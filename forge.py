@@ -2,7 +2,7 @@
 
 The engine tick is handle_command(session, text) -> str: one command
 in, one response out, as a plain function. game_loop is just a thin
-terminal driver around it -- the socket gateway is another.
+terminal driver around it -- a socket gateway will be another.
 """
 
 import re
@@ -16,7 +16,7 @@ from parts.jobs import JOBS, assign_job, jobs_text, score_text
 from parts.npcs import room_npcs_text, talk
 from parts.ranks import wizard_command
 from parts.save import load_game, save_game
-from parts.session import SESSIONS, Session, roster
+from parts.session import SESSIONS, Session, display_name, roster
 from parts.world import DIRECTIONS, render_room, try_move
 
 NAME_RE = re.compile(r"^[a-z][a-z0-9_]{1,15}$")
@@ -40,18 +40,17 @@ def render_scene(location: str, viewer: str = "") -> str:
         scene.append(company)
     others = [pid for pid, s in SESSIONS.items() if s.location == location and pid != viewer]
     for pid in sorted(others):
-        scene.append(f"{pid} is here.")
+        scene.append(f"{display_name(pid)} is here.")
     return "\n".join(scene)
 
 
 def _move(session: Session, direction: str) -> str:
     arrived, message = try_move(session.location, direction)
     if arrived != session.location:
-        announce(
-            session.location, f"{session.player_id} leaves {direction}.", exclude=session.player_id
-        )
+        me = display_name(session.player_id)
+        announce(session.location, f"{me} leaves {direction}.", exclude=session.player_id)
         session.location = arrived
-        announce(arrived, f"{session.player_id} arrives.", exclude=session.player_id)
+        announce(arrived, f"{me} arrives.", exclude=session.player_id)
         return render_scene(arrived, viewer=session.player_id)
     return message
 
@@ -80,7 +79,9 @@ def handle_command(session: Session, raw: str) -> str:
         if not message:
             return "Say what?"
         announce(
-            session.location, f'{session.player_id} says, "{message}"', exclude=session.player_id
+            session.location,
+            f'{display_name(session.player_id)} says, "{message}"',
+            exclude=session.player_id,
         )
         return f'You say, "{message}"'
     if raw.startswith("name "):
@@ -91,7 +92,7 @@ def handle_command(session: Session, raw: str) -> str:
                 "starting with a letter. Try: name matrym"
             )
         if wanted in SESSIONS:
-            return f"Someone here is already called {wanted}."
+            return f"Someone here is already called {display_name(wanted)}."
         old = session.player_id
         SESSIONS.pop(old, None)
         session.player_id = wanted
@@ -99,14 +100,21 @@ def handle_command(session: Session, raw: str) -> str:
         rename(old, wanted)
         record = load_character(wanted)
         if record is not None:
-            announce(session.location, f"{old} leaves.", exclude=wanted)
+            announce(session.location, f"{display_name(old)} leaves.", exclude=wanted)
             restore_character(session, record)
-            announce(session.location, f"{wanted} arrives.", exclude=wanted)
-            return f"Welcome back, {wanted}.\n{render_scene(session.location, viewer=wanted)}"
+            announce(session.location, f"{display_name(wanted)} arrives.", exclude=wanted)
+            return (
+                f"Welcome back, {display_name(wanted)}.\n"
+                f"{render_scene(session.location, viewer=wanted)}"
+            )
         session.named = True
         save_character(session)
-        announce(session.location, f"{old} is now known as {wanted}.", exclude=wanted)
-        return f"You are now known as {wanted}."
+        announce(
+            session.location,
+            f"{display_name(old)} is now known as {display_name(wanted)}.",
+            exclude=wanted,
+        )
+        return f"You are now known as {display_name(wanted)}."
     if raw.startswith("@"):
         return wizard_command(session, raw)
     if raw.startswith(("attack ", "kill ")):
@@ -119,7 +127,8 @@ def handle_command(session: Session, raw: str) -> str:
         if result.startswith("You take up"):
             announce(
                 session.location,
-                f"{session.player_id} takes up the way of the {JOBS[session.job]['name']}.",
+                f"{display_name(session.player_id)} takes up the way "
+                f"of the {JOBS[session.job]['name']}.",
                 exclude=session.player_id,
             )
         return result
@@ -127,7 +136,7 @@ def handle_command(session: Session, raw: str) -> str:
         return score_text(session)
     if raw == "who":
         names = roster() or [session.player_id]
-        return "Players online: " + ", ".join(names)
+        return "Players online: " + ", ".join(display_name(n) for n in names)
     if raw in ("inventory", "i", "inv"):
         return inventory_text()
     if raw.startswith(("take ", "get ")):
@@ -136,7 +145,7 @@ def handle_command(session: Session, raw: str) -> str:
         if result.startswith("You take"):
             announce(
                 session.location,
-                result.replace("You take", f"{session.player_id} takes", 1),
+                result.replace("You take", f"{display_name(session.player_id)} takes", 1),
                 exclude=session.player_id,
             )
         return result
@@ -146,7 +155,7 @@ def handle_command(session: Session, raw: str) -> str:
         if result.startswith("You drop"):
             announce(
                 session.location,
-                result.replace("You drop", f"{session.player_id} drops", 1),
+                result.replace("You drop", f"{display_name(session.player_id)} drops", 1),
                 exclude=session.player_id,
             )
         return result

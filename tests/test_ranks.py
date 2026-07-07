@@ -46,7 +46,7 @@ def test_teleport_moves_a_wizard_and_is_witnessed():
     out = handle_command(w, "@teleport library")
     assert w.location == "library"
     assert "You step between places" in out
-    assert "gandalf appears from nowhere." in heard
+    assert "Gandalf appears from nowhere." in heard
     unregister("bystander")
 
 

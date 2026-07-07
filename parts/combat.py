@@ -15,7 +15,7 @@ from parts.progression import (
     mp_gain_per_level,
 )
 from parts.resources import Resource
-from parts.session import Session
+from parts.session import Session, display_name
 
 DAMAGE_BASE = 3  # damage dealt = DAMAGE_BASE + strength // 3
 
@@ -52,7 +52,7 @@ def award_xp(session: Session, amount: int) -> str:
         save_character(session)
         announce(
             session.location,
-            f"{session.player_id} has reached level {session.level}!",
+            f"{display_name(session.player_id)} has reached level {session.level}!",
             exclude=session.player_id,
         )
     return "\n".join(lines)
@@ -72,7 +72,7 @@ def attack(session: Session, word: str) -> str:
     npc["hp_now"] -= dmg
     announce(
         session.location,
-        f"{session.player_id} strikes {npc['name']} for {dmg}.",
+        f"{display_name(session.player_id)} strikes {npc['name']} for {dmg}.",
         exclude=session.player_id,
     )
     if npc["hp_now"] > 0:

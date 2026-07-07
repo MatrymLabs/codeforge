@@ -49,8 +49,8 @@ def test_movement_announces_departure_and_arrival():
     _, b_heard = _seat("b", "forge")
     _, c_heard = _seat("c", "courtyard")
     handle_command(a, "n")
-    assert "a leaves north." in b_heard
-    assert "a arrives." in c_heard
+    assert "A leaves north." in b_heard
+    assert "A arrives." in c_heard
     for pid in ("a", "b", "c"):
         unregister(pid)
 
@@ -60,7 +60,7 @@ def test_say_is_heard_by_the_room():
     _, b_heard = _seat("b", "library")
     response = handle_command(a, "say hello there")
     assert response == 'You say, "hello there"'
-    assert 'a says, "hello there"' in b_heard
+    assert 'A says, "hello there"' in b_heard
     unregister("a")
     unregister("b")
 
@@ -69,7 +69,7 @@ def test_take_is_seen_by_bystanders():
     a, _ = _seat("a", "library")
     _, b_heard = _seat("b", "library")
     handle_command(a, "take key")
-    assert "a takes a copper key." in b_heard
+    assert "A takes a copper key." in b_heard
     unregister("a")
     unregister("b")
 
@@ -78,7 +78,7 @@ def test_scene_shows_other_players_but_not_yourself():
     _seat("a", "library")
     _seat("b", "library")
     scene = render_scene("library", viewer="a")
-    assert "b is here." in scene
-    assert "a is here." not in scene
+    assert "B is here." in scene
+    assert "A is here." not in scene
     unregister("a")
     unregister("b")

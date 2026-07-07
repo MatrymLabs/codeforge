@@ -58,7 +58,7 @@ def _command(sock: socket.socket, text: str) -> str:
 def test_connection_gets_a_welcome_and_the_forge(server):
     sock = _connect(server)
     banner = _read_until_prompt(sock)
-    assert "Welcome to The First Forge, player1" in banner
+    assert "Welcome to The First Forge, Player1" in banner
     assert "The Cold Forge" in banner
     sock.close()
 
@@ -79,8 +79,8 @@ def test_who_lists_everyone_connected(server):
     _read_until_prompt(a)
     _read_until_prompt(b)
     out = _command(a, "who")
-    assert "player1" in out
-    assert "player2" in out
+    assert "Player1" in out
+    assert "Player2" in out
     a.close(), b.close()
 
 
@@ -93,5 +93,5 @@ def test_quit_unseats_the_player(server):
     b = _connect(server)
     _read_until_prompt(b)
     out = _command(b, "who")
-    assert "player1" not in out
+    assert "Player1" not in out
     b.close()

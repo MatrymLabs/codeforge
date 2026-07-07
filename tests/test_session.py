@@ -72,7 +72,7 @@ def test_name_command_renames_the_player():
     s = Session(player_id="player1")
     SESSIONS["player1"] = s
     response = handle_command(s, "name matrym")
-    assert response == "You are now known as matrym."
+    assert response == "You are now known as Matrym."
     assert s.player_id == "matrym"
     assert "matrym" in SESSIONS
     assert "player1" not in SESSIONS
@@ -102,3 +102,11 @@ def test_broadcasts_follow_the_new_name():
     assert "the shelves whisper." in heard  # the sink moved with the name
     unregister("matrym")
     SESSIONS.clear()
+
+
+def test_display_name_is_projection_only():
+    from parts.session import display_name
+
+    assert display_name("matrym") == "Matrym"
+    assert display_name("iron_fist") == "Iron Fist"
+    assert display_name("player1") == "Player1"

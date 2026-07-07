@@ -39,7 +39,7 @@ def test_score_sheet_shows_the_whole_character():
     s = Session(player_id="matrym")
     assign_job(s, "vanguard")
     sheet = score_text(s)
-    assert "matrym, the Vanguard" in sheet
+    assert "Matrym, the Vanguard" in sheet
     assert "Level 1" in sheet
     assert "HP 32/32" in sheet  # 20 + 12 stamina
     assert "strength 14" in sheet

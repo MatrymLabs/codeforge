@@ -15,7 +15,7 @@ import threading
 from forge import handle_command, render_scene
 from parts.characters import save_character
 from parts.events import SHUTDOWN, register, unregister
-from parts.session import SESSIONS, Session
+from parts.session import SESSIONS, Session, display_name
 
 TICK_LOCK = threading.Lock()
 _counter_lock = threading.Lock()
@@ -44,7 +44,7 @@ class _Handler(socketserver.StreamRequestHandler):
         with TICK_LOCK:
             SESSIONS[player_id] = session
             register(player_id, self._send)
-        self._send(f"Welcome to The First Forge, {player_id}. Type HELP to begin.")
+        self._send(f"Welcome to The First Forge, {display_name(player_id)}. Type HELP to begin.")
         self._send(render_scene(session.location, viewer=player_id))
         try:
             while session.alive:

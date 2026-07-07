@@ -12,7 +12,7 @@ to the machine is the one authority the engine cannot outrank.
 
 from parts.characters import save_character
 from parts.events import SHUTDOWN, announce, broadcast
-from parts.session import SESSIONS, Session
+from parts.session import SESSIONS, Session, display_name
 from parts.world import WORLD
 
 RANK_ORDER = {"player": 0, "wizard": 1, "owner": 2}
@@ -27,9 +27,10 @@ def teleport(session: Session, word: str) -> str:
     room = word.strip().lower()
     if room not in WORLD:
         return f"There is no room labeled '{room}'."
-    announce(session.location, f"{session.player_id} vanishes.", exclude=session.player_id)
+    me = display_name(session.player_id)
+    announce(session.location, f"{me} vanishes.", exclude=session.player_id)
     session.location = room
-    announce(room, f"{session.player_id} appears from nowhere.", exclude=session.player_id)
+    announce(room, f"{me} appears from nowhere.", exclude=session.player_id)
     return f"You step between places.\nYou are now in: {WORLD[room]['name']}"
 
 
@@ -43,15 +44,15 @@ def grant(session: Session, words: str) -> str:
         return f"'{rank}' is not a rank. Ranks: player, wizard, owner."
     target = SESSIONS.get(target_name)
     if target is None:
-        return f"No one called {target_name} is connected."
+        return f"No one called {display_name(target_name)} is connected."
     target.rank = rank
     save_character(target)
     announce(
         target.location,
-        f"{target_name} is invested with the rank of {rank}.",
+        f"{display_name(target_name)} is invested with the rank of {rank}.",
         exclude=session.player_id,
     )
-    return f"{target_name} is now rank: {rank}."
+    return f"{display_name(target_name)} is now rank: {rank}."
 
 
 def shutdown_world(session: Session) -> str:

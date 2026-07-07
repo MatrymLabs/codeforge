@@ -70,7 +70,7 @@ def test_the_room_witnesses_the_level_up():
     heard: list[str] = []
     register("bystander", heard.append)
     award_xp(s, 80)
-    assert "matrym has reached level 2!" in heard
+    assert "Matrym has reached level 2!" in heard
     unregister("bystander")
 
 

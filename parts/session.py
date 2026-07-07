@@ -39,3 +39,10 @@ SESSIONS: dict[str, Session] = {}
 def roster() -> list[str]:
     """Names of everyone currently seated, alphabetized."""
     return sorted(SESSIONS)
+
+
+def display_name(player_id: str) -> str:
+    """Proper-noun projection: identity stays lowercase; display is
+    capitalized at the last moment ('matrym' -> 'Matrym',
+    'iron_fist' -> 'Iron Fist'). Never stored, always derived."""
+    return player_id.replace("_", " ").title()

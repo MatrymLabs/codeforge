@@ -9,7 +9,7 @@ command renders the sheet -- projection, never authority.
 from parts.progression import get_next_level_threshold
 from parts.resources import Resource
 from parts.seed import SEED_DIR, load_jobs
-from parts.session import Session
+from parts.session import Session, display_name
 from parts.stats import Stat, StatBlock
 
 JOBS = load_jobs(SEED_DIR / "jobs.yaml")
@@ -57,7 +57,7 @@ def score_text(session: Session) -> str:
     stat_line = "   ".join(f"{s.name} {s.base}" for s in session.stats.stats)
     return "\n".join(
         [
-            f"== {session.player_id}, the {job['name']} ==",
+            f"== {display_name(session.player_id)}, the {job['name']} ==",
             f"Level {session.level}   {xp_line}",
             f"HP {hp.current}/{hp.maximum}   MP {mp.current}/{mp.maximum}",
             stat_line,
