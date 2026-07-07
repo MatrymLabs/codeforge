@@ -7,10 +7,22 @@ from parts.save import load_game, save_game
 from parts.world import DIRECTIONS, render_room, try_move
 
 
+def render_scene(location: str) -> str:
+    """The full projection of a room: place, things, people."""
+    scene = [render_room(location)]
+    extra = room_items_text(location)
+    if extra:
+        scene.append(extra)
+    company = room_npcs_text(location)
+    if company:
+        scene.append(company)
+    return "\n".join(scene)
+
+
 def game_loop() -> None:
     location = "forge"
     print("Welcome to The First Forge. Type HELP to begin.")
-    print(render_room(location))
+    print(render_scene(location))
 
     while True:
         raw = input("\n> ").strip().lower()
@@ -24,19 +36,19 @@ def game_loop() -> None:
                 "take, drop, inventory, talk <name>, unlock <door> with <key>, save, load, quit"
             )
         elif raw == "look":
-            print(render_room(location))
-            extra = room_items_text(location)
-            if extra:
-                print(extra)
-            company = room_npcs_text(location)
-            if company:
-                print(company)
+            print(render_scene(location))
         elif raw in DIRECTIONS:
-            location = try_move(location, DIRECTIONS[raw])
+            arrived = try_move(location, DIRECTIONS[raw])
+            if arrived != location:
+                location = arrived
+                print(render_scene(location))
         elif raw.startswith("go "):
             word = raw.removeprefix("go ").strip()
             if word in DIRECTIONS:
-                location = try_move(location, DIRECTIONS[word])
+                arrived = try_move(location, DIRECTIONS[word])
+                if arrived != location:
+                    location = arrived
+                    print(render_scene(location))
             else:
                 print("You can't go that way.")
         elif raw in ("inventory", "i", "inv"):
@@ -62,7 +74,7 @@ def game_loop() -> None:
         elif raw == "load":
             location, msg = load_game()
             print(msg)
-            print(render_room(location))
+            print(render_scene(location))
         elif raw == "":
             continue
         else:

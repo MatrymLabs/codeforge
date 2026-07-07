@@ -43,8 +43,6 @@ def try_move(location: str, direction: str) -> str:
         return location
     exits = WORLD[location]["exits"]
     if direction in exits:
-        new_location = exits[direction]
-        print(render_room(new_location))
-        return new_location
+        return exits[direction]
     print("You can't go that way.")
     return location

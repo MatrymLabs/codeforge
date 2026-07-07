@@ -52,3 +52,10 @@ def test_locked_door_blocks_the_player(monkeypatch, capsys):
 def test_unknown_command_gets_help_hint(monkeypatch, capsys):
     out = play(monkeypatch, capsys, ["dance wildly", "quit"])
     assert "Huh? Type HELP for commands." in out
+
+
+def test_entering_a_room_shows_who_and_what_is_there(monkeypatch, capsys):
+    """Regression: the Librarian must appear on ARRIVAL, not only on look."""
+    out = play(monkeypatch, capsys, ["n", "e", "quit"])
+    assert "The librarian is here." in out
+    assert "You see a copper key here." in out
