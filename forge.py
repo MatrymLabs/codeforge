@@ -2,19 +2,19 @@
 
 The engine tick is handle_command(session, text) -> str: one command
 in, one response out, as a plain function. game_loop is just a thin
-terminal driver around it -- a socket gateway will be another.
+terminal driver around it -- the socket gateway is another.
 """
 
 from parts.doors import unlock
 from parts.items import drop, inventory_text, room_items_text, take
 from parts.npcs import room_npcs_text, talk
 from parts.save import load_game, save_game
-from parts.session import Session
+from parts.session import SESSIONS, Session, roster
 from parts.world import DIRECTIONS, render_room, try_move
 
 HELP_TEXT = (
     "Commands: look, go <direction> (or n/s/e/w/u/d), "
-    "take, drop, inventory, talk <name>, unlock <door> with <key>, save, load, quit"
+    "take, drop, inventory, talk <name>, who, unlock <door> with <key>, save, load, quit"
 )
 
 
@@ -56,6 +56,9 @@ def handle_command(session: Session, raw: str) -> str:
         if word in DIRECTIONS:
             return _move(session, DIRECTIONS[word])
         return "You can't go that way."
+    if raw == "who":
+        names = roster() or [session.player_id]
+        return "Players online: " + ", ".join(names)
     if raw in ("inventory", "i", "inv"):
         return inventory_text()
     if raw.startswith(("take ", "get ")):
@@ -86,13 +89,17 @@ def handle_command(session: Session, raw: str) -> str:
 def game_loop() -> None:
     """Terminal driver: reads a keyboard, prints a screen. That's all."""
     session = Session(player_id="player")
+    SESSIONS[session.player_id] = session
     print("Welcome to The First Forge. Type HELP to begin.")
     print(render_scene(session.location))
 
-    while session.alive:
-        response = handle_command(session, input("\n> "))
-        if response:
-            print(response)
+    try:
+        while session.alive:
+            response = handle_command(session, input("\n> "))
+            if response:
+                print(response)
+    finally:
+        SESSIONS.pop(session.player_id, None)
 
 
 if __name__ == "__main__":

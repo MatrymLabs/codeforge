@@ -48,3 +48,6 @@ store:
 
 clean:
 	rm -rf .pytest_cache .ruff_cache .mypy_cache .coverage __pycache__ parts/__pycache__ tests/__pycache__
+
+serve:
+	python3 -m parts.gateway

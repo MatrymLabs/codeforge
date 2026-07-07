@@ -19,3 +19,13 @@ class Session:
     player_id: str
     location: str = "forge"
     alive: bool = True
+
+
+# The registry of connected sessions. Gateways and game_loop register
+# here; 'who' reads it. One world, many seats.
+SESSIONS: dict[str, Session] = {}
+
+
+def roster() -> list[str]:
+    """Names of everyone currently seated, alphabetized."""
+    return sorted(SESSIONS)
