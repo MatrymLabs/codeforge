@@ -1,0 +1,14 @@
+[project]
+name = "codeforge"
+version = "0.1.0"
+description = "A Python-native modular MUD engine and reusable code workshop."
+requires-python = ">=3.13"
+
+[tool.ruff]
+line-length = 100
+target-version = "py313"
+
+[tool.ruff.lint]
+# E/F: core errors  I: import sorting  UP: modernize syntax
+# B: common bug patterns  SIM: simplifications
+select = ["E", "F", "I", "UP", "B", "SIM"]
