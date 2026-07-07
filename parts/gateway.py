@@ -13,6 +13,7 @@ import socketserver
 import threading
 
 from forge import handle_command, render_scene
+from parts.events import register, unregister
 from parts.session import SESSIONS, Session
 
 TICK_LOCK = threading.Lock()
@@ -41,8 +42,9 @@ class _Handler(socketserver.StreamRequestHandler):
         session = Session(player_id=player_id)
         with TICK_LOCK:
             SESSIONS[player_id] = session
+            register(player_id, self._send)
         self._send(f"Welcome to The First Forge, {player_id}. Type HELP to begin.")
-        self._send(render_scene(session.location))
+        self._send(render_scene(session.location, viewer=player_id))
         try:
             while session.alive:
                 self.wfile.write(b"> ")
@@ -55,6 +57,7 @@ class _Handler(socketserver.StreamRequestHandler):
                     self._send(response)
         finally:
             with TICK_LOCK:
+                unregister(player_id)
                 SESSIONS.pop(player_id, None)
 
 
@@ -62,7 +65,12 @@ def serve(host: str = "0.0.0.0", port: int = 4000) -> None:
     with GatewayServer((host, port), _Handler) as server:
         print(f"CodeForge gateway listening on {host}:{port}")
         print(f"Connect with:  nc <this-machine> {port}   (or any telnet client)")
-        server.serve_forever()
+        print("Press Ctrl+C to shut down.")
+        try:
+            server.serve_forever()
+        except KeyboardInterrupt:
+            print("\nShutting down the gateway. The world sleeps.")
+            server.shutdown()
 
 
 if __name__ == "__main__":
