@@ -1,31 +1,19 @@
-# CodeForge 🔨
+# CodeForge ⚒️
 
-![CI](https://github.com/MatrymLabs/codeforge/actions/workflows/ci.yml/badge.svg)
+[![CI](https://github.com/MatrymLabs/codeforge/actions/workflows/ci.yml/badge.svg)](https://github.com/MatrymLabs/codeforge/actions/workflows/ci.yml)
 
-**A Python-native modular MUD engine and reusable code workshop.**
-Classic MUD soul — rooms, keys, locked doors, talking NPCs — on modern Python
-architecture: typed schemas, validated data-driven worlds, gated shipping, and
-a self-generating parts catalog.
+**A Python-native multiplayer MUD engine, built as a workshop of small, tested, reusable parts.**
 
-```
-== The Old Library ==
-Dust drifts between towering shelves. An oak door in the back is sealed shut.
-Exits: west, north
-You see a copper key here.
-The librarian is here.
+Classic soul: rooms, exits, keys, locked doors, NPCs, callings, XP, a training dummy
+that reassembles itself. Modern body: a pure-function engine tick, a broadcast event
+bus, YAML-seeded worlds, deterministic combat math, restart-surviving characters, and
+a threaded TCP gateway that real MUD clients (Mudlet, telnet, nc) connect to today.
 
-> talk librarian
-The librarian says: "That oak door? Sealed for years. A copper key went missing ages ago..."
-
-> take key
-You take a copper key.
-
-> unlock door with key
-You unlock the oak door with a copper key.
-
-> go north
-== The Sealed Archive ==
-Forbidden shelves climb into darkness. The air tastes of secrets and old ink.
+```text
+== matrym, the Vanguard ==
+Level 2   XP 90 / 150
+HP 39/39   MP 11/11
+agility 8   magic 4   stamina 12   strength 14
 ```
 
 ## Quick start
@@ -35,80 +23,112 @@ git clone git@github.com:MatrymLabs/codeforge.git
 cd codeforge
 python3 -m venv .venv && source .venv/bin/activate
 pip install -e ".[dev]"
-make check     # lint, typecheck, 41 tests
-make run       # step into The First Forge
+make check     # lint + typecheck + full test suite
+make run       # play solo in the terminal
 ```
 
-## The Hardware Store
+### Multiplayer
 
-Every engine component is a **card**: one module, one purpose, one test twin.
-This inventory is **generated from the code itself** (`make store` reads each
-card's docstring) — documentation that cannot go stale:
-
-```
-#   CARD      TESTED  PURPOSE
-------------------------------------------------------------
-1   catalog   yes     the filing system. List world components by number
-2   doors     yes     lockable barriers between rooms
-3   items     yes     objects, containment, take/drop/inventory
-4   npcs      yes     characters who live in rooms and talk
-5   save      yes     snapshot persistence for world state
-6   seed      yes     load and validate room packs from YAML
-7   store     yes     the hardware store inventory. List engine parts and purposes
-8   world     yes     world graph, direction aliases, movement
+```bash
+make serve     # gateway on port 4000
 ```
 
-## The control panel
+Then from any machine on your network: `nc <host> 4000` -- or point **Mudlet**
+(or any telnet client) at it. Each connection is a live seat in one shared world:
+players see each other arrive, speak, fight, and level up.
 
-| Button          | What it does                                              |
-|-----------------|-----------------------------------------------------------|
-| `make fix`      | Auto-format and auto-repair lint findings                 |
-| `make check`    | The ritual: format check → lint → typecheck → tests       |
-| `make coverage` | Test coverage report (currently ~90%)                     |
-| `make audit`    | Scan dependencies for known vulnerabilities               |
-| `make ship`     | Run all gates, then push — refuses dirty trees & red gates|
-| `make run`      | Play The First Forge                                      |
-| `make world`    | Numbered catalog of rooms and NPCs (operator view)        |
-| `make store`    | Numbered catalog of engine parts (developer view)         |
-
-## Architecture principles
-
-- **The world is data.** Rooms live in `seeds/first-forge/rooms.yaml`, not in
-  Python. Every room is born complete via a three-layer template merge:
-  engine defaults → file `template:` block → the room's own fields.
-- **Labels are identity, names are display.** Machines link by
-  `lowercase_snake_case` labels; humans read names. The seed loader *gates*
-  labels: bad format gets a suggested fix, duplicates are refused (plain YAML
-  would silently overwrite), and dangling exits are named before the world
-  can boot.
-- **State is canonical, text is a projection.** Only validated actions mutate
-  world state; every screen of text is rendered *from* state. Saves persist
-  facts (`"oak_door": {"locked": false}`), never prose.
-- **Every card ships with a test twin.** `parts/x.py` ↔ `tests/test_x.py`,
-  enforced by the store catalog's `TESTED` column. A scripted robot player
-  drives the real game loop end-to-end in integration tests.
-
-## Repository layout
-
+```text
+> name matrym
+Welcome back, matrym.
 ```
-codeforge/
-  forge.py              # entry point: the power switch
-  parts/                # the hardware store shelves (engine cards)
-  tests/                # one test twin per card + integration tests
-  seeds/first-forge/    # the starter world, as data
-  .github/workflows/    # CI: the ritual on every push
+
+Your name is your login: characters persist across server restarts
+(v0 has no passwords -- treat it as a LAN toy, not an internet service).
+
+## Architecture
+
+The engine is a **pure tick** surrounded by thin drivers. Every part is a card:
+one module, one job, one test twin.
+
+```mermaid
+flowchart LR
+    T[Terminal driver] --> H
+    G[TCP gateway<br/>Mudlet / telnet / nc] --> H
+    H["handle_command(session, text) -> str<br/><b>the engine tick</b>"]
+    H --> P[parts/*<br/>world · items · doors · npcs<br/>jobs · combat · progression]
+    P --> E[events bus<br/>room broadcasts]
+    E --> G
+    S[(seeds/*.yaml<br/>rooms · items · npcs · jobs)] --> P
+    P --> C[(characters.json<br/>minimal canonical state)]
 ```
+
+Three laws hold everywhere:
+
+1. **State is canonical; text is a projection.** Renderers never mutate anything.
+2. **The world is data.** Rooms, items, NPCs, and callings are born from YAML seeds,
+   validated by loader gates (label rules, duplicate refusal, template merging).
+3. **Derive, don't store.** A saved character is four integers; stats and resources
+   are recomputed from the job template and growth formulas -- and a parity test
+   pins restore-math equal to play-math.
+
+## The card catalog
+
+Generated from the `CARD:` docstrings in `parts/` (see `make store`):
+
+| Card | Purpose |
+|---|---|
+| `catalog` | the filing system. List world components by number. |
+| `characters` | named heroes survive the restart. |
+| `combat` | the training loop: strike, defeat, XP, LEVEL UP. |
+| `doors` | lockable barriers between rooms. |
+| `events` | world happenings broadcast to bystanders. |
+| `gateway` | a line-based TCP server sharing one world. |
+| `items` | objects, containment, take/drop/inventory. |
+| `jobs` | callings born from seed, characters born from callings. |
+| `npcs` | characters who live in rooms and talk. |
+| `progression` | XP and JP level curves (locked design, July 2026). |
+| `resources` | bounded depleting values (HP, MP, TP). |
+| `save` | snapshot persistence for world state. |
+| `seed` | load and validate world component packs from YAML. |
+| `session` | one player's connection state. |
+| `stats` | validated, immutable character statistics. |
+| `store` | the hardware store inventory. List engine parts and purposes. |
+| `world` | world graph, direction aliases, movement. |
+
+Salvage note: `stats`, `resources`, and `progression` were ported from an earlier
+Evennia-based prototype -- framework-free kernel code survived the framework it was
+written for, original tests included.
+
+## Workshop buttons
+
+| Command | What it does |
+|---|---|
+| `make fix` | Auto-format and auto-fix lint |
+| `make check` | Lint, typecheck (mypy), full pytest suite |
+| `make coverage` | Test coverage report |
+| `make audit` | Dependency vulnerability scan |
+| `make run` | Solo terminal play |
+| `make serve` | Multiplayer TCP gateway (Ctrl+C to sleep the world) |
+| `make world` | Operator catalog of rooms / items / NPCs |
+| `make store` | Developer catalog of cards and their test twins |
+| `make ship` | Full check, refuse dirty tree, push |
+
+## Testing
+
+125 tests and counting: unit twins for every card, real-socket gateway tests,
+engine-tick wiring tests, deterministic combat math, persistence parity, and
+Hypothesis property tests pinning the progression curves ("XP costs never
+decrease") across thousands of generated cases. CI runs the same `make check`
+as the workbench.
 
 ## Roadmap
 
-- [x] Playable core loop: movement, items, locked doors, NPCs
-- [x] Snapshot persistence (`save` / `load`)
-- [x] Data-driven world: YAML seed with validation gates
-- [x] Self-generating world & parts catalogs
-- [ ] Items and NPCs join the seed (fully data-driven world)
-- [ ] Gateway arc: sessions → engine tick → multi-client server
-- [ ] Seed packages: install, preview, rollback (the Auto-Injector)
+- NPCs that fight back (stakes, defeat, reawakening)
+- Permission ranks and wizard verbs (`@shutdown`, `@teleport`, `@dig`)
+- Accounts with real password hashing
+- Canonical event frames (typed MUD-IL payloads on the bus)
+- Seed packs as installable world modules
 
 ## License
 
-MIT — see [LICENSE](../../../Downloads/LICENSE).
+MIT -- see [LICENSE](LICENSE).
