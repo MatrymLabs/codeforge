@@ -34,3 +34,6 @@ ship: check
 	fi
 	git push
 	@echo "✓ Shipped to GitHub."
+
+world:
+	python3 -m parts.catalog
