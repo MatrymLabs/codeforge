@@ -1,0 +1,71 @@
+# ============================================================
+# SEED: first-forge -- rooms.yaml
+# The starter world. Edit this file and the world changes.
+# No Python required.
+# ============================================================
+#
+# NAMING CONVENTIONS
+#   label  : the YAML key. lowercase_snake_case, unique, permanent.
+#            Machines use labels: exits, saves, scripts, code.
+#   name   : human display text. Change it anytime; nothing breaks.
+#
+# THE ROOM TEMPLATE (everything is a room)
+#   Every room is born complete. Merge order, rightmost wins:
+#     engine defaults  ->  template: block below  ->  the room's own fields
+#   Engine defaults: name is generated from the label
+#   ("guard_tower" -> "Guard Tower"), desc gets a placeholder,
+#   exits default to empty.
+#
+#   A bare label is a valid room:
+#     attic:
+#
+# THE GATES (what the loader refuses)
+#   - labels that aren't lowercase_snake_case  (suggests the fix)
+#   - duplicate labels                          (YAML would silently overwrite)
+#   - exits pointing at rooms that don't exist  (names the dangling edge)
+# ============================================================
+
+template:
+  desc: The forge's silence hangs here, waiting for a builder's touch.
+
+forge:
+  name: The Cold Forge
+  desc: |-
+    You stand beside a cold forge beneath unfamiliar stars.
+    A brass plaque on the anvil reads: "Every world begins as a spark."
+  exits:
+    north: courtyard
+    down: cellar
+
+courtyard:
+  name: Broken Courtyard
+  desc: Cracked flagstones stretch under a violet sky. Wind hums through the ruins.
+  exits:
+    south: forge
+    east: library
+
+library:
+  name: The Old Library
+  desc: Dust drifts between towering shelves. An oak door in the back is sealed shut.
+  exits:
+    west: courtyard
+    north: archive
+
+archive:
+  name: The Sealed Archive
+  desc: Forbidden shelves climb into darkness. The air tastes of secrets and old ink.
+  exits:
+    south: library
+
+cellar:
+  name: The Forge Cellar
+  desc: Cool darkness. Crates of unworked ore line the walls, waiting for a purpose.
+  exits:
+    up: forge
+    west: workshop
+
+workshop:
+  name: The Forge Workshop
+  desc: A workshop for crafting tools and weapons.
+  exits:
+    east: cellar

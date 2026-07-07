@@ -1,50 +1,17 @@
 """CARD: world -- world graph, direction aliases, movement.
 
-The world is data. Rooms are nodes, exits are edges.
+The world is data -- and now it lives in a seed file, not in Python.
 try_move is the only function that changes a player's location.
 """
 
-from typing import TypedDict
+from pathlib import Path
 
 from parts.doors import DOORS, door_blocking
+from parts.seed import Room, load_rooms
 
+SEED_PATH = Path(__file__).resolve().parent.parent / "seeds" / "first-forge" / "rooms.yaml"
 
-class Room(TypedDict):
-    """The shape every room must have. Structure, checked by machine."""
-
-    name: str
-    desc: str
-    exits: dict[str, str]
-
-
-WORLD: dict[str, Room] = {
-    "forge": {
-        "name": "The Cold Forge",
-        "desc": "You stand beside a cold forge beneath unfamiliar stars.\n"
-        'A brass plaque on the anvil reads: "Every world begins as a spark."',
-        "exits": {"north": "courtyard", "down": "cellar"},
-    },
-    "courtyard": {
-        "name": "Broken Courtyard",
-        "desc": "Cracked flagstones stretch under a violet sky. Wind hums through the ruins.",
-        "exits": {"south": "forge", "east": "library"},
-    },
-    "library": {
-        "name": "The Old Library",
-        "desc": "Dust drifts between towering shelves. An oak door in the back is sealed shut.",
-        "exits": {"west": "courtyard", "north": "archive"},
-    },
-    "archive": {
-        "name": "The Sealed Archive",
-        "desc": "Forbidden shelves climb into darkness. The air tastes of secrets and old ink.",
-        "exits": {"south": "library"},
-    },
-    "cellar": {
-        "name": "The Forge Cellar",
-        "desc": "Cool darkness. Crates of unworked ore line the walls, waiting for a purpose.",
-        "exits": {"up": "forge"},
-    },
-}
+WORLD: dict[str, Room] = load_rooms(SEED_PATH)
 
 DIRECTIONS: dict[str, str] = {
     "north": "north",

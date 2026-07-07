@@ -1,4 +1,5 @@
 [project]
+dependencies = ["pyyaml"]
 name = "codeforge"
 version = "0.1.0"
 description = "A Python-native modular MUD engine and reusable code workshop."
