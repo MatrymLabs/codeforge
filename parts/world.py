@@ -4,7 +4,18 @@ The world is data. Rooms are nodes, exits are edges.
 try_move is the only function that changes a player's location.
 """
 
-WORLD = {
+from typing import TypedDict
+
+
+class Room(TypedDict):
+    """The shape every room must have. Structure, checked by machine."""
+
+    name: str
+    desc: str
+    exits: dict[str, str]
+
+
+WORLD: dict[str, Room] = {
     "forge": {
         "name": "The Cold Forge",
         "desc": "You stand beside a cold forge beneath unfamiliar stars.\n"

@@ -12,3 +12,7 @@ target-version = "py313"
 # E/F: core errors  I: import sorting  UP: modernize syntax
 # B: common bug patterns  SIM: simplifications
 select = ["E", "F", "I", "UP", "B", "SIM"]
+
+[tool.mypy]
+python_version = "3.13"
+warn_unused_ignores = true
