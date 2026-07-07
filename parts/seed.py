@@ -56,6 +56,9 @@ class Npc(TypedDict):
     location: str  # room label
     dialogue: list[str]
     next_line: int  # runtime state, always starts at 0
+    hp: int  # max hit points; 0 means peaceful, not attackable
+    hp_now: int  # runtime state, starts at hp
+    xp: int  # XP awarded when defeated
 
 
 class Job(TypedDict):
@@ -201,6 +204,8 @@ def load_npcs(path: Path) -> dict[str, Npc]:
             "name": f"the {_phrase(label)}",
             "keywords": _auto_keywords(label),
             "dialogue": DEFAULT_DIALOGUE,
+            "hp": 0,
+            "xp": 0,
             **file_template,
             **raw,
         }
@@ -209,7 +214,14 @@ def load_npcs(path: Path) -> dict[str, Npc]:
         _require_types(
             label,
             merged,
-            (("name", str), ("keywords", list), ("location", str), ("dialogue", list)),
+            (
+                ("name", str),
+                ("keywords", list),
+                ("location", str),
+                ("dialogue", list),
+                ("hp", int),
+                ("xp", int),
+            ),
         )
         npcs[label] = Npc(
             name=merged["name"],
@@ -217,6 +229,9 @@ def load_npcs(path: Path) -> dict[str, Npc]:
             location=merged["location"],
             dialogue=merged["dialogue"],
             next_line=0,
+            hp=merged["hp"],
+            hp_now=merged["hp"],
+            xp=merged["xp"],
         )
     return npcs
 

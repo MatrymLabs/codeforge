@@ -7,6 +7,7 @@ terminal driver around it -- the socket gateway is another.
 
 import re
 
+from parts.combat import attack
 from parts.doors import unlock
 from parts.events import announce, register, rename, unregister
 from parts.items import drop, inventory_text, room_items_text, take
@@ -21,7 +22,7 @@ NAME_RE = re.compile(r"^[a-z][a-z0-9_]{1,15}$")
 HELP_TEXT = (
     "Commands: look, go <direction> (or n/s/e/w/u/d), "
     "take, drop, inventory, talk <npc>, say <msg>, name <yourname>, who, "
-    "jobs, job <calling>, score, "
+    "jobs, job <calling>, score, attack <target>, "
     "unlock <door> with <key>, save, load, quit"
 )
 
@@ -95,6 +96,9 @@ def handle_command(session: Session, raw: str) -> str:
         rename(old, wanted)
         announce(session.location, f"{old} is now known as {wanted}.", exclude=wanted)
         return f"You are now known as {wanted}."
+    if raw.startswith(("attack ", "kill ")):
+        word = raw.split(" ", 1)[1].strip()
+        return attack(session, word)
     if raw == "jobs":
         return jobs_text()
     if raw.startswith("job "):

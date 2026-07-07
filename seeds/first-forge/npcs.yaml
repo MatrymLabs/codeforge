@@ -9,3 +9,11 @@ librarian:
     - '"Welcome to the old library. Mind the dust -- it remembers things."'
     - '"That oak door? Sealed for years. A copper key went missing ages ago..."'
     - '"If you ever stand inside the Archive, tell no one what you read."'
+
+training_dummy:
+  location: courtyard
+  keywords: [dummy, training]
+  dialogue:
+    - '"..." The dummy says nothing. It is, after all, a dummy.'
+  hp: 20
+  xp: 30
