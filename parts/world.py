@@ -6,6 +6,8 @@ try_move is the only function that changes a player's location.
 
 from typing import TypedDict
 
+from parts.doors import DOORS, door_blocking
+
 
 class Room(TypedDict):
     """The shape every room must have. Structure, checked by machine."""
@@ -30,7 +32,12 @@ WORLD: dict[str, Room] = {
     "library": {
         "name": "The Old Library",
         "desc": "Dust drifts between towering shelves. An oak door in the back is sealed shut.",
-        "exits": {"west": "courtyard"},
+        "exits": {"west": "courtyard", "north": "archive"},
+    },
+    "archive": {
+        "name": "The Sealed Archive",
+        "desc": "Forbidden shelves climb into darkness. The air tastes of secrets and old ink.",
+        "exits": {"south": "library"},
     },
     "cellar": {
         "name": "The Forge Cellar",
@@ -39,7 +46,7 @@ WORLD: dict[str, Room] = {
     },
 }
 
-DIRECTIONS = {
+DIRECTIONS: dict[str, str] = {
     "north": "north",
     "n": "north",
     "south": "south",
@@ -63,6 +70,10 @@ def render_room(room_id: str) -> str:
 
 def try_move(location: str, direction: str) -> str:
     """Return the new room id, or the old one if movement fails."""
+    blocked = door_blocking(location, direction)
+    if blocked:
+        print(f"{DOORS[blocked]['name'].capitalize()} is locked.")
+        return location
     exits = WORLD[location]["exits"]
     if direction in exits:
         new_location = exits[direction]
