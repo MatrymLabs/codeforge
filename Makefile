@@ -1,21 +1,26 @@
-.PHONY: lint format test check run
+.PHONY: fix lint typecheck test check run clean
 
-lint:
-	ruff check .
-
-format:
+# --- Mutators: run these while working ---
+fix:
 	ruff format .
 	ruff check . --fix
 
-test:
-	pytest
-
-check: format lint test
-
-run:
-	python3 forge.py
+# --- Gates: pure checks, cheapest first, nothing is modified ---
+lint:
+	ruff format --check .
+	ruff check .
 
 typecheck:
 	mypy parts tests forge.py
 
-check: format lint test typecheck
+test:
+	pytest
+
+check: lint typecheck test
+
+# --- Conveniences ---
+run:
+	python3 forge.py
+
+clean:
+	rm -rf .pytest_cache .ruff_cache .mypy_cache __pycache__ parts/__pycache__ tests/__pycache__

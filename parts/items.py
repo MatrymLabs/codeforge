@@ -5,7 +5,18 @@ Locations are tagged strings: "room:library" or "player".
 Functions RETURN text; the game loop decides what to print.
 """
 
-ITEMS = {
+from typing import TypedDict
+
+
+class Item(TypedDict):
+    """The shape every item must have."""
+
+    name: str
+    keywords: list[str]
+    location: str
+
+
+ITEMS: dict[str, Item] = {
     "copper_key": {
         "name": "a copper key",
         "keywords": ["key", "copper", "copper key"],
