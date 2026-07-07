@@ -40,7 +40,13 @@ def test_save_and_load_roundtrip(tmp_path):
     s.level, s.xp = 2, 90
     save_character(s, path)
     record = load_character("matrym", path)
-    assert record == {"job": "vanguard", "level": 2, "xp": 90, "location": "courtyard"}
+    assert record == {
+        "job": "vanguard",
+        "level": 2,
+        "xp": 90,
+        "location": "courtyard",
+        "rank": "player",
+    }
     assert load_character("stranger", path) is None
 
 

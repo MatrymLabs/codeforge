@@ -18,6 +18,10 @@ Sink = Callable[[str], None]
 
 _SINKS: dict[str, Sink] = {}
 
+# The gateway registers its stop function here at boot; the @shutdown
+# verb calls it. Dependency inversion: forge never imports the gateway.
+SHUTDOWN: dict[str, Callable[[], None] | None] = {"hook": None}
+
 
 def register(player_id: str, sink: Sink) -> None:
     """Attach a delivery channel for one player."""
@@ -43,3 +47,9 @@ def announce(room: str, text: str, exclude: str = "") -> None:
         sink = _SINKS.get(player_id)
         if sink is not None:
             sink(text)
+
+
+def broadcast(text: str) -> None:
+    """Deliver text to every sink in the world, no exclusions."""
+    for sink in _SINKS.values():
+        sink(text)

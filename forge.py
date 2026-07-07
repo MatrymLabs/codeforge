@@ -14,6 +14,7 @@ from parts.events import announce, register, rename, unregister
 from parts.items import drop, inventory_text, room_items_text, take
 from parts.jobs import JOBS, assign_job, jobs_text, score_text
 from parts.npcs import room_npcs_text, talk
+from parts.ranks import wizard_command
 from parts.save import load_game, save_game
 from parts.session import SESSIONS, Session, roster
 from parts.world import DIRECTIONS, render_room, try_move
@@ -106,6 +107,8 @@ def handle_command(session: Session, raw: str) -> str:
         save_character(session)
         announce(session.location, f"{old} is now known as {wanted}.", exclude=wanted)
         return f"You are now known as {wanted}."
+    if raw.startswith("@"):
+        return wizard_command(session, raw)
     if raw.startswith(("attack ", "kill ")):
         word = raw.split(" ", 1)[1].strip()
         return attack(session, word)

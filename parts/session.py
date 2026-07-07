@@ -23,6 +23,7 @@ class Session:
     location: str = "forge"
     alive: bool = True
     named: bool = False
+    rank: str = "player"
     job: str = ""
     level: int = 1
     xp: int = 0

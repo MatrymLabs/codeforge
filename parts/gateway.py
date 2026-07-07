@@ -14,7 +14,7 @@ import threading
 
 from forge import handle_command, render_scene
 from parts.characters import save_character
-from parts.events import register, unregister
+from parts.events import SHUTDOWN, register, unregister
 from parts.session import SESSIONS, Session
 
 TICK_LOCK = threading.Lock()
@@ -65,6 +65,7 @@ class _Handler(socketserver.StreamRequestHandler):
 
 def serve(host: str = "0.0.0.0", port: int = 4000) -> None:
     with GatewayServer((host, port), _Handler) as server:
+        SHUTDOWN["hook"] = server.shutdown
         print(f"CodeForge gateway listening on {host}:{port}")
         print(f"Connect with:  nc <this-machine> {port}   (or any telnet client)")
         server.serve_forever()

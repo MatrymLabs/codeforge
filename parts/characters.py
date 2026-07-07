@@ -37,6 +37,7 @@ def save_character(session: Session, path: Path | None = None) -> None:
         "level": session.level,
         "xp": session.xp,
         "location": session.location,
+        "rank": session.rank,
     }
     path.write_text(json.dumps(data, indent=2))
 
@@ -50,6 +51,7 @@ def restore_character(session: Session, record: dict[str, Any]) -> None:
     """Rebuild the full sheet from minimal state. Resources return full:
     logging back in is a night's rest."""
     session.named = True
+    session.rank = str(record.get("rank", "player"))
     session.level = int(record["level"])
     session.xp = int(record["xp"])
     session.location = str(record["location"])
@@ -67,3 +69,23 @@ def restore_character(session: Session, record: dict[str, Any]) -> None:
         "hp": Resource(name="hp", current=hp_max, maximum=hp_max),
         "mp": Resource(name="mp", current=mp_max, maximum=mp_max),
     }
+
+
+def set_rank(name: str, rank: str, path: Path | None = None) -> str:
+    """Host-shell grant: the bootstrap authority. See parts/ranks.py."""
+    path = path or CHARACTERS_PATH
+    data = _read(path)
+    if name not in data:
+        return f"No saved character named {name}."
+    data[name]["rank"] = rank
+    path.write_text(json.dumps(data, indent=2))
+    return f"{name} is now rank: {rank}."
+
+
+if __name__ == "__main__":
+    import sys
+
+    if len(sys.argv) == 4 and sys.argv[1] == "grant":
+        print(set_rank(sys.argv[2], sys.argv[3]))
+    else:
+        print("Usage: python3 -m parts.characters grant <name> <rank>")
