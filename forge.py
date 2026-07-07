@@ -2,6 +2,7 @@
 
 from parts.doors import unlock
 from parts.items import drop, inventory_text, room_items_text, take
+from parts.save import load_game, save_game
 from parts.world import DIRECTIONS, render_room, try_move
 
 
@@ -19,7 +20,7 @@ def game_loop() -> None:
         elif raw == "help":
             print(
                 "Commands: look, go <direction> (or n/s/e/w/u/d), "
-                "take, drop, inventory, unlock <door> with <key>, quit"
+                "take, drop, inventory, unlock <door> with <key>, save, load, quit"
             )
         elif raw == "look":
             print(render_room(location))
@@ -49,6 +50,12 @@ def game_loop() -> None:
                 print(unlock(door_word, key_word, location))
             else:
                 print("Unlock what with what? Try: unlock door with key")
+        elif raw == "save":
+            print(save_game(location))
+        elif raw == "load":
+            location, msg = load_game()
+            print(msg)
+            print(render_room(location))
         elif raw == "":
             continue
         else:
