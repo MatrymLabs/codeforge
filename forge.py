@@ -7,6 +7,7 @@ terminal driver around it -- a socket gateway will be another.
 
 import re
 
+from parts.accounts import has_password, set_password, verify_password
 from parts.characters import load_character, restore_character, save_character
 from parts.combat import attack
 from parts.doors import unlock
@@ -84,29 +85,46 @@ def handle_command(session: Session, raw: str) -> str:
             exclude=session.player_id,
         )
         return f'You say, "{message}"'
+    if raw.startswith("password "):
+        if not session.named:
+            return "Claim a name first: name <yourname>"
+        return set_password(session.player_id, raw.removeprefix("password ").strip())
     if raw.startswith("name "):
-        wanted = raw.removeprefix("name ").strip()
-        if not NAME_RE.match(wanted):
+        words = raw.removeprefix("name ").split()
+        wanted = words[0] if words else ""
+        record = load_character(wanted) if wanted else None
+        protected = record is not None and has_password(record)
+        bad_shape = len(words) > 2 or (len(words) == 2 and not protected)
+        if not wanted or not NAME_RE.match(wanted) or bad_shape:
             return (
                 "Names are 2-16 characters: lowercase letters, digits, underscores, "
                 "starting with a letter. Try: name matrym"
             )
         if wanted in SESSIONS:
             return f"Someone here is already called {display_name(wanted)}."
+        secret = words[1] if len(words) == 2 else ""
+        if protected and not verify_password(wanted, secret):
+            return f"That name is protected. Prove it is yours: name {wanted} <password>"
         old = session.player_id
         SESSIONS.pop(old, None)
         session.player_id = wanted
         SESSIONS[wanted] = session
         rename(old, wanted)
-        record = load_character(wanted)
         if record is not None:
             announce(session.location, f"{display_name(old)} leaves.", exclude=wanted)
             restore_character(session, record)
             announce(session.location, f"{display_name(wanted)} arrives.", exclude=wanted)
+            nag = (
+                ""
+                if has_password(record)
+                else "\n(This name has no password. Protect it: password <secret>)"
+            )
+            # fmt: off
             return (
-                f"Welcome back, {display_name(wanted)}.\n"
+                f"Welcome back, {display_name(wanted)}.{nag}\n"
                 f"{render_scene(session.location, viewer=wanted)}"
             )
+        # fmt: on
         session.named = True
         save_character(session)
         announce(

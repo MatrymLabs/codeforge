@@ -32,19 +32,31 @@ def save_character(session: Session, path: Path | None = None) -> None:
     if not session.named:
         return
     data = _read(path)
-    data[session.player_id] = {
-        "job": session.job,
-        "level": session.level,
-        "xp": session.xp,
-        "location": session.location,
-        "rank": session.rank,
-    }
+    record = data.get(session.player_id, {})
+    record.update(
+        {
+            "job": session.job,
+            "level": session.level,
+            "xp": session.xp,
+            "location": session.location,
+            "rank": session.rank,
+        }
+    )
+    data[session.player_id] = record  # merge: fields like "auth" survive
     path.write_text(json.dumps(data, indent=2))
 
 
 def load_character(name: str, path: Path | None = None) -> dict[str, Any] | None:
     path = path or CHARACTERS_PATH
     return _read(path).get(name)
+
+
+def put_record(name: str, record: dict[str, Any], path: Path | None = None) -> None:
+    """Write one character record through the single storage door."""
+    path = path or CHARACTERS_PATH
+    data = _read(path)
+    data[name] = record
+    path.write_text(json.dumps(data, indent=2))
 
 
 def restore_character(session: Session, record: dict[str, Any]) -> None:

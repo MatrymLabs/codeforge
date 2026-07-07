@@ -68,7 +68,12 @@ def serve(host: str = "0.0.0.0", port: int = 4000) -> None:
         SHUTDOWN["hook"] = server.shutdown
         print(f"CodeForge gateway listening on {host}:{port}")
         print(f"Connect with:  nc <this-machine> {port}   (or any telnet client)")
-        server.serve_forever()
+        print("Press Ctrl+C to shut down.")
+        try:
+            server.serve_forever()
+        except KeyboardInterrupt:
+            print("\nShutting down the gateway. The world sleeps.")
+            server.shutdown()
 
 
 if __name__ == "__main__":

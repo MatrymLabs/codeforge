@@ -5,3 +5,4 @@ save.json
 save.json
 .coverage
 *.egg-info/
+characters.json
