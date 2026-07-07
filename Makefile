@@ -24,3 +24,13 @@ run:
 
 clean:
 	rm -rf .pytest_cache .ruff_cache .mypy_cache __pycache__ parts/__pycache__ tests/__pycache__
+
+ship: check
+	@if [ -n "$$(git status --porcelain)" ]; then \
+		echo ""; \
+		echo "✗ Uncommitted changes detected. Commit first, then ship:"; \
+		git status --short; \
+		exit 1; \
+	fi
+	git push
+	@echo "✓ Shipped to GitHub."
