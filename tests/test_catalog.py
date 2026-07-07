@@ -1,7 +1,6 @@
 """Test twin for parts/catalog.py -- the numbered filing view."""
 
 from parts.catalog import room_catalog
-
 from parts.seed import Room
 
 
@@ -27,3 +26,12 @@ def test_catalog_reads_the_shipped_world_by_default():
 def test_catalog_shows_none_for_dead_ends():
     rooms: dict[str, Room] = {"pit": Room(name="The Pit", desc="deep", exits={})}
     assert "(none)" in room_catalog(rooms)
+
+
+def test_npc_catalog_files_the_librarian():
+    from parts.catalog import npc_catalog
+
+    out = npc_catalog()
+    assert "librarian" in out
+    assert "library" in out
+    assert "npcs filed." in out
