@@ -10,6 +10,7 @@ import re
 from parts.doors import unlock
 from parts.events import announce, register, rename, unregister
 from parts.items import drop, inventory_text, room_items_text, take
+from parts.jobs import JOBS, assign_job, jobs_text, score_text
 from parts.npcs import room_npcs_text, talk
 from parts.save import load_game, save_game
 from parts.session import SESSIONS, Session, roster
@@ -20,6 +21,7 @@ NAME_RE = re.compile(r"^[a-z][a-z0-9_]{1,15}$")
 HELP_TEXT = (
     "Commands: look, go <direction> (or n/s/e/w/u/d), "
     "take, drop, inventory, talk <npc>, say <msg>, name <yourname>, who, "
+    "jobs, job <calling>, score, "
     "unlock <door> with <key>, save, load, quit"
 )
 
@@ -93,6 +95,19 @@ def handle_command(session: Session, raw: str) -> str:
         rename(old, wanted)
         announce(session.location, f"{old} is now known as {wanted}.", exclude=wanted)
         return f"You are now known as {wanted}."
+    if raw == "jobs":
+        return jobs_text()
+    if raw.startswith("job "):
+        result = assign_job(session, raw.removeprefix("job "))
+        if result.startswith("You take up"):
+            announce(
+                session.location,
+                f"{session.player_id} takes up the way of the {JOBS[session.job]['name']}.",
+                exclude=session.player_id,
+            )
+        return result
+    if raw == "score":
+        return score_text(session)
     if raw == "who":
         names = roster() or [session.player_id]
         return "Players online: " + ", ".join(names)

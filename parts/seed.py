@@ -29,6 +29,7 @@ SEED_DIR = Path(__file__).resolve().parent.parent / "seeds" / "first-forge"
 LABEL_RE = re.compile(r"^[a-z][a-z0-9_]*$")
 DEFAULT_ROOM_DESC = "There is nothing remarkable here yet."
 DEFAULT_DIALOGUE = ['"..."']
+DEFAULT_JOB_STATS = {"strength": 8, "agility": 8, "stamina": 8, "magic": 8}
 
 
 class Room(TypedDict):
@@ -55,6 +56,14 @@ class Npc(TypedDict):
     location: str  # room label
     dialogue: list[str]
     next_line: int  # runtime state, always starts at 0
+
+
+class Job(TypedDict):
+    """The shape every job (class/calling) must have."""
+
+    name: str
+    description: str
+    stats: dict[str, int]
 
 
 class SeedError(Exception):
@@ -229,3 +238,25 @@ def validate_locations(
             raise SeedError(
                 f"NPC '{label}' is placed in room '{npc['location']}', which does not exist."
             )
+
+
+def load_jobs(path: Path) -> dict[str, Job]:
+    """Load and gate the job pack: every job gets name, description, stats."""
+    entries, template = _load_mapping(path, "job")
+    jobs: dict[str, Job] = {}
+    for label, fields in entries.items():
+        _check_label(label, "job")
+        merged: dict[str, Any] = {
+            "name": _phrase(label).title(),
+            "description": "",
+            "stats": dict(DEFAULT_JOB_STATS),
+        }
+        merged.update(template)
+        merged.update(fields)
+        _require_types(label, merged, (("name", str), ("description", str), ("stats", dict)))
+        stats = dict(DEFAULT_JOB_STATS) | dict(merged["stats"])
+        for stat_name, value in stats.items():
+            if not isinstance(value, int) or isinstance(value, bool):
+                raise SeedError(f"job '{label}': stat '{stat_name}' must be an integer")
+        jobs[label] = Job(name=merged["name"], description=merged["description"], stats=stats)
+    return jobs

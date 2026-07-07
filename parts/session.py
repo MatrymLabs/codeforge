@@ -9,7 +9,10 @@ prerequisite for gateways. Tomorrow, every connected socket gets
 its own Session pointed at the same world.
 """
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+
+from parts.resources import Resource
+from parts.stats import StatBlock
 
 
 @dataclass
@@ -19,6 +22,11 @@ class Session:
     player_id: str
     location: str = "forge"
     alive: bool = True
+    job: str = ""
+    level: int = 1
+    xp: int = 0
+    stats: StatBlock | None = None
+    resources: dict[str, Resource] = field(default_factory=dict)
 
 
 # The registry of connected sessions. Gateways and game_loop register
