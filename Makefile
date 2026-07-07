@@ -37,3 +37,6 @@ ship: check
 
 world:
 	python3 -m parts.catalog
+
+store:
+	python3 -m parts.store
