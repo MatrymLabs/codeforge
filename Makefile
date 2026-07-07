@@ -1,4 +1,4 @@
-.PHONY: fix lint typecheck test check run clean
+.PHONY: fix lint typecheck test coverage audit check ship run world store clean
 
 # --- Mutators: run these while working ---
 fix:
@@ -18,13 +18,14 @@ test:
 
 check: lint typecheck test
 
-# --- Conveniences ---
-run:
-	python3 forge.py
+# --- Extra inspections (One-Button Rule) ---
+coverage:
+	pytest --cov=parts --cov=forge --cov-report=term-missing
 
-clean:
-	rm -rf .pytest_cache .ruff_cache .mypy_cache __pycache__ parts/__pycache__ tests/__pycache__
+audit:
+	pip-audit --skip-editable
 
+# --- Ship: gates, then push. Refuses dirty trees and red gates ---
 ship: check
 	@if [ -n "$$(git status --porcelain)" ]; then \
 		echo ""; \
@@ -35,8 +36,15 @@ ship: check
 	git push
 	@echo "✓ Shipped to GitHub."
 
+# --- Conveniences ---
+run:
+	python3 forge.py
+
 world:
 	python3 -m parts.catalog
 
 store:
 	python3 -m parts.store
+
+clean:
+	rm -rf .pytest_cache .ruff_cache .mypy_cache .coverage __pycache__ parts/__pycache__ tests/__pycache__

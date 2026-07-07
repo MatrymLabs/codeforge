@@ -1,9 +1,27 @@
 [project]
-dependencies = ["pyyaml"]
 name = "codeforge"
 version = "0.1.0"
 description = "A Python-native modular MUD engine and reusable code workshop."
 requires-python = ">=3.13"
+dependencies = ["pyyaml"]
+
+[project.optional-dependencies]
+dev = [
+    "ruff",
+    "mypy",
+    "types-PyYAML",
+    "pytest",
+    "pytest-cov",
+    "pip-audit",
+]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["parts"]
+py-modules = ["forge"]
 
 [tool.ruff]
 line-length = 100
@@ -17,3 +35,6 @@ select = ["E", "F", "I", "UP", "B", "SIM"]
 [tool.mypy]
 python_version = "3.13"
 warn_unused_ignores = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
