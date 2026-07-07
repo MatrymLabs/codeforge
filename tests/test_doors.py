@@ -25,7 +25,9 @@ def test_oak_door_starts_locked():
 
 
 def test_locked_door_blocks_movement():
-    assert try_move("library", "north") == "library"
+    arrived, message = try_move("library", "north")
+    assert arrived == "library"
+    assert "locked" in message
 
 
 def test_unlock_fails_without_key():
@@ -44,4 +46,5 @@ def test_unlock_with_carried_key_succeeds():
 def test_unlocked_door_allows_movement():
     take("key", "library")
     unlock("door", "key", "library")
-    assert try_move("library", "north") == "archive"
+    arrived, _ = try_move("library", "north")
+    assert arrived == "archive"

@@ -1,0 +1,12 @@
+# SEED: first-forge -- items.yaml
+# Same conventions as rooms.yaml: labels are identity, names are display.
+# Write plain room labels here (location: library); the engine tags
+# them internally. An item's name and keywords GENERATE from its label
+# unless you override them -- 'copper_key' becomes "a copper key"
+# findable by: copper key / copper / key.
+
+copper_key:
+  location: library
+
+rusty_lantern:
+  location: workshop

@@ -8,8 +8,9 @@ This is the first World Console component: an admin view that
 inspects world state without mutating it.
 """
 
+from parts.items import ITEMS
 from parts.npcs import NPCS, Npc
-from parts.seed import Room, load_rooms
+from parts.seed import Item, Room, load_rooms
 from parts.world import SEED_PATH
 
 
@@ -23,6 +24,19 @@ def room_catalog(rooms: dict[str, Room] | None = None) -> str:
         exits = ", ".join(f"{d}->{dest}" for d, dest in room["exits"].items()) or "(none)"
         lines.append(f"{number:<4}{label:<14}{room['name']:<26}{exits}")
     lines.append(f"\n{len(rooms)} rooms filed.")
+    return "\n".join(lines)
+
+
+def item_catalog(items: dict[str, Item] | None = None) -> str:
+    """Return the numbered item index as display text."""
+    if items is None:
+        items = ITEMS
+    header = f"{'#':<4}{'LABEL':<16}{'NAME':<26}WHERE"
+    lines = [header, "-" * len(header)]
+    for number, (label, item) in enumerate(sorted(items.items()), start=1):
+        where = item["location"].removeprefix("room:")
+        lines.append(f"{number:<4}{label:<16}{item['name'].title():<26}{where}")
+    lines.append(f"\n{len(items)} items filed.")
     return "\n".join(lines)
 
 
@@ -41,6 +55,9 @@ def npc_catalog(npcs: dict[str, Npc] | None = None) -> str:
 if __name__ == "__main__":
     print("ROOMS")
     print(room_catalog())
+    print()
+    print("ITEMS")
+    print(item_catalog())
     print()
     print("NPCS")
     print(npc_catalog())

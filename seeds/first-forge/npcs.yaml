@@ -1,0 +1,11 @@
+# SEED: first-forge -- npcs.yaml
+# Labels generate names ('librarian' -> "the librarian") and keywords.
+# Dialogue cycles one line per talk, then loops.
+
+librarian:
+  location: library
+  keywords: [librarian, keeper, woman]
+  dialogue:
+    - '"Welcome to the old library. Mind the dust -- it remembers things."'
+    - '"That oak door? Sealed for years. A copper key went missing ages ago..."'
+    - '"If you ever stand inside the Archive, tell no one what you read."'

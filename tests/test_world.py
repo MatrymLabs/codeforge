@@ -19,8 +19,12 @@ def test_direction_aliases_resolve_to_canonical_forms():
 
 
 def test_move_through_valid_exit_changes_location():
-    assert try_move("forge", "north") == "courtyard"
+    arrived, message = try_move("forge", "north")
+    assert arrived == "courtyard"
+    assert message == ""
 
 
 def test_move_through_missing_exit_stays_put():
-    assert try_move("forge", "east") == "forge"
+    arrived, message = try_move("forge", "east")
+    assert arrived == "forge"
+    assert "can't go" in message

@@ -1,37 +1,13 @@
 """CARD: npcs -- characters who live in rooms and talk.
 
 An NPC is world state: a location, keywords, and a dialogue cycle.
+NPCs are born from the seed (seeds/first-forge/npcs.yaml).
 MUD-IL shape: verb=talk, direct_object=npc.
-Dialogue advances one line per talk and loops -- deterministic,
-testable, and enough personality for a first conversation.
 """
 
-from typing import TypedDict
+from parts.seed import SEED_DIR, Npc, load_npcs
 
-
-class Npc(TypedDict):
-    """The shape every NPC must have."""
-
-    name: str
-    keywords: list[str]
-    location: str  # room label
-    dialogue: list[str]
-    next_line: int
-
-
-NPCS: dict[str, Npc] = {
-    "librarian": {
-        "name": "the librarian",
-        "keywords": ["librarian", "keeper", "woman"],
-        "location": "library",
-        "dialogue": [
-            '"Welcome to the old library. Mind the dust -- it remembers things."',
-            '"That oak door? Sealed for years. A copper key went missing ages ago..."',
-            '"If you ever stand inside the Archive, tell no one what you read."',
-        ],
-        "next_line": 0,
-    },
-}
+NPCS: dict[str, Npc] = load_npcs(SEED_DIR / "npcs.yaml")
 
 
 def npcs_in(room_id: str) -> list[str]:

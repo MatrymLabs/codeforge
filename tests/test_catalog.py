@@ -35,3 +35,12 @@ def test_npc_catalog_files_the_librarian():
     assert "librarian" in out
     assert "library" in out
     assert "npcs filed." in out
+
+
+def test_item_catalog_files_the_copper_key():
+    from parts.catalog import item_catalog
+
+    out = item_catalog()
+    assert "copper_key" in out
+    assert "library" in out
+    assert "items filed." in out

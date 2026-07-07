@@ -2,27 +2,13 @@
 
 Design rule: an item stores its own location. Nothing else does.
 Locations are tagged strings: "room:library" or "player".
+Items are born from the seed (seeds/first-forge/items.yaml).
 Functions RETURN text; the game loop decides what to print.
 """
 
-from typing import TypedDict
+from parts.seed import SEED_DIR, Item, load_items
 
-
-class Item(TypedDict):
-    """The shape every item must have."""
-
-    name: str
-    keywords: list[str]
-    location: str
-
-
-ITEMS: dict[str, Item] = {
-    "copper_key": {
-        "name": "a copper key",
-        "keywords": ["key", "copper", "copper key"],
-        "location": "room:library",
-    },
-}
+ITEMS: dict[str, Item] = load_items(SEED_DIR / "items.yaml")
 
 
 def items_in(location: str) -> list[str]:

@@ -2,7 +2,7 @@
 
 import pytest
 
-from parts.seed import DEFAULT_DESC, SeedError, load_rooms
+from parts.seed import DEFAULT_ROOM_DESC, SeedError, load_rooms
 from parts.world import SEED_PATH
 
 
@@ -43,7 +43,7 @@ def test_bare_label_becomes_a_complete_room(tmp_path):
     path.write_text("north_tower:\n")
     rooms = load_rooms(path)
     assert rooms["north_tower"]["name"] == "North Tower"
-    assert rooms["north_tower"]["desc"] == DEFAULT_DESC
+    assert rooms["north_tower"]["desc"] == DEFAULT_ROOM_DESC
     assert rooms["north_tower"]["exits"] == {}
 
 
@@ -64,3 +64,63 @@ def test_room_fields_win_over_template(tmp_path):
     )
     rooms = load_rooms(path)
     assert rooms["vault"]["desc"] == "Cold iron shelves line the walls."
+
+
+# --- items and NPCs join the seed ---
+
+from parts.seed import SEED_DIR, load_items, load_npcs, validate_locations  # noqa: E402
+
+
+def test_shipped_items_seed_loads_the_copper_key():
+    items = load_items(SEED_DIR / "items.yaml")
+    assert items["copper_key"]["location"] == "room:library"
+    assert items["copper_key"]["name"] == "a copper key"
+
+
+def test_item_defaults_generate_name_and_keywords(tmp_path):
+    path = tmp_path / "items.yaml"
+    path.write_text("oak_staff:\n  location: vault\n")
+    items = load_items(path)
+    assert items["oak_staff"]["name"] == "an oak staff"
+    assert items["oak_staff"]["keywords"] == ["oak staff", "oak", "staff"]
+    assert items["oak_staff"]["location"] == "room:vault"
+
+
+def test_item_without_location_is_rejected(tmp_path):
+    path = tmp_path / "items.yaml"
+    path.write_text("ghost_gem:\n")
+    with pytest.raises(SeedError, match="missing required field 'location'"):
+        load_items(path)
+
+
+def test_shipped_npcs_seed_loads_the_librarian():
+    npcs = load_npcs(SEED_DIR / "npcs.yaml")
+    assert npcs["librarian"]["location"] == "library"
+    assert npcs["librarian"]["next_line"] == 0
+    assert "dust" in npcs["librarian"]["dialogue"][0]
+
+
+def test_npc_defaults_generate_name_and_silence(tmp_path):
+    path = tmp_path / "npcs.yaml"
+    path.write_text("tower_guard:\n  location: gate\n")
+    npcs = load_npcs(path)
+    assert npcs["tower_guard"]["name"] == "the tower guard"
+    assert npcs["tower_guard"]["dialogue"] == ['"..."']
+
+
+def test_cross_gate_catches_item_in_missing_room(tmp_path):
+    rooms = load_rooms(SEED_DIR / "rooms.yaml")
+    path = tmp_path / "items.yaml"
+    path.write_text("lost_coin:\n  location: mystery_cave\n")
+    bad_items = load_items(path)
+    with pytest.raises(SeedError, match="mystery_cave"):
+        validate_locations(rooms, bad_items, {})
+
+
+def test_cross_gate_catches_npc_in_missing_room(tmp_path):
+    rooms = load_rooms(SEED_DIR / "rooms.yaml")
+    path = tmp_path / "npcs.yaml"
+    path.write_text("ghost:\n  location: the_void\n")
+    bad_npcs = load_npcs(path)
+    with pytest.raises(SeedError, match="the_void"):
+        validate_locations(rooms, {}, bad_npcs)

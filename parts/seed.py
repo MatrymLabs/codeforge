@@ -1,19 +1,22 @@
-"""CARD: seed -- load and validate room packs from YAML.
+"""CARD: seed -- load and validate world component packs from YAML.
 
-The world is a file. This loader is also a GATE: a seed that fails
+The world is files. Every loader is also a GATE: a pack that fails
 validation never reaches the engine.
 
-Identity rules:
-- Every room has a LABEL (its YAML key): lowercase_snake_case, unique,
-  permanent. Exits, saves, and code reference labels.
-- Every room has a NAME: human display text. Free to change anytime.
+Identity rules (all component types):
+- LABEL: the YAML key. lowercase_snake_case, unique, permanent.
+  Machines link by label: exits, saves, scripts, code.
+- NAME: human display text. Free to change anytime.
 
-The room template (everything is a room):
-- Engine defaults make every room born complete: name is generated
-  from the label, desc gets a placeholder, exits default to empty.
-- An optional top-level 'template:' block sets file-wide defaults.
-- A room's own fields always win.
-  merge order: engine defaults -> template: block -> room fields.
+Shared machinery (all component types):
+- label gates: bad format gets a suggested fix; duplicates are
+  refused (plain YAML would silently overwrite).
+- the template merge chain, rightmost wins:
+    engine defaults -> file 'template:' block -> the entry's own fields
+
+Location rule: operators write plain room labels in YAML
+(location: library). The engine tags item locations internally
+(room:library) because items can also live on a player.
 """
 
 import re
@@ -22,16 +25,36 @@ from typing import Any, TypedDict
 
 import yaml
 
+SEED_DIR = Path(__file__).resolve().parent.parent / "seeds" / "first-forge"
 LABEL_RE = re.compile(r"^[a-z][a-z0-9_]*$")
-DEFAULT_DESC = "There is nothing remarkable here yet."
+DEFAULT_ROOM_DESC = "There is nothing remarkable here yet."
+DEFAULT_DIALOGUE = ['"..."']
 
 
 class Room(TypedDict):
-    """The shape every room must have. Structure, checked by machine."""
+    """The shape every room must have."""
 
     name: str
     desc: str
     exits: dict[str, str]
+
+
+class Item(TypedDict):
+    """The shape every item must have."""
+
+    name: str
+    keywords: list[str]
+    location: str  # "room:<label>" or "player"
+
+
+class Npc(TypedDict):
+    """The shape every NPC must have."""
+
+    name: str
+    keywords: list[str]
+    location: str  # room label
+    dialogue: list[str]
+    next_line: int  # runtime state, always starts at 0
 
 
 class SeedError(Exception):
@@ -40,8 +63,7 @@ class SeedError(Exception):
 
 class _UniqueKeyLoader(yaml.SafeLoader):
     """A YAML loader that refuses duplicate keys instead of silently
-    overwriting. Plain YAML keeps the LAST duplicate and says nothing --
-    a world-corruption bug waiting for a builder."""
+    overwriting them."""
 
 
 def _construct_unique_mapping(loader: _UniqueKeyLoader, node: yaml.MappingNode) -> dict[Any, Any]:
@@ -64,56 +86,146 @@ _UniqueKeyLoader.add_constructor(
 
 def _check_label(label: str, what: str) -> None:
     if not isinstance(label, str) or not LABEL_RE.match(label):
-        suggestion = re.sub(r"[^a-z0-9_]+", "_", str(label).lower()).strip("_") or "my_room"
+        suggestion = re.sub(r"[^a-z0-9_]+", "_", str(label).lower()).strip("_") or "my_label"
         raise SeedError(
             f"{what} label '{label}' is invalid. Labels must be lowercase_snake_case "
             f"(letters, digits, underscores; starts with a letter). Try: '{suggestion}'."
         )
 
 
-def _default_name(label: str) -> str:
-    return label.replace("_", " ").title()
+def _phrase(label: str) -> str:
+    return label.replace("_", " ")
 
 
-def load_rooms(path: Path) -> dict[str, Room]:
-    """Read a rooms.yaml seed file, validate it, return the room graph."""
+def _auto_keywords(label: str) -> list[str]:
+    """copper_key -> ['copper key', 'copper', 'key']"""
+    words = label.split("_")
+    keywords = [_phrase(label)] if len(words) > 1 else []
+    keywords.extend(words)
+    return keywords
+
+
+def _article(noun: str) -> str:
+    return "an" if noun[:1] in "aeiou" else "a"
+
+
+def _load_mapping(path: Path, what: str) -> tuple[dict[str, dict[str, Any]], dict[str, Any]]:
+    """Shared front door: read YAML, gate labels, pop the template block.
+
+    Returns (entries, file_template)."""
     if not path.exists():
         raise SeedError(f"Seed file not found: {path}")
-
     data = yaml.load(path.read_text(), Loader=_UniqueKeyLoader)
     if not isinstance(data, dict) or not data:
         raise SeedError(f"Seed file is empty or not a mapping: {path}")
-
     file_template = data.pop("template", None) or {}
     if not isinstance(file_template, dict):
-        raise SeedError("'template:' must be a mapping of default room fields.")
-
-    rooms: dict[str, Room] = {}
-    for room_label, raw in data.items():
-        _check_label(room_label, "Room")
+        raise SeedError("'template:' must be a mapping of default fields.")
+    entries: dict[str, dict[str, Any]] = {}
+    for label, raw in data.items():
+        _check_label(label, what)
         if raw is None:
-            raw = {}  # a bare label is a valid room: all defaults
+            raw = {}  # a bare label is valid: all defaults
         if not isinstance(raw, dict):
-            raise SeedError(f"Room '{room_label}' is not a mapping.")
+            raise SeedError(f"{what} '{label}' is not a mapping.")
+        entries[label] = raw
+    return entries, file_template
+
+
+def _require_types(label: str, merged: dict[str, Any], spec: tuple[tuple[str, type], ...]) -> None:
+    for field, kind in spec:
+        if not isinstance(merged[field], kind):
+            raise SeedError(f"'{label}' field '{field}' must be {kind.__name__}.")
+
+
+def load_rooms(path: Path) -> dict[str, Room]:
+    """Read rooms.yaml, validate it, return the room graph."""
+    entries, file_template = _load_mapping(path, "Room")
+    rooms: dict[str, Room] = {}
+    for label, raw in entries.items():
         merged: dict[str, Any] = {
-            "name": _default_name(room_label),
-            "desc": DEFAULT_DESC,
+            "name": _phrase(label).title(),
+            "desc": DEFAULT_ROOM_DESC,
             "exits": {},
             **file_template,
             **raw,
         }
-        for field, kind in (("name", str), ("desc", str), ("exits", dict)):
-            if not isinstance(merged[field], kind):
-                raise SeedError(f"Room '{room_label}' field '{field}' must be {kind.__name__}.")
-        rooms[room_label] = Room(name=merged["name"], desc=merged["desc"], exits=merged["exits"])
-
-    # The graph gate: every exit must lead to a room label in this seed.
-    for room_label, room in rooms.items():
+        _require_types(label, merged, (("name", str), ("desc", str), ("exits", dict)))
+        rooms[label] = Room(name=merged["name"], desc=merged["desc"], exits=merged["exits"])
+    for label, room in rooms.items():
         for direction, destination in room["exits"].items():
             if destination not in rooms:
                 raise SeedError(
-                    f"Room '{room_label}' has exit '{direction}' -> '{destination}', "
+                    f"Room '{label}' has exit '{direction}' -> '{destination}', "
                     "which does not exist in this seed."
                 )
-
     return rooms
+
+
+def load_items(path: Path) -> dict[str, Item]:
+    """Read items.yaml, validate it, return items with tagged locations."""
+    entries, file_template = _load_mapping(path, "Item")
+    items: dict[str, Item] = {}
+    for label, raw in entries.items():
+        noun = _phrase(label)
+        merged: dict[str, Any] = {
+            "name": f"{_article(noun)} {noun}",
+            "keywords": _auto_keywords(label),
+            **file_template,
+            **raw,
+        }
+        if "location" not in merged:
+            raise SeedError(f"Item '{label}' is missing required field 'location' (a room label).")
+        _require_types(label, merged, (("name", str), ("keywords", list), ("location", str)))
+        loc = merged["location"]
+        tagged = loc if loc == "player" else f"room:{loc}"
+        items[label] = Item(name=merged["name"], keywords=merged["keywords"], location=tagged)
+    return items
+
+
+def load_npcs(path: Path) -> dict[str, Npc]:
+    """Read npcs.yaml, validate it, return NPCs. next_line is runtime state."""
+    entries, file_template = _load_mapping(path, "NPC")
+    npcs: dict[str, Npc] = {}
+    for label, raw in entries.items():
+        merged: dict[str, Any] = {
+            "name": f"the {_phrase(label)}",
+            "keywords": _auto_keywords(label),
+            "dialogue": DEFAULT_DIALOGUE,
+            **file_template,
+            **raw,
+        }
+        if "location" not in merged:
+            raise SeedError(f"NPC '{label}' is missing required field 'location' (a room label).")
+        _require_types(
+            label,
+            merged,
+            (("name", str), ("keywords", list), ("location", str), ("dialogue", list)),
+        )
+        npcs[label] = Npc(
+            name=merged["name"],
+            keywords=merged["keywords"],
+            location=merged["location"],
+            dialogue=merged["dialogue"],
+            next_line=0,
+        )
+    return npcs
+
+
+def validate_locations(
+    rooms: dict[str, Room], items: dict[str, Item], npcs: dict[str, Npc]
+) -> None:
+    """The cross-component gate: everything placed somewhere must be
+    placed in a room that exists. Runs at boot, before any player."""
+    for label, item in items.items():
+        loc = item["location"]
+        if loc != "player" and loc.removeprefix("room:") not in rooms:
+            raise SeedError(
+                f"Item '{label}' is placed in room '{loc.removeprefix('room:')}', "
+                "which does not exist."
+            )
+    for label, npc in npcs.items():
+        if npc["location"] not in rooms:
+            raise SeedError(
+                f"NPC '{label}' is placed in room '{npc['location']}', which does not exist."
+            )
