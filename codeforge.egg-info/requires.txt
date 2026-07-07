@@ -1,9 +1,0 @@
-pyyaml
-
-[dev]
-ruff
-mypy
-types-PyYAML
-pytest
-pytest-cov
-pip-audit
