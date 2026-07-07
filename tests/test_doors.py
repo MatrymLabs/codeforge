@@ -3,9 +3,9 @@
 import copy
 
 import pytest
-from parts.doors import door_blocking, unlock
 
 from parts import doors, items
+from parts.doors import door_blocking, unlock
 from parts.items import take
 from parts.world import try_move
 
