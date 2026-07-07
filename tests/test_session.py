@@ -10,7 +10,7 @@ import pytest
 
 from forge import handle_command
 from parts import doors, items, npcs
-from parts.session import Session
+from parts.session import SESSIONS, Session
 
 
 @pytest.fixture(autouse=True)
@@ -66,3 +66,39 @@ def test_two_sessions_share_one_world():
     handle_command(a, "take key")
     response = handle_command(b, "take key")
     assert response == "You don't see that here."
+
+
+def test_name_command_renames_the_player():
+    s = Session(player_id="player1")
+    SESSIONS["player1"] = s
+    response = handle_command(s, "name matrym")
+    assert response == "You are now known as matrym."
+    assert s.player_id == "matrym"
+    assert "matrym" in SESSIONS
+    assert "player1" not in SESSIONS
+    SESSIONS.clear()
+
+
+def test_name_refuses_taken_and_invalid_names():
+    a = Session(player_id="player1")
+    b = Session(player_id="matrym")
+    SESSIONS["player1"] = a
+    SESSIONS["matrym"] = b
+    assert "already called" in handle_command(a, "name matrym")
+    assert "2-16 characters" in handle_command(a, "name Bad Name!")
+    assert a.player_id == "player1"
+    SESSIONS.clear()
+
+
+def test_broadcasts_follow_the_new_name():
+    from parts.events import announce, register, unregister
+
+    s = Session(player_id="player1", location="library")
+    SESSIONS["player1"] = s
+    heard: list[str] = []
+    register("player1", heard.append)
+    handle_command(s, "name matrym")
+    announce("library", "the shelves whisper.", exclude="")
+    assert "the shelves whisper." in heard  # the sink moved with the name
+    unregister("matrym")
+    SESSIONS.clear()

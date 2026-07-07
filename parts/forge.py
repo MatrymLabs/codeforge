@@ -5,13 +5,17 @@ in, one response out, as a plain function. game_loop is just a thin
 terminal driver around it -- a socket gateway will be another.
 """
 
+import re
+
 from parts.doors import unlock
-from parts.events import announce, register, unregister
+from parts.events import announce, register, rename, unregister
 from parts.items import drop, inventory_text, room_items_text, take
 from parts.npcs import room_npcs_text, talk
 from parts.save import load_game, save_game
 from parts.session import SESSIONS, Session, roster
 from parts.world import DIRECTIONS, render_room, try_move
+
+NAME_RE = re.compile(r"^[a-z][a-z0-9_]{1,15}$")
 
 HELP_TEXT = (
     "Commands: look, go <direction> (or n/s/e/w/u/d), "
@@ -72,6 +76,22 @@ def handle_command(session: Session, raw: str) -> str:
             session.location, f'{session.player_id} says, "{message}"', exclude=session.player_id
         )
         return f'You say, "{message}"'
+    if raw.startswith("name "):
+        wanted = raw.removeprefix("name ").strip()
+        if not NAME_RE.match(wanted):
+            return (
+                "Names are 2-16 characters: lowercase letters, digits, underscores, "
+                "starting with a letter. Try: name matrym"
+            )
+        if wanted in SESSIONS:
+            return f"Someone here is already called {wanted}."
+        old = session.player_id
+        SESSIONS.pop(old, None)
+        session.player_id = wanted
+        SESSIONS[wanted] = session
+        rename(old, wanted)
+        announce(session.location, f"{old} is now known as {wanted}.", exclude=wanted)
+        return f"You are now known as {wanted}."
     if raw == "who":
         names = roster() or [session.player_id]
         return "Players online: " + ", ".join(names)

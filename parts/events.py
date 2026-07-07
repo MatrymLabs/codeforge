@@ -28,6 +28,13 @@ def unregister(player_id: str) -> None:
     _SINKS.pop(player_id, None)
 
 
+def rename(old_id: str, new_id: str) -> None:
+    """Move a player's delivery channel to their new name."""
+    sink = _SINKS.pop(old_id, None)
+    if sink is not None:
+        _SINKS[new_id] = sink
+
+
 def announce(room: str, text: str, exclude: str = "") -> None:
     """Deliver text to every seated player in a room, except the actor."""
     for player_id, session in SESSIONS.items():
