@@ -22,6 +22,7 @@ class Session:
     player_id: str
     location: str = "forge"
     alive: bool = True
+    named: bool = False
     job: str = ""
     level: int = 1
     xp: int = 0

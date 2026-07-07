@@ -47,6 +47,9 @@ def award_xp(session: Session, amount: int) -> str:
         session.level += 1
         _grow_on_level_up(session)
         lines.append(f"*** LEVEL UP! You are now level {session.level}. ***")
+        from parts.characters import save_character
+
+        save_character(session)
         announce(
             session.location,
             f"{session.player_id} has reached level {session.level}!",

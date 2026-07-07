@@ -7,6 +7,7 @@ terminal driver around it -- the socket gateway is another.
 
 import re
 
+from parts.characters import load_character, restore_character, save_character
 from parts.combat import attack
 from parts.doors import unlock
 from parts.events import announce, register, rename, unregister
@@ -59,6 +60,7 @@ def handle_command(session: Session, raw: str) -> str:
     raw = raw.strip().lower()
 
     if raw in ("quit", "q"):
+        save_character(session)
         session.alive = False
         return "The world dims. See you next spark."
     if raw == "help":
@@ -94,6 +96,14 @@ def handle_command(session: Session, raw: str) -> str:
         session.player_id = wanted
         SESSIONS[wanted] = session
         rename(old, wanted)
+        record = load_character(wanted)
+        if record is not None:
+            announce(session.location, f"{old} leaves.", exclude=wanted)
+            restore_character(session, record)
+            announce(session.location, f"{wanted} arrives.", exclude=wanted)
+            return f"Welcome back, {wanted}.\n{render_scene(session.location, viewer=wanted)}"
+        session.named = True
+        save_character(session)
         announce(session.location, f"{old} is now known as {wanted}.", exclude=wanted)
         return f"You are now known as {wanted}."
     if raw.startswith(("attack ", "kill ")):
@@ -170,6 +180,7 @@ def game_loop() -> None:
             if response:
                 print(response)
     finally:
+        save_character(session)
         unregister(session.player_id)
         SESSIONS.pop(session.player_id, None)
 
