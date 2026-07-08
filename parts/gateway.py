@@ -44,20 +44,29 @@ def _next_player_id() -> str:
 
 
 def _record_login_failure(ip: str) -> None:
-    """Remember one failed login from an address, pruning stale hits."""
+    """Remember one failed login from an address. Also sweeps the whole
+    table: addresses whose failures have all aged out are DELETED, so the
+    dict is bounded by currently-failing addresses, not by every address
+    ever seen."""
+    now = time.monotonic()
     with _fails_lock:
-        recent = [t for t in _login_fails.get(ip, []) if time.monotonic() - t < LOGIN_FAIL_WINDOW]
-        recent.append(time.monotonic())
-        _login_fails[ip] = recent
+        for addr in list(_login_fails):
+            live = [t for t in _login_fails[addr] if now - t < LOGIN_FAIL_WINDOW]
+            if live:
+                _login_fails[addr] = live
+            else:
+                del _login_fails[addr]
+        _login_fails.setdefault(ip, []).append(now)
 
 
 def _is_rate_limited(ip: str) -> bool:
     """True once an address has too many recent failures -- online
     brute-force defense that survives reconnects (the per-connection
-    3-strikes does not)."""
+    3-strikes does not). Read-only: never creates table entries, so
+    connect-only traffic cannot grow the dict."""
+    now = time.monotonic()
     with _fails_lock:
-        recent = [t for t in _login_fails.get(ip, []) if time.monotonic() - t < LOGIN_FAIL_WINDOW]
-        _login_fails[ip] = recent
+        recent = [t for t in _login_fails.get(ip, []) if now - t < LOGIN_FAIL_WINDOW]
         return len(recent) >= MAX_LOGIN_FAILS
 
 

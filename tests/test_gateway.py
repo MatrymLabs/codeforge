@@ -273,6 +273,30 @@ def test_repeated_failures_rate_limit_the_address(server, monkeypatch):
     refused.close()
 
 
+def test_rate_limit_check_never_grows_the_table(server):
+    """_is_rate_limited is read-only: connect-only traffic (no failed
+    logins) must not add dict entries -- that would be a memory leak an
+    attacker could drive with bare connects."""
+    sock = _connect_guest(server)  # a clean visit: no failures
+    sock.close()
+    assert gateway._login_fails == {}
+    assert gateway._is_rate_limited("10.9.8.7") is False
+    assert "10.9.8.7" not in gateway._login_fails
+
+
+def test_stale_failure_addresses_are_swept_out(monkeypatch):
+    """Addresses whose failures aged past the window are deleted, not
+    kept forever: the table is bounded by currently-failing addresses."""
+    clock = {"now": 1000.0}
+    monkeypatch.setattr(gateway.time, "monotonic", lambda: clock["now"])
+    gateway._record_login_failure("10.0.0.1")
+    assert gateway._is_rate_limited("10.0.0.1") is False  # one strike isn't a ban
+    clock["now"] += gateway.LOGIN_FAIL_WINDOW + 1  # the window passes
+    gateway._record_login_failure("10.0.0.2")  # any new failure sweeps the table
+    assert "10.0.0.1" not in gateway._login_fails  # stale key gone
+    assert list(gateway._login_fails) == ["10.0.0.2"]
+
+
 def test_connection_cap_refuses_when_full(server, monkeypatch):
     monkeypatch.setattr(gateway, "MAX_CONNECTIONS", 1)
     holder = _connect_guest(server)  # occupies the only slot
