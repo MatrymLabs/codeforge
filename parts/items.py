@@ -16,7 +16,7 @@ def items_in(location: str) -> list[str]:
     return [iid for iid, item in ITEMS.items() if item["location"] == location]
 
 
-def find_item(word: str, location: str) -> str | None:
+def trace_item(word: str, location: str) -> str | None:
     """Match a player's word against keywords of items at a location."""
     for iid in items_in(location):
         if word in ITEMS[iid]["keywords"]:
@@ -25,7 +25,7 @@ def find_item(word: str, location: str) -> str | None:
 
 
 def take(word: str, room_id: str) -> str:
-    iid = find_item(word, f"room:{room_id}")
+    iid = trace_item(word, f"room:{room_id}")
     if iid is None:
         return "You don't see that here."
     ITEMS[iid]["location"] = "player"
@@ -33,7 +33,7 @@ def take(word: str, room_id: str) -> str:
 
 
 def drop(word: str, room_id: str) -> str:
-    iid = find_item(word, "player")
+    iid = trace_item(word, "player")
     if iid is None:
         return "You aren't carrying that."
     ITEMS[iid]["location"] = f"room:{room_id}"

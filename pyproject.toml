@@ -13,6 +13,7 @@ dev = [
     "pytest",
     "pytest-cov",
     "pip-audit",
+    "bandit[toml]",
     "hypothesis",
     "httpx2",
 ]
@@ -44,3 +45,11 @@ warn_unused_ignores = true
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+
+[tool.bandit]
+# Reviewed suppressions, each safe by design in this codebase:
+#   B101 assert  - type-narrowing invariants for mypy, not input validation.
+#   B104 bind-all - the gateway and admin API are meant to accept LAN clients.
+#   B506 yaml.load - the only call site uses _UniqueKeyLoader, a SafeLoader
+#                    subclass that merely adds duplicate-key rejection.
+skips = ["B101", "B104", "B506"]

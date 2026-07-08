@@ -16,7 +16,7 @@ import time
 
 from forge import handle_command, render_scene
 from parts.characters import save_character
-from parts.events import SHUTDOWN, register, unregister
+from parts.events import SHUTDOWN, bind_echo, unbind_echo
 from parts.seed import SEED_DIR
 from parts.session import SESSIONS, Session, display_name
 
@@ -43,7 +43,7 @@ def _next_player_id() -> str:
         return f"player{_counter}"
 
 
-def _mark_turned_away(ip: str) -> None:
+def _log_turnaway(ip: str) -> None:
     """Remember one failed login from an address. Also sweeps the whole
     table: addresses whose failures have all aged out are DELETED, so the
     dict is bounded by currently-failing addresses, not by every address
@@ -59,7 +59,7 @@ def _mark_turned_away(ip: str) -> None:
         _turnaway_ledger.setdefault(ip, []).append(now)
 
 
-def _door_is_barred(ip: str) -> bool:
+def _gate_is_barred(ip: str) -> bool:
     """True once an address has too many recent failures -- online
     brute-force defense that survives reconnects (the per-connection
     3-strikes does not). Read-only: never creates table entries, so
@@ -119,12 +119,12 @@ def load_splash() -> str:
     return "Welcome, traveler."
 
 
-class GatewayServer(socketserver.ThreadingTCPServer):
+class ForgeGateServer(socketserver.ThreadingTCPServer):
     allow_reuse_address = True
     daemon_threads = True
 
 
-class _Handler(socketserver.StreamRequestHandler):
+class _GateHandler(socketserver.StreamRequestHandler):
     timeout = IDLE_TIMEOUT  # StreamRequestHandler applies this to the socket
 
     def _send(self, text: str) -> None:
@@ -176,7 +176,7 @@ class _Handler(socketserver.StreamRequestHandler):
         The dialogue assembles login/register commands for the engine
         tick -- UX out here, but the tick stays the only door."""
         ip = self.client_address[0]
-        if _door_is_barred(ip):
+        if _gate_is_barred(ip):
             self._send("Too many failed logins from your address. Try again later.")
             return False
         self._send(load_splash())
@@ -204,7 +204,7 @@ class _Handler(socketserver.StreamRequestHandler):
             if response.startswith("Welcome,"):
                 self._send(render_scene(session.location, viewer=session.player_id))
                 return True
-            _mark_turned_away(ip)  # this login/register attempt failed
+            _log_turnaway(ip)  # this login/register attempt failed
         self._send("Too many attempts. The door closes.")
         return False
 
@@ -226,10 +226,10 @@ class _Handler(socketserver.StreamRequestHandler):
         session = Session(player_id=player_id)
         with TICK_LOCK:
             SESSIONS[player_id] = session
-            register(player_id, self._send)
+            bind_echo(player_id, self._send)
         if not self._front_desk(session):
             with TICK_LOCK:
-                unregister(session.player_id)
+                unbind_echo(session.player_id)
                 SESSIONS.pop(session.player_id, None)
             return
         try:
@@ -252,12 +252,12 @@ class _Handler(socketserver.StreamRequestHandler):
         finally:
             with TICK_LOCK:
                 save_character(session)
-                unregister(session.player_id)
+                unbind_echo(session.player_id)
                 SESSIONS.pop(session.player_id, None)
 
 
 def serve(host: str = "0.0.0.0", port: int = 4000) -> None:
-    with GatewayServer((host, port), _Handler) as server:
+    with ForgeGateServer((host, port), _GateHandler) as server:
         SHUTDOWN["hook"] = server.shutdown
         print(f"CodeForge gateway listening on {host}:{port}")
         print(f"Connect with:  nc <this-machine> {port}   (or any telnet client)")

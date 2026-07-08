@@ -91,16 +91,16 @@ def test_name_refuses_taken_and_invalid_names():
 
 
 def test_broadcasts_follow_the_new_name():
-    from parts.events import announce, register, unregister
+    from parts.events import announce, bind_echo, unbind_echo
 
     s = Session(player_id="player1", location="library")
     SESSIONS["player1"] = s
     heard: list[str] = []
-    register("player1", heard.append)
+    bind_echo("player1", heard.append)
     handle_command(s, "name matrym")
     announce("library", "the shelves whisper.", exclude="")
     assert "the shelves whisper." in heard  # the sink moved with the name
-    unregister("matrym")
+    unbind_echo("matrym")
     SESSIONS.clear()
 
 

@@ -19,7 +19,7 @@ PARTS_DIR = Path(__file__).resolve().parent
 TESTS_DIR = PARTS_DIR.parent / "tests"
 
 
-def read_card(path: Path) -> tuple[str, str] | None:
+def inspect_card(path: Path) -> tuple[str, str] | None:
     """Return (card_name, purpose) if the module declares a CARD docstring."""
     doc = ast.get_docstring(ast.parse(path.read_text()))
     if not doc:
@@ -32,25 +32,26 @@ def read_card(path: Path) -> tuple[str, str] | None:
     return (name.strip(), purpose.strip().rstrip("."))
 
 
-def store_catalog() -> str:
+def hardware_store_catalog() -> str:
     """Return the numbered parts inventory as display text."""
-    header = f"{'#':<4}{'CARD':<10}{'TESTED':<8}PURPOSE"
-    lines = ["CODEFORGE HARDWARE STORE -- engine parts inventory", "", header, "-" * 60]
+    card_width = 13
+    header = f"{'#':<4}{'CARD':<{card_width}}{'TESTED':<8}PURPOSE"
+    lines = ["CODEFORGE HARDWARE STORE -- engine parts inventory", "", header, "-" * len(header)]
     stocked: list[tuple[str, str, str]] = []
     for path in sorted(PARTS_DIR.glob("*.py")):
         if path.name.startswith("_"):
             continue
-        card = read_card(path)
+        card = inspect_card(path)
         if card is None:
             continue
         name, purpose = card
         tested = "yes" if (TESTS_DIR / f"test_{path.stem}.py").exists() else "NO"
         stocked.append((name, tested, purpose))
     for number, (name, tested, purpose) in enumerate(stocked, start=1):
-        lines.append(f"{number:<4}{name:<10}{tested:<8}{purpose}")
+        lines.append(f"{number:<4}{name:<{card_width}}{tested:<8}{purpose}")
     lines.append(f"\n{len(stocked)} parts stocked.")
     return "\n".join(lines)
 
 
 if __name__ == "__main__":
-    print(store_catalog())
+    print(hardware_store_catalog())

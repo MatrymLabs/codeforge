@@ -15,7 +15,7 @@ def npcs_in(room_id: str) -> list[str]:
     return [nid for nid, npc in NPCS.items() if npc["location"] == room_id]
 
 
-def find_npc(word: str, room_id: str) -> str | None:
+def trace_npc(word: str, room_id: str) -> str | None:
     """Match a player's word against keywords of NPCs in this room."""
     for nid in npcs_in(room_id):
         if word in NPCS[nid]["keywords"]:
@@ -24,7 +24,7 @@ def find_npc(word: str, room_id: str) -> str | None:
 
 
 def talk(word: str, room_id: str) -> str:
-    nid = find_npc(word, room_id)
+    nid = trace_npc(word, room_id)
     if nid is None:
         return "There is no one like that here."
     npc = NPCS[nid]

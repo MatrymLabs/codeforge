@@ -4,7 +4,7 @@ import pytest
 
 from forge import handle_command
 from parts import events
-from parts.events import register, unregister
+from parts.events import bind_echo, unbind_echo
 from parts.ranks import has_rank
 from parts.session import SESSIONS, Session
 
@@ -42,12 +42,12 @@ def test_teleport_moves_a_wizard_and_is_witnessed():
     w = _seat("gandalf", "wizard")
     _seat("bystander", location="library")
     heard: list[str] = []
-    register("bystander", heard.append)
+    bind_echo("bystander", heard.append)
     out = handle_command(w, "@teleport library")
     assert w.location == "library"
     assert "You step between places" in out
     assert "Gandalf appears from nowhere." in heard
-    unregister("bystander")
+    unbind_echo("bystander")
 
 
 def test_teleport_refuses_unknown_rooms():
@@ -72,10 +72,10 @@ def test_shutdown_saves_everyone_and_fires_the_hook():
     o = _seat("matrym", "owner")
     p = _seat("bystander")
     heard: list[str] = []
-    register("bystander", heard.append)
+    bind_echo("bystander", heard.append)
     out = handle_command(o, "@shutdown")
     assert out == "The world sleeps."
     assert fired == [True]
     assert not o.alive and not p.alive
     assert any("going to sleep" in line for line in heard)
-    unregister("bystander")
+    unbind_echo("bystander")

@@ -9,7 +9,7 @@ import re
 
 from parts.accounts import (
     has_password,
-    login_check,
+    inspect_login,
     parse_handle,
     reforge_secret,
     set_password,
@@ -19,14 +19,14 @@ from parts.accounts import register as register_account
 from parts.characters import load_character, restore_character, save_character
 from parts.combat import attack
 from parts.doors import unlock
-from parts.events import announce, register, rename, unregister
+from parts.events import announce, bind_echo, rename_echo, unbind_echo
 from parts.items import drop, inventory_text, room_items_text, take
-from parts.jobs import JOBS, assign_job, jobs_text, score_text
+from parts.jobs import JOBS, bind_calling, calling_index, render_sheet
 from parts.npcs import room_npcs_text, talk
 from parts.ranks import wizard_command
-from parts.save import load_game, save_game
+from parts.save import awaken_snapshot, seal_snapshot
 from parts.session import SESSIONS, Session, display_name, roster
-from parts.world import DIRECTIONS, render_room, try_move
+from parts.world import DIRECTIONS, render_room, resolve_move
 
 NAME_RE = re.compile(r"^[a-z][a-z0-9_]{1,15}$")
 
@@ -53,8 +53,8 @@ def render_scene(location: str, viewer: str = "") -> str:
     return "\n".join(scene)
 
 
-def _move(session: Session, direction: str) -> str:
-    arrived, message = try_move(session.location, direction)
+def _resolve_move(session: Session, direction: str) -> str:
+    arrived, message = resolve_move(session.location, direction)
     if arrived != session.location:
         me = display_name(session.player_id)
         announce(session.location, f"{me} leaves {direction}.", exclude=session.player_id)
@@ -64,32 +64,32 @@ def _move(session: Session, direction: str) -> str:
     return message
 
 
-def handle_command(session: Session, raw: str) -> str:
+def handle_command(session: Session, signal: str) -> str:
     """The engine tick: one player command in, one response out.
 
     Routing is case-insensitive, but SECRETS keep their case: the
     original text is preserved and password arguments are parsed
     from it. Lowercasing a password destroys it."""
-    original = raw.strip()
-    raw = original.lower()
+    true_signal = signal.strip()
+    routed_signal = true_signal.lower()
 
-    if raw in ("quit", "q"):
+    if routed_signal in ("quit", "q"):
         save_character(session)
         session.alive = False
         return "The world dims. See you next spark."
-    if raw == "help":
+    if routed_signal == "help":
         return HELP_TEXT
-    if raw in ("look", "l"):
+    if routed_signal in ("look", "l"):
         return render_scene(session.location, viewer=session.player_id)
-    if raw in DIRECTIONS:
-        return _move(session, DIRECTIONS[raw])
-    if raw.startswith("go "):
-        word = raw.removeprefix("go ").strip()
+    if routed_signal in DIRECTIONS:
+        return _resolve_move(session, DIRECTIONS[routed_signal])
+    if routed_signal.startswith("go "):
+        word = routed_signal.removeprefix("go ").strip()
         if word in DIRECTIONS:
-            return _move(session, DIRECTIONS[word])
+            return _resolve_move(session, DIRECTIONS[word])
         return "You can't go that way."
-    if raw.startswith("say "):
-        message = raw.removeprefix("say ").strip()
+    if routed_signal.startswith("say "):
+        message = routed_signal.removeprefix("say ").strip()
         if not message:
             return "Say what?"
         announce(
@@ -98,8 +98,8 @@ def handle_command(session: Session, raw: str) -> str:
             exclude=session.player_id,
         )
         return f'You say, "{message}"'
-    if raw.startswith(("register ", "login ")):
-        verb, _, rest = original.partition(" ")
+    if routed_signal.startswith(("register ", "login ")):
+        verb, _, rest = true_signal.partition(" ")
         verb = verb.lower()
         words = rest.split()
         handle = parse_handle(words[0].lower()) if words else None
@@ -118,18 +118,18 @@ def handle_command(session: Session, raw: str) -> str:
             problem = register_account(char, account, secret)
             if problem:
                 return problem
-        elif not login_check(char, account, secret):
+        elif not inspect_login(char, account, secret):
             return "That character, account, and password do not align."
         old = session.player_id
         SESSIONS.pop(old, None)
         session.player_id = char
         session.account = account
         SESSIONS[char] = session
-        rename(old, char)
-        record = load_character(char)
-        if record is not None:
+        rename_echo(old, char)
+        casefile = load_character(char)
+        if casefile is not None:
             announce(session.location, f"{display_name(old)} leaves.", exclude=char)
-            restore_character(session, record)
+            restore_character(session, casefile)
             session.account = account
             announce(session.location, f"{display_name(char)} arrives.", exclude=char)
             return (
@@ -144,13 +144,13 @@ def handle_command(session: Session, raw: str) -> str:
             exclude=char,
         )
         return f"Welcome, {display_name(char)}@{account}. Your legend begins. Type JOBS."
-    if raw == "passwd" or raw.startswith("passwd "):
+    if routed_signal == "passwd" or routed_signal.startswith("passwd "):
         if not session.account:
             return (
                 "Only account logins can change a password. "
                 "Try: login <character>@<account> <password>"
             )
-        words = original.split()  # TRUE case: secrets are never lowered
+        words = true_signal.split()  # TRUE case: secrets are never lowered
         if len(words) != 4:
             return "Usage: passwd <old> <new> <new-again>"
         _, old, new, again = words
@@ -160,15 +160,15 @@ def handle_command(session: Session, raw: str) -> str:
         if problem:
             return problem
         return "Password changed. Use it the next time you log in."
-    if raw.startswith("password "):
+    if routed_signal.startswith("password "):
         if not session.named:
             return "Claim a name first: name <yourname>"
-        return set_password(session.player_id, original.split(" ", 1)[1].strip())
-    if raw.startswith("name "):
-        words = original.split(" ", 1)[1].split() if " " in original else []
+        return set_password(session.player_id, true_signal.split(" ", 1)[1].strip())
+    if routed_signal.startswith("name "):
+        words = true_signal.split(" ", 1)[1].split() if " " in true_signal else []
         wanted = words[0].lower() if words else ""
-        record = load_character(wanted) if wanted else None
-        protected = record is not None and has_password(record)
+        casefile = load_character(wanted) if wanted else None
+        protected = casefile is not None and has_password(casefile)
         bad_shape = len(words) > 2 or (len(words) == 2 and not protected)
         if not wanted or not NAME_RE.match(wanted) or bad_shape:
             return (
@@ -184,14 +184,14 @@ def handle_command(session: Session, raw: str) -> str:
         SESSIONS.pop(old, None)
         session.player_id = wanted
         SESSIONS[wanted] = session
-        rename(old, wanted)
-        if record is not None:
+        rename_echo(old, wanted)
+        if casefile is not None:
             announce(session.location, f"{display_name(old)} leaves.", exclude=wanted)
-            restore_character(session, record)
+            restore_character(session, casefile)
             announce(session.location, f"{display_name(wanted)} arrives.", exclude=wanted)
             nag = (
                 ""
-                if has_password(record)
+                if has_password(casefile)
                 else "\n(This name has no password. Protect it: password <secret>)"
             )
             # fmt: off
@@ -208,65 +208,65 @@ def handle_command(session: Session, raw: str) -> str:
             exclude=wanted,
         )
         return f"You are now known as {display_name(wanted)}."
-    if raw.startswith("@"):
-        return wizard_command(session, raw)
-    if raw.startswith(("attack ", "kill ")):
-        word = raw.split(" ", 1)[1].strip()
+    if routed_signal.startswith("@"):
+        return wizard_command(session, routed_signal)
+    if routed_signal.startswith(("attack ", "kill ")):
+        word = routed_signal.split(" ", 1)[1].strip()
         return attack(session, word)
-    if raw == "jobs":
-        return jobs_text()
-    if raw.startswith("job "):
-        result = assign_job(session, raw.removeprefix("job "))
-        if result.startswith("You take up"):
+    if routed_signal == "jobs":
+        return calling_index()
+    if routed_signal.startswith("job "):
+        verdict = bind_calling(session, routed_signal.removeprefix("job "))
+        if verdict.startswith("You take up"):
             announce(
                 session.location,
                 f"{display_name(session.player_id)} takes up the way "
                 f"of the {JOBS[session.job]['name']}.",
                 exclude=session.player_id,
             )
-        return result
-    if raw == "score":
-        return score_text(session)
-    if raw == "who":
+        return verdict
+    if routed_signal == "score":
+        return render_sheet(session)
+    if routed_signal == "who":
         names = roster() or [session.player_id]
         return "Players online: " + ", ".join(display_name(n) for n in names)
-    if raw in ("inventory", "i", "inv"):
+    if routed_signal in ("inventory", "i", "inv"):
         return inventory_text()
-    if raw.startswith(("take ", "get ")):
-        word = raw.split(" ", 1)[1].strip()
-        result = take(word, session.location)
-        if result.startswith("You take"):
+    if routed_signal.startswith(("take ", "get ")):
+        word = routed_signal.split(" ", 1)[1].strip()
+        verdict = take(word, session.location)
+        if verdict.startswith("You take"):
             announce(
                 session.location,
-                result.replace("You take", f"{display_name(session.player_id)} takes", 1),
+                verdict.replace("You take", f"{display_name(session.player_id)} takes", 1),
                 exclude=session.player_id,
             )
-        return result
-    if raw.startswith("drop "):
-        word = raw.split(" ", 1)[1].strip()
-        result = drop(word, session.location)
-        if result.startswith("You drop"):
+        return verdict
+    if routed_signal.startswith("drop "):
+        word = routed_signal.split(" ", 1)[1].strip()
+        verdict = drop(word, session.location)
+        if verdict.startswith("You drop"):
             announce(
                 session.location,
-                result.replace("You drop", f"{display_name(session.player_id)} drops", 1),
+                verdict.replace("You drop", f"{display_name(session.player_id)} drops", 1),
                 exclude=session.player_id,
             )
-        return result
-    if raw.startswith("talk "):
-        word = raw.split(" ", 1)[1].strip()
+        return verdict
+    if routed_signal.startswith("talk "):
+        word = routed_signal.split(" ", 1)[1].strip()
         return talk(word, session.location)
-    if raw.startswith("unlock "):
-        rest = raw.removeprefix("unlock ").strip()
+    if routed_signal.startswith("unlock "):
+        rest = routed_signal.removeprefix("unlock ").strip()
         if " with " in rest:
             door_word, key_word = (p.strip() for p in rest.split(" with ", 1))
             return unlock(door_word, key_word, session.location)
         return "Unlock what with what? Try: unlock door with key"
-    if raw == "save":
-        return save_game(session.location)
-    if raw == "load":
-        session.location, msg = load_game()
+    if routed_signal == "save":
+        return seal_snapshot(session.location)
+    if routed_signal == "load":
+        session.location, msg = awaken_snapshot()
         return f"{msg}\n{render_scene(session.location, viewer=session.player_id)}"
-    if raw == "":
+    if routed_signal == "":
         return ""
     return "Huh? Type HELP for commands."
 
@@ -275,7 +275,7 @@ def game_loop() -> None:
     """Terminal driver: reads a keyboard, prints a screen. That's all."""
     session = Session(player_id="player")
     SESSIONS[session.player_id] = session
-    register(session.player_id, print)
+    bind_echo(session.player_id, print)
     print("Welcome to The First Forge. Type HELP to begin.")
     print(render_scene(session.location, viewer=session.player_id))
 
@@ -286,7 +286,7 @@ def game_loop() -> None:
                 print(response)
     finally:
         save_character(session)
-        unregister(session.player_id)
+        unbind_echo(session.player_id)
         SESSIONS.pop(session.player_id, None)
 
 

@@ -8,7 +8,7 @@ training dummy; collapsing is its job.
 """
 
 from parts.events import announce
-from parts.npcs import NPCS, find_npc
+from parts.npcs import NPCS, trace_npc
 from parts.progression import (
     get_next_level_threshold,
     hp_gain_per_level,
@@ -20,12 +20,12 @@ from parts.session import Session, display_name
 DAMAGE_BASE = 3  # damage dealt = DAMAGE_BASE + strength // 3
 
 
-def damage_for(session: Session) -> int:
+def strike_power(session: Session) -> int:
     assert session.stats is not None
     return DAMAGE_BASE + session.stats.get("strength").base // 3
 
 
-def _grow_on_level_up(session: Session) -> None:
+def _ascend_resources(session: Session) -> None:
     """Level-up growth uses the mk1 formulas; resources refill in full."""
     assert session.stats is not None
     sta = session.stats.get("stamina").base
@@ -45,7 +45,7 @@ def award_xp(session: Session, amount: int) -> str:
         if threshold is None or session.xp < threshold:
             break
         session.level += 1
-        _grow_on_level_up(session)
+        _ascend_resources(session)
         lines.append(f"*** LEVEL UP! You are now level {session.level}. ***")
         from parts.characters import save_character
 
@@ -62,13 +62,13 @@ def attack(session: Session, word: str) -> str:
     """One strike of the training loop."""
     if session.stats is None:
         return "You have no calling yet. Type JOBS before you pick a fight."
-    nid = find_npc(word, session.location)
+    nid = trace_npc(word, session.location)
     if nid is None:
         return "There is no one like that here."
     npc = NPCS[nid]
     if npc["hp"] <= 0:
         return f"{npc['name'].capitalize()} is not something you can fight."
-    dmg = damage_for(session)
+    dmg = strike_power(session)
     npc["hp_now"] -= dmg
     announce(
         session.location,

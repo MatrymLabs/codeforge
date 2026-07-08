@@ -12,7 +12,7 @@ from parts import doors, items, npcs
 from parts.accounts import adopt
 from parts.accounts import register as register_account
 from parts.characters import save_character
-from parts.gateway import GatewayServer, _Handler, _sanitize
+from parts.gateway import ForgeGateServer, _GateHandler, _sanitize
 from parts.session import SESSIONS, Session
 
 
@@ -34,14 +34,14 @@ def fresh_world():
 
 @pytest.fixture()
 def server():
-    srv = GatewayServer(("127.0.0.1", 0), _Handler)
+    srv = ForgeGateServer(("127.0.0.1", 0), _GateHandler)
     threading.Thread(target=srv.serve_forever, daemon=True).start()
     yield srv
     srv.shutdown()
     srv.server_close()
 
 
-def _connect(srv: GatewayServer) -> socket.socket:
+def _connect(srv: ForgeGateServer) -> socket.socket:
     sock = socket.create_connection(("127.0.0.1", srv.server_address[1]), timeout=3)
     sock.settimeout(3)
     return sock
@@ -76,7 +76,7 @@ def _line(sock: socket.socket, text: str) -> None:
     sock.sendall((text + "\n").encode("utf-8"))
 
 
-def _connect_guest(srv: GatewayServer) -> socket.socket:
+def _connect_guest(srv: ForgeGateServer) -> socket.socket:
     sock = _connect(srv)
     _read_until(sock, b"GUEST: ")
     _line(sock, "guest")
@@ -184,7 +184,7 @@ def test_password_prompt_negotiates_echo_blackout(server):
     sock.close()
 
 
-def _login(srv: GatewayServer, char="matrym", account="matlabs", pw="swordfish") -> socket.socket:
+def _login(srv: ForgeGateServer, char="matrym", account="matlabs", pw="swordfish") -> socket.socket:
     """Connect and clear the front desk into the world as an account."""
     sock = _connect(srv)
     _read_until(sock, b"GUEST: ")
@@ -274,13 +274,13 @@ def test_repeated_failures_rate_limit_the_address(server, monkeypatch):
 
 
 def test_rate_limit_check_never_grows_the_table(server):
-    """_door_is_barred is read-only: connect-only traffic (no failed
+    """_gate_is_barred is read-only: connect-only traffic (no failed
     logins) must not add dict entries -- that would be a memory leak an
     attacker could drive with bare connects."""
     sock = _connect_guest(server)  # a clean visit: no failures
     sock.close()
     assert gateway._turnaway_ledger == {}
-    assert gateway._door_is_barred("10.9.8.7") is False
+    assert gateway._gate_is_barred("10.9.8.7") is False
     assert "10.9.8.7" not in gateway._turnaway_ledger
 
 
@@ -289,10 +289,10 @@ def test_stale_failure_addresses_are_swept_out(monkeypatch):
     kept forever: the table is bounded by currently-failing addresses."""
     clock = {"now": 1000.0}
     monkeypatch.setattr(gateway.time, "monotonic", lambda: clock["now"])
-    gateway._mark_turned_away("10.0.0.1")
-    assert gateway._door_is_barred("10.0.0.1") is False  # one strike isn't a ban
+    gateway._log_turnaway("10.0.0.1")
+    assert gateway._gate_is_barred("10.0.0.1") is False  # one strike isn't a ban
     clock["now"] += gateway.LOGIN_FAIL_WINDOW + 1  # the window passes
-    gateway._mark_turned_away("10.0.0.2")  # any new failure sweeps the table
+    gateway._log_turnaway("10.0.0.2")  # any new failure sweeps the table
     assert "10.0.0.1" not in gateway._turnaway_ledger  # stale key gone
     assert list(gateway._turnaway_ledger) == ["10.0.0.2"]
 
@@ -307,7 +307,7 @@ def test_connection_cap_refuses_when_full(server, monkeypatch):
 
 
 def test_idle_connection_times_out_and_closes(server, monkeypatch):
-    monkeypatch.setattr(gateway._Handler, "timeout", 0.5)
+    monkeypatch.setattr(gateway._GateHandler, "timeout", 0.5)
     sock = _connect_guest(server)  # seated in the world, then goes silent
     assert _drain_to_close(sock) == ""  # server drops the idle socket, no data
     sock.close()
