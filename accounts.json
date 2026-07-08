@@ -1,8 +1,8 @@
 {
   "matlabs": {
     "auth": {
-      "salt": "f381357e1861c6388da2e6a4f80edc9c",
-      "hash": "57f330a11b6797c978734d38f7328db5504629889d251fc8ce6ace8ef5a602b4"
+      "salt": "a7f55d47844aef241c0588225413804d",
+      "hash": "6fc0c17c4c6328261c2531b0ce5c1918935d7dac59f91c1b724e735c87ee47a1"
     },
     "characters": [
       "matrym"
