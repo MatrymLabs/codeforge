@@ -29,6 +29,17 @@ jobs:
       - name: Coverage report
         run: make coverage
 
+      # Upload coverage to Codecov. Non-blocking: a Codecov outage or a missing
+      # token must never turn the portfolio's build red. Public repo uploads work
+      # tokenless; set the CODECOV_TOKEN secret for higher rate limits.
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v5
+        continue-on-error: true
+        with:
+          files: ./coverage.xml
+          fail_ci_if_error: false
+          token: ${{ secrets.CODECOV_TOKEN }}
+
       # Informational, non-blocking: pip-audit scans the whole environment, so an
       # unrelated CVE in build tooling (pip/setuptools) should surface without
       # turning the build red. Review its output; it does not gate the ritual.

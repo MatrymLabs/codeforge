@@ -20,7 +20,7 @@ check: lint typecheck test
 
 # --- Extra inspections (One-Button Rule) ---
 coverage:
-	pytest --cov=parts --cov=forge --cov-report=term-missing --cov-fail-under=85
+	pytest --cov=parts --cov=forge --cov-report=term-missing --cov-report=xml --cov-fail-under=85
 
 audit:
 	pip-audit --skip-editable
