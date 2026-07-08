@@ -37,13 +37,15 @@ def load_character(name: str) -> dict[str, Any] | None:
 
 def put_record(name: str, casefile: dict[str, Any]) -> None:
     """Write one full casefile through the single storage door."""
+    from parts.world import START_ROOM
+
     auth = casefile.get("auth") or {}
     with open_archive_session() as db:
         archive_row = db.get(CharacterRow, name) or CharacterRow(name=name)
         archive_row.job = casefile.get("job", "")
         archive_row.level = int(casefile.get("level", 1))
         archive_row.xp = int(casefile.get("xp", 0))
-        archive_row.location = casefile.get("location", "forge")
+        archive_row.location = casefile.get("location", START_ROOM)
         archive_row.rank = casefile.get("rank", "player")
         archive_row.account = casefile.get("account", "")
         archive_row.auth_salt = auth.get("salt")

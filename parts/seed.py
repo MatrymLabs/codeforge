@@ -19,13 +19,30 @@ Location rule: operators write plain room labels in YAML
 (room:library) because items can also live on a player.
 """
 
+import os
 import re
 from pathlib import Path
 from typing import Any, TypedDict
 
 import yaml
 
-SEED_DIR = Path(__file__).resolve().parent.parent / "seeds" / "first-forge"
+# A seed IS a game. The engine loads one seed pack at startup; swap the seed and
+# codeforge boots a different game (fantasy `first-forge`, `sword-art-online`, ...).
+# Selection is by the FORGE_SEED env var, read once at import -- you choose which
+# program the holodeck runs when it powers on, not while it's running.
+SEEDS_ROOT = Path(__file__).resolve().parent.parent / "seeds"
+DEFAULT_SEED = "first-forge"
+SEED_NAME = os.environ.get("FORGE_SEED", DEFAULT_SEED)
+SEED_DIR = SEEDS_ROOT / SEED_NAME
+
+
+def available_seeds() -> list[str]:
+    """Every installed game: seed dirs that carry a rooms.yaml, alphabetical."""
+    if not SEEDS_ROOT.is_dir():
+        return []
+    return sorted(p.name for p in SEEDS_ROOT.iterdir() if (p / "rooms.yaml").is_file())
+
+
 LABEL_RE = re.compile(r"^[a-z][a-z0-9_]*$")
 DEFAULT_ROOM_DESC = "There is nothing remarkable here yet."
 DEFAULT_DIALOGUE = ['"..."']

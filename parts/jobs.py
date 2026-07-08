@@ -20,7 +20,7 @@ BASE_MP = 5  # starting MP is BASE_MP + magic
 
 def calling_index() -> str:
     """The list a new soul reads before choosing."""
-    lines = ["Callings of The First Forge:"]
+    lines = ["Callings:"]
     for label, job in JOBS.items():
         lines.append(f"  {label:<10} {job['name']} -- {job['description']}")
     lines.append("Choose with: job <calling>")

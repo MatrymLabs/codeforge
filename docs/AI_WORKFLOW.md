@@ -96,7 +96,7 @@ working code before theory, one concept at a time.
 
 ## Current state (update as it changes)
 
-- 191 tests green; CI badge green; 24+ cards in `parts/` (see `make store`).
+- 198 tests green; CI badge green; 24+ cards in `parts/` (see `make store`).
 - Merged feature arcs: seeds, sessions, gateway, events, names, chargen,
   combat, persistence→SQL, ranks, accounts (character@account), front-desk
   login dialogue, proper-noun display, CLI entry points, FastAPI admin,

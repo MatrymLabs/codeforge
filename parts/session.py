@@ -15,12 +15,20 @@ from parts.resources import Resource
 from parts.stats import StatBlock
 
 
+def _spawn() -> str:
+    """The seed's first room. Imported lazily so `codeforge grant` (which touches
+    Session but not the world) doesn't pay to load the whole seed."""
+    from parts.world import START_ROOM
+
+    return START_ROOM
+
+
 @dataclass
 class Session:
     """One player's seat at the world."""
 
     player_id: str
-    location: str = "forge"
+    location: str = field(default_factory=_spawn)
     alive: bool = True
     named: bool = False
     rank: str = "player"

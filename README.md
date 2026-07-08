@@ -34,7 +34,7 @@ git clone git@github.com:MatrymLabs/codeforge.git
 cd codeforge
 python3 -m venv .venv && source .venv/bin/activate
 pip install -e ".[dev]"
-make check       # lint + typecheck + 191 tests
+make check       # lint + typecheck + 198 tests
 spark            # ignite the multiplayer server on port 4000
 ```
 
@@ -45,6 +45,21 @@ salted pbkdf2 hashes; ranks gate the wizard verbs (`@teleport`, `@grant`, `@shut
 
 More doors: `codeforge play` (solo terminal), `codeforge grant <name> <rank>`,
 `codeforge migrate <char> <account>`.
+
+### A seed is a game
+
+The engine boots one **seed pack** (a whole world: rooms, items, NPCs, callings,
+splash) at startup — swap the seed and you're playing a different game on the same
+engine. The spawn point is the first room in the seed, so nothing is hardcoded.
+
+```bash
+codeforge seeds                        # list installed games
+codeforge play --seed sword-art-online # boot a different game (Aincrad, Floor 1)
+FORGE_SEED=sword-art-online spark       # same selector for the multiplayer server
+```
+
+Shipped seeds: `first-forge` (the fantasy starter) and `sword-art-online`. Adding a
+new game is a new `seeds/<name>/` folder of YAML — no Python required.
 
 ## Architecture
 
@@ -123,7 +138,7 @@ written for, original tests included.
 
 ## Testing
 
-191 tests: unit twins for every card, real-socket gateway tests that walk the login
+198 tests: unit twins for every card, real-socket gateway tests that walk the login
 dialogue over the wire, engine-tick wiring tripwires, deterministic combat math,
 persistence parity, security tests (impostor refusal, salted hashes, generic login
 refusals), and Hypothesis property tests pinning the progression curves across
