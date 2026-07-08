@@ -8,25 +8,68 @@ Handlers import lazily: `codeforge grant` should not have to load
 the entire world to edit one archive casefile.
 """
 
+import os
 import sys
+from pathlib import Path
 
 USAGE = """codeforge -- hardware-store counter for the world engine
 
   spark                                ignite the multiplayer server
   codeforge serve                      same thing, formal attire
   codeforge play                       solo terminal session
+  codeforge play --seed <game>         boot a different game (see: codeforge seeds)
+  codeforge seeds                      list installed games (seeds)
   codeforge grant <name> <rank>        host-shell authority (player/wizard/owner)
   codeforge migrate <char> <account>   move a v1 password onto an account
   codeforge migrate-db                 import legacy JSON saves into SQLite
   codeforge passwd <account>           rotate an account password (prompted)
   codeforge api                        serve the HTTP admin API on port 8000
   codeforge help                       this text
+
+A seed IS a game. `--seed <game>` (or the FORGE_SEED env var, which `spark` reads)
+selects which world the engine boots.
 """
+
+
+def _seeds_available() -> list[str]:
+    """List installed games without importing the world (keeps env-before-import clean)."""
+    root = Path(__file__).resolve().parent.parent / "seeds"
+    if not root.is_dir():
+        return []
+    return sorted(p.name for p in root.iterdir() if (p / "rooms.yaml").is_file())
+
+
+def _pop_seed(args: list[str]) -> str | None:
+    """Extract `--seed <name>` from args (mutates in place). Returns the name or None."""
+    if "--seed" not in args:
+        return None
+    i = args.index("--seed")
+    name = args[i + 1] if i + 1 < len(args) else ""
+    del args[i : i + 2]
+    return name
 
 
 def main(argv: list[str] | None = None) -> int:
     args = list(sys.argv[1:]) if argv is None else list(argv)
+
+    # Seed selection must set the env BEFORE any world module is imported, since
+    # SEED_DIR binds at import time (the holodeck picks its program at power-on).
+    seed = _pop_seed(args)
+    if seed is not None:
+        if seed not in _seeds_available():
+            print(
+                f"Unknown seed '{seed}'. Installed: {', '.join(_seeds_available()) or '(none)'}",
+                file=sys.stderr,
+            )
+            return 2
+        os.environ["FORGE_SEED"] = seed
+
     cmd = args[0] if args else "serve"
+
+    if cmd == "seeds":
+        for name in _seeds_available():
+            print(name)
+        return 0
 
     if cmd == "serve":
         from parts.gateway import serve

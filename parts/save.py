@@ -26,7 +26,9 @@ def seal_snapshot(location: str, path: Path = SAVE_PATH) -> str:
 def awaken_snapshot(path: Path = SAVE_PATH) -> tuple[str, str]:
     """Return (location, message). Unknown ids in the file are ignored."""
     if not path.exists():
-        return ("forge", "No saved world found.")
+        from parts.world import START_ROOM
+
+        return (START_ROOM, "No saved world found.")
     snapshot = json.loads(path.read_text())
     for iid, loc in snapshot["items"].items():
         if iid in items.ITEMS:

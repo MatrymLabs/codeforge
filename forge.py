@@ -279,7 +279,7 @@ def game_loop() -> None:
     session = Session(player_id="player")
     SESSIONS[session.player_id] = session
     bind_echo(session.player_id, print)
-    print("Welcome to The First Forge. Type HELP to begin.")
+    print("Welcome. Type HELP to begin.")
     print(render_scene(session.location, viewer=session.player_id))
 
     try:

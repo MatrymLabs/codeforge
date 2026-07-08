@@ -14,6 +14,10 @@ SEED_PATH = SEED_DIR / "rooms.yaml"
 WORLD: dict[str, Room] = load_rooms(SEED_PATH)
 inspect_world_links(WORLD, ITEMS, NPCS)
 
+# The spawn point is seed-defined, not hardcoded: the FIRST room in rooms.yaml.
+# (first-forge -> "forge"; sword-art-online -> "town_of_beginnings".)
+START_ROOM: str = next(iter(WORLD))
+
 DIRECTIONS: dict[str, str] = {
     "north": "north",
     "n": "north",
