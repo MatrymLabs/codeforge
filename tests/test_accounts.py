@@ -162,3 +162,33 @@ def test_migrate_moves_a_character_password_onto_a_new_account():
     assert "matrym@matlabs is ready" in msg
     assert login_check("matrym", "matlabs", "swordfish")
     assert not has_password(load_character("matrym"))  # char auth retired
+
+
+def test_mixed_case_passwords_survive_the_tick():
+    """Regression: the tick must never lowercase a secret. This is the
+    bug that ate a week of rotations -- CLI-set true-case passwords
+    failed at the door because raw.lower() mangled them."""
+
+    s = _fresh()
+    _tick(s, "register matrym@matlabs StArTeR1")
+    _tick(s, "quit")
+    SESSIONS.clear()
+    back = _fresh()
+    assert "Welcome back" in _tick(back, "login matrym@matlabs StArTeR1")
+    SESSIONS.clear()
+    impostor = _fresh("p2")
+    assert "do not align" in _tick(impostor, "login matrym@matlabs starter1")
+
+
+def test_cli_rotation_then_tick_login_roundtrip():
+    """The exact saga, pinned forever: passwd via CLI, login via door."""
+    from parts.accounts import set_account_password
+
+    s = _fresh()
+    _tick(s, "register matrym@matlabs starter1")
+    _tick(s, "quit")
+    SESSIONS.clear()
+    set_account_password("matlabs", "MiXedCase42!")
+    back = _fresh()
+    out = _tick(back, "login matrym@matlabs MiXedCase42!")
+    assert "Welcome back, Matrym@matlabs" in out

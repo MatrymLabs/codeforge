@@ -14,7 +14,7 @@ dev = [
     "pytest-cov",
     "pip-audit",
     "hypothesis",
-    "httpx",
+    "httpx2",
 ]
 
 [project.scripts]
