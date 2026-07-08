@@ -8,10 +8,10 @@ terminal driver around it -- a socket gateway will be another.
 import re
 
 from parts.accounts import (
-    change_password,
     has_password,
     login_check,
     parse_handle,
+    reforge_secret,
     set_password,
     verify_password,
 )
@@ -156,7 +156,7 @@ def handle_command(session: Session, raw: str) -> str:
         _, old, new, again = words
         if new != again:
             return "Those new passwords do not match. Nothing changed."
-        problem = change_password(session.account, old, new)
+        problem = reforge_secret(session.account, old, new)
         if problem:
             return problem
         return "Password changed. Use it the next time you log in."

@@ -270,13 +270,13 @@ def test_password_floor_is_eight_characters():
     assert "Welcome, Short@acct" in _tick(s, "register short@acct eightchr")  # 8 chars ok
 
 
-def test_change_password_directly_verifies_then_rotates():
-    from parts.accounts import account_password_ok, change_password
+def test_reforge_secret_directly_verifies_then_rotates():
+    from parts.accounts import account_password_ok, reforge_secret
 
     s = _fresh()
     _tick(s, "register matrym@matlabs starter1")
-    assert "not your current password" in change_password("matlabs", "wrong", "fresh_pw2")
+    assert "not your current password" in reforge_secret("matlabs", "wrong", "fresh_pw2")
     assert account_password_ok("matlabs", "starter1")  # bad old changed nothing
-    assert change_password("matlabs", "starter1", "fresh_pw2") == ""
+    assert reforge_secret("matlabs", "starter1", "fresh_pw2") == ""
     assert account_password_ok("matlabs", "fresh_pw2")
     assert not account_password_ok("matlabs", "starter1")

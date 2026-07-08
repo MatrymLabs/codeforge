@@ -96,12 +96,14 @@ working code before theory, one concept at a time.
 
 ## Current state (update as it changes)
 
-- 176 tests green; CI badge green; 24+ cards in `parts/` (see `make store`).
+- 184 tests green; CI badge green; 24+ cards in `parts/` (see `make store`).
 - Merged feature arcs: seeds, sessions, gateway, events, names, chargen,
   combat, persistence→SQL, ranks, accounts (character@account), front-desk
   login dialogue, proper-noun display, CLI entry points, FastAPI admin,
   Docker, telnet echo blackout, secret case preservation, in-game `passwd`
-  (self-service password change), absolute DB path.
+  (self-service password change), absolute DB path, security hardening
+  (output sanitization, per-IP turnaway ledger, seat cap + idle timeouts,
+  8-char password floor — see `docs/reports/security/`).
 - Backlog: NPCs that fight back (stakes/defeat); canonical typed event
   frames; `docs/engineering-log.md` and `docs/ai-assisted-workflow.md`;
   cloud deploy half-day.
@@ -117,3 +119,61 @@ working code before theory, one concept at a time.
   house standard for cornering heisenbugs.
 - Mistakes are feedback from the system, not failure. Name the lesson, file
   the pattern, move on.
+
+## Code identity & style (the forge voice)
+
+CodeForge's code should physically read like the developer's imagination: part
+Tony Stark's workshop (invention, reactors, forged tools), part Sherlock Holmes
+(clues, traces, deductions, case files), part Sword Art Online (worlds, gates,
+floors, skills, quests, progression), all wound through a spiral motif (seeds
+becoming systems, loops becoming layers). The names already in this repo —
+`spark`, `Forge`, `Session`, `seed`, `handle_command` as the tick — are the seed
+of that voice. Extend it; don't fight it.
+
+**Signature vocabulary (reach for these over generic names):**
+- Nouns: Forge, Spark, Reactor, Arc, Seed, Spiral, Gate, Echo, Signal, Trace,
+  CaseFile, Archive, Floor, Skill, Quest, Avatar, Engine, Compass, Lens,
+  Keystone, Relic.
+- Verbs: ignite, forge, trace, deduce, unlock, ascend, awaken, bind, inspect,
+  map, evolve, attune, calibrate, enter, resolve.
+- Architecture metaphors: Seed → Spark → Spiral → Forge → Gate → World;
+  Clue → Trace → Deduction → CaseFile → Verdict; Player → Skill → Quest →
+  Floor → WorldState.
+
+**Shape the code surface, not just comments:** prefer memorable names for new
+classes, functions, locals, and section dividers. Banish generic names —
+`manager`, `handler`, `processor`, `data`, `item`, `thing`, `result` — in favor
+of something with a face. When introducing a new module or subsystem, name it in
+the voice (a diagnostics reader is a `Lens`, a validated installer is a `Gate`).
+
+**When asked to restyle existing code, respond in this format:** Identity Read
+(what it feels like now) → Style Map (generic → personal, e.g.
+`validate_password → inspect_passkey`) → Transformed Code → Why It Feels Like Me
+→ Safety Check (what you refused to rename and why).
+
+### Governing boundaries (the style serves the engine, never the reverse)
+
+These are hard limits. Creative naming stops at anything the system persists,
+loads, or tests against:
+
+1. **Behavior is preserved unless a redesign is explicitly requested.** A restyle
+   is a rename, never a rewrite of logic.
+2. **`make check` (ruff + mypy + pytest) must be green before any restyle is
+   committed.** A rename that breaks an import or a test isn't done. When
+   renaming a symbol used across files, update every caller and its test twin in
+   the same change, then run the ritual.
+3. **Persisted identifiers are FROZEN — never restyle them:** `lowercase_snake_case`
+   labels (room/item/npc/job keys), YAML seed keys, database column names, JSON
+   record keys, account/character handle formats, CARD docstring names, and CLI
+   verb strings (`serve`, `play`, `grant`, `migrate`, `passwd`). Renaming these
+   breaks save files, seeds, migrations, or the public interface. The metaphor
+   lives in the *code*, not in the *data contract*.
+4. **Never rename** `__init__`, `__str__`, `main`, dunder methods, pytest test
+   function names, or third-party API symbols (FastAPI decorators, SQLAlchemy
+   mapped attributes) unless provably safe.
+5. **Clarity outranks poetry.** If a name makes the purpose unclear, it's wrong —
+   `inspect_passkey` is good; `attune_the_arcane_ward` is not. Every reader,
+   including a future teammate, must still understand what the code does.
+6. Security and architecture laws above are never traded for style: no plaintext
+   passwords, no lowercased secrets, canonical state stays canonical, however
+   the variables are named.
