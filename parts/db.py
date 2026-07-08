@@ -2,20 +2,36 @@
 
 One file on disk (codeforge.db), two tables, typed rows. The rest of
 the engine never sees SQL: characters.py and accounts.py keep their
-function signatures and swap their insides. Tests point DB_PATH at a
-tmp file; production points it at the working directory.
+function signatures and swap their insides. The default path is
+absolute and anchored to the repo root (CODEFORGE_DB overrides it);
+tests point DB_PATH at a tmp file.
 
 Why an ORM for a game this size? The same reason the seed loaders
 gate YAML: schemas make bad states unrepresentable, and the skill
 transfers straight to PostgreSQL when the world outgrows one file.
 """
 
+import os
 from pathlib import Path
 
 from sqlalchemy import Engine, create_engine
 from sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column
 
-DB_PATH = Path("codeforge.db")
+
+def _default_db_path() -> Path:
+    """Where the database lives. Absolute and anchored to the repo root
+    (this file's grandparent) so the server opens the SAME file no matter
+    which directory it is launched from -- a cwd-relative default once
+    silently created a second, empty database when run from the wrong
+    place. Override with CODEFORGE_DB for tests, containers, or a chosen
+    data directory."""
+    override = os.environ.get("CODEFORGE_DB")
+    if override:
+        return Path(override).expanduser()
+    return Path(__file__).resolve().parent.parent / "codeforge.db"
+
+
+DB_PATH = _default_db_path()
 
 _ENGINES: dict[str, Engine] = {}
 
