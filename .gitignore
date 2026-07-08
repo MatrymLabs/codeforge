@@ -6,5 +6,6 @@ save.json
 .coverage
 *.egg-info/
 characters.json
+accounts.json
 codeforge.db
 *.kdbx
