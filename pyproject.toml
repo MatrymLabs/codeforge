@@ -16,6 +16,10 @@ dev = [
     "hypothesis",
 ]
 
+[project.scripts]
+codeforge = "parts.cli:main"
+spark = "parts.cli:spark"
+
 [build-system]
 requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
