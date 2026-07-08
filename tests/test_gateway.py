@@ -182,6 +182,57 @@ def test_password_prompt_negotiates_echo_blackout(server):
     sock.close()
 
 
+def _login(srv: GatewayServer, char="matrym", account="matlabs", pw="swordfish") -> socket.socket:
+    """Connect and clear the front desk into the world as an account."""
+    sock = _connect(srv)
+    _read_until(sock, b"GUEST: ")
+    _line(sock, f"{char}@{account}")
+    _read_until(sock, b"Password: " + bytes([255, 251, 1]))
+    _line(sock, pw)
+    _read_until(sock, b"> ")
+    return sock
+
+
+def test_passwd_flow_rotates_the_secret_with_blackout(server):
+    """Bare 'passwd' in-world triggers the three-prompt dialogue, each
+    prompt echo-blacked-out; the new secret then opens the door."""
+    from parts.accounts import account_password_ok
+
+    _saved_account()
+    sock = _login(server)
+    _line(sock, "passwd")
+    raw = _read_until_raw(sock, b"Current password: " + bytes([255, 251, 1]))
+    assert raw.endswith(bytes([255, 251, 1]))  # echo OFF for the old secret
+    _line(sock, "swordfish")
+    _read_until_raw(sock, b"New password: " + bytes([255, 251, 1]))
+    _line(sock, "NewSecret9")
+    _read_until_raw(sock, b"New password again: " + bytes([255, 251, 1]))
+    _line(sock, "NewSecret9")
+    out = _read_until(sock, b"> ")
+    assert "Password changed" in out
+    sock.close()
+    assert account_password_ok("matlabs", "NewSecret9")  # new secret lives
+    assert not account_password_ok("matlabs", "swordfish")  # old is dead
+
+
+def test_passwd_flow_rejects_a_mismatch_over_the_wire(server):
+    from parts.accounts import account_password_ok
+
+    _saved_account()
+    sock = _login(server)
+    _line(sock, "passwd")
+    _read_until_raw(sock, b"Current password: " + bytes([255, 251, 1]))
+    _line(sock, "swordfish")
+    _read_until_raw(sock, b"New password: " + bytes([255, 251, 1]))
+    _line(sock, "AAAA1")
+    _read_until_raw(sock, b"New password again: " + bytes([255, 251, 1]))
+    _line(sock, "BBBB2")
+    out = _read_until(sock, b"> ")
+    assert "do not match" in out
+    assert account_password_ok("matlabs", "swordfish")  # unchanged
+    sock.close()
+
+
 def test_client_negotiation_bytes_never_pollute_the_secret(server):
     """Clients reply with their own IAC sequences; the stripper must
     keep them out of the password."""

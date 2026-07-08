@@ -114,6 +114,24 @@ def set_account_password(account: str, password: str) -> str:
     return f"Password rotated for {account}."
 
 
+def change_password(account: str, old: str, new: str) -> str:
+    """Self-service rotation: prove the current secret, then set a new
+    one. Returns '' on success or the reason it was refused. The old
+    password is verified constant-time; the new one is salted afresh.
+    Refusal on a bad old password stays generic -- no enumeration."""
+    if len(new) < 4:
+        return "Passwords need at least 4 characters."
+    with get_session() as db:
+        row = db.get(AccountRow, account)
+        if row is None or not _matches(old, row.auth_salt, row.auth_hash):
+            return "That is not your current password."
+        salt = secrets.token_bytes(16)
+        row.auth_salt = salt.hex()
+        row.auth_hash = _hash(new, salt)
+        db.commit()
+    return ""
+
+
 def migrate(char: str, account: str) -> str:
     """Move a v1 character-password onto a NEW account."""
     record = load_character(char)

@@ -192,3 +192,82 @@ def test_cli_rotation_then_tick_login_roundtrip():
     back = _fresh()
     out = _tick(back, "login matrym@matlabs MiXedCase42!")
     assert "Welcome back, Matrym@matlabs" in out
+
+
+# ----------------------------------------------- passwd (in-game self-service)
+
+
+def test_passwd_changes_the_account_password_end_to_end():
+    """The whole point: never touch the CLI. Rotate in-world, then the
+    new secret opens the door and the old one is dead."""
+    s = _fresh()
+    _tick(s, "register matrym@matlabs starter1")
+    assert "Password changed" in _tick(s, "passwd starter1 fresh_pw2 fresh_pw2")
+    _tick(s, "quit")
+    SESSIONS.clear()
+    back = _fresh()
+    assert "do not align" in _tick(back, "login matrym@matlabs starter1")  # old is dead
+    assert "Welcome back, Matrym@matlabs" in _tick(back, "login matrym@matlabs fresh_pw2")
+
+
+def test_passwd_refuses_the_wrong_old_password():
+    from parts.accounts import account_password_ok
+
+    s = _fresh()
+    _tick(s, "register matrym@matlabs starter1")
+    assert "not your current password" in _tick(s, "passwd wrongold newpass9 newpass9")
+    assert account_password_ok("matlabs", "starter1")  # nothing rotated
+
+
+def test_passwd_refuses_mismatched_new_passwords():
+    from parts.accounts import account_password_ok
+
+    s = _fresh()
+    _tick(s, "register matrym@matlabs starter1")
+    assert "do not match" in _tick(s, "passwd starter1 newpass9 different9")
+    assert account_password_ok("matlabs", "starter1")  # nothing rotated
+
+
+def test_passwd_preserves_mixed_case_roundtrip():
+    """The saga's rule applied to self-service: a mixed-case NEW password
+    must log in with its true case and reject the lowered one."""
+    s = _fresh()
+    _tick(s, "register matrym@matlabs starter1")
+    assert "Password changed" in _tick(s, "passwd starter1 MiXeD_Pw9 MiXeD_Pw9")
+    _tick(s, "quit")
+    SESSIONS.clear()
+    back = _fresh()
+    assert "do not align" in _tick(back, "login matrym@matlabs mixed_pw9")  # lowered fails
+    assert "Welcome back" in _tick(back, "login matrym@matlabs MiXeD_Pw9")
+
+
+def test_passwd_requires_an_account():
+    guest = _fresh()  # a seat with no account
+    assert "Only account logins" in _tick(guest, "passwd anything newpass9 newpass9")
+
+
+def test_passwd_refuses_a_too_short_new_password():
+    from parts.accounts import account_password_ok
+
+    s = _fresh()
+    _tick(s, "register matrym@matlabs starter1")
+    assert "at least 4" in _tick(s, "passwd starter1 no no")
+    assert account_password_ok("matlabs", "starter1")  # nothing rotated
+
+
+def test_passwd_shows_usage_on_wrong_shape():
+    s = _fresh()
+    _tick(s, "register matrym@matlabs starter1")
+    assert "Usage: passwd" in _tick(s, "passwd starter1 lonely")  # missing confirm
+
+
+def test_change_password_directly_verifies_then_rotates():
+    from parts.accounts import account_password_ok, change_password
+
+    s = _fresh()
+    _tick(s, "register matrym@matlabs starter1")
+    assert "not your current password" in change_password("matlabs", "wrong", "fresh_pw2")
+    assert account_password_ok("matlabs", "starter1")  # bad old changed nothing
+    assert change_password("matlabs", "starter1", "fresh_pw2") == ""
+    assert account_password_ok("matlabs", "fresh_pw2")
+    assert not account_password_ok("matlabs", "starter1")
