@@ -1,63 +1,73 @@
-"""CARD: characters -- named heroes survive the restart.
+"""CARD: characters -- named heroes survive the restart (SQL-backed).
 
-Your name is your login (v0: no password -- LAN honesty; the future
-accounts card adds real credential hashing). We persist the MINIMUM
-canonical state: job, level, xp, location. Stats and resources are
-DERIVED on restore from the job template and the mk1 growth formulas.
-Derive, don't store: recomputable data saved twice is data that can
-disagree with itself.
+Same doors as always -- load_character, save_character, put_record,
+set_rank -- now opening onto a SQLite table instead of a JSON file.
+Derive-don't-store is unchanged: a record is a handful of canonical
+facts; stats and resources recompute on restore.
 """
 
-import json
-from pathlib import Path
 from typing import Any
 
+from parts.db import CharacterRow, get_session
 from parts.jobs import BASE_HP, BASE_MP, assign_job
 from parts.progression import hp_gain_per_level, mp_gain_per_level
 from parts.resources import Resource
 from parts.session import Session
 
-CHARACTERS_PATH = Path("characters.json")
+
+def _row_to_record(row: CharacterRow) -> dict[str, Any]:
+    record: dict[str, Any] = {
+        "job": row.job,
+        "level": row.level,
+        "xp": row.xp,
+        "location": row.location,
+        "rank": row.rank,
+        "account": row.account,
+    }
+    if row.auth_salt and row.auth_hash:
+        record["auth"] = {"salt": row.auth_salt, "hash": row.auth_hash}
+    return record
 
 
-def _read(path: Path) -> dict[str, dict[str, Any]]:
-    if not path.exists():
-        return {}
-    return json.loads(path.read_text())
+def load_character(name: str) -> dict[str, Any] | None:
+    with get_session() as db:
+        row = db.get(CharacterRow, name)
+        return _row_to_record(row) if row else None
 
 
-def save_character(session: Session, path: Path | None = None) -> None:
-    """Persist a named hero. Unnamed seats (player1...) are ephemeral."""
-    path = path or CHARACTERS_PATH  # resolved at CALL time, so tests can redirect it
+def put_record(name: str, record: dict[str, Any]) -> None:
+    """Write one full record through the single storage door."""
+    auth = record.get("auth") or {}
+    with get_session() as db:
+        row = db.get(CharacterRow, name) or CharacterRow(name=name)
+        row.job = record.get("job", "")
+        row.level = int(record.get("level", 1))
+        row.xp = int(record.get("xp", 0))
+        row.location = record.get("location", "forge")
+        row.rank = record.get("rank", "player")
+        row.account = record.get("account", "")
+        row.auth_salt = auth.get("salt")
+        row.auth_hash = auth.get("hash")
+        db.add(row)
+        db.commit()
+
+
+def save_character(session: Session) -> None:
+    """Persist a named hero's gameplay state. Column-scoped update:
+    auth fields belong to other cards and are never touched here --
+    the merge-save law, now enforced by the schema itself."""
     if not session.named:
         return
-    data = _read(path)
-    record = data.get(session.player_id, {})
-    record.update(
-        {
-            "job": session.job,
-            "level": session.level,
-            "xp": session.xp,
-            "location": session.location,
-            "rank": session.rank,
-            "account": session.account,
-        }
-    )
-    data[session.player_id] = record  # merge: fields like "auth" survive
-    path.write_text(json.dumps(data, indent=2))
-
-
-def load_character(name: str, path: Path | None = None) -> dict[str, Any] | None:
-    path = path or CHARACTERS_PATH
-    return _read(path).get(name)
-
-
-def put_record(name: str, record: dict[str, Any], path: Path | None = None) -> None:
-    """Write one character record through the single storage door."""
-    path = path or CHARACTERS_PATH
-    data = _read(path)
-    data[name] = record
-    path.write_text(json.dumps(data, indent=2))
+    with get_session() as db:
+        row = db.get(CharacterRow, session.player_id) or CharacterRow(name=session.player_id)
+        row.job = session.job
+        row.level = session.level
+        row.xp = session.xp
+        row.location = session.location
+        row.rank = session.rank
+        row.account = session.account
+        db.add(row)
+        db.commit()
 
 
 def restore_character(session: Session, record: dict[str, Any]) -> None:
@@ -72,7 +82,7 @@ def restore_character(session: Session, record: dict[str, Any]) -> None:
     job = str(record["job"])
     if not job:
         return
-    assign_job(session, job)  # stats + level-1 resources
+    assign_job(session, job)
     assert session.stats is not None
     sta = session.stats.get("stamina").base
     mag = session.stats.get("magic").base
@@ -85,21 +95,12 @@ def restore_character(session: Session, record: dict[str, Any]) -> None:
     }
 
 
-def set_rank(name: str, rank: str, path: Path | None = None) -> str:
-    """Host-shell grant: the bootstrap authority. See parts/ranks.py."""
-    path = path or CHARACTERS_PATH
-    data = _read(path)
-    if name not in data:
-        return f"No saved character named {name}."
-    data[name]["rank"] = rank
-    path.write_text(json.dumps(data, indent=2))
+def set_rank(name: str, rank: str) -> str:
+    """Host-shell grant: the bootstrap authority."""
+    with get_session() as db:
+        row = db.get(CharacterRow, name)
+        if row is None:
+            return f"No saved character named {name}."
+        row.rank = rank
+        db.commit()
     return f"{name} is now rank: {rank}."
-
-
-if __name__ == "__main__":
-    import sys
-
-    if len(sys.argv) == 4 and sys.argv[1] == "grant":
-        print(set_rank(sys.argv[2], sys.argv[3]))
-    else:
-        print("Usage: python3 -m parts.characters grant <name> <rank>")

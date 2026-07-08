@@ -1,26 +1,17 @@
-"""CARD: accounts -- names become logins with real password hashing.
+"""CARD: accounts -- names become logins with real password hashing (SQL-backed).
 
-Ranks made impersonation into privilege escalation, so protected
-names now demand proof. Rules that never bend:
-
-1. Plaintext passwords are NEVER stored -- only pbkdf2_hmac(sha256)
-   with a per-user random salt and 600k iterations (stdlib; we do
-   not roll our own crypto).
-2. Verification happens BEFORE a session re-keys to a name.
-3. Legacy passwordless records still restore, with a nag to protect.
-
-LAN honesty: the transport is plaintext telnet, so this protects
-against casual impersonation, not wire sniffing. TLS is a future
-gateway concern.
+One account = one human = one password (salted pbkdf2-sha256, 600k
+iterations, constant-time compare). Characters are masks worn by
+their account: membership IS the character row's account column.
+Login refusals stay generic -- no enumeration gifts.
 """
 
 import hashlib
-import json
 import secrets
-from pathlib import Path
 from typing import Any
 
 from parts.characters import load_character, put_record
+from parts.db import AccountRow, CharacterRow, get_session
 
 _ITERATIONS = 600_000
 
@@ -29,13 +20,18 @@ def _hash(password: str, salt: bytes) -> str:
     return hashlib.pbkdf2_hmac("sha256", password.encode(), salt, _ITERATIONS).hex()
 
 
+def _matches(password: str, salt_hex: str, expected: str) -> bool:
+    digest = _hash(password, bytes.fromhex(salt_hex))
+    return secrets.compare_digest(digest, expected)
+
+
+# --------------------------------------------------- legacy v1: per-character
 def has_password(record: dict[str, Any]) -> bool:
     return bool(record.get("auth"))
 
 
 def set_password(name: str, password: str) -> str:
-    """Attach protection to a saved character. Owner of the name only
-    (the engine tick enforces that the caller IS that character)."""
+    """Attach v1 protection to a character (guest-name path)."""
     if len(password) < 4:
         return "Passwords need at least 4 characters."
     record = load_character(name)
@@ -48,34 +44,13 @@ def set_password(name: str, password: str) -> str:
 
 
 def verify_password(name: str, password: str) -> bool:
-    """True only if the record is protected AND the password matches."""
     record = load_character(name)
     if record is None or not has_password(record):
         return False
-    salt = bytes.fromhex(record["auth"]["salt"])
-    expected = record["auth"]["hash"]
-    return secrets.compare_digest(_hash(password, salt), expected)
+    return _matches(password, record["auth"]["salt"], record["auth"]["hash"])
 
 
-# ---------------------------------------------------------------- accounts
-# An account is the HUMAN: one password, many characters. Login is
-# character@account -- the mask, worn by its owner.
-
-ACCOUNTS_PATH = Path("accounts.json")
-
-
-def _read_accounts(path: Path | None = None) -> dict[str, dict[str, Any]]:
-    path = path or ACCOUNTS_PATH
-    if not path.exists():
-        return {}
-    return json.loads(path.read_text())
-
-
-def _write_accounts(data: dict[str, dict[str, Any]], path: Path | None = None) -> None:
-    path = path or ACCOUNTS_PATH
-    path.write_text(json.dumps(data, indent=2))
-
-
+# ------------------------------------------------------------------ accounts
 def parse_handle(handle: str) -> tuple[str, str] | None:
     """'matrym@matlabs' -> ('matrym', 'matlabs'); None if malformed."""
     char, at, account = handle.partition("@")
@@ -85,67 +60,109 @@ def parse_handle(handle: str) -> tuple[str, str] | None:
 
 
 def register(char: str, account: str, password: str) -> str:
-    """Create or extend an account with a new character.
-
-    New account: password becomes the account's secret.
-    Existing account: password must match before a character is added.
-    Character names are globally unique -- no hijacking saved heroes."""
+    """Create or extend an account with a new character. Returns '' on
+    success; the engine tick finishes the character's birth."""
     if len(password) < 4:
         return "Passwords need at least 4 characters."
     if load_character(char) is not None:
         return f"A character named {char} already exists."
-    accounts = _read_accounts()
-    entry = accounts.get(account)
-    if entry is None:
-        salt = secrets.token_bytes(16)
-        entry = {"auth": {"salt": salt.hex(), "hash": _hash(password, salt)}, "characters": []}
-        accounts[account] = entry
-    else:
-        if not _verify_account_entry(entry, password):
+    with get_session() as db:
+        row = db.get(AccountRow, account)
+        if row is None:
+            salt = secrets.token_bytes(16)
+            db.add(AccountRow(name=account, auth_salt=salt.hex(), auth_hash=_hash(password, salt)))
+            db.commit()
+        elif not _matches(password, row.auth_salt, row.auth_hash):
             return "That account exists and this is not its password."
-    entry["characters"].append(char)
-    _write_accounts(accounts)
-    return ""  # empty string means success; the tick finishes the birth
-
-
-def _verify_account_entry(entry: dict[str, Any], password: str) -> bool:
-    salt = bytes.fromhex(entry["auth"]["salt"])
-    return secrets.compare_digest(_hash(password, salt), entry["auth"]["hash"])
+    return ""
 
 
 def login_check(char: str, account: str, password: str) -> bool:
-    """One generic verdict. Never reveals WHICH part was wrong --
-    'no such account' vs 'bad password' is a gift to attackers."""
-    accounts = _read_accounts()
-    entry = accounts.get(account)
-    if entry is None:
-        return False
-    if char not in entry["characters"]:
-        return False
-    return _verify_account_entry(entry, password)
+    """One generic verdict: account exists, password matches, and the
+    character belongs to that account. Which part failed is a secret."""
+    with get_session() as db:
+        acct = db.get(AccountRow, account)
+        if acct is None or not _matches(password, acct.auth_salt, acct.auth_hash):
+            return False
+        row = db.get(CharacterRow, char)
+        return row is not None and row.account == account
 
 
-def migrate(char: str, account: str, path: Path | None = None) -> str:
-    """Host-shell tool: move a v1 character-password onto an account.
-    The character's own auth is retired; the account takes over."""
+def adopt(char: str, account: str) -> str:
+    """Attach an existing character to an account (migration/admin)."""
+    with get_session() as db:
+        row = db.get(CharacterRow, char)
+        if row is None:
+            return f"No saved character named {char}."
+        row.account = account
+        db.commit()
+    return f"{char} now belongs to {account}."
+
+
+def set_account_password(account: str, password: str) -> str:
+    """Rotate an account's secret (the codeforge passwd verb)."""
+    if len(password) < 4:
+        return "Passwords need at least 4 characters."
+    with get_session() as db:
+        row = db.get(AccountRow, account)
+        if row is None:
+            return f"No account named {account}."
+        salt = secrets.token_bytes(16)
+        row.auth_salt = salt.hex()
+        row.auth_hash = _hash(password, salt)
+        db.commit()
+    return f"Password rotated for {account}."
+
+
+def migrate(char: str, account: str) -> str:
+    """Move a v1 character-password onto a NEW account."""
     record = load_character(char)
     if record is None:
         return f"No saved character named {char}."
     if not record.get("auth"):
         return f"{char} has no password to migrate. Set one in-game first: password <secret>"
-    accounts = _read_accounts(path)
-    if account in accounts:
-        return f"Account {account} already exists; migration only creates new accounts."
-    accounts[account] = {"auth": record.pop("auth"), "characters": [char]}
-    _write_accounts(accounts, path)
-    put_record(char, record)
+    with get_session() as db:
+        if db.get(AccountRow, account) is not None:
+            return f"Account {account} already exists; migration only creates new accounts."
+        auth = record["auth"]
+        db.add(AccountRow(name=account, auth_salt=auth["salt"], auth_hash=auth["hash"]))
+        row = db.get(CharacterRow, char)
+        assert row is not None
+        row.account = account
+        row.auth_salt = None
+        row.auth_hash = None
+        db.commit()
     return f"{char}@{account} is ready. Log in with the same password."
 
 
-if __name__ == "__main__":
-    import sys
+def import_legacy_json() -> str:
+    """One-time importer: characters.json + accounts.json -> SQLite."""
+    import json
+    from pathlib import Path
 
-    if len(sys.argv) == 4 and sys.argv[1] == "migrate":
-        print(migrate(sys.argv[2], sys.argv[3]))
-    else:
-        print("Usage: python3 -m parts.accounts migrate <character> <account>")
+    moved = []
+    chars = Path("characters.json")
+    if chars.exists():
+        for name, record in json.loads(chars.read_text()).items():
+            put_record(name, record)
+            moved.append(name)
+    accts = Path("accounts.json")
+    if accts.exists():
+        with get_session() as db:
+            for name, entry in json.loads(accts.read_text()).items():
+                if db.get(AccountRow, name) is None and entry.get("auth"):
+                    db.add(
+                        AccountRow(
+                            name=name,
+                            auth_salt=entry["auth"]["salt"],
+                            auth_hash=entry["auth"]["hash"],
+                        )
+                    )
+                for member in entry.get("characters", []):
+                    row = db.get(CharacterRow, member)
+                    if row is not None:
+                        row.account = name
+            db.commit()
+    if not moved and not accts.exists():
+        return "No legacy JSON found; nothing to import."
+    return f"Imported {len(moved)} character(s) into codeforge.db. Legacy files left untouched."

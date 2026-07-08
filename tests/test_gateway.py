@@ -9,6 +9,7 @@ import pytest
 
 import parts.gateway as gateway
 from parts import doors, items, npcs
+from parts.accounts import adopt
 from parts.accounts import register as register_account
 from parts.characters import save_character
 from parts.gateway import GatewayServer, _Handler
@@ -89,12 +90,7 @@ def _saved_account(char: str = "matrym", account: str = "matlabs", pw: str = "sw
     save_character(hero)
     SESSIONS.clear()
     register_account("other_seed", account, pw)  # creates the account
-    # attach the real character to it
-    from parts.accounts import _read_accounts, _write_accounts
-
-    data = _read_accounts()
-    data[account]["characters"].append(char)
-    _write_accounts(data)
+    adopt(char, account)  # attach the real character to it
 
 
 def test_front_desk_shows_splash_and_stops_at_the_door(server):
