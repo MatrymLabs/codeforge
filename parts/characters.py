@@ -2,53 +2,53 @@
 
 Same doors as always -- load_character, save_character, put_record,
 set_rank -- now opening onto a SQLite table instead of a JSON file.
-Derive-don't-store is unchanged: a record is a handful of canonical
+Derive-don't-store is unchanged: a casefile is a handful of canonical
 facts; stats and resources recompute on restore.
 """
 
 from typing import Any
 
-from parts.db import CharacterRow, get_session
-from parts.jobs import BASE_HP, BASE_MP, assign_job
+from parts.db import CharacterRow, open_archive_session
+from parts.jobs import BASE_HP, BASE_MP, bind_calling
 from parts.progression import hp_gain_per_level, mp_gain_per_level
 from parts.resources import Resource
 from parts.session import Session
 
 
-def _row_to_record(row: CharacterRow) -> dict[str, Any]:
-    record: dict[str, Any] = {
-        "job": row.job,
-        "level": row.level,
-        "xp": row.xp,
-        "location": row.location,
-        "rank": row.rank,
-        "account": row.account,
+def _archive_row_to_casefile(archive_row: CharacterRow) -> dict[str, Any]:
+    casefile: dict[str, Any] = {
+        "job": archive_row.job,
+        "level": archive_row.level,
+        "xp": archive_row.xp,
+        "location": archive_row.location,
+        "rank": archive_row.rank,
+        "account": archive_row.account,
     }
-    if row.auth_salt and row.auth_hash:
-        record["auth"] = {"salt": row.auth_salt, "hash": row.auth_hash}
-    return record
+    if archive_row.auth_salt and archive_row.auth_hash:
+        casefile["auth"] = {"salt": archive_row.auth_salt, "hash": archive_row.auth_hash}
+    return casefile
 
 
 def load_character(name: str) -> dict[str, Any] | None:
-    with get_session() as db:
-        row = db.get(CharacterRow, name)
-        return _row_to_record(row) if row else None
+    with open_archive_session() as db:
+        archive_row = db.get(CharacterRow, name)
+        return _archive_row_to_casefile(archive_row) if archive_row else None
 
 
-def put_record(name: str, record: dict[str, Any]) -> None:
-    """Write one full record through the single storage door."""
-    auth = record.get("auth") or {}
-    with get_session() as db:
-        row = db.get(CharacterRow, name) or CharacterRow(name=name)
-        row.job = record.get("job", "")
-        row.level = int(record.get("level", 1))
-        row.xp = int(record.get("xp", 0))
-        row.location = record.get("location", "forge")
-        row.rank = record.get("rank", "player")
-        row.account = record.get("account", "")
-        row.auth_salt = auth.get("salt")
-        row.auth_hash = auth.get("hash")
-        db.add(row)
+def put_record(name: str, casefile: dict[str, Any]) -> None:
+    """Write one full casefile through the single storage door."""
+    auth = casefile.get("auth") or {}
+    with open_archive_session() as db:
+        archive_row = db.get(CharacterRow, name) or CharacterRow(name=name)
+        archive_row.job = casefile.get("job", "")
+        archive_row.level = int(casefile.get("level", 1))
+        archive_row.xp = int(casefile.get("xp", 0))
+        archive_row.location = casefile.get("location", "forge")
+        archive_row.rank = casefile.get("rank", "player")
+        archive_row.account = casefile.get("account", "")
+        archive_row.auth_salt = auth.get("salt")
+        archive_row.auth_hash = auth.get("hash")
+        db.add(archive_row)
         db.commit()
 
 
@@ -58,31 +58,33 @@ def save_character(session: Session) -> None:
     the merge-save law, now enforced by the schema itself."""
     if not session.named:
         return
-    with get_session() as db:
-        row = db.get(CharacterRow, session.player_id) or CharacterRow(name=session.player_id)
-        row.job = session.job
-        row.level = session.level
-        row.xp = session.xp
-        row.location = session.location
-        row.rank = session.rank
-        row.account = session.account
-        db.add(row)
+    with open_archive_session() as db:
+        archive_row = db.get(CharacterRow, session.player_id) or CharacterRow(
+            name=session.player_id
+        )
+        archive_row.job = session.job
+        archive_row.level = session.level
+        archive_row.xp = session.xp
+        archive_row.location = session.location
+        archive_row.rank = session.rank
+        archive_row.account = session.account
+        db.add(archive_row)
         db.commit()
 
 
-def restore_character(session: Session, record: dict[str, Any]) -> None:
+def restore_character(session: Session, casefile: dict[str, Any]) -> None:
     """Rebuild the full sheet from minimal state. Resources return full:
     logging back in is a night's rest."""
     session.named = True
-    session.rank = str(record.get("rank", "player"))
-    session.account = str(record.get("account", ""))
-    session.level = int(record["level"])
-    session.xp = int(record["xp"])
-    session.location = str(record["location"])
-    job = str(record["job"])
+    session.rank = str(casefile.get("rank", "player"))
+    session.account = str(casefile.get("account", ""))
+    session.level = int(casefile["level"])
+    session.xp = int(casefile["xp"])
+    session.location = str(casefile["location"])
+    job = str(casefile["job"])
     if not job:
         return
-    assign_job(session, job)
+    bind_calling(session, job)
     assert session.stats is not None
     sta = session.stats.get("stamina").base
     mag = session.stats.get("magic").base
@@ -97,10 +99,10 @@ def restore_character(session: Session, record: dict[str, Any]) -> None:
 
 def set_rank(name: str, rank: str) -> str:
     """Host-shell grant: the bootstrap authority."""
-    with get_session() as db:
-        row = db.get(CharacterRow, name)
-        if row is None:
+    with open_archive_session() as db:
+        archive_row = db.get(CharacterRow, name)
+        if archive_row is None:
             return f"No saved character named {name}."
-        row.rank = rank
+        archive_row.rank = rank
         db.commit()
     return f"{name} is now rank: {rank}."

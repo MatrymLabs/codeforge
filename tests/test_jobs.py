@@ -1,7 +1,7 @@
 """Test twin for parts/jobs.py -- chargen from seed to sheet."""
 
 from forge import handle_command
-from parts.jobs import JOBS, assign_job, score_text
+from parts.jobs import JOBS, bind_calling, render_sheet
 from parts.session import Session
 
 
@@ -13,7 +13,7 @@ def test_jobs_load_from_seed_with_labels():
 
 def test_assign_job_births_stats_and_resources():
     s = Session(player_id="matrym")
-    message = assign_job(s, "scholar")
+    message = bind_calling(s, "scholar")
     assert "way of the Scholar" in message
     assert s.job == "scholar"
     assert s.stats is not None
@@ -25,20 +25,20 @@ def test_assign_job_births_stats_and_resources():
 
 def test_unknown_calling_is_refused():
     s = Session(player_id="matrym")
-    assert "no calling named" in assign_job(s, "necromancer")
+    assert "no calling named" in bind_calling(s, "necromancer")
     assert s.job == ""
     assert s.stats is None
 
 
 def test_score_before_choosing_points_to_jobs():
     s = Session(player_id="matrym")
-    assert "no calling yet" in score_text(s)
+    assert "no calling yet" in render_sheet(s)
 
 
 def test_score_sheet_shows_the_whole_character():
     s = Session(player_id="matrym")
-    assign_job(s, "vanguard")
-    sheet = score_text(s)
+    bind_calling(s, "vanguard")
+    sheet = render_sheet(s)
     assert "Matrym, the Vanguard" in sheet
     assert "Level 1" in sheet
     assert "HP 32/32" in sheet  # 20 + 12 stamina

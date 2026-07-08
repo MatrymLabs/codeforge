@@ -121,7 +121,7 @@ def _article(noun: str) -> str:
     return "an" if noun[:1] in "aeiou" else "a"
 
 
-def _load_mapping(path: Path, what: str) -> tuple[dict[str, dict[str, Any]], dict[str, Any]]:
+def _open_seed_bin(path: Path, what: str) -> tuple[dict[str, dict[str, Any]], dict[str, Any]]:
     """Shared front door: read YAML, gate labels, pop the template block.
 
     Returns (entries, file_template)."""
@@ -144,7 +144,9 @@ def _load_mapping(path: Path, what: str) -> tuple[dict[str, dict[str, Any]], dic
     return entries, file_template
 
 
-def _require_types(label: str, merged: dict[str, Any], spec: tuple[tuple[str, type], ...]) -> None:
+def _inspect_required_types(
+    label: str, merged: dict[str, Any], spec: tuple[tuple[str, type], ...]
+) -> None:
     for field, kind in spec:
         if not isinstance(merged[field], kind):
             raise SeedError(f"'{label}' field '{field}' must be {kind.__name__}.")
@@ -152,7 +154,7 @@ def _require_types(label: str, merged: dict[str, Any], spec: tuple[tuple[str, ty
 
 def load_rooms(path: Path) -> dict[str, Room]:
     """Read rooms.yaml, validate it, return the room graph."""
-    entries, file_template = _load_mapping(path, "Room")
+    entries, file_template = _open_seed_bin(path, "Room")
     rooms: dict[str, Room] = {}
     for label, raw in entries.items():
         merged: dict[str, Any] = {
@@ -162,7 +164,7 @@ def load_rooms(path: Path) -> dict[str, Room]:
             **file_template,
             **raw,
         }
-        _require_types(label, merged, (("name", str), ("desc", str), ("exits", dict)))
+        _inspect_required_types(label, merged, (("name", str), ("desc", str), ("exits", dict)))
         rooms[label] = Room(name=merged["name"], desc=merged["desc"], exits=merged["exits"])
     for label, room in rooms.items():
         for direction, destination in room["exits"].items():
@@ -176,7 +178,7 @@ def load_rooms(path: Path) -> dict[str, Room]:
 
 def load_items(path: Path) -> dict[str, Item]:
     """Read items.yaml, validate it, return items with tagged locations."""
-    entries, file_template = _load_mapping(path, "Item")
+    entries, file_template = _open_seed_bin(path, "Item")
     items: dict[str, Item] = {}
     for label, raw in entries.items():
         noun = _phrase(label)
@@ -188,7 +190,9 @@ def load_items(path: Path) -> dict[str, Item]:
         }
         if "location" not in merged:
             raise SeedError(f"Item '{label}' is missing required field 'location' (a room label).")
-        _require_types(label, merged, (("name", str), ("keywords", list), ("location", str)))
+        _inspect_required_types(
+            label, merged, (("name", str), ("keywords", list), ("location", str))
+        )
         loc = merged["location"]
         tagged = loc if loc == "player" else f"room:{loc}"
         items[label] = Item(name=merged["name"], keywords=merged["keywords"], location=tagged)
@@ -197,7 +201,7 @@ def load_items(path: Path) -> dict[str, Item]:
 
 def load_npcs(path: Path) -> dict[str, Npc]:
     """Read npcs.yaml, validate it, return NPCs. next_line is runtime state."""
-    entries, file_template = _load_mapping(path, "NPC")
+    entries, file_template = _open_seed_bin(path, "NPC")
     npcs: dict[str, Npc] = {}
     for label, raw in entries.items():
         merged: dict[str, Any] = {
@@ -211,7 +215,7 @@ def load_npcs(path: Path) -> dict[str, Npc]:
         }
         if "location" not in merged:
             raise SeedError(f"NPC '{label}' is missing required field 'location' (a room label).")
-        _require_types(
+        _inspect_required_types(
             label,
             merged,
             (
@@ -236,7 +240,7 @@ def load_npcs(path: Path) -> dict[str, Npc]:
     return npcs
 
 
-def validate_locations(
+def inspect_world_links(
     rooms: dict[str, Room], items: dict[str, Item], npcs: dict[str, Npc]
 ) -> None:
     """The cross-component gate: everything placed somewhere must be
@@ -257,7 +261,7 @@ def validate_locations(
 
 def load_jobs(path: Path) -> dict[str, Job]:
     """Load and gate the job pack: every job gets name, description, stats."""
-    entries, template = _load_mapping(path, "job")
+    entries, template = _open_seed_bin(path, "job")
     jobs: dict[str, Job] = {}
     for label, fields in entries.items():
         _check_label(label, "job")
@@ -268,7 +272,9 @@ def load_jobs(path: Path) -> dict[str, Job]:
         }
         merged.update(template)
         merged.update(fields)
-        _require_types(label, merged, (("name", str), ("description", str), ("stats", dict)))
+        _inspect_required_types(
+            label, merged, (("name", str), ("description", str), ("stats", dict))
+        )
         stats = dict(DEFAULT_JOB_STATS) | dict(merged["stats"])
         for stat_name, value in stats.items():
             if not isinstance(value, int) or isinstance(value, bool):

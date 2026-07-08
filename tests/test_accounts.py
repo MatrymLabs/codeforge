@@ -152,7 +152,7 @@ def test_handles_must_be_well_formed():
 
 
 def test_migrate_moves_a_character_password_onto_a_new_account():
-    from parts.accounts import login_check, migrate
+    from parts.accounts import inspect_login, migrate
 
     hero = Session(player_id="matrym", location="courtyard", named=True)
     SESSIONS["matrym"] = hero
@@ -160,7 +160,7 @@ def test_migrate_moves_a_character_password_onto_a_new_account():
     set_password("matrym", "swordfish")
     msg = migrate("matrym", "matlabs")
     assert "matrym@matlabs is ready" in msg
-    assert login_check("matrym", "matlabs", "swordfish")
+    assert inspect_login("matrym", "matlabs", "swordfish")
     assert not has_password(load_character("matrym"))  # char auth retired
 
 
@@ -182,13 +182,13 @@ def test_mixed_case_passwords_survive_the_tick():
 
 def test_cli_rotation_then_tick_login_roundtrip():
     """The exact saga, pinned forever: passwd via CLI, login via door."""
-    from parts.accounts import set_account_password
+    from parts.accounts import rotate_account_secret
 
     s = _fresh()
     _tick(s, "register matrym@matlabs starter1")
     _tick(s, "quit")
     SESSIONS.clear()
-    set_account_password("matlabs", "MiXedCase42!")
+    rotate_account_secret("matlabs", "MiXedCase42!")
     back = _fresh()
     out = _tick(back, "login matrym@matlabs MiXedCase42!")
     assert "Welcome back, Matrym@matlabs" in out

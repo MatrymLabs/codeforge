@@ -3,7 +3,7 @@
 [![CI](https://github.com/MatrymLabs/codeforge/actions/workflows/ci.yml/badge.svg)](https://github.com/MatrymLabs/codeforge/actions/workflows/ci.yml)
 ![Python](https://img.shields.io/badge/python-3.13-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
-![Tests](https://img.shields.io/badge/tests-151%20passing-brightgreen)
+![Tests](https://img.shields.io/badge/tests-184%20passing-brightgreen)
 
 **A Python-native multiplayer MUD engine, built as a workshop of small, tested, reusable parts.**
 
@@ -32,7 +32,7 @@ git clone git@github.com:MatrymLabs/codeforge.git
 cd codeforge
 python3 -m venv .venv && source .venv/bin/activate
 pip install -e ".[dev]"
-make check       # lint + typecheck + 151 tests
+make check       # lint + typecheck + 184 tests
 spark            # ignite the multiplayer server on port 4000
 ```
 
@@ -55,10 +55,10 @@ flowchart LR
     G[TCP gateway + front desk<br/>Mudlet / telnet / nc] --> H
     H["handle_command(session, text)<br/><b>the engine tick</b>"]
     H --> P[parts/*<br/>world · items · doors · npcs · jobs<br/>combat · ranks · accounts]
-    P --> E[events bus<br/>room broadcasts]
+    P --> E[events bus<br/>echo sinks + room broadcasts]
     E --> G
     S[(seeds/*.yaml + splash.txt<br/>the world as data)] --> P
-    P --> C[(characters.json / accounts.json<br/>minimal canonical state)]
+    P --> C[(codeforge.db + save snapshots<br/>minimal canonical state)]
 ```
 
 Three laws hold everywhere:
@@ -115,7 +115,7 @@ written for, original tests included.
 
 ## Testing
 
-151 tests: unit twins for every card, real-socket gateway tests that walk the login
+184 tests: unit twins for every card, real-socket gateway tests that walk the login
 dialogue over the wire, engine-tick wiring tripwires, deterministic combat math,
 persistence parity, security tests (impostor refusal, salted hashes, generic login
 refusals), and Hypothesis property tests pinning the progression curves across
@@ -132,6 +132,10 @@ thousands of generated cases. CI runs the same `make check` as the workbench.
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for the workshop rituals: conventional commits,
 the card/test-twin rule, and the verification gates.
+
+This project was built in AI-assisted sessions with human review at every gate;
+[docs/AI_WORKFLOW.md](docs/AI_WORKFLOW.md) documents the guardrails, failure patterns,
+and design invariants that governed those sessions.
 
 ## License
 

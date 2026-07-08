@@ -68,7 +68,7 @@ def test_room_fields_win_over_template(tmp_path):
 
 # --- items and NPCs join the seed ---
 
-from parts.seed import SEED_DIR, load_items, load_npcs, validate_locations  # noqa: E402
+from parts.seed import SEED_DIR, inspect_world_links, load_items, load_npcs  # noqa: E402
 
 
 def test_shipped_items_seed_loads_the_copper_key():
@@ -114,7 +114,7 @@ def test_cross_gate_catches_item_in_missing_room(tmp_path):
     path.write_text("lost_coin:\n  location: mystery_cave\n")
     bad_items = load_items(path)
     with pytest.raises(SeedError, match="mystery_cave"):
-        validate_locations(rooms, bad_items, {})
+        inspect_world_links(rooms, bad_items, {})
 
 
 def test_cross_gate_catches_npc_in_missing_room(tmp_path):
@@ -123,4 +123,4 @@ def test_cross_gate_catches_npc_in_missing_room(tmp_path):
     path.write_text("ghost:\n  location: the_void\n")
     bad_npcs = load_npcs(path)
     with pytest.raises(SeedError, match="the_void"):
-        validate_locations(rooms, {}, bad_npcs)
+        inspect_world_links(rooms, {}, bad_npcs)

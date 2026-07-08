@@ -7,7 +7,7 @@ from parts.session import SESSIONS, Session
 
 def test_unknown_verbs_print_usage_and_fail(capsys):
     assert main(["dance"]) == 1
-    assert "codeforge -- the world engine" in capsys.readouterr().out
+    assert "hardware-store counter" in capsys.readouterr().out
 
 
 def test_help_prints_usage_and_succeeds(capsys):

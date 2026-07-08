@@ -21,7 +21,7 @@ from sqlalchemy import select
 
 from parts.accounts import account_has_owner, account_password_ok
 from parts.characters import set_rank
-from parts.db import CharacterRow, get_session
+from parts.db import CharacterRow, open_archive_session
 from parts.ranks import RANK_ORDER
 from parts.world import WORLD
 
@@ -75,10 +75,11 @@ def health() -> dict[str, str]:
 @app.get("/characters", response_model=list[Hero])
 def characters() -> list[Hero]:
     """Every saved hero, straight from the canonical table."""
-    with get_session() as db:
-        rows = db.scalars(select(CharacterRow)).all()
+    with open_archive_session() as db:
+        archive_rows = db.scalars(select(CharacterRow)).all()
     return [
-        Hero(name=r.name, job=r.job, level=r.level, rank=r.rank, location=r.location) for r in rows
+        Hero(name=row.name, job=row.job, level=row.level, rank=row.rank, location=row.location)
+        for row in archive_rows
     ]
 
 

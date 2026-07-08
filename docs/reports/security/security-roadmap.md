@@ -23,7 +23,7 @@ and, if ever exposed, the open internet.
 
 ## Online brute-force defense
 - ✅ Per-connection 3-strikes-then-close at the front desk.
-- ✅ **Cross-connection per-IP rate limiting** (`_door_is_barred` /
+- ✅ **Cross-connection per-IP rate limiting** (`_gate_is_barred` /
   `_turnaway_ledger`, `MAX_LOGIN_FAILS` in a `LOGIN_FAIL_WINDOW`). Survives reconnects, which the
   per-connection 3-strikes did not. The ledger is bounded: barred-checks are
   read-only and each recorded turnaway sweeps aged-out addresses (self-audit

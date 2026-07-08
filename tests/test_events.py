@@ -6,7 +6,7 @@ import pytest
 
 from forge import handle_command, render_scene
 from parts import doors, items, npcs
-from parts.events import announce, register, unregister
+from parts.events import announce, bind_echo, unbind_echo
 from parts.session import SESSIONS, Session
 
 
@@ -28,7 +28,7 @@ def _seat(player_id: str, location: str) -> tuple[Session, list[str]]:
     s = Session(player_id=player_id, location=location)
     SESSIONS[player_id] = s
     heard: list[str] = []
-    register(player_id, heard.append)
+    bind_echo(player_id, heard.append)
     return s, heard
 
 
@@ -41,7 +41,7 @@ def test_announce_reaches_room_but_not_actor():
     assert a_heard == []
     assert c_heard == []
     for pid in ("a", "b", "c"):
-        unregister(pid)
+        unbind_echo(pid)
 
 
 def test_movement_announces_departure_and_arrival():
@@ -52,7 +52,7 @@ def test_movement_announces_departure_and_arrival():
     assert "A leaves north." in b_heard
     assert "A arrives." in c_heard
     for pid in ("a", "b", "c"):
-        unregister(pid)
+        unbind_echo(pid)
 
 
 def test_say_is_heard_by_the_room():
@@ -61,8 +61,8 @@ def test_say_is_heard_by_the_room():
     response = handle_command(a, "say hello there")
     assert response == 'You say, "hello there"'
     assert 'A says, "hello there"' in b_heard
-    unregister("a")
-    unregister("b")
+    unbind_echo("a")
+    unbind_echo("b")
 
 
 def test_take_is_seen_by_bystanders():
@@ -70,8 +70,8 @@ def test_take_is_seen_by_bystanders():
     _, b_heard = _seat("b", "library")
     handle_command(a, "take key")
     assert "A takes a copper key." in b_heard
-    unregister("a")
-    unregister("b")
+    unbind_echo("a")
+    unbind_echo("b")
 
 
 def test_scene_shows_other_players_but_not_yourself():
@@ -80,5 +80,5 @@ def test_scene_shows_other_players_but_not_yourself():
     scene = render_scene("library", viewer="a")
     assert "B is here." in scene
     assert "A is here." not in scene
-    unregister("a")
-    unregister("b")
+    unbind_echo("a")
+    unbind_echo("b")

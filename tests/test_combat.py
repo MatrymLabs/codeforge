@@ -5,9 +5,9 @@ import copy
 import pytest
 
 from parts import npcs
-from parts.combat import attack, award_xp, damage_for
-from parts.events import register, unregister
-from parts.jobs import assign_job
+from parts.combat import attack, award_xp, strike_power
+from parts.events import bind_echo, unbind_echo
+from parts.jobs import bind_calling
 from parts.session import SESSIONS, Session
 
 
@@ -23,7 +23,7 @@ def fresh_world():
 def _fighter(job: str = "vanguard", location: str = "courtyard") -> Session:
     s = Session(player_id="matrym", location=location)
     SESSIONS["matrym"] = s
-    assign_job(s, job)
+    bind_calling(s, job)
     return s
 
 
@@ -38,9 +38,9 @@ def test_peaceful_npcs_cannot_be_fought():
 
 
 def test_damage_comes_from_strength():
-    assert damage_for(_fighter("vanguard")) == 3 + 14 // 3  # 7
+    assert strike_power(_fighter("vanguard")) == 3 + 14 // 3  # 7
     SESSIONS.clear()
-    assert damage_for(_fighter("scholar")) == 3 + 5 // 3  # 4
+    assert strike_power(_fighter("scholar")) == 3 + 5 // 3  # 4
 
 
 def test_strikes_wear_the_dummy_down_and_it_reassembles():
@@ -68,10 +68,10 @@ def test_the_room_witnesses_the_level_up():
     b = Session(player_id="bystander", location="courtyard")
     SESSIONS["bystander"] = b
     heard: list[str] = []
-    register("bystander", heard.append)
+    bind_echo("bystander", heard.append)
     award_xp(s, 80)
     assert "Matrym has reached level 2!" in heard
-    unregister("bystander")
+    unbind_echo("bystander")
 
 
 def test_attack_flows_through_the_engine_tick():

@@ -4,7 +4,7 @@ from pathlib import Path
 
 import parts.db as db
 from parts.characters import load_character, put_record, save_character
-from parts.db import CharacterRow, _default_db_path, get_session
+from parts.db import CharacterRow, _default_db_path, open_archive_session
 from parts.session import SESSIONS, Session
 
 
@@ -50,5 +50,5 @@ def test_save_character_never_touches_auth_columns():
 
 def test_unnamed_seats_write_no_rows():
     save_character(Session(player_id="player1"))
-    with get_session() as db:
+    with open_archive_session() as db:
         assert db.get(CharacterRow, "player1") is None

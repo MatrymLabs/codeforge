@@ -7,7 +7,7 @@ import pytest
 from parts import npcs
 from parts.characters import load_character, restore_character, save_character
 from parts.combat import award_xp
-from parts.jobs import assign_job
+from parts.jobs import bind_calling
 from parts.session import SESSIONS, Session
 
 
@@ -23,7 +23,7 @@ def fresh_world():
 def _hero() -> Session:
     s = Session(player_id="matrym", location="courtyard", named=True)
     SESSIONS["matrym"] = s
-    assign_job(s, "vanguard")
+    bind_calling(s, "vanguard")
     return s
 
 

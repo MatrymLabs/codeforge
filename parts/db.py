@@ -15,7 +15,8 @@ import os
 from pathlib import Path
 
 from sqlalchemy import Engine, create_engine
-from sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+from sqlalchemy.orm import Session as SqlSession
 
 
 def _default_db_path() -> Path:
@@ -36,11 +37,11 @@ DB_PATH = _default_db_path()
 _ENGINES: dict[str, Engine] = {}
 
 
-class Base(DeclarativeBase):
+class ArchiveBase(DeclarativeBase):
     pass
 
 
-class CharacterRow(Base):
+class CharacterRow(ArchiveBase):
     __tablename__ = "characters"
 
     name: Mapped[str] = mapped_column(primary_key=True)
@@ -54,7 +55,7 @@ class CharacterRow(Base):
     auth_hash: Mapped[str | None] = mapped_column(default=None)
 
 
-class AccountRow(Base):
+class AccountRow(ArchiveBase):
     __tablename__ = "accounts"
 
     name: Mapped[str] = mapped_column(primary_key=True)
@@ -62,13 +63,13 @@ class AccountRow(Base):
     auth_hash: Mapped[str] = mapped_column()
 
 
-def get_session() -> Session:
-    """A working session on the current DB_PATH. Engines are cached per
+def open_archive_session() -> SqlSession:
+    """A working archive session on the current DB_PATH. Engines are cached per
     path; tables are created on first contact (idempotent)."""
     key = str(DB_PATH)
     engine = _ENGINES.get(key)
     if engine is None:
         engine = create_engine(f"sqlite:///{key}")
-        Base.metadata.create_all(engine)
+        ArchiveBase.metadata.create_all(engine)
         _ENGINES[key] = engine
-    return Session(engine)
+    return SqlSession(engine)

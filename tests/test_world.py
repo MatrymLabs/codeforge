@@ -1,6 +1,6 @@
 """Test twin for parts/world.py -- graph integrity and movement."""
 
-from parts.world import DIRECTIONS, WORLD, try_move
+from parts.world import DIRECTIONS, WORLD, resolve_move
 
 
 def test_all_exits_lead_to_real_rooms():
@@ -19,12 +19,12 @@ def test_direction_aliases_resolve_to_canonical_forms():
 
 
 def test_move_through_valid_exit_changes_location():
-    arrived, message = try_move("forge", "north")
+    arrived, message = resolve_move("forge", "north")
     assert arrived == "courtyard"
     assert message == ""
 
 
 def test_move_through_missing_exit_stays_put():
-    arrived, message = try_move("forge", "east")
+    arrived, message = resolve_move("forge", "east")
     assert arrived == "forge"
     assert "can't go" in message

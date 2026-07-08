@@ -18,7 +18,7 @@ BASE_HP = 20  # starting HP is BASE_HP + stamina; leveling uses the progression 
 BASE_MP = 5  # starting MP is BASE_MP + magic
 
 
-def jobs_text() -> str:
+def calling_index() -> str:
     """The list a new soul reads before choosing."""
     lines = ["Callings of The First Forge:"]
     for label, job in JOBS.items():
@@ -27,7 +27,7 @@ def jobs_text() -> str:
     return "\n".join(lines)
 
 
-def assign_job(session: Session, word: str) -> str:
+def bind_calling(session: Session, word: str) -> str:
     """Stamp a calling onto a session: stats and resources are born here."""
     label = word.strip().lower()
     if label not in JOBS:
@@ -46,7 +46,7 @@ def assign_job(session: Session, word: str) -> str:
     return f"You take up the way of the {job['name']}. Type SCORE to see your sheet."
 
 
-def score_text(session: Session) -> str:
+def render_sheet(session: Session) -> str:
     """The classic character sheet. Pure projection of session state."""
     if not session.job or session.stats is None:
         return "You have no calling yet. Type JOBS to see the paths."

@@ -5,9 +5,9 @@ import copy
 import pytest
 
 from parts import doors, items
-from parts.doors import door_blocking, unlock
+from parts.doors import barred_door_for, unlock
 from parts.items import take
-from parts.world import try_move
+from parts.world import resolve_move
 
 
 @pytest.fixture(autouse=True)
@@ -21,11 +21,11 @@ def fresh_world():
 
 
 def test_oak_door_starts_locked():
-    assert door_blocking("library", "north") == "oak_door"
+    assert barred_door_for("library", "north") == "oak_door"
 
 
 def test_locked_door_blocks_movement():
-    arrived, message = try_move("library", "north")
+    arrived, message = resolve_move("library", "north")
     assert arrived == "library"
     assert "locked" in message
 
@@ -46,5 +46,5 @@ def test_unlock_with_carried_key_succeeds():
 def test_unlocked_door_allows_movement():
     take("key", "library")
     unlock("door", "key", "library")
-    arrived, _ = try_move("library", "north")
+    arrived, _ = resolve_move("library", "north")
     assert arrived == "archive"

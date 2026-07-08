@@ -5,12 +5,12 @@ real commands: `codeforge <verb>` for operations, and `spark` -- the
 one-word world igniter, named for the plaque on the anvil.
 
 Handlers import lazily: `codeforge grant` should not have to load
-the entire world to edit one record.
+the entire world to edit one archive casefile.
 """
 
 import sys
 
-USAGE = """codeforge -- the world engine
+USAGE = """codeforge -- hardware-store counter for the world engine
 
   spark                                ignite the multiplayer server
   codeforge serve                      same thing, formal attire
@@ -63,14 +63,14 @@ def main(argv: list[str] | None = None) -> int:
     if cmd == "passwd" and len(args) == 2:
         import getpass
 
-        from parts.accounts import set_account_password
+        from parts.accounts import rotate_account_secret
 
         pw = getpass.getpass(f"New password for {args[1]}: ")
         again = getpass.getpass("Type it again: ")
         if pw != again:
             print("Mismatch. Nothing changed.")
             return 1
-        print(set_account_password(args[1], pw))
+        print(rotate_account_secret(args[1], pw))
         return 0
     print(USAGE)
     return 0 if cmd in ("help", "-h", "--help") else 1
