@@ -91,6 +91,55 @@ at `/data/codeforge.db`.
 
 ---
 
+## 1½. ⚒ The ritual — one command for all of it
+
+For the daily "bring everything online" moment, there's a single command that
+lights the whole workshop in sequence:
+
+```bash
+make ritual          # or, once bound as a phrase:  start the ritual
+```
+
+Four stages light up in order:
+
+1. **Ignition** — the gates run (`make check`: lint · types · tests). A red gate
+   **stops the ritual** — the forge never lights on broken code.
+2. **Mirror** — syncs with GitHub: fast-forwards your branch if it's behind,
+   names any unpushed commits. It never force-syncs and never auto-pushes a dirty
+   tree.
+3. **The Forge** — lights the gateway on :4000 and waits until the socket is
+   truly accepting connections. If a forge is *already* burning on :4000, the
+   ritual joins it instead of starting a second one.
+4. **The Gate** — opens the MUD window at the front desk, ready to log in.
+
+When you leave (`QUIT` or `Ctrl-C`), the ritual **banks the coals**: a server it
+lit, it puts out. A server it merely joined, it leaves burning. Boot a different
+game with `FORGE_SEED=sword-art-online make ritual`.
+
+### Bind the phrase `start the ritual`
+
+`make` targets are single words, so to type the literal phrase, add this shell
+function to your `~/.bashrc` (a `start` command doesn't exist on Linux, so this
+is safe):
+
+```bash
+start() {
+  if [ "$*" = "the ritual" ]; then
+    make -C "$HOME/Projects/MatrymLabs/codeforge" ritual
+  else
+    echo "start: only 'the ritual' is known here"; return 1
+  fi
+}
+```
+
+Reload with `source ~/.bashrc`, then anywhere:
+
+```bash
+start the ritual
+```
+
+---
+
 ## 2. Connect to the running server
 
 From any machine that can reach the host, use **any** of these:
