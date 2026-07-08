@@ -49,3 +49,20 @@ jobs:
 
       - name: Static security scan
         run: bandit -c pyproject.toml -r parts forge.py -q
+
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build the image
+        run: docker build -t codeforge:ci .
+      - name: Smoke-test the container boots and serves
+        run: |
+          docker run -d --name cf -p 4000:4000 codeforge:ci
+          sleep 5
+          docker logs cf
+          # The gateway announces itself once the seed loads and the socket binds.
+          # If the seed files went missing or a part failed to import, this line
+          # never prints and the job fails loud.
+          docker logs cf 2>&1 | grep -q "listening on 0.0.0.0:4000"
+          docker rm -f cf
