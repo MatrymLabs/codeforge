@@ -1,8 +1,0 @@
-.venv/
-__pycache__/
-.pytest_cache/
-save.json
-characters.json
-save.json
-.coverage
-*.egg-info/

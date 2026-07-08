@@ -28,3 +28,13 @@ jobs:
 
       - name: Coverage report
         run: make coverage
+
+      # Informational, non-blocking: pip-audit scans the whole environment, so an
+      # unrelated CVE in build tooling (pip/setuptools) should surface without
+      # turning the build red. Review its output; it does not gate the ritual.
+      - name: Dependency CVE audit
+        run: make audit
+        continue-on-error: true
+
+      - name: Static security scan
+        run: bandit -c pyproject.toml -r parts forge.py -q
