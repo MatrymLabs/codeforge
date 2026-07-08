@@ -19,6 +19,7 @@ USAGE = """codeforge -- the world engine
   codeforge migrate <char> <account>   move a v1 password onto an account
   codeforge migrate-db                 import legacy JSON saves into SQLite
   codeforge passwd <account>           rotate an account password (prompted)
+  codeforge api                        serve the HTTP admin API on port 8000
   codeforge help                       this text
 """
 
@@ -46,6 +47,13 @@ def main(argv: list[str] | None = None) -> int:
         from parts.accounts import migrate
 
         print(migrate(args[1], args[2]))
+        return 0
+    if cmd == "api":
+        import uvicorn
+
+        from parts.api import app
+
+        uvicorn.run(app, host="0.0.0.0", port=8000)
         return 0
     if cmd == "migrate-db":
         from parts.accounts import import_legacy_json
