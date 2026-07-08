@@ -47,15 +47,57 @@ class _Handler(socketserver.StreamRequestHandler):
     def _send(self, text: str) -> None:
         self.wfile.write((text + "\r\n").encode("utf-8"))
 
+    def _ask(self, prompt: str) -> str | None:
+        """One question at the front desk. None means they walked away."""
+        self.wfile.write((prompt + " ").encode("utf-8"))
+        line = self.rfile.readline()
+        if not line:
+            return None
+        return line.decode("utf-8", errors="ignore").strip()
+
+    def _front_desk(self, session: Session) -> bool:
+        """The classic connection ritual: authenticate BEFORE the world.
+        The dialogue assembles login/register commands for the engine
+        tick -- UX out here, but the tick stays the only door."""
+        self._send(load_splash())
+        for _ in range(3):
+            who = self._ask("Character (character@account), NEW, or GUEST:")
+            if who is None:
+                return False
+            who = who.strip().lower()
+            if who in ("guest", "g", ""):
+                self._send(f"Wandering in as {display_name(session.player_id)}.")
+                self._send(render_scene(session.location, viewer=session.player_id))
+                return True
+            if who == "new":
+                handle = self._ask("Choose your character@account:") or ""
+                secret = self._ask("Choose a password:") or ""
+                command = f"register {handle.strip()} {secret.strip()}"
+            else:
+                secret = self._ask("Password:") or ""
+                command = f"login {who} {secret.strip()}"
+            with TICK_LOCK:
+                response = handle_command(session, command)
+            self._send(response)
+            if response.startswith("Welcome back,"):
+                return True  # the restore response already renders the scene
+            if response.startswith("Welcome,"):
+                self._send(render_scene(session.location, viewer=session.player_id))
+                return True
+        self._send("Too many attempts. The door closes.")
+        return False
+
     def handle(self) -> None:
         player_id = _next_player_id()
         session = Session(player_id=player_id)
         with TICK_LOCK:
             SESSIONS[player_id] = session
             register(player_id, self._send)
-        self._send(load_splash())
-        self._send(f"You are seated as {display_name(player_id)} for now. Type HELP for commands.")
-        self._send(render_scene(session.location, viewer=player_id))
+        if not self._front_desk(session):
+            with TICK_LOCK:
+                unregister(session.player_id)
+                SESSIONS.pop(session.player_id, None)
+            return
         try:
             while session.alive:
                 self.wfile.write(b"> ")

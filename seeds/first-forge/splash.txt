@@ -9,7 +9,7 @@
 =========================================================
  Every world begins as a spark.
 
- Returning?   login <character>@<account> <password>
- New here?    register <character>@<account> <password>
- Just looking? wander in and pick a guest name: name <yourname>
+ Returning?    enter your  character@account
+ New here?     type  NEW
+ Just looking? type  GUEST
 =========================================================
