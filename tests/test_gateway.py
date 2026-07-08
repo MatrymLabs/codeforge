@@ -55,10 +55,14 @@ def _command(sock: socket.socket, text: str) -> str:
     return _read_until_prompt(sock)
 
 
-def test_connection_gets_a_welcome_and_the_forge(server):
+def test_connection_gets_the_splash_over_the_wire(server):
+    """Pins the WIRING, not just the loader: the splash must arrive
+    on a real socket. A loader that exists but is never called fails here."""
     sock = _connect(server)
     banner = _read_until_prompt(sock)
-    assert "Welcome to The First Forge, Player1" in banner
+    assert "T H E   F I R S T   F O R G E" in banner
+    assert "login <character>@<account> <password>" in banner
+    assert "You are seated as Player1" in banner
     assert "The Cold Forge" in banner
     sock.close()
 

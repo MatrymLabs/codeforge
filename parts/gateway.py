@@ -53,7 +53,8 @@ class _Handler(socketserver.StreamRequestHandler):
         with TICK_LOCK:
             SESSIONS[player_id] = session
             register(player_id, self._send)
-        self._send(f"Welcome to The First Forge, {display_name(player_id)}. Type HELP to begin.")
+        self._send(load_splash())
+        self._send(f"You are seated as {display_name(player_id)} for now. Type HELP for commands.")
         self._send(render_scene(session.location, viewer=player_id))
         try:
             while session.alive:
