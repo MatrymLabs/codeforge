@@ -34,7 +34,7 @@ git clone git@github.com:MatrymLabs/codeforge.git
 cd codeforge
 python3 -m venv .venv && source .venv/bin/activate
 pip install -e ".[dev]"
-make check       # lint + typecheck + 184 tests
+make check       # lint + typecheck + 191 tests
 spark            # ignite the multiplayer server on port 4000
 ```
 
@@ -91,6 +91,7 @@ Generated from the `CARD:` docstrings in `parts/` (see `make store`):
 | `npcs` | characters who live in rooms and talk. |
 | `progression` | XP and JP level curves (locked design, July 2026). |
 | `ranks` | authority, and the wizard verbs it makes legal. |
+| `regulations` | `regs` — reference federal guidance from the Guidance Library while you build. |
 | `resources` | bounded depleting values (HP, MP, TP). |
 | `save` | snapshot persistence for world state. |
 | `seed` | load and validate world component packs from YAML. |
@@ -112,6 +113,7 @@ written for, original tests included.
 | `make test` / `make property` | Deterministic suite / Hypothesis property tests, run separately |
 | `make coverage` / `make security` | Coverage report (85% floor) / bandit SAST + dependency CVE scan |
 | `make doctor` | Run every gate read-only, stop at the first failure, and prescribe the fix |
+| `make daily` | The gate, then check federal guidance for updates and file them in the [Guidance Library](https://github.com/MatrymLabs/federal-guidance-library) (`FGL_HOME`) |
 | `spark` · `codeforge serve` | Multiplayer gateway (Ctrl+C sleeps the world) |
 | `codeforge play` | Solo terminal session |
 | `make world` / `make store` | Operator catalog / developer card catalog |
@@ -120,7 +122,7 @@ written for, original tests included.
 
 ## Testing
 
-184 tests: unit twins for every card, real-socket gateway tests that walk the login
+191 tests: unit twins for every card, real-socket gateway tests that walk the login
 dialogue over the wire, engine-tick wiring tripwires, deterministic combat math,
 persistence parity, security tests (impostor refusal, salted hashes, generic login
 refusals), and Hypothesis property tests pinning the progression curves across

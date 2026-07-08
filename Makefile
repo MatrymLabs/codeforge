@@ -1,4 +1,4 @@
-.PHONY: env fix lint typecheck test property coverage audit security doctor check ship run world store clean serve unskew
+.PHONY: env fix lint typecheck test property coverage audit security doctor daily check ship run world store clean serve unskew
 
 # --- Environment: create/validate the .venv, fail loud on version mismatch ---
 env:
@@ -44,6 +44,18 @@ security:
 # --- Doctor: run the gates read-only, stop at the first failure, prescribe the fix ---
 doctor:
 	python3 scripts/doctor.py
+
+# --- Daily ritual: the code gate, then check federal guidance for updates and
+# file them in the guidance library. Point FGL_HOME at your library checkout. ---
+FGL_HOME ?= ../federal-guidance-library
+daily: check
+	@echo "→ checking federal guidance for updates..."
+	@if [ -x "$(FGL_HOME)/.venv/bin/library" ]; then \
+		( cd "$(FGL_HOME)" && .venv/bin/library check ) || echo "  (reg check reported changes or was offline)"; \
+	else \
+		echo "  library not runnable at $(FGL_HOME) — run 'make env' there to enable the daily reg check"; \
+	fi
+	@echo "✓ daily ritual complete"
 
 # --- Ship: gates, then push. Refuses dirty trees and red gates ---
 ship: check

@@ -24,6 +24,7 @@ from parts.items import drop, inventory_text, room_items_text, take
 from parts.jobs import JOBS, bind_calling, calling_index, render_sheet
 from parts.npcs import room_npcs_text, talk
 from parts.ranks import wizard_command
+from parts.regulations import regs
 from parts.save import awaken_snapshot, seal_snapshot
 from parts.session import SESSIONS, Session, display_name, roster
 from parts.world import DIRECTIONS, render_room, resolve_move
@@ -34,7 +35,7 @@ HELP_TEXT = (
     "Commands: look, go <direction> (or n/s/e/w/u/d), "
     "take, drop, inventory, talk <npc>, say <msg>, name <yourname>, who, "
     "jobs, job <calling>, score, attack <target>, "
-    "unlock <door> with <key>, passwd, save, load, quit"
+    "unlock <door> with <key>, regs [topic|id], passwd, save, load, quit"
 )
 
 
@@ -230,6 +231,8 @@ def handle_command(session: Session, signal: str) -> str:
     if routed_signal == "who":
         names = roster() or [session.player_id]
         return "Players online: " + ", ".join(display_name(n) for n in names)
+    if routed_signal == "regs" or routed_signal.startswith("regs "):
+        return regs(routed_signal[len("regs ") :] if routed_signal.startswith("regs ") else "")
     if routed_signal in ("inventory", "i", "inv"):
         return inventory_text()
     if routed_signal.startswith(("take ", "get ")):
