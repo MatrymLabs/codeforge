@@ -64,10 +64,11 @@ working code before theory, one concept at a time.
 ## Environment facts
 
 - Host: Raspberry Pi ("skynet"), aarch64 Ubuntu, Python 3.13, venv at `.venv`.
-- `parts/db.py` `DB_PATH` defaults to cwd-relative `codeforge.db`
-  (env-overridable via `CODEFORGE_DB`). Running the server from the wrong
-  directory silently creates a second empty database — a recurring trap;
-  always launch from the repo root. Hardening to an absolute default is backlog.
+- `parts/db.py` `DB_PATH` defaults to an ABSOLUTE path anchored to the repo
+  root (`_default_db_path()`), so the server opens the same `codeforge.db`
+  no matter which directory it launches from. Override with `CODEFORGE_DB`
+  (containers, a chosen data dir). This closed the old cwd-relative trap
+  that silently created a second, empty database when run from the wrong place.
 - `conftest.py` quarantines the database into tmp for every test. Tests must
   never touch real state files.
 - Save/state files are gitignored: `codeforge.db`, `save.json`,
@@ -95,15 +96,15 @@ working code before theory, one concept at a time.
 
 ## Current state (update as it changes)
 
-- ~163 tests green; CI badge green; 24+ cards in `parts/` (see `make store`).
+- 176 tests green; CI badge green; 24+ cards in `parts/` (see `make store`).
 - Merged feature arcs: seeds, sessions, gateway, events, names, chargen,
   combat, persistence→SQL, ranks, accounts (character@account), front-desk
   login dialogue, proper-noun display, CLI entry points, FastAPI admin,
-  Docker, telnet echo blackout, secret case preservation.
-- Backlog: in-game player `passwd` flow (self-service password change);
-  absolute DB path hardening; NPCs that fight back (stakes/defeat);
-  canonical typed event frames; `docs/engineering-log.md` and
-  `docs/ai-assisted-workflow.md`; cloud deploy half-day.
+  Docker, telnet echo blackout, secret case preservation, in-game `passwd`
+  (self-service password change), absolute DB path.
+- Backlog: NPCs that fight back (stakes/defeat); canonical typed event
+  frames; `docs/engineering-log.md` and `docs/ai-assisted-workflow.md`;
+  cloud deploy half-day.
 
 ## How to work with this developer
 
