@@ -43,7 +43,7 @@ def test_verify_roundtrip_and_rejection():
 
 def test_short_passwords_are_refused():
     _saved_hero()
-    assert "at least 4" in set_password("matrym", "abc")
+    assert "at least 8" in set_password("matrym", "abc")
     assert not has_password(load_character("matrym"))
 
 
@@ -117,7 +117,7 @@ def test_register_second_character_needs_the_account_password():
     _tick(s, "quit")
     SESSIONS.clear()
     alt = _fresh()
-    assert "not its password" in _tick(alt, "register duelist@matlabs wrong")
+    assert "not its password" in _tick(alt, "register duelist@matlabs wrongpass")
     out = _tick(alt, "register duelist@matlabs swordfish")
     assert "Welcome, Duelist@matlabs" in out
 
@@ -127,7 +127,7 @@ def test_register_cannot_hijack_an_existing_character():
     _tick(s, "register matrym@matlabs swordfish")
     SESSIONS.clear()
     thief = _fresh()
-    assert "already exists" in _tick(thief, "register matrym@evilcorp hunter2")
+    assert "already exists" in _tick(thief, "register matrym@evilcorp hunter2x")
 
 
 def test_login_restores_the_character_with_one_generic_refusal():
@@ -251,7 +251,7 @@ def test_passwd_refuses_a_too_short_new_password():
 
     s = _fresh()
     _tick(s, "register matrym@matlabs starter1")
-    assert "at least 4" in _tick(s, "passwd starter1 no no")
+    assert "at least 8" in _tick(s, "passwd starter1 no no")
     assert account_password_ok("matlabs", "starter1")  # nothing rotated
 
 
@@ -259,6 +259,15 @@ def test_passwd_shows_usage_on_wrong_shape():
     s = _fresh()
     _tick(s, "register matrym@matlabs starter1")
     assert "Usage: passwd" in _tick(s, "passwd starter1 lonely")  # missing confirm
+
+
+def test_password_floor_is_eight_characters():
+    from parts.accounts import MIN_PASSWORD_LEN
+
+    assert MIN_PASSWORD_LEN == 8
+    s = _fresh()
+    assert "at least 8" in _tick(s, "register short@acct sevench")  # 7 chars refused
+    assert "Welcome, Short@acct" in _tick(s, "register short@acct eightchr")  # 8 chars ok
 
 
 def test_change_password_directly_verifies_then_rotates():

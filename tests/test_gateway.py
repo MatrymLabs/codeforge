@@ -12,7 +12,7 @@ from parts import doors, items, npcs
 from parts.accounts import adopt
 from parts.accounts import register as register_account
 from parts.characters import save_character
-from parts.gateway import GatewayServer, _Handler
+from parts.gateway import GatewayServer, _Handler, _sanitize
 from parts.session import SESSIONS, Session
 
 
@@ -23,6 +23,8 @@ def fresh_world():
     npcs_snap = copy.deepcopy(npcs.NPCS)
     SESSIONS.clear()
     gateway._counter = 0
+    gateway._active = 0
+    gateway._login_fails.clear()
     yield
     items.ITEMS = items_snap
     doors.DOORS = doors_snap
@@ -230,6 +232,60 @@ def test_passwd_flow_rejects_a_mismatch_over_the_wire(server):
     out = _read_until(sock, b"> ")
     assert "do not match" in out
     assert account_password_ok("matlabs", "swordfish")  # unchanged
+    sock.close()
+
+
+def test_sanitize_strips_control_chars_but_keeps_layout():
+    assert _sanitize("hi\x1b[31mRED\x1b[0m") == "hi[31mRED[0m"  # ESC gone, text left inert
+    assert _sanitize("line1\nline2\tok\r") == "line1\nline2\tok\r"  # newline/tab/CR kept
+    assert _sanitize("bell\x07nul\x00del\x7f") == "bellnuldel"
+
+
+def test_chat_escape_sequences_are_stripped_before_broadcast(server):
+    """A player's chat must not carry escape sequences into another
+    player's terminal. Sanitize at the client boundary."""
+    a = _connect_guest(server)
+    b = _connect_guest(server)  # both start in the same room
+    _line(a, "say \x1b[31mred\x1b[2Jalert")
+    _read_until(a, b"> ")  # a's own turn completes first
+    heard = _read_until(b, b"\r\n")  # b hears the broadcast
+    assert "\x1b" not in heard  # no raw escape reached b
+    assert "red" in heard and "alert" in heard  # the words survived
+    a.close()
+    b.close()
+
+
+def test_repeated_failures_rate_limit_the_address(server, monkeypatch):
+    """Per-connection 3-strikes resets on reconnect; the per-IP limiter
+    does not. After enough failures the address is refused up front."""
+    _saved_account()
+    monkeypatch.setattr(gateway, "MAX_LOGIN_FAILS", 3)
+    sock = _connect(server)
+    for _ in range(3):  # three bad passwords: door closes, 3 failures logged
+        _read_until(sock, b"GUEST: ")
+        _line(sock, "matrym@matlabs")
+        _read_until_raw(sock, bytes([255, 251, 1]))
+        _line(sock, "wrongpass")
+    assert "Too many attempts" in _drain_to_close(sock)
+    sock.close()
+    refused = _connect(server)  # same address, now over the limit
+    assert "Too many failed logins" in _drain_to_close(refused)
+    refused.close()
+
+
+def test_connection_cap_refuses_when_full(server, monkeypatch):
+    monkeypatch.setattr(gateway, "MAX_CONNECTIONS", 1)
+    holder = _connect_guest(server)  # occupies the only slot
+    overflow = _connect(server)
+    assert "forge is full" in _drain_to_close(overflow)
+    holder.close()
+    overflow.close()
+
+
+def test_idle_connection_times_out_and_closes(server, monkeypatch):
+    monkeypatch.setattr(gateway._Handler, "timeout", 0.5)
+    sock = _connect_guest(server)  # seated in the world, then goes silent
+    assert _drain_to_close(sock) == ""  # server drops the idle socket, no data
     sock.close()
 
 

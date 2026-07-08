@@ -14,6 +14,8 @@ from parts.characters import load_character, put_record
 from parts.db import AccountRow, CharacterRow, get_session
 
 _ITERATIONS = 600_000
+MIN_PASSWORD_LEN = 8  # NIST SP 800-63B floor: length beats composition rules
+_TOO_SHORT = f"Passwords need at least {MIN_PASSWORD_LEN} characters."
 
 
 def _hash(password: str, salt: bytes) -> str:
@@ -32,8 +34,8 @@ def has_password(record: dict[str, Any]) -> bool:
 
 def set_password(name: str, password: str) -> str:
     """Attach v1 protection to a character (guest-name path)."""
-    if len(password) < 4:
-        return "Passwords need at least 4 characters."
+    if len(password) < MIN_PASSWORD_LEN:
+        return _TOO_SHORT
     record = load_character(name)
     if record is None:
         return f"No saved character named {name}."
@@ -62,8 +64,8 @@ def parse_handle(handle: str) -> tuple[str, str] | None:
 def register(char: str, account: str, password: str) -> str:
     """Create or extend an account with a new character. Returns '' on
     success; the engine tick finishes the character's birth."""
-    if len(password) < 4:
-        return "Passwords need at least 4 characters."
+    if len(password) < MIN_PASSWORD_LEN:
+        return _TOO_SHORT
     if load_character(char) is not None:
         return f"A character named {char} already exists."
     with get_session() as db:
@@ -101,8 +103,8 @@ def adopt(char: str, account: str) -> str:
 
 def set_account_password(account: str, password: str) -> str:
     """Rotate an account's secret (the codeforge passwd verb)."""
-    if len(password) < 4:
-        return "Passwords need at least 4 characters."
+    if len(password) < MIN_PASSWORD_LEN:
+        return _TOO_SHORT
     with get_session() as db:
         row = db.get(AccountRow, account)
         if row is None:
@@ -119,8 +121,8 @@ def change_password(account: str, old: str, new: str) -> str:
     one. Returns '' on success or the reason it was refused. The old
     password is verified constant-time; the new one is salted afresh.
     Refusal on a bad old password stays generic -- no enumeration."""
-    if len(new) < 4:
-        return "Passwords need at least 4 characters."
+    if len(new) < MIN_PASSWORD_LEN:
+        return _TOO_SHORT
     with get_session() as db:
         row = db.get(AccountRow, account)
         if row is None or not _matches(old, row.auth_salt, row.auth_hash):

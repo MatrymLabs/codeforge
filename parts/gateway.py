@@ -9,8 +9,10 @@ Security: plaintext, no auth, LAN-visible. This is the compatibility
 transport for your home network, not an internet-facing service.
 """
 
+import re
 import socketserver
 import threading
+import time
 
 from forge import handle_command, render_scene
 from parts.characters import save_character
@@ -22,12 +24,41 @@ TICK_LOCK = threading.Lock()
 _counter_lock = threading.Lock()
 _counter = 0
 
+# --- resource limits (a LAN server still shouldn't fall over to a flood) ---
+IDLE_TIMEOUT = 300.0  # seconds of silence before a connection is dropped
+MAX_CONNECTIONS = 128  # concurrent sockets; thread-per-connection has a ceiling
+MAX_LOGIN_FAILS = 5  # failed logins per client address within the window...
+LOGIN_FAIL_WINDOW = 300.0  # ...before that address is refused for a cooldown
+
+_active = 0
+_active_lock = threading.Lock()
+_login_fails: dict[str, list[float]] = {}
+_fails_lock = threading.Lock()
+
 
 def _next_player_id() -> str:
     global _counter
     with _counter_lock:
         _counter += 1
         return f"player{_counter}"
+
+
+def _record_login_failure(ip: str) -> None:
+    """Remember one failed login from an address, pruning stale hits."""
+    with _fails_lock:
+        recent = [t for t in _login_fails.get(ip, []) if time.monotonic() - t < LOGIN_FAIL_WINDOW]
+        recent.append(time.monotonic())
+        _login_fails[ip] = recent
+
+
+def _is_rate_limited(ip: str) -> bool:
+    """True once an address has too many recent failures -- online
+    brute-force defense that survives reconnects (the per-connection
+    3-strikes does not)."""
+    with _fails_lock:
+        recent = [t for t in _login_fails.get(ip, []) if time.monotonic() - t < LOGIN_FAIL_WINDOW]
+        _login_fails[ip] = recent
+        return len(recent) >= MAX_LOGIN_FAILS
 
 
 # --- telnet option negotiation (RFC 854/857): the password blackout ---
@@ -59,6 +90,18 @@ def _strip_telnet(data: bytes) -> bytes:
     return bytes(out)
 
 
+# Strip terminal control characters (ANSI/VT escapes and other C0/C1
+# controls) but keep tab, newline, carriage return. Player-supplied text
+# -- chat, especially -- must not carry escape sequences that could hijack
+# or spoof another player's terminal.
+_CONTROL_RE = re.compile(r"[\x00-\x08\x0b\x0c\x0e-\x1f\x7f-\x9f]")
+
+
+def _sanitize(text: str) -> str:
+    """Remove terminal control characters from text bound for a client."""
+    return _CONTROL_RE.sub("", text)
+
+
 def load_splash() -> str:
     """The pre-login screen is world data: seeds/<world>/splash.txt."""
     path = SEED_DIR / "splash.txt"
@@ -73,13 +116,19 @@ class GatewayServer(socketserver.ThreadingTCPServer):
 
 
 class _Handler(socketserver.StreamRequestHandler):
+    timeout = IDLE_TIMEOUT  # StreamRequestHandler applies this to the socket
+
     def _send(self, text: str) -> None:
-        self.wfile.write((text + "\r\n").encode("utf-8"))
+        self.wfile.write((_sanitize(text) + "\r\n").encode("utf-8"))
 
     def _ask(self, prompt: str) -> str | None:
-        """One question at the front desk. None means they walked away."""
+        """One question at the front desk. None means they walked away
+        (hung up or idled out)."""
         self.wfile.write((prompt + " ").encode("utf-8"))
-        line = self.rfile.readline()
+        try:
+            line = self.rfile.readline()
+        except OSError:
+            return None  # idle timeout or broken pipe
         if not line:
             return None
         return _strip_telnet(line).decode("utf-8", errors="ignore").strip()
@@ -90,7 +139,10 @@ class _Handler(socketserver.StreamRequestHandler):
         telnet-native getpass. (nc ignores negotiation -- raw pipes
         keep their echo; Mudlet and telnet go dark.)"""
         self.wfile.write((prompt + " ").encode("utf-8") + _ECHO_OFF)
-        line = self.rfile.readline()
+        try:
+            line = self.rfile.readline()
+        except OSError:
+            return None  # idle timeout or broken pipe
         self.wfile.write(_ECHO_ON)
         self._send("")  # the client didn't echo their Enter; supply the newline
         if not line:
@@ -114,6 +166,10 @@ class _Handler(socketserver.StreamRequestHandler):
         """The classic connection ritual: authenticate BEFORE the world.
         The dialogue assembles login/register commands for the engine
         tick -- UX out here, but the tick stays the only door."""
+        ip = self.client_address[0]
+        if _is_rate_limited(ip):
+            self._send("Too many failed logins from your address. Try again later.")
+            return False
         self._send(load_splash())
         for _ in range(3):
             who = self._ask("Character (character@account), NEW, or GUEST:")
@@ -139,10 +195,24 @@ class _Handler(socketserver.StreamRequestHandler):
             if response.startswith("Welcome,"):
                 self._send(render_scene(session.location, viewer=session.player_id))
                 return True
+            _record_login_failure(ip)  # this login/register attempt failed
         self._send("Too many attempts. The door closes.")
         return False
 
     def handle(self) -> None:
+        global _active
+        with _active_lock:
+            if _active >= MAX_CONNECTIONS:
+                self._send("The forge is full right now. Try again shortly.")
+                return
+            _active += 1
+        try:
+            self._serve_player()
+        finally:
+            with _active_lock:
+                _active = max(0, _active - 1)
+
+    def _serve_player(self) -> None:
         player_id = _next_player_id()
         session = Session(player_id=player_id)
         with TICK_LOCK:
@@ -156,7 +226,10 @@ class _Handler(socketserver.StreamRequestHandler):
         try:
             while session.alive:
                 self.wfile.write(b"> ")
-                line = self.rfile.readline()
+                try:
+                    line = self.rfile.readline()
+                except OSError:
+                    break  # idle timeout or broken pipe -> disconnect
                 if not line:
                     break  # client hung up
                 text = line.decode("utf-8", errors="ignore")
