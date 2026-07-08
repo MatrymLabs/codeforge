@@ -15,6 +15,7 @@ import threading
 from forge import handle_command, render_scene
 from parts.characters import save_character
 from parts.events import SHUTDOWN, register, unregister
+from parts.seed import SEED_DIR
 from parts.session import SESSIONS, Session, display_name
 
 TICK_LOCK = threading.Lock()
@@ -27,6 +28,14 @@ def _next_player_id() -> str:
     with _counter_lock:
         _counter += 1
         return f"player{_counter}"
+
+
+def load_splash() -> str:
+    """The pre-login screen is world data: seeds/<world>/splash.txt."""
+    path = SEED_DIR / "splash.txt"
+    if path.exists():
+        return path.read_text().rstrip("\n")
+    return "Welcome, traveler."
 
 
 class GatewayServer(socketserver.ThreadingTCPServer):

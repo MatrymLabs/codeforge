@@ -40,6 +40,7 @@ def save_character(session: Session, path: Path | None = None) -> None:
             "xp": session.xp,
             "location": session.location,
             "rank": session.rank,
+            "account": session.account,
         }
     )
     data[session.player_id] = record  # merge: fields like "auth" survive
@@ -64,6 +65,7 @@ def restore_character(session: Session, record: dict[str, Any]) -> None:
     logging back in is a night's rest."""
     session.named = True
     session.rank = str(record.get("rank", "player"))
+    session.account = str(record.get("account", ""))
     session.level = int(record["level"])
     session.xp = int(record["xp"])
     session.location = str(record["location"])

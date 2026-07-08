@@ -24,6 +24,7 @@ class Session:
     alive: bool = True
     named: bool = False
     rank: str = "player"
+    account: str = ""
     job: str = ""
     level: int = 1
     xp: int = 0

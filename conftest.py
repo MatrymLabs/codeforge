@@ -7,3 +7,6 @@ def _isolated_characters(tmp_path, monkeypatch):
     from parts import characters
 
     monkeypatch.setattr(characters, "CHARACTERS_PATH", tmp_path / "characters.json")
+    from parts import accounts
+
+    monkeypatch.setattr(accounts, "ACCOUNTS_PATH", tmp_path / "accounts.json")

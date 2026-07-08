@@ -87,3 +87,78 @@ def test_password_command_requires_a_claimed_name():
     anon = Session(player_id="player1")
     SESSIONS["player1"] = anon
     assert "Claim a name first" in handle_command(anon, "password swordfish")
+
+
+# --------------------------------------------------------- character@account
+
+
+def _tick(session, text):
+    return handle_command(session, text)
+
+
+def _fresh(pid="p1"):
+    s = Session(player_id=pid)
+    SESSIONS[pid] = s
+    return s
+
+
+def test_register_creates_account_character_and_seat():
+    s = _fresh()
+    out = _tick(s, "register matrym@matlabs swordfish")
+    assert "Welcome, Matrym@matlabs" in out
+    assert s.player_id == "matrym"
+    assert s.account == "matlabs"
+    assert load_character("matrym") is not None
+
+
+def test_register_second_character_needs_the_account_password():
+    s = _fresh()
+    _tick(s, "register matrym@matlabs swordfish")
+    _tick(s, "quit")
+    SESSIONS.clear()
+    alt = _fresh()
+    assert "not its password" in _tick(alt, "register duelist@matlabs wrong")
+    out = _tick(alt, "register duelist@matlabs swordfish")
+    assert "Welcome, Duelist@matlabs" in out
+
+
+def test_register_cannot_hijack_an_existing_character():
+    s = _fresh()
+    _tick(s, "register matrym@matlabs swordfish")
+    SESSIONS.clear()
+    thief = _fresh()
+    assert "already exists" in _tick(thief, "register matrym@evilcorp hunter2")
+
+
+def test_login_restores_the_character_with_one_generic_refusal():
+    s = _fresh()
+    _tick(s, "register matrym@matlabs swordfish")
+    s.level = 2
+    _tick(s, "quit")
+    SESSIONS.clear()
+    back = _fresh()
+    assert "do not align" in _tick(back, "login matrym@matlabs wrong")
+    assert "do not align" in _tick(back, "login matrym@nosuch swordfish")
+    assert "do not align" in _tick(back, "login stranger@matlabs swordfish")
+    out = _tick(back, "login matrym@matlabs swordfish")
+    assert "Welcome back, Matrym@matlabs" in out
+    assert back.level == 2
+
+
+def test_handles_must_be_well_formed():
+    s = _fresh()
+    assert "Usage:" in _tick(s, "login matrym swordfish")
+    assert "Usage:" in _tick(s, "register matrym@matlabs")
+
+
+def test_migrate_moves_a_character_password_onto_a_new_account():
+    from parts.accounts import login_check, migrate
+
+    hero = Session(player_id="matrym", location="courtyard", named=True)
+    SESSIONS["matrym"] = hero
+    save_character(hero)
+    set_password("matrym", "swordfish")
+    msg = migrate("matrym", "matlabs")
+    assert "matrym@matlabs is ready" in msg
+    assert login_check("matrym", "matlabs", "swordfish")
+    assert not has_password(load_character("matrym"))  # char auth retired

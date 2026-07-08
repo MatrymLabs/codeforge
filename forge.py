@@ -7,7 +7,14 @@ terminal driver around it -- a socket gateway will be another.
 
 import re
 
-from parts.accounts import has_password, set_password, verify_password
+from parts.accounts import (
+    has_password,
+    login_check,
+    parse_handle,
+    set_password,
+    verify_password,
+)
+from parts.accounts import register as register_account
 from parts.characters import load_character, restore_character, save_character
 from parts.combat import attack
 from parts.doors import unlock
@@ -85,6 +92,51 @@ def handle_command(session: Session, raw: str) -> str:
             exclude=session.player_id,
         )
         return f'You say, "{message}"'
+    if raw.startswith(("register ", "login ")):
+        verb, _, rest = raw.partition(" ")
+        words = rest.split()
+        handle = parse_handle(words[0]) if words else None
+        secret = words[1] if len(words) > 1 else ""
+        if handle is None or len(words) != 2:
+            return f"Usage: {verb} <character>@<account> <password>"
+        char, account = handle
+        if not NAME_RE.match(char) or not NAME_RE.match(account):
+            return (
+                "Character and account names are 2-16 characters: lowercase "
+                "letters, digits, underscores, starting with a letter."
+            )
+        if char in SESSIONS:
+            return f"Someone here is already {display_name(char)}."
+        if verb == "register":
+            problem = register_account(char, account, secret)
+            if problem:
+                return problem
+        elif not login_check(char, account, secret):
+            return "That character, account, and password do not align."
+        old = session.player_id
+        SESSIONS.pop(old, None)
+        session.player_id = char
+        session.account = account
+        SESSIONS[char] = session
+        rename(old, char)
+        record = load_character(char)
+        if record is not None:
+            announce(session.location, f"{display_name(old)} leaves.", exclude=char)
+            restore_character(session, record)
+            session.account = account
+            announce(session.location, f"{display_name(char)} arrives.", exclude=char)
+            return (
+                f"Welcome back, {display_name(char)}@{account}.\n"
+                f"{render_scene(session.location, viewer=char)}"
+            )
+        session.named = True
+        save_character(session)
+        announce(
+            session.location,
+            f"{display_name(old)} is now known as {display_name(char)}.",
+            exclude=char,
+        )
+        return f"Welcome, {display_name(char)}@{account}. Your legend begins. Type JOBS."
     if raw.startswith("password "):
         if not session.named:
             return "Claim a name first: name <yourname>"

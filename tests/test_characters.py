@@ -46,6 +46,7 @@ def test_save_and_load_roundtrip(tmp_path):
         "xp": 90,
         "location": "courtyard",
         "rank": "player",
+        "account": "",
     }
     assert load_character("stranger", path) is None
 
