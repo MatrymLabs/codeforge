@@ -116,13 +116,19 @@ fi
 spark_line "The Gate -- opening the MUD window (log in at the front desk)..."
 printf '%b   Character (character@account), NEW, or GUEST awaits. Ctrl-C or QUIT to leave.%b\n\n' "$DIM" "$OFF"
 sleep 0.4
-if command -v telnet >/dev/null 2>&1; then
-  telnet 127.0.0.1 "$PORT"          # telnet honours the password blackout
+# Prefer our own client: it honours the password blackout with only the stdlib,
+# so secrets stay hidden even where `telnet` isn't installed. `nc` cannot mask a
+# password (it ignores telnet negotiation) -- it's the last resort, and loud.
+if [ -f "$ROOT/scripts/mud_client.py" ]; then
+  python3 "$ROOT/scripts/mud_client.py" 127.0.0.1 "$PORT"
+elif command -v telnet >/dev/null 2>&1; then
+  telnet 127.0.0.1 "$PORT"
 elif command -v nc >/dev/null 2>&1; then
-  nc 127.0.0.1 "$PORT"              # nc works too (password echo is visible -- see docs/RUNNING.md)
+  warn "Falling back to nc -- your PASSWORD WILL BE VISIBLE (nc can't mask it)."
+  warn "Register/login is unsafe here; use GUEST, or install telnet. See docs/RUNNING.md."
+  nc 127.0.0.1 "$PORT"
 else
-  warn "No telnet or nc found. The forge is lit on :$PORT -- connect with a MUD client (Mudlet)."
+  warn "No client found. The forge is lit on :$PORT -- connect with Mudlet."
   warn "Press Ctrl-C here to end the ritual and bank the forge."
-  # Keep the ritual (and the server) alive until the operator ends it.
   while [ "$STARTED_HERE" = "1" ] && kill -0 "${FORGE_PID:-0}" 2>/dev/null; do sleep 1; done
 fi

@@ -110,7 +110,11 @@ Four stages light up in order:
 3. **The Forge** — lights the gateway on :4000 and waits until the socket is
    truly accepting connections. If a forge is *already* burning on :4000, the
    ritual joins it instead of starting a second one.
-4. **The Gate** — opens the MUD window at the front desk, ready to log in.
+4. **The Gate** — opens the MUD window at the front desk, ready to log in. It
+   connects with a bundled stdlib client (`scripts/mud_client.py`) that honors
+   the password blackout even where `telnet` isn't installed — so your password
+   stays hidden. (`nc` cannot do this; the ritual only falls back to it with a
+   loud warning, and never for a real login.)
 
 When you leave (`QUIT` or `Ctrl-C`), the ritual **banks the coals**: a server it
 lit, it puts out. A server it merely joined, it leaves burning. Boot a different
@@ -145,12 +149,15 @@ start the ritual
 From any machine that can reach the host, use **any** of these:
 
 ```bash
-nc <host> 4000            # netcat — simplest
-telnet <host> 4000        # classic
+python3 scripts/mud_client.py <host> 4000   # bundled — masks your password, no deps
+telnet <host> 4000                          # classic — also masks the password
+nc <host> 4000                              # simplest, but CANNOT mask the password
 ```
 
 Or point a real MUD client (**Mudlet**, TinTin++, MUSHclient) at `<host>` port
-`4000`. `<host>` is `localhost` if you're on the same machine.
+`4000`. `<host>` is `localhost` if you're on the same machine. For logging in,
+prefer the bundled client, `telnet`, or Mudlet — anything that honors the telnet
+echo blackout so your password stays hidden.
 
 > **Note on raw `nc`:** the gateway blacks out the password prompt using telnet
 > option negotiation (IAC WILL/WONT ECHO). Real telnet clients and Mudlet honor
