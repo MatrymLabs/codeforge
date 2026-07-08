@@ -30,6 +30,35 @@ def _next_player_id() -> str:
         return f"player{_counter}"
 
 
+# --- telnet option negotiation (RFC 854/857): the password blackout ---
+IAC, WILL, WONT, DO, DONT = 255, 251, 252, 253, 254
+ECHO_OPT = 1
+_ECHO_OFF = bytes([IAC, WILL, ECHO_OPT])  # "I will echo" -> client stops echoing
+_ECHO_ON = bytes([IAC, WONT, ECHO_OPT])  # "I won't echo" -> client resumes
+
+
+def _strip_telnet(data: bytes) -> bytes:
+    """Remove IAC command sequences from raw input. Clients answer our
+    negotiation with their own IAC bytes -- those must never end up
+    inside a password."""
+    out = bytearray()
+    i = 0
+    while i < len(data):
+        if data[i] == IAC and i + 1 < len(data):
+            command = data[i + 1]
+            if command == IAC:  # escaped literal 255
+                out.append(IAC)
+                i += 2
+            elif command in (WILL, WONT, DO, DONT):
+                i += 3  # three-byte sequence: IAC <verb> <option>
+            else:
+                i += 2
+        else:
+            out.append(data[i])
+            i += 1
+    return bytes(out)
+
+
 def load_splash() -> str:
     """The pre-login screen is world data: seeds/<world>/splash.txt."""
     path = SEED_DIR / "splash.txt"
@@ -53,7 +82,20 @@ class _Handler(socketserver.StreamRequestHandler):
         line = self.rfile.readline()
         if not line:
             return None
-        return line.decode("utf-8", errors="ignore").strip()
+        return _strip_telnet(line).decode("utf-8", errors="ignore").strip()
+
+    def _ask_secret(self, prompt: str) -> str | None:
+        """A question whose answer must not appear on the client's
+        screen: negotiate echo OFF, read, negotiate echo ON. The
+        telnet-native getpass. (nc ignores negotiation -- raw pipes
+        keep their echo; Mudlet and telnet go dark.)"""
+        self.wfile.write((prompt + " ").encode("utf-8") + _ECHO_OFF)
+        line = self.rfile.readline()
+        self.wfile.write(_ECHO_ON)
+        self._send("")  # the client didn't echo their Enter; supply the newline
+        if not line:
+            return None
+        return _strip_telnet(line).decode("utf-8", errors="ignore").strip()
 
     def _front_desk(self, session: Session) -> bool:
         """The classic connection ritual: authenticate BEFORE the world.
@@ -71,10 +113,10 @@ class _Handler(socketserver.StreamRequestHandler):
                 return True
             if who == "new":
                 handle = self._ask("Choose your character@account:") or ""
-                secret = self._ask("Choose a password:") or ""
+                secret = self._ask_secret("Choose a password:") or ""
                 command = f"register {handle.strip()} {secret.strip()}"
             else:
-                secret = self._ask("Password:") or ""
+                secret = self._ask_secret("Password:") or ""
                 command = f"login {who} {secret.strip()}"
             with TICK_LOCK:
                 response = handle_command(session, command)

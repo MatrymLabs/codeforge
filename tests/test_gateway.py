@@ -46,13 +46,17 @@ def _connect(srv: GatewayServer) -> socket.socket:
 
 
 def _read_until(sock: socket.socket, marker: bytes) -> str:
+    return _read_until_raw(sock, marker).decode("utf-8", errors="ignore")
+
+
+def _read_until_raw(sock: socket.socket, marker: bytes) -> bytes:
     data = b""
     while not data.endswith(marker):
         chunk = sock.recv(4096)
         if not chunk:
             break
         data += chunk
-    return data.decode("utf-8")
+    return data
 
 
 def _drain_to_close(sock: socket.socket) -> str:
@@ -62,7 +66,7 @@ def _drain_to_close(sock: socket.socket) -> str:
     while True:
         chunk = sock.recv(4096)
         if not chunk:
-            return data.decode("utf-8")
+            return data.decode("utf-8", errors="ignore")
         data += chunk
 
 
@@ -116,7 +120,7 @@ def test_login_dialogue_restores_a_hero_over_the_wire(server):
     sock = _connect(server)
     _read_until(sock, b"GUEST: ")
     _line(sock, "matrym@matlabs")
-    _read_until(sock, b"Password: ")
+    _read_until(sock, b"Password: " + bytes([255, 251, 1]))
     _line(sock, "swordfish")
     out = _read_until(sock, b"> ")
     assert "Welcome back, Matrym@matlabs" in out
@@ -130,7 +134,7 @@ def test_three_wrong_passwords_close_the_door(server):
     for _ in range(3):
         _read_until(sock, b"GUEST: ")
         _line(sock, "matrym@matlabs")
-        _read_until(sock, b"Password: ")
+        _read_until(sock, b"Password: " + bytes([255, 251, 1]))
         _line(sock, "wrong")
     tail = _drain_to_close(sock)  # server hangs up
     assert "Too many attempts" in tail
@@ -160,3 +164,34 @@ def test_who_lists_everyone_and_quit_unseats(server):
         out = _command(a, "who")
     assert "Player2" not in out
     a.close()
+
+
+def test_password_prompt_negotiates_echo_blackout(server):
+    """The telnet-native getpass: IAC WILL ECHO before the secret,
+    IAC WONT ECHO after. Pinned at the byte level, over the wire."""
+    _saved_account()
+    sock = _connect(server)
+    _read_until(sock, b"GUEST: ")
+    _line(sock, "matrym@matlabs")
+    raw = _read_until_raw(sock, b"Password: " + bytes([255, 251, 1]))
+    assert raw.endswith(bytes([255, 251, 1]))  # echo OFF ordered
+    _line(sock, "swordfish")
+    after = _read_until_raw(sock, b"> ")
+    assert bytes([255, 252, 1]) in after  # echo ON restored
+    assert "Welcome back, Matrym@matlabs" in after.decode("utf-8", errors="ignore")
+    sock.close()
+
+
+def test_client_negotiation_bytes_never_pollute_the_secret(server):
+    """Clients reply with their own IAC sequences; the stripper must
+    keep them out of the password."""
+    _saved_account()
+    sock = _connect(server)
+    _read_until(sock, b"GUEST: ")
+    _line(sock, "matrym@matlabs")
+    _read_until_raw(sock, bytes([255, 251, 1]))
+    # a compliant client's reply (IAC DO ECHO) arrives glued to the secret
+    sock.sendall(bytes([255, 253, 1]) + b"swordfish\n")
+    out = _read_until(sock, b"> ")
+    assert "Welcome back, Matrym@matlabs" in out
+    sock.close()
