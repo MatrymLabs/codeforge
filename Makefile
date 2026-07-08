@@ -51,3 +51,6 @@ clean:
 
 serve:
 	codeforge serve
+
+unskew:
+	git ls-files | xargs touch
