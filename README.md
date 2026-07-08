@@ -13,6 +13,8 @@ account authentication with salted pbkdf2 hashing, a broadcast event bus, YAML-s
 worlds, restart-surviving characters, rank-gated admin verbs, and a threaded TCP gateway
 that real MUD clients (Mudlet, telnet, nc) connect to today.
 
+![Pick a calling, walk to the courtyard, and train against the self-repairing dummy until you level up](docs/demo.gif)
+
 ```text
 =========================================================
             T H E   F I R S T   F O R G E
