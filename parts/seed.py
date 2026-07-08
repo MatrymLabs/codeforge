@@ -30,7 +30,10 @@ import yaml
 # codeforge boots a different game (fantasy `first-forge`, `sword-art-online`, ...).
 # Selection is by the FORGE_SEED env var, read once at import -- you choose which
 # program the holodeck runs when it powers on, not while it's running.
-SEEDS_ROOT = Path(__file__).resolve().parent.parent / "seeds"
+# Default: the repo's seeds/ dir. CODEFORGE_SEEDS_ROOT overrides it for installed /
+# containerized deploys where the package lives apart from the seed files.
+_default_seeds_root = Path(__file__).resolve().parent.parent / "seeds"
+SEEDS_ROOT = Path(os.environ.get("CODEFORGE_SEEDS_ROOT", str(_default_seeds_root)))
 DEFAULT_SEED = "first-forge"
 SEED_NAME = os.environ.get("FORGE_SEED", DEFAULT_SEED)
 SEED_DIR = SEEDS_ROOT / SEED_NAME
