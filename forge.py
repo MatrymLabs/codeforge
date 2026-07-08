@@ -8,6 +8,7 @@ terminal driver around it -- a socket gateway will be another.
 import re
 
 from parts.accounts import (
+    change_password,
     has_password,
     login_check,
     parse_handle,
@@ -33,7 +34,7 @@ HELP_TEXT = (
     "Commands: look, go <direction> (or n/s/e/w/u/d), "
     "take, drop, inventory, talk <npc>, say <msg>, name <yourname>, who, "
     "jobs, job <calling>, score, attack <target>, "
-    "unlock <door> with <key>, save, load, quit"
+    "unlock <door> with <key>, passwd, save, load, quit"
 )
 
 
@@ -143,6 +144,22 @@ def handle_command(session: Session, raw: str) -> str:
             exclude=char,
         )
         return f"Welcome, {display_name(char)}@{account}. Your legend begins. Type JOBS."
+    if raw == "passwd" or raw.startswith("passwd "):
+        if not session.account:
+            return (
+                "Only account logins can change a password. "
+                "Try: login <character>@<account> <password>"
+            )
+        words = original.split()  # TRUE case: secrets are never lowered
+        if len(words) != 4:
+            return "Usage: passwd <old> <new> <new-again>"
+        _, old, new, again = words
+        if new != again:
+            return "Those new passwords do not match. Nothing changed."
+        problem = change_password(session.account, old, new)
+        if problem:
+            return problem
+        return "Password changed. Use it the next time you log in."
     if raw.startswith("password "):
         if not session.named:
             return "Claim a name first: name <yourname>"

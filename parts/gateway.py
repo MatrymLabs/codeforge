@@ -97,6 +97,19 @@ class _Handler(socketserver.StreamRequestHandler):
             return None
         return _strip_telnet(line).decode("utf-8", errors="ignore").strip()
 
+    def _passwd(self, session: Session) -> None:
+        """Self-service password change with the echo blackout: prompt
+        the old secret and the new one twice, then let the tick's passwd
+        verb do the actual rotation. UX out here, tick stays the door."""
+        old = self._ask_secret("Current password:")
+        new = self._ask_secret("New password:")
+        again = self._ask_secret("New password again:")
+        if old is None or new is None or again is None:
+            return  # walked away mid-change; nothing touched
+        with TICK_LOCK:
+            response = handle_command(session, f"passwd {old} {new} {again}")
+        self._send(response)
+
     def _front_desk(self, session: Session) -> bool:
         """The classic connection ritual: authenticate BEFORE the world.
         The dialogue assembles login/register commands for the engine
@@ -146,8 +159,12 @@ class _Handler(socketserver.StreamRequestHandler):
                 line = self.rfile.readline()
                 if not line:
                     break  # client hung up
+                text = line.decode("utf-8", errors="ignore")
+                if text.strip().lower() == "passwd":
+                    self._passwd(session)  # multi-prompt dialogue with echo blackout
+                    continue
                 with TICK_LOCK:
-                    response = handle_command(session, line.decode("utf-8", errors="ignore"))
+                    response = handle_command(session, text)
                 if response:
                     self._send(response)
         finally:
