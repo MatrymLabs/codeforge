@@ -107,8 +107,11 @@ written for, original tests included.
 
 | Command | What it does |
 |---|---|
-| `make fix` / `make check` | Auto-fix, then lint + mypy + full suite |
-| `make coverage` / `make audit` | Coverage report / dependency CVE scan |
+| `make env` | Create/validate the `.venv` and install dev deps (fails loud on Python < 3.13) |
+| `make fix` / `make check` | Auto-fix, then lint + mypy + tests + property tests |
+| `make test` / `make property` | Deterministic suite / Hypothesis property tests, run separately |
+| `make coverage` / `make security` | Coverage report (85% floor) / bandit SAST + dependency CVE scan |
+| `make doctor` | Run every gate read-only, stop at the first failure, and prescribe the fix |
 | `spark` · `codeforge serve` | Multiplayer gateway (Ctrl+C sleeps the world) |
 | `codeforge play` | Solo terminal session |
 | `make world` / `make store` | Operator catalog / developer card catalog |

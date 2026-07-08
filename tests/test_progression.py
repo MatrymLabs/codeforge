@@ -1,5 +1,6 @@
 """Test twin for parts/progression.py -- mk1 checkpoints plus Hypothesis laws."""
 
+import pytest
 from hypothesis import given
 from hypothesis import strategies as st
 
@@ -84,22 +85,26 @@ def test_next_job_level_threshold_below_cap_matches_cumulative():
 # --- Hypothesis property tests: laws across the whole curve ---
 
 
+@pytest.mark.property
 @given(st.integers(min_value=1, max_value=254))
 def test_xp_curve_never_gets_cheaper(level):
     """The marginal cost of the next level is never below this one's."""
     assert marginal_xp_for_level(level + 1) >= marginal_xp_for_level(level)
 
 
+@pytest.mark.property
 @given(st.integers(min_value=1, max_value=255))
 def test_cumulative_xp_is_strictly_increasing(level):
     assert cumulative_xp_for_level(level) > cumulative_xp_for_level(level - 1)
 
 
+@pytest.mark.property
 @given(st.integers(min_value=1, max_value=29))
 def test_jp_thresholds_always_ahead_of_current_total(level):
     assert get_next_job_level_threshold(level) > cumulative_jp_for_level(level)
 
 
+@pytest.mark.property
 @given(st.integers(min_value=0, max_value=100))
 def test_hp_and_mp_gains_are_always_positive(stat):
     assert hp_gain_per_level(stat) >= 4

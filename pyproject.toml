@@ -45,6 +45,7 @@ warn_unused_ignores = true
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+markers = ["property: Hypothesis property-based tests (run via `make property`)"]
 
 [tool.bandit]
 # Reviewed suppressions, each safe by design in this codebase:
