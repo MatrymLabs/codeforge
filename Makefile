@@ -1,4 +1,12 @@
-.PHONY: fix lint typecheck test coverage audit check ship run world store clean
+.PHONY: env fix lint typecheck test property coverage audit security doctor check ship run world store clean serve unskew
+
+# --- Environment: create/validate the .venv, fail loud on version mismatch ---
+env:
+	python3 -m venv .venv
+	.venv/bin/pip install -q --upgrade pip
+	.venv/bin/pip install -q -e ".[dev]"
+	@.venv/bin/python -c "import sys; assert sys.version_info[:2] >= (3, 13), 'need Python >= 3.13'"
+	@echo "✓ .venv ready — activate with: source .venv/bin/activate"
 
 # --- Mutators: run these while working ---
 fix:
@@ -14,9 +22,12 @@ typecheck:
 	mypy parts tests forge.py
 
 test:
-	pytest
+	pytest -m "not property"
 
-check: lint typecheck test
+property:
+	pytest -m property
+
+check: lint typecheck test property
 
 # --- Extra inspections (One-Button Rule) ---
 coverage:
@@ -24,6 +35,15 @@ coverage:
 
 audit:
 	pip-audit --skip-editable
+
+# SAST + dependency CVEs. bandit gates; audit is informational (see doctor).
+security:
+	bandit -c pyproject.toml -r parts forge.py -q
+	pip-audit --skip-editable
+
+# --- Doctor: run the gates read-only, stop at the first failure, prescribe the fix ---
+doctor:
+	python3 scripts/doctor.py
 
 # --- Ship: gates, then push. Refuses dirty trees and red gates ---
 ship: check
