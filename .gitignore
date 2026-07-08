@@ -6,3 +6,4 @@ save.json
 .coverage
 *.egg-info/
 characters.json
+codeforge.db

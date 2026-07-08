@@ -166,3 +166,20 @@ def import_legacy_json() -> str:
     if not moved and not accts.exists():
         return "No legacy JSON found; nothing to import."
     return f"Imported {len(moved)} character(s) into codeforge.db. Legacy files left untouched."
+
+
+def account_password_ok(account: str, password: str) -> bool:
+    """Bare account credential check (no character required) -- the
+    HTTP admin surface authenticates accounts, not masks."""
+    with get_session() as db:
+        row = db.get(AccountRow, account)
+        return row is not None and _matches(password, row.auth_salt, row.auth_hash)
+
+
+def account_has_owner(account: str) -> bool:
+    """True if any character on this account holds the owner rank."""
+    from sqlalchemy import select
+
+    with get_session() as db:
+        rows = db.scalars(select(CharacterRow).where(CharacterRow.account == account))
+        return any(row.rank == "owner" for row in rows)
