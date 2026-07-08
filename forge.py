@@ -64,8 +64,13 @@ def _move(session: Session, direction: str) -> str:
 
 
 def handle_command(session: Session, raw: str) -> str:
-    """The engine tick: one player command in, one response out."""
-    raw = raw.strip().lower()
+    """The engine tick: one player command in, one response out.
+
+    Routing is case-insensitive, but SECRETS keep their case: the
+    original text is preserved and password arguments are parsed
+    from it. Lowercasing a password destroys it."""
+    original = raw.strip()
+    raw = original.lower()
 
     if raw in ("quit", "q"):
         save_character(session)
@@ -93,10 +98,11 @@ def handle_command(session: Session, raw: str) -> str:
         )
         return f'You say, "{message}"'
     if raw.startswith(("register ", "login ")):
-        verb, _, rest = raw.partition(" ")
+        verb, _, rest = original.partition(" ")
+        verb = verb.lower()
         words = rest.split()
-        handle = parse_handle(words[0]) if words else None
-        secret = words[1] if len(words) > 1 else ""
+        handle = parse_handle(words[0].lower()) if words else None
+        secret = words[1] if len(words) > 1 else ""  # TRUE case: secrets are never lowered
         if handle is None or len(words) != 2:
             return f"Usage: {verb} <character>@<account> <password>"
         char, account = handle
@@ -140,10 +146,10 @@ def handle_command(session: Session, raw: str) -> str:
     if raw.startswith("password "):
         if not session.named:
             return "Claim a name first: name <yourname>"
-        return set_password(session.player_id, raw.removeprefix("password ").strip())
+        return set_password(session.player_id, original.split(" ", 1)[1].strip())
     if raw.startswith("name "):
-        words = raw.removeprefix("name ").split()
-        wanted = words[0] if words else ""
+        words = original.split(" ", 1)[1].split() if " " in original else []
+        wanted = words[0].lower() if words else ""
         record = load_character(wanted) if wanted else None
         protected = record is not None and has_password(record)
         bad_shape = len(words) > 2 or (len(words) == 2 and not protected)

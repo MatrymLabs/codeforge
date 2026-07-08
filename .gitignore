@@ -7,3 +7,4 @@ save.json
 *.egg-info/
 characters.json
 codeforge.db
+*.kdbx
