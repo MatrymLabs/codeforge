@@ -3,6 +3,7 @@ __pycache__/
 .pytest_cache/
 save.json
 .coverage
+coverage.xml
 *.egg-info/
 characters.json
 accounts.json
