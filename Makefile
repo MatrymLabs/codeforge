@@ -1,4 +1,4 @@
-.PHONY: env fix lint typecheck test property coverage audit security doctor daily check ship run world store clean serve unskew
+.PHONY: env fix lint typecheck test property coverage audit security doctor patch daily check ship run world store clean serve unskew
 
 # --- Environment: create/validate the .venv, fail loud on version mismatch ---
 env:
@@ -45,10 +45,24 @@ security:
 doctor:
 	python3 scripts/doctor.py
 
-# --- Daily ritual: the code gate, then check federal guidance for updates and
-# file them in the guidance library. Point FGL_HOME at your library checkout. ---
+# --- Security patches: scan deps for CVEs, apply available fixes, then RE-VERIFY.
+# Files a dated audit under security-evidence/. Detect + fix are best-effort
+# (need network); the re-run of `make check` is the hard safety net — if a patch
+# breaks the build, the ritual fails loud (recover with `make env`). ---
+patch:
+	@mkdir -p security-evidence
+	@echo "→ scanning Python dependencies for known CVEs..."
+	-pip-audit --skip-editable -f json -o "security-evidence/$$(date -u +%Y-%m-%d)-pip-audit.json"
+	@echo "→ applying available security fixes (pip-audit --fix)..."
+	-pip-audit --fix --skip-editable
+	@echo "→ re-verifying the patched environment..."
+	$(MAKE) check
+	@echo "✓ security patch cycle complete (evidence: security-evidence/)"
+
+# --- Daily ritual: apply security patches (+re-verify), then check federal
+# guidance for updates and file them in the library. Point FGL_HOME at it. ---
 FGL_HOME ?= ../federal-guidance-library
-daily: check
+daily: patch
 	@echo "→ checking federal guidance for updates..."
 	@if [ -x "$(FGL_HOME)/.venv/bin/library" ]; then \
 		( cd "$(FGL_HOME)" && .venv/bin/library check ) || echo "  (reg check reported changes or was offline)"; \

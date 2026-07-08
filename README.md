@@ -113,7 +113,8 @@ written for, original tests included.
 | `make test` / `make property` | Deterministic suite / Hypothesis property tests, run separately |
 | `make coverage` / `make security` | Coverage report (85% floor) / bandit SAST + dependency CVE scan |
 | `make doctor` | Run every gate read-only, stop at the first failure, and prescribe the fix |
-| `make daily` | The gate, then check federal guidance for updates and file them in the [Guidance Library](https://github.com/MatrymLabs/federal-guidance-library) (`FGL_HOME`) |
+| `make patch` | Scan deps for CVEs, apply available security fixes (`pip-audit --fix`), then re-verify + file dated evidence |
+| `make daily` | Apply security patches (+re-verify), then check federal guidance for updates and file them in the [Guidance Library](https://github.com/MatrymLabs/federal-guidance-library) (`FGL_HOME`) |
 | `spark` · `codeforge serve` | Multiplayer gateway (Ctrl+C sleeps the world) |
 | `codeforge play` | Solo terminal session |
 | `make world` / `make store` | Operator catalog / developer card catalog |
