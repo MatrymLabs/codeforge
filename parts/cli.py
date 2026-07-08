@@ -17,6 +17,8 @@ USAGE = """codeforge -- the world engine
   codeforge play                       solo terminal session
   codeforge grant <name> <rank>        host-shell authority (player/wizard/owner)
   codeforge migrate <char> <account>   move a v1 password onto an account
+  codeforge migrate-db                 import legacy JSON saves into SQLite
+  codeforge passwd <account>           rotate an account password (prompted)
   codeforge help                       this text
 """
 
@@ -44,6 +46,23 @@ def main(argv: list[str] | None = None) -> int:
         from parts.accounts import migrate
 
         print(migrate(args[1], args[2]))
+        return 0
+    if cmd == "migrate-db":
+        from parts.accounts import import_legacy_json
+
+        print(import_legacy_json())
+        return 0
+    if cmd == "passwd" and len(args) == 2:
+        import getpass
+
+        from parts.accounts import set_account_password
+
+        pw = getpass.getpass(f"New password for {args[1]}: ")
+        again = getpass.getpass("Type it again: ")
+        if pw != again:
+            print("Mismatch. Nothing changed.")
+            return 1
+        print(set_account_password(args[1], pw))
         return 0
     print(USAGE)
     return 0 if cmd in ("help", "-h", "--help") else 1

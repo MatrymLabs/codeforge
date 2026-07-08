@@ -2,11 +2,8 @@ import pytest
 
 
 @pytest.fixture(autouse=True)
-def _isolated_characters(tmp_path, monkeypatch):
-    """No test may ever touch the real characters.json."""
-    from parts import characters
+def _isolated_database(tmp_path, monkeypatch):
+    """No test may ever touch the real codeforge.db."""
+    from parts import db
 
-    monkeypatch.setattr(characters, "CHARACTERS_PATH", tmp_path / "characters.json")
-    from parts import accounts
-
-    monkeypatch.setattr(accounts, "ACCOUNTS_PATH", tmp_path / "accounts.json")
+    monkeypatch.setattr(db, "DB_PATH", tmp_path / "test.db")

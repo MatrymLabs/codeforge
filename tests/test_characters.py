@@ -4,7 +4,7 @@ import copy
 
 import pytest
 
-from parts import characters, npcs
+from parts import npcs
 from parts.characters import load_character, restore_character, save_character
 from parts.combat import award_xp
 from parts.jobs import assign_job
@@ -27,19 +27,17 @@ def _hero() -> Session:
     return s
 
 
-def test_unnamed_seats_are_never_saved(tmp_path):
-    path = tmp_path / "characters.json"
+def test_unnamed_seats_are_never_saved():
     s = Session(player_id="player1")
-    save_character(s, path)
-    assert not path.exists()
+    save_character(s)
+    assert load_character("player1") is None
 
 
-def test_save_and_load_roundtrip(tmp_path):
-    path = tmp_path / "characters.json"
+def test_save_and_load_roundtrip():
     s = _hero()
     s.level, s.xp = 2, 90
-    save_character(s, path)
-    record = load_character("matrym", path)
+    save_character(s)
+    record = load_character("matrym")
     assert record == {
         "job": "vanguard",
         "level": 2,
@@ -48,7 +46,7 @@ def test_save_and_load_roundtrip(tmp_path):
         "rank": "player",
         "account": "",
     }
-    assert load_character("stranger", path) is None
+    assert load_character("stranger") is None
 
 
 def test_restore_rebuilds_the_full_sheet():
@@ -73,14 +71,12 @@ def test_restored_hero_matches_a_live_grown_one():
     assert restored.resources["mp"].maximum == live.resources["mp"].maximum
 
 
-def test_name_command_restores_a_saved_hero(tmp_path, monkeypatch):
+def test_name_command_restores_a_saved_hero():
     from forge import handle_command
 
-    path = tmp_path / "characters.json"
-    monkeypatch.setattr(characters, "CHARACTERS_PATH", path)
     veteran = _hero()
     veteran.level, veteran.xp = 2, 90
-    save_character(veteran, path)
+    save_character(veteran)
     SESSIONS.clear()
 
     fresh = Session(player_id="player1")
