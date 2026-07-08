@@ -23,9 +23,13 @@ and, if ever exposed, the open internet.
 
 ## Online brute-force defense
 - ✅ Per-connection 3-strikes-then-close at the front desk.
-- ✅ **Cross-connection per-IP rate limiting** (`_is_rate_limited`,
-  `MAX_LOGIN_FAILS` in a `LOGIN_FAIL_WINDOW`). Survives reconnects, which the
-  per-connection 3-strikes did not.
+- ✅ **Cross-connection per-IP rate limiting** (`_door_is_barred` /
+  `_turnaway_ledger`, `MAX_LOGIN_FAILS` in a `LOGIN_FAIL_WINDOW`). Survives reconnects, which the
+  per-connection 3-strikes did not. The ledger is bounded: barred-checks are
+  read-only and each recorded turnaway sweeps aged-out addresses (self-audit
+  fix, 2026-07-08). *Accepted trade-off:* shape errors (`Usage:` responses)
+  count as turnaways — errs toward security; a fumbling newcomer waits out a
+  5-minute window.
 
 ## Input & output handling
 - ✅ **No shell-out; ORM-only (no raw SQL)** — command/SQL injection closed.
@@ -69,7 +73,8 @@ and, if ever exposed, the open internet.
 4. Password floor raised to 8 (NIST-aligned).
 
 All four landed with test twins (unit + over-the-wire socket tests); suite
-grew 176 → 182, green.
+grew 176 → 182, green. A same-day self-audit then found and fixed an
+unbounded-growth bug in the turnaway ledger (182 → 184).
 
 **Deferred by design (🧭):** TLS and Argon2id hinge on deployment/dependency
 decisions and would be half-baked as drive-by code. **Still planned (📋):**

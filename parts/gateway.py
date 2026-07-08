@@ -24,16 +24,16 @@ TICK_LOCK = threading.Lock()
 _counter_lock = threading.Lock()
 _counter = 0
 
-# --- resource limits (a LAN server still shouldn't fall over to a flood) ---
+# --- the doorman's post: seats, silence, and the turnaway ledger ---
 IDLE_TIMEOUT = 300.0  # seconds of silence before a connection is dropped
 MAX_CONNECTIONS = 128  # concurrent sockets; thread-per-connection has a ceiling
 MAX_LOGIN_FAILS = 5  # failed logins per client address within the window...
 LOGIN_FAIL_WINDOW = 300.0  # ...before that address is refused for a cooldown
 
-_active = 0
-_active_lock = threading.Lock()
-_login_fails: dict[str, list[float]] = {}
-_fails_lock = threading.Lock()
+_seats_filled = 0
+_seats_lock = threading.Lock()
+_turnaway_ledger: dict[str, list[float]] = {}
+_ledger_lock = threading.Lock()
 
 
 def _next_player_id() -> str:
@@ -43,30 +43,30 @@ def _next_player_id() -> str:
         return f"player{_counter}"
 
 
-def _record_login_failure(ip: str) -> None:
+def _mark_turned_away(ip: str) -> None:
     """Remember one failed login from an address. Also sweeps the whole
     table: addresses whose failures have all aged out are DELETED, so the
     dict is bounded by currently-failing addresses, not by every address
     ever seen."""
     now = time.monotonic()
-    with _fails_lock:
-        for addr in list(_login_fails):
-            live = [t for t in _login_fails[addr] if now - t < LOGIN_FAIL_WINDOW]
+    with _ledger_lock:
+        for addr in list(_turnaway_ledger):
+            live = [t for t in _turnaway_ledger[addr] if now - t < LOGIN_FAIL_WINDOW]
             if live:
-                _login_fails[addr] = live
+                _turnaway_ledger[addr] = live
             else:
-                del _login_fails[addr]
-        _login_fails.setdefault(ip, []).append(now)
+                del _turnaway_ledger[addr]
+        _turnaway_ledger.setdefault(ip, []).append(now)
 
 
-def _is_rate_limited(ip: str) -> bool:
+def _door_is_barred(ip: str) -> bool:
     """True once an address has too many recent failures -- online
     brute-force defense that survives reconnects (the per-connection
     3-strikes does not). Read-only: never creates table entries, so
     connect-only traffic cannot grow the dict."""
     now = time.monotonic()
-    with _fails_lock:
-        recent = [t for t in _login_fails.get(ip, []) if now - t < LOGIN_FAIL_WINDOW]
+    with _ledger_lock:
+        recent = [t for t in _turnaway_ledger.get(ip, []) if now - t < LOGIN_FAIL_WINDOW]
         return len(recent) >= MAX_LOGIN_FAILS
 
 
@@ -176,7 +176,7 @@ class _Handler(socketserver.StreamRequestHandler):
         The dialogue assembles login/register commands for the engine
         tick -- UX out here, but the tick stays the only door."""
         ip = self.client_address[0]
-        if _is_rate_limited(ip):
+        if _door_is_barred(ip):
             self._send("Too many failed logins from your address. Try again later.")
             return False
         self._send(load_splash())
@@ -204,22 +204,22 @@ class _Handler(socketserver.StreamRequestHandler):
             if response.startswith("Welcome,"):
                 self._send(render_scene(session.location, viewer=session.player_id))
                 return True
-            _record_login_failure(ip)  # this login/register attempt failed
+            _mark_turned_away(ip)  # this login/register attempt failed
         self._send("Too many attempts. The door closes.")
         return False
 
     def handle(self) -> None:
-        global _active
-        with _active_lock:
-            if _active >= MAX_CONNECTIONS:
+        global _seats_filled
+        with _seats_lock:
+            if _seats_filled >= MAX_CONNECTIONS:
                 self._send("The forge is full right now. Try again shortly.")
                 return
-            _active += 1
+            _seats_filled += 1
         try:
             self._serve_player()
         finally:
-            with _active_lock:
-                _active = max(0, _active - 1)
+            with _seats_lock:
+                _seats_filled = max(0, _seats_filled - 1)
 
     def _serve_player(self) -> None:
         player_id = _next_player_id()

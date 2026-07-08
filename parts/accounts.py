@@ -116,7 +116,7 @@ def set_account_password(account: str, password: str) -> str:
     return f"Password rotated for {account}."
 
 
-def change_password(account: str, old: str, new: str) -> str:
+def reforge_secret(account: str, old: str, new: str) -> str:
     """Self-service rotation: prove the current secret, then set a new
     one. Returns '' on success or the reason it was refused. The old
     password is verified constant-time; the new one is salted afresh.

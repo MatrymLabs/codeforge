@@ -23,8 +23,8 @@ def fresh_world():
     npcs_snap = copy.deepcopy(npcs.NPCS)
     SESSIONS.clear()
     gateway._counter = 0
-    gateway._active = 0
-    gateway._login_fails.clear()
+    gateway._seats_filled = 0
+    gateway._turnaway_ledger.clear()
     yield
     items.ITEMS = items_snap
     doors.DOORS = doors_snap
@@ -274,14 +274,14 @@ def test_repeated_failures_rate_limit_the_address(server, monkeypatch):
 
 
 def test_rate_limit_check_never_grows_the_table(server):
-    """_is_rate_limited is read-only: connect-only traffic (no failed
+    """_door_is_barred is read-only: connect-only traffic (no failed
     logins) must not add dict entries -- that would be a memory leak an
     attacker could drive with bare connects."""
     sock = _connect_guest(server)  # a clean visit: no failures
     sock.close()
-    assert gateway._login_fails == {}
-    assert gateway._is_rate_limited("10.9.8.7") is False
-    assert "10.9.8.7" not in gateway._login_fails
+    assert gateway._turnaway_ledger == {}
+    assert gateway._door_is_barred("10.9.8.7") is False
+    assert "10.9.8.7" not in gateway._turnaway_ledger
 
 
 def test_stale_failure_addresses_are_swept_out(monkeypatch):
@@ -289,12 +289,12 @@ def test_stale_failure_addresses_are_swept_out(monkeypatch):
     kept forever: the table is bounded by currently-failing addresses."""
     clock = {"now": 1000.0}
     monkeypatch.setattr(gateway.time, "monotonic", lambda: clock["now"])
-    gateway._record_login_failure("10.0.0.1")
-    assert gateway._is_rate_limited("10.0.0.1") is False  # one strike isn't a ban
+    gateway._mark_turned_away("10.0.0.1")
+    assert gateway._door_is_barred("10.0.0.1") is False  # one strike isn't a ban
     clock["now"] += gateway.LOGIN_FAIL_WINDOW + 1  # the window passes
-    gateway._record_login_failure("10.0.0.2")  # any new failure sweeps the table
-    assert "10.0.0.1" not in gateway._login_fails  # stale key gone
-    assert list(gateway._login_fails) == ["10.0.0.2"]
+    gateway._mark_turned_away("10.0.0.2")  # any new failure sweeps the table
+    assert "10.0.0.1" not in gateway._turnaway_ledger  # stale key gone
+    assert list(gateway._turnaway_ledger) == ["10.0.0.2"]
 
 
 def test_connection_cap_refuses_when_full(server, monkeypatch):
