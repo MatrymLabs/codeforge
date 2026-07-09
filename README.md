@@ -220,7 +220,7 @@ governing boundaries are in [`docs/AI_WORKFLOW.md`](docs/AI_WORKFLOW.md).
 | `make coverage` / `make security` | Coverage report (85% floor) / bandit SAST + dependency CVE scan |
 | `make doctor` | Run every gate read-only, stop at the first failure, and prescribe the fix |
 | `make patch` | Scan deps for CVEs, apply available security fixes (`pip-audit --fix`), then re-verify + file dated evidence |
-| `make daily` | Apply security patches (+re-verify), then check federal guidance for updates and file them in the [Guidance Library](https://github.com/MatrymLabs/federal-guidance-library) (`FGL_HOME`) |
+| `make daily` | Apply security patches (+re-verify), then check federal guidance for updates and file them in the Guidance Library (a private companion repo, `FGL_HOME`) |
 | `spark` · `codeforge serve` | Multiplayer gateway (Ctrl+C sleeps the world) |
 | `codeforge play` | Solo terminal session |
 | `make ritual` / `make ritual-down` | Light the whole workshop (gates → mirror → forge → MUD) / secure it at day's end |
