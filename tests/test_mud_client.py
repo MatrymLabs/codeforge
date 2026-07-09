@@ -54,3 +54,35 @@ def test_wont_echo_restores_the_terminal():
 def test_escaped_literal_ff_survives_as_one_byte():
     shown, _ = _pump([b"hi\xff\xffthere"])  # IAC IAC -> a single literal 0xff
     assert shown == b"hi\xffthere"
+
+
+# --- the masked field: a '*' per keystroke, real text buffered until Enter ---
+
+
+def test_mask_feed_echoes_stars_and_returns_the_line_on_enter():
+    buf = bytearray()
+    echo, line = mud_client._mask_feed(buf, b"pw9")
+    assert echo == b"***" and line is None and bytes(buf) == b"pw9"  # masked, not sent yet
+    echo, line = mud_client._mask_feed(buf, b"\r")
+    assert echo == b"\r\n" and line == b"pw9\n" and buf == bytearray()  # real text on Enter
+
+
+def test_mask_feed_backspace_rubs_out_a_star():
+    buf = bytearray(b"ab")
+    echo, line = mud_client._mask_feed(buf, b"\x7f")
+    assert echo == b"\b \b" and bytes(buf) == b"a" and line is None
+
+
+def test_mask_feed_ignores_stray_control_bytes():
+    buf = bytearray()
+    echo, line = mud_client._mask_feed(buf, b"a\x00b")  # NUL between letters
+    assert echo == b"**" and bytes(buf) == b"ab" and line is None
+
+
+def test_secret_field_passes_through_when_not_a_tty():
+    """Piped input (and CI) has no terminal to mask -- forward untouched so
+    scripted logins still work."""
+    field = mud_client._SecretField(0, None)  # saved=None marks a non-tty
+    field.enter()
+    assert field.active is True
+    assert field.feed(1, b"swordfish9\n") == b"swordfish9\n"
