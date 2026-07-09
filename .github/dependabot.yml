@@ -1,0 +1,28 @@
+# Dependabot -- automated dependency vulnerability + version monitoring.
+# Supply-chain hygiene (NIST SSDF RV, EO 14028): a bot watches deps so a known
+# CVE surfaces as a PR, not a surprise. Bumps are reviewed like any change
+# (branch -> CI green -> merge); Dependabot never merges on its own.
+version: 2
+updates:
+  # Python runtime + dev dependencies (pyproject.toml).
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "chore(deps)"
+    labels:
+      - "dependencies"
+      - "security"
+
+  # The CI/CD workflow actions themselves (pinned action versions age out).
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "chore(ci)"
+    labels:
+      - "dependencies"
+      - "ci"
