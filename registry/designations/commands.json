@@ -138,5 +138,34 @@
     "aliases": [],
     "created": "2026-07-09",
     "updated": "2026-07-09"
+  },
+  {
+    "designation": "CMD-UM04-S01-N001-001-R0",
+    "name": "`@sg`",
+    "status": "active",
+    "function": "System-generate a filed item pattern into the world (wizard+).",
+    "label": "@sg",
+    "file": "parts/generate.py",
+    "type": "CMD",
+    "domain": "UM04",
+    "sector": "S01",
+    "node": "N001",
+    "sequence": "001",
+    "revision": "R0",
+    "docs": "",
+    "tests": "tests/test_generate.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "the admin generation verb; every seed inherits it",
+    "tags": [
+      "command",
+      "admin",
+      "generate"
+    ],
+    "notes": "",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-09",
+    "updated": "2026-07-09"
   }
 ]

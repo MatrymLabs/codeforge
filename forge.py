@@ -28,10 +28,11 @@ from parts.classroom import (
     talk_to_codex,
 )
 from parts.combat import attack
-from parts.commands import CORE, Command, CommandSet
+from parts.commands import ADMIN, CORE, Command, CommandSet
 from parts.console import console_menu, diagnostics_view, run_view
 from parts.doors import unlock
 from parts.events import announce, bind_echo, rename_echo, unbind_echo
+from parts.generate import system_generate
 from parts.items import drop, inventory_text, room_items_text, take
 from parts.jobs import JOBS, bind_calling, calling_index, render_sheet
 from parts.library import library
@@ -111,6 +112,16 @@ def _build_commands() -> CommandSet:
             "filter by status",
             lambda _s, arg: registry_status(arg),
             namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "@sg",
+            "CMD-UM04-S01-N001-001-R0",
+            "system-generate a filed item pattern (wizard+)",
+            system_generate,
+            namespace=ADMIN,
+            min_rank="wizard",
         )
     )
     return cs
