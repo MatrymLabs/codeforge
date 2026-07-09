@@ -7,6 +7,21 @@ pre-1.0. Readiness language only — no compliance/OSHA/legal claims.
 ## [Unreleased]
 
 ### Added
+- **End-to-end live smoke test** (`scripts/e2e_smoke.py`, `make smoke`): drives the
+  whole engine over a real TCP socket in one sequence — start (isolated server) →
+  log in → look → check (regs/library/registry/qa/pm/docs) → do (move, `@sg` denied
+  for a player, then owner grant + forge + take) → log out → bank the forge. Runs on
+  a spare port with an ephemeral DB (the real `:4000` and `codeforge.db` are never
+  touched); every step is asserted and timed. 16/16 green.
+
+### Fixed / Performance
+- **Gateway latency ~40ms → ~1ms per command.** The TCP gateway never set
+  `TCP_NODELAY`, so every one-line reply stalled ~40ms on Nagle + delayed-ACK — a
+  fixed per-command lag for every client (Mudlet, telnet, browser gate). Disabled
+  Nagle in the connection setup. Measured via the smoke test: per-command round-trips
+  dropped from ~44ms to ~0–3ms (~20–40×).
+
+### Added
 - **Ritual READINESS phase + `make readiness`**: the startup ritual now runs a global
   self-audit — the classification registry validates (no duplicates/orphans; GATES
   the forge) and the project dashboard (`pm status`) prints as a readiness report.

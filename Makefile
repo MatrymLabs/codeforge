@@ -1,4 +1,4 @@
-.PHONY: env fix lint typecheck test property coverage audit security doctor patch daily check readiness ship run world store hardware clean serve ritual ritual-down unskew
+.PHONY: env fix lint typecheck test property coverage audit security doctor patch daily check readiness smoke ship run world store hardware clean serve ritual ritual-down unskew
 
 # --- Environment: create/validate the .venv, fail loud on version mismatch ---
 env:
@@ -33,6 +33,12 @@ check: lint typecheck test property
 # project dashboard, computed from the registry + QualityGate. Read-only. ---
 readiness:
 	@python3 -c "import sys; from parts.registry import load_collective, validate; from parts.pm import pm_status; p=validate(load_collective()); print('Registry: CLEAN (no duplicates, no orphans)' if not p else 'Registry PROBLEMS:\n  '+'\n  '.join(p)); print(); print(pm_status()); sys.exit(1 if p else 0)"
+
+# --- Smoke: the whole engine end-to-end over a live socket -- start -> log in
+# -> look -> check -> do -> log out -> bank the forge. Isolated (own port + temp
+# DB) and timed. Exit 0 == every live step passed. ---
+smoke:
+	@python3 scripts/e2e_smoke.py
 
 # --- Extra inspections (One-Button Rule) ---
 coverage:
