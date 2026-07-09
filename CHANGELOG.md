@@ -7,6 +7,11 @@ pre-1.0. Readiness language only — no compliance/OSHA/legal claims.
 ## [Unreleased]
 
 ### Added
+- **PM control panel** (`parts/pm.py`): `pm status` / `pm metrics` — the project
+  dashboard is *computed* from the registry + QualityGate (part + part + part), not
+  stored. `docs/project_management.md` holds the charter, milestone status, backlog,
+  risk register, decision log, and one worked DMAIC. Scope control: this prompt's
+  full PMO + Lean-Six-Sigma/ADDIE systems were *deferred as backlog*, not built.
 - **Safety + QA spine** (`parts/qualitygate.py`): `QualityGate` grades any filed
   object (purpose · file · tests · docs · maturity-honesty → `pass|watch|fail`),
   `SafetyReview` rates risk, `DocumentationImpactSweep` sweeps the key docs. New

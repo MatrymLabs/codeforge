@@ -37,6 +37,7 @@ from parts.items import drop, inventory_text, room_items_text, take
 from parts.jobs import JOBS, bind_calling, calling_index, render_sheet
 from parts.library import library
 from parts.npcs import room_npcs_text, talk, trace_npc
+from parts.pm import pm_metrics, pm_status
 from parts.qualitygate import docs_check, render_gate, render_gate_all, render_safety
 from parts.ranks import wizard_command
 from parts.registry import (
@@ -60,7 +61,7 @@ HELP_TEXT = (
     "jobs, job <calling>, score, attack <target>, "
     "unlock <door> with <key>, regs [topic|id], library [id], "
     "registry [show|find|type|status], "
-    "qa gate [all|<id>], safety review <id>, docs check, "
+    "qa gate [all|<id>], safety review <id>, docs check, pm status, pm metrics, "
     "workshop, catalog, reuse <term>, console, run <check>, diagnostics, "
     "security, ai <prompt>, lesson list, question, answer <A-D>, hint, progress, "
     "passwd, save, load, quit"
@@ -160,6 +161,25 @@ def _build_commands() -> CommandSet:
             "CMD-UM10-S01-N001-009-R0",
             "sweep the key docs for gaps",
             lambda _s, _a: docs_check(),
+            namespace=CORE,
+        )
+    )
+    # --- PM control panel (read-only; computes state from registry + QualityGate) ---
+    cs.add(
+        Command(
+            "pm status",
+            "CMD-UM10-S01-N001-010-R0",
+            "project status dashboard (computed, not stored)",
+            lambda _s, _a: pm_status(),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "pm metrics",
+            "CMD-UM10-S01-N001-011-R0",
+            "project metrics (objects, QA readiness, docs gaps)",
+            lambda _s, _a: pm_metrics(),
             namespace=CORE,
         )
     )
