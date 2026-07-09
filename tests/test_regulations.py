@@ -55,6 +55,12 @@ def test_keyword_search_finds_nist(reg: Path) -> None:
     assert "REG-CMMC-32CFR170" not in out  # cmmc row doesn't mention nist
 
 
+def test_detail_shows_version_and_publication_date(reg: Path) -> None:
+    out = regs("pub-nist-800-171", path=reg)
+    assert "Version: Rev 2" in out
+    assert "published/last changed:" in out  # the publication/revision date field
+
+
 def test_reports_unnoted_reliance(reg: Path) -> None:
     # NIST row has a blank legal_reliance_note -> shown as "(none noted)"
     assert "(none noted)" in regs("pub-nist-800-171", path=reg)

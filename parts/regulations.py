@@ -59,11 +59,14 @@ def regulation_detail(source_id: str, path: Path = REGISTRY_PATH) -> str:
     controls = ", ".join(c for c in match["related_internal_controls"].split(";") if c) or "(none)"
     owner = match["internal_owner"] or "(unassigned)"
     last = match["last_checked"] or "(never)"
+    version = match["current_version_or_date"] or "unknown"
+    changed = match["last_changed"] or "unknown"
     return "\n".join(
         [
             f"== {match['source_id']} — {match['source_name']} ==",
             f"Tier {match['authority_tier']} · {match['domain']} · status: {match['status']}",
-            f"Owner: {owner} · cadence: {match['refresh_frequency']} · last checked: {last}",
+            f"Version: {version} · published/last changed: {changed} · last checked: {last}",
+            f"Owner: {owner} · cadence: {match['refresh_frequency']}",
             f"Controls: {controls}",
             f"Source: {match['official_url']}",
             f"Reliance: {match['legal_reliance_note'] or '(none noted)'}",
