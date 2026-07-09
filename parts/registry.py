@@ -180,6 +180,128 @@ def mint_designation(
     return f"{type_}-{domain}-{sector}-{node}-{sequence:03d}-R0"
 
 
+DOMAIN_NAMES = {
+    "UM01": "Workshop",
+    "UM02": "City",
+    "UM03": "Library & Classroom",
+    "UM04": "Game systems",
+    "UM05": "Hardware Store",
+    "UM06": "Compliance & regulations",
+    "UM07": "Finance",
+    "UM08": "Records management",
+    "UM09": "AI & API systems",
+    "UM10": "Reports, logs & evidence",
+}
+TYPE_NAMES = {
+    "UM": "Unimatrix",
+    "SEC": "Sector",
+    "RM": "Room",
+    "NPC": "NPC",
+    "ITM": "Item",
+    "QST": "Quest",
+    "CMD": "Command",
+    "MOD": "Module",
+    "PRT": "Reusable part",
+    "DOC": "Document",
+    "PDF": "PDF artifact",
+    "TXT": "Text analog",
+    "REG": "Regulation",
+    "LSN": "Lesson",
+    "QZ": "Quiz",
+    "EV": "Evidence",
+    "LOG": "Log",
+    "SYS": "System",
+    "API": "API connector",
+}
+
+
+def _find(designation: str, records: list[Designation]) -> Designation | None:
+    low = designation.lower()
+    for r in records:
+        if r.designation.lower() == low or low in [a.lower() for a in r.aliases]:
+            return r
+    return None
+
+
+def _row(r: Designation) -> str:
+    return f"{r.designation:26}{r.status:11}{r.name}"
+
+
+def registry_list(registry_dir: Path | None = None) -> str:
+    """Index the whole collective, grouped by type."""
+    records = load_collective(registry_dir)
+    if not records:
+        return "The registry is empty. File something first."
+    by_type: dict[str, int] = {}
+    for r in records:
+        by_type[r.type] = by_type.get(r.type, 0) + 1
+    tally = ", ".join(f"{n}x {t}" for t, n in sorted(by_type.items()))
+    lines = [f"Collective registry: {len(records)} designation(s) filed.", tally, ""]
+    lines += [_row(r) for r in sorted(records, key=lambda x: x.designation)]
+    lines.append("\n`registry show <designation>` for one record.")
+    return "\n".join(lines)
+
+
+def registry_show(designation: str, registry_dir: Path | None = None) -> str:
+    """Render one designation's full card (case-insensitive; resolves aliases)."""
+    record = _find(designation, load_collective(registry_dir))
+    if record is None:
+        return f"No designation '{designation}'. Try `registry find` or `registry list`."
+    connected = ", ".join(record.related) or "(none)"
+    reuse = record.reuse or "(none noted)"
+    depends = ", ".join(record.depends_on) or "(none)"
+    return "\n".join(
+        [
+            f"Designation:  {record.designation}",
+            f"Name:         {record.name}",
+            f"Type:         {TYPE_NAMES.get(record.type, record.type)}",
+            f"Domain:       {record.domain} — {DOMAIN_NAMES.get(record.domain, '?')}",
+            f"Function:     {record.function}",
+            f"Status:       {record.status}",
+            f"Files label:  {record.label}   (source: {record.file})",
+            f"Depends on:   {depends}",
+            f"Connected:    {connected}",
+            f"Reuse:        {reuse}",
+        ]
+    )
+
+
+def _filtered(records: list[Designation], header: str) -> str:
+    if not records:
+        return "Nothing filed matches that."
+    lines = [header, ""]
+    lines += [_row(r) for r in sorted(records, key=lambda x: x.designation)]
+    lines.append(f"\n{len(records)} record(s).")
+    return "\n".join(lines)
+
+
+def registry_find(term: str, registry_dir: Path | None = None) -> str:
+    """Search designation, name, label, function, and tags for a term."""
+    term = term.strip().lower()
+    if not term:
+        return "Find what? Usage: registry find <term>"
+    hits = [
+        r
+        for r in load_collective(registry_dir)
+        if term in f"{r.designation} {r.name} {r.label} {r.function} {' '.join(r.tags)}".lower()
+    ]
+    return _filtered(hits, f"Designations matching '{term}':")
+
+
+def registry_type(type_: str, registry_dir: Path | None = None) -> str:
+    """List every designation of one type (e.g. RM, NPC, CMD)."""
+    type_ = type_.strip().upper()
+    hits = [r for r in load_collective(registry_dir) if r.type == type_]
+    return _filtered(hits, f"Type {type_} ({TYPE_NAMES.get(type_, '?')}):")
+
+
+def registry_status(status: str, registry_dir: Path | None = None) -> str:
+    """List every designation with one status (e.g. active, prototype)."""
+    status = status.strip().lower()
+    hits = [r for r in load_collective(registry_dir) if r.status == status]
+    return _filtered(hits, f"Status '{status}':")
+
+
 def validate(
     records: list[Designation], root: Path | None = None, check_files: bool = True
 ) -> list[str]:
