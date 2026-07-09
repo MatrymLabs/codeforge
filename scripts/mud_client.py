@@ -29,15 +29,22 @@ ECHO = 1
 
 def _echo_toggle(fd: int, saved: list | None):
     """Return (echo_on, echo_off) callables. No-ops when stdin isn't a real
-    terminal (e.g. piped input in a test) -- there's nothing to blind."""
+    terminal (e.g. piped input in a test) -- there's nothing to blind.
+
+    Every termios call is defensive: toggling echo must NEVER crash the client.
+    If we can't dim the terminal, the worst case is a visible password, which
+    beats a dropped connection."""
     if saved is None:
         return (lambda: None), (lambda: None)
     import termios
 
     def _set(on: bool) -> None:
-        attrs = termios.tcgetattr(fd)
-        attrs[3] = attrs[3] | termios.ECHO if on else attrs[3] & ~termios.ECHO
-        termios.tcsetattr(fd, termios.TCSANOW, attrs)
+        try:
+            attrs = termios.tcgetattr(fd)
+            attrs[3] = attrs[3] | termios.ECHO if on else attrs[3] & ~termios.ECHO
+            termios.tcsetattr(fd, termios.TCSANOW, attrs)
+        except (termios.error, OSError):
+            pass
 
     return (lambda: _set(True)), (lambda: _set(False))
 
@@ -78,7 +85,16 @@ def main(argv: list[str]) -> int:
     if os.isatty(stdin_fd):
         import termios
 
-        saved = termios.tcgetattr(stdin_fd)
+        # Ignore SIGTTOU so tcsetattr works even when we're NOT the terminal's
+        # foreground process group -- e.g. the ritual runs us beside a
+        # backgrounded server. Without this, blanking the password echo would
+        # raise/kill the client and silently drop the login. (Unix-only signal.)
+        with contextlib.suppress(ValueError, OSError, AttributeError):
+            import signal
+
+            signal.signal(signal.SIGTTOU, signal.SIG_IGN)
+        with contextlib.suppress(termios.error, OSError):
+            saved = termios.tcgetattr(stdin_fd)
     echo_on, echo_off = _echo_toggle(stdin_fd, saved)
 
     try:
@@ -116,7 +132,8 @@ def main(argv: list[str]) -> int:
         if saved is not None:
             import termios
 
-            termios.tcsetattr(stdin_fd, termios.TCSANOW, saved)
+            with contextlib.suppress(termios.error, OSError):
+                termios.tcsetattr(stdin_fd, termios.TCSANOW, saved)
         sock.close()
     return 0
 

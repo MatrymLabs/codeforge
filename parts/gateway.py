@@ -224,15 +224,18 @@ class _GateHandler(socketserver.StreamRequestHandler):
     def _serve_player(self) -> None:
         player_id = _next_player_id()
         session = Session(player_id=player_id)
+        entered = False
         with TICK_LOCK:
             SESSIONS[player_id] = session
             bind_echo(player_id, self._send)
-        if not self._front_desk(session):
-            with TICK_LOCK:
-                unbind_echo(session.player_id)
-                SESSIONS.pop(session.player_id, None)
-            return
         try:
+            # The front desk may raise if the client drops mid-handshake (a
+            # health-check connect, a reset). Whatever happens, the finally below
+            # unbinds this session so a dead sink can never linger and crash
+            # another player's broadcast.
+            entered = self._front_desk(session)
+            if not entered:
+                return
             while session.alive:
                 self.wfile.write(b"> ")
                 try:
@@ -249,9 +252,12 @@ class _GateHandler(socketserver.StreamRequestHandler):
                     response = handle_command(session, text)
                 if response:
                     self._send(response)
+        except OSError:
+            pass  # client dropped (broken pipe / reset) -- disconnect quietly
         finally:
             with TICK_LOCK:
-                save_character(session)
+                if entered:
+                    save_character(session)  # only real players persist
                 unbind_echo(session.player_id)
                 SESSIONS.pop(session.player_id, None)
 

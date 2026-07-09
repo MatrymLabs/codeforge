@@ -73,8 +73,16 @@ else
   warn "Branch '$(git rev-parse --abbrev-ref HEAD)' has no upstream -- skipping mirror."
 fi
 
-# Is the gateway accepting connections on :$PORT right now?
-forge_is_up() { (exec 3<>"/dev/tcp/127.0.0.1/$PORT") 2>/dev/null && { exec 3>&- 2>/dev/null; return 0; }; return 1; }
+# Is something already listening on :$PORT? Prefer `ss` (no connection made);
+# fall back to a single, harmless connect only if ss is unavailable. We avoid
+# connecting in a loop -- each connect spawns a real gateway session.
+forge_is_up() {
+  if command -v ss >/dev/null 2>&1; then
+    ss -ltnH 2>/dev/null | grep -q ":$PORT[[:space:]]" && return 0 || return 1
+  fi
+  (exec 3<>"/dev/tcp/127.0.0.1/$PORT") 2>/dev/null && { exec 3>&- 2>/dev/null; return 0; }
+  return 1
+}
 
 # When we leave, put out only a fire we started. Installed BEFORE we light the
 # forge so any later failure still banks the coals -- no leaked servers.
@@ -95,20 +103,22 @@ spark_line "The Forge -- lighting the gateway on :$PORT..."
 if forge_is_up; then
   ok "A forge is already burning on :$PORT -- joining it (won't disturb it on exit)."
 else
-  FORGE_SEED="$SEED" spark >/tmp/ritual-spark.log 2>&1 &
+  : >/tmp/ritual-spark.log
+  # PYTHONUNBUFFERED so the gateway's "listening" line hits the log immediately
+  # -- we wait on that line instead of connecting (a connect would spawn a real
+  # session on the very server we're booting).
+  PYTHONUNBUFFERED=1 FORGE_SEED="$SEED" spark >/tmp/ritual-spark.log 2>&1 &
   FORGE_PID=$!
   STARTED_HERE=1
-  # Wait until the socket actually accepts a connection -- probe the port, don't
-  # scrape the log (Python block-buffers stdout to a file; the bind is the truth).
   for _ in $(seq 1 60); do
-    if forge_is_up; then break; fi
+    if grep -q "listening on" /tmp/ritual-spark.log 2>/dev/null; then break; fi
     if ! kill -0 "$FORGE_PID" 2>/dev/null; then
       printf '%b' "$DIM"; cat /tmp/ritual-spark.log; printf '%b' "$OFF"
       die "The forge failed to light (see above)."
     fi
     sleep 0.25
   done
-  forge_is_up || die "The forge did not open :$PORT in time."
+  grep -q "listening on" /tmp/ritual-spark.log || die "The forge did not announce itself in time."
   ok "The forge is lit (pid $FORGE_PID) -- '$SEED' is live on :$PORT."
 fi
 
