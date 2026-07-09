@@ -24,6 +24,7 @@ USAGE = """codeforge -- hardware-store counter for the world engine
   codeforge migrate-db                 import legacy JSON saves into SQLite
   codeforge passwd <account>           rotate an account password (prompted)
   codeforge api                        serve the HTTP admin API on port 8000
+  codeforge web                        serve the browser gate (WebSocket play) on $PORT
   codeforge help                       this text
 
 A seed IS a game. `--seed <game>` (or the FORGE_SEED env var, which `spark` reads)
@@ -97,6 +98,14 @@ def main(argv: list[str] | None = None) -> int:
         from parts.api import app
 
         uvicorn.run(app, host="0.0.0.0", port=8000)
+        return 0
+    if cmd == "web":
+        import uvicorn
+
+        from parts.web_gateway import app as web_app
+
+        # Hosts (Render/Fly) hand us the port on $PORT; default to 8000 locally.
+        uvicorn.run(web_app, host="0.0.0.0", port=int(os.environ.get("PORT", "8000")))
         return 0
     if cmd == "migrate-db":
         from parts.accounts import import_legacy_json

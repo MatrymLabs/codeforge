@@ -1,0 +1,26 @@
+# Render blueprint: the public browser demo of CodeForge.
+#
+# One free web service. It reuses the repo Dockerfile but overrides the
+# entrypoint to run the WebSocket browser gate (`codeforge web`) instead of
+# the LAN telnet server (`spark`). Render injects $PORT; the `web` verb binds it.
+#
+# Deploy: push this file, then in Render -> New -> Blueprint, point at this repo.
+# No secrets required (codeforge needs no API keys). State is ephemeral by design.
+services:
+  - type: web
+    name: codeforge-demo
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    dockerCommand: codeforge web
+    plan: free
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      # Ephemeral demo DB in the container's tmp -- resets on every deploy so a
+      # public link never accretes accounts. (Render's free filesystem is
+      # ephemeral anyway; this just makes the intent explicit and avoids /data.)
+      - key: CODEFORGE_DB
+        value: /tmp/codeforge-demo.db
+      # Which game the demo boots. first-forge is the flagship starter world.
+      - key: FORGE_SEED
+        value: first-forge
