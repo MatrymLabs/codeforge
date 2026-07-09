@@ -32,6 +32,8 @@ ALLOWLIST: dict[str, list[str]] = {
     "tests": ["pytest", "-q", "-m", "not property"],
     "status": ["git", "status", "--short"],
     "diff": ["git", "diff", "--stat"],
+    "security": ["bandit", "-c", "pyproject.toml", "-r", "parts", "forge.py", "-q"],
+    "audit": ["pip-audit", "--skip-editable"],
 }
 
 # The fast, always-safe subset the `diagnostics` command runs as a bundle.

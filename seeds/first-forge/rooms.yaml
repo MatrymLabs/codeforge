@@ -50,10 +50,27 @@ library:
   exits:
     west: courtyard
     north: archive
+    east: classroom
+
+classroom:
+  name: The Classroom of Practical Arts
+  desc: |-
+    Dark wooden desks face a slate board of diagrams, code fragments, and glowing
+    question marks. Shelves of lesson scrolls line the walls — Python, Git,
+    Finance, Records, Compliance. This is where knowledge becomes usable skill.
+    -- Here: talk codex, lesson list, lesson start <subject>, question,
+       answer <A-D>, hint, progress.
+  exits:
+    west: library
 
 archive:
   name: The Sealed Archive
-  desc: Forbidden shelves climb into darkness. The air tastes of secrets and old ink.
+  desc: |-
+    Forbidden shelves climb into darkness, but the air has changed: this is the
+    records office. Stamped forms, ledgers, and archive crystals preserve what
+    happened, when, and who approved it — including the federal guidance CodeForge
+    builds against.
+    -- Here: regs (list guidance), regs nist (NIST SP 800-171/172/218), regs <id> (read one).
   exits:
     south: library
 
@@ -67,8 +84,57 @@ cellar:
 workshop:
   name: The Forge Workshop
   desc: |-
-    Your engineering cockpit. A blueprint table, a diagnostics panel, and the
-    hardware-catalog counter line the walls; the Architect's chair sits empty,
-    waiting to be filled. Type WORKSHOP to see your tools.
+    Your engineering cockpit. Blueprint rails, a diagnostics panel, and the
+    hardware-catalog counter orbit a central workbench; the Architect's chair
+    hums, ready. Every system begins here before it becomes part of the world.
+    -- Here: workshop (tools), ai <prompt> (the Architect). Rooms ring you:
+       the Vault (w), the Console (s), the Observatory (n), the Blueprint (e).
   exits:
-    east: cellar
+    north: observatory
+    east: blueprint_table
+    west: component_vault
+    south: diagnostic_console
+    down: cellar
+
+observatory:
+  name: The Observatory
+  desc: |-
+    A domed glass ceiling frames constellations shaped like systems, modules,
+    and quests. A telescope points not at space but at possible futures — where
+    CodeForge dreams before it builds.
+    -- Here: ai <prompt> to think through what to build next. Long-range
+       planning (the Starwright) is coming.
+  exits:
+    south: workshop
+
+blueprint_table:
+  name: The Blueprint Table
+  desc: |-
+    A vast table glows with layered plans — rooms, commands, workflows, and
+    ledgers as movable diagrams. Nothing here is built by accident; every idea
+    becomes a plan before it becomes code.
+    -- Here: blueprint (draft a plan) is coming; for now, ai <prompt> to
+       reason one through.
+  exits:
+    west: workshop
+
+component_vault:
+  name: The Component Vault
+  desc: |-
+    Shelves of tested parts recede into shadow: gates, ledgers, validators,
+    command relays. Each is tagged for reuse across games, government, finance,
+    compliance, and records — the CodeForge hardware store.
+    -- Here: catalog (browse), reuse <term> (search, e.g. reuse audit).
+  exits:
+    east: workshop
+
+diagnostic_console:
+  name: The Diagnostic Console
+  desc: |-
+    A reinforced console blinks amber and blue. Each command is carved into a
+    metal plate and routed through a failsafe — not a raw terminal, a guarded
+    station where every run is checked, capped, and logged.
+    -- Here: diagnostics (quick checks), run <check>, security (SAST scan),
+       console (the full list).
+  exits:
+    north: workshop

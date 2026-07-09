@@ -77,6 +77,25 @@
     compliance: "safe, logged command execution as an auditable control"
     general: "a sandboxed command relay for any untrusted-caller automation"
 
+- id: assessment-engine
+  name: Assessment Engine
+  source: parts/assessment.py
+  category: learning
+  tags: [quiz, training, assessment, data-driven]
+  maturity: beta
+  risk: low
+  reuse_score: 5
+  purpose: >
+    Load a question bank from data, ask questions, check answers, hand out hints
+    and explanations, and score a run — a domain-agnostic assessment engine.
+  reuse:
+    game: "Professor Codex's Classroom drills (Python, Git, systems design)"
+    government: "policy-acknowledgement and CMMC/NIST knowledge checks"
+    finance: "AP/AR process-training quizzes and sign-off competency checks"
+    compliance: "training-evidence assessments tied to a control"
+    records: "onboarding and records-handling competency checks"
+    general: "any onboarding or certification-style quiz system"
+
 - id: gate-runner
   name: Gate Runner
   source: scripts/doctor.py

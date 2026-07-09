@@ -59,11 +59,14 @@ def regulation_detail(source_id: str, path: Path = REGISTRY_PATH) -> str:
     controls = ", ".join(c for c in match["related_internal_controls"].split(";") if c) or "(none)"
     owner = match["internal_owner"] or "(unassigned)"
     last = match["last_checked"] or "(never)"
+    version = match["current_version_or_date"] or "unknown"
+    changed = match["last_changed"] or "unknown"
     return "\n".join(
         [
             f"== {match['source_id']} — {match['source_name']} ==",
             f"Tier {match['authority_tier']} · {match['domain']} · status: {match['status']}",
-            f"Owner: {owner} · cadence: {match['refresh_frequency']} · last checked: {last}",
+            f"Version: {version} · published/last changed: {changed} · last checked: {last}",
+            f"Owner: {owner} · cadence: {match['refresh_frequency']}",
             f"Controls: {controls}",
             f"Source: {match['official_url']}",
             f"Reliance: {match['legal_reliance_note'] or '(none noted)'}",
@@ -71,14 +74,37 @@ def regulation_detail(source_id: str, path: Path = REGISTRY_PATH) -> str:
     )
 
 
+def regulations_search(query: str, path: Path = REGISTRY_PATH) -> str:
+    """List sources whose id, name, or domain mention `query` (e.g. 'nist')."""
+    rows = _load(path)
+    hits = [
+        r
+        for r in rows
+        if query.lower() in f"{r['source_id']} {r['source_name']} {r['domain']}".lower()
+    ]
+    if not hits:
+        return f"No source or match for '{query}'. Try `regs` for the index."
+    header = f"{'ID':22}{'TIER':5}{'DOMAIN':12}SOURCE"
+    lines = [f"Guidance matching '{query}':", header, "-" * len(header)]
+    for r in sorted(hits, key=lambda x: (x["authority_tier"], x["source_id"])):
+        lines.append(
+            f"{r['source_id']:22}T{r['authority_tier']:<4}{r['domain']:12}{r['source_name']}"
+        )
+    lines.append(f"\n{len(hits)} match(es). `regs <id>` for detail.")
+    return "\n".join(lines)
+
+
 def regs(arg: str = "", path: Path = REGISTRY_PATH) -> str:
-    """Dispatch: '' -> index; a known domain -> filtered index; else -> detail by id."""
+    """Dispatch: '' -> index; a known domain -> filtered index; an exact id ->
+    detail; otherwise a keyword search across id/name/domain (e.g. `regs nist`)."""
     if not path.exists():
         return _NOT_MOUNTED
     arg = arg.strip()
     if not arg:
         return regulations_index(path=path)
-    domains = {r["domain"].lower() for r in _load(path)}
-    if arg.lower() in domains:
+    rows = _load(path)
+    if arg.lower() in {r["domain"].lower() for r in rows}:
         return regulations_index(domain=arg, path=path)
-    return regulation_detail(arg, path=path)
+    if any(r["source_id"].lower() == arg.lower() for r in rows):
+        return regulation_detail(arg, path=path)
+    return regulations_search(arg, path=path)
