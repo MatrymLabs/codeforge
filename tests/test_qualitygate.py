@@ -91,6 +91,20 @@ def test_a_read_only_object_is_low_risk() -> None:
     assert finding.approval_required is False
 
 
+def test_safety_review_flags_item_and_prototype_branches() -> None:
+    item = safety_review(_rec("ITM-UM04-S01-N001-001-R0", label="excalibur"))
+    assert "broken_player_progression" in item.categories
+    proto = safety_review(_rec("RM-UM02-S01-N001-001-R0", status="prototype", label="city"))
+    assert "untested_behavior" in proto.categories
+
+
+def test_render_paths_handle_an_unknown_designation() -> None:
+    from parts.qualitygate import render_gate, render_safety
+
+    assert "No object" in render_gate("RM-UM09-S09-N999-999-R9")
+    assert "No object" in render_safety("RM-UM09-S09-N999-999-R9")
+
+
 # --- DocumentationImpactSweep -------------------------------------------------
 
 
