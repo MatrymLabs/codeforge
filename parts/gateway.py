@@ -9,7 +9,9 @@ Security: plaintext, no auth, LAN-visible. This is the compatibility
 transport for your home network, not an internet-facing service.
 """
 
+import contextlib
 import re
+import socket
 import socketserver
 import threading
 import time
@@ -126,6 +128,14 @@ class ForgeGateServer(socketserver.ThreadingTCPServer):
 
 class _GateHandler(socketserver.StreamRequestHandler):
     timeout = IDLE_TIMEOUT  # StreamRequestHandler applies this to the socket
+
+    def setup(self) -> None:
+        super().setup()
+        # Disable Nagle. Without this, each one-line reply waits ~40ms for a delayed
+        # ACK before flushing -- a fixed per-command stall on every client. MUD
+        # traffic is tiny interactive lines: exactly what TCP_NODELAY is for.
+        with contextlib.suppress(OSError):  # setsockopt is platform-dependent
+            self.connection.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
 
     def _send(self, text: str) -> None:
         self.wfile.write((_sanitize(text) + "\r\n").encode("utf-8"))
