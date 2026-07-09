@@ -28,6 +28,7 @@ from parts.classroom import (
     talk_to_codex,
 )
 from parts.combat import attack
+from parts.commands import CORE, Command, CommandSet
 from parts.console import console_menu, diagnostics_view, run_view
 from parts.doors import unlock
 from parts.events import announce, bind_echo, rename_echo, unbind_echo
@@ -35,6 +36,13 @@ from parts.items import drop, inventory_text, room_items_text, take
 from parts.jobs import JOBS, bind_calling, calling_index, render_sheet
 from parts.npcs import room_npcs_text, talk, trace_npc
 from parts.ranks import wizard_command
+from parts.registry import (
+    registry_find,
+    registry_list,
+    registry_show,
+    registry_status,
+    registry_type,
+)
 from parts.regulations import regs
 from parts.save import awaken_snapshot, seal_snapshot
 from parts.session import SESSIONS, Session, display_name, roster
@@ -48,10 +56,66 @@ HELP_TEXT = (
     "take, drop, inventory, talk <npc>, say <msg>, name <yourname>, who, "
     "jobs, job <calling>, score, attack <target>, "
     "unlock <door> with <key>, regs [topic|id], "
+    "registry [show|find|type|status], "
     "workshop, catalog, reuse <term>, console, run <check>, diagnostics, "
     "security, ai <prompt>, lesson list, question, answer <A-D>, hint, progress, "
     "passwd, save, load, quit"
 )
+
+
+def _build_commands() -> CommandSet:
+    """The registry command family, filed as CMD-* designations. First family on the
+    command spine; the legacy tick still handles everything else via fall-through."""
+    cs = CommandSet()
+    cs.add(
+        Command(
+            "registry",
+            "CMD-UM10-S01-N001-001-R0",
+            "list the collective",
+            lambda _s, _a: registry_list(),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "registry show",
+            "CMD-UM10-S01-N001-002-R0",
+            "show one record",
+            lambda _s, arg: registry_show(arg),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "registry find",
+            "CMD-UM10-S01-N001-003-R0",
+            "search the registry",
+            lambda _s, arg: registry_find(arg),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "registry type",
+            "CMD-UM10-S01-N001-004-R0",
+            "filter by type",
+            lambda _s, arg: registry_type(arg),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "registry status",
+            "CMD-UM10-S01-N001-005-R0",
+            "filter by status",
+            lambda _s, arg: registry_status(arg),
+            namespace=CORE,
+        )
+    )
+    return cs
+
+
+COMMANDS = _build_commands()
 
 
 def render_scene(location: str, viewer: str = "") -> str:
@@ -88,6 +152,12 @@ def handle_command(session: Session, signal: str) -> str:
     from it. Lowercasing a password destroys it."""
     true_signal = signal.strip()
     routed_signal = true_signal.lower()
+
+    # The command spine is tried first; it returns None for anything it doesn't own,
+    # so the legacy tick below still handles the rest (authorization before capability).
+    handled = COMMANDS.dispatch(session, true_signal)
+    if handled is not None:
+        return handled
 
     if routed_signal in ("quit", "q"):
         save_character(session)
