@@ -156,6 +156,17 @@ Salvage note: `stats`, `resources`, and `progression` were ported from an earlie
 Evennia-based prototype -- framework-free kernel code survived the framework it was
 written for, original tests included.
 
+## The forge voice
+
+The names in this repo are chosen in a deliberate voice — workshop invention,
+detective case files, worlds-and-gates — so the code reads like the thing it
+models (`spark`, `Forge`, `Session`, `Seed`, the tick as the only *door*). It's a
+documented convention with hard limits: **clarity outranks poetry, and the data
+contract stays literal** (persisted labels, seed keys, DB columns, and CLI verbs
+never take the metaphor). The vocabulary map is in
+[`docs/naming_glossary.md`](docs/naming_glossary.md); the philosophy and its
+governing boundaries are in [`docs/AI_WORKFLOW.md`](docs/AI_WORKFLOW.md).
+
 ## Workshop buttons
 
 | Command | What it does |
