@@ -7,7 +7,7 @@ catalog and searching it for a reusable part. Commands that RUN things
 relay -- see docs/holodeck/SAFETY.md. This card never executes a subprocess.
 """
 
-from parts.hardware import Part, catalog_text, load_catalog
+from parts.hardware import catalog_text, load_catalog, part_haystack
 
 WORKSHOP_ROOM = "workshop"  # the seed room label this cockpit lives in
 
@@ -16,10 +16,11 @@ _LIVE = (
     ("reuse <term>", "find cataloged parts for a need (e.g. reuse audit)"),
     ("console", "list the read-only diagnostic commands"),
     ("run <check> / diagnostics", "run allowlisted checks (lint, types, tests, git)"),
+    ("ai <prompt>", "ask the Architect NPC (advisory, read-only)"),
 )
 _COMING = (
-    ("ai <prompt>", "ask the Architect NPC (advisory)"),
     ("blueprint", "draft a plan for a new part"),
+    ("patch proposal", "the Architect proposes an edit for your approval"),
 )
 
 
@@ -37,19 +38,12 @@ def catalog_view() -> str:
     return catalog_text()
 
 
-def _haystack(part: Part) -> str:
-    """Everything about a part, lowercased, for a plain substring search."""
-    fields = [part.id, part.name, part.category, *part.tags]
-    fields += list(part.reuse.keys()) + list(part.reuse.values())
-    return " ".join(fields).lower()
-
-
 def reuse_search(term: str) -> str:
     """Find cataloged parts whose id/name/tags/category/domain-uses mention `term`."""
     query = term.strip().lower()
     if not query:
         return "Reuse what? Try: reuse audit"
-    hits = [part for part in load_catalog() if query in _haystack(part)]
+    hits = [part for part in load_catalog() if query in part_haystack(part)]
     if not hits:
         return f"No cataloged part matches '{term}'. Browse them all with: catalog"
     lines = [f"Parts matching '{term}':"]

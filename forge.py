@@ -16,6 +16,7 @@ from parts.accounts import (
     verify_password,
 )
 from parts.accounts import register as register_account
+from parts.architect import consult
 from parts.characters import load_character, restore_character, save_character
 from parts.combat import attack
 from parts.console import console_menu, diagnostics_view, run_view
@@ -39,7 +40,7 @@ HELP_TEXT = (
     "jobs, job <calling>, score, attack <target>, "
     "unlock <door> with <key>, regs [topic|id], "
     "workshop, catalog, reuse <term>, console, run <check>, diagnostics, "
-    "passwd, save, load, quit"
+    "ai <prompt>, passwd, save, load, quit"
 )
 
 
@@ -251,6 +252,8 @@ def handle_command(session: Session, signal: str) -> str:
         return diagnostics_view()
     if routed_signal == "run" or routed_signal.startswith("run "):
         return run_view(routed_signal[len("run ") :] if routed_signal.startswith("run ") else "")
+    if routed_signal == "ai" or routed_signal.startswith("ai "):
+        return consult(true_signal[len("ai ") :].strip() if routed_signal.startswith("ai ") else "")
     if routed_signal in ("inventory", "i", "inv"):
         return inventory_text()
     if routed_signal.startswith(("take ", "get ")):

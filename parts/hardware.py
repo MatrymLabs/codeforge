@@ -103,6 +103,13 @@ def find_part(part_id: str, path: Path | None = None) -> Part | None:
     return None
 
 
+def part_haystack(part: Part) -> str:
+    """Everything about a part, lowercased -- for a plain substring search."""
+    fields = [part.id, part.name, part.category, *part.tags]
+    fields += list(part.reuse.keys()) + list(part.reuse.values())
+    return " ".join(fields).lower()
+
+
 def catalog_text(path: Path | None = None) -> str:
     """Render the catalog as display text: each part and every domain it serves."""
     parts = load_catalog(path)
