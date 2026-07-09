@@ -27,6 +27,7 @@ path with `CODEFORGE_CATALOG`.
   risk: low                # required · low | medium | high
   source_status: original  # optional (default original) · original | mit | apache-2.0 | ...
   license: MIT             # optional (default MIT) · this repo's own code is MIT
+  influence: "…"           # optional · the KNOWN PATTERN it was rebuilt from
   reuse:                   # required · non-empty map of domain -> concrete use
     game: "…"
     government: "…"
@@ -51,6 +52,10 @@ path with `CODEFORGE_CATALOG`.
   original CodeForge parts. `source_status` records the provenance; an unclear license
   means the part is not stocked in the first place (the loader refuses any status
   outside the free-to-use set). Every part here is `original` — this repo's own MIT code.
+- **Harvest patterns, not code (proven, not asserted).** `influence` records the *known
+  pattern* a part was rebuilt from (RBAC, pub/sub, allowlist-without-a-shell). The part
+  is an original implementation *of the pattern* — the concept is reused, the expression
+  is ours.
 - **Add a part when it proves reusable**, not before — the store stocks finished
   parts, not intentions.
 

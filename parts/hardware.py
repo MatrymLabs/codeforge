@@ -64,6 +64,7 @@ class Part:
     reuse_score: int = 0
     source_status: str = "original"  # provenance: original / mit / apache-2.0 / ...
     license: str = "MIT"  # the reuse license (this repo's own code is MIT)
+    influence: str = ""  # the KNOWN PATTERN it was rebuilt from -- harvest patterns, not code
 
 
 class CatalogError(ValueError):
@@ -105,6 +106,7 @@ def _coerce(raw: Any, index: int) -> Part:
         reuse_score=int(raw.get("reuse_score", 0)),
         source_status=source_status,
         license=str(raw.get("license", "MIT")),
+        influence=str(raw.get("influence", "")),
     )
 
 
@@ -144,7 +146,9 @@ def catalog_text(path: Path | None = None) -> str:
         lines.append(
             f"[{part.id}] {part.name}  ({part.category} | {part.maturity} | risk={part.risk})"
         )
-        lines.append(f"    source: {part.source}")
+        lines.append(f"    source: {part.source}  ({part.source_status}, {part.license})")
+        if part.influence:
+            lines.append(f"    pattern: {part.influence}")
         lines.append(f"    {part.purpose}")
         for domain, use in part.reuse.items():
             lines.append(f"    - {domain:<11} {use}")

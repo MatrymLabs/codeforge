@@ -12,6 +12,7 @@
   maturity: shipped
   source_status: original
   license: MIT
+  influence: "RBAC — authorization-before-capability pattern (original implementation)"
   risk: low
   reuse_score: 5
   purpose: >
@@ -32,6 +33,7 @@
   maturity: shipped
   source_status: original
   license: MIT
+  influence: "publish/subscribe (observer) pattern (original implementation)"
   risk: low
   reuse_score: 5
   purpose: >
@@ -52,6 +54,7 @@
   maturity: shipped
   source_status: original
   license: MIT
+  influence: "fail-loud validation at the boundary (original implementation)"
   risk: low
   reuse_score: 4
   purpose: >
@@ -72,6 +75,7 @@
   maturity: shipped
   source_status: original
   license: MIT
+  influence: "command allowlist + subprocess without a shell, shell=False (original implementation)"
   risk: low
   reuse_score: 5
   purpose: >
@@ -93,6 +97,7 @@
   maturity: beta
   source_status: original
   license: MIT
+  influence: "data-driven question bank (original implementation)"
   risk: low
   reuse_score: 5
   purpose: >
@@ -114,6 +119,7 @@
   maturity: shipped
   source_status: original
   license: MIT
+  influence: "read-only preflight gate, stop at first failure (original implementation)"
   risk: low
   reuse_score: 4
   purpose: >

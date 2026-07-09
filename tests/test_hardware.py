@@ -21,6 +21,24 @@ def test_shipped_catalog_loads_and_every_part_maps_to_a_domain():
     assert all(part.source for part in parts)  # each names its source file
 
 
+def test_every_shipped_part_is_free_to_use_and_records_its_pattern():
+    # the Free-to-Use rule, enforced: clear provenance + the pattern it was rebuilt from
+    parts = load_catalog()
+    assert all(part.source_status == "original" for part in parts)
+    assert all(part.license for part in parts)
+    assert all(part.influence for part in parts), "each part should record its known pattern"
+
+
+def test_a_non_free_to_use_source_status_is_refused(tmp_path):
+    path = _write(
+        tmp_path,
+        "- id: x\n  name: X\n  source: parts/x.py\n  category: c\n  maturity: beta\n"
+        "  risk: low\n  source_status: gpl-3.0\n  reuse: {game: y}\n  purpose: z\n",
+    )
+    with pytest.raises(CatalogError, match="free-to-use status"):
+        load_catalog(path)
+
+
 def test_find_part_by_id():
     parts = load_catalog()
     first = parts[0]
