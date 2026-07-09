@@ -14,6 +14,11 @@ worlds, restart-surviving characters, rank-gated admin verbs, a threaded TCP gat
 that real MUD clients (Mudlet, telnet, nc) connect to today, and a browser gateway you
 can click straight into.
 
+> **Where this is going:** a MUD-powered **engineering holodeck** and a reusable-code
+> **hardware store** — the parts built for the game get cataloged for real-world reuse
+> (government, finance, compliance, records). Browse them with `make hardware`; read the
+> blueprint in [`docs/holodeck/`](docs/holodeck/VISION.md).
+
 ![Pick a calling, walk to the courtyard, and train against the self-repairing dummy until you level up](docs/demo.gif)
 
 ```text

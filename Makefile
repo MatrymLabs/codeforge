@@ -1,4 +1,4 @@
-.PHONY: env fix lint typecheck test property coverage audit security doctor patch daily check ship run world store clean serve ritual ritual-down unskew
+.PHONY: env fix lint typecheck test property coverage audit security doctor patch daily check ship run world store hardware clean serve ritual ritual-down unskew
 
 # --- Environment: create/validate the .venv, fail loud on version mismatch ---
 env:
@@ -91,6 +91,9 @@ world:
 
 store:
 	python3 -m parts.store
+
+hardware:
+	python3 -m parts.hardware
 
 clean:
 	rm -rf .pytest_cache .ruff_cache .mypy_cache .coverage __pycache__ parts/__pycache__ tests/__pycache__
