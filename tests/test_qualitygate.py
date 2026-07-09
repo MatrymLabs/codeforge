@@ -73,6 +73,16 @@ def test_gate_all_audits_the_real_registry() -> None:
     assert all(r.verdict in (PASS, "watch", FAIL) for r in results)
 
 
+def test_the_shipped_board_has_no_failures() -> None:
+    # The growth gate (hard bar): no filed object may be `active` without a file + tests
+    # -- that would be a FAIL. A missing docs link is only a soft `watch`. So a red board
+    # means an untested/unfiled active object slipped in; CI must catch it here.
+    from parts.registry import load_collective
+
+    fails = [r.designation for r in gate_all(load_collective()) if r.verdict == FAIL]
+    assert not fails, f"QA board has failures (untested/unfiled active objects): {fails}"
+
+
 # --- SafetyReview -------------------------------------------------------------
 
 
