@@ -6,6 +6,17 @@ pre-1.0. Readiness language only — no compliance/OSHA/legal claims.
 
 ## [Unreleased]
 
+### Performance / Changed
+- **Test suite ~2.3× faster (27.7s → 11.8s), measured.** The suite was dominated by
+  password tests running pbkdf2 at the production 600k iterations. `conftest` now drops
+  the iteration count to 1000 *inside the test process only* — production stays 600k
+  (the constant is read at call time). Tests still prove hash/verify/rotate logic; they
+  just no longer pay for 600k of deliberately-expensive hashing. Speeds up `make check`,
+  the ritual's IGNITION, and CI. (Runtime commands were already fast — `pm status`
+  5.7ms — so no premature caching was added.)
+- **Ritual WARDS now gates secrets too:** the startup ritual runs `detect-secrets`
+  (offline, fast) alongside `bandit` — the forge won't light on a committed secret.
+
 ### Added / Changed
 - **The self-audit now covers the code** (code-audit Finding 1). Filed 38 `MOD-*`
   designations for every `parts/*.py` module, so `qa gate all` / `pm status` now grade
