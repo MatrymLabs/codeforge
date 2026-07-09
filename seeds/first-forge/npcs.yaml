@@ -24,3 +24,12 @@ professor_codex:
   keywords: [codex, professor, instructor]
   dialogue:
     - '"The Library tells you what is true. This room tests whether you can use it. Try `lesson list`."'
+
+archivist:
+  name: the Archivist
+  location: archive
+  keywords: [archivist, clerk, scribe]
+  dialogue:
+    - '"Every record here traces to a source, a date, and an owner. Type `library` to see what we preserve."'
+    - '"A source is a citation; a document is the whole text, extracted and dated. Read one: `library <id>`."'
+    - '"Freshness is never assumed. If a document reads ''unknown'', it has not been confirmed against its source."'

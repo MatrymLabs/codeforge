@@ -69,8 +69,9 @@ archive:
     Forbidden shelves climb into darkness, but the air has changed: this is the
     records office. Stamped forms, ledgers, and archive crystals preserve what
     happened, when, and who approved it — including the federal guidance CodeForge
-    builds against.
-    -- Here: regs (list guidance), regs nist (NIST SP 800-171/172/218), regs <id> (read one).
+    builds against. The Archivist tends the preserved documents.
+    -- Here: regs (list guidance), regs nist (NIST SP 800-171/172/218), regs <id> (read one),
+       library (preserved documents), library <id> (read a document), talk archivist.
   exits:
     south: library
 
