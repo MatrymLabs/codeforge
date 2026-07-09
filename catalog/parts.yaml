@@ -1,0 +1,77 @@
+# CodeForge Hardware Catalog — reusable parts across domains.
+#
+# One well-made part, many jobs. Each entry documents where the same engine
+# code serves outside the game. Schema + rules: catalog/README.md.
+# View it: `make hardware`. Validated by parts/hardware.py (fails loud on a bad row).
+
+- id: rank-gate
+  name: Rank Gate
+  source: parts/ranks.py
+  category: authorization
+  tags: [rbac, permissions, security, governance]
+  maturity: production
+  risk: low
+  reuse_score: 5
+  purpose: >
+    Authorization before capability: check an actor's rank against the rank a
+    privileged action requires, and refuse before any of that action's code runs.
+  reuse:
+    game: "@-verbs gate on wizard/owner rank before they touch the world"
+    government: "records access by clearance level; who may release a document"
+    finance: "approval authority tiers — who may sign off an AP/AR transaction"
+    compliance: "least-privilege enforcement, with the refusal as evidence"
+    general: "role-based access control (RBAC) for any command surface"
+
+- id: event-ledger
+  name: Event Ledger
+  source: parts/events.py
+  category: messaging
+  tags: [events, audit, fan-out, resilience]
+  maturity: production
+  risk: low
+  reuse_score: 5
+  purpose: >
+    Fan an event out to many subscribers, isolating failures: one dead or slow
+    consumer can never fault the producer, and a raising sink is pruned.
+  reuse:
+    game: "broadcast room events (arrivals, speech) to every player present"
+    government: "an append-only audit trail of who did what, when"
+    finance: "a financial transaction / posting history feed"
+    compliance: "a security-event log that survives a failing downstream sink"
+    general: "a resilient pub/sub notification relay"
+
+- id: validated-loader
+  name: Validated Loader
+  source: parts/seed.py
+  category: data-integrity
+  tags: [validation, schema, config, fail-loud]
+  maturity: production
+  risk: low
+  reuse_score: 4
+  purpose: >
+    Load external data (YAML) through a schema gate so bad states are
+    unrepresentable: a malformed row fails loud at load, not deep in a run.
+  reuse:
+    game: "load and validate seed worlds (rooms/items/npcs) before boot"
+    government: "validate a records schema or control registry on ingest"
+    finance: "validate a chart-of-accounts / vendor file before posting"
+    compliance: "reject a malformed control/source registry row at the door"
+    general: "typed config loading with early, loud validation"
+
+- id: gate-runner
+  name: Gate Runner
+  source: scripts/doctor.py
+  category: diagnostics
+  tags: [diagnostics, audit, ci, read-only]
+  maturity: production
+  risk: low
+  reuse_score: 4
+  purpose: >
+    Re-run a suite of checks read-only, stop at the first failure, and prescribe
+    the fix — a diagnostic that reports but never mutates.
+  reuse:
+    game: "verify the engine's gates (lint, types, tests) before a change ships"
+    government: "a readiness checker that reports control gaps without changing state"
+    finance: "a process-control checker over a run's outputs"
+    compliance: "a repo/compliance readiness scan feeding an evidence report"
+    general: "the seed of a repo auditor (see the forge-audit backlog item)"
