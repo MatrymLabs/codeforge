@@ -7,6 +7,12 @@ pre-1.0. Readiness language only — no compliance/OSHA/legal claims.
 ## [Unreleased]
 
 ### Added / Changed
+- **Harvest patterns, not code — made provable.** Hardware Part Cards gain an
+  `influence` field recording the *known pattern* each part was rebuilt from (RBAC,
+  pub/sub, allowlist-without-a-shell, fail-loud validation). Each part is an original
+  implementation *of the pattern* — concept reused, expression ours. `make hardware`
+  now shows provenance (`source_status`, `license`) + pattern; a test pins that every
+  shipped part is free-to-use and records its pattern, and refuses a non-free status.
 - **Branding + provenance polish (truthful).** README gains a "What this demonstrates"
   section (skills tied to evidence); GitHub topics added for discoverability. Hardware
   Part Cards gain `source_status` / `license` fields — the **Free-to-Use rule**: only
