@@ -193,10 +193,27 @@ def test_validate_flags_a_label_filed_twice_under_one_type() -> None:
 
 
 def test_validate_flags_an_orphaned_file(tmp_path: Path) -> None:
-    problems = validate([_rec(file="seeds/ghost.yaml")], root=tmp_path)
+    # a built room (active) with a missing source file is an orphan
+    problems = validate([_rec(status="active", file="seeds/ghost.yaml")], root=tmp_path)
     assert any("file not found" in p for p in problems)
 
 
 def test_validate_flags_a_dangling_supersede() -> None:
     problems = validate([_rec(superseded_by="RM-UM03-S02-N001-999-R0")], check_files=False)
     assert any("is not filed" in p for p in problems)
+
+
+def test_the_shipped_registry_validates() -> None:
+    # the real registry/designations/*.json must always be clean -- it can never rot
+    records = load_collective()
+    assert records, "expected the shipped registry to hold records"
+    assert validate(records) == []
+
+
+def test_a_prototype_is_exempt_from_the_file_check(tmp_path: Path) -> None:
+    # a planned room (prototype) has no source file yet -- it must still validate clean
+    planned = _rec(status="prototype", file="seeds/haven-city/rooms.yaml")
+    assert validate([planned], root=tmp_path) == []
+    # but a non-prototype with the same ghost file is still flagged
+    built = _rec("RM-UM02-S01-N001-009-R0", status="active", file="seeds/haven-city/rooms.yaml")
+    assert any("file not found" in p for p in validate([built], root=tmp_path))

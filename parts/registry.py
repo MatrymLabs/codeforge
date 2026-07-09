@@ -201,6 +201,8 @@ def validate(
     if check_files:
         base = root if root is not None else _ROOT
         for r in records:
+            if r.status == "prototype":
+                continue  # a prototype isn't built yet -- no source file is expected
             if r.file and not (base / r.file).exists():
                 problems.append(f"{r.designation}: file not found: {r.file}")
             if r.tests and not (base / r.tests).exists():
