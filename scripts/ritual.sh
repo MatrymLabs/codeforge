@@ -3,11 +3,14 @@
 #
 #   1. IGNITION   the gates run; a red gate stops the ritual (the forge never
 #                 lights on broken code).
-#   2. MIRROR     sync with GitHub -- fast-forward what's behind, name what's
+#   2. WARDS      security posture -- SAST (bandit) GATES the forge; a dependency
+#                 CVE scan (pip-audit) runs and warns. Cyber/SSDF best practice:
+#                 never run on code with a known SAST finding.
+#   3. MIRROR     sync with GitHub -- fast-forward what's behind, name what's
 #                 ahead. Never force, never silently push.
-#   3. THE FORGE  light the gateway (the multiplayer server) and wait for it to
+#   4. THE FORGE  light the gateway (the multiplayer server) and wait for it to
 #                 announce itself.
-#   4. THE GATE   open the MUD window at the front desk, ready to log in.
+#   5. THE GATE   open the MUD window at the front desk, ready to log in.
 #
 # When you walk away (quit / Ctrl-C), the forge banks its coals: a server the
 # ritual lit is a server the ritual puts out. A forge already burning is left be.
@@ -52,7 +55,24 @@ else
   die "A gate is red -- the forge stays cold. Fix it (see /tmp/ritual-check.log), then start the ritual again."
 fi
 
-# --- 2. MIRROR: sync with GitHub -------------------------------------------
+# --- 2. WARDS: security posture (SAST gates; dependency CVEs warn) ----------
+# Cyber/SSDF discipline: the forge never lights on code with a known SAST finding.
+# bandit is offline + fast, so it GATES; pip-audit needs the network, so it WARNS
+# (recover CVEs with `make patch`). Mirrors `make security`'s bandit-gates rule.
+spark_line "Wards -- checking security posture (SAST + dependency CVEs)..."
+if bandit -c pyproject.toml -r parts forge.py -q >/tmp/ritual-bandit.log 2>&1; then
+  ok "SAST clean (bandit)."
+else
+  printf '%b' "$DIM"; tail -20 /tmp/ritual-bandit.log; printf '%b' "$OFF"
+  die "SAST found an issue -- the forge stays cold. Fix it (bandit), then start the ritual again."
+fi
+if pip-audit --skip-editable >/tmp/ritual-audit.log 2>&1; then
+  ok "No known dependency CVEs (pip-audit)."
+else
+  warn "pip-audit reported findings or was offline -- review with 'make patch' (see /tmp/ritual-audit.log)."
+fi
+
+# --- 3. MIRROR: sync with GitHub -------------------------------------------
 spark_line "Mirror -- syncing with GitHub..."
 if git rev-parse --abbrev-ref @'{u}' >/dev/null 2>&1; then
   git fetch --quiet origin || warn "Could not reach GitHub (offline?). Skipping mirror."
@@ -98,7 +118,7 @@ extinguish() {
 }
 trap extinguish EXIT INT TERM
 
-# --- 3. THE FORGE: light the gateway ---------------------------------------
+# --- 4. THE FORGE: light the gateway ---------------------------------------
 spark_line "The Forge -- lighting the gateway on :$PORT..."
 if forge_is_up; then
   ok "A forge is already burning on :$PORT -- joining it (won't disturb it on exit)."
@@ -122,7 +142,7 @@ else
   ok "The forge is lit (pid $FORGE_PID) -- '$SEED' is live on :$PORT."
 fi
 
-# --- 4. THE GATE: open the MUD window --------------------------------------
+# --- 5. THE GATE: open the MUD window --------------------------------------
 spark_line "The Gate -- opening the MUD window (log in at the front desk)..."
 printf '%b   Character (character@account) or NEW awaits. Ctrl-C or QUIT to leave.%b\n\n' "$DIM" "$OFF"
 sleep 0.4
