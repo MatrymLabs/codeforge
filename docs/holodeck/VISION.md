@@ -64,16 +64,17 @@ The first end-to-end slice we are climbing toward (not all at once):
 
 1. `make ritual` lights the workshop and opens the MUD. *(exists)*
 2. Log in as a builder. *(exists)*
-3. **Enter a `workshop` room** — the engineering hub. *(next)*
-4. Run `hardware` / `catalog` in-world to browse reusable parts. *(catalog exists; wire the command next)*
+3. **Enter the `workshop` room** — the engineering hub. *(done — furnished off the cellar)*
+4. Run `workshop` / `catalog` / `reuse <term>` in-world to browse reusable parts. *(done)*
 5. Run safe read-only `diagnostics` (tests, lint, git status) through a **safe runner**.
 6. **Reports** of those runs are readable in-world and saved to `reports/`.
 7. Talk to a **read-only Architect NPC** for advice.
 8. The catalog stocks **at least four real parts** with domain reuse. *(done — see `make hardware`)*
 
-Steps 1–2 and the catalog (8) are done. The base is set; the MVP is items 3–7,
-climbed in the order in [`ROADMAP.md`](ROADMAP.md), behind the guarantees in
-[`SAFETY.md`](SAFETY.md).
+Steps 1–4 and the catalog (8) are done — you can log in, walk into the Workshop,
+and browse the hardware store in-world today. The MVP's remaining items are 5–7
+(safe diagnostics, in-world reports, the read-only Architect NPC), climbed in the
+order in [`ROADMAP.md`](ROADMAP.md), behind the guarantees in [`SAFETY.md`](SAFETY.md).
 
 ## File & folder plan (target shape)
 

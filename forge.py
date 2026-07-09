@@ -27,6 +27,7 @@ from parts.ranks import wizard_command
 from parts.regulations import regs
 from parts.save import awaken_snapshot, seal_snapshot
 from parts.session import SESSIONS, Session, display_name, roster
+from parts.workshop import catalog_view, reuse_search, workshop_menu
 from parts.world import DIRECTIONS, render_room, resolve_move
 
 NAME_RE = re.compile(r"^[a-z][a-z0-9_]{1,15}$")
@@ -35,7 +36,8 @@ HELP_TEXT = (
     "Commands: look, go <direction> (or n/s/e/w/u/d), "
     "take, drop, inventory, talk <npc>, say <msg>, name <yourname>, who, "
     "jobs, job <calling>, score, attack <target>, "
-    "unlock <door> with <key>, regs [topic|id], passwd, save, load, quit"
+    "unlock <door> with <key>, regs [topic|id], "
+    "workshop, catalog, reuse <term>, passwd, save, load, quit"
 )
 
 
@@ -233,6 +235,14 @@ def handle_command(session: Session, signal: str) -> str:
         return "Players online: " + ", ".join(display_name(n) for n in names)
     if routed_signal == "regs" or routed_signal.startswith("regs "):
         return regs(routed_signal[len("regs ") :] if routed_signal.startswith("regs ") else "")
+    if routed_signal == "workshop":
+        return workshop_menu()
+    if routed_signal in ("catalog", "hardware", "parts"):
+        return catalog_view()
+    if routed_signal == "reuse" or routed_signal.startswith("reuse "):
+        return reuse_search(
+            routed_signal[len("reuse ") :] if routed_signal.startswith("reuse ") else ""
+        )
     if routed_signal in ("inventory", "i", "inv"):
         return inventory_text()
     if routed_signal.startswith(("take ", "get ")):

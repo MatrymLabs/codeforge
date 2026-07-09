@@ -12,8 +12,8 @@ Legend: ✅ done · 🔨 next · 📋 planned · 🧭 later (gated/advanced)
 | # | Phase | State | Done looks like |
 |---|-------|-------|-----------------|
 | 1 | **Startup ritual** | ✅ | `make ritual` checks env, gates, lights the forge, opens the MUD; `ritual-down` secures it. |
-| 2 | **Workshop room** | 🔨 | A `workshop` room in the seed; you can walk into it after login. |
-| 3 | **Workshop command menu** | 🔨 | In-world `workshop · status · diagnostics · catalog · parts · hardware · repo · evidence · help` — **display only, no risky actions**. |
+| 2 | **Workshop room** | ✅ | The `workshop` room (off the cellar) is furnished as the engineering cockpit; walk in after login. |
+| 3 | **Workshop command menu** | 🟡 | Live, **display-only**: `workshop` (cockpit menu), `catalog`/`hardware`/`parts` (browse), `reuse <term>` (search). `diagnostics`/`ai`/`blueprint` are marked "coming" and gated on later phases. |
 | 4 | **Hardware catalog** | ✅ | `catalog/parts.yaml` + `parts/hardware.py`; `make hardware` lists parts with cross-domain reuse; ≥4 real parts stocked. |
 | 5 | **AI NPC (read-only)** | 📋 | An Architect NPC takes a prompt, sends **redacted** context to the API behind a mockable seam, returns advice in-world. Advisory only — no file edits. |
 | 6 | **Diagnostic console** | 📋 | A `CommandRelay` runs an **allowlisted, read-only** set (`pytest`, `ruff check`, `mypy`, `git status`, `git diff --stat`) — never a raw shell. |
@@ -51,9 +51,9 @@ Repo-safe, low-risk, high-signal — the base of the climb:
 
 1. ✅ Catalog card + `catalog/parts.yaml` + `make hardware` + tests. *(done)*
 2. ✅ This blueprint (`docs/holodeck/`). *(done)*
-3. 🔨 Add a `workshop` room to the `first-forge` seed (data only) + a seed test.
-4. 🔨 `parts/workshop.py` — a `workshop`/`status`/`help` command that renders text; wire it in the tick with an engine-tick test. **Display only.**
-5. 🔨 Wire `catalog`/`hardware`/`parts` in-world to `parts/hardware.py` (read-only).
+3. ✅ Furnish the `workshop` room as the cockpit (it already existed off the cellar). *(done)*
+4. ✅ `parts/workshop.py` — the `workshop` menu command, wired in the tick with an engine-tick test. **Display only.** *(done)*
+5. ✅ Wire `catalog`/`hardware`/`parts` + `reuse <term>` in-world to `parts/hardware.py` (read-only). *(done)*
 6. 📋 Stock 2–3 more real parts in the catalog as they prove reusable.
 7. 📋 `reports/` scaffold + a tiny `save_report()` helper (write + summarize).
 8. 📋 `parts/console.py` — the `CommandRelay` skeleton with the allowlist (Phase 6), tests first, **no execution of anything not on the list**.
