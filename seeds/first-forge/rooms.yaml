@@ -66,6 +66,9 @@ cellar:
 
 workshop:
   name: The Forge Workshop
-  desc: A workshop for crafting tools and weapons.
+  desc: |-
+    Your engineering cockpit. A blueprint table, a diagnostics panel, and the
+    hardware-catalog counter line the walls; the Architect's chair sits empty,
+    waiting to be filled. Type WORKSHOP to see your tools.
   exits:
     east: cellar
