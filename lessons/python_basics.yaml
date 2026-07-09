@@ -1,0 +1,137 @@
+# LESSON: Python Basics — Trial One
+# A question bank is DATA, not code (parts/assessment.py loads + validates it).
+# The same engine drills any subject; add a lessons/<subject>_*.yaml to grow.
+
+id: python_basics_001
+subject: python
+title: Python Basics — Trial One
+questions:
+  - id: q01
+    prompt: What is a variable used for in Python?
+    choices:
+      A: To permanently delete files
+      B: To store a value under a name
+      C: To create a Git branch
+      D: To launch a web server
+    correct: B
+    hint: Think of a labeled drawer in the Workshop.
+    explanation: >
+      A variable gives a name to a value so your program can use it later —
+      e.g. player_name = "Matrym" points the name player_name at the text "Matrym".
+
+  - id: q02
+    prompt: What does a function do?
+    choices:
+      A: Groups reusable steps under a name you can call
+      B: Deletes a file from disk
+      C: Renames a variable automatically
+      D: Stops the program forever
+    correct: A
+    hint: It is a named block of work you can run again and again.
+    explanation: >
+      A function bundles steps under a name; calling it runs those steps, so you
+      write the logic once and reuse it.
+
+  - id: q03
+    prompt: What is a list in Python?
+    choices:
+      A: A single number
+      B: An ordered collection of items you can change
+      C: A permanent, unchangeable value
+      D: A type of loop
+    correct: B
+    hint: Square brackets, in order, and you can add or remove items.
+    explanation: >
+      A list holds items in order, like [1, 2, 3]; it is mutable, so you can
+      append, remove, or replace elements.
+
+  - id: q04
+    prompt: What is a dictionary in Python?
+    choices:
+      A: A list that is always sorted
+      B: A mapping of keys to values
+      C: A function with no arguments
+      D: A comment block
+    correct: B
+    hint: You look things up by a key, like a word in a real dictionary.
+    explanation: >
+      A dict stores key -> value pairs, e.g. {"hp": 20}; you fetch a value by its
+      key rather than by position.
+
+  - id: q05
+    prompt: What does an `if` statement do?
+    choices:
+      A: Repeats code many times
+      B: Runs a block only when a condition is true
+      C: Defines a new function
+      D: Imports a module
+    correct: B
+    hint: It is a fork in the road based on a true/false test.
+    explanation: >
+      `if` runs its block only when its condition is true; `else`/`elif` handle
+      the other cases.
+
+  - id: q06
+    prompt: What does a loop do?
+    choices:
+      A: Runs a block of code repeatedly
+      B: Deletes a variable
+      C: Ends the program
+      D: Creates a class
+    correct: A
+    hint: Both the for-loop and the while-loop do this.
+    explanation: >
+      A loop repeats a block — `for` over a collection, `while` until a condition
+      turns false — so you don't copy the same code many times.
+
+  - id: q07
+    prompt: What is a module in Python?
+    choices:
+      A: A single line of code
+      B: A file of Python code you can import and reuse
+      C: A kind of error
+      D: A database table
+    correct: B
+    hint: Each .py file is one of these; you `import` it.
+    explanation: >
+      A module is a .py file whose functions and values other files import — the
+      unit of reuse (in CodeForge, each part in parts/ is a module).
+
+  - id: q08
+    prompt: What is a test (as in pytest) for?
+    choices:
+      A: To make the program run faster
+      B: To automatically check that code behaves as expected
+      C: To format the code
+      D: To delete unused files
+    correct: B
+    hint: It proves your code still works after you change it.
+    explanation: >
+      A test runs your code with known inputs and asserts the result, catching
+      breakage automatically — the safety net behind every CodeForge change.
+
+  - id: q09
+    prompt: Why do we write comments?
+    choices:
+      A: To explain WHY code exists, for humans
+      B: Because Python fails without them
+      C: To make the program run
+      D: To hide code from Git
+    correct: A
+    hint: The computer ignores them; people don't.
+    explanation: >
+      Comments explain intent and reasoning to human readers; good ones say WHY,
+      not restate the obvious WHAT.
+
+  - id: q10
+    prompt: Why should code be readable?
+    choices:
+      A: Readability has no real value
+      B: So people (including future you) can understand and safely change it
+      C: Only to satisfy the linter
+      D: To make files larger
+    correct: B
+    hint: You will read code far more often than you write it.
+    explanation: >
+      Readable code is cheaper to understand, review, and change safely — clear
+      names and small pieces beat clever one-liners.

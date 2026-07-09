@@ -17,3 +17,10 @@ training_dummy:
     - '"..." The dummy says nothing. It is, after all, a dummy.'
   hp: 20
   xp: 30
+
+professor_codex:
+  name: Professor Codex
+  location: classroom
+  keywords: [codex, professor, instructor]
+  dialogue:
+    - '"The Library tells you what is true. This room tests whether you can use it. Try `lesson list`."'

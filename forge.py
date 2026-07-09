@@ -18,13 +18,22 @@ from parts.accounts import (
 from parts.accounts import register as register_account
 from parts.architect import consult
 from parts.characters import load_character, restore_character, save_character
+from parts.classroom import (
+    ask_question,
+    hint,
+    lesson_list,
+    lesson_start,
+    progress,
+    submit_answer,
+    talk_to_codex,
+)
 from parts.combat import attack
 from parts.console import console_menu, diagnostics_view, run_view
 from parts.doors import unlock
 from parts.events import announce, bind_echo, rename_echo, unbind_echo
 from parts.items import drop, inventory_text, room_items_text, take
 from parts.jobs import JOBS, bind_calling, calling_index, render_sheet
-from parts.npcs import room_npcs_text, talk
+from parts.npcs import room_npcs_text, talk, trace_npc
 from parts.ranks import wizard_command
 from parts.regulations import regs
 from parts.save import awaken_snapshot, seal_snapshot
@@ -40,7 +49,8 @@ HELP_TEXT = (
     "jobs, job <calling>, score, attack <target>, "
     "unlock <door> with <key>, regs [topic|id], "
     "workshop, catalog, reuse <term>, console, run <check>, diagnostics, "
-    "security, ai <prompt>, passwd, save, load, quit"
+    "security, ai <prompt>, lesson list, question, answer <A-D>, hint, progress, "
+    "passwd, save, load, quit"
 )
 
 
@@ -256,6 +266,24 @@ def handle_command(session: Session, signal: str) -> str:
         return run_view(routed_signal[len("run ") :] if routed_signal.startswith("run ") else "")
     if routed_signal == "ai" or routed_signal.startswith("ai "):
         return consult(true_signal[len("ai ") :].strip() if routed_signal.startswith("ai ") else "")
+    if routed_signal == "lesson" or routed_signal.startswith("lesson "):
+        rest = (
+            routed_signal[len("lesson ") :].strip() if routed_signal.startswith("lesson ") else ""
+        )
+        if rest in ("", "list"):
+            return lesson_list()
+        if rest.startswith("start "):
+            return lesson_start(session.player_id, rest[len("start ") :])
+        return "Try: lesson list, or lesson start <subject>"
+    if routed_signal == "question":
+        return ask_question(session.player_id)
+    if routed_signal == "answer" or routed_signal.startswith("answer "):
+        arg = routed_signal[len("answer ") :] if routed_signal.startswith("answer ") else ""
+        return submit_answer(session.player_id, arg)
+    if routed_signal == "hint":
+        return hint(session.player_id)
+    if routed_signal == "progress":
+        return progress(session.player_id)
     if routed_signal in ("inventory", "i", "inv"):
         return inventory_text()
     if routed_signal.startswith(("take ", "get ")):
@@ -278,6 +306,10 @@ def handle_command(session: Session, signal: str) -> str:
                 exclude=session.player_id,
             )
         return verdict
+    if routed_signal == "talk codex":
+        if trace_npc("codex", session.location) is not None:
+            return talk_to_codex()
+        return "There is no one like that here."
     if routed_signal.startswith("talk "):
         word = routed_signal.split(" ", 1)[1].strip()
         return talk(word, session.location)

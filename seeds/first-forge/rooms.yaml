@@ -50,6 +50,18 @@ library:
   exits:
     west: courtyard
     north: archive
+    east: classroom
+
+classroom:
+  name: The Classroom of Practical Arts
+  desc: |-
+    Dark wooden desks face a slate board of diagrams, code fragments, and glowing
+    question marks. Shelves of lesson scrolls line the walls — Python, Git,
+    Finance, Records, Compliance. This is where knowledge becomes usable skill.
+    -- Here: talk codex, lesson list, lesson start <subject>, question,
+       answer <A-D>, hint, progress.
+  exits:
+    west: library
 
 archive:
   name: The Sealed Archive
