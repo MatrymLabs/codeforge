@@ -6,6 +6,44 @@
 
 ---
 
+## Stardate 2026.190 — "The Machine That Checks Itself"
+
+**Captain's Log, Stardate 2026.190.** The ninth of July, ship's calendar. The longest
+watch yet.
+
+We built the flagship a spine it did not have — a hidden **Classification Registry**,
+a filing system beneath the fantasy, and upon it a **command spine** with a reserved
+`@` sigil so no seed can ever collide with the ship's own verbs. Then we proved the
+engine composes: a **QualityGate** that reads the registry and grades every filed
+object, a **project dashboard** computed from both — part upon part, no second copy to
+drift. The Captain asked whether the engine could take *(part + part)*. It can:
+`qa gate all` audits the ship from parts already aboard.
+
+We taught the forge to make things on command — `@sg`, owner-gated, data-driven,
+refusing to conjure the unknown — to read the guidance library in-game, and to confirm
+a regulation's date against its own source. The ritual grew teeth: a **WARDS** phase
+that will not light the forge on a known SAST finding, and a **READINESS** phase where
+the ship audits itself before the gate opens. We walked the whole engine end to end
+over a live socket — start, log in, look, do, log out, bank the forge — and in the
+walking found the ship had been **stalling ~40ms on every command** for want of one
+line. We struck Nagle from the gateway; the lag fell to near nothing.
+
+Twice the Captain called for truth over comfort. An audit found the papers claiming a
+test count three times stale; we corrected them, then made the claim one that *cannot*
+lie. We drew a line between the shop window and the back room, and put the compliance
+work behind glass.
+
+**A reckoning, in the ship's own hand:** building the **RepoIntegrityRitual** — the
+machine that checks the machine — the Captain's own mistake surfaced. We merged on
+`make check` alone; the security watch caught a false alarm we had not run, and main
+stood red for four minutes. We fixed it forward, loudly, and filed the lesson: *the
+check gate is not the whole gate.* Integrity-first cuts toward the one at the wheel.
+
+The recommendations are saved in the project log. The machine is honest, and greener
+for the day.
+
+---
+
 ## Stardate 2026.189 — "The Forge Lights on Command"
 
 **Captain's Log, Stardate 2026.189.** The eighth of July, ship's calendar.

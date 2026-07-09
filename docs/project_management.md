@@ -58,6 +58,25 @@ dashboard MVP** was built. The rest is filed backlog:
 
 **Rule in force:** no new track starts until the current milestone's gaps close.
 
+## Recommendations captured 2026-07-09 (saved, not yet built)
+
+A big prompt-driven session. These are the open recommendations, honestly prioritized.
+Several big-sounding prompts turned out to be **mostly already built** — the note says so.
+
+| # | Recommendation | Why / origin | Priority | Effort |
+|---|----------------|--------------|----------|--------|
+| R1 | **Secret scanning** — add `make secrets` (detect-secrets, baselined) + a `.secrets.baseline`; optional gitleaks | the RepoIntegrityRitual's own #1 action — closes the one honest gap it surfaces (`not_configured`); other ship repos already carry it | **P1** | S–M |
+| R2 | **Close QG04 → green board** — link `docs` paths on registry records so `pm status`/`qa gate` go green | the dashboard is literally asking for it (LSS-CF-001 DMAIC) | **P1** | S |
+| R3 | **Ritual modes + saved reports** — `make ritual-start-fast/deep`, a structured startup/shutdown report saved under `reports/ritual/`, a shutdown **commit/push-readiness** gate | the Startup/Shutdown prompt's *real delta*; the ritual **spine already exists** (ritual.sh WARDS/READINESS + ritual_down MUSTER) — this is modes + evidence, NOT the 19-phase Python CLI / workshop-lock cathedral (deferred) | P2 | M |
+| R4 | **VeritasGate `truth check`** command — automate the manual truth audit (README/docs/registry claims) | truth prompt; composes `docs_check` + registry validate | P2 | S |
+| R5 | **forge-audit MVP** — run the gates on a *target* repo behind a mockable GitHub-API seam, emit a JSON scorecard | the `DEVELOPMENT_PLAN`'s one net-new flagship build | P2 | **L** |
+| R6 | **Portfolio index page (GitHub Pages)** — link flagship + live demo + a case study | presentation is a hiring gate | P2 | M |
+| R7 | **Build one prototype city room real** (e.g. City Square) | advances the game/world; seeds-are-data | P3 | S |
+
+Still open from the earlier backlog table: EvidenceLedger, ADDIE lesson #1, LSS DMAIC
+records, filing `PRT`/`MOD` parts. **Recommended first move:** R2 (green board) or R1
+(secret scanning) — both small, both close a gap a tool already flagged.
+
 ---
 
 ## Risk register (top 3)
