@@ -176,13 +176,20 @@ written for, original tests included.
 
 ## Testing
 
-201 tests: unit twins for every card, real-socket gateway tests that walk the login
-dialogue over the wire, engine-tick wiring tripwires, deterministic combat math,
-persistence parity, event-bus resilience (a dropped client can never crash another
-player's command), security tests (impostor refusal, salted hashes, generic login
-refusals), and Hypothesis property tests pinning the progression curves across
-thousands of generated cases. CI runs the same `make check` as the workbench, plus a
-`docker` job that builds the image and smoke-tests that the gateway boots.
+217 tests: unit twins for every card, real-socket gateway tests that walk the login
+dialogue over the wire, browser-gateway tests over a real WebSocket, engine-tick wiring
+tripwires, deterministic combat math, persistence parity, event-bus resilience (a
+dropped client can never crash another player's command), security tests (impostor
+refusal, salted hashes, generic login refusals), and Hypothesis property tests pinning
+the progression curves across thousands of generated cases. CI runs the same
+`make check` as the workbench, plus a `docker` job that builds the image and smoke-tests
+that the gateway boots.
+
+> **🔍 Debugging case study.** That "a dropped client can never crash another player's
+> command" line has a story: an intermittent, "impossible" crash that only surfaced
+> through the launch ritual, cornered with a **PTY reproduction** and fixed at three
+> seams. The write-up — symptom → reproduction → root cause → fix → lesson — is in
+> **[docs/DEBUGGING.md](docs/DEBUGGING.md)**.
 
 ## Roadmap
 
