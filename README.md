@@ -10,8 +10,9 @@
 Classic soul: an ASCII splash screen, rooms, locked doors, NPCs, callings, XP, wizards,
 and a training dummy that reassembles itself. Modern body: a pure-function engine tick,
 account authentication with salted pbkdf2 hashing, a broadcast event bus, YAML-seeded
-worlds, restart-surviving characters, rank-gated admin verbs, and a threaded TCP gateway
-that real MUD clients (Mudlet, telnet, nc) connect to today.
+worlds, restart-surviving characters, rank-gated admin verbs, a threaded TCP gateway
+that real MUD clients (Mudlet, telnet, nc) connect to today, and a browser gateway you
+can click straight into.
 
 ![Pick a calling, walk to the courtyard, and train against the self-repairing dummy until you level up](docs/demo.gif)
 
@@ -27,6 +28,21 @@ Welcome back, Matrym@matlabs.
 The world is going to sleep. Your deeds are remembered.
 ```
 
+## Play in your browser 🌐
+
+**Live demo: _add your Render URL here after deploy_** — no install, just click and play.
+
+Or run it locally:
+
+```bash
+codeforge web            # serves the browser gate on http://localhost:8000
+```
+
+Same engine, a fourth thin driver: an [xterm.js](https://xtermjs.org) terminal speaks to
+the tick over a WebSocket. The public demo is deliberately safe — ephemeral state, a seat
+cap, and idle timeouts — so a shared link can't be farmed. Deploy your own with the
+included [`render.yaml`](render.yaml) (Render → New → Blueprint; no secrets required).
+
 ## Quick start
 
 ```bash
@@ -34,7 +50,7 @@ git clone git@github.com:MatrymLabs/codeforge.git
 cd codeforge
 python3 -m venv .venv && source .venv/bin/activate
 pip install -e ".[dev]"
-make check       # lint + typecheck + 201 tests
+make check       # lint + typecheck + 208 tests
 spark            # ignite the multiplayer server on port 4000
 ```
 

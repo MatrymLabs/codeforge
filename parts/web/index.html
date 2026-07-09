@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CodeForge — play in the browser</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@xterm/xterm@5.5.0/css/xterm.min.css" />
+<style>
+  :root { --forge: #ff7a18; --ink: #0b0d10; --panel: #12151a; --edge: #232833; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--ink); color: #e6e6e6;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    display: flex; flex-direction: column; height: 100vh;
+  }
+  header {
+    padding: 10px 16px; border-bottom: 1px solid var(--edge);
+    display: flex; align-items: center; gap: 12px; background: var(--panel);
+  }
+  header .mark { color: var(--forge); font-weight: 700; letter-spacing: .5px; }
+  header .sub { color: #8b93a1; font-size: 13px; }
+  header .status { margin-left: auto; font-size: 12px; color: #8b93a1; }
+  header .status.live::before { content: "● "; color: #35c46b; }
+  header .status.gone::before { content: "● "; color: #e5533d; }
+  #banner {
+    padding: 6px 16px; font-size: 12px; color: #c9b38a;
+    background: #1a1710; border-bottom: 1px solid var(--edge);
+  }
+  #screen { flex: 1; padding: 8px 10px; overflow: hidden; }
+  a { color: var(--forge); }
+</style>
+</head>
+<body>
+  <header>
+    <span class="mark">⚒ CodeForge</span>
+    <span class="sub">a Python-native MUD engine — play it right here</span>
+    <span id="status" class="status">connecting…</span>
+  </header>
+  <div id="banner">
+    Public demo. Type <b>GUEST</b> to wander in, or <b>NEW</b> to make a
+    character (state is ephemeral and resets on redeploy). Try:
+    <code>look</code>, <code>n</code>/<code>s</code>/<code>e</code>/<code>w</code>,
+    <code>help</code>.
+  </div>
+  <div id="screen"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@xterm/xterm@5.5.0/lib/xterm.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@xterm/addon-fit@0.10.0/lib/addon-fit.min.js"></script>
+  <script>
+    const term = new Terminal({
+      cursorBlink: true, fontSize: 15, convertEol: true,
+      theme: { background: "#0b0d10", foreground: "#e6e6e6", cursor: "#ff7a18" },
+    });
+    const fit = new FitAddon.FitAddon();
+    term.loadAddon(fit);
+    term.open(document.getElementById("screen"));
+    fit.fit();
+    window.addEventListener("resize", () => fit.fit());
+
+    const statusEl = document.getElementById("status");
+    const proto = location.protocol === "https:" ? "wss" : "ws";
+    const ws = new WebSocket(`${proto}://${location.host}/ws`);
+
+    // Client-side password masking: when the last server line is a password
+    // prompt, echo '*' instead of the typed characters. The blackout is a
+    // client concern here (no telnet), but secrets never appear on screen.
+    let line = "";
+    let masked = false;
+    const isPasswordPrompt = (s) => /password:\s*$/i.test(s.trim());
+
+    ws.onopen = () => { statusEl.textContent = "live"; statusEl.className = "status live"; };
+    ws.onclose = () => {
+      statusEl.textContent = "disconnected"; statusEl.className = "status gone";
+      term.write("\r\n\x1b[90m— connection closed —\x1b[0m\r\n");
+    };
+    ws.onerror = () => { statusEl.textContent = "error"; statusEl.className = "status gone"; };
+
+    ws.onmessage = (ev) => {
+      const text = String(ev.data);
+      term.write(text.replace(/\n/g, "\r\n") + "\r\n");
+      masked = isPasswordPrompt(text);
+    };
+
+    term.onData((data) => {
+      for (const ch of data) {
+        if (ch === "\r") {                       // Enter: send the line
+          term.write("\r\n");
+          if (ws.readyState === WebSocket.OPEN) ws.send(line);
+          line = ""; masked = false;
+        } else if (ch === "\x7f") {              // Backspace
+          if (line.length) { line = line.slice(0, -1); term.write("\b \b"); }
+        } else if (ch >= " ") {                  // printable
+          line += ch;
+          term.write(masked ? "*" : ch);
+        }
+      }
+    });
+
+    term.focus();
+  </script>
+</body>
+</html>
