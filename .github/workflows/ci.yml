@@ -33,7 +33,7 @@ jobs:
       # token must never turn the portfolio's build red. Public repo uploads work
       # tokenless; set the CODECOV_TOKEN secret for higher rate limits.
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@v7
         continue-on-error: true
         with:
           files: ./coverage.xml
