@@ -23,6 +23,23 @@ the philosophy and its hard limits.
 | **Archive / `open_archive_session`** | Persistence | The canonical store (SQLite) where character case files are kept and restored. |
 | **`render_scene` / `render_room`** | Projection | Turn canonical state into the text a player sees. Projections never mutate state. |
 
+## The engineering stack (the self-auditing filing layer)
+
+Above the game, a second vocabulary names the parts that file, gate, and audit the
+engine. Each maps to a real, tested module — the metaphor stays in the code; the
+*designations* it files are the frozen data contract.
+
+| Name | Kind | Plain-English meaning |
+|------|------|-----------------------|
+| **Designation / Classification Registry** (`parts/registry.py`) | Filing | Every object gets a unique designation `TYPE-UM-SEC-NODE-SEQ-REV`, keyed to its frozen runtime label — a hidden filing system beneath the fantasy. Additive metadata, never a rename. |
+| **CommandSet / the command spine** (`parts/commands.py`) | Dispatch | Namespaced, rank-gated verbs: `CORE` bare words the engine owns, `ADMIN` under the reserved `@` sigil, `SEED` verbs each game owns. A seed can never shadow a reserved word. |
+| **FailsafeRunner** (`parts/console.py`) | Safety | The safe command console: an allowlist runs only vetted checks — never raw shell. |
+| **QualityGate / SafetyReview** (`parts/qualitygate.py`) | Readiness | Grade a filed object (purpose · file · tests · docs · maturity) → `pass\|watch\|fail`; rate its risk. Readiness, never compliance. |
+| **ProjectControl / `pm status`** (`parts/pm.py`) | PM | The project dashboard, *computed* from the registry + QualityGate — no stored copy to drift. |
+| **the Archivist / `library`** (`parts/library.py`) | Library | Read the guidance library's preserved documents, read-only. |
+| **`@sg` / the generator** (`parts/generate.py`) | Admin | System item generation from filed data patterns (wizard+); refuses to conjure the unknown. |
+| **the awareness lens / `law`** (`parts/law.py`) | Compliance-aware | Renders tracked sources through a legal-*awareness* boundary — never legal advice, always "human review required." |
+
 ## The two rules that keep it honest
 
 1. **Clarity outranks poetry.** `reforge_secret` is good; `attune_the_arcane_ward`
