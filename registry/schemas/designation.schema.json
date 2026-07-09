@@ -1,0 +1,143 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://matrymlabs.dev/codeforge/registry/designation.schema.json",
+  "title": "CodeForge Designation Record",
+  "description": "One filed object in the CodeForge Classification Registry. Additive metadata keyed to a frozen runtime label; never a rename of it.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "designation",
+    "name",
+    "type",
+    "domain",
+    "status",
+    "function",
+    "label",
+    "file"
+  ],
+  "properties": {
+    "designation": {
+      "description": "Unique filing handle: TYPE-UM-SEC-NODE-SEQ-REV.",
+      "type": "string",
+      "pattern": "^(UM|SEC|RM|NPC|ITM|QST|CMD|MOD|PRT|DOC|PDF|TXT|REG|LSN|QZ|EV|LOG|SYS|API)-UM[0-9]{2}-S[0-9]{2}-N[0-9]{3}-[0-9]{3}-R[0-9]+$"
+    },
+    "name": {
+      "description": "Human-readable name.",
+      "type": "string",
+      "minLength": 1
+    },
+    "type": {
+      "description": "Object type prefix.",
+      "type": "string",
+      "enum": ["UM", "SEC", "RM", "NPC", "ITM", "QST", "CMD", "MOD", "PRT", "DOC", "PDF", "TXT", "REG", "LSN", "QZ", "EV", "LOG", "SYS", "API"]
+    },
+    "domain": {
+      "description": "Unimatrix / major domain.",
+      "type": "string",
+      "enum": ["UM01", "UM02", "UM03", "UM04", "UM05", "UM06", "UM07", "UM08", "UM09", "UM10"]
+    },
+    "sector": {
+      "description": "Sector / zone within the domain.",
+      "type": "string",
+      "pattern": "^S[0-9]{2}$",
+      "default": "S01"
+    },
+    "node": {
+      "description": "Node: a room, service, or module slot.",
+      "type": "string",
+      "pattern": "^N[0-9]{3}$",
+      "default": "N001"
+    },
+    "sequence": {
+      "description": "Object sequence within the node.",
+      "type": "string",
+      "pattern": "^[0-9]{3}$",
+      "default": "001"
+    },
+    "revision": {
+      "description": "Revision; bumped on a breaking change (an alias preserves the old id).",
+      "type": "string",
+      "pattern": "^R[0-9]+$",
+      "default": "R0"
+    },
+    "status": {
+      "description": "Lifecycle status; never assumed.",
+      "type": "string",
+      "enum": ["prototype", "active", "hardened", "deprecated", "archived", "superseded"]
+    },
+    "function": {
+      "description": "What the object does (one line).",
+      "type": "string",
+      "minLength": 1
+    },
+    "label": {
+      "description": "The frozen runtime identifier this record files (e.g. a room key, CLI verb, or CARD name). Never renamed.",
+      "type": "string",
+      "minLength": 1
+    },
+    "file": {
+      "description": "Repo-relative path to the source that realizes this object.",
+      "type": "string",
+      "minLength": 1
+    },
+    "docs": {
+      "description": "Repo-relative path to documentation, if any.",
+      "type": "string",
+      "default": ""
+    },
+    "tests": {
+      "description": "Repo-relative path to the proving test(s), if any.",
+      "type": "string",
+      "default": ""
+    },
+    "depends_on": {
+      "description": "Designations this object depends on.",
+      "type": "array",
+      "items": { "type": "string" },
+      "default": []
+    },
+    "related": {
+      "description": "Related object designations.",
+      "type": "array",
+      "items": { "type": "string" },
+      "default": []
+    },
+    "reuse": {
+      "description": "What can reuse this object (free text).",
+      "type": "string",
+      "default": ""
+    },
+    "tags": {
+      "description": "Free-text search tags.",
+      "type": "array",
+      "items": { "type": "string" },
+      "default": []
+    },
+    "notes": {
+      "description": "Anything else worth filing.",
+      "type": "string",
+      "default": ""
+    },
+    "superseded_by": {
+      "description": "If superseded, the designation that replaced this one.",
+      "type": "string",
+      "default": ""
+    },
+    "aliases": {
+      "description": "Prior designations that still resolve to this record (migration trail).",
+      "type": "array",
+      "items": { "type": "string" },
+      "default": []
+    },
+    "created": {
+      "description": "ISO date the record was minted.",
+      "type": "string",
+      "default": ""
+    },
+    "updated": {
+      "description": "ISO date the record last changed.",
+      "type": "string",
+      "default": ""
+    }
+  }
+}
