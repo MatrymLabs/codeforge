@@ -49,31 +49,42 @@ def _echo_toggle(fd: int, saved: list | None):
     return (lambda: _set(True)), (lambda: _set(False))
 
 
-def _pump_from_server(chunk: bytes, out: int, echo_on, echo_off) -> None:
-    """Strip IAC sequences for display; act on the ECHO option the gateway uses."""
+def _pump_from_server(chunk: bytes, out: int, echo_on, echo_off, leftover: bytes = b"") -> bytes:
+    """Strip IAC sequences for display; act on the ECHO option the gateway uses.
+
+    Returns any trailing bytes that are the START of an IAC sequence split across
+    this recv() boundary. The caller feeds them back as `leftover` next time, so a
+    fragmented negotiation (e.g. `IAC WILL ECHO` arriving one byte early) never
+    leaks its raw bytes to the terminal as garbage, and never misses the echo
+    toggle that blacks out the password field."""
+    data = leftover + chunk
     clean = bytearray()
-    i = 0
-    while i < len(chunk):
-        byte = chunk[i]
-        if byte == IAC and i + 1 < len(chunk):
-            command = chunk[i + 1]
-            if command == IAC:  # escaped literal 0xFF
-                clean.append(IAC)
-                i += 2
-            elif command in (WILL, WONT, DO, DONT) and i + 2 < len(chunk):
-                option = chunk[i + 2]
-                if option == ECHO:
-                    # Server WILL echo -> we go dark (it won't actually echo the
-                    # secret, so the field stays blank). WONT -> echo returns.
-                    (echo_off if command == WILL else echo_on)()
-                i += 3
-            else:
-                i += 2
-        else:
+    i, n = 0, len(data)
+    while i < n:
+        byte = data[i]
+        if byte != IAC:
             clean.append(byte)
             i += 1
+            continue
+        if i + 1 >= n:
+            break  # a lone IAC at the edge -- hold it for the next chunk
+        command = data[i + 1]
+        if command == IAC:  # escaped literal 0xFF
+            clean.append(IAC)
+            i += 2
+        elif command in (WILL, WONT, DO, DONT):
+            if i + 2 >= n:
+                break  # 3-byte option split here -- wait for the option byte
+            if data[i + 2] == ECHO:
+                # Server WILL echo -> we go dark (it won't actually echo the
+                # secret, so the field stays blank). WONT -> echo returns.
+                (echo_off if command == WILL else echo_on)()
+            i += 3
+        else:
+            i += 2  # some other 2-byte telnet command
     if clean:
         os.write(out, bytes(clean))
+    return data[i:]  # partial IAC sequence, carried to the next chunk
 
 
 def main(argv: list[str]) -> int:
@@ -106,6 +117,7 @@ def main(argv: list[str]) -> int:
     try:
         sock.setblocking(False)
         stdin_open = True
+        leftover = b""  # start of an IAC sequence split across a recv() boundary
         while True:
             watch = [sock, stdin_fd] if stdin_open else [sock]
             readable, _, _ = select.select(watch, [], [])
@@ -113,7 +125,7 @@ def main(argv: list[str]) -> int:
                 data = sock.recv(4096)
                 if not data:
                     break  # server closed -- the forge banked its coals
-                _pump_from_server(data, sys.stdout.fileno(), echo_on, echo_off)
+                leftover = _pump_from_server(data, sys.stdout.fileno(), echo_on, echo_off, leftover)
             if stdin_open and stdin_fd in readable:
                 typed = os.read(stdin_fd, 4096)
                 if not typed:
