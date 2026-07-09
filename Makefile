@@ -1,4 +1,4 @@
-.PHONY: env fix lint typecheck test property coverage audit security doctor patch daily check readiness smoke repo-integrity ship run world store hardware clean serve ritual ritual-down unskew
+.PHONY: env fix lint typecheck test property coverage audit security secrets doctor patch daily check readiness smoke repo-integrity ship run world store hardware clean serve ritual ritual-down unskew
 
 # --- Environment: create/validate the .venv, fail loud on version mismatch ---
 env:
@@ -57,6 +57,12 @@ audit:
 security:
 	bandit -c pyproject.toml -r parts forge.py -q
 	pip-audit --skip-editable
+	@git ls-files | xargs detect-secrets-hook --baseline .secrets.baseline
+
+# --- Secret scan: fail on any tracked secret not in the audited baseline.
+# Regenerate the baseline after auditing: detect-secrets scan --exclude-files '\.venv/' > .secrets.baseline ---
+secrets:
+	@git ls-files | xargs detect-secrets-hook --baseline .secrets.baseline
 
 # --- Doctor: run the gates read-only, stop at the first failure, prescribe the fix ---
 doctor:

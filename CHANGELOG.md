@@ -7,6 +7,11 @@ pre-1.0. Readiness language only — no compliance/OSHA/legal claims.
 ## [Unreleased]
 
 ### Added
+- **Secret scanning** (`make secrets`): detect-secrets gates on any tracked secret not
+  in the audited `.secrets.baseline` (verified — passes clean, catches a planted key).
+  Folded into `make security` and CI. Closes the RepoIntegrityRitual's own #1 gap:
+  its report went `secret scan: not_configured` → `detected`. The repo scanned clean
+  (empty baseline).
 - **RepoIntegrityRitual** (`parts/integrity.py`, `make repo-integrity`): one honest
   repo-health report — code quality (tool detection), security, license/source origin,
   originality awareness, presentation, and a truth/VeritasGate pass — composed from
