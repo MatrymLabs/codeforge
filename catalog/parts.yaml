@@ -58,6 +58,25 @@
     compliance: "reject a malformed control/source registry row at the door"
     general: "typed config loading with early, loud validation"
 
+- id: safe-runner
+  name: Failsafe Runner
+  source: parts/console.py
+  category: security
+  tags: [allowlist, subprocess, sandbox, governance]
+  maturity: production
+  risk: low
+  reuse_score: 5
+  purpose: >
+    Run only allowlisted commands as argument lists (never a shell), in a fixed
+    directory, under a timeout and an output cap, with each run logged. Unknown
+    input is refused and never executes.
+  reuse:
+    game: "the Workshop's in-world diagnostic console (run lint/tests/git safely)"
+    government: "a controlled command surface for a records/workflow operator"
+    finance: "a gated task runner for AP/AR jobs — no arbitrary execution"
+    compliance: "safe, logged command execution as an auditable control"
+    general: "a sandboxed command relay for any untrusted-caller automation"
+
 - id: gate-runner
   name: Gate Runner
   source: scripts/doctor.py
