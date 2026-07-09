@@ -37,6 +37,7 @@ from parts.items import drop, inventory_text, room_items_text, take
 from parts.jobs import JOBS, bind_calling, calling_index, render_sheet
 from parts.library import library
 from parts.npcs import room_npcs_text, talk, trace_npc
+from parts.qualitygate import docs_check, render_gate, render_gate_all, render_safety
 from parts.ranks import wizard_command
 from parts.registry import (
     registry_find,
@@ -59,6 +60,7 @@ HELP_TEXT = (
     "jobs, job <calling>, score, attack <target>, "
     "unlock <door> with <key>, regs [topic|id], library [id], "
     "registry [show|find|type|status], "
+    "qa gate [all|<id>], safety review <id>, docs check, "
     "workshop, catalog, reuse <term>, console, run <check>, diagnostics, "
     "security, ai <prompt>, lesson list, question, answer <A-D>, hint, progress, "
     "passwd, save, load, quit"
@@ -122,6 +124,43 @@ def _build_commands() -> CommandSet:
             system_generate,
             namespace=ADMIN,
             min_rank="wizard",
+        )
+    )
+    # --- Safety + QA spine (read-only; composes with the registry) ---
+    cs.add(
+        Command(
+            "qa gate all",
+            "CMD-UM10-S01-N001-007-R0",
+            "grade every filed object for readiness",
+            lambda _s, _a: render_gate_all(),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "qa gate",
+            "CMD-UM10-S01-N001-006-R0",
+            "grade one object against the readiness checklist",
+            lambda _s, arg: render_gate(arg),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "safety review",
+            "CMD-UM10-S01-N001-008-R0",
+            "rate one object's risk (readiness, not compliance)",
+            lambda _s, arg: render_safety(arg),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "docs check",
+            "CMD-UM10-S01-N001-009-R0",
+            "sweep the key docs for gaps",
+            lambda _s, _a: docs_check(),
+            namespace=CORE,
         )
     )
     return cs
