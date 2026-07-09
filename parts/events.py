@@ -39,17 +39,28 @@ def rename_echo(old_id: str, new_id: str) -> None:
         _ECHO_SINKS[new_id] = sink
 
 
+def _deliver(player_id: str, sink: EchoSink, text: str) -> None:
+    """Push text to one sink. A dead channel (dropped client, closed socket)
+    must NEVER crash the acting player's command -- one bad client cannot take
+    down another. A sink that raises is pruned so it isn't tried again."""
+    try:
+        sink(text)
+    except OSError:
+        unbind_echo(player_id)
+
+
 def announce(room: str, text: str, exclude: str = "") -> None:
     """Deliver text to every seated player in a room, except the actor."""
-    for player_id, session in SESSIONS.items():
+    # Snapshot: _deliver may prune a dead sink mid-loop (mutates _ECHO_SINKS).
+    for player_id, session in list(SESSIONS.items()):
         if player_id == exclude or session.location != room:
             continue
         sink = _ECHO_SINKS.get(player_id)
         if sink is not None:
-            sink(text)
+            _deliver(player_id, sink, text)
 
 
 def broadcast(text: str) -> None:
     """Deliver text to every sink in the world, no exclusions."""
-    for sink in _ECHO_SINKS.values():
-        sink(text)
+    for player_id, sink in list(_ECHO_SINKS.items()):
+        _deliver(player_id, sink, text)

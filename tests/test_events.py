@@ -6,7 +6,7 @@ import pytest
 
 from forge import handle_command, render_scene
 from parts import doors, items, npcs
-from parts.events import announce, bind_echo, unbind_echo
+from parts.events import _ECHO_SINKS, announce, bind_echo, broadcast, unbind_echo
 from parts.session import SESSIONS, Session
 
 
@@ -72,6 +72,35 @@ def test_take_is_seen_by_bystanders():
     assert "A takes a copper key." in b_heard
     unbind_echo("a")
     unbind_echo("b")
+
+
+def _dead_sink(_text: str) -> None:
+    """A client whose socket is gone -- writing to it raises, like a real
+    BrokenPipeError / Bad file descriptor."""
+    raise OSError(9, "Bad file descriptor")
+
+
+def test_dead_sink_does_not_crash_a_broadcast_and_is_pruned():
+    # A dropped client (dead socket) shares the room with a live listener.
+    _seat("ghost", "library")
+    bind_echo("ghost", _dead_sink)  # overwrite ghost's sink with a dead one
+    _, live_heard = _seat("live", "library")
+    # The acting player's broadcast must NOT raise, and the live player still hears it.
+    announce("library", "the anvil rings.", exclude="actor")
+    assert live_heard == ["the anvil rings."]
+    # The dead channel is pruned so it is never tried again.
+    assert "ghost" not in _ECHO_SINKS
+    unbind_echo("live")
+
+
+def test_broadcast_survives_a_dead_sink():
+    _seat("ghost", "forge")
+    bind_echo("ghost", _dead_sink)
+    _, live_heard = _seat("live", "forge")
+    broadcast("the world shudders.")  # must not raise
+    assert live_heard == ["the world shudders."]
+    assert "ghost" not in _ECHO_SINKS
+    unbind_echo("live")
 
 
 def test_scene_shows_other_players_but_not_yourself():

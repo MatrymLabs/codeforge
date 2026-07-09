@@ -1,4 +1,4 @@
-.PHONY: env fix lint typecheck test property coverage audit security doctor patch daily check ship run world store clean serve unskew
+.PHONY: env fix lint typecheck test property coverage audit security doctor patch daily check ship run world store clean serve ritual unskew
 
 # --- Environment: create/validate the .venv, fail loud on version mismatch ---
 env:
@@ -97,6 +97,12 @@ clean:
 
 serve:
 	codeforge serve
+
+# --- The Ritual: one command lights the whole workshop -- gates run, GitHub
+# mirrors, the forge lights, the MUD window opens at the front desk. Bound to
+# the phrase "start the ritual" via a shell function (see docs/RUNNING.md). ---
+ritual:
+	@bash scripts/ritual.sh
 
 unskew:
 	git ls-files | xargs touch
