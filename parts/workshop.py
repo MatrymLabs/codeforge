@@ -14,9 +14,10 @@ WORKSHOP_ROOM = "workshop"  # the seed room label this cockpit lives in
 _LIVE = (
     ("catalog / hardware / parts", "browse the reusable-parts catalog"),
     ("reuse <term>", "find cataloged parts for a need (e.g. reuse audit)"),
+    ("console", "list the read-only diagnostic commands"),
+    ("run <check> / diagnostics", "run allowlisted checks (lint, types, tests, git)"),
 )
 _COMING = (
-    ("diagnostics / tests", "run the gates read-only (safe command relay)"),
     ("ai <prompt>", "ask the Architect NPC (advisory)"),
     ("blueprint", "draft a plan for a new part"),
 )

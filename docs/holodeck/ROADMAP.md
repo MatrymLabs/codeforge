@@ -16,7 +16,7 @@ Legend: ✅ done · 🔨 next · 📋 planned · 🧭 later (gated/advanced)
 | 3 | **Workshop command menu** | 🟡 | Live, **display-only**: `workshop` (cockpit menu), `catalog`/`hardware`/`parts` (browse), `reuse <term>` (search). `diagnostics`/`ai`/`blueprint` are marked "coming" and gated on later phases. |
 | 4 | **Hardware catalog** | ✅ | `catalog/parts.yaml` + `parts/hardware.py`; `make hardware` lists parts with cross-domain reuse; ≥4 real parts stocked. |
 | 5 | **AI NPC (read-only)** | 📋 | An Architect NPC takes a prompt, sends **redacted** context to the API behind a mockable seam, returns advice in-world. Advisory only — no file edits. |
-| 6 | **Diagnostic console** | 📋 | A `CommandRelay` runs an **allowlisted, read-only** set (`pytest`, `ruff check`, `mypy`, `git status`, `git diff --stat`) — never a raw shell. |
+| 6 | **Diagnostic console** | ✅ | `parts/console.py` (`FailsafeRunner`) runs an **allowlisted, read-only** set as argument lists (no shell), under a timeout + output cap, each run logged. In-world: `console`, `run <check>`, `diagnostics`. Refuses anything off the list. |
 | 7 | **Report system** | 📋 | Long outputs summarized in-world, full logs saved under `reports/<kind>/`. |
 | 8 | **AI planning mode** | 🧭 | The NPC drafts plans, task lists, catalog entries, and *proposed* changes — still no direct edits. |
 | 9 | **Safe patch proposal** | 🧭 | The NPC emits a `PatchProposal`: file, why, affected part, catalog update, risk, test, revert. **Human approval required.** |

@@ -18,6 +18,7 @@ from parts.accounts import (
 from parts.accounts import register as register_account
 from parts.characters import load_character, restore_character, save_character
 from parts.combat import attack
+from parts.console import console_menu, diagnostics_view, run_view
 from parts.doors import unlock
 from parts.events import announce, bind_echo, rename_echo, unbind_echo
 from parts.items import drop, inventory_text, room_items_text, take
@@ -37,7 +38,8 @@ HELP_TEXT = (
     "take, drop, inventory, talk <npc>, say <msg>, name <yourname>, who, "
     "jobs, job <calling>, score, attack <target>, "
     "unlock <door> with <key>, regs [topic|id], "
-    "workshop, catalog, reuse <term>, passwd, save, load, quit"
+    "workshop, catalog, reuse <term>, console, run <check>, diagnostics, "
+    "passwd, save, load, quit"
 )
 
 
@@ -243,6 +245,12 @@ def handle_command(session: Session, signal: str) -> str:
         return reuse_search(
             routed_signal[len("reuse ") :] if routed_signal.startswith("reuse ") else ""
         )
+    if routed_signal == "console":
+        return console_menu()
+    if routed_signal == "diagnostics":
+        return diagnostics_view()
+    if routed_signal == "run" or routed_signal.startswith("run "):
+        return run_view(routed_signal[len("run ") :] if routed_signal.startswith("run ") else "")
     if routed_signal in ("inventory", "i", "inv"):
         return inventory_text()
     if routed_signal.startswith(("take ", "get ")):
