@@ -33,6 +33,7 @@ from parts.doors import unlock
 from parts.events import announce, bind_echo, rename_echo, unbind_echo
 from parts.items import drop, inventory_text, room_items_text, take
 from parts.jobs import JOBS, bind_calling, calling_index, render_sheet
+from parts.library import library
 from parts.npcs import room_npcs_text, talk, trace_npc
 from parts.ranks import wizard_command
 from parts.regulations import regs
@@ -47,7 +48,7 @@ HELP_TEXT = (
     "Commands: look, go <direction> (or n/s/e/w/u/d), "
     "take, drop, inventory, talk <npc>, say <msg>, name <yourname>, who, "
     "jobs, job <calling>, score, attack <target>, "
-    "unlock <door> with <key>, regs [topic|id], "
+    "unlock <door> with <key>, regs [topic|id], library [id], "
     "workshop, catalog, reuse <term>, console, run <check>, diagnostics, "
     "security, ai <prompt>, lesson list, question, answer <A-D>, hint, progress, "
     "passwd, save, load, quit"
@@ -248,6 +249,10 @@ def handle_command(session: Session, signal: str) -> str:
         return "Players online: " + ", ".join(display_name(n) for n in names)
     if routed_signal == "regs" or routed_signal.startswith("regs "):
         return regs(routed_signal[len("regs ") :] if routed_signal.startswith("regs ") else "")
+    if routed_signal == "library" or routed_signal.startswith("library "):
+        return library(
+            routed_signal[len("library ") :] if routed_signal.startswith("library ") else ""
+        )
     if routed_signal == "workshop":
         return workshop_menu()
     if routed_signal in ("catalog", "hardware", "parts"):
