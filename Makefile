@@ -1,4 +1,4 @@
-.PHONY: env fix lint typecheck test property coverage audit security doctor patch daily check ship run world store clean serve ritual unskew
+.PHONY: env fix lint typecheck test property coverage audit security doctor patch daily check ship run world store clean serve ritual ritual-down unskew
 
 # --- Environment: create/validate the .venv, fail loud on version mismatch ---
 env:
@@ -103,6 +103,12 @@ serve:
 # the phrase "start the ritual" via a shell function (see docs/RUNNING.md). ---
 ritual:
 	@bash scripts/ritual.sh
+
+# --- The Ritual, Closed: secure the workshop at day's end -- bank any forge on
+# :4000, stop containers, muster uncommitted/unpushed work. Bound to the phrase
+# "complete the ritual". ---
+ritual-down:
+	@bash scripts/ritual_down.sh
 
 unskew:
 	git ls-files | xargs touch

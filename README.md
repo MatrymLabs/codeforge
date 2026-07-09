@@ -34,17 +34,34 @@ git clone git@github.com:MatrymLabs/codeforge.git
 cd codeforge
 python3 -m venv .venv && source .venv/bin/activate
 pip install -e ".[dev]"
-make check       # lint + typecheck + 198 tests
+make check       # lint + typecheck + 201 tests
 spark            # ignite the multiplayer server on port 4000
 ```
 
 Connect from any machine on your network with `nc <host> 4000`, telnet, or **Mudlet**.
 Every connection meets the front desk: log in as `character@account`, register a new
 legend, or wander in as a guest. Characters persist across restarts; passwords are
-salted pbkdf2 hashes; ranks gate the wizard verbs (`@teleport`, `@grant`, `@shutdown`).
+salted pbkdf2 hashes and hidden at the prompt (telnet echo blackout); ranks gate the
+wizard verbs (`@teleport`, `@grant`, `@shutdown`).
 
 More doors: `codeforge play` (solo terminal), `codeforge grant <name> <rank>`,
-`codeforge migrate <char> <account>`.
+`codeforge migrate <char> <account>`. The full operator's guide — starting the
+servers, the login flow, and the one-command **ritual** — is
+[docs/RUNNING.md](docs/RUNNING.md).
+
+### The ritual
+
+One command lights the whole workshop and drops you at the front desk — gates run,
+GitHub mirrors, the forge lights, the MUD window opens; its counterpart secures
+everything at day's end:
+
+```bash
+make ritual        # or, bound as a phrase: start the ritual
+make ritual-down   # or: complete the ritual   (bank the forge, muster report)
+```
+
+Login uses a bundled stdlib client (`scripts/mud_client.py`) that hides your
+password even where `telnet` isn't installed.
 
 ### A seed is a game
 
@@ -132,24 +149,30 @@ written for, original tests included.
 | `make daily` | Apply security patches (+re-verify), then check federal guidance for updates and file them in the [Guidance Library](https://github.com/MatrymLabs/federal-guidance-library) (`FGL_HOME`) |
 | `spark` · `codeforge serve` | Multiplayer gateway (Ctrl+C sleeps the world) |
 | `codeforge play` | Solo terminal session |
+| `make ritual` / `make ritual-down` | Light the whole workshop (gates → mirror → forge → MUD) / secure it at day's end |
 | `make world` / `make store` | Operator catalog / developer card catalog |
 | `make unskew` | Reset tracked-file timestamps (clock-skew cure) |
 | `make ship` | Full check, refuse dirty tree, push |
 
 ## Testing
 
-198 tests: unit twins for every card, real-socket gateway tests that walk the login
+201 tests: unit twins for every card, real-socket gateway tests that walk the login
 dialogue over the wire, engine-tick wiring tripwires, deterministic combat math,
-persistence parity, security tests (impostor refusal, salted hashes, generic login
+persistence parity, event-bus resilience (a dropped client can never crash another
+player's command), security tests (impostor refusal, salted hashes, generic login
 refusals), and Hypothesis property tests pinning the progression curves across
-thousands of generated cases. CI runs the same `make check` as the workbench.
+thousands of generated cases. CI runs the same `make check` as the workbench, plus a
+`docker` job that builds the image and smoke-tests that the gateway boots.
 
 ## Roadmap
 
-- Password change command + telnet echo masking (IAC negotiation)
+- ~~Password change command + telnet echo masking (IAC negotiation)~~ — shipped
+  (`passwd`, plus a bundled stdlib client that masks the prompt)
 - NPCs that fight back: stakes, defeat, reawakening
 - Canonical event frames: typed MUD-IL payloads on the bus
 - Seed packs as installable world modules
+- The workshop: build programs via in-MUD commands, then step through an
+  owner-only arch into the holodeck to play the game you built
 
 ## Contributing
 

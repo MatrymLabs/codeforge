@@ -142,6 +142,35 @@ Reload with `source ~/.bashrc`, then anywhere:
 start the ritual
 ```
 
+### Closing the ritual
+
+At day's end, the counterpart secures the workshop:
+
+```bash
+make ritual-down     # or, bound as a phrase:  complete the ritual
+```
+
+It **banks any forge** still burning on :4000 (a detached server, or a ghost from
+an old launch), stops any codeforge containers, and gives an honest **muster** —
+uncommitted changes and unpushed commits — so nothing is lost overnight. It never
+pushes for you; it just tells the truth. (`start the ritual` already banks the
+forge it lit when you quit — this catches everything else, and is safe to run
+twice.)
+
+To bind the phrase, add a `complete` function to `~/.bashrc`. `complete` *is* a
+bash builtin (programmable completion), so the function delegates every other use
+straight to it — bash completion keeps working:
+
+```bash
+complete() {
+  if [ "$*" = "the ritual" ]; then
+    make -C "$HOME/Projects/MatrymLabs/codeforge" ritual-down
+  else
+    command complete "$@"   # fall through to the real builtin
+  fi
+}
+```
+
 ---
 
 ## 2. Connect to the running server
