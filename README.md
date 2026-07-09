@@ -58,7 +58,7 @@ git clone git@github.com:MatrymLabs/codeforge.git
 cd codeforge
 python3 -m venv .venv && source .venv/bin/activate
 pip install -e ".[dev]"
-make check       # lint + typecheck + 208 tests
+make check       # lint + typecheck + 323 tests
 spark            # ignite the multiplayer server on port 4000
 ```
 
@@ -192,7 +192,7 @@ governing boundaries are in [`docs/AI_WORKFLOW.md`](docs/AI_WORKFLOW.md).
 
 ## Testing
 
-217 tests: unit twins for every card, real-socket gateway tests that walk the login
+323 tests: unit twins for every card, real-socket gateway tests that walk the login
 dialogue over the wire, browser-gateway tests over a real WebSocket, engine-tick wiring
 tripwires, deterministic combat math, persistence parity, event-bus resilience (a
 dropped client can never crash another player's command), security tests (impostor
