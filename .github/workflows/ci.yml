@@ -50,6 +50,9 @@ jobs:
       - name: Static security scan
         run: bandit -c pyproject.toml -r parts forge.py -q
 
+      - name: Secret scan
+        run: make secrets
+
   docker:
     runs-on: ubuntu-latest
     steps:

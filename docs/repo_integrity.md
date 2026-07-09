@@ -37,15 +37,21 @@ Hard boundaries (integrity-first):
 | Report section | Source (already in the repo) |
 |----------------|------------------------------|
 | Code quality | tool detection → `make check` (ruff · mypy · pytest · property) |
-| Security | `make security` (bandit + pip-audit); **secret scan: not_configured** (gap) |
+| Security | `make security` (bandit + pip-audit + **`make secrets`** detect-secrets) |
 | License / source origin | the hardware catalog's `source_status` / `license` / `influence` |
 | Originality awareness | catalog provenance; states the "not universal originality" limit |
 | Presentation | presence of README · LICENSE · CHANGELOG · SECURITY · CONTRIBUTING · docs |
 | Truth / VeritasGate | registry `validate()` · `qa gate` readiness · README overclaim scan |
 
-## Known gap it surfaces (honestly)
+## The gap it surfaced — now closed
 
-**Secret scanning is `not_configured`.** codeforge has `make security` (bandit +
-pip-audit) but no `make secrets` (detect-secrets, baselined) yet — the other ship
-repos carry it. The integrity report recommends adding it as the top next action
-rather than pretending secrets were scanned. That honesty is the point of the tool.
+The report's first run flagged **secret scanning as `not_configured`** (top next
+action). That gap is now closed: `make secrets` runs **detect-secrets** against an
+audited `.secrets.baseline`, failing on any tracked secret not already in the baseline
+(verified: it passes clean and catches a planted key). It's folded into `make security`
+and gates in CI. The report now shows `secret scan: detected` — the tool flagged its
+own gap, and closing it fixed the tool's own output. That self-correcting loop is the
+point of integrity-first.
+
+Regenerate the baseline after auditing new findings:
+`detect-secrets scan --exclude-files '\.venv/' > .secrets.baseline`.

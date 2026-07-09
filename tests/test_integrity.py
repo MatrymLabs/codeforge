@@ -45,12 +45,18 @@ def test_overclaim_scan_is_clean_when_wording_is_honest(tmp_path: Path):
     assert overclaim_hits(root=tmp_path) == []
 
 
-def test_report_is_honest_about_the_secret_scan_gap():
-    # the real repo has no gitleaks/detect-secrets -> the report must SAY so, not fake it
-    report = build_report(today=date(2026, 7, 9))
+def test_report_is_honest_about_a_missing_secret_scanner():
+    # with no secret scanner present, the report must SAY not_configured, not fake it
+    report = build_report(today=date(2026, 7, 9), tools={})  # nothing detected
     assert "secret scan:" in report
     assert "not_configured" in report
     assert "Configure secret scanning" in report
+
+
+def test_report_shows_detected_when_a_secret_scanner_is_present():
+    report = build_report(today=date(2026, 7, 9), tools={"detect-secrets": True})
+    assert "secret scan:       detected" in report
+    assert "Configure secret scanning" not in report
 
 
 def test_report_states_its_own_limitation():

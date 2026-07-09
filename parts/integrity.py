@@ -73,11 +73,16 @@ def overclaim_hits(root: Path | None = None) -> list[str]:
     return [phrase for phrase in _OVERCLAIM if phrase in text]
 
 
-def build_report(root: Path | None = None, today: date | None = None) -> str:
-    """Assemble the integrity report from in-process signals + tool detection."""
+def build_report(
+    root: Path | None = None, today: date | None = None, tools: dict[str, bool] | None = None
+) -> str:
+    """Assemble the integrity report from in-process signals + tool detection.
+
+    `tools` is injectable (a name->present map) so tests are deterministic regardless
+    of what's installed in the current environment."""
     base = root if root is not None else _ROOT
     stamp = today if today is not None else date.today()
-    tools = tool_status()
+    tools = tools if tools is not None else tool_status()
 
     def tool_line(name: str, live: str) -> str:
         return f"detected (run `{live}`)" if tools.get(name) else "not_configured"
