@@ -35,6 +35,7 @@ from parts.events import announce, bind_echo, rename_echo, unbind_echo
 from parts.generate import system_generate
 from parts.items import drop, inventory_text, room_items_text, take
 from parts.jobs import JOBS, bind_calling, calling_index, render_sheet
+from parts.law import law
 from parts.library import library
 from parts.npcs import room_npcs_text, talk, trace_npc
 from parts.pm import pm_metrics, pm_status
@@ -59,7 +60,7 @@ HELP_TEXT = (
     "Commands: look, go <direction> (or n/s/e/w/u/d), "
     "take, drop, inventory, talk <npc>, say <msg>, name <yourname>, who, "
     "jobs, job <calling>, score, attack <target>, "
-    "unlock <door> with <key>, regs [topic|id], library [id], "
+    "unlock <door> with <key>, regs [topic|id], library [id], law [id], "
     "registry [show|find|type|status], "
     "qa gate [all|<id>], safety review <id>, docs check, pm status, pm metrics, "
     "workshop, catalog, reuse <term>, console, run <check>, diagnostics, "
@@ -180,6 +181,15 @@ def _build_commands() -> CommandSet:
             "CMD-UM10-S01-N001-011-R0",
             "project metrics (objects, QA readiness, docs gaps)",
             lambda _s, _a: pm_metrics(),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "law",
+            "CMD-UM06-S01-N001-001-R0",
+            "legal/policy awareness over tracked sources (not legal advice)",
+            lambda _s, arg: law(arg),
             namespace=CORE,
         )
     )
