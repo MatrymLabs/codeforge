@@ -6,6 +6,17 @@ pre-1.0. Readiness language only — no compliance/OSHA/legal claims.
 
 ## [Unreleased]
 
+### Added
+- **RepoIntegrityRitual** (`parts/integrity.py`, `make repo-integrity`): one honest
+  repo-health report — code quality (tool detection), security, license/source origin,
+  originality awareness, presentation, and a truth/VeritasGate pass — composed from
+  checks the repo already owns, saved dated under `reports/repo_integrity/`.
+  Integrity-first: a missing tool is reported `not_configured` (never faked), it never
+  uploads code to a third party, and it states plainly that it does **not** prove legal
+  originality/security/compliance. It honestly surfaces its own top gap — **secret
+  scanning is not_configured** (no `make secrets` yet) — as the recommended next action.
+  + `docs/repo_integrity.md`. +7 tests.
+
 ### Added / Changed
 - **Harvest patterns, not code — made provable.** Hardware Part Cards gain an
   `influence` field recording the *known pattern* each part was rebuilt from (RBAC,
