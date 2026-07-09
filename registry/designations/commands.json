@@ -283,5 +283,61 @@
     "aliases": [],
     "created": "2026-07-09",
     "updated": "2026-07-09"
+  },
+  {
+    "designation": "CMD-UM10-S01-N001-010-R0",
+    "name": "`pm status`",
+    "status": "active",
+    "function": "Project status dashboard, computed from the registry + QualityGate.",
+    "label": "pm status",
+    "file": "parts/pm.py",
+    "type": "CMD",
+    "domain": "UM10",
+    "sector": "S01",
+    "node": "N001",
+    "sequence": "010",
+    "revision": "R0",
+    "docs": "",
+    "tests": "tests/test_pm.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "the project control panel; composes registry + QualityGate",
+    "tags": [
+      "command",
+      "pm"
+    ],
+    "notes": "",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-09",
+    "updated": "2026-07-09"
+  },
+  {
+    "designation": "CMD-UM10-S01-N001-011-R0",
+    "name": "`pm metrics`",
+    "status": "active",
+    "function": "Project metrics: objects filed, QA readiness, docs gaps.",
+    "label": "pm metrics",
+    "file": "parts/pm.py",
+    "type": "CMD",
+    "domain": "UM10",
+    "sector": "S01",
+    "node": "N001",
+    "sequence": "011",
+    "revision": "R0",
+    "docs": "",
+    "tests": "tests/test_pm.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "the project control panel; composes registry + QualityGate",
+    "tags": [
+      "command",
+      "pm"
+    ],
+    "notes": "",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-09",
+    "updated": "2026-07-09"
   }
 ]
