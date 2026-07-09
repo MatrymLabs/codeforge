@@ -9,7 +9,9 @@
   source: parts/ranks.py
   category: authorization
   tags: [rbac, permissions, security, governance]
-  maturity: production
+  maturity: shipped
+  source_status: original
+  license: MIT
   risk: low
   reuse_score: 5
   purpose: >
@@ -27,7 +29,9 @@
   source: parts/events.py
   category: messaging
   tags: [events, audit, fan-out, resilience]
-  maturity: production
+  maturity: shipped
+  source_status: original
+  license: MIT
   risk: low
   reuse_score: 5
   purpose: >
@@ -45,7 +49,9 @@
   source: parts/seed.py
   category: data-integrity
   tags: [validation, schema, config, fail-loud]
-  maturity: production
+  maturity: shipped
+  source_status: original
+  license: MIT
   risk: low
   reuse_score: 4
   purpose: >
@@ -63,7 +69,9 @@
   source: parts/console.py
   category: security
   tags: [allowlist, subprocess, sandbox, governance]
-  maturity: production
+  maturity: shipped
+  source_status: original
+  license: MIT
   risk: low
   reuse_score: 5
   purpose: >
@@ -83,6 +91,8 @@
   category: learning
   tags: [quiz, training, assessment, data-driven]
   maturity: beta
+  source_status: original
+  license: MIT
   risk: low
   reuse_score: 5
   purpose: >
@@ -101,7 +111,9 @@
   source: scripts/doctor.py
   category: diagnostics
   tags: [diagnostics, audit, ci, read-only]
-  maturity: production
+  maturity: shipped
+  source_status: original
+  license: MIT
   risk: low
   reuse_score: 4
   purpose: >

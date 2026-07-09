@@ -6,6 +6,15 @@ pre-1.0. Readiness language only — no compliance/OSHA/legal claims.
 
 ## [Unreleased]
 
+### Added / Changed
+- **Branding + provenance polish (truthful).** README gains a "What this demonstrates"
+  section (skills tied to evidence); GitHub topics added for discoverability. Hardware
+  Part Cards gain `source_status` / `license` fields — the **Free-to-Use rule**: only
+  stock parts whose license is clearly free to use (the loader refuses any status
+  outside the free-to-use set); every part is `original` MIT code. Catalog maturity
+  `production` → `shipped` so the label matches its own definition ("shipped + tested
+  on main") — no out-of-context overclaim.
+
 ### Added
 - **Legal/policy awareness** (`docs/legal_policy_awareness.md` + `law` card): a
   documented boundary — CodeForge provides compliance-*awareness* (source tracking,
