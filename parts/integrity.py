@@ -13,6 +13,7 @@ Run: `make repo-integrity` (or `python -m parts.integrity`).
 from __future__ import annotations
 
 import shutil
+from collections import Counter
 from collections.abc import Callable
 from datetime import date
 from pathlib import Path
@@ -91,9 +92,7 @@ def build_report(root: Path | None = None, today: date | None = None) -> str:
     reg_problems = validate(records) if records else ["registry empty"]
     gaps = presence_gaps(base)
     overclaims = overclaim_hits(base)
-    qa = {"pass": 0, "watch": 0, "fail": 0}
-    for r in gate_all(records):
-        qa[r.verdict] = qa.get(r.verdict, 0) + 1
+    qa = Counter(r.verdict for r in gate_all(records))  # keys: pass | watch | fail
 
     status_summary = ", ".join(f"{n} {s}" for s, n in sorted(by_status.items())) or "none"
     reg_line = "yes" if not reg_problems else "NO -- " + "; ".join(reg_problems)
