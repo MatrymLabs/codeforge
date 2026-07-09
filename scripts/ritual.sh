@@ -57,16 +57,22 @@ else
   die "A gate is red -- the forge stays cold. Fix it (see /tmp/ritual-check.log), then start the ritual again."
 fi
 
-# --- 2. WARDS: security posture (SAST gates; dependency CVEs warn) ----------
-# Cyber/SSDF discipline: the forge never lights on code with a known SAST finding.
-# bandit is offline + fast, so it GATES; pip-audit needs the network, so it WARNS
-# (recover CVEs with `make patch`). Mirrors `make security`'s bandit-gates rule.
-spark_line "Wards -- checking security posture (SAST + dependency CVEs)..."
+# --- 2. WARDS: security posture (SAST + secrets gate; dependency CVEs warn) --
+# Cyber/SSDF discipline: the forge never lights on code with a known SAST finding or a
+# committed secret. bandit + detect-secrets are offline + fast, so they GATE; pip-audit
+# needs the network, so it WARNS (recover CVEs with `make patch`).
+spark_line "Wards -- checking security posture (SAST + secrets + dependency CVEs)..."
 if bandit -c pyproject.toml -r parts forge.py -q >/tmp/ritual-bandit.log 2>&1; then
   ok "SAST clean (bandit)."
 else
   printf '%b' "$DIM"; tail -20 /tmp/ritual-bandit.log; printf '%b' "$OFF"
   die "SAST found an issue -- the forge stays cold. Fix it (bandit), then start the ritual again."
+fi
+if git ls-files | xargs detect-secrets-hook --baseline .secrets.baseline >/tmp/ritual-secrets.log 2>&1; then
+  ok "No secrets committed (detect-secrets)."
+else
+  printf '%b' "$DIM"; tail -12 /tmp/ritual-secrets.log; printf '%b' "$OFF"
+  die "A secret was detected -- do NOT enter the MUD. Remove it (or audit the baseline), then restart."
 fi
 if pip-audit --skip-editable >/tmp/ritual-audit.log 2>&1; then
   ok "No known dependency CVEs (pip-audit)."
