@@ -93,17 +93,31 @@ working code before theory, one concept at a time.
 - **Default args evaluate at def time** — path defaults resolved at call time
   (`path or CONSTANT`) so tests can monkeypatch.
 - Distributed assertions race — poll with a deadline, never assert an instant.
+- **A dead sink can crash a live command**: broadcasting to a room writes to
+  every session's echo sink; one closed socket (`OSError: Bad file descriptor`)
+  used to propagate and kill the *acting* player's command. Fix: the event bus
+  swallows + prunes a raising sink, and `_serve_player` unbinds its session in a
+  `finally` even if the front desk raises. Never let a health-check connect the
+  live gateway (it spawns a real session) — wait on the log line instead.
+- **Interactive-only heisenbugs need a PTY**: a bug that vanishes when you run
+  the client directly but bites through `make → bash → backgrounded server`
+  needs `pty.fork` to reproduce (process-group / `SIGTTOU` / termios effects
+  don't show under a pipe). The server log's `BrokenPipeError` tells you which
+  side closed first (the peer did).
 
 ## Current state (update as it changes)
 
-- 198 tests green; CI badge green; 24+ cards in `parts/` (see `make store`).
+- 201 tests green; CI (`check` + `docker`) green; 23 cards in `parts/` (see
+  `make store`).
 - Merged feature arcs: seeds, sessions, gateway, events, names, chargen,
   combat, persistence→SQL, ranks, accounts (character@account), front-desk
   login dialogue, proper-noun display, CLI entry points, FastAPI admin,
-  Docker, telnet echo blackout, secret case preservation, in-game `passwd`
-  (self-service password change), absolute DB path, security hardening
-  (output sanitization, per-IP turnaway ledger, seat cap + idle timeouts,
-  8-char password floor — see `docs/reports/security/`).
+  Docker image (real, on main, with a `docker` CI smoke-test), telnet echo
+  blackout, secret case preservation, in-game `passwd` (self-service password
+  change), absolute DB path, event-bus dead-sink resilience, the one-command
+  **ritual** (`make ritual` / `ritual-down`) with a bundled password-masking
+  client, security hardening (output sanitization, per-IP turnaway ledger, seat
+  cap + idle timeouts, 8-char password floor — see `docs/reports/security/`).
 - Backlog: NPCs that fight back (stakes/defeat); canonical typed event
   frames; `docs/engineering-log.md` and `docs/ai-assisted-workflow.md`;
   cloud deploy half-day.
