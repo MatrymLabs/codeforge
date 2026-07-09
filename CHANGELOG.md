@@ -6,6 +6,16 @@ pre-1.0. Readiness language only — no compliance/OSHA/legal claims.
 
 ## [Unreleased]
 
+### Added / Changed
+- **The board is green, and it's now a growth gate.** Linked every filed object to its
+  real documentation (a doc page for modules/commands, a seed/inline note for
+  rooms/items) — `qa gate all` → **72/72 pass**, `pm status` → **GREEN** (closes
+  LSS-CF-001). A new test (`test_the_shipped_board_has_no_failures`) enforces the *hard
+  bar*: no object may be `active` without a file + tests, so an untested/unfiled object
+  turns CI red. `docs/project_management.md` gains a **Growth structure** section: the
+  project audits its own maturity as it scales — filed · tested · documented · maturity
+  honest — and a system isn't *done* until `pm status` is green for it.
+
 ### Performance / Changed
 - **Test suite ~2.3× faster (27.7s → 11.8s), measured.** The suite was dominated by
   password tests running pbkdf2 at the production 600k iterations. `conftest` now drops

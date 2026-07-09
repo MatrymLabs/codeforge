@@ -66,7 +66,7 @@ Several big-sounding prompts turned out to be **mostly already built** — the n
 | # | Recommendation | Why / origin | Priority | Effort |
 |---|----------------|--------------|----------|--------|
 | R1 | **Secret scanning** — add `make secrets` (detect-secrets, baselined) + a `.secrets.baseline`; optional gitleaks | the RepoIntegrityRitual's own #1 action — closes the one honest gap it surfaces (`not_configured`); other ship repos already carry it | **P1** | S–M |
-| R2 | **Close QG04 → green board** — link `docs` paths on registry records so `pm status`/`qa gate` go green | the dashboard is literally asking for it (LSS-CF-001 DMAIC) | **P1** | S |
+| R2 | **Close QG04 → green board (DONE 2026-07-09)** — link `docs` paths on registry records so `pm status`/`qa gate` go green | the dashboard is literally asking for it (LSS-CF-001 DMAIC) | **P1** | S |
 | R3 | **Ritual modes + saved reports** — `make ritual-start-fast/deep`, a structured startup/shutdown report saved under `reports/ritual/`, a shutdown **commit/push-readiness** gate | the Startup/Shutdown prompt's *real delta*; the ritual **spine already exists** (ritual.sh WARDS/READINESS + ritual_down MUSTER) — this is modes + evidence, NOT the 19-phase Python CLI / workshop-lock cathedral (deferred) | P2 | M |
 | R4 | **VeritasGate `truth check`** command — automate the manual truth audit (README/docs/registry claims) | truth prompt; composes `docs_check` + registry validate | P2 | S |
 | R5 | **forge-audit MVP** — run the gates on a *target* repo behind a mockable GitHub-API seam, emit a JSON scorecard | the `DEVELOPMENT_PLAN`'s one net-new flagship build | P2 | **L** |
@@ -113,14 +113,49 @@ records, filing `PRT`/`MOD` parts. **Recommended first move:** R2 (green board) 
 - **Control:** `qa gate all` (QG04) + `pm status` surface the gap on every run; a
   future ritual step can print it at startup.
 
+- **Closed 2026-07-09:** every record now links its real documentation (a doc page for
+  modules/commands, a seed/inline note for rooms/items). `qa gate all` → **72/72 pass**;
+  `pm status` → GREEN. The **Control** is live: `test_the_shipped_board_has_no_failures`
+  keeps a future untested/unfiled active object from turning the board red unnoticed.
+
 This is the template: every `lss` improvement is Define→Measure→Analyze→Improve→
 Control, with the metric coming from `pm metrics` and the control from the QA gate.
 
 ---
 
+## Growth structure — the board is the gate (professional alignment as we scale)
+
+CodeForge grows by **composition, not sprawl**, and the growth stays professional
+because the project **audits its own maturity**. Every important object — rooms, NPCs,
+items, commands, *and the code modules themselves* — is filed in the Classification
+Registry; `qa gate all` grades each against a fixed bar; `pm status` rolls it into one
+verdict. So "how professional is this project right now?" has a **computed answer, not
+an opinion.** As of 2026-07-09 the board is **GREEN — 72/72 objects pass.**
+
+**The bar every filed object must clear** (the QualityGate checklist): (1) a clear
+purpose · (2) a source file · (3) tests · (4) a docs link · (5) its declared maturity
+is backed by evidence — an `active`/`hardened` object must actually have file + tests.
+
+**Two lines, one green board:**
+- **Hard bar (enforced by CI):** no object may be `active` without a file + tests. A
+  new module/command/part with no test → `fail`; a test (`test_the_shipped_board_has_no_failures`)
+  turns that into a red build. *You cannot merge an untested active object.*
+- **Soft bar (tracked, expected before "done"):** a docs link. Missing docs → `watch`,
+  not `fail`; `pm status` shows it. Link the doc to return the board to fully **green**.
+
+**The growth rule:** a new system isn't *done* until `pm status` is green for it —
+filed, tested, documented, maturity honest. Capability that skips the bar turns the
+board yellow (or red) until it's fixed. This is *why growth doesn't degrade quality*:
+the more we build, the more the registry + QA + PM keep it coherent. The project climbs
+the same ladder its builder does — prototype → tested → documented → reusable →
+hardened, **each rung earned with evidence.** Advanced infra (cloud beyond the Render
+demo, ML serving, orchestration) stays **deferred by design** until presentation is
+done — an interviewer sees the green board and the live demo before architecture.
+
 ## Definition of Done (every task)
 
 Code/content exists · registry entry if applicable · tested or manually verified ·
 docs impact checked (`docs check`) · relevant docs updated · CHANGELOG updated if
-behavior changed · risks updated if needed · next dependency clear. No compliance
-claims — readiness only.
+behavior changed · risks updated if needed · next dependency clear · **`pm status`
+green for the new system** (filed · tested · documented · maturity honest). No
+compliance claims — readiness only.
