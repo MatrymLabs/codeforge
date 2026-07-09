@@ -6,11 +6,13 @@
 #   2. WARDS      security posture -- SAST (bandit) GATES the forge; a dependency
 #                 CVE scan (pip-audit) runs and warns. Cyber/SSDF best practice:
 #                 never run on code with a known SAST finding.
-#   3. MIRROR     sync with GitHub -- fast-forward what's behind, name what's
+#   3. READINESS  the system audits itself -- registry validation GATES (a corrupt
+#                 registry is a defect); the readiness dashboard (pm status) reports.
+#   4. MIRROR     sync with GitHub -- fast-forward what's behind, name what's
 #                 ahead. Never force, never silently push.
-#   4. THE FORGE  light the gateway (the multiplayer server) and wait for it to
+#   5. THE FORGE  light the gateway (the multiplayer server) and wait for it to
 #                 announce itself.
-#   5. THE GATE   open the MUD window at the front desk, ready to log in.
+#   6. THE GATE   open the MUD window at the front desk, ready to log in.
 #
 # When you walk away (quit / Ctrl-C), the forge banks its coals: a server the
 # ritual lit is a server the ritual puts out. A forge already burning is left be.
@@ -72,7 +74,20 @@ else
   warn "pip-audit reported findings or was offline -- review with 'make patch' (see /tmp/ritual-audit.log)."
 fi
 
-# --- 3. MIRROR: sync with GitHub -------------------------------------------
+# --- 3. READINESS: the global self-audit (registry gates; QA/PM report) -----
+# "Is the system still healthy today?" -- registry validation GATES (a corrupt
+# registry is a defect); the readiness dashboard (pm status) is informational
+# (a YELLOW board is not a red gate -- watch != fail).
+spark_line "Readiness -- the system audits itself (registry + QA + docs)..."
+if make readiness >/tmp/ritual-readiness.log 2>&1; then
+  ok "Registry validates. Readiness dashboard:"
+  printf '%b' "$DIM"; sed 's/^/     /' /tmp/ritual-readiness.log; printf '%b' "$OFF"
+else
+  printf '%b' "$DIM"; tail -20 /tmp/ritual-readiness.log; printf '%b' "$OFF"
+  die "Readiness check failed (registry invalid) -- fix it, then start the ritual again."
+fi
+
+# --- 4. MIRROR: sync with GitHub -------------------------------------------
 spark_line "Mirror -- syncing with GitHub..."
 if git rev-parse --abbrev-ref @'{u}' >/dev/null 2>&1; then
   git fetch --quiet origin || warn "Could not reach GitHub (offline?). Skipping mirror."
@@ -118,7 +133,7 @@ extinguish() {
 }
 trap extinguish EXIT INT TERM
 
-# --- 4. THE FORGE: light the gateway ---------------------------------------
+# --- 5. THE FORGE: light the gateway ---------------------------------------
 spark_line "The Forge -- lighting the gateway on :$PORT..."
 if forge_is_up; then
   ok "A forge is already burning on :$PORT -- joining it (won't disturb it on exit)."
@@ -142,7 +157,7 @@ else
   ok "The forge is lit (pid $FORGE_PID) -- '$SEED' is live on :$PORT."
 fi
 
-# --- 5. THE GATE: open the MUD window --------------------------------------
+# --- 6. THE GATE: open the MUD window --------------------------------------
 spark_line "The Gate -- opening the MUD window (log in at the front desk)..."
 printf '%b   Character (character@account) or NEW awaits. Ctrl-C or QUIT to leave.%b\n\n' "$DIM" "$OFF"
 sleep 0.4

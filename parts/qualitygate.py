@@ -170,6 +170,8 @@ _KEY_DOCS = (
     ("CONTRIBUTING.md", "how to contribute"),
     ("docs/architecture.md", "architecture"),
     ("docs/safety_qa_system.md", "safety + QA system"),
+    ("docs/startup_ritual.md", "startup ritual"),
+    ("docs/project_management.md", "project management"),
     ("docs/classification/CLASSIFICATION_SYSTEM.md", "classification registry"),
 )
 

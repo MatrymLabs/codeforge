@@ -7,6 +7,11 @@ pre-1.0. Readiness language only — no compliance/OSHA/legal claims.
 ## [Unreleased]
 
 ### Added
+- **Ritual READINESS phase + `make readiness`**: the startup ritual now runs a global
+  self-audit — the classification registry validates (no duplicates/orphans; GATES
+  the forge) and the project dashboard (`pm status`) prints as a readiness report.
+  `make readiness` is the reusable one-button version. `docs/startup_ritual.md`
+  documents all six phases (IGNITION · WARDS · READINESS · MIRROR · FORGE · GATE).
 - **PM control panel** (`parts/pm.py`): `pm status` / `pm metrics` — the project
   dashboard is *computed* from the registry + QualityGate (part + part + part), not
   stored. `docs/project_management.md` holds the charter, milestone status, backlog,
