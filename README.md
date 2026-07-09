@@ -58,7 +58,7 @@ git clone git@github.com:MatrymLabs/codeforge.git
 cd codeforge
 python3 -m venv .venv && source .venv/bin/activate
 pip install -e ".[dev]"
-make check       # lint + typecheck + 323 tests
+make check       # lint + typecheck + 326 tests
 spark            # ignite the multiplayer server on port 4000
 ```
 
@@ -146,6 +146,9 @@ is real, tested, and reachable in the MUD:
   gate (no stored copy to drift). See [docs/project_management.md](docs/project_management.md).
 - **Guidance Library** — `library` / `library <id>` read the Federal Guidance
   Library's stored documents read-only; `regs <id>` cites tracked sources.
+- **Compliance awareness** — `law` / `law <id>` render tracked sources through a
+  legal-*awareness* boundary: never legal advice, always "human review required."
+  See [docs/legal_policy_awareness.md](docs/legal_policy_awareness.md).
 - **System generation** — `@sg item <pattern>` forges a filed item pattern (wizard+,
   data-driven, refuses the unknown).
 
@@ -159,7 +162,7 @@ Reading this repo, an engineer can *verify* — not take on faith — these skil
 - **Architecture** — a pure-function engine tick (`handle_command`) with thin drivers
   (terminal · TCP · WebSocket); state is canonical, text is a projection. See
   [docs/architecture.md](docs/architecture.md).
-- **Testing discipline** — 323 tests: unit twins per card, property-based (Hypothesis),
+- **Testing discipline** — 326 tests: unit twins per card, property-based (Hypothesis),
   real-socket + WebSocket integration, an end-to-end `make smoke`, restore/play parity.
 - **Self-auditing systems** — a classification registry, `qa gate all`, and `pm status`
   compute readiness from filed data (part + part); the startup ritual runs a security +
@@ -173,6 +176,12 @@ Reading this repo, an engineer can *verify* — not take on faith — these skil
 
 Everything above is **working and tested.** Planned work is marked as such in the
 [roadmap](#roadmap).
+
+**How it's built — honestly:** AI-assisted and engineering-directed. AI expands the
+creative and analytical surface; the ritual, gates, and self-audit keep it honest;
+tests and evidence prove each claim; I direct, review, and make the calls. What makes
+this *engineering* and not "AI wrote it" is the same thing that proves any engineering —
+the tests, the gates, and the green CI you can run yourself.
 
 ## The card catalog
 
@@ -252,7 +261,7 @@ governing boundaries are in [`docs/AI_WORKFLOW.md`](docs/AI_WORKFLOW.md).
 
 ## Testing
 
-323 tests: unit twins for every card, real-socket gateway tests that walk the login
+326 tests: unit twins for every card, real-socket gateway tests that walk the login
 dialogue over the wire, browser-gateway tests over a real WebSocket, engine-tick wiring
 tripwires, deterministic combat math, persistence parity, event-bus resilience (a
 dropped client can never crash another player's command), security tests (impostor
