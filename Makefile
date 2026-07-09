@@ -1,4 +1,4 @@
-.PHONY: env fix lint typecheck test property coverage audit security doctor patch daily check ship run world store hardware clean serve ritual ritual-down unskew
+.PHONY: env fix lint typecheck test property coverage audit security doctor patch daily check readiness ship run world store hardware clean serve ritual ritual-down unskew
 
 # --- Environment: create/validate the .venv, fail loud on version mismatch ---
 env:
@@ -28,6 +28,11 @@ property:
 	pytest -m property
 
 check: lint typecheck test property
+
+# --- Readiness: the global self-audit -- registry validates (gates), then the
+# project dashboard, computed from the registry + QualityGate. Read-only. ---
+readiness:
+	@python3 -c "import sys; from parts.registry import load_collective, validate; from parts.pm import pm_status; p=validate(load_collective()); print('Registry: CLEAN (no duplicates, no orphans)' if not p else 'Registry PROBLEMS:\n  '+'\n  '.join(p)); print(); print(pm_status()); sys.exit(1 if p else 0)"
 
 # --- Extra inspections (One-Button Rule) ---
 coverage:

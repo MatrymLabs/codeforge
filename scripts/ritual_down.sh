@@ -84,6 +84,6 @@ else
 fi
 
 # --- 3. DOUSE THE EMBERS ---------------------------------------------------
-rm -f /tmp/ritual-spark.log /tmp/ritual-check.log /tmp/ritual-bandit.log /tmp/ritual-audit.log 2>/dev/null || true
+rm -f /tmp/ritual-spark.log /tmp/ritual-check.log /tmp/ritual-bandit.log /tmp/ritual-audit.log /tmp/ritual-readiness.log 2>/dev/null || true
 
 printf '\n%b⚒  The forge is cold. The workshop is secured. Rest well.%b\n\n' "$CYAN" "$OFF"
