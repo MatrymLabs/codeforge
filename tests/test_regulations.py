@@ -48,6 +48,13 @@ def test_unknown_id_is_helpful(reg: Path) -> None:
     assert "No source" in regs("bogus", path=reg)
 
 
+def test_keyword_search_finds_nist(reg: Path) -> None:
+    out = regs("nist", path=reg)  # not a domain, not an exact id -> keyword search
+    assert "matching 'nist'" in out
+    assert "PUB-NIST-800-171" in out  # matches on id + name
+    assert "REG-CMMC-32CFR170" not in out  # cmmc row doesn't mention nist
+
+
 def test_reports_unnoted_reliance(reg: Path) -> None:
     # NIST row has a blank legal_reliance_note -> shown as "(none noted)"
     assert "(none noted)" in regs("pub-nist-800-171", path=reg)

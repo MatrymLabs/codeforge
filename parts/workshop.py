@@ -15,7 +15,8 @@ _LIVE = (
     ("catalog / hardware / parts", "browse the reusable-parts catalog"),
     ("reuse <term>", "find cataloged parts for a need (e.g. reuse audit)"),
     ("console", "list the read-only diagnostic commands"),
-    ("run <check> / diagnostics", "run allowlisted checks (lint, types, tests, git)"),
+    ("diagnostics / run <check>", "run allowlisted checks (lint, types, tests, git)"),
+    ("security", "run the SAST scan (bandit) on the engine"),
     ("ai <prompt>", "ask the Architect NPC (advisory, read-only)"),
 )
 _COMING = (

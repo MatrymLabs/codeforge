@@ -40,7 +40,7 @@ HELP_TEXT = (
     "jobs, job <calling>, score, attack <target>, "
     "unlock <door> with <key>, regs [topic|id], "
     "workshop, catalog, reuse <term>, console, run <check>, diagnostics, "
-    "ai <prompt>, passwd, save, load, quit"
+    "security, ai <prompt>, passwd, save, load, quit"
 )
 
 
@@ -250,6 +250,8 @@ def handle_command(session: Session, signal: str) -> str:
         return console_menu()
     if routed_signal == "diagnostics":
         return diagnostics_view()
+    if routed_signal == "security":
+        return run_view("security")
     if routed_signal == "run" or routed_signal.startswith("run "):
         return run_view(routed_signal[len("run ") :] if routed_signal.startswith("run ") else "")
     if routed_signal == "ai" or routed_signal.startswith("ai "):
