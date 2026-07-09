@@ -1,0 +1,20 @@
+# CATALOG: item generation patterns.
+#
+# `@sg item <pattern>` stamps one of these into the world at the caster's feet.
+# Patterns are DATA -- the world is data; a sword is not a Python class. Only a
+# pattern filed HERE can be generated (the generator never conjures from nothing).
+# Each pattern is filed as an ITM-* designation in registry/designations/items.json.
+#
+# Shape: <pattern>: { name, keywords }. Label = the pattern key (lowercase_snake_case).
+
+excalibur:
+  name: Excalibur, the drawn blade
+  keywords: [excalibur, sword, blade]
+
+iron_sword:
+  name: an iron sword
+  keywords: [iron, sword, blade]
+
+oaken_shield:
+  name: an oaken shield
+  keywords: [oaken, oak, shield]
