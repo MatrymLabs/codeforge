@@ -30,7 +30,10 @@ The world is going to sleep. Your deeds are remembered.
 
 ## Play in your browser 🌐
 
-**Live demo: _add your Render URL here after deploy_** — no install, just click and play.
+### ▶ [**Play the live demo**](https://codeforge-demo-1kcu.onrender.com/)
+
+No install — just click and log in (`NEW` to make a character). It's on a free tier that
+sleeps when idle, so the **first load may take ~30–60s to wake up**; after that it's instant.
 
 Or run it locally:
 
