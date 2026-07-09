@@ -10,8 +10,35 @@ from collections.abc import Iterator
 import pytest
 
 from forge import handle_command
-from parts.pm import pm_metrics, pm_status, project_metrics
+from parts.pm import ProjectMetrics, _recommended_next, pm_metrics, pm_status, project_metrics
 from parts.session import SESSIONS, Session
+
+# --- failure/edge branches (the "board is red/green" logic), injected deterministically ---
+
+
+def test_recommended_next_prioritizes_failures() -> None:
+    assert "Fix 2 failing" in _recommended_next(ProjectMetrics(total=5, qa_fail=2, qa_watch=3))
+
+
+def test_recommended_next_then_docs_then_planned() -> None:
+    assert "Link docs on 3" in _recommended_next(ProjectMetrics(total=3, docs_missing=3))
+    assert "Build the next of 2" in _recommended_next(ProjectMetrics(total=2, qa_pass=0, planned=2))
+
+
+def test_recommended_next_all_pass() -> None:
+    assert "All filed objects pass" in _recommended_next(ProjectMetrics(total=4, qa_pass=4))
+
+
+def test_pm_status_is_red_when_objects_fail() -> None:
+    out = pm_status(metrics=ProjectMetrics(total=10, qa_fail=2, qa_watch=8))
+    assert "RED" in out and "Fix 2 failing" in out
+
+
+def test_pm_status_is_green_when_all_pass() -> None:
+    out = pm_status(metrics=ProjectMetrics(total=10, qa_pass=10))
+    assert "GREEN" in out
+    assert "100%" in out  # ready_pct
+    assert "Objects filed:" in pm_metrics(metrics=ProjectMetrics(total=10, qa_pass=10))
 
 
 def test_metrics_are_computed_from_the_real_registry() -> None:

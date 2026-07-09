@@ -71,3 +71,11 @@ def test_save_report_writes_a_dated_file(tmp_path: Path):
     assert path.exists()
     assert path.name == "2026-07-09-repo-integrity.md"
     assert "hello report" in path.read_text()
+
+
+def test_run_repo_integrity_writes_a_real_report():
+    from parts.integrity import run_repo_integrity
+
+    path = run_repo_integrity()  # builds + saves under reports/repo_integrity/ (gitignored)
+    assert path.exists()
+    assert "CodeForge Repo Integrity Report" in path.read_text()

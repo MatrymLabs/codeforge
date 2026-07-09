@@ -67,9 +67,9 @@ def _recommended_next(m: ProjectMetrics) -> str:
     return "All filed objects pass -- pick the next milestone in docs/project_management.md."
 
 
-def pm_metrics() -> str:
-    """Raw counts, honestly computed."""
-    m = project_metrics()
+def pm_metrics(metrics: ProjectMetrics | None = None) -> str:
+    """Raw counts, honestly computed. `metrics` is injectable for deterministic tests."""
+    m = metrics if metrics is not None else project_metrics()
     types = ", ".join(f"{n} {t}" for t, n in sorted(m.by_type.items()))
     return "\n".join(
         [
@@ -82,9 +82,10 @@ def pm_metrics() -> str:
     )
 
 
-def pm_status() -> str:
-    """The project status report -- the dashboard, plus the recommended next action."""
-    m = project_metrics()
+def pm_status(metrics: ProjectMetrics | None = None) -> str:
+    """The project status report -- the dashboard, plus the recommended next action.
+    `metrics` is injectable so the red/green gate logic is deterministically testable."""
+    m = metrics if metrics is not None else project_metrics()
     ready_pct = round(100 * m.qa_pass / m.total) if m.total else 0
     color = (
         "green"

@@ -6,6 +6,19 @@ pre-1.0. Readiness language only — no compliance/OSHA/legal claims.
 
 ## [Unreleased]
 
+### Added / Changed
+- **The self-audit now covers the code** (code-audit Finding 1). Filed 38 `MOD-*`
+  designations for every `parts/*.py` module, so `qa gate all` / `pm status` now grade
+  the codebase itself, not just rooms/commands/items (72 objects, up from 34). All
+  modules pass purpose/file/tests/maturity; docs-link is the pending soft gap.
+- **Failure-branch tests** (Finding 3): the previously-untested *failure* paths are now
+  pinned — `pm` red/green + recommendation logic (via an injectable `metrics` seam),
+  `safety_review` item/prototype branches, `render_*` unknown-designation paths,
+  `validate` tests-not-found, and `run_repo_integrity`.
+- **Two maturity vocabularies documented** (Finding 2): the catalog's `maturity`
+  (reuse-readiness) and the registry's `status` (lifecycle) are deliberately different
+  axes — now stated in `catalog/README.md` so they're not mistaken for a duplicate.
+
 ### Added
 - **Secret scanning** (`make secrets`): detect-secrets gates on any tracked secret not
   in the audited `.secrets.baseline` (verified — passes clean, catches a planted key).

@@ -47,6 +47,13 @@ path with `CODEFORGE_CATALOG`.
 - **`source` points at real code.** The catalog documents parts that exist and are
   tested; it is not a wishlist.
 - **`maturity` is earned:** `shipped` means shipped + tested on `main`.
+- **Two maturity vocabularies, on purpose — different axes.** This catalog's
+  `maturity` (`prototype | beta | shipped`) rates **reuse-readiness** — how ready a
+  part is to be *lifted into another project*. The Classification Registry's `status`
+  (`prototype | active | hardened | deprecated | archived | superseded`) tracks an
+  object's **lifecycle** — where it is between conception and retirement. They're
+  orthogonal: a part can be `active` in the engine (registry) *and* `shipped` for reuse
+  (catalog). Don't collapse them.
 - **Free-to-use only (the provenance rule).** Only stock a part whose license is
   clearly free to use. Don't harvest code — harvest *patterns* and rebuild them as
   original CodeForge parts. `source_status` records the provenance; an unclear license

@@ -198,6 +198,14 @@ def test_validate_flags_an_orphaned_file(tmp_path: Path) -> None:
     assert any("file not found" in p for p in problems)
 
 
+def test_validate_flags_missing_tests(tmp_path: Path) -> None:
+    # a built object whose tests path doesn't exist is flagged (the file exists)
+    (tmp_path / "seeds").mkdir()
+    (tmp_path / "seeds" / "rooms.yaml").write_text("x")
+    rec = _rec(status="active", file="seeds/rooms.yaml", tests="tests/ghost.py")
+    assert any("tests not found" in p for p in validate([rec], root=tmp_path))
+
+
 def test_validate_flags_a_dangling_supersede() -> None:
     problems = validate([_rec(superseded_by="RM-UM03-S02-N001-999-R0")], check_files=False)
     assert any("is not filed" in p for p in problems)
