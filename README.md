@@ -58,7 +58,7 @@ git clone git@github.com:MatrymLabs/codeforge.git
 cd codeforge
 python3 -m venv .venv && source .venv/bin/activate
 pip install -e ".[dev]"
-make check       # lint + typecheck + 326 tests
+make check       # lint + typecheck + the full test suite
 spark            # ignite the multiplayer server on port 4000
 ```
 
@@ -162,8 +162,9 @@ Reading this repo, an engineer can *verify* — not take on faith — these skil
 - **Architecture** — a pure-function engine tick (`handle_command`) with thin drivers
   (terminal · TCP · WebSocket); state is canonical, text is a projection. See
   [docs/architecture.md](docs/architecture.md).
-- **Testing discipline** — 326 tests: unit twins per card, property-based (Hypothesis),
-  real-socket + WebSocket integration, an end-to-end `make smoke`, restore/play parity.
+- **Testing discipline** — unit twins per card, property-based (Hypothesis), real-socket
+  + WebSocket integration, an end-to-end `make smoke`, restore/play parity — the full
+  suite runs green on every merge (the CI badge is the live source of truth).
 - **Self-auditing systems** — a classification registry, `qa gate all`, and `pm status`
   compute readiness from filed data (part + part); the startup ritual runs a security +
   registry self-check *before* it lights the forge.
@@ -261,7 +262,7 @@ governing boundaries are in [`docs/AI_WORKFLOW.md`](docs/AI_WORKFLOW.md).
 
 ## Testing
 
-326 tests: unit twins for every card, real-socket gateway tests that walk the login
+A layered suite: unit twins for every card, real-socket gateway tests that walk the login
 dialogue over the wire, browser-gateway tests over a real WebSocket, engine-tick wiring
 tripwires, deterministic combat math, persistence parity, event-bus resilience (a
 dropped client can never crash another player's command), security tests (impostor
