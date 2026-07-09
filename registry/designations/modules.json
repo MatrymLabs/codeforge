@@ -1024,5 +1024,32 @@
     "aliases": [],
     "created": "2026-07-09",
     "updated": "2026-07-09"
+  },
+  {
+    "designation": "MOD-UM10-S01-N001-006-R0",
+    "name": "veritas",
+    "status": "active",
+    "function": "VeritasGate: check that CodeForge's claims match reality",
+    "label": "veritas",
+    "file": "parts/veritas.py",
+    "type": "MOD",
+    "domain": "UM10",
+    "sector": "S01",
+    "node": "N001",
+    "sequence": "006",
+    "revision": "R0",
+    "docs": "docs/veritas.md",
+    "tests": "tests/test_veritas.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "module"
+    ],
+    "notes": "",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-09",
+    "updated": "2026-07-09"
   }
 ]

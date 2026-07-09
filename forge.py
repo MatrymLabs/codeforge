@@ -51,6 +51,7 @@ from parts.registry import (
 from parts.regulations import regs
 from parts.save import awaken_snapshot, seal_snapshot
 from parts.session import SESSIONS, Session, display_name, roster
+from parts.veritas import render_truth
 from parts.workshop import catalog_view, reuse_search, workshop_menu
 from parts.world import DIRECTIONS, render_room, resolve_move
 
@@ -63,6 +64,7 @@ HELP_TEXT = (
     "unlock <door> with <key>, regs [topic|id], library [id], law [id], "
     "registry [show|find|type|status], "
     "qa gate [all|<id>], safety review <id>, docs check, pm status, pm metrics, "
+    "truth check, "
     "workshop, catalog, reuse <term>, console, run <check>, diagnostics, "
     "security, ai <prompt>, lesson list, question, answer <A-D>, hint, progress, "
     "passwd, save, load, quit"
@@ -190,6 +192,15 @@ def _build_commands() -> CommandSet:
             "CMD-UM06-S01-N001-001-R0",
             "legal/policy awareness over tracked sources (not legal advice)",
             lambda _s, arg: law(arg),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "truth check",
+            "CMD-UM10-S01-N001-012-R0",
+            "VeritasGate: check that the project's claims match reality",
+            lambda _s, _a: render_truth(),
             namespace=CORE,
         )
     )

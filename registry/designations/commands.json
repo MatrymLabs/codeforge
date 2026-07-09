@@ -368,5 +368,34 @@
     "aliases": [],
     "created": "2026-07-09",
     "updated": "2026-07-09"
+  },
+  {
+    "designation": "CMD-UM10-S01-N001-012-R0",
+    "name": "`truth check`",
+    "status": "active",
+    "function": "VeritasGate: check that the project's claims match reality.",
+    "label": "truth check",
+    "file": "parts/veritas.py",
+    "type": "CMD",
+    "domain": "UM10",
+    "sector": "S01",
+    "node": "N001",
+    "sequence": "012",
+    "revision": "R0",
+    "docs": "docs/veritas.md",
+    "tests": "tests/test_veritas.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "the claims-vs-reality gate; composes with any repo's docs+registry",
+    "tags": [
+      "command",
+      "truth",
+      "veritas"
+    ],
+    "notes": "",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-09",
+    "updated": "2026-07-09"
   }
 ]
