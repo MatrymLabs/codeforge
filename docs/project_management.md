@@ -70,7 +70,7 @@ Several big-sounding prompts turned out to be **mostly already built** — the n
 | R3 | **Ritual modes + saved reports** — `make ritual-start-fast/deep`, a structured startup/shutdown report saved under `reports/ritual/`, a shutdown **commit/push-readiness** gate | the Startup/Shutdown prompt's *real delta*; the ritual **spine already exists** (ritual.sh WARDS/READINESS + ritual_down MUSTER) — this is modes + evidence, NOT the 19-phase Python CLI / workshop-lock cathedral (deferred) | P2 | M |
 | R4 | **VeritasGate `truth check`** command — automate the manual truth audit (README/docs/registry claims) | truth prompt; composes `docs_check` + registry validate | P2 | S |
 | R5 | **forge-audit MVP** — run the gates on a *target* repo behind a mockable GitHub-API seam, emit a JSON scorecard | the `DEVELOPMENT_PLAN`'s one net-new flagship build | P2 | **L** |
-| R6 | **Portfolio index page (GitHub Pages)** — link flagship + live demo + a case study | presentation is a hiring gate | P2 | M |
+| R6 | **Portfolio index page (DONE 2026-07-09 — https://matrymlabs.github.io/)** — link flagship + live demo + a case study | presentation is a hiring gate | P2 | M |
 | R7 | **Build one prototype city room real** (e.g. City Square) | advances the game/world; seeds-are-data | P3 | S |
 
 Still open from the earlier backlog table: EvidenceLedger, ADDIE lesson #1, LSS DMAIC
