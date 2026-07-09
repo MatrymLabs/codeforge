@@ -129,32 +129,70 @@ Three laws hold everywhere:
    resources recompute from job templates and growth formulas, with a parity test
    pinning restore-math equal to play-math.
 
+## Engineering systems
+
+Beyond the game, the parts compose into a self-auditing engine. Every command below
+is real, tested, and reachable in the MUD:
+
+- **Classification Registry** — a hidden filing system: every object carries a
+  designation (`TYPE-UM-SEC-NODE-SEQ-REV`) keyed to its runtime label. `registry show
+  <id>`, `registry type CMD`. See [docs/classification/](docs/classification/CLASSIFICATION_SYSTEM.md).
+- **Command spine** — namespaced (`CORE` / `ADMIN @` / `SEED`), rank-gated verbs; a
+  seed can never shadow a reserved word.
+- **Safety + QA** — `qa gate all` grades every filed object (purpose · file · tests ·
+  docs · maturity); `safety review <id>` rates risk. Readiness only — no compliance
+  claims. See [docs/safety_qa_system.md](docs/safety_qa_system.md).
+- **Project control** — `pm status` computes the dashboard from the registry + the QA
+  gate (no stored copy to drift). See [docs/project_management.md](docs/project_management.md).
+- **Guidance Library** — `library` / `library <id>` read the Federal Guidance
+  Library's stored documents read-only; `regs <id>` cites tracked sources.
+- **System generation** — `@sg item <pattern>` forges a filed item pattern (wizard+,
+  data-driven, refuses the unknown).
+
+The whole flow runs green end-to-end via `make smoke` (start → log in → look → check
+→ do → log out → bank the forge). The startup ritual audits it (`make readiness`).
+
 ## The card catalog
 
 Generated from the `CARD:` docstrings in `parts/` (see `make store`):
 
 | Card | Purpose |
 |---|---|
-| `accounts` | names become logins with real password hashing. |
+| `accounts` | names become logins with real password hashing (SQL-backed). |
+| `api` | an HTTP window onto the canonical world (FastAPI). |
+| `architect` | the Architect NPC: an advisory AI pair-programmer (read-only). |
+| `assessment` | the AssessmentEngine: a data-driven question engine. |
 | `catalog` | the filing system. List world components by number. |
-| `characters` | named heroes survive the restart. |
+| `characters` | named heroes survive the restart (SQL-backed). |
+| `classroom` | Professor Codex and the Classroom of Practical Arts. |
 | `cli` | one door to the whole workshop: the codeforge command. |
 | `combat` | the training loop: strike, defeat, XP, LEVEL UP. |
+| `commands` | the command spine: verbs filed, rank-gated, namespaced. |
+| `console` | the FailsafeRunner: run allowlisted commands safely. |
+| `db` | SQLite persistence through the SQLAlchemy 2.0 ORM. |
 | `doors` | lockable barriers between rooms. |
 | `events` | world happenings broadcast to bystanders. |
 | `gateway` | a line-based TCP server sharing one world. |
+| `generate` | @sg, the system item generator (wizard/owner only). |
+| `hardware` | the cross-domain reusable-parts catalog (the hardware store). |
 | `items` | objects, containment, take/drop/inventory. |
 | `jobs` | callings born from seed, characters born from callings. |
+| `library` | read the Federal Guidance Library's preserved documents. |
 | `npcs` | characters who live in rooms and talk. |
+| `pm` | the project control panel. Composes registry + QualityGate. |
 | `progression` | XP and JP level curves (locked design, July 2026). |
+| `qualitygate` | the Safety + QA spine. Composes with the registry. |
 | `ranks` | authority, and the wizard verbs it makes legal. |
-| `regulations` | `regs` — reference federal guidance from the Guidance Library while you build. |
+| `registry` | the CodeForge Classification Registry filing engine. |
+| `regulations` | reference federal guidance from the Guidance Library. |
 | `resources` | bounded depleting values (HP, MP, TP). |
 | `save` | snapshot persistence for world state. |
 | `seed` | load and validate world component packs from YAML. |
 | `session` | one player's connection state. |
 | `stats` | validated, immutable character statistics. |
 | `store` | the hardware store inventory. List engine parts and purposes. |
+| `web_gateway` | the browser gate: play the forge over a WebSocket. |
+| `workshop` | the engineering cockpit inside the MUD (display-only). |
 | `world` | world graph, direction aliases, movement. |
 
 Salvage note: `stats`, `resources`, and `progression` were ported from an earlier
