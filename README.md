@@ -152,6 +152,28 @@ is real, tested, and reachable in the MUD:
 The whole flow runs green end-to-end via `make smoke` (start → log in → look → check
 → do → log out → bank the forge). The startup ritual audits it (`make readiness`).
 
+## What this demonstrates
+
+Reading this repo, an engineer can *verify* — not take on faith — these skills:
+
+- **Architecture** — a pure-function engine tick (`handle_command`) with thin drivers
+  (terminal · TCP · WebSocket); state is canonical, text is a projection. See
+  [docs/architecture.md](docs/architecture.md).
+- **Testing discipline** — 323 tests: unit twins per card, property-based (Hypothesis),
+  real-socket + WebSocket integration, an end-to-end `make smoke`, restore/play parity.
+- **Self-auditing systems** — a classification registry, `qa gate all`, and `pm status`
+  compute readiness from filed data (part + part); the startup ritual runs a security +
+  registry self-check *before* it lights the forge.
+- **Security posture** — rank-gated admin verbs, salted pbkdf2 auth, an allowlisted
+  command runner (never raw shell), SAST + dependency scanning + Dependabot.
+- **Delivery mechanics** — CI + Docker + a live browser demo + Conventional Commits + a
+  CHANGELOG; every merge green.
+- **Systems thinking (20 yrs USAF)** — readiness checks, evidence trails, controlled
+  changes, QA gates — mission-system discipline applied to software.
+
+Everything above is **working and tested.** Planned work is marked as such in the
+[roadmap](#roadmap).
+
 ## The card catalog
 
 Generated from the `CARD:` docstrings in `parts/` (see `make store`):

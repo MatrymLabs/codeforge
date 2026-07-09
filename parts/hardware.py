@@ -20,8 +20,23 @@ from typing import Any
 import yaml
 
 _REQUIRED = ("id", "name", "source", "category", "purpose", "maturity", "risk", "reuse")
-_MATURITY = ("prototype", "beta", "production")
+# "shipped" reads as its own definition (shipped + tested on main) -- no out-of-context
+# overclaim, unlike "production".
+_MATURITY = ("prototype", "beta", "shipped")
 _RISK = ("low", "medium", "high")
+# Free-to-Use rule: only stock parts whose provenance is clearly free to use. A part's
+# source_status must be one of these; anything unclear is not stocked in the first place.
+_SOURCE_STATUS = (
+    "original",
+    "stdlib",
+    "public-domain",
+    "cc0",
+    "unlicense",
+    "0bsd",
+    "mit",
+    "bsd",
+    "apache-2.0",
+)
 
 
 def _default_catalog_path() -> Path:
@@ -47,6 +62,8 @@ class Part:
     reuse: dict[str, str]
     tags: list[str] = field(default_factory=list)
     reuse_score: int = 0
+    source_status: str = "original"  # provenance: original / mit / apache-2.0 / ...
+    license: str = "MIT"  # the reuse license (this repo's own code is MIT)
 
 
 class CatalogError(ValueError):
@@ -65,6 +82,11 @@ def _coerce(raw: Any, index: int) -> Part:
     risk = str(raw["risk"])
     if risk not in _RISK:
         raise CatalogError(f"part {raw['id']!r}: risk must be one of {_RISK}")
+    source_status = str(raw.get("source_status", "original"))
+    if source_status not in _SOURCE_STATUS:
+        raise CatalogError(
+            f"part {raw['id']!r}: source_status must be a free-to-use status {_SOURCE_STATUS}"
+        )
     reuse = raw["reuse"]
     if not isinstance(reuse, dict) or not reuse:
         raise CatalogError(
@@ -81,6 +103,8 @@ def _coerce(raw: Any, index: int) -> Part:
         reuse={str(domain): str(use) for domain, use in reuse.items()},
         tags=[str(tag) for tag in raw.get("tags", [])],
         reuse_score=int(raw.get("reuse_score", 0)),
+        source_status=source_status,
+        license=str(raw.get("license", "MIT")),
     )
 
 

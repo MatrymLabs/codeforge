@@ -23,8 +23,10 @@ path with `CODEFORGE_CATALOG`.
   name: Rank Gate          # required · human name
   source: parts/ranks.py   # required · the file that implements it
   category: authorization  # required · one word (authorization, messaging, …)
-  maturity: production     # required · prototype | beta | production
+  maturity: shipped        # required · prototype | beta | shipped
   risk: low                # required · low | medium | high
+  source_status: original  # optional (default original) · original | mit | apache-2.0 | ...
+  license: MIT             # optional (default MIT) · this repo's own code is MIT
   reuse:                   # required · non-empty map of domain -> concrete use
     game: "…"
     government: "…"
@@ -43,7 +45,12 @@ path with `CODEFORGE_CATALOG`.
   job — not a maybe. If it doesn't fit, leave the domain out.
 - **`source` points at real code.** The catalog documents parts that exist and are
   tested; it is not a wishlist.
-- **`maturity` is earned:** `production` means shipped + tested on `main`.
+- **`maturity` is earned:** `shipped` means shipped + tested on `main`.
+- **Free-to-use only (the provenance rule).** Only stock a part whose license is
+  clearly free to use. Don't harvest code — harvest *patterns* and rebuild them as
+  original CodeForge parts. `source_status` records the provenance; an unclear license
+  means the part is not stocked in the first place (the loader refuses any status
+  outside the free-to-use set). Every part here is `original` — this repo's own MIT code.
 - **Add a part when it proves reusable**, not before — the store stocks finished
   parts, not intentions.
 
