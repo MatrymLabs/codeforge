@@ -76,10 +76,24 @@ def _line(sock: socket.socket, text: str) -> None:
     sock.sendall((text + "\n").encode("utf-8"))
 
 
-def _connect_guest(srv: ForgeGateServer) -> socket.socket:
+_acct_seq = 0
+
+
+def _connect_player(srv: ForgeGateServer, who: str | None = None) -> socket.socket:
+    """Register a fresh character@account and step into the world. Anonymous
+    'guest' access was removed -- login is required -- so tests that just need
+    a body in the world register one here."""
+    global _acct_seq
+    if who is None:
+        _acct_seq += 1
+        who = f"hero{_acct_seq}"
     sock = _connect(srv)
-    _read_until(sock, b"GUEST: ")
-    _line(sock, "guest")
+    _read_until(sock, b"NEW: ")
+    _line(sock, "new")
+    _read_until(sock, b"account: ")
+    _line(sock, f"{who}@{who}_co")
+    _read_until(sock, b"password: " + bytes([255, 251, 1]))
+    _line(sock, "swordfish9")  # clears the 8-char floor
     _read_until(sock, b"> ")
     return sock
 
@@ -101,18 +115,33 @@ def _saved_account(char: str = "matrym", account: str = "matlabs", pw: str = "sw
 
 def test_front_desk_shows_splash_and_stops_at_the_door(server):
     sock = _connect(server)
-    banner = _read_until(sock, b"GUEST: ")
+    banner = _read_until(sock, b"NEW: ")
     assert "T H E   F I R S T   F O R G E" in banner
     assert "The Cold Forge" not in banner  # the world waits behind the desk
     sock.close()
 
 
-def test_guest_path_seats_and_enters_the_world(server):
+def test_empty_enter_does_not_grant_access(server):
+    """Guest access was removed: pressing Enter re-prompts, never seats."""
     sock = _connect(server)
-    _read_until(sock, b"GUEST: ")
-    _line(sock, "guest")
+    _read_until(sock, b"NEW: ")
+    _line(sock, "")  # just hit Enter, as a curious visitor would
+    reply = _read_until(sock, b"NEW: ")  # the door re-prompts...
+    assert "Login required" in reply  # ...with a refusal
+    assert "The Cold Forge" not in reply  # and never opens the world
+    sock.close()
+
+
+def test_register_over_the_wire_seats_and_enters(server):
+    sock = _connect(server)
+    _read_until(sock, b"NEW: ")
+    _line(sock, "new")
+    _read_until(sock, b"account: ")
+    _line(sock, "newbie@newco")
+    _read_until(sock, b"password: " + bytes([255, 251, 1]))
+    _line(sock, "swordfish9")
     scene = _read_until(sock, b"> ")
-    assert "Wandering in as Player1" in scene
+    assert "Welcome, Newbie@newco" in scene
     assert "The Cold Forge" in scene
     sock.close()
 
@@ -120,7 +149,7 @@ def test_guest_path_seats_and_enters_the_world(server):
 def test_login_dialogue_restores_a_hero_over_the_wire(server):
     _saved_account()
     sock = _connect(server)
-    _read_until(sock, b"GUEST: ")
+    _read_until(sock, b"NEW: ")
     _line(sock, "matrym@matlabs")
     _read_until(sock, b"Password: " + bytes([255, 251, 1]))
     _line(sock, "swordfish")
@@ -134,7 +163,7 @@ def test_three_wrong_passwords_close_the_door(server):
     _saved_account()
     sock = _connect(server)
     for _ in range(3):
-        _read_until(sock, b"GUEST: ")
+        _read_until(sock, b"NEW: ")
         _line(sock, "matrym@matlabs")
         _read_until(sock, b"Password: " + bytes([255, 251, 1]))
         _line(sock, "wrong")
@@ -143,8 +172,8 @@ def test_three_wrong_passwords_close_the_door(server):
     sock.close()
 
 
-def test_two_guests_share_one_world(server):
-    a, b = _connect_guest(server), _connect_guest(server)
+def test_two_players_share_one_world(server):
+    a, b = _connect_player(server), _connect_player(server)
     for s in (a, b):
         _command(s, "n"), _command(s, "e")
     assert "You take a copper key." in _command(a, "take key")
@@ -153,18 +182,18 @@ def test_two_guests_share_one_world(server):
 
 
 def test_who_lists_everyone_and_quit_unseats(server):
-    a, b = _connect_guest(server), _connect_guest(server)
+    a, b = _connect_player(server, "kirito"), _connect_player(server, "asuna")
     out = _command(a, "who")
-    assert "Player1" in out and "Player2" in out
+    assert "Kirito" in out and "Asuna" in out
     b.sendall(b"quit\n")
     b.recv(4096)
     b.close()
     deadline = time.time() + 2.0
     out = _command(a, "who")
-    while "Player2" in out and time.time() < deadline:
+    while "Asuna" in out and time.time() < deadline:
         time.sleep(0.05)  # the server thread's cleanup races our next question
         out = _command(a, "who")
-    assert "Player2" not in out
+    assert "Asuna" not in out
     a.close()
 
 
@@ -173,7 +202,7 @@ def test_password_prompt_negotiates_echo_blackout(server):
     IAC WONT ECHO after. Pinned at the byte level, over the wire."""
     _saved_account()
     sock = _connect(server)
-    _read_until(sock, b"GUEST: ")
+    _read_until(sock, b"NEW: ")
     _line(sock, "matrym@matlabs")
     raw = _read_until_raw(sock, b"Password: " + bytes([255, 251, 1]))
     assert raw.endswith(bytes([255, 251, 1]))  # echo OFF ordered
@@ -187,7 +216,7 @@ def test_password_prompt_negotiates_echo_blackout(server):
 def _login(srv: ForgeGateServer, char="matrym", account="matlabs", pw="swordfish") -> socket.socket:
     """Connect and clear the front desk into the world as an account."""
     sock = _connect(srv)
-    _read_until(sock, b"GUEST: ")
+    _read_until(sock, b"NEW: ")
     _line(sock, f"{char}@{account}")
     _read_until(sock, b"Password: " + bytes([255, 251, 1]))
     _line(sock, pw)
@@ -244,8 +273,8 @@ def test_sanitize_strips_control_chars_but_keeps_layout():
 def test_chat_escape_sequences_are_stripped_before_broadcast(server):
     """A player's chat must not carry escape sequences into another
     player's terminal. Sanitize at the client boundary."""
-    a = _connect_guest(server)
-    b = _connect_guest(server)  # both start in the same room
+    a = _connect_player(server)
+    b = _connect_player(server)  # both start in the same room
     _line(a, "say \x1b[31mred\x1b[2Jalert")
     _read_until(a, b"> ")  # a's own turn completes first
     heard = _read_until(b, b"\r\n")  # b hears the broadcast
@@ -262,7 +291,7 @@ def test_repeated_failures_rate_limit_the_address(server, monkeypatch):
     monkeypatch.setattr(gateway, "MAX_LOGIN_FAILS", 3)
     sock = _connect(server)
     for _ in range(3):  # three bad passwords: door closes, 3 failures logged
-        _read_until(sock, b"GUEST: ")
+        _read_until(sock, b"NEW: ")
         _line(sock, "matrym@matlabs")
         _read_until_raw(sock, bytes([255, 251, 1]))
         _line(sock, "wrongpass")
@@ -277,7 +306,7 @@ def test_rate_limit_check_never_grows_the_table(server):
     """_gate_is_barred is read-only: connect-only traffic (no failed
     logins) must not add dict entries -- that would be a memory leak an
     attacker could drive with bare connects."""
-    sock = _connect_guest(server)  # a clean visit: no failures
+    sock = _connect_player(server)  # a clean visit: no failures
     sock.close()
     assert gateway._turnaway_ledger == {}
     assert gateway._gate_is_barred("10.9.8.7") is False
@@ -299,7 +328,7 @@ def test_stale_failure_addresses_are_swept_out(monkeypatch):
 
 def test_connection_cap_refuses_when_full(server, monkeypatch):
     monkeypatch.setattr(gateway, "MAX_CONNECTIONS", 1)
-    holder = _connect_guest(server)  # occupies the only slot
+    holder = _connect_player(server)  # occupies the only slot
     overflow = _connect(server)
     assert "forge is full" in _drain_to_close(overflow)
     holder.close()
@@ -308,7 +337,7 @@ def test_connection_cap_refuses_when_full(server, monkeypatch):
 
 def test_idle_connection_times_out_and_closes(server, monkeypatch):
     monkeypatch.setattr(gateway._GateHandler, "timeout", 0.5)
-    sock = _connect_guest(server)  # seated in the world, then goes silent
+    sock = _connect_player(server)  # seated in the world, then goes silent
     assert _drain_to_close(sock) == ""  # server drops the idle socket, no data
     sock.close()
 
@@ -318,7 +347,7 @@ def test_client_negotiation_bytes_never_pollute_the_secret(server):
     keep them out of the password."""
     _saved_account()
     sock = _connect(server)
-    _read_until(sock, b"GUEST: ")
+    _read_until(sock, b"NEW: ")
     _line(sock, "matrym@matlabs")
     _read_until_raw(sock, bytes([255, 251, 1]))
     # a compliant client's reply (IAC DO ECHO) arrives glued to the secret

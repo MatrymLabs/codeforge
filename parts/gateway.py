@@ -18,7 +18,7 @@ from forge import handle_command, render_scene
 from parts.characters import save_character
 from parts.events import SHUTDOWN, bind_echo, unbind_echo
 from parts.seed import SEED_DIR
-from parts.session import SESSIONS, Session, display_name
+from parts.session import SESSIONS, Session
 
 TICK_LOCK = threading.Lock()
 _counter_lock = threading.Lock()
@@ -181,14 +181,13 @@ class _GateHandler(socketserver.StreamRequestHandler):
             return False
         self._send(load_splash())
         for _ in range(3):
-            who = self._ask("Character (character@account), NEW, or GUEST:")
+            who = self._ask("Character (character@account) or NEW:")
             if who is None:
                 return False
             who = who.strip().lower()
-            if who in ("guest", "g", ""):
-                self._send(f"Wandering in as {display_name(session.player_id)}.")
-                self._send(render_scene(session.location, viewer=session.player_id))
-                return True
+            if not who:
+                self._send("Login required: enter your character@account, or type NEW.")
+                continue
             if who == "new":
                 handle = self._ask("Choose your character@account:") or ""
                 secret = self._ask_secret("Choose a password:") or ""
