@@ -9,7 +9,6 @@
 =========================================================
  Every world begins as a spark.
 
- Returning?    enter your  character@account
- New here?     type  NEW
- Just looking? type  GUEST
+ Returning?  enter your  character@account
+ New here?   type  NEW
 =========================================================

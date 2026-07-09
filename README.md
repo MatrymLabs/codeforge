@@ -20,7 +20,7 @@ can click straight into.
 =========================================================
             T H E   F I R S T   F O R G E
 =========================================================
-Character (character@account), NEW, or GUEST: matrym@matlabs
+Character (character@account) or NEW: matrym@matlabs
 Password: ********
 Welcome back, Matrym@matlabs.
 
@@ -55,10 +55,11 @@ spark            # ignite the multiplayer server on port 4000
 ```
 
 Connect from any machine on your network with `nc <host> 4000`, telnet, or **Mudlet**.
-Every connection meets the front desk: log in as `character@account`, register a new
-legend, or wander in as a guest. Characters persist across restarts; passwords are
-salted pbkdf2 hashes and hidden at the prompt (telnet echo blackout); ranks gate the
-wizard verbs (`@teleport`, `@grant`, `@shutdown`).
+Every connection meets the front desk and must authenticate: log in as
+`character@account`, or register a new legend with `NEW` — there is no anonymous access.
+Characters persist across restarts; passwords are salted pbkdf2 hashes and hidden at the
+prompt (telnet echo blackout); ranks gate the wizard verbs (`@teleport`, `@grant`,
+`@shutdown`).
 
 More doors: `codeforge play` (solo terminal), `codeforge grant <name> <rank>`,
 `codeforge migrate <char> <account>`. The full operator's guide — starting the

@@ -32,7 +32,7 @@ from parts.gateway import (
     _next_player_id,
     load_splash,
 )
-from parts.session import SESSIONS, Session, display_name
+from parts.session import SESSIONS, Session
 
 _PAGE = (Path(__file__).parent / "web" / "index.html").read_text(encoding="utf-8")
 
@@ -78,11 +78,10 @@ async def _front_desk(ws: WebSocket, outbox: asyncio.Queue[str], session: Sessio
     dialogue assembles login/register tick commands; the tick decides."""
     outbox.put_nowait(load_splash())
     for _ in range(3):
-        who = (await _ask(ws, outbox, "Character (character@account), NEW, or GUEST:")).lower()
-        if who in ("guest", "g", ""):
-            outbox.put_nowait(f"Wandering in as {display_name(session.player_id)}.")
-            outbox.put_nowait(render_scene(session.location, viewer=session.player_id))
-            return True
+        who = (await _ask(ws, outbox, "Character (character@account) or NEW:")).lower()
+        if not who:
+            outbox.put_nowait("Login required: enter your character@account, or type NEW.")
+            continue
         if who == "new":
             handle = await _ask(ws, outbox, "Choose your character@account:")
             secret = await _ask(ws, outbox, "Choose a password:")

@@ -124,7 +124,7 @@ fi
 
 # --- 4. THE GATE: open the MUD window --------------------------------------
 spark_line "The Gate -- opening the MUD window (log in at the front desk)..."
-printf '%b   Character (character@account), NEW, or GUEST awaits. Ctrl-C or QUIT to leave.%b\n\n' "$DIM" "$OFF"
+printf '%b   Character (character@account) or NEW awaits. Ctrl-C or QUIT to leave.%b\n\n' "$DIM" "$OFF"
 sleep 0.4
 # Prefer our own client: it honours the password blackout with only the stdlib,
 # so secrets stay hidden even where `telnet` isn't installed. `nc` cannot mask a
@@ -135,7 +135,7 @@ elif command -v telnet >/dev/null 2>&1; then
   telnet 127.0.0.1 "$PORT"
 elif command -v nc >/dev/null 2>&1; then
   warn "Falling back to nc -- your PASSWORD WILL BE VISIBLE (nc can't mask it)."
-  warn "Register/login is unsafe here; use GUEST, or install telnet. See docs/RUNNING.md."
+  warn "Prefer scripts/mud_client.py or telnet/Mudlet to keep it hidden. See docs/RUNNING.md."
   nc 127.0.0.1 "$PORT"
 else
   warn "No client found. The forge is lit on :$PORT -- connect with Mudlet."

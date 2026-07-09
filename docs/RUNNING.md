@@ -199,13 +199,14 @@ echo blackout so your password stays hidden.
 ## 3. The front desk — logging into The First Forge
 
 Every connection to the gateway meets the login dialogue before it reaches the
-game. You have three choices at the first prompt:
+game, and it **must authenticate** — there is no anonymous access. You have two
+choices at the first prompt:
 
 ```text
 =========================================================
             T H E   F I R S T   F O R G E
 =========================================================
-Character (character@account), NEW, or GUEST:
+Character (character@account) or NEW:
 ```
 
 ### Option A — Register a new legend (first time)
@@ -213,7 +214,7 @@ Character (character@account), NEW, or GUEST:
 Type `NEW`. You'll be asked for a handle and a password:
 
 ```text
-Character (character@account), NEW, or GUEST: NEW
+Character (character@account) or NEW: NEW
 Choose your character@account: kirito@matlabs
 Choose a password: ********
 Welcome, Kirito@matlabs.
@@ -230,7 +231,7 @@ Welcome, Kirito@matlabs.
 Type the full `character@account` and its password:
 
 ```text
-Character (character@account), NEW, or GUEST: kirito@matlabs
+Character (character@account) or NEW: kirito@matlabs
 Password: ********
 Welcome back, Kirito@matlabs.
 ```
@@ -238,10 +239,8 @@ Welcome back, Kirito@matlabs.
 Characters persist across server restarts — job, level, XP, location, and rank
 are remembered; stats and resources recompute on restore.
 
-### Option C — Wander in as a guest
-
-Type `GUEST` (or just press Enter). No account, nothing saved. Good for a look
-around.
+Pressing Enter with no input does **not** grant access — the door simply
+re-prompts. Login is required.
 
 Once you see **`Welcome`** / **`Welcome back`**, you're in the world at the
 `>` prompt.
