@@ -339,5 +339,34 @@
     "aliases": [],
     "created": "2026-07-09",
     "updated": "2026-07-09"
+  },
+  {
+    "designation": "CMD-UM06-S01-N001-001-R0",
+    "name": "`law`",
+    "status": "active",
+    "function": "Legal/policy awareness over tracked sources (never legal advice).",
+    "label": "law",
+    "file": "parts/law.py",
+    "type": "CMD",
+    "domain": "UM06",
+    "sector": "S01",
+    "node": "N001",
+    "sequence": "001",
+    "revision": "R0",
+    "docs": "",
+    "tests": "tests/test_law.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "the compliance-awareness lens over any source registry",
+    "tags": [
+      "command",
+      "law",
+      "compliance-aware"
+    ],
+    "notes": "",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-09",
+    "updated": "2026-07-09"
   }
 ]

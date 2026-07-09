@@ -7,6 +7,14 @@ pre-1.0. Readiness language only — no compliance/OSHA/legal claims.
 ## [Unreleased]
 
 ### Added
+- **Legal/policy awareness** (`docs/legal_policy_awareness.md` + `law` card): a
+  documented boundary — CodeForge provides compliance-*awareness* (source tracking,
+  checklists, evidence), **not legal advice**, and never claims compliance. New
+  read-only `law` / `law <id>` command renders the tracked sources through that lens
+  (jurisdiction · freshness · publication date) and always ends "No legal conclusion.
+  Human review required." Reuses the guidance-source registry; jurisdiction is
+  unknown by default. Standalone `ApplicabilityMapper`/`ComplianceDesignGate`/`law
+  check` remain planned, not built.
 - **End-to-end live smoke test** (`scripts/e2e_smoke.py`, `make smoke`): drives the
   whole engine over a real TCP socket in one sequence — start (isolated server) →
   log in → look → check (regs/library/registry/qa/pm/docs) → do (move, `@sg` denied
