@@ -7,6 +7,10 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
 ## [Unreleased]
 
 ### Added / Changed
+- **CI installs via uv.** The check job now installs dependencies with `uv pip install`
+  (Rust parallel resolver) instead of pip: measured install step ~19s -> ~6s (setup 2s +
+  install 4s). CI-only tooling, not a runtime/pyproject dependency; build backend stays
+  setuptools. Unlike a download cache, the win is deterministic (not hit-dependent).
 - **Ritual tuned: parallel tests + PR-aware `make ship`.** The test suite (measured as ~95%
   of `make check`) now runs across cores via pytest-xdist (`coverage` uses `-n auto`): ~19s
   -> ~16s locally, more on CI. And `make ship` was fixed for the protected `main`: it refuses
