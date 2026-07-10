@@ -20,6 +20,7 @@ from pydantic import BaseModel
 from sqlalchemy import select
 
 from parts.accounts import account_has_owner, account_password_ok
+from parts.blueprint import load_all as load_blueprints
 from parts.characters import set_rank
 from parts.dashboard import router as dashboard_router
 from parts.db import CharacterRow, open_archive_session
@@ -75,6 +76,14 @@ class GrantRequest(BaseModel):
     rank: str
 
 
+class BlueprintSummary(BaseModel):
+    blueprint_id: str
+    title: str
+    intent: str
+    status: str
+    requirement_count: int
+
+
 @app.get("/health")
 def health() -> dict[str, str]:
     return {"status": "alive", "engine": "codeforge"}
@@ -97,6 +106,21 @@ def rooms() -> list[Room]:
     return [
         Room(label=label, name=room["name"], exits=dict(room["exits"]))
         for label, room in WORLD.items()
+    ]
+
+
+@app.get("/api/blueprints", response_model=list[BlueprintSummary])
+def blueprints() -> list[BlueprintSummary]:
+    """Every filed Blueprint, summarized. The typed contract a front end lists from."""
+    return [
+        BlueprintSummary(
+            blueprint_id=b.blueprint_id,
+            title=b.title,
+            intent=b.intent,
+            status=b.status,
+            requirement_count=len(b.requirements),
+        )
+        for b in load_blueprints()
     ]
 
 

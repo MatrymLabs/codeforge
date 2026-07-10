@@ -7,6 +7,10 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
 ## [Unreleased]
 
 ### Added / Changed
+- **Typed `GET /api/blueprints` endpoint.** The API now exposes filed Blueprints as a typed
+  list (`BlueprintSummary`: id, title, intent, status, requirement_count), documented in
+  OpenAPI at `/docs`. It is the contract the CodeForge Console (the React/TypeScript front-end
+  flagship) lists Blueprints from, so the API and the client grow together, both typed.
 - **End-to-end browser tests (Playwright).** A real Chromium drives the live dashboard
   (`e2e/`): the board loads with its cards, the Refresh button swaps the board via HTMX,
   clicking a Blueprint renders it in-page, and `/metrics` responds. The app is served on a
