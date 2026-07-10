@@ -25,7 +25,7 @@ codeforge = "parts.cli:main"
 spark = "parts.cli:spark"
 
 [build-system]
-requires = ["setuptools>=68"]
+requires = ["setuptools>=83.0.0"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
