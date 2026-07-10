@@ -132,6 +132,23 @@ else
   ok "commit_ready: $COMMIT_READY · push_ready: $PUSH_READY."
 fi
 
+# --- 3b. DOCS IMPACT: did code change without docs/CHANGELOG? (informational) --
+# Keeping docs and code in lockstep is a maintenance discipline. This nudges (never blocks)
+# when the about-to-leave set (uncommitted + unpushed) touches code but no doc/changelog.
+step "Docs impact -- code changed without docs?"
+_changed() {
+  git status --porcelain 2>/dev/null | awk '{print $NF}'
+  git rev-parse --abbrev-ref '@{u}' >/dev/null 2>&1 && git diff --name-only '@{u}'..@ 2>/dev/null
+}
+DI_SET="$(_changed | sort -u)"
+di_code=$(printf '%s\n' "$DI_SET" | grep -cE '^(parts/.*\.py|forge\.py|scripts/.*\.(sh|py))$' || true)
+di_docs=$(printf '%s\n' "$DI_SET" | grep -cE '^(CHANGELOG\.md|README\.md|docs/)' || true)
+if [ "$di_code" -gt 0 ] && [ "$di_docs" -eq 0 ]; then
+  warn "Docs impact: code changed but no CHANGELOG/docs update in the set -- review before pushing."
+else
+  ok "Docs impact: nothing to flag."
+fi
+
 # --- 4. CLOSE THE RECORD: stamp the day's after-action file (if one exists) --
 # Closes the loop begun at startup: the same dated record gets an honest end-of-day
 # line -- tree state and unpushed count -- so the day is auditable start to finish.
