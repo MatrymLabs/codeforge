@@ -71,8 +71,8 @@ The first end-to-end slice we are climbing toward (not all at once):
 7. Talk to a **read-only Architect NPC** for advice.
 8. The catalog stocks **at least four real parts** with domain reuse. *(done - see `make hardware`)*
 
-Steps 1–4 and the catalog (8) are done - you can log in, walk into the Workshop,
-and browse the hardware store in-world today. The MVP's remaining items are 5–7
+Steps 1-4 and the catalog (8) are done - you can log in, walk into the Workshop,
+and browse the hardware store in-world today. The MVP's remaining items are 5-7
 (safe diagnostics, in-world reports, the read-only Architect NPC), climbed in the
 order in [`ROADMAP.md`](ROADMAP.md), behind the guarantees in [`SAFETY.md`](SAFETY.md).
 

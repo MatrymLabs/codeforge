@@ -122,7 +122,7 @@ Every designation record carries these fields (schema:
 | 19 | `notes` | anything else |
 | 20 | `created` / `updated` | dates |
 
-The **modularity story lives in fields 15–17**: `depends_on`, `related`, and
+The **modularity story lives in fields 15-17**: `depends_on`, `related`, and
 `reuse` make an object's seams visible. The designation is just the filing handle;
 the dependency and reuse edges are what show a part is modular.
 

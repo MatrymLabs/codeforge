@@ -65,7 +65,7 @@ Several big-sounding prompts turned out to be **mostly already built** - the not
 
 | # | Recommendation | Why / origin | Priority | Effort |
 |---|----------------|--------------|----------|--------|
-| R1 | **Secret scanning** - add `make secrets` (detect-secrets, baselined) + a `.secrets.baseline`; optional gitleaks | the RepoIntegrityRitual's own #1 action - closes the one honest gap it surfaces (`not_configured`); other ship repos already carry it | **P1** | S–M |
+| R1 | **Secret scanning** - add `make secrets` (detect-secrets, baselined) + a `.secrets.baseline`; optional gitleaks | the RepoIntegrityRitual's own #1 action - closes the one honest gap it surfaces (`not_configured`); other ship repos already carry it | **P1** | S-M |
 | R2 | **Close QG04 → green board (DONE 2026-07-09)** - link `docs` paths on registry records so `pm status`/`qa gate` go green | the dashboard is literally asking for it (LSS-CF-001 DMAIC) | **P1** | S |
 | R3 | **Ritual modes + saved reports** - `make ritual-start-fast/deep`, a structured startup/shutdown report saved under `reports/ritual/`, a shutdown **commit/push-readiness** gate | the Startup/Shutdown prompt's *real delta*; the ritual **spine already exists** (ritual.sh WARDS/READINESS + ritual_down MUSTER) - this is modes + evidence, NOT the 19-phase Python CLI / workshop-lock cathedral (deferred) | P2 | M |
 | R4 | **VeritasGate `truth check`** command **(DONE 2026-07-09)** - automate the manual truth audit (README/docs/registry claims) | truth prompt; composes `docs_check` + registry validate | P2 | S |

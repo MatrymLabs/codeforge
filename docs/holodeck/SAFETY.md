@@ -3,7 +3,7 @@
 The Workshop lets you run commands and (eventually) let an AI propose changes from
 inside a game. That power is only acceptable behind hard rails. **The in-MUD
 terminal is never a raw shell.** This document is the contract every automated
-phase (5–11) must satisfy before it ships.
+phase (5-11) must satisfy before it ships.
 
 ## The FailsafeRunner (the safe command relay)
 

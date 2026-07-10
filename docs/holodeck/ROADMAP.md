@@ -24,7 +24,7 @@ Legend: ✅ done · 🔨 next · 📋 planned · 🧭 later (gated/advanced)
 | 11 | **Full engineering loop** | 🧭 | Request → search parts → clarify → blueprint → approve → generate → test → diagnose → fix → document → catalog → commit summary → evidence, all from the Workshop. |
 | 12 | **Industry expansion** | 🧭 | The catalog's `reuse` tags grow into tracks (gov / finance / compliance / records) - the *framework* for it exists; parts opt in over time. |
 
-**Discipline:** phases 8–11 are where the AI touches files. They are deliberately
+**Discipline:** phases 8-11 are where the AI touches files. They are deliberately
 last and each is gated by [`SAFETY.md`](SAFETY.md). We do not skip ahead.
 
 ## Command plan
@@ -54,13 +54,13 @@ Repo-safe, low-risk, high-signal - the base of the climb:
 3. ✅ Furnish the `workshop` room as the cockpit (it already existed off the cellar). *(done)*
 4. ✅ `parts/workshop.py` - the `workshop` menu command, wired in the tick with an engine-tick test. **Display only.** *(done)*
 5. ✅ Wire `catalog`/`hardware`/`parts` + `reuse <term>` in-world to `parts/hardware.py` (read-only). *(done)*
-6. 📋 Stock 2–3 more real parts in the catalog as they prove reusable.
+6. 📋 Stock 2-3 more real parts in the catalog as they prove reusable.
 7. 📋 `reports/` scaffold + a tiny `save_report()` helper (write + summarize).
 8. 📋 `parts/console.py` - the `CommandRelay` skeleton with the allowlist (Phase 6), tests first, **no execution of anything not on the list**.
 9. 📋 `parts/architect.py` - the AI seam as a `Protocol` (mockable), read-only, context **redacted**; tests use a fake, never the network.
 10. 📋 Document a first `PatchProposal` shape (no implementation) so Phase 9 has a target.
 
-Tasks 1–2 are done. 3–5 are the next shippable slices (each: branch → `make check`
+Tasks 1-2 are done. 3-5 are the next shippable slices (each: branch → `make check`
 → merge → push).
 
 ## Definition of done (per phase)
