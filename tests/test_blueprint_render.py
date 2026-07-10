@@ -6,7 +6,7 @@ never injected.
 """
 
 from parts.blueprint import from_dict
-from parts.blueprint_render import render_html, write_html
+from parts.blueprint_render import render_fragment, render_html, write_html
 
 _BP = from_dict(
     {
@@ -58,3 +58,25 @@ def test_write_html_files_to_reports(tmp_path):
     path = write_html(_BP, root=tmp_path)
     assert path == tmp_path / "reports" / "blueprints" / "render_me.html"
     assert path.read_text().startswith("<!doctype html>")
+
+
+def test_fragment_is_embeddable_and_shows_content():
+    frag = render_fragment(_BP)
+    assert "<!doctype" not in frag.lower()  # no document scaffolding
+    assert "<html" not in frag.lower()
+    assert "Render Me" in frag
+    assert "Show the requirements." in frag
+
+
+def test_fragment_escapes_hostile_text():
+    evil = from_dict(
+        {
+            "blueprint_id": "evil",
+            "title": "<script>alert(1)</script>",
+            "intent": "x",
+            "requirements": ["<b>bad</b>"],
+        }
+    )
+    frag = render_fragment(evil)
+    assert "<script>alert(1)</script>" not in frag
+    assert "&lt;script&gt;" in frag

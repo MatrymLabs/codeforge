@@ -91,6 +91,26 @@ def render_html(bp: Blueprint) -> str:
     )
 
 
+def render_fragment(bp: Blueprint) -> str:
+    """A self-contained HTML fragment (no <html>/<head>/<style>) for embedding via HTMX.
+    Styling comes from the host page (it reuses the dashboard's CSS classes). Hostile text
+    is escaped, same as the full page."""
+    esc = html.escape
+    out = [
+        f"<h2>{esc(bp.title)}</h2>",
+        f'<p class="bp-intent">{esc(bp.intent)}</p>',
+        "<h3>Requirements</h3>",
+        "<ol>" + "".join(f"<li>{esc(r)}</li>" for r in bp.requirements) + "</ol>",
+    ]
+    if bp.tasks:
+        out.append("<h3>Tasks</h3>")
+        out.append("<ul>" + "".join(f"<li>{esc(t)}</li>" for t in bp.tasks) + "</ul>")
+    if bp.stack:
+        rows = "".join(f"<dt>{esc(layer)}</dt><dd>{esc(choice)}</dd>" for layer, choice in bp.stack)
+        out.append(f'<h3>Stack</h3><dl class="rows">{rows}</dl>')
+    return "".join(out)
+
+
 def write_html(bp: Blueprint, root: Path | None = None) -> Path:
     """File the rendered page as regenerable evidence under reports/blueprints/."""
     base = (

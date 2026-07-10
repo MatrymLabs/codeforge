@@ -7,6 +7,17 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
 ## [Unreleased]
 
 ### Added / Changed
+- **Live dashboard with HTMX (progressively enhanced).** The readiness dashboard gains live
+  interactivity: a **Refresh** control re-computes the board and swaps the cards grid in place
+  (`GET /ui/board`), and clicking a **Blueprint** renders it as an HTML fragment into an
+  in-page panel (`GET /ui/blueprint/{id}`, reusing the Blueprint renderer). HTMX is
+  **vendored** (`parts/web/static/htmx.min.js`, served same-origin from `/static/htmx.min.js`)
+  -- no JS build system, no runtime CDN, and no Python dependency. It is pure progressive
+  enhancement: the page is fully server-rendered and works with JavaScript disabled (each
+  blueprint link is a real `<a href>`). Fragment routes return HTML fragments (no document
+  scaffolding); the blueprint id is matched against filed blueprints, never used to open a
+  path. Adds `render_board` + `blueprint_render.render_fragment` and 7 test cases (asset
+  served, board/blueprint fragments, 404, fragment escaping, progressive-enhancement wiring).
 - **Pydantic: typed API contract + typed settings.** `pydantic` is now a declared runtime
   dependency (previously transitive via FastAPI), justified in the ledger, and used directly
   two ways. (1) The `/api/status` route gains explicit `StatusPayload`/`StatusCard` response

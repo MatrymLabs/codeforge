@@ -26,6 +26,23 @@ codeforge api          # serves the FastAPI app on :8000
 #            http://localhost:8000/docs       (OpenAPI, auto-generated)
 ```
 
+## Live interactivity (HTMX, progressively enhanced)
+
+The dashboard is enhanced with **HTMX** - vendored (`parts/web/static/htmx.min.js`, served
+same-origin from `/static/htmx.min.js`), so there is **no JS build system, no runtime CDN,
+and no Python dependency**. Two live interactions:
+
+- **Refresh** (`GET /ui/board`) re-computes the board from repo state and swaps the cards
+  grid in place, no page reload.
+- **Blueprints** (`GET /ui/blueprint/{id}`) render a filed Blueprint as an HTML fragment
+  into an in-page panel (ties in `docs/blueprint_renderer.md`).
+
+Crucially this is **progressive enhancement**: the page is fully server-rendered and works
+with JavaScript disabled (the cards are already there; each blueprint link is a real
+`<a href>` that navigates to the fragment). HTMX only upgrades the experience. The fragment
+routes return HTML fragments (no `<html>`/`<head>`), and the blueprint id is matched against
+filed blueprints, never used to open a path (no traversal).
+
 ## Design decisions
 
 - **Frameless, on purpose.** The page is rendered with stdlib `html.escape` and f-strings,

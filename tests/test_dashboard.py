@@ -124,6 +124,41 @@ def test_status_route_serves_the_json_twin(client):
     assert {c["key"] for c in body["cards"]} == {"career", "qa", "hardware", "perf"}
 
 
+def test_page_wires_htmx_for_progressive_enhancement(client):
+    page = client.get("/").text
+    assert '<script src="/static/htmx.min.js"' in page  # vendored, same-origin
+    assert 'hx-get="/ui/board"' in page  # live board refresh
+    # Blueprint links are real <a href> too, so they work without JS (progressive enhancement).
+    assert 'href="/ui/blueprint/npc_combat"' in page
+    assert 'hx-get="/ui/blueprint/npc_combat"' in page
+
+
+def test_htmx_asset_is_served_same_origin(client):
+    resp = client.get("/static/htmx.min.js")
+    assert resp.status_code == 200
+    assert "javascript" in resp.headers["content-type"]
+    assert "htmx" in resp.text[:200].lower()
+
+
+def test_board_fragment_is_swappable_html_not_a_full_page(client):
+    resp = client.get("/ui/board")
+    assert resp.status_code == 200
+    assert 'id="board-grid"' in resp.text
+    assert "<!doctype" not in resp.text.lower()  # a fragment, not a whole document
+
+
+def test_blueprint_fragment_renders_real_content(client):
+    resp = client.get("/ui/blueprint/npc_combat")
+    assert resp.status_code == 200
+    assert "<!doctype" not in resp.text.lower()  # embeddable fragment
+    assert "Requirements" in resp.text
+    assert "NPCs that fight back" in resp.text
+
+
+def test_unknown_blueprint_fragment_is_404(client):
+    assert client.get("/ui/blueprint/ghost").status_code == 404
+
+
 def test_status_contract_is_documented_in_openapi(client):
     # The typed response_model means the contract self-documents at /openapi.json (/docs).
     schema = client.get("/openapi.json").json()

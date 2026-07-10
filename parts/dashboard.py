@@ -18,9 +18,15 @@ import re
 from dataclasses import dataclass
 from pathlib import Path
 
-from fastapi import APIRouter
-from fastapi.responses import HTMLResponse
+from fastapi import APIRouter, HTTPException
+from fastapi.responses import HTMLResponse, Response
 from pydantic import BaseModel
+
+# htmx is vendored (no CDN at runtime, no JS build, no Python dependency): read once and
+# served same-origin from /static/htmx.min.js. It only ENHANCES a page that already works
+# server-rendered without JavaScript (progressive enhancement).
+_STATIC = Path(__file__).resolve().parent / "web" / "static"
+_HTMX_JS = (_STATIC / "htmx.min.js").read_text(encoding="utf-8")
 
 # --- the snapshot: canonical data projected to one shape ---------------------
 
@@ -219,6 +225,24 @@ dl.rows { margin:.3rem 0 0; display:grid; grid-template-columns:1fr auto; gap:.1
 dl.rows dt { color:var(--muted); }
 dl.rows dd { margin:0; text-align:right; font-variant-numeric:tabular-nums; }
 :focus-visible { outline:2px solid var(--info); outline-offset:2px; }
+.controls { display:flex; align-items:center; gap:.75rem; margin-bottom:1rem; }
+button.refresh { background:var(--panel); color:var(--info); border:1px solid var(--edge);
+  border-radius:8px; padding:.4rem .8rem; cursor:pointer; font-size:.85rem; }
+button.refresh:hover, button.refresh:focus-visible { border-color:var(--info); }
+.controls .hint { color:var(--muted); font-size:.8rem; }
+.htmx-request.refresh, .htmx-request .refresh { opacity:.5; }
+section.blueprints { margin-top:2rem; }
+section.blueprints h2 { font-size:1.1rem; margin:0 0 .75rem; }
+ul.bp-list { list-style:none; padding:0; margin:0; display:flex; flex-wrap:wrap; gap:.5rem; }
+ul.bp-list a { display:inline-block; background:var(--panel); border:1px solid var(--edge);
+  border-radius:8px; padding:.35rem .7rem; color:var(--info); text-decoration:none; }
+ul.bp-list a:hover, ul.bp-list a:focus-visible { border-color:var(--info); }
+#bp-panel { margin-top:1rem; }
+#bp-panel:empty::before { content:"Select a blueprint above to render it here.";
+  color:var(--muted); font-size:.9rem; }
+#bp-panel h2 { font-size:1.2rem; margin:.2rem 0; }
+#bp-panel h3 { color:var(--muted); font-size:.95rem; margin:.9rem 0 .3rem; }
+#bp-panel .bp-intent { color:var(--muted); }
 footer { border-top:1px solid var(--edge); padding:1.25rem 1rem; color:var(--muted);
   font-size:.85rem; text-align:center; }
 footer a { color:var(--info); }
@@ -243,9 +267,32 @@ def _card_html(card: Card) -> str:
     )
 
 
-def render_page(snapshot: Snapshot) -> str:
-    """Project the snapshot to one accessible, responsive HTML document (no framework)."""
+def render_board(snapshot: Snapshot) -> str:
+    """Just the cards grid -- the fragment HTMX swaps in for a live refresh (no page reload)."""
     cards = "".join(_card_html(c) for c in snapshot.cards)
+    return f'<div id="board-grid" class="grid">{cards}</div>'
+
+
+def _blueprint_list_html() -> str:
+    """The filed blueprints as HTMX links. Each is a real <a href> too, so it still works
+    without JavaScript (progressive enhancement); HTMX just renders it in-page instead."""
+    from parts.blueprint import load_all
+
+    plans = load_all()
+    if not plans:
+        return '<p class="detail">No blueprints filed yet.</p>'
+    items = "".join(
+        f'<li><a href="/ui/blueprint/{html.escape(b.blueprint_id)}" '
+        f'hx-get="/ui/blueprint/{html.escape(b.blueprint_id)}" '
+        f'hx-target="#bp-panel" hx-swap="innerHTML">{html.escape(b.title)}</a></li>'
+        for b in plans
+    )
+    return f'<ul class="bp-list">{items}</ul>'
+
+
+def render_page(snapshot: Snapshot) -> str:
+    """Project the snapshot to one accessible, responsive HTML document. HTMX enhances it
+    (live board refresh, in-page blueprint rendering); it works fully without JavaScript."""
     return (
         "<!doctype html>"
         '<html lang="en">'
@@ -254,6 +301,7 @@ def render_page(snapshot: Snapshot) -> str:
         '<meta name="viewport" content="width=device-width, initial-scale=1">'
         "<title>CodeForge readiness dashboard</title>"
         f"<style>{_STYLE}</style>"
+        '<script src="/static/htmx.min.js" defer></script>'
         "</head>"
         "<body>"
         '<a class="skip" href="#board">Skip to the board</a>'
@@ -267,10 +315,21 @@ def render_page(snapshot: Snapshot) -> str:
         '<a href="/health">Health</a>'
         "</nav>"
         '<main><section id="board" aria-label="Readiness board">'
-        f'<div class="grid">{cards}</div>'
-        "</section></main>"
+        '<div class="controls">'
+        '<button class="refresh" hx-get="/ui/board" hx-target="#board-grid" '
+        'hx-swap="outerHTML">Refresh</button>'
+        '<span class="hint">Live: re-computes from repo state, no page reload.</span>'
+        "</div>"
+        f"{render_board(snapshot)}"
+        "</section>"
+        '<section class="blueprints" aria-label="Blueprints">'
+        "<h2>Blueprints</h2>"
+        f"{_blueprint_list_html()}"
+        '<div id="bp-panel" aria-live="polite"></div>'
+        "</section>"
+        "</main>"
         "<footer>"
-        "Server-rendered by FastAPI, no front-end framework. "
+        "Server-rendered by FastAPI, enhanced with vendored HTMX (no JS build, no CDN). "
         'The same data is served as JSON at <a href="/api/status">/api/status</a>.'
         "</footer>"
         "</body></html>"
@@ -293,3 +352,28 @@ def dashboard_status() -> StatusPayload:
     """The read-only, typed JSON twin -- the seam a React/TypeScript front end would consume.
     Typed with StatusPayload, so the contract is documented in OpenAPI at /docs."""
     return status_payload(build_snapshot())
+
+
+@router.get("/static/htmx.min.js")
+def htmx_asset() -> Response:
+    """The vendored HTMX library, served same-origin (no runtime CDN dependency)."""
+    return Response(_HTMX_JS, media_type="text/javascript")
+
+
+@router.get("/ui/board", response_class=HTMLResponse)
+def ui_board() -> str:
+    """The board fragment: HTMX swaps this in for a live refresh, no page reload."""
+    return render_board(build_snapshot())
+
+
+@router.get("/ui/blueprint/{blueprint_id}", response_class=HTMLResponse)
+def ui_blueprint(blueprint_id: str) -> str:
+    """A Blueprint rendered as an HTML fragment, for in-page HTMX rendering. The id is matched
+    against filed blueprints (never used to open a path), so there is no traversal risk."""
+    from parts.blueprint import load_all
+    from parts.blueprint_render import render_fragment
+
+    bp = next((b for b in load_all() if b.blueprint_id == blueprint_id), None)
+    if bp is None:
+        raise HTTPException(status_code=404, detail=f"No blueprint '{blueprint_id}'")
+    return render_fragment(bp)
