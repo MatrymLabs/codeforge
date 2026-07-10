@@ -7,6 +7,12 @@ pre-1.0. Readiness language only — no compliance/OSHA/legal claims.
 ## [Unreleased]
 
 ### Added / Changed
+- **Ritual modes — `make ritual-fast` (~1s preflight).** Automation Enhancement Audit,
+  batch 1 (additive, zero renames/deletions): a read-only fast door for daily coding —
+  imports · registry · truth GATE red, lint/types/claims WARN yellow, no suite/network/
+  scans (~45s → ~1s). Extracted `scripts/lib.sh` (shared colours + message helpers) to
+  dedupe `ritual.sh`/`ritual_down.sh`. Added the missing `docs/shutdown_ritual.md`; the
+  startup doc's phase table refreshed to the current 8 phases + a mode table.
 - **CodeQL + SBOM (supply-chain evidence).** Added a GitHub-native CodeQL workflow
   (`.github/workflows/codeql.yml`, scanning Python and the workflows) and `make sbom`
   (CycloneDX bill of materials, generated in CI and kept as an artifact). The forge-audit
