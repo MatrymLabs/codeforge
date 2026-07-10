@@ -15,6 +15,7 @@ dev = [
     "pip-audit",
     "bandit[toml]",
     "detect-secrets",
+    "cyclonedx-bom",
     "hypothesis",
     "httpx2",
 ]

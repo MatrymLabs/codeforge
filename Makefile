@@ -1,4 +1,4 @@
-.PHONY: env fix lint typecheck test property coverage audit security secrets doctor patch daily check readiness truth smoke repo-integrity ship run world store hardware clean serve ritual ritual-down unskew
+.PHONY: env fix lint typecheck test property coverage audit security secrets sbom doctor patch daily check readiness truth smoke repo-integrity ship run world store hardware clean serve ritual ritual-down unskew
 
 # --- Environment: create/validate the .venv, fail loud on version mismatch ---
 env:
@@ -59,6 +59,14 @@ coverage:
 
 audit:
 	pip-audit --skip-editable
+
+# --- SBOM: a CycloneDX software bill of materials (SSDF supply-chain evidence).
+# Generated from the installed environment; the output is git-ignored (reproducible
+# from the recorded commit), the README/CI advertise that it is produced. ---
+sbom:
+	@mkdir -p reports/security
+	cyclonedx-py environment -o reports/security/sbom.cdx.json
+	@echo "✓ SBOM -> reports/security/sbom.cdx.json"
 
 # SAST + dependency CVEs. bandit gates; audit is informational (see doctor).
 security:

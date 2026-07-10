@@ -7,6 +7,15 @@ pre-1.0. Readiness language only — no compliance/OSHA/legal claims.
 ## [Unreleased]
 
 ### Added / Changed
+- **CodeQL + SBOM (supply-chain evidence).** Added a GitHub-native CodeQL workflow
+  (`.github/workflows/codeql.yml`, scanning Python and the workflows) and `make sbom`
+  (CycloneDX bill of materials, generated in CI and kept as an artifact). The forge-audit
+  scorecard's `ci` dimension now passes at the intermediate stage on two real workflow
+  files; the README Evaluation table was regenerated to match.
+- **The ritual now asserts what CI asserts, and banks evidence.** IGNITION added the
+  coverage-threshold gate (parity with CI); new VERITAS (`truth check`) and SMOKE
+  (end-to-end) phases GATE before the forge lights; every run writes a dated after-action
+  record under `reports/ritual/`. `make truth` exposes VeritasGate to scripts/CI.
 - **The board is green, and it's now a growth gate.** Linked every filed object to its
   real documentation (a doc page for modules/commands, a seed/inline note for
   rooms/items) — `qa gate all` → **72/72 pass**, `pm status` → **GREEN** (closes

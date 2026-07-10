@@ -53,6 +53,17 @@ jobs:
       - name: Secret scan
         run: make secrets
 
+      # SBOM (SSDF supply-chain evidence): generate a CycloneDX bill of materials and
+      # keep it as a build artifact. Reproducible from this commit; non-blocking.
+      - name: Software bill of materials (SBOM)
+        run: make sbom
+      - name: Upload SBOM artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom-cyclonedx
+          path: reports/security/sbom.cdx.json
+          if-no-files-found: warn
+
   docker:
     runs-on: ubuntu-latest
     steps:

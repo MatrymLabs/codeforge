@@ -169,7 +169,8 @@ Reading this repo, an engineer can *verify* — not take on faith — these skil
   compute readiness from filed data (part + part); the startup ritual runs a security +
   registry self-check *before* it lights the forge.
 - **Security posture** — rank-gated admin verbs, salted pbkdf2 auth, an allowlisted
-  command runner (never raw shell), SAST + dependency scanning + Dependabot.
+  command runner (never raw shell), SAST (bandit + CodeQL) + dependency scanning
+  (pip-audit) + secret scanning (detect-secrets) + a CycloneDX SBOM + Dependabot.
 - **Delivery mechanics** — CI + Docker + a live browser demo + Conventional Commits + a
   CHANGELOG; every merge green.
 - **Systems thinking (20 yrs USAF)** — readiness checks, evidence trails, controlled
@@ -206,15 +207,15 @@ $ forge-audit --path ./codeforge --stage intermediate --online --format md
 | tests | ✅ pass | green suite, coverage 94% ≥ 80% |
 | security | ✅ pass | clean |
 | dependencies | ✅ pass | clean |
-| ci | 🔶 watchlist | 1 workflow(s) < 2 for this stage |
+| ci | ✅ pass | 2 CI workflow(s) |
 | collaboration | ✅ pass | 12 merged PR(s) |
-| **overall** | **🔶 watchlist** | role signals: testing · security · backend · collaboration |
+| **overall** | **✅ pass** | role signals: testing · security · backend · devops · collaboration |
 
-The one watchlist item is honest and left in on purpose: forge-audit counts workflow
-*files*, and CodeForge runs its `check` and `docker` jobs as two jobs inside a single
-`ci.yml`. A rigged all-green would be a *weaker* signal than a scorecard that shows where
-it bites — the tool grades this repo by the same rule it grades any other. At the `entry`
-stage the verdict is a clean **pass**.
+Every dimension passes at the intermediate bar. The `ci` dimension earned its pass
+honestly: CodeForge runs two workflow files — `ci.yml` (check + docker) and `codeql.yml`
+(CodeQL SAST). An earlier version of this table showed `ci` as a `watchlist` when there
+was one workflow file; rather than argue with the tool, the repo added the second gate the
+tool was asking for. That is the point of grading yourself by a rule you don't get to bend.
 
 ## The card catalog
 
