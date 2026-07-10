@@ -26,7 +26,7 @@
 - [x] Server-rendered dashboard - `GET /`, real data (career / QA / hardware / perf), no framework
 - [x] Report display page - the four evidence cards render the actual renderers' data
 - [x] Route + render tests (`tests/test_dashboard.py`, 12 cases incl. escaping + honest-failure)
-- [ ] Browser/E2E tests (Playwright) - deferred to phase 2 with the React front end
+- [x] Browser/E2E tests (Playwright) - real Chromium drives the live dashboard (`e2e/`, own CI job)
 
 ## Decisions (from the pioneer questions, 2026-07-10)
 
@@ -54,4 +54,6 @@
 - Dashboard: **built** (phase 1) - server-rendered, real data, tested; see `docs/dashboard.md`.
 - Next.js/TS front end: **planned** (separate repo, phase 2, the full-stack-developer target).
 - FastAPI admin: **working** (backend); public API contract now **surfaced** (`/api/status`, `/docs`).
-- Browser/E2E (Playwright): **planned** (phase 2, alongside the React front end).
+- Browser/E2E (Playwright): **built** - `e2e/` drives real Chromium against the running app
+  (dashboard loads, HTMX refresh swaps the board, a blueprint renders in-page, /metrics is
+  live); isolated from `make check`, run by `make e2e` and a non-required CI job.
