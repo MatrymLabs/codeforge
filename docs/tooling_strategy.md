@@ -67,7 +67,7 @@ Status labels are defined at the bottom of this doc. Grounded in the inventory a
 | MkDocs / Material | Docs | `portfolio_candidate` | Could publish `docs/` to the portfolio page. Not needed while Markdown reads well. |
 | pdoc | Docs | `optional_dev_tool` | Zero-config API docs from existing CARD docstrings. Nice-to-have. |
 | Sphinx | Docs | `research_only` | Heavyweight; reserve for a real API surface, not now. |
-| uv | Packaging / CI | `integrate_now` (done, CI) | Measured: CI install step ~19s -> ~6s. Rust parallel resolver; CI-only (`uv pip install --system`), not a runtime/pyproject dep. |
+| uv | Packaging / CI / env | `integrate_now` (done) | Measured: CI install ~19s -> ~6s; local `make env` ~86s -> ~1.6s. Rust resolver used by CI and `make env` (with a pip fallback); not a runtime/pyproject dep; build backend stays setuptools. |
 | Poetry / Hatch / PDM | Packaging | `research_only` | setuptools + pyproject already works; no reproducibility gap to close. |
 | Typer / Click | CLI | `integrate_later` | Better UX later; today would add a framework the CLI does not need. |
 | Rich | CLI | `do_not_integrate_yet` | Plain-text renders are deterministic and testable; color would complicate test twins. |
