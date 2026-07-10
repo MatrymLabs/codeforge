@@ -447,6 +447,19 @@
             "repo_proof": [],
             "status": "missing",
             "next_proof_task": "Point forge-audit at multiple repos and publish the scorecards as a shared surface."
+          },
+          {
+            "skill_id": "adv.ai.mockable_llm",
+            "skill": "Integrate an LLM behind a mockable, schema-enforced boundary",
+            "why_it_matters": "AI-assisted engineering is a 2026 differentiator; the hireable skill is a testable, schema-enforced boundary, not a raw API call.",
+            "repo_proof": [
+              "parts/architect.py",
+              "parts/blueprint_ai.py",
+              "tests/test_blueprint_ai.py",
+              "tests/test_architect.py"
+            ],
+            "status": "proven",
+            "next_proof_task": "Exercise the live path in a gated, keyed integration run and capture the evidence (the seam is proven; a real call is not yet run in CI)."
           }
         ]
       }

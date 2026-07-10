@@ -37,11 +37,26 @@ blueprint                 list every filed plan
 blueprint list            (the same)
 blueprint show <id>       print the plan as Markdown
 blueprint render <id>     project it to a static HTML page under reports/blueprints/
+blueprint draft <idea>    draft a NEW plan from a freeform idea with Claude (AI, key-away)
 ```
 
 Reachable through `handle_command` and pinned by an engine-tick test (a feature is not wired
-until the tick proves it). The Architect NPC *advises* on a plan but never invents one - the
-operator authors the Blueprint, so no autonomous-coding claim is made.
+until the tick proves it).
+
+## Drafting with AI (schema-enforced, honest)
+
+`parts/blueprint_ai.py` turns a freeform idea into a **structured** Blueprint using the
+Anthropic Messages API's `messages.parse` with a Pydantic schema (`BlueprintDraft`). The model
+fills a schema; it never emits free prose we parse by hand. The draft is then re-validated
+through the **same loud gate** every human-authored Blueprint passes (`from_dict`), so an
+invalid draft fails loud, and its `status` is always forced to `draft` (AI output is Tier-4 -
+a human reviews before filing). No autonomous coding is claimed: it drafts a plan, it does not
+write code.
+
+Same seam discipline as the Architect: the Anthropic client is **injected**, so tests drive a
+fake and never touch the network (CI runs with no key); codeforge core never imports
+`anthropic`. `blueprint draft` is one API key away - offline it returns an honest "needs the
+Claude Architect" message. See `docs/architect_brain.md`.
 
 ## Why frameless
 

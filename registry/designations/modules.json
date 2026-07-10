@@ -1415,5 +1415,32 @@
     "aliases": [],
     "created": "2026-07-10",
     "updated": "2026-07-10"
+  },
+  {
+    "designation": "MOD-UM10-S01-N001-018-R0",
+    "name": "blueprint_ai",
+    "status": "active",
+    "function": "draft a Blueprint from a freeform idea with Claude (schema-enforced structured output)",
+    "label": "blueprint_ai",
+    "file": "parts/blueprint_ai.py",
+    "type": "MOD",
+    "domain": "UM10",
+    "sector": "S01",
+    "node": "N001",
+    "sequence": "018",
+    "revision": "R0",
+    "docs": "docs/blueprint_renderer.md",
+    "tests": "tests/test_blueprint_ai.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "module"
+    ],
+    "notes": "Anthropic messages.parse (output_format schema); injected client (mockable, CI-safe); AI output is re-validated by from_dict and always a Tier-4 draft. One API key away.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-10",
+    "updated": "2026-07-10"
   }
 ]
