@@ -33,6 +33,7 @@ from parts.commands import ADMIN, CORE, Command, CommandSet
 from parts.console import console_menu, diagnostics_view, run_view
 from parts.doors import unlock
 from parts.events import announce, bind_echo, rename_echo, unbind_echo
+from parts.frameup import inspect
 from parts.generate import system_generate
 from parts.items import drop, inventory_text, room_items_text, take
 from parts.jobs import JOBS, bind_calling, calling_index, render_sheet
@@ -66,7 +67,7 @@ HELP_TEXT = (
     "unlock <door> with <key>, regs [topic|id], library [id], law [id], "
     "registry [show|find|type|status], "
     "qa gate [all|<id>], safety review <id>, docs check, pm status, pm metrics, "
-    "truth check, career, pioneer, "
+    "truth check, career, pioneer, inspect, "
     "workshop, catalog, reuse <term>, console, run <check>, diagnostics, "
     "security, ai <prompt>, lesson list, question, answer <A-D>, hint, progress, "
     "passwd, save, load, quit"
@@ -221,6 +222,15 @@ def _build_commands() -> CommandSet:
             "CMD-UM10-S01-N001-014-R0",
             "Pioneer Mode: bold-but-honest engineering (doctrine, risk ladder, experiments)",
             lambda _s, arg: pioneer(arg),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "inspect",
+            "CMD-UM10-S01-N001-015-R0",
+            "Inspect the forge: an on-demand green/yellow/red frame-up of every system",
+            lambda _s, arg: inspect(arg),
             namespace=CORE,
         )
     )

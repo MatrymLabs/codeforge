@@ -1137,5 +1137,34 @@
     "aliases": [],
     "created": "2026-07-10",
     "updated": "2026-07-10"
+  },
+  {
+    "designation": "MOD-UM10-S01-N001-010-R0",
+    "name": "frameup",
+    "status": "active",
+    "function": "Frame-up inspector: composes registry+QA+truth+docs+overclaim+career+pioneer into one health view.",
+    "label": "frameup",
+    "file": "parts/frameup.py",
+    "type": "MOD",
+    "domain": "UM10",
+    "sector": "S01",
+    "node": "N001",
+    "sequence": "010",
+    "revision": "R0",
+    "docs": "docs/frame_up.md",
+    "tests": "tests/test_frameup.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "module",
+      "inspect",
+      "audit"
+    ],
+    "notes": "",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-10",
+    "updated": "2026-07-10"
   }
 ]

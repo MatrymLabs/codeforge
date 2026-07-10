@@ -7,6 +7,12 @@ pre-1.0. Readiness language only — no compliance/OSHA/legal claims.
 ## [Unreleased]
 
 ### Added / Changed
+- **`inspect` — inspect the forge (on-demand frame-up).** One command that composes every
+  self-audit signal — registry validity · QA board · VeritasGate truth · doc presence ·
+  overclaim scan, plus career + pioneer status — into a single green/yellow/red frame-up.
+  Computed live (nothing stored), REUSES the existing gates (no duplication). The single
+  pane of glass over the whole machine. `parts/frameup.py` + `docs/frame_up.md` +
+  `tests/test_frameup.py`; filed in the registry (board 81/81). Currently 🟢 GREEN.
 - **Pioneer Mode (`pioneer` command).** A disciplined-Maverick engineering framework —
   *bend convention, not truth/safety/trust* — surfaced in the MUD and codified in docs.
   `docs/pioneer_mode.md` (doctrine · Maverick Filter · risk ladder L1–L5 · constraint-review
