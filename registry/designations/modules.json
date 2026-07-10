@@ -1307,5 +1307,32 @@
     "aliases": [],
     "created": "2026-07-10",
     "updated": "2026-07-10"
+  },
+  {
+    "designation": "MOD-UM10-S01-N001-014-R0",
+    "name": "dashboard",
+    "status": "active",
+    "function": "the readiness Lens: a server-rendered HTML board + JSON twin over real forge evidence",
+    "label": "dashboard",
+    "file": "parts/dashboard.py",
+    "type": "MOD",
+    "domain": "UM10",
+    "sector": "S01",
+    "node": "N001",
+    "sequence": "014",
+    "revision": "R0",
+    "docs": "docs/dashboard.md",
+    "tests": "tests/test_dashboard.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "module"
+    ],
+    "notes": "Frameless full-stack proof (stdlib html.escape, no template engine); mounted on parts/api.py at GET / and GET /api/status.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-10",
+    "updated": "2026-07-10"
   }
 ]

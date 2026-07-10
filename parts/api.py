@@ -21,6 +21,7 @@ from sqlalchemy import select
 
 from parts.accounts import account_has_owner, account_password_ok
 from parts.characters import set_rank
+from parts.dashboard import router as dashboard_router
 from parts.db import CharacterRow, open_archive_session
 from parts.ranks import RANK_ORDER
 from parts.world import WORLD
@@ -31,6 +32,9 @@ app = FastAPI(
     "and owner-authenticated administration.",
     version="0.1.0",
 )
+
+# The portfolio Lens: GET / (server-rendered readiness board) + GET /api/status (JSON twin).
+app.include_router(dashboard_router)
 
 _basic = HTTPBasic()
 

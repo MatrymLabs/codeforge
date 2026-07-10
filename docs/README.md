@@ -23,6 +23,7 @@ The one map to everything under `docs/`. New here? Read [RUNNING.md](RUNNING.md)
 - [safety_qa_system.md](safety_qa_system.md), QualityGate + SafetyReview.
 - [repo_integrity.md](repo_integrity.md), `make repo-integrity`, the composite health report.
 - [performance.md](performance.md), `make bench`, the engine-tick throughput/latency benchmark (performance evidence).
+- [dashboard.md](dashboard.md), the readiness Lens: a server-rendered web dashboard (`GET /`) + JSON twin (`GET /api/status`) over real forge evidence (the full-stack proof).
 - [project_management.md](project_management.md), `pm status`, backlog, risks, decisions, one worked LSS DMAIC.
 
 ## Ritual and process

@@ -52,6 +52,18 @@ the tick over a WebSocket. The public demo is deliberately safe - ephemeral stat
 cap, and idle timeouts - so a shared link can't be farmed. Deploy your own with the
 included [`render.yaml`](render.yaml) (Render → New → Blueprint; no secrets required).
 
+### The readiness dashboard 📊
+
+```bash
+codeforge api            # serves the FastAPI app on http://localhost:8000
+```
+
+`GET /` is a server-rendered dashboard that projects the forge's own evidence, the career
+board, the QualityGate audit, the hardware store, and the latest `make bench` run, onto one
+accessible, responsive page. The same data is served as JSON at `/api/status` (the seam a
+future React/TypeScript front end would consume), and the API self-documents at `/docs`.
+Frameless: stdlib HTML rendering, no template engine. See [`docs/dashboard.md`](docs/dashboard.md).
+
 ## Quick start
 
 ```bash
@@ -262,6 +274,7 @@ Generated from the `CARD:` docstrings in `parts/` (see `make store`):
 | `combat` | the training loop: strike, defeat, XP, LEVEL UP. |
 | `commands` | the command spine: verbs filed, rank-gated, namespaced. |
 | `console` | the FailsafeRunner: run allowlisted commands safely. |
+| `dashboard` | the Lens: a server-rendered web board over real forge evidence. |
 | `db` | SQLite persistence through the SQLAlchemy 2.0 ORM. |
 | `doors` | lockable barriers between rooms. |
 | `events` | world happenings broadcast to bystanders. |
