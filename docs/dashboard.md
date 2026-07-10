@@ -63,6 +63,14 @@ filed blueprints, never used to open a path (no traversal).
   footer`, `aria-label`led regions, `:focus-visible` outlines, and status conveyed by a text
   badge (`OK/WATCH/FAIL/INFO`), never color alone.
 
+## End-to-end tested (real browser)
+
+Beyond the route-level tests (`tests/test_dashboard.py`), a Playwright suite (`e2e/`) drives a
+real Chromium against the running app: the dashboard loads with its cards, the **Refresh**
+button swaps the board via HTMX, clicking a **Blueprint** renders it in-page, and `/metrics`
+responds. It is isolated from `make check` (lives outside `tests/`), run by `make e2e` and a
+dedicated, non-required CI job.
+
 ## What it does NOT do (scope discipline)
 
 It is read-only, unauthenticated, and additive: it mounts on the existing admin API

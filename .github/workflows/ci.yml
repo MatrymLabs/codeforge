@@ -102,6 +102,23 @@ jobs:
       - name: Prove the ORM round-trips on PostgreSQL
         run: pytest tests/test_postgres_integration.py -v
 
+  # Drives the live HTMX dashboard with a real Chromium browser (isolated in e2e/, never in
+  # `make check`). A focused front-to-back proof, so it is intentionally NOT a required check.
+  e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0  # v7
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1  # v6
+        with:
+          python-version: "3.13"
+      - uses: astral-sh/setup-uv@11f9893b081a58869d3b5fccaea48c9e9e46f990  # v8.3.2
+      - name: Install dependencies
+        run: uv pip install --system -e ".[dev]"
+      - name: Install the Chromium browser (+ OS deps)
+        run: python -m playwright install --with-deps chromium
+      - name: Run the browser E2E suite
+        run: pytest e2e -q
+
   docker:
     runs-on: ubuntu-latest
     steps:

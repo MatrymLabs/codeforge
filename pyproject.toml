@@ -25,6 +25,7 @@ dev = [
     "httpx2",
     "alembic",
     "mkdocs-material",
+    "playwright",
 ]
 
 [project.scripts]

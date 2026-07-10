@@ -7,6 +7,15 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
 ## [Unreleased]
 
 ### Added / Changed
+- **End-to-end browser tests (Playwright).** A real Chromium drives the live dashboard
+  (`e2e/`): the board loads with its cards, the Refresh button swaps the board via HTMX,
+  clicking a Blueprint renders it in-page, and `/metrics` responds. The app is served on a
+  background uvicorn thread in the fixture. The suite is **isolated from `make check`** (it
+  lives outside pytest `testpaths`, so the main suite stays fast and browser-free) and runs
+  via `make e2e` and a dedicated, non-required CI job (so it can never deadlock a merge).
+  `playwright` is a dev dependency (ledger-justified, isolated to `e2e/`); verified locally
+  on the Pi's aarch64 Chromium and in CI on x86. Flips the last frontend item in the
+  full-stack readiness checklist to done.
 - **Observability: structured logs + Prometheus /metrics.** `parts/observability.py`
   (MOD-UM10-S01-N001-019-R0) wires two operability signals onto the FastAPI surface with one
   HTTP middleware: **structured JSON request logs** via structlog (method, route, status,

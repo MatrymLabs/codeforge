@@ -126,3 +126,8 @@ removable = "Yes; dev/ops-time only. The SQLite default runs without it (create_
 why = "Builds the docs/ tree into the public documentation site (GitHub Pages). Docs-build tooling; never imported by the app."
 stdlib_alternative = "None sensible; hand-writing an HTML docs site generator is not worth it. The Markdown docs remain readable on GitHub without it."
 removable = "Yes; docs-build only. The repo and its Markdown docs work without the published site."
+
+[dev.playwright]
+why = "End-to-end browser tests for the live HTMX dashboard (e2e/), driving real Chromium against the running app. Test tooling; never imported by the app or the main suite."
+stdlib_alternative = "None; there is no stdlib headless browser. Route-level tests (httpx TestClient) cover the API, but only a browser proves the HTMX behavior end to end."
+removable = "Yes; test-only, isolated in e2e/ and its own CI job. `make check` and the app run without it."
