@@ -3,14 +3,14 @@
 *A hidden filing system beneath the fantasy.*
 
 Players see a world: rooms, an Archivist, a training dummy, guidance documents.
-Underneath, every object that matters is **filed** — given a unique designation,
+Underneath, every object that matters is **filed** - given a unique designation,
 a record, and a traceable line back to its source file, its tests, and the things
 it depends on. The fiction is the surface; the registry is the engineering catalog
 beneath it.
 
 This is the same discipline as the Federal Guidance Library's
-`data/source_registry.csv` — *trace everything to a source, date, version, owner,
-and control* — applied to the whole ship.
+`data/source_registry.csv` - *trace everything to a source, date, version, owner,
+and control* - applied to the whole ship.
 
 ---
 
@@ -20,7 +20,7 @@ and control* — applied to the whole ship.
 
 Every runtime identifier stays frozen: room keys (`archive`), YAML seed keys,
 database columns, CLI verbs (`serve`, `play`), CARD names, character/account handle
-formats. Those are load-bearing — renaming them breaks save files, seeds, and
+formats. Those are load-bearing - renaming them breaks save files, seeds, and
 migrations.
 
 A designation is *attached to* a label, not a replacement for it:
@@ -41,11 +41,11 @@ is invalid.
 ```
 [TYPE]-[UM]-[SEC]-[NODE]-[SEQ]-[REV]
    |     |     |     |      |     |
-   |     |     |     |      |     revision  (R0, R1, ... — bump on a breaking change)
-   |     |     |     |      sequence (001... — unique object number within the node)
-   |     |     |     node     (N001... — a room, service, or module slot)
-   |     |     sector (S01... — a zone/subsystem within the domain)
-   |     unimatrix (UM01... — the major domain)
+   |     |     |     |      |     revision  (R0, R1, ... - bump on a breaking change)
+   |     |     |     |      sequence (001... - unique object number within the node)
+   |     |     |     node     (N001... - a room, service, or module slot)
+   |     |     sector (S01... - a zone/subsystem within the domain)
+   |     unimatrix (UM01... - the major domain)
    type prefix (RM, NPC, PRT, ...)
 ```
 
@@ -53,7 +53,7 @@ Example: `RM-UM03-S02-N001-001-R0` reads as *Room · Library/Classroom domain ·
 Sector 02 · Node 001 · object 001 · revision 0.*
 
 Designations sort cleanly, grep cleanly, and never collide (a validator enforces
-uniqueness — see below). You never hand-type one: a helper mints the next sequence.
+uniqueness - see below). You never hand-type one: a helper mints the next sequence.
 
 ### Type prefixes
 
@@ -84,7 +84,7 @@ sometimes many-PRT-per-MOD.
 | `UM04` | Game systems (combat, jobs, XP)      | `UM09` | AI NPC & API systems |
 | `UM05` | Hardware Store / reusable parts      | `UM10` | Reports, logs & evidence |
 
-### Status vocabulary (controlled — never let stale read as active)
+### Status vocabulary (controlled - never let stale read as active)
 
 `prototype` · `active` · `hardened` · `deprecated` · `archived` · `superseded`
 
@@ -128,10 +128,10 @@ the dependency and reuse edges are what show a part is modular.
 
 ---
 
-## Storage — start simple
+## Storage - start simple
 
 **JSON**, mirroring FGL's `documents.json`: a list of records per type, loaded by a
-validator that *fails loud* on a bad row. Not SQLite yet — same beginner-safe call we
+validator that *fails loud* on a bad row. Not SQLite yet - same beginner-safe call we
 made for the guidance library. Indexes are **generated, never hand-maintained.**
 
 ```
@@ -157,7 +157,7 @@ registry/
 
 ## How code links to its filing (the modularity tag)
 
-Because the registry is a *backend* filing system, modules stay clean — no heavy
+Because the registry is a *backend* filing system, modules stay clean - no heavy
 in-code annotations. The bridge is one line, both directions:
 
 - **code → registry:** the existing CARD block gains one optional line, so you can
@@ -180,8 +180,8 @@ in-code annotations. The bridge is one line, both directions:
 1. **No duplicate designations.** The minter guarantees the next free sequence.
 2. **No orphans.** Every record's `label` maps to a real object; `file`/`tests` exist.
 3. **No casual renames.** A designation is stable once minted. A change bumps the
-   `revision` and records an **alias/migration** entry — the old ID still resolves.
-4. **No deletes — archive instead.** Status → `archived`/`superseded`; the row stays.
+   `revision` and records an **alias/migration** entry - the old ID still resolves.
+4. **No deletes - archive instead.** Status → `archived`/`superseded`; the row stays.
 5. **Controlled status.** `status` must be one of the six values above.
 6. **Beginner-safe.** If a rule makes a new object hard to file, the rule is wrong.
 
@@ -189,15 +189,15 @@ in-code annotations. The bridge is one line, both directions:
 
 ## Implementation staircase (each step ships green)
 
-- **Phase 1 — rules & schema.** *(this document + `designation.schema.json`)*
-- **Phase 2 — the registry card.** `parts/registry.py`: `Designation` dataclass,
+- **Phase 1 - rules & schema.** *(this document + `designation.schema.json`)*
+- **Phase 2 - the registry card.** `parts/registry.py`: `Designation` dataclass,
   `load_registry`, `mint_designation`, `validate` + a test twin. No wiring yet.
-- **Phase 3 — file the 16 starter rooms.** First real data.
-- **Phase 4 — NPCs & items.**
-- **Phase 5 — documents, lessons, quizzes, evidence.**
-- **Phase 6 — the sync gate.** `make registry` proves code ↔ registry never drift.
-- **Phase 7 — MUD verbs.** `registry show/find/type/tag/status/related/validate`.
-- **Phase 8 — ritual check.** The startup ritual validates the registry: required
+- **Phase 3 - file the 16 starter rooms.** First real data.
+- **Phase 4 - NPCs & items.**
+- **Phase 5 - documents, lessons, quizzes, evidence.**
+- **Phase 6 - the sync gate.** `make registry` proves code ↔ registry never drift.
+- **Phase 7 - MUD verbs.** `registry show/find/type/tag/status/related/validate`.
+- **Phase 8 - ritual check.** The startup ritual validates the registry: required
   rooms, documents, parts, and evidence paths all exist and are filed.
 
 ## Definition of done
@@ -205,4 +205,4 @@ in-code annotations. The bridge is one line, both directions:
 Every starter room, important NPC, stored document, PDF + text analog, and reusable
 part is filed; duplicates are impossible; the MUD can display a record; the startup
 ritual validates the whole registry; and a beginner can file a new object in one
-step. Precise, engineered, traceable — and invisible until you look.
+step. Precise, engineered, traceable - and invisible until you look.

@@ -105,7 +105,7 @@ def build_report(
     secret_scan = (
         "detected"
         if (tools.get("gitleaks") or tools.get("detect-secrets"))
-        else "not_configured — recommend detect-secrets (baselined) or gitleaks"
+        else "not_configured - recommend detect-secrets (baselined) or gitleaks"
     )
     next_actions = []
     if not (tools.get("gitleaks") or tools.get("detect-secrets")):
@@ -120,7 +120,7 @@ def build_report(
         next_actions.append(f"Soften overclaims in README: {', '.join(overclaims)}.")
     if not next_actions:
         next_actions.append(
-            "No blocking gaps found — run `make check` + `make security` for the live gates."
+            "No blocking gaps found - run `make check` + `make security` for the live gates."
         )
 
     lines = [

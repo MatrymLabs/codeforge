@@ -1,7 +1,7 @@
 """Run each quality gate read-only, stop at the first failure, and prescribe the fix.
 
 Reruns the gates (never parses stale logs) so it's always truthful about the
-current state. Blocking gates stop the run; pip-audit is informational — it
+current state. Blocking gates stop the run; pip-audit is informational - it
 reports CVEs but does not fail doctor, matching the non-blocking CI step.
 Assumes an activated .venv (run `make env` first if tools aren't on PATH).
 """

@@ -1,4 +1,4 @@
-# Resume Mapping — CodeForge → the job market
+# Resume Mapping - CodeForge → the job market
 
 *How the work in CodeForge translates to resume language and target roles. Evidence-based:
 every claim maps to a repo artifact (see the [Career Evidence Sign](#the-career-evidence-sign)).*
@@ -11,7 +11,7 @@ every claim maps to a repo artifact (see the [Career Evidence Sign](#the-career-
 
 ## The three market narratives (from the BLS/O*NET-grounded research)
 
-CodeForge's strongest overlap is **not** generic "junior coder" work — it's the
+CodeForge's strongest overlap is **not** generic "junior coder" work - it's the
 intersection of **internal tools · release/build · DevOps/SRE · QA automation · technical
 docs**. Lead with these three, in your own words:
 
@@ -34,7 +34,7 @@ docs**. Lead with these three, in your own words:
 | Software architecture / decisions | `docs/adr/`, `docs/architecture.md`, `docs/seed_architecture.md` |
 | QA & safety thinking | QualityGate, VeritasGate, allowlisted console (never raw shell) |
 | Truth between docs & code | `truth check` (VeritasGate), this evidence board |
-| AI-assisted development, reviewed | `docs/AI_WORKFLOW.md` — AI as force multiplier, gated by tests |
+| AI-assisted development, reviewed | `docs/AI_WORKFLOW.md` - AI as force multiplier, gated by tests |
 
 ## Target role clusters (from current public postings)
 
@@ -49,4 +49,4 @@ docs**. Lead with these three, in your own words:
 In the MUD, `career` (in The Forge Workshop) renders this board live from
 `data/career/career_evidence_matrix.json`. `career gaps` shows exactly what to build next.
 The board obeys VeritasGate: a skill is only `proven` when a cited repo artifact actually
-exists — so it can name its own gaps honestly. **Readiness, never certification.**
+exists - so it can name its own gaps honestly. **Readiness, never certification.**

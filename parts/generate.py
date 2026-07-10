@@ -86,7 +86,7 @@ def system_generate(session: Session, argument: str) -> str:
     if label is not None:
         announce(
             session.location,
-            f"The air ignites — {ITEMS[label]['name']} is forged into being by "
+            f"The air ignites - {ITEMS[label]['name']} is forged into being by "
             f"{display_name(session.player_id)}.",
             exclude=session.player_id,
         )

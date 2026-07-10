@@ -1,4 +1,4 @@
-# CodeForge Hardware Catalog — reusable parts across domains.
+# CodeForge Hardware Catalog - reusable parts across domains.
 #
 # One well-made part, many jobs. Each entry documents where the same engine
 # code serves outside the game. Schema + rules: catalog/README.md.
@@ -12,7 +12,7 @@
   maturity: shipped
   source_status: original
   license: MIT
-  influence: "RBAC — authorization-before-capability pattern (original implementation)"
+  influence: "RBAC - authorization-before-capability pattern (original implementation)"
   risk: low
   reuse_score: 5
   purpose: >
@@ -21,7 +21,7 @@
   reuse:
     game: "@-verbs gate on wizard/owner rank before they touch the world"
     government: "records access by clearance level; who may release a document"
-    finance: "approval authority tiers — who may sign off an AP/AR transaction"
+    finance: "approval authority tiers - who may sign off an AP/AR transaction"
     compliance: "least-privilege enforcement, with the refusal as evidence"
     general: "role-based access control (RBAC) for any command surface"
 
@@ -85,7 +85,7 @@
   reuse:
     game: "the Workshop's in-world diagnostic console (run lint/tests/git safely)"
     government: "a controlled command surface for a records/workflow operator"
-    finance: "a gated task runner for AP/AR jobs — no arbitrary execution"
+    finance: "a gated task runner for AP/AR jobs - no arbitrary execution"
     compliance: "safe, logged command execution as an auditable control"
     general: "a sandboxed command relay for any untrusted-caller automation"
 
@@ -102,7 +102,7 @@
   reuse_score: 5
   purpose: >
     Load a question bank from data, ask questions, check answers, hand out hints
-    and explanations, and score a run — a domain-agnostic assessment engine.
+    and explanations, and score a run - a domain-agnostic assessment engine.
   reuse:
     game: "Professor Codex's Classroom drills (Python, Git, systems design)"
     government: "policy-acknowledgement and CMMC/NIST knowledge checks"
@@ -124,7 +124,7 @@
   reuse_score: 4
   purpose: >
     Re-run a suite of checks read-only, stop at the first failure, and prescribe
-    the fix — a diagnostic that reports but never mutates.
+    the fix - a diagnostic that reports but never mutates.
   reuse:
     game: "verify the engine's gates (lint, types, tests) before a change ships"
     government: "a readiness checker that reports control gaps without changing state"

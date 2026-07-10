@@ -84,7 +84,7 @@ def _render_question(learner: _Learner) -> str:
 def _score_line(learner: _Learner) -> str:
     total = len(learner.lesson.questions)
     return (
-        f'Professor Codex closes his ledger. "{learner.lesson.title} complete — '
+        f'Professor Codex closes his ledger. "{learner.lesson.title} complete - '
         f'{learner.correct} of {total} correct."'
     )
 
@@ -116,7 +116,7 @@ def submit_answer(player_id: str, choice: str) -> str:
     verdict = (
         'Professor Codex nods. "Correct."'
         if right
-        else f'Professor Codex taps the chalk. "Not quite — the answer was {question.correct}."'
+        else f'Professor Codex taps the chalk. "Not quite - the answer was {question.correct}."'
     )
     body = f"{verdict}\n{question.explanation}"
     if learner.current is None:

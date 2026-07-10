@@ -8,14 +8,14 @@ so that class of mistake is caught before merge, not after.*
 | **Date** | 2026-07-09 |
 | **Status** | closed |
 | **Authors** | Josh / MatrymLabs (AI-assisted) |
-| **Severity** | SEV3 (default branch CI red; no runtime/user impact — portfolio repo) |
+| **Severity** | SEV3 (default branch CI red; no runtime/user impact - portfolio repo) |
 
 ## Summary
 
 A change to `parts/integrity.py` merged to `main` and turned CI **red**: bandit's `B105`
 (hardcoded-password) check fired on a dictionary literal `{"pass": 0, ...}`, reading the
 key `"pass"` as a password. The pre-merge check passed locally because the **local gate
-did not run bandit** — CI's `make security` did.
+did not run bandit** - CI's `make security` did.
 
 ## Impact
 
@@ -35,14 +35,14 @@ a repo whose whole thesis is "green, evidence-backed engineering."
 ## Root cause
 
 **Gate asymmetry.** The local pre-merge gate (`make check`) ran lint + types + tests, but
-**not** bandit — while CI's `make security` did. So a bandit-only failure was structurally
+**not** bandit - while CI's `make security` did. So a bandit-only failure was structurally
 invisible before merge. The trigger was a bandit false positive (`"pass"` as a dict key
 read as a hardcoded password), but the *cause* is that the local gate proved less than the
 pipeline gate, giving false assurance.
 
 ## Detection
 
-Manual — watching the CI run after the merge. Detection was correct but *late*: it happened
+Manual - watching the CI run after the merge. Detection was correct but *late*: it happened
 **after** the code was already on `main`. The right time to catch it is before merge.
 
 ## Resolution
@@ -53,7 +53,7 @@ string literal bandit could misread. Committed as a `fix:`, watched CI to green.
 
 ## What went well / what went wrong / where we got lucky
 
-- **Went well:** CI's `make security` *did* catch it — the pipeline gate was correct and
+- **Went well:** CI's `make security` *did* catch it - the pipeline gate was correct and
   loud. Fix-forward was fast and honest (no history rewrite, no hiding).
 - **Went wrong:** the local gate and the CI gate were not the same set, so "green locally"
   did not mean "green in CI." The merge happened without watching CI to green first.
@@ -71,7 +71,7 @@ string literal bandit could misread. Committed as a `fix:`, watched CI to green.
 
 ## Lessons
 
-**A local gate that proves *less* than the pipeline gives false assurance — make them the
+**A local gate that proves *less* than the pipeline gives false assurance - make them the
 same set.** This incident is the origin of two standing rules now baked into the tooling:
 the ritual asserts what CI asserts (gate parity), and nothing merges to `main` without
 watching CI to green. The class of "green locally, red in CI" is now closed by construction.

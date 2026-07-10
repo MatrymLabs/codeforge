@@ -1,6 +1,6 @@
-# CodeForge — Project Management
+# CodeForge - Project Management
 
-*The control panel that keeps CodeForge climbing the stairs. One file, on purpose —
+*The control panel that keeps CodeForge climbing the stairs. One file, on purpose -
 we don't build a PMO before the workshop door opens.*
 
 Live status is **computed, not stored**: type `pm status` in the MUD (it reads the
@@ -15,10 +15,10 @@ derive: charter, milestones, backlog, risks, decisions.
   hardware store, built as a portfolio-grade, self-auditing engine.
 - **Primary constraint:** beginner-safe development with professional engineering
   discipline (branch → `make check` green → CI green → merge).
-- **Current phase:** the *engine spine is composing* — registry + command spine +
+- **Current phase:** the *engine spine is composing* - registry + command spine +
   QualityGate + PM dashboard all plug together. (`pm status` for the live number.)
 - **Success criterion:** a vertical slice that launches, enters the Workshop, reads
-  stored guidance, files every object, audits itself, and reports readiness — done.
+  stored guidance, files every object, audits itself, and reports readiness - done.
 
 ---
 
@@ -37,7 +37,7 @@ derive: charter, milestones, backlog, risks, decisions.
 
 ---
 
-## This prompt's two systems — scoped, not built (scope control)
+## This prompt's two systems - scoped, not built (scope control)
 
 The PM + Lean-Six-Sigma/ADDIE prompt describes two large systems. Per the prompt's
 own rule ("prevent building the dragon before the door opens"), only the **PM
@@ -45,15 +45,15 @@ dashboard MVP** was built. The rest is filed backlog:
 
 | Backlog item | Track | Priority | Depends on | Effort |
 |--------------|-------|----------|-----------|--------|
-| `pm status` / `pm metrics` (computed dashboard) | 11 | **P0 — DONE** | registry, QualityGate | S |
-| Charter/milestones/risks doc (this file) | 11 | **P0 — DONE** | — | S |
+| `pm status` / `pm metrics` (computed dashboard) | 11 | **P0 - DONE** | registry, QualityGate | S |
+| Charter/milestones/risks doc (this file) | 11 | **P0 - DONE** | - | S |
 | File `PRT`/`MOD` code parts in the registry | 4/5 | P1 | registry | M |
-| Link `docs` paths on records (close QG04) | 8 | P1 | — | S |
+| Link `docs` paths on records (close QG04) | 8 | P1 | - | S |
 | EvidenceLedger (save gate/review results to `reports/`) | 8 | P1 | QualityGate | M |
 | ADDIE lesson template + 1 Python lesson (registry validator) | 7 | P2 | AssessmentEngine | M |
 | Quiz quit/pause/resume hardening | 7 | P2 | classroom | S |
 | Lean Six Sigma DMAIC/SIPOC records + `lss` verbs | 8 | P3 | metrics | L |
-| Full PMO (WBS/Gantt/sprints/change-control files) | 11 | P3 | — | L |
+| Full PMO (WBS/Gantt/sprints/change-control files) | 11 | P3 | - | L |
 | Master Kaizen NPC, `pm`/`addie`/`lss` command families | 7/8 | P4 | above | L |
 
 **Rule in force:** no new track starts until the current milestone's gaps close.
@@ -61,21 +61,21 @@ dashboard MVP** was built. The rest is filed backlog:
 ## Recommendations captured 2026-07-09 (saved, not yet built)
 
 A big prompt-driven session. These are the open recommendations, honestly prioritized.
-Several big-sounding prompts turned out to be **mostly already built** — the note says so.
+Several big-sounding prompts turned out to be **mostly already built** - the note says so.
 
 | # | Recommendation | Why / origin | Priority | Effort |
 |---|----------------|--------------|----------|--------|
-| R1 | **Secret scanning** — add `make secrets` (detect-secrets, baselined) + a `.secrets.baseline`; optional gitleaks | the RepoIntegrityRitual's own #1 action — closes the one honest gap it surfaces (`not_configured`); other ship repos already carry it | **P1** | S–M |
-| R2 | **Close QG04 → green board (DONE 2026-07-09)** — link `docs` paths on registry records so `pm status`/`qa gate` go green | the dashboard is literally asking for it (LSS-CF-001 DMAIC) | **P1** | S |
-| R3 | **Ritual modes + saved reports** — `make ritual-start-fast/deep`, a structured startup/shutdown report saved under `reports/ritual/`, a shutdown **commit/push-readiness** gate | the Startup/Shutdown prompt's *real delta*; the ritual **spine already exists** (ritual.sh WARDS/READINESS + ritual_down MUSTER) — this is modes + evidence, NOT the 19-phase Python CLI / workshop-lock cathedral (deferred) | P2 | M |
-| R4 | **VeritasGate `truth check`** command **(DONE 2026-07-09)** — automate the manual truth audit (README/docs/registry claims) | truth prompt; composes `docs_check` + registry validate | P2 | S |
-| R5 | **forge-audit MVP (DONE 2026-07-09 — https://github.com/MatrymLabs/forge-audit)** — run the gates on a *target* repo behind a mockable GitHub-API seam, emit a JSON scorecard | the `DEVELOPMENT_PLAN`'s one net-new flagship build | P2 | **L** |
-| R6 | **Portfolio index page (DONE 2026-07-09 — https://matrymlabs.github.io/)** — link flagship + live demo + a case study | presentation is a hiring gate | P2 | M |
+| R1 | **Secret scanning** - add `make secrets` (detect-secrets, baselined) + a `.secrets.baseline`; optional gitleaks | the RepoIntegrityRitual's own #1 action - closes the one honest gap it surfaces (`not_configured`); other ship repos already carry it | **P1** | S–M |
+| R2 | **Close QG04 → green board (DONE 2026-07-09)** - link `docs` paths on registry records so `pm status`/`qa gate` go green | the dashboard is literally asking for it (LSS-CF-001 DMAIC) | **P1** | S |
+| R3 | **Ritual modes + saved reports** - `make ritual-start-fast/deep`, a structured startup/shutdown report saved under `reports/ritual/`, a shutdown **commit/push-readiness** gate | the Startup/Shutdown prompt's *real delta*; the ritual **spine already exists** (ritual.sh WARDS/READINESS + ritual_down MUSTER) - this is modes + evidence, NOT the 19-phase Python CLI / workshop-lock cathedral (deferred) | P2 | M |
+| R4 | **VeritasGate `truth check`** command **(DONE 2026-07-09)** - automate the manual truth audit (README/docs/registry claims) | truth prompt; composes `docs_check` + registry validate | P2 | S |
+| R5 | **forge-audit MVP (DONE 2026-07-09 - https://github.com/MatrymLabs/forge-audit)** - run the gates on a *target* repo behind a mockable GitHub-API seam, emit a JSON scorecard | the `DEVELOPMENT_PLAN`'s one net-new flagship build | P2 | **L** |
+| R6 | **Portfolio index page (DONE 2026-07-09 - https://matrymlabs.github.io/)** - link flagship + live demo + a case study | presentation is a hiring gate | P2 | M |
 | R7 | **Build one prototype city room real** (e.g. City Square) | advances the game/world; seeds-are-data | P3 | S |
 
 Still open from the earlier backlog table: EvidenceLedger, ADDIE lesson #1, LSS DMAIC
 records, filing `PRT`/`MOD` parts. **Recommended first move:** R2 (green board) or R1
-(secret scanning) — both small, both close a gap a tool already flagged.
+(secret scanning) - both small, both close a gap a tool already flagged.
 
 ---
 
@@ -83,7 +83,7 @@ records, filing `PRT`/`MOD` parts. **Recommended first move:** R2 (green board) 
 
 | ID | Risk | P×I | Mitigation |
 |----|------|-----|-----------|
-| RISK-CF-001 | **Scope creep** — building many systems at once | high×high | milestones + "no new track" rule; this prompt's two towers were *deferred*, not built |
+| RISK-CF-001 | **Scope creep** - building many systems at once | high×high | milestones + "no new track" rule; this prompt's two towers were *deferred*, not built |
 | RISK-CF-002 | Undocumented objects (31 watch on QG04) | med×med | see the DMAIC below; `pm status` surfaces it every run |
 | RISK-CF-003 | Overclaiming (OSHA/compliance/certification) | low×high | readiness language only; enforced in `qualitygate.py` copy + these docs |
 
@@ -102,7 +102,7 @@ records, filing `PRT`/`MOD` parts. **Recommended first move:** R2 (green board) 
 
 ## One Lean Six Sigma DMAIC (a real finding, worked)
 
-**LSS-CF-001 — Reduce undocumented filed objects.**
+**LSS-CF-001 - Reduce undocumented filed objects.**
 
 - **Define:** filed objects have code + tests + a purpose, but no linked docs page.
 - **Measure:** `qa gate all` → **31/31 objects `watch` on QG04** (docs link missing).
@@ -123,18 +123,18 @@ Control, with the metric coming from `pm metrics` and the control from the QA ga
 
 ---
 
-## Growth structure — the board is the gate (professional alignment as we scale)
+## Growth structure - the board is the gate (professional alignment as we scale)
 
 CodeForge grows by **composition, not sprawl**, and the growth stays professional
-because the project **audits its own maturity**. Every important object — rooms, NPCs,
-items, commands, *and the code modules themselves* — is filed in the Classification
+because the project **audits its own maturity**. Every important object - rooms, NPCs,
+items, commands, *and the code modules themselves* - is filed in the Classification
 Registry; `qa gate all` grades each against a fixed bar; `pm status` rolls it into one
 verdict. So "how professional is this project right now?" has a **computed answer, not
-an opinion.** As of 2026-07-09 the board is **GREEN — 72/72 objects pass.**
+an opinion.** As of 2026-07-09 the board is **GREEN - 72/72 objects pass.**
 
 **The bar every filed object must clear** (the QualityGate checklist): (1) a clear
 purpose · (2) a source file · (3) tests · (4) a docs link · (5) its declared maturity
-is backed by evidence — an `active`/`hardened` object must actually have file + tests.
+is backed by evidence - an `active`/`hardened` object must actually have file + tests.
 
 **Two lines, one green board:**
 - **Hard bar (enforced by CI):** no object may be `active` without a file + tests. A
@@ -143,14 +143,14 @@ is backed by evidence — an `active`/`hardened` object must actually have file 
 - **Soft bar (tracked, expected before "done"):** a docs link. Missing docs → `watch`,
   not `fail`; `pm status` shows it. Link the doc to return the board to fully **green**.
 
-**The growth rule:** a new system isn't *done* until `pm status` is green for it —
+**The growth rule:** a new system isn't *done* until `pm status` is green for it -
 filed, tested, documented, maturity honest. Capability that skips the bar turns the
 board yellow (or red) until it's fixed. This is *why growth doesn't degrade quality*:
 the more we build, the more the registry + QA + PM keep it coherent. The project climbs
-the same ladder its builder does — prototype → tested → documented → reusable →
+the same ladder its builder does - prototype → tested → documented → reusable →
 hardened, **each rung earned with evidence.** Advanced infra (cloud beyond the Render
 demo, ML serving, orchestration) stays **deferred by design** until presentation is
-done — an interviewer sees the green board and the live demo before architecture.
+done - an interviewer sees the green board and the live demo before architecture.
 
 ## Definition of Done (every task)
 
@@ -158,4 +158,4 @@ Code/content exists · registry entry if applicable · tested or manually verifi
 docs impact checked (`docs check`) · relevant docs updated · CHANGELOG updated if
 behavior changed · risks updated if needed · next dependency clear · **`pm status`
 green for the new system** (filed · tested · documented · maturity honest). No
-compliance claims — readiness only.
+compliance claims - readiness only.

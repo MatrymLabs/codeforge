@@ -1,4 +1,4 @@
-# Holodeck Roadmap — the staircase
+# Holodeck Roadmap - the staircase
 
 A staircase, not a cliff. Each phase is a shippable slice with a **definition of
 done**. Don't build the dragon before the workshop door opens; don't build advanced
@@ -15,14 +15,14 @@ Legend: ✅ done · 🔨 next · 📋 planned · 🧭 later (gated/advanced)
 | 2 | **Workshop room** | ✅ | The `workshop` room (off the cellar) is furnished as the engineering cockpit; walk in after login. |
 | 3 | **Workshop command menu** | 🟡 | Live, **display-only**: `workshop` (cockpit menu), `catalog`/`hardware`/`parts` (browse), `reuse <term>` (search). `diagnostics`/`ai`/`blueprint` are marked "coming" and gated on later phases. |
 | 4 | **Hardware catalog** | ✅ | `catalog/parts.yaml` + `parts/hardware.py`; `make hardware` lists parts with cross-domain reuse; ≥4 real parts stocked. |
-| 5 | **AI NPC (read-only)** | 🟡 | `parts/architect.py`: `ai <prompt>` in-world. A **local rule-based** Architect navigates you to the right command/part today, behind a swappable `Advisor` seam; a Claude-backed brain drops in next (same interface, redacted context, key from env, mocked in tests). Advisory only — no edits, no execution. |
+| 5 | **AI NPC (read-only)** | 🟡 | `parts/architect.py`: `ai <prompt>` in-world. A **local rule-based** Architect navigates you to the right command/part today, behind a swappable `Advisor` seam; a Claude-backed brain drops in next (same interface, redacted context, key from env, mocked in tests). Advisory only - no edits, no execution. |
 | 6 | **Diagnostic console** | ✅ | `parts/console.py` (`FailsafeRunner`) runs an **allowlisted, read-only** set as argument lists (no shell), under a timeout + output cap, each run logged. In-world: `console`, `run <check>`, `diagnostics`. Refuses anything off the list. |
 | 7 | **Report system** | 📋 | Long outputs summarized in-world, full logs saved under `reports/<kind>/`. |
-| 8 | **AI planning mode** | 🧭 | The NPC drafts plans, task lists, catalog entries, and *proposed* changes — still no direct edits. |
+| 8 | **AI planning mode** | 🧭 | The NPC drafts plans, task lists, catalog entries, and *proposed* changes - still no direct edits. |
 | 9 | **Safe patch proposal** | 🧭 | The NPC emits a `PatchProposal`: file, why, affected part, catalog update, risk, test, revert. **Human approval required.** |
-| 10 | **Controlled generation** | 🧭 | Only now may the system write files — always: branch first → plan → diff → tests → evidence → rollback path. |
+| 10 | **Controlled generation** | 🧭 | Only now may the system write files - always: branch first → plan → diff → tests → evidence → rollback path. |
 | 11 | **Full engineering loop** | 🧭 | Request → search parts → clarify → blueprint → approve → generate → test → diagnose → fix → document → catalog → commit summary → evidence, all from the Workshop. |
-| 12 | **Industry expansion** | 🧭 | The catalog's `reuse` tags grow into tracks (gov / finance / compliance / records) — the *framework* for it exists; parts opt in over time. |
+| 12 | **Industry expansion** | 🧭 | The catalog's `reuse` tags grow into tracks (gov / finance / compliance / records) - the *framework* for it exists; parts opt in over time. |
 
 **Discipline:** phases 8–11 are where the AI touches files. They are deliberately
 last and each is gated by [`SAFETY.md`](SAFETY.md). We do not skip ahead.
@@ -35,7 +35,7 @@ it mutates, an approval gate (Phase 9).
 
 | In-world | Does | Fronts / becomes |
 |----------|------|------------------|
-| `workshop` | Enter/describe the Workshop | — |
+| `workshop` | Enter/describe the Workshop | - |
 | `status` | Repo + env snapshot | `git status`, env check (read-only) |
 | `catalog` / `hardware` / `parts` | Browse reusable parts | `parts/hardware.py` |
 | `reuse <need>` | Find parts matching a need | catalog search (Phase 3+) |
@@ -47,17 +47,17 @@ it mutates, an approval gate (Phase 9).
 
 ## First 10 tasks (start here)
 
-Repo-safe, low-risk, high-signal — the base of the climb:
+Repo-safe, low-risk, high-signal - the base of the climb:
 
 1. ✅ Catalog card + `catalog/parts.yaml` + `make hardware` + tests. *(done)*
 2. ✅ This blueprint (`docs/holodeck/`). *(done)*
 3. ✅ Furnish the `workshop` room as the cockpit (it already existed off the cellar). *(done)*
-4. ✅ `parts/workshop.py` — the `workshop` menu command, wired in the tick with an engine-tick test. **Display only.** *(done)*
+4. ✅ `parts/workshop.py` - the `workshop` menu command, wired in the tick with an engine-tick test. **Display only.** *(done)*
 5. ✅ Wire `catalog`/`hardware`/`parts` + `reuse <term>` in-world to `parts/hardware.py` (read-only). *(done)*
 6. 📋 Stock 2–3 more real parts in the catalog as they prove reusable.
 7. 📋 `reports/` scaffold + a tiny `save_report()` helper (write + summarize).
-8. 📋 `parts/console.py` — the `CommandRelay` skeleton with the allowlist (Phase 6), tests first, **no execution of anything not on the list**.
-9. 📋 `parts/architect.py` — the AI seam as a `Protocol` (mockable), read-only, context **redacted**; tests use a fake, never the network.
+8. 📋 `parts/console.py` - the `CommandRelay` skeleton with the allowlist (Phase 6), tests first, **no execution of anything not on the list**.
+9. 📋 `parts/architect.py` - the AI seam as a `Protocol` (mockable), read-only, context **redacted**; tests use a fake, never the network.
 10. 📋 Document a first `PatchProposal` shape (no implementation) so Phase 9 has a target.
 
 Tasks 1–2 are done. 3–5 are the next shippable slices (each: branch → `make check`
@@ -85,5 +85,5 @@ Each phase is also employer-facing proof. What to show, and what test proves it:
 | 12 Industry tracks | Domain modeling, compliance awareness | "reusable across gov/finance/compliance" | the `reuse` map in the catalog | catalog tests per domain tag |
 
 Each of these is also a **case study**: "I built X for a game, then reused the same
-tested part for a government/finance/compliance job — here's the catalog entry, the
+tested part for a government/finance/compliance job - here's the catalog entry, the
 tests, and the evidence."

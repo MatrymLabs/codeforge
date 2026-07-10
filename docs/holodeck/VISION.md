@@ -1,25 +1,25 @@
-# CodeForge — the Holodeck & the Hardware Store
+# CodeForge - the Holodeck & the Hardware Store
 
 ## Vision
 
 CodeForge is two products sharing one engine.
 
 - **A MUD-powered engineering holodeck.** You log in as a builder, enter your
-  Workshop, and engineer software *through the world* — talk to an Architect NPC
+  Workshop, and engineer software *through the world* - talk to an Architect NPC
   (an AI pair-programmer), run diagnostics at a console, read test results in-world,
   and design systems interactively. The game is the proving ground.
 - **A reusable-code hardware store.** Every part built for the game that proves
-  generally useful is cataloged as a professional component — with its purpose,
+  generally useful is cataloged as a professional component - with its purpose,
   tests, risks, and the **real-world domains it serves** (government, finance,
   compliance, records, general software). The hardware store is the product.
 
 > Build code once, understand it deeply, reuse it intelligently. The MUD is the
 > interface; the Workshop is the cockpit; the NPC is the pair-programmer; the
 > catalog is the parts library. PyCharm is where you go only for the serious
-> decisions — approving a risky diff, reviewing architecture, resolving what must
+> decisions - approving a risky diff, reviewing architecture, resolving what must
 > not be automated blindly.
 
-This is not a departure from today's CodeForge — it is its next spiral. The engine,
+This is not a departure from today's CodeForge - it is its next spiral. The engine,
 the tick, the seed-driven world, the control-panel `make`, and `parts/store.py`
 (already labeled *"the hardware store"*) are the seed of it.
 
@@ -58,27 +58,27 @@ generation). **Nothing risky runs without the Safety layer around it.**
   (the cross-domain catalog, `catalog/parts.yaml` + `parts/hardware.py`).
 - **Ritual & control panel:** `make ritual`, `make check/doctor/patch/daily`.
 
-## MVP — the smallest working holodeck
+## MVP - the smallest working holodeck
 
 The first end-to-end slice we are climbing toward (not all at once):
 
 1. `make ritual` lights the workshop and opens the MUD. *(exists)*
 2. Log in as a builder. *(exists)*
-3. **Enter the `workshop` room** — the engineering hub. *(done — furnished off the cellar)*
+3. **Enter the `workshop` room** - the engineering hub. *(done - furnished off the cellar)*
 4. Run `workshop` / `catalog` / `reuse <term>` in-world to browse reusable parts. *(done)*
 5. Run safe read-only `diagnostics` (tests, lint, git status) through a **safe runner**.
 6. **Reports** of those runs are readable in-world and saved to `reports/`.
 7. Talk to a **read-only Architect NPC** for advice.
-8. The catalog stocks **at least four real parts** with domain reuse. *(done — see `make hardware`)*
+8. The catalog stocks **at least four real parts** with domain reuse. *(done - see `make hardware`)*
 
-Steps 1–4 and the catalog (8) are done — you can log in, walk into the Workshop,
+Steps 1–4 and the catalog (8) are done - you can log in, walk into the Workshop,
 and browse the hardware store in-world today. The MVP's remaining items are 5–7
 (safe diagnostics, in-world reports, the read-only Architect NPC), climbed in the
 order in [`ROADMAP.md`](ROADMAP.md), behind the guarantees in [`SAFETY.md`](SAFETY.md).
 
 ## File & folder plan (target shape)
 
-Grown proportionally — not scaffolded empty. Today's `parts/` already holds the
+Grown proportionally - not scaffolded empty. Today's `parts/` already holds the
 game + reusable code; new subsystems land as new cards, not new top-level sprawl.
 
 ```
@@ -91,7 +91,7 @@ codeforge/
   catalog/          # ✅ the hardware store data
     parts.yaml
     README.md
-  seeds/            # ✅ worlds as data — the Workshop room lives here (Phase 2)
+  seeds/            # ✅ worlds as data - the Workshop room lives here (Phase 2)
   reports/          # → saved run outputs, by kind (Phase 7; gitignored)
   docs/holodeck/    # ✅ this blueprint (VISION, ROADMAP, SAFETY)
   tests/            # ✅ a twin per card

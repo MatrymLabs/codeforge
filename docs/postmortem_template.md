@@ -29,7 +29,7 @@ goal is prevention, not blame.*
 
 ## Root cause
 
-<The actual cause, traced to the system — not "someone forgot." Usually a missing gate,
+<The actual cause, traced to the system - not "someone forgot." Usually a missing gate,
 an asymmetry, or an unsafe default that *allowed* the mistake.>
 
 ## Detection
@@ -50,7 +50,7 @@ an asymmetry, or an unsafe default that *allowed* the mistake.>
 
 | Action | Type | Owner | Status |
 |--------|------|-------|--------|
-| <preventive fix — make the mistake impossible> | prevent | <who> | done · open |
+| <preventive fix - make the mistake impossible> | prevent | <who> | done · open |
 | <detection improvement> | detect | <who> | open |
 
 ## Lessons
