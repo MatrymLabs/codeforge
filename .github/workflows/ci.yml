@@ -12,9 +12,9 @@ jobs:
   check:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.13"
 
@@ -33,7 +33,7 @@ jobs:
       # token must never turn the portfolio's build red. Public repo uploads work
       # tokenless; set the CODECOV_TOKEN secret for higher rate limits.
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@v7
         continue-on-error: true
         with:
           files: ./coverage.xml
@@ -58,7 +58,7 @@ jobs:
       - name: Software bill of materials (SBOM)
         run: make sbom
       - name: Upload SBOM artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: sbom-cyclonedx
           path: reports/security/sbom.cdx.json
@@ -67,7 +67,7 @@ jobs:
   docker:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Build the image
         run: docker build -t codeforge:ci .
       - name: Smoke-test the container boots and serves
