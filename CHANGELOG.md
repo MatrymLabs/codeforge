@@ -7,6 +7,11 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
 ## [Unreleased]
 
 ### Added / Changed
+- **Frameless Python tooling strategy (docs).** Named the frameless identity in
+  `docs/frameless_python.md` and the tool-evaluation discipline in `docs/tooling_strategy.md`:
+  a current-inventory audit, a decision matrix, a Tool Integration Review template, a
+  Dependency Approval Rule, and the phased roadmap. Finding: the repo is already Phase 3;
+  OpenSSF Scorecard is the one open low-risk integration. No dependencies added.
 - **Terminal sticky note.** A post-it cheat card on the FORGE TERMINAL boot screen shows the
   few commands to drive it (get here: workshop -> north; `terminal`, `terminal <name>`,
   `terminal help`) so the way in is never a memory test.
