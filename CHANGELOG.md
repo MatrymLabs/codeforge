@@ -7,6 +7,9 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
 ## [Unreleased]
 
 ### Added / Changed
+- **CodeQL added to required checks.** `main` now requires `check`, `docker`, and both
+  CodeQL analyze jobs to pass before merging. Scorecard stays non-required (no PR trigger;
+  requiring it would deadlock PRs) but still scores on schedule.
 - **Branch protection on `main` (Scorecard Branch-Protection lever).** Require a PR + the
   `check`/`docker` CI (strict) before merging; force-push and deletion blocked. Solo-friendly
   (0 approvals) and no-lockout (`enforce_admins=false`). Retires the local merge-to-main
