@@ -18,10 +18,14 @@ jobs:
         with:
           python-version: "3.13"
 
+      # uv (Rust, parallel resolver) installs the dependency set far faster than pip.
+      # CI-only tooling; not a runtime or pyproject dependency. Installs into the
+      # setup-python interpreter via --system.
+      - name: Install uv
+        uses: astral-sh/setup-uv@11f9893b081a58869d3b5fccaea48c9e9e46f990  # v8.3.2
+
       - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -e ".[dev]"
+        run: uv pip install --system -e ".[dev]"
 
       # `make check` folds coverage into a single suite run (lint · types · pytest --cov
       # · threshold) and writes coverage.xml -- no separate coverage step needed.
