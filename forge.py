@@ -39,6 +39,7 @@ from parts.jobs import JOBS, bind_calling, calling_index, render_sheet
 from parts.law import law
 from parts.library import library
 from parts.npcs import room_npcs_text, talk, trace_npc
+from parts.pioneer import pioneer
 from parts.pm import pm_metrics, pm_status
 from parts.qualitygate import docs_check, render_gate, render_gate_all, render_safety
 from parts.ranks import wizard_command
@@ -65,7 +66,7 @@ HELP_TEXT = (
     "unlock <door> with <key>, regs [topic|id], library [id], law [id], "
     "registry [show|find|type|status], "
     "qa gate [all|<id>], safety review <id>, docs check, pm status, pm metrics, "
-    "truth check, career, "
+    "truth check, career, pioneer, "
     "workshop, catalog, reuse <term>, console, run <check>, diagnostics, "
     "security, ai <prompt>, lesson list, question, answer <A-D>, hint, progress, "
     "passwd, save, load, quit"
@@ -211,6 +212,15 @@ def _build_commands() -> CommandSet:
             "CMD-UM10-S01-N001-013-R0",
             "Career Evidence Sign: map CodeForge work to job-ready skills, with repo proof",
             lambda _s, arg: career(arg),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "pioneer",
+            "CMD-UM10-S01-N001-014-R0",
+            "Pioneer Mode: bold-but-honest engineering (doctrine, risk ladder, experiments)",
+            lambda _s, arg: pioneer(arg),
             namespace=CORE,
         )
     )

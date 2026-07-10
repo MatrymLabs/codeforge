@@ -1,0 +1,25 @@
+{
+  "risk_ladder": {
+    "doctrine": ["Bend convention.", "Protect safety.", "Prove the impossible.", "Document the evidence."],
+    "filter": [
+      "Is it bold?", "Is it useful?", "Is it safe enough to test?", "Is it reversible?",
+      "Is it honest?", "Is it documented?", "Does it create evidence?", "Does it move the mission forward?"
+    ],
+    "levels": [
+      {"level": 1, "name": "Safe Experiment", "meaning": "read-only, reversible, local, no secrets",
+       "examples": "generate a report; inspect structure; compileall; a docs draft", "needs": "just do it"},
+      {"level": 2, "name": "Controlled Prototype", "meaning": "small change, branch-based, tested",
+       "examples": "a new CLI command; a validator; a MUD object", "needs": "branch + gate green"},
+      {"level": 3, "name": "Approval-Gated", "meaning": "changes behavior, files, or workflow",
+       "examples": "refactor the ritual; rename a make target; alter registry format", "needs": "show the plan first"},
+      {"level": 4, "name": "High-Risk", "meaning": "hard to reverse / outward-facing",
+       "examples": "delete files; rewrite git history; push to GitHub; licenses; schema", "needs": "explicit approval + rollback"},
+      {"level": 5, "name": "Blocked", "meaning": "never",
+       "examples": "expose secrets; bypass a gate; unlicensed code; claim compliance; hide uncertainty; disable tests; raw shell in the MUD", "needs": "do not do"}
+    ],
+    "constraint_review_template": [
+      "Mission:", "Hard/safety/quality (do NOT break):", "Assumptions we can challenge:",
+      "Rules we may bend (habit, not constraint):", "Smallest safe experiment:", "Evidence needed:", "Rollback plan:"
+    ]
+  }
+}

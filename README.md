@@ -198,6 +198,10 @@ It obeys VeritasGate: a skill is only "proven" when its cited artifact actually 
 [docs/career_evidence_board.md](docs/career_evidence_board.md) and
 [docs/resume_mapping.md](docs/resume_mapping.md).
 
+**Bold, but honest:** `pioneer` surfaces **Pioneer Mode** — a disciplined-Maverick framework
+(*bend convention, not truth/safety/trust*) with a risk ladder, a constraint-review template,
+and filed experiment reports. See [docs/pioneer_mode.md](docs/pioneer_mode.md).
+
 **How it's built — honestly:** AI-assisted and engineering-directed. AI expands the
 creative and analytical surface; the ritual, gates, and self-audit keep it honest;
 tests and evidence prove each claim; I direct, review, and make the calls. What makes
