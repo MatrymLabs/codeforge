@@ -7,6 +7,12 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
 ## [Unreleased]
 
 ### Added / Changed
+- **Hardware Store functions check (`functions`).** A live demo of each cataloged reusable
+  part, the real call and its real output, so "reusable" is shown, not claimed: `rank-gate`
+  refuses a novice and allows an owner, `report-writer` writes "hello world" to a temp file,
+  `validated-loader` rejects a bad row and fails loud, `assessment-engine` validates its
+  lessons. Parts that need world state cite their test twin (`[tested]`), never a fake demo.
+  `parts/functions.py`, filed in the registry (board 84/84).
 - **Closed three career-board gaps with real artifacts.** Cataloged the ReportWriter as a
   Hardware Store part with a cross-domain reuse map (`catalog/parts.yaml`); wrote a real
   rollback runbook for the live demo (`docs/runbooks/demo-deploy-rollback.md`); added a

@@ -72,3 +72,19 @@ Today it's a validated data file + a viewer (`make hardware`). Next steps (see
 [`../docs/holodeck/ROADMAP.md`](../docs/holodeck/ROADMAP.md)): expose it in-world as
 the `catalog`/`parts`/`hardware` Workshop commands, add search by tag/domain, and
 let the Architect NPC suggest an existing part before you build a new one.
+
+## Functions check (`functions`)
+
+A hardware store lets you test a part before you rely on it. The **`functions`** command
+runs a small, safe, live demo of each cataloged part, the real call and its real output,
+so "reusable" is shown, not just claimed:
+
+```
+functions
+```
+
+Where a clean standalone demo is safe it runs live (`[runs]`, e.g. `report-writer` writes
+"hello world" to a temp file, `rank-gate` refuses a novice and allows an owner,
+`validated-loader` rejects a bad row and fails loud). Where a part needs world state, the
+check cites its **test twin** instead of faking a demo (`[tested]`), never a false claim.
+See `parts/functions.py`.
