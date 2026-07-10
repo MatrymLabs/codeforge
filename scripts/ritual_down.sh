@@ -74,7 +74,7 @@ fi
 if git rev-parse --abbrev-ref '@{u}' >/dev/null 2>&1; then
   ahead="$(git rev-list --count '@{u}'..@ 2>/dev/null || echo 0)"
   if [ "$ahead" -gt 0 ]; then
-    warn "'$BRANCH' is ahead by $ahead commit(s) -- unpushed. When ready: git push"
+    warn "'$BRANCH' is ahead by $ahead commit(s) -- unpushed. When ready: make ship (pushes the branch + opens its PR)"
   else
     ok "Pushed and in sync with GitHub."
   fi

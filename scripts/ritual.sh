@@ -133,7 +133,7 @@ if git rev-parse --abbrev-ref @'{u}' >/dev/null 2>&1; then
     git merge --ff-only --quiet @'{u}' && ok "Fast-forwarded '$BRANCH' to match GitHub."
   elif [ "$REMOTE" = "$BASE" ]; then
     MIRROR_STATUS="ahead $(git rev-list --count @'{u}'..@) (unpushed)"
-    warn "'$BRANCH' is ahead by $(git rev-list --count @'{u}'..@) commit(s) -- unpushed. Review, then: git push"
+    warn "'$BRANCH' is ahead by $(git rev-list --count @'{u}'..@) commit(s) -- unpushed. Review, then ship the PR: make ship"
   else
     MIRROR_STATUS="diverged (reconcile by hand)"
     warn "'$BRANCH' has diverged from GitHub. Reconcile by hand (the ritual never force-syncs)."
