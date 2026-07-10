@@ -86,8 +86,16 @@ Status labels are defined at the bottom of this doc. Grounded in the inventory a
 **Integrated this cycle (1):**
 1. **OpenSSF Scorecard** (`integrate_now`, DONE). The single professionalism/security signal
    from the Phase-3 list that was not yet wired. Shipped as `.github/workflows/scorecard.yml`
-   with a public badge, no runtime dependency. The first score may be below-average until
-   branch protection and a few settings are tuned; that is the honest-improvement story.
+   with a public badge, no runtime dependency.
+
+**Repo settings tuned for the score (safe, reversible):**
+- All GitHub Actions pinned to full commit SHA (Scorecard Pinned-Dependencies); Dependabot
+  maintains them.
+- `main` branch protection enabled: require a pull request + the `check` and `docker` CI
+  jobs (strict) before merging, force-push and deletion blocked. Solo-friendly (0 required
+  approvals, so the owner self-merges) and no lockout (`enforce_admins=false`, an emergency
+  bypass remains). This also aligns the repo with its own documented workflow
+  (branch -> PR -> CI green -> merge); the local merge-to-main shortcut is retired.
 
 **Document for later (2):**
 1. **MkDocs / Material** (`portfolio_candidate`) to publish `docs/` alongside the portfolio page.

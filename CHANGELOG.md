@@ -7,6 +7,10 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
 ## [Unreleased]
 
 ### Added / Changed
+- **Branch protection on `main` (Scorecard Branch-Protection lever).** Require a PR + the
+  `check`/`docker` CI (strict) before merging; force-push and deletion blocked. Solo-friendly
+  (0 approvals) and no-lockout (`enforce_admins=false`). Retires the local merge-to-main
+  shortcut in favor of the documented branch -> PR -> CI green -> merge flow.
 - **Hardware Store: the road not taken.** Each part card now carries an optional
   `experimental` section (`make hardware`) naming the framework/tool path it *could*
   take if CodeForge were not frameless (FastAPI DI, Pydantic, a broker, Jinja2, an LMS)
