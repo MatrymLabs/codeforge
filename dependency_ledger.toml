@@ -1,0 +1,93 @@
+# Dependency ledger -- every dependency earns its place (frameless Python).
+#
+# The Dependency Approval Rule (docs/tooling_strategy.md) made machine-checkable: every
+# runtime and dev dependency declared in pyproject.toml MUST have a justification row here,
+# or `make deps` fails. Each row answers three of the eight approval questions in the form
+# that outlives a PR description: why we need it, what stdlib option was weighed, and how
+# removable it is. Adding a dependency without a row here is the gate's whole point to catch.
+#
+# Keys are PEP 503-normalized package names (lowercase, hyphens): `bandit[toml]` -> `bandit`.
+
+# ----- runtime dependencies (ship inside the wheel) -----------------------------------
+
+[runtime.pyyaml]
+why = "Parse and validate the YAML seed files; the world is data, loaded through our own gates."
+stdlib_alternative = "None; there is no YAML parser in the standard library and hand-rolling one is not worth it."
+removable = "Only by changing the seed format (e.g. to JSON/TOML), which the loader gate abstracts."
+
+[runtime.sqlalchemy]
+why = "Typed, migration-friendly persistence for accounts and characters behind parts/db.py."
+stdlib_alternative = "sqlite3 (stdlib) works, but hand-written SQL loses the typed models and schema laws."
+removable = "The db seam (parts/db.py) is the only caller; a sqlite3 backend could replace it."
+
+[runtime.fastapi]
+why = "The read-only admin/HTTP surface with owner-account auth and typed request handling."
+stdlib_alternative = "http.server (stdlib) exists but has no routing, validation, or auth ergonomics."
+removable = "The admin API is an optional surface; the MUD engine runs without it."
+
+[runtime.uvicorn]
+why = "ASGI server that actually runs the FastAPI admin app."
+stdlib_alternative = "None at the ASGI layer; wsgiref is WSGI-only and synchronous."
+removable = "Removed together with FastAPI if the HTTP surface is dropped."
+
+[runtime.websockets]
+why = "The browser gateway speaks WebSocket to the in-page terminal."
+stdlib_alternative = "None; implementing the WebSocket handshake and framing by hand is error-prone."
+removable = "Only the browser gate depends on it; the TCP gateway does not."
+
+# ----- dev dependencies (quality gates, never shipped) --------------------------------
+
+[dev.ruff]
+why = "Lint and format in one fast tool; the quality gate in make fix/lint and CI."
+stdlib_alternative = "None; there is no stdlib linter/formatter."
+removable = "Yes; it is a dev-time gate, not runtime. Replaceable by Black+isort+Flake8 (worse)."
+
+[dev.mypy]
+why = "Static type checking; enforces the typing discipline that make check gates on."
+stdlib_alternative = "None; typing is in stdlib but there is no stdlib type checker."
+removable = "Yes; dev-time only. Pyright is an alternative if ever needed."
+
+[dev.types-pyyaml]
+why = "Type stubs so mypy understands the pyyaml calls; no runtime effect."
+stdlib_alternative = "None; stubs are inherently third-party."
+removable = "Yes; removed if pyyaml is removed or mypy is dropped."
+
+[dev.pytest]
+why = "The test runner for the whole suite; proves every part with acceptance and refusal cases."
+stdlib_alternative = "unittest (stdlib) works but pytest's fixtures and parametrization are far cleaner."
+removable = "Migratable to unittest with effort; the tests are the asset, not the runner."
+
+[dev.pytest-cov]
+why = "Coverage measurement folded into the test run; gates the coverage threshold."
+stdlib_alternative = "coverage.py directly (still third-party); no stdlib coverage tool exists."
+removable = "Yes; dev-time only. coverage.py could be invoked standalone."
+
+[dev.pip-audit]
+why = "Scans installed dependencies for known CVEs; the make audit gate and CI supply-chain check."
+stdlib_alternative = "None; CVE data and matching are inherently external."
+removable = "Yes; dev/CI-time only."
+
+[dev.bandit]
+why = "Static security scan (SAST) of our own source; catches unsafe patterns before CI."
+stdlib_alternative = "None; there is no stdlib SAST."
+removable = "Yes; dev/CI-time only. CodeQL provides a deeper GitHub-native scan alongside it."
+
+[dev.detect-secrets]
+why = "Baselined secret scanning so a credential never reaches git; the make secrets gate."
+stdlib_alternative = "None; entropy/heuristic secret detection is not in stdlib."
+removable = "Yes; dev/CI-time only. gitleaks/trufflehog are alternatives (redundant)."
+
+[dev.cyclonedx-bom]
+why = "Generates the CycloneDX SBOM (supply-chain evidence, SSDF) as a build artifact."
+stdlib_alternative = "None; SBOM formats and dependency graph resolution are external."
+removable = "Yes; dev/CI-time only."
+
+[dev.hypothesis]
+why = "Property-based tests (make property) that assert laws across generated inputs, not just examples."
+stdlib_alternative = "None; stdlib has no property-testing engine."
+removable = "Yes; example-based tests remain if it is dropped, losing the generative coverage."
+
+[dev.httpx2]
+why = "Test client for exercising the FastAPI admin surface without a live network."
+stdlib_alternative = "http.client (stdlib) works but lacks the ASGI transport that tests the app in-process."
+removable = "Yes; test-only. Removed if the HTTP surface is dropped."

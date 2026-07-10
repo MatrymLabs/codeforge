@@ -1,4 +1,4 @@
-.PHONY: env fix lint typecheck test property coverage audit security secrets sbom doctor patch daily check readiness truth cast-plan smoke repo-integrity ship run world store hardware clean serve ritual-fast ritual ritual-down unskew
+.PHONY: env fix lint typecheck test property coverage audit security secrets deps sbom doctor patch daily check readiness truth cast-plan smoke repo-integrity ship run world store hardware clean serve ritual-fast ritual ritual-down unskew
 
 # --- Environment: create/validate the .venv, fail loud on version mismatch ---
 env:
@@ -88,6 +88,12 @@ security:
 # Regenerate the baseline after auditing: detect-secrets scan --exclude-files '\.venv/' > .secrets.baseline ---
 secrets:
 	@git ls-files | xargs detect-secrets-hook --baseline .secrets.baseline
+
+# --- Dependency gate: every declared dependency must have a justification row in
+# dependency_ledger.toml (the Dependency Approval Rule, frameless Python). Fails loud
+# on an unjustified dependency; warns on a stale ledger row. Stdlib only (tomllib). ---
+deps:
+	@python -m parts.dependencies
 
 # --- Doctor: run the gates read-only, stop at the first failure, prescribe the fix ---
 doctor:
