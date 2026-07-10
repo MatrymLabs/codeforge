@@ -296,6 +296,7 @@ Generated from the `CARD:` docstrings in `parts/` (see `make store`):
 | `cli` | one door to the whole workshop: the codeforge command. |
 | `combat` | the training loop: strike, defeat, XP, LEVEL UP. |
 | `commands` | the command spine: verbs filed, rank-gated, namespaced. |
+| `config` | one typed, validated view of the environment (pydantic Settings). |
 | `console` | the FailsafeRunner: run allowlisted commands safely. |
 | `dashboard` | the Lens: a server-rendered web board over real forge evidence. |
 | `db` | persistence through the SQLAlchemy 2.0 ORM (SQLite or PostgreSQL). |

@@ -22,6 +22,7 @@ _PROGRAMS: list[tuple[str, str]] = [
     ("docs", "Documentation gap check"),
     ("deps", "Dependency gate - every dependency justified (frameless Python)"),
     ("bench", "Engine tick benchmark - handle_command throughput + latency"),
+    ("config", "Configuration - the typed, validated environment (secrets redacted)"),
 ]
 _NAMES = {name for name, _ in _PROGRAMS}
 
@@ -89,6 +90,10 @@ def _run(name: str) -> str:
         from parts.bench import bench as run_bench
 
         return run_bench()
+    if name == "config":
+        from parts.config import render_config
+
+        return render_config()
     return f"no such program '{name}'"
 
 

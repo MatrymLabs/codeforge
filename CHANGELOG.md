@@ -7,6 +7,18 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
 ## [Unreleased]
 
 ### Added / Changed
+- **Pydantic: typed API contract + typed settings.** `pydantic` is now a declared runtime
+  dependency (previously transitive via FastAPI), justified in the ledger, and used directly
+  two ways. (1) The `/api/status` route gains explicit `StatusPayload`/`StatusCard` response
+  models, so the JSON contract is documented in OpenAPI at `/docs` (the "visible API
+  contract" a React/TypeScript client can generate types from). (2) `parts/config.py`
+  (MOD-UM10-S01-N001-017-R0) adds a typed, validated `Settings` catalog of the environment
+  (PORT, DATABASE_URL, CODEFORGE_ARCHITECT, ...): fails loud on a bad value (a non-numeric or
+  out-of-range PORT raises `ConfigError`), is frozen, and renders with credentials redacted.
+  The `web` entry point now takes its port from validated `Settings`; a `config` terminal
+  program displays the effective config. Adds `docs/configuration.md` and test twins
+  (typed-payload + OpenAPI contract assertions; config defaults, coercion, hostile PORT
+  values, redaction).
 - **PostgreSQL backend + Alembic migrations.** The db seam (`parts/db.py`) now speaks either
   SQLite (the zero-config default for dev, tests, and the demo) or PostgreSQL when
   `DATABASE_URL` is set (`postgresql+psycopg://...`), through the same SQLAlchemy 2.0 models.

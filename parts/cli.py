@@ -102,10 +102,11 @@ def main(argv: list[str] | None = None) -> int:
     if cmd == "web":
         import uvicorn
 
+        from parts.config import Settings
         from parts.web_gateway import app as web_app
 
-        # Hosts (Render/Fly) hand us the port on $PORT; default to 8000 locally.
-        uvicorn.run(web_app, host="0.0.0.0", port=int(os.environ.get("PORT", "8000")))
+        # Hosts (Render/Fly) hand us the port on $PORT; Settings types + validates it.
+        uvicorn.run(web_app, host="0.0.0.0", port=Settings.load().port)
         return 0
     if cmd == "migrate-db":
         from parts.accounts import import_legacy_json

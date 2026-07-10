@@ -94,11 +94,11 @@ def test_hostile_card_text_is_escaped():
 
 def test_status_payload_mirrors_the_cards():
     snap = build_snapshot()
-    payload = status_payload(snap)
-    assert payload["engine"] == "codeforge"
-    assert [c["key"] for c in payload["cards"]] == [c.key for c in snap.cards]
-    hardware = next(c for c in payload["cards"] if c["key"] == "hardware")
-    assert hardware["headline"] == next(c.headline for c in snap.cards if c.key == "hardware")
+    payload = status_payload(snap)  # a typed StatusPayload, not a bare dict
+    assert payload.engine == "codeforge"
+    assert [c.key for c in payload.cards] == [c.key for c in snap.cards]
+    hardware = next(c for c in payload.cards if c.key == "hardware")
+    assert hardware.headline == next(c.headline for c in snap.cards if c.key == "hardware")
 
 
 # --- routes: live on the FastAPI app ----------------------------------------
@@ -122,3 +122,13 @@ def test_status_route_serves_the_json_twin(client):
     body = resp.json()
     assert body["engine"] == "codeforge"
     assert {c["key"] for c in body["cards"]} == {"career", "qa", "hardware", "perf"}
+
+
+def test_status_contract_is_documented_in_openapi(client):
+    # The typed response_model means the contract self-documents at /openapi.json (/docs).
+    schema = client.get("/openapi.json").json()
+    assert "StatusPayload" in schema["components"]["schemas"]
+    assert "StatusCard" in schema["components"]["schemas"]
+    status_get = schema["paths"]["/api/status"]["get"]
+    ref = status_get["responses"]["200"]["content"]["application/json"]["schema"]["$ref"]
+    assert ref.endswith("/StatusPayload")

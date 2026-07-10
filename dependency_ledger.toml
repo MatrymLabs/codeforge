@@ -35,6 +35,11 @@ why = "The browser gateway speaks WebSocket to the in-page terminal."
 stdlib_alternative = "None; implementing the WebSocket handshake and framing by hand is error-prone."
 removable = "Only the browser gate depends on it; the TCP gateway does not."
 
+[runtime.pydantic]
+why = "Typed, validated models: the API request/response contract (documented in OpenAPI) and the Settings environment catalog (parts/config.py). Already a transitive dependency of FastAPI; now declared and used directly."
+stdlib_alternative = "dataclasses + hand-written validation exist, but lose the JSON-schema/OpenAPI generation and coercion FastAPI relies on."
+removable = "Not while FastAPI is used (it depends on pydantic); the direct uses (config, response models) would fall back to dataclasses + manual validation."
+
 [runtime.psycopg]
 why = "Optional (extra 'postgres'): the PostgreSQL driver SQLAlchemy uses when DATABASE_URL points at Postgres. Not installed by default; SQLite (stdlib) stays the dev/test backend."
 stdlib_alternative = "sqlite3 (stdlib) is the default backend and needs no driver; Postgres is a production capability with no stdlib client."
