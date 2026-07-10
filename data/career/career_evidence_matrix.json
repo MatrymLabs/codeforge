@@ -280,11 +280,11 @@
           },
           {
             "skill_id": "adv.runbook.postmortem",
-            "skill": "Create runbooks and postmortem templates",
+            "skill": "Create runbooks and postmortem templates (and fill one)",
             "why_it_matters": "Operational discipline is the clearest SRE bridge.",
-            "repo_proof": [],
-            "status": "missing",
-            "next_proof_task": "Add docs/runbook_template.md and docs/postmortem_template.md, then fill one."
+            "repo_proof": ["docs/runbook_template.md", "docs/postmortem_template.md", "docs/postmortems/2026-07-09-red-merge-to-main.md"],
+            "status": "proven",
+            "next_proof_task": "Add a runbook for a real operation (e.g. the demo deploy rollback)."
           },
           {
             "skill_id": "adv.platform.tooling",

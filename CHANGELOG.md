@@ -7,6 +7,13 @@ pre-1.0. Readiness language only — no compliance/OSHA/legal claims.
 ## [Unreleased]
 
 ### Added / Changed
+- **Runbook + postmortem discipline (closes a Career-board gap).** Added
+  `docs/runbook_template.md`, `docs/postmortem_template.md`, and a real filled blameless
+  postmortem (`docs/postmortems/2026-07-09-red-merge-to-main.md`) of the day a bandit gate
+  merged red to `main` — with the root cause (local/CI gate asymmetry) and the standing
+  rules it produced. Flipped the Career board's `adv.runbook.postmortem` skill from
+  `missing` → `proven` (board now 25 proven · 8 partial · 1 missing); the honesty test
+  confirms every cited artifact exists.
 - **Career Evidence Sign (`career` command).** A data-driven, VeritasGate-honest proof
   board in *The Forge Workshop* that maps CodeForge work to real software-career skills —
   each with the exact repo artifact that proves it, and the honest gaps. Grounded in
