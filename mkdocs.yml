@@ -1,0 +1,90 @@
+site_name: CodeForge
+site_description: A Python-native MUD engine and self-auditing engineering workshop.
+site_url: https://matrymlabs.github.io/codeforge/
+repo_url: https://github.com/MatrymLabs/codeforge
+repo_name: MatrymLabs/codeforge
+edit_uri: ""
+copyright: MIT licensed. Readiness and evidence, never certification.
+
+theme:
+  name: material
+  palette:
+    - scheme: slate
+      primary: teal
+      accent: teal
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+    - scheme: default
+      primary: teal
+      accent: teal
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+  features:
+    - navigation.sections
+    - navigation.top
+    - content.code.copy
+    - search.suggest
+    - toc.follow
+
+markdown_extensions:
+  - admonition
+  - tables
+  - pymdownx.details
+  - pymdownx.superfences
+  - toc:
+      permalink: true
+
+# README.md is the GitHub-facing docs map; index.md is the site home (avoid the conflict).
+exclude_docs: |
+  README.md
+  reports/
+
+nav:
+  - Home: index.md
+  - Getting started:
+      - Run it: RUNNING.md
+  - Architecture and decisions:
+      - Architecture: architecture.md
+      - Architecture-first Python: frameless_python.md
+      - Tooling strategy: tooling_strategy.md
+      - Full-stack forge decision: full_stack_forge_decision.md
+      - Framework decision matrix: framework_decision_matrix.md
+      - Seed architecture: seed_architecture.md
+  - Full-stack:
+      - Dashboard (HTMX): dashboard.md
+      - Blueprint renderer: blueprint_renderer.md
+      - Database (SQLite / PostgreSQL): database.md
+      - Configuration: configuration.md
+      - Architect brain (AI): architect_brain.md
+      - Performance: performance.md
+  - Self-audit systems:
+      - Frame-up: frame_up.md
+      - VeritasGate (truth): veritas.md
+      - Safety and QA: safety_qa_system.md
+      - Repo integrity: repo_integrity.md
+      - Project management: project_management.md
+  - Career and evidence:
+      - Career board: career_evidence_board.md
+      - Hiring matrix: hiring_requirement_matrix.md
+      - GitHub portfolio checklist: github_portfolio_checklist.md
+      - Full-stack readiness: full_stack_readiness_checklist.md
+      - Resume mapping: resume_mapping.md
+  - Process and rituals:
+      - Startup ritual: startup_ritual.md
+      - Shutdown ritual: shutdown_ritual.md
+      - Pioneer mode: pioneer_mode.md
+      - AI workflow: AI_WORKFLOW.md
+      - Debugging case study: DEBUGGING.md
+  - Reference:
+      - ADR 0001 - canonical state: adr/0001-canonical-state.md
+      - ADR 0002 - derive, don't store: adr/0002-derive-dont-store.md
+      - ADR 0003 - framework-free by design: adr/0003-framework-free-by-design.md
+      - Classification system: classification/CLASSIFICATION_SYSTEM.md
+      - Naming glossary: naming_glossary.md
+      - Legal and policy awareness: legal_policy_awareness.md
+  - Research (2026):
+      - Python hiring requirements: research/python_hiring_requirements.md
+      - GitHub portfolio requirements: research/github_portfolio_requirements.md
+      - Full-stack Python requirements: research/full_stack_python_requirements.md

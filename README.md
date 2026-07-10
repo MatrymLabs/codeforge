@@ -5,8 +5,11 @@
 ![License](https://img.shields.io/badge/license-MIT-green)
 [![codecov](https://codecov.io/gh/MatrymLabs/codeforge/branch/main/graph/badge.svg)](https://codecov.io/gh/MatrymLabs/codeforge)
 [![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/MatrymLabs/codeforge/badge)](https://scorecard.dev/viewer/?uri=github.com/MatrymLabs/codeforge)
+[![Docs](https://img.shields.io/badge/docs-mkdocs--material-teal)](https://matrymlabs.github.io/codeforge/)
 
 **A Python-native multiplayer MUD engine, built as a workshop of small, tested, reusable parts.**
+
+📖 **Documentation site:** [matrymlabs.github.io/codeforge](https://matrymlabs.github.io/codeforge/) (built from `docs/` with MkDocs Material, published on GitHub Pages).
 
 Classic soul: an ASCII splash screen, rooms, locked doors, NPCs, callings, XP, wizards,
 and a training dummy that reassembles itself. Modern body: a pure-function engine tick,

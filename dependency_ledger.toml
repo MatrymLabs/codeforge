@@ -116,3 +116,8 @@ removable = "Yes; test-only. Removed if the HTTP surface is dropped."
 why = "Schema migrations for the SQLAlchemy models (migrations/); `alembic upgrade head` builds the PostgreSQL schema and versions future changes. Ops/dev tooling, not a runtime import."
 stdlib_alternative = "None; there is no stdlib migration tool. create_all covers the SQLite dev path but does not version or evolve a production schema."
 removable = "Yes; dev/ops-time only. The SQLite default runs without it (create_all); Postgres deployments use it."
+
+[dev.mkdocs-material]
+why = "Builds the docs/ tree into the public documentation site (GitHub Pages). Docs-build tooling; never imported by the app."
+stdlib_alternative = "None sensible; hand-writing an HTML docs site generator is not worth it. The Markdown docs remain readable on GitHub without it."
+removable = "Yes; docs-build only. The repo and its Markdown docs work without the published site."

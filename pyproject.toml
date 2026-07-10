@@ -24,6 +24,7 @@ dev = [
     "hypothesis",
     "httpx2",
     "alembic",
+    "mkdocs-material",
 ]
 
 [project.scripts]
