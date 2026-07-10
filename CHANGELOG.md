@@ -7,6 +7,15 @@ pre-1.0. Readiness language only — no compliance/OSHA/legal claims.
 ## [Unreleased]
 
 ### Added / Changed
+- **Career Evidence Sign (`career` command).** A data-driven, VeritasGate-honest proof
+  board in *The Forge Workshop* that maps CodeForge work to real software-career skills —
+  each with the exact repo artifact that proves it, and the honest gaps. Grounded in
+  BLS/O*NET research. Views: `career` · `career checklist` · `career gaps` · `career
+  evidence` · `career resume` · `career role entry|intermediate|advanced`. `parts/career.py`
+  + `data/career/career_evidence_matrix.json` + `docs/{career_evidence_board,resume_mapping}.md`.
+  Honesty enforced: `tests/test_career.py` fails if a skill is `proven`/`partial` while its
+  cited proof path doesn't exist (no overclaiming). Shipped board: 24 proven · 8 partial ·
+  2 missing of 34 skills.
 - **ADR-0003: Framework-free by design.** Records the deliberate scope choice to build the
   engine in plain, testable code (world-is-data, one pure-function tick, derive-don't-store,
   small tested parts) rather than on a framework. Framed neutrally — a framework like Evennia

@@ -87,9 +87,11 @@ workshop:
   desc: |-
     Your engineering cockpit. Blueprint rails, a diagnostics panel, and the
     hardware-catalog counter orbit a central workbench; the Architect's chair
-    hums, ready. Every system begins here before it becomes part of the world.
-    -- Here: workshop (tools), ai <prompt> (the Architect). Rooms ring you:
-       the Vault (w), the Console (s), the Observatory (n), the Blueprint (e).
+    hums, ready. A clean black-and-white Career Evidence Sign hangs by the door.
+    Every system begins here before it becomes part of the world.
+    -- Here: workshop (tools), ai <prompt> (the Architect), career (the sign).
+       Rooms ring you: the Vault (w), the Console (s), the Observatory (n),
+       the Blueprint (e).
   exits:
     north: observatory
     east: blueprint_table

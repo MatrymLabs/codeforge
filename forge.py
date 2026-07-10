@@ -17,6 +17,7 @@ from parts.accounts import (
 )
 from parts.accounts import register as register_account
 from parts.architect import consult
+from parts.career import career
 from parts.characters import load_character, restore_character, save_character
 from parts.classroom import (
     ask_question,
@@ -64,7 +65,7 @@ HELP_TEXT = (
     "unlock <door> with <key>, regs [topic|id], library [id], law [id], "
     "registry [show|find|type|status], "
     "qa gate [all|<id>], safety review <id>, docs check, pm status, pm metrics, "
-    "truth check, "
+    "truth check, career, "
     "workshop, catalog, reuse <term>, console, run <check>, diagnostics, "
     "security, ai <prompt>, lesson list, question, answer <A-D>, hint, progress, "
     "passwd, save, load, quit"
@@ -201,6 +202,15 @@ def _build_commands() -> CommandSet:
             "CMD-UM10-S01-N001-012-R0",
             "VeritasGate: check that the project's claims match reality",
             lambda _s, _a: render_truth(),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "career",
+            "CMD-UM10-S01-N001-013-R0",
+            "Career Evidence Sign: map CodeForge work to job-ready skills, with repo proof",
+            lambda _s, arg: career(arg),
             namespace=CORE,
         )
     )

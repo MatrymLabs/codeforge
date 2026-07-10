@@ -1080,5 +1080,34 @@
     "aliases": [],
     "created": "2026-07-10",
     "updated": "2026-07-10"
+  },
+  {
+    "designation": "MOD-UM10-S01-N001-008-R0",
+    "name": "career",
+    "status": "active",
+    "function": "Career Evidence Sign renderer: data-driven skills-to-proof board (VeritasGate-honest).",
+    "label": "career",
+    "file": "parts/career.py",
+    "type": "MOD",
+    "domain": "UM10",
+    "sector": "S01",
+    "node": "N001",
+    "sequence": "008",
+    "revision": "R0",
+    "docs": "docs/career_evidence_board.md",
+    "tests": "tests/test_career.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "module",
+      "career",
+      "evidence"
+    ],
+    "notes": "",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-10",
+    "updated": "2026-07-10"
   }
 ]
