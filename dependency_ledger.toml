@@ -40,6 +40,11 @@ why = "Typed, validated models: the API request/response contract (documented in
 stdlib_alternative = "dataclasses + hand-written validation exist, but lose the JSON-schema/OpenAPI generation and coercion FastAPI relies on."
 removable = "Not while FastAPI is used (it depends on pydantic); the direct uses (config, response models) would fall back to dataclasses + manual validation."
 
+[runtime.structlog]
+why = "Structured (JSON) request logging on the HTTP surface (parts/observability.py): one queryable event per request, not a prose line. An observability signal employers name."
+stdlib_alternative = "logging (stdlib) with a custom JSON formatter works, but loses structlog's context binding, processor pipeline, and ergonomics; more boilerplate for the same result."
+removable = "Yes; only parts/observability.py imports it. The MUD engine and tick never log through it; the HTTP surface would fall back to stdlib logging."
+
 [runtime.psycopg]
 why = "Optional (extra 'postgres'): the PostgreSQL driver SQLAlchemy uses when DATABASE_URL points at Postgres. Not installed by default; SQLite (stdlib) stays the dev/test backend."
 stdlib_alternative = "sqlite3 (stdlib) is the default backend and needs no driver; Postgres is a production capability with no stdlib client."

@@ -460,6 +460,18 @@
             ],
             "status": "proven",
             "next_proof_task": "Exercise the live path in a gated, keyed integration run and capture the evidence (the seam is proven; a real call is not yet run in CI)."
+          },
+          {
+            "skill_id": "adv.ops.observability",
+            "skill": "Instrument a service with structured logs and metrics",
+            "why_it_matters": "Seniors are judged on operability; structured logs + a Prometheus /metrics endpoint are a recurring observability ask.",
+            "repo_proof": [
+              "parts/observability.py",
+              "tests/test_observability.py",
+              "docs/observability.md"
+            ],
+            "status": "proven",
+            "next_proof_task": "Add latency histogram buckets and scrape the endpoint from a Prometheus/Grafana demo, captured as evidence."
           }
         ]
       }

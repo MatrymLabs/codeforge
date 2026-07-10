@@ -30,6 +30,7 @@ The one map to everything under `docs/`. New here? Read [RUNNING.md](RUNNING.md)
 - [architect_brain.md](architect_brain.md), the Architect NPC's swappable brain: local rule-based guide today, Claude-backed one an API key away (the seam, tested with a fake).
 - [database.md](database.md), persistence: SQLite by default, PostgreSQL (`DATABASE_URL`) for production, with Alembic migrations and a docker-compose Postgres.
 - [configuration.md](configuration.md), the typed, validated environment catalog (pydantic `Settings`); the `config` terminal program renders it (secrets redacted).
+- [observability.md](observability.md), structured request logs (structlog) + a Prometheus `/metrics` endpoint, wired on with one HTTP middleware.
 - [project_management.md](project_management.md), `pm status`, backlog, risks, decisions, one worked LSS DMAIC.
 
 ## Ritual and process
