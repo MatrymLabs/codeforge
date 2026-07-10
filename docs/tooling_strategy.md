@@ -91,11 +91,15 @@ Status labels are defined at the bottom of this doc. Grounded in the inventory a
 **Repo settings tuned for the score (safe, reversible):**
 - All GitHub Actions pinned to full commit SHA (Scorecard Pinned-Dependencies); Dependabot
   maintains them.
-- `main` branch protection enabled: require a pull request + the `check` and `docker` CI
-  jobs (strict) before merging, force-push and deletion blocked. Solo-friendly (0 required
-  approvals, so the owner self-merges) and no lockout (`enforce_admins=false`, an emergency
-  bypass remains). This also aligns the repo with its own documented workflow
-  (branch -> PR -> CI green -> merge); the local merge-to-main shortcut is retired.
+- `main` branch protection enabled: require a pull request + the required CI jobs (strict)
+  before merging, force-push and deletion blocked. Solo-friendly (0 required approvals, so
+  the owner self-merges) and no lockout (`enforce_admins=false`, an emergency bypass remains).
+  This also aligns the repo with its own documented workflow (branch -> PR -> CI green ->
+  merge); the local merge-to-main shortcut is retired.
+- Required status checks: `check`, `docker`, and both CodeQL jobs (`Analyze (actions)`,
+  `Analyze (python)`). Scorecard is deliberately NOT required: it has no `pull_request`
+  trigger (it runs on schedule/push), so requiring it would deadlock every PR; it still
+  scores and refreshes the badge on its own cadence.
 
 **Document for later (2):**
 1. **MkDocs / Material** (`portfolio_candidate`) to publish `docs/` alongside the portfolio page.
