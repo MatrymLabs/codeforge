@@ -86,9 +86,13 @@ def truth_checks(root: Path | None = None) -> list[TruthCheck]:
     ]
 
 
-def render_truth() -> str:
-    """The `truth check` projection: each check, its verdict, and the overall call."""
-    checks = truth_checks()
+def render_truth(checks: list[TruthCheck] | None = None) -> str:
+    """The `truth check` projection: each check, its verdict, and the overall call.
+
+    Accepts pre-computed checks (so a caller that also needs the pass/fail verdict does
+    not run the audit twice); computes them from the live repo when none are passed.
+    """
+    checks = truth_checks() if checks is None else checks
     flagged = [c for c in checks if c.status != VERIFIED]
     lines = ["VeritasGate: truth check", "", "No claim without correspondence.", ""]
     for c in checks:
@@ -107,3 +111,18 @@ def render_truth() -> str:
         "It does not prove legal originality or compliance."
     )
     return "\n".join(lines)
+
+
+def main() -> int:
+    """CLI entry (`python -m parts.veritas`, `make truth`): render the audit and GATE.
+
+    Exit 0 when every claim corresponds to reality; exit 1 the moment one is FLAGGED, so
+    the ritual and CI can fail loud on a claim that has drifted from the code.
+    """
+    checks = truth_checks()
+    print(render_truth(checks))
+    return 1 if any(c.status != VERIFIED for c in checks) else 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

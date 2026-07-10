@@ -12,7 +12,7 @@ import pytest
 
 from forge import handle_command
 from parts.session import SESSIONS, Session
-from parts.veritas import FLAGGED, VERIFIED, render_truth, truth_checks
+from parts.veritas import FLAGGED, VERIFIED, main, render_truth, truth_checks
 
 
 def test_the_real_repo_passes_its_own_truth_checks() -> None:
@@ -26,6 +26,24 @@ def test_render_reports_the_overall_verdict() -> None:
     out = render_truth()
     assert "No claim without correspondence" in out
     assert "ALL VERIFIED" in out  # the repo is currently honest
+
+
+def test_truth_cli_exits_zero_when_the_repo_is_honest(capsys) -> None:
+    # `make truth` / `python -m parts.veritas`: the gate the ritual and CI call.
+    code = main()
+    out = capsys.readouterr().out
+    assert code == 0  # the real repo currently verifies
+    assert "VeritasGate" in out
+
+
+def test_truth_cli_exits_one_when_a_claim_is_flagged(monkeypatch, capsys) -> None:
+    # A FLAGGED claim must fail the gate loud (exit 1), never pass silently.
+    from parts import veritas as v
+
+    flagged = [v.TruthCheck("some claim", FLAGGED, "does not correspond")]
+    monkeypatch.setattr(v, "truth_checks", lambda: flagged)
+    assert main() == 1
+    assert "FLAGGED" in capsys.readouterr().out
 
 
 def test_a_planted_overclaim_and_hardcoded_count_are_flagged(tmp_path: Path) -> None:
