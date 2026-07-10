@@ -454,5 +454,34 @@
     "aliases": [],
     "created": "2026-07-10",
     "updated": "2026-07-10"
+  },
+  {
+    "designation": "CMD-UM10-S01-N001-015-R0",
+    "name": "`inspect`",
+    "status": "active",
+    "function": "Inspect the forge: on-demand green/yellow/red frame-up composed from the project's gates.",
+    "label": "inspect",
+    "file": "parts/frameup.py",
+    "type": "CMD",
+    "domain": "UM10",
+    "sector": "S01",
+    "node": "N001",
+    "sequence": "015",
+    "revision": "R0",
+    "docs": "docs/frame_up.md",
+    "tests": "tests/test_frameup.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "command",
+      "inspect",
+      "audit"
+    ],
+    "notes": "",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-10",
+    "updated": "2026-07-10"
   }
 ]

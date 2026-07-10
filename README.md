@@ -202,6 +202,10 @@ It obeys VeritasGate: a skill is only "proven" when its cited artifact actually 
 (*bend convention, not truth/safety/trust*) with a risk ladder, a constraint-review template,
 and filed experiment reports. See [docs/pioneer_mode.md](docs/pioneer_mode.md).
 
+**One pane of glass:** `inspect` (inspect the forge) composes every self-audit signal —
+registry · QA board · truth · docs · overclaims · career · pioneer — into one on-demand
+green/yellow/red **frame-up** of the whole machine. See [docs/frame_up.md](docs/frame_up.md).
+
 **How it's built — honestly:** AI-assisted and engineering-directed. AI expands the
 creative and analytical surface; the ritual, gates, and self-audit keep it honest;
 tests and evidence prove each claim; I direct, review, and make the calls. What makes
