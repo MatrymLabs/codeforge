@@ -7,6 +7,10 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
 ## [Unreleased]
 
 ### Added / Changed
+- **`make env` uses uv locally too.** When uv is present, `make env` builds the venv with
+  `uv venv` + `uv pip install`: measured ~86s -> ~1.6s on the Pi (~20x). Falls back to plain
+  `python -m venv` + pip when uv is absent, so bootstrap never hard-requires uv. uv is dev
+  tooling, not a runtime/pyproject dependency.
 - **CI installs via uv.** The check job now installs dependencies with `uv pip install`
   (Rust parallel resolver) instead of pip: measured install step ~19s -> ~6s (setup 2s +
   install 4s). CI-only tooling, not a runtime/pyproject dependency; build backend stays

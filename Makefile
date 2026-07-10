@@ -1,10 +1,19 @@
 .PHONY: env fix lint typecheck test property coverage audit security secrets deps sbom doctor patch daily check readiness truth cast-plan smoke repo-integrity ship run world store hardware clean serve ritual-fast ritual ritual-down unskew
 
-# --- Environment: create/validate the .venv, fail loud on version mismatch ---
+# --- Environment: create/validate the .venv, fail loud on version mismatch.
+# Uses uv when present (a Rust resolver; measured ~20x faster than pip on this host:
+# 85s -> 4s) and falls back to plain venv+pip, so bootstrap never hard-requires uv. ---
 env:
-	python3 -m venv .venv
-	.venv/bin/pip install -q --upgrade pip
-	.venv/bin/pip install -q -e ".[dev]"
+	@if command -v uv >/dev/null 2>&1; then \
+		echo "→ uv found - fast env build"; \
+		uv venv .venv --clear --python 3.13; \
+		uv pip install --python .venv/bin/python -q -e ".[dev]"; \
+	else \
+		echo "→ uv not found (using pip). Install uv for a ~20x faster env: https://docs.astral.sh/uv/"; \
+		python3 -m venv .venv; \
+		.venv/bin/pip install -q --upgrade pip; \
+		.venv/bin/pip install -q -e ".[dev]"; \
+	fi
 	@.venv/bin/python -c "import sys; assert sys.version_info[:2] >= (3, 13), 'need Python >= 3.13'"
 	@echo "✓ .venv ready - activate with: source .venv/bin/activate"
 
