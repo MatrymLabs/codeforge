@@ -7,6 +7,13 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
 ## [Unreleased]
 
 ### Added / Changed
+- **Frame-up consolidation (the Pioneer-path cleanup).** `inspect` became the audit hub:
+  `inspect qa` / `inspect truth` / `inspect pm` drill into one system each (reusing that
+  system's own renderer, nothing duplicated), and `inspect save` banks the frame-up. A
+  shared **ReportWriter** (`parts/reporting.py`) files every dated report under
+  `reports/<category>/` through one seam, adopted by both `make repo-integrity` and
+  `inspect save`. New **`docs/README.md`** maps every doc for navigation. The standalone
+  `qa gate all` / `truth check` / `pm status` commands still work.
 - **`inspect` - inspect the forge (on-demand frame-up).** One command that composes every
   self-audit signal - registry validity · QA board · VeritasGate truth · doc presence ·
   overclaim scan, plus career + pioneer status - into a single green/yellow/red frame-up.

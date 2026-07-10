@@ -5,10 +5,27 @@ view. Nothing stored, nothing faked - computed live from the project's own gates
 
 ## In the MUD
 
+`inspect` is the **audit hub**. Bare, it renders the whole-machine frame-up; the subviews
+drill into one system, each reusing that system's own renderer (nothing duplicated):
+
 ```
-inspect            # the frame-up
+inspect            # the whole-machine frame-up
 inspect forge      # same - "inspect the forge"
+inspect qa         # the QA board            (= qa gate all)
+inspect truth      # the truth check         (= truth check)
+inspect pm         # the project dashboard   (= pm status)
+inspect save       # bank the frame-up to reports/frameup/ via the ReportWriter
 ```
+
+The standalone commands (`qa gate all`, `truth check`, `pm status`) still work; the
+subviews simply gather them under one audit namespace.
+
+## The ReportWriter
+
+`inspect save` and `make repo-integrity` both file their evidence through one seam,
+`parts/reporting.py`: `write_report(category, text, stamp, slug)` writes a dated report to
+`reports/<category>/`, so every producer files the same way. Contents are git-ignored
+(generated, reproducible); the writer just keeps the dated-path mechanics consistent.
 
 ## What it composes
 

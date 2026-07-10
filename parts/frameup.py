@@ -147,5 +147,38 @@ def render_frameup(root: Path | None = None) -> str:
 
 
 def inspect(arg: str = "") -> str:
-    """The `inspect` command: render the frame-up. `inspect`, `inspect forge` -> the frame-up."""
-    return render_frameup()
+    """The `inspect` command: the audit hub. Bare -> the frame-up; subviews drill into one
+    system (each reuses that system's own renderer, so nothing is duplicated):
+
+        inspect            the whole-machine frame-up
+        inspect forge      same (as in "inspect the forge")
+        inspect qa         the QA board            (= `qa gate all`)
+        inspect truth      the truth check         (= `truth check`)
+        inspect pm         the project dashboard   (= `pm status`)
+        inspect save       bank the frame-up to reports/frameup/ via the ReportWriter
+
+    The standalone commands (`qa gate all`, `truth check`, `pm status`) still work; these
+    are the same views gathered under one audit namespace.
+    """
+    a = (arg or "").strip().lower()
+    if a in ("", "forge", "the forge"):
+        return render_frameup()
+    if a == "qa":
+        from parts.qualitygate import render_gate_all
+
+        return render_gate_all()
+    if a == "truth":
+        from parts.veritas import render_truth
+
+        return render_truth()
+    if a == "pm":
+        from parts.pm import pm_status
+
+        return pm_status()
+    if a == "save":
+        from parts.reporting import write_report
+
+        report = render_frameup()
+        path = write_report("frameup", report, slug="frameup")
+        return report + f"\n\n  (banked to {path.relative_to(_ROOT)})"
+    return "Unknown inspect view. Try: (blank) · forge · qa · truth · pm · save"
