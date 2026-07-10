@@ -60,9 +60,11 @@ codeforge api            # serves the FastAPI app on http://localhost:8000
 
 `GET /` is a server-rendered dashboard that projects the forge's own evidence, the career
 board, the QualityGate audit, the hardware store, and the latest `make bench` run, onto one
-accessible, responsive page. The same data is served as JSON at `/api/status` (the seam a
-future React/TypeScript front end would consume), and the API self-documents at `/docs`.
-Frameless: stdlib HTML rendering, no template engine. See [`docs/dashboard.md`](docs/dashboard.md).
+accessible, responsive page. It is **enhanced with HTMX** (vendored, no JS build, no CDN): a
+live **Refresh** re-computes the board with no page reload, and clicking a **Blueprint**
+renders it in-page - all as progressive enhancement (the page works with JavaScript off). The
+same data is served as typed JSON at `/api/status` (the seam a future React/TypeScript front
+end would consume, documented in OpenAPI at `/docs`). See [`docs/dashboard.md`](docs/dashboard.md).
 
 ## Full-Stack Forge Direction 🧭
 
