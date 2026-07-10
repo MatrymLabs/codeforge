@@ -7,6 +7,18 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
 ## [Unreleased]
 
 ### Added / Changed
+- **AI Blueprint drafter (schema-enforced, mockable).** `parts/blueprint_ai.py`
+  (MOD-UM10-S01-N001-018-R0) turns a freeform idea into a structured Blueprint using the
+  Anthropic Messages API's `messages.parse` with a Pydantic schema (`BlueprintDraft`), then
+  re-validates it through the same loud gate a human's Blueprint passes (`from_dict`) and
+  forces `status=draft` (AI output is Tier-4). Reachable via a new `blueprint draft <idea>`
+  tick verb; offline it returns an honest "needs the Claude Architect" message. Same seam as
+  the Architect: the Anthropic client is injected (tests use a fake, CI never touches the
+  network), codeforge core never imports `anthropic`, one API key away. Factored a shared
+  `anthropic_client()` out of `parts/architect.py` (behavior unchanged). Adds 9 test cases
+  (structured draft -> validated Blueprint, empty-idea no-call, None output, schema-valid but
+  Blueprint-invalid draft, key-absent refusal, offline verb) and an honest advanced
+  career-board skill (LLM behind a mockable, schema-enforced boundary).
 - **Published documentation site (MkDocs Material -> GitHub Pages).** The `docs/` tree now
   builds into a navigable public site at matrymlabs.github.io/codeforge, with a curated nav
   (architecture and decisions, full-stack, self-audit systems, career and evidence, process,

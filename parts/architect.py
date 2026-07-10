@@ -131,17 +131,24 @@ class ClaudeAdvisor:
         return f"The Architect considers, then says:\n  {reply}"
 
 
-def build_claude_advisor(model: str | None = None) -> Advisor:
-    """Construct the production Claude-backed Architect. One API key away from live: needs
+def anthropic_client() -> Any:
+    """Construct an Anthropic client, or fail loud. Shared by every Claude-backed feature
+    (the Architect, the Blueprint drafter): one API key away from live: needs
     ANTHROPIC_API_KEY in the env and the `anthropic` package (`pip install codeforge[ai]`).
-    Never reached in CI or offline play; the default brain stays local."""
+    Never reached in CI or offline play (tests inject a fake client)."""
     if not os.environ.get("ANTHROPIC_API_KEY"):
-        raise ArchitectError("set ANTHROPIC_API_KEY to wake the Claude Architect")
+        raise ArchitectError("set ANTHROPIC_API_KEY to use a Claude-backed feature")
     try:
         import anthropic
     except ImportError as exc:  # an optional extra, not a core dependency
-        raise ArchitectError("the Claude Architect needs `pip install codeforge[ai]`") from exc
-    return ClaudeAdvisor(anthropic.Anthropic(), model or _CLAUDE_MODEL)
+        raise ArchitectError("Claude features need `pip install codeforge[ai]`") from exc
+    return anthropic.Anthropic()
+
+
+def build_claude_advisor(model: str | None = None) -> Advisor:
+    """The production Claude-backed Architect. The default brain stays local; this is only
+    reached when CODEFORGE_ARCHITECT=claude and a key is present."""
+    return ClaudeAdvisor(anthropic_client(), model or _CLAUDE_MODEL)
 
 
 _DEFAULT: Advisor = LocalArchitect()

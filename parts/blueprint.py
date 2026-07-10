@@ -180,6 +180,7 @@ def blueprint(arg: str = "", root: Path | None = None) -> str:
             "",
             "  blueprint show <id>   -- read the plan",
             "  blueprint render <id> -- project it to HTML",
+            "  blueprint draft <idea> -- draft a new plan with Claude (needs the AI Architect)",
         ]
         return "\n".join(lines)
 
@@ -196,4 +197,20 @@ def blueprint(arg: str = "", root: Path | None = None) -> str:
         path = write_html(found, root=root)
         return f"Rendered '{found.blueprint_id}' to {path}"
 
-    return f"Unknown blueprint action '{sub}'. Try: blueprint list | show <id> | render <id>."
+    if sub == "draft":
+        if not rest:
+            return "Describe the idea: blueprint draft <what you want to build>"
+        from parts.architect import ArchitectError
+        from parts.blueprint_ai import BlueprintDraftError, build_claude_drafter
+
+        try:
+            drafter = build_claude_drafter()
+        except ArchitectError as exc:
+            return f"Blueprint drafting needs the Claude Architect: {exc}"
+        try:
+            drafted = drafter.draft(rest)
+        except BlueprintDraftError as exc:
+            return f"Could not draft: {exc}"
+        return "DRAFT - AI-generated (Tier-4), review before filing:\n\n" + to_markdown(drafted)
+
+    return "Unknown blueprint action. Try: blueprint list | show <id> | render <id> | draft <idea>."
