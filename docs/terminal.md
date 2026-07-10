@@ -7,9 +7,14 @@ the project already owns behind a single computer-terminal surface.*
 ## In the MUD
 
 ```
-terminal            # boot screen + the program menu
+terminal            # boot screen + the program menu (with the sticky-note cheat card)
 terminal <name>     # run one program, framed like a console
+terminal help       # show the boot screen + sticky note again
 ```
+
+A **sticky note** is stuck to the corner of the screen: the few commands to drive the
+terminal (how to reach the console: `workshop -> north`; `terminal`, `terminal <name>`,
+`terminal help`). It shows on the boot screen so you never have to remember the way in.
 
 ## Wired programs
 
