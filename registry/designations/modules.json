@@ -1224,5 +1224,34 @@
     "aliases": [],
     "created": "2026-07-10",
     "updated": "2026-07-10"
+  },
+  {
+    "designation": "MOD-UM01-S01-N001-003-R0",
+    "name": "terminal",
+    "status": "active",
+    "function": "In-game computer terminal: wires the diagnostic renderers behind one console.",
+    "label": "terminal",
+    "file": "parts/terminal.py",
+    "type": "MOD",
+    "domain": "UM01",
+    "sector": "S01",
+    "node": "N001",
+    "sequence": "003",
+    "revision": "R0",
+    "docs": "docs/terminal.md",
+    "tests": "tests/test_terminal.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "module",
+      "terminal",
+      "diagnostics"
+    ],
+    "notes": "",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-10",
+    "updated": "2026-07-10"
   }
 ]
