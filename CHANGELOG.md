@@ -7,13 +7,12 @@ pre-1.0. Readiness language only — no compliance/OSHA/legal claims.
 ## [Unreleased]
 
 ### Added / Changed
-- **ADR-0003: Framework-free — why CodeForge is not Evennia.** Codifies the clean-room
-  divergence from the Evennia/Django/Twisted predecessor as law (world-is-data not
-  typeclasses, one pure-function tick not CmdSets, derive-don't-store not ORM Attributes),
-  and names the genre-universal conventions (`@` admin, account/character split, rooms/
-  exits) as *not* copying. Enforced, not just documented: `tests/test_framework_free.py`
-  fails CI if any `evennia`/`django`/`twisted` import or dependency is reintroduced
-  (honest prose lineage notes still allowed). Verified zero contamination 2026-07-10.
+- **ADR-0003: Framework-free by design.** Records the deliberate scope choice to build the
+  engine in plain, testable code (world-is-data, one pure-function tick, derive-don't-store,
+  small tested parts) rather than on a framework. Framed neutrally — a framework like Evennia
+  is a fine tool, simply out of scope for what this portfolio proves — and **revisable**:
+  adopting a dependency later remains an open option. Notes the genre-universal conventions
+  (`@` admin, account/character split, rooms/exits) as shared MUD vocabulary, not copying.
 - **Seed → Cast scaffold (Phase 1).** A **seed pack** is a game's content (`seeds/<name>/`);
   a **cast** is a standalone project poured from the forge — the engine + one seed pack +
   config, detached into its own repo. `parts/cast.py` + `make cast-plan` PLAN a cast (a dry
