@@ -28,6 +28,7 @@ The one map to everything under `docs/`. New here? Read [RUNNING.md](RUNNING.md)
 - [dashboard.md](dashboard.md), the readiness Lens: a server-rendered web dashboard (`GET /`) + JSON twin (`GET /api/status`) over real forge evidence (the full-stack proof).
 - [blueprint_renderer.md](blueprint_renderer.md), the forge's planning spine: idea -> validated Blueprint (JSON + Markdown) -> static HTML page (`blueprint` verb).
 - [architect_brain.md](architect_brain.md), the Architect NPC's swappable brain: local rule-based guide today, Claude-backed one an API key away (the seam, tested with a fake).
+- [database.md](database.md), persistence: SQLite by default, PostgreSQL (`DATABASE_URL`) for production, with Alembic migrations and a docker-compose Postgres.
 - [project_management.md](project_management.md), `pm status`, backlog, risks, decisions, one worked LSS DMAIC.
 
 ## Ritual and process

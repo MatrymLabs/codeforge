@@ -14,5 +14,8 @@ def _isolated_database(tmp_path, monkeypatch):
     """
     from parts import accounts, db
 
+    # A DATABASE_URL in the ambient shell must never redirect the suite at a real
+    # PostgreSQL: the unit tests always run on a fresh, quarantined SQLite tmp file.
+    monkeypatch.delenv("DATABASE_URL", raising=False)
     monkeypatch.setattr(db, "DB_PATH", tmp_path / "test.db")
     monkeypatch.setattr(accounts, "_ITERATIONS", 1000)

@@ -1,10 +1,14 @@
-"""CARD: db -- SQLite persistence through the SQLAlchemy 2.0 ORM.
+"""CARD: db -- persistence through the SQLAlchemy 2.0 ORM (SQLite or PostgreSQL).
 
-One file on disk (codeforge.db), two tables, typed rows. The rest of
-the engine never sees SQL: characters.py and accounts.py keep their
-function signatures and swap their insides. The default path is
-absolute and anchored to the repo root (CODEFORGE_DB overrides it);
-tests point DB_PATH at a tmp file.
+Two tables, typed rows. The rest of the engine never sees SQL:
+characters.py and accounts.py keep their function signatures and swap
+their insides. Two backends behind one seam:
+
+- Default: a single SQLite file (codeforge.db), absolute-pathed to the
+  repo root (CODEFORGE_DB overrides the path); tests point DB_PATH at tmp.
+- Production: set DATABASE_URL (a postgresql+psycopg:// URL) and the same
+  ORM speaks to PostgreSQL. Schema is managed by Alembic migrations (see
+  migrations/); create_all remains a zero-config convenience for SQLite.
 
 Why an ORM for a game this size? The same reason the seed loaders
 gate YAML: schemas make bad states unrepresentable, and the skill
@@ -63,13 +67,21 @@ class AccountRow(ArchiveBase):
     auth_hash: Mapped[str] = mapped_column()
 
 
+def engine_url() -> str:
+    """The SQLAlchemy URL in force. DATABASE_URL wins (PostgreSQL in production);
+    otherwise a SQLite file at DB_PATH (the zero-config default for dev and tests)."""
+    url = os.environ.get("DATABASE_URL", "").strip()
+    return url or f"sqlite:///{DB_PATH}"
+
+
 def open_archive_session() -> SqlSession:
-    """A working archive session on the current DB_PATH. Engines are cached per
-    path; tables are created on first contact (idempotent)."""
-    key = str(DB_PATH)
-    engine = _ENGINES.get(key)
+    """A working archive session on the current backend. Engines are cached per URL.
+    For SQLite the tables are created on first contact (idempotent); for PostgreSQL
+    Alembic owns the schema, but create_all is a harmless checkfirst no-op if migrated."""
+    url = engine_url()
+    engine = _ENGINES.get(url)
     if engine is None:
-        engine = create_engine(f"sqlite:///{key}")
-        ArchiveBase.metadata.create_all(engine)
-        _ENGINES[key] = engine
+        engine = create_engine(url)
+        ArchiveBase.metadata.create_all(engine)  # checkfirst=True: a no-op once migrated
+        _ENGINES[url] = engine
     return SqlSession(engine)

@@ -67,6 +67,41 @@ jobs:
           path: reports/security/sbom.cdx.json
           if-no-files-found: warn
 
+  # Proves the ORM + Alembic migrations work against a REAL PostgreSQL, not just SQLite.
+  # The unit suite (check job) stays SQLite-isolated; this job is a focused integration
+  # proof, so it is intentionally NOT a required check (it cannot deadlock a merge).
+  postgres:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: codeforge
+          POSTGRES_PASSWORD: codeforge  # pragma: allowlist secret
+          POSTGRES_DB: codeforge
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U codeforge"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      DATABASE_URL: postgresql+psycopg://codeforge:codeforge@localhost:5432/codeforge  # pragma: allowlist secret
+      POSTGRES_TEST_URL: postgresql+psycopg://codeforge:codeforge@localhost:5432/codeforge  # pragma: allowlist secret
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0  # v7
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1  # v6
+        with:
+          python-version: "3.13"
+      - uses: astral-sh/setup-uv@11f9893b081a58869d3b5fccaea48c9e9e46f990  # v8.3.2
+      - name: Install dependencies (with the postgres extra)
+        run: uv pip install --system -e ".[dev,postgres]"
+      - name: Build the schema with Alembic (upgrade head)
+        run: alembic upgrade head
+      - name: Prove the ORM round-trips on PostgreSQL
+        run: pytest tests/test_postgres_integration.py -v
+
   docker:
     runs-on: ubuntu-latest
     steps:

@@ -1,0 +1,27 @@
+# Local PostgreSQL for developing and testing codeforge against a production-shaped
+# database. SQLite stays the zero-config default; this is the "real backend" path.
+#
+#   make db-up                 # start Postgres in the background
+#   export DATABASE_URL=postgresql+psycopg://codeforge:codeforge@localhost:5432/codeforge
+#   make db-migrate            # alembic upgrade head -> builds the schema
+#   codeforge api              # the app now speaks to Postgres
+#   make db-down               # stop it (data persists in the named volume)
+services:
+  db:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: codeforge
+      POSTGRES_PASSWORD: codeforge  # pragma: allowlist secret
+      POSTGRES_DB: codeforge
+    ports:
+      - "5432:5432"
+    volumes:
+      - codeforge_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U codeforge"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  codeforge_pgdata:
