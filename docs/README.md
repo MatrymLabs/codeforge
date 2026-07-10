@@ -22,6 +22,7 @@ The one map to everything under `docs/`. New here? Read [RUNNING.md](RUNNING.md)
 - [veritas.md](veritas.md), `truth check`, claims vs reality (no claim without correspondence).
 - [safety_qa_system.md](safety_qa_system.md), QualityGate + SafetyReview.
 - [repo_integrity.md](repo_integrity.md), `make repo-integrity`, the composite health report.
+- [performance.md](performance.md), `make bench`, the engine-tick throughput/latency benchmark (performance evidence).
 - [project_management.md](project_management.md), `pm status`, backlog, risks, decisions, one worked LSS DMAIC.
 
 ## Ritual and process

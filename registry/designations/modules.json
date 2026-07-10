@@ -1280,5 +1280,32 @@
     "aliases": [],
     "created": "2026-07-10",
     "updated": "2026-07-10"
+  },
+  {
+    "designation": "MOD-UM10-S01-N001-013-R0",
+    "name": "bench",
+    "status": "active",
+    "function": "engine-tick performance evidence: handle_command throughput + latency",
+    "label": "bench",
+    "file": "parts/bench.py",
+    "type": "MOD",
+    "domain": "UM10",
+    "sector": "S01",
+    "node": "N001",
+    "sequence": "013",
+    "revision": "R0",
+    "docs": "docs/performance.md",
+    "tests": "tests/test_bench.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "module"
+    ],
+    "notes": "Frameless (stdlib time+statistics); files dated evidence under reports/performance/.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-10",
+    "updated": "2026-07-10"
   }
 ]

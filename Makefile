@@ -1,4 +1,4 @@
-.PHONY: env fix lint typecheck test property coverage audit security secrets deps sbom doctor patch daily check readiness truth cast-plan smoke repo-integrity ship run world store hardware clean serve ritual-fast ritual ritual-down unskew
+.PHONY: env fix lint typecheck test property coverage audit security secrets deps sbom bench doctor patch daily check readiness truth cast-plan smoke repo-integrity ship run world store hardware clean serve ritual-fast ritual ritual-down unskew
 
 # --- Environment: create/validate the .venv, fail loud on version mismatch.
 # Uses uv when present (a Rust resolver; measured ~20x faster than pip on this host:
@@ -106,6 +106,11 @@ secrets:
 # on an unjustified dependency; warns on a stale ledger row. Stdlib only (tomllib). ---
 deps:
 	@python -m parts.dependencies
+
+# --- Bench: measure the engine tick (handle_command) throughput + latency and file a
+# dated performance-evidence report under reports/performance/. Frameless (stdlib). ---
+bench:
+	@python -m parts.bench
 
 # --- Doctor: run the gates read-only, stop at the first failure, prescribe the fix ---
 doctor:
