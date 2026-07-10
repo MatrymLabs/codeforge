@@ -298,7 +298,7 @@ Generated from the `CARD:` docstrings in `parts/` (see `make store`):
 | `commands` | the command spine: verbs filed, rank-gated, namespaced. |
 | `console` | the FailsafeRunner: run allowlisted commands safely. |
 | `dashboard` | the Lens: a server-rendered web board over real forge evidence. |
-| `db` | SQLite persistence through the SQLAlchemy 2.0 ORM. |
+| `db` | persistence through the SQLAlchemy 2.0 ORM (SQLite or PostgreSQL). |
 | `doors` | lockable barriers between rooms. |
 | `events` | world happenings broadcast to bystanders. |
 | `gateway` | a line-based TCP server sharing one world. |

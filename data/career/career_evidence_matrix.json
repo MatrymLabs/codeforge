@@ -299,6 +299,20 @@
             ],
             "status": "proven",
             "next_proof_task": "Add a decoupled React/TypeScript front end (separate flagship) consuming GET /api/status."
+          },
+          {
+            "skill_id": "inter.data.relational_migrations",
+            "skill": "Model a relational database and evolve it with migrations",
+            "why_it_matters": "PostgreSQL + schema migrations is the single most-named production-data ask in 2026 postings.",
+            "repo_proof": [
+              "parts/db.py",
+              "migrations/env.py",
+              "migrations/versions",
+              "docker-compose.yml",
+              "docs/database.md"
+            ],
+            "status": "proven",
+            "next_proof_task": "Add a second migration from a real model change (e.g. a new column) with a downgrade path."
           }
         ]
       },

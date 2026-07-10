@@ -35,6 +35,11 @@ why = "The browser gateway speaks WebSocket to the in-page terminal."
 stdlib_alternative = "None; implementing the WebSocket handshake and framing by hand is error-prone."
 removable = "Only the browser gate depends on it; the TCP gateway does not."
 
+[runtime.psycopg]
+why = "Optional (extra 'postgres'): the PostgreSQL driver SQLAlchemy uses when DATABASE_URL points at Postgres. Not installed by default; SQLite (stdlib) stays the dev/test backend."
+stdlib_alternative = "sqlite3 (stdlib) is the default backend and needs no driver; Postgres is a production capability with no stdlib client."
+removable = "Yes; it is an optional extra. codeforge core runs on SQLite without psycopg; the db seam (parts/db.py) chooses the backend from DATABASE_URL."
+
 [runtime.anthropic]
 why = "Optional (extra 'ai'): the Claude-backed Architect brain, behind the Advisor seam in parts/architect.py. Not installed by default; one API key away from live."
 stdlib_alternative = "None; there is no stdlib LLM client, and the wire protocol is a vendor API. The seam (Advisor protocol) keeps it swappable and testable with a fake."
@@ -101,3 +106,8 @@ removable = "Yes; example-based tests remain if it is dropped, losing the genera
 why = "Test client for exercising the FastAPI admin surface without a live network."
 stdlib_alternative = "http.client (stdlib) works but lacks the ASGI transport that tests the app in-process."
 removable = "Yes; test-only. Removed if the HTTP surface is dropped."
+
+[dev.alembic]
+why = "Schema migrations for the SQLAlchemy models (migrations/); `alembic upgrade head` builds the PostgreSQL schema and versions future changes. Ops/dev tooling, not a runtime import."
+stdlib_alternative = "None; there is no stdlib migration tool. create_all covers the SQLite dev path but does not version or evolve a production schema."
+removable = "Yes; dev/ops-time only. The SQLite default runs without it (create_all); Postgres deployments use it."

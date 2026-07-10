@@ -7,6 +7,18 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
 ## [Unreleased]
 
 ### Added / Changed
+- **PostgreSQL backend + Alembic migrations.** The db seam (`parts/db.py`) now speaks either
+  SQLite (the zero-config default for dev, tests, and the demo) or PostgreSQL when
+  `DATABASE_URL` is set (`postgresql+psycopg://...`), through the same SQLAlchemy 2.0 models.
+  Schema is versioned by Alembic (`migrations/`, initial migration builds characters +
+  accounts); `create_all` stays the SQLite convenience. Adds a `postgres` extra
+  (`psycopg`, folded into the dependency gate + ledger), `alembic` (dev), a docker-compose
+  Postgres (`make db-up`/`db-down`/`db-migrate`), a real Postgres CI job (service container:
+  `alembic upgrade head` + an ORM round-trip integration test, non-required so it cannot
+  deadlock merges), and `docs/database.md`. Tests: `engine_url` resolver (SQLite default /
+  `DATABASE_URL` override / blank-URL fallback) + a `POSTGRES_TEST_URL`-guarded integration
+  test (skipped without it). `conftest` now also clears any ambient `DATABASE_URL` so the
+  unit suite always runs on quarantined tmp SQLite. `.env` git-ignored.
 - **Architect brain: Claude-backed, an API key away.** The Architect NPC's `Advisor` seam now
   has a second implementation, `ClaudeAdvisor` (Anthropic Messages API, model
   `claude-opus-4-8`), alongside the default `LocalArchitect`. The architecture is complete and

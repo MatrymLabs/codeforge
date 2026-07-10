@@ -4,8 +4,28 @@ from pathlib import Path
 
 import parts.db as db
 from parts.characters import load_character, put_record, save_character
-from parts.db import CharacterRow, _default_db_path, open_archive_session
+from parts.db import CharacterRow, _default_db_path, engine_url, open_archive_session
 from parts.session import SESSIONS, Session
+
+
+def test_engine_url_defaults_to_sqlite_at_db_path(monkeypatch, tmp_path):
+    """No DATABASE_URL -> a SQLite file at DB_PATH (the zero-config dev/test default)."""
+    monkeypatch.delenv("DATABASE_URL", raising=False)
+    monkeypatch.setattr(db, "DB_PATH", tmp_path / "x.db")
+    assert engine_url() == f"sqlite:///{tmp_path / 'x.db'}"
+
+
+def test_database_url_overrides_to_postgres(monkeypatch):
+    """DATABASE_URL wins -> the same ORM speaks PostgreSQL (production backend)."""
+    monkeypatch.setenv("DATABASE_URL", "postgresql+psycopg://u:p@host:5432/codeforge")
+    assert engine_url() == "postgresql+psycopg://u:p@host:5432/codeforge"
+
+
+def test_blank_database_url_falls_back_to_sqlite(monkeypatch, tmp_path):
+    """An empty/whitespace DATABASE_URL is treated as unset, not a broken URL."""
+    monkeypatch.setenv("DATABASE_URL", "   ")
+    monkeypatch.setattr(db, "DB_PATH", tmp_path / "y.db")
+    assert engine_url().startswith("sqlite:///")
 
 
 def test_default_db_path_is_absolute_and_repo_anchored(monkeypatch):

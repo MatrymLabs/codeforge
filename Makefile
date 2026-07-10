@@ -1,4 +1,4 @@
-.PHONY: env fix lint typecheck test property coverage audit security secrets deps sbom bench doctor patch daily check readiness truth cast-plan smoke repo-integrity ship run world store hardware clean serve ritual-fast ritual ritual-down unskew
+.PHONY: env fix lint typecheck test property coverage audit security secrets deps sbom bench doctor patch daily check readiness truth cast-plan smoke repo-integrity ship run world store hardware clean serve db-up db-down db-migrate ritual-fast ritual ritual-down unskew
 
 # --- Environment: create/validate the .venv, fail loud on version mismatch.
 # Uses uv when present (a Rust resolver; measured ~20x faster than pip on this host:
@@ -185,6 +185,18 @@ clean:
 
 serve:
 	codeforge serve
+
+# --- PostgreSQL: the production-shaped backend. SQLite stays the zero-config default;
+# these bring up a local Postgres and run the Alembic migrations against DATABASE_URL.
+# See docs/database.md. ---
+db-up:
+	docker compose up -d db
+
+db-down:
+	docker compose down
+
+db-migrate:
+	@alembic upgrade head
 
 # --- The Ritual: one command lights the whole workshop -- gates run, GitHub
 # mirrors, the forge lights, the MUD window opens at the front desk. Bound to
