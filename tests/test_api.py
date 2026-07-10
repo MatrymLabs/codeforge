@@ -56,6 +56,21 @@ def test_rooms_expose_the_seed_graph(client):
     assert forge["exits"]["north"] == "courtyard"
 
 
+def test_blueprints_endpoint_summarizes_filed_plans(client):
+    resp = client.get("/api/blueprints")
+    assert resp.status_code == 200
+    plans = resp.json()
+    npc = next(b for b in plans if b["blueprint_id"] == "npc_combat")
+    assert npc["title"] == "NPCs that fight back"
+    assert npc["status"] == "draft"
+    assert npc["requirement_count"] >= 1
+
+
+def test_blueprints_contract_is_documented_in_openapi(client):
+    schema = client.get("/openapi.json").json()
+    assert "BlueprintSummary" in schema["components"]["schemas"]
+
+
 def test_grant_refuses_the_unauthenticated(client):
     _owner_account()
     response = client.post("/admin/grant", json={"name": "matrym", "rank": "wizard"})
