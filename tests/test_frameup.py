@@ -54,6 +54,20 @@ def test_render_shows_the_header_and_overall() -> None:
 def test_inspect_command_renders_the_frameup() -> None:
     assert "FRAME-UP INSPECTION" in inspect("")
     assert "FRAME-UP INSPECTION" in inspect("forge")  # `inspect the forge`
+    assert "FRAME-UP INSPECTION" in inspect("the forge")
+
+
+def test_inspect_subviews_reuse_each_system_renderer() -> None:
+    assert "truth check" in inspect("truth")  # VeritasGate renderer
+    assert inspect("qa").strip() != ""  # the QA board renderer
+    assert inspect("pm").strip() != ""  # pm status renderer
+    assert "Unknown inspect view" in inspect("nonsense")
+
+
+def test_inspect_save_banks_the_frameup_via_the_reportwriter() -> None:
+    out = inspect("save")
+    assert "banked to reports/frameup/" in out
+    assert "FRAME-UP INSPECTION" in out
 
 
 def test_inspect_is_reachable_through_the_engine_tick() -> None:

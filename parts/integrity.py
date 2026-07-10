@@ -172,13 +172,12 @@ def build_report(
 
 
 def save_report(text: str, root: Path | None = None, today: date | None = None) -> Path:
-    """Write the report under reports/repo_integrity/<date>.md (created if absent)."""
-    base_dir = (root / "reports" / "repo_integrity") if root is not None else _REPORT_DIR
-    base_dir.mkdir(parents=True, exist_ok=True)
-    stamp = today if today is not None else date.today()
-    path = base_dir / f"{stamp.isoformat()}-repo-integrity.md"
-    path.write_text(text + "\n", encoding="utf-8")
-    return path
+    """Write the report under reports/repo_integrity/<date>-repo-integrity.md via the shared
+    ReportWriter (one dated-report seam for every producer)."""
+    from parts.reporting import write_report
+
+    stamp = (today if today is not None else date.today()).isoformat()
+    return write_report("repo_integrity", text, root=root, stamp=stamp, slug="repo-integrity")
 
 
 def run_repo_integrity() -> Path:
