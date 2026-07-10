@@ -6,6 +6,9 @@ requires-python = ">=3.13"
 dependencies = ["pyyaml", "sqlalchemy", "fastapi", "uvicorn", "websockets"]
 
 [project.optional-dependencies]
+# Optional feature extras still earn their place: the dependency gate (`make deps`) folds
+# every non-dev extra into the runtime set, so `anthropic` is justified in the ledger.
+ai = ["anthropic>=0.40"]
 dev = [
     "ruff",
     "mypy",
@@ -49,6 +52,12 @@ select = ["E", "F", "I", "UP", "B", "SIM"]
 [tool.mypy]
 python_version = "3.13"
 warn_unused_ignores = true
+
+# anthropic is an optional 'ai' extra (the Claude Architect brain), not installed in the
+# dev/CI venv; it is lazy-imported behind the Advisor seam. Don't require its stubs here.
+[[tool.mypy.overrides]]
+module = "anthropic"
+ignore_missing_imports = true
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
