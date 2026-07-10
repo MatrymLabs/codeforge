@@ -7,6 +7,14 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
 ## [Unreleased]
 
 ### Added / Changed
+- **Published documentation site (MkDocs Material -> GitHub Pages).** The `docs/` tree now
+  builds into a navigable public site at matrymlabs.github.io/codeforge, with a curated nav
+  (architecture and decisions, full-stack, self-audit systems, career and evidence, process,
+  ADRs, research), dark/light theme, and search. A `docs.yml` workflow builds it `--strict`
+  and deploys to Pages (SHA-pinned Pages actions; `pages`/`id-token` permissions scoped to
+  that job). Adds `mkdocs.yml`, `docs/index.md` (site home), `mkdocs-material` (dev,
+  ledger-justified), `make docs-serve`/`docs-build`, a docs badge/link, and `site/`
+  git-ignored. First deploy may require Pages source set to "GitHub Actions" once.
 - **Live dashboard with HTMX (progressively enhanced).** The readiness dashboard gains live
   interactivity: a **Refresh** control re-computes the board and swaps the cards grid in place
   (`GET /ui/board`), and clicking a **Blueprint** renders it as an HTML fragment into an

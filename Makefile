@@ -198,6 +198,13 @@ db-down:
 db-migrate:
 	@alembic upgrade head
 
+# --- Docs site: build docs/ into the public GitHub Pages site (mkdocs-material). ---
+docs-serve:
+	mkdocs serve
+
+docs-build:
+	mkdocs build --strict
+
 # --- The Ritual: one command lights the whole workshop -- gates run, GitHub
 # mirrors, the forge lights, the MUD window opens at the front desk. Bound to
 # the phrase "start the ritual" via a shell function (see docs/RUNNING.md). ---
