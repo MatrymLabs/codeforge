@@ -35,6 +35,11 @@ why = "The browser gateway speaks WebSocket to the in-page terminal."
 stdlib_alternative = "None; implementing the WebSocket handshake and framing by hand is error-prone."
 removable = "Only the browser gate depends on it; the TCP gateway does not."
 
+[runtime.anthropic]
+why = "Optional (extra 'ai'): the Claude-backed Architect brain, behind the Advisor seam in parts/architect.py. Not installed by default; one API key away from live."
+stdlib_alternative = "None; there is no stdlib LLM client, and the wire protocol is a vendor API. The seam (Advisor protocol) keeps it swappable and testable with a fake."
+removable = "Yes; it is an optional extra. The local rule-based Architect is the default and needs no dependency, so codeforge core runs without anthropic."
+
 # ----- dev dependencies (quality gates, never shipped) --------------------------------
 
 [dev.ruff]

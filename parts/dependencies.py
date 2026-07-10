@@ -49,9 +49,15 @@ def read_declared(path: Path = _PYPROJECT) -> Declared:
         raise LedgerError(f"pyproject not found: {path}")
     data = tomllib.loads(path.read_text(encoding="utf-8"))
     project = data.get("project", {})
+    optional = project.get("optional-dependencies", {})
     runtime = {_canonical(x) for x in project.get("dependencies", [])}
-    dev_group = project.get("optional-dependencies", {}).get("dev", [])
-    dev = {_canonical(x) for x in dev_group}
+    # Optional FEATURE extras (e.g. `ai`) are runtime capabilities, not dev tooling: they
+    # still earn their place, so fold every non-dev extra into the runtime set the gate audits.
+    for group, items in optional.items():
+        if group == "dev":
+            continue
+        runtime |= {_canonical(x) for x in items}
+    dev = {_canonical(x) for x in optional.get("dev", [])}
     return Declared(frozenset(runtime), frozenset(dev))
 
 

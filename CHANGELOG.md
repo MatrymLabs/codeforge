@@ -7,6 +7,17 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
 ## [Unreleased]
 
 ### Added / Changed
+- **Architect brain: Claude-backed, an API key away.** The Architect NPC's `Advisor` seam now
+  has a second implementation, `ClaudeAdvisor` (Anthropic Messages API, model
+  `claude-opus-4-8`), alongside the default `LocalArchitect`. The architecture is complete and
+  tested; it is dormant until `CODEFORGE_ARCHITECT=claude` + `ANTHROPIC_API_KEY` +
+  `pip install codeforge[ai]`. The SDK is touched in one place behind the protocol (codeforge
+  core never imports `anthropic`); the client is injected so tests use a fake and CI never
+  touches the network; prompts are redacted of anything secret-shaped before any call; a
+  requested-but-unreachable Claude falls back to the local guide and says so (no hidden gap).
+  `anthropic` is an optional `ai` extra, folded into the dependency gate and justified in the
+  ledger. Adds `.env.example`, `docs/architect_brain.md`, and 8 test cases (fake-client call,
+  redaction, empty-prompt no-call, key-absent refusal, local fallback).
 - **Blueprint renderer (the forge's planning spine).** An idea becomes a validated Blueprint
   (`parts/blueprint.py`, MOD-UM10-S01-N001-015-R0): a fail-loud model (JSON record + Markdown
   twin, frozen `lowercase_snake_case` identity), then a static, accessible HTML page

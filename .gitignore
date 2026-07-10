@@ -19,3 +19,6 @@ reports/*
 
 # Generated cast sandbox (dry-run output; a cast becomes its own repo elsewhere)
 casts/
+
+# Local secrets/config: only .env.example (placeholders) is ever tracked.
+.env
