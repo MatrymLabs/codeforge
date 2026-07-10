@@ -191,6 +191,13 @@ Reading this repo, an engineer can *verify* — not take on faith — these skil
 Everything above is **working and tested.** Planned work is marked as such in the
 [roadmap](#roadmap).
 
+**Skills → proof, in the MUD:** the `career` command (in *The Forge Workshop*) renders a
+**Career Evidence Sign** — real software-career skills mapped to the exact repo artifact
+that proves each, grounded in BLS/O*NET research. `career gaps` lists what's still missing.
+It obeys VeritasGate: a skill is only "proven" when its cited artifact actually exists. See
+[docs/career_evidence_board.md](docs/career_evidence_board.md) and
+[docs/resume_mapping.md](docs/resume_mapping.md).
+
 **How it's built — honestly:** AI-assisted and engineering-directed. AI expands the
 creative and analytical surface; the ritual, gates, and self-audit keep it honest;
 tests and evidence prove each claim; I direct, review, and make the calls. What makes

@@ -397,5 +397,34 @@
     "aliases": [],
     "created": "2026-07-09",
     "updated": "2026-07-09"
+  },
+  {
+    "designation": "CMD-UM10-S01-N001-013-R0",
+    "name": "`career`",
+    "status": "active",
+    "function": "Career Evidence Sign: map CodeForge work to job-ready skills with repo proof.",
+    "label": "career",
+    "file": "parts/career.py",
+    "type": "CMD",
+    "domain": "UM10",
+    "sector": "S01",
+    "node": "N001",
+    "sequence": "013",
+    "revision": "R0",
+    "docs": "docs/career_evidence_board.md",
+    "tests": "tests/test_career.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "command",
+      "career",
+      "evidence"
+    ],
+    "notes": "",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-10",
+    "updated": "2026-07-10"
   }
 ]

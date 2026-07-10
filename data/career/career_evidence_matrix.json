@@ -1,0 +1,301 @@
+{
+  "career_board": {
+    "title": "Career Evidence Sign",
+    "purpose": "Map CodeForge work to real software-career skills -- each with the exact repo artifact that proves it, and the honest gaps.",
+    "last_updated": "2026-07-10",
+    "market_note": "Basis: BLS 2024 medians (Software Developers $133,080 - QA/Testers $102,610 - Technical Writers $91,670; ~317,700 CS/IT openings/yr through 2034) + O*NET work styles + current public postings (Roblox, Extreme Networks, Wyetech, Veeva, BioIntelliSense, PlayOn, Xsolla). CodeForge's strongest overlap: internal tools - release/build - DevOps/SRE - QA automation - technical docs.",
+    "status_legend": "proven=current repo artifact | partial=some proof, needs more | missing=no proof | planned=idea only | needs_update=stale | human_review_required=uncertain",
+    "levels": [
+      {
+        "level": "entry",
+        "target_roles": ["Entry Software Engineer", "Junior Python Developer", "Software Tools Engineer 1", "Associate Test Engineer", "Technical Writer"],
+        "skills": [
+          {
+            "skill_id": "entry.communication.explain",
+            "skill": "Explain a feature in plain English",
+            "why_it_matters": "Entry roles screen for clear communication and the ability to explain work (Roblox, Extreme early-career).",
+            "repo_proof": ["README.md", "docs/architecture.md", "docs/RUNNING.md"],
+            "status": "proven",
+            "next_proof_task": "Record a 60-second narrated demo of one system."
+          },
+          {
+            "skill_id": "entry.docs.what_why_verify",
+            "skill": "Document what changed, why, and how to verify it",
+            "why_it_matters": "Employers want changes that are auditable, not just made.",
+            "repo_proof": ["CHANGELOG.md", "docs/adr/"],
+            "status": "proven",
+            "next_proof_task": "Keep every CHANGELOG entry pairing the change with its verify command."
+          },
+          {
+            "skill_id": "entry.python.basics",
+            "skill": "Show solid Python understanding",
+            "why_it_matters": "The core of every entry Python/tools role.",
+            "repo_proof": ["parts/", "forge.py", "tests/"],
+            "status": "proven",
+            "next_proof_task": "Keep modules small, typed, and single-responsibility."
+          },
+          {
+            "skill_id": "entry.git.hygiene",
+            "skill": "Show basic Git hygiene",
+            "why_it_matters": "Conventional Commits + branch->PR->merge signal process discipline.",
+            "repo_proof": ["CONTRIBUTING.md", ".github/"],
+            "status": "proven",
+            "next_proof_task": "Keep the issue -> PR -> merge loop visible (e.g. forge-audit #3 -> #4)."
+          },
+          {
+            "skill_id": "entry.testing.habits",
+            "skill": "Show basic testing habits",
+            "why_it_matters": "QA/test and entry-dev roles expect tests as a habit, not an afterthought.",
+            "repo_proof": ["tests/", "pyproject.toml", "Makefile"],
+            "status": "proven",
+            "next_proof_task": "Hold coverage at/above the stage threshold on the default branch."
+          },
+          {
+            "skill_id": "entry.detail.attention",
+            "skill": "Show attention to detail",
+            "why_it_matters": "O*NET lists attention to detail as a top work style for devs, QA, and writers.",
+            "repo_proof": ["registry/", "parts/qualitygate.py"],
+            "status": "proven",
+            "next_proof_task": "Keep the classification registry validating (no orphans/dupes)."
+          },
+          {
+            "skill_id": "entry.feature.end_to_end",
+            "skill": "Complete a small feature end to end",
+            "why_it_matters": "Proof you can finish, not just start.",
+            "repo_proof": ["parts/cast.py", "parts/veritas.py", "scripts/ritual_fast.sh"],
+            "status": "proven",
+            "next_proof_task": "Keep each feature: filed, tested, documented, merged green."
+          },
+          {
+            "skill_id": "entry.docs.clean_readme",
+            "skill": "Maintain a clean README (purpose - install - run - test)",
+            "why_it_matters": "The first thing an interviewer reads.",
+            "repo_proof": ["README.md"],
+            "status": "proven",
+            "next_proof_task": "Add a demo GIF above the fold."
+          },
+          {
+            "skill_id": "entry.docs.user_dev",
+            "skill": "Create simple user/developer documentation",
+            "why_it_matters": "Technical-writer-adjacent signal that also helps every reviewer.",
+            "repo_proof": ["docs/RUNNING.md", "CONTRIBUTING.md", "docs/"],
+            "status": "proven",
+            "next_proof_task": "Add a short quickstart tutorial for a first-time player."
+          },
+          {
+            "skill_id": "entry.repeatable.commands",
+            "skill": "Show dependability through repeatable commands",
+            "why_it_matters": "One-button, reproducible workflows read as reliability.",
+            "repo_proof": ["Makefile", "scripts/ritual.sh"],
+            "status": "proven",
+            "next_proof_task": "Keep the control panel consistent across all repos."
+          },
+          {
+            "skill_id": "entry.learning.agility",
+            "skill": "Show learning agility",
+            "why_it_matters": "Entry hiring optimizes for learning velocity over experience.",
+            "repo_proof": ["docs/AI_WORKFLOW.md"],
+            "status": "partial",
+            "next_proof_task": "Add a short spike-branch note documenting picking up one new tool/library."
+          },
+          {
+            "skill_id": "entry.requirements.from_spec",
+            "skill": "Work from requirements and communicate them clearly",
+            "why_it_matters": "Turning a request into a plan is a core early-career signal.",
+            "repo_proof": ["docs/project_management.md"],
+            "status": "partial",
+            "next_proof_task": "Capture one requirement -> plan -> build trace as a short doc."
+          }
+        ]
+      },
+      {
+        "level": "intermediate",
+        "target_roles": ["Release Engineer", "DevOps Engineer", "QA Automation Engineer", "Software Engineer in Test", "Python Automation Developer", "Technical Writer / Editor"],
+        "skills": [
+          {
+            "skill_id": "inter.automation.toil",
+            "skill": "Reduce manual toil with automation",
+            "why_it_matters": "Automation-first thinking is the #1 repeated intermediate ask (BioIntelliSense, AppZen).",
+            "repo_proof": ["Makefile", "scripts/ritual.sh", "scripts/ritual_fast.sh"],
+            "status": "proven",
+            "next_proof_task": "Keep before/after timing evidence for each automation win (e.g. ritual 45s -> 1s)."
+          },
+          {
+            "skill_id": "inter.ritual.improve",
+            "skill": "Build or improve a readiness ritual",
+            "why_it_matters": "Startup/shutdown discipline maps directly to release/DevOps work.",
+            "repo_proof": ["scripts/ritual_fast.sh", "docs/startup_ritual.md", "docs/shutdown_ritual.md"],
+            "status": "proven",
+            "next_proof_task": "Add the deep ritual mode for pre-push/portfolio checks."
+          },
+          {
+            "skill_id": "inter.debug.methodical",
+            "skill": "Troubleshoot methodically (and write it up)",
+            "why_it_matters": "Debugging discipline is a top intermediate signal; a written case study proves method.",
+            "repo_proof": ["docs/DEBUGGING.md"],
+            "status": "proven",
+            "next_proof_task": "Add a second case study with a before/after metric."
+          },
+          {
+            "skill_id": "inter.ci.improve",
+            "skill": "Improve testing or CI/CD",
+            "why_it_matters": "Release/DevOps roles want CI ownership and coverage discipline.",
+            "repo_proof": [".github/workflows/ci.yml", ".github/workflows/codeql.yml", "Makefile"],
+            "status": "proven",
+            "next_proof_task": "Keep CI green-before-merge and coverage at threshold."
+          },
+          {
+            "skill_id": "inter.tooling.reusable",
+            "skill": "Create reusable Python tooling",
+            "why_it_matters": "Internal-tools/platform roles are CodeForge's strongest market overlap.",
+            "repo_proof": ["forge.py", "parts/cast.py"],
+            "status": "proven",
+            "next_proof_task": "Point to forge-audit (separate flagship) as the reusable-tool exemplar."
+          },
+          {
+            "skill_id": "inter.release.discipline",
+            "skill": "Show release/readiness discipline",
+            "why_it_matters": "Release engineers own playbooks, gates, and rollback paths.",
+            "repo_proof": ["scripts/ritual_down.sh", "docs/shutdown_ritual.md"],
+            "status": "proven",
+            "next_proof_task": "Add a rollback runbook to pair with the push-ready gate."
+          },
+          {
+            "skill_id": "inter.docs.engineer_facing",
+            "skill": "Maintain engineer-facing docs",
+            "why_it_matters": "Docs-as-code is a repeated intermediate ask (Mujin, Veeva).",
+            "repo_proof": ["docs/adr/", "docs/architecture.md", "docs/repo_integrity.md"],
+            "status": "proven",
+            "next_proof_task": "Add an API/tutorial doc for the engine tick."
+          },
+          {
+            "skill_id": "inter.evidence.tracking",
+            "skill": "Track project evidence and next actions",
+            "why_it_matters": "Project control read as ownership and follow-through.",
+            "repo_proof": ["docs/project_management.md", "parts/pm.py"],
+            "status": "proven",
+            "next_proof_task": "Keep pm status computed from filed state, never hand-maintained."
+          },
+          {
+            "skill_id": "inter.risk.tradeoffs",
+            "skill": "Communicate risk and tradeoffs",
+            "why_it_matters": "Intermediate roles want risks called out, not hidden.",
+            "repo_proof": ["docs/adr/0003-framework-free-by-design.md"],
+            "status": "partial",
+            "next_proof_task": "Add a decision memo that lists risks/tradeoffs for one design choice explicitly."
+          },
+          {
+            "skill_id": "inter.docs.impact_review",
+            "skill": "Review documentation impact of changes",
+            "why_it_matters": "Keeping docs and code in lockstep is a maintenance-discipline signal.",
+            "repo_proof": ["CHANGELOG.md"],
+            "status": "partial",
+            "next_proof_task": "Add a docs-impact checklist step to the shutdown ritual."
+          },
+          {
+            "skill_id": "inter.hardware.part",
+            "skill": "Create a reusable part with tests and reuse notes",
+            "why_it_matters": "A cataloged reusable component is concrete platform evidence.",
+            "repo_proof": ["catalog/", "parts/hardware.py"],
+            "status": "partial",
+            "next_proof_task": "Promote one part to the Hardware Store with tests + a reuse map."
+          }
+        ]
+      },
+      {
+        "level": "advanced",
+        "target_roles": ["Senior SRE", "Senior/Staff Release Engineer", "Lead Tools Engineer", "Platform / Systems Engineer", "Senior QA Software Engineer", "Senior Technical Writer"],
+        "skills": [
+          {
+            "skill_id": "adv.adr.records",
+            "skill": "Create architecture decision records",
+            "why_it_matters": "ADRs make architecture tradeoffs explicit -- a senior signal.",
+            "repo_proof": ["docs/adr/0001-canonical-state.md", "docs/adr/0002-derive-dont-store.md", "docs/adr/0003-framework-free-by-design.md"],
+            "status": "proven",
+            "next_proof_task": "Add an ADR for the cast/seed architecture."
+          },
+          {
+            "skill_id": "adv.guardrails.safe",
+            "skill": "Build safe automation guardrails",
+            "why_it_matters": "SRE/release roles want gates that prevent unsafe actions.",
+            "repo_proof": ["scripts/ritual_down.sh", "parts/console.py"],
+            "status": "proven",
+            "next_proof_task": "Keep the allowlisted runner (never raw shell) + push-ready gate documented."
+          },
+          {
+            "skill_id": "adv.diagnostics.reliability",
+            "skill": "Improve reliability through diagnostics",
+            "why_it_matters": "Observability/diagnostics are the core of SRE.",
+            "repo_proof": ["scripts/doctor.py", "parts/integrity.py", "scripts/e2e_smoke.py"],
+            "status": "proven",
+            "next_proof_task": "Add a lightweight metrics/health snapshot to the ritual report."
+          },
+          {
+            "skill_id": "adv.standards.contributors",
+            "skill": "Define standards for future contributors",
+            "why_it_matters": "Standards-setting is how seniors scale their impact.",
+            "repo_proof": ["CONTRIBUTING.md", "docs/adr/", "CLAUDE.md"],
+            "status": "proven",
+            "next_proof_task": "Add a review rubric for incoming changes."
+          },
+          {
+            "skill_id": "adv.truth.docs_code",
+            "skill": "Maintain truth between docs and code",
+            "why_it_matters": "Trustworthy documentation is a repeated senior/SRE value (DexCare).",
+            "repo_proof": ["parts/veritas.py", "docs/veritas.md"],
+            "status": "proven",
+            "next_proof_task": "Broaden truth check to more drift-prone claims."
+          },
+          {
+            "skill_id": "adv.outcomes.measurable",
+            "skill": "Connect engineering work to measurable outcomes",
+            "why_it_matters": "Seniors tie work to metrics (latency, toil, coverage).",
+            "repo_proof": ["docs/DEBUGGING.md", "docs/startup_ritual.md"],
+            "status": "proven",
+            "next_proof_task": "Keep a metrics note per optimization (e.g. 40ms -> 1ms Nagle fix)."
+          },
+          {
+            "skill_id": "adv.systems.design",
+            "skill": "Design systems other engineers could use",
+            "why_it_matters": "Platform/lead roles shape how others work.",
+            "repo_proof": ["docs/seed_architecture.md", "parts/cast.py"],
+            "status": "partial",
+            "next_proof_task": "Ship real cast generation so another dev can pour a project."
+          },
+          {
+            "skill_id": "adv.rollback.thinking",
+            "skill": "Show rollout/rollback thinking",
+            "why_it_matters": "Safe shipping/rollback is central to release/SRE roles.",
+            "repo_proof": ["Dockerfile", "render.yaml"],
+            "status": "partial",
+            "next_proof_task": "Write a rollback runbook for the demo deploy."
+          },
+          {
+            "skill_id": "adv.mentoring.artifacts",
+            "skill": "Mentor through classroom/tutorial artifacts",
+            "why_it_matters": "Teaching artifacts prove standards-setting and mentorship.",
+            "repo_proof": ["lessons/"],
+            "status": "partial",
+            "next_proof_task": "Flesh out one lesson end-to-end with a quiz and a worked example."
+          },
+          {
+            "skill_id": "adv.runbook.postmortem",
+            "skill": "Create runbooks and postmortem templates",
+            "why_it_matters": "Operational discipline is the clearest SRE bridge.",
+            "repo_proof": [],
+            "status": "missing",
+            "next_proof_task": "Add docs/runbook_template.md and docs/postmortem_template.md, then fill one."
+          },
+          {
+            "skill_id": "adv.platform.tooling",
+            "skill": "Build platform-style tooling used by multiple consumers",
+            "why_it_matters": "Platform engineering serves many teams/projects.",
+            "repo_proof": [],
+            "status": "missing",
+            "next_proof_task": "Point forge-audit at multiple repos and publish the scorecards as a shared surface."
+          }
+        ]
+      }
+    ]
+  }
+}
