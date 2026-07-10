@@ -1,4 +1,4 @@
-.PHONY: env fix lint typecheck test property coverage audit security secrets sbom doctor patch daily check readiness truth smoke repo-integrity ship run world store hardware clean serve ritual-fast ritual ritual-down unskew
+.PHONY: env fix lint typecheck test property coverage audit security secrets sbom doctor patch daily check readiness truth cast-plan smoke repo-integrity ship run world store hardware clean serve ritual-fast ritual ritual-down unskew
 
 # --- Environment: create/validate the .venv, fail loud on version mismatch ---
 env:
@@ -43,6 +43,12 @@ readiness:
 # Detects tools; a missing one is reported not_configured, never faked. ---
 repo-integrity:
 	@python3 -m parts.integrity
+
+# --- Cast: plan a standalone game project ("cast") poured from a seed pack + the engine.
+# Dry run -- lists what it WOULD copy and the manifest it WOULD write; writes nothing.
+# Usage: make cast-plan TEMPLATE=fantasy_mud NAME=Aethris (see docs/seed_architecture.md). ---
+cast-plan:
+	@python3 -m parts.cast $(or $(TEMPLATE),blank_mud) $(or $(NAME),Demo) $$(git rev-parse --short HEAD 2>/dev/null || echo unknown)
 
 # --- Truth: VeritasGate -- check the project's claims correspond to reality
 # (overclaims, drift-prone counts, docs, registry, QA board). Exit 1 on any

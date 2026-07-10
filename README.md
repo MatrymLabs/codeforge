@@ -103,6 +103,18 @@ FORGE_SEED=sword-art-online spark       # same selector for the multiplayer serv
 Shipped seeds: `first-forge` (the fantasy starter) and `sword-art-online`. Adding a
 new game is a new `seeds/<name>/` folder of YAML — no Python required.
 
+A **seed pack** is a game's *content* (above). A **cast** is the next layer: a standalone,
+installable project poured from the forge — the engine + one chosen seed pack + config,
+detached into its own repo. *"CodeForge is the forge; a cast is what leaves it."* The
+Phase-1 scaffold plans a cast (dry run — writes nothing):
+
+```bash
+make cast-plan TEMPLATE=fantasy_mud NAME=Aethris   # what a cast WOULD copy, and never copy
+```
+
+See [docs/seed_architecture.md](docs/seed_architecture.md) for the doctrine and the phased
+plan (whole-engine copy today; module-level selection is Phase-2 decoupling work).
+
 ## Architecture
 
 The engine is a **pure tick** surrounded by thin drivers. Every part is a card:

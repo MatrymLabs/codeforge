@@ -1051,5 +1051,34 @@
     "aliases": [],
     "created": "2026-07-09",
     "updated": "2026-07-09"
+  },
+  {
+    "designation": "MOD-UM10-S01-N001-007-R0",
+    "name": "cast",
+    "status": "active",
+    "function": "Seed\u2192cast planner: plan a standalone game project from a seed pack + the engine (dry run).",
+    "label": "cast",
+    "file": "parts/cast.py",
+    "type": "MOD",
+    "domain": "UM10",
+    "sector": "S01",
+    "node": "N001",
+    "sequence": "007",
+    "revision": "R0",
+    "docs": "docs/seed_architecture.md",
+    "tests": "tests/test_cast.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "module",
+      "cast",
+      "seed"
+    ],
+    "notes": "",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-10",
+    "updated": "2026-07-10"
   }
 ]
