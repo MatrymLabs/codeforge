@@ -7,6 +7,10 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
 ## [Unreleased]
 
 ### Added / Changed
+- **Functions check: full live sweep (7/7).** Filled the remaining parts with real demos,
+  so every cataloged part now runs live: `event-ledger` delivers a message to an echo sink,
+  `safe-runner` refuses `rm -rf /` (CommandRefused, never ran), `gate-runner` lists the
+  doctor's 8 read-only gates. No more `[tested]`/`[manual]` rows -- 7 demonstrated live.
 - **The in-game computer (`terminal`).** A read-only FORGE TERMINAL in the Diagnostic
   Console room that WIRES every diagnostic program behind one console: `terminal functions`
   (the functions check), `inspect`, `career`, `pioneer`, `pm`, `truth`, `qa`, `docs`. Each

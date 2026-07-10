@@ -32,6 +32,28 @@ def test_validated_loader_demo_fails_loud() -> None:
     assert "fails loud" in out
 
 
+def test_safe_runner_demo_refuses_a_dangerous_command() -> None:
+    _call, out = _DEMOS["safe-runner"]()
+    assert "CommandRefused" in out and "never ran" in out
+
+
+def test_event_ledger_demo_delivers_the_message() -> None:
+    _call, out = _DEMOS["event-ledger"]()
+    assert "hello world" in out
+
+
+def test_gate_runner_demo_lists_the_gates() -> None:
+    _call, out = _DEMOS["gate-runner"]()
+    assert "gates" in out.lower()
+
+
+def test_all_seven_parts_now_run_live() -> None:
+    # After filling the remaining demos, the check should have no [tested]/[manual] rows.
+    out = render_functions()
+    assert "7 demonstrated live" in out
+    assert "[tested]" not in out and "[manual]" not in out
+
+
 def test_render_lists_parts_with_run_or_tested_status() -> None:
     out = render_functions()
     assert "FUNCTIONS CHECK" in out
