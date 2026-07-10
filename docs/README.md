@@ -32,6 +32,10 @@ The one map to everything under `docs/`. New here? Read [RUNNING.md](RUNNING.md)
 
 ## Career and evidence
 - [career_evidence_board.md](career_evidence_board.md), `career`, skills mapped to repo proof.
+- [hiring_requirement_matrix.md](hiring_requirement_matrix.md), 2026 hiring requirements mapped to repo evidence.
+- [github_portfolio_checklist.md](github_portfolio_checklist.md), honest pass against the ideal-repo checklist.
+- [full_stack_readiness_checklist.md](full_stack_readiness_checklist.md), backend/frontend readiness, honestly labeled.
+- [research/](research/), the captured 2026 hiring / portfolio / full-stack research (the First Rule).
 - [resume_mapping.md](resume_mapping.md), how the work translates to resume language.
 - [DEBUGGING.md](DEBUGGING.md), a debugging case study (the dead-sink heisenbug).
 - [AI_WORKFLOW.md](AI_WORKFLOW.md), how AI is used, and how it stays honest.
