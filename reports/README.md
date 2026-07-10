@@ -16,6 +16,7 @@ reports/
   diagnostics/    # lint / type / compile checks
   ai/             # Architect NPC exchanges (redacted)
   repo_audits/    # forge-audit / doctor scorecards
+  ritual/         # dated startup/shutdown after-action records (make ritual)
   security/       # bandit / pip-audit output
   compliance/     # readiness evidence (dated + hashed)
   catalog/        # hardware-catalog snapshots

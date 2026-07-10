@@ -1,4 +1,4 @@
-.PHONY: env fix lint typecheck test property coverage audit security secrets doctor patch daily check readiness smoke repo-integrity ship run world store hardware clean serve ritual ritual-down unskew
+.PHONY: env fix lint typecheck test property coverage audit security secrets doctor patch daily check readiness truth smoke repo-integrity ship run world store hardware clean serve ritual ritual-down unskew
 
 # --- Environment: create/validate the .venv, fail loud on version mismatch ---
 env:
@@ -39,6 +39,13 @@ readiness:
 # Detects tools; a missing one is reported not_configured, never faked. ---
 repo-integrity:
 	@python3 -m parts.integrity
+
+# --- Truth: VeritasGate -- check the project's claims correspond to reality
+# (overclaims, drift-prone counts, docs, registry, QA board). Exit 1 on any
+# FLAGGED claim, so the ritual and CI fail loud on drift. Same as the in-MUD
+# `truth check`, reachable from a script. ---
+truth:
+	@python3 -m parts.veritas
 
 # --- Smoke: the whole engine end-to-end over a live socket -- start -> log in
 # -> look -> check -> do -> log out -> bank the forge. Isolated (own port + temp
