@@ -193,7 +193,7 @@ exist." vs. "Wrong password."). Two concrete measures:
 ## 3. Online Brute-Force Defence
 
 Weak or absent brute-force protection is squarely within OWASP Top 10
-**A07:2021 – Identification and Authentication Failures**, which explicitly cites
+**A07:2021 - Identification and Authentication Failures**, which explicitly cites
 permitting automated credential-stuffing and brute-force attempts
 ([OWASP A07](https://owasp.org/Top10/2021/A07_2021-Identification_and_Authentication_Failures/)).
 OWASP's guidance combines several controls
@@ -204,7 +204,7 @@ OWASP's guidance combines several controls
   successive failures on the same account or connection. For a persistent telnet
   session this is trivial to enforce: sleep/backoff and eventually drop the
   connection after N failures.
-- **Account lockout - carefully.** Typical thresholds are 3–5 failures with a
+- **Account lockout - carefully.** Typical thresholds are 3-5 failures with a
   timed auto-unlock. **Warning:** naive lockout is itself a denial-of-service
   vector - an attacker who knows valid names can lock every player out. Prefer
   temporary, exponentially-increasing lockouts and per-IP throttling over
@@ -295,7 +295,7 @@ sequences (`ESC[`, `0x1B`), a malicious player can:
 
 **Mitigations:**
 
-- **Strip or reject raw control characters** (`0x00–0x1F` except intended
+- **Strip or reject raw control characters** (`0x00-0x1F` except intended
   whitespace, plus `0x7F` and `ESC`) from all player-supplied text at the input
   boundary. Then re-introduce colour on *output* through your own safe markup
   (e.g. a `{r`/`&R`-style tag scheme translated to ANSI by the server), so

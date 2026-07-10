@@ -15,7 +15,7 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
   `tests/test_frameup.py`; filed in the registry (board 81/81). Currently 🟢 GREEN.
 - **Pioneer Mode (`pioneer` command).** A disciplined-Maverick engineering framework -
   *bend convention, not truth/safety/trust* - surfaced in the MUD and codified in docs.
-  `docs/pioneer_mode.md` (doctrine · Maverick Filter · risk ladder L1–L5 · constraint-review
+  `docs/pioneer_mode.md` (doctrine · Maverick Filter · risk ladder L1-L5 · constraint-review
   + experiment templates), `parts/pioneer.py` + `data/pioneer/risk_ladder.json` (views:
   `pioneer` · `risks` · `plan` · `experiments`), and a **real first filed experiment**
   (`docs/pioneer_experiments/2026-07-10-honest-gpu-split.md` - building a GPU package on a
@@ -160,7 +160,7 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
   `TCP_NODELAY`, so every one-line reply stalled ~40ms on Nagle + delayed-ACK - a
   fixed per-command lag for every client (Mudlet, telnet, browser gate). Disabled
   Nagle in the connection setup. Measured via the smoke test: per-command round-trips
-  dropped from ~44ms to ~0–3ms (~20–40×).
+  dropped from ~44ms to ~0-3ms (~20-40×).
 
 ### Added
 - **Ritual READINESS phase + `make readiness`**: the startup ritual now runs a global
