@@ -1109,5 +1109,33 @@
     "aliases": [],
     "created": "2026-07-10",
     "updated": "2026-07-10"
+  },
+  {
+    "designation": "MOD-UM10-S01-N001-009-R0",
+    "name": "pioneer",
+    "status": "active",
+    "function": "Pioneer Mode renderer: risk ladder + constraint review + filed experiments.",
+    "label": "pioneer",
+    "file": "parts/pioneer.py",
+    "type": "MOD",
+    "domain": "UM10",
+    "sector": "S01",
+    "node": "N001",
+    "sequence": "009",
+    "revision": "R0",
+    "docs": "docs/pioneer_mode.md",
+    "tests": "tests/test_pioneer.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "module",
+      "pioneer"
+    ],
+    "notes": "",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-10",
+    "updated": "2026-07-10"
   }
 ]

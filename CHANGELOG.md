@@ -7,6 +7,14 @@ pre-1.0. Readiness language only — no compliance/OSHA/legal claims.
 ## [Unreleased]
 
 ### Added / Changed
+- **Pioneer Mode (`pioneer` command).** A disciplined-Maverick engineering framework —
+  *bend convention, not truth/safety/trust* — surfaced in the MUD and codified in docs.
+  `docs/pioneer_mode.md` (doctrine · Maverick Filter · risk ladder L1–L5 · constraint-review
+  + experiment templates), `parts/pioneer.py` + `data/pioneer/risk_ladder.json` (views:
+  `pioneer` · `risks` · `plan` · `experiments`), and a **real first filed experiment**
+  (`docs/pioneer_experiments/2026-07-10-honest-gpu-split.md` — building a GPU package on a
+  GPU-less host, verified CPU / honest GPU). Filed in the registry (board 79/79); the
+  framework gives the existing gates bold direction, it does not replace them.
 - **Runbook + postmortem discipline (closes a Career-board gap).** Added
   `docs/runbook_template.md`, `docs/postmortem_template.md`, and a real filled blameless
   postmortem (`docs/postmortems/2026-07-09-red-merge-to-main.md`) of the day a bandit gate
