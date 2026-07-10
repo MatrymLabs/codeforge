@@ -13,6 +13,8 @@ The one map to everything under `docs/`. New here? Read [RUNNING.md](RUNNING.md)
 - [adr/](adr/), Architecture Decision Records (0001 canonical state, 0002 derive-don't-store, 0003 framework-free).
 - [frameless_python.md](frameless_python.md), the frameless identity: stdlib + my architecture as the spine, tools as integrations.
 - [tooling_strategy.md](tooling_strategy.md), how a tool earns its place: the decision matrix, review template, and dependency-approval rule.
+- [full_stack_forge_decision.md](full_stack_forge_decision.md), the full-stack framework decision (custom core + FastAPI + custom renderers; Django/Evennia/React deferred).
+- [framework_decision_matrix.md](framework_decision_matrix.md), the scored path comparison + tool status labels.
 - [seed_architecture.md](seed_architecture.md), seed pack vs cast, the detachment plan.
 - [naming_glossary.md](naming_glossary.md), the forge vocabulary.
 - [classification/](classification/), the designation / registry system.
@@ -24,6 +26,7 @@ The one map to everything under `docs/`. New here? Read [RUNNING.md](RUNNING.md)
 - [repo_integrity.md](repo_integrity.md), `make repo-integrity`, the composite health report.
 - [performance.md](performance.md), `make bench`, the engine-tick throughput/latency benchmark (performance evidence).
 - [dashboard.md](dashboard.md), the readiness Lens: a server-rendered web dashboard (`GET /`) + JSON twin (`GET /api/status`) over real forge evidence (the full-stack proof).
+- [blueprint_renderer.md](blueprint_renderer.md), the forge's planning spine: idea -> validated Blueprint (JSON + Markdown) -> static HTML page (`blueprint` verb).
 - [project_management.md](project_management.md), `pm status`, backlog, risks, decisions, one worked LSS DMAIC.
 
 ## Ritual and process

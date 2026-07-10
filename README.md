@@ -64,6 +64,27 @@ accessible, responsive page. The same data is served as JSON at `/api/status` (t
 future React/TypeScript front end would consume), and the API self-documents at `/docs`.
 Frameless: stdlib HTML rendering, no template engine. See [`docs/dashboard.md`](docs/dashboard.md).
 
+## Full-Stack Forge Direction 🧭
+
+CodeForge is **architecture-first Python**: frameworks are professional tools that must earn
+their place, not an identity to avoid. The custom tick stays the core; FastAPI carries the
+web layer it already carries; Django, Evennia, and React are researched, deferred options.
+The decision and the scored matrix live in
+[`docs/full_stack_forge_decision.md`](docs/full_stack_forge_decision.md) and
+[`docs/framework_decision_matrix.md`](docs/framework_decision_matrix.md).
+
+The first net-new spine is the **Blueprint renderer**: an idea becomes a validated Blueprint
+(JSON record + Markdown twin), then a static HTML page, all frameless.
+
+```bash
+codeforge play           # then, in the MUD:
+blueprint list           # every filed plan
+blueprint show npc_combat # read the plan as Markdown
+blueprint render npc_combat # project it to a static HTML page (reports/blueprints/)
+```
+
+See [`docs/blueprint_renderer.md`](docs/blueprint_renderer.md).
+
 ## Quick start
 
 ```bash
@@ -267,6 +288,8 @@ Generated from the `CARD:` docstrings in `parts/` (see `make store`):
 | `api` | an HTTP window onto the canonical world (FastAPI). |
 | `architect` | the Architect NPC: an advisory AI pair-programmer (read-only). |
 | `assessment` | the AssessmentEngine: a data-driven question engine. |
+| `blueprint` | the Blueprint: a software idea forged into a validated spec. |
+| `blueprint_render` | project a Blueprint to a static HTML/CSS page. |
 | `catalog` | the filing system. List world components by number. |
 | `characters` | named heroes survive the restart (SQL-backed). |
 | `classroom` | Professor Codex and the Classroom of Practical Arts. |

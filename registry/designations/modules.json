@@ -1334,5 +1334,59 @@
     "aliases": [],
     "created": "2026-07-10",
     "updated": "2026-07-10"
+  },
+  {
+    "designation": "MOD-UM10-S01-N001-015-R0",
+    "name": "blueprint",
+    "status": "active",
+    "function": "the Blueprint: a software idea forged into a validated JSON+Markdown spec",
+    "label": "blueprint",
+    "file": "parts/blueprint.py",
+    "type": "MOD",
+    "domain": "UM10",
+    "sector": "S01",
+    "node": "N001",
+    "sequence": "015",
+    "revision": "R0",
+    "docs": "docs/blueprint_renderer.md",
+    "tests": "tests/test_blueprint.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "module"
+    ],
+    "notes": "Frameless (stdlib json+re); fail-loud validator; state is JSON, Markdown/HTML are projections.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-10",
+    "updated": "2026-07-10"
+  },
+  {
+    "designation": "MOD-UM10-S01-N001-016-R0",
+    "name": "blueprint_render",
+    "status": "active",
+    "function": "project a Blueprint to a static, accessible HTML/CSS page (the renderer spine)",
+    "label": "blueprint_render",
+    "file": "parts/blueprint_render.py",
+    "type": "MOD",
+    "domain": "UM10",
+    "sector": "S01",
+    "node": "N001",
+    "sequence": "016",
+    "revision": "R0",
+    "docs": "docs/blueprint_renderer.md",
+    "tests": "tests/test_blueprint_render.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "module"
+    ],
+    "notes": "Frameless (stdlib html.escape, no template engine); rendered pages are regenerable evidence under reports/blueprints/.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-10",
+    "updated": "2026-07-10"
   }
 ]

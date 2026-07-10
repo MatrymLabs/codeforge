@@ -17,6 +17,7 @@ from parts.accounts import (
 )
 from parts.accounts import register as register_account
 from parts.architect import consult
+from parts.blueprint import blueprint
 from parts.career import career
 from parts.characters import load_character, restore_character, save_character
 from parts.classroom import (
@@ -251,6 +252,15 @@ def _build_commands() -> CommandSet:
             "CMD-UM01-S01-N001-001-R0",
             "The in-game computer: one console to run every diagnostic program",
             lambda _s, arg: terminal(arg),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "blueprint",
+            "CMD-UM10-S01-N001-016-R0",
+            "Blueprint: browse, read, or render a forged plan (idea -> spec -> HTML)",
+            lambda _s, arg: blueprint(arg),
             namespace=CORE,
         )
     )
