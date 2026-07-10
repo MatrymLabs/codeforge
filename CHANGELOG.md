@@ -7,6 +7,10 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
 ## [Unreleased]
 
 ### Added / Changed
+- **Hardware Store: the road not taken.** Each part card now carries an optional
+  `experimental` section (`make hardware`) naming the framework/tool path it *could*
+  take if CodeForge were not frameless (FastAPI DI, Pydantic, a broker, Jinja2, an LMS)
+  and what that trade would cost. Shows the frameless choice was deliberate, not naive.
 - **Dependency gate (`make deps`) + SHA-pinned Actions.** The Dependency Approval Rule is
   now machine-checkable: `dependency_ledger.toml` justifies every dependency and
   `parts/dependencies.py` (stdlib `tomllib`) fails loud on any unjustified one; the test

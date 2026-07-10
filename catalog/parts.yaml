@@ -13,6 +13,10 @@
   source_status: original
   license: MIT
   influence: "RBAC - authorization-before-capability pattern (original implementation)"
+  experimental: >-
+    express it as FastAPI Depends(require_rank(...)) dependency
+    injection, Django's permission framework, or a policy engine like Casbin/oso
+    (RBAC as external policy data). Traded away: the plain, testable refusal path.
   risk: low
   reuse_score: 5
   purpose: >
@@ -34,6 +38,10 @@
   source_status: original
   license: MIT
   influence: "publish/subscribe (observer) pattern (original implementation)"
+  experimental: >-
+    swap the in-process bus for blinker signals, or a broker
+    (Redis pub/sub, RabbitMQ, Kafka) once fan-out must cross processes; Celery for
+    durable delivery. Traded away: zero dependencies and in-test determinism.
   risk: low
   reuse_score: 5
   purpose: >
@@ -55,6 +63,10 @@
   source_status: original
   license: MIT
   influence: "fail-loud validation at the boundary (original implementation)"
+  experimental: >-
+    declare the schema with Pydantic models (or jsonschema /
+    marshmallow / voluptuous) so validation and types come from one declaration
+    instead of hand-written gates. Traded away: full control over the error voice.
   risk: low
   reuse_score: 4
   purpose: >
@@ -76,6 +88,10 @@
   source_status: original
   license: MIT
   influence: "command allowlist + subprocess without a shell, shell=False (original implementation)"
+  experimental: >-
+    wrap it with invoke/plumbum for richer command orchestration,
+    or move real isolation to a container / nsjail / firejail sandbox rather than
+    an allowlist. Traded away: a tiny, auditable surface with no new attack area.
   risk: low
   reuse_score: 5
   purpose: >
@@ -98,6 +114,10 @@
   source_status: original
   license: MIT
   influence: "data-driven question bank (original implementation)"
+  experimental: >-
+    back the question bank with SQLAlchemy + Pydantic models and
+    serve it over FastAPI, or integrate an LMS (Moodle / xAPI) for standards-based
+    training records. Traded away: a self-contained engine with no server to run.
   risk: low
   reuse_score: 5
   purpose: >
@@ -120,6 +140,10 @@
   source_status: original
   license: MIT
   influence: "read-only preflight gate, stop at first failure (original implementation)"
+  experimental: >-
+    orchestrate the checks with nox / tox sessions or pre-commit,
+    or drive them from a CI matrix instead of a hand-rolled runner. Traded away:
+    a single zero-config entry point that reads its own gate list.
   risk: low
   reuse_score: 4
   purpose: >
@@ -141,6 +165,10 @@
   source_status: original
   license: MIT
   influence: "dated evidence-report pattern - one writer, one convention (original implementation)"
+  experimental: >-
+    render with Jinja2 templates and style via rich (or reportlab /
+    WeasyPrint for PDF), or emit structured events (structlog) to a document store
+    instead of Markdown files. Traded away: greppable plain text, diffable in git.
   risk: low
   reuse_score: 4
   purpose: >

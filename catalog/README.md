@@ -28,6 +28,7 @@ path with `CODEFORGE_CATALOG`.
   source_status: original  # optional (default original) · original | mit | apache-2.0 | ...
   license: MIT             # optional (default MIT) · this repo's own code is MIT
   influence: "…"           # optional · the KNOWN PATTERN it was rebuilt from
+  experimental: "…"        # optional · the road NOT taken: the framework/tool path if not frameless
   reuse:                   # required · non-empty map of domain -> concrete use
     game: "…"
     government: "…"
@@ -63,6 +64,12 @@ path with `CODEFORGE_CATALOG`.
   pattern* a part was rebuilt from (RBAC, pub/sub, allowlist-without-a-shell). The part
   is an original implementation *of the pattern* - the concept is reused, the expression
   is ours.
+- **`experimental` is the road not taken (frameless honesty).** It names the
+  framework/tool path a part *could* take if CodeForge abandoned frameless Python (FastAPI
+  DI, Pydantic, a broker, Jinja2, an LMS), plus what that trade would cost. The point is to
+  show the frameless choice was *deliberate*, made by an engineer who knows the alternatives,
+  not by one who never met them. It is a design note, never a plan; see
+  [`docs/frameless_python.md`](../docs/frameless_python.md).
 - **Add a part when it proves reusable**, not before - the store stocks finished
   parts, not intentions.
 

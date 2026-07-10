@@ -29,6 +29,26 @@ def test_every_shipped_part_is_free_to_use_and_records_its_pattern():
     assert all(part.influence for part in parts), "each part should record its known pattern"
 
 
+def test_every_shipped_part_shows_its_road_not_taken():
+    # the experimental section: what the part would become if it were NOT frameless
+    parts = load_catalog()
+    assert all(part.experimental for part in parts), "each part should note its non-frameless path"
+    text = catalog_text()
+    assert "experimental (if not frameless)" in text
+
+
+def test_experimental_is_optional_and_omitted_when_absent(tmp_path):
+    # a part without an experimental note loads fine and prints no experimental line
+    catalog = _write(
+        tmp_path,
+        "- id: x\n  name: X\n  source: parts/x.py\n  category: c\n  purpose: p\n"
+        "  maturity: beta\n  risk: low\n  reuse: {game: y}\n",
+    )
+    part = load_catalog(catalog)[0]
+    assert part.experimental == ""
+    assert "experimental (if not frameless)" not in catalog_text(catalog)
+
+
 def test_a_non_free_to_use_source_status_is_refused(tmp_path):
     path = _write(
         tmp_path,
