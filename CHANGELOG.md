@@ -7,6 +7,18 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
 ## [Unreleased]
 
 ### Added / Changed
+- **Observability: structured logs + Prometheus /metrics.** `parts/observability.py`
+  (MOD-UM10-S01-N001-019-R0) wires two operability signals onto the FastAPI surface with one
+  HTTP middleware: **structured JSON request logs** via structlog (method, route, status,
+  duration per event) and a **`GET /metrics`** endpoint in Prometheus text exposition
+  (request counts + latency sums by method, route template, and status). Series key on the
+  matched route TEMPLATE (e.g. `/ui/blueprint/{blueprint_id}`), never the raw path, so
+  cardinality stays bounded; the registry is a small stdlib thread-safe counter table (the
+  exposition format is rendered directly, no scraping library; a summary, not a full
+  histogram, labeled honestly). Adds `structlog` (runtime, ledger-justified, bounded to this
+  module), `docs/observability.md`, 7 test cases (exposition rendering, label escaping,
+  middleware records by template, endpoint content type), and an honest advanced career-board
+  skill (structured logs + metrics).
 - **AI Blueprint drafter (schema-enforced, mockable).** `parts/blueprint_ai.py`
   (MOD-UM10-S01-N001-018-R0) turns a freeform idea into a structured Blueprint using the
   Anthropic Messages API's `messages.parse` with a Pydantic schema (`BlueprintDraft`), then

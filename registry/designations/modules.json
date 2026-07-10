@@ -1442,5 +1442,32 @@
     "aliases": [],
     "created": "2026-07-10",
     "updated": "2026-07-10"
+  },
+  {
+    "designation": "MOD-UM10-S01-N001-019-R0",
+    "name": "observability",
+    "status": "active",
+    "function": "structured request logs (structlog) + a Prometheus /metrics endpoint on the HTTP surface",
+    "label": "observability",
+    "file": "parts/observability.py",
+    "type": "MOD",
+    "domain": "UM10",
+    "sector": "S01",
+    "node": "N001",
+    "sequence": "019",
+    "revision": "R0",
+    "docs": "docs/observability.md",
+    "tests": "tests/test_observability.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "module"
+    ],
+    "notes": "One HTTP middleware times each request, emits a JSON log event, and records a metric by route TEMPLATE (bounded cardinality). Prometheus text exposition rendered by a stdlib registry (no scraping library).",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-10",
+    "updated": "2026-07-10"
   }
 ]
