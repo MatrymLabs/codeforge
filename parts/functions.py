@@ -66,11 +66,58 @@ def _demo_validated_loader() -> tuple[str, str]:
             return ("load_rooms(<duplicate-key yaml>)", f"{kind} -- refuses a bad row (fails loud)")
 
 
+def _demo_event_ledger() -> tuple[str, str]:
+    from parts.events import announce, bind_echo, unbind_echo
+    from parts.session import SESSIONS, Session
+
+    pid = "_fn_evt_demo"
+    got: list[str] = []
+    prev = SESSIONS.get(pid)
+    SESSIONS[pid] = Session(player_id=pid, location="_fn_demo_room")
+    bind_echo(pid, got.append)  # an EchoSink is just Callable[[str], None]
+    try:
+        announce("_fn_demo_room", "hello world")
+        result = repr(got[0]) if got else "(nothing delivered)"
+        return ("announce('room', 'hello world')", f"echo sink received {result}")
+    finally:
+        unbind_echo(pid)
+        if prev is None:
+            SESSIONS.pop(pid, None)
+        else:
+            SESSIONS[pid] = prev
+
+
+def _demo_safe_runner() -> tuple[str, str]:
+    from parts.console import ALLOWLIST, CommandRefused, run
+
+    try:
+        run("rm -rf /")  # not on the allowlist
+        return ("run('rm -rf /')", "ran (unexpected -- allowlist bypass!)")
+    except CommandRefused:
+        sample = ", ".join(sorted(ALLOWLIST)[:3])
+        return ("run('rm -rf /')", f"CommandRefused -- never ran (allowlist: {sample}, ...)")
+
+
+def _demo_gate_runner() -> tuple[str, str]:
+    import importlib.util
+
+    spec = importlib.util.spec_from_file_location("_fn_doctor", _ROOT / "scripts" / "doctor.py")
+    if spec is None or spec.loader is None:  # pragma: no cover - defensive
+        return ("scripts/doctor.py", "could not load doctor")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)  # import-safe: doctor runs main() only under __main__
+    labels = [g[0] for g in mod.GATES]
+    return ("doctor GATES (read-only)", f"{len(labels)} gates: {', '.join(labels[:4])}, ...")
+
+
 _DEMOS: dict[str, Callable[[], tuple[str, str]]] = {
     "rank-gate": _demo_rank_gate,
     "report-writer": _demo_report_writer,
     "assessment-engine": _demo_assessment,
     "validated-loader": _demo_validated_loader,
+    "event-ledger": _demo_event_ledger,
+    "safe-runner": _demo_safe_runner,
+    "gate-runner": _demo_gate_runner,
 }
 
 
