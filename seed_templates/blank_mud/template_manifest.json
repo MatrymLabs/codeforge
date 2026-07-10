@@ -1,0 +1,22 @@
+{
+  "template_id": "blank_mud",
+  "name": "Blank MUD",
+  "description": "The minimal world that boots: a starter seed pack + the whole engine. The smallest useful cast to build on.",
+  "starter_seed_pack": "first-forge",
+  "engine_strategy": "vendored-whole",
+  "default_settings": {
+    "genre": "starter",
+    "allow_multiplayer": true,
+    "allow_ai_npcs": false,
+    "combat_mode": "turn_based",
+    "save_mode": "local"
+  },
+  "includes": {
+    "engine": true,
+    "ritual": "slim",
+    "registry": true,
+    "qa": true,
+    "veritas": true
+  },
+  "status": "prototype"
+}

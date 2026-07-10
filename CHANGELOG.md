@@ -7,6 +7,14 @@ pre-1.0. Readiness language only — no compliance/OSHA/legal claims.
 ## [Unreleased]
 
 ### Added / Changed
+- **Seed → Cast scaffold (Phase 1).** A **seed pack** is a game's content (`seeds/<name>/`);
+  a **cast** is a standalone project poured from the forge — the engine + one seed pack +
+  config, detached into its own repo. `parts/cast.py` + `make cast-plan` PLAN a cast (a dry
+  run listing what it *would* copy and the manifest it *would* write) and write nothing.
+  Honest by construction: `engine_strategy: "vendored-whole"` (module-level selection is
+  Phase-2 decoupling work, not claimed now), and the never-copy set covers secrets/state/
+  evidence/other-packs. Ships `seed_templates/{blank_mud,fantasy_mud}` + the doctrine in
+  `docs/seed_architecture.md`. Real generation, detachment, and standalone boot come later.
 - **Ritual audit batch 2 — no double suite run, and a shutdown push-ready gate.**
   `make check` now folds coverage into a **single** suite run (`lint · types · pytest
   --cov · threshold`) instead of running the suite once for `check` and again for

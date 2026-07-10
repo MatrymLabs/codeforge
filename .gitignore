@@ -16,3 +16,6 @@ security-evidence/
 # Runtime Workshop outputs (generated, reproducible); keep the README tracked.
 reports/*
 !reports/README.md
+
+# Generated cast sandbox (dry-run output; a cast becomes its own repo elsewhere)
+casts/
