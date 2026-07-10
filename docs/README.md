@@ -11,6 +11,8 @@ The one map to everything under `docs/`. New here? Read [RUNNING.md](RUNNING.md)
 ## Architecture and decisions
 - [architecture.md](architecture.md), the engine tick, drivers, and canonical state.
 - [adr/](adr/), Architecture Decision Records (0001 canonical state, 0002 derive-don't-store, 0003 framework-free).
+- [frameless_python.md](frameless_python.md), the frameless identity: stdlib + my architecture as the spine, tools as integrations.
+- [tooling_strategy.md](tooling_strategy.md), how a tool earns its place: the decision matrix, review template, and dependency-approval rule.
 - [seed_architecture.md](seed_architecture.md), seed pack vs cast, the detachment plan.
 - [naming_glossary.md](naming_glossary.md), the forge vocabulary.
 - [classification/](classification/), the designation / registry system.
