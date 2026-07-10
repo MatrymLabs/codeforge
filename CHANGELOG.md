@@ -7,6 +7,11 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
 ## [Unreleased]
 
 ### Added / Changed
+- **Closed three career-board gaps with real artifacts.** Cataloged the ReportWriter as a
+  Hardware Store part with a cross-domain reuse map (`catalog/parts.yaml`); wrote a real
+  rollback runbook for the live demo (`docs/runbooks/demo-deploy-rollback.md`); added a
+  DOCS IMPACT nudge to the shutdown ritual (warns when code changes without docs). The
+  Career board flipped 25 -> 28 proven (honesty test confirms every cited artifact exists).
 - **Frame-up consolidation (the Pioneer-path cleanup).** `inspect` became the audit hub:
   `inspect qa` / `inspect truth` / `inspect pm` drill into one system each (reusing that
   system's own renderer, nothing duplicated), and `inspect save` banks the frame-up. A

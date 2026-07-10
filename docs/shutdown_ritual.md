@@ -14,6 +14,7 @@ run it twice and the second run just confirms all is cold.
 | 1 | **BANK THE FORGE** | Stop any gateway still burning on `:4000` (a server the startup ritual lit and detached, or a ghost from an old launch) and stop any codeforge containers. `start the ritual` banks the forge *it* lit when you quit; this catches everything else. |
 | 2 | **MUSTER** | An honest end-of-day report: uncommitted changes, unpushed commits. It **never pushes for you** - it tells the truth and leaves the decision to you. |
 | 3 | **PUSH READINESS** | Names every blocker and reports `commit_ready` / `push_ready`. Fast blockers always run; the full gate runs only when there are unpushed commits to protect. **It never pushes** - it tells you loudly *not* to when something is wrong. |
+| 3b | **DOCS IMPACT** | Informational nudge: if the about-to-leave set (uncommitted + unpushed) touches code (`parts/*.py`, `forge.py`, `scripts/*`) but no `CHANGELOG`/`README`/`docs/`, it warns to review docs impact before pushing. Never blocks. |
 | 4 | **CLOSE THE RECORD** | Stamps the day's after-action record (`reports/ritual/<date>.md`) with the closing state - tree, unpushed count, and the commit/push-ready verdict - so the day is auditable start to finish. |
 | 5 | **DOUSE THE EMBERS** | Clear the ritual's scratch logs from `/tmp`. |
 

@@ -72,10 +72,19 @@ def test_a_skill_missing_a_required_field_fails_loud(tmp_path: Path) -> None:
 
 
 def test_gaps_view_surfaces_the_real_gaps() -> None:
+    # Structural, not pinned to a specific skill: as gaps are closed the list shrinks, but
+    # while any partial/missing remains the view must show it with a next-proof-task + count.
+    board = load_board()
+    open_gaps = [
+        s for lvl in board["levels"] for s in lvl["skills"] if s["status"] in ("partial", "missing")
+    ]
     out = render_gaps()
     assert "GAPS" in out
-    # runbook/postmortem is a known 'missing' item - it must appear as a gap
-    assert "runbook" in out.lower() or "postmortem" in out.lower()
+    if open_gaps:
+        assert "next:" in out
+        assert "gap(s)" in out
+    else:
+        assert "No gaps recorded" in out
 
 
 def test_resume_is_generated_from_proven_skills() -> None:

@@ -131,3 +131,26 @@
     finance: "a process-control checker over a run's outputs"
     compliance: "a repo/compliance readiness scan feeding an evidence report"
     general: "the seed of a repo auditor (see the forge-audit backlog item)"
+
+- id: report-writer
+  name: Report Writer
+  source: parts/reporting.py
+  category: evidence
+  tags: [reporting, evidence, audit-trail, filing, reuse]
+  maturity: shipped
+  source_status: original
+  license: MIT
+  influence: "dated evidence-report pattern - one writer, one convention (original implementation)"
+  risk: low
+  reuse_score: 4
+  purpose: >
+    One writer for dated evidence reports: file any text under reports/<category>/ with a
+    consistent dated-path convention, so every producer files the same way. In-repo it is
+    already reused by two consumers (the repo-integrity report and the `inspect save`
+    frame-up snapshot) - one seam, not three ad-hoc writers.
+  reuse:
+    game: "banks frame-up snapshots and repo-integrity health reports under reports/"
+    government: "dated evidence/audit-trail reports, filed consistently and traceable"
+    finance: "dated transaction or reconciliation evidence, one filing convention"
+    compliance: "dated evidence bundles under a category, reproducible from the commit"
+    general: "any project's dated report/evidence writer - stop reinventing the mkdir+path"
