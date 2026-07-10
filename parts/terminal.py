@@ -20,6 +20,7 @@ _PROGRAMS: list[tuple[str, str]] = [
     ("truth", "VeritasGate - the project's claims vs reality"),
     ("qa", "QA board - every filed object graded"),
     ("docs", "Documentation gap check"),
+    ("deps", "Dependency gate - every dependency justified (frameless Python)"),
 ]
 _NAMES = {name for name, _ in _PROGRAMS}
 
@@ -79,6 +80,10 @@ def _run(name: str) -> str:
         from parts.qualitygate import docs_check
 
         return docs_check()
+    if name == "deps":
+        from parts.dependencies import render_dependencies
+
+        return render_dependencies()
     return f"no such program '{name}'"
 
 

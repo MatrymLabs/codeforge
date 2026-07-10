@@ -149,6 +149,13 @@ PR description or ADR, before it lands:
 If the case is not strong on "need", "skill proven", and "removable", the default is
 `stdlib_first`, `research_only`, or `integrate_later`.
 
+**Enforced, not just documented.** `make deps` (part `parts/dependencies.py`, stdlib
+`tomllib` only) reads the declared dependencies from `pyproject.toml` and their
+justifications from `dependency_ledger.toml`, then fails loud on any dependency declared
+without a ledger row (and warns on a stale row). The test twin rides `make check`, so an
+unjustified dependency cannot merge silently. Adding a dependency now means adding its
+row here first.
+
 ---
 
 ## Phased roadmap (where CodeForge sits)
@@ -207,4 +214,5 @@ blocked                  unsafe, unclear, unlicensed, or too risky
 
 **On the Hardware Store**
 - Could a "tool review" itself become a Hardware Store part (a reusable evaluation checklist)?
-- Could the Dependency Approval Rule be enforced by a small in-repo gate (a `make` target that lints new deps)?
+- ~~Could the Dependency Approval Rule be enforced by a small in-repo gate (a `make` target that lints new deps)?~~
+  **Answered:** yes - `make deps` (`parts/dependencies.py`) now enforces the ledger; the test twin rides `make check`.

@@ -7,6 +7,12 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
 ## [Unreleased]
 
 ### Added / Changed
+- **Dependency gate (`make deps`) + SHA-pinned Actions.** The Dependency Approval Rule is
+  now machine-checkable: `dependency_ledger.toml` justifies every dependency and
+  `parts/dependencies.py` (stdlib `tomllib`) fails loud on any unjustified one; the test
+  twin rides `make check`. All GitHub Actions are pinned to full commit SHA (Dependabot
+  maintains them), lifting the OpenSSF Scorecard Pinned-Dependencies check. Filed as
+  MOD-UM10-S01-N001-012-R0.
 - **OpenSSF Scorecard wired.** `.github/workflows/scorecard.yml` scores the repo's
   supply-chain/security posture weekly + on push and publishes the result; a truthful
   badge is on the README. Closes the last open Phase-3 tooling item. No runtime dep.

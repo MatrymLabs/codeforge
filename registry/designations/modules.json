@@ -1253,5 +1253,32 @@
     "aliases": [],
     "created": "2026-07-10",
     "updated": "2026-07-10"
+  },
+  {
+    "designation": "MOD-UM10-S01-N001-012-R0",
+    "name": "dependencies",
+    "status": "active",
+    "function": "the dependency gate: every declared dependency must be justified in the ledger",
+    "label": "dependencies",
+    "file": "parts/dependencies.py",
+    "type": "MOD",
+    "domain": "UM10",
+    "sector": "S01",
+    "node": "N001",
+    "sequence": "012",
+    "revision": "R0",
+    "docs": "docs/tooling_strategy.md",
+    "tests": "tests/test_dependencies.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "module"
+    ],
+    "notes": "Reads pyproject.toml + dependency_ledger.toml (stdlib tomllib); frameless.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-10",
+    "updated": "2026-07-10"
   }
 ]
