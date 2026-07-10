@@ -65,6 +65,7 @@ class Part:
     source_status: str = "original"  # provenance: original / mit / apache-2.0 / ...
     license: str = "MIT"  # the reuse license (this repo's own code is MIT)
     influence: str = ""  # the KNOWN PATTERN it was rebuilt from -- harvest patterns, not code
+    experimental: str = ""  # the road NOT taken: the framework/tool path if this were not frameless
 
 
 class CatalogError(ValueError):
@@ -107,6 +108,7 @@ def _coerce(raw: Any, index: int) -> Part:
         source_status=source_status,
         license=str(raw.get("license", "MIT")),
         influence=str(raw.get("influence", "")),
+        experimental=str(raw.get("experimental", "")).strip(),
     )
 
 
@@ -152,6 +154,10 @@ def catalog_text(path: Path | None = None) -> str:
         lines.append(f"    {part.purpose}")
         for domain, use in part.reuse.items():
             lines.append(f"    - {domain:<11} {use}")
+        if part.experimental:
+            # The road not taken: what this part would become if we abandoned frameless.
+            # Shown so the choice reads as deliberate, not as ignorance of the tools.
+            lines.append(f"    experimental (if not frameless): {part.experimental}")
         lines.append("")
     lines.append(f"{len(parts)} part(s) cataloged.")
     return "\n".join(lines)
