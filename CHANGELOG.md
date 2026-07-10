@@ -7,6 +7,11 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
 ## [Unreleased]
 
 ### Added / Changed
+- **The in-game computer (`terminal`).** A read-only FORGE TERMINAL in the Diagnostic
+  Console room that WIRES every diagnostic program behind one console: `terminal functions`
+  (the functions check), `inspect`, `career`, `pioneer`, `pm`, `truth`, `qa`, `docs`. Each
+  dispatches to that system's existing renderer (composition, not duplication), framed like
+  a terminal. `parts/terminal.py` + `docs/terminal.md`; the room now points to it. board 86/86.
 - **Hardware Store functions check (`functions`).** A live demo of each cataloged reusable
   part, the real call and its real output, so "reusable" is shown, not claimed: `rank-gate`
   refuses a novice and allows an owner, `report-writer` writes "hello world" to a temp file,

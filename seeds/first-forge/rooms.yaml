@@ -136,8 +136,10 @@ diagnostic_console:
   desc: |-
     A reinforced console blinks amber and blue. Each command is carved into a
     metal plate and routed through a failsafe - not a raw terminal, a guarded
-    station where every run is checked, capped, and logged.
-    -- Here: diagnostics (quick checks), run <check>, security (SAST scan),
-       console (the full list).
+    station where every run is checked, capped, and logged. Beside it, a second
+    screen hums: the FORGE TERMINAL, a read-only computer that runs every
+    diagnostic program from one place.
+    -- Here: terminal (the in-game computer), diagnostics (quick checks),
+       run <check>, security (SAST scan), console (the full list).
   exits:
     north: workshop

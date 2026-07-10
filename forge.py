@@ -55,6 +55,7 @@ from parts.registry import (
 from parts.regulations import regs
 from parts.save import awaken_snapshot, seal_snapshot
 from parts.session import SESSIONS, Session, display_name, roster
+from parts.terminal import terminal
 from parts.veritas import render_truth
 from parts.workshop import catalog_view, reuse_search, workshop_menu
 from parts.world import DIRECTIONS, render_room, resolve_move
@@ -68,7 +69,7 @@ HELP_TEXT = (
     "unlock <door> with <key>, regs [topic|id], library [id], law [id], "
     "registry [show|find|type|status], "
     "qa gate [all|<id>], safety review <id>, docs check, pm status, pm metrics, "
-    "truth check, career, pioneer, inspect, functions, "
+    "truth check, career, pioneer, inspect, functions, terminal, "
     "workshop, catalog, reuse <term>, console, run <check>, diagnostics, "
     "security, ai <prompt>, lesson list, question, answer <A-D>, hint, progress, "
     "passwd, save, load, quit"
@@ -241,6 +242,15 @@ def _build_commands() -> CommandSet:
             "CMD-UM05-S01-N001-002-R0",
             "Hardware Store functions check: run a live demo of each reusable part",
             lambda _s, arg: functions(arg),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "terminal",
+            "CMD-UM01-S01-N001-001-R0",
+            "The in-game computer: one console to run every diagnostic program",
+            lambda _s, arg: terminal(arg),
             namespace=CORE,
         )
     )

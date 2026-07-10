@@ -513,5 +513,35 @@
     "aliases": [],
     "created": "2026-07-10",
     "updated": "2026-07-10"
+  },
+  {
+    "designation": "CMD-UM01-S01-N001-001-R0",
+    "name": "`terminal`",
+    "status": "active",
+    "function": "The in-game computer: one console to run every diagnostic program.",
+    "label": "terminal",
+    "file": "parts/terminal.py",
+    "type": "CMD",
+    "domain": "UM01",
+    "sector": "S01",
+    "node": "N001",
+    "sequence": "001",
+    "revision": "R0",
+    "docs": "docs/terminal.md",
+    "tests": "tests/test_terminal.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "command",
+      "workshop",
+      "diagnostics",
+      "terminal"
+    ],
+    "notes": "",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-10",
+    "updated": "2026-07-10"
   }
 ]
