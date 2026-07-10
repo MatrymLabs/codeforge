@@ -7,6 +7,9 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
 ## [Unreleased]
 
 ### Added / Changed
+- **Terminal sticky note.** A post-it cheat card on the FORGE TERMINAL boot screen shows the
+  few commands to drive it (get here: workshop -> north; `terminal`, `terminal <name>`,
+  `terminal help`) so the way in is never a memory test.
 - **Functions check: full live sweep (7/7).** Filled the remaining parts with real demos,
   so every cataloged part now runs live: `event-ledger` delivers a message to an echo sink,
   `safe-runner` refuses `rm -rf /` (CommandRefused, never ran), `gate-runner` lists the

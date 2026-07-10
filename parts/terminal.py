@@ -27,6 +27,24 @@ _WIDTH = 54
 _BAR = "+" + "=" * (_WIDTH - 2) + "+"
 
 
+def _sticky_note() -> str:
+    """A post-it stuck to the corner of the screen: the few commands to drive the terminal."""
+    return "\n".join(
+        [
+            "        __________________________________",
+            "       / STICKY NOTE  (how to drive me)   /|",
+            "      /  1. get here: workshop -> north  / |",
+            "     /   2. `terminal`      this menu   /  |",
+            "    /    3. `terminal <name>` run one  /   |",
+            "   /     4. `terminal help`   this note/    |",
+            "  /______________________________ ___ /   /",
+            "  |  e.g. `terminal functions`        |  /",
+            "  |  read-only - nothing here bites   | /",
+            "  |___________________________________|/",
+        ]
+    )
+
+
 def _run(name: str) -> str:
     """Dispatch one program to its existing renderer (lazy imports avoid a load-time web)."""
     if name == "functions":
@@ -66,6 +84,8 @@ def _run(name: str) -> str:
 
 def _boot_screen() -> str:
     lines = [
+        _sticky_note(),
+        "",
         _BAR,
         "|  F O R G E   T E R M I N A L".ljust(_WIDTH - 1) + "|",
         "|  diagnostic console  ·  read-only  ·  v1".ljust(_WIDTH - 1) + "|",

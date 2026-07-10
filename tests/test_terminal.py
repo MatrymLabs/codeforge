@@ -12,6 +12,18 @@ def test_boot_screen_lists_every_wired_program() -> None:
         assert name in out, f"{name} missing from the terminal menu"
 
 
+def test_sticky_note_shows_the_basic_commands_to_get_in() -> None:
+    out = terminal("")
+    assert "STICKY NOTE" in out
+    assert "workshop -> north" in out  # how to reach the console in the world
+    assert "terminal <name>" in out  # how to run a program
+    assert "terminal help" in out  # how to see the note again
+
+
+def test_help_shows_the_boot_screen_with_the_note() -> None:
+    assert "STICKY NOTE" in terminal("help")
+
+
 def test_every_wired_program_actually_runs() -> None:
     # The terminal only wires existing renderers; each must produce real output, no crash.
     for name in _NAMES:
