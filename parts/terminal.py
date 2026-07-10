@@ -21,6 +21,7 @@ _PROGRAMS: list[tuple[str, str]] = [
     ("qa", "QA board - every filed object graded"),
     ("docs", "Documentation gap check"),
     ("deps", "Dependency gate - every dependency justified (frameless Python)"),
+    ("bench", "Engine tick benchmark - handle_command throughput + latency"),
 ]
 _NAMES = {name for name, _ in _PROGRAMS}
 
@@ -84,6 +85,10 @@ def _run(name: str) -> str:
         from parts.dependencies import render_dependencies
 
         return render_dependencies()
+    if name == "bench":
+        from parts.bench import bench as run_bench
+
+        return run_bench()
     return f"no such program '{name}'"
 
 

@@ -7,6 +7,12 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
 ## [Unreleased]
 
 ### Added / Changed
+- **Performance evidence (`make bench`).** A frameless (stdlib time+statistics) benchmark of
+  the engine tick: drives a read-only command rotation through `handle_command` and reports
+  throughput + latency distribution (median/p95/p99). Files dated evidence under
+  reports/performance/; wired to `terminal bench`; filed as MOD-UM10-S01-N001-013-R0.
+  Measured ~126k commands/sec, median ~7us on a Pi 5. Gives codeforge its own performance
+  artifact (the deep GPU/CPU study lives in pyg-perf-lab).
 - **`make env` uses uv locally too.** When uv is present, `make env` builds the venv with
   `uv venv` + `uv pip install`: measured ~86s -> ~1.6s on the Pi (~20x). Falls back to plain
   `python -m venv` + pip when uv is absent, so bootstrap never hard-requires uv. uv is dev
