@@ -20,6 +20,7 @@ from pathlib import Path
 
 from fastapi import APIRouter
 from fastapi.responses import HTMLResponse
+from pydantic import BaseModel
 
 # --- the snapshot: canonical data projected to one shape ---------------------
 
@@ -143,25 +144,47 @@ def build_snapshot(root: Path | None = None) -> Snapshot:
     return Snapshot(tuple(cards))
 
 
-# --- JSON twin: the seam a future front end consumes -------------------------
+# --- JSON twin: a TYPED contract the front end consumes ----------------------
+#
+# Explicit Pydantic response models, so FastAPI documents the shape in OpenAPI (/docs) and
+# a future React/TypeScript client can generate types from it. The page and this contract
+# are fed by the same Snapshot, so they can never disagree.
 
 
-def status_payload(snapshot: Snapshot) -> dict:
-    """The machine-readable projection: the same data the page renders."""
-    return {
-        "engine": "codeforge",
-        "cards": [
-            {
-                "key": c.key,
-                "title": c.title,
-                "status": c.status,
-                "headline": c.headline,
-                "detail": c.detail,
-                "rows": {label: value for label, value in c.rows},
-            }
+class StatusCard(BaseModel):
+    """One evidence card in the JSON status contract."""
+
+    key: str
+    title: str
+    status: str
+    headline: str
+    detail: str
+    rows: dict[str, str]
+
+
+class StatusPayload(BaseModel):
+    """The read-only status contract served at GET /api/status."""
+
+    engine: str
+    cards: list[StatusCard]
+
+
+def status_payload(snapshot: Snapshot) -> StatusPayload:
+    """The machine-readable projection: the same data the page renders, typed."""
+    return StatusPayload(
+        engine="codeforge",
+        cards=[
+            StatusCard(
+                key=c.key,
+                title=c.title,
+                status=c.status,
+                headline=c.headline,
+                detail=c.detail,
+                rows={label: value for label, value in c.rows},
+            )
             for c in snapshot.cards
         ],
-    }
+    )
 
 
 # --- HTML projection: semantic, responsive, accessible, frameless ------------
@@ -265,7 +288,8 @@ def dashboard_page() -> str:
     return render_page(build_snapshot())
 
 
-@router.get("/api/status")
-def dashboard_status() -> dict:
-    """The read-only JSON twin -- the seam a React/TypeScript front end would consume."""
+@router.get("/api/status", response_model=StatusPayload)
+def dashboard_status() -> StatusPayload:
+    """The read-only, typed JSON twin -- the seam a React/TypeScript front end would consume.
+    Typed with StatusPayload, so the contract is documented in OpenAPI at /docs."""
     return status_payload(build_snapshot())

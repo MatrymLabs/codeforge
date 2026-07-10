@@ -1388,5 +1388,32 @@
     "aliases": [],
     "created": "2026-07-10",
     "updated": "2026-07-10"
+  },
+  {
+    "designation": "MOD-UM10-S01-N001-017-R0",
+    "name": "config",
+    "status": "active",
+    "function": "one typed, validated view of the environment (pydantic Settings), credentials redacted",
+    "label": "config",
+    "file": "parts/config.py",
+    "type": "MOD",
+    "domain": "UM10",
+    "sector": "S01",
+    "node": "N001",
+    "sequence": "017",
+    "revision": "R0",
+    "docs": "docs/configuration.md",
+    "tests": "tests/test_config.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "module"
+    ],
+    "notes": "Pydantic model catalogs the env (PORT, DATABASE_URL, CODEFORGE_ARCHITECT, ...); fails loud on a bad value; the `config` terminal program renders it.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-10",
+    "updated": "2026-07-10"
   }
 ]

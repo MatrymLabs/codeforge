@@ -3,7 +3,7 @@ name = "codeforge"
 version = "0.1.0"
 description = "A Python-native modular MUD engine and reusable code workshop."
 requires-python = ">=3.13"
-dependencies = ["pyyaml", "sqlalchemy", "fastapi", "uvicorn", "websockets"]
+dependencies = ["pyyaml", "sqlalchemy", "fastapi", "uvicorn", "websockets", "pydantic"]
 
 [project.optional-dependencies]
 # Optional feature extras still earn their place: the dependency gate (`make deps`) folds
