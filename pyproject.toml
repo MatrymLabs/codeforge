@@ -12,6 +12,7 @@ dev = [
     "types-PyYAML",
     "pytest",
     "pytest-cov",
+    "pytest-xdist",
     "pip-audit",
     "bandit[toml]",
     "detect-secrets",

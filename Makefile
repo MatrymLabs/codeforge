@@ -64,8 +64,11 @@ smoke:
 	@python3 scripts/e2e_smoke.py
 
 # --- Extra inspections (One-Button Rule) ---
+# `-n auto` fans the suite across cores (pytest-xdist); pytest-cov combines the per-worker
+# data. The suite is ~95% of check's runtime, so this is the one real speed lever. The
+# inner-loop `test`/`property` targets stay serial for readable, debuggable output.
 coverage:
-	pytest --cov=parts --cov=forge --cov-report=term-missing --cov-report=xml --cov-fail-under=85
+	pytest -n auto --cov=parts --cov=forge --cov-report=term-missing --cov-report=xml --cov-fail-under=85
 
 audit:
 	pip-audit --skip-editable
@@ -125,7 +128,9 @@ daily: patch
 	fi
 	@echo "✓ daily ritual complete"
 
-# --- Ship: gates, then push. Refuses dirty trees and red gates ---
+# --- Ship: gates, then open the PR. main is protected (require PR + CI), so shipping
+# means pushing THIS branch and opening a pull request -- never a direct push to main.
+# Refuses dirty trees, red gates, and shipping from main itself. ---
 ship: check
 	@if [ -n "$$(git status --porcelain)" ]; then \
 		echo ""; \
@@ -133,8 +138,20 @@ ship: check
 		git status --short; \
 		exit 1; \
 	fi
-	git push
-	@echo "✓ Shipped to GitHub."
+	@branch="$$(git rev-parse --abbrev-ref HEAD)"; \
+	if [ "$$branch" = "main" ]; then \
+		echo "✗ You are on main, which is protected. Ship from a branch:"; \
+		echo "    git checkout -b feat/your-change   # then commit and 'make ship'"; \
+		exit 1; \
+	fi; \
+	echo "→ pushing '$$branch' and opening its PR..."; \
+	git push -u origin "$$branch"; \
+	if command -v gh >/dev/null 2>&1; then \
+		gh pr view >/dev/null 2>&1 && gh pr view || gh pr create --fill; \
+	else \
+		echo "  gh not found -- open a PR for '$$branch' on GitHub."; \
+	fi
+	@echo "✓ Branch pushed + PR ready. Merge after CI is green (check · docker · CodeQL)."
 
 # --- Conveniences ---
 run:

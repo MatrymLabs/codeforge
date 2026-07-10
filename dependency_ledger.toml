@@ -62,6 +62,11 @@ why = "Coverage measurement folded into the test run; gates the coverage thresho
 stdlib_alternative = "coverage.py directly (still third-party); no stdlib coverage tool exists."
 removable = "Yes; dev-time only. coverage.py could be invoked standalone."
 
+[dev.pytest-xdist]
+why = "Parallelize the test suite across cores; the suite is ~95% of make check's runtime (measured 18.3s serial -> 15.0s on 4 cores)."
+stdlib_alternative = "None; neither stdlib nor pytest core runs tests in parallel across processes."
+removable = "Yes; dev-time only. Tests still run serially without the -n flag (the inner-loop `make test` stays serial)."
+
 [dev.pip-audit]
 why = "Scans installed dependencies for known CVEs; the make audit gate and CI supply-chain check."
 stdlib_alternative = "None; CVE data and matching are inherently external."

@@ -7,6 +7,11 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
 ## [Unreleased]
 
 ### Added / Changed
+- **Ritual tuned: parallel tests + PR-aware `make ship`.** The test suite (measured as ~95%
+  of `make check`) now runs across cores via pytest-xdist (`coverage` uses `-n auto`): ~19s
+  -> ~16s locally, more on CI. And `make ship` was fixed for the protected `main`: it refuses
+  to push to main, pushes the current branch, and opens its PR (branch -> PR -> CI -> merge).
+  The inner-loop `make test`/`property` stay serial for readable output.
 - **CodeQL added to required checks.** `main` now requires `check`, `docker`, and both
   CodeQL analyze jobs to pass before merging. Scorecard stays non-required (no PR trigger;
   requiring it would deadlock PRs) but still scores on schedule.
