@@ -7,6 +7,11 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
 ## [Unreleased]
 
 ### Added / Changed
+- **Portfolio readiness scaffolding.** Captured the 2026 hiring/portfolio/full-stack research
+  under docs/research/, added an honest hiring_requirement_matrix, github_portfolio_checklist,
+  and full_stack_readiness_checklist (VeritasGate-labeled), and added GitHub issue templates
+  (bug + feature + config). Sets up the frontend proof: a FastAPI server-rendered dashboard
+  (real data) as the first full-stack artifact, with a Next.js/TS second flagship planned.
 - **Performance evidence (`make bench`).** A frameless (stdlib time+statistics) benchmark of
   the engine tick: drives a read-only command rotation through `handle_command` and reports
   throughput + latency distribution (median/p95/p99). Files dated evidence under

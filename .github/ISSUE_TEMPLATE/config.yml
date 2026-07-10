@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Play the live demo
+    url: https://codeforge-demo-1kcu.onrender.com/
+    about: Try CodeForge in the browser before filing, the behavior may already be visible there.
+  - name: Docs index
+    url: https://github.com/MatrymLabs/codeforge/blob/main/docs/README.md
+    about: Architecture, the ritual, the self-audit systems, and runbooks.
