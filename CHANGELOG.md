@@ -7,6 +7,9 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
 ## [Unreleased]
 
 ### Added / Changed
+- **OpenSSF Scorecard wired.** `.github/workflows/scorecard.yml` scores the repo's
+  supply-chain/security posture weekly + on push and publishes the result; a truthful
+  badge is on the README. Closes the last open Phase-3 tooling item. No runtime dep.
 - **Frameless Python tooling strategy (docs).** Named the frameless identity in
   `docs/frameless_python.md` and the tool-evaluation discipline in `docs/tooling_strategy.md`:
   a current-inventory audit, a decision matrix, a Tool Integration Review template, a

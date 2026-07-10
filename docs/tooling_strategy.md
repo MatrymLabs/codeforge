@@ -62,7 +62,7 @@ Status labels are defined at the bottom of this doc. Grounded in the inventory a
 | cyclonedx-bom | Security | `integrate_now` (done) | SBOM artifact in CI. |
 | CodeQL | Security | `integrate_now` (done) | GitHub-native code scanning. |
 | Dependabot | Security | `integrate_now` (done) | Dependency update PRs. |
-| **OpenSSF Scorecard** | Security | **`ci_candidate` (integrate_now)** | The one missing Phase-3 signal; a workflow + public badge, no runtime dep. |
+| OpenSSF Scorecard | Security | `integrate_now` (done) | The last Phase-3 signal; `scorecard.yml` + public badge, no runtime dep. |
 | pre-commit | Automation | `documented_option` | `make check` + CI already gate; adds contributor friction. Optional local mirror. |
 | MkDocs / Material | Docs | `portfolio_candidate` | Could publish `docs/` to the portfolio page. Not needed while Markdown reads well. |
 | pdoc | Docs | `optional_dev_tool` | Zero-config API docs from existing CARD docstrings. Nice-to-have. |
@@ -83,10 +83,11 @@ Status labels are defined at the bottom of this doc. Grounded in the inventory a
 
 ## Top recommendations (this cycle)
 
-**Integrate now (1):**
-1. **OpenSSF Scorecard** (`ci_candidate`). It is the single professionalism/security signal
-   from the Phase-3 list not yet wired. One workflow file, a public badge, no runtime
-   dependency. It answers the Dependency Approval Rule cleanly (see below).
+**Integrated this cycle (1):**
+1. **OpenSSF Scorecard** (`integrate_now`, DONE). The single professionalism/security signal
+   from the Phase-3 list that was not yet wired. Shipped as `.github/workflows/scorecard.yml`
+   with a public badge, no runtime dependency. The first score may be below-average until
+   branch protection and a few settings are tuned; that is the honest-improvement story.
 
 **Document for later (2):**
 1. **MkDocs / Material** (`portfolio_candidate`) to publish `docs/` alongside the portfolio page.
@@ -157,8 +158,8 @@ If the case is not strong on "need", "skill proven", and "removable", the defaul
 - **Phase 2 - Professional dev tooling.** Ruff, pytest, coverage, mypy (gradual), pip-audit,
   a secret scanner, (pre-commit optional). **DONE** (pre-commit deliberately deferred).
 - **Phase 3 - Portfolio / GitHub proof.** GitHub Actions, Dependabot, CodeQL, SBOM, structured
-  reports; MkDocs and OpenSSF Scorecard optional. **MOSTLY DONE** - OpenSSF Scorecard is the
-  open item; MkDocs is a documented option.
+  reports; MkDocs and OpenSSF Scorecard optional. **DONE** - OpenSSF Scorecard now wired
+  (`scorecard.yml`); MkDocs remains a documented option.
 - **Phase 4 - Seed / installability.** pyproject polish, packaging entry points, template
   generation, plugin architecture, versioned Seed manifests. **PARTIAL** (entry points +
   console scripts exist; plugin architecture stays `internal_custom`).

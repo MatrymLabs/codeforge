@@ -1,0 +1,50 @@
+# OpenSSF Scorecard -- an independent, standardized read of this repo's supply-chain and
+# security posture (branch protection, pinned actions, CI tests, SAST, token permissions,
+# and more). It asserts nothing itself; it scores what the repo already does and publishes
+# the result so the badge is truthful. Complements CodeQL (SAST) and the make-gated stack
+# (pip-audit, bandit, detect-secrets, SBOM). Public repos publish a public score.
+name: scorecard
+
+on:
+  branch_protection_rule:  # re-score when protection rules change
+  schedule:
+    - cron: "27 6 * * 1"  # weekly sweep (Monday), a beat after the CodeQL run
+  push:
+    branches: [main]
+
+# Least-privilege by default; each step below widens only what it needs.
+permissions: read-all
+
+jobs:
+  analysis:
+    name: Scorecard analysis
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write  # upload the SARIF result to the Security tab
+      id-token: write         # sign the published result (publish_results)
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Run analysis
+        uses: ossf/scorecard-action@v2.4.2
+        with:
+          results_file: results.sarif
+          results_format: sarif
+          publish_results: true  # required for the public badge to be truthful
+
+      # Keep the raw SARIF as an artifact (14 days) for local review.
+      - name: Upload artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: scorecard-results
+          path: results.sarif
+          retention-days: 14
+
+      # Feed the result into GitHub code scanning (Security tab).
+      - name: Upload to code-scanning
+        uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: results.sarif
