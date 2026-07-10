@@ -1,4 +1,4 @@
-.PHONY: env fix lint typecheck test property coverage audit security secrets sbom doctor patch daily check readiness truth smoke repo-integrity ship run world store hardware clean serve ritual ritual-down unskew
+.PHONY: env fix lint typecheck test property coverage audit security secrets sbom doctor patch daily check readiness truth smoke repo-integrity ship run world store hardware clean serve ritual-fast ritual ritual-down unskew
 
 # --- Environment: create/validate the .venv, fail loud on version mismatch ---
 env:
@@ -142,6 +142,12 @@ serve:
 # --- The Ritual: one command lights the whole workshop -- gates run, GitHub
 # mirrors, the forge lights, the MUD window opens at the front desk. Bound to
 # the phrase "start the ritual" via a shell function (see docs/RUNNING.md). ---
+# --- Ritual, Fast: the ~1s preflight -- critical checks only (imports · registry ·
+# truth), quality checks WARN, no suite/network/scans. Green/yellow/red gate to enter
+# and code. Run `make ritual` (standard) or the deep battery before a push or demo. ---
+ritual-fast:
+	@bash scripts/ritual_fast.sh
+
 ritual:
 	@bash scripts/ritual.sh
 

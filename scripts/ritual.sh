@@ -37,17 +37,9 @@ cd "$ROOT"
 PORT=4000
 SEED="${FORGE_SEED:-first-forge}"
 
-# --- A little light (colour only when writing to a real terminal) ----------
-if [ -t 1 ]; then
-  BOLD=$'\033[1m'; DIM=$'\033[2m'; GREEN=$'\033[32m'; RED=$'\033[31m'
-  YELLOW=$'\033[33m'; CYAN=$'\033[36m'; OFF=$'\033[0m'
-else
-  BOLD=""; DIM=""; GREEN=""; RED=""; YELLOW=""; CYAN=""; OFF=""
-fi
-spark_line() { printf '%b⚒  %s%b\n' "$CYAN" "$1" "$OFF"; }
-ok()   { printf '%b   ✓ %s%b\n' "$GREEN"  "$1" "$OFF"; }
-warn() { printf '%b   ! %s%b\n' "$YELLOW" "$1" "$OFF"; }
-die()  { printf '%b   ✗ %s%b\n' "$RED"    "$1" "$OFF"; exit 1; }
+# --- A little light + the shared voice (colours, spark_line/ok/warn/die) ----
+# shellcheck source=scripts/lib.sh
+source "$HERE/lib.sh"
 
 printf '\n%b=== T H E   R I T U A L ===%b   %bseed: %s%b\n\n' "$BOLD" "$OFF" "$DIM" "$SEED" "$OFF"
 
