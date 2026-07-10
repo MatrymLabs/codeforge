@@ -1,6 +1,6 @@
 # The Hardware Catalog
 
-CodeForge builds code parts for a game — and the good ones do a second job in the
+CodeForge builds code parts for a game - and the good ones do a second job in the
 real world. This catalog is the "hardware store" counter: it records, for each
 part worth reusing, **where the same code serves outside the game** (government,
 finance, compliance, records, general software).
@@ -10,10 +10,10 @@ Two catalogs, two depths:
 | Command | What it shows |
 |---------|---------------|
 | `make store` | Auto-generated inventory of *every* engine part, from its `CARD:` line. |
-| `make hardware` | This curated catalog — the parts documented for **cross-domain reuse**. |
+| `make hardware` | This curated catalog - the parts documented for **cross-domain reuse**. |
 
 The data lives in [`parts.yaml`](parts.yaml); the loader/validator is
-`parts/hardware.py` (a bad row fails loud — it is never stocked). Override the
+`parts/hardware.py` (a bad row fails loud - it is never stocked). Override the
 path with `CODEFORGE_CATALOG`.
 
 ## Entry schema
@@ -43,27 +43,27 @@ path with `CODEFORGE_CATALOG`.
 ## Rules
 
 - **Honest reuse only.** A domain line means the *same code* genuinely serves that
-  job — not a maybe. If it doesn't fit, leave the domain out.
+  job - not a maybe. If it doesn't fit, leave the domain out.
 - **`source` points at real code.** The catalog documents parts that exist and are
   tested; it is not a wishlist.
 - **`maturity` is earned:** `shipped` means shipped + tested on `main`.
-- **Two maturity vocabularies, on purpose — different axes.** This catalog's
-  `maturity` (`prototype | beta | shipped`) rates **reuse-readiness** — how ready a
+- **Two maturity vocabularies, on purpose - different axes.** This catalog's
+  `maturity` (`prototype | beta | shipped`) rates **reuse-readiness** - how ready a
   part is to be *lifted into another project*. The Classification Registry's `status`
   (`prototype | active | hardened | deprecated | archived | superseded`) tracks an
-  object's **lifecycle** — where it is between conception and retirement. They're
+  object's **lifecycle** - where it is between conception and retirement. They're
   orthogonal: a part can be `active` in the engine (registry) *and* `shipped` for reuse
   (catalog). Don't collapse them.
 - **Free-to-use only (the provenance rule).** Only stock a part whose license is
-  clearly free to use. Don't harvest code — harvest *patterns* and rebuild them as
+  clearly free to use. Don't harvest code - harvest *patterns* and rebuild them as
   original CodeForge parts. `source_status` records the provenance; an unclear license
   means the part is not stocked in the first place (the loader refuses any status
-  outside the free-to-use set). Every part here is `original` — this repo's own MIT code.
+  outside the free-to-use set). Every part here is `original` - this repo's own MIT code.
 - **Harvest patterns, not code (proven, not asserted).** `influence` records the *known
   pattern* a part was rebuilt from (RBAC, pub/sub, allowlist-without-a-shell). The part
-  is an original implementation *of the pattern* — the concept is reused, the expression
+  is an original implementation *of the pattern* - the concept is reused, the expression
   is ours.
-- **Add a part when it proves reusable**, not before — the store stocks finished
+- **Add a part when it proves reusable**, not before - the store stocks finished
   parts, not intentions.
 
 ## Roadmap for this catalog

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>CodeForge — play in the browser</title>
+<title>CodeForge - play in the browser</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@xterm/xterm@5.5.0/css/xterm.min.css" />
 <style>
   :root { --forge: #ff7a18; --ink: #0b0d10; --panel: #12151a; --edge: #232833; }
@@ -33,7 +33,7 @@
 <body>
   <header>
     <span class="mark">⚒ CodeForge</span>
-    <span class="sub">a Python-native MUD engine — play it right here</span>
+    <span class="sub">a Python-native MUD engine - play it right here</span>
     <span id="status" class="status">connecting…</span>
   </header>
   <div id="banner">
@@ -71,7 +71,7 @@
     ws.onopen = () => { statusEl.textContent = "live"; statusEl.className = "status live"; };
     ws.onclose = () => {
       statusEl.textContent = "disconnected"; statusEl.className = "status gone";
-      term.write("\r\n\x1b[90m— connection closed —\x1b[0m\r\n");
+      term.write("\r\n\x1b[90m- connection closed -\x1b[0m\r\n");
     };
     ws.onerror = () => { statusEl.textContent = "error"; statusEl.className = "status gone"; };
 

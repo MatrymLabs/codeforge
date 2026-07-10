@@ -66,7 +66,7 @@ def test_planning_a_real_cast_is_ready_and_honest() -> None:
     plan = plan_cast("fantasy_mud", "Aethris", commit="abc1234")
     assert plan.verdict == READY
     m = plan.manifest
-    assert m.status == PLANNED  # dry run — nothing generated
+    assert m.status == PLANNED  # dry run - nothing generated
     assert m.engine_strategy == "vendored-whole"
     assert m.codeforge_commit == "abc1234"
     assert m.seed_id == "CAST-AETHRIS-001"
@@ -120,7 +120,7 @@ def test_reading_a_broken_manifest_fails_loud(tmp_path: Path) -> None:
 
 def test_render_plan_shows_the_verdict_and_sections() -> None:
     out = render_plan(plan_cast("fantasy_mud", "Aethris"))
-    assert "Cast plan — Aethris" in out
+    assert "Cast plan - Aethris" in out
     assert "WOULD COPY:" in out
     assert "WOULD NEVER COPY:" in out
     assert "vendored-whole" in out

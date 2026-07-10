@@ -63,7 +63,7 @@ def regulation_detail(source_id: str, path: Path = REGISTRY_PATH) -> str:
     changed = match["last_changed"] or "unknown"
     return "\n".join(
         [
-            f"== {match['source_id']} — {match['source_name']} ==",
+            f"== {match['source_id']} - {match['source_name']} ==",
             f"Tier {match['authority_tier']} · {match['domain']} · status: {match['status']}",
             f"Version: {version} · published/last changed: {changed} · last checked: {last}",
             f"Owner: {owner} · cadence: {match['refresh_frequency']}",

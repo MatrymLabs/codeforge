@@ -100,9 +100,9 @@ def render_truth(checks: list[TruthCheck] | None = None) -> str:
         lines.append(f"             {c.evidence}")
     lines.append("")
     verdict = (
-        "ALL VERIFIED — the project's claims correspond to reality."
+        "ALL VERIFIED - the project's claims correspond to reality."
         if not flagged
-        else f"{len(flagged)} FLAGGED — correct the claim (or the code) before trusting it."
+        else f"{len(flagged)} FLAGGED - correct the claim (or the code) before trusting it."
     )
     lines.append(f"Verdict: {verdict}")
     lines.append("")

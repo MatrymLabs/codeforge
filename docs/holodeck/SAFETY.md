@@ -20,7 +20,7 @@ Every command the Workshop can run goes through one relay with these properties:
   full log is saved to `reports/` (never streamed unbounded to the MUD).
 - **Working-directory restriction.** Runs are confined to the repo root; no `..`
   escapes, no absolute paths outside the project.
-- **Logging.** Every invocation is logged (command, time, exit code, duration) —
+- **Logging.** Every invocation is logged (command, time, exit code, duration) -
   the relay is itself an evidence source.
 - **Dry-run by default** where a command can mutate. Mutation requires an approval gate.
 
@@ -49,7 +49,7 @@ government-sensitive information, or any file outside the public project context
 
 - The API boundary is a **seam** (a `Protocol`), mockable; **tests never hit the
   network** and CI runs with no key (same rule as `ai-log-triage`).
-- Context sent to the API is **redacted** and drawn only from public project files —
+- Context sent to the API is **redacted** and drawn only from public project files -
   never from the machine's private environment. `.env` is git-ignored; only
   `.env.example` is tracked; `make secrets` (detect-secrets) gates it.
 - Keep a clear wall between **public project context** (safe to send) and **private
@@ -82,7 +82,7 @@ commit). See the ship's `CLAUDE.md` for the federal evidence rules.
 
 ## Compliance honesty
 
-Nothing here is "compliant" or "certified" — it is **readiness/evidence** tooling.
+Nothing here is "compliant" or "certified" - it is **readiness/evidence** tooling.
 A pipeline satisfies only the technical portion of a control; policy and
 people/process work is human and unautomatable. Never let a green check imply a
 certification. Open gaps are logged, never hidden.

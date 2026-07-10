@@ -37,7 +37,7 @@ def load_ladder(path: Path | None = None) -> dict:
 
 def render_overview(ladder: dict | None = None) -> str:
     lad = ladder or load_ladder()
-    lines = ["PIONEER MODE — bold, but honest", ""]
+    lines = ["PIONEER MODE - bold, but honest", ""]
     lines += [f"  {d}" for d in lad.get("doctrine", [])]
     lines += ["", "  The Maverick Filter (recommend only if all hold):"]
     lines += [f"    - {q}" for q in lad.get("filter", [])]
@@ -51,9 +51,9 @@ def render_overview(ladder: dict | None = None) -> str:
 
 def render_risks(ladder: dict | None = None) -> str:
     lad = ladder or load_ladder()
-    lines = ["PIONEER MODE — the risk ladder", ""]
+    lines = ["PIONEER MODE - the risk ladder", ""]
     for lv in lad["levels"]:
-        lines.append(f"  L{lv['level']} {lv['name']} — {lv['meaning']}")
+        lines.append(f"  L{lv['level']} {lv['name']} - {lv['meaning']}")
         lines.append(f"      e.g. {lv['examples']}")
         lines.append(f"      needs: {lv['needs']}")
     lines += ["", "  Higher levels need more proof; L4 needs a human + rollback; L5 is never."]
@@ -63,7 +63,7 @@ def render_risks(ladder: dict | None = None) -> str:
 def render_plan(ladder: dict | None = None) -> str:
     lad = ladder or load_ladder()
     lines = [
-        "PIONEER MODE — Constraint Review (fill this before a bold move)",
+        "PIONEER MODE - Constraint Review (fill this before a bold move)",
         "",
         "  Classify each constraint: hard · safety · legal/policy · quality · technical ·",
         "  resource · habit/assumption · unknown. Then answer:",
@@ -76,7 +76,7 @@ def render_plan(ladder: dict | None = None) -> str:
 def render_experiments(root: Path | None = None) -> str:
     """List filed pioneer experiment reports (durable evidence, tracked in docs/)."""
     base = root or _EXPERIMENTS
-    lines = ["PIONEER MODE — filed experiments (docs/pioneer_experiments/)", ""]
+    lines = ["PIONEER MODE - filed experiments (docs/pioneer_experiments/)", ""]
     reports = sorted(base.glob("*.md")) if base.is_dir() else []
     if not reports:
         lines.append("  (none filed yet -- run a bold experiment and file the report)")

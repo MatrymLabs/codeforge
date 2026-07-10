@@ -49,7 +49,7 @@ is serialized. An async event-loop gateway is a future card, not a correction.
 
 ## Engineering layers (parts that compose into a self-auditing engine)
 
-Above the game, a second set of parts plugs together — each new layer reads the ones
+Above the game, a second set of parts plugs together - each new layer reads the ones
 below it, so capability compounds without a bespoke rewrite:
 
 ```
@@ -76,7 +76,7 @@ Two rules keep it honest and safe at scale:
   or admin word. So `forge` stays free for every seed.
 
 Readiness, never compliance: the QA/PM layers report `pass|watch|fail` and
-readiness language only — no OSHA/CMMC/legal claims. Details:
+readiness language only - no OSHA/CMMC/legal claims. Details:
 [classification](classification/CLASSIFICATION_SYSTEM.md) ·
 [safety_qa_system](safety_qa_system.md) · [project_management](project_management.md) ·
 [startup_ritual](startup_ritual.md).

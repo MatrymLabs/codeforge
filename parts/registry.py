@@ -255,7 +255,7 @@ def registry_show(designation: str, registry_dir: Path | None = None) -> str:
             f"Designation:  {record.designation}",
             f"Name:         {record.name}",
             f"Type:         {TYPE_NAMES.get(record.type, record.type)}",
-            f"Domain:       {record.domain} — {DOMAIN_NAMES.get(record.domain, '?')}",
+            f"Domain:       {record.domain} - {DOMAIN_NAMES.get(record.domain, '?')}",
             f"Function:     {record.function}",
             f"Status:       {record.status}",
             f"Files label:  {record.label}   (source: {record.file})",

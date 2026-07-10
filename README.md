@@ -15,7 +15,7 @@ that real MUD clients (Mudlet, telnet, nc) connect to today, and a browser gatew
 can click straight into.
 
 > **Where this is going:** a MUD-powered **engineering holodeck** and a reusable-code
-> **hardware store** — the parts built for the game get cataloged for real-world reuse
+> **hardware store** - the parts built for the game get cataloged for real-world reuse
 > (government, finance, compliance, records). Browse them with `make hardware`; read the
 > blueprint in [`docs/holodeck/`](docs/holodeck/VISION.md).
 
@@ -37,7 +37,7 @@ The world is going to sleep. Your deeds are remembered.
 
 ### ▶ [**Play the live demo**](https://codeforge-demo-1kcu.onrender.com/)
 
-No install — just click and log in (`NEW` to make a character). It's on a free tier that
+No install - just click and log in (`NEW` to make a character). It's on a free tier that
 sleeps when idle, so the **first load may take ~30–60s to wake up**; after that it's instant.
 
 Or run it locally:
@@ -47,8 +47,8 @@ codeforge web            # serves the browser gate on http://localhost:8000
 ```
 
 Same engine, a fourth thin driver: an [xterm.js](https://xtermjs.org) terminal speaks to
-the tick over a WebSocket. The public demo is deliberately safe — ephemeral state, a seat
-cap, and idle timeouts — so a shared link can't be farmed. Deploy your own with the
+the tick over a WebSocket. The public demo is deliberately safe - ephemeral state, a seat
+cap, and idle timeouts - so a shared link can't be farmed. Deploy your own with the
 included [`render.yaml`](render.yaml) (Render → New → Blueprint; no secrets required).
 
 ## Quick start
@@ -64,19 +64,19 @@ spark            # ignite the multiplayer server on port 4000
 
 Connect from any machine on your network with `nc <host> 4000`, telnet, or **Mudlet**.
 Every connection meets the front desk and must authenticate: log in as
-`character@account`, or register a new legend with `NEW` — there is no anonymous access.
+`character@account`, or register a new legend with `NEW` - there is no anonymous access.
 Characters persist across restarts; passwords are salted pbkdf2 hashes and hidden at the
 prompt (telnet echo blackout); ranks gate the wizard verbs (`@teleport`, `@grant`,
 `@shutdown`).
 
 More doors: `codeforge play` (solo terminal), `codeforge grant <name> <rank>`,
-`codeforge migrate <char> <account>`. The full operator's guide — starting the
-servers, the login flow, and the one-command **ritual** — is
+`codeforge migrate <char> <account>`. The full operator's guide - starting the
+servers, the login flow, and the one-command **ritual** - is
 [docs/RUNNING.md](docs/RUNNING.md).
 
 ### The ritual
 
-One command lights the whole workshop and drops you at the front desk — gates run,
+One command lights the whole workshop and drops you at the front desk - gates run,
 GitHub mirrors, the forge lights, the MUD window opens; its counterpart secures
 everything at day's end:
 
@@ -91,7 +91,7 @@ password even where `telnet` isn't installed.
 ### A seed is a game
 
 The engine boots one **seed pack** (a whole world: rooms, items, NPCs, callings,
-splash) at startup — swap the seed and you're playing a different game on the same
+splash) at startup - swap the seed and you're playing a different game on the same
 engine. The spawn point is the first room in the seed, so nothing is hardcoded.
 
 ```bash
@@ -101,12 +101,12 @@ FORGE_SEED=sword-art-online spark       # same selector for the multiplayer serv
 ```
 
 Shipped seeds: `first-forge` (the fantasy starter) and `sword-art-online`. Adding a
-new game is a new `seeds/<name>/` folder of YAML — no Python required.
+new game is a new `seeds/<name>/` folder of YAML - no Python required.
 
 A **seed pack** is a game's *content* (above). A **cast** is the next layer: a standalone,
-installable project poured from the forge — the engine + one chosen seed pack + config,
+installable project poured from the forge - the engine + one chosen seed pack + config,
 detached into its own repo. *"CodeForge is the forge; a cast is what leaves it."* The
-Phase-1 scaffold plans a cast (dry run — writes nothing):
+Phase-1 scaffold plans a cast (dry run - writes nothing):
 
 ```bash
 make cast-plan TEMPLATE=fantasy_mud NAME=Aethris   # what a cast WOULD copy, and never copy
@@ -146,22 +146,22 @@ Three laws hold everywhere:
 Beyond the game, the parts compose into a self-auditing engine. Every command below
 is real, tested, and reachable in the MUD:
 
-- **Classification Registry** — a hidden filing system: every object carries a
+- **Classification Registry** - a hidden filing system: every object carries a
   designation (`TYPE-UM-SEC-NODE-SEQ-REV`) keyed to its runtime label. `registry show
   <id>`, `registry type CMD`. See [docs/classification/](docs/classification/CLASSIFICATION_SYSTEM.md).
-- **Command spine** — namespaced (`CORE` / `ADMIN @` / `SEED`), rank-gated verbs; a
+- **Command spine** - namespaced (`CORE` / `ADMIN @` / `SEED`), rank-gated verbs; a
   seed can never shadow a reserved word.
-- **Safety + QA** — `qa gate all` grades every filed object (purpose · file · tests ·
-  docs · maturity); `safety review <id>` rates risk. Readiness only — no compliance
+- **Safety + QA** - `qa gate all` grades every filed object (purpose · file · tests ·
+  docs · maturity); `safety review <id>` rates risk. Readiness only - no compliance
   claims. See [docs/safety_qa_system.md](docs/safety_qa_system.md).
-- **Project control** — `pm status` computes the dashboard from the registry + the QA
+- **Project control** - `pm status` computes the dashboard from the registry + the QA
   gate (no stored copy to drift). See [docs/project_management.md](docs/project_management.md).
-- **Guidance Library** — `library` / `library <id>` read the Federal Guidance
+- **Guidance Library** - `library` / `library <id>` read the Federal Guidance
   Library's stored documents read-only; `regs <id>` cites tracked sources.
-- **Compliance awareness** — `law` / `law <id>` render tracked sources through a
+- **Compliance awareness** - `law` / `law <id>` render tracked sources through a
   legal-*awareness* boundary: never legal advice, always "human review required."
   See [docs/legal_policy_awareness.md](docs/legal_policy_awareness.md).
-- **System generation** — `@sg item <pattern>` forges a filed item pattern (wizard+,
+- **System generation** - `@sg item <pattern>` forges a filed item pattern (wizard+,
   data-driven, refuses the unknown).
 
 The whole flow runs green end-to-end via `make smoke` (start → log in → look → check
@@ -169,63 +169,63 @@ The whole flow runs green end-to-end via `make smoke` (start → log in → look
 
 ## What this demonstrates
 
-Reading this repo, an engineer can *verify* — not take on faith — these skills:
+Reading this repo, an engineer can *verify*, not take on faith, these skills:
 
-- **Architecture** — a pure-function engine tick (`handle_command`) with thin drivers
+- **Architecture** - a pure-function engine tick (`handle_command`) with thin drivers
   (terminal · TCP · WebSocket); state is canonical, text is a projection. See
   [docs/architecture.md](docs/architecture.md).
-- **Testing discipline** — unit twins per card, property-based (Hypothesis), real-socket
-  + WebSocket integration, an end-to-end `make smoke`, restore/play parity — the full
+- **Testing discipline** - unit twins per card, property-based (Hypothesis), real-socket
+  + WebSocket integration, an end-to-end `make smoke`, restore/play parity: the full
   suite runs green on every merge (the CI badge is the live source of truth).
-- **Self-auditing systems** — a classification registry, `qa gate all`, and `pm status`
+- **Self-auditing systems** - a classification registry, `qa gate all`, and `pm status`
   compute readiness from filed data (part + part); the startup ritual runs a security +
   registry self-check *before* it lights the forge.
-- **Security posture** — rank-gated admin verbs, salted pbkdf2 auth, an allowlisted
+- **Security posture** - rank-gated admin verbs, salted pbkdf2 auth, an allowlisted
   command runner (never raw shell), SAST (bandit + CodeQL) + dependency scanning
   (pip-audit) + secret scanning (detect-secrets) + a CycloneDX SBOM + Dependabot.
-- **Delivery mechanics** — CI + Docker + a live browser demo + Conventional Commits + a
+- **Delivery mechanics** - CI + Docker + a live browser demo + Conventional Commits + a
   CHANGELOG; every merge green.
-- **Systems thinking (20 yrs USAF)** — readiness checks, evidence trails, controlled
-  changes, QA gates — mission-system discipline applied to software.
+- **Systems thinking (20 yrs USAF)** - readiness checks, evidence trails, controlled
+  changes, QA gates - mission-system discipline applied to software.
 
 Everything above is **working and tested.** Planned work is marked as such in the
 [roadmap](#roadmap).
 
 **Skills → proof, in the MUD:** the `career` command (in *The Forge Workshop*) renders a
-**Career Evidence Sign** — real software-career skills mapped to the exact repo artifact
+**Career Evidence Sign** - real software-career skills mapped to the exact repo artifact
 that proves each, grounded in BLS/O*NET research. `career gaps` lists what's still missing.
 It obeys VeritasGate: a skill is only "proven" when its cited artifact actually exists. See
 [docs/career_evidence_board.md](docs/career_evidence_board.md) and
 [docs/resume_mapping.md](docs/resume_mapping.md).
 
-**Bold, but honest:** `pioneer` surfaces **Pioneer Mode** — a disciplined-Maverick framework
+**Bold, but honest:** `pioneer` surfaces **Pioneer Mode** - a disciplined-Maverick framework
 (*bend convention, not truth/safety/trust*) with a risk ladder, a constraint-review template,
 and filed experiment reports. See [docs/pioneer_mode.md](docs/pioneer_mode.md).
 
-**One pane of glass:** `inspect` (inspect the forge) composes every self-audit signal —
-registry · QA board · truth · docs · overclaims · career · pioneer — into one on-demand
+**One pane of glass:** `inspect` (inspect the forge) composes every self-audit signal -
+registry · QA board · truth · docs · overclaims · career · pioneer - into one on-demand
 green/yellow/red **frame-up** of the whole machine. See [docs/frame_up.md](docs/frame_up.md).
 
-**How it's built — honestly:** AI-assisted and engineering-directed. AI expands the
+**How it's built - honestly:** AI-assisted and engineering-directed. AI expands the
 creative and analytical surface; the ritual, gates, and self-audit keep it honest;
 tests and evidence prove each claim; I direct, review, and make the calls. What makes
-this *engineering* and not "AI wrote it" is the same thing that proves any engineering —
+this *engineering* and not "AI wrote it" is the same thing that proves any engineering -
 the tests, the gates, and the green CI you can run yourself.
 
 ## Evaluation
 
-Don't take the claims above on faith — **run the scorecard.**
+Don't take the claims above on faith - **run the scorecard.**
 [**forge-audit**](https://github.com/MatrymLabs/forge-audit) is a separate proof-tool that
 runs the quality gates on any repo (with the repo's *own* toolchain) and emits a verdict
 graded against objective stage thresholds. The table below is **generated by the tool, not
-hand-written** — reproduce it verbatim at the **intermediate** stage (coverage floor 80%,
+hand-written** - reproduce it verbatim at the **intermediate** stage (coverage floor 80%,
 CI-workflow-file floor 2):
 
 ```
 $ forge-audit --path ./codeforge --stage intermediate --online --format md
 ```
 
-### forge-audit — codeforge (intermediate stage)
+### forge-audit - codeforge (intermediate stage)
 
 | Dimension | Verdict | Evidence |
 |---|---|---|
@@ -239,7 +239,7 @@ $ forge-audit --path ./codeforge --stage intermediate --online --format md
 | **overall** | **✅ pass** | role signals: testing · security · backend · devops · collaboration |
 
 Every dimension passes at the intermediate bar. The `ci` dimension earned its pass
-honestly: CodeForge runs two workflow files — `ci.yml` (check + docker) and `codeql.yml`
+honestly: CodeForge runs two workflow files - `ci.yml` (check + docker) and `codeql.yml`
 (CodeQL SAST). An earlier version of this table showed `ci` as a `watchlist` when there
 was one workflow file; rather than argue with the tool, the repo added the second gate the
 tool was asking for. That is the point of grading yourself by a rule you don't get to bend.
@@ -293,8 +293,8 @@ written for, original tests included.
 
 ## The forge voice
 
-The names in this repo are chosen in a deliberate voice — workshop invention,
-detective case files, worlds-and-gates — so the code reads like the thing it
+The names in this repo are chosen in a deliberate voice - workshop invention,
+detective case files, worlds-and-gates - so the code reads like the thing it
 models (`spark`, `Forge`, `Session`, `Seed`, the tick as the only *door*). It's a
 documented convention with hard limits: **clarity outranks poetry, and the data
 contract stays literal** (persisted labels, seed keys, DB columns, and CLI verbs
@@ -334,12 +334,12 @@ that the gateway boots.
 > **🔍 Debugging case study.** That "a dropped client can never crash another player's
 > command" line has a story: an intermittent, "impossible" crash that only surfaced
 > through the launch ritual, cornered with a **PTY reproduction** and fixed at three
-> seams. The write-up — symptom → reproduction → root cause → fix → lesson — is in
+> seams. The write-up - symptom → reproduction → root cause → fix → lesson - is in
 > **[docs/DEBUGGING.md](docs/DEBUGGING.md)**.
 
 ## Roadmap
 
-- ~~Password change command + telnet echo masking (IAC negotiation)~~ — shipped
+- ~~Password change command + telnet echo masking (IAC negotiation)~~ - shipped
   (`passwd`, plus a bundled stdlib client that masks the prompt)
 - NPCs that fight back: stakes, defeat, reawakening
 - Canonical event frames: typed MUD-IL payloads on the bus

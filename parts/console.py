@@ -39,7 +39,7 @@ ALLOWLIST: dict[str, list[str]] = {
 # The fast, always-safe subset the `diagnostics` command runs as a bundle.
 QUICK = ("version", "lint", "status")
 
-_LOG: list[tuple[str, int, float]] = []  # (name, exit_code, duration) — recent runs
+_LOG: list[tuple[str, int, float]] = []  # (name, exit_code, duration) - recent runs
 
 
 @dataclass(frozen=True)

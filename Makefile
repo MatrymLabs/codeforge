@@ -6,7 +6,7 @@ env:
 	.venv/bin/pip install -q --upgrade pip
 	.venv/bin/pip install -q -e ".[dev]"
 	@.venv/bin/python -c "import sys; assert sys.version_info[:2] >= (3, 13), 'need Python >= 3.13'"
-	@echo "✓ .venv ready — activate with: source .venv/bin/activate"
+	@echo "✓ .venv ready - activate with: source .venv/bin/activate"
 
 # --- Mutators: run these while working ---
 fix:
@@ -95,7 +95,7 @@ doctor:
 
 # --- Security patches: scan deps for CVEs, apply available fixes, then RE-VERIFY.
 # Files a dated audit under security-evidence/. Detect + fix are best-effort
-# (need network); the re-run of `make check` is the hard safety net — if a patch
+# (need network); the re-run of `make check` is the hard safety net - if a patch
 # breaks the build, the ritual fails loud (recover with `make env`). ---
 patch:
 	@mkdir -p security-evidence
@@ -115,7 +115,7 @@ daily: patch
 	@if [ -x "$(FGL_HOME)/.venv/bin/library" ]; then \
 		( cd "$(FGL_HOME)" && .venv/bin/library check ) || echo "  (reg check reported changes or was offline)"; \
 	else \
-		echo "  library not runnable at $(FGL_HOME) — run 'make env' there to enable the daily reg check"; \
+		echo "  library not runnable at $(FGL_HOME) - run 'make env' there to enable the daily reg check"; \
 	fi
 	@echo "✓ daily ritual complete"
 

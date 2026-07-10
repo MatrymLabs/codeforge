@@ -1,12 +1,12 @@
 # Pioneer Mode
 
 *A disciplined pioneer challenges assumptions and proves unconventional solutions with
-evidence. Bend convention — not truth, not safety, not trust.*
+evidence. Bend convention - not truth, not safety, not trust.*
 
 Pioneer Mode is not permission to be sloppy. It's a way to take **calculated risks** with
 the instruments still on: understand the mission, tell a real constraint from a habit,
 run the smallest bold experiment, and leave a trail of evidence. It gives the existing
-safety systems (VeritasGate, QualityGate, SafetyReview, the Ritual) **bold direction** —
+safety systems (VeritasGate, QualityGate, SafetyReview, the Ritual) **bold direction** -
 it does not replace them.
 
 ## The doctrine
@@ -65,7 +65,7 @@ Rollback plan:
 ## Pioneer Experiment Report (template)
 
 Every bold experiment leaves a trail. Filled reports live in **`docs/pioneer_experiments/`**
-(tracked evidence — *not* `reports/`, which is git-ignored generated output; a durable
+(tracked evidence - *not* `reports/`, which is git-ignored generated output; a durable
 experiment is evidence, so it belongs where GitHub can see it).
 
 ```
@@ -95,7 +95,7 @@ Next move:
 ## Filed experiments
 
 See [docs/pioneer_experiments/](pioneer_experiments/). The first is the
-[honest GPU split](pioneer_experiments/2026-07-10-honest-gpu-split.md) — building a
+[honest GPU split](pioneer_experiments/2026-07-10-honest-gpu-split.md) - building a
 GPU performance package on a GPU-less host by verifying the CPU path and honestly marking
 the GPU path, instead of faking output.
 

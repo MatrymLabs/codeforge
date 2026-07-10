@@ -172,12 +172,12 @@ def render_plan(plan: CastPlan) -> str:
     m = plan.manifest
     glyph = "🟢" if plan.verdict == READY else "⛔"
     lines = [
-        f"Cast plan — {plan.cast_name} (from template '{plan.template}')",
+        f"Cast plan - {plan.cast_name} (from template '{plan.template}')",
         "",
         f"  seed_id         {m.seed_id}",
         f"  starter pack    {m.starter_seed_pack}",
         f"  engine strategy {m.engine_strategy}",
-        f"  status          {m.status}  (dry run — nothing written)",
+        f"  status          {m.status}  (dry run - nothing written)",
         "",
         "  WOULD COPY:",
         *[f"    + {c}" for c in m.copied_categories],
@@ -192,7 +192,7 @@ def render_plan(plan: CastPlan) -> str:
         lines += ["", "  WARNINGS:", *[f"    ! {w}" for w in plan.warnings]]
     lines += [
         "",
-        f"{glyph} {plan.verdict.upper()} — "
+        f"{glyph} {plan.verdict.upper()} - "
         + (
             "this cast could be poured (generation lands in a later phase)."
             if plan.verdict == READY

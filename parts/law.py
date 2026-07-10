@@ -11,7 +11,7 @@ from pathlib import Path
 from parts.regulations import _NOT_MOUNTED, REGISTRY_PATH, _load
 
 _DISCLAIMER = (
-    "Compliance-awareness only — NOT legal advice. CodeForge tracks sources and flags "
+    "Compliance-awareness only - NOT legal advice. CodeForge tracks sources and flags "
     "review needs; it does not interpret law or claim compliance. Human review is "
     "required before relying on any of this."
 )
@@ -52,7 +52,7 @@ def law_detail(source_id: str, path: Path = REGISTRY_PATH) -> str:
             f"Publication date:  {published}  (confirm with `library verify {match['source_id']}`)",
             f"Freshness/status:  {match['status']}  ·  last checked {checked}",
             f"Official source:   {match['official_url']}",
-            "Applicability:     Not determined — human review required.",
+            "Applicability:     Not determined - human review required.",
             f"Legal conclusion:  {_NO_CONCLUSION}",
         ]
     )

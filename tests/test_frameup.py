@@ -46,7 +46,7 @@ def test_the_real_repo_reads_green() -> None:
 
 def test_render_shows_the_header_and_overall() -> None:
     out = render_frameup()
-    assert "THE FORGE — FRAME-UP INSPECTION" in out
+    assert "THE FORGE - FRAME-UP INSPECTION" in out
     assert "OVERALL:" in out
     assert "nothing stored, nothing faked" in out
 

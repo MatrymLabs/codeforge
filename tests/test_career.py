@@ -74,7 +74,7 @@ def test_a_skill_missing_a_required_field_fails_loud(tmp_path: Path) -> None:
 def test_gaps_view_surfaces_the_real_gaps() -> None:
     out = render_gaps()
     assert "GAPS" in out
-    # runbook/postmortem is a known 'missing' item — it must appear as a gap
+    # runbook/postmortem is a known 'missing' item - it must appear as a gap
     assert "runbook" in out.lower() or "postmortem" in out.lower()
 
 

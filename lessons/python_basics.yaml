@@ -1,10 +1,10 @@
-# LESSON: Python Basics — Trial One
+# LESSON: Python Basics - Trial One
 # A question bank is DATA, not code (parts/assessment.py loads + validates it).
 # The same engine drills any subject; add a lessons/<subject>_*.yaml to grow.
 
 id: python_basics_001
 subject: python
-title: Python Basics — Trial One
+title: Python Basics - Trial One
 questions:
   - id: q01
     prompt: What is a variable used for in Python?
@@ -16,7 +16,7 @@ questions:
     correct: B
     hint: Think of a labeled drawer in the Workshop.
     explanation: >
-      A variable gives a name to a value so your program can use it later —
+      A variable gives a name to a value so your program can use it later -
       e.g. player_name = "Matrym" points the name player_name at the text "Matrym".
 
   - id: q02
@@ -81,8 +81,8 @@ questions:
     correct: A
     hint: Both the for-loop and the while-loop do this.
     explanation: >
-      A loop repeats a block — `for` over a collection, `while` until a condition
-      turns false — so you don't copy the same code many times.
+      A loop repeats a block - `for` over a collection, `while` until a condition
+      turns false - so you don't copy the same code many times.
 
   - id: q07
     prompt: What is a module in Python?
@@ -94,7 +94,7 @@ questions:
     correct: B
     hint: Each .py file is one of these; you `import` it.
     explanation: >
-      A module is a .py file whose functions and values other files import — the
+      A module is a .py file whose functions and values other files import - the
       unit of reuse (in CodeForge, each part in parts/ is a module).
 
   - id: q08
@@ -108,7 +108,7 @@ questions:
     hint: It proves your code still works after you change it.
     explanation: >
       A test runs your code with known inputs and asserts the result, catching
-      breakage automatically — the safety net behind every CodeForge change.
+      breakage automatically - the safety net behind every CodeForge change.
 
   - id: q09
     prompt: Why do we write comments?
@@ -133,5 +133,5 @@ questions:
     correct: B
     hint: You will read code far more often than you write it.
     explanation: >
-      Readable code is cheaper to understand, review, and change safely — clear
+      Readable code is cheaper to understand, review, and change safely - clear
       names and small pieces beat clever one-liners.

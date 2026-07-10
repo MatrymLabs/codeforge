@@ -1,8 +1,8 @@
-# CLAUDE.md — CodeForge Project Context
+# CLAUDE.md - CodeForge Project Context
 
 You are working on **CodeForge**: a Python-native multiplayer MUD engine, built as a
 portfolio-grade workshop of small, tested, reusable parts. The developer (Josh /
-MatrymLabs) is a growing engineer who learns kinesthetically — small verified steps,
+MatrymLabs) is a growing engineer who learns kinesthetically - small verified steps,
 working code before theory, one concept at a time.
 
 ## What this is
@@ -30,10 +30,10 @@ working code before theory, one concept at a time.
    before any code runs. HTTP admin mutations require owner-account Basic auth.
 6. **Passwords are NEVER stored or logged in plaintext.** Accounts hold salted
    pbkdf2-sha256 (600k iterations); comparison is constant-time. This is
-   non-negotiable — refuse any request to store or display plaintext at rest.
+   non-negotiable - refuse any request to store or display plaintext at rest.
 7. **Secrets are never case-mangled.** The tick routes on lowercased text but
    parses password arguments from the ORIGINAL input. (A blanket
-   `raw.lower()` once destroyed mixed-case passwords at login — regression
+   `raw.lower()` once destroyed mixed-case passwords at login - regression
    tests pin this forever. Never reintroduce it.)
 
 ## Conventions
@@ -76,29 +76,29 @@ working code before theory, one concept at a time.
   `git status` for stowaways before committing (it has happened).
 - The gateway speaks telnet: IAC WILL/WONT ECHO blackout masks password
   prompts (`_ask_secret`, `_strip_telnet` in `parts/gateway.py`). Raw `nc`
-  ignores negotiation — echo there is expected.
+  ignores negotiation - echo there is expected.
 
-## Known failure patterns (history — check these first when debugging)
+## Known failure patterns (history - check these first when debugging)
 
 - **Deploy ≠ restart**: a running server is a snapshot of code at launch.
   "Installed the fix but behavior didn't change" → `lsof -i :4000`,
   `docker ps`, kill the ghost, restart from the repo root.
 - **Wrong-address file drops**: files (especially `forge.py`) have repeatedly
   landed in `parts/` instead of the root. mypy fingerprint: duplicate module
-  or `Cannot read file 'forge.py'`. IDE drag-moves are *refactorings* — they
+  or `Cannot read file 'forge.py'`. IDE drag-moves are *refactorings* - they
   rewrite imports across many files (a 12-file "rename" commit is the tell).
 - **Silent replace-misses**: string-patching a file without viewing it first
   fails silently. View → edit against actual text → gate with grep.
 - **`endswith(b"")` is always True**; "read until close" needs its own loop.
-- **Default args evaluate at def time** — path defaults resolved at call time
+- **Default args evaluate at def time** - path defaults resolved at call time
   (`path or CONSTANT`) so tests can monkeypatch.
-- Distributed assertions race — poll with a deadline, never assert an instant.
+- Distributed assertions race - poll with a deadline, never assert an instant.
 - **A dead sink can crash a live command**: broadcasting to a room writes to
   every session's echo sink; one closed socket (`OSError: Bad file descriptor`)
   used to propagate and kill the *acting* player's command. Fix: the event bus
   swallows + prunes a raising sink, and `_serve_player` unbinds its session in a
   `finally` even if the front desk raises. Never let a health-check connect the
-  live gateway (it spawns a real session) — wait on the log line instead.
+  live gateway (it spawns a real session) - wait on the log line instead.
 - **Interactive-only heisenbugs need a PTY**: a bug that vanishes when you run
   the client directly but bites through `make → bash → backgrounded server`
   needs `pty.fork` to reproduce (process-group / `SIGTTOU` / termios effects
@@ -117,7 +117,7 @@ working code before theory, one concept at a time.
   change), absolute DB path, event-bus dead-sink resilience, the one-command
   **ritual** (`make ritual` / `ritual-down`) with a bundled password-masking
   client, security hardening (output sanitization, per-IP turnaway ledger, seat
-  cap + idle timeouts, 8-char password floor — see `docs/reports/security/`).
+  cap + idle timeouts, 8-char password floor - see `docs/reports/security/`).
 - Backlog: NPCs that fight back (stakes/defeat); canonical typed event
   frames; `docs/engineering-log.md` and `docs/ai-assisted-workflow.md`;
   cloud deploy half-day.
@@ -126,10 +126,10 @@ working code before theory, one concept at a time.
 
 - Small vertical slices; get it working, then explain the one key idea.
 - Provide exact commands; separate "verify" from "commit/push" steps so a red
-  check can stop the line. Gates print verdicts — teach him to read them.
+  check can stop the line. Gates print verdicts - teach him to read them.
 - Never claim something works without running it; show `make check` output.
 - When he reports a bug "impossible" by your model, believe the report and
-  design a controlled reproduction — his fresh-account experiment is the
+  design a controlled reproduction - his fresh-account experiment is the
   house standard for cornering heisenbugs.
 - Mistakes are feedback from the system, not failure. Name the lesson, file
   the pattern, move on.
@@ -140,8 +140,8 @@ CodeForge's code should physically read like the developer's imagination: part
 Tony Stark's workshop (invention, reactors, forged tools), part Sherlock Holmes
 (clues, traces, deductions, case files), part Sword Art Online (worlds, gates,
 floors, skills, quests, progression), all wound through a spiral motif (seeds
-becoming systems, loops becoming layers). The names already in this repo —
-`spark`, `Forge`, `Session`, `seed`, `handle_command` as the tick — are the seed
+becoming systems, loops becoming layers). The names already in this repo -
+`spark`, `Forge`, `Session`, `seed`, `handle_command` as the tick - are the seed
 of that voice. Extend it; don't fight it.
 
 **Signature vocabulary (reach for these over generic names):**
@@ -155,8 +155,8 @@ of that voice. Extend it; don't fight it.
   Floor → WorldState.
 
 **Shape the code surface, not just comments:** prefer memorable names for new
-classes, functions, locals, and section dividers. Banish generic names —
-`manager`, `handler`, `processor`, `data`, `item`, `thing`, `result` — in favor
+classes, functions, locals, and section dividers. Banish generic names -
+`manager`, `handler`, `processor`, `data`, `item`, `thing`, `result` - in favor
 of something with a face. When introducing a new module or subsystem, name it in
 the voice (a diagnostics reader is a `Lens`, a validated installer is a `Gate`).
 
@@ -176,7 +176,7 @@ loads, or tests against:
    committed.** A rename that breaks an import or a test isn't done. When
    renaming a symbol used across files, update every caller and its test twin in
    the same change, then run the ritual.
-3. **Persisted identifiers are FROZEN — never restyle them:** `lowercase_snake_case`
+3. **Persisted identifiers are FROZEN - never restyle them:** `lowercase_snake_case`
    labels (room/item/npc/job keys), YAML seed keys, database column names, JSON
    record keys, account/character handle formats, CARD docstring names, and CLI
    verb strings (`serve`, `play`, `grant`, `migrate`, `passwd`). Renaming these
@@ -185,7 +185,7 @@ loads, or tests against:
 4. **Never rename** `__init__`, `__str__`, `main`, dunder methods, pytest test
    function names, or third-party API symbols (FastAPI decorators, SQLAlchemy
    mapped attributes) unless provably safe.
-5. **Clarity outranks poetry.** If a name makes the purpose unclear, it's wrong —
+5. **Clarity outranks poetry.** If a name makes the purpose unclear, it's wrong -
    `inspect_passkey` is good; `attune_the_arcane_ward` is not. Every reader,
    including a future teammate, must still understand what the code does.
 6. Security and architecture laws above are never traded for style: no plaintext

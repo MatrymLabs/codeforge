@@ -39,7 +39,7 @@ def test_detail_shows_jurisdiction_and_refuses_conclusions(reg: Path) -> None:
     out = law_detail("pub-nist-800-171", path=reg)
     assert "United States Federal" in out
     assert "2021-01-28" in out  # publication date surfaced
-    assert "Applicability:     Not determined — human review required." in out
+    assert "Applicability:     Not determined - human review required." in out
     assert "No legal conclusion. Human review required." in out
 
 

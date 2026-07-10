@@ -1,6 +1,6 @@
 # Repo Integrity Ritual
 
-*One honest command for repo health — evidence and warnings, not a certificate.*
+*One honest command for repo health - evidence and warnings, not a certificate.*
 
 Run it:
 
@@ -30,7 +30,7 @@ Hard boundaries (integrity-first):
 - **It never uploads your code** to any third-party plagiarism/similarity service.
 - **A missing tool is reported `not_configured`**, never silently passed or faked.
 - **It detects tools** (ruff, mypy, pytest, bandit, pip-audit) and points at
-  `make check` / `make security` for the live run — it does not re-run the suite.
+  `make check` / `make security` for the live run - it does not re-run the suite.
 
 ## How it composes (nothing rebuilt)
 
@@ -43,13 +43,13 @@ Hard boundaries (integrity-first):
 | Presentation | presence of README · LICENSE · CHANGELOG · SECURITY · CONTRIBUTING · docs |
 | Truth / VeritasGate | registry `validate()` · `qa gate` readiness · README overclaim scan |
 
-## The gap it surfaced — now closed
+## The gap it surfaced - now closed
 
 The report's first run flagged **secret scanning as `not_configured`** (top next
 action). That gap is now closed: `make secrets` runs **detect-secrets** against an
 audited `.secrets.baseline`, failing on any tracked secret not already in the baseline
 (verified: it passes clean and catches a planted key). It's folded into `make security`
-and gates in CI. The report now shows `secret scan: detected` — the tool flagged its
+and gates in CI. The report now shows `secret scan: detected` - the tool flagged its
 own gap, and closing it fixed the tool's own output. That self-correcting loop is the
 point of integrity-first.
 

@@ -1,6 +1,6 @@
 # Reports (runtime evidence)
 
-Saved outputs from Workshop runs — diagnostics, AI advice, repo audits, security
+Saved outputs from Workshop runs - diagnostics, AI advice, repo audits, security
 scans, and domain evidence. Long output is summarized in-world; the **full log
 lands here**, so a run is auditable after the fact rather than lost to the scroll.
 
@@ -27,4 +27,4 @@ reports/
 Rules (see [`../docs/holodeck/SAFETY.md`](../docs/holodeck/SAFETY.md)):
 - outputs are **saved, not spammed**; the MUD shows a summary, the file holds the full log;
 - compliance / finance / records evidence is **dated + hashed** and traceable to a commit;
-- nothing here implies certification — it is readiness/evidence only.
+- nothing here implies certification - it is readiness/evidence only.

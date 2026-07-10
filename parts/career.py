@@ -111,7 +111,7 @@ def _render_level(board: dict, level: str) -> list[str]:
 
 def _header(board: dict) -> list[str]:
     return [
-        "CAREER EVIDENCE SIGN — CodeForge Skills-to-Proof Board",
+        "CAREER EVIDENCE SIGN - CodeForge Skills-to-Proof Board",
         "",
         board.get("purpose", ""),
         f"  {board.get('market_note', '')}",
@@ -161,9 +161,9 @@ def render_role(level: str, board: dict | None = None) -> str:
 def render_gaps(board: dict | None = None) -> str:
     b = board or load_board()
     gaps = [s for s in _skills(b) if s["status"] in (PARTIAL, MISSING, PLANNED, NEEDS_UPDATE)]
-    lines = ["CAREER EVIDENCE SIGN — GAPS (what to build next)", ""]
+    lines = ["CAREER EVIDENCE SIGN - GAPS (what to build next)", ""]
     if not gaps:
-        lines.append("  No gaps recorded — every tracked skill has current proof.")
+        lines.append("  No gaps recorded - every tracked skill has current proof.")
         return "\n".join(lines)
     for s in sorted(gaps, key=lambda x: x["status"]):
         lines.append(f"  {_GLYPH.get(s['status'], '[ ]')} {s['skill']}  ({s['status']})")
@@ -177,7 +177,7 @@ def render_gaps(board: dict | None = None) -> str:
 
 def render_evidence(board: dict | None = None) -> str:
     b = board or load_board()
-    lines = ["CAREER EVIDENCE SIGN — PROOF PATHS", ""]
+    lines = ["CAREER EVIDENCE SIGN - PROOF PATHS", ""]
     for s in _skills(b):
         if s["status"] in _CLAIMS_EVIDENCE:
             lines.append(f"  {_GLYPH.get(s['status'])} {s['skill']}")
@@ -191,7 +191,7 @@ def render_resume(board: dict | None = None) -> str:
     proven = [s["skill"] for s in _skills(b) if s["status"] == PROVEN]
     roles = sorted({r for lvl in b["levels"] for r in lvl.get("target_roles", [])})
     lines = [
-        "CAREER EVIDENCE SIGN — RESUME TRANSLATION",
+        "CAREER EVIDENCE SIGN - RESUME TRANSLATION",
         "",
         "CodeForge demonstrates the ability to design and run Python software systems with",
         "automation, documentation, testing, AI-assisted development, reusable tooling, and",
@@ -201,7 +201,7 @@ def render_resume(board: dict | None = None) -> str:
     ]
     lines += [f"  - {p}" for p in proven]
     lines += ["", f"Target role clusters: {', '.join(roles)}."]
-    lines.append("Readiness, never certification — see `career gaps` for what is still open.")
+    lines.append("Readiness, never certification - see `career gaps` for what is still open.")
     return "\n".join(lines)
 
 

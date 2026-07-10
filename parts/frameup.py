@@ -94,7 +94,7 @@ def frame_up(root: Path | None = None) -> list[SystemFrame]:
         GREEN if not flagged else RED,
         "all claims verified"
         if not flagged
-        else f"{len(flagged)} FLAGGED — correct before trusting",
+        else f"{len(flagged)} FLAGGED - correct before trusting",
     )
 
     gaps = presence_gaps(base)
@@ -129,7 +129,7 @@ def render_frameup(root: Path | None = None) -> str:
     frames = frame_up(root)
     ov = overall(frames)
     lines = [
-        "THE FORGE — FRAME-UP INSPECTION",
+        "THE FORGE - FRAME-UP INSPECTION",
         "",
         "  Composed live from the project's own gates (nothing stored, nothing faked).",
         "",
@@ -140,7 +140,7 @@ def render_frameup(root: Path | None = None) -> str:
     if ov == GREEN:
         lines.append("  Every system reads true. The forge is sound.")
     elif ov == YELLOW:
-        lines.append("  Sound, with watch-items — see the yellow rows.")
+        lines.append("  Sound, with watch-items - see the yellow rows.")
     else:
         lines.append("  A red system needs attention before the forge is trusted.")
     return "\n".join(lines)

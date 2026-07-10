@@ -48,7 +48,7 @@ class LocalArchitect:
         tips: list[str] = []
         if any(w in text for w in ("test", "lint", "type", "check", "diagnos", "gate", "run")):
             tips.append(
-                "Run the read-only checks with `diagnostics`, or one at a time — "
+                "Run the read-only checks with `diagnostics`, or one at a time - "
                 "`run lint`, `run types`, `run tests`."
             )
         if any(w in text for w in ("part", "catalog", "reuse", "component", "hardware", "module")):
@@ -65,7 +65,7 @@ class LocalArchitect:
         if not tips:
             tips.append(
                 "I can point you at tools and parts. Try `workshop`, `catalog`, or "
-                "`diagnostics` — or ask about a domain (audit, rbac, validation)."
+                "`diagnostics` - or ask about a domain (audit, rbac, validation)."
             )
         body = "\n".join(f"  · {tip}" for tip in tips)
         return f"The Architect considers, then says:\n{body}"

@@ -1,6 +1,6 @@
 # Security Best Practices for MUD-Style Game Servers
 
-*A reference report for **CodeForge** — a threaded TCP/telnet MUD engine (line-oriented protocol, SQLite + SQLAlchemy persistence, PBKDF2 account authentication, a FastAPI admin surface, LAN-only by design).*
+*A reference report for **CodeForge** - a threaded TCP/telnet MUD engine (line-oriented protocol, SQLite + SQLAlchemy persistence, PBKDF2 account authentication, a FastAPI admin surface, LAN-only by design).*
 
 ---
 
@@ -14,9 +14,9 @@ directly into other players' terminals. Modern web-security guidance from OWASP
 and NIST maps onto these problems cleanly, even though MUDs are not web
 applications.
 
-This report translates authoritative guidance — the OWASP Top 10, OWASP Cheat
+This report translates authoritative guidance - the OWASP Top 10, OWASP Cheat
 Sheet Series and ASVS, NIST SP 800-63B, the telnet RFCs, and the Argon2 / PHC
-references — into concrete recommendations for a codebase shaped like CodeForge.
+references - into concrete recommendations for a codebase shaped like CodeForge.
 The headline conclusions:
 
 - **Telnet is plaintext by definition.** Echo-blackout (turning off local echo
@@ -29,7 +29,7 @@ The headline conclusions:
 - **Password *policy* should follow NIST SP 800-63B**: length over composition,
   screen against breached-password corpora, no forced periodic rotation.
 - **The classic MUD vulnerability is privilege escalation** through the
-  wizard/immortal command tier — and, historically, `eval`/`exec`-style "coder"
+  wizard/immortal command tier - and, historically, `eval`/`exec`-style "coder"
   commands. Least privilege and never exposing a live interpreter are
   non-negotiable.
 - **The MUD-specific injection risk** is ANSI/terminal control-character
@@ -55,8 +55,8 @@ in transit ([RFC 854](https://www.rfc-editor.org/rfc/rfc854.html),
 password prompt, it is asking the client (or negotiating via telnet ECHO) to
 stop echoing keystrokes so a shoulder-surfer cannot read the password off the
 screen. The bytes still traverse the network in cleartext. Anyone able to
-observe the segment — a switch SPAN port, a compromised host doing ARP spoofing,
-a promiscuous NIC on shared Wi-Fi — can read credentials and session content
+observe the segment - a switch SPAN port, a compromised host doing ARP spoofing,
+a promiscuous NIC on shared Wi-Fi - can read credentials and session content
 verbatim.
 
 **Do not treat "LAN-only" as equivalent to "confidential."** LANs are routinely
@@ -66,7 +66,7 @@ move after any host compromise is lateral network sniffing.
 ### 1.2 Options for encrypting a MUD transport
 
 There is **no single official "TLS-MUD" RFC**. (Note: an IETF document does use
-the acronym "MUD" — RFC 9761, *Manufacturer Usage Description* — but that is an
+the acronym "MUD" - RFC 9761, *Manufacturer Usage Description* - but that is an
 unrelated IoT-networking specification, not a game protocol; do not cite it as a
 MUD-game standard.) In practice the community uses a handful of conventions:
 
@@ -77,7 +77,7 @@ MUD-game standard.) In practice the community uses a handful of conventions:
   ([Mudlet TLS](https://wiki.mudlet.org/w/Sample_TLS_Configuration),
   [LDMud TLS](https://abathur.github.io/ldmud-doc/build/html/topics/tls.html)).
 - **`stunnel` wrapper.** `stunnel` adds TLS to an unmodified server by proxying
-  an encrypted external port to the plaintext internal one — a well-established
+  an encrypted external port to the plaintext internal one - a well-established
   MUD pattern ([Discworld MUD: Stunnel](https://dwwiki.mooo.com/wiki/Stunnel)).
   Trade-off: the MUD sees `stunnel`'s local address as the client IP unless the
   PROXY protocol is used, which breaks per-IP throttling and audit logging
@@ -95,7 +95,7 @@ and prefer an approach that preserves the real client IP so §3's rate limiting
 and §5's audit logging remain meaningful. Use modern TLS only (TLS 1.2+;
 prefer 1.3) and disable legacy protocol versions and cipher suites.
 
-The FastAPI admin surface must be served over HTTPS with the same rigour — an
+The FastAPI admin surface must be served over HTTPS with the same rigour - an
 admin panel is exactly the asset an attacker wants, and OWASP classifies
 transmitting sensitive data in cleartext under *Cryptographic Failures* in the
 Top 10.
@@ -111,7 +111,7 @@ state-of-the-art memory-hard password hash; **Argon2id**, the hybrid variant, is
 the recommended default because it combines Argon2i's side-channel resistance
 with Argon2d's GPU-cracking resistance
 ([P-H-C/phc-winner-argon2](https://github.com/P-H-C/phc-winner-argon2),
-[Argon2 — Wikipedia](https://en.wikipedia.org/wiki/Argon2)).
+[Argon2 - Wikipedia](https://en.wikipedia.org/wiki/Argon2)).
 
 OWASP's current, quotable parameter guidance
 ([OWASP Password Storage Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html)):
@@ -120,11 +120,11 @@ OWASP's current, quotable parameter guidance
 |---|---|
 | **Argon2id** (preferred) | 19 MiB memory, iterations `t=2`, parallelism `p=1` (equivalently 46 MiB/`t=1`, 12 MiB/`t=3`, etc.) |
 | **scrypt** (if no Argon2) | `N=2^17` (128 MiB), `r=8`, `p=1` |
-| **bcrypt** (legacy) | work factor ≥ 10; **72-byte input limit** — enforce a max password length or pre-hash |
+| **bcrypt** (legacy) | work factor ≥ 10; **72-byte input limit** - enforce a max password length or pre-hash |
 | **PBKDF2** (FIPS-140 only) | PBKDF2-HMAC-SHA256 ≥ **600,000** iterations (SHA-512 ≥ 220,000) |
 
-**Implications for CodeForge's current PBKDF2:** PBKDF2 is *not wrong* — it is
-FIPS-approved and OWASP-listed — but it is the weakest of the four against
+**Implications for CodeForge's current PBKDF2:** PBKDF2 is *not wrong* - it is
+FIPS-approved and OWASP-listed - but it is the weakest of the four against
 GPU/ASIC attackers because it is not memory-hard. If you keep it, verify the
 iteration count meets ~600,000 for SHA-256. The stronger move is to migrate to
 Argon2id via a well-maintained library (e.g. `argon2-cffi`). A clean migration
@@ -148,7 +148,7 @@ re-hash a user's password to the new scheme on their next successful login.
   performs a constant-time check internally, so the main place to be careful is
   any *hand-written* token or hash comparison (session tokens, admin API keys).
 
-### 2.3 Password policy — follow NIST SP 800-63B
+### 2.3 Password policy - follow NIST SP 800-63B
 
 NIST SP 800-63B inverts a generation of "complexity rule" habits
 ([NIST SP 800-63B](https://pages.nist.gov/800-63-3/sp800-63b.html),
@@ -157,7 +157,7 @@ NIST SP 800-63B inverts a generation of "complexity rule" habits
 - **Favour length over composition.** Support long passphrases (accept at least
   64 characters), enforce a sensible minimum (SP 800-63B requires ≥ 8; the
   latest revision raises the recommended floor toward 15 for password-only
-  auth), and **do not impose mandatory character-class rules** — NIST states
+  auth), and **do not impose mandatory character-class rules** - NIST states
   composition rules make it *harder* for people to choose strong passwords.
 - **Screen against breached/weak passwords.** Reject passwords found in known
   breach corpora, common dictionaries, and obvious context words (e.g. the
@@ -204,25 +204,25 @@ OWASP's guidance combines several controls
   successive failures on the same account or connection. For a persistent telnet
   session this is trivial to enforce: sleep/backoff and eventually drop the
   connection after N failures.
-- **Account lockout — carefully.** Typical thresholds are 3–5 failures with a
+- **Account lockout - carefully.** Typical thresholds are 3–5 failures with a
   timed auto-unlock. **Warning:** naive lockout is itself a denial-of-service
-  vector — an attacker who knows valid names can lock every player out. Prefer
+  vector - an attacker who knows valid names can lock every player out. Prefer
   temporary, exponentially-increasing lockouts and per-IP throttling over
   permanent per-account locks ([OWASP Authentication Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html)).
 - **Per-IP throttling** on both new connections and failed logins. This depends
-  on seeing the *real* client IP — see the `stunnel` caveat in §1.2.
+  on seeing the *real* client IP - see the `stunnel` caveat in §1.2.
 - **CAPTCHA / MFA** are the strongest web controls but map awkwardly onto a raw
   telnet MUD; treat them as options for the FastAPI admin surface (where MFA is
   strongly advised) rather than the game login.
 
-Apply the same throttling to the FastAPI admin login — an admin brute-force is
+Apply the same throttling to the FastAPI admin login - an admin brute-force is
 far more damaging than a player one.
 
 ---
 
 ## 4. Input Handling
 
-### 4.1 SQL injection — use the ORM / parameterized queries
+### 4.1 SQL injection - use the ORM / parameterized queries
 
 OWASP's primary defence against SQL injection is **parameterized queries /
 prepared statements**, with an ORM being an acceptable equivalent because it
@@ -236,7 +236,7 @@ places developers *bypass* the ORM:
 - Never build SQL by string concatenation or f-strings, even "just for an admin
   report." Use bound parameters (`text("... :name")` with a params dict, or the
   ORM expression language).
-- Table/column *identifiers* cannot be parameterized — if any admin feature lets
+- Table/column *identifiers* cannot be parameterized - if any admin feature lets
   a user pick a column/table name, validate it against a hard-coded allowlist.
 
 ### 4.2 Command injection and never exposing `eval`/`exec`
@@ -274,8 +274,8 @@ arbitrary paths.
 ### 4.5 The MUD-specific risk: ANSI / terminal control-character injection
 
 This is the input-handling issue most unique to MUDs and most often missed.
-Player-supplied text — character names, `say`/`tell`/channel chat, descriptions,
-titles, mail — is rendered into *other players'* terminals and into
+Player-supplied text - character names, `say`/`tell`/channel chat, descriptions,
+titles, mail - is rendered into *other players'* terminals and into
 *administrators'* consoles and logs. If that text can contain raw ANSI/VT escape
 sequences (`ESC[`, `0x1B`), a malicious player can:
 
@@ -312,11 +312,11 @@ sequences (`ESC[`, `0x1B`), a malicious player can:
 Broken access control is OWASP Top 10 **A01:2021**, the single most prevalent
 category, covering any failure to enforce that users act only within their
 intended permissions ([OWASP A01](https://owasp.org/Top10/2021/A01_2021-Broken_Access_Control/)).
-In MUDs this manifests as the **wizard/immortal escalation** problem — the most
+In MUDs this manifests as the **wizard/immortal escalation** problem - the most
 storied MUD vulnerability class.
 
 - **Least privilege and default-deny.** Every privileged command must check the
-  actor's level/role at execution time, server-side, on *every* invocation — not
+  actor's level/role at execution time, server-side, on *every* invocation - not
   merely hide the command from a menu. Never rely on the client to withhold a
   command.
 - **Tiered command tables.** Separate mortal, builder/wizard, and admin/implementor
@@ -350,12 +350,12 @@ but is the textbook target for connection-exhaustion attacks.
   or queue beyond the cap rather than spawning unbounded threads.
 - **Thread-per-connection exhaustion + Slowloris.** A "low and slow" attacker
   opens many connections and sends bytes just fast enough to avoid timing out,
-  tying up one worker/thread each until the pool is exhausted — precisely the
+  tying up one worker/thread each until the pool is exhausted - precisely the
   Slowloris pattern that devastates thread-per-connection servers
   ([Cloudflare: Slowloris](https://www.cloudflare.com/learning/ddos/ddos-attack-tools/slowloris/),
   [CMU SEI: Mitigating Slowloris](https://www.sei.cmu.edu/blog/mitigating-slowloris/)).
   Mitigations that transfer directly to a MUD:
-  - **Aggressive read/idle timeouts** — drop a connection that has not completed
+  - **Aggressive read/idle timeouts** - drop a connection that has not completed
     login or sent input within a bounded window; do not let a header/line be fed
     one byte at a time forever ([CMU SEI](https://www.sei.cmu.edu/blog/mitigating-slowloris/)).
   - **Per-IP connection limits** and **maximum session lifetime for the
@@ -377,7 +377,7 @@ for the HTTP side ([Cloudflare: Slowloris](https://www.cloudflare.com/learning/d
 
 ## 7. Persistence and Data Integrity
 
-- **Parameterized queries everywhere** — see §4.1. With SQLAlchemy this is the
+- **Parameterized queries everywhere** - see §4.1. With SQLAlchemy this is the
   default; the discipline is never dropping to string-built SQL.
 - **Treat all persisted and client state as untrusted.** Data loaded back from
   SQLite (or from any client-supplied "restore" of game state) must be
@@ -386,11 +386,11 @@ for the HTTP side ([Cloudflare: Slowloris](https://www.cloudflare.com/learning/d
   not crash or silently corrupt live state. This is the persistence-layer
   corollary of OWASP's input-validation guidance.
 - **SQLite WAL mode.** Enabling Write-Ahead Logging (`PRAGMA journal_mode=WAL`)
-  improves crash durability and concurrency — readers do not block the single
+  improves crash durability and concurrency - readers do not block the single
   writer and vice-versa, and a COMMIT is durable once its record is flushed to
   the WAL, even across a power loss ([SQLite: Write-Ahead Logging](https://sqlite.org/wal.html)).
   Two caveats from the SQLite docs: there is still only **one writer at a time**,
-  and **WAL does not work over a network filesystem** — all processes must be on
+  and **WAL does not work over a network filesystem** - all processes must be on
   the same host ([SQLite: Write-Ahead Logging](https://sqlite.org/wal.html)).
   This suits a single-host LAN MUD well.
 - **Backups.** Take regular, tested backups. Use SQLite's online backup API or
@@ -407,7 +407,7 @@ for the HTTP side ([Cloudflare: Slowloris](https://www.cloudflare.com/learning/d
   variables or a secrets manager, never from tracked source. Commit a
   `.env.example` documenting the *names* of required variables, and ensure
   `.env`, key files, and the SQLite database are `.gitignore`d. A committed
-  secret must be treated as compromised and rotated — removing it in a later
+  secret must be treated as compromised and rotated - removing it in a later
   commit does not undo the exposure, since it remains in git history.
 - **Audit dependencies.** Run **`pip-audit`** (maintained with contributors from
   Google's open-source security team and Trail of Bits; it sources advisories
@@ -444,7 +444,7 @@ for the HTTP side ([Cloudflare: Slowloris](https://www.cloudflare.com/learning/d
 
 ## Notes on Certainty and Conflicting Guidance
 
-- **PBKDF2 vs Argon2id.** These are not in conflict — both are OWASP-listed. The
+- **PBKDF2 vs Argon2id.** These are not in conflict - both are OWASP-listed. The
   nuance is that PBKDF2 is *sufficient for compliance* (FIPS-140) but *weaker per
   unit of defender cost* because it is not memory-hard. Calling PBKDF2 "insecure"
   would be an overstatement; "acceptable but no longer preferred" is accurate.
@@ -457,14 +457,14 @@ for the HTTP side ([Cloudflare: Slowloris](https://www.cloudflare.com/learning/d
   command escalation, OLC/coder RCE), but these were largely documented in mailing
   lists and code comments rather than the modern CVE database, and this report
   could not verify specific CVE identifiers for them from authoritative sources.
-  The *vulnerability classes* (memory-safety in C — not applicable to CodeForge's
-  Python — and privilege escalation, which very much is) are well established even
+  The *vulnerability classes* (memory-safety in C - not applicable to CodeForge's
+  Python - and privilege escalation, which very much is) are well established even
   where individual advisory citations are not. This is flagged rather than
   overstated.
 - **ANSI-escape severity varies by terminal.** The impact of terminal-escape
   injection depends heavily on the victim's terminal emulator; consequences range
   from cosmetic corruption to (in specific emulators) clipboard or command
-  staging. The defensive posture — strip control characters — is the same
+  staging. The defensive posture - strip control characters - is the same
   regardless, but claims of guaranteed RCE against arbitrary clients would be
   overstated.
 
@@ -472,33 +472,33 @@ for the HTTP side ([Cloudflare: Slowloris](https://www.cloudflare.com/learning/d
 
 ## References
 
-1. OWASP — Password Storage Cheat Sheet. <https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html>
-2. OWASP — Authentication Cheat Sheet. <https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html>
-3. OWASP — Forgot Password Cheat Sheet. <https://cheatsheetseries.owasp.org/cheatsheets/Forgot_Password_Cheat_Sheet.html>
-4. OWASP — SQL Injection Prevention Cheat Sheet. <https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html>
-5. OWASP — Query Parameterization Cheat Sheet. <https://cheatsheetseries.owasp.org/cheatsheets/Query_Parameterization_Cheat_Sheet.html>
-6. OWASP — Injection Prevention Cheat Sheet. <https://cheatsheetseries.owasp.org/cheatsheets/Injection_Prevention_Cheat_Sheet.html>
-7. OWASP — Blocking Brute Force Attacks. <https://owasp.org/www-community/controls/Blocking_Brute_Force_Attacks>
-8. OWASP Top 10:2021 — A01 Broken Access Control. <https://owasp.org/Top10/2021/A01_2021-Broken_Access_Control/>
-9. OWASP Top 10:2021 — A07 Identification and Authentication Failures. <https://owasp.org/Top10/2021/A07_2021-Identification_and_Authentication_Failures/>
-10. OWASP — Application Security Verification Standard (ASVS). <https://owasp.org/www-project-application-security-verification-standard/>
-11. NIST SP 800-63B — Digital Identity Guidelines: Authentication and Lifecycle Management. <https://pages.nist.gov/800-63-3/sp800-63b.html>
-12. NIST SP 800-63B-4 — Passwords (draft/revision). <https://pages.nist.gov/800-63-4/sp800-63b/passwords/>
-13. IETF RFC 854 — Telnet Protocol Specification. <https://www.rfc-editor.org/rfc/rfc854.html>
-14. IETF RFC 857 — Telnet Echo Option. <https://www.rfc-editor.org/rfc/rfc857>
-15. P-H-C — Argon2, winner of the Password Hashing Competition (reference implementation). <https://github.com/P-H-C/phc-winner-argon2>
-16. Argon2 — Wikipedia (PHC 2015 winner; Argon2i/d/id variants). <https://en.wikipedia.org/wiki/Argon2>
-17. CyberArk — "Don't Trust This Title: Abusing Terminal Emulators with ANSI Escape Characters." <https://www.cyberark.com/resources/threat-research-blog/dont-trust-this-title-abusing-terminal-emulators-with-ansi-escape-characters>
-18. InfosecMatter — Terminal Escape Injection. <https://www.infosecmatter.com/terminal-escape-injection/>
-19. SentinelOne — CVE-2025-55754 (Apache Tomcat ANSI escape injection in logs). <https://www.sentinelone.com/vulnerability-database/cve-2025-55754/>
-20. Discworld MUD Wiki — Stunnel (TLS wrapping for MUDs). <https://dwwiki.mooo.com/wiki/Stunnel>
-21. LDMud Documentation — Transport Layer Security. <https://abathur.github.io/ldmud-doc/build/html/topics/tls.html>
-22. Mudlet Wiki — Sample TLS Configuration. <https://wiki.mudlet.org/w/Sample_TLS_Configuration>
-23. pip-audit — Python dependency vulnerability scanner (PyPI). <https://pypi.org/project/pip-audit/>
-24. Cloudflare — Slowloris DDoS Attack. <https://www.cloudflare.com/learning/ddos/ddos-attack-tools/slowloris/>
-25. CMU Software Engineering Institute — Mitigating Slowloris. <https://www.sei.cmu.edu/blog/mitigating-slowloris/>
-26. SQLite — Write-Ahead Logging. <https://sqlite.org/wal.html>
-27. Python Standard Library — `hmac.compare_digest` (constant-time comparison). <https://docs.python.org/3/library/hmac.html>
+1. OWASP - Password Storage Cheat Sheet. <https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html>
+2. OWASP - Authentication Cheat Sheet. <https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html>
+3. OWASP - Forgot Password Cheat Sheet. <https://cheatsheetseries.owasp.org/cheatsheets/Forgot_Password_Cheat_Sheet.html>
+4. OWASP - SQL Injection Prevention Cheat Sheet. <https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html>
+5. OWASP - Query Parameterization Cheat Sheet. <https://cheatsheetseries.owasp.org/cheatsheets/Query_Parameterization_Cheat_Sheet.html>
+6. OWASP - Injection Prevention Cheat Sheet. <https://cheatsheetseries.owasp.org/cheatsheets/Injection_Prevention_Cheat_Sheet.html>
+7. OWASP - Blocking Brute Force Attacks. <https://owasp.org/www-community/controls/Blocking_Brute_Force_Attacks>
+8. OWASP Top 10:2021 - A01 Broken Access Control. <https://owasp.org/Top10/2021/A01_2021-Broken_Access_Control/>
+9. OWASP Top 10:2021 - A07 Identification and Authentication Failures. <https://owasp.org/Top10/2021/A07_2021-Identification_and_Authentication_Failures/>
+10. OWASP - Application Security Verification Standard (ASVS). <https://owasp.org/www-project-application-security-verification-standard/>
+11. NIST SP 800-63B - Digital Identity Guidelines: Authentication and Lifecycle Management. <https://pages.nist.gov/800-63-3/sp800-63b.html>
+12. NIST SP 800-63B-4 - Passwords (draft/revision). <https://pages.nist.gov/800-63-4/sp800-63b/passwords/>
+13. IETF RFC 854 - Telnet Protocol Specification. <https://www.rfc-editor.org/rfc/rfc854.html>
+14. IETF RFC 857 - Telnet Echo Option. <https://www.rfc-editor.org/rfc/rfc857>
+15. P-H-C - Argon2, winner of the Password Hashing Competition (reference implementation). <https://github.com/P-H-C/phc-winner-argon2>
+16. Argon2 - Wikipedia (PHC 2015 winner; Argon2i/d/id variants). <https://en.wikipedia.org/wiki/Argon2>
+17. CyberArk - "Don't Trust This Title: Abusing Terminal Emulators with ANSI Escape Characters." <https://www.cyberark.com/resources/threat-research-blog/dont-trust-this-title-abusing-terminal-emulators-with-ansi-escape-characters>
+18. InfosecMatter - Terminal Escape Injection. <https://www.infosecmatter.com/terminal-escape-injection/>
+19. SentinelOne - CVE-2025-55754 (Apache Tomcat ANSI escape injection in logs). <https://www.sentinelone.com/vulnerability-database/cve-2025-55754/>
+20. Discworld MUD Wiki - Stunnel (TLS wrapping for MUDs). <https://dwwiki.mooo.com/wiki/Stunnel>
+21. LDMud Documentation - Transport Layer Security. <https://abathur.github.io/ldmud-doc/build/html/topics/tls.html>
+22. Mudlet Wiki - Sample TLS Configuration. <https://wiki.mudlet.org/w/Sample_TLS_Configuration>
+23. pip-audit - Python dependency vulnerability scanner (PyPI). <https://pypi.org/project/pip-audit/>
+24. Cloudflare - Slowloris DDoS Attack. <https://www.cloudflare.com/learning/ddos/ddos-attack-tools/slowloris/>
+25. CMU Software Engineering Institute - Mitigating Slowloris. <https://www.sei.cmu.edu/blog/mitigating-slowloris/>
+26. SQLite - Write-Ahead Logging. <https://sqlite.org/wal.html>
+27. Python Standard Library - `hmac.compare_digest` (constant-time comparison). <https://docs.python.org/3/library/hmac.html>
 
 ---
 
