@@ -51,26 +51,18 @@ else
   die "No .venv found. Run 'make env' first, then start the ritual."
 fi
 
-# --- 1. IGNITION: the gates (parity with CI -- check AND the coverage threshold) --
-# CI gates on `make check` AND `make coverage` (>= threshold). The ritual must gate on
-# the same set, or a green ritual gives false assurance about code CI would reject.
+# --- 1. IGNITION: the gates -- lint · types · full suite WITH coverage (one run) --
+# `make check` folds coverage into a single suite run (no double execution), and enforces
+# the threshold. Parity with CI, which runs the same `make check`.
 IGN_TESTS=""; IGN_COV=""
 spark_line "Ignition -- running the gates (lint · types · tests · coverage)..."
 if make check >/tmp/ritual-check.log 2>&1; then
-  # `make check` runs pytest twice (suite, then property) -- sum both, not just the last,
-  # so the banked count is the true total, never the trailing property-only number.
   IGN_TESTS="$(grep -Eo '[0-9]+ passed' /tmp/ritual-check.log | awk '{s+=$1} END{if(s)print s" passed"}')"
-  ok "All gates green. ${IGN_TESTS:-tests passed}."
+  IGN_COV="$(grep -Eo 'Total coverage: [0-9.]+%' /tmp/ritual-check.log | tail -1 | sed 's/Total coverage: //')"
+  ok "All gates green. ${IGN_TESTS:-tests passed}${IGN_COV:+ · coverage $IGN_COV}."
 else
   printf '%b' "$DIM"; tail -20 /tmp/ritual-check.log; printf '%b' "$OFF"
   die "A gate is red -- the forge stays cold. Fix it (see /tmp/ritual-check.log), then start the ritual again."
-fi
-if make coverage >/tmp/ritual-coverage.log 2>&1; then
-  IGN_COV="$(grep -Eo 'Total coverage: [0-9.]+%' /tmp/ritual-coverage.log | tail -1 | sed 's/Total coverage: //')"
-  ok "Coverage gate met${IGN_COV:+ ($IGN_COV)}."
-else
-  printf '%b' "$DIM"; tail -12 /tmp/ritual-coverage.log; printf '%b' "$OFF"
-  die "Coverage below threshold -- CI would reject this. Add tests, then start the ritual again."
 fi
 
 # --- 2. WARDS: security posture (SAST + secrets gate; dependency CVEs warn) --

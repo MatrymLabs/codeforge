@@ -7,6 +7,15 @@ pre-1.0. Readiness language only — no compliance/OSHA/legal claims.
 ## [Unreleased]
 
 ### Added / Changed
+- **Ritual audit batch 2 — no double suite run, and a shutdown push-ready gate.**
+  `make check` now folds coverage into a **single** suite run (`lint · types · pytest
+  --cov · threshold`) instead of running the suite once for `check` and again for
+  `coverage`; the startup ritual and CI drop the redundant second run (~15s off each).
+  `complete the ritual` gains a **PUSH READINESS** phase: `commit_ready` / `push_ready`
+  verdicts that name every blocker (staged `.env` or generated/state files, committed
+  secrets, broken imports, red gates) and are banked in the after-action record. It never
+  pushes — it makes the unsafe choice loud. `make check` in the gate is change-aware (runs
+  only when unpushed commits exist).
 - **Ritual modes — `make ritual-fast` (~1s preflight).** Automation Enhancement Audit,
   batch 1 (additive, zero renames/deletions): a read-only fast door for daily coding —
   imports · registry · truth GATE red, lint/types/claims WARN yellow, no suite/network/
