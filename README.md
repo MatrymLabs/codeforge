@@ -184,6 +184,35 @@ tests and evidence prove each claim; I direct, review, and make the calls. What 
 this *engineering* and not "AI wrote it" is the same thing that proves any engineering —
 the tests, the gates, and the green CI you can run yourself.
 
+## Evaluation
+
+Don't take the claims above on faith — **run the scorecard.**
+[**forge-audit**](https://github.com/MatrymLabs/forge-audit) is a separate proof-tool that
+runs the quality gates on any repo (with the repo's *own* toolchain) and emits a JSON
+verdict graded against objective stage thresholds. Here is its current reading of this
+repo, at the **intermediate** stage (coverage floor 80%, CI-workflow-file floor 2):
+
+```
+$ forge-audit --path ./codeforge --stage intermediate --online
+```
+
+| Dimension | Verdict | Evidence |
+|---|---|---|
+| lint | ✅ pass | clean (`ruff`) |
+| typecheck | ✅ pass | clean (`mypy`) |
+| tests | ✅ pass | green suite, coverage 94% ≥ 80% |
+| security | ✅ pass | clean (`bandit`, medium+ severity) |
+| dependencies | ✅ pass | clean (`pip-audit`) |
+| ci | 🔶 watchlist | 1 workflow **file** < 2 for this stage |
+| collaboration | ✅ pass | 12 merged PRs |
+| **overall** | **🔶 watchlist** | **role signals: testing · security · backend · collaboration** |
+
+The one watchlist item is honest and left in on purpose: forge-audit counts workflow
+*files*, and CodeForge runs its `check` and `docker` jobs as two jobs inside a single
+`ci.yml`. A rigged all-green would be a *weaker* signal than a scorecard that shows where
+it bites — the tool grades this repo by the same rule it grades any other. At the `entry`
+stage the verdict is a clean **pass**.
+
 ## The card catalog
 
 Generated from the `CARD:` docstrings in `parts/` (see `make store`):
