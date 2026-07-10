@@ -67,7 +67,7 @@ Status labels are defined at the bottom of this doc. Grounded in the inventory a
 | MkDocs / Material | Docs | `portfolio_candidate` | Could publish `docs/` to the portfolio page. Not needed while Markdown reads well. |
 | pdoc | Docs | `optional_dev_tool` | Zero-config API docs from existing CARD docstrings. Nice-to-have. |
 | Sphinx | Docs | `research_only` | Heavyweight; reserve for a real API surface, not now. |
-| uv | Packaging | `research_more` | Could speed CI installs; decide after current setuptools flow is proven. |
+| uv | Packaging / CI | `integrate_now` (done, CI) | Measured: CI install step ~19s -> ~6s. Rust parallel resolver; CI-only (`uv pip install --system`), not a runtime/pyproject dep. |
 | Poetry / Hatch / PDM | Packaging | `research_only` | setuptools + pyproject already works; no reproducibility gap to close. |
 | Typer / Click | CLI | `integrate_later` | Better UX later; today would add a framework the CLI does not need. |
 | Rich | CLI | `do_not_integrate_yet` | Plain-text renders are deterministic and testable; color would complicate test twins. |
@@ -106,7 +106,8 @@ Status labels are defined at the bottom of this doc. Grounded in the inventory a
 2. **pdoc** (`optional_dev_tool`) to auto-generate API docs from the CARD docstrings already written.
 
 **Not worth adding yet (3):**
-1. **Poetry / uv / Hatch** (`research_more`) - no reproducibility gap; setuptools + pinned deps works.
+1. **Poetry / Hatch** (`research_more`) - no reproducibility gap; setuptools + pinned deps works.
+   (uv was adopted for CI installs only - measured ~19s -> ~6s - but the build backend stays setuptools.)
 2. **Rich / Typer** (`do_not_integrate_yet`) - would dilute the frameless CLI and complicate test twins.
 3. **pluggy / stevedore** (`internal_custom`) - the registry is already the native version.
 
