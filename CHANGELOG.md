@@ -7,6 +7,15 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
 ## [Unreleased]
 
 ### Added / Changed
+- **Readiness dashboard (the full-stack proof).** A read-only, server-rendered web page
+  (`parts/dashboard.py`, MOD-UM10-S01-N001-014-R0) that projects real forge evidence, the
+  career board, the QualityGate audit, the hardware store, and the latest `make bench` run,
+  onto four cards, with a JSON twin at `GET /api/status` (the seam a future React front end
+  consumes). Frameless: stdlib `html.escape` + f-strings, no template engine and no new
+  dependency; semantic HTML5, responsive CSS grid, and accessibility basics (skip link,
+  `aria-label`s, `:focus-visible`, text status badges). Mounted on the existing FastAPI app
+  at `GET /`; fails honest (a broken source renders a red card, never a 500). Tested with 12
+  cases (routes, real-data binding, HTML escaping, honest-failure). See `docs/dashboard.md`.
 - **Portfolio readiness scaffolding.** Captured the 2026 hiring/portfolio/full-stack research
   under docs/research/, added an honest hiring_requirement_matrix, github_portfolio_checklist,
   and full_stack_readiness_checklist (VeritasGate-labeled), and added GitHub issue templates

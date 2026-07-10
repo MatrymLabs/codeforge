@@ -13,19 +13,20 @@
 - [x] Tests (435, 91.5% coverage) + quality gates (`make check`)
 - [x] Security boundaries (bandit, Scorecard, CodeQL, secret scan, SBOM)
 - [x] Containerized (Dockerfile, CI docker smoke, live demo)
-- [~] Documented API - FastAPI admin exists but the contract is not yet showcased/OpenAPI-surfaced
+- [x] Documented API - FastAPI admin + read-only `GET /api/status`; OpenAPI at `/docs`, linked from the dashboard nav
 - [~] Database - SQLite via SQLAlchemy (deliberate embedded choice; not PostgreSQL)
 - [ ] Migrations tool (Alembic) - `codeforge migrate-db` exists; not a full migration framework
 
-## Frontend (the gap being closed)
+## Frontend (phase 1 shipped)
 
-- [~] Semantic HTML proof - one gateway page (`parts/web/index.html`); dashboard planned
-- [ ] CSS layout proof - responsive, accessible stylesheet (planned with the dashboard)
-- [ ] Responsive design proof (planned)
-- [ ] Accessibility basics (labels, focus, keyboard nav) (planned)
-- [ ] Static or server-rendered dashboard (planned: FastAPI server-rendered, real data)
-- [ ] Report display page (planned: career/QA/hardware/perf views)
-- [ ] Browser/E2E tests for the dashboard (planned)
+- [x] Semantic HTML proof - server-rendered `header/nav/main/section/footer` (`parts/dashboard.py`)
+- [x] CSS layout proof - responsive stylesheet, CSS grid `auto-fit` card board (inline, frameless)
+- [x] Responsive design proof - `minmax(240px,1fr)` grid + viewport meta, reflows on narrow screens
+- [x] Accessibility basics - `lang`, skip link, `aria-label`led regions, `:focus-visible`, text status badges (not color alone)
+- [x] Server-rendered dashboard - `GET /`, real data (career / QA / hardware / perf), no framework
+- [x] Report display page - the four evidence cards render the actual renderers' data
+- [x] Route + render tests (`tests/test_dashboard.py`, 12 cases incl. escaping + honest-failure)
+- [ ] Browser/E2E tests (Playwright) - deferred to phase 2 with the React front end
 
 ## Decisions (from the pioneer questions, 2026-07-10)
 
@@ -50,6 +51,7 @@
 
 ## Honest labels
 
-- Dashboard: **planned** (not yet built).
-- Next.js/TS front end: **planned** (separate repo, phase 2).
-- FastAPI admin: **working** (backend); its public API contract: **needs docs/showcase**.
+- Dashboard: **built** (phase 1) - server-rendered, real data, tested; see `docs/dashboard.md`.
+- Next.js/TS front end: **planned** (separate repo, phase 2, the full-stack-developer target).
+- FastAPI admin: **working** (backend); public API contract now **surfaced** (`/api/status`, `/docs`).
+- Browser/E2E (Playwright): **planned** (phase 2, alongside the React front end).
