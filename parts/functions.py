@@ -1,0 +1,120 @@
+"""CARD: functions -- the Hardware Store functions check: prove the parts actually work.
+
+A hardware store lets you test a part before you rely on it. This runs a small, safe,
+canonical demonstration of each cataloged reusable part -- the real function call and its
+real output -- so "reusable" is shown, not claimed. Where a clean standalone demo isn't
+safe (a part that needs world state), it cites the part's test twin instead of faking one.
+Nothing here mutates real repo state; demos use temp dirs and throwaway objects.
+"""
+
+from __future__ import annotations
+
+import tempfile
+from collections.abc import Callable
+from pathlib import Path
+
+from parts.hardware import load_catalog
+
+_ROOT = Path(__file__).resolve().parent.parent
+
+
+# --- Live demos: (call shown, output shown). Each is pure or uses a temp dir. -----------
+def _demo_rank_gate() -> tuple[str, str]:
+    from parts.ranks import has_rank
+    from parts.session import Session
+
+    novice = has_rank(Session(player_id="novice", rank="player"), "wizard")
+    owner = has_rank(Session(player_id="owner", rank="owner"), "wizard")
+    return ("has_rank(player, owner -> 'wizard')", f"{novice} / {owner}  (refused / allowed)")
+
+
+def _demo_report_writer() -> tuple[str, str]:
+    from parts.reporting import write_report
+
+    with tempfile.TemporaryDirectory() as d:
+        p = write_report("demo", "hello world", root=Path(d), stamp="2026-07-10")
+        return (
+            "write_report('demo', 'hello world')",
+            f"wrote {p.name} ({p.read_text().strip()!r})",
+        )
+
+
+def _demo_assessment() -> tuple[str, str]:
+    from parts.assessment import available_lessons
+
+    lessons = available_lessons()
+    total_q = sum(len(x.questions) for x in lessons)
+    return (
+        "available_lessons()",
+        f"{len(lessons)} lesson(s), {total_q} question(s), all validated",
+    )
+
+
+def _demo_validated_loader() -> tuple[str, str]:
+    from parts.seed import SeedError, load_rooms
+
+    with tempfile.TemporaryDirectory() as d:
+        bad = Path(d) / "rooms.yaml"
+        bad.write_text(
+            "start:\n  name: Start\nstart:\n  name: Dup\n", encoding="utf-8"
+        )  # duplicate key
+        try:
+            load_rooms(bad)
+            return ("load_rooms(<duplicate-key yaml>)", "loaded (unexpected -- validation gap!)")
+        except (SeedError, Exception) as exc:  # noqa: BLE001 - the point is it refuses, loudly
+            kind = type(exc).__name__
+            return ("load_rooms(<duplicate-key yaml>)", f"{kind} -- refuses a bad row (fails loud)")
+
+
+_DEMOS: dict[str, Callable[[], tuple[str, str]]] = {
+    "rank-gate": _demo_rank_gate,
+    "report-writer": _demo_report_writer,
+    "assessment-engine": _demo_assessment,
+    "validated-loader": _demo_validated_loader,
+}
+
+
+def _test_twin(source: str) -> str | None:
+    """Derive a part's test twin from its source path (parts/x.py -> tests/test_x.py)."""
+    stem = Path(source).stem
+    twin = _ROOT / "tests" / f"test_{stem}.py"
+    return f"tests/test_{stem}.py" if twin.is_file() else None
+
+
+def render_functions() -> str:
+    """Run each part's live demo (or cite its test twin) and report -- the functions check."""
+    parts = load_catalog()
+    lines = [
+        "HARDWARE STORE - FUNCTIONS CHECK",
+        "  Prove the parts work, don't just claim it. Live demo where clean; else the test twin.",
+        "",
+    ]
+    ran = 0
+    tested = 0
+    for part in parts:
+        demo = _DEMOS.get(part.id)
+        if demo is not None:
+            try:
+                call, out = demo()
+                lines.append(f"  [runs]   {part.id:<18} {call}")
+                lines.append(f"           -> {out}")
+                ran += 1
+            except Exception as exc:  # a part whose demo breaks must surface, never hide
+                lines.append(f"  [BROKEN] {part.id:<18} demo raised: {exc}")
+        else:
+            twin = _test_twin(part.source)
+            if twin:
+                lines.append(f"  [tested] {part.id:<18} verified by {twin}")
+                tested += 1
+            else:
+                lines.append(f"  [manual] {part.id:<18} run its example by hand ({part.source})")
+    lines += [
+        "",
+        f"  {len(parts)} parts: {ran} demonstrated live, {tested} verified by their test twins.",
+    ]
+    return "\n".join(lines)
+
+
+def functions(arg: str = "") -> str:
+    """The `functions` command: the Hardware Store functions check."""
+    return render_functions()

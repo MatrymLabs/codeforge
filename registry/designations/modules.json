@@ -1195,5 +1195,34 @@
     "aliases": [],
     "created": "2026-07-10",
     "updated": "2026-07-10"
+  },
+  {
+    "designation": "MOD-UM05-S01-N001-004-R0",
+    "name": "functions",
+    "status": "active",
+    "function": "Functions check: run each cataloged part's live demo, or cite its test twin.",
+    "label": "functions",
+    "file": "parts/functions.py",
+    "type": "MOD",
+    "domain": "UM05",
+    "sector": "S01",
+    "node": "N001",
+    "sequence": "004",
+    "revision": "R0",
+    "docs": "catalog/README.md",
+    "tests": "tests/test_functions.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "module",
+      "hardware",
+      "demo"
+    ],
+    "notes": "",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-10",
+    "updated": "2026-07-10"
   }
 ]

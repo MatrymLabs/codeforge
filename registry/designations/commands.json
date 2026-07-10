@@ -483,5 +483,35 @@
     "aliases": [],
     "created": "2026-07-10",
     "updated": "2026-07-10"
+  },
+  {
+    "designation": "CMD-UM05-S01-N001-002-R0",
+    "name": "`functions`",
+    "status": "active",
+    "function": "Hardware Store functions check: run a live demo of each reusable part.",
+    "label": "functions",
+    "file": "parts/functions.py",
+    "type": "CMD",
+    "domain": "UM05",
+    "sector": "S01",
+    "node": "N001",
+    "sequence": "002",
+    "revision": "R0",
+    "docs": "catalog/README.md",
+    "tests": "tests/test_functions.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "command",
+      "hardware",
+      "reuse",
+      "demo"
+    ],
+    "notes": "",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-10",
+    "updated": "2026-07-10"
   }
 ]
