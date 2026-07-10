@@ -286,6 +286,19 @@
             ],
             "status": "proven",
             "next_proof_task": "Catalog more reusable parts as they mature, each with a reuse map."
+          },
+          {
+            "skill_id": "inter.web.fullstack_surface",
+            "skill": "Build a full-stack web surface (backend API + server-rendered frontend)",
+            "why_it_matters": "Full-stack roles want a Python backend plus a real browser surface; a recurring 2026 ask (see docs/research).",
+            "repo_proof": [
+              "parts/api.py",
+              "parts/dashboard.py",
+              "parts/blueprint_render.py",
+              "docs/dashboard.md"
+            ],
+            "status": "proven",
+            "next_proof_task": "Add a decoupled React/TypeScript front end (separate flagship) consuming GET /api/status."
           }
         ]
       },

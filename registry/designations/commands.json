@@ -543,5 +543,34 @@
     "aliases": [],
     "created": "2026-07-10",
     "updated": "2026-07-10"
+  },
+  {
+    "designation": "CMD-UM10-S01-N001-016-R0",
+    "name": "`blueprint`",
+    "status": "active",
+    "function": "Blueprint: browse, read, or render a forged plan (idea -> spec -> HTML).",
+    "label": "blueprint",
+    "file": "parts/blueprint.py",
+    "type": "CMD",
+    "domain": "UM10",
+    "sector": "S01",
+    "node": "N001",
+    "sequence": "016",
+    "revision": "R0",
+    "docs": "docs/blueprint_renderer.md",
+    "tests": "tests/test_blueprint.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "command",
+      "blueprint",
+      "renderer"
+    ],
+    "notes": "",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-10",
+    "updated": "2026-07-10"
   }
 ]

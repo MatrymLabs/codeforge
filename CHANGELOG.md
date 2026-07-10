@@ -7,6 +7,20 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
 ## [Unreleased]
 
 ### Added / Changed
+- **Blueprint renderer (the forge's planning spine).** An idea becomes a validated Blueprint
+  (`parts/blueprint.py`, MOD-UM10-S01-N001-015-R0): a fail-loud model (JSON record + Markdown
+  twin, frozen `lowercase_snake_case` identity), then a static, accessible HTML page
+  (`parts/blueprint_render.py`, MOD-UM10-S01-N001-016-R0). Frameless: stdlib `json`/`re`/
+  `html.escape`, no template engine and no new dependency. Reachable through the tick via a
+  `blueprint list | show <id> | render <id>` verb (CMD-UM10-S01-N001-016-R0), pinned by an
+  engine-tick test; JSON is canonical, Markdown/HTML are projections (law 1); rendered pages
+  are regenerable evidence under `reports/blueprints/` (git-ignored). Ships one example
+  (`blueprints/examples/npc_combat`), 32 test cases (validation with hostile cases, files,
+  the verb, HTML escaping), and a new intermediate career-board skill (full-stack web
+  surface, proof on disk). Filed with the decision report + scored matrix
+  (`docs/full_stack_forge_decision.md`, `docs/framework_decision_matrix.md`,
+  `docs/blueprint_renderer.md`): CodeForge is architecture-first Python; Django/Evennia/React
+  stay researched and deferred.
 - **Readiness dashboard (the full-stack proof).** A read-only, server-rendered web page
   (`parts/dashboard.py`, MOD-UM10-S01-N001-014-R0) that projects real forge evidence, the
   career board, the QualityGate audit, the hardware store, and the latest `make bench` run,
