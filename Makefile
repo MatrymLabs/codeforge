@@ -27,7 +27,11 @@ test:
 property:
 	pytest -m property
 
-check: lint typecheck test property
+# The full gate. `coverage` runs the WHOLE suite (property included) once, WITH
+# instrumentation and the threshold -- so `check` covers, tests, and gates in a single
+# suite run instead of two. `test`/`property` remain as fast, focused, no-coverage
+# targets for the inner dev loop; `make ritual-fast` is the ~1s preflight.
+check: lint typecheck coverage
 
 # --- Readiness: the global self-audit -- registry validates (gates), then the
 # project dashboard, computed from the registry + QualityGate. Read-only. ---

@@ -23,11 +23,10 @@ jobs:
           python -m pip install --upgrade pip
           pip install -e ".[dev]"
 
-      - name: Run the ritual
+      # `make check` folds coverage into a single suite run (lint · types · pytest --cov
+      # · threshold) and writes coverage.xml -- no separate coverage step needed.
+      - name: Run the gates (check = lint · types · tests+coverage)
         run: make check
-
-      - name: Coverage report
-        run: make coverage
 
       # Upload coverage to Codecov. Non-blocking: a Codecov outage or a missing
       # token must never turn the portfolio's build red. Public repo uploads work
