@@ -369,3 +369,29 @@
     manufacturing: "a work order or machine mode: idle to running to fault to maintenance"
     compliance: "a control's status: current to proposed to final to superseded to withdrawn"
     general: "any lifecycle where only certain transitions are legal"
+
+- id: score-sheet-renderer
+  name: Character Score Sheet Renderer
+  source: parts/score_sheet.py
+  category: presentation
+  tags: [view-model, fixed-width, renderer, dashboard, report]
+  maturity: beta
+  source_status: original
+  license: MIT
+  influence: "view-model / MVVM separation - render from a projection, not the database (original)"
+  experimental: >-
+    render through a template engine (Jinja) or a TUI toolkit (rich/textual), or emit HTML or
+    JSON for a web view. Traded away: a dependency; kept a dependency-free fixed-width renderer
+    pinned by one golden snapshot.
+  risk: low
+  reuse_score: 5
+  purpose: >
+    Turn a structured record into a readable, fixed-width sheet from a decoupled view model
+    (not database fields), surviving long names, missing optional fields, and unknown values
+    without breaking the frame.
+  reuse:
+    game: "the character score sheet - identity, stats, jobs, equipment, resistances"
+    business: "a personnel dashboard or an employee skills matrix"
+    education: "a training transcript or a certification profile"
+    manufacturing: "a maintenance status board or an equipment qualification record"
+    general: "any fixed-width record view rendered from a view model"

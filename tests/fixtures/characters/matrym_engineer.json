@@ -1,0 +1,39 @@
+{
+  "display_name": "Matrym",
+  "player_level": 12,
+  "current_xp": 4820,
+  "next_level_xp": 5400,
+  "hp": [142, 142],
+  "mp": [38, 38],
+  "jp": 1150,
+  "race": "Human",
+  "guild": "The Forgebound",
+  "rank_title": "Builder II",
+  "primary_job": "Engineer",
+  "primary_job_level": 9,
+  "secondary_job": null,
+  "counter": "Emergency Repair",
+  "movement": "Field Deployment",
+  "inherent": "Systems Thinking",
+  "signature": "Forge Overdrive",
+  "tp_rows": [
+    { "label": "Engineer", "current": 340, "required": 500 },
+    { "label": "Secondary", "current": 90, "required": 500 }
+  ],
+  "attributes": { "STR": 18, "SPD": 22, "MAG": 9, "STA": 14, "WIS": 7, "LUCK": 16 },
+  "derived": { "ATK": 46, "DEF": 29, "EVA": 33, "MAG DEF": 24, "ACC": 71 },
+  "equipment": {
+    "weapon": "Modular Forge Wrench",
+    "body": "Workshop Field Coat",
+    "head": "Diagnostic Visor",
+    "arm": "Reinforced Work Bracers",
+    "accessory_1": "Calibration Gauge",
+    "accessory_2": "Veteran's Multitool"
+  },
+  "resistances": {
+    "FIR": "Normal", "ICE": "Normal", "LGT": "Weak", "WND": "Resist",
+    "ERT": "Resist", "WTR": "Normal", "HLY": "Normal", "DRK": "Normal",
+    "PSN": "Resist", "CRS": "Normal"
+  },
+  "key_item": "Workshop Key"
+}
