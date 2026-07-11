@@ -2090,5 +2090,32 @@
     "aliases": [],
     "created": "2026-07-11",
     "updated": "2026-07-11"
+  },
+  {
+    "designation": "MOD-UM10-S01-N001-022-R0",
+    "name": "verdicts",
+    "status": "active",
+    "function": "the shared readiness verdict vocabulary: one home for pass/fail/watch/n/a",
+    "label": "verdicts",
+    "file": "parts/verdicts.py",
+    "type": "MOD",
+    "domain": "UM10",
+    "sector": "S01",
+    "node": "N001",
+    "sequence": "022",
+    "revision": "R0",
+    "docs": "docs/safety_qa_system.md",
+    "tests": "tests/test_verdicts.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "module"
+    ],
+    "notes": "",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-11",
+    "updated": "2026-07-11"
   }
 ]

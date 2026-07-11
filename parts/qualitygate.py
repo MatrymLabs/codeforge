@@ -11,10 +11,9 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 from parts.registry import Designation, load_collective
+from parts.verdicts import FAIL, NA, PASS, WATCH
 
 _ROOT = Path(__file__).resolve().parent.parent
-
-PASS, FAIL, NA = "pass", "fail", "n/a"
 
 # --- Quality gate -----------------------------------------------------------
 
@@ -127,7 +126,7 @@ def run_gate(
     verdict = (
         FAIL
         if any(c.result == FAIL and c.check_id in hard for c in checks)
-        else ("watch" if any(c.result == FAIL and c.check_id in soft for c in checks) else PASS)
+        else (WATCH if any(c.result == FAIL and c.check_id in soft for c in checks) else PASS)
     )
     return GateResult(record.designation, record.type, record.status, verdict, checks)
 
@@ -234,7 +233,7 @@ def render_gate(designation: str) -> str:
 
 def render_gate_all() -> str:
     results = gate_all()
-    tally = {PASS: 0, "watch": 0, FAIL: 0}
+    tally = {PASS: 0, WATCH: 0, FAIL: 0}
     for r in results:
         tally[r.verdict] += 1
     lines = [
@@ -243,9 +242,7 @@ def render_gate_all() -> str:
         f"{tally[PASS]} pass, {tally['watch']} watch, {tally[FAIL]} fail.",
         "",
     ]
-    for r in sorted(
-        results, key=lambda x: (x.verdict != FAIL, x.verdict != "watch", x.designation)
-    ):
+    for r in sorted(results, key=lambda x: (x.verdict != FAIL, x.verdict != WATCH, x.designation)):
         if r.verdict != PASS:
             gap = ", ".join(c.check_id for c in r.checks if c.result == FAIL)
             lines.append(f"  {r.verdict.upper():5} {r.designation:26} (gaps: {gap})")

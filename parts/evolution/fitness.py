@@ -12,6 +12,8 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 
 from parts.evolution.evaluators import EvaluatorResult
+from parts.verdicts import FAIL as _FAIL
+from parts.verdicts import PASS as _PASS
 
 # The weighted objectives and their weights (v1 defaults; visible and documented on purpose).
 WEIGHTS: tuple[tuple[str, float], ...] = (
@@ -19,8 +21,6 @@ WEIGHTS: tuple[tuple[str, float], ...] = (
     ("documentation", 0.2),
     ("maintainability", 0.3),
 )
-
-_PASS, _FAIL = "pass", "fail"
 
 
 @dataclass(frozen=True)

@@ -15,8 +15,7 @@ from dataclasses import dataclass
 
 from parts.stewardship.change import ChangeDescriptor
 from parts.stewardship.risk import RiskAssessment, assess_risk
-
-PASS, FAIL = "pass", "fail"
+from parts.verdicts import FAIL, PASS
 
 
 @dataclass(frozen=True)
