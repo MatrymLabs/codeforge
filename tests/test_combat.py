@@ -135,3 +135,43 @@ def test_defeating_an_enemy_awards_jp():
             break
     assert "JP (Engineer)" in out  # the kill line reports the JP award
     assert s.job_progress["engineer"].jp > 0
+
+
+def test_tp_accrues_to_the_active_job():
+    s = _fighter("engineer")
+    from parts.combat import award_tp
+
+    award_tp(s, 120)
+    assert s.job_progress["engineer"].tp == 120
+
+
+def test_no_active_job_earns_no_tp():
+    from parts.combat import award_tp
+
+    assert award_tp(Session(player_id="matrym"), 50) == ""
+
+
+def test_earned_tp_persists_for_a_named_character():
+    from parts.characters import load_character, restore_character
+    from parts.combat import award_tp
+
+    s = Session(player_id="matrym", location="courtyard", named=True)
+    SESSIONS["matrym"] = s
+    bind_calling(s, "engineer")
+    award_tp(s, 75)
+    fresh = Session(player_id="matrym")
+    record = load_character("matrym")
+    assert record is not None
+    restore_character(fresh, record)
+    assert fresh.job_progress["engineer"].tp == 75
+
+
+def test_defeating_an_enemy_awards_tp():
+    s = _fighter("engineer")
+    out = ""
+    for _ in range(10):
+        out = attack(s, "dummy")
+        if "reassembles" in out:
+            break
+    assert "TP (Engineer)" in out
+    assert s.job_progress["engineer"].tp > 0

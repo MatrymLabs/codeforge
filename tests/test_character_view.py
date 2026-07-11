@@ -84,3 +84,21 @@ def test_the_sheet_shows_declared_resistances_and_normal_otherwise() -> None:
     assert sheet.resistances["ERT"] == "Resist"
     assert sheet.resistances["FIR"] == "Normal"  # undeclared -> Normal, never unknown
     assert len(sheet.resistances) == 10  # all ten elements present
+
+
+def test_milestone_perks_raise_derived_stats_when_unlocked() -> None:
+    from parts.character_view import TP_MILESTONE, perks_unlocked, sheet_from_session
+    from parts.job_progress import JobProgress
+    from parts.jobs import JOBS, bind_calling
+    from parts.session import Session
+
+    s = Session(player_id="matrym")
+    bind_calling(s, "engineer")
+    base = sheet_from_session(s)
+    assert base is not None
+    base_def = base.derived["DEF"]
+    s.job_progress["engineer"] = JobProgress("engineer", tp=TP_MILESTONE)  # unlock perk 1
+    assert len(perks_unlocked(JOBS["engineer"], TP_MILESTONE)) == 1
+    boosted = sheet_from_session(s)
+    assert boosted is not None
+    assert boosted.derived["DEF"] == base_def + 4  # Reinforced Frame +4 DEF
