@@ -69,3 +69,18 @@ def test_sheet_from_a_live_session_reads_real_progress() -> None:
 
 def test_a_session_with_no_calling_has_no_sheet() -> None:
     assert sheet_from_session(Session(player_id="matrym")) is None
+
+
+def test_the_sheet_shows_declared_resistances_and_normal_otherwise() -> None:
+    from parts.character_view import sheet_from_session
+    from parts.jobs import bind_calling
+    from parts.session import Session
+
+    s = Session(player_id="matrym")
+    bind_calling(s, "engineer")
+    sheet = sheet_from_session(s)
+    assert sheet is not None
+    assert sheet.resistances["LGT"] == "Weak"  # declared
+    assert sheet.resistances["ERT"] == "Resist"
+    assert sheet.resistances["FIR"] == "Normal"  # undeclared -> Normal, never unknown
+    assert len(sheet.resistances) == 10  # all ten elements present

@@ -61,6 +61,9 @@ DEFAULT_JOB_STATS = {
     "luck": 8,
 }
 
+# The valid resistance levels a job may declare for an element/status. Undeclared reads Normal.
+RESIST_LEVELS = ("Weak", "Normal", "Resist", "Immune", "Absorb")
+
 
 class Room(TypedDict):
     """The shape every room must have."""
@@ -116,6 +119,7 @@ class Job(TypedDict):
     movement: str  # positioning/mobility ability label
     inherent: str  # passive trait label
     signature: str  # defining job ability label
+    resistances: dict[str, str]  # element/status code -> level (Normal/Weak/Resist/Immune/Absorb)
 
 
 class SeedError(Exception):
@@ -338,6 +342,7 @@ def load_jobs(path: Path) -> dict[str, Job]:
             "movement": "",
             "inherent": "",
             "signature": "",
+            "resistances": {},
         }
         merged.update(template)
         merged.update(fields)
@@ -355,6 +360,7 @@ def load_jobs(path: Path) -> dict[str, Job]:
                 ("movement", str),
                 ("inherent", str),
                 ("signature", str),
+                ("resistances", dict),
             ),
         )
         stats = dict(DEFAULT_JOB_STATS) | dict(merged["stats"])
@@ -364,6 +370,11 @@ def load_jobs(path: Path) -> dict[str, Job]:
         for list_field in ("role_tags", "abilities"):
             if not all(isinstance(entry, str) for entry in merged[list_field]):
                 raise SeedError(f"job '{label}': every {list_field} entry must be a string")
+        for code, level in merged["resistances"].items():
+            if level not in RESIST_LEVELS:
+                raise SeedError(
+                    f"job '{label}': resistance '{code}' must be one of {RESIST_LEVELS}"
+                )
         jobs[label] = Job(
             name=merged["name"],
             description=merged["description"],
@@ -375,5 +386,6 @@ def load_jobs(path: Path) -> dict[str, Job]:
             movement=merged["movement"],
             inherent=merged["inherent"],
             signature=merged["signature"],
+            resistances=dict(merged["resistances"]),
         )
     return jobs
