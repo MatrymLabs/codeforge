@@ -124,22 +124,19 @@ def _one_part(pid: str, name: str = "X") -> str:
 
 
 def test_the_catalog_is_parsed_once_and_cached(tmp_path):
-    from parts.hardware import _CATALOG_CACHE
-
+    # conftest clears the shared loader cache before each test, so this starts cold.
     path = _write(tmp_path, _one_part("alpha"))
-    _CATALOG_CACHE.pop(path, None)
     first = load_catalog(path)
     second = load_catalog(path)
     assert first is second  # same object on an unchanged file -> not re-parsed
 
 
 def test_cached_result_equals_a_fresh_parse(tmp_path):
-    from parts.hardware import _CATALOG_CACHE
+    from parts import loader_cache
 
     path = _write(tmp_path, _one_part("alpha"))
-    _CATALOG_CACHE.pop(path, None)
     cached = load_catalog(path)
-    _CATALOG_CACHE.pop(path, None)  # force a genuinely fresh parse
+    loader_cache.clear()  # force a genuinely fresh parse
     fresh = load_catalog(path)
     assert cached == fresh  # Part is a frozen dataclass; equality is by value
 

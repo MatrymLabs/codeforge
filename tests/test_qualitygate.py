@@ -46,6 +46,38 @@ def test_a_complete_object_passes() -> None:
     assert all(c.result != FAIL for c in result.checks)
 
 
+def test_run_gate_honors_the_shared_stat_cache() -> None:
+    # EXP-002: run_gate reads path existence from the shared memo instead of re-stat'ing.
+    # Pre-seed the cache with a lie (the real file DOES exist) and prove the gate trusts it,
+    # which proves the memo is consulted and duplicate stats are eliminated.
+    rec = _rec()  # file=parts/registry.py, tests=tests/test_registry.py (both real)
+    cache = {rec.file: False, rec.tests: False}
+    result = run_gate(rec, stat_cache=cache)
+    qg02 = next(c for c in result.checks if c.check_id == "QG02")
+    qg05 = next(c for c in result.checks if c.check_id == "QG05")
+    assert qg02.result == FAIL  # honored the cache (did not re-stat the real file)
+    assert qg05.result == FAIL  # QG05 reused the same memoized answer, no duplicate stat
+
+
+def test_gate_all_stats_each_path_once(monkeypatch: pytest.MonkeyPatch) -> None:
+    # The whole self-audit stats any given proof path at most once, across all records and
+    # across QG02/QG03/QG05 (which previously re-checked file+tests).
+    from pathlib import Path as _P
+
+    seen: list[str] = []
+    real_exists = _P.exists
+
+    def counting_exists(self: _P) -> bool:
+        seen.append(str(self))
+        return real_exists(self)
+
+    monkeypatch.setattr(_P, "exists", counting_exists)
+    records = [_rec("PRT-UM05-S01-N001-001-R0"), _rec("PRT-UM05-S01-N001-002-R0")]
+    gate_all(records)
+    # Two records x {file, tests} = 2 distinct paths; each stat'ed once despite QG02/03/05.
+    assert len(seen) == len(set(seen)), f"a path was stat'ed more than once: {seen}"
+
+
 def test_a_built_object_missing_its_file_fails() -> None:
     result = run_gate(_rec(file="parts/ghost.py"))
     assert result.verdict == FAIL

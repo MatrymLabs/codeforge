@@ -17,6 +17,8 @@ from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any
 
+from parts import loader_cache
+
 _ROOT = Path(__file__).resolve().parent.parent  # the repo root (parts/ -> root)
 REGISTRY_DIR = _ROOT / "registry" / "designations"
 
@@ -117,14 +119,25 @@ def _from_dict(raw: Any) -> Designation:
     return Designation(**{key: value for key, value in raw.items() if key in fields})
 
 
-def load_designations(path: Path) -> list[Designation]:
-    """Load one designations file. A missing file is empty, not an error."""
-    if not path.exists():
-        return []
+def _parse_designations(path: Path) -> list[Designation]:
+    """Parse+validate one designations file into records (a bad row raises before caching)."""
     data: Any = json.loads(path.read_text(encoding="utf-8"))
     if not isinstance(data, list):
         raise RegistryError(f"{path.name} must be a list of records")
     return [_from_dict(entry) for entry in data]
+
+
+def load_designations(path: Path) -> list[Designation]:
+    """Load one designations file. A missing file is empty, not an error.
+
+    Parsed once and reused until the file changes on disk, via the shared mtime-guarded
+    loader cache (the registry is immutable within a run; the qa-gate self-audit used to
+    re-decode every file on every render). Records are read-only for all callers, so the
+    cached list is shared, not copied -- the same discipline as the Hardware Store catalog.
+    """
+    if not path.exists():
+        return []
+    return loader_cache.load_cached(path, _parse_designations)
 
 
 def load_collective(registry_dir: Path | None = None) -> list[Designation]:

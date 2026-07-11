@@ -12,7 +12,11 @@ def _isolated_database(tmp_path, monkeypatch):
       process. The tests still prove hash/verify/rotate LOGIC, just not the 600k
       strength (that's a production config, not a behavior).
     """
-    from parts import accounts, db
+    from parts import accounts, db, loader_cache
+
+    # The shared parse-once cache is keyed by resolved path + mtime; clear it so a tmp file
+    # reused across tests (same path, coarse mtime granularity) can never serve stale data.
+    loader_cache.clear()
 
     # A DATABASE_URL in the ambient shell must never redirect the suite at a real
     # PostgreSQL: the unit tests always run on a fresh, quarantined SQLite tmp file.
