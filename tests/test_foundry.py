@@ -19,6 +19,7 @@ from parts.foundry import (
     forge_command,
     propose,
     render_proposal,
+    render_proving_ground,
     scaffold_part,
 )
 from parts.session import Session
@@ -152,3 +153,25 @@ def test_forge_is_owner_gated_at_the_tick():
     # An owner reaches it (proposing writes nothing to the real repo).
     allowed = handle_command(Session(player_id="o", rank="owner"), "@forge list")
     assert "proposal" in allowed.lower()
+
+
+# --- the arch: read-only Proving Ground review ------------------------------
+
+
+def test_proving_ground_is_empty_by_default(tmp_path):
+    out = render_proving_ground(root=tmp_path)
+    assert "Nothing forged yet" in out
+
+
+def test_proving_ground_lists_forged_candidates(tmp_path):
+    apply_proposal(approve(_good()), root=tmp_path)  # forge one candidate
+    out = render_proving_ground(root=tmp_path)
+    assert "generated/my_part.py" in out
+    assert "nothing here is wired into the engine" in out
+
+
+def test_arch_is_owner_gated_and_read_only_at_the_tick():
+    denied = handle_command(Session(player_id="p", rank="player"), "@arch")
+    assert "authority" in denied.lower() or "denied" in denied.lower()
+    allowed = handle_command(Session(player_id="o", rank="owner"), "@arch")
+    assert "PROVING GROUND" in allowed
