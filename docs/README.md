@@ -19,6 +19,9 @@ The one map to everything under `docs/`. New here? Read [RUNNING.md](RUNNING.md)
 - [naming_glossary.md](naming_glossary.md), the forge vocabulary.
 - [classification/](classification/), the designation / registry system.
 
+## The game systems
+- [character_system.md](character_system.md), the character system end to end: jobs, attributes, XP/JP/TP progression, combat + the Engineer's kit, equipment, resistances, the score sheet and its display modes. Both a player guide (the commands) and an author guide (the data schema + the derived-stat pipeline).
+
 ## The self-audit systems (how the machine grades itself)
 - [frame_up.md](frame_up.md), `inspect`, the on-demand green/yellow/red frame-up (the audit hub) + the ReportWriter.
 - [veritas.md](veritas.md), `truth check`, claims vs reality (no claim without correspondence).
