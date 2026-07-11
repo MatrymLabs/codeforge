@@ -21,8 +21,9 @@ CodeForge is already on the hybrid path, not starting from zero:
 - **FastAPI is already integrated and ledger-justified** across three surfaces:
   `parts/api.py` (admin API), `parts/web_gateway.py` (WebSocket play), and
   `parts/dashboard.py` (the readiness dashboard: `GET /` + `GET /api/status` + `/docs`).
-- **Persistence:** SQLAlchemy 2.0 / SQLite. **Content:** YAML seeds. Five runtime deps,
-  each justified in `dependency_ledger.toml`. No LLM SDK, no template engine.
+- **Persistence:** SQLAlchemy 2.0 / SQLite. **Content:** YAML seeds. Seven runtime deps,
+  each justified in `dependency_ledger.toml`. No LLM SDK in the default wheel (an optional
+  `ai` extra adds `anthropic`); no template engine.
 - **Gaps:** there was no Blueprint model and no Blueprint renderer (both aspirational
   "coming" markers). The Architect NPC is a **scripted, advisory-only** `LocalArchitect`
   (a swappable seam for a future Claude brain, not an LLM today). The real LLM lives in the
