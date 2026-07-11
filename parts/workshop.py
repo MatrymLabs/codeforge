@@ -29,10 +29,11 @@ _LIVE = (
     ("console / diagnostics", "run allowlisted read-only checks (lint, types, tests, git)"),
     ("security", "run the SAST scan (bandit) on the engine"),
 )
-_COMING = (
-    ("patch proposal", "the Architect proposes an edit for your approval (holodeck phase 9)"),
-    ("arch", "step through to the holodeck to play what you built (owner-only, later)"),
+_OWNER = (
+    ("@forge <name>", "propose a part skeleton (writes nothing until you approve)"),
+    ("@forge approve <name>", "generate the approved candidate into the workspace/ sandbox"),
 )
+_COMING = (("arch", "step through to the holodeck to play what you built (owner-only, later)"),)
 
 
 def workshop_menu() -> str:
@@ -41,6 +42,8 @@ def workshop_menu() -> str:
     lines += [f"  {line}" for line in _INTRO]
     lines += ["", "Live tools:"]
     lines += [f"  {cmd:<28}{desc}" for cmd, desc in _LIVE]
+    lines += ["", "Owner tools (gated, sandboxed - see docs/holodeck/SAFETY.md):"]
+    lines += [f"  {cmd:<28}{desc}" for cmd, desc in _OWNER]
     lines += ["", "Coming (see docs/holodeck/ROADMAP.md):"]
     lines += [f"  {cmd:<28}{desc}" for cmd, desc in _COMING]
     return "\n".join(lines)

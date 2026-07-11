@@ -572,5 +572,35 @@
     "aliases": [],
     "created": "2026-07-10",
     "updated": "2026-07-10"
+  },
+  {
+    "designation": "CMD-UM10-S01-N001-020-R0",
+    "name": "`@forge`",
+    "status": "active",
+    "function": "the Foundry: propose a part skeleton, approve, and generate it into the sandbox (owner-only).",
+    "label": "@forge",
+    "file": "parts/foundry.py",
+    "type": "CMD",
+    "domain": "UM10",
+    "sector": "S01",
+    "node": "N001",
+    "sequence": "020",
+    "revision": "R0",
+    "docs": "docs/holodeck/SAFETY.md",
+    "tests": "tests/test_foundry.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "command",
+      "admin",
+      "foundry",
+      "generation"
+    ],
+    "notes": "ADMIN verb, min_rank owner. Two-step: propose (writes nothing) -> approve -> generate into workspace/ sandbox.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-10",
+    "updated": "2026-07-10"
   }
 ]

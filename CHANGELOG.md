@@ -7,6 +7,17 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
 ## [Unreleased]
 
 ### Added / Changed
+- **Holodeck phases 9-10: the Foundry (human-approved, sandboxed code generation).** The
+  AI-touches-files phases, made safe. `parts/foundry.py` (MOD-UM10-S01-N001-020-R0): a
+  `PatchProposal` is a DATA artifact (target, why, part, risk, test, rollback) - creating one
+  writes NOTHING, and a human must `approve()` it first (phase 9). Applying an approved
+  proposal generates a NEW file into a git-ignored `workspace/` sandbox: it refuses without
+  approval, refuses to overwrite, refuses to escape the sandbox (absolute or `..`), and never
+  touches existing source, config, git, or main (phase 10). In-world it is an owner-only
+  `@forge <name>` -> `@forge approve <name>` verb (CMD-UM10-S01-N001-020-R0; a demo visitor,
+  always rank player, can never reach it). Promoting a candidate into `parts/` stays a human
+  branch -> check -> PR step, per docs/holodeck/SAFETY.md. 17 test cases, refusal-first. The
+  workshop cockpit surfaces it under "Owner tools"; the roadmap marks phases 9-10 done.
 - **The Workshop cockpit is now the real hub.** The in-MUD `workshop` menu advertised
   `blueprint` as "coming" long after it shipped; it now surfaces the genuine live tools:
   catalog/reuse, `blueprint` (browse/show/render/draft with the Claude Architect), `ai`, and

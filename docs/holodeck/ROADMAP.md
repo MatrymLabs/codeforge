@@ -19,8 +19,8 @@ Legend: ✅ done · 🔨 next · 📋 planned · 🧭 later (gated/advanced)
 | 6 | **Diagnostic console** | ✅ | `parts/console.py` (`FailsafeRunner`) runs an **allowlisted, read-only** set as argument lists (no shell), under a timeout + output cap, each run logged. In-world: `console`, `run <check>`, `diagnostics`. Refuses anything off the list. |
 | 7 | **Report system** | ✅ | `parts/reporting.py` (`write_report`) files dated evidence under `reports/<kind>/`; used by the bench, frame-up, repo-integrity, and blueprint renderers. |
 | 8 | **AI planning mode** | ✅ | `blueprint` drafts a structured plan: `blueprint draft <idea>` uses the Claude Architect (schema-enforced `messages.parse`) to author a Blueprint, re-validated through the same gate and always a Tier-4 draft. `parts/blueprint_ai.py`, no direct edits. |
-| 9 | **Safe patch proposal** | 🧭 | The NPC emits a `PatchProposal`: file, why, affected part, catalog update, risk, test, revert. **Human approval required.** |
-| 10 | **Controlled generation** | 🧭 | Only now may the system write files - always: branch first → plan → diff → tests → evidence → rollback path. |
+| 9 | **Safe patch proposal** | ✅ | `parts/foundry.py`: a `PatchProposal` (target, why, part, risk, test, rollback) is a data artifact - creating one writes NOTHING; a human must `approve()` it first. Tested with refusal cases. |
+| 10 | **Controlled generation** | ✅ (sandboxed) | Applying an approved proposal generates a NEW file into a git-ignored `workspace/` sandbox - refuses to overwrite, refuses to escape, files evidence. In-world: owner-only `@forge <name>` then `@forge approve <name>`. It never edits existing source, config, git, or main; promoting a candidate into `parts/` stays a human branch → check → PR step. |
 | 11 | **Full engineering loop** | 🧭 | Request → search parts → clarify → blueprint → approve → generate → test → diagnose → fix → document → catalog → commit summary → evidence, all from the Workshop. |
 | 12 | **Industry expansion** | 🧭 | The catalog's `reuse` tags grow into tracks (gov / finance / compliance / records) - the *framework* for it exists; parts opt in over time. |
 
