@@ -28,7 +28,7 @@ path with `CODEFORGE_CATALOG`.
   source_status: original  # optional (default original) · original | mit | apache-2.0 | ...
   license: MIT             # optional (default MIT) · this repo's own code is MIT
   influence: "…"           # optional · the KNOWN PATTERN it was rebuilt from
-  experimental: "…"        # optional · the road NOT taken: the framework/tool path if not frameless
+  experimental: "…"        # optional · the road NOT taken: the deliberate alternative (framework or frameless)
   reuse:                   # required · non-empty map of domain -> concrete use
     game: "…"
     government: "…"
@@ -64,12 +64,16 @@ path with `CODEFORGE_CATALOG`.
   pattern* a part was rebuilt from (RBAC, pub/sub, allowlist-without-a-shell). The part
   is an original implementation *of the pattern* - the concept is reused, the expression
   is ours.
-- **`experimental` is the road not taken (frameless honesty).** It names the
-  framework/tool path a part *could* take if CodeForge abandoned frameless Python (FastAPI
-  DI, Pydantic, a broker, Jinja2, an LMS), plus what that trade would cost. The point is to
-  show the frameless choice was *deliberate*, made by an engineer who knows the alternatives,
-  not by one who never met them. It is a design note, never a plan; see
-  [`docs/frameless_python.md`](../docs/frameless_python.md).
+- **`experimental` is the road not taken (architecture-first honesty).** CodeForge builds
+  architecture-first, not frameless-at-all-costs: our own architecture is the spine, and a
+  framework earns its place when it proves a skill or does a job stdlib cannot. So this field
+  names the deliberate alternative for a part, *whichever direction*: the framework a
+  frameless part declined (FastAPI DI, a broker, Jinja2), OR the frameless path a
+  framework-adopting part declined (hand-rolled validation instead of Pydantic, raw SQL
+  instead of SQLAlchemy). Either way it shows the choice was made by an engineer who knows
+  the alternatives, plus what the trade costs. A design note, never a plan; see
+  [`docs/frameless_python.md`](../docs/frameless_python.md) and
+  [`docs/full_stack_forge_decision.md`](../docs/full_stack_forge_decision.md).
 - **Add a part when it proves reusable**, not before - the store stocks finished
   parts, not intentions.
 

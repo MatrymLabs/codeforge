@@ -7,6 +7,16 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
 ## [Unreleased]
 
 ### Added / Changed
+- **Hardware Store: broadened horizon (7 -> 13 parts, architecture-first framing).** The
+  reusable-parts catalog now stocks the patterns built this arc: `typed-contract` (Pydantic
+  API models + OpenAPI), `observability` (structured logs + Prometheus metrics), `ai-boundary`
+  (mockable, schema-enforced LLM seam), `backend-seam` (SQLite/PostgreSQL behind one URL
+  resolver + Alembic), `html-projection` (frameless accessible HTML), and `typed-settings`
+  (validated env catalog) - each with a cross-domain reuse map and a real test twin (shown
+  `[tested]` in the `functions` check). The `experimental` field's framing broadened from
+  "the road not taken *if not frameless*" to simply **"road not taken"**: the deliberate
+  alternative in *either* direction (a framework a frameless part declined, or the frameless
+  path a framework-adopting part declined) - matching the architecture-first posture.
 - **Containerized API surface (`Dockerfile.api`).** A second image serves the HTTP API
   (dashboard + typed contracts) on :8000, alongside the gateway image (`Dockerfile` -> `spark`
   on :4000). Because the `/api/status` board audits the codebase itself (career proof paths,

@@ -3,6 +3,12 @@
 # One well-made part, many jobs. Each entry documents where the same engine
 # code serves outside the game. Schema + rules: catalog/README.md.
 # View it: `make hardware`. Validated by parts/hardware.py (fails loud on a bad row).
+#
+# The stance is architecture-first, not frameless-at-all-costs: our own architecture is the
+# spine, and a framework earns its place when it proves a skill or does a job stdlib cannot.
+# So each part records the ROAD NOT TAKEN - the deliberate alternative, whichever direction:
+# a framework we declined (the early frameless parts), or the frameless path we declined
+# (the later parts that adopt Pydantic, SQLAlchemy, structlog, an LLM SDK).
 
 - id: rank-gate
   name: Rank Gate
@@ -182,3 +188,158 @@
     finance: "dated transaction or reconciliation evidence, one filing convention"
     compliance: "dated evidence bundles under a category, reproducible from the commit"
     general: "any project's dated report/evidence writer - stop reinventing the mkdir+path"
+
+- id: typed-contract
+  name: Typed API Contract
+  source: parts/api.py
+  category: api
+  tags: [api, pydantic, openapi, contracts, validation]
+  maturity: shipped
+  source_status: original
+  license: MIT
+  influence: "typed request/response models with schema generation (Pydantic; a framework adopted because it earns its place)"
+  experimental: >-
+    hand-rolled dataclass validation with no schema or OpenAPI generation - the
+    frameless path we declined here, because a documented contract a client can codegen
+    from is worth the dependency. Traded away: zero third-party surface.
+  risk: low
+  reuse_score: 5
+  purpose: >
+    Expose data through typed Pydantic models so the contract validates at the edge and
+    self-documents in OpenAPI: a client generates types from it, and a schema change surfaces
+    as a compile error, not a runtime surprise. Proven by the React/TypeScript console.
+  reuse:
+    game: "the readiness board and blueprint list as typed JSON (/api/status, /api/blueprints)"
+    government: "typed record exchange between systems, with a published schema"
+    finance: "transaction request/response schemas validated at the boundary"
+    compliance: "validated data contracts, the schema itself an evidence artifact"
+    general: "any REST API contract a front end or partner consumes"
+
+- id: observability
+  name: Observability Middleware
+  source: parts/observability.py
+  category: observability
+  tags: [observability, metrics, logging, prometheus, structlog, middleware]
+  maturity: shipped
+  source_status: original
+  license: MIT
+  influence: "structured logging + the Prometheus text-exposition format (structlog for logs; a stdlib metrics registry)"
+  experimental: >-
+    prometheus-client with full histogram buckets plus OpenTelemetry tracing, or a
+    hosted APM (Datadog/Sentry). Traded away: a zero-dependency stdlib metrics registry
+    you can read, and no vendor lock-in.
+  risk: low
+  reuse_score: 5
+  purpose: >
+    One HTTP middleware that turns every request into a structured JSON log event and a
+    Prometheus metric (count + latency by route template, cardinality bounded), so a service
+    is queryable and scrapeable, not just readable.
+  reuse:
+    game: "per-request telemetry on the dashboard API (/metrics)"
+    government: "audit and monitoring of a service, with structured logs"
+    finance: "transaction rate and latency SLOs, scraped by Prometheus"
+    compliance: "structured request logs retained as evidence"
+    general: "drop-in telemetry for any FastAPI/ASGI service"
+
+- id: ai-boundary
+  name: Mockable AI Boundary
+  source: parts/architect.py
+  category: ai
+  tags: [ai, llm, seam, mockable, schema, anthropic]
+  maturity: shipped
+  source_status: original
+  license: MIT
+  influence: "ports-and-adapters / dependency injection for an LLM, with schema-enforced output (original)"
+  experimental: >-
+    an orchestration framework (LangChain / LlamaIndex) or a direct in-line SDK call
+    scattered through the app. Traded away: a tiny, mockable seam you can test offline and
+    swap brains behind - the SDK is touched in exactly one place.
+  risk: medium
+  reuse_score: 4
+  purpose: >
+    Put an LLM behind a protocol seam with an INJECTED client, so a feature is one API key
+    away, its output is schema-enforced and re-validated, and tests drive a fake with no
+    network. Powers the Architect NPC and the AI blueprint drafter.
+  reuse:
+    game: "the Architect NPC and the schema-enforced blueprint drafter"
+    government: "AI document triage offered as a Tier-4 aid, never as authority"
+    finance: "AI transaction classification behind a testable, swappable seam"
+    compliance: "AI summaries labeled Tier-4, the boundary auditable and mockable"
+    general: "any testable, provider-swappable AI feature (CI runs with no key)"
+
+- id: backend-seam
+  name: Dual Backend Seam
+  source: parts/db.py
+  category: persistence
+  tags: [database, sqlalchemy, postgresql, sqlite, alembic, migrations]
+  maturity: shipped
+  source_status: original
+  license: MIT
+  influence: "the repository/adapter seam over an ORM; one URL resolver picks the backend (SQLAlchemy; adopted)"
+  experimental: >-
+    an ORM welded to one database, or raw SQL per driver. Traded away: a single seam
+    that runs SQLite in dev and tests and PostgreSQL in production, unchanged, with Alembic
+    owning the schema.
+  risk: low
+  reuse_score: 5
+  purpose: >
+    One typed ORM behind one URL resolver: SQLite by default (zero-config for dev and tests),
+    PostgreSQL when DATABASE_URL is set, with Alembic owning schema migrations. Proven end to
+    end against a real Postgres in CI.
+  reuse:
+    game: "characters and accounts persistence, embedded or server-backed"
+    government: "a records store that scales from a file to a database server"
+    finance: "a ledger that dev-runs on SQLite and prod-runs on PostgreSQL"
+    compliance: "an auditable, migratable schema with a versioned history"
+    general: "any app that must run embedded in dev and server-backed in prod"
+
+- id: html-projection
+  name: HTML Projection
+  source: parts/blueprint_render.py
+  category: rendering
+  tags: [html, rendering, ssr, accessibility, frameless, htmx]
+  maturity: shipped
+  source_status: original
+  license: MIT
+  influence: "server-side rendering with progressive enhancement (frameless; stdlib html.escape; original)"
+  experimental: >-
+    a template engine (Jinja2) or a client framework (React) with a JS build. Traded
+    away: no template engine and no build step - data projected straight to accessible,
+    escaped HTML. (When a real SPA is wanted, that is a separate flagship, not this part.)
+  risk: low
+  reuse_score: 4
+  purpose: >
+    Project data to a semantic, accessible, escaped HTML page or fragment with stdlib only -
+    no template engine, no JS build - suitable for server-rendering and HTMX enhancement.
+  reuse:
+    game: "the readiness dashboard and rendered blueprint pages/fragments"
+    government: "rendered report and record pages from data"
+    finance: "account statements and printable summaries"
+    compliance: "evidence dashboards generated straight from data"
+    general: "any data-to-HTML view without a front-end toolchain"
+
+- id: typed-settings
+  name: Typed Settings Catalog
+  source: parts/config.py
+  category: configuration
+  tags: [config, pydantic, settings, validation, twelve-factor]
+  maturity: shipped
+  source_status: original
+  license: MIT
+  influence: "validated 12-factor configuration objects (Pydantic; adopted)"
+  experimental: >-
+    pydantic-settings BaseSettings, or dynaconf / a config server. Traded away: a
+    small, explicit, frozen catalog that fails loud on a bad value and redacts secrets, with
+    no extra dependency beyond Pydantic.
+  risk: low
+  reuse_score: 4
+  purpose: >
+    One typed, validated catalog of the environment: it fails loud on a bad value (a
+    non-numeric or out-of-range port), is frozen, and renders with credentials redacted (a
+    key reported present/absent, a URL shown scheme+host only).
+  reuse:
+    game: "PORT, DATABASE_URL, and the Architect brain selection"
+    government: "validated service configuration with a single typed surface"
+    finance: "typed, audited configuration for a service"
+    compliance: "a config surface that never prints a secret"
+    general: "12-factor environment configuration for any service"

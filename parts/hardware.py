@@ -65,7 +65,9 @@ class Part:
     source_status: str = "original"  # provenance: original / mit / apache-2.0 / ...
     license: str = "MIT"  # the reuse license (this repo's own code is MIT)
     influence: str = ""  # the KNOWN PATTERN it was rebuilt from -- harvest patterns, not code
-    experimental: str = ""  # the road NOT taken: the framework/tool path if this were not frameless
+    experimental: str = (
+        ""  # the road NOT taken: the deliberate alternative (framework or frameless)
+    )
 
 
 class CatalogError(ValueError):
@@ -155,9 +157,10 @@ def catalog_text(path: Path | None = None) -> str:
         for domain, use in part.reuse.items():
             lines.append(f"    - {domain:<11} {use}")
         if part.experimental:
-            # The road not taken: what this part would become if we abandoned frameless.
-            # Shown so the choice reads as deliberate, not as ignorance of the tools.
-            lines.append(f"    experimental (if not frameless): {part.experimental}")
+            # The road not taken: the alternative we weighed for this part -- a framework we
+            # declined, or (now that we build architecture-first) the frameless path we
+            # declined. Shown so the choice reads as deliberate, not as ignorance of the tools.
+            lines.append(f"    road not taken: {part.experimental}")
         lines.append("")
     lines.append(f"{len(parts)} part(s) cataloged.")
     return "\n".join(lines)
