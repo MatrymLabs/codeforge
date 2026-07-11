@@ -89,6 +89,20 @@ def award_jp(session: Session, amount: int) -> str:
     return "\n".join(lines)
 
 
+def award_tp(session: Session, amount: int) -> str:
+    """Accrue TP to the ACTIVE job (toward its milestone perks). No leveling; TP just fills."""
+    job = session.job
+    if not job or job not in session.job_progress:
+        return ""
+    prog = session.job_progress[job]
+    session.job_progress[job] = replace(prog, tp=prog.tp + amount)
+    if session.named:
+        from parts.characters import save_character
+
+        save_character(session)
+    return f"You gain {amount} TP ({JOBS[job]['name']})."
+
+
 def attack(session: Session, word: str) -> str:
     """One strike of the training loop."""
     if session.stats is None:
@@ -116,7 +130,7 @@ def attack(session: Session, word: str) -> str:
     )
     defeat = f"You strike {npc['name']} for {dmg}. It collapses -- then reassembles itself."
     rewards = award_xp(session, npc["xp"])
-    jp = award_jp(session, npc["xp"])
-    if jp:
-        rewards = f"{rewards}\n{jp}"
+    for extra in (award_jp(session, npc["xp"]), award_tp(session, npc["xp"])):
+        if extra:
+            rewards = f"{rewards}\n{extra}"
     return f"{defeat}\n{rewards}"

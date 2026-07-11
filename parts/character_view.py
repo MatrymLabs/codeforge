@@ -14,7 +14,7 @@ pretend they exist.
 from __future__ import annotations
 
 from parts.derived import derived_stats
-from parts.equipment import apply_equipment, equipped_loadout
+from parts.equipment import apply_equipment, apply_stat_modifiers, equipped_loadout
 from parts.jobs import BASE_HP, BASE_MP, JOBS
 from parts.progression import get_next_level_threshold
 from parts.score_sheet import (
@@ -24,7 +24,9 @@ from parts.score_sheet import (
     JobLine,
     JobTP,
 )
+from parts.seed import Job
 from parts.session import Session, display_name
+from parts.stats import StatModifier
 
 # Sheet attribute code -> engine stat name.
 _ATTR_CODES = {
@@ -36,7 +38,23 @@ _ATTR_CODES = {
     "LUCK": "luck",
 }
 
-TP_MILESTONE = 500  # prototype: TP required for the next job milestone (meaning not yet final)
+TP_MILESTONE = 500  # prototype: TP required per milestone; each milestone unlocks the next perk
+
+
+def perks_unlocked(job: Job, tp: int) -> list[dict]:
+    """The milestone perks a job has earned at this TP: one per full milestone, in order."""
+    count = min(tp // TP_MILESTONE, len(job["milestone_perks"]))
+    return list(job["milestone_perks"][:count])
+
+
+def _perk_modifiers(job: Job, tp: int) -> dict[str, list[StatModifier]]:
+    """Unlocked perks as modifiers grouped by the stat they raise (fed through the stack)."""
+    mods: dict[str, list[StatModifier]] = {}
+    for perk in perks_unlocked(job, tp):
+        mods.setdefault(perk["target"], []).append(
+            StatModifier(source=perk["name"], flat=perk["amount"])
+        )
+    return mods
 
 
 def build_job_sheet(
@@ -118,7 +136,11 @@ def sheet_from_session(session: Session) -> CharacterSheet | None:
         signature=job["signature"],
         secondary_job=None,
         attributes={code: attrs[name] for code, name in _ATTR_CODES.items()},
-        derived=apply_equipment(derived_stats(attrs, session.level), session),
+        # Base formulas, then equipped gear, then unlocked job perks -- all through the stack.
+        derived=apply_stat_modifiers(
+            apply_equipment(derived_stats(attrs, session.level), session),
+            _perk_modifiers(job, progress.tp if progress else 0),
+        ),
         tp_rows=tp_rows,
         equipment=equipped_loadout(session),
         # A character knows their own resistances: declared levels shown, the rest Normal.

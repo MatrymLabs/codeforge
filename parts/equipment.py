@@ -50,17 +50,24 @@ def equipped_modifiers(session: Session) -> dict[str, list[StatModifier]]:
     return by_target
 
 
-def apply_equipment(base_derived: dict[str, int], session: Session) -> dict[str, int]:
-    """Return derived stats with equipped gear folded in via the ModifierStack (pure)."""
-    mods = equipped_modifiers(session)
-    if not mods:
+def apply_stat_modifiers(
+    base_derived: dict[str, int], mods_by_target: dict[str, list[StatModifier]]
+) -> dict[str, int]:
+    """Fold a target->modifiers map into derived stats via the ModifierStack (pure). Reused by
+    equipment and by job perks, so both bend the stats the same, order-independent way."""
+    if not mods_by_target:
         return dict(base_derived)
     result = dict(base_derived)
     for stat, value in base_derived.items():
-        if stat in mods:
+        if stat in mods_by_target:
             bounded = Stat(name=stat, base=value, min_value=0, max_value=9999)
-            result[stat] = ModifierStack(tuple(mods[stat])).apply(bounded)
+            result[stat] = ModifierStack(tuple(mods_by_target[stat])).apply(bounded)
     return result
+
+
+def apply_equipment(base_derived: dict[str, int], session: Session) -> dict[str, int]:
+    """Return derived stats with equipped gear folded in via the ModifierStack (pure)."""
+    return apply_stat_modifiers(base_derived, equipped_modifiers(session))
 
 
 def equipped_loadout(session: Session) -> EquipmentLoadout:

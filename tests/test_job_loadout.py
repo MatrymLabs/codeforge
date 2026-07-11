@@ -65,3 +65,14 @@ def test_an_invalid_resistance_level_is_rejected_at_load(tmp_path) -> None:
     path.write_text("golem:\n  name: Golem\n  resistances: {FIR: Nope}\n")
     with pytest.raises(SeedError, match="must be one of"):
         load_jobs(path)
+
+
+def test_a_job_may_declare_milestone_perks() -> None:
+    assert JOBS["engineer"]["milestone_perks"][0]["target"] == "DEF"
+
+
+def test_a_malformed_perk_is_rejected_at_load(tmp_path) -> None:
+    path = tmp_path / "jobs.yaml"
+    path.write_text("golem:\n  name: Golem\n  milestone_perks: [{name: X, target: DEF}]\n")
+    with pytest.raises(SeedError, match="milestone perk"):
+        load_jobs(path)

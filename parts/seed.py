@@ -122,6 +122,7 @@ class Job(TypedDict):
     resistances: dict[str, str]  # element/status code -> level (Normal/Weak/Resist/Immune/Absorb)
     power_cells: int  # size of the job's custom resource pool (0 = none, runs on MP)
     power_regen: int  # power cells regained per combat tick
+    milestone_perks: list[dict]  # ordered passive perks unlocked at each TP milestone
 
 
 class SeedError(Exception):
@@ -347,6 +348,7 @@ def load_jobs(path: Path) -> dict[str, Job]:
             "resistances": {},
             "power_cells": 0,
             "power_regen": 0,
+            "milestone_perks": [],
         }
         merged.update(template)
         merged.update(fields)
@@ -367,8 +369,20 @@ def load_jobs(path: Path) -> dict[str, Job]:
                 ("resistances", dict),
                 ("power_cells", int),
                 ("power_regen", int),
+                ("milestone_perks", list),
             ),
         )
+        for perk in merged["milestone_perks"]:
+            if not (
+                isinstance(perk, dict)
+                and isinstance(perk.get("name"), str)
+                and isinstance(perk.get("target"), str)
+                and isinstance(perk.get("amount"), int)
+                and not isinstance(perk.get("amount"), bool)
+            ):
+                raise SeedError(
+                    f"job '{label}': each milestone perk needs name(str), target(str), amount(int)"
+                )
         stats = dict(DEFAULT_JOB_STATS) | dict(merged["stats"])
         for stat_name, value in stats.items():
             if not isinstance(value, int) or isinstance(value, bool):
@@ -395,5 +409,6 @@ def load_jobs(path: Path) -> dict[str, Job]:
             resistances=dict(merged["resistances"]),
             power_cells=merged["power_cells"],
             power_regen=merged["power_regen"],
+            milestone_perks=[dict(p) for p in merged["milestone_perks"]],
         )
     return jobs
