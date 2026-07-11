@@ -11,7 +11,11 @@ import secrets
 from typing import Any
 
 from parts.characters import load_character, put_record
-from parts.db import AccountRow, CharacterRow, open_archive_session
+
+# parts.db is imported lazily inside the functions that touch persistence (below), so a
+# DB-free `import forge` (play/command sessions, benchmarks, most tests) never pays the
+# ~400ms SQLAlchemy import. The cost shifts to the first real DB touch (e.g. first login),
+# measured, not hidden. parts.db owns the ORM rows; this only defers WHEN they load. (EXP-003)
 
 _ITERATIONS = 600_000
 MIN_PASSWORD_LEN = 8  # NIST SP 800-63B floor: length beats composition rules
@@ -68,6 +72,8 @@ def register(char: str, account: str, password: str) -> str:
         return _TOO_SHORT
     if load_character(char) is not None:
         return f"A character named {char} already exists."
+    from parts.db import AccountRow, open_archive_session
+
     with open_archive_session() as db:
         account_row = db.get(AccountRow, account)
         if account_row is None:
@@ -86,6 +92,8 @@ def register(char: str, account: str, password: str) -> str:
 def inspect_login(char: str, account: str, password: str) -> bool:
     """One generic verdict: account exists, password matches, and the
     character belongs to that account. Which part failed is a secret."""
+    from parts.db import AccountRow, CharacterRow, open_archive_session
+
     with open_archive_session() as db:
         account_row = db.get(AccountRow, account)
         if account_row is None or not _secret_matches(
@@ -98,6 +106,8 @@ def inspect_login(char: str, account: str, password: str) -> bool:
 
 def adopt(char: str, account: str) -> str:
     """Attach an existing character to an account (migration/admin)."""
+    from parts.db import CharacterRow, open_archive_session
+
     with open_archive_session() as db:
         hero_row = db.get(CharacterRow, char)
         if hero_row is None:
@@ -111,6 +121,8 @@ def rotate_account_secret(account: str, password: str) -> str:
     """Rotate an account's secret (the codeforge passwd verb)."""
     if len(password) < MIN_PASSWORD_LEN:
         return _TOO_SHORT
+    from parts.db import AccountRow, open_archive_session
+
     with open_archive_session() as db:
         account_row = db.get(AccountRow, account)
         if account_row is None:
@@ -129,6 +141,8 @@ def reforge_secret(account: str, old: str, new: str) -> str:
     Refusal on a bad old password stays generic -- no enumeration."""
     if len(new) < MIN_PASSWORD_LEN:
         return _TOO_SHORT
+    from parts.db import AccountRow, open_archive_session
+
     with open_archive_session() as db:
         account_row = db.get(AccountRow, account)
         if account_row is None or not _secret_matches(
@@ -149,6 +163,8 @@ def migrate(char: str, account: str) -> str:
         return f"No saved character named {char}."
     if not casefile.get("auth"):
         return f"{char} has no password to migrate. Set one in-game first: password <secret>"
+    from parts.db import AccountRow, CharacterRow, open_archive_session
+
     with open_archive_session() as db:
         if db.get(AccountRow, account) is not None:
             return f"Account {account} already exists; migration only creates new accounts."
@@ -176,6 +192,8 @@ def import_legacy_json() -> str:
             moved.append(name)
     accts = Path("accounts.json")
     if accts.exists():
+        from parts.db import AccountRow, CharacterRow, open_archive_session
+
         with open_archive_session() as db:
             for name, entry in json.loads(accts.read_text()).items():
                 if db.get(AccountRow, name) is None and entry.get("auth"):
@@ -199,6 +217,8 @@ def import_legacy_json() -> str:
 def account_password_ok(account: str, password: str) -> bool:
     """Bare account credential check (no character required) -- the
     HTTP admin surface authenticates accounts, not masks."""
+    from parts.db import AccountRow, open_archive_session
+
     with open_archive_session() as db:
         account_row = db.get(AccountRow, account)
         return account_row is not None and _secret_matches(
@@ -209,6 +229,8 @@ def account_password_ok(account: str, password: str) -> bool:
 def account_has_owner(account: str) -> bool:
     """True if any character on this account holds the owner rank."""
     from sqlalchemy import select
+
+    from parts.db import CharacterRow, open_archive_session
 
     with open_archive_session() as db:
         archive_rows = db.scalars(select(CharacterRow).where(CharacterRow.account == account))
