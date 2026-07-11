@@ -346,3 +346,30 @@ def validate(
         if r.superseded_by and r.superseded_by not in seen:
             problems.append(f"{r.designation}: superseded_by '{r.superseded_by}' is not filed")
     return problems
+
+
+def unfiled_modules(
+    records: list[Designation] | None = None, root: Path | None = None
+) -> list[str]:
+    """Every importable parts module (incl. subpackages) with NO filed designation.
+
+    Registry completeness -- distinct from validate()'s internal consistency. The registry's
+    thesis is that it files the code modules themselves so `qa gate all` audits the codebase;
+    an unfiled module is a real gap the internal-consistency check cannot see (it once reported
+    CLEAN while 22 modules were undocumented). Empty list == every module is filed.
+    """
+    base = root if root is not None else _ROOT
+    recs = records if records is not None else load_collective()
+    filed = {r.file for r in recs if r.file}
+    parts_dir = base / "parts"
+    if not parts_dir.is_dir():
+        return []
+    modules = sorted(parts_dir.glob("*.py")) + sorted(parts_dir.glob("*/*.py"))
+    unfiled: list[str] = []
+    for path in modules:
+        if path.name == "__init__.py" or "__pycache__" in path.parts:
+            continue
+        rel = path.relative_to(base).as_posix()
+        if rel not in filed:
+            unfiled.append(rel)
+    return unfiled
