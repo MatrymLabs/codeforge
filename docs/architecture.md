@@ -14,6 +14,9 @@ clients (Mudlet / telnet / nc / terminal)
    -> codeforge.db + save snapshots (minimal canonical state)
 ```
 
+> A **C4 model view** (System Context + Containers, rendered as Mermaid) lives in
+> [architecture_c4.md](architecture_c4.md), pinned to the code by a correspondence test.
+
 The tick is a plain function, so every driver -- the solo terminal loop, the threaded
 TCP gateway, and any future WebSocket gateway -- is just another caller. The gateway's
 login dialogue is deliberately thin UX: it assembles the same `login`/`register`
