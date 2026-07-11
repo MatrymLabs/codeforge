@@ -53,7 +53,7 @@ io_or_query_counts · timestamp · profiler · status · budget · noise_band ·
 | command (`handle_command` rotation) | 8.5 us | CPU / dispatch | `passed` (fast; not a hotspot) |
 | combat (single strike) | 10.3 us | CPU | `passed` (fast; not a hotspot) |
 | qa gate all (`render_gate_all`) | 8.2 ms | I/O (repeated `stat`) | `human_review_required` (see EXP-002) |
-| catalog search (`reuse_search`) | 39 ms | serialization (repeated YAML parse) | `regression_detected` vs intent (see EXP-001) |
+| catalog search (`reuse_search`) | 39 ms -> **91.8 us** | serialization (was: repeated YAML parse) | `improvement_detected` - EXP-001 done (~426x), now well within budget |
 | startup (cold `import forge`) | 574 ms | startup (eager SQLAlchemy import) | `human_review_required` (see EXP-003) |
 
 Reproduce: `python -m benchmarks.perf_journeys` (raw output under `reports/performance/`,
@@ -63,7 +63,7 @@ git-ignored but reproducible from the recorded commit).
 
 - Command response: median <= 50 us (baseline 8.5 us) - generous head-room; user-imperceptible.
 - Combat tick: median <= 100 us (baseline 10.3 us).
-- Catalog/registry search: median <= 5 ms (baseline 39 ms) - **currently over**; EXP-001 targets it.
+- Catalog/registry search: median <= 5 ms - **met** (EXP-001: 39 ms -> 0.09 ms; ~426x).
 - QA gate all: median <= 5 ms (baseline 8.2 ms) - EXP-002.
 - Cold startup: <= 300 ms (baseline 574 ms) - EXP-003.
 - Max permitted regression: median +15% over baseline (else `regression_detected`).
