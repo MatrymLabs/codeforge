@@ -13,10 +13,10 @@ from __future__ import annotations
 
 import statistics
 import time
-from collections.abc import Callable
 from dataclasses import dataclass, field
+from typing import Any
 
-from parts.evolution.subjects import Formatter
+from parts.evolution.subjects import Subject
 
 _PASS, _FAIL, _WARN = "pass", "fail", "warn"
 
@@ -38,21 +38,24 @@ class EvaluatorResult:
 
 def evaluate_correctness(
     candidate_id: str,
-    fn: Formatter,
-    inputs: tuple[tuple[str, int], ...],
-    oracle: Callable[[str, int], str],
+    fn: Subject,
+    inputs: tuple[tuple[Any, ...], ...],
+    oracle: Subject,
 ) -> EvaluatorResult:
-    """Blocking hard gate: the candidate must match the oracle on every input, exactly."""
+    """Blocking hard gate: the candidate must match the oracle on every input, exactly.
+
+    Signature-agnostic: each input is an argument tuple applied as `fn(*args)`, so the same
+    gate scores a (str, int) formatter and a (str,) slugifier alike."""
     mismatches: list[str] = []
-    for text, width in inputs:
+    for args in inputs:
         try:
-            got = fn(text, width)
+            got = fn(*args)
         except Exception as exc:  # a candidate that raises is a correctness failure, not a crash
-            mismatches.append(f"fit({text!r},{width}) raised {type(exc).__name__}: {exc}")
+            mismatches.append(f"call{args!r} raised {type(exc).__name__}: {exc}")
             continue
-        want = oracle(text, width)
+        want = oracle(*args)
         if got != want:
-            mismatches.append(f"fit({text!r},{width}) -> {got!r}, expected {want!r}")
+            mismatches.append(f"call{args!r} -> {got!r}, expected {want!r}")
     passed = not mismatches
     score = 1.0 if passed else 1.0 - len(mismatches) / len(inputs)
     return EvaluatorResult(
@@ -66,7 +69,7 @@ def evaluate_correctness(
     )
 
 
-def evaluate_documentation(candidate_id: str, fn: Formatter) -> EvaluatorResult:
+def evaluate_documentation(candidate_id: str, fn: Subject) -> EvaluatorResult:
     """Advisory: does the candidate carry a non-empty docstring?"""
     doc = (fn.__doc__ or "").strip()
     has_doc = bool(doc)
@@ -82,8 +85,8 @@ def evaluate_documentation(candidate_id: str, fn: Formatter) -> EvaluatorResult:
 
 def evaluate_performance(
     candidate_id: str,
-    fn: Formatter,
-    inputs: tuple[tuple[str, int], ...],
+    fn: Subject,
+    inputs: tuple[tuple[Any, ...], ...],
     reps: int = 2000,
     warmup: int = 200,
 ) -> EvaluatorResult:
@@ -93,13 +96,13 @@ def evaluate_performance(
     `median_us` across the population, so no single number is treated as the whole verdict.
     """
     for _ in range(warmup):
-        for text, width in inputs:
-            fn(text, width)
+        for args in inputs:
+            fn(*args)
     samples: list[float] = []
     for _ in range(reps):
         start = time.perf_counter()
-        for text, width in inputs:
-            fn(text, width)
+        for args in inputs:
+            fn(*args)
         samples.append((time.perf_counter() - start) * 1e6)
     median_us = statistics.median(samples)
     return EvaluatorResult(
@@ -114,9 +117,9 @@ def evaluate_performance(
 
 def run_evaluators(
     candidate_id: str,
-    fn: Formatter,
-    inputs: tuple[tuple[str, int], ...],
-    oracle: Callable[[str, int], str],
+    fn: Subject,
+    inputs: tuple[tuple[Any, ...], ...],
+    oracle: Subject,
 ) -> list[EvaluatorResult]:
     """The coordinator: run every evaluator, return their results (assembles, never judges)."""
     return [
