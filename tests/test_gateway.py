@@ -182,18 +182,18 @@ def test_two_players_share_one_world(server):
 
 
 def test_who_lists_everyone_and_quit_unseats(server):
-    a, b = _connect_player(server, "kirito"), _connect_player(server, "asuna")
+    a, b = _connect_player(server, "ember"), _connect_player(server, "quill")
     out = _command(a, "who")
-    assert "Kirito" in out and "Asuna" in out
+    assert "Ember" in out and "Quill" in out
     b.sendall(b"quit\n")
     b.recv(4096)
     b.close()
     deadline = time.time() + 2.0
     out = _command(a, "who")
-    while "Asuna" in out and time.time() < deadline:
+    while "Quill" in out and time.time() < deadline:
         time.sleep(0.05)  # the server thread's cleanup races our next question
         out = _command(a, "who")
-    assert "Asuna" not in out
+    assert "Quill" not in out
     a.close()
 
 

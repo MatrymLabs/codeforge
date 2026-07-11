@@ -586,7 +586,7 @@
     "node": "N001",
     "sequence": "020",
     "revision": "R0",
-    "docs": "docs/holodeck/SAFETY.md",
+    "docs": "docs/proving_ground/SAFETY.md",
     "tests": "tests/test_foundry.py",
     "depends_on": [],
     "related": [],

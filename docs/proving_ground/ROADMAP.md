@@ -1,4 +1,4 @@
-# Holodeck Roadmap - the staircase
+# Proving Ground Roadmap - the staircase
 
 A staircase, not a cliff. Each phase is a shippable slice with a **definition of
 done**. Don't build the dragon before the workshop door opens; don't build advanced
@@ -50,7 +50,7 @@ it mutates, an approval gate (Phase 9).
 Repo-safe, low-risk, high-signal - the base of the climb:
 
 1. ✅ Catalog card + `catalog/parts.yaml` + `make hardware` + tests. *(done)*
-2. ✅ This blueprint (`docs/holodeck/`). *(done)*
+2. ✅ This blueprint (`docs/proving_ground/`). *(done)*
 3. ✅ Furnish the `workshop` room as the cockpit (it already existed off the cellar). *(done)*
 4. ✅ `parts/workshop.py` - the `workshop` menu command, wired in the tick with an engine-tick test. **Display only.** *(done)*
 5. ✅ Wire `catalog`/`hardware`/`parts` + `reuse <term>` in-world to `parts/hardware.py` (read-only). *(done)*

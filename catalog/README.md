@@ -80,7 +80,7 @@ path with `CODEFORGE_CATALOG`.
 ## Roadmap for this catalog
 
 Today it's a validated data file + a viewer (`make hardware`). Next steps (see
-[`../docs/holodeck/ROADMAP.md`](../docs/holodeck/ROADMAP.md)): expose it in-world as
+[`../docs/proving_ground/ROADMAP.md`](../docs/proving_ground/ROADMAP.md)): expose it in-world as
 the `catalog`/`parts`/`hardware` Workshop commands, add search by tag/domain, and
 let the Architect NPC suggest an existing part before you build a new one.
 

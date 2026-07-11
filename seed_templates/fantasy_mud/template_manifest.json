@@ -2,7 +2,7 @@
   "template_id": "fantasy_mud",
   "name": "Fantasy MUD",
   "description": "A themed fantasy/adventure cast: rooms, NPCs, items, jobs, quests, combat, poured from a themed seed pack + the whole engine.",
-  "starter_seed_pack": "sword-art-online",
+  "starter_seed_pack": "spiral-ascent",
   "engine_strategy": "vendored-whole",
   "default_settings": {
     "genre": "fantasy",

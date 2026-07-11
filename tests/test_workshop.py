@@ -30,7 +30,7 @@ def test_menu_lists_live_tools_and_is_honest_about_whats_coming():
     assert "catalog" in menu and "reuse" in menu  # live
     assert (
         "Coming" in menu and "arch" in menu
-    )  # honest about what's not built yet (the holodeck arch)
+    )  # honest about what's not built yet (the proving ground arch)
 
 
 def test_blueprint_is_a_live_workshop_tool_now():

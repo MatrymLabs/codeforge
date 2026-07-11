@@ -1,0 +1,44 @@
+# SEED: spiral-ascent -- rooms.yaml
+# A different game on the same engine: climb the Spiral, clear each Floor's Gate.
+# Same gates as any seed: lowercase_snake_case labels, exits must resolve.
+# The FIRST room is the spawn (START_ROOM), by convention -- no hardcoded start.
+
+template:
+  desc: The Spiral's forged sky curves overhead, faintly humming with old heat.
+
+spiral_landing:
+  name: The Spiral Landing
+  desc: |-
+    A wide ring of warm brass at the base of the Spiral. Newcomers wake here.
+    A graven plate reads: "Clear each Floor's Gate to ascend. The Spiral remembers."
+  exits:
+    north: ascent_gate
+    east: warden_hall
+
+warden_hall:
+  name: The Hall of Wardens
+  desc: |-
+    Names are forged into the brass walls here, each climber who came before.
+    A cold draft moves through the empty seats of the Wardens' council.
+  exits:
+    west: spiral_landing
+
+ascent_gate:
+  name: The Ascent Gate
+  desc: A ring of pale fire marks the only road up, into the first coil of the Spiral.
+  exits:
+    south: spiral_landing
+    north: first_coil
+
+first_coil:
+  name: The First Coil
+  desc: Winding brass corridors climb into the dark. Something skitters toward the chamber above.
+  exits:
+    south: ascent_gate
+    up: gate_chamber
+
+gate_chamber:
+  name: The Gate Chamber
+  desc: A vaulted forge-hall. On the anvil-throne waits the Coilwarden, keeper of the first Gate.
+  exits:
+    down: first_coil

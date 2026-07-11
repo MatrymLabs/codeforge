@@ -7,7 +7,14 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
 ## [Unreleased]
 
 ### Added / Changed
-- **Holodeck phases 9-10: the Foundry (human-approved, sandboxed code generation).** The
+- **Removed trademarked references (IP hygiene).** Replaced the second seed pack with an
+  original game, `spiral-ascent` (climb the Spiral, clear each Floor's Gate), and scrubbed
+  every reference across code, tests, docs, and the cast manifest. Renamed the in-MUD
+  engineering-simulation concept to **the Proving Ground** throughout (`docs/proving_ground/`,
+  registry doc-paths updated), removed borrowed names from the code-identity notes, and
+  reworded a networking term to a plain "event loop" for accuracy. Two seeds still ship, so
+  "a seed is a game" stays intact.
+- **Proving Ground phases 9-10: the Foundry (human-approved, sandboxed code generation).** The
   AI-touches-files phases, made safe. `parts/foundry.py` (MOD-UM10-S01-N001-020-R0): a
   `PatchProposal` is a DATA artifact (target, why, part, risk, test, rollback) - creating one
   writes NOTHING, and a human must `approve()` it first (phase 9). Applying an approved
@@ -16,14 +23,14 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
   touches existing source, config, git, or main (phase 10). In-world it is an owner-only
   `@forge <name>` -> `@forge approve <name>` verb (CMD-UM10-S01-N001-020-R0; a demo visitor,
   always rank player, can never reach it). Promoting a candidate into `parts/` stays a human
-  branch -> check -> PR step, per docs/holodeck/SAFETY.md. 17 test cases, refusal-first. The
+  branch -> check -> PR step, per docs/proving_ground/SAFETY.md. 17 test cases, refusal-first. The
   workshop cockpit surfaces it under "Owner tools"; the roadmap marks phases 9-10 done.
 - **The Workshop cockpit is now the real hub.** The in-MUD `workshop` menu advertised
   `blueprint` as "coming" long after it shipped; it now surfaces the genuine live tools:
   catalog/reuse, `blueprint` (browse/show/render/draft with the Claude Architect), `ai`, and
-  the read-only console/diagnostics/security, with only `patch proposal` and the holodeck
+  the read-only console/diagnostics/security, with only `patch proposal` and the proving ground
   `arch` still marked coming (the file-editing phases, deliberately gated). Updated the
-  holodeck roadmap to mark phases 3, 7 (reports), and 8 (AI planning via `blueprint draft`)
+  proving ground roadmap to mark phases 3, 7 (reports), and 8 (AI planning via `blueprint draft`)
   as done. A test pins that `blueprint` is advertised live, not coming.
 - **Hardware Store: broadened horizon (7 -> 13 parts, architecture-first framing).** The
   reusable-parts catalog now stocks the patterns built this arc: `typed-contract` (Pydantic

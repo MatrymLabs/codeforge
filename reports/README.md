@@ -4,7 +4,7 @@ Saved outputs from Workshop runs - diagnostics, AI advice, repo audits, security
 scans, and domain evidence. Long output is summarized in-world; the **full log
 lands here**, so a run is auditable after the fact rather than lost to the scroll.
 
-This is **Phase 7** of the [holodeck roadmap](../docs/holodeck/ROADMAP.md). The
+This is **Phase 7** of the [proving ground roadmap](../docs/proving_ground/ROADMAP.md). The
 folders below are created on demand as each producer ships; the contents are
 **git-ignored** (generated, reproducible), while this README stays tracked.
 
@@ -24,7 +24,7 @@ reports/
   records/        # records-track evidence
 ```
 
-Rules (see [`../docs/holodeck/SAFETY.md`](../docs/holodeck/SAFETY.md)):
+Rules (see [`../docs/proving_ground/SAFETY.md`](../docs/proving_ground/SAFETY.md)):
 - outputs are **saved, not spammed**; the MUD shows a summary, the file holds the full log;
 - compliance / finance / records evidence is **dated + hashed** and traceable to a commit;
 - nothing here implies certification - it is readiness/evidence only.

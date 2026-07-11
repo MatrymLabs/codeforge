@@ -48,7 +48,7 @@ port 8000) - covered in §6. It is not how players log in.
 
 ```bash
 codeforge play                          # boot the default game, first-forge
-codeforge play --seed sword-art-online  # boot a different game
+codeforge play --seed spiral-ascent  # boot a different game
 codeforge seeds                         # list every installed game first
 ```
 
@@ -62,7 +62,7 @@ spark                     # ignite the server on 0.0.0.0:4000 (default game)
 # or, same thing:
 codeforge serve
 # boot a different game on the server:
-FORGE_SEED=sword-art-online spark
+FORGE_SEED=spiral-ascent spark
 ```
 
 You'll see:
@@ -82,7 +82,7 @@ to connect - see §2.
 docker build -t codeforge .                        # build once
 docker run -p 4000:4000 -v codeforge_data:/data codeforge
 # boot a different game:
-docker run -p 4000:4000 -e FORGE_SEED=sword-art-online codeforge
+docker run -p 4000:4000 -e FORGE_SEED=spiral-ascent codeforge
 ```
 
 The `-v codeforge_data:/data` volume carries the database (accounts, characters)
@@ -118,7 +118,7 @@ Four stages light up in order:
 
 When you leave (`QUIT` or `Ctrl-C`), the ritual **banks the coals**: a server it
 lit, it puts out. A server it merely joined, it leaves burning. Boot a different
-game with `FORGE_SEED=sword-art-online make ritual`.
+game with `FORGE_SEED=spiral-ascent make ritual`.
 
 ### Bind the phrase `start the ritual`
 
@@ -215,12 +215,12 @@ Type `NEW`. You'll be asked for a handle and a password:
 
 ```text
 Character (character@account) or NEW: NEW
-Choose your character@account: kirito@matlabs
+Choose your character@account: climber@matlabs
 Choose a password: ********
-Welcome, Kirito@matlabs.
+Welcome, Climber@matlabs.
 ```
 
-- The handle is **`character@account`**: `kirito` is the character; `matlabs` is
+- The handle is **`character@account`**: `climber` is the character; `matlabs` is
   the account that owns it. One account can own several characters.
 - Handles are `lowercase_snake_case`; capitalization is only for display.
 - The password is salted **pbkdf2-sha256** at rest - never stored or logged in
@@ -231,9 +231,9 @@ Welcome, Kirito@matlabs.
 Type the full `character@account` and its password:
 
 ```text
-Character (character@account) or NEW: kirito@matlabs
+Character (character@account) or NEW: climber@matlabs
 Password: ********
-Welcome back, Kirito@matlabs.
+Welcome back, Climber@matlabs.
 ```
 
 Characters persist across server restarts - job, level, XP, location, and rank
@@ -256,7 +256,7 @@ Type `HELP` any time for the full command list. A first run, start to level-up:
 > jobs                     # the callings this world offers
 > job vanguard             # choose one - you can't fight without a calling
 > score                    # your character sheet: level, XP, HP/MP
-> name Kirito              # set your display name
+> name Climber              # set your display name
 > north                    # walk to the Broken Courtyard
 > attack dummy             # strike the training dummy...
 > attack dummy             # ...it collapses, then reassembles itself, and you gain XP
@@ -284,7 +284,7 @@ Authority is ranked: **player → wizard → owner**. Admin verbs check rank bef
 any code runs. Grant a rank from the host shell (the server operator's power):
 
 ```bash
-codeforge grant kirito wizard      # or: owner
+codeforge grant climber wizard      # or: owner
 ```
 
 Then, logged in as that character, the `@`-verbs unlock - e.g. `@teleport`,

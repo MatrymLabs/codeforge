@@ -1,19 +1,19 @@
-# SEED: sword-art-online -- jobs.yaml (callings)
+# SEED: spiral-ascent -- jobs.yaml (callings)
 
 template:
   description: A path not yet described.
 
-swordsman:
-  name: Swordsman
+vanguard:
+  name: Vanguard
   description: The straightforward blade. Balanced strength and stamina.
   stats: {strength: 12, agility: 10, stamina: 12, magic: 2}
 
-beater:
-  name: Beater
-  description: A beta-tester turned solo player. Speed and skill over brute force.
+pathfinder:
+  name: Pathfinder
+  description: A scout who climbs alone. Speed and skill over brute force.
   stats: {strength: 10, agility: 14, stamina: 9, magic: 3}
 
-blacksmith:
-  name: Blacksmith
+forgewright:
+  name: Forgewright
   description: Forges and upgrades gear. Patient hands, a sharp eye for steel.
   stats: {strength: 11, agility: 8, stamina: 13, magic: 4}

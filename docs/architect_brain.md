@@ -33,7 +33,7 @@ says so** in a one-line note - the gap is surfaced, never hidden (VeritasGate).
   suite drives it with a fake that mirrors the SDK shape. CI runs with no `ANTHROPIC_API_KEY`.
 - **Secrets never leave the machine.** The prompt is passed through `_redact` before any call,
   scrubbing anything that looks like a password/token/key. Only redacted, public project
-  context is ever sent (`docs/holodeck/SAFETY.md`).
+  context is ever sent (`docs/proving_ground/SAFETY.md`).
 - **Advisory only.** The Architect explains, suggests commands, and points at parts. It never
   edits files or runs anything - that stays with you and the FailsafeRunner. No autonomous-
   coding claim is made.
