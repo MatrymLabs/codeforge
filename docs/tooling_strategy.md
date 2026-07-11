@@ -1,4 +1,4 @@
-# Tooling Strategy (Frameless Python)
+# Tooling Strategy (Architecture-First Python)
 
 *Companion to [`frameless_python.md`](frameless_python.md). This is where a tool earns, or
 fails to earn, its place. Python's standard library and CodeForge's own architecture are the
@@ -214,7 +214,7 @@ blocked                  unsafe, unclear, unlicensed, or too risky
 
 ## Pioneer questions (open, for Josh)
 
-**On the frameless identity**
+**On the architecture-first identity**
 - What is the boldest useful thing a tool could unlock without making CodeForge *look* like a framework?
 - Which current tool, if removed, would you struggle to explain in an interview? (That one needs a doc.)
 
