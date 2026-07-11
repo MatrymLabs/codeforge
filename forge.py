@@ -497,11 +497,15 @@ def handle_command(session: Session, signal: str) -> str:
                 exclude=session.player_id,
             )
         return verdict
-    if routed_signal == "score":
+    if routed_signal == "score" or routed_signal.startswith("score "):
         sheet = sheet_from_session(session)
         if sheet is None:
             return "You have no calling yet. Type JOBS to see the paths."
-        return render_score_sheet(sheet)
+        mode = routed_signal[len("score ") :].strip() if " " in routed_signal else "standard"
+        try:
+            return render_score_sheet(sheet, mode)
+        except ValueError as err:
+            return str(err)
     if routed_signal == "who":
         names = roster() or [session.player_id]
         return "Players online: " + ", ".join(display_name(n) for n in names)
