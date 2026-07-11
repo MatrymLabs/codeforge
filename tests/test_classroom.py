@@ -108,3 +108,21 @@ def test_a_lesson_can_never_grant_above_the_cap():
 def test_achievements_view_starts_empty_and_is_reachable():
     session = _student()
     assert "No achievements yet" in handle_command(session, "achievements")
+
+
+def test_achievements_view_lists_an_unlocked_skill():
+    session = _student()
+    _run_lesson(session, correct=True)
+    board = handle_command(session, "achievements")
+    assert "Show solid Python understanding" in board
+    assert "1 skill(s) demonstrated" in board
+
+
+def test_re_passing_a_lesson_does_not_repeat_the_achievement():
+    # Once a skill is demonstrated at a level, re-passing the same lesson does not re-award
+    # (no duplicate ceremony); the demonstrated level is unchanged.
+    session = _student()
+    _run_lesson(session, correct=True)
+    second = _run_lesson(session, correct=True)
+    assert "ACHIEVEMENT UNLOCKED" not in second
+    assert demonstrated("student") == {"entry.python.basics": 2}
