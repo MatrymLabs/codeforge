@@ -92,11 +92,24 @@ class Npc(TypedDict):
 
 
 class Job(TypedDict):
-    """The shape every job (class/calling) must have."""
+    """The shape every job (class/calling) must have.
+
+    The first three fields are the original calling. The rest are the JRPG job loadout: they
+    are OPTIONAL in the data (a simple calling omits them) but the loader always fills them
+    with empty defaults, so every Job carries the full shape. Ability fields hold ability
+    labels (names), not behavior -- combat wiring is a later batch.
+    """
 
     name: str
     description: str
     stats: dict[str, int]
+    role_tags: list[str]  # role identity, e.g. ["support", "control", "technical"]
+    abilities: list[str]  # active skill labels
+    automatic_attack: str  # the auto-attack label
+    counter: str  # reaction ability label
+    movement: str  # positioning/mobility ability label
+    inherent: str  # passive trait label
+    signature: str  # defining job ability label
 
 
 class SeedError(Exception):
@@ -299,15 +312,49 @@ def load_jobs(path: Path) -> dict[str, Job]:
             "name": _phrase(label).title(),
             "description": "",
             "stats": dict(DEFAULT_JOB_STATS),
+            "role_tags": [],
+            "abilities": [],
+            "automatic_attack": "",
+            "counter": "",
+            "movement": "",
+            "inherent": "",
+            "signature": "",
         }
         merged.update(template)
         merged.update(fields)
         _inspect_required_types(
-            label, merged, (("name", str), ("description", str), ("stats", dict))
+            label,
+            merged,
+            (
+                ("name", str),
+                ("description", str),
+                ("stats", dict),
+                ("role_tags", list),
+                ("abilities", list),
+                ("automatic_attack", str),
+                ("counter", str),
+                ("movement", str),
+                ("inherent", str),
+                ("signature", str),
+            ),
         )
         stats = dict(DEFAULT_JOB_STATS) | dict(merged["stats"])
         for stat_name, value in stats.items():
             if not isinstance(value, int) or isinstance(value, bool):
                 raise SeedError(f"job '{label}': stat '{stat_name}' must be an integer")
-        jobs[label] = Job(name=merged["name"], description=merged["description"], stats=stats)
+        for list_field in ("role_tags", "abilities"):
+            if not all(isinstance(entry, str) for entry in merged[list_field]):
+                raise SeedError(f"job '{label}': every {list_field} entry must be a string")
+        jobs[label] = Job(
+            name=merged["name"],
+            description=merged["description"],
+            stats=stats,
+            role_tags=list(merged["role_tags"]),
+            abilities=list(merged["abilities"]),
+            automatic_attack=merged["automatic_attack"],
+            counter=merged["counter"],
+            movement=merged["movement"],
+            inherent=merged["inherent"],
+            signature=merged["signature"],
+        )
     return jobs

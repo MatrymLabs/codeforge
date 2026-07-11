@@ -18,3 +18,17 @@ artificer:
   name: Artificer
   description: Builder of clever things. Balanced hands, curious eyes.
   stats: {strength: 9, speed: 12, stamina: 9, magic: 9}
+
+# Engineer: the JRPG reference job. A tactical support and control class -- repair,
+# devices, diagnostics, interrupts -- not a renamed spellcaster. Stat balance is prototype.
+engineer:
+  name: Engineer
+  description: Battlefield mechanic and systems operator. Repairs, deploys, diagnoses, controls.
+  stats: {strength: 10, speed: 12, magic: 8, stamina: 11, wisdom: 13, luck: 9}
+  role_tags: [support, control, technical]
+  automatic_attack: Calibrated Strike
+  abilities: [Diagnostic Scan, Field Repair, System Interrupt, Deploy Barrier]
+  counter: Emergency Repair
+  movement: Field Deployment
+  inherent: Systems Thinking
+  signature: Forge Overdrive

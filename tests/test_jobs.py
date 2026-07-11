@@ -6,7 +6,7 @@ from parts.session import Session
 
 
 def test_jobs_load_from_seed_with_labels():
-    assert set(JOBS) == {"vanguard", "scholar", "artificer"}
+    assert set(JOBS) == {"vanguard", "scholar", "artificer", "engineer"}
     assert JOBS["scholar"]["name"] == "Scholar"
     assert JOBS["scholar"]["stats"]["magic"] == 14
 
