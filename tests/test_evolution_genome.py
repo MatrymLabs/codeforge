@@ -130,7 +130,12 @@ def test_a_string_where_a_list_is_expected_fails_loud() -> None:
 
 
 def test_a_malformed_pairs_field_fails_loud() -> None:
-    raw = {"genome_id": "g", "purpose": "x", "seed": bp.to_dict(_seed()), "resource_budgets": [1, 2, 3]}
+    raw = {
+        "genome_id": "g",
+        "purpose": "x",
+        "seed": bp.to_dict(_seed()),
+        "resource_budgets": [1, 2, 3],
+    }
     with pytest.raises(GenomeError, match="pairs of"):
         from_dict(raw)
 
