@@ -33,6 +33,7 @@ from parts.combat import attack
 from parts.commands import ADMIN, CORE, Command, CommandSet
 from parts.console import console_menu, diagnostics_view, run_view
 from parts.doors import unlock
+from parts.engineer import diagnostic_scan, field_repair
 from parts.events import announce, bind_echo, rename_echo, unbind_echo
 from parts.foundry import arch_command, forge_command
 from parts.frameup import inspect
@@ -67,7 +68,7 @@ NAME_RE = re.compile(r"^[a-z][a-z0-9_]{1,15}$")
 HELP_TEXT = (
     "Commands: look, go <direction> (or n/s/e/w/u/d), "
     "take, drop, inventory, talk <npc>, say <msg>, name <yourname>, who, "
-    "jobs, job <calling>, score, attack <target>, "
+    "jobs, job <calling>, score, attack <target>, repair, scan <target>, "
     "unlock <door> with <key>, regs [topic|id], library [id], law [id], "
     "registry [show|find|type|status], "
     "qa gate [all|<id>], safety review <id>, docs check, pm status, pm metrics, "
@@ -472,6 +473,10 @@ def handle_command(session: Session, signal: str) -> str:
     if routed_signal.startswith(("attack ", "kill ")):
         word = routed_signal.split(" ", 1)[1].strip()
         return attack(session, word)
+    if routed_signal in ("repair", "field repair"):
+        return field_repair(session)
+    if routed_signal.startswith("scan "):
+        return diagnostic_scan(session, routed_signal.split(" ", 1)[1].strip())
     if routed_signal == "jobs":
         return calling_index()
     if routed_signal.startswith("job "):
