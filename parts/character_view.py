@@ -16,7 +16,8 @@ from __future__ import annotations
 from parts.derived import derived_stats
 from parts.jobs import BASE_HP, BASE_MP, JOBS
 from parts.progression import get_next_level_threshold
-from parts.score_sheet import CharacterSheet, EquipmentLoadout
+from parts.score_sheet import CharacterSheet, EquipmentLoadout, JobTP
+from parts.session import Session, display_name
 
 # Sheet attribute code -> engine stat name.
 _ATTR_CODES = {
@@ -27,6 +28,8 @@ _ATTR_CODES = {
     "WIS": "wisdom",
     "LUCK": "luck",
 }
+
+TP_MILESTONE = 500  # prototype: TP required for the next job milestone (meaning not yet final)
 
 
 def build_job_sheet(
@@ -69,6 +72,45 @@ def build_job_sheet(
         attributes={code: stats.get(name, 0) for code, name in _ATTR_CODES.items()},
         derived=derived_stats(stats, player_level),
         tp_rows=(),
+        equipment=EquipmentLoadout(),
+        resistances={},
+    )
+
+
+def sheet_from_session(session: Session) -> CharacterSheet | None:
+    """Build the score sheet from a LIVE character. None when they have no calling yet.
+
+    Reads real state: attributes from the stat block, resources from the pools, per-job level
+    and TP from the persisted job_progress record. What is not modeled yet renders honestly
+    (bare equipment, unknown resistances, no secondary job)."""
+    if not session.job or session.stats is None:
+        return None
+    job = JOBS[session.job]
+    attrs = {name: session.stats.get(name).base for name in _ATTR_CODES.values()}
+    hp, mp = session.resources["hp"], session.resources["mp"]
+    progress = session.job_progress.get(session.job)
+    job_level = progress.job_level if progress else 1
+    jp = progress.jp if progress else 0
+    tp_rows = (JobTP(job["name"], progress.tp, TP_MILESTONE),) if progress else ()
+    return CharacterSheet(
+        display_name=display_name(session.player_id),
+        player_level=session.level,
+        current_xp=session.xp,
+        next_level_xp=get_next_level_threshold(session.level),
+        hp=(hp.current, hp.maximum),
+        mp=(mp.current, mp.maximum),
+        jp=jp,
+        race="Human",
+        primary_job=job["name"],
+        primary_job_level=job_level,
+        counter=job["counter"],
+        movement=job["movement"],
+        inherent=job["inherent"],
+        signature=job["signature"],
+        secondary_job=None,
+        attributes={code: attrs[name] for code, name in _ATTR_CODES.items()},
+        derived=derived_stats(attrs, session.level),
+        tp_rows=tp_rows,
         equipment=EquipmentLoadout(),
         resistances={},
     )
