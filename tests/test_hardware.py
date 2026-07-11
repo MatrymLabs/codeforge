@@ -30,11 +30,11 @@ def test_every_shipped_part_is_free_to_use_and_records_its_pattern():
 
 
 def test_every_shipped_part_shows_its_road_not_taken():
-    # the experimental section: what the part would become if it were NOT frameless
+    # the road-not-taken section: the deliberate alternative (a framework, or the frameless path)
     parts = load_catalog()
-    assert all(part.experimental for part in parts), "each part should note its non-frameless path"
+    assert all(part.experimental for part in parts), "each part should note its road not taken"
     text = catalog_text()
-    assert "experimental (if not frameless)" in text
+    assert "road not taken" in text
 
 
 def test_experimental_is_optional_and_omitted_when_absent(tmp_path):
@@ -46,7 +46,7 @@ def test_experimental_is_optional_and_omitted_when_absent(tmp_path):
     )
     part = load_catalog(catalog)[0]
     assert part.experimental == ""
-    assert "experimental (if not frameless)" not in catalog_text(catalog)
+    assert "road not taken" not in catalog_text(catalog)
 
 
 def test_a_non_free_to_use_source_status_is_refused(tmp_path):
