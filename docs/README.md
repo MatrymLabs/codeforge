@@ -9,6 +9,8 @@ The one map to everything under `docs/`. New here? Read [RUNNING.md](RUNNING.md)
 - [../CONTRIBUTING.md](../CONTRIBUTING.md), setup and the workshop rules.
 
 ## Architecture and decisions
+- [optimization_ethos.md](optimization_ethos.md), the Matrym optimization ethos: turn solutions into infrastructure (the loop, the optimization ladder, the evidence standard, the Expansion Review, the critical-junction rule).
+
 - [architecture.md](architecture.md), the engine tick, drivers, and canonical state.
 - [adr/](adr/), Architecture Decision Records (0001 canonical state, 0002 derive-don't-store, 0003 framework-free).
 - [frameless_python.md](frameless_python.md), the frameless identity: stdlib + my architecture as the spine, tools as integrations.
