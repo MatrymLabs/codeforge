@@ -395,3 +395,53 @@
     education: "a training transcript or a certification profile"
     manufacturing: "a maintenance status board or an equipment qualification record"
     general: "any fixed-width record view rendered from a view model"
+
+- id: derived-stat-calculator
+  name: Derived Stat Calculator
+  source: parts/derived.py
+  category: rules-engine
+  tags: [formula, derived-values, deterministic, prototype-balance]
+  maturity: prototype
+  source_status: original
+  license: MIT
+  influence: "attribute -> derived-value formula tables (original; balance is prototype only)"
+  experimental: >-
+    drive the formulas from a data table or a small expression DSL, or fold in an
+    equipment/status modifier stack. Traded away for now: tuned balance and modifier stacking;
+    kept a pure, deterministic, one-file calculator that is exact and testable.
+  risk: low
+  reuse_score: 4
+  purpose: >
+    Compute derived values from base inputs with pure, deterministic, integer formulas, so the
+    outputs are exact, testable, and changed in exactly one place when the rules change.
+  reuse:
+    game: "combat stats (ATK/DEF/EVA/MAG DEF/ACC) from the six attributes"
+    business: "a composite score (risk, credit, priority) derived from weighted inputs"
+    manufacturing: "an OEE or health index derived from measured factors"
+    finance: "a derived rating from underlying metrics"
+    general: "any deterministic derived-value calculation kept in one auditable place"
+
+- id: job-loadout-schema
+  name: Data-Driven Job Loadout
+  source: parts/seed.py
+  category: content-schema
+  tags: [data-driven, class-system, roles, validation, loadout]
+  maturity: beta
+  source_status: original
+  license: MIT
+  influence: "data-driven class/job definitions with a validating loader (original)"
+  experimental: >-
+    model jobs as Pydantic models or a plugin registry, or store them in a database. Traded
+    away: a schema layer; kept plain validated seed data that fails loud on a bad job and
+    fills sensible defaults for optional fields.
+  risk: low
+  reuse_score: 4
+  purpose: >
+    Define roles/classes as validated data (identity, attributes, role tags, ability loadout)
+    that a loader gates at load, so new jobs are a data edit, not a code change.
+  reuse:
+    game: "the Engineer reference job and every future class"
+    education: "a role/competency profile: required skills and progression by role"
+    business: "job-role definitions: responsibilities, required competencies, tooling"
+    government: "a position description with duties and required qualifications"
+    general: "any data-driven role catalog with a validating loader"
