@@ -23,7 +23,7 @@ def test_spiral_seed_passes_every_loader_gate():
     load_items(SPIRAL / "items.yaml")  # gates: valid labels, present location
     load_npcs(SPIRAL / "npcs.yaml")
     jobs = load_jobs(SPIRAL / "jobs.yaml")
-    assert "vanguard" in jobs and jobs["pathfinder"]["stats"]["agility"] == 14
+    assert "vanguard" in jobs and jobs["pathfinder"]["stats"]["speed"] == 14
 
 
 def test_spiral_boss_is_attackable():

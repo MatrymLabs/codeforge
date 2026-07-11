@@ -7,14 +7,14 @@ template:
 vanguard:
   name: Vanguard
   description: Front-line protector. Strength and stamina carry the day.
-  stats: {strength: 14, agility: 8, stamina: 12, magic: 4}
+  stats: {strength: 14, speed: 8, stamina: 12, magic: 4}
 
 scholar:
   name: Scholar
   description: Seeker of the old words. The mind is the sharpest blade.
-  stats: {strength: 5, agility: 8, stamina: 8, magic: 14}
+  stats: {strength: 5, speed: 8, stamina: 8, magic: 14}
 
 artificer:
   name: Artificer
   description: Builder of clever things. Balanced hands, curious eyes.
-  stats: {strength: 9, agility: 12, stamina: 9, magic: 9}
+  stats: {strength: 9, speed: 12, stamina: 9, magic: 9}
