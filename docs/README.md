@@ -51,6 +51,7 @@ Each of these translates one captured research report into a real, tested subsys
 
 ## Career and evidence
 - [career_evidence_board.md](career_evidence_board.md), `career`, skills mapped to repo proof.
+- [keel_records/](keel_records/), the Human Keel Records that back level 4 (defendable) ownership claims: intent, decision, AI contribution vs human modification, evidence (the KeelGate requires one on disk before any portfolio ownership claim).
 - [hiring_requirement_matrix.md](hiring_requirement_matrix.md), 2026 hiring requirements mapped to repo evidence.
 - [github_portfolio_checklist.md](github_portfolio_checklist.md), honest pass against the ideal-repo checklist.
 - [full_stack_readiness_checklist.md](full_stack_readiness_checklist.md), backend/frontend readiness, honestly labeled.
