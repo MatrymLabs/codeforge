@@ -39,6 +39,7 @@ from parts.doors import unlock
 from parts.engineer import deploy_barrier, diagnostic_scan, field_repair
 from parts.equipment import equip, unequip
 from parts.events import announce, bind_echo, rename_echo, unbind_echo
+from parts.evolution.command import evolution
 from parts.foundry import arch_command, forge_command
 from parts.frameup import inspect
 from parts.functions import functions
@@ -78,7 +79,7 @@ HELP_TEXT = (
     "unlock <door> with <key>, regs [topic|id], library [id], law [id], "
     "registry [show|find|type|status], "
     "qa gate [all|<id>], safety review <id>, docs check, pm status, pm metrics, "
-    "truth check, career, pioneer, inspect, functions, terminal, "
+    "truth check, career, pioneer, evolution, inspect, functions, terminal, "
     "workshop, catalog, reuse <term>, console, run <check>, diagnostics, "
     "security, ai <prompt>, lesson list, question, answer <A-D>, hint, progress, achievements, "
     "passwd, save, load, quit"
@@ -253,6 +254,15 @@ def _build_commands() -> CommandSet:
             "CMD-UM10-S01-N001-014-R0",
             "Pioneer Mode: bold-but-honest engineering (doctrine, risk ladder, experiments)",
             lambda _s, arg: pioneer(arg),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "evolution",
+            "CMD-UM10-S01-N001-022-R0",
+            "Blueprint Evolution Lab (read-only): show recorded candidate bake-off runs",
+            lambda _s, arg: evolution(arg),
             namespace=CORE,
         )
     )

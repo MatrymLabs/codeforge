@@ -1,4 +1,4 @@
-.PHONY: env fix lint typecheck test property coverage audit security secrets deps sbom bench doctor patch daily check readiness truth cast-plan smoke repo-integrity ship run world store hardware clean serve db-up db-down db-migrate docs-serve docs-build e2e ritual-fast ritual ritual-down unskew
+.PHONY: env fix lint typecheck test property coverage audit security secrets deps sbom bench doctor patch daily check readiness truth cast-plan smoke repo-integrity ship run world store hardware clean serve db-up db-down db-migrate docs-serve docs-build e2e evolution ritual-fast ritual ritual-down unskew
 
 # --- Environment: create/validate the .venv, fail loud on version mismatch.
 # Uses uv when present (a Rust resolver; measured ~20x faster than pip on this host:
@@ -71,6 +71,11 @@ truth:
 # DB) and timed. Exit 0 == every live step passed. ---
 smoke:
 	@python3 scripts/e2e_smoke.py
+
+# Blueprint Evolution Lab: run the demo bake-off and file evidence to reports/evolution/.
+# The authorized execution path (the MUD `evolution` command is read-only). Nothing is promoted.
+evolution:
+	@python3 scripts/evolution_demo.py
 
 # --- Extra inspections (One-Button Rule) ---
 # `-n auto` fans the suite across cores (pytest-xdist); pytest-cov combines the per-worker
