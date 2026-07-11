@@ -81,4 +81,13 @@ commit de0f8a5. Reproduce with `python -m benchmarks.perf_journeys`.
 - **Expected Benefit:** up to ~400 ms off cold start for DB-free paths. **Potential Harm:** the import cost shifts to first DB use (measure it; it must not regress a hot path).
 - **Compatibility / Security Risk:** none (same schema/behavior). **Maintenance Cost:** low. **Approval:** touches the persistence import boundary - a change-rule stop-point; confirm before running.
 - **Rollback:** restore the eager import.
-- **Result / Decision:** not run yet. Workload class: **startup-bound**. Level 1.
+- **Result / Decision:** **VERIFIED IMPROVEMENT (executed 2026-07-11, approved).** Deferring the
+  `parts.db` import (SQLAlchemy's ORM home) out of the three modules on the `import forge` chain
+  (`accounts`, `characters`, `session -> job_progress`) via function-local imports cut cold
+  `import forge` **680 ms -> 202 ms (~3.4x)**; `sqlalchemy` is verified absent from `sys.modules`
+  after `import forge`. The deferred cost is measured, not hidden: `import forge` + first DB import
+  = 680 ms (unchanged total), so a DB-touching path (e.g. first login) pays the ~478 ms once, while
+  DB-free paths (play/command, benchmarks, most of the tick) never do. `db.py` (the ORM classes)
+  is untouched; only WHEN it loads changed. No behavior change: full suite 700 passed, all auth and
+  persistence-roundtrip regressions green, mypy clean (135 files). Regression guard: the import-graph
+  is implicitly pinned by the suite importing `forge` DB-free. Workload class: **startup-bound**. Level 1.

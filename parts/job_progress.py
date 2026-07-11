@@ -12,9 +12,9 @@ from __future__ import annotations
 from collections.abc import Iterable
 from dataclasses import dataclass
 
-from sqlalchemy import select
-
-from parts.db import JobProgressRow, open_archive_session
+# sqlalchemy and parts.db import lazily inside the load/save functions (below), so importing
+# this module for the JobProgress value object (via parts.session, on the hot `import forge`
+# path) never triggers the ~400ms SQLAlchemy import (EXP-003).
 
 
 @dataclass(frozen=True)
@@ -29,6 +29,10 @@ class JobProgress:
 
 def load_job_progress(character_name: str) -> dict[str, JobProgress]:
     """Every job record for a character, keyed by job id. Empty for an unknown/new character."""
+    from sqlalchemy import select
+
+    from parts.db import JobProgressRow, open_archive_session
+
     with open_archive_session() as db:
         rows = db.execute(
             select(JobProgressRow).where(JobProgressRow.character_name == character_name)
@@ -38,6 +42,8 @@ def load_job_progress(character_name: str) -> dict[str, JobProgress]:
 
 def save_job_progress(character_name: str, records: Iterable[JobProgress]) -> None:
     """Upsert a character's job records. The character row must already exist (the FK)."""
+    from parts.db import JobProgressRow, open_archive_session
+
     with open_archive_session() as db:
         for record in records:
             row = db.get(JobProgressRow, (character_name, record.job_id)) or JobProgressRow(
