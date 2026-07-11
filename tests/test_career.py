@@ -17,6 +17,7 @@ from parts.career import (
     career,
     load_board,
     ownership_gaps,
+    render_claim,
     render_gaps,
     render_ownership,
     render_resume,
@@ -142,6 +143,34 @@ def test_gaps_view_surfaces_the_real_gaps() -> None:
         assert "gap(s)" in out
     else:
         assert "No gaps recorded" in out
+
+
+def test_ownership_view_shows_a_demonstrated_unlock() -> None:
+    # A Classroom-demonstrated skill (not declared in the matrix) renders as `demonstrated`,
+    # with the path to make it durable.
+    out = render_ownership(demonstrated={"entry.python.basics": 2})
+    assert "(demonstrated)" in out
+    assert "career claim entry.python.basics" in out
+    assert "demonstrated 1" in out
+
+
+def test_claim_bridges_a_demonstrated_unlock() -> None:
+    # `career claim` proposes the ownership block for Josh to commit -- it never writes it.
+    out = render_claim("entry.python.basics", demonstrated={"entry.python.basics": 2})
+    assert '"ownership"' in out and '"level": 2' in out
+    assert "lessons/python_basics.yaml" in out  # cites the real lesson file (it exists)
+    assert "commit it" in out.lower()
+    assert "Level 4" in out  # refuses to grant portfolio-ready from a lesson
+
+
+def test_claim_refuses_an_undemonstrated_skill() -> None:
+    out = render_claim("entry.python.basics", demonstrated={})
+    assert "not demonstrated yet" in out
+
+
+def test_claim_rejects_an_unknown_skill() -> None:
+    out = render_claim("no.such.skill", demonstrated={"no.such.skill": 2})
+    assert "No such skill" in out
 
 
 def test_resume_is_generated_from_proven_skills() -> None:

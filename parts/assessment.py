@@ -45,6 +45,8 @@ class Lesson:
     subject: str  # short key, e.g. "python"
     title: str
     questions: list[Question]
+    proves_skill: str = ""  # optional: a career-board skill_id this lesson demonstrates
+    earns_level: int = 0  # optional: the ownership level a pass demonstrates (capped by the caller)
 
 
 class LessonError(ValueError):
@@ -81,12 +83,19 @@ def load_lesson(path: Path) -> Lesson:
     questions = [_coerce_question(q, i) for i, q in enumerate(data["questions"], start=1)]
     if not questions:
         raise LessonError(f"{path.name}: a lesson needs at least one question")
+    earns_level = data.get("earns_level", 0)
+    if not isinstance(earns_level, int) or isinstance(earns_level, bool) or earns_level < 0:
+        raise LessonError(
+            f"{path.name}: earns_level must be a non-negative int, got {earns_level!r}"
+        )
     default_subject = path.stem.split("_")[0]
     return Lesson(
         id=str(data.get("id", path.stem)),
         subject=str(data.get("subject", default_subject)),
         title=str(data.get("title", path.stem.replace("_", " ").title())),
         questions=questions,
+        proves_skill=str(data.get("proves_skill", "")),
+        earns_level=earns_level,
     )
 
 
