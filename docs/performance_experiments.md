@@ -31,8 +31,9 @@ commit de0f8a5. Reproduce with `python -m benchmarks.perf_journeys`.
   the hot path. Correctness proven: `cached == fresh`, an on-disk edit (mtime) invalidates, a
   bad edit fails loud and is never cached. Full suite 673 passed (+4 cache tests), 93.30%
   coverage. No behavior change, no new dependency. Regression guard: the parse-once and
-  mtime-invalidation tests in `test_hardware.py`. **Reuse (captured Next, not built):**
-  generalize the mtime-guarded loader cache for the classification registry and seed loaders.
+  mtime-invalidation tests in `test_hardware.py`. **Reuse (SHIPPED 2026-07-11):** the mtime-guarded
+  loader cache was promoted to a shared part, `parts/loader_cache.py` (its own test twin), and now
+  serves the catalog AND the classification registry (see EXP-002). One solution, three customers.
   Workload class: serialization/I-O-bound. Level 1.
 
 ---
@@ -52,7 +53,16 @@ commit de0f8a5. Reproduce with `python -m benchmarks.perf_journeys`.
 - **Expected Benefit:** proportional to the duplicate-stat ratio (to be measured). **Potential Harm:** a cached verdict could miss a mid-run file change (dev-only concern).
 - **Compatibility / Security Risk:** none. **Maintenance Cost:** low-medium.
 - **Rollback:** revert the cache.
-- **Result / Decision:** not run yet. Workload class: **I/O-bound**. Level 1-3.
+- **Result / Decision:** **VERIFIED IMPROVEMENT (executed 2026-07-11, with EXP-001 reuse).** A
+  per-audit existence memo shared across all records (and across QG02/QG03/QG05, which re-checked
+  file+tests) cut `exists()` stat calls **446 -> 139 per cold `gate_all`** (one per unique proof
+  path, zero duplicates) and `qa gate all` median **9.4 ms -> 2.91 ms (~3.2x)**. In the SAME change,
+  the registry adopted the shared mtime-guarded loader cache (the EXP-001 "reuse"): repeated
+  `load_collective` now parses each `designations/*.json` once (**12 -> 4** `_parse_designations`
+  calls over 3 audits). Output byte-identical; full suite 700 passed, 93.59%. Regression guard:
+  `test_run_gate_honors_the_shared_stat_cache`, `test_gate_all_stats_each_path_once`,
+  `test_designations_are_parsed_once_and_cached`. Workload class: **I/O-bound**. Level 2 (remove
+  duplicate work).
 
 ---
 

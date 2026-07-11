@@ -19,6 +19,8 @@ from typing import Any
 
 import yaml
 
+from parts import loader_cache
+
 _REQUIRED = ("id", "name", "source", "category", "purpose", "maturity", "risk", "reuse")
 # "shipped" reads as its own definition (shipped + tested on main) -- no out-of-context
 # overclaim, unlike "production".
@@ -114,31 +116,24 @@ def _coerce(raw: Any, index: int) -> Part:
     )
 
 
-# Parse-once cache, invalidated by file mtime: the catalog is immutable within a run, so
-# re-parsing the YAML on every lookup (search, find_part, career) is pure waste (EXP-001).
-# Keyed by (path -> (mtime_ns, parts)); an on-disk edit bumps mtime_ns and reparses. A bad
-# catalog raises before it is cached, so a broken edit never poisons the cache.
-_CATALOG_CACHE: dict[Path, tuple[int, list[Part]]] = {}
+def _parse_catalog(source: Path) -> list[Part]:
+    """Parse and validate a catalog file into Parts (a bad row raises before caching)."""
+    data = yaml.safe_load(source.read_text()) or []
+    if not isinstance(data, list):
+        raise CatalogError("catalog root must be a list of parts")
+    return [_coerce(entry, number) for number, entry in enumerate(data, start=1)]
 
 
 def load_catalog(path: Path | None = None) -> list[Part]:
     """Load and validate the catalog. A missing catalog is empty, not an error.
 
-    Cached by file mtime: parsed once, then reused until `catalog/parts.yaml` changes on disk.
+    Parsed once and reused until `catalog/parts.yaml` changes on disk, via the shared
+    mtime-guarded loader cache (EXP-001; the pattern now lives in `parts/loader_cache.py`).
     """
     source = path or _default_catalog_path()
     if not source.exists():
         return []
-    mtime_ns = source.stat().st_mtime_ns
-    cached = _CATALOG_CACHE.get(source)
-    if cached is not None and cached[0] == mtime_ns:
-        return cached[1]
-    data = yaml.safe_load(source.read_text()) or []
-    if not isinstance(data, list):
-        raise CatalogError("catalog root must be a list of parts")
-    parts = [_coerce(entry, number) for number, entry in enumerate(data, start=1)]
-    _CATALOG_CACHE[source] = (mtime_ns, parts)  # cache only a fully-validated catalog
-    return parts
+    return loader_cache.load_cached(source, _parse_catalog)
 
 
 def find_part(part_id: str, path: Path | None = None) -> Part | None:

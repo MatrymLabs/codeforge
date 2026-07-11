@@ -95,6 +95,29 @@ def test_missing_file_loads_empty(tmp_path: Path) -> None:
     assert load_designations(tmp_path / "absent.json") == []
 
 
+def test_designations_are_parsed_once_and_cached(tmp_path: Path) -> None:
+    # The registry is immutable within a run: a second load of an unchanged file returns the
+    # SAME object (no re-decode of the JSON), via the shared mtime-guarded loader cache.
+    path = tmp_path / "rooms.json"
+    path.write_text(
+        json.dumps(
+            [
+                {
+                    "designation": "RM-UM03-S02-N001-001-R0",
+                    "name": "Classroom",
+                    "status": "prototype",
+                    "function": "lessons",
+                    "label": "classroom",
+                    "file": "seeds/x.yaml",
+                }
+            ]
+        )
+    )
+    first = load_designations(path)
+    second = load_designations(path)
+    assert first is second  # unchanged file -> reused, not re-parsed
+
+
 def test_a_non_list_file_is_refused(tmp_path: Path) -> None:
     path = tmp_path / "bad.json"
     path.write_text(json.dumps({"not": "a list"}))

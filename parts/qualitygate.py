@@ -41,12 +41,28 @@ class GateResult:
     checks: list[GateCheck] = field(default_factory=list)
 
 
-def run_gate(record: Designation, root: Path | None = None) -> GateResult:
-    """Grade one filed object against the readiness checklist (read-only)."""
+def run_gate(
+    record: Designation,
+    root: Path | None = None,
+    stat_cache: dict[str, bool] | None = None,
+) -> GateResult:
+    """Grade one filed object against the readiness checklist (read-only).
+
+    `stat_cache` memoizes path-existence within one audit: `gate_all` shares one across all
+    records so a proof path is `stat`ed at most once (QG05 re-checked file+tests that QG02/QG03
+    already checked -- ~446 stats/render, half of them duplicates; EXP-002). Read-only.
+    """
     base = root if root is not None else _ROOT
+    seen = stat_cache if stat_cache is not None else {}
 
     def exists(rel: str) -> bool:
-        return bool(rel) and (base / rel).exists()
+        if not rel:
+            return False
+        cached = seen.get(rel)
+        if cached is None:
+            cached = (base / rel).exists()
+            seen[rel] = cached
+        return cached
 
     proto = record.status == "prototype"
     checks: list[GateCheck] = []
@@ -121,7 +137,8 @@ def gate_all(
 ) -> list[GateResult]:
     """Run the gate over the whole collective -- the self-audit (part + part)."""
     recs = records if records is not None else load_collective()
-    return [run_gate(r, root) for r in recs]
+    stat_cache: dict[str, bool] = {}  # one shared existence memo for the whole audit (EXP-002)
+    return [run_gate(r, root, stat_cache) for r in recs]
 
 
 # --- Safety review ----------------------------------------------------------
