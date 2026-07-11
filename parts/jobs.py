@@ -6,6 +6,7 @@ resources from the job's stats, and stamps the session. The score
 command renders the sheet -- projection, never authority.
 """
 
+from parts.job_progress import JobProgress
 from parts.progression import get_next_level_threshold
 from parts.resources import Resource
 from parts.seed import SEED_DIR, load_jobs
@@ -43,6 +44,8 @@ def bind_calling(session: Session, word: str) -> str:
         "hp": Resource(name="hp", current=max_hp, maximum=max_hp),
         "mp": Resource(name="mp", current=max_mp, maximum=max_mp),
     }
+    # First time in this job? Open a progress record at level 1. A prior record is preserved.
+    session.job_progress.setdefault(label, JobProgress(job_id=label))
     return f"You take up the way of the {job['name']}. Type SCORE to see your sheet."
 
 
