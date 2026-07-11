@@ -1,7 +1,7 @@
 """Test twin for parts/jobs.py -- chargen from seed to sheet."""
 
 from forge import handle_command
-from parts.jobs import JOBS, bind_calling, render_sheet
+from parts.jobs import JOBS, bind_calling
 from parts.session import Session
 
 
@@ -32,22 +32,13 @@ def test_unknown_calling_is_refused():
 
 def test_score_before_choosing_points_to_jobs():
     s = Session(player_id="matrym")
-    assert "no calling yet" in render_sheet(s)
-
-
-def test_score_sheet_shows_the_whole_character():
-    s = Session(player_id="matrym")
-    bind_calling(s, "vanguard")
-    sheet = render_sheet(s)
-    assert "Matrym, the Vanguard" in sheet
-    assert "Level 1" in sheet
-    assert "HP 32/32" in sheet  # 20 + 12 stamina
-    assert "strength 14" in sheet
-    assert "XP 0 /" in sheet  # threshold comes from the salvaged progression card
+    assert "no calling yet" in handle_command(s, "score")
 
 
 def test_full_chargen_through_the_engine_tick():
     s = Session(player_id="matrym")
     assert "Callings" in handle_command(s, "jobs")
     handle_command(s, "job artificer")
-    assert "the Artificer" in handle_command(s, "score")
+    sheet = handle_command(s, "score")
+    assert "Job: Artificer (Lv 1)" in sheet  # the rich JRPG score sheet
+    assert "PLvl 1" in sheet  # player level separate from job level

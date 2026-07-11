@@ -10,8 +10,11 @@ from __future__ import annotations
 
 import pytest
 
-from parts.character_view import build_job_sheet
+from parts.character_view import build_job_sheet, sheet_from_session
+from parts.job_progress import JobProgress
+from parts.jobs import bind_calling
 from parts.score_sheet import render_score_sheet
+from parts.session import Session
 
 
 def test_the_engineer_builds_a_correct_sheet() -> None:
@@ -50,3 +53,19 @@ def test_the_engineer_sheet_renders_without_error() -> None:
 def test_an_unknown_job_is_a_loud_error() -> None:
     with pytest.raises(KeyError, match="no job named"):
         build_job_sheet("necromancer", "Matrym")
+
+
+def test_sheet_from_a_live_session_reads_real_progress() -> None:
+    s = Session(player_id="matrym", level=12, xp=4820)
+    bind_calling(s, "engineer")
+    s.job_progress["engineer"] = JobProgress("engineer", job_level=9, jp=1150, tp=340)
+    sheet = sheet_from_session(s)
+    assert sheet is not None
+    assert sheet.player_level == 12 and sheet.primary_job_level == 9  # separate axes, live
+    assert sheet.jp == 1150
+    assert sheet.tp_rows[0].current == 340
+    assert sheet.attributes["WIS"] == 13
+
+
+def test_a_session_with_no_calling_has_no_sheet() -> None:
+    assert sheet_from_session(Session(player_id="matrym")) is None

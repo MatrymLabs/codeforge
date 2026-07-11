@@ -19,6 +19,7 @@ from parts.accounts import register as register_account
 from parts.architect import consult
 from parts.blueprint import blueprint
 from parts.career import career
+from parts.character_view import sheet_from_session
 from parts.characters import load_character, restore_character, save_character
 from parts.classroom import (
     ask_question,
@@ -40,7 +41,7 @@ from parts.frameup import inspect
 from parts.functions import functions
 from parts.generate import system_generate
 from parts.items import drop, inventory_text, room_items_text, take
-from parts.jobs import JOBS, bind_calling, calling_index, render_sheet
+from parts.jobs import JOBS, bind_calling, calling_index
 from parts.law import law
 from parts.library import library
 from parts.npcs import room_npcs_text, talk, trace_npc
@@ -57,6 +58,7 @@ from parts.registry import (
 )
 from parts.regulations import regs
 from parts.save import awaken_snapshot, seal_snapshot
+from parts.score_sheet import render_score_sheet
 from parts.session import SESSIONS, Session, display_name, roster
 from parts.terminal import terminal
 from parts.veritas import render_truth
@@ -490,7 +492,10 @@ def handle_command(session: Session, signal: str) -> str:
             )
         return verdict
     if routed_signal == "score":
-        return render_sheet(session)
+        sheet = sheet_from_session(session)
+        if sheet is None:
+            return "You have no calling yet. Type JOBS to see the paths."
+        return render_score_sheet(sheet)
     if routed_signal == "who":
         names = roster() or [session.player_id]
         return "Players online: " + ", ".join(display_name(n) for n in names)
