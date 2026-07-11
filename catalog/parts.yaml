@@ -445,3 +445,28 @@
     business: "job-role definitions: responsibilities, required competencies, tooling"
     government: "a position description with duties and required qualifications"
     general: "any data-driven role catalog with a validating loader"
+
+- id: cooldown-status-clock
+  name: Cooldown and Status Clock
+  source: parts/engineer.py
+  category: mechanics
+  tags: [cooldown, status-effect, ttl, rate-limit, timer]
+  maturity: beta
+  source_status: original
+  license: MIT
+  influence: "tick-driven cooldowns + expiring statuses (original; deterministic, prototype balance)"
+  experimental: >-
+    drive it from real wall-clock time or an event-scheduler, or model each effect as a state
+    machine. Traded away: real-time scheduling; kept a deterministic tick-per-action clock that
+    is exact and trivially testable.
+  risk: low
+  reuse_score: 4
+  purpose: >
+    Track named countdowns (cooldowns, effect durations) that advance one tick per action and
+    drop themselves at zero, so "is this ready / still active?" is a deterministic lookup.
+  reuse:
+    game: "ability cooldowns and timed statuses (Analyzed, barriers, overdrive)"
+    business: "rate limiting: an action allowed again only after N cycles"
+    cybersecurity: "lockout windows and token time-to-live"
+    industrial automation: "equipment recovery/cure timers before a next cycle"
+    general: "any named countdown that expires and reports readiness"

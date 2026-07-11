@@ -38,6 +38,10 @@ class Session:
     xp: int = 0
     stats: StatBlock | None = None
     resources: dict[str, Resource] = field(default_factory=dict)
+    # Transient combat state (not persisted): ability cooldowns and active statuses,
+    # each a name -> remaining-ticks countdown. A fresh session starts with a clear board.
+    cooldowns: dict[str, int] = field(default_factory=dict)
+    statuses: dict[str, int] = field(default_factory=dict)
 
 
 # The registry of connected sessions. Gateways and game_loop register
