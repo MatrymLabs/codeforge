@@ -37,3 +37,27 @@ latency distribution (median, p95, p99, max).
 Performance evidence is a scored portfolio dimension. This gives codeforge its own tick
 benchmark (the deep GPU/CPU performance study lives in the sibling `pyg-perf-lab`), proving
 the engine's hot path with a reproducible artifact rather than an assertion.
+
+## The five critical journeys (measurement foundation)
+
+Beyond the tick, a measurement harness baselines the five journeys an audit cares about:
+
+```
+python -m benchmarks.perf_journeys   # startup · command · combat · qa gate · catalog search
+```
+
+It reuses the same frameless method (stdlib `perf_counter` + `statistics`, warmup, median +
+distribution); startup is measured cold (a fresh interpreter), the rest warm. Raw output lands
+under `reports/performance/` (git-ignored, reproducible). Baselines on a Raspberry Pi 5
+(commit de0f8a5): command 8.5us and combat 10.3us are fast (not hotspots); the measured
+hotspots are I/O/serialization/startup-bound, not CPU kernels -
+
+- catalog search **39 ms** (99% is re-parsing the YAML catalog every call),
+- qa gate all **8.2 ms** (~446 `stat` calls per run),
+- cold startup **574 ms** (SQLAlchemy imported eagerly ~412 ms).
+
+See [performance_gate.md](performance_gate.md) (the PerformanceGate draft + budgets),
+[performance_research_map.md](performance_research_map.md) (the research-to-CodeForge evidence
+map, APA-cited), and [performance_experiments.md](performance_experiments.md) (one experiment
+card per hotspot - proposals, not yet run). Doctrine: **AI proposes, the profiler observes,
+the benchmark compares, the tests verify, the engineer decides.**
