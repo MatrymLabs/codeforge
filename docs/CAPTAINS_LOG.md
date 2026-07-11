@@ -1,8 +1,59 @@
-# Captain's Log - the MatrymLabs ship
+# Chief Engineer's Log - the MatrymLabs ship
 
-> A running log of the voyage. Newest entry on top. Engineering reckoning, in the
+> A running log of the work. Newest entry on top. Engineering reckoning, in the
 > ship's own hand. *(The ship: **MatrymLabs**. The engine: **CodeForge**. A seed
-> is a game.)*
+> is a game.)* Earlier entries predate the naming cleanup and keep their original
+> headers.
+
+---
+
+## Chief Engineer's Log - 2026-07-10 (ship's day 191) - "The Long Watch: Full-Stack, and the Forge That Builds Itself"
+
+**Ship's day 191, the tenth of July.** The longest watch on record, and the flagship
+changed shape.
+
+We closed the full-stack loop end to end. The engine grew a typed HTTP contract and a live
+dashboard that renders its own evidence - the career board, the quality gates, the hardware
+store, a real benchmark - enhanced with HTMX so it refreshes without a reload, yet still
+works with the browser's scripts switched off. That same typed contract became a second
+flagship: a React and TypeScript console, its own repository, that consumes the API across a
+network and draws it live. We proved that by standing both up in one `docker compose up` and
+watching the console render the engine's real numbers across the container wall, no
+demo-fallback banner in sight. The documentation now publishes itself to a public site on
+every change.
+
+Underneath, the data layer learned to speak PostgreSQL as fluently as SQLite - one seam, one
+URL, the schema versioned by Alembic and exercised against a real database in the pipeline.
+Configuration became typed and validated; every request became a structured log line and a
+metric; a real browser drove the whole dashboard end to end.
+
+We gave the Architect a second brain - a Claude-backed one, an API key away, behind the same
+seam the local guide uses and mocked in every test so the pipeline never touches the network.
+From it we forged the planning spine: an idea becomes a schema-enforced Blueprint,
+re-validated through the same loud gate a human's plan passes, always a draft for a person to
+review.
+
+Then we climbed the hardest rung, and climbed it slowly. The Foundry: the engine may now
+generate a file, but only as a proposal a human approves, only into a cordoned sandbox, never
+overwriting, never escaping, never touching real source or the branch. The proof is in the
+refusals - the tests that make sure it says no. And the arch: step through it, owner-only and
+read-only, into the Proving Ground to review what was forged. The loop the ship was drawn
+around - workshop, forge, arch, review, promote by hand - is real now, and safe by
+construction.
+
+We also took the borrowed names off the hull. Titles that were only ever concepts are gone
+from the public flagship and the private contract alike, replaced with the ship's own words:
+the Spiral Ascent, the Proving Ground. A portfolio should stand on its own inventions.
+
+The reckoning: eighteen changes merged to the flagship's main, each behind a green pipeline;
+a new front-end flagship raised, made public, and pinned; the docs site lit; the hardware
+store grown to thirteen cross-domain parts; coverage held near ninety-two percent throughout;
+and the truth audit still says every claim corresponds to reality. Nothing shipped that
+wasn't proven. Nothing claimed that wasn't run.
+
+The forge is banked. The watch stands relieved.
+
+*- Chief Engineer, MatrymLabs*
 
 ---
 
