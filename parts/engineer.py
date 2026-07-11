@@ -1,22 +1,27 @@
 """CARD: engineer -- the Engineer job's combat kit: repair, scan, cooldowns, statuses.
 
-The Engineer's tactical actions, built on HP/MP plus cooldowns and statuses (no custom
-resource yet -- that is a deferred design juncture). Everything is DETERMINISTIC: no dice, so
-every number is exact and the test twin pins it. A valid combat action advances the clock
-(`tick`), counting down cooldowns and statuses and dropping the expired ones. Balance is
-prototype, not final.
+The Engineer's tactical actions, built on HP/MP, cooldowns, statuses, and the job's custom
+resource -- Power Cells (data-driven per job; regenerated per tick, spent to Deploy Barrier).
+Everything is DETERMINISTIC: no dice, so every number is exact and the test twin pins it. A
+valid combat action advances the clock (`tick`), counting cooldowns/statuses down, dropping the
+expired, and regenerating Power Cells. Balance is prototype, not final.
 
-The kit proves the four combat pillars: a skill (Field Repair), a status (Analyzed, applied
-by Diagnostic Scan), a cooldown (Field Repair recovers over ticks), and a reaction (Emergency
-Repair, a counter) plus a passive (Systems Thinking, which lengthens Analyzed).
+The kit proves the combat pillars: a skill (Field Repair), a status (Analyzed, applied by
+Diagnostic Scan), a cooldown (Field Repair recovers over ticks), a reaction (Emergency Repair,
+a counter), a passive (Systems Thinking, which lengthens Analyzed), and a resource economy
+(Power Cells spent by Deploy Barrier).
 """
 
 from __future__ import annotations
 
+from parts.jobs import JOBS
 from parts.npcs import NPCS, trace_npc
 from parts.session import Session
 
 _JOB = "engineer"
+
+DEPLOY_BARRIER_COST = 2  # Power Cells spent to Deploy Barrier
+BARRIER_DURATION = 3  # ticks the barrier status lasts
 
 # Prototype balance knobs -- tuned later, in one place.
 FIELD_REPAIR_MP = 4
@@ -28,12 +33,18 @@ EMERGENCY_HP_FRACTION = 0.30  # the counter arms when HP drops to/below 30%
 
 
 def tick(session: Session) -> None:
-    """Advance the combat clock one step: count every cooldown and status down, drop the expired."""
+    """Advance the combat clock one step: count cooldowns/statuses down, drop the expired, and
+    regenerate the job's custom resource (Power Cells) by its per-tick rate."""
     for board in (session.cooldowns, session.statuses):
         for name in list(board):
             board[name] -= 1
             if board[name] <= 0:
                 del board[name]
+    power = session.resources.get("power")
+    if power is not None and session.job in JOBS:
+        regen = JOBS[session.job]["power_regen"]
+        if regen and power.current < power.maximum:
+            session.resources["power"] = power.heal(regen)
 
 
 def _wisdom(session: Session) -> int:
@@ -86,6 +97,26 @@ def diagnostic_scan(session: Session, word: str) -> str:
     return (
         f"Diagnostic Scan on {npc['name']}: {npc['hp_now']}/{npc['hp']} HP. "
         f"Analyzed applied ({duration} ticks)."
+    )
+
+
+def deploy_barrier(session: Session) -> str:
+    """Spend Power Cells to raise a temporary defensive barrier. Refuses loud when short."""
+    if session.job != _JOB:
+        return "Only an Engineer can Deploy Barrier."
+    power = session.resources.get("power")
+    have = power.current if power is not None else 0
+    if have < DEPLOY_BARRIER_COST:
+        return (
+            f"Not enough Power Cells for Deploy Barrier (need {DEPLOY_BARRIER_COST}, have {have})."
+        )
+    tick(session)
+    session.resources["power"] = session.resources["power"].damage(DEPLOY_BARRIER_COST)
+    session.statuses["barrier"] = BARRIER_DURATION
+    cells = session.resources["power"]
+    return (
+        f"You deploy a barrier ({BARRIER_DURATION} ticks). "
+        f"-{DEPLOY_BARRIER_COST} Power Cells ({cells.current}/{cells.maximum})."
     )
 
 

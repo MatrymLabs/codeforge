@@ -120,6 +120,8 @@ class Job(TypedDict):
     inherent: str  # passive trait label
     signature: str  # defining job ability label
     resistances: dict[str, str]  # element/status code -> level (Normal/Weak/Resist/Immune/Absorb)
+    power_cells: int  # size of the job's custom resource pool (0 = none, runs on MP)
+    power_regen: int  # power cells regained per combat tick
 
 
 class SeedError(Exception):
@@ -343,6 +345,8 @@ def load_jobs(path: Path) -> dict[str, Job]:
             "inherent": "",
             "signature": "",
             "resistances": {},
+            "power_cells": 0,
+            "power_regen": 0,
         }
         merged.update(template)
         merged.update(fields)
@@ -361,6 +365,8 @@ def load_jobs(path: Path) -> dict[str, Job]:
                 ("inherent", str),
                 ("signature", str),
                 ("resistances", dict),
+                ("power_cells", int),
+                ("power_regen", int),
             ),
         )
         stats = dict(DEFAULT_JOB_STATS) | dict(merged["stats"])
@@ -387,5 +393,7 @@ def load_jobs(path: Path) -> dict[str, Job]:
             inherent=merged["inherent"],
             signature=merged["signature"],
             resistances=dict(merged["resistances"]),
+            power_cells=merged["power_cells"],
+            power_regen=merged["power_regen"],
         )
     return jobs

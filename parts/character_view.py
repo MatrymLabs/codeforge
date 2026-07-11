@@ -95,6 +95,7 @@ def sheet_from_session(session: Session) -> CharacterSheet | None:
     job = JOBS[session.job]
     attrs = {name: session.stats.get(name).base for name in _ATTR_CODES.values()}
     hp, mp = session.resources["hp"], session.resources["mp"]
+    power = session.resources.get("power")
     progress = session.job_progress.get(session.job)
     job_level = progress.job_level if progress else 1
     jp = progress.jp if progress else 0
@@ -106,6 +107,7 @@ def sheet_from_session(session: Session) -> CharacterSheet | None:
         next_level_xp=get_next_level_threshold(session.level),
         hp=(hp.current, hp.maximum),
         mp=(mp.current, mp.maximum),
+        power=(power.current, power.maximum) if power is not None else None,
         jp=jp,
         race="Human",
         primary_job=job["name"],

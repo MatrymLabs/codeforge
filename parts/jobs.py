@@ -44,6 +44,9 @@ def bind_calling(session: Session, word: str) -> str:
         "hp": Resource(name="hp", current=max_hp, maximum=max_hp),
         "mp": Resource(name="mp", current=max_mp, maximum=max_mp),
     }
+    cells = job["power_cells"]  # a custom resource pool, if the job declares one (0 = none)
+    if cells > 0:
+        session.resources["power"] = Resource(name="power", current=cells, maximum=cells)
     # First time in this job? Open a progress record at level 1. A prior record is preserved.
     session.job_progress.setdefault(label, JobProgress(job_id=label))
     return f"You take up the way of the {job['name']}. Type SCORE to see your sheet."

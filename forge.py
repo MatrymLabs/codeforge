@@ -34,7 +34,7 @@ from parts.combat import attack
 from parts.commands import ADMIN, CORE, Command, CommandSet
 from parts.console import console_menu, diagnostics_view, run_view
 from parts.doors import unlock
-from parts.engineer import diagnostic_scan, field_repair
+from parts.engineer import deploy_barrier, diagnostic_scan, field_repair
 from parts.equipment import equip, unequip
 from parts.events import announce, bind_echo, rename_echo, unbind_echo
 from parts.foundry import arch_command, forge_command
@@ -72,7 +72,7 @@ HELP_TEXT = (
     "Commands: look, go <direction> (or n/s/e/w/u/d), "
     "take, drop, inventory, talk <npc>, say <msg>, name <yourname>, who, "
     "jobs, job <calling>, score, equip <item>, unequip <slot>, "
-    "attack <target>, repair, scan <target>, "
+    "attack <target>, repair, scan <target>, deploy, "
     "unlock <door> with <key>, regs [topic|id], library [id], law [id], "
     "registry [show|find|type|status], "
     "qa gate [all|<id>], safety review <id>, docs check, pm status, pm metrics, "
@@ -483,6 +483,8 @@ def handle_command(session: Session, signal: str) -> str:
         return unequip(session, routed_signal.split(" ", 1)[1].strip())
     if routed_signal in ("repair", "field repair"):
         return field_repair(session)
+    if routed_signal in ("deploy", "deploy barrier", "barrier"):
+        return deploy_barrier(session)
     if routed_signal.startswith("scan "):
         return diagnostic_scan(session, routed_signal.split(" ", 1)[1].strip())
     if routed_signal == "jobs":
