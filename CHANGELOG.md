@@ -7,6 +7,12 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
 ## [Unreleased]
 
 ### Added / Changed
+- **The arch: step into the Proving Ground (`@arch`).** The last rung of the workshop loop.
+  An owner-only, read-only `@arch` verb (CMD-UM10-S01-N001-021-R0) shows the Proving Ground:
+  the candidate files the Foundry (`@forge`) generated into the `workspace/` sandbox, awaiting
+  review. It closes the loop (forge -> review -> promote) without any new risk: it never runs
+  or installs generated code, and promotion into `parts/` stays a human branch -> check -> PR
+  step. Surfaced in the workshop cockpit under "Owner tools"; a player is denied at the tick.
 - **Removed trademarked references (IP hygiene).** Replaced the second seed pack with an
   original game, `spiral-ascent` (climb the Spiral, clear each Floor's Gate), and scrubbed
   every reference across code, tests, docs, and the cast manifest. Renamed the in-MUD

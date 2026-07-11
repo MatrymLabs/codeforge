@@ -34,7 +34,7 @@ from parts.commands import ADMIN, CORE, Command, CommandSet
 from parts.console import console_menu, diagnostics_view, run_view
 from parts.doors import unlock
 from parts.events import announce, bind_echo, rename_echo, unbind_echo
-from parts.foundry import forge_command
+from parts.foundry import arch_command, forge_command
 from parts.frameup import inspect
 from parts.functions import functions
 from parts.generate import system_generate
@@ -143,6 +143,16 @@ def _build_commands() -> CommandSet:
             "CMD-UM10-S01-N001-020-R0",
             "the Foundry: propose a part skeleton, approve, generate into the sandbox (owner)",
             lambda s, arg: forge_command(s, arg),
+            namespace=ADMIN,
+            min_rank="owner",
+        )
+    )
+    cs.add(
+        Command(
+            "@arch",
+            "CMD-UM10-S01-N001-021-R0",
+            "step through the arch into the Proving Ground: review forged candidates (owner)",
+            lambda s, arg: arch_command(s, arg),
             namespace=ADMIN,
             min_rank="owner",
         )

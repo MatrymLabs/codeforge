@@ -32,10 +32,9 @@ _LIVE = (
 _OWNER = (
     ("@forge <name>", "propose a part skeleton (writes nothing until you approve)"),
     ("@forge approve <name>", "generate the approved candidate into the workspace/ sandbox"),
+    ("@arch", "step through the arch into the Proving Ground: review forged candidates"),
 )
-_COMING = (
-    ("arch", "step through to the proving ground to play what you built (owner-only, later)"),
-)
+_COMING = (("cast play", "run a generated cast as its own game (the full loop, later)"),)
 
 
 def workshop_menu() -> str:

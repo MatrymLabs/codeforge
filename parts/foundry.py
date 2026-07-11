@@ -223,3 +223,40 @@ def forge_command(session: object, arg: str = "", root: Path | None = None) -> s
         return str(exc)
     _PENDING[name] = proposal
     return render_proposal(proposal) + f"\n\n  Approve to generate: @forge approve {name}"
+
+
+# --- the arch: step into the Proving Ground to review what the Foundry forged ---------------
+#
+# Read-only, owner-only. The candidates in the sandbox are drafts awaiting a human's review;
+# nothing here is wired into the running engine. Promotion into parts/ stays a branch -> PR
+# step, so the arch never runs or installs generated code -- it only shows it.
+
+
+def list_candidates(root: Path | None = None) -> list[Path]:
+    """Every generated candidate file in the sandbox, sorted."""
+    base = (root if root is not None else _root()) / _SANDBOX
+    return sorted(base.glob("**/*.py")) if base.is_dir() else []
+
+
+def render_proving_ground(root: Path | None = None) -> str:
+    """The Proving Ground: the Foundry's candidates, awaiting review (read-only)."""
+    base = (root if root is not None else _root()) / _SANDBOX
+    candidates = list_candidates(root)
+    lines = ["THE PROVING GROUND - candidates forged, awaiting your review", ""]
+    if not candidates:
+        lines.append("  Nothing forged yet. Draft one: @forge <name>, then @forge approve <name>.")
+        return "\n".join(lines)
+    for path in candidates:
+        lines.append(f"  {path.relative_to(base)}  ({path.stat().st_size} bytes)")
+    lines += [
+        "",
+        "  These are sandboxed drafts -- nothing here is wired into the engine. Review a",
+        "  candidate, then promote it into parts/ via the normal branch -> check -> PR flow.",
+    ]
+    return "\n".join(lines)
+
+
+def arch_command(session: object, arg: str = "", root: Path | None = None) -> str:
+    """The owner-only `@arch` verb: step into the Proving Ground and review the forged
+    candidates. Read-only; rank is enforced by the command spine (ADMIN, min_rank owner)."""
+    return render_proving_ground(root)
