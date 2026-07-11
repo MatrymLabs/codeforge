@@ -13,7 +13,7 @@ The one map to everything under `docs/`. New here? Read [RUNNING.md](RUNNING.md)
 
 - [architecture.md](architecture.md), the engine tick, drivers, and canonical state.
 - [adr/](adr/), Architecture Decision Records (0001 canonical state, 0002 derive-don't-store, 0003 framework-free).
-- [frameless_python.md](frameless_python.md), the frameless identity: stdlib + my architecture as the spine, tools as integrations.
+- [frameless_python.md](frameless_python.md), the architecture-first identity: stdlib + my architecture as the spine, frameworks as integrations that earn their place.
 - [tooling_strategy.md](tooling_strategy.md), how a tool earns its place: the decision matrix, review template, and dependency-approval rule.
 - [full_stack_forge_decision.md](full_stack_forge_decision.md), the full-stack framework decision (custom core + FastAPI + custom renderers; Django/Evennia/React deferred).
 - [framework_decision_matrix.md](framework_decision_matrix.md), the scored path comparison + tool status labels.
