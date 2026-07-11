@@ -28,3 +28,6 @@ site/
 
 # The Foundry sandbox: generated candidate files (never promoted automatically).
 workspace/
+
+# setuptools build artifacts (from a local pip install/build)
+build/
