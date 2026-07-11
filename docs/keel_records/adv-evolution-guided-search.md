@@ -55,8 +55,9 @@ load-bearing calls, and they are his.
 - Delivered in PR #73 (the candidate bake-off) atop the typed genome (#72).
 
 ## What Josh learned
-> DRAFT (Josh to confirm or replace in his own words): a guided search earns trust from its
-> governance, bounded, explainable, human-final, not from a clever fitness formula.
+A guided search earns trust from its governance (bounded, explainable, human-final), not from
+a clever fitness formula. The load-bearing design is keeping the search from ever promoting its
+own output, and I can defend why the human stays outside the loop for the risky edits.
 
 ## Final decision
 Josh's, at the merge junction and of this record. Level 4 holds only if he can defend the bounded,

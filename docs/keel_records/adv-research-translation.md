@@ -57,8 +57,9 @@ not-recommended). The governance boundary (AI proposes, never promotes) was a hu
 - Delivered across PRs #72-76 (genome/gate, bake-off, MUD surface, second subject, cards).
 
 ## What Josh learned
-> DRAFT (Josh to confirm or replace in his own words): translating research means grading the
-> evidence before writing code, and the honest labels are the deliverable as much as the modules.
+Translating research means grading the evidence before writing any code. The honest labels
+(what transfers, what is extrapolation, what to reject) are the deliverable as much as the
+modules are, and I can defend where each one landed.
 
 ## Final decision
 Josh's, at the merge junction of each slice and of this record. He claims level 4 only if he can
