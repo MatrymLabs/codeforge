@@ -7,9 +7,13 @@ test twin is exact. The dummy reassembles on defeat -- it is a
 training dummy; collapsing is its job.
 """
 
+from dataclasses import replace
+
 from parts.events import announce
+from parts.jobs import JOBS
 from parts.npcs import NPCS, trace_npc
 from parts.progression import (
+    get_next_job_level_threshold,
     get_next_level_threshold,
     hp_gain_per_level,
     mp_gain_per_level,
@@ -58,6 +62,33 @@ def award_xp(session: Session, amount: int) -> str:
     return "\n".join(lines)
 
 
+def award_jp(session: Session, amount: int) -> str:
+    """Add JP to the ACTIVE job; climb every job-level threshold crossed. The curves are law.
+
+    JP here is cumulative earned progress toward the job's level (it mirrors XP -> PLvl).
+    Changing jobs never touches another job's record. A seat with no active job earns nothing.
+    """
+    job = session.job
+    if not job or job not in session.job_progress:
+        return ""
+    prog = session.job_progress[job]
+    new_jp = prog.jp + amount
+    new_level = prog.job_level
+    lines = [f"You gain {amount} JP ({JOBS[job]['name']})."]
+    while True:
+        threshold = get_next_job_level_threshold(new_level)
+        if threshold is None or new_jp < threshold:
+            break
+        new_level += 1
+        lines.append(f"*** {JOBS[job]['name']} advances to job level {new_level}! ***")
+    session.job_progress[job] = replace(prog, jp=new_jp, job_level=new_level)
+    if session.named:
+        from parts.characters import save_character
+
+        save_character(session)
+    return "\n".join(lines)
+
+
 def attack(session: Session, word: str) -> str:
     """One strike of the training loop."""
     if session.stats is None:
@@ -84,4 +115,8 @@ def attack(session: Session, word: str) -> str:
         exclude=session.player_id,
     )
     defeat = f"You strike {npc['name']} for {dmg}. It collapses -- then reassembles itself."
-    return f"{defeat}\n{award_xp(session, npc['xp'])}"
+    rewards = award_xp(session, npc["xp"])
+    jp = award_jp(session, npc["xp"])
+    if jp:
+        rewards = f"{rewards}\n{jp}"
+    return f"{defeat}\n{rewards}"

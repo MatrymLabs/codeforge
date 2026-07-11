@@ -5,7 +5,7 @@ import copy
 import pytest
 
 from parts import npcs
-from parts.combat import attack, award_xp, strike_power
+from parts.combat import attack, award_jp, award_xp, strike_power
 from parts.events import bind_echo, unbind_echo
 from parts.jobs import bind_calling
 from parts.session import SESSIONS, Session
@@ -80,3 +80,39 @@ def test_attack_flows_through_the_engine_tick():
     s = _fighter()
     out = handle_command(s, "attack dummy")
     assert "You strike the training dummy" in out
+
+
+def test_jp_accrues_to_the_active_job_and_levels_it():
+    s = _fighter("engineer")
+    # cumulative JP to reach job level 2 is 60 (20 for lvl 1 + 40 for lvl 2).
+    out = award_jp(s, 60)
+    assert s.job_progress["engineer"].jp == 60
+    assert s.job_progress["engineer"].job_level == 2  # crossed the threshold
+    assert "advances to job level 2" in out
+
+
+def test_a_small_jp_gain_accrues_without_leveling():
+    s = _fighter("engineer")
+    award_jp(s, 10)
+    assert s.job_progress["engineer"].jp == 10
+    assert s.job_progress["engineer"].job_level == 1  # below the level-2 threshold
+
+
+def test_jp_only_touches_the_active_job():
+    s = _fighter("engineer")
+    from parts.job_progress import JobProgress
+
+    s.job_progress["scholar"] = JobProgress("scholar", job_level=5, jp=200)
+    award_jp(s, 30)
+    assert s.job_progress["scholar"] == JobProgress("scholar", job_level=5, jp=200)  # untouched
+
+
+def test_defeating_an_enemy_awards_jp():
+    s = _fighter("engineer")
+    out = ""
+    for _ in range(10):  # strike until the dummy collapses
+        out = attack(s, "dummy")
+        if "reassembles" in out:
+            break
+    assert "JP (Engineer)" in out  # the kill line reports the JP award
+    assert s.job_progress["engineer"].jp > 0
