@@ -10,3 +10,11 @@ copper_key:
 
 rusty_lantern:
   location: workshop
+
+# An equippable weapon (Engineer-flavored). Balance is prototype.
+forge_wrench:
+  name: a modular forge wrench
+  keywords: [wrench, forge wrench, forge]
+  location: workshop
+  slot: weapon
+  mods: {ATK: 6, ACC: 3}

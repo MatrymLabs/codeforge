@@ -14,6 +14,7 @@ pretend they exist.
 from __future__ import annotations
 
 from parts.derived import derived_stats
+from parts.equipment import apply_equipment, equipped_loadout
 from parts.jobs import BASE_HP, BASE_MP, JOBS
 from parts.progression import get_next_level_threshold
 from parts.score_sheet import CharacterSheet, EquipmentLoadout, JobTP
@@ -109,8 +110,8 @@ def sheet_from_session(session: Session) -> CharacterSheet | None:
         signature=job["signature"],
         secondary_job=None,
         attributes={code: attrs[name] for code, name in _ATTR_CODES.items()},
-        derived=derived_stats(attrs, session.level),
+        derived=apply_equipment(derived_stats(attrs, session.level), session),
         tp_rows=tp_rows,
-        equipment=EquipmentLoadout(),
+        equipment=equipped_loadout(session),
         resistances={},
     )
