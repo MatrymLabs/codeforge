@@ -7,6 +7,56 @@
 
 ---
 
+## Chief Engineer's Log - 2026-07-11 (ship's day 192) - "The Frame Held: A Restoration, and the Keel Made Plain"
+
+**Ship's day 192, the eleventh of July.** No new deck was raised today. We did the harder,
+quieter work: we took the frame off the flagship and looked at it honestly, then put back only
+what earned its place.
+
+The restoration ran in eight numbered slices, each a controlled cut, never a reckless rewrite.
+We taught the classification registry to notice its own blind spots - a completeness check that
+names any code module nobody filed, so the index can no longer lie by omission. We walked the
+docs against the code and pulled every stale number that had drifted out of true. We settled on
+one name for the architecture-first doctrine instead of three. We gathered the readiness words -
+pass, fail, watch, not-applicable - that four gates had each re-declared on their own, into one
+shared vocabulary, so a gate and the board that reads it can never drift apart again. We deleted
+a second TOML parser that a subsystem had grown, and pointed it at the one validated ledger
+reader. We clarified the control panel so seven check-like buttons read as one ladder, and we
+closed a real gap: the ritual had been skipping the integrity report, so "run the ritual" now
+files every piece of evidence it should.
+
+Two slices we were told to execute, and did not. That is the part worth remembering. One asked
+us to force seven check-shaped records under a single shared base; we looked, found they
+genuinely differ - some carry a not-applicable state, some a plain boolean, some a blocking flag,
+some none - and reported that a shared base would buy coupling for no behavior. The other asked
+us to merge three research-to-build maps and four statements of the dependency rule; we found the
+rule was already consolidated and the three maps were distinct, valuable, and simply undiscoverable
+- so we indexed them as one family instead of flattening them into one file. A restoration keeps
+the sound planks. Declining, with evidence, is the work too.
+
+Then we made the keel plain. Two advanced skills - translating research into a tested system, and
+designing an evaluator-guided search that stays human-final - had proof on the board but no
+declared owner. The gate that guards ownership refuses any portfolio claim without a real keel
+record on disk, and there were none. So we wrote them, from the actual build history: intent,
+decision, what the AI built, what the human decided, the tests that stand behind it. The claims
+are staged at the defendable level, and held at the gangway for the Captain's own word - the
+first-person line is his to write, because no machine assigns a man's ownership for him.
+
+We also re-ran the engine-tick benchmark, one hundred and thirteen thousand commands a second,
+median under nine microseconds. Down about a tenth from the last reading, but the ship was under
+its own load at the time, and the shape held - the honest label is noise, not a regression. A
+wobble inside the measurement is not a fall.
+
+The reckoning: seven changes merged to main behind green pipelines, an eighth open for the
+Captain's signature; two things deliberately not done, each with its reasons filed; the truth
+audit still clean. Nothing rebuilt that was already sound. Nothing claimed that was not proven.
+
+The frame is back on, and it fits better than it did. The watch stands relieved.
+
+*- Chief Engineer, MatrymLabs*
+
+---
+
 ## Chief Engineer's Log - 2026-07-10 (ship's day 191) - "The Long Watch: Full-Stack, and the Forge That Builds Itself"
 
 **Ship's day 191, the tenth of July.** The longest watch on record, and the flagship
