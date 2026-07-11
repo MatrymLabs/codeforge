@@ -11,6 +11,7 @@ its own Session pointed at the same world.
 
 from dataclasses import dataclass, field
 
+from parts.job_progress import JobProgress
 from parts.resources import Resource
 from parts.stats import StatBlock
 
@@ -42,6 +43,9 @@ class Session:
     # each a name -> remaining-ticks countdown. A fresh session starts with a clear board.
     cooldowns: dict[str, int] = field(default_factory=dict)
     statuses: dict[str, int] = field(default_factory=dict)
+    # Per-job progression, keyed by job id. A character keeps a record per job they take up,
+    # so switching jobs never erases a prior job's level. Persisted via the job_progress card.
+    job_progress: dict[str, JobProgress] = field(default_factory=dict)
 
 
 # The registry of connected sessions. Gateways and game_loop register

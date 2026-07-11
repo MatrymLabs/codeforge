@@ -18,7 +18,7 @@ transfers straight to PostgreSQL when the world outgrows one file.
 import os
 from pathlib import Path
 
-from sqlalchemy import Engine, create_engine
+from sqlalchemy import Engine, ForeignKey, create_engine
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from sqlalchemy.orm import Session as SqlSession
 
@@ -57,6 +57,20 @@ class CharacterRow(ArchiveBase):
     account: Mapped[str] = mapped_column(default="")
     auth_salt: Mapped[str | None] = mapped_column(default=None)  # legacy v1 char passwords
     auth_hash: Mapped[str | None] = mapped_column(default=None)
+
+
+class JobProgressRow(ArchiveBase):
+    """One character's progress in ONE job. A character has many of these, one per job they
+    have taken up -- so changing jobs never erases a prior job's level (derive-don't-store:
+    stats recompute, but the job's earned rank is a canonical fact worth keeping)."""
+
+    __tablename__ = "job_progress"
+
+    character_name: Mapped[str] = mapped_column(ForeignKey("characters.name"), primary_key=True)
+    job_id: Mapped[str] = mapped_column(primary_key=True)
+    job_level: Mapped[int] = mapped_column(default=1)
+    jp: Mapped[int] = mapped_column(default=0)  # job points available in this job
+    tp: Mapped[int] = mapped_column(default=0)  # training progress toward the next milestone
 
 
 class AccountRow(ArchiveBase):

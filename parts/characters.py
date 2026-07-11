@@ -9,6 +9,7 @@ facts; stats and resources recompute on restore.
 from typing import Any
 
 from parts.db import CharacterRow, open_archive_session
+from parts.job_progress import load_job_progress, save_job_progress
 from parts.jobs import BASE_HP, BASE_MP, bind_calling
 from parts.progression import hp_gain_per_level, mp_gain_per_level
 from parts.resources import Resource
@@ -72,6 +73,9 @@ def save_character(session: Session) -> None:
         archive_row.account = session.account
         db.add(archive_row)
         db.commit()
+    # Persist per-job progress AFTER the character row exists (the foreign key needs it).
+    if session.job_progress:
+        save_job_progress(session.player_id, session.job_progress.values())
 
 
 def restore_character(session: Session, casefile: dict[str, Any]) -> None:
@@ -87,6 +91,8 @@ def restore_character(session: Session, casefile: dict[str, Any]) -> None:
     if not job:
         return
     bind_calling(session, job)
+    # Restore every job record this character earned; bind_calling seeded the active one.
+    session.job_progress = load_job_progress(session.player_id) or session.job_progress
     assert session.stats is not None
     sta = session.stats.get("stamina").base
     mag = session.stats.get("magic").base
