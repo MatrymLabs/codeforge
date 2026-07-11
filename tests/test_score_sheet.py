@@ -141,3 +141,39 @@ def test_multiple_tp_records_all_render() -> None:
 def test_an_unknown_display_mode_is_refused_loud() -> None:
     with pytest.raises(ValueError, match="unknown display_mode"):
         render_score_sheet(_matrym(), display_mode="hologram")
+
+
+# --- display modes --------------------------------------------------------------
+def test_every_framed_mode_renders_within_the_frame() -> None:
+    # developer is a raw dump, not a framed sheet, so it is exempt from the 70-col frame.
+    for mode in ("standard", "compact", "jobs", "equipment", "resistances"):
+        out = render_score_sheet(_matrym(), display_mode=mode)
+        assert all(len(line) <= 70 for line in out.splitlines()), mode
+
+
+def test_the_developer_view_renders() -> None:
+    assert render_score_sheet(_matrym(), display_mode="developer").strip()
+
+
+def test_compact_drops_the_derived_and_resistance_blocks() -> None:
+    out = render_score_sheet(_matrym(), display_mode="compact")
+    assert "MAG DEF" not in out and "FIR:" not in out
+    assert "STR" in out  # but keeps identity + core stats
+
+
+def test_resistances_mode_shows_the_grid() -> None:
+    out = render_score_sheet(_matrym(), display_mode="resistances")
+    assert "LGT:Weak" in out and "PSN:Resist" in out
+
+
+def test_developer_mode_marks_prototype_formulas() -> None:
+    out = render_score_sheet(_matrym(), display_mode="developer")
+    assert "DEVELOPER VIEW" in out and "prototype_balance_only" in out
+
+
+def test_jobs_mode_lists_unlocked_jobs() -> None:
+    from parts.score_sheet import JobLine
+
+    sheet = replace(_matrym(), jobs=(JobLine("Engineer", 9, 1150, 340),), primary_job="Engineer")
+    out = render_score_sheet(sheet, display_mode="jobs")
+    assert "Engineer" in out and "Lv 9" in out and "(active)" in out

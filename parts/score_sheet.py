@@ -38,6 +38,16 @@ class JobTP:
 
 
 @dataclass(frozen=True)
+class JobLine:
+    """One unlocked job's standing, for the `jobs` view: its level, JP, and TP."""
+
+    name: str
+    level: int
+    jp: int
+    tp: int
+
+
+@dataclass(frozen=True)
 class EquipmentLoadout:
     """The equipped items by slot. An empty string means the slot is bare."""
 
@@ -80,6 +90,7 @@ class CharacterSheet:
     equipment: EquipmentLoadout = field(default_factory=EquipmentLoadout)
     resistances: dict[str, str] = field(default_factory=dict)
     key_item: str = ""
+    jobs: tuple[JobLine, ...] = ()  # every unlocked job, for the `jobs` view
 
 
 def sheet_from_mapping(data: Mapping[str, Any]) -> CharacterSheet:
@@ -255,16 +266,87 @@ def _render_standard(sheet: CharacterSheet) -> str:
     return "\n".join(parts)
 
 
-_MODES = {"standard": _render_standard}
+def _render_compact(sheet: CharacterSheet) -> str:
+    """Identity, level, job, HP/MP, core stats, and the primary loadout -- the quick glance."""
+    parts = [
+        _frame(),
+        _header(sheet),
+        _frame(),
+        *_zip_block(_resource_lefts(sheet)[: (2 if sheet.mp is not None else 1)], []),
+        _divider(),
+        *_zip_block(_attr_lefts(sheet), _loadout_rights(sheet)),
+        _frame(),
+    ]
+    return "\n".join(parts)
+
+
+def _render_jobs(sheet: CharacterSheet) -> str:
+    """Every unlocked job with its level, JP, and TP -- and which is active."""
+    lines = [_frame(), _header(sheet), _frame(), " Jobs"]
+    for jl in sheet.jobs:
+        active = "  (active)" if jl.name == sheet.primary_job else ""
+        lines.append(f"   {jl.name:<16} Lv {jl.level:<3} JP {jl.jp:<6} TP {jl.tp}{active}")
+    if not sheet.jobs:
+        lines.append("   (no jobs unlocked yet)")
+    lines.append(_frame())
+    return "\n".join(lines)
+
+
+def _render_equipment(sheet: CharacterSheet) -> str:
+    """The worn gear and the derived stats it shapes -- equipment and its effects."""
+    parts = [
+        _frame(),
+        _header(sheet),
+        _frame(),
+        *_zip_block(_equipment_lefts(sheet), [], _EQUIP_LEFT),
+        _divider(),
+        *_derived_block(sheet),
+        _frame(),
+    ]
+    return "\n".join(parts)
+
+
+def _render_resistances(sheet: CharacterSheet) -> str:
+    """The elemental and status resistance grid."""
+    lines = [_frame(), _header(sheet), _frame()]
+    lines += [line.replace("  ", " ", 1) for line in _resist_rights(sheet)]
+    lines.append(_frame())
+    return "\n".join(lines)
+
+
+def _render_developer(sheet: CharacterSheet) -> str:
+    """Raw and derived values with their sources -- the internal view (prototype formulas)."""
+    worn = {slot: item for slot, item in vars(sheet.equipment).items() if item}
+    resisted = {code: lvl for code, lvl in sheet.resistances.items() if lvl != "Normal"}
+    lines = [
+        _frame(),
+        f" DEVELOPER VIEW -- {sheet.display_name}",
+        _frame(),
+        f" player_level={sheet.player_level} xp={sheet.current_xp} next={sheet.next_level_xp}",
+        f" job={sheet.primary_job!r} job_level={sheet.primary_job_level} jp={sheet.jp}",
+        f" attributes={sheet.attributes}",
+        f" derived={sheet.derived}  (prototype_balance_only formulas -- ADR-0006)",
+        f" equipped={worn}",
+        f" resistances(non-normal)={resisted}",
+        _frame(),
+    ]
+    return "\n".join(lines)
+
+
+_MODES = {
+    "standard": _render_standard,
+    "compact": _render_compact,
+    "jobs": _render_jobs,
+    "equipment": _render_equipment,
+    "resistances": _render_resistances,
+    "developer": _render_developer,
+}
 
 
 def render_score_sheet(sheet: CharacterSheet, display_mode: str = "standard") -> str:
-    """Render a character sheet in the requested mode. Only `standard` ships today; the other
-    modes (compact, jobs, equipment, resistances, developer) are a documented next batch."""
+    """Render a character sheet in the requested mode: standard, compact, jobs, equipment,
+    resistances, or developer. An unknown mode is refused loud."""
     renderer = _MODES.get(display_mode)
     if renderer is None:
-        raise ValueError(
-            f"unknown display_mode {display_mode!r}; available: {sorted(_MODES)} "
-            "(compact/jobs/equipment/resistances/developer are planned)"
-        )
+        raise ValueError(f"unknown display_mode {display_mode!r}; available: {sorted(_MODES)}")
     return renderer(sheet)
