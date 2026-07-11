@@ -118,6 +118,11 @@ def sheet_from_session(session: Session) -> CharacterSheet | None:
     job_level = progress.job_level if progress else 1
     jp = progress.jp if progress else 0
     tp_rows = (JobTP(job["name"], progress.tp, TP_MILESTONE),) if progress else ()
+    secondary = None
+    if session.secondary_job and session.secondary_job in JOBS:
+        sec = session.job_progress.get(session.secondary_job)
+        sec_level = sec.job_level if sec else 1
+        secondary = f"{JOBS[session.secondary_job]['name']} (Lv {sec_level})"
     return CharacterSheet(
         display_name=display_name(session.player_id),
         player_level=session.level,
@@ -134,7 +139,7 @@ def sheet_from_session(session: Session) -> CharacterSheet | None:
         movement=job["movement"],
         inherent=job["inherent"],
         signature=job["signature"],
-        secondary_job=None,
+        secondary_job=secondary,
         attributes={code: attrs[name] for code, name in _ATTR_CODES.items()},
         # Base formulas, then equipped gear, then unlocked job perks -- all through the stack.
         derived=apply_stat_modifiers(

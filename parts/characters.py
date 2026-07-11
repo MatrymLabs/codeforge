@@ -19,6 +19,7 @@ from parts.session import Session
 def _archive_row_to_casefile(archive_row: CharacterRow) -> dict[str, Any]:
     casefile: dict[str, Any] = {
         "job": archive_row.job,
+        "secondary_job": archive_row.secondary_job,
         "level": archive_row.level,
         "xp": archive_row.xp,
         "location": archive_row.location,
@@ -44,6 +45,7 @@ def put_record(name: str, casefile: dict[str, Any]) -> None:
     with open_archive_session() as db:
         archive_row = db.get(CharacterRow, name) or CharacterRow(name=name)
         archive_row.job = casefile.get("job", "")
+        archive_row.secondary_job = casefile.get("secondary_job", "")
         archive_row.level = int(casefile.get("level", 1))
         archive_row.xp = int(casefile.get("xp", 0))
         archive_row.location = casefile.get("location", START_ROOM)
@@ -66,6 +68,7 @@ def save_character(session: Session) -> None:
             name=session.player_id
         )
         archive_row.job = session.job
+        archive_row.secondary_job = session.secondary_job
         archive_row.level = session.level
         archive_row.xp = session.xp
         archive_row.location = session.location
@@ -87,6 +90,7 @@ def restore_character(session: Session, casefile: dict[str, Any]) -> None:
     session.level = int(casefile["level"])
     session.xp = int(casefile["xp"])
     session.location = str(casefile["location"])
+    session.secondary_job = str(casefile.get("secondary_job", ""))
     job = str(casefile["job"])
     if not job:
         return

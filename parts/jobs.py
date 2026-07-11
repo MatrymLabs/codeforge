@@ -50,3 +50,17 @@ def bind_calling(session: Session, word: str) -> str:
     # First time in this job? Open a progress record at level 1. A prior record is preserved.
     session.job_progress.setdefault(label, JobProgress(job_id=label))
     return f"You take up the way of the {job['name']}. Type SCORE to see your sheet."
+
+
+def set_secondary(session: Session, word: str) -> str:
+    """Equip a secondary job: it lends its ability kit, and keeps its own level/JP record."""
+    label = word.strip().lower()
+    if not session.job:
+        return "Take up a primary calling first. Type JOBS."
+    if label not in JOBS:
+        return f"There is no calling named '{word}'. Type JOBS to see the paths."
+    if label == session.job:
+        return "That is already your primary calling."
+    session.secondary_job = label
+    session.job_progress.setdefault(label, JobProgress(job_id=label))
+    return f"You equip the {JOBS[label]['name']} as your secondary. Its kit is yours to borrow."

@@ -50,6 +50,7 @@ class CharacterRow(ArchiveBase):
 
     name: Mapped[str] = mapped_column(primary_key=True)
     job: Mapped[str] = mapped_column(default="")
+    secondary_job: Mapped[str] = mapped_column(default="")  # the equipped subjob, or "" for none
     level: Mapped[int] = mapped_column(default=1)
     xp: Mapped[int] = mapped_column(default=0)
     location: Mapped[str] = mapped_column(default="forge")
