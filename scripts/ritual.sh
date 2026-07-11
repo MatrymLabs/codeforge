@@ -115,6 +115,20 @@ else
   die "A claim is FLAGGED -- correct the claim (or the code) before entering. See /tmp/ritual-truth.log."
 fi
 
+# --- 4b. INTEGRITY: file the dated repo-integrity evidence bundle ------------
+# The RepoIntegrityRitual composes the same self-audit signals (registry, QA board,
+# overclaim scan, docs, dependency provenance) into ONE dated, honest evidence file.
+# Its gating signals already GATED above (readiness + truth); here we FILE the bundle,
+# so "run the ritual" produces the integrity evidence too (it used to be skipped).
+INTEGRITY_STATUS="filed"
+spark_line "Integrity -- filing the dated repo-integrity evidence bundle..."
+if make repo-integrity >/tmp/ritual-integrity.log 2>&1; then
+  ok "Repo-integrity evidence filed."
+else
+  INTEGRITY_STATUS="report failed (see /tmp/ritual-integrity.log)"
+  warn "repo-integrity could not file its report -- review /tmp/ritual-integrity.log."
+fi
+
 # --- 5. MIRROR: sync with GitHub -------------------------------------------
 MIRROR_STATUS="unknown"
 spark_line "Mirror -- syncing with GitHub..."
@@ -171,6 +185,7 @@ REPORT_FILE="$RITUAL_REPORTS/$(date -u +%Y-%m-%d).md"
   echo "- WARDS: SAST clean · secrets clean · deps ${WARDS_AUDIT:-clean}"
   echo "- READINESS: registry validates"
   echo "- VERITAS: all claims verified (truth check)"
+  echo "- INTEGRITY: ${INTEGRITY_STATUS:-filed}"
   echo "- SMOKE: ${SMOKE_RESULT:-passed}"
   echo "- MIRROR: ${BRANCH:-?} - ${MIRROR_STATUS:-unknown}"
   echo ""

@@ -347,13 +347,22 @@ governing boundaries are in [`docs/AI_WORKFLOW.md`](docs/AI_WORKFLOW.md).
 
 ## Workshop buttons
 
+**The quality gates form one ladder, not a pile of look-alikes.** `make check` is *the* gate
+(CI runs it: lint + types + tests + coverage; green before merge). `make doctor` runs the same
+gates diagnostically - read-only, stops at the first failure, prescribes the fix (use it when
+`check` is red). `make ritual` is the full ceremony: `check` + security wards + `readiness` +
+`truth` + a `repo-integrity` evidence report + an end-to-end `smoke` test. The single-purpose
+verifiers - `readiness` (registry + PM), `truth` (claims vs reality), `repo-integrity` (dated
+evidence bundle), `smoke` (live socket round-trip) - are the steps the ritual composes; run one
+directly when you want just that check.
+
 | Command | What it does |
 |---|---|
 | `make env` | Create/validate the `.venv` and install dev deps (fails loud on Python < 3.13) |
 | `make fix` / `make check` | Auto-fix, then lint + mypy + tests + property tests |
 | `make test` / `make property` | Deterministic suite / Hypothesis property tests, run separately |
 | `make coverage` / `make security` | Coverage report (85% floor) / bandit SAST + dependency CVE scan |
-| `make doctor` | Run every gate read-only, stop at the first failure, and prescribe the fix |
+| `make doctor` | The same gates as `check`, diagnostic: run read-only, stop at the first failure, and prescribe the fix |
 | `make patch` | Scan deps for CVEs, apply available security fixes (`pip-audit --fix`), then re-verify + file dated evidence |
 | `make daily` | Apply security patches (+re-verify), then check federal guidance for updates and file them in the Guidance Library (a private companion repo, `FGL_HOME`) |
 | `spark` · `codeforge serve` | Multiplayer gateway (Ctrl+C sleeps the world) |
