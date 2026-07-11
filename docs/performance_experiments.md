@@ -25,8 +25,15 @@ commit de0f8a5. Reproduce with `python -m benchmarks.perf_journeys`.
 - **Metrics:** median/p95 latency, `yaml.safe_load` call count, peak memory.
 - **Expected Benefit:** ~40x on catalog/registry search and every `find_part` caller (career board, `catalog`, `reuse`). **Potential Harm:** stale catalog after a live file edit (mitigated by mtime guard).
 - **Compatibility / Security Risk:** none (read-only, same data). **Maintenance Cost:** low.
-- **Rollback:** revert the cache decorator.
-- **Result / Decision:** not run yet. Workload class: **serialization/I-O-bound**. Level 1.
+- **Rollback:** revert the cache block.
+- **Result / Decision:** **VERIFIED IMPROVEMENT (executed 2026-07-11).** catalog search median
+  **39 ms -> 91.8 us (~426x)**, p95 67 ms -> 0.12 ms; cProfile confirms `yaml.safe_load` left
+  the hot path. Correctness proven: `cached == fresh`, an on-disk edit (mtime) invalidates, a
+  bad edit fails loud and is never cached. Full suite 673 passed (+4 cache tests), 93.30%
+  coverage. No behavior change, no new dependency. Regression guard: the parse-once and
+  mtime-invalidation tests in `test_hardware.py`. **Reuse (captured Next, not built):**
+  generalize the mtime-guarded loader cache for the classification registry and seed loaders.
+  Workload class: serialization/I-O-bound. Level 1.
 
 ---
 
