@@ -49,7 +49,17 @@ def available_seeds() -> list[str]:
 LABEL_RE = re.compile(r"^[a-z][a-z0-9_]*$")
 DEFAULT_ROOM_DESC = "There is nothing remarkable here yet."
 DEFAULT_DIALOGUE = ['"..."']
-DEFAULT_JOB_STATS = {"strength": 8, "agility": 8, "stamina": 8, "magic": 8}
+# The six canonical attributes (JRPG character system): the loader fills any a job omits.
+# `speed` replaces the old `agility`; `wisdom` and `luck` are new. Balance per job is set in
+# the seed data, not here -- these defaults only guarantee every job carries all six.
+DEFAULT_JOB_STATS = {
+    "strength": 8,
+    "speed": 8,
+    "magic": 8,
+    "stamina": 8,
+    "wisdom": 8,
+    "luck": 8,
+}
 
 
 class Room(TypedDict):
