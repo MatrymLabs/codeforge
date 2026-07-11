@@ -20,7 +20,7 @@ from pathlib import Path
 
 from parts.hardware import load_catalog
 from parts.qualitygate import gate_all
-from parts.registry import load_collective, validate
+from parts.registry import load_collective, unfiled_modules, validate
 
 _ROOT = Path(__file__).resolve().parent.parent
 _REPORT_DIR = _ROOT / "reports" / "repo_integrity"
@@ -95,6 +95,9 @@ def build_report(
 
     records = load_collective()
     reg_problems = validate(records) if records else ["registry empty"]
+    # Completeness: the registry claims to file the code modules themselves, so an unfiled
+    # module is a real gap the internal-consistency validate() cannot see.
+    reg_problems += [f"unfiled module: {m}" for m in unfiled_modules(records)]
     gaps = presence_gaps(base)
     overclaims = overclaim_hits(base)
     qa = Counter(r.verdict for r in gate_all(records))  # keys: pass | watch | fail

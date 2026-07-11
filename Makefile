@@ -45,7 +45,7 @@ check: lint typecheck coverage
 # --- Readiness: the global self-audit -- registry validates (gates), then the
 # project dashboard, computed from the registry + QualityGate. Read-only. ---
 readiness:
-	@python3 -c "import sys; from parts.registry import load_collective, validate; from parts.pm import pm_status; p=validate(load_collective()); print('Registry: CLEAN (no duplicates, no orphans)' if not p else 'Registry PROBLEMS:\n  '+'\n  '.join(p)); print(); print(pm_status()); sys.exit(1 if p else 0)"
+	@python3 -c "import sys; from parts.registry import load_collective, validate, unfiled_modules; from parts.pm import pm_status; r=load_collective(); p=validate(r)+['unfiled module (not in the registry): '+m for m in unfiled_modules(r)]; print('Registry: CLEAN (no duplicates, no orphans, every module filed)' if not p else 'Registry PROBLEMS:\n  '+'\n  '.join(p)); print(); print(pm_status()); sys.exit(1 if p else 0)"
 
 # --- Repo integrity: one honest repo-health report (code quality + security +
 # provenance + registry + docs + truth), composed from checks we already own.

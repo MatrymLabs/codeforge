@@ -17,6 +17,7 @@ from parts.registry import (
     load_designations,
     mint_designation,
     save_designations,
+    unfiled_modules,
     validate,
 )
 
@@ -248,3 +249,22 @@ def test_a_prototype_is_exempt_from_the_file_check(tmp_path: Path) -> None:
     # but a non-prototype with the same ghost file is still flagged
     built = _rec("RM-UM02-S01-N001-009-R0", status="active", file="seeds/haven-city/rooms.yaml")
     assert any("file not found" in p for p in validate([built], root=tmp_path))
+
+
+def test_the_registry_files_every_module_on_disk() -> None:
+    # Completeness gate: the registry's thesis is that it files the code modules themselves, so
+    # `qa gate`/`readiness` can audit the codebase. This pins that no parts module is unfiled --
+    # it once reported CLEAN while 22 modules (incl. the evolution/stewardship/hubble ones) were
+    # undocumented. If this fails, file the listed module(s) in registry/designations/modules.json.
+    unfiled = unfiled_modules()
+    assert unfiled == [], "unfiled parts module(s) -- file them in the registry:\n  " + "\n  ".join(
+        unfiled
+    )
+
+
+def test_unfiled_modules_flags_a_missing_designation(tmp_path) -> None:
+    # A parts module with no filed designation is reported (the check the blind spot lacked).
+    assert unfiled_modules(records=[], root=tmp_path) == []  # no parts/ dir -> nothing to check
+    (tmp_path / "parts").mkdir()
+    (tmp_path / "parts" / "orphan.py").write_text("x = 1\n")
+    assert "parts/orphan.py" in unfiled_modules(records=[], root=tmp_path)
