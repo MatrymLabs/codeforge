@@ -16,12 +16,12 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from parts.integrity import overclaim_hits, presence_gaps
-from parts.qualitygate import FAIL, gate_all
+from parts.qualitygate import gate_all
 from parts.registry import load_collective, validate
+from parts.verdicts import FAIL, PASS, WATCH
 from parts.veritas import VERIFIED, truth_checks
 
 _ROOT = Path(__file__).resolve().parent.parent
-_WATCH = "watch"  # qualitygate uses a bare "watch" verdict (no exported constant)
 
 GREEN = "green"
 YELLOW = "yellow"
@@ -80,11 +80,11 @@ def frame_up(root: Path | None = None) -> list[SystemFrame]:
     )
 
     board = Counter(r.verdict for r in gate_all(recs))
-    qa_verdict = RED if board.get(FAIL) else (YELLOW if board.get(_WATCH) else GREEN)
+    qa_verdict = RED if board.get(FAIL) else (YELLOW if board.get(WATCH) else GREEN)
     qa = SystemFrame(
         "quality gate (QA board)",
         qa_verdict,
-        f"{board.get('pass', 0)} pass · {board.get(_WATCH, 0)} watch · {board.get(FAIL, 0)} fail",
+        f"{board.get(PASS, 0)} pass · {board.get(WATCH, 0)} watch · {board.get(FAIL, 0)} fail",
     )
 
     checks = truth_checks(base)
