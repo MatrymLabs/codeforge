@@ -13,7 +13,6 @@ wiring, and by contract never gates CI). The ledger allowlist is a local file, r
 
 from __future__ import annotations
 
-import tomllib
 from collections.abc import Mapping
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -92,15 +91,19 @@ class AdmissionResult:
 
 
 def ledger_packages(path: Path | None = None) -> set[str]:
-    """The approved-dependency allowlist: the PEP 503 names filed in dependency_ledger.toml."""
+    """The approved-dependency allowlist: the canonical names filed in dependency_ledger.toml.
+
+    Reuses the ONE validated ledger reader (`parts/dependencies.read_ledger`, which
+    PEP 503-canonicalizes names and fails loud on a malformed row) instead of parsing the TOML
+    a second time. A missing ledger is an empty allowlist -- so a new dependency then requires a
+    ledger row, a safe default for admission control.
+    """
+    from parts.dependencies import read_ledger
+
     src = path or (_ROOT / "dependency_ledger.toml")
-    if not src.exists():
+    if not src.is_file():
         return set()
-    data = tomllib.loads(src.read_text(encoding="utf-8"))
-    names: set[str] = set()
-    for group in ("runtime", "dev"):
-        names |= set(data.get(group, {}).keys())
-    return {name.lower() for name in names}
+    return set(read_ledger(src).keys())
 
 
 def admit_dependency(
