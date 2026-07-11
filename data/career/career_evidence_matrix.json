@@ -495,7 +495,12 @@
               "tests/test_evolution_genome.py"
             ],
             "status": "proven",
-            "next_proof_task": "Extend the lab with a third subject or a new evaluator dimension, still human-governed."
+            "next_proof_task": "Extend the lab with a third subject or a new evaluator dimension, still human-governed.",
+            "ownership": {
+              "level": 4,
+              "keel": "DRAFT (Josh, edit to your own words): I directed a research report into an evidence-labeled build - I set the scope, chose what to translate vs defer, and can defend why each label sits where it does.",
+              "record": "docs/keel_records/adv-research-translation.md"
+            }
           },
           {
             "skill_id": "adv.evolution.guided_search",
@@ -508,7 +513,12 @@
               "tests/test_evolution_bakeoff.py"
             ],
             "status": "proven",
-            "next_proof_task": "Add typed mutation operators (autonomous mutation) only after measurement justifies it, with Josh's approval."
+            "next_proof_task": "Add typed mutation operators (autonomous mutation) only after measurement justifies it, with Josh's approval.",
+            "ownership": {
+              "level": 4,
+              "keel": "DRAFT (Josh, edit to your own words): I designed the guided search as bounded and human-final - hard gates before weighted objectives, no autonomous mutation in v1, the human kept outside the loop for security-sensitive edits.",
+              "record": "docs/keel_records/adv-evolution-guided-search.md"
+            }
           }
         ]
       }
