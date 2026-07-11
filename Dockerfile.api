@@ -1,0 +1,30 @@
+# CodeForge -- the HTTP API surface (dashboard + typed contracts), containerized.
+#
+# Unlike the gateway image (Dockerfile -> `spark` on :4000), the API reads the repo's
+# evidence -- data/, registry/, catalog/, blueprints/, seeds/ -- via file-relative paths.
+# A plain `pip install .` would put `parts` in site-packages and those paths would resolve
+# to site-packages, not the data. So this image installs EDITABLE (`pip install -e .`):
+# `parts` resolves to /app, and every file-relative source is found in place.
+FROM python:3.13-slim
+
+ENV PYTHONUNBUFFERED=1 PYTHONDONTWRITEBYTECODE=1
+WORKDIR /app
+
+# The whole repo (minus .dockerignore cruft): the /api/status board audits the codebase
+# itself (career proof paths, the QualityGate over every module's file+tests+docs), so an
+# accurate self-audit surface needs the real tree, not just parts/.
+COPY . .
+RUN pip install --no-cache-dir -e .
+
+# File a performance report so the /api/status perf card shows a real throughput number
+# (otherwise it honestly reads "not yet run"). Cheap; the tick is pure-function.
+RUN python -m parts.bench || true
+
+# Never run a network service as root, even a read-only one.
+RUN useradd --create-home smith && chown -R smith /app
+USER smith
+
+# Canonical state on tmp: the API surface is read-mostly and the demo is ephemeral.
+ENV CODEFORGE_DB=/tmp/codeforge.db
+EXPOSE 8000
+CMD ["codeforge", "api"]

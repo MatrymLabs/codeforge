@@ -1,3 +1,7 @@
+# Excludes build/runtime cruft from the Docker context. Source dirs (parts, seeds, data,
+# catalog, registry, blueprints, tests, docs, scripts, lessons) are KEPT: the API image
+# (Dockerfile.api) serves a self-audit surface that reads them, so it copies the whole repo.
+# The gateway image (Dockerfile) uses explicit COPYs, so it is unaffected by what is kept.
 .git/
 .github/
 .venv/
@@ -9,11 +13,16 @@ __pycache__/
 .hypothesis/
 .coverage
 coverage.xml
-tests/
-docs/
 codeforge.db
 save.json
 characters.json
 accounts.json
 *.kdbx
 security-evidence/
+reports/
+site/
+casts/
+node_modules/
+.next/
+.env
+e2e/

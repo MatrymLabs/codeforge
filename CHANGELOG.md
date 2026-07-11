@@ -7,6 +7,16 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
 ## [Unreleased]
 
 ### Added / Changed
+- **Containerized API surface (`Dockerfile.api`).** A second image serves the HTTP API
+  (dashboard + typed contracts) on :8000, alongside the gateway image (`Dockerfile` -> `spark`
+  on :4000). Because the `/api/status` board audits the codebase itself (career proof paths,
+  the QualityGate over every module's file+tests+docs), the image copies the whole repo and
+  installs editable (`pip install -e .`) so file-relative paths resolve to `/app` -- the
+  self-audit reports accurately (career/qa green), and a build-time `make bench` fills the
+  perf card with a real throughput number. Widened `.dockerignore` to keep source (tests/docs)
+  while still excluding venv/caches/state/node/build artifacts. CI's `docker` job now builds
+  the API image and smoke-tests it serves real evidence (`/api/status`, `/api/blueprints`).
+  This is what the CodeForge Console's one-command full-stack demo runs against.
 - **Typed `GET /api/blueprints` endpoint.** The API now exposes filed Blueprints as a typed
   list (`BlueprintSummary`: id, title, intent, status, requirement_count), documented in
   OpenAPI at `/docs`. It is the contract the CodeForge Console (the React/TypeScript front-end

@@ -135,3 +135,12 @@ jobs:
           # never prints and the job fails loud.
           docker logs cf 2>&1 | grep -q "listening on 0.0.0.0:4000"
           docker rm -f cf
+      - name: Build the API image
+        run: docker build -f Dockerfile.api -t codeforge-api:ci .
+      - name: Smoke-test the API serves real evidence
+        run: |
+          docker run -d --name cfapi -p 8000:8000 codeforge-api:ci
+          for i in $(seq 1 30); do curl -sf http://localhost:8000/health && break; sleep 1; done
+          curl -sf http://localhost:8000/api/status | grep -q '"engine":"codeforge"'
+          curl -sf http://localhost:8000/api/blueprints | grep -q 'npc_combat'
+          docker rm -f cfapi
