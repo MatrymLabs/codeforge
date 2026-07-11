@@ -7,6 +7,13 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
 ## [Unreleased]
 
 ### Added / Changed
+- **The Workshop cockpit is now the real hub.** The in-MUD `workshop` menu advertised
+  `blueprint` as "coming" long after it shipped; it now surfaces the genuine live tools:
+  catalog/reuse, `blueprint` (browse/show/render/draft with the Claude Architect), `ai`, and
+  the read-only console/diagnostics/security, with only `patch proposal` and the holodeck
+  `arch` still marked coming (the file-editing phases, deliberately gated). Updated the
+  holodeck roadmap to mark phases 3, 7 (reports), and 8 (AI planning via `blueprint draft`)
+  as done. A test pins that `blueprint` is advertised live, not coming.
 - **Hardware Store: broadened horizon (7 -> 13 parts, architecture-first framing).** The
   reusable-parts catalog now stocks the patterns built this arc: `typed-contract` (Pydantic
   API models + OpenAPI), `observability` (structured logs + Prometheus metrics), `ai-boundary`

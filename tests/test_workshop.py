@@ -28,7 +28,16 @@ def test_menu_lists_live_tools_and_is_honest_about_whats_coming():
     menu = workshop_menu()
     assert "engineering cockpit" in menu
     assert "catalog" in menu and "reuse" in menu  # live
-    assert "Coming" in menu and "Architect" in menu  # not built yet, and says so
+    assert "Coming" in menu and "patch proposal" in menu  # honest about what's not built yet
+
+
+def test_blueprint_is_a_live_workshop_tool_now():
+    # blueprint (browse/read/render/draft) is built, so the cockpit advertises it as LIVE,
+    # not "coming" -- the menu must reflect what the workshop can actually do.
+    menu = workshop_menu()
+    live, _, coming = menu.partition("Coming")
+    assert "blueprint" in live
+    assert "blueprint" not in coming
 
 
 def test_catalog_view_shows_cataloged_parts():
