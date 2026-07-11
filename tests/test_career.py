@@ -17,6 +17,7 @@ from parts.career import (
     career,
     load_board,
     ownership_gaps,
+    render_claim,
     render_gaps,
     render_ownership,
     render_resume,
@@ -142,6 +143,108 @@ def test_gaps_view_surfaces_the_real_gaps() -> None:
         assert "gap(s)" in out
     else:
         assert "No gaps recorded" in out
+
+
+def test_ownership_view_shows_a_demonstrated_unlock() -> None:
+    # A Classroom-demonstrated skill (not declared in the matrix) renders as `demonstrated`,
+    # with the path to make it durable.
+    out = render_ownership(demonstrated={"entry.python.basics": 2})
+    assert "(demonstrated)" in out
+    assert "career claim entry.python.basics" in out
+    assert "demonstrated 1" in out
+
+
+def test_claim_bridges_a_demonstrated_unlock() -> None:
+    # `career claim` proposes the ownership block for Josh to commit -- it never writes it.
+    out = render_claim("entry.python.basics", demonstrated={"entry.python.basics": 2})
+    assert '"ownership"' in out and '"level": 2' in out
+    assert "lessons/python_basics.yaml" in out  # cites the real lesson file (it exists)
+    assert "commit it" in out.lower()
+    assert "Level 4" in out  # refuses to grant portfolio-ready from a lesson
+
+
+def test_claim_refuses_an_undemonstrated_skill() -> None:
+    out = render_claim("entry.python.basics", demonstrated={})
+    assert "not demonstrated yet" in out
+
+
+def test_claim_rejects_an_unknown_skill() -> None:
+    out = render_claim("no.such.skill", demonstrated={"no.such.skill": 2})
+    assert "No such skill" in out
+
+
+def test_claim_on_a_skill_without_a_lesson_uses_a_placeholder_record() -> None:
+    # A demonstrated skill that no lesson proves still yields a claim block, with a
+    # placeholder record for Josh to fill (no lesson file to cite).
+    out = render_claim("entry.git.hygiene", demonstrated={"entry.git.hygiene": 2})
+    assert '"ownership"' in out and "path to the artifact" in out
+
+
+def test_career_dispatch_routes_claim() -> None:
+    out = career("claim entry.python.basics", demonstrated={"entry.python.basics": 2})
+    assert '"ownership"' in out
+
+
+def test_keelgate_flags_a_defendable_claim_without_a_backing_record() -> None:
+    # A level-4 claim with no keel line, and one whose record path does not exist, are both
+    # KeelGate violations. (The shipped board has none; this exercises the guard directly.)
+    board = {
+        "levels": [
+            {
+                "level": "entry",
+                "skills": [
+                    {
+                        "skill_id": "no_keel",
+                        "skill": "No keel",
+                        "status": "proven",
+                        "repo_proof": ["README.md"],
+                        "next_proof_task": "y",
+                        "ownership": {"level": 4, "keel": "", "record": "README.md"},
+                    },
+                    {
+                        "skill_id": "no_record",
+                        "skill": "No record",
+                        "status": "proven",
+                        "repo_proof": ["README.md"],
+                        "next_proof_task": "y",
+                        "ownership": {"level": 4, "keel": "I can defend this", "record": "nope.md"},
+                    },
+                ],
+            }
+        ]
+    }
+    gaps = ownership_gaps(board)
+    assert any("no keel line" in g for g in gaps)
+    assert any("does not exist" in g for g in gaps)
+
+
+def test_ownership_without_a_level_fails_loud(tmp_path: Path) -> None:
+    bad = tmp_path / "m.json"
+    bad.write_text(
+        json.dumps(
+            {
+                "career_board": {
+                    "levels": [
+                        {
+                            "level": "entry",
+                            "skills": [
+                                {
+                                    "skill_id": "x",
+                                    "skill": "X",
+                                    "status": "proven",
+                                    "repo_proof": [],
+                                    "next_proof_task": "y",
+                                    "ownership": {"keel": "hi"},
+                                }
+                            ],
+                        }
+                    ]
+                }
+            }
+        )
+    )
+    with pytest.raises(CareerError, match="ownership must be a mapping"):
+        load_board(bad)
 
 
 def test_resume_is_generated_from_proven_skills() -> None:

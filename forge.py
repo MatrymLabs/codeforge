@@ -23,10 +23,12 @@ from parts.character_view import sheet_from_session
 from parts.characters import load_character, restore_character, save_character
 from parts.classroom import (
     ask_question,
+    demonstrated,
     hint,
     lesson_list,
     lesson_start,
     progress,
+    render_achievements,
     submit_answer,
     talk_to_codex,
 )
@@ -78,7 +80,7 @@ HELP_TEXT = (
     "qa gate [all|<id>], safety review <id>, docs check, pm status, pm metrics, "
     "truth check, career, pioneer, inspect, functions, terminal, "
     "workshop, catalog, reuse <term>, console, run <check>, diagnostics, "
-    "security, ai <prompt>, lesson list, question, answer <A-D>, hint, progress, "
+    "security, ai <prompt>, lesson list, question, answer <A-D>, hint, progress, achievements, "
     "passwd, save, load, quit"
 )
 
@@ -241,7 +243,7 @@ def _build_commands() -> CommandSet:
             "career",
             "CMD-UM10-S01-N001-013-R0",
             "Career Evidence Sign: map CodeForge work to job-ready skills, with repo proof",
-            lambda _s, arg: career(arg),
+            lambda s, arg: career(arg, demonstrated=demonstrated(s.player_id)),
             namespace=CORE,
         )
     )
@@ -555,6 +557,8 @@ def handle_command(session: Session, signal: str) -> str:
         return hint(session.player_id)
     if routed_signal == "progress":
         return progress(session.player_id)
+    if routed_signal == "achievements":
+        return render_achievements(session.player_id)
     if routed_signal in ("inventory", "i", "inv"):
         return inventory_text()
     if routed_signal.startswith(("take ", "get ")):

@@ -5,6 +5,10 @@
 id: python_basics_001
 subject: python
 title: Python Basics - Trial One
+# Passing this lesson demonstrates a career-board skill and unlocks its ownership
+# (capped at level 2 = verified; a lesson can never grant level 4 defendable).
+proves_skill: entry.python.basics
+earns_level: 2
 questions:
   - id: q01
     prompt: What is a variable used for in Python?

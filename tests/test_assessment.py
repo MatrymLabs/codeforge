@@ -68,3 +68,17 @@ def test_wrong_choice_set_fails_loud(tmp_path):
     )
     with pytest.raises(LessonError):
         load_lesson(bad)
+
+
+def test_skill_binding_fields_parse(tmp_path):
+    lesson = load_lesson(
+        _write(tmp_path, _GOOD + "proves_skill: entry.python.basics\nearns_level: 2\n")
+    )
+    assert lesson.proves_skill == "entry.python.basics"
+    assert lesson.earns_level == 2
+
+
+def test_a_bad_earns_level_fails_loud(tmp_path):
+    bad = _write(tmp_path, _GOOD + "earns_level: -1\n")
+    with pytest.raises(LessonError, match="earns_level"):
+        load_lesson(bad)

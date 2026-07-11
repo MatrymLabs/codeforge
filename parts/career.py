@@ -102,6 +102,21 @@ def _skills(board: dict) -> list[dict]:
     return [s for lvl in board["levels"] for s in lvl.get("skills", [])]
 
 
+def skill_label(skill_id: str, board: dict | None = None) -> str | None:
+    """The display name for a skill_id, or None if the board has no such skill.
+    A public lookup so other systems (the Classroom) can name a skill honestly."""
+    b = board or load_board()
+    for s in _skills(b):
+        if s["skill_id"] == skill_id:
+            return s["skill"]
+    return None
+
+
+def ownership_name(level: int) -> str:
+    """The Ownership Gate name for a level (e.g. 2 -> 'verified')."""
+    return _OWNERSHIP_NAMES.get(level, "?")
+
+
 def unproven_claims(board: dict, root: Path | None = None) -> list[str]:
     """VeritasGate: proven/partial skills whose cited proof paths do NOT exist on disk.
     An empty list means every claim of evidence points to a real artifact."""
@@ -248,11 +263,13 @@ def render_evidence(board: dict | None = None) -> str:
     return "\n".join(lines)
 
 
-def render_ownership(board: dict | None = None) -> str:
+def render_ownership(board: dict | None = None, demonstrated: dict[str, int] | None = None) -> str:
     """The human keel: how deeply Josh OWNS each skill, orthogonal to whether its artifact
-    exists. Declared entries show the level, Josh's keel line, and the backing record;
-    everything else is honestly `undeclared`, a gap to claim, never a lie."""
+    exists. Three states per skill: `declared` (in the git-tracked matrix, KeelGate-guarded),
+    `demonstrated` (unlocked in the Classroom, not yet made durable), and `undeclared` (an
+    honest gap). Declared always outranks demonstrated for the same skill."""
     b = board or load_board()
+    demo = demonstrated or {}
     skills = _skills(b)
     lines = [
         "CAREER EVIDENCE SIGN - OWNERSHIP (the human keel)",
@@ -266,24 +283,88 @@ def render_ownership(board: dict | None = None) -> str:
     for s in declared:
         own = s["ownership"]
         level = own["level"]
-        lines.append(f"  [{level} {_OWNERSHIP_NAMES[level]}] {s['skill']}")
+        lines.append(f"  [{level} {_OWNERSHIP_NAMES[level]}] {s['skill']}   (declared)")
         if own.get("keel"):
             lines.append(f"      keel:   {own['keel']}")
         if own.get("record"):
             lines.append(f"      record: {own['record']}")
         lines.append("")
-    undeclared = [s for s in skills if not s.get("ownership")]
+    # Demonstrated: earned in the Classroom, not yet declared. Declared wins if both exist.
+    shown = [s for s in skills if not s.get("ownership") and s["skill_id"] in demo]
+    for s in shown:
+        level = demo[s["skill_id"]]
+        lines.append(
+            f"  [{level} {_OWNERSHIP_NAMES.get(level, '?')}] {s['skill']}   (demonstrated)"
+        )
+        lines.append(
+            f"      earned in the Classroom - make it durable:  career claim {s['skill_id']}"
+        )
+        lines.append("")
+    undeclared = [s for s in skills if not s.get("ownership") and s["skill_id"] not in demo]
     if undeclared:
         lines.append("  UNDECLARED (proof may exist; ownership not yet claimed):")
         for s in undeclared:
             lines.append(f"    [-] {s['skill']}")
         lines.append("")
     lines += [
-        f"  declared {len(declared)} · undeclared {len(undeclared)} of {len(skills)} skills",
+        f"  declared {len(declared)} · demonstrated {len(shown)} · undeclared {len(undeclared)} "
+        f"of {len(skills)} skills",
         "  Undeclared ownership is an honest gap, not a claim - Josh claims each as he",
         "  defends it. Level 4+ requires a real keel record (KeelGate).",
     ]
     return "\n".join(lines)
+
+
+def render_claim(
+    skill_id: str, board: dict | None = None, demonstrated: dict[str, int] | None = None
+) -> str:
+    """Bridge a Classroom-demonstrated unlock into a durable, human-committed declaration.
+
+    Prints the exact `ownership` JSON block for Josh to paste into the matrix and commit
+    himself. The Classroom NEVER writes the matrix; this only proposes the edit. Level 4+
+    (portfolio-ready) is refused here -- that needs a written keel record, not a lesson."""
+    b = board or load_board()
+    demo = demonstrated or {}
+    skill_id = skill_id.strip()
+    label = skill_label(skill_id, b)
+    if label is None:
+        return f"No such skill '{skill_id}'. See: career ownership"
+    if skill_id not in demo:
+        return (
+            f"'{label}' is not demonstrated yet. Earn it first in the Classroom "
+            f"(lesson list), then: career claim {skill_id}"
+        )
+    level = demo[skill_id]
+    record = _lesson_record_for(skill_id)
+    block = (
+        '      "ownership": {\n'
+        f'        "level": {level},\n'
+        f'        "keel": "<one line: what you can now explain and defend about this>",\n'
+        f'        "record": "{record}"\n'
+        "      }"
+    )
+    return (
+        f"CLAIM: {label}  ({skill_id})  ->  level {level} {_OWNERSHIP_NAMES.get(level, '?')}\n\n"
+        "You demonstrated this in the Classroom. To make it a durable, owned claim, add the\n"
+        "block below to this skill in data/career/career_evidence_matrix.json and commit it\n"
+        "yourself (the Classroom never writes the board for you):\n\n"
+        f"{block}\n\n"
+        "Level 4 (defendable / portfolio-ready) is not granted by a lesson - it needs a\n"
+        "written keel record and your own defense (see docs/human_keel_doctrine.md)."
+    )
+
+
+def _lesson_record_for(skill_id: str) -> str:
+    """The real lesson file that proves this skill, as a provenance path for a claim block
+    (or a placeholder if none is found). Read-only; imports lazily to avoid an import cycle."""
+    from parts.assessment import _default_lessons_dir, load_lesson
+
+    lessons_dir = _default_lessons_dir()
+    if lessons_dir.is_dir():
+        for path in sorted(lessons_dir.glob("*.yaml")):
+            if load_lesson(path).proves_skill == skill_id:
+                return f"lessons/{path.name}"
+    return "<path to the artifact that proves this>"
 
 
 def render_resume(board: dict | None = None) -> str:
@@ -306,8 +387,13 @@ def render_resume(board: dict | None = None) -> str:
     return "\n".join(lines)
 
 
-def career(arg: str = "") -> str:
-    """The `career` command: dispatch on the argument (mirrors `law <arg>`)."""
+def career(arg: str = "", demonstrated: dict[str, int] | None = None) -> str:
+    """The `career` command: dispatch on the argument (mirrors `law <arg>`).
+
+    `demonstrated` (skill_id -> level) is the caller's per-player Classroom unlocks, injected
+    by the tick so the board can show demonstrated ownership beside declared, and so
+    `career claim` can propose a durable claim. None means "no player context / none earned."
+    """
     a = (arg or "").strip().lower()
     try:
         if a in ("", "help", "sign"):
@@ -319,7 +405,9 @@ def career(arg: str = "") -> str:
         if a == "evidence":
             return render_evidence()
         if a == "ownership":
-            return render_ownership()
+            return render_ownership(demonstrated=demonstrated)
+        if a.startswith("claim"):
+            return render_claim(arg[len("claim") :].strip(), demonstrated=demonstrated)
         if a == "resume":
             return render_resume()
         if a.startswith("role"):
@@ -327,6 +415,6 @@ def career(arg: str = "") -> str:
     except CareerError as exc:
         return f"Career board unavailable: {exc}"
     return (
-        f"Unknown career view '{arg}'. Try: checklist · gaps · evidence · ownership · resume · "
-        "role entry|intermediate|advanced"
+        f"Unknown career view '{arg}'. Try: checklist · gaps · evidence · ownership · claim · "
+        "resume · role entry|intermediate|advanced"
     )
