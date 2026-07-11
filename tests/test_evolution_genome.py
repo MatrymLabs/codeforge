@@ -112,6 +112,35 @@ def test_an_unknown_expression_target_is_blocked() -> None:
     assert any(r.rule_id == "GEN06" and r.blocking for r in check_constraints(genome))
 
 
+def test_a_minimal_genome_defaults_optional_fields_to_empty() -> None:
+    # Absent optional fields default to empty tuples (the None-coercion paths).
+    genome = from_dict({"genome_id": "min_g", "purpose": "x", "seed": bp.to_dict(_seed())})
+    assert genome.interfaces == () and genome.resource_budgets == () and genome.provenance == ()
+
+
+def test_a_non_mapping_record_fails_loud() -> None:
+    with pytest.raises(GenomeError, match="must be a mapping"):
+        from_dict(["not", "a", "dict"])
+
+
+def test_a_string_where_a_list_is_expected_fails_loud() -> None:
+    raw = {"genome_id": "g", "purpose": "x", "seed": bp.to_dict(_seed()), "interfaces": "oops"}
+    with pytest.raises(GenomeError, match="must be a list of strings"):
+        from_dict(raw)
+
+
+def test_a_malformed_pairs_field_fails_loud() -> None:
+    raw = {"genome_id": "g", "purpose": "x", "seed": bp.to_dict(_seed()), "resource_budgets": [1, 2, 3]}
+    with pytest.raises(GenomeError, match="pairs of"):
+        from_dict(raw)
+
+
+def test_empty_purpose_and_unknown_status_are_blocked() -> None:
+    genome = _genome(purpose="   ", status="bogus")
+    blocking = {r.rule_id for r in check_constraints(genome) if r.blocking}
+    assert "GEN02" in blocking and "GEN03" in blocking
+
+
 def test_missing_obligations_warn_but_do_not_block() -> None:
     genome = _genome(test_obligations=(), documentation_obligations=())
     results = {r.rule_id: r for r in check_constraints(genome)}
