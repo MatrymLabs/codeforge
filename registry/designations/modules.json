@@ -1469,5 +1469,32 @@
     "aliases": [],
     "created": "2026-07-10",
     "updated": "2026-07-10"
+  },
+  {
+    "designation": "MOD-UM10-S01-N001-020-R0",
+    "name": "foundry",
+    "status": "active",
+    "function": "propose/approve/generate pipeline (holodeck phases 9-10): human-approved, sandboxed, no-overwrite code generation",
+    "label": "foundry",
+    "file": "parts/foundry.py",
+    "type": "MOD",
+    "domain": "UM10",
+    "sector": "S01",
+    "node": "N001",
+    "sequence": "020",
+    "revision": "R0",
+    "docs": "docs/holodeck/SAFETY.md",
+    "tests": "tests/test_foundry.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "module"
+    ],
+    "notes": "A PatchProposal writes nothing; a human must approve; generation lands only in the git-ignored workspace/ sandbox, never overwrites, never escapes, never touches source/config/git. Owner-gated @forge verb.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-10",
+    "updated": "2026-07-10"
   }
 ]

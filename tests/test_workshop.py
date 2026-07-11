@@ -28,7 +28,9 @@ def test_menu_lists_live_tools_and_is_honest_about_whats_coming():
     menu = workshop_menu()
     assert "engineering cockpit" in menu
     assert "catalog" in menu and "reuse" in menu  # live
-    assert "Coming" in menu and "patch proposal" in menu  # honest about what's not built yet
+    assert (
+        "Coming" in menu and "arch" in menu
+    )  # honest about what's not built yet (the holodeck arch)
 
 
 def test_blueprint_is_a_live_workshop_tool_now():
