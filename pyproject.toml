@@ -56,6 +56,10 @@ select = ["E", "F", "I", "UP", "B", "SIM"]
 [tool.mypy]
 python_version = "3.13"
 warn_unused_ignores = true
+# The typecheck scope, declared here so it is the single source of truth: the Makefile,
+# any IDE, and external auditors all see the same set. `e2e/` is deliberately excluded
+# (it carries a second conftest.py; a whole-tree `mypy .` would collide on the basename).
+files = ["parts", "tests", "forge.py"]
 
 # anthropic is an optional 'ai' extra (the Claude Architect brain), not installed in the
 # dev/CI venv; it is lazy-imported behind the Advisor seam. Don't require its stubs here.
