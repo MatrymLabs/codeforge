@@ -484,6 +484,31 @@
             ],
             "status": "proven",
             "next_proof_task": "Add latency histogram buckets and scrape the endpoint from a Prometheus/Grafana demo, captured as evidence."
+          },
+          {
+            "skill_id": "adv.research.translation",
+            "skill": "Translate scholarly research into a working, tested system",
+            "why_it_matters": "Turning a literature survey into a disciplined, evidence-labeled implementation is a senior differentiator (research-to-architecture), not just consuming papers.",
+            "repo_proof": [
+              "docs/nature_inspired/research_mapping.md",
+              "parts/evolution/genome.py",
+              "tests/test_evolution_genome.py"
+            ],
+            "status": "proven",
+            "next_proof_task": "Extend the lab with a third subject or a new evaluator dimension, still human-governed."
+          },
+          {
+            "skill_id": "adv.evolution.guided_search",
+            "skill": "Design an evaluator-guided search with human governance",
+            "why_it_matters": "Evolutionary/program-synthesis concepts plus AI governance and human-in-the-loop selection are 2026 differentiators; the hireable skill is a bounded, auditable, human-final design.",
+            "repo_proof": [
+              "parts/evolution/bakeoff.py",
+              "parts/evolution/fitness.py",
+              "parts/evolution/evaluators.py",
+              "tests/test_evolution_bakeoff.py"
+            ],
+            "status": "proven",
+            "next_proof_task": "Add typed mutation operators (autonomous mutation) only after measurement justifies it, with Josh's approval."
           }
         ]
       }

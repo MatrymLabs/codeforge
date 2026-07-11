@@ -121,8 +121,24 @@ _DEMOS: dict[str, Callable[[], tuple[str, str]]] = {
 }
 
 
-def _test_twin(source: str) -> str | None:
-    """Derive a part's test twin from its source path (parts/x.py -> tests/test_x.py)."""
+# Parts whose verification lives in a SHARED test file, not the 1:1 test_<stem>.py convention
+# (e.g. the evolution parts are proven together in test_evolution_*.py). Each cited file exists.
+_TWINS: dict[str, str] = {
+    "blueprint-genome": "tests/test_evolution_genome.py",
+    "constraint-gate": "tests/test_evolution_genome.py",
+    "counterexample-bank": "tests/test_evolution_bakeoff.py",
+    "fitness-aggregator": "tests/test_evolution_bakeoff.py",
+    "evaluator-swarm": "tests/test_evolution_bakeoff.py",
+    "evolution-lab": "tests/test_evolution_bakeoff.py",
+}
+
+
+def _test_twin(part_id: str, source: str) -> str | None:
+    """A part's test twin: an explicit shared-twin mapping, else the derived
+    convention (parts/x.py -> tests/test_x.py). Only cite a file that actually exists."""
+    explicit = _TWINS.get(part_id)
+    if explicit and (_ROOT / explicit).is_file():
+        return explicit
     stem = Path(source).stem
     twin = _ROOT / "tests" / f"test_{stem}.py"
     return f"tests/test_{stem}.py" if twin.is_file() else None
@@ -149,7 +165,7 @@ def render_functions() -> str:
             except Exception as exc:  # a part whose demo breaks must surface, never hide
                 lines.append(f"  [BROKEN] {part.id:<18} demo raised: {exc}")
         else:
-            twin = _test_twin(part.source)
+            twin = _test_twin(part.id, part.source)
             if twin:
                 lines.append(f"  [tested] {part.id:<18} verified by {twin}")
                 tested += 1
