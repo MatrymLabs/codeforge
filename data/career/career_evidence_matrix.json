@@ -444,9 +444,11 @@
             "skill_id": "adv.platform.tooling",
             "skill": "Build platform-style tooling used by multiple consumers",
             "why_it_matters": "Platform engineering serves many teams/projects.",
-            "repo_proof": [],
-            "status": "missing",
-            "next_proof_task": "Point forge-audit at multiple repos and publish the scorecards as a shared surface."
+            "repo_proof": [
+              "docs/reports/fleet_scorecard.md"
+            ],
+            "status": "proven",
+            "next_proof_task": "Publish the private repos' scorecards to an interviewer on request; add a second CI workflow to each so the fleet reads all-green."
           },
           {
             "skill_id": "adv.ai.mockable_llm",
