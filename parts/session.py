@@ -46,6 +46,8 @@ class Session:
     # Per-job progression, keyed by job id. A character keeps a record per job they take up,
     # so switching jobs never erases a prior job's level. Persisted via the job_progress card.
     job_progress: dict[str, JobProgress] = field(default_factory=dict)
+    # Equipped gear, keyed by slot (weapon/body/head/...). Values are item ids. Runtime state.
+    equipped: dict[str, str] = field(default_factory=dict)
 
 
 # The registry of connected sessions. Gateways and game_loop register

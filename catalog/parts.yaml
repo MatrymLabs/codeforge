@@ -494,3 +494,27 @@
     finance: "an adjusted rate from stacked flat and percentage adjustments"
     manufacturing: "a throughput/efficiency figure with stacked modifiers"
     general: "any value adjusted by many stacking sources, computed once"
+
+- id: equipment-slots
+  name: Equipment Slot System
+  source: parts/equipment.py
+  category: mechanics
+  tags: [equipment, slots, modifiers, loadout, gear]
+  maturity: beta
+  source_status: original
+  license: MIT
+  influence: "slot-based equipment whose modifiers feed a stat pipeline (original)"
+  experimental: >-
+    model gear as full items with durability, sets, and sockets, or drive slots from a schema.
+    Traded away for now: depth (durability/sets) and persistence; kept a clean slot map whose
+    modifiers flow through the ModifierStack into derived stats.
+  risk: low
+  reuse_score: 4
+  purpose: >
+    Equip items into named slots and fold their modifiers into computed stats through a shared
+    modifier stack, so gear changes outcomes without special-casing each piece.
+  reuse:
+    game: "weapon/armor/accessory slots that raise ATK/DEF/etc."
+    business: "a configuration whose selected options adjust a computed result"
+    manufacturing: "tooling/fixtures on a machine that change its rated output"
+    general: "any slotted-attachment model whose parts modify a computed value"

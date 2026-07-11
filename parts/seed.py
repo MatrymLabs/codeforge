@@ -71,11 +71,17 @@ class Room(TypedDict):
 
 
 class Item(TypedDict):
-    """The shape every item must have."""
+    """The shape every item must have.
+
+    `slot` and `mods` are the OPTIONAL equipment fields: a bare item leaves them empty; an
+    equippable one names its slot (weapon/body/head/arm/accessory_1/accessory_2) and the flat
+    modifiers it grants (target stat -> amount, e.g. {ATK: 6}). The loader fills empty defaults."""
 
     name: str
     keywords: list[str]
     location: str  # "room:<label>" or "player"
+    slot: str  # equipment slot, or "" for a non-equippable item
+    mods: dict[str, int]  # flat stat modifiers this item grants when equipped
 
 
 class Npc(TypedDict):
@@ -228,17 +234,30 @@ def load_items(path: Path) -> dict[str, Item]:
         merged: dict[str, Any] = {
             "name": f"{_article(noun)} {noun}",
             "keywords": _auto_keywords(label),
+            "slot": "",
+            "mods": {},
             **file_template,
             **raw,
         }
         if "location" not in merged:
             raise SeedError(f"Item '{label}' is missing required field 'location' (a room label).")
         _inspect_required_types(
-            label, merged, (("name", str), ("keywords", list), ("location", str))
+            label,
+            merged,
+            (("name", str), ("keywords", list), ("location", str), ("slot", str), ("mods", dict)),
         )
+        for target, amount in merged["mods"].items():
+            if not isinstance(amount, int) or isinstance(amount, bool):
+                raise SeedError(f"Item '{label}': mod '{target}' must be an integer")
         loc = merged["location"]
         tagged = loc if loc == "player" else f"room:{loc}"
-        items[label] = Item(name=merged["name"], keywords=merged["keywords"], location=tagged)
+        items[label] = Item(
+            name=merged["name"],
+            keywords=merged["keywords"],
+            location=tagged,
+            slot=merged["slot"],
+            mods=dict(merged["mods"]),
+        )
     return items
 
 
