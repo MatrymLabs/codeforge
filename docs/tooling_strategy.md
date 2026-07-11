@@ -31,15 +31,16 @@ clear `integrate_now` candidate (OpenSSF Scorecard); everything else is already 
 | Lint / format | Ruff (`E,F,I,UP,B,SIM`, line 100) | `[tool.ruff]` |
 | Types | mypy (py313, `warn_unused_ignores`) | `[tool.mypy]` |
 | Testing | pytest, pytest-cov, hypothesis (property marker) | `[tool.pytest.ini_options]` |
-| Automation | Make Ritual (~35 targets), no pre-commit | `Makefile` |
+| Automation | Make Ritual (one-button gates), no pre-commit | `Makefile` |
 | Security | pip-audit, bandit, detect-secrets, cyclonedx-bom | `Makefile`, `[tool.bandit]`, CI |
 | CI | GitHub Actions `ci.yml` + `codeql.yml` + docker smoke | `.github/workflows/` |
 | Supply chain | Dependabot, CodeQL, SBOM artifact | `.github/dependabot.yml`, `codeql.yml` |
 | Docs | rich raw Markdown, ADRs, runbooks, postmortems | `docs/` |
 | Data / state | SQLite via SQLAlchemy behind `parts/db.py` | `parts/db.py` |
 
-Runtime dependencies (the shipped wheel): `pyyaml`, `sqlalchemy`, `fastapi`, `uvicorn`,
-`websockets`. Everything else is a dev/CI-time gate, not runtime identity.
+Runtime dependencies (the shipped wheel), every one justified in `dependency_ledger.toml`:
+`pyyaml`, `sqlalchemy`, `fastapi`, `uvicorn`, `websockets`, `pydantic`, `structlog`. Everything
+else is a dev/CI-time gate, not runtime identity.
 
 ---
 
@@ -52,7 +53,7 @@ Status labels are defined at the bottom of this doc. Grounded in the inventory a
 | stdlib (pathlib, json, csv, sqlite3, subprocess, dataclasses, enum, typing, tomllib) | Foundation | `stdlib_first` | The spine. Reach here before any add-on. |
 | argparse | CLI | `stdlib_first` | Current hand-rolled dispatch is enough; argparse is the fallback, not Typer. |
 | Ruff | Quality | `integrate_now` (done) | Replaces Black + isort + Flake8; fast; already configured. |
-| pytest + pytest-cov | Testing | `integrate_now` (done) | Professional testing + coverage proof; 91%+. |
+| pytest + pytest-cov | Testing | `integrate_now` (done) | Professional testing + coverage proof (the codecov badge is the live source). |
 | hypothesis | Testing | `integrate_now` (done) | Property tests already gate via `make property`. |
 | mypy | Typing | `integrate_now` (done) | Gradual typing discipline, already green. |
 | Make | Automation | `integrate_now` (done) | The Ritual interface; stays the primary control panel. |
@@ -74,8 +75,8 @@ Status labels are defined at the bottom of this doc. Grounded in the inventory a
 | Textual | CLI | `integrate_later` | The terminal-control-panel vision (backlog), not this phase. |
 | pyinstrument / scalene / line_profiler | Perf | `research_only` | Command timing suffices in-repo; deep perf evidence lives in `pyg-perf-lab`. |
 | pluggy / stevedore | Plugins | `internal_custom` | The classification registry is the CodeForge-native version; build custom first. |
-| Pydantic (standalone) | Data | `stdlib_first` | dataclasses + my own validators cover it; FastAPI pulls pydantic transitively anyway. |
-| Alembic | Data | `integrate_later` | Only when schema migrations outgrow `codeforge migrate-db`. |
+| Pydantic | Data | `integrate_now` (done) | A direct runtime dep: the typed API request/response contract (OpenAPI) and the Settings env catalog (`parts/config.py`); imported in api/config/dashboard/blueprint_ai. |
+| Alembic | Data | `integrate_now` (done) | Schema migrations, live: `alembic.ini` + `make db-migrate` (`docs/database.md`). |
 | gitleaks / trufflehog | Security | `research_only` | detect-secrets already covers this; redundant. |
 | Semgrep | Security | `research_only` | bandit + CodeQL cover SAST; revisit only for custom rules. |
 

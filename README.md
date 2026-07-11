@@ -270,7 +270,7 @@ $ forge-audit --path ./codeforge --stage intermediate --online --format md
 |---|---|---|
 | lint | ✅ pass | clean |
 | typecheck | ✅ pass | clean |
-| tests | ✅ pass | green suite, coverage 94% ≥ 80% |
+| tests | ✅ pass | green suite, coverage ≥ 80% floor (the codecov badge is the live source) |
 | security | ✅ pass | clean |
 | dependencies | ✅ pass | clean |
 | ci | ✅ pass | 2 CI workflow(s) |

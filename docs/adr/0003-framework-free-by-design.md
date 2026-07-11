@@ -72,3 +72,11 @@ Using the genre's nouns is speaking the language, not lifting a codebase.
   framework would otherwise hide.
 - **The honest cost:** we re-implement what a framework gives for free (persistence wiring,
   networking, admin). That is the accepted price of the scope, chosen with eyes open.
+
+## Status update (2026-07-11)
+
+The runtime set has grown from the original five to **seven** (`pydantic` and `structlog` added,
+each justified in `dependency_ledger.toml`), and the doctrine was refined to **architecture-first
+Python: a framework earns its place** (`docs/full_stack_forge_decision.md`). The decision above
+stands as the record of the original scope; `dependency_ledger.toml` is the live source of truth
+for the dependency set, and `make deps` gates it.

@@ -37,8 +37,9 @@ What CodeForge will **not** say:
 
 The tools that *are* present (Ruff, mypy, pytest, pip-audit, bandit, detect-secrets,
 cyclonedx, CodeQL, Dependabot) are **dev-time and CI-time quality gates**, not the runtime
-identity. The shipped engine depends on a short, defensible list: `pyyaml`, `sqlalchemy`,
-`fastapi`, `uvicorn`, `websockets` (`pyproject.toml`).
+identity. The shipped engine depends on a short, defensible list, every runtime dependency
+justified in `dependency_ledger.toml` (the source of truth, gated by `make deps`): `pyyaml`,
+`sqlalchemy`, `fastapi`, `uvicorn`, `websockets`, `pydantic`, `structlog`.
 
 ## The frameless rule (ask before adding a tool)
 
