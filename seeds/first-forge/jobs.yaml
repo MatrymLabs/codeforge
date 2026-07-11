@@ -32,3 +32,5 @@ engineer:
   movement: Field Deployment
   inherent: Systems Thinking
   signature: Forge Overdrive
+  # Prototype resistance profile: grounded and hardened, but electronics dislike lightning.
+  resistances: {LGT: Weak, ERT: Resist, PSN: Resist, WND: Resist}

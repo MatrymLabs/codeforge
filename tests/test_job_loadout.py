@@ -48,3 +48,20 @@ def test_a_wrong_typed_ability_slot_is_rejected_at_load(tmp_path) -> None:
     path.write_text("golem:\n  name: Golem\n  counter: [not, a, string]\n")
     with pytest.raises(SeedError):
         load_jobs(path)
+
+
+def test_a_job_may_declare_a_resistance_profile() -> None:
+    assert JOBS["engineer"]["resistances"]["LGT"] == "Weak"
+
+
+def test_a_simple_calling_has_no_resistances(tmp_path) -> None:
+    path = tmp_path / "jobs.yaml"
+    path.write_text("squire:\n  name: Squire\n")
+    assert load_jobs(path)["squire"]["resistances"] == {}
+
+
+def test_an_invalid_resistance_level_is_rejected_at_load(tmp_path) -> None:
+    path = tmp_path / "jobs.yaml"
+    path.write_text("golem:\n  name: Golem\n  resistances: {FIR: Nope}\n")
+    with pytest.raises(SeedError, match="must be one of"):
+        load_jobs(path)

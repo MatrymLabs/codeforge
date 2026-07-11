@@ -17,7 +17,7 @@ from parts.derived import derived_stats
 from parts.equipment import apply_equipment, equipped_loadout
 from parts.jobs import BASE_HP, BASE_MP, JOBS
 from parts.progression import get_next_level_threshold
-from parts.score_sheet import CharacterSheet, EquipmentLoadout, JobTP
+from parts.score_sheet import RESIST_ORDER, CharacterSheet, EquipmentLoadout, JobTP
 from parts.session import Session, display_name
 
 # Sheet attribute code -> engine stat name.
@@ -113,5 +113,6 @@ def sheet_from_session(session: Session) -> CharacterSheet | None:
         derived=apply_equipment(derived_stats(attrs, session.level), session),
         tp_rows=tp_rows,
         equipment=equipped_loadout(session),
-        resistances={},
+        # A character knows their own resistances: declared levels shown, the rest Normal.
+        resistances={code: job["resistances"].get(code, "Normal") for code in RESIST_ORDER},
     )
