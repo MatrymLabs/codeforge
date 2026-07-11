@@ -1,0 +1,29 @@
+======================================================================
+ Matrym                                 PLvl 12   Job: Engineer (Lv 9)
+======================================================================
+ HP   142 / 142             |   XP   4,820  (next PLvl @ 5,400)
+ MP   38 / 38               |   JP   1,150  (Engineer)
+ Race : Human               |   TP (Engineer)   340 / 500
+ Guild : The Forgebound     |   TP (Secondary)   90 / 500
+ Engineer Rank : Builder II |
+----------------------------+-----------------------------------------
+ STR      18                |   Primary Job    Engineer (Lv 9)
+ SPD      22                |   Secondary Job  Unassigned
+ MAG       9                |   Counter        Emergency Repair
+ STA      14                |   Movement       Field Deployment
+ WIS       7                |   Inherent       Systems Thinking
+ LUCK     16                |   Signature      "Forge Overdrive"
+----------------------------+-----------------------------------------
+ ATK        46              |   DEF        29
+ EVA        33              |   MAG DEF    24
+ ACC        71              |
+----------------------------+-----------------------------------------
+ Equipment                             |  Elemental / Status Res.
+ Weapon : Modular Forge Wrench         |  FIR:Normal    ICE:Normal
+ Body : Workshop Field Coat            |  LGT:Weak      WND:Resist
+ Head : Diagnostic Visor               |  ERT:Resist    WTR:Normal
+ Arm : Reinforced Work Bracers         |  HLY:Normal    DRK:Normal
+ Accessory 1 : Calibration Gauge       |  PSN:Resist    CRS:Normal
+ Accessory 2 : Veteran's Multitool     |
+ Key Item : Workshop Key               |
+======================================================================
