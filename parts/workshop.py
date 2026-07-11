@@ -1,33 +1,45 @@
-"""CARD: workshop -- the engineering cockpit inside the MUD (display-only).
+"""CARD: workshop -- the engineering cockpit inside the MUD.
 
-The Workshop room is where you engineer through the world. This card renders the
-cockpit menu and fronts the read-only tools available today: browsing the hardware
-catalog and searching it for a reusable part. Commands that RUN things
-(diagnostics, tests, the Architect NPC) arrive later, behind the safe command
-relay -- see docs/holodeck/SAFETY.md. This card never executes a subprocess.
+The Workshop room is where you engineer through the world. This card renders the cockpit
+menu: the real tools the Workshop fronts today -- browse the reusable-parts catalog, search
+it, plan with blueprints (browse/read/render, and draft one with the Claude Architect), ask
+the advisory Architect NPC, and run allowlisted read-only diagnostics. Anything that RUNS
+goes through the safe command relay (`parts/console.py`); anything that would EDIT files is
+still gated on the later holodeck phases (see docs/holodeck/ROADMAP.md + SAFETY.md). This
+card itself never executes a subprocess -- it renders the menu; the verbs do the work.
 """
 
 from parts.hardware import catalog_text, load_catalog, part_haystack
 
 WORKSHOP_ROOM = "workshop"  # the seed room label this cockpit lives in
 
+_INTRO = (
+    "The workshop is where you engineer through the world: browse reusable parts, plan with",
+    "blueprints, ask the Architect, and run read-only diagnostics -- all from the MUD.",
+)
+
 _LIVE = (
     ("catalog / hardware / parts", "browse the reusable-parts catalog"),
-    ("reuse <term>", "find cataloged parts for a need (e.g. reuse audit)"),
-    ("console", "list the read-only diagnostic commands"),
-    ("diagnostics / run <check>", "run allowlisted checks (lint, types, tests, git)"),
-    ("security", "run the SAST scan (bandit) on the engine"),
+    ("reuse <term>", "find a cataloged part for a need (e.g. reuse audit)"),
+    ("blueprint", "browse forged plans (idea -> spec -> HTML)"),
+    ("blueprint show <id>", "read a plan as Markdown"),
+    ("blueprint render <id>", "project a plan to a static HTML page"),
+    ("blueprint draft <idea>", "draft a new plan with the Claude Architect (an API key away)"),
     ("ai <prompt>", "ask the Architect NPC (advisory, read-only)"),
+    ("console / diagnostics", "run allowlisted read-only checks (lint, types, tests, git)"),
+    ("security", "run the SAST scan (bandit) on the engine"),
 )
 _COMING = (
-    ("blueprint", "draft a plan for a new part"),
-    ("patch proposal", "the Architect proposes an edit for your approval"),
+    ("patch proposal", "the Architect proposes an edit for your approval (holodeck phase 9)"),
+    ("arch", "step through to the holodeck to play what you built (owner-only, later)"),
 )
 
 
 def workshop_menu() -> str:
     """The cockpit menu: what the Workshop offers today, and what's coming."""
-    lines = ["== The Forge Workshop -- engineering cockpit ==", "", "Live tools:"]
+    lines = ["== The Forge Workshop -- engineering cockpit ==", ""]
+    lines += [f"  {line}" for line in _INTRO]
+    lines += ["", "Live tools:"]
     lines += [f"  {cmd:<28}{desc}" for cmd, desc in _LIVE]
     lines += ["", "Coming (see docs/holodeck/ROADMAP.md):"]
     lines += [f"  {cmd:<28}{desc}" for cmd, desc in _COMING]
