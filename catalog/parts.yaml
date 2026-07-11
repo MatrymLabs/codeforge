@@ -470,3 +470,27 @@
     cybersecurity: "lockout windows and token time-to-live"
     industrial automation: "equipment recovery/cure timers before a next cycle"
     general: "any named countdown that expires and reports readiness"
+
+- id: modifier-stack
+  name: Modifier Stack
+  source: parts/stats.py
+  category: rules-engine
+  tags: [modifiers, stacking, additive, compound, buffs]
+  maturity: shipped
+  source_status: original
+  license: MIT
+  influence: "additive/compound modifier composition (salvaged from the mk1 stat kernel; original)"
+  experimental: >-
+    model modifiers as an event-sourced pipeline or a rules DSL. Traded away: extensibility we
+    do not need yet; kept a pure, immutable, order-independent stack with two explicit modes.
+  risk: low
+  reuse_score: 5
+  purpose: >
+    Combine many flat/percent modifiers into one effective value by an explicitly chosen
+    strategy (additive or compound), pure and order-independent, clamped to bounds.
+  reuse:
+    game: "equipment, status effects, and job perks bending a derived stat"
+    business: "layered pricing: base price with stacked discounts and surcharges"
+    finance: "an adjusted rate from stacked flat and percentage adjustments"
+    manufacturing: "a throughput/efficiency figure with stacked modifiers"
+    general: "any value adjusted by many stacking sources, computed once"

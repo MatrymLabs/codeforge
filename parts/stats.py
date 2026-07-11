@@ -8,6 +8,7 @@ Kernel rule preserved from mk1: this module imports nothing from
 the engine. Pure schema, pure logic, fully portable.
 """
 
+import math
 from dataclasses import dataclass
 
 
@@ -89,4 +90,43 @@ class StatModifier:
     def apply(self, stat: Stat) -> int:
         """Return the modified effective value, clamped to the stat's bounds."""
         raw = stat.base + self.flat + round(stat.base * self.percent)
+        return max(stat.min_value, min(stat.max_value, raw))
+
+
+_STACK_MODES = ("additive", "compound")
+
+
+@dataclass(frozen=True)
+class ModifierStack:
+    """Many StatModifiers applied as one, by an explicitly chosen strategy (salvaged mk1 kernel).
+
+    Two order-independent modes, neither a hidden default of the other:
+      additive: base + sum(flats) + round(base * sum(percents))
+      compound: round((base + sum(flats)) * product(1 + percent))
+
+    This is the primitive equipment, status effects, and job perks all use to bend derived
+    stats: gather the sources' modifiers, stack them, apply once. Pure -- it never mutates a Stat.
+    """
+
+    modifiers: tuple[StatModifier, ...] = ()
+    mode: str = "additive"
+
+    def __post_init__(self) -> None:
+        if self.mode not in _STACK_MODES:
+            raise ValueError(f"mode must be one of {_STACK_MODES}, got {self.mode!r}")
+        for m in self.modifiers:
+            if not isinstance(m, StatModifier):
+                raise ValueError(
+                    f"ModifierStack members must be StatModifier, got {type(m).__name__}"
+                )
+
+    def apply(self, stat: Stat) -> int:
+        """Return the combined effective value, clamped to the stat's bounds."""
+        total_flat = sum(m.flat for m in self.modifiers)
+        if self.mode == "additive":
+            percent = sum(m.percent for m in self.modifiers)
+            raw = stat.base + total_flat + round(stat.base * percent)
+        else:
+            factor = math.prod(1 + m.percent for m in self.modifiers)
+            raw = round((stat.base + total_flat) * factor)
         return max(stat.min_value, min(stat.max_value, raw))
