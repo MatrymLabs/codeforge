@@ -343,3 +343,29 @@
     finance: "typed, audited configuration for a service"
     compliance: "a config surface that never prints a secret"
     general: "12-factor environment configuration for any service"
+
+- id: state-machine
+  name: State Machine
+  source: parts/statemachine.py
+  category: control-flow
+  tags: [fsm, state-machine, lifecycle, workflow, guards]
+  maturity: shipped
+  source_status: original
+  license: MIT
+  influence: "finite-state machine + State/Command/Strategy patterns (original implementation)"
+  experimental: >-
+    reach for a workflow engine (a BPMN runner), a library like transitions/xstate, or
+    event-sourced aggregates. Traded away: a big engine's timers and parallel regions; kept a
+    small pure core that returns a refusal with a reason instead of raising.
+  risk: low
+  reuse_score: 5
+  purpose: >
+    Model a lifecycle as explicit states and guarded transitions, so legal moves are a table
+    lookup and illegal moves are refused with a reason instead of hidden in scattered flags.
+  reuse:
+    game: "doors (locked to open), quest progression, combat AI phases, the self-reassembling dummy"
+    business: "an order lifecycle: placed to paid to shipped to delivered to refunded"
+    medical: "a care pathway: triage to admitted to treatment to discharge, with clinical guards"
+    manufacturing: "a work order or machine mode: idle to running to fault to maintenance"
+    compliance: "a control's status: current to proposed to final to superseded to withdrawn"
+    general: "any lifecycle where only certain transitions are legal"
