@@ -337,7 +337,12 @@
               "docs/adr/0003-framework-free-by-design.md"
             ],
             "status": "proven",
-            "next_proof_task": "Add an ADR for the cast/seed architecture."
+            "next_proof_task": "Add an ADR for the cast/seed architecture.",
+            "ownership": {
+              "level": 4,
+              "keel": "I made the three architecture-law calls (canonical state, derive-don't-store, framework-free) and wrote each ADR to defend the tradeoff I accepted.",
+              "record": "docs/adr/0003-framework-free-by-design.md"
+            }
           },
           {
             "skill_id": "adv.guardrails.safe",
@@ -372,7 +377,12 @@
               "CLAUDE.md"
             ],
             "status": "proven",
-            "next_proof_task": "Add a review rubric for incoming changes."
+            "next_proof_task": "Add a review rubric for incoming changes.",
+            "ownership": {
+              "level": 4,
+              "keel": "I authored the repo's contributor standard (CONTRIBUTING.md) - the process every contributor, human or AI, must follow.",
+              "record": "CONTRIBUTING.md"
+            }
           },
           {
             "skill_id": "adv.truth.docs_code",

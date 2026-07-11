@@ -16,7 +16,9 @@ from parts.career import (
     CareerError,
     career,
     load_board,
+    ownership_gaps,
     render_gaps,
+    render_ownership,
     render_resume,
     unproven_claims,
 )
@@ -71,6 +73,61 @@ def test_a_skill_missing_a_required_field_fails_loud(tmp_path: Path) -> None:
         load_board(bad)
 
 
+def test_no_ownership_claim_outruns_its_record() -> None:
+    # KeelGate: a skill claiming defendable ownership (level >= 4) must cite a real keel
+    # record on disk. The shipped board must have zero violations, so the human-keel claim
+    # cannot quietly overinflate the way an evidence claim cannot (see unproven_claims).
+    board = load_board()
+    violations = ownership_gaps(board)
+    assert not violations, "Ownership claim outruns its record:\n" + "\n".join(violations)
+
+
+def test_undeclared_ownership_is_honest_not_a_violation() -> None:
+    # Ownership is a second, optional axis: most skills carry no `ownership` block yet, and
+    # that undeclared state is honest (a gap to claim), never a KeelGate failure.
+    board = load_board()
+    skills = [s for lvl in board["levels"] for s in lvl["skills"]]
+    assert any("ownership" not in s for s in skills), "expected some undeclared skills"
+    assert any("ownership" in s for s in skills), "expected at least one seeded ownership claim"
+    assert ownership_gaps(board) == []
+
+
+def test_ownership_view_shows_declared_and_undeclared() -> None:
+    out = render_ownership()
+    assert "OWNERSHIP (the human keel)" in out
+    assert "keel:" in out  # at least one declared entry renders its keel line
+    assert "declared" in out and "undeclared" in out
+
+
+def test_a_malformed_ownership_level_fails_loud(tmp_path: Path) -> None:
+    bad = tmp_path / "m.json"
+    bad.write_text(
+        json.dumps(
+            {
+                "career_board": {
+                    "levels": [
+                        {
+                            "level": "entry",
+                            "skills": [
+                                {
+                                    "skill_id": "x",
+                                    "skill": "x",
+                                    "status": "proven",
+                                    "repo_proof": ["README.md"],
+                                    "next_proof_task": "y",
+                                    "ownership": {"level": 9},
+                                }
+                            ],
+                        }
+                    ]
+                }
+            }
+        )
+    )
+    with pytest.raises(CareerError, match="ownership level"):
+        load_board(bad)
+
+
 def test_gaps_view_surfaces_the_real_gaps() -> None:
     # Structural, not pinned to a specific skill: as gaps are closed the list shrinks, but
     # while any partial/missing remains the view must show it with a next-proof-task + count.
@@ -99,6 +156,7 @@ def test_career_dispatch_routes_each_view() -> None:
     assert "RESUME" in career("resume")
     assert "ENTRY-LEVEL READINESS" in career("role entry")
     assert "PROOF PATHS" in career("evidence")
+    assert "OWNERSHIP (the human keel)" in career("ownership")
     assert "Unknown career view" in career("nonsense")
 
 
