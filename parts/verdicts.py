@@ -11,7 +11,7 @@ Scope: this is the READINESS/QA vocabulary only. Routing decisions (proceed/revi
 and stay with their own systems -- they answer different questions and should not be merged here.
 """
 
-PASS = "pass"
+PASS = "pass"  # nosec B105 - a readiness verdict word, not a password (bandit heuristic false positive)
 FAIL = "fail"
 WATCH = "watch"  # a soft gap: not a hard fail, but not clean either
 NA = "n/a"  # not applicable (e.g. a prototype not built yet, so a file check is moot)

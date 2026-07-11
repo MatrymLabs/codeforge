@@ -76,7 +76,7 @@ def run(
         # Safe by construction: argv is a fixed allowlist entry (never user input),
         # run as a list with shell=False in the repo root. B607 (partial path) is
         # accepted -- these are dev tools resolved from PATH by design.
-        proc = subprocess.run(  # nosec B603 B607
+        proc = subprocess.run(  # nosec B603
             argv,
             cwd=REPO_ROOT,
             capture_output=True,
