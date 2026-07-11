@@ -8,13 +8,16 @@ from __future__ import annotations
 
 import os
 import socket
+import tempfile
 import threading
 import time
 
 import pytest
 
 # Keep any real database out of the way; the dashboard endpoints under test do not touch it.
-os.environ.setdefault("CODEFORGE_DB", "/tmp/codeforge_e2e.db")
+# Resolve the temp dir via tempfile rather than a hardcoded "/tmp" literal (portable, and
+# no predictable world-writable path -- bandit B108). Override with CODEFORGE_DB if needed.
+os.environ.setdefault("CODEFORGE_DB", os.path.join(tempfile.gettempdir(), "codeforge_e2e.db"))
 
 
 def _free_port() -> int:
