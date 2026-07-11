@@ -91,3 +91,16 @@ commit de0f8a5. Reproduce with `python -m benchmarks.perf_journeys`.
   is untouched; only WHEN it loads changed. No behavior change: full suite 700 passed, all auth and
   persistence-roundtrip regressions green, mypy clean (135 files). Regression guard: the import-graph
   is implicitly pinned by the suite importing `forge` DB-free. Workload class: **startup-bound**. Level 1.
+
+---
+
+## EXP-004 - Parse seeds with libyaml's CSafeLoader
+
+- **Repository Area:** B (world/seed). `parts/seed.py:_UniqueKeyLoader`, used by `load_rooms`/`load_items`/`load_npcs`/`load_jobs`.
+- **Observed Problem:** the seed parser subclassed the pure-Python `yaml.SafeLoader`; the full seed pack parsed at ~51 ms, 100% pure-Python YAML scanner, on the cold-start path (world + npcs load at import).
+- **Evidence of Problem / Profiling:** A/B on rooms.yaml - pure-Python SafeLoader 6521 us vs `yaml.CSafeLoader` 486 us = 13.4x on the raw parse; libyaml is available in the venv (`yaml.__with_libyaml__`).
+- **Current Baseline:** `load_rooms(first-forge)` end-to-end ~6500 us (parse + validation + room build).
+- **Hypothesis:** basing `_UniqueKeyLoader` on `CSafeLoader` moves scanning/composing into C; the parse drops toward the libyaml cost, cutting cold start.
+- **Correctness risk + Tests:** `CSafeLoader` composes mappings in C, so the unique-key duplicate gate had to be re-proven. Verified empirically that the C composer **preserves duplicate key pairs** in the node, so `_construct_unique_mapping` still fires. Pinned by `test_duplicate_label_is_rejected` (runs through the active loader) and `test_seed_loader_prefers_libyaml` (asserts the C loader is used when libyaml is present).
+- **Compatibility:** falls back to `SafeLoader` where libyaml is absent (`try/except ImportError`), so a host without libyaml still loads seeds (just slower).
+- **Result / Decision:** **VERIFIED IMPROVEMENT (executed 2026-07-11).** `load_rooms(first-forge)` end-to-end **~6500 us -> 748 us (~8.7x)** (raw parse 13.4x; the remainder is validation/room-build, unchanged). Duplicate-key gate confirmed still firing under the C loader. Full suite 701 passed (+1 test), mypy clean. No behavior change, no new dependency (PyYAML already vendored libyaml). Workload class: **serialization/startup**. Level 6 (specialized tool, adopted only after profiling proved the win and a correctness re-proof).

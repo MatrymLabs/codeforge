@@ -129,7 +129,17 @@ class SeedError(Exception):
     """Raised when a seed file fails validation. Names the exact problem."""
 
 
-class _UniqueKeyLoader(yaml.SafeLoader):
+# Parse seeds with libyaml's CSafeLoader (~13x faster than the pure-Python SafeLoader) on the
+# cold-start path, falling back to SafeLoader where libyaml is absent. The C composer preserves
+# duplicate key pairs in the composed node, so the unique-key gate below still fires (proven and
+# pinned by test_duplicate_label_is_rejected + test_seed_loader_prefers_libyaml). EXP-004.
+try:
+    from yaml import CSafeLoader as _SeedYamlBase
+except ImportError:  # pragma: no cover - libyaml is present on our hosts and in CI
+    from yaml import SafeLoader as _SeedYamlBase  # type: ignore[assignment]
+
+
+class _UniqueKeyLoader(_SeedYamlBase):
     """A YAML loader that refuses duplicate keys instead of silently
     overwriting them."""
 

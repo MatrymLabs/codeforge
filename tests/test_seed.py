@@ -32,10 +32,26 @@ def test_invalid_label_is_rejected_with_suggestion(tmp_path):
 
 
 def test_duplicate_label_is_rejected(tmp_path):
+    # The unique-key gate must fire under whatever loader is active (see the C-loader test
+    # below): a duplicate key is a loud SeedError, never a silent overwrite.
     bad = tmp_path / "rooms.yaml"
     bad.write_text("vault:\n  name: Vault A\nvault:\n  name: Vault B\n")
     with pytest.raises(SeedError, match="Duplicate label 'vault'"):
         load_rooms(bad)
+
+
+def test_seed_loader_prefers_libyaml(tmp_path):
+    # EXP-004: seeds parse through libyaml's CSafeLoader (~13x faster) when available. Pinning
+    # this means a regression to the slow pure-Python SafeLoader is visible, and it documents
+    # that the duplicate-key gate above runs on the C loader (whose composer keeps duplicates).
+    import yaml
+
+    from parts.seed import _UniqueKeyLoader
+
+    if yaml.__with_libyaml__:
+        assert issubclass(_UniqueKeyLoader, yaml.CSafeLoader), "seed loader should use libyaml"
+    else:  # pragma: no cover - libyaml is present on our hosts and CI
+        assert issubclass(_UniqueKeyLoader, yaml.SafeLoader)
 
 
 def test_bare_label_becomes_a_complete_room(tmp_path):
