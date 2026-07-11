@@ -16,6 +16,7 @@ from forge import handle_command
 from parts import engineer, npcs
 from parts.engineer import (
     analyzed_duration,
+    deploy_barrier,
     diagnostic_scan,
     emergency_repair,
     field_repair,
@@ -177,3 +178,51 @@ def test_repair_and_scan_are_reachable_through_the_tick() -> None:
     handle_command(s, "job engineer")
     assert "Field Repair" in handle_command(s, "repair")
     assert "Analyzed applied" in handle_command(s, "scan dummy")
+
+
+# --- Power Cells + Deploy Barrier -----------------------------------------------
+def test_the_engineer_starts_with_power_cells() -> None:
+    s = _engineer()
+    assert s.resources["power"].maximum == 6 and s.resources["power"].current == 6
+
+
+def test_deploy_barrier_spends_power_and_raises_a_barrier() -> None:
+    s = _engineer()
+    out = deploy_barrier(s)
+    assert s.resources["power"].current == 6 - engineer.DEPLOY_BARRIER_COST
+    assert s.statuses["barrier"] == engineer.BARRIER_DURATION
+    assert "deploy a barrier" in out
+
+
+def test_deploy_barrier_refused_without_enough_power() -> None:
+    s = _engineer()
+    s.resources["power"] = Resource("power", 1, 6)  # below the cost
+    assert "Not enough Power Cells" in deploy_barrier(s)
+
+
+def test_power_regenerates_on_the_tick_capped_at_max() -> None:
+    s = _engineer()
+    s.resources["power"] = Resource("power", 2, 6)
+    tick(s)
+    assert s.resources["power"].current == 3  # +power_regen
+    s.resources["power"] = Resource("power", 6, 6)
+    tick(s)
+    assert s.resources["power"].current == 6  # capped, never over max
+
+
+def test_only_an_engineer_can_deploy() -> None:
+    s = Session(player_id="matrym")
+    bind_calling(s, "vanguard")
+    assert "Only an Engineer" in deploy_barrier(s)
+
+
+def test_a_job_without_power_cells_has_no_power_resource() -> None:
+    s = Session(player_id="matrym")
+    bind_calling(s, "vanguard")
+    assert "power" not in s.resources
+
+
+def test_deploy_reaches_through_the_tick() -> None:
+    s = Session(player_id="matrym", location="courtyard")
+    handle_command(s, "job engineer")
+    assert "deploy a barrier" in handle_command(s, "deploy")

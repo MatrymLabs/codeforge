@@ -81,6 +81,7 @@ class CharacterSheet:
     inherent: str
     signature: str
     mp: tuple[int, int] | None = None
+    power: tuple[int, int] | None = None  # a custom resource (Power Cells), if the job has one
     guild: str | None = None
     rank_title: str = ""
     secondary_job: str | None = None
@@ -178,6 +179,8 @@ def _resource_lefts(sheet: CharacterSheet) -> list[str]:
     lines = [f" HP   {sheet.hp[0]} / {sheet.hp[1]}"]
     if sheet.mp is not None:
         lines.append(f" MP   {sheet.mp[0]} / {sheet.mp[1]}")
+    if sheet.power is not None:
+        lines.append(f" PC   {sheet.power[0]} / {sheet.power[1]}")  # Power Cells
     lines.append(f" Race : {sheet.race}")
     if sheet.guild:
         lines.append(f" Guild : {sheet.guild}")

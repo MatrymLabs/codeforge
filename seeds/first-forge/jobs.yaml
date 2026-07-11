@@ -34,3 +34,6 @@ engineer:
   signature: Forge Overdrive
   # Prototype resistance profile: grounded and hardened, but electronics dislike lightning.
   resistances: {LGT: Weak, ERT: Resist, PSN: Resist, WND: Resist}
+  # Power Cells: the Engineer's custom resource, spent to deploy devices, regained per tick.
+  power_cells: 6
+  power_regen: 1
