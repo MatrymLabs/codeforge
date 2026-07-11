@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import inspect
 from dataclasses import dataclass, field
+from typing import Any
 
 from parts.evolution.candidate import Candidate
 from parts.evolution.counterexamples import Counterexample, CounterexampleBank
@@ -20,11 +21,14 @@ from parts.evolution.fitness import WEIGHTS, FitnessResult, _Entry, aggregate_fi
 from parts.evolution.genome import BlueprintGenome
 from parts.evolution.subjects import (
     ORACLE_INPUTS,
-    Formatter,
+    Subject,
     candidate_extensible,
     candidate_minimal,
     candidate_performance,
     oracle_fit,
+    slug_extensible,
+    slug_minimal,
+    slug_performance,
 )
 from parts.evolution.validation import validate_genome
 
@@ -57,7 +61,7 @@ class EvolutionRun:
     final_status: str = "human_decision_required"
 
 
-def _source_lines(fn: Formatter) -> int:
+def _source_lines(fn: Subject) -> int:
     try:
         return len(inspect.getsource(fn).strip().splitlines())
     except (OSError, TypeError):  # pragma: no cover - a C/builtin fn has no readable source
@@ -66,10 +70,10 @@ def _source_lines(fn: Formatter) -> int:
 
 def run_bakeoff(
     genome: BlueprintGenome,
-    pairs: list[tuple[Candidate, Formatter]],
+    pairs: list[tuple[Candidate, Subject]],
     run_id: str,
-    inputs: tuple[tuple[str, int], ...] = ORACLE_INPUTS,
-    oracle: Formatter = oracle_fit,
+    inputs: tuple[tuple[Any, ...], ...] = ORACLE_INPUTS,
+    oracle: Subject = oracle_fit,
     bank: CounterexampleBank | None = None,
     elite_baseline: str = "oracle_fit",
     kill_switch: bool = False,
@@ -129,7 +133,7 @@ def run_bakeoff(
     )
 
 
-def build_score_sheet_pairs(genome_id: str) -> list[tuple[Candidate, Formatter]]:
+def build_score_sheet_pairs(genome_id: str) -> list[tuple[Candidate, Subject]]:
     """The three hand-authored ScoreSheetRenderer column-formatter candidates."""
     return [
         (
@@ -145,6 +149,24 @@ def build_score_sheet_pairs(genome_id: str) -> list[tuple[Candidate, Formatter]]
         (
             Candidate("cand_extensible", genome_id, "extensibility", "candidate_extensible"),
             candidate_extensible,
+        ),
+    ]
+
+
+def build_slugify_pairs(genome_id: str) -> list[tuple[Candidate, Subject]]:
+    """The three hand-authored slugify candidates (the second subject; a (str,) signature)."""
+    return [
+        (
+            Candidate("cand_minimal", genome_id, "minimal", "slug_minimal", ("elite_baseline",)),
+            slug_minimal,
+        ),
+        (
+            Candidate("cand_performance", genome_id, "performance", "slug_performance"),
+            slug_performance,
+        ),
+        (
+            Candidate("cand_extensible", genome_id, "extensibility", "slug_extensible"),
+            slug_extensible,
         ),
     ]
 
