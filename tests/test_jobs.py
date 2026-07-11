@@ -42,3 +42,42 @@ def test_full_chargen_through_the_engine_tick():
     sheet = handle_command(s, "score")
     assert "Job: Artificer (Lv 1)" in sheet  # the rich JRPG score sheet
     assert "PLvl 1" in sheet  # player level separate from job level
+
+
+def test_set_secondary_equips_a_subjob_and_opens_its_record():
+    from parts.jobs import set_secondary
+
+    s = Session(player_id="matrym")
+    bind_calling(s, "engineer")
+    out = set_secondary(s, "scholar")
+    assert s.secondary_job == "scholar"
+    assert "scholar" in s.job_progress  # its own record, tracked separately
+    assert "Scholar" in out
+
+
+def test_secondary_refusals():
+    from parts.jobs import set_secondary
+
+    fresh = Session(player_id="matrym")
+    assert "primary calling first" in set_secondary(fresh, "scholar")  # no primary yet
+    s = Session(player_id="matrym")
+    bind_calling(s, "engineer")
+    assert "no calling named" in set_secondary(s, "necromancer")
+    assert "already your primary" in set_secondary(s, "engineer")
+
+
+def test_the_sheet_shows_the_equipped_secondary():
+    from parts.character_view import sheet_from_session
+    from parts.jobs import set_secondary
+
+    s = Session(player_id="matrym")
+    bind_calling(s, "engineer")
+    set_secondary(s, "scholar")
+    sheet = sheet_from_session(s)
+    assert sheet is not None and sheet.secondary_job == "Scholar (Lv 1)"
+
+
+def test_subjob_reaches_through_the_tick():
+    s = Session(player_id="matrym")
+    handle_command(s, "job engineer")
+    assert "secondary" in handle_command(s, "subjob scholar").lower()

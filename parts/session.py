@@ -35,6 +35,7 @@ class Session:
     rank: str = "player"
     account: str = ""
     job: str = ""
+    secondary_job: str = ""  # the equipped subjob label, or "" for none
     level: int = 1
     xp: int = 0
     stats: StatBlock | None = None

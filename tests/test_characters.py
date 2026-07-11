@@ -40,6 +40,7 @@ def test_save_and_load_roundtrip():
     record = load_character("matrym")
     assert record == {
         "job": "vanguard",
+        "secondary_job": "",
         "level": 2,
         "xp": 90,
         "location": "courtyard",

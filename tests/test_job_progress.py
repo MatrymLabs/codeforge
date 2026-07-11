@@ -66,3 +66,19 @@ def test_an_unnamed_seat_persists_no_job_progress() -> None:
     bind_calling(s, "engineer")  # a runtime record exists...
     save_character(s)  # ...but an unnamed seat is never saved
     assert load_job_progress("drifter") == {}
+
+
+def test_the_secondary_job_survives_a_character_roundtrip():
+    from parts.jobs import set_secondary
+
+    s = Session(player_id="matrym", location="courtyard", named=True)
+    SESSIONS["matrym"] = s
+    bind_calling(s, "engineer")
+    set_secondary(s, "scholar")
+    save_character(s)
+    fresh = Session(player_id="matrym")
+    record = load_character("matrym")
+    assert record is not None
+    restore_character(fresh, record)
+    assert fresh.secondary_job == "scholar"
+    assert "scholar" in fresh.job_progress  # its separate record persisted too

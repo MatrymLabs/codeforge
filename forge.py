@@ -42,7 +42,7 @@ from parts.frameup import inspect
 from parts.functions import functions
 from parts.generate import system_generate
 from parts.items import drop, inventory_text, room_items_text, take
-from parts.jobs import JOBS, bind_calling, calling_index
+from parts.jobs import JOBS, bind_calling, calling_index, set_secondary
 from parts.law import law
 from parts.library import library
 from parts.npcs import room_npcs_text, talk, trace_npc
@@ -71,7 +71,7 @@ NAME_RE = re.compile(r"^[a-z][a-z0-9_]{1,15}$")
 HELP_TEXT = (
     "Commands: look, go <direction> (or n/s/e/w/u/d), "
     "take, drop, inventory, talk <npc>, say <msg>, name <yourname>, who, "
-    "jobs, job <calling>, score, equip <item>, unequip <slot>, "
+    "jobs, job <calling>, subjob <calling>, score, equip <item>, unequip <slot>, "
     "attack <target>, repair, scan <target>, deploy, "
     "unlock <door> with <key>, regs [topic|id], library [id], law [id], "
     "registry [show|find|type|status], "
@@ -499,6 +499,8 @@ def handle_command(session: Session, signal: str) -> str:
                 exclude=session.player_id,
             )
         return verdict
+    if routed_signal.startswith(("subjob ", "secondary ")):
+        return set_secondary(session, routed_signal.split(" ", 1)[1])
     if routed_signal == "score" or routed_signal.startswith("score "):
         sheet = sheet_from_session(session)
         if sheet is None:
