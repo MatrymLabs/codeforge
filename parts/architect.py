@@ -6,7 +6,7 @@ anything (that stays with you and the FailsafeRunner). It speaks through a seam
 (`Advisor`) so the brain is swappable: a local rule-based guide today, a
 Claude-backed one later behind the SAME interface.
 
-Safety (docs/holodeck/SAFETY.md): tests use the local advisor and never touch the
+Safety (docs/proving_ground/SAFETY.md): tests use the local advisor and never touch the
 network; only redacted, public project context is ever sent to a real API, and
 secrets never are.
 """
@@ -98,7 +98,7 @@ class ArchitectError(RuntimeError):
 
 
 def _redact(text: str) -> str:
-    """Never send a secret to a remote brain (docs/holodeck/SAFETY.md)."""
+    """Never send a secret to a remote brain (docs/proving_ground/SAFETY.md)."""
     return _SECRETISH.sub("[redacted]", text)
 
 

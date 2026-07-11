@@ -58,7 +58,7 @@ The one map to everything under `docs/`. New here? Read [RUNNING.md](RUNNING.md)
 - [reports/](reports/), the runtime-evidence README (generated reports are git-ignored, reproducible).
 
 ## Vision (planned, labeled as such)
-- [holodeck/](holodeck/), the workshop/holodeck roadmap and safety notes.
+- [proving_ground/](proving_ground/), the workshop/proving ground roadmap and safety notes.
 
 ## Logs
 - [CAPTAINS_LOG.md](CAPTAINS_LOG.md), the flagship's engineering log.

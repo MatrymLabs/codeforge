@@ -94,6 +94,6 @@ Matrym@matlabs."** The Broken Courtyard, the training dummy, the whole loop, ali
 and holding. Two hundred and one tests green. CI green. The forge lit on command.
 
 *A good day's work. The workshop is next: to build programs from inside the world,
-and step through an owner-only arch into the holodeck to play what we built.*
+and step through an owner-only arch into the proving ground to play what we built.*
 
 - Logged by the Captain, MatrymLabs. End of entry.

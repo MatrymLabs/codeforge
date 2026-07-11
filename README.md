@@ -18,10 +18,10 @@ worlds, restart-surviving characters, rank-gated admin verbs, a threaded TCP gat
 that real MUD clients (Mudlet, telnet, nc) connect to today, and a browser gateway you
 can click straight into.
 
-> **Where this is going:** a MUD-powered **engineering holodeck** and a reusable-code
+> **Where this is going:** a MUD-powered **engineering proving ground** and a reusable-code
 > **hardware store** - the parts built for the game get cataloged for real-world reuse
 > (government, finance, compliance, records). Browse them with `make hardware`; read the
-> blueprint in [`docs/holodeck/`](docs/holodeck/VISION.md).
+> blueprint in [`docs/proving_ground/`](docs/proving_ground/VISION.md).
 
 ![Pick a calling, walk to the courtyard, and train against the self-repairing dummy until you level up](docs/demo.gif)
 
@@ -134,12 +134,12 @@ splash) at startup - swap the seed and you're playing a different game on the sa
 engine. The spawn point is the first room in the seed, so nothing is hardcoded.
 
 ```bash
-codeforge seeds                        # list installed games
-codeforge play --seed sword-art-online # boot a different game (Aincrad, Floor 1)
-FORGE_SEED=sword-art-online spark       # same selector for the multiplayer server
+codeforge seeds                       # list installed games
+codeforge play --seed spiral-ascent   # boot a different game (the Spiral Ascent)
+FORGE_SEED=spiral-ascent spark        # same selector for the multiplayer server
 ```
 
-Shipped seeds: `first-forge` (the fantasy starter) and `sword-art-online`. Adding a
+Shipped seeds: `first-forge` (the fantasy starter) and `spiral-ascent`. Adding a
 new game is a new `seeds/<name>/` folder of YAML - no Python required.
 
 A **seed pack** is a game's *content* (above). A **cast** is the next layer: a standalone,
@@ -388,7 +388,7 @@ that the gateway boots.
 - Canonical event frames: typed MUD-IL payloads on the bus
 - Seed packs as installable world modules
 - The workshop: build programs via in-MUD commands, then step through an
-  owner-only arch into the holodeck to play the game you built
+  owner-only arch into the proving ground to play the game you built
 
 ## Contributing
 

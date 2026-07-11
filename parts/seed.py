@@ -27,9 +27,9 @@ from typing import Any, TypedDict
 import yaml
 
 # A seed IS a game. The engine loads one seed pack at startup; swap the seed and
-# codeforge boots a different game (fantasy `first-forge`, `sword-art-online`, ...).
+# codeforge boots a different game (fantasy `first-forge`, `spiral-ascent`, ...).
 # Selection is by the FORGE_SEED env var, read once at import -- you choose which
-# program the holodeck runs when it powers on, not while it's running.
+# program the proving ground runs when it powers on, not while it's running.
 # Default: the repo's seeds/ dir. CODEFORGE_SEEDS_ROOT overrides it for installed /
 # containerized deploys where the package lives apart from the seed files.
 _default_seeds_root = Path(__file__).resolve().parent.parent / "seeds"

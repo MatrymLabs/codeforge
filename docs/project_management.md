@@ -11,7 +11,7 @@ derive: charter, milestones, backlog, risks, decisions.
 
 ## Project charter
 
-- **Vision:** a Python-native MUD-shaped engineering holodeck + reusable-code
+- **Vision:** a Python-native MUD-shaped engineering proving ground + reusable-code
   hardware store, built as a portfolio-grade, self-auditing engine.
 - **Primary constraint:** beginner-safe development with professional engineering
   discipline (branch → `make check` green → CI green → merge).

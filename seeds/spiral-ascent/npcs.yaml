@@ -1,0 +1,19 @@
+# SEED: spiral-ascent -- npcs.yaml
+# hp > 0 makes an NPC attackable; xp is awarded on defeat.
+
+wayfitter:
+  name: the Wayfitter
+  location: spiral_landing
+  keywords: [wayfitter, smith, merchant, shopkeeper]
+  dialogue:
+    - '"Blades, tokens, a warm cloak -- everything a climber needs for the ascent."'
+    - '"A party is forming for the first Gate. You in?"'
+
+coilwarden:
+  name: the Coilwarden
+  location: gate_chamber
+  keywords: [coilwarden, warden, boss, gate]
+  dialogue:
+    - '"NONE ASCEND UNPROVEN." The Coilwarden lifts a scarred greatblade.'
+  hp: 60
+  xp: 200

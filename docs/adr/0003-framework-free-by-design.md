@@ -42,7 +42,7 @@ Both are legitimate; they optimize for different things.
 
 | Dimension | Framework approach (e.g. Evennia) | CodeForge (framework-free) |
 |-----------|-----------------------------------|----------------------------|
-| Foundation | Django ORM + Twisted reactor, provided | pure Python · SQLAlchemy 2.0 · threaded `socket` · FastAPI |
+| Foundation | Django ORM + Twisted's event loop, provided | pure Python · SQLAlchemy 2.0 · threaded `socket` · FastAPI |
 | The world | Typeclasses - objects are DB rows | Data - `seeds/*.yaml`, validated on load |
 | Commands | CmdSets attached to objects, merged by priority | One pure-function tick + a namespaced command spine |
 | Character data | Persisted ORM attributes | Derive-don't-store; immutable dataclasses |
@@ -65,7 +65,7 @@ Using the genre's nouns is speaking the language, not lifting a codebase.
 ## Consequences
 
 - **Testability:** the tick is a pure function; parts import only what they need - the suite
-  runs without a server, a reactor, or a live database.
+  runs without a server, an event loop, or a live database.
 - **Portability & reuse:** kernel modules (e.g. `parts/stats.py`) are engine-independent -
   which is what makes the **cast** architecture (`docs/seed_architecture.md`) possible.
 - **Portfolio signal:** building the engine in plain code is the point - it shows the work a

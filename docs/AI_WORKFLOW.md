@@ -137,15 +137,15 @@ working code before theory, one concept at a time.
 ## Code identity & style (the forge voice)
 
 CodeForge's code should physically read like the developer's imagination: part
-Tony Stark's workshop (invention, reactors, forged tools), part Sherlock Holmes
-(clues, traces, deductions, case files), part Sword Art Online (worlds, gates,
-floors, skills, quests, progression), all wound through a spiral motif (seeds
-becoming systems, loops becoming layers). The names already in this repo -
-`spark`, `Forge`, `Session`, `seed`, `handle_command` as the tick - are the seed
-of that voice. Extend it; don't fight it.
+inventor's workshop (invention, forged tools), part detective's case room (clues,
+traces, deductions, case files), part tower-climb (worlds, gates, floors, skills,
+quests, progression), all wound through a spiral motif (seeds becoming systems,
+loops becoming layers). The names already in this repo - `spark`, `Forge`,
+`Session`, `seed`, `handle_command` as the tick - are the seed of that voice.
+Extend it; don't fight it.
 
 **Signature vocabulary (reach for these over generic names):**
-- Nouns: Forge, Spark, Reactor, Arc, Seed, Spiral, Gate, Echo, Signal, Trace,
+- Nouns: Forge, Spark, Core, Kiln, Seed, Spiral, Gate, Echo, Signal, Trace,
   CaseFile, Archive, Floor, Skill, Quest, Avatar, Engine, Compass, Lens,
   Keystone, Relic.
 - Verbs: ignite, forge, trace, deduce, unlock, ascend, awaken, bind, inspect,

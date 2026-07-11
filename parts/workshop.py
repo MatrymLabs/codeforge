@@ -5,8 +5,8 @@ menu: the real tools the Workshop fronts today -- browse the reusable-parts cata
 it, plan with blueprints (browse/read/render, and draft one with the Claude Architect), ask
 the advisory Architect NPC, and run allowlisted read-only diagnostics. Anything that RUNS
 goes through the safe command relay (`parts/console.py`); anything that would EDIT files is
-still gated on the later holodeck phases (see docs/holodeck/ROADMAP.md + SAFETY.md). This
-card itself never executes a subprocess -- it renders the menu; the verbs do the work.
+still gated on the later Proving Ground phases (see docs/proving_ground/). This card itself
+never executes a subprocess -- it renders the menu; the verbs do the work.
 """
 
 from parts.hardware import catalog_text, load_catalog, part_haystack
@@ -33,7 +33,9 @@ _OWNER = (
     ("@forge <name>", "propose a part skeleton (writes nothing until you approve)"),
     ("@forge approve <name>", "generate the approved candidate into the workspace/ sandbox"),
 )
-_COMING = (("arch", "step through to the holodeck to play what you built (owner-only, later)"),)
+_COMING = (
+    ("arch", "step through to the proving ground to play what you built (owner-only, later)"),
+)
 
 
 def workshop_menu() -> str:
@@ -42,9 +44,9 @@ def workshop_menu() -> str:
     lines += [f"  {line}" for line in _INTRO]
     lines += ["", "Live tools:"]
     lines += [f"  {cmd:<28}{desc}" for cmd, desc in _LIVE]
-    lines += ["", "Owner tools (gated, sandboxed - see docs/holodeck/SAFETY.md):"]
+    lines += ["", "Owner tools (gated, sandboxed - see docs/proving_ground/SAFETY.md):"]
     lines += [f"  {cmd:<28}{desc}" for cmd, desc in _OWNER]
-    lines += ["", "Coming (see docs/holodeck/ROADMAP.md):"]
+    lines += ["", "Coming (see docs/proving_ground/ROADMAP.md):"]
     lines += [f"  {cmd:<28}{desc}" for cmd, desc in _COMING]
     return "\n".join(lines)
 

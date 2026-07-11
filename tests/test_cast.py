@@ -37,7 +37,7 @@ def test_the_shipped_templates_are_on_the_shelf() -> None:
 def test_a_real_template_loads_with_its_required_keys() -> None:
     tpl = load_template("fantasy_mud")
     assert tpl["template_id"] == "fantasy_mud"
-    assert tpl["starter_seed_pack"] == "sword-art-online"
+    assert tpl["starter_seed_pack"] == "spiral-ascent"
     assert tpl["engine_strategy"] == "vendored-whole"
 
 

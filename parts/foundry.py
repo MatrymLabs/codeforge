@@ -1,7 +1,7 @@
 """CARD: foundry -- propose a change, gate it on human approval, then generate under guard.
 
-Holodeck phases 9-10 (the AI-touches-files phases), made safe. Two hard rails, straight from
-docs/holodeck/SAFETY.md:
+Proving Ground phases 9-10 (the AI-touches-files phases), made safe. Two hard rails, straight from
+docs/proving_ground/SAFETY.md:
 
   Phase 9  A PatchProposal is a DATA artifact -- what file, why, which part, the risk, how to
            test, how to revert. Creating one writes NOTHING. A human must APPROVE it first.

@@ -1,10 +1,10 @@
-# CodeForge - the Holodeck & the Hardware Store
+# CodeForge - the Proving Ground & the Hardware Store
 
 ## Vision
 
 CodeForge is two products sharing one engine.
 
-- **A MUD-powered engineering holodeck.** You log in as a builder, enter your
+- **A MUD-powered engineering proving ground.** You log in as a builder, enter your
   Workshop, and engineer software *through the world* - talk to an Architect NPC
   (an AI pair-programmer), run diagnostics at a console, read test results in-world,
   and design systems interactively. The game is the proving ground.
@@ -58,7 +58,7 @@ generation). **Nothing risky runs without the Safety layer around it.**
   (the cross-domain catalog, `catalog/parts.yaml` + `parts/hardware.py`).
 - **Ritual & control panel:** `make ritual`, `make check/doctor/patch/daily`.
 
-## MVP - the smallest working holodeck
+## MVP - the smallest working proving ground
 
 The first end-to-end slice we are climbing toward (not all at once):
 
@@ -93,7 +93,7 @@ codeforge/
     README.md
   seeds/            # ✅ worlds as data - the Workshop room lives here (Phase 2)
   reports/          # → saved run outputs, by kind (Phase 7; gitignored)
-  docs/holodeck/    # ✅ this blueprint (VISION, ROADMAP, SAFETY)
+  docs/proving_ground/    # ✅ this blueprint (VISION, ROADMAP, SAFETY)
   tests/            # ✅ a twin per card
 ```
 

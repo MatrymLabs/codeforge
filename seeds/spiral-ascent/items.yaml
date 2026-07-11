@@ -1,0 +1,17 @@
+# SEED: spiral-ascent -- items.yaml
+# location is a plain room label; the engine tags it internally.
+
+forged_blade:
+  name: a forged blade
+  keywords: [sword, blade, forged]
+  location: spiral_landing
+
+ascent_token:
+  name: an ascent token
+  keywords: [token, ascent, crystal]
+  location: spiral_landing
+
+coil_key:
+  name: a coil key
+  keywords: [key, coil]
+  location: first_coil

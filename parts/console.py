@@ -5,7 +5,7 @@ Every command goes through this relay: only allowlisted commands run, as argumen
 LISTS (no shell, no interpolation), in the repo root, under a timeout and an
 output cap, and each run is logged. An unknown command is refused and never runs.
 
-This is the FailsafeRunner from docs/holodeck/SAFETY.md. The v1 allowlist is
+This is the FailsafeRunner from docs/proving_ground/SAFETY.md. The v1 allowlist is
 entirely READ-ONLY; anything that mutates will need an approval gate (a later
 phase). It runs synchronously (it blocks the tick for the command's duration) --
 fine for the fast checks below; async execution is a later phase.
