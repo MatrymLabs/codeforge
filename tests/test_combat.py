@@ -98,6 +98,25 @@ def test_a_small_jp_gain_accrues_without_leveling():
     assert s.job_progress["engineer"].job_level == 1  # below the level-2 threshold
 
 
+def test_a_seat_with_no_active_job_earns_no_jp():
+    s = Session(player_id="matrym")  # no calling taken
+    assert award_jp(s, 50) == ""
+
+
+def test_earned_jp_persists_for_a_named_character():
+    from parts.characters import load_character, restore_character
+
+    s = Session(player_id="matrym", location="courtyard", named=True)
+    SESSIONS["matrym"] = s
+    bind_calling(s, "engineer")
+    award_jp(s, 45)  # a named seat persists on award
+    fresh = Session(player_id="matrym")
+    record = load_character("matrym")
+    assert record is not None
+    restore_character(fresh, record)
+    assert fresh.job_progress["engineer"].jp == 45
+
+
 def test_jp_only_touches_the_active_job():
     s = _fighter("engineer")
     from parts.job_progress import JobProgress
