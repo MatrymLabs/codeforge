@@ -631,5 +631,35 @@
     "aliases": [],
     "created": "2026-07-10",
     "updated": "2026-07-10"
+  },
+  {
+    "designation": "CMD-UM10-S01-N001-022-R0",
+    "name": "`evolution`",
+    "status": "active",
+    "function": "Blueprint Evolution Lab, read-only: list and show recorded candidate bake-off runs. Never executes a run or promotes a candidate.",
+    "label": "evolution",
+    "file": "parts/evolution/command.py",
+    "type": "CMD",
+    "domain": "UM10",
+    "sector": "S01",
+    "node": "N001",
+    "sequence": "022",
+    "revision": "R0",
+    "docs": "docs/nature_inspired/research_mapping.md",
+    "tests": "tests/test_evolution_command.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "command",
+      "core",
+      "evolution",
+      "read-only"
+    ],
+    "notes": "CORE verb. Read-only window on reports/evolution/ runs; producing a run is `make evolution`, never a MUD side effect.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-11",
+    "updated": "2026-07-11"
   }
 ]
