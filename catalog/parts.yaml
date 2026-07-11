@@ -518,3 +518,146 @@
     business: "a configuration whose selected options adjust a computed result"
     manufacturing: "tooling/fixtures on a machine that change its rated output"
     general: "any slotted-attachment model whose parts modify a computed value"
+
+# --- Blueprint Evolution Lab parts (nature-inspired engineering; docs/nature_inspired/) ---
+
+- id: blueprint-genome
+  name: Blueprint Genome
+  source: parts/evolution/genome.py
+  category: modeling
+  tags: [typed-model, genotype, ir, serialization, governance]
+  maturity: beta
+  source_status: original
+  license: MIT
+  influence: "genotype/phenotype separation; typed internal program representation (pattern studied: Pantridge & Helmuth 2023, GECCO)"
+  experimental: >-
+    express the genome as a Pydantic model or a protobuf/JSON-schema contract once it must
+    cross a network or a language boundary. Traded away: a plain frozen dataclass that
+    round-trips with no dependency and no schema server.
+  risk: low
+  reuse_score: 4
+  purpose: >
+    Capture design INTENT and constraints as typed, inspectable data, separate from any
+    emitted code. Composes an existing spec (the Blueprint) and adds interfaces, invariants,
+    allowed/prohibited dependencies, budgets, and obligations; never an opaque mini-language.
+  reuse:
+    game: "a typed spec for a seed or a forged part before any code exists"
+    business: "a validated design/config contract with explicit constraints and provenance"
+    records: "auditable design intent, git-diffable, separate from the artifact it produced"
+    general: "any typed IR that separates intent from emitted output"
+
+- id: constraint-gate
+  name: Constraint Gate
+  source: parts/evolution/validation.py
+  category: validation
+  tags: [constraints, policy, governance, fail-loud]
+  maturity: beta
+  source_status: original
+  license: MIT
+  influence: "constraint-coded design / invalid-combination avoidance (DNA-computing analogy: Nguyen et al. 2023)"
+  experimental: >-
+    express the rules in a policy engine (OPA/Rego, Casbin) once they must live outside the
+    code and be edited by non-engineers. Traded away: plain, testable, typed ConstraintResults.
+  risk: low
+  reuse_score: 4
+  purpose: >
+    Make invalid states inexpressible: reject a candidate before it is built when it violates
+    prohibited dependencies, illegal combinations, or governance rules. Returns a typed result
+    per rule (a reviewer sees WHY) and fails loud on any blocking violation.
+  reuse:
+    government: "reject a configuration that combines mutually exclusive controls before deploy"
+    security: "deny an illegal privilege or dependency combination at the gate"
+    business: "validate a config against declared allowed/prohibited sets, with reasons"
+    general: "a per-rule, fail-loud validator that explains every refusal"
+
+- id: counterexample-bank
+  name: Counterexample Bank
+  source: parts/evolution/counterexamples.py
+  category: quality
+  tags: [regression, testing, dedup, memory]
+  maturity: beta
+  source_status: original
+  license: MIT
+  influence: "counterexample-driven search: failures become permanent regression knowledge (pattern studied: Helmuth et al. 2024)"
+  experimental: >-
+    back the bank with SQLite or a test-case database once it must persist across machines and
+    feed a CI gate. Traded away: an in-memory, JSON-serializable store with zero setup.
+  risk: low
+  reuse_score: 4
+  purpose: >
+    Turn every discovered failure into governed, deduplicated knowledge: normalize a failure to
+    a signature, collapse repeats, and keep it so the same defect can never silently recur.
+  reuse:
+    testing: "convert each discovered failure into a regression case, deduped by signature"
+    records: "a governed failure log that never grows unbounded or double-counts"
+    general: "a normalize-and-dedup store for any recurring failure signal"
+
+- id: fitness-aggregator
+  name: Fitness Aggregator
+  source: parts/evolution/fitness.py
+  category: decision
+  tags: [multi-objective, scoring, hard-gates, transparency]
+  maturity: beta
+  source_status: original
+  license: MIT
+  influence: "multi-objective selection: hard gates first, then weighted objectives (pattern studied: Solovyeva et al. 2025)"
+  experimental: >-
+    swap in a formal Pareto-front or a scikit-style scorer once objectives grow many and
+    trade-offs must be plotted. Traded away: a transparent, hand-auditable weighted sum.
+  risk: low
+  reuse_score: 4
+  purpose: >
+    Choose among options honestly: a candidate that fails a hard gate cannot win, and only then
+    do weighted objectives produce an overall score. Every raw and normalized metric stays
+    visible, so no single number hides the components.
+  reuse:
+    business: "a multi-criteria decision with visible weights and non-negotiable gates"
+    government: "score options where some criteria are pass/fail and others are weighted"
+    general: "rank candidates by hard gates then transparent weighted objectives"
+
+- id: evaluator-swarm
+  name: Evaluator Swarm
+  source: parts/evolution/evaluators.py
+  category: quality
+  tags: [evaluation, multi-agent, advisory, review]
+  maturity: beta
+  source_status: original
+  license: MIT
+  influence: "bounded multi-agent evaluation: specialized readers that advise, never merge (pattern studied: SOEN-101, 2024)"
+  experimental: >-
+    route each evaluator to an LLM or a heavier static analyzer once the dimensions need
+    judgement code cannot give. Traded away: deterministic, offline, dependency-free scoring.
+  risk: low
+  reuse_score: 4
+  purpose: >
+    Score one artifact on several quality dimensions with a small set of specialized, read-only
+    evaluators. Each returns a structured result (score, findings, evidence); none can merge,
+    promote, or approve its own recommendation.
+  reuse:
+    qa: "multi-dimension review scoring (correctness, docs, performance) as evidence"
+    education: "structured, explainable feedback on a submission from several angles"
+    general: "an advisory multi-evaluator layer with no merge authority"
+
+- id: evolution-lab
+  name: Blueprint Evolution Lab
+  source: parts/evolution/bakeoff.py
+  category: search
+  tags: [evolutionary, bake-off, human-in-the-loop, evidence]
+  maturity: beta
+  source_status: original
+  license: MIT
+  influence: "evaluator-guided evolutionary search over candidates (pattern studied: FunSearch, Romera-Paredes et al. 2024, Nature)"
+  experimental: >-
+    add real generations and typed mutation operators once measurement justifies the cost.
+    Traded away (deliberately, v1): autonomous mutation - the candidates are hand-authored and
+    Josh selects the elite.
+  risk: low
+  reuse_score: 3
+  purpose: >
+    Bake off a small population of candidate implementations against an oracle: validate the
+    genome, score via the evaluator swarm, apply multi-objective fitness, capture failures as
+    counterexamples, and STOP at a human decision. Signature-agnostic; nothing is auto-promoted.
+  reuse:
+    software: "compare N implementations of one contract against an oracle plus metrics"
+    education: "teach evaluator-guided search with a reproducible, inspectable run"
+    general: "a human-governed bake-off: candidates in, ranked evidence out, human decides"
