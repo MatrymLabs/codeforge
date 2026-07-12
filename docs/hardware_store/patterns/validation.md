@@ -56,8 +56,19 @@ when invalid, carrying the result.
 - **Maturity: `beta`** -- demonstrated in two contexts and tested, but not `stable` (no nested
   schemas or coercion yet).
 
+## The companion part: `sanitizer`
+
+`parts/sanitizer.py` -- where the validator *checks*, the sanitizer *normalizes*. `sanitize(text,
+rule)` drops control characters, folds every run of whitespace to one space, trims, optionally
+lowercases, and caps the length. It is **deterministic and idempotent** (sanitizing twice equals
+once, a property-tested invariant), and honest about its scope: it normalizes, it is **not** a
+security control (not output-escaping, not crypto). It does neutralize control chars and
+log-injection newlines. Adapters: a sanitized player title in the game (`parts/titles.py`, the
+`title` verb) and a stored/logged field cleaner in a practical app (`parts/field_sanitizer.py`,
+`clean_field` / `clean_record`). Trace it: `make loop PART=sanitizer`. Maturity `beta`.
+
 ## Deferred (needs Josh's approval)
 
 Nested/recursive schemas, type coercion, and a Pydantic or JSON-Schema-backed validator are later
-slices. Consolidating the existing seed/manifest loader checks onto this part is a follow-up, not
-part of this slice.
+slices; for the sanitizer, unicode NFC normalization and script allowlists. Consolidating the
+existing seed/manifest loader checks onto these parts is a follow-up, not part of this slice.

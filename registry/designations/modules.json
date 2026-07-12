@@ -3054,5 +3054,90 @@
     "aliases": [],
     "created": "2026-07-12",
     "updated": "2026-07-12"
+  },
+  {
+    "designation": "MOD-UM05-S01-N001-051-R0",
+    "name": "sanitizer",
+    "status": "active",
+    "function": "normalize untrusted text: strip control chars, collapse whitespace, cap length",
+    "label": "sanitizer",
+    "file": "parts/sanitizer.py",
+    "type": "MOD",
+    "domain": "UM05",
+    "sector": "S01",
+    "node": "N001",
+    "sequence": "051",
+    "revision": "R0",
+    "docs": "docs/hardware_store/patterns/validation.md",
+    "tests": "tests/test_sanitizer.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "input-normalization core; titles (game) + field_sanitizer (practical)",
+    "tags": [
+      "module"
+    ],
+    "notes": "Hardware Store part sanitizer; docs/hardware/sanitizer.yaml.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-12",
+    "updated": "2026-07-12"
+  },
+  {
+    "designation": "MOD-UM05-S01-N001-052-R0",
+    "name": "field_sanitizer",
+    "status": "active",
+    "function": "the practical adapter for the sanitizer: clean fields before storage/logs",
+    "label": "field_sanitizer",
+    "file": "parts/field_sanitizer.py",
+    "type": "MOD",
+    "domain": "UM05",
+    "sector": "S01",
+    "node": "N001",
+    "sequence": "052",
+    "revision": "R0",
+    "docs": "docs/hardware_store/patterns/validation.md",
+    "tests": "tests/test_field_sanitizer.py",
+    "depends_on": [
+      "sanitizer"
+    ],
+    "related": [],
+    "reuse": "clean stored/logged fields; the practical face of the sanitizer",
+    "tags": [
+      "module"
+    ],
+    "notes": "",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-12",
+    "updated": "2026-07-12"
+  },
+  {
+    "designation": "MOD-UM04-S01-N001-039-R0",
+    "name": "titles",
+    "status": "active",
+    "function": "the game adapter for the sanitizer: set a clean player title",
+    "label": "titles",
+    "file": "parts/titles.py",
+    "type": "MOD",
+    "domain": "UM04",
+    "sector": "S01",
+    "node": "N001",
+    "sequence": "039",
+    "revision": "R0",
+    "docs": "docs/hardware_store/patterns/validation.md",
+    "tests": "tests/test_titles.py",
+    "depends_on": [
+      "sanitizer"
+    ],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "module"
+    ],
+    "notes": "The `title` verb, a sanitized player title.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-12",
+    "updated": "2026-07-12"
   }
 ]

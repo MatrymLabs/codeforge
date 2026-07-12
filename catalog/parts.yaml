@@ -923,3 +923,29 @@
     government: "registered notification or records-export providers, capability-gated"
     security: "extensions admitted only by explicit registration and capability checks"
     general: "exporters, notification providers, storage backends, and integrations"
+
+- id: sanitizer
+  name: Input Sanitizer
+  source: parts/sanitizer.py
+  category: validation
+  tags: [sanitize, normalize, input, hardening, idempotent]
+  maturity: beta
+  source_status: original
+  license: MIT
+  influence: "input normalization / sanitization (independently implemented)"
+  experimental: >-
+    add unicode NFC normalization or an allowlist of scripts for stricter input. Traded away (v1):
+    unicode folding and HTML/SQL escaping (which belong at the output boundary), keeping a small,
+    deterministic, idempotent normalizer.
+  risk: low
+  reuse_score: 4
+  purpose: >
+    Normalize untrusted text deterministically and idempotently: strip control chars, fold
+    whitespace, trim, optionally lowercase, cap length. One core, two adapters: a sanitized player
+    title in the game and a stored/logged field cleaner in a practical app.
+  reuse:
+    game: "clean a player title, chat, or sign before it is shown or stored"
+    finance: "normalize a form field before validation and storage"
+    government: "strip control chars from record fields; bound field lengths"
+    security: "neutralize log-injection newlines and control chars before logging"
+    general: "normalize any user input before validation, storage, or display"
