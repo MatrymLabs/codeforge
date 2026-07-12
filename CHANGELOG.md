@@ -7,6 +7,15 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
 ## [Unreleased]
 
 ### Added
+- **ARC slice 4: every change flows through ARC before it ships (the ARC blueprint is complete).**
+  A `Change` now carries an `arc_verdict`, and a new `arc_clear` guard gates `deploy` (canary ->
+  deployed): a change cannot deploy unless it carries a **recorded, non-blocked** ARC verdict -
+  mirroring the `tests_passed` guard that gates canary. The verdict is injected
+  (`ChangeLedger.record_arc`, `PatchTracker.review_arc`), so the ledger stays decoupled from ARC's
+  file-reading. `watchlist`/`ready` pass; `blocked` or unreviewed blocks (chosen over requiring
+  `ready`, which - since ARC is realistically watchlist - would deadlock every deploy). With this the
+  ARC blueprint (`blueprints/arc`) is marked **validated**: slices 1 (compose) -> 2 (read filed
+  evidence) -> 3 (the Chamber room) -> 4 (the change-flow gate) are all shipped.
 - **ARC slice 3: the ARC Chamber is a real room (the world is the interface).** Walk into the ARC
   Chamber and `look`, and the room renders with the live ARC readiness board beneath it. Kept the
   world data-driven: a room may declare a `dynamic:` capability in its seed (`dynamic: arc`), and the

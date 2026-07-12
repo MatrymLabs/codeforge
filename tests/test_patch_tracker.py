@@ -12,6 +12,7 @@ def _walk_to_verified(tracker: PatchTracker, patch_id: str) -> None:
     tracker.advance(patch_id, "test")
     tracker.pass_tests(patch_id)
     tracker.advance(patch_id, "canary", actor="operator")
+    tracker.review_arc(patch_id)  # slice 4: deploy needs a non-blocked ARC verdict
     tracker.advance(patch_id, "deploy", actor="operator")
     tracker.advance(patch_id, "verify", actor="operator")
 
@@ -25,6 +26,18 @@ def test_a_cve_patch_walks_the_full_lifecycle_to_closed():
     _walk_to_verified(tracker, "CVE-FIX-1")
     assert isinstance(tracker.advance("CVE-FIX-1", "close"), Fired)
     assert tracker.status("CVE-FIX-1") == "closed"
+
+
+def test_a_patch_cannot_deploy_without_an_arc_review():
+    tracker = PatchTracker()
+    tracker.record_dependency_bump("DEP-2", "Bump ruff", "ruff")
+    tracker.advance("DEP-2", "triage")
+    tracker.advance("DEP-2", "approve", actor="approver")
+    tracker.advance("DEP-2", "build")
+    tracker.advance("DEP-2", "test")
+    tracker.pass_tests("DEP-2")
+    tracker.advance("DEP-2", "canary", actor="operator")
+    assert isinstance(tracker.advance("DEP-2", "deploy", actor="operator"), Refusal)  # no ARC yet
 
 
 def test_a_patch_cannot_reach_canary_before_its_tests_pass():

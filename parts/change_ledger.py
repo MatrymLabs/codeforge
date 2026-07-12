@@ -3,8 +3,9 @@
 The first slice of the Software Evolution Engine (research: patch/change management). A `Change`
 records a patch's facts (id, kind, severity, CVEs, components, rollback plan) and walks a gated
 lifecycle: identified -> triaged -> approved -> building -> testing -> canary -> deployed ->
-verified -> closed, with reject and rollback edges. Approval and deploy are role-gated, and a change
-cannot reach canary until it has PASSING test evidence.
+verified -> closed, with reject and rollback edges. Approval and deploy are role-gated, a change
+cannot reach canary until it has PASSING test evidence, and it cannot deploy until it carries a
+non-blocked ARC verdict (slice 4: every change flows through ARC before it ships).
 
 Assembled from parts already on the shelf, not reinvented: the lifecycle is a `workflow` (role
 gated, on the pure `statemachine`), storage is a `repository`, intake policy is a `validator`, and
@@ -26,6 +27,10 @@ from parts.workflow import ANY_ROLE, Instance, Step, WorkflowEngine, build_workf
 
 KINDS = ("dependency", "security", "config", "migration", "version")
 SEVERITIES = ("low", "medium", "high", "critical")
+# ARC verdicts a change may carry (slice 4). Injected by the caller (who runs ARC), so the ledger
+# stays decoupled from ARC's file-reading - the same seam as test evidence.
+ARC_VERDICTS = ("ready", "watchlist", "blocked")
+_ARC_BLOCKED = "blocked"
 
 
 def _tests_passed(ctx: Data) -> str | None:
@@ -35,6 +40,18 @@ def _tests_passed(ctx: Data) -> str | None:
         return "no change in context"
     if not change.evidence.passed():
         return "tests have not passed; cannot promote to canary"
+    return None
+
+
+def _arc_clear(ctx: Data) -> str | None:
+    """Guard: a change may only deploy once an ARC verdict is recorded and is not blocked."""
+    change = ctx.get("change")
+    if not isinstance(change, Change):
+        return "no change in context"
+    if not change.arc_verdict:
+        return "no ARC verdict recorded; a change must flow through ARC before it deploys"
+    if change.arc_verdict == _ARC_BLOCKED:
+        return "ARC verdict is blocked; cannot deploy"
     return None
 
 
@@ -49,7 +66,7 @@ _LIFECYCLE = build_workflow(
         Step("building", "test", "testing"),
         Step("testing", "canary", "canary", guard="tests_passed"),
         Step("testing", "fail", "rolled_back"),
-        Step("canary", "deploy", "deployed", roles=frozenset({"operator"})),
+        Step("canary", "deploy", "deployed", roles=frozenset({"operator"}), guard="arc_clear"),
         Step("canary", "rollback", "rolled_back", roles=frozenset({"operator"})),
         Step("deployed", "verify", "verified", roles=frozenset({"operator"})),
         Step("deployed", "rollback", "rolled_back", roles=frozenset({"operator"})),
@@ -71,7 +88,9 @@ _LIFECYCLE = build_workflow(
         "rolled_back": "rolled back",
     },
 )
-_ENGINE = WorkflowEngine(_LIFECYCLE, guards={"tests_passed": _tests_passed})
+_ENGINE = WorkflowEngine(
+    _LIFECYCLE, guards={"tests_passed": _tests_passed, "arc_clear": _arc_clear}
+)
 
 _INTAKE = Validator(
     required("change_id"),
@@ -95,6 +114,7 @@ class Change:
     rollback_plan: str = ""
     run: Instance = field(default=None)  # type: ignore[assignment]
     evidence: EvidenceLedger = field(default=None)  # type: ignore[assignment]
+    arc_verdict: str = ""  # the ARC readiness verdict recorded before deploy (slice 4)
 
     @property
     def status(self) -> str:
@@ -141,6 +161,12 @@ class ChangeLedger:
     def record_test(self, change_id: str, check: str, status: str = PASSED) -> None:
         """Attach a test result to a change (the evidence its promotion gate reads)."""
         self._repo.require(change_id).evidence.record(check, status)
+
+    def record_arc(self, change_id: str, verdict: str) -> None:
+        """Attach an ARC verdict to a change (the gate its deploy step reads). Fails loud."""
+        if verdict not in ARC_VERDICTS:
+            raise ValueError(f"ARC verdict must be one of {ARC_VERDICTS}, got {verdict!r}")
+        self._repo.require(change_id).arc_verdict = verdict
 
     def advance(self, change_id: str, event: str, actor: str = ANY_ROLE):
         """Move a change one legal step. Role-gated, and canary is gated on passing evidence."""

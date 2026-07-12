@@ -3,7 +3,7 @@
 *ARC is CodeForge's umbrella engineering-review system. It adds no new gate: it composes the ten review dimensions CodeForge already has into one honest Assurance/Readiness/Control verdict, so any meaningful change can flow through a single readiness check that reads filed evidence and never invents it. The ARC Chamber is its room; the world is the interface.*
 
 - **id:** `arc`
-- **status:** draft
+- **status:** validated
 
 ## Requirements
 

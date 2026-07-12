@@ -31,5 +31,5 @@
     "tests": "pytest twin (acceptance + refusal) + engine-tick reachability test",
     "labels": "readiness language only (ready | watchlist | blocked), never certification"
   },
-  "status": "draft"
+  "status": "validated"
 }

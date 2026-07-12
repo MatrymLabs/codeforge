@@ -4,7 +4,7 @@ import pytest
 from hypothesis import given
 from hypothesis import strategies as st
 
-from parts.change_ledger import ChangeLedger
+from parts.change_ledger import ChangeLedger, _arc_clear, _tests_passed
 from parts.repository import DuplicateKey
 from parts.statemachine import Fired, Refusal
 from parts.validation import ValidationFailed
@@ -72,8 +72,9 @@ def test_the_full_lifecycle_reaches_closed_with_history():
     ]:
         led.advance("PF-1", event, actor=actor)
     led.record_test("PF-1", "ci")
+    led.advance("PF-1", "canary", actor="operator")
+    led.record_arc("PF-1", "watchlist")  # slice 4: deploy needs a non-blocked ARC verdict
     for event, actor in [
-        ("canary", "operator"),
         ("deploy", "operator"),
         ("verify", "operator"),
         ("close", "*"),
@@ -81,6 +82,51 @@ def test_the_full_lifecycle_reaches_closed_with_history():
         led.advance("PF-1", event, actor=actor)
     assert led.status("PF-1") == "closed"
     assert [h["event"] for h in led.history("PF-1")][:3] == ["triage", "approve", "build"]
+
+
+def _to_canary(led: ChangeLedger) -> None:
+    """Walk PF-1 to canary (tests passing), ready for the deploy gate."""
+    led.advance("PF-1", "triage")
+    led.advance("PF-1", "approve", actor="approver")
+    led.advance("PF-1", "build")
+    led.advance("PF-1", "test")
+    led.record_test("PF-1", "ci")
+    led.advance("PF-1", "canary", actor="operator")
+
+
+def test_a_change_cannot_deploy_without_an_arc_verdict():
+    led = _opened()
+    _to_canary(led)
+    blocked = led.advance("PF-1", "deploy", actor="operator")  # no ARC recorded
+    assert isinstance(blocked, Refusal) and "no ARC verdict" in blocked.reason
+
+
+def test_a_blocked_arc_verdict_stops_deploy():
+    led = _opened()
+    _to_canary(led)
+    led.record_arc("PF-1", "blocked")
+    blocked = led.advance("PF-1", "deploy", actor="operator")
+    assert isinstance(blocked, Refusal) and "blocked" in blocked.reason
+
+
+def test_a_non_blocked_arc_verdict_lets_it_deploy():
+    led = _opened()
+    _to_canary(led)
+    led.record_arc("PF-1", "watchlist")  # not ready, but not blocked -> allowed
+    assert isinstance(led.advance("PF-1", "deploy", actor="operator"), Fired)
+    assert led.get("PF-1").arc_verdict == "watchlist"
+
+
+def test_record_arc_refuses_an_unknown_verdict():
+    led = _opened()
+    with pytest.raises(ValueError):
+        led.record_arc("PF-1", "green")
+
+
+def test_guards_refuse_a_context_without_a_change():
+    # A broken ctx never crashes the tick; the guard refuses cleanly.
+    assert _tests_passed({}) == "no change in context"
+    assert _arc_clear({}) == "no change in context"
 
 
 def test_an_illegal_transition_is_refused():
