@@ -155,6 +155,19 @@ def test_counterattack_flows_through_the_engine_tick():
     assert "strikes back for 4" in out
 
 
+def test_the_seeded_gate_boss_is_a_real_fight():
+    """The spiral-ascent Coilwarden is wired for combat: reachable in play, and it hits back."""
+    from parts.seed import SEEDS_ROOT, load_npcs
+
+    boss = load_npcs(SEEDS_ROOT / "spiral-ascent" / "npcs.yaml")["coilwarden"]
+    npcs.NPCS["coilwarden"] = boss  # its seed location is gate_chamber
+    s = _fighter(location="gate_chamber")
+    max_hp = s.resources["hp"].maximum
+    out = attack(s, "coilwarden")
+    assert "strikes back for 8" in out  # the seeded atk engages through the attack path
+    assert s.resources["hp"].current == max_hp - 8  # the player took a real blow
+
+
 def test_jp_accrues_to_the_active_job_and_levels_it():
     s = _fighter("engineer")
     # cumulative JP to reach job level 2 is 60 (20 for lvl 1 + 40 for lvl 2).

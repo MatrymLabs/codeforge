@@ -6,6 +6,12 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
 
 ## [Unreleased]
 
+### Added
+- **NPCs that fight back.** An NPC that carries a seed `atk` stat now strikes back when it
+  survives a blow; a training-ground failsafe restores a felled player in place. The
+  spiral-ascent Gate boss (the Coilwarden) is the first to use it. The passive training
+  dummy is unchanged.
+
 ## [0.1.0] - 2026-07-12
 
 First tagged release: the flagship as it stands, CI-green on `main`. Versions are

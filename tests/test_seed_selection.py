@@ -26,9 +26,10 @@ def test_spiral_seed_passes_every_loader_gate():
     assert "vanguard" in jobs and jobs["pathfinder"]["stats"]["speed"] == 14
 
 
-def test_spiral_boss_is_attackable():
+def test_spiral_boss_is_attackable_and_strikes_back():
     coilwarden = load_npcs(SPIRAL / "npcs.yaml")["coilwarden"]
     assert coilwarden["hp"] == 60 and coilwarden["xp"] == 200
+    assert coilwarden["atk"] == 8  # a real fight: the Gate boss hits back
 
 
 def test_pop_seed_extracts_and_mutates():
