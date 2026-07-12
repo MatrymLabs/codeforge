@@ -1,0 +1,25 @@
+{
+  "record_id": "code-learning-research-2026",
+  "title": "Code-learning research: what it means for the CodeForge loop",
+  "date": "2026-07-12",
+  "what_changed": "Reviewed a research summary (8 annotated papers, 2020-2026) on integrating learning and feedback into code generation, and mapped its findings onto CodeForge's continuous-improvement loop. Grounded docs/continuous_improvement.md in that evidence and identified two concrete engineering gaps to harvest next.",
+  "why": "A self-improving loop should be grounded in empirical evidence, not asserted. The research both validates the loop CodeForge already built (search, pattern capture, review, learning capture, versioning) and names specific practices that sharpen it. Its own proposed 'Write-and-Learn Pipeline' diagram is, station for station, the CodeForge loop.",
+  "evidence": [
+    "Holistic evaluation (Szych & Schwerk 2026): a 'tree-fold' method combines automated tests, static code-quality metrics, AND structured developer review; many readability/maintainability defects are caught only by human review. 'Passing tests = good' is false.",
+    "Clone detection (Zhu et al. 2025): LLMs reach F1 up to 0.94 on SYNTACTIC clones but fall on SEMANTIC ones; combine LLM hints with AST-based analysis for robustness.",
+    "Continual learning (Weyssow et al. 2023): plain fine-tuning catastrophically forgets old APIs; replay buffers / regularization preserve old knowledge while learning new.",
+    "Feedback caution (Zhou et al. 2025, RCT n=257): GPT-4 feedback raised solution rates and cut wheel-spinning, but the gains vanished once feedback stopped, showing dependency risk.",
+    "Pedagogical feedback (Scholz et al. 2025): LLM feedback framed with mastery/scaffolding was rated useful by teachers, but LLMs lacked student context and could not ask clarifying questions.",
+    "Productivity (Peng et al. 2023, n=36): developers finished ~56% faster with Copilot, with an over-reliance caveat.",
+    "Active/visual learning (Scherer et al. 2020, meta-analysis of 139 studies): large gains (g~0.81) for programming instruction, with visualization (g~0.44) and physical manipulation (g~0.72) especially effective."
+  ],
+  "tradeoffs": "Most studies are lab-based; long-term effects of 'learning while coding' are under-studied (only Zhou 2025 is a real user trial), so treat the implications as directional. Adding complexity/maintainability metrics grows the tooling surface, which the stdlib-first rule keeps lean (an AST-based cyclomatic-complexity measure needs no new dependency).",
+  "future_reuse": "Two concrete gaps to harvest into parts: (1) a holistic quality-metrics tool (cyclomatic complexity, maintainability, duplication percent) that grounds the loop's Analyze station beyond tests/lint/coverage - the tree-fold's missing third fold; (2) a clone/near-duplicate detector that strengthens the Harvest Lens (AST structural hashing now, optional LLM hints later). Metrics worth tracking over time: reuse frequency of Hardware Store parts, new parts created, and a complexity trend per module.",
+  "concepts": [
+    "Passing tests never means the code is good: holistic evaluation needs static metrics and human review, not just green tests (this is why ARC composes many gates, not one)",
+    "AI feedback boosts short-term outcomes but the gains vanish when it stops, so Learning Records and AURA must teach heuristics and force reflection, not just hand over answers (the human-keel learning-protection rule, now evidence-backed)",
+    "Catastrophic forgetting in continual learning is the model-level version of CodeForge's never-overwrite/v2 rule: preserve old knowledge while adding new",
+    "Clone detection is reliable for syntactic duplicates but weak on semantic ones, so pattern discovery should pair AST heuristics (the Harvest Lens) with LLM hints, never trust one alone",
+    "The world is the visualization: the meta-analysis says visual and tangible learning wins, which is exactly the 'the world is the interface' bet - execution traces, state diagrams, and game maps are pedagogy, not decoration"
+  ]
+}

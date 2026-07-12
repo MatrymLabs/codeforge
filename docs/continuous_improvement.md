@@ -80,6 +80,34 @@ deterministic code generation, and small tested vertical slices (branch -> `make
 migrations, persistence changes, security-model changes, **Hardware Store promotions**, and **major
 version upgrades**. AURA proposes, the system measures, the tests verify, Josh decides.
 
+## Research foundation
+
+The loop is grounded in evidence, not asserted (full translation: the `code-learning-research-2026`
+Learning Record). What the code-learning literature says, and how it shapes the loop:
+
+- **Holistic evaluation beyond correctness** (Szych & Schwerk 2026). A "tree-fold" method combines
+  automated tests, static code-quality metrics, and structured human review; many maintainability
+  defects are caught only by review. *"Passing tests = good" is false* - which is exactly why ARC
+  composes many gates and the Analyze station uses lint, types, and coverage, not just pytest. The
+  missing third fold: **complexity / maintainability / duplication metrics** (a named gap below).
+- **LLMs discover patterns, but only reliably the syntactic ones** (Zhu et al. 2025: clone F1 up to
+  0.94 syntactic, weaker semantic). Pair AST heuristics (the Harvest Lens) with LLM hints; trust
+  neither alone.
+- **Continual learning avoids catastrophic forgetting** (Weyssow et al. 2023). Replay/regularization
+  preserve old knowledge - the model-level analogue of the never-overwrite / v2 rule above.
+- **AI feedback helps, then the gains vanish when it stops** (Zhou et al. 2025, RCT). So Learning
+  Records and AURA must teach heuristics and force reflection, not just hand over answers - the
+  human-keel learning-protection rule, now evidence-backed.
+- **Visual and tangible learning wins** (Scherer et al. 2020, meta-analysis, g~0.81). The world is
+  the interface: execution traces, state diagrams, and game maps are pedagogy, not decoration.
+
+Named gaps the research surfaces (candidates, gated on evidence and Josh's go):
+
+1. **Holistic quality metrics** - an AST-based cyclomatic-complexity / duplication tool that grounds
+   the Analyze station's third fold (stdlib-only; no new dependency).
+2. **Clone / near-duplicate detection** - structural hashing to strengthen the Harvest Lens beyond
+   name/docstring signals.
+
 ## The Continuous Improvement Report
 
 At the end of a task, produce a report: work performed, repository impact, tests executed, quality
