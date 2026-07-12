@@ -17,6 +17,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+from parts import record_loader
+
 # Identity is a permanent lowercase_snake_case label (frozen identifier, like room/item keys).
 _LABEL = re.compile(r"^[a-z][a-z0-9_]*$")
 _STATUSES = ("draft", "validated")
@@ -132,18 +134,14 @@ def blueprints_dir(root: Path | None = None) -> Path:
 
 def load_blueprint(path: Path) -> Blueprint:
     """Read and validate one Blueprint JSON file (a GATE: a bad file fails loud)."""
-    try:
-        raw = json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError) as exc:
-        raise BlueprintError(f"unreadable blueprint at {path}: {exc}") from exc
-    return from_dict(raw)
+    return record_loader.load_record(path, from_dict, error=BlueprintError, label="blueprint")
 
 
 def load_all(root: Path | None = None) -> list[Blueprint]:
     """Every filed Blueprint, sorted by id. A missing directory is empty, not an error."""
-    base = blueprints_dir(root)
-    found = sorted(base.glob("**/*.json")) if base.is_dir() else []
-    return [load_blueprint(p) for p in found]
+    return record_loader.load_dir(
+        blueprints_dir(root), from_dict, error=BlueprintError, label="blueprint", recursive=True
+    )
 
 
 def write_blueprint(bp: Blueprint, root: Path | None = None) -> tuple[Path, Path]:

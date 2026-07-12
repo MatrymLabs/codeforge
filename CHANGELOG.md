@@ -6,6 +6,17 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
 
 ## [Unreleased]
 
+### Changed
+- **Extracted the record-loader clone the scan found (the loop closing on itself).** The `clones` tool
+  flagged ~55-57 node structural duplicates in `blueprint` and `learning_record` (JSON read +
+  fail-loud + validate + directory glob). Extracted them into a shared `parts/record_loader.py` (a
+  generic validator-parameterized loader, PEP 695 generics); both subsystems now delegate, with public
+  APIs and behavior unchanged (no test changed). Measurable result: the `load_all` clone was
+  eliminated and the `load_blueprint`/`load_record` clone shrank from ~55 nodes of logic to a 24-node
+  delegation - the duplicated logic is gone. Filed UM05-060; captured in the `extract-record-loader-2026`
+  Learning Record. Cataloging record_loader as a Hardware Store card is recommended but reserved for
+  Josh (a promotion). make check green: 1111 passed.
+
 ### Added
 - **Holistic code analysis: complexity + clone detection (the Analyze third fold).** Grounds the
   continuous-improvement loop's Analyze station in the code-learning research ("passing tests = good"

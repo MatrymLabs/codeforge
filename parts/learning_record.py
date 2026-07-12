@@ -10,11 +10,12 @@ incident): a Learning Record captures WHY an improvement was made and what Josh 
 
 from __future__ import annotations
 
-import json
 import re
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
+
+from parts import record_loader
 
 # Identity is a permanent lowercase kebab/snake label, like a blueprint or part id.
 _ID = re.compile(r"^[a-z][a-z0-9_-]*$")
@@ -121,18 +122,16 @@ def records_dir(root: Path | None = None) -> Path:
 
 def load_record(path: Path) -> LearningRecord:
     """Read and validate one Learning Record JSON file (a GATE: a bad file fails loud)."""
-    try:
-        raw = json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError) as exc:
-        raise LearningRecordError(f"unreadable learning record at {path}: {exc}") from exc
-    return from_dict(raw)
+    return record_loader.load_record(
+        path, from_dict, error=LearningRecordError, label="learning record"
+    )
 
 
 def load_all(root: Path | None = None) -> list[LearningRecord]:
     """Every filed Learning Record, sorted by id. A missing directory is empty, not an error."""
-    base = records_dir(root)
-    found = sorted(base.glob("*.json")) if base.is_dir() else []
-    return [load_record(path) for path in found]
+    return record_loader.load_dir(
+        records_dir(root), from_dict, error=LearningRecordError, label="learning record"
+    )
 
 
 def learnings(arg: str = "", root: Path | None = None) -> str:

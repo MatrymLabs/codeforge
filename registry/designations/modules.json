@@ -3589,5 +3589,36 @@
     "tests": "tests/test_clone_scan.py",
     "reuse": "duplicate-logic detection: upgrade pattern discovery from signals to real clones",
     "notes": "The `clones` verb; upgrades the Harvest Lens with structural AST clone detection."
+  },
+  {
+    "designation": "MOD-UM05-S01-N001-060-R0",
+    "name": "record_loader",
+    "status": "active",
+    "function": "load validated JSON records from a file or a directory",
+    "label": "record_loader",
+    "file": "parts/record_loader.py",
+    "type": "MOD",
+    "domain": "UM05",
+    "sector": "S01",
+    "node": "N001",
+    "sequence": "060",
+    "revision": "R0",
+    "docs": "docs/continuous_improvement.md",
+    "tests": "tests/test_record_loader.py",
+    "depends_on": [],
+    "related": [
+      "blueprint",
+      "learning_record",
+      "clone_scan"
+    ],
+    "reuse": "a validated JSON-record loader parameterized by schema + error type",
+    "tags": [
+      "module"
+    ],
+    "notes": "Extracted from the blueprint/learning_record clone the scan found. Recommend cataloging (a promotion, Josh's call).",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-12",
+    "updated": "2026-07-12"
   }
 ]
