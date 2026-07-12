@@ -7,6 +7,14 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
 ## [Unreleased]
 
 ### Added
+- **Hardware Store part: the Token Bucket rate limiter (`token-bucket`).** A framework-free,
+  deterministic rate limiter (token-bucket algorithm, independently implemented) with an
+  INJECTED clock, so tests pin exact behavior and a property test proves the conservation law
+  (consumed never exceeds `capacity + rate*elapsed`). One core (`parts/token_bucket.py`), two
+  adapters: a rate-limited `shout` verb in the game (`parts/chat_throttle.py`) and a
+  login-attempt guard for a practical app (`parts/login_guard.py`). Cataloged, filed, manifest
+  (`docs/hardware/token-bucket.yaml`), pattern doc, and `make loop PART=token-bucket` traces it.
+  No new dependencies. Maturity: beta. From the Full-Stack Design Patterns research.
 - **Fuzz lane for trust-boundary gates (`make fuzz`).** Hypothesis-driven hostile-input
   tests (`tests/test_fuzz_gates.py`, `@pytest.mark.fuzz`) enforce the gate law: seed,
   catalog, and manifest loaders refuse with their OWN error type, never crash. The first

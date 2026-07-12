@@ -18,6 +18,7 @@ from parts.accounts import (
 from parts.accounts import register as register_account
 from parts.character_view import sheet_from_session
 from parts.characters import load_character, restore_character, save_character
+from parts.chat_throttle import shout
 from parts.classroom import (
     ask_question,
     demonstrated,
@@ -56,7 +57,7 @@ NAME_RE = re.compile(r"^[a-z][a-z0-9_]{1,15}$")
 
 HELP_TEXT = (
     "Commands: look, go <direction> (or n/s/e/w/u/d), "
-    "take, drop, inventory, talk <npc>, say <msg>, name <yourname>, who, "
+    "take, drop, inventory, talk <npc>, say <msg>, shout <msg>, name <yourname>, who, "
     "jobs, job <calling>, subjob <calling>, score, equip <item>, unequip <slot>, "
     "attack <target>, repair, scan <target>, deploy, "
     "unlock <door> with <key>, regs [topic|id], library [id], law [id], "
@@ -558,6 +559,9 @@ def handle_command(session: Session, signal: str) -> str:
             exclude=session.player_id,
         )
         return f'You say, "{message}"'
+    if routed_signal == "shout" or routed_signal.startswith("shout "):
+        _, _, message = true_signal.partition(" ")
+        return shout(session, message)
     if routed_signal.startswith(("register ", "login ")):
         verb, _, rest = true_signal.partition(" ")
         verb = verb.lower()
