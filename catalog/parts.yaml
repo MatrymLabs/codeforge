@@ -794,3 +794,29 @@
     finance: "a ledger-entry or transaction store behind a swappable backend"
     government: "a case or record repository; the domain stays storage-agnostic"
     general: "any CRUD collection with a swappable in-memory or database backend"
+
+- id: health-registry
+  name: Health Registry
+  source: parts/health.py
+  category: observability
+  tags: [health-check, readiness, observability, diagnostics, monitoring]
+  maturity: beta
+  source_status: original
+  license: MIT
+  influence: "health-check / readiness probe pattern (independently implemented)"
+  experimental: >-
+    add latencies, expose it as an HTTP /healthz endpoint, or push to Prometheus. Traded away
+    (v1): async checks and timeouts, keeping a synchronous, dependency-free registry whose only
+    rule is that unknown is never called healthy.
+  risk: low
+  reuse_score: 4
+  purpose: >
+    Run named checks and aggregate an honest overall status (worst wins); an unknown or failing
+    check is never reported healthy, and an empty registry is unknown. One core, two adapters: a
+    world-vitals panel in the game and a service-readiness probe in a practical app.
+  reuse:
+    game: "a world/server vitals panel: engine, NPCs, callings, gateways"
+    finance: "readiness of a trading or ledger service before it accepts traffic"
+    government: "liveness/readiness of a public service and its dependencies"
+    security: "surface a degraded or unknown control instead of a false all-clear"
+    general: "a /healthz or /readyz probe aggregating dependency checks for any service"

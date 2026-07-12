@@ -2629,5 +2629,90 @@
     "aliases": [],
     "created": "2026-07-12",
     "updated": "2026-07-12"
+  },
+  {
+    "designation": "MOD-UM05-S01-N001-041-R0",
+    "name": "health",
+    "status": "active",
+    "function": "a health-check registry: run named checks, aggregate an honest overall status",
+    "label": "health",
+    "file": "parts/health.py",
+    "type": "MOD",
+    "domain": "UM05",
+    "sector": "S01",
+    "node": "N001",
+    "sequence": "041",
+    "revision": "R0",
+    "docs": "docs/hardware_store/patterns/observability.md",
+    "tests": "tests/test_health.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "observability core: health checks + honest aggregation; vitals (game) + service_health (practical)",
+    "tags": [
+      "module"
+    ],
+    "notes": "Hardware Store part health-registry; docs/hardware/health-registry.yaml.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-12",
+    "updated": "2026-07-12"
+  },
+  {
+    "designation": "MOD-UM05-S01-N001-042-R0",
+    "name": "service_health",
+    "status": "active",
+    "function": "the practical adapter for the health registry: a service readiness probe",
+    "label": "service_health",
+    "file": "parts/service_health.py",
+    "type": "MOD",
+    "domain": "UM05",
+    "sector": "S01",
+    "node": "N001",
+    "sequence": "042",
+    "revision": "R0",
+    "docs": "docs/hardware_store/patterns/observability.md",
+    "tests": "tests/test_service_health.py",
+    "depends_on": [
+      "health"
+    ],
+    "related": [],
+    "reuse": "service readiness/liveness from aggregated dependency checks; the practical face",
+    "tags": [
+      "module"
+    ],
+    "notes": "",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-12",
+    "updated": "2026-07-12"
+  },
+  {
+    "designation": "MOD-UM04-S01-N001-034-R0",
+    "name": "vitals",
+    "status": "active",
+    "function": "the game adapter for the health registry: a world-vitals panel",
+    "label": "vitals",
+    "file": "parts/vitals.py",
+    "type": "MOD",
+    "domain": "UM04",
+    "sector": "S01",
+    "node": "N001",
+    "sequence": "034",
+    "revision": "R0",
+    "docs": "docs/hardware_store/patterns/observability.md",
+    "tests": "tests/test_vitals.py",
+    "depends_on": [
+      "health"
+    ],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "module"
+    ],
+    "notes": "The `vitals` verb, a world-health panel.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-12",
+    "updated": "2026-07-12"
   }
 ]

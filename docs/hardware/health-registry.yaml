@@ -1,0 +1,32 @@
+part_id: health-registry
+name: Health Registry
+version: "0.1"
+maturity: beta
+purpose: >
+  Run named health checks and aggregate an honest overall status (worst wins). An UNKNOWN or
+  failing check is never reported as healthy; an empty registry is UNKNOWN.
+source: parts/health.py
+domain: observability
+inputs: >
+  named checks (Callable[[], str] returning a status), or bool predicates via healthy_if
+outputs: >
+  a list of HealthResult(name, status, detail); an overall status; a rendered report
+interfaces:
+  - HealthRegistry.register
+  - HealthRegistry.run
+  - HealthRegistry.overall
+  - HealthRegistry.report
+  - healthy_if
+security: >
+  no I/O of its own; a raising check is contained (never crashes the report). It reports health,
+  it does not prove a system is secure or compliant.
+tests:
+  - tests/test_health.py
+  - tests/test_vitals.py
+  - tests/test_service_health.py
+license: MIT
+source_status: original
+owner: MatrymLabs
+adapters:
+  - parts/vitals.py
+  - parts/service_health.py

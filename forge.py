@@ -54,6 +54,7 @@ from parts.relay import channel
 from parts.save import awaken_snapshot, seal_snapshot
 from parts.score_sheet import render_score_sheet
 from parts.session import SESSIONS, Session, display_name, roster
+from parts.vitals import vitals
 from parts.world import DIRECTIONS, render_room, resolve_move
 
 NAME_RE = re.compile(r"^[a-z][a-z0-9_]{1,15}$")
@@ -62,7 +63,7 @@ HELP_TEXT = (
     "Commands: look, go <direction> (or n/s/e/w/u/d), "
     "take, drop, inventory, talk <npc>, say <msg>, shout <msg>, name <yourname>, who, "
     "jobs, job <calling>, subjob <calling>, score, equip <item>, unequip <slot>, "
-    "attack <target>, repair, scan <target>, deploy, calibrate, channel, journal [text], "
+    "attack <target>, repair, scan <target>, deploy, calibrate, channel, journal [text], vitals, "
     "unlock <door> with <key>, regs [topic|id], library [id], law [id], "
     "registry [show|find|type|status], loop trace <part-id>, "
     "qa gate [all|<id>], safety review <id>, docs check, pm status, pm metrics, "
@@ -689,6 +690,8 @@ def handle_command(session: Session, signal: str) -> str:
     if routed_signal == "journal" or routed_signal.startswith("journal "):
         _, _, entry = true_signal.partition(" ")
         return journal(session, entry)
+    if routed_signal == "vitals":
+        return vitals(session)
     if routed_signal.startswith("equip "):
         return equip(session, routed_signal.split(" ", 1)[1].strip())
     if routed_signal.startswith("unequip "):
