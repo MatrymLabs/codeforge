@@ -16,6 +16,7 @@ from parts.accounts import (
     verify_password,
 )
 from parts.accounts import register as register_account
+from parts.arc import arc
 from parts.calibrate import calibrate
 from parts.character_view import sheet_from_session
 from parts.characters import load_character, restore_character, save_character
@@ -70,7 +71,7 @@ HELP_TEXT = (
     "take, drop, inventory, talk <npc>, say <msg>, shout <msg>, name <yourname>, who, "
     "jobs, job <calling>, subjob <calling>, score, equip <item>, unequip <slot>, "
     "attack <target>, repair, scan <target>, deploy, calibrate, channel, journal [text], vitals, "
-    "namecheck <name>, features, certify, heralds, title [text], maintenance, "
+    "namecheck <name>, features, certify, heralds, title [text], maintenance, arc [status], "
     "unlock <door> with <key>, regs [topic|id], library [id], law [id], "
     "registry [show|find|type|status], loop trace <part-id>, "
     "qa gate [all|<id>], safety review <id>, docs check, pm status, pm metrics, "
@@ -707,6 +708,9 @@ def handle_command(session: Session, signal: str) -> str:
         return heralds(session)
     if routed_signal == "maintenance":
         return maintenance(session)
+    if routed_signal == "arc" or routed_signal.startswith("arc "):
+        _, _, arc_arg = routed_signal.partition(" ")
+        return arc(arc_arg)
     if routed_signal == "title" or routed_signal.startswith("title "):
         _, _, text = true_signal.partition(" ")
         return title(session, text)

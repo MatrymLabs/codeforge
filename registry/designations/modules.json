@@ -3230,5 +3230,39 @@
     "aliases": [],
     "created": "2026-07-12",
     "updated": "2026-07-12"
+  },
+  {
+    "designation": "MOD-UM10-S01-N001-023-R0",
+    "name": "arc",
+    "status": "active",
+    "function": "ARC (Assurance, Readiness, Control): compose gate verdicts into one honest report",
+    "label": "arc",
+    "file": "parts/arc.py",
+    "type": "MOD",
+    "domain": "UM10",
+    "sector": "S01",
+    "node": "N001",
+    "sequence": "023",
+    "revision": "R0",
+    "docs": "blueprints/arc.md",
+    "tests": "tests/test_arc.py",
+    "depends_on": [],
+    "related": [
+      "change_ledger",
+      "patch_tracker",
+      "test_evidence",
+      "qualitygate",
+      "integrity",
+      "release_gate"
+    ],
+    "reuse": "release-readiness dashboard: compose many gate verdicts into one honest verdict",
+    "tags": [
+      "module"
+    ],
+    "notes": "Slice 1 of the ARC blueprint: pure compose() + the `arc status` verb. Dimensions report MISSING until slice 2 wires each gate.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-12",
+    "updated": "2026-07-12"
   }
 ]
