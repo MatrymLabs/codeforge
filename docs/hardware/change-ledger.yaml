@@ -1,0 +1,38 @@
+part_id: change-ledger
+name: Change Ledger
+version: "0.1"
+maturity: beta
+purpose: >
+  Record a change/patch and drive it through a role-gated, evidence-gated lifecycle: identified ->
+  triaged -> approved -> building -> testing -> canary -> deployed -> verified -> closed, with reject
+  and rollback edges. A change cannot reach canary until its test evidence passes.
+source: parts/change_ledger.py
+domain: change_management
+inputs: >
+  change facts (id, title, kind, severity, created_by, optional cve_refs/components/rollback_plan),
+  lifecycle events with an actor role, and recorded test results
+outputs: >
+  a governed Change with a live lifecycle state and history; ValidationFailed on bad intake,
+  DuplicateKey on a repeated id, a Refusal on an illegal or ungated move
+interfaces:
+  - ChangeLedger
+  - Change
+security: >
+  it governs a change record; it is NOT an authorization system. Approval and deploy are role-gated
+  by actor string only (no identity/authn). Pair it with real auth at the call site.
+assembled_from:
+  - parts/repository.py
+  - parts/workflow.py
+  - parts/statemachine.py
+  - parts/validation.py
+  - parts/test_evidence.py
+tests:
+  - tests/test_change_ledger.py
+  - tests/test_maintenance.py
+  - tests/test_patch_tracker.py
+license: MIT
+source_status: original
+owner: MatrymLabs
+adapters:
+  - parts/maintenance.py
+  - parts/patch_tracker.py

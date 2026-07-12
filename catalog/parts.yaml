@@ -949,3 +949,31 @@
     government: "strip control chars from record fields; bound field lengths"
     security: "neutralize log-injection newlines and control chars before logging"
     general: "normalize any user input before validation, storage, or display"
+
+- id: change-ledger
+  name: Change Ledger
+  source: parts/change_ledger.py
+  category: change_management
+  tags: [change, patch, lifecycle, governance, evidence-gated]
+  maturity: beta
+  source_status: original
+  license: MIT
+  influence: "software patch/change management (assembled from five Hardware Store parts, no code copied)"
+  experimental: >-
+    wire a policy engine (require-approval-for-major, emergency bypass), SBOM-as-evidence, and real
+    canary/rollback telemetry. Traded away (v1): persistence (in-memory) and an approval quorum,
+    keeping a small, gated, composable core.
+  risk: medium
+  reuse_score: 5
+  purpose: >
+    Record a change/patch and drive it through a role-gated lifecycle (identified -> triaged ->
+    approved -> building -> testing -> canary -> deployed -> verified -> closed, plus reject and
+    rollback edges); a change cannot reach canary until its test evidence passes. Assembled from
+    repository + workflow + statemachine + validation + test-evidence. One core, two adapters: a
+    world-maintenance log in the game and a dependency/CVE patch tracker in a practical app.
+  reuse:
+    game: "govern world fixes and content tweaks through a visible, gated change log"
+    finance: "drive a controlled software change through approval, test, and rollback gates"
+    government: "track a patch's evidence and approvals for a change-control record"
+    security: "gate a CVE fix so it cannot deploy to canary before its tests pass"
+    general: "any governed change record: dependency bumps, releases, config changes"
