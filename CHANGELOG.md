@@ -6,6 +6,15 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
 
 ## [Unreleased]
 
+### Changed
+- **De-duplicated progression.py (the clone scanner's biggest find, using our own tool).** XP and JP
+  leveling were parallel, near-identical math - four clone pairs the `clones` tool flagged in one
+  file. Parameterized into one algorithm over a "track" (base, tiers, cap): `_tier_multiplier`,
+  `_marginal`, `_cumulative`, `_next_threshold`, with every public function kept as a thin wrapper
+  (`XP_TRACK` / `JP_TRACK`). Behavior-preserving - the 15 pinned checkpoint tests
+  (`cumulative_xp_for_level(50) == 31875`, etc.) still pass unchanged. Measurable result: the clone
+  scanner now reports **zero** progression clone pairs (down from four). progression.py 100% covered.
+
 ### Added
 - **ARC slice 4: every change flows through ARC before it ships (the ARC blueprint is complete).**
   A `Change` now carries an `arc_verdict`, and a new `arc_clear` guard gates `deploy` (canary ->

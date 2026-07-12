@@ -43,36 +43,61 @@ XP_TIERS = [
 ]
 
 
-def get_xp_tier_multiplier(level):
-    """Return the tier multiplier (1, 2, 3, 6, or 15) for a given PLvl."""
-    for start, end, mult in XP_TIERS:
+# XP and JP progression are the same algorithm; a "track" is (base, tiers, cap) and is all they
+# differ by. Parameterizing here removed four duplicate-logic pairs the clone scan flagged.
+XP_TRACK = (XP_BASE, XP_TIERS, 255)
+
+
+def _tier_multiplier(track, level):
+    """The tier multiplier for `level` on a track, or 1 past the last tier."""
+    _base, tiers, _cap = track
+    for start, end, mult in tiers:
         if start <= level <= end:
             return mult
     return 1
 
 
+def _marginal(track, level):
+    """The cost of the single level `level` on a track (0 if out of range 1..cap)."""
+    base, _tiers, cap = track
+    if level < 1 or level > cap:
+        return 0
+    return base * level * _tier_multiplier(track, level)
+
+
+def _cumulative(track, level):
+    """Total cost to reach `level` on a track (inclusive sum of levels 1..level)."""
+    if level < 1:
+        return 0
+    return sum(_marginal(track, lvl) for lvl in range(1, level + 1))
+
+
+def _next_threshold(track, current):
+    """Total cost to reach the next level on a track, or None at the cap."""
+    _base, _tiers, cap = track
+    if current >= cap:
+        return None
+    return _cumulative(track, current + 1)
+
+
+def get_xp_tier_multiplier(level):
+    """Return the tier multiplier (1, 2, 3, 6, or 15) for a given PLvl."""
+    return _tier_multiplier(XP_TRACK, level)
+
+
 def marginal_xp_for_level(level):
     """XP cost of the single level `level` (0 if out of range 1-255)."""
-    if level < 1 or level > 255:
-        return 0
-    return XP_BASE * level * get_xp_tier_multiplier(level)
+    return _marginal(XP_TRACK, level)
 
 
 def cumulative_xp_for_level(level):
     """Total XP to reach a given PLvl (inclusive sum of levels 1..level)."""
-    if level < 1:
-        return 0
-    total = 0
-    for lvl in range(1, level + 1):
-        total += marginal_xp_for_level(lvl)
-    return total
+    return _cumulative(XP_TRACK, level)
 
 
 def get_next_level_threshold(current_level):
     """Total XP to reach the next PLvl, or None if at cap (255)."""
-    if current_level >= 255:
-        return None
-    return cumulative_xp_for_level(current_level + 1)
+    return _next_threshold(XP_TRACK, current_level)
 
 
 JP_BASE = 20
@@ -84,33 +109,24 @@ JP_TIERS = [
 ]
 
 
+JP_TRACK = (JP_BASE, JP_TIERS, 30)
+
+
 def get_jp_tier_multiplier(level):
     """Return the tier multiplier (1, 3, or 8) for a given Job Lvl."""
-    for start, end, mult in JP_TIERS:
-        if start <= level <= end:
-            return mult
-    return 1
+    return _tier_multiplier(JP_TRACK, level)
 
 
 def marginal_jp_for_level(level):
     """JP cost of the single Job Lvl `level` (0 if out of range 1-30)."""
-    if level < 1 or level > 30:
-        return 0
-    return JP_BASE * level * get_jp_tier_multiplier(level)
+    return _marginal(JP_TRACK, level)
 
 
 def cumulative_jp_for_level(level):
     """Total JP to reach a given Job Lvl (inclusive sum of levels 1..level)."""
-    if level < 1:
-        return 0
-    total = 0
-    for lvl in range(1, level + 1):
-        total += marginal_jp_for_level(lvl)
-    return total
+    return _cumulative(JP_TRACK, level)
 
 
 def get_next_job_level_threshold(current_job_level):
     """Total JP to reach the next Job Lvl, or None if at cap (30)."""
-    if current_job_level >= 30:
-        return None
-    return cumulative_jp_for_level(current_job_level + 1)
+    return _next_threshold(JP_TRACK, current_job_level)

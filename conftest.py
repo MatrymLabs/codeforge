@@ -13,10 +13,16 @@ def _isolated_database(tmp_path, monkeypatch):
       strength (that's a production config, not a behavior).
     """
     from parts import accounts, db, loader_cache
+    from parts.session import SESSIONS
 
     # The shared parse-once cache is keyed by resolved path + mtime; clear it so a tmp file
     # reused across tests (same path, coarse mtime granularity) can never serve stale data.
     loader_cache.clear()
+
+    # SESSIONS is a process-global registry. A test that leaves a session in it (e.g. one named
+    # "matrym") would collide with another test's rename -- an isolation flake that only surfaces
+    # under some -n auto orderings. Clear it before every test so none inherits a stray session.
+    SESSIONS.clear()
 
     # A DATABASE_URL in the ambient shell must never redirect the suite at a real
     # PostgreSQL: the unit tests always run on a fresh, quarantined SQLite tmp file.
