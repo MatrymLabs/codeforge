@@ -1,5 +1,5 @@
 # SEED: spiral-ascent -- npcs.yaml
-# hp > 0 makes an NPC attackable; xp is awarded on defeat.
+# hp > 0 makes an NPC attackable; xp is awarded on defeat; atk > 0 makes it strike back.
 
 wayfitter:
   name: the Wayfitter
@@ -17,3 +17,4 @@ coilwarden:
     - '"NONE ASCEND UNPROVEN." The Coilwarden lifts a scarred greatblade.'
   hp: 60
   xp: 200
+  atk: 8  # the Gate boss strikes back; come prepared (the training-ground failsafe still catches a fall)
