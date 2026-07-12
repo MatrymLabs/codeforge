@@ -7,6 +7,13 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
 ## [Unreleased]
 
 ### Added
+- **Hardware Store part: the Health Registry (`health-registry`).** Run named health checks and
+  aggregate an honest overall status (worst wins). The load-bearing rule: an UNKNOWN or failing
+  check is never reported healthy, and an empty registry is UNKNOWN. A raising check is contained
+  (never crashes the report). One core (`parts/health.py`), two adapters: a `vitals` world-health
+  panel in the game (`parts/vitals.py`) and a `ServiceHealth` readiness probe for a practical app
+  (`parts/service_health.py`). A property test pins that overall is healthy iff every check is.
+  Cataloged, filed, manifest, observability pattern doc. No new dependencies. Maturity: beta.
 - **Hardware Store part: the Repository (`repository`).** The Repository pattern (Fowler),
   independently implemented: `Repository[E, K]` is a typed, runtime-checkable **Protocol** (the
   replaceable storage boundary) and `InMemoryRepository` is the dependency-free implementation.
