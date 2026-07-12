@@ -7,6 +7,13 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
 ## [Unreleased]
 
 ### Changed
+- **ARC slice 2: the readiness verdict now reads real filed evidence.** `arc status` no longer reports
+  every dimension MISSING. `filed_review` reads the six dimensions with evidence on disk (architecture
+  = ADRs, testing = CI workflow + test files, documentation = pattern docs, dependency = the ledger,
+  performance = benchmarks, security = security-evidence) and reports them READY; the four
+  purely-runtime dimensions (change, patch, evidence, release) have no stored verdict, so they stay
+  honestly MISSING. Overall verdict: WATCHLIST (missing is never a pass). ARC still reads only. Root-
+  injected, so it is tested without depending on the live repo.
 - **Extracted the record-loader clone the scan found (the loop closing on itself).** The `clones` tool
   flagged ~55-57 node structural duplicates in `blueprint` and `learning_record` (JSON read +
   fail-loud + validate + directory glob). Extracted them into a shared `parts/record_loader.py` (a
