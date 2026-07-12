@@ -37,6 +37,7 @@ from parts.doors import unlock
 from parts.engineer import deploy_barrier, diagnostic_scan, field_repair
 from parts.equipment import equip, unequip
 from parts.events import announce, bind_echo, rename_echo, unbind_echo
+from parts.features import features
 from parts.items import drop, inventory_text, room_items_text, take
 from parts.jobs import JOBS, bind_calling, calling_index, set_secondary
 from parts.logbook import journal
@@ -65,7 +66,7 @@ HELP_TEXT = (
     "take, drop, inventory, talk <npc>, say <msg>, shout <msg>, name <yourname>, who, "
     "jobs, job <calling>, subjob <calling>, score, equip <item>, unequip <slot>, "
     "attack <target>, repair, scan <target>, deploy, calibrate, channel, journal [text], vitals, "
-    "namecheck <name>, "
+    "namecheck <name>, features, "
     "unlock <door> with <key>, regs [topic|id], library [id], law [id], "
     "registry [show|find|type|status], loop trace <part-id>, "
     "qa gate [all|<id>], safety review <id>, docs check, pm status, pm metrics, "
@@ -694,6 +695,8 @@ def handle_command(session: Session, signal: str) -> str:
         return journal(session, entry)
     if routed_signal == "vitals":
         return vitals(session)
+    if routed_signal == "features":
+        return features(session)
     if routed_signal == "namecheck" or routed_signal.startswith("namecheck "):
         return name_check(session, routed_signal.removeprefix("namecheck").strip())
     if routed_signal.startswith("equip "):

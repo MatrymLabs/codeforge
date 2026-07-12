@@ -846,3 +846,29 @@
     government: "enforce record-submission rules with every error reported at once"
     security: "reject malformed input at the boundary with explicit, non-leaky messages"
     general: "API payload, config, form, and data-import validation"
+
+- id: feature-flags
+  name: Feature Flags
+  source: parts/feature_flags.py
+  category: configuration
+  tags: [feature-flag, toggle, configuration, rollout, kill-switch]
+  maturity: beta
+  source_status: original
+  license: MIT
+  influence: "feature flags / toggles (LaunchDarkly-style; independently implemented)"
+  experimental: >-
+    add percentage rollouts, targeting rules, or a hosted flag service (LaunchDarkly, Unleash).
+    Traded away (v1): targeting and rollouts, keeping a simple typed registry with a clear
+    override-beats-default precedence and no dependencies.
+  risk: low
+  reuse_score: 4
+  purpose: >
+    Toggle features at runtime without a redeploy: register flags with defaults, override them, reset,
+    retire; an override beats the default and an unknown flag is an error, never silently off. One
+    core, two adapters: an in-world feature panel in the game and an env kill switch in a practical app.
+  reuse:
+    game: "toggle beta quests, verbose combat, or a debug mode; content gating"
+    finance: "canary a new pricing path or ship a kill switch without a redeploy"
+    government: "gate a new public feature behind a controlled rollout switch"
+    security: "an emergency kill switch to disable a risky feature immediately"
+    general: "A/B tests, canary releases, and operational on/off switches"
