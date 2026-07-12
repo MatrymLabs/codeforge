@@ -29,7 +29,7 @@ def awaken_snapshot(path: Path = SAVE_PATH) -> tuple[str, str]:
         from parts.world import START_ROOM
 
         return (START_ROOM, "No saved world found.")
-    snapshot = json.loads(path.read_text())
+    snapshot = json.loads(path.read_text(encoding="utf-8"))
     for iid, loc in snapshot["items"].items():
         if iid in items.ITEMS:
             items.ITEMS[iid]["location"] = loc

@@ -187,7 +187,7 @@ def import_legacy_json() -> str:
     moved = []
     chars = Path("characters.json")
     if chars.exists():
-        for name, casefile in json.loads(chars.read_text()).items():
+        for name, casefile in json.loads(chars.read_text(encoding="utf-8")).items():
             put_record(name, casefile)
             moved.append(name)
     accts = Path("accounts.json")
@@ -195,7 +195,7 @@ def import_legacy_json() -> str:
         from parts.db import AccountRow, CharacterRow, open_archive_session
 
         with open_archive_session() as db:
-            for name, entry in json.loads(accts.read_text()).items():
+            for name, entry in json.loads(accts.read_text(encoding="utf-8")).items():
                 if db.get(AccountRow, name) is None and entry.get("auth"):
                     db.add(
                         AccountRow(

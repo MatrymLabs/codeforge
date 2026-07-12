@@ -194,7 +194,7 @@ def _open_seed_bin(path: Path, what: str) -> tuple[dict[str, dict[str, Any]], di
     Returns (entries, file_template)."""
     if not path.exists():
         raise SeedError(f"Seed file not found: {path}")
-    data = yaml.load(path.read_text(), Loader=_UniqueKeyLoader)
+    data = yaml.load(path.read_text(encoding="utf-8"), Loader=_UniqueKeyLoader)
     if not isinstance(data, dict) or not data:
         raise SeedError(f"Seed file is empty or not a mapping: {path}")
     file_template = data.pop("template", None) or {}

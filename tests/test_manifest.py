@@ -1,6 +1,8 @@
 """Test twin for parts/manifest.py -- the typed Part Manifest."""
 
 import pytest
+from hypothesis import given
+from hypothesis import strategies as st
 
 from parts.manifest import (
     ManifestError,
@@ -84,3 +86,54 @@ def test_shipped_workflow_engine_manifest_loads():
 
 def test_find_manifest_returns_none_for_unknown():
     assert find_manifest("no-such-part-ever") is None
+
+
+# --- Hypothesis property tests: laws the manifest gate must always hold ---
+
+_MATURITIES = ("prototype", "beta", "shipped")
+# visible, non-empty text: the gate strips whitespace, so generate around that law
+_field = st.text(min_size=1, max_size=40).filter(lambda s: s.strip())
+_fields = st.lists(_field, max_size=4)
+
+
+@st.composite
+def _raw_manifests(draw):
+    return {
+        "part_id": draw(_field),
+        "name": draw(_field),
+        "version": draw(_field),
+        "maturity": draw(st.sampled_from(_MATURITIES)),
+        "purpose": draw(_field),
+        "source": draw(_field),
+        "domain": draw(_field),
+        "inputs": draw(st.text(max_size=40)),
+        "interfaces": draw(_fields),
+        "dependencies": draw(_fields),
+        "tests": draw(_fields),
+        "adapters": draw(_fields),
+    }
+
+
+@pytest.mark.property
+@given(_raw_manifests())
+def test_round_trip_law_holds_for_any_valid_manifest(raw):
+    """from_dict(to_dict(m)) == m -- serialization must never lose or invent data."""
+    m = from_dict(raw)
+    assert from_dict(to_dict(m)) == m
+
+
+@pytest.mark.property
+@given(_raw_manifests(), st.sampled_from(("part_id", "name", "purpose", "source")))
+def test_a_whitespace_only_required_field_always_fails_loud(raw, field):
+    """The gate strips before checking: '   ' is as missing as ''."""
+    raw[field] = "   "
+    with pytest.raises(ManifestError, match=field):
+        from_dict(raw)
+
+
+@pytest.mark.property
+@given(_raw_manifests(), st.text(max_size=20).filter(lambda s: s not in _MATURITIES))
+def test_any_maturity_outside_the_enum_is_refused(raw, bad):
+    raw["maturity"] = bad
+    with pytest.raises(ManifestError, match="maturity"):
+        from_dict(raw)

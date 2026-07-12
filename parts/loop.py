@@ -15,6 +15,11 @@ import sys
 from dataclasses import dataclass
 from datetime import date
 from pathlib import Path
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:  # typed boundary without the import cost (annotations are strings)
+    from parts.assembly import Assembly
+    from parts.manifest import PartManifest
 
 _ROOT = Path(__file__).resolve().parent.parent
 
@@ -39,7 +44,7 @@ class TraceReport:
     report_path: str
 
 
-def _stage_manifest(part_id: str, root: Path) -> tuple[StageResult, object]:
+def _stage_manifest(part_id: str, root: Path) -> tuple[StageResult, PartManifest | None]:
     """Stage 1: load and validate the part manifest."""
     from parts.manifest import ManifestError, find_manifest
 
@@ -77,19 +82,15 @@ def _stage_blueprint(part_id: str, root: Path) -> StageResult:
     return StageResult("blueprint", "pass", f"'{bp.blueprint_id}' [{bp.status}]")
 
 
-def _stage_registry(part_id: str, root: Path, manifest: object) -> StageResult:
+def _stage_registry(part_id: str, root: Path, manifest: PartManifest | None) -> StageResult:
     """Stage 4: check if the part has a filed designation in the registry."""
-    from parts.manifest import PartManifest
     from parts.registry import load_collective
 
     registry_dir = root / "registry" / "designations"
     collective = load_collective(registry_dir)
     # match by the manifest's source field (authoritative), falling back to part_id
-    source_file = (
-        manifest.source
-        if isinstance(manifest, PartManifest)
-        else f"parts/{part_id.replace('-', '_')}.py"
-    )
+    fallback = f"parts/{part_id.replace('-', '_')}.py"
+    source_file = manifest.source if manifest is not None else fallback
     matched = [d for d in collective if getattr(d, "file", "") == source_file]
     if not matched:
         return StageResult("registry", "fail", f"no designation for {source_file}")
@@ -97,12 +98,13 @@ def _stage_registry(part_id: str, root: Path, manifest: object) -> StageResult:
     return StageResult("registry", "pass", f"{desig.designation} ({desig.status})")
 
 
-def _stage_assembly(manifest: object, root: Path) -> tuple[StageResult, object]:
+def _stage_assembly(
+    manifest: PartManifest | None, root: Path
+) -> tuple[StageResult, Assembly | None]:
     """Stage 5: discover dependencies and compose the assembly."""
     from parts.assembly import AssemblyError, assemble
-    from parts.manifest import PartManifest
 
-    if not isinstance(manifest, PartManifest):
+    if manifest is None:
         return StageResult("assembly", "skip", "no manifest to assemble from"), None
     try:
         asm = assemble(manifest, root=root)
@@ -115,11 +117,9 @@ def _stage_assembly(manifest: object, root: Path) -> tuple[StageResult, object]:
     return StageResult("assembly", "pass", summary), asm
 
 
-def _stage_tests(manifest: object, root: Path) -> StageResult:
+def _stage_tests(manifest: PartManifest | None, root: Path) -> StageResult:
     """Stage 6: verify test files exist and are non-empty."""
-    from parts.manifest import PartManifest
-
-    if not isinstance(manifest, PartManifest):
+    if manifest is None:
         return StageResult("tests", "skip", "no manifest")
     if not manifest.tests:
         return StageResult("tests", "fail", "no test files declared in manifest")

@@ -7,6 +7,41 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
 ## [Unreleased]
 
 ### Added
+- **Fuzz lane for trust-boundary gates (`make fuzz`).** Hypothesis-driven hostile-input
+  tests (`tests/test_fuzz_gates.py`, `@pytest.mark.fuzz`) enforce the gate law: seed,
+  catalog, and manifest loaders refuse with their OWN error type, never crash. The first
+  run found two real defects (below). No new dependencies.
+- **Property tests for the manufacturing spine.** Hypothesis laws for the manifest
+  round-trip (`from_dict(to_dict(m)) == m`), registry minting (never collides, always
+  fills the lowest gap, for ANY prior state), and workflow refusals (unknown events and
+  imposter actors mutate nothing; history grows by exactly one per fired move). Backed by
+  Ravi & Coblenz (OOPSLA 2025): PBT finds ~50x more injected faults than average unit tests.
+- **The Python engineering standard, written down** (`docs/python/standards.md`) - the
+  toolchain, testing layers, boundary-first typing policy, and idioms policy this repo
+  already practices, with APA citations to the 2021-2026 scholarly survey.
+
+- **Pinned dependency graph (`uv.lock`).** The full resolved tree (117 packages, all
+  extras) is committed; `make env` now installs the exact pinned versions via `uv sync`,
+  so any two machines build identical environments. Refresh deliberately with `uv lock`.
+
+- **EXP-005: lazy command seams (-29% cold startup).** Twenty command-only modules
+  (evolution lab, frameup, console, foundry, qualitygate, pm, career, and the long tail)
+  no longer load at `import forge`; each verb imports its module on first use. PC startup
+  95.8 ms -> 68.4 ms, hot paths unchanged. EXP-006 (parallel `make check`) measured and
+  honestly REJECTED: 0.3 s gain inside noise. Cards in docs/performance_experiments.md.
+
+### Fixed
+- **Fuzz finding: platform-default file encoding.** Nine gate call sites read files with
+  `read_text()` and no encoding, crashing with `UnicodeDecodeError` on Windows (cp1252)
+  for any non-Latin content. All now read explicit UTF-8; repaired a real Windows test
+  failure in `parts/store.py`'s card reader.
+- **Fuzz finding: a bare `interfaces:` in a manifest YAML** parses to `None` and crashed
+  the gate with `TypeError` instead of refusing with `ManifestError`. List fields are now
+  validated as lists.
+- **Typed boundary in `parts/loop.py`**: stage functions take `PartManifest | None`
+  (via `TYPE_CHECKING`, keeping lazy imports) instead of `object` + isinstance narrowing.
+
+### Added
 - **The Workflow Engine (first manufacturing vertical slice).** One reusable, config-driven
   workflow part (`parts/workflow.py`, built on the pure `statemachine`) proves the vision's
   two-way translation: it powers a **regional quest** in the MUD (`parts/quest.py`, the `quest`

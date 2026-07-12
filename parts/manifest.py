@@ -67,7 +67,8 @@ def from_dict(raw: Any) -> PartManifest:
     """Validate a raw mapping into a PartManifest. Every gap fails loud, early, by name."""
     if not isinstance(raw, dict):
         raise ManifestError(f"expected a mapping, got {type(raw).__name__}")
-    missing = [key for key in _REQUIRED if not raw.get(key)]
+    # strip before the required-check so a whitespace-only field fails loud, not late
+    missing = [key for key in _REQUIRED if not str(raw.get(key, "")).strip()]
     if missing:
         raise ManifestError(f"manifest missing required fields: {', '.join(missing)}")
     maturity = str(raw["maturity"])
@@ -76,6 +77,14 @@ def from_dict(raw: Any) -> PartManifest:
     source_status = str(raw.get("source_status", "original"))
     if source_status not in _SOURCE_STATUS:
         raise ManifestError(f"source_status {source_status!r} must be one of {_SOURCE_STATUS}")
+
+    def _str_list(field: str) -> tuple[str, ...]:
+        """List fields must be lists: a bare `field:` in YAML is None, not []. Fuzz-found."""
+        value = raw.get(field) or []
+        if not isinstance(value, list):
+            raise ManifestError(f"'{field}' must be a list, got {type(value).__name__}")
+        return tuple(str(item) for item in value)
+
     return PartManifest(
         part_id=str(raw["part_id"]),
         name=str(raw["name"]),
@@ -86,14 +95,14 @@ def from_dict(raw: Any) -> PartManifest:
         domain=str(raw["domain"]),
         inputs=str(raw.get("inputs", "")).strip(),
         outputs=str(raw.get("outputs", "")).strip(),
-        interfaces=tuple(str(i) for i in raw.get("interfaces", [])),
-        dependencies=tuple(str(d) for d in raw.get("dependencies", [])),
+        interfaces=_str_list("interfaces"),
+        dependencies=_str_list("dependencies"),
         security=str(raw.get("security", "")).strip(),
-        tests=tuple(str(t) for t in raw.get("tests", [])),
+        tests=_str_list("tests"),
         license=str(raw.get("license", "MIT")),
         source_status=source_status,
         owner=str(raw.get("owner", "")),
-        adapters=tuple(str(a) for a in raw.get("adapters", [])),
+        adapters=_str_list("adapters"),
     )
 
 

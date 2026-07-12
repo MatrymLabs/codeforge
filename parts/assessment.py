@@ -77,7 +77,7 @@ def _coerce_question(raw: Any, index: int) -> Question:
 
 def load_lesson(path: Path) -> Lesson:
     """Load and validate one lesson bank."""
-    data = yaml.safe_load(path.read_text()) or {}
+    data = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
     if not isinstance(data, dict) or "questions" not in data:
         raise LessonError(f"{path.name}: a lesson needs a 'title' and 'questions'")
     questions = [_coerce_question(q, i) for i, q in enumerate(data["questions"], start=1)]

@@ -1,6 +1,8 @@
 """Test twin for parts/workflow.py -- the config-driven workflow engine (roles + history)."""
 
 import pytest
+from hypothesis import given
+from hypothesis import strategies as st
 
 from parts.statemachine import Fired, Refusal
 from parts.workflow import (
@@ -95,3 +97,46 @@ def test_any_role_steps_are_open_to_everyone():
     assert isinstance(engine.advance(run, "go", actor="anybody"), Fired)
     assert engine.is_done(run)
     assert ANY_ROLE in wf.roles[("a", "go")]
+
+
+# --- Hypothesis property tests: laws the engine must hold for ANY input ---
+
+_KNOWN_EVENTS = frozenset({"submit", "approve", "reject"})
+
+
+@pytest.mark.property
+@given(st.text(max_size=20).filter(lambda s: s not in _KNOWN_EVENTS))
+def test_any_unknown_event_is_refused_and_mutates_nothing(event):
+    """Illegal moves never fire, never step the state, never write history."""
+    engine = WorkflowEngine(_approval())
+    run = engine.open()
+    outcome = engine.advance(run, event, actor="author")
+    assert isinstance(outcome, Refusal)
+    assert run.state == "draft"
+    assert run.history == []
+
+
+@pytest.mark.property
+@given(st.text(min_size=1, max_size=20).filter(lambda s: s not in ("author", ANY_ROLE)))
+def test_any_actor_outside_the_role_is_refused(actor):
+    """Role gating holds for every imposter, not just the ones we thought of."""
+    engine = WorkflowEngine(_approval())
+    run = engine.open()
+    outcome = engine.advance(run, "submit", actor=actor)
+    assert isinstance(outcome, Refusal)
+    assert run.state == "draft"
+
+
+@pytest.mark.property
+@given(st.lists(st.sampled_from(sorted(_KNOWN_EVENTS)), max_size=8))
+def test_history_grows_by_exactly_one_per_fired_move(events):
+    """The trail records every fired move and nothing else -- an audit-log invariant."""
+    engine = WorkflowEngine(_approval())
+    run = engine.open()
+    fired = 0
+    for event in events:
+        # drive with the right actor for each event so role gating isn't the variable here
+        actor = "author" if event == "submit" else "manager"
+        if isinstance(engine.advance(run, event, actor=actor), Fired):
+            fired += 1
+    assert len(run.history) == fired

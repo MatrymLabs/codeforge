@@ -76,3 +76,9 @@ the benchmark compares, the tests verify, the engineer decides.**
 > likely reflects filesystem/YAML-parse differences on Windows vs Linux aarch64 — worth
 > investigating if it becomes a bottleneck. The hot-path commands (command, combat) are
 > CPU-bound and scale with clock speed as expected.
+
+**EXP-005 update (2026-07-12):** lazy command seams in `forge.py` (20 command-only modules
+deferred off the import chain) cut PC startup **95.8 ms -> 68.4 ms (-29%)** with hot paths
+unchanged. Pi re-measurement pending; expect ~202 ms -> ~140 ms. See
+[performance_experiments.md](performance_experiments.md) (EXP-005, and EXP-006 for the
+honestly rejected make-parallel experiment).

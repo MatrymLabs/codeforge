@@ -104,3 +104,44 @@ commit de0f8a5. Reproduce with `python -m benchmarks.perf_journeys`.
 - **Correctness risk + Tests:** `CSafeLoader` composes mappings in C, so the unique-key duplicate gate had to be re-proven. Verified empirically that the C composer **preserves duplicate key pairs** in the node, so `_construct_unique_mapping` still fires. Pinned by `test_duplicate_label_is_rejected` (runs through the active loader) and `test_seed_loader_prefers_libyaml` (asserts the C loader is used when libyaml is present).
 - **Compatibility:** falls back to `SafeLoader` where libyaml is absent (`try/except ImportError`), so a host without libyaml still loads seeds (just slower).
 - **Result / Decision:** **VERIFIED IMPROVEMENT (executed 2026-07-11).** `load_rooms(first-forge)` end-to-end **~6500 us -> 748 us (~8.7x)** (raw parse 13.4x; the remainder is validation/room-build, unchanged). Duplicate-key gate confirmed still firing under the C loader. Full suite 701 passed (+1 test), mypy clean. No behavior change, no new dependency (PyYAML already vendored libyaml). Workload class: **serialization/startup**. Level 6 (specialized tool, adopted only after profiling proved the win and a correctness re-proof).
+
+---
+
+## EXP-005 - Lazy command seams: defer command-only modules off the import chain
+
+- **Repository Area:** A (server/runtime). `forge.py`'s eager import hub: 20 modules imported at
+  the top were used ONLY inside command handlers or the tick fall-through (evolution lab, frameup,
+  console, foundry, qualitygate, pm, career, pioneer, law, library, regulations, veritas, workshop,
+  terminal, functions, blueprint, architect, loop, generate).
+- **Observed Problem:** every engine start paid the import cost of verbs that may never run in
+  that process (a benchmark, a CLI invocation, a short session).
+- **Evidence / Profiling:** `python -X importtime -c "import forge"` (Windows PC, warm cache):
+  our chain 72.5 ms of a 100.5 ms cold start; heaviest command-only subtrees
+  `parts.evolution.command` 9.0 ms, `parts.frameup` 6.4 ms, `parts.console` 4.3 ms, plus a long
+  tail of ~1-2 ms modules.
+- **Hypothesis:** command lambdas resolve module globals at CALL time, so replacing each eager
+  import with a module-level wrapper that imports inside its body removes the modules from the
+  start chain with zero behavior change; each verb pays its module cost once, on first use.
+- **Correctness Tests:** tests import only `COMMANDS`/`handle_command`/`render_scene` from forge
+  (verified); full suite green through the wrappers (the engine-tick tests exercise every wired verb).
+- **Result / Decision:** **VERIFIED IMPROVEMENT (executed 2026-07-12, Windows PC).** Our import
+  chain **72.5 ms -> 41.2 ms (-43%)**; official five-journey startup **95.8 ms -> 68.4 ms (-29%)**.
+  Hot paths unchanged (command 3.5 us, combat 4.5 us - the tick's eager imports were not touched).
+  The deferred cost is honest: the FIRST use of a lazy verb pays its module import once
+  (worst observed subtree ~9 ms on PC); every later use is a dict hit. mypy clean, ruff clean,
+  826 passed. Workload class: **startup-bound**. Level 4 (remove duplicate work).
+  *(Pi verification pending: expect ~202 ms -> ~140 ms; re-run `python -m benchmarks.perf_journeys`.)*
+
+---
+
+## EXP-006 - Parallelize the `make check` gates (REJECTED)
+
+- **Repository Area:** Makefile. `check: lint typecheck coverage` runs serially.
+- **Hypothesis:** running the three gates under `make -j3` cuts wall time to max() instead of sum().
+- **Evidence / Measurement (Windows PC, warm caches):** lint 0.1 s, typecheck 0.3 s (mypy
+  incremental cache), coverage 9.9 s (pytest -n auto already saturates cores). Serial sum 10.2 s
+  vs parallel floor 9.9 s: **a 0.3 s gain, inside run-to-run noise.**
+- **Result / Decision:** **REJECTED.** The gates are already ordered cheapest-first, the expensive
+  gate already parallelizes internally (xdist), and ruff/mypy incremental caches make the serial
+  prefix nearly free. Parallel make would add output interleaving (harder verdict reading) for a
+  gain inside noise. Re-open only if a cold-cache CI measurement shows a real win.

@@ -21,7 +21,7 @@ TESTS_DIR = PARTS_DIR.parent / "tests"
 
 def inspect_card(path: Path) -> tuple[str, str] | None:
     """Return (card_name, purpose) if the module declares a CARD docstring."""
-    doc = ast.get_docstring(ast.parse(path.read_text()))
+    doc = ast.get_docstring(ast.parse(path.read_text(encoding="utf-8")))
     if not doc:
         return None
     first = doc.splitlines()[0].strip()

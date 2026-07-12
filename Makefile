@@ -1,13 +1,14 @@
-.PHONY: env fix lint typecheck test property coverage audit security secrets deps sbom bench doctor patch daily check readiness truth cast-plan smoke repo-integrity ship run world store hardware clean serve db-up db-down db-migrate docs-serve docs-build e2e evolution ritual-fast ritual ritual-down unskew loop
+.PHONY: env fix lint typecheck test property fuzz coverage audit security secrets deps sbom bench doctor patch daily check readiness truth cast-plan smoke repo-integrity ship run world store hardware clean serve db-up db-down db-migrate docs-serve docs-build e2e evolution ritual-fast ritual ritual-down unskew loop
 
 # --- Environment: create/validate the .venv, fail loud on version mismatch.
 # Uses uv when present (a Rust resolver; measured ~20x faster than pip on this host:
-# 85s -> 4s) and falls back to plain venv+pip, so bootstrap never hard-requires uv. ---
+# 85s -> 4s) and falls back to plain venv+pip, so bootstrap never hard-requires uv.
+# With uv, `sync` installs the exact pinned graph from uv.lock (reproducible builds);
+# the pip fallback still resolves fresh -- best-effort without the resolver. ---
 env:
 	@if command -v uv >/dev/null 2>&1; then \
-		echo "→ uv found - fast env build"; \
-		uv venv .venv --clear --python 3.13; \
-		uv pip install --python .venv/bin/python -q -e ".[dev]"; \
+		echo "→ uv found - fast env build (pinned from uv.lock)"; \
+		uv sync --extra dev --python 3.13; \
 	else \
 		echo "→ uv not found (using pip). Install uv for a ~20x faster env: https://docs.astral.sh/uv/"; \
 		python3 -m venv .venv; \
@@ -31,10 +32,15 @@ typecheck:
 	mypy parts tests forge.py
 
 test:
-	pytest -m "not property"
+	pytest -m "not property and not fuzz"
 
 property:
 	pytest -m property
+
+# Fuzz the trust-boundary gates (hostile input: seed/catalog/manifest YAML). The law:
+# a gate refuses with its own error type, never crashes. Hypothesis-driven, no new deps.
+fuzz:
+	pytest -m fuzz
 
 # The full gate. `coverage` runs the WHOLE suite (property included) once, WITH
 # instrumentation and the threshold -- so `check` covers, tests, and gates in a single

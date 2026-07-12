@@ -9,8 +9,11 @@ import json
 from pathlib import Path
 
 import pytest
+from hypothesis import given
+from hypothesis import strategies as st
 
 from parts.registry import (
+    DESIGNATION_RE,
     Designation,
     RegistryError,
     load_collective,
@@ -268,3 +271,28 @@ def test_unfiled_modules_flags_a_missing_designation(tmp_path) -> None:
     (tmp_path / "parts").mkdir()
     (tmp_path / "parts" / "orphan.py").write_text("x = 1\n")
     assert "parts/orphan.py" in unfiled_modules(records=[], root=tmp_path)
+
+
+# --- Hypothesis property tests: minting laws that must hold for any registry state ---
+
+
+@pytest.mark.property
+@given(st.sets(st.integers(min_value=1, max_value=998), max_size=60))
+def test_mint_never_collides_with_any_existing_set(used_sequences):
+    """A minted designation's sequence is never one already filed -- for ANY prior state."""
+    existing = [f"MOD-UM05-S01-N001-{seq:03d}-R0" for seq in used_sequences]
+    minted = mint_designation("MOD", "UM05", existing)
+    assert minted not in existing
+    match = DESIGNATION_RE.match(minted)
+    assert match is not None, f"minted an invalid designation: {minted}"
+    assert int(match.group("sequence")) not in used_sequences
+
+
+@pytest.mark.property
+@given(st.sets(st.integers(min_value=1, max_value=998), max_size=60))
+def test_mint_always_fills_the_lowest_gap(used_sequences):
+    """Sequences are recycled: the mint is exactly the smallest unused positive integer."""
+    existing = [f"MOD-UM05-S01-N001-{seq:03d}-R0" for seq in used_sequences]
+    minted = mint_designation("MOD", "UM05", existing)
+    lowest_free = next(n for n in range(1, 1000) if n not in used_sequences)
+    assert minted.split("-")[4] == f"{lowest_free:03d}"
