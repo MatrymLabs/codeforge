@@ -68,7 +68,7 @@ from parts.store_index import store
 from parts.telegraph import telegraph
 from parts.titles import title
 from parts.vitals import vitals
-from parts.world import DIRECTIONS, render_room, resolve_move
+from parts.world import DIRECTIONS, dynamic_capability, render_room, resolve_move
 from parts.world_cert import certify
 
 NAME_RE = re.compile(r"^[a-z][a-z0-9_]{1,15}$")
@@ -514,9 +514,17 @@ def _loop_trace_handler(arg: str) -> str:
 COMMANDS = _build_commands()
 
 
+# A room may declare (in its seed) a live capability to surface on look. The engine renders the
+# declared capability; it never hard-codes a room label (the world stays data).
+_DYNAMIC_PANELS = {"arc": lambda: arc("status")}
+
+
 def render_scene(location: str, viewer: str = "") -> str:
     """The full projection of a room: place, things, people, players."""
     scene = [render_room(location)]
+    panel = _DYNAMIC_PANELS.get(dynamic_capability(location))
+    if panel is not None:
+        scene.append(panel())
     extra = room_items_text(location)
     if extra:
         scene.append(extra)

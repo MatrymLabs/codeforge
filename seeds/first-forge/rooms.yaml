@@ -143,3 +143,15 @@ diagnostic_console:
        run <check>, security (SAST scan), console (the full list).
   exits:
     north: workshop
+    up: arc_chamber
+
+arc_chamber:
+  name: The ARC Chamber
+  desc: |-
+    A quiet vaulted room. On the far wall hangs a great slate - the readiness
+    board - where the forge's own engineering is graded and lit: assurance,
+    readiness, control. It shows what is proven and, honestly, what is not.
+    -- Here: the board reads itself when you look; `arc status` reads it again.
+  exits:
+    down: diagnostic_console
+  dynamic: arc
