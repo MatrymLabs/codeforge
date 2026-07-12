@@ -7,6 +7,13 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
 ## [Unreleased]
 
 ### Changed
+- **Extracted `resolved_path` from the env-override path clone (4 parts).** The env-override path
+  logic (`os.environ.get(VAR)` -> expanduser, else a default) was copied into `db`, `hardware`,
+  `store_index`, and `assessment` - a duplication the `clones` tool flagged. It now lives once in
+  `parts/paths.py` (`resolved_path`, UM05-061); the four callers delegate, behavior preserved (their
+  tests pass unchanged). The duplicated LOGIC is gone; the remaining structural match between the thin
+  wrappers is the DRY end-state, not duplication (the anchor `Path(__file__)` must stay at each call
+  site). paths.py 100% covered.
 - **De-duplicated progression.py (the clone scanner's biggest find, using our own tool).** XP and JP
   leveling were parallel, near-identical math - four clone pairs the `clones` tool flagged in one
   file. Parameterized into one algorithm over a "track" (base, tiers, cap): `_tier_multiplier`,

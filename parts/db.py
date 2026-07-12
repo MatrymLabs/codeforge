@@ -22,6 +22,8 @@ from sqlalchemy import Engine, ForeignKey, create_engine
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from sqlalchemy.orm import Session as SqlSession
 
+from parts.paths import resolved_path
+
 
 def _default_db_path() -> Path:
     """Where the database lives. Absolute and anchored to the repo root
@@ -30,10 +32,7 @@ def _default_db_path() -> Path:
     silently created a second, empty database when run from the wrong
     place. Override with CODEFORGE_DB for tests, containers, or a chosen
     data directory."""
-    override = os.environ.get("CODEFORGE_DB")
-    if override:
-        return Path(override).expanduser()
-    return Path(__file__).resolve().parent.parent / "codeforge.db"
+    return resolved_path("CODEFORGE_DB", Path(__file__).resolve().parent.parent / "codeforge.db")
 
 
 DB_PATH = _default_db_path()

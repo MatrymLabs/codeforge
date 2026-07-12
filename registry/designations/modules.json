@@ -3620,5 +3620,37 @@
     "aliases": [],
     "created": "2026-07-12",
     "updated": "2026-07-12"
+  },
+  {
+    "designation": "MOD-UM05-S01-N001-061-R0",
+    "name": "paths",
+    "status": "active",
+    "function": "resolve a path from an environment override or a default, in one place",
+    "label": "paths",
+    "file": "parts/paths.py",
+    "type": "MOD",
+    "domain": "UM05",
+    "sector": "S01",
+    "node": "N001",
+    "sequence": "061",
+    "revision": "R0",
+    "docs": "docs/hardware_store/patterns/framing.md",
+    "tests": "tests/test_paths.py",
+    "depends_on": [],
+    "related": [
+      "db",
+      "hardware",
+      "store_index",
+      "assessment"
+    ],
+    "reuse": "env-override path resolution: one helper for $VAR-or-default path config",
+    "tags": [
+      "module"
+    ],
+    "notes": "Extracted from the _default_path clone the scan found across 4 parts.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-12",
+    "updated": "2026-07-12"
   }
 ]
