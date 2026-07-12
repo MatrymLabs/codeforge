@@ -24,7 +24,9 @@ def test_refresh_button_swaps_the_board_via_htmx(page, base_url):
 def test_clicking_a_blueprint_renders_it_in_page(page, base_url):
     page.goto(base_url)
     assert page.locator("#bp-panel h2").count() == 0  # empty before a click
-    page.click("ul.bp-list a")
+    # Target a specific blueprint by its stable id-based href, not list order: any
+    # newly filed blueprint could sort ahead of it and change "the first link."
+    page.click("ul.bp-list a[href='/ui/blueprint/npc_combat']")
     page.wait_for_selector("#bp-panel h2")
     panel = page.locator("#bp-panel").inner_text()
     assert "NPCs that fight back" in panel
