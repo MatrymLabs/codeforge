@@ -7,6 +7,16 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
 ## [Unreleased]
 
 ### Added
+- **Hardware Store Catalog V3 realignment (foundation).** A 24-part redesign report
+  (`docs/hardware_store/catalog_v3_redesign.md`) adopts a layered identity model - permanent slug
+  identity, a re-classifiable catalog address, display designation, metadata tags - which maps onto
+  CodeForge's own "labels are identity, numbers are filing aids" doctrine. The safe foundation ships
+  with it: `catalog/domains.yaml` consolidates 31 ad-hoc categories into **19 stable engineering
+  domains**, and `parts/store_index.py` (the `store` verb) derives each part's catalog address
+  (`domain.ordinal`) and provides multi-field search - **editing zero cards**. `store` shows the
+  catalog organized by domain; `store find <query>` searches it. Richer card fields, the seven-stage
+  maturity ladder, and numeric part IDs are proposed as gated later migrations. Filed UM05-059. No
+  new dependencies.
 - **V3 Vision Synchronization + the Harvest Lens.** A 25-part engineering review
   (`docs/v3_vision_review.md`) re-evaluates architecture, terminology, and boundaries against the
   settled vision: the codebase is already strongly engineering-first, so V3 is synchronization, not

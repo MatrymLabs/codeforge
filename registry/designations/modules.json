@@ -3464,5 +3464,39 @@
     "aliases": [],
     "created": "2026-07-12",
     "updated": "2026-07-12"
+  },
+  {
+    "designation": "MOD-UM05-S01-N001-059-R0",
+    "name": "store_index",
+    "status": "active",
+    "function": "organize the Hardware Store catalog by V3 engineering domain and address",
+    "label": "store_index",
+    "file": "parts/store_index.py",
+    "type": "MOD",
+    "domain": "UM05",
+    "sector": "S01",
+    "node": "N001",
+    "sequence": "059",
+    "revision": "R0",
+    "docs": "docs/hardware_store/catalog_v3_redesign.md",
+    "tests": "tests/test_store_index.py",
+    "depends_on": [
+      "hardware",
+      "loader_cache"
+    ],
+    "related": [
+      "catalog",
+      "hardware",
+      "harvest_lens"
+    ],
+    "reuse": "catalog addressing + multi-field search: organize a parts catalog by engineering domain",
+    "tags": [
+      "module"
+    ],
+    "notes": "The `store` verb; V3 catalog realignment. Derives addresses, edits no card.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-12",
+    "updated": "2026-07-12"
   }
 ]
