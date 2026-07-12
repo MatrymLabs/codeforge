@@ -1,0 +1,34 @@
+part_id: validator
+name: Validator
+version: "0.1"
+maturity: beta
+purpose: >
+  Validate a mapping against composable rules and collect every issue at once, each tagged with its
+  field and a readable message; raise_if_invalid is the one loud exit.
+source: parts/validation.py
+domain: validation
+inputs: >
+  a Validator built from rules (required, matches, in_range, of_type, one_of, max_length) + a
+  mapping to check
+outputs: >
+  a ValidationResult (is_valid, issues, errors); ValidationFailed on raise_if_invalid
+interfaces:
+  - Validator.check
+  - ValidationResult.raise_if_invalid
+  - ValidationResult.merge
+  - required
+  - matches
+  - in_range
+security: >
+  rules never mutate the input; validation reports problems, it does not sanitize or trust data by
+  itself. Enforce required separately from format so an empty field reports once.
+tests:
+  - tests/test_validation.py
+  - tests/test_name_check.py
+  - tests/test_payload_check.py
+license: MIT
+source_status: original
+owner: MatrymLabs
+adapters:
+  - parts/name_check.py
+  - parts/payload_check.py

@@ -2714,5 +2714,90 @@
     "aliases": [],
     "created": "2026-07-12",
     "updated": "2026-07-12"
+  },
+  {
+    "designation": "MOD-UM05-S01-N001-043-R0",
+    "name": "validation",
+    "status": "active",
+    "function": "collect validation issues into a result: valid, or a list of clear errors",
+    "label": "validation",
+    "file": "parts/validation.py",
+    "type": "MOD",
+    "domain": "UM05",
+    "sector": "S01",
+    "node": "N001",
+    "sequence": "043",
+    "revision": "R0",
+    "docs": "docs/hardware_store/patterns/validation.md",
+    "tests": "tests/test_validation.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "validation core: composable rules + accumulated result; name_check (game) + payload_check (practical)",
+    "tags": [
+      "module"
+    ],
+    "notes": "Hardware Store part validator; docs/hardware/validator.yaml.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-12",
+    "updated": "2026-07-12"
+  },
+  {
+    "designation": "MOD-UM05-S01-N001-044-R0",
+    "name": "payload_check",
+    "status": "active",
+    "function": "the practical adapter for validation: validate a signup payload",
+    "label": "payload_check",
+    "file": "parts/payload_check.py",
+    "type": "MOD",
+    "domain": "UM05",
+    "sector": "S01",
+    "node": "N001",
+    "sequence": "044",
+    "revision": "R0",
+    "docs": "docs/hardware_store/patterns/validation.md",
+    "tests": "tests/test_payload_check.py",
+    "depends_on": [
+      "validation"
+    ],
+    "related": [],
+    "reuse": "signup/form/API payload validation; the practical face of the validator",
+    "tags": [
+      "module"
+    ],
+    "notes": "",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-12",
+    "updated": "2026-07-12"
+  },
+  {
+    "designation": "MOD-UM04-S01-N001-035-R0",
+    "name": "name_check",
+    "status": "active",
+    "function": "the game adapter for validation: preview whether a character name is valid",
+    "label": "name_check",
+    "file": "parts/name_check.py",
+    "type": "MOD",
+    "domain": "UM04",
+    "sector": "S01",
+    "node": "N001",
+    "sequence": "035",
+    "revision": "R0",
+    "docs": "docs/hardware_store/patterns/validation.md",
+    "tests": "tests/test_name_check.py",
+    "depends_on": [
+      "validation"
+    ],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "module"
+    ],
+    "notes": "The `namecheck` verb, a name-validity preview.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-12",
+    "updated": "2026-07-12"
   }
 ]
