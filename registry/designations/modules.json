@@ -2799,5 +2799,90 @@
     "aliases": [],
     "created": "2026-07-12",
     "updated": "2026-07-12"
+  },
+  {
+    "designation": "MOD-UM05-S01-N001-045-R0",
+    "name": "feature_flags",
+    "status": "active",
+    "function": "toggle features at runtime without a redeploy: typed flags with precedence",
+    "label": "feature_flags",
+    "file": "parts/feature_flags.py",
+    "type": "MOD",
+    "domain": "UM05",
+    "sector": "S01",
+    "node": "N001",
+    "sequence": "045",
+    "revision": "R0",
+    "docs": "docs/hardware_store/patterns/configuration.md",
+    "tests": "tests/test_feature_flags.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "config core: runtime flags; features (game) + feature_control (practical)",
+    "tags": [
+      "module"
+    ],
+    "notes": "Hardware Store part feature-flags; docs/hardware/feature-flags.yaml.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-12",
+    "updated": "2026-07-12"
+  },
+  {
+    "designation": "MOD-UM05-S01-N001-046-R0",
+    "name": "feature_control",
+    "status": "active",
+    "function": "the practical adapter for feature flags: an environment kill switch",
+    "label": "feature_control",
+    "file": "parts/feature_control.py",
+    "type": "MOD",
+    "domain": "UM05",
+    "sector": "S01",
+    "node": "N001",
+    "sequence": "046",
+    "revision": "R0",
+    "docs": "docs/hardware_store/patterns/configuration.md",
+    "tests": "tests/test_feature_control.py",
+    "depends_on": [
+      "feature_flags"
+    ],
+    "related": [],
+    "reuse": "env-driven kill switch / canary; the practical face of feature flags",
+    "tags": [
+      "module"
+    ],
+    "notes": "",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-12",
+    "updated": "2026-07-12"
+  },
+  {
+    "designation": "MOD-UM04-S01-N001-036-R0",
+    "name": "features",
+    "status": "active",
+    "function": "the game adapter for feature flags: an in-world feature panel",
+    "label": "features",
+    "file": "parts/features.py",
+    "type": "MOD",
+    "domain": "UM04",
+    "sector": "S01",
+    "node": "N001",
+    "sequence": "036",
+    "revision": "R0",
+    "docs": "docs/hardware_store/patterns/configuration.md",
+    "tests": "tests/test_features.py",
+    "depends_on": [
+      "feature_flags"
+    ],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "module"
+    ],
+    "notes": "The `features` verb, a world feature-flag panel.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-12",
+    "updated": "2026-07-12"
   }
 ]

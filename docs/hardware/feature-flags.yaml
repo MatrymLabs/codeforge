@@ -1,0 +1,33 @@
+part_id: feature-flags
+name: Feature Flags
+version: "0.1"
+maturity: beta
+purpose: >
+  Toggle features at runtime without a redeploy: register named flags with defaults, override them,
+  reset to default, retire them; an override beats the default and an unknown flag is an error.
+source: parts/feature_flags.py
+domain: configuration
+inputs: >
+  flag names + defaults; enable/disable/reset/retire calls; a name to query with is_on
+outputs: >
+  a bool per flag (is_on); a reproducible snapshot; FeatureFlagError on unknown/duplicate flags
+interfaces:
+  - FlagRegistry.register
+  - FlagRegistry.is_on
+  - FlagRegistry.enable
+  - FlagRegistry.reset
+  - FlagRegistry.retire
+  - FlagRegistry.snapshot
+security: >
+  no I/O of its own; flags default off so beta content never ships on by accident. It gates
+  features; it is not an authorization mechanism.
+tests:
+  - tests/test_feature_flags.py
+  - tests/test_features.py
+  - tests/test_feature_control.py
+license: MIT
+source_status: original
+owner: MatrymLabs
+adapters:
+  - parts/features.py
+  - parts/feature_control.py

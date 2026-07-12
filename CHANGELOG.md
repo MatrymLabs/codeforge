@@ -7,6 +7,14 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
 ## [Unreleased]
 
 ### Added
+- **Hardware Store part: Feature Flags (`feature-flags`).** Toggle features at runtime without a
+  redeploy: a `FlagRegistry` of named flags with defaults, an override that beats the default, reset,
+  and retirement; an unknown flag is an error (never silently off) and flags default off. One core
+  (`parts/feature_flags.py`), two adapters: an in-world `features` panel in the game
+  (`parts/features.py`) and an environment kill switch for a practical app
+  (`parts/feature_control.py`, `FEATURE_<NAME>` overrides the default). Property test pins both paths
+  and the override precedence. Cataloged, filed, manifest, configuration pattern doc. No new
+  dependencies. Maturity: beta.
 - **Hardware Store part: the Validator (`validator`).** Validate a mapping against composable rules
   and collect every issue at once, each tagged with its field and a clear message; `raise_if_invalid`
   is the one loud exit. Rule builders cover the common cases (`required`, `matches`, `in_range`,
