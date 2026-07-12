@@ -213,7 +213,8 @@ def render_trace_text(
         "",
     ]
     for s in stages:
-        icon = {"pass": "[PASS]", "fail": "[FAIL]", "skip": "[SKIP]"}[s.status]
+        # nosec B105: stage-status labels, not credentials (bandit false positive on "pass")
+        icon = {"pass": "[PASS]", "fail": "[FAIL]", "skip": "[SKIP]"}[s.status]  # nosec B105
         lines.append(f"  {icon} {s.stage:12} {s.detail}")
     lines.append("")
     lines.append(f"VERDICT: {verdict.upper()}")
