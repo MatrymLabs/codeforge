@@ -97,7 +97,8 @@ the production one, behind one seam. Per survey guidance (p. 8), the dependency 
 pinned in `uv.lock` (committed): with uv, `make env` installs the exact resolved versions
 (`uv sync`), so two machines building the project get identical dependency trees. The pip
 fallback still resolves fresh -- reproducibility is best-effort without the resolver.
-Refresh the pin deliberately with `uv lock`; `uv lock --check` verifies it is current.
+Refresh the pin deliberately with `uv lock`; CI verifies it is current (`uv lock --check`)
+before anything installs, so a dependency edit without a re-lock fails loud in seconds.
 
 ## References (APA 7)
 
