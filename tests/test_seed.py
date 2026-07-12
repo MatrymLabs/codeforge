@@ -17,6 +17,15 @@ def test_missing_file_raises_seed_error(tmp_path):
         load_rooms(tmp_path / "nope.yaml")
 
 
+def test_a_negative_npc_atk_is_rejected_at_load(tmp_path):
+    from parts.seed import load_npcs
+
+    bad = tmp_path / "npcs.yaml"
+    bad.write_text("brawler:\n  location: courtyard\n  atk: -1\n")
+    with pytest.raises(SeedError, match="atk"):
+        load_npcs(bad)
+
+
 def test_dangling_exit_is_rejected_at_load(tmp_path):
     bad = tmp_path / "rooms.yaml"
     bad.write_text("start:\n  exits:\n    north: mystery_cave\n")

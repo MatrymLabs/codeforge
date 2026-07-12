@@ -98,6 +98,7 @@ class Npc(TypedDict):
     hp: int  # max hit points; 0 means peaceful, not attackable
     hp_now: int  # runtime state, starts at hp
     xp: int  # XP awarded when defeated
+    atk: int  # counter-attack damage; 0 (default) means passive, never strikes back
 
 
 class Job(TypedDict):
@@ -289,6 +290,7 @@ def load_npcs(path: Path) -> dict[str, Npc]:
             "dialogue": DEFAULT_DIALOGUE,
             "hp": 0,
             "xp": 0,
+            "atk": 0,
             **file_template,
             **raw,
         }
@@ -304,8 +306,14 @@ def load_npcs(path: Path) -> dict[str, Npc]:
                 ("dialogue", list),
                 ("hp", int),
                 ("xp", int),
+                ("atk", int),
             ),
         )
+        if merged["atk"] < 0:
+            raise SeedError(
+                f"NPC '{label}' has a negative atk ({merged['atk']}); "
+                "counter-attack damage cannot be negative."
+            )
         npcs[label] = Npc(
             name=merged["name"],
             keywords=merged["keywords"],
@@ -315,6 +323,7 @@ def load_npcs(path: Path) -> dict[str, Npc]:
             hp=merged["hp"],
             hp_now=merged["hp"],
             xp=merged["xp"],
+            atk=merged["atk"],
         )
     return npcs
 

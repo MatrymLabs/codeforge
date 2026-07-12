@@ -4,19 +4,26 @@ import copy
 
 import pytest
 
-from parts import npcs
+from parts import combat, npcs
 from parts.combat import attack, award_jp, award_xp, strike_power
 from parts.events import bind_echo, unbind_echo
 from parts.jobs import bind_calling
+from parts.seed import Npc
 from parts.session import SESSIONS, Session
 
 
 @pytest.fixture(autouse=True)
 def fresh_world():
-    npcs_snap = copy.deepcopy(npcs.NPCS)
+    # combat.py binds `from parts.npcs import NPCS`, and other suites rebind npcs.NPCS,
+    # so the two names can point at different dicts. Snapshot and restore BOTH in place
+    # (clear + update, never rebind) so the alias attack() reads stays valid and no NPC
+    # mutation leaks across tests. See issue for the systemic anti-pattern.
+    snapshots = [(npcs.NPCS, copy.deepcopy(npcs.NPCS)), (combat.NPCS, copy.deepcopy(combat.NPCS))]
     SESSIONS.clear()
     yield
-    npcs.NPCS = npcs_snap
+    for registry, snap in snapshots:
+        registry.clear()
+        registry.update(snap)
     SESSIONS.clear()
 
 
@@ -80,6 +87,76 @@ def test_attack_flows_through_the_engine_tick():
     s = _fighter()
     out = handle_command(s, "attack dummy")
     assert "You strike the training dummy" in out
+
+
+def _spawn_hostile(label: str = "brawler", location: str = "courtyard", atk: int = 5, hp: int = 50):
+    """Place a fighting NPC in a room. Written to both aliased registries; the fixture cleans up."""
+    hostile: Npc = {
+        "name": f"the {label}",
+        "keywords": [label],
+        "location": location,
+        "dialogue": ["..."],
+        "next_line": 0,
+        "hp": hp,
+        "hp_now": hp,
+        "xp": 10,
+        "atk": atk,
+    }
+    npcs.NPCS[label] = hostile  # trace_npc reads this one
+    combat.NPCS[label] = hostile  # attack() reads this one (its own import alias)
+    return label
+
+
+def test_npc_strike_power_reads_the_atk_stat():
+    from parts.combat import npc_strike_power
+
+    _spawn_hostile(atk=5)
+    assert npc_strike_power(npcs.NPCS["brawler"]) == 5
+    assert npc_strike_power(npcs.NPCS["training_dummy"]) == 0  # passive by default
+
+
+def test_a_hostile_npc_strikes_back_when_it_survives():
+    s = _fighter()
+    _spawn_hostile(atk=5, hp=50)
+    max_hp = s.resources["hp"].maximum
+    out = attack(s, "brawler")
+    assert "strikes back for 5" in out
+    assert s.resources["hp"].current == max_hp - 5  # exact, deterministic
+
+
+def test_the_passive_training_dummy_never_strikes_back():
+    s = _fighter()  # the dummy carries no atk stat
+    max_hp = s.resources["hp"].maximum
+    out = attack(s, "dummy")
+    assert "strikes back" not in out
+    assert s.resources["hp"].current == max_hp  # unhurt: backward compatible
+
+
+def test_a_defeated_npc_does_not_counter():
+    s = _fighter()
+    _spawn_hostile(atk=99, hp=1)  # a huge atk, but it dies to the first blow
+    max_hp = s.resources["hp"].maximum
+    out = attack(s, "brawler")
+    assert "strikes back" not in out
+    assert s.resources["hp"].current == max_hp  # a corpse never counters
+
+
+def test_a_fallen_player_is_restored_safely():
+    s = _fighter()
+    _spawn_hostile(atk=9999, hp=50)  # its counter empties the player's HP
+    out = attack(s, "brawler")
+    assert "wake restored at full health" in out
+    assert s.resources["hp"].is_full  # never a broken state
+    assert s.location == "courtyard"  # restored in place
+
+
+def test_counterattack_flows_through_the_engine_tick():
+    from forge import handle_command
+
+    s = _fighter()
+    _spawn_hostile(atk=4, hp=50)
+    out = handle_command(s, "attack brawler")
+    assert "strikes back for 4" in out
 
 
 def test_jp_accrues_to_the_active_job_and_levels_it():
