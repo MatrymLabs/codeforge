@@ -4,7 +4,7 @@ import copy
 
 import pytest
 
-from parts import combat, npcs
+from parts import npcs
 from parts.combat import attack, award_jp, award_xp, strike_power
 from parts.events import bind_echo, unbind_echo
 from parts.jobs import bind_calling
@@ -14,16 +14,13 @@ from parts.session import SESSIONS, Session
 
 @pytest.fixture(autouse=True)
 def fresh_world():
-    # combat.py binds `from parts.npcs import NPCS`, and other suites rebind npcs.NPCS,
-    # so the two names can point at different dicts. Snapshot and restore BOTH in place
-    # (clear + update, never rebind) so the alias attack() reads stays valid and no NPC
-    # mutation leaks across tests. See issue for the systemic anti-pattern.
-    snapshots = [(npcs.NPCS, copy.deepcopy(npcs.NPCS)), (combat.NPCS, copy.deepcopy(combat.NPCS))]
+    # Restore in place (clear + update, never rebind): combat.py holds
+    # `from parts.npcs import NPCS`, so rebinding npcs.NPCS would strand that alias.
+    npcs_snap = copy.deepcopy(npcs.NPCS)
     SESSIONS.clear()
     yield
-    for registry, snap in snapshots:
-        registry.clear()
-        registry.update(snap)
+    npcs.NPCS.clear()
+    npcs.NPCS.update(npcs_snap)
     SESSIONS.clear()
 
 
@@ -102,8 +99,7 @@ def _spawn_hostile(label: str = "brawler", location: str = "courtyard", atk: int
         "xp": 10,
         "atk": atk,
     }
-    npcs.NPCS[label] = hostile  # trace_npc reads this one
-    combat.NPCS[label] = hostile  # attack() reads this one (its own import alias)
+    npcs.NPCS[label] = hostile  # combat.py's NPCS alias sees this (same object, no rebinds)
     return label
 
 

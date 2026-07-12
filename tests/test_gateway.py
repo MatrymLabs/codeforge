@@ -26,9 +26,12 @@ def fresh_world():
     gateway._seats_filled = 0
     gateway._turnaway_ledger.clear()
     yield
-    items.ITEMS = items_snap
-    doors.DOORS = doors_snap
-    npcs.NPCS = npcs_snap
+    items.ITEMS.clear()
+    items.ITEMS.update(items_snap)
+    doors.DOORS.clear()
+    doors.DOORS.update(doors_snap)
+    npcs.NPCS.clear()
+    npcs.NPCS.update(npcs_snap)
     SESSIONS.clear()
 
 

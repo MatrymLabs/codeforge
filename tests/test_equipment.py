@@ -25,7 +25,8 @@ from parts.session import Session
 def fresh_world():
     items_snap = copy.deepcopy(items.ITEMS)
     yield
-    items.ITEMS = items_snap
+    items.ITEMS.clear()
+    items.ITEMS.update(items_snap)
 
 
 def _engineer_with_wrench() -> Session:
