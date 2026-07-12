@@ -5,7 +5,9 @@ workshop, the deduction of a detective's case file, and the worlds-and-gates
 motif of a climbable tower, wound through a spiral (seeds becoming systems). The
 metaphor lives in the *code*; the *data contract* stays literal. This table maps
 the vocabulary to plain English, and the [style guide](AI_WORKFLOW.md) explains
-the philosophy and its hard limits.
+the philosophy and its hard limits. The [Naming Standard](naming_standard.md) is
+the governing ruleset for all new names; the [Theme Alignment Report](theme_alignment_report.md)
+is the subsystem-level audit behind it.
 
 | Name | Kind | Plain-English meaning |
 |------|------|-----------------------|
