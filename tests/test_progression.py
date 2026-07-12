@@ -60,6 +60,12 @@ def test_marginal_jp_zero_above_cap():
     assert marginal_jp_for_level(31) == 0
 
 
+def test_tier_multiplier_defaults_to_one_past_the_tiers():
+    # A level below or above every tier falls through to the default multiplier of 1.
+    assert get_xp_tier_multiplier(0) == 1
+    assert get_jp_tier_multiplier(999) == 1
+
+
 # --- next-threshold helpers return None at the caps ---
 
 
