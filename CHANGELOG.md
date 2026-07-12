@@ -7,6 +7,15 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
 ## [Unreleased]
 
 ### Added
+- **Hardware Store part: the Circuit Breaker (`circuit-breaker`).** Fail fast when a dependency is
+  broken: trip open after consecutive failures, reject calls immediately, then probe recovery after
+  a reset timeout. Independently implemented and, notably, **built ON the `state-machine` part** (a
+  part from a part) - the loop's assembly stage shows the real dependency. Deterministic via an
+  injected clock; a property test proves it opens exactly on a run of `threshold` failures. One core
+  (`parts/circuit_breaker.py`), two adapters: a `channel` verb on a flaky relay in the game
+  (`parts/relay.py`) and a per-service `ServiceBreakers` registry for a practical app
+  (`parts/service_breaker.py`). Cataloged, filed, manifest, resilience pattern doc. No new
+  dependencies. Maturity: beta.
 - **Hardware Store part: the Retry Policy (`retry-policy`).** Retry with exponential backoff,
   independently implemented, framework-free and DETERMINISTIC via an injected sleep: it retries
   transient failures, re-raises permanent ones immediately, and re-raises the final one (never
