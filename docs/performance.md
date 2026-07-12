@@ -61,3 +61,18 @@ See [performance_gate.md](performance_gate.md) (the PerformanceGate draft + budg
 map, APA-cited), and [performance_experiments.md](performance_experiments.md) (one experiment
 card per hotspot - proposals, not yet run). Doctrine: **AI proposes, the profiler observes,
 the benchmark compares, the tests verify, the engineer decides.**
+
+## Cross-platform comparison (Pi 5 vs Windows PC)
+
+| Journey | Pi 5 median (de0f8a5) | PC median (Win11, same commit) | Speedup |
+|---------|----------------------|-------------------------------|---------|
+| Startup (cold) | 202 ms | 95.3 ms | ~2.1x |
+| Command | 8.5 μs | 3.4 μs | ~2.5x |
+| Combat | 10.3 μs | 4.4 μs | ~2.3x |
+| QA Gate All | 2.91 ms | 2.69 ms | ~1.1x |
+| Catalog Search | 91.8 μs | 242.7 μs | 0.4x (Pi faster) |
+
+> PC run: 2026-07-12, Windows 11, Python 3.13.12. The catalog search regression on PC
+> likely reflects filesystem/YAML-parse differences on Windows vs Linux aarch64 — worth
+> investigating if it becomes a bottleneck. The hot-path commands (command, combat) are
+> CPU-bound and scale with clock speed as expected.
