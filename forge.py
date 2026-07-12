@@ -48,6 +48,8 @@ from parts.items import drop, inventory_text, room_items_text, take
 from parts.jobs import JOBS, bind_calling, calling_index, set_secondary
 from parts.law import law
 from parts.library import library
+from parts.loop import render_trace
+from parts.loop import trace as loop_trace
 from parts.npcs import room_npcs_text, talk, trace_npc
 from parts.pioneer import pioneer
 from parts.pm import pm_metrics, pm_status
@@ -78,7 +80,7 @@ HELP_TEXT = (
     "jobs, job <calling>, subjob <calling>, score, equip <item>, unequip <slot>, "
     "attack <target>, repair, scan <target>, deploy, "
     "unlock <door> with <key>, regs [topic|id], library [id], law [id], "
-    "registry [show|find|type|status], "
+    "registry [show|find|type|status], loop trace <part-id>, "
     "qa gate [all|<id>], safety review <id>, docs check, pm status, pm metrics, "
     "truth check, career, pioneer, evolution, inspect, functions, terminal, "
     "workshop, catalog, reuse <term>, console, run <check>, diagnostics, "
@@ -303,7 +305,37 @@ def _build_commands() -> CommandSet:
             namespace=CORE,
         )
     )
+    cs.add(
+        Command(
+            "loop trace",
+            "CMD-UM05-S01-N001-023-R0",
+            "trace a part through every manufacturing stage",
+            lambda _s, arg: _loop_trace_handler(arg),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "loop",
+            "CMD-UM05-S01-N001-024-R0",
+            "manufacturing loop commands (try: loop trace <part-id>)",
+            lambda _s, _a: (
+                "Usage: loop trace <part-id>\n"
+                "  Trace a part through every manufacturing stage and file evidence."
+            ),
+            namespace=CORE,
+        )
+    )
     return cs
+
+
+def _loop_trace_handler(arg: str) -> str:
+    """Handle the `loop trace <part-id>` command."""
+    part_id = arg.strip()
+    if not part_id:
+        return "Usage: loop trace <part-id>\n  Example: loop trace workflow-engine"
+    report = loop_trace(part_id)
+    return render_trace(report)
 
 
 COMMANDS = _build_commands()

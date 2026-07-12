@@ -1,4 +1,4 @@
-.PHONY: env fix lint typecheck test property coverage audit security secrets deps sbom bench doctor patch daily check readiness truth cast-plan smoke repo-integrity ship run world store hardware clean serve db-up db-down db-migrate docs-serve docs-build e2e evolution ritual-fast ritual ritual-down unskew
+.PHONY: env fix lint typecheck test property coverage audit security secrets deps sbom bench doctor patch daily check readiness truth cast-plan smoke repo-integrity ship run world store hardware clean serve db-up db-down db-migrate docs-serve docs-build e2e evolution ritual-fast ritual ritual-down unskew loop
 
 # --- Environment: create/validate the .venv, fail loud on version mismatch.
 # Uses uv when present (a Rust resolver; measured ~20x faster than pip on this host:
@@ -184,6 +184,9 @@ store:
 
 hardware:
 	python3 -m parts.hardware
+
+loop:
+	@python3 -m parts.loop trace $(or $(PART),workflow-engine)
 
 clean:
 	rm -rf .pytest_cache .ruff_cache .mypy_cache .coverage __pycache__ parts/__pycache__ tests/__pycache__
