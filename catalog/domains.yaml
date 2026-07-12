@@ -1,0 +1,65 @@
+# CodeForge Hardware Store V3 engineering domains.
+#
+# A DOMAIN is stable classification: parts are organized by engineering purpose, not by language,
+# framework, or where they happened to be implemented. Each existing catalog `category` maps to
+# exactly one domain here. A part's numeric catalog address (domain.ordinal) is a computed FILING
+# AID for display; the part's slug `id` remains its permanent IDENTITY. Labels are identity, numbers
+# are filing aids (parts/catalog.py). Add a domain only when a category needs a home; never renumber.
+domains:
+  - code: "01"
+    name: Validation
+    categories: [validation, data-integrity, content-schema]
+  - code: "02"
+    name: State
+    categories: [modeling]
+  - code: "03"
+    name: Workflow
+    categories: [orchestration, control-flow, rules-engine, decision]
+  - code: "04"
+    name: Events
+    categories: [eventing, messaging]
+  - code: "05"
+    name: Resilience
+    categories: [resilience, rate-limiting]
+  - code: "06"
+    name: Persistence
+    categories: [persistence]
+  - code: "07"
+    name: Caching
+    categories: [caching]
+  - code: "08"
+    name: Observability
+    categories: [observability, diagnostics]
+  - code: "09"
+    name: Testing
+    categories: [testing, quality, evidence]
+  - code: "10"
+    name: Security
+    categories: [security, authorization]
+  - code: "11"
+    name: Configuration
+    categories: [configuration]
+  - code: "12"
+    name: Parsing
+    categories: [parsing]
+  - code: "13"
+    name: Presentation
+    categories: [rendering, presentation, api]
+  - code: "14"
+    name: Plugins
+    categories: [plugins]
+  - code: "15"
+    name: AI
+    categories: [ai]
+  - code: "16"
+    name: Change
+    categories: [change_management]
+  - code: "17"
+    name: Learning
+    categories: [learning]
+  - code: "18"
+    name: Search
+    categories: [search]
+  - code: "19"
+    name: World Systems
+    categories: [mechanics]
