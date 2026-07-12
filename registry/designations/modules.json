@@ -2212,7 +2212,7 @@
     "node": "N001",
     "sequence": "030",
     "revision": "R0",
-    "docs": "",
+    "docs": "docs/manufacturing_loop.md",
     "tests": "tests/test_manifest.py",
     "depends_on": [],
     "related": [
@@ -2244,7 +2244,7 @@
     "node": "N001",
     "sequence": "031",
     "revision": "R0",
-    "docs": "",
+    "docs": "docs/manufacturing_loop.md",
     "tests": "tests/test_assembly.py",
     "depends_on": [
       "MOD-UM05-S01-N001-030-R0"
@@ -2277,7 +2277,7 @@
     "node": "N001",
     "sequence": "032",
     "revision": "R0",
-    "docs": "",
+    "docs": "docs/manufacturing_loop.md",
     "tests": "tests/test_loop.py",
     "depends_on": [
       "MOD-UM05-S01-N001-030-R0",
