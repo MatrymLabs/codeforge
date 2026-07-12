@@ -42,6 +42,7 @@ from parts.heralds import heralds
 from parts.items import drop, inventory_text, room_items_text, take
 from parts.jobs import JOBS, bind_calling, calling_index, set_secondary
 from parts.logbook import journal
+from parts.maintenance import maintenance
 from parts.name_check import name_check
 from parts.npcs import room_npcs_text, talk, trace_npc
 from parts.quest import quest_view
@@ -69,7 +70,7 @@ HELP_TEXT = (
     "take, drop, inventory, talk <npc>, say <msg>, shout <msg>, name <yourname>, who, "
     "jobs, job <calling>, subjob <calling>, score, equip <item>, unequip <slot>, "
     "attack <target>, repair, scan <target>, deploy, calibrate, channel, journal [text], vitals, "
-    "namecheck <name>, features, certify, heralds, title [text], "
+    "namecheck <name>, features, certify, heralds, title [text], maintenance, "
     "unlock <door> with <key>, regs [topic|id], library [id], law [id], "
     "registry [show|find|type|status], loop trace <part-id>, "
     "qa gate [all|<id>], safety review <id>, docs check, pm status, pm metrics, "
@@ -704,6 +705,8 @@ def handle_command(session: Session, signal: str) -> str:
         return certify(session)
     if routed_signal == "heralds":
         return heralds(session)
+    if routed_signal == "maintenance":
+        return maintenance(session)
     if routed_signal == "title" or routed_signal.startswith("title "):
         _, _, text = true_signal.partition(" ")
         return title(session, text)

@@ -7,6 +7,16 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
 ## [Unreleased]
 
 ### Added
+- **Hardware Store part: Change Ledger (`change-ledger`).** The first slice of the Software Evolution
+  Engine (research: patch/change management). Record a `Change` (id, kind, severity, optional CVEs,
+  components, rollback plan) and drive it through a **role-gated, evidence-gated** lifecycle
+  (identified -> triaged -> approved -> building -> testing -> canary -> deployed -> verified ->
+  closed, plus reject and rollback edges); a change **cannot reach canary until its test evidence
+  passes**. Not reinvented: **assembled from five parts already on the shelf** (repository + workflow
+  + statemachine + validation + test-evidence), no code copied. One core (`parts/change_ledger.py`),
+  two adapters: a world-`maintenance` log in the game (`parts/maintenance.py`) and a dependency/CVE
+  `PatchTracker` for a practical app (`parts/patch_tracker.py`). Cataloged, filed, manifest, new
+  change-management pattern doc. No new dependencies. Maturity: beta.
 - **Hardware Store part: Input Sanitizer (`sanitizer`).** Normalize untrusted text deterministically
   and **idempotently** (sanitizing twice equals once, a property-tested invariant): drop control
   characters, fold whitespace, trim, optionally lowercase, cap length. Honest scope: it normalizes,

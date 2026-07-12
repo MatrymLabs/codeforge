@@ -3139,5 +3139,96 @@
     "aliases": [],
     "created": "2026-07-12",
     "updated": "2026-07-12"
+  },
+  {
+    "designation": "MOD-UM05-S01-N001-053-R0",
+    "name": "change_ledger",
+    "status": "active",
+    "function": "a Change/Patch engine: record changes and drive them through a gated lifecycle",
+    "label": "change_ledger",
+    "file": "parts/change_ledger.py",
+    "type": "MOD",
+    "domain": "UM05",
+    "sector": "S01",
+    "node": "N001",
+    "sequence": "053",
+    "revision": "R0",
+    "docs": "docs/hardware_store/patterns/change_management.md",
+    "tests": "tests/test_change_ledger.py",
+    "depends_on": [
+      "repository",
+      "workflow",
+      "statemachine",
+      "validation",
+      "test_evidence"
+    ],
+    "related": [],
+    "reuse": "change management: a role-gated, evidence-gated change/patch lifecycle, one core with many adapters",
+    "tags": [
+      "module"
+    ],
+    "notes": "Assembled from five Hardware Store parts; no code copied.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-12",
+    "updated": "2026-07-12"
+  },
+  {
+    "designation": "MOD-UM05-S01-N001-054-R0",
+    "name": "patch_tracker",
+    "status": "active",
+    "function": "the practical adapter for the change ledger: a software patch tracker",
+    "label": "patch_tracker",
+    "file": "parts/patch_tracker.py",
+    "type": "MOD",
+    "domain": "UM05",
+    "sector": "S01",
+    "node": "N001",
+    "sequence": "054",
+    "revision": "R0",
+    "docs": "docs/hardware_store/patterns/change_management.md",
+    "tests": "tests/test_patch_tracker.py",
+    "depends_on": [
+      "change_ledger"
+    ],
+    "related": [],
+    "reuse": "track dependency bumps and CVE fixes through the gated lifecycle",
+    "tags": [
+      "module"
+    ],
+    "notes": "The practical life of the change ledger core.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-12",
+    "updated": "2026-07-12"
+  },
+  {
+    "designation": "MOD-UM04-S01-N001-040-R0",
+    "name": "maintenance",
+    "status": "active",
+    "function": "the game adapter for the change ledger: a world-maintenance log",
+    "label": "maintenance",
+    "file": "parts/maintenance.py",
+    "type": "MOD",
+    "domain": "UM04",
+    "sector": "S01",
+    "node": "N001",
+    "sequence": "040",
+    "revision": "R0",
+    "docs": "docs/hardware_store/patterns/change_management.md",
+    "tests": "tests/test_maintenance.py",
+    "depends_on": [
+      "change_ledger"
+    ],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "module"
+    ],
+    "notes": "The `maintenance` verb, the world's own gated change log.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-12",
+    "updated": "2026-07-12"
   }
 ]
