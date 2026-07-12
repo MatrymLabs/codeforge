@@ -7,6 +7,62 @@
 
 ---
 
+## Chief Engineer's Log - 2026-07-11 (ship's day 192, evening watch) - "The Storefront, the Trail, and the Machine Named"
+
+**Ship's day 192, still the eleventh of July.** The morning's restoration behind us, the watch
+ran long and turned outward: from how the ship reads, to what it can prove, to what it *is*.
+
+First we cleaned the storefront, because a stranger judges the window before the workshop. A hard
+look through a recruiter's eyes found the ship undercutting its own strong flagship: the test
+count was stated four different ways and none of them right, on the one repo whose whole creed is
+that a claim must match reality. We killed the drift at the root and let the badge be the only
+number. We took the fancy dashes out of the most-read page, pulled a private repository out of the
+featured slot where a cold visitor would have hit a locked door, and swept the weakest, oldest
+repositories into the archive so the showroom holds only work we would want clicked. Then we
+hardened the two flagships that remain: a code of conduct, branch protection, a first tagged
+release where none had ever been cut, a coverage badge that is now *earned* rather than asserted,
+and the vulnerability alerts that were quietly switched off, switched on. The self-audit scorecards
+in both READMEs had themselves gone stale; the proof-tool caught its own storefront lying, and we
+told the truth instead, up to the honest admission that the younger tool sits on the watchlist at
+the highest bar and says so rather than inflate the grade.
+
+Then we earned the one signal a solo builder cannot fake by asserting it: a real trail. An issue
+opened, a branch cut, a pull request that closed it, all in the open. The feature it carried was
+NPCs that fight back, and building it flushed a heron from the reeds: a latent flaw where the test
+fixtures rebound a shared registry that four modules had aliased, so they could silently drift
+apart under parallel runs. We did not paper over it. We found it, fixed it for the file at hand,
+then chased the same pattern across every fixture that carried it and rooted it out, and filed the
+follow-ups in the open. A bug surfaced by your own change, tracked and killed at its source, is
+worth more than a suite that never admits one exists. And we made the fight real in the game the
+combat was built for: the Gate boss now strikes back.
+
+We strengthened the proving itself. The coverage gate now measures branches, not just lines,
+because a line that ran is not the same as a decision tested both ways, and the stricter measure
+made a hundred and eighty-one blind spots visible at once. The pytest harness now refuses a typo
+where it used to shrug.
+
+Last, and largest, we named the machine. The ship had grown many good systems and lost the single
+sentence that says what it is. So we wrote it down and made the flagship say it: CodeForge is a
+manufacturing platform with two products - an installable world you can play today, and a store of
+reusable parts proven in that world and translated to real software. Then, because a vision is only
+a vision until one part carries the whole idea on its back, we built that part. A workflow engine,
+grown on a state machine we already trusted, now runs a quest inside the MUD and an employee's
+onboarding through a plain interface outside it - one core, two lives, the same tests, cataloged as
+a real part and shown on the wall. That single slice makes the whole vision legible without the
+whole factory being finished. It is the proof that the machine is real.
+
+The reckoning: better than a dozen changes merged to main, every one behind a green pipeline; two
+flagships hardened and made to tell the truth about themselves; a bug found and buried at its root;
+the test gate made stricter; the ship given one clear name and one working proof of it. Eight
+hundred and one tests green. Nothing shipped that was not proven. Nothing claimed that was not run.
+
+The storefront is honest, the trail is real, the machine is named. The forge is banked. The watch
+stands relieved.
+
+*- Chief Engineer, MatrymLabs*
+
+---
+
 ## Chief Engineer's Log - 2026-07-11 (ship's day 192) - "The Frame Held: A Restoration, and the Keel Made Plain"
 
 **Ship's day 192, the eleventh of July.** No new deck was raised today. We did the harder,
