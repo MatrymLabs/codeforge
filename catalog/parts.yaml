@@ -687,3 +687,30 @@
     finance: "approval routing: who may submit, review, and sign off, recorded as evidence"
     records: "document lifecycle: draft, review, approve, publish, archive"
     general: "onboarding, task, incident, or project workflow from one config-driven engine"
+
+- id: token-bucket
+  name: Token Bucket
+  source: parts/token_bucket.py
+  category: rate-limiting
+  tags: [rate-limit, throttle, token-bucket, resilience, backpressure]
+  maturity: beta
+  source_status: original
+  license: MIT
+  influence: "token-bucket rate-limiting algorithm (public-domain CS; independently implemented)"
+  experimental: >-
+    back it with Redis for a distributed limiter, or make it thread-safe/async once the tick
+    stops being single-threaded. Traded away (v1): concurrency and cross-process state, keeping
+    it pure, deterministic (injected clock), and dependency-free.
+  risk: low
+  reuse_score: 4
+  purpose: >
+    Cap a sustained rate while allowing short bursts up to a capacity, via the token-bucket
+    algorithm with an injected clock. Returns an allow/deny decision plus the exact retry_after.
+    One core, two adapters: it throttles a player's shouts in the game and login attempts in a
+    practical app.
+  reuse:
+    game: "anti-spam on chat/shout; command or ability cooldowns; an energy recharge meter"
+    finance: "transaction-submission caps; per-client API call quotas"
+    government: "request throttling on public-facing services; fair-use governance"
+    security: "brute-force login-attempt limiting per account or IP"
+    general: "any 'N per window with bursts' limiter: APIs, email sends, job submission"

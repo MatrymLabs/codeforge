@@ -1,0 +1,29 @@
+part_id: token-bucket
+name: Token Bucket
+version: "0.1"
+maturity: beta
+purpose: >
+  Rate limiting by the token-bucket algorithm: cap a sustained rate while allowing short
+  bursts up to a capacity. A deterministic, framework-free limiter with an injected clock.
+source: parts/token_bucket.py
+domain: rate-limiting
+inputs: >
+  a rate (tokens/sec), a capacity (burst size), an injected clock, and a per-action cost
+outputs: >
+  a ThrottleDecision(allowed, tokens_left, retry_after, reason)
+interfaces:
+  - TokenBucket.check
+  - TokenBucket.consume
+security: >
+  no I/O, no crypto, no world-state mutation; it returns a throttle DECISION only and does
+  not authenticate. A distributed or thread-safe variant is a deferred, deliberate juncture.
+tests:
+  - tests/test_token_bucket.py
+  - tests/test_chat_throttle.py
+  - tests/test_login_guard.py
+license: MIT
+source_status: original
+owner: MatrymLabs
+adapters:
+  - parts/chat_throttle.py
+  - parts/login_guard.py
