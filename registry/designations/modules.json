@@ -2198,5 +2198,102 @@
     "aliases": [],
     "created": "2026-07-11",
     "updated": "2026-07-11"
+  },
+  {
+    "designation": "MOD-UM05-S01-N001-030-R0",
+    "name": "manifest",
+    "status": "active",
+    "function": "typed Part Manifest: a reusable parts machine-readable contract",
+    "label": "manifest",
+    "file": "parts/manifest.py",
+    "type": "MOD",
+    "domain": "UM05",
+    "sector": "S01",
+    "node": "N001",
+    "sequence": "030",
+    "revision": "R0",
+    "docs": "",
+    "tests": "tests/test_manifest.py",
+    "depends_on": [],
+    "related": [
+      "MOD-UM05-S01-N001-031-R0",
+      "MOD-UM05-S01-N001-032-R0"
+    ],
+    "reuse": "formal contract for any reusable part in the Hardware Store",
+    "tags": [
+      "module",
+      "manufacturing",
+      "spine"
+    ],
+    "notes": "",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-12",
+    "updated": "2026-07-12"
+  },
+  {
+    "designation": "MOD-UM05-S01-N001-031-R0",
+    "name": "assembly",
+    "status": "active",
+    "function": "discover what parts compose a product and file the evidence",
+    "label": "assembly",
+    "file": "parts/assembly.py",
+    "type": "MOD",
+    "domain": "UM05",
+    "sector": "S01",
+    "node": "N001",
+    "sequence": "031",
+    "revision": "R0",
+    "docs": "",
+    "tests": "tests/test_assembly.py",
+    "depends_on": [
+      "MOD-UM05-S01-N001-030-R0"
+    ],
+    "related": [
+      "MOD-UM05-S01-N001-032-R0"
+    ],
+    "reuse": "import discovery and composition evidence for any assembled product",
+    "tags": [
+      "module",
+      "manufacturing",
+      "spine"
+    ],
+    "notes": "",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-12",
+    "updated": "2026-07-12"
+  },
+  {
+    "designation": "MOD-UM05-S01-N001-032-R0",
+    "name": "loop",
+    "status": "active",
+    "function": "trace a part through every manufacturing stage and file evidence",
+    "label": "loop",
+    "file": "parts/loop.py",
+    "type": "MOD",
+    "domain": "UM05",
+    "sector": "S01",
+    "node": "N001",
+    "sequence": "032",
+    "revision": "R0",
+    "docs": "",
+    "tests": "tests/test_loop.py",
+    "depends_on": [
+      "MOD-UM05-S01-N001-030-R0",
+      "MOD-UM05-S01-N001-031-R0"
+    ],
+    "related": [],
+    "reuse": "end-to-end manufacturing loop trace for any part",
+    "tags": [
+      "module",
+      "manufacturing",
+      "spine"
+    ],
+    "notes": "",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-12",
+    "updated": "2026-07-12"
   }
 ]

@@ -661,5 +661,66 @@
     "aliases": [],
     "created": "2026-07-11",
     "updated": "2026-07-11"
+  },
+  {
+    "designation": "CMD-UM05-S01-N001-023-R0",
+    "name": "`loop trace`",
+    "status": "active",
+    "function": "Trace a part through every manufacturing stage and file evidence.",
+    "label": "loop trace",
+    "file": "parts/loop.py",
+    "type": "CMD",
+    "domain": "UM05",
+    "sector": "S01",
+    "node": "N001",
+    "sequence": "023",
+    "revision": "R0",
+    "docs": "",
+    "tests": "tests/test_loop.py",
+    "depends_on": [],
+    "related": [
+      "CMD-UM05-S01-N001-024-R0"
+    ],
+    "reuse": "trace any reusable part through the manufacturing loop",
+    "tags": [
+      "command",
+      "manufacturing",
+      "spine"
+    ],
+    "notes": "",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-12",
+    "updated": "2026-07-12"
+  },
+  {
+    "designation": "CMD-UM05-S01-N001-024-R0",
+    "name": "`loop`",
+    "status": "active",
+    "function": "Manufacturing loop commands (usage hint).",
+    "label": "loop",
+    "file": "parts/loop.py",
+    "type": "CMD",
+    "domain": "UM05",
+    "sector": "S01",
+    "node": "N001",
+    "sequence": "024",
+    "revision": "R0",
+    "docs": "",
+    "tests": "tests/test_loop.py",
+    "depends_on": [],
+    "related": [
+      "CMD-UM05-S01-N001-023-R0"
+    ],
+    "reuse": "",
+    "tags": [
+      "command",
+      "manufacturing"
+    ],
+    "notes": "",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-12",
+    "updated": "2026-07-12"
   }
 ]
