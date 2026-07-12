@@ -14,6 +14,7 @@ fine for the fast checks below; async execution is a later phase.
 from __future__ import annotations
 
 import subprocess  # nosec B404 -- used only for the fixed, shell-free allowlist below
+import sys
 import time
 from dataclasses import dataclass
 from pathlib import Path
@@ -23,12 +24,14 @@ DEFAULT_TIMEOUT = 60.0  # seconds; a hung command is killed
 OUTPUT_CAP = 4000  # chars; overflow is truncated (full logs land in reports/ -- Phase 7)
 
 # name -> argv. READ-ONLY only. No shell, no user-supplied arguments ever.
+# sys.executable, not "python3": the absolute path to THIS interpreter, so the console
+# runs the same Python everywhere (and never whatever PATH happens to resolve).
 ALLOWLIST: dict[str, list[str]] = {
-    "version": ["python3", "--version"],
+    "version": [sys.executable, "--version"],
     "lint": ["ruff", "check", "."],
     "format": ["ruff", "format", "--check", "."],
     "types": ["mypy", "parts", "forge.py"],
-    "compile": ["python3", "-m", "compileall", "-q", "parts", "forge.py"],
+    "compile": [sys.executable, "-m", "compileall", "-q", "parts", "forge.py"],
     "tests": ["pytest", "-q", "-m", "not property"],
     "status": ["git", "status", "--short"],
     "diff": ["git", "diff", "--stat"],

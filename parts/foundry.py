@@ -247,7 +247,8 @@ def render_proving_ground(root: Path | None = None) -> str:
         lines.append("  Nothing forged yet. Draft one: @forge <name>, then @forge approve <name>.")
         return "\n".join(lines)
     for path in candidates:
-        lines.append(f"  {path.relative_to(base)}  ({path.stat().st_size} bytes)")
+        # as_posix: display paths read the same on every host (repo paths are posix-style)
+        lines.append(f"  {path.relative_to(base).as_posix()}  ({path.stat().st_size} bytes)")
     lines += [
         "",
         "  These are sandboxed drafts -- nothing here is wired into the engine. Review a",
