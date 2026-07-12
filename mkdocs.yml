@@ -85,6 +85,8 @@ nav:
       - Repository template library: repo_templates/README.md
       - Classification system: classification/CLASSIFICATION_SYSTEM.md
       - Naming glossary: naming_glossary.md
+      - Naming standard: naming_standard.md
+      - Theme alignment report: theme_alignment_report.md
       - Legal and policy awareness: legal_policy_awareness.md
   - Research (2026):
       - Python hiring requirements: research/python_hiring_requirements.md
