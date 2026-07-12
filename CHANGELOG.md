@@ -7,6 +7,14 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
 ## [Unreleased]
 
 ### Added
+- **Hardware Store part: Plugin Registry (`plugin-registry`).** Extend behavior by EXPLICIT
+  registration, never by loading arbitrary code: a generic `PluginRegistry[P]` that validates plugin
+  metadata (a duplicate name or a missing required capability is refused), and enables/disables
+  plugins. The trust boundary is explicit (the caller supplies the object). One core
+  (`parts/plugin_registry.py`), two adapters: pluggable in-world `heralds` in the game
+  (`parts/heralds.py`) and swappable json/csv export providers for a practical app
+  (`parts/exporters.py`). Cataloged, filed, manifest, new plugins pattern doc. No new dependencies.
+  Maturity: beta.
 - **Hardware Store part: Test Evidence (`test-evidence`).** Record check evidence honestly: an
   `EvidenceLedger` where you `expect` checks and `record` outcomes (with environment and commit), and
   `passed()` is true only when every declared check has PASSED evidence. Missing evidence is never a

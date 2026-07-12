@@ -1,0 +1,32 @@
+part_id: plugin-registry
+name: Plugin Registry
+version: "0.1"
+maturity: beta
+purpose: >
+  Extend behavior by explicit registration: register named plugins with metadata (version,
+  capabilities), validated in; enable/disable them. It never imports or executes arbitrary code.
+source: parts/plugin_registry.py
+domain: plugins
+inputs: >
+  PluginInfo (name, version, capabilities) + an already-constructed plugin object; enable/disable
+outputs: >
+  the plugin for a name (or None if disabled/unknown); the active plugins; PluginError on misuse
+interfaces:
+  - PluginRegistry.register
+  - PluginRegistry.get
+  - PluginRegistry.enable
+  - PluginRegistry.disable
+  - PluginRegistry.active
+security: >
+  the trust boundary is explicit: the CALLER supplies the plugin object; the registry never loads or
+  executes code, and refuses a plugin missing a required capability.
+tests:
+  - tests/test_plugin_registry.py
+  - tests/test_heralds.py
+  - tests/test_exporters.py
+license: MIT
+source_status: original
+owner: MatrymLabs
+adapters:
+  - parts/heralds.py
+  - parts/exporters.py
