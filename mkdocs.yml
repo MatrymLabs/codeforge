@@ -81,6 +81,8 @@ nav:
       - ADR 0001 - canonical state: adr/0001-canonical-state.md
       - ADR 0002 - derive, don't store: adr/0002-derive-dont-store.md
       - ADR 0003 - framework-free by design: adr/0003-framework-free-by-design.md
+      - ADR 0007 - repository layout: adr/0007-repository-layout.md
+      - Repository template library: repo_templates/README.md
       - Classification system: classification/CLASSIFICATION_SYSTEM.md
       - Naming glossary: naming_glossary.md
       - Legal and policy awareness: legal_policy_awareness.md

@@ -1,0 +1,22 @@
+cff-version: 1.2.0
+message: "If you use CodeForge, please cite it as below."
+title: "CodeForge: a Python-native modular MUD engine and reusable code workshop"
+abstract: >-
+  CodeForge is a Python-native multiplayer MUD engine built as a portfolio-grade
+  workshop of small, tested, reusable parts, wrapped in a self-auditing engineering
+  stack (classification registry, quality gates, safety review, evidence rituals).
+type: software
+authors:
+  - family-names: Evans
+    given-names: Josh
+    affiliation: MatrymLabs
+repository-code: "https://github.com/MatrymLabs/codeforge"
+url: "https://github.com/MatrymLabs/codeforge"
+license: MIT
+version: "0.1.0"
+keywords:
+  - mud-engine
+  - python
+  - reusable-components
+  - software-engineering
+  - portfolio
