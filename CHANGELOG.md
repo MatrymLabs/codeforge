@@ -12,6 +12,13 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
   spiral-ascent Gate boss (the Coilwarden) is the first to use it. The passive training
   dummy is unchanged.
 
+### Changed
+- **Branch coverage + strict pytest (testing foundation).** The coverage gate now measures
+  branch coverage, not just line (`[tool.coverage.run] branch = true`, `--cov-branch`): 85%
+  floor held at 92.69% branch-inclusive. pytest now runs with `--strict-markers`,
+  `--strict-config`, and `--import-mode=importlib` so a typo'd marker or stale config fails
+  loud. No new dependencies.
+
 ## [0.1.0] - 2026-07-12
 
 First tagged release: the flagship as it stands, CI-green on `main`. Versions are
