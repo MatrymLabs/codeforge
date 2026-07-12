@@ -67,6 +67,7 @@ nav:
       - Project management: project_management.md
   - Career and evidence:
       - Career board: career_evidence_board.md
+      - Maturity scorecard: repository_maturity_scorecard.md
       - Hiring matrix: hiring_requirement_matrix.md
       - GitHub portfolio checklist: github_portfolio_checklist.md
       - Full-stack readiness: full_stack_readiness_checklist.md
