@@ -65,6 +65,12 @@ def test_empty_query_returns_nothing():
     assert search([_part("a", "validation")], "   ") == []
 
 
+def test_search_matches_an_unmapped_part_by_name():
+    # An unmapped category (domain None) is still searchable by its other fields.
+    hits = search([_part("odd", "weird", name="Oddment")], "oddment", domains=_DOMAINS)
+    assert len(hits) == 1
+
+
 def test_render_index_groups_by_domain():
     out = render_index([_part("retry", "resilience", name="Retry")], _DOMAINS)
     assert "Resilience" in out
@@ -75,6 +81,21 @@ def test_load_domains_reads_the_real_taxonomy():
     assert any(d.name == "Validation" for d in load_domains())
 
 
+def test_domains_path_honors_env_override(tmp_path, monkeypatch):
+    custom = tmp_path / "custom.yaml"
+    custom.write_text(
+        "domains:\n  - code: '01'\n    name: Validation\n    categories: [validation]\n"
+    )
+    monkeypatch.setenv("CODEFORGE_DOMAINS", str(custom))
+    assert any(d.name == "Validation" for d in load_domains())
+
+
+def test_missing_taxonomy_fails_loud(tmp_path):
+    with pytest.raises(DomainError) as err:
+        load_domains(tmp_path / "nope.yaml")
+    assert "not found" in str(err.value)
+
+
 @pytest.mark.parametrize(
     "body, needle",
     [
@@ -82,6 +103,7 @@ def test_load_domains_reads_the_real_taxonomy():
         ("nope: 1", "non-empty"),
         ("domains:\n  - name: X", "'code' and 'name'"),
         ("domains:\n  - code: '01'\n    name: A\n  - code: '01'\n    name: B", "not unique"),
+        ("domains:\n  - code: '01'\n    name: A\n    categories: notalist", "must be a list"),
         (
             "domains:\n  - code: '01'\n    name: A\n    categories: [v]\n"
             "  - code: '02'\n    name: B\n    categories: [v]",
@@ -105,3 +127,8 @@ def test_store_verb_is_tick_reachable():
 def test_store_find_searches_the_catalog():
     out = handle_command(Session(player_id="matrym", location="courtyard"), "store find retry")
     assert "retry" in out.lower()
+
+
+def test_store_find_reports_no_match():
+    out = handle_command(Session(player_id="matrym", location="courtyard"), "store find zzznomatch")
+    assert "No parts match" in out
