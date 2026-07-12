@@ -6,6 +6,15 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
 
 ## [Unreleased]
 
+### Added
+- **ARC slice 3: the ARC Chamber is a real room (the world is the interface).** Walk into the ARC
+  Chamber and `look`, and the room renders with the live ARC readiness board beneath it. Kept the
+  world data-driven: a room may declare a `dynamic:` capability in its seed (`dynamic: arc`), and the
+  engine renders that declared capability through a small panel registry - it never hard-codes a room
+  label in Python (architecture law: the world is data). New optional `dynamic` field on the Room
+  schema (additive, backward-compatible); `world.dynamic_capability` reads it; the ARC Chamber is
+  reachable from the Diagnostic Console (up/down).
+
 ### Changed
 - **ARC slice 2: the readiness verdict now reads real filed evidence.** `arc status` no longer reports
   every dimension MISSING. `filed_review` reads the six dimensions with evidence on disk (architecture

@@ -40,6 +40,12 @@ def render_room(room_id: str) -> str:
     return f"\n== {room['name']} ==\n{room['desc']}\nExits: {exits}"
 
 
+def dynamic_capability(room_id: str) -> str:
+    """The live capability a room surfaces on look (seed-declared `dynamic`), or "" for none."""
+    room = WORLD.get(room_id)
+    return room.get("dynamic", "") if room is not None else ""
+
+
 def resolve_move(location: str, direction: str) -> tuple[str, str]:
     """Pure movement: returns (new_location, message).
 

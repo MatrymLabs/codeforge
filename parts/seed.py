@@ -22,7 +22,7 @@ Location rule: operators write plain room labels in YAML
 import os
 import re
 from pathlib import Path
-from typing import Any, TypedDict
+from typing import Any, NotRequired, TypedDict
 
 import yaml
 
@@ -71,6 +71,9 @@ class Room(TypedDict):
     name: str
     desc: str
     exits: dict[str, str]
+    # Optional: a live capability this room surfaces on `look` (e.g. "arc" -> the ARC verdict).
+    # The world stays data; the engine renders a declared capability, never a hard-coded room.
+    dynamic: NotRequired[str]
 
 
 class Item(TypedDict):
@@ -232,7 +235,10 @@ def load_rooms(path: Path) -> dict[str, Room]:
             **raw,
         }
         _inspect_required_types(label, merged, (("name", str), ("desc", str), ("exits", dict)))
-        rooms[label] = Room(name=merged["name"], desc=merged["desc"], exits=merged["exits"])
+        room = Room(name=merged["name"], desc=merged["desc"], exits=merged["exits"])
+        if merged.get("dynamic"):
+            room["dynamic"] = str(merged["dynamic"])
+        rooms[label] = room
     for label, room in rooms.items():
         for direction, destination in room["exits"].items():
             if destination not in rooms:
