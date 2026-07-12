@@ -977,3 +977,55 @@
     government: "track a patch's evidence and approvals for a change-control record"
     security: "gate a CVE fix so it cannot deploy to canary before its tests pass"
     general: "any governed change record: dependency bumps, releases, config changes"
+
+- id: stream-framer
+  name: Stream Framer
+  source: parts/stream_framer.py
+  category: parsing
+  tags: [framing, stream, protocol, buffer, bytes]
+  maturity: beta
+  source_status: original
+  license: MIT
+  influence: "message framing (harvested from codeforge-client; independently implemented)"
+  experimental: >-
+    add a max-buffer guard to bound memory on a delimiter that never arrives, and a length-prefixed
+    framing mode. Traded away (v1): length-prefix and regex framing, keeping a small delimiter framer.
+  risk: low
+  reuse_score: 5
+  purpose: >
+    Frame a byte stream into complete, delimiter-terminated messages, buffering a partial tail until
+    the rest arrives, because the naive endswith check silently splits or drops messages. One core,
+    two adapters: an in-world bursty `telegraph` in the game and a byte-stream record reader for a
+    practical app.
+  reuse:
+    game: "reassemble a dispatch delivered in bursts into clean lines"
+    finance: "read delimited transaction records off a socket without splitting one"
+    government: "frame a byte stream of records for ingest, never truncating mid-record"
+    security: "frame a protocol stream so a message can't be split across reads and mis-parsed"
+    general: "any socket/pipe/protocol reader that must not split a message across reads"
+
+- id: typed-event-bus
+  name: Typed Signal Bus
+  source: parts/signal_bus.py
+  category: eventing
+  tags: [events, pubsub, decoupling, signals, observer]
+  maturity: beta
+  source_status: original
+  license: MIT
+  influence: "typed pub/sub (harvested from codeforge-client; independently implemented)"
+  experimental: >-
+    add wildcard/base-type subscriptions and a once() helper. Traded away (v1): async dispatch and
+    subscription priorities, keeping a small synchronous exact-type bus.
+  risk: low
+  reuse_score: 5
+  purpose: >
+    Decouple publishers from subscribers with a typed synchronous pub/sub: subscribe handlers by
+    exact signal type, publish a signal to them, neither side knowing the other. One core, two
+    adapters: an in-world `chime` answering a world signal in the game and a domain-event `Notifier`
+    for a practical app.
+  reuse:
+    game: "ring a chime (or any reaction) when a world signal is published"
+    finance: "fan an order/transaction event to audit, receipt, and metrics handlers"
+    government: "notify independent handlers of a record event without coupling them"
+    security: "publish a security event to multiple detectors/loggers without coupling"
+    general: "any decoupled notification: one publisher, many independent subscribers"

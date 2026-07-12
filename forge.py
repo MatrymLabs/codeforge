@@ -21,6 +21,7 @@ from parts.calibrate import calibrate
 from parts.character_view import sheet_from_session
 from parts.characters import load_character, restore_character, save_character
 from parts.chat_throttle import shout
+from parts.chime import chime
 from parts.classroom import (
     ask_question,
     demonstrated,
@@ -59,6 +60,7 @@ from parts.relay import channel
 from parts.save import awaken_snapshot, seal_snapshot
 from parts.score_sheet import render_score_sheet
 from parts.session import SESSIONS, Session, display_name, roster
+from parts.telegraph import telegraph
 from parts.titles import title
 from parts.vitals import vitals
 from parts.world import DIRECTIONS, render_room, resolve_move
@@ -72,6 +74,7 @@ HELP_TEXT = (
     "jobs, job <calling>, subjob <calling>, score, equip <item>, unequip <slot>, "
     "attack <target>, repair, scan <target>, deploy, calibrate, channel, journal [text], vitals, "
     "namecheck <name>, features, certify, heralds, title [text], maintenance, arc [status], "
+    "telegraph, chime, "
     "unlock <door> with <key>, regs [topic|id], library [id], law [id], "
     "registry [show|find|type|status], loop trace <part-id>, "
     "qa gate [all|<id>], safety review <id>, docs check, pm status, pm metrics, "
@@ -711,6 +714,10 @@ def handle_command(session: Session, signal: str) -> str:
     if routed_signal == "arc" or routed_signal.startswith("arc "):
         _, _, arc_arg = routed_signal.partition(" ")
         return arc(arc_arg)
+    if routed_signal == "telegraph":
+        return telegraph(session)
+    if routed_signal == "chime":
+        return chime(session)
     if routed_signal == "title" or routed_signal.startswith("title "):
         _, _, text = true_signal.partition(" ")
         return title(session, text)

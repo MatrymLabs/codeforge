@@ -1,0 +1,32 @@
+part_id: typed-event-bus
+name: Typed Signal Bus
+version: "0.1"
+maturity: beta
+purpose: >
+  Decouple publishers from subscribers with a typed synchronous pub/sub: subscribe handlers by exact
+  signal type, publish a signal to them, neither side knowing the other.
+source: parts/signal_bus.py
+domain: eventing
+inputs: >
+  signal types to subscribe handlers to, and Signal instances to publish
+outputs: >
+  each signal delivered to its exact-type subscribers in subscription order; a subscriber count
+interfaces:
+  - SignalBus
+  - Signal
+security: >
+  a handler that raises propagates to the publisher (synchronous, by design); wrap handlers if a
+  faulty subscriber must not break publication. No dynamic code execution.
+provenance: >
+  harvested from codeforge-client's event bus (proven there driving its state reducer), reimplemented
+  in the forge voice. Distinct from parts/events (in-world echo broadcasts). No code copied.
+tests:
+  - tests/test_signal_bus.py
+  - tests/test_chime.py
+  - tests/test_notifier.py
+license: MIT
+source_status: original
+owner: MatrymLabs
+adapters:
+  - parts/chime.py
+  - parts/notifier.py

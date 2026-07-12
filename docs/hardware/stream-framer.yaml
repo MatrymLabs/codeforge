@@ -1,0 +1,32 @@
+part_id: stream-framer
+name: Stream Framer
+version: "0.1"
+maturity: beta
+purpose: >
+  Frame a byte stream into complete, delimiter-terminated messages, buffering a partial tail until
+  the rest arrives. Exists because the naive endswith check (and endswith(b"") always True) silently
+  splits or drops messages.
+source: parts/stream_framer.py
+domain: parsing
+inputs: >
+  byte chunks fed one at a time, plus an optional delimiter (default b"\n"), encoding, and strip bytes
+outputs: >
+  complete decoded messages per feed; a buffered partial via flush; ValueError on an empty delimiter
+interfaces:
+  - StreamFramer
+security: >
+  it frames; it does not sanitize. Bound memory in production (a delimiter that never arrives grows
+  the buffer); pair with a size guard for untrusted streams.
+provenance: >
+  harvested from codeforge-client's line framer (proven there first), reimplemented as a general
+  delimiter framer. No code copied.
+tests:
+  - tests/test_stream_framer.py
+  - tests/test_telegraph.py
+  - tests/test_record_stream.py
+license: MIT
+source_status: original
+owner: MatrymLabs
+adapters:
+  - parts/telegraph.py
+  - parts/record_stream.py

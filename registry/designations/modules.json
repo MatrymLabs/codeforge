@@ -3264,5 +3264,175 @@
     "aliases": [],
     "created": "2026-07-12",
     "updated": "2026-07-12"
+  },
+  {
+    "designation": "MOD-UM05-S01-N001-055-R0",
+    "name": "stream_framer",
+    "status": "active",
+    "function": "frame a byte stream into complete messages, buffering partials",
+    "label": "stream_framer",
+    "file": "parts/stream_framer.py",
+    "type": "MOD",
+    "domain": "UM05",
+    "sector": "S01",
+    "node": "N001",
+    "sequence": "055",
+    "revision": "R0",
+    "docs": "docs/hardware_store/patterns/framing.md",
+    "tests": "tests/test_stream_framer.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "framing: any socket/pipe/protocol reader that must not split a message across reads",
+    "tags": [
+      "module"
+    ],
+    "notes": "Harvested from codeforge-client's line framer; addresses the endswith(b'') scar.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-12",
+    "updated": "2026-07-12"
+  },
+  {
+    "designation": "MOD-UM05-S01-N001-056-R0",
+    "name": "record_stream",
+    "status": "active",
+    "function": "the practical adapter for the stream framer: read records from a byte stream",
+    "label": "record_stream",
+    "file": "parts/record_stream.py",
+    "type": "MOD",
+    "domain": "UM05",
+    "sector": "S01",
+    "node": "N001",
+    "sequence": "056",
+    "revision": "R0",
+    "docs": "docs/hardware_store/patterns/framing.md",
+    "tests": "tests/test_record_stream.py",
+    "depends_on": [
+      "stream_framer"
+    ],
+    "related": [],
+    "reuse": "log tailers, protocol clients, delimited-record readers",
+    "tags": [
+      "module"
+    ],
+    "notes": "Practical life of the stream framer core.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-12",
+    "updated": "2026-07-12"
+  },
+  {
+    "designation": "MOD-UM04-S01-N001-041-R0",
+    "name": "telegraph",
+    "status": "active",
+    "function": "the game adapter for the stream framer: a dispatch that arrives in pieces",
+    "label": "telegraph",
+    "file": "parts/telegraph.py",
+    "type": "MOD",
+    "domain": "UM04",
+    "sector": "S01",
+    "node": "N001",
+    "sequence": "041",
+    "revision": "R0",
+    "docs": "docs/hardware_store/patterns/framing.md",
+    "tests": "tests/test_telegraph.py",
+    "depends_on": [
+      "stream_framer"
+    ],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "module"
+    ],
+    "notes": "The `telegraph` verb, a bursty dispatch reframed into clean lines.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-12",
+    "updated": "2026-07-12"
+  },
+  {
+    "designation": "MOD-UM05-S01-N001-057-R0",
+    "name": "signal_bus",
+    "status": "active",
+    "function": "a typed signal bus: subscribe handlers by signal type, publish to them",
+    "label": "signal_bus",
+    "file": "parts/signal_bus.py",
+    "type": "MOD",
+    "domain": "UM05",
+    "sector": "S01",
+    "node": "N001",
+    "sequence": "057",
+    "revision": "R0",
+    "docs": "docs/hardware_store/patterns/eventing.md",
+    "tests": "tests/test_signal_bus.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "eventing: decoupled typed pub/sub, one publisher many independent subscribers",
+    "tags": [
+      "module"
+    ],
+    "notes": "Harvested from codeforge-client's event bus; distinct from parts/events echo broadcasts.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-12",
+    "updated": "2026-07-12"
+  },
+  {
+    "designation": "MOD-UM05-S01-N001-058-R0",
+    "name": "notifier",
+    "status": "active",
+    "function": "the practical adapter for the signal bus: fan a domain event to handlers",
+    "label": "notifier",
+    "file": "parts/notifier.py",
+    "type": "MOD",
+    "domain": "UM05",
+    "sector": "S01",
+    "node": "N001",
+    "sequence": "058",
+    "revision": "R0",
+    "docs": "docs/hardware_store/patterns/eventing.md",
+    "tests": "tests/test_notifier.py",
+    "depends_on": [
+      "signal_bus"
+    ],
+    "related": [],
+    "reuse": "webhook fan-out, audit trails, decoupled domain-event notification",
+    "tags": [
+      "module"
+    ],
+    "notes": "Practical life of the signal bus core.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-12",
+    "updated": "2026-07-12"
+  },
+  {
+    "designation": "MOD-UM04-S01-N001-042-R0",
+    "name": "chime",
+    "status": "active",
+    "function": "the game adapter for the signal bus: a gate-chime answers a world signal",
+    "label": "chime",
+    "file": "parts/chime.py",
+    "type": "MOD",
+    "domain": "UM04",
+    "sector": "S01",
+    "node": "N001",
+    "sequence": "042",
+    "revision": "R0",
+    "docs": "docs/hardware_store/patterns/eventing.md",
+    "tests": "tests/test_chime.py",
+    "depends_on": [
+      "signal_bus"
+    ],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "module"
+    ],
+    "notes": "The `chime` verb, a subscriber ringing on a published world signal.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-12",
+    "updated": "2026-07-12"
   }
 ]
