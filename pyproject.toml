@@ -69,7 +69,16 @@ ignore_missing_imports = true
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+# Fail loud on typos, not silently: an unregistered marker or an unknown config
+# key is a mistake, not a warning. importlib import mode is the modern default
+# (no sys.path games, no __init__.py needed in tests).
+addopts = "--strict-markers --strict-config --import-mode=importlib"
 markers = ["property: Hypothesis property-based tests (run via `make property`)"]
+
+[tool.coverage.run]
+# Branch coverage, not just line: line coverage proves a line ran, branch coverage
+# proves both sides of every conditional were exercised. The stricter, honest measure.
+branch = true
 
 [tool.bandit]
 # Reviewed suppressions, each safe by design in this codebase:

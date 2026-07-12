@@ -82,7 +82,7 @@ evolution:
 # data. The suite is ~95% of check's runtime, so this is the one real speed lever. The
 # inner-loop `test`/`property` targets stay serial for readable, debuggable output.
 coverage:
-	pytest -n auto --cov=parts --cov=forge --cov-report=term-missing --cov-report=xml --cov-fail-under=85
+	pytest -n auto --cov=parts --cov=forge --cov-branch --cov-report=term-missing --cov-report=xml --cov-fail-under=85
 
 audit:
 	pip-audit --skip-editable
