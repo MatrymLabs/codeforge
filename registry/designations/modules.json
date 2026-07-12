@@ -2457,5 +2457,92 @@
     "aliases": [],
     "created": "2026-07-12",
     "updated": "2026-07-12"
+  },
+  {
+    "designation": "MOD-UM05-S01-N001-037-R0",
+    "name": "circuit_breaker",
+    "status": "active",
+    "function": "fail fast when a service is broken; test recovery after a timeout",
+    "label": "circuit_breaker",
+    "file": "parts/circuit_breaker.py",
+    "type": "MOD",
+    "domain": "UM05",
+    "sector": "S01",
+    "node": "N001",
+    "sequence": "037",
+    "revision": "R0",
+    "docs": "docs/hardware_store/patterns/resilience.md",
+    "tests": "tests/test_circuit_breaker.py",
+    "depends_on": [
+      "statemachine"
+    ],
+    "related": [],
+    "reuse": "resilience core built on the state-machine part; relay (game) + service_breaker (practical)",
+    "tags": [
+      "module"
+    ],
+    "notes": "Hardware Store part circuit-breaker; composes parts/statemachine; docs/hardware/circuit-breaker.yaml.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-12",
+    "updated": "2026-07-12"
+  },
+  {
+    "designation": "MOD-UM05-S01-N001-038-R0",
+    "name": "service_breaker",
+    "status": "active",
+    "function": "the practical adapter for the circuit breaker: per-service breakers",
+    "label": "service_breaker",
+    "file": "parts/service_breaker.py",
+    "type": "MOD",
+    "domain": "UM05",
+    "sector": "S01",
+    "node": "N001",
+    "sequence": "038",
+    "revision": "R0",
+    "docs": "docs/hardware_store/patterns/resilience.md",
+    "tests": "tests/test_service_breaker.py",
+    "depends_on": [
+      "circuit_breaker"
+    ],
+    "related": [],
+    "reuse": "per-service circuit breakers so upstreams fail independently; the practical face",
+    "tags": [
+      "module"
+    ],
+    "notes": "",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-12",
+    "updated": "2026-07-12"
+  },
+  {
+    "designation": "MOD-UM04-S01-N001-032-R0",
+    "name": "relay",
+    "status": "active",
+    "function": "the game adapter for the circuit breaker: a flaky power relay that can trip",
+    "label": "relay",
+    "file": "parts/relay.py",
+    "type": "MOD",
+    "domain": "UM04",
+    "sector": "S01",
+    "node": "N001",
+    "sequence": "032",
+    "revision": "R0",
+    "docs": "docs/hardware_store/patterns/resilience.md",
+    "tests": "tests/test_relay.py",
+    "depends_on": [
+      "circuit_breaker"
+    ],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "module"
+    ],
+    "notes": "The `channel` verb, protected by the circuit breaker.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-12",
+    "updated": "2026-07-12"
   }
 ]

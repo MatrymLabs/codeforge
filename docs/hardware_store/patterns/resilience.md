@@ -56,7 +56,29 @@ responsibility** -- the part retries, it does not make an operation safe to repe
 - **Maturity: `beta`** -- demonstrated in two contexts and tested, but not `stable` (no jitter,
   cancellation, or async yet -- deferred junctures).
 
+## The part: `circuit-breaker`
+
+`parts/circuit_breaker.py` -- the other half of the resilience family. It guards calls to a flaky
+dependency: **CLOSED** it passes calls and counts consecutive failures; at a threshold it trips to
+**OPEN** and rejects calls immediately (`CircuitOpen`, no waiting on a dead service); after a reset
+timeout it moves to **HALF_OPEN** and lets one probe through -- success closes it, failure re-opens
+it. Provenance: `independently_implemented_pattern` (Azure resilience pattern; no code copied).
+
+**Composition, not reinvention:** the three-state lifecycle IS a state machine, so the breaker is
+built ON the Hardware Store's own `state-machine` part (`parts/statemachine`) -- a part from a part.
+The manufacturing loop's assembly stage shows that real dependency. The clock is injected, so the
+trip and recovery are deterministic; a property test proves it opens exactly when a run of
+`threshold` consecutive failures occurs.
+
+- **Game:** `parts/relay.py` -- a `channel` verb draws power through a relay that trips after
+  repeated surges, then cools and re-tests. Tick-reachable.
+- **Practical:** `parts/service_breaker.py` -- `ServiceBreakers` keeps one breaker per named upstream
+  so a broken payment gateway trips independently of a slow search service.
+- Evidence: `tests/test_circuit_breaker.py`, `tests/test_relay.py`, `tests/test_service_breaker.py`;
+  manifest `docs/hardware/circuit-breaker.yaml`; `make loop PART=circuit-breaker`. Maturity `beta`.
+
 ## Deferred (needs Josh's approval)
 
-Jitter, a deadline/cancellation token, an async variant, and a **Circuit Breaker** (the other half of
-this family) are deliberate later slices, not part of this one.
+For retry: jitter, a deadline/cancellation token, an async variant. For the circuit breaker:
+half-open concurrency control, a rolling-window failure rate, and metrics hooks. All deliberate
+later slices.

@@ -1,0 +1,32 @@
+part_id: circuit-breaker
+name: Circuit Breaker
+version: "0.1"
+maturity: beta
+purpose: >
+  Fail fast when a dependency is broken: trip to OPEN after consecutive failures, reject calls
+  immediately, then probe recovery after a reset timeout. Built ON the state-machine part.
+source: parts/circuit_breaker.py
+domain: resilience
+inputs: >
+  a failure_threshold, a reset_timeout, an injected clock, and a callable to protect
+outputs: >
+  the callable's result, or CircuitOpen when the breaker is open; a current state (closed/open/half_open)
+interfaces:
+  - CircuitBreaker.call
+  - CircuitBreaker.state
+  - CircuitBreaker.allow
+dependencies:
+  - parts.statemachine
+security: >
+  no I/O and no world-state mutation of its own; it never swallows a failure (records then re-raises).
+  Not thread-safe by design; a concurrent variant is a deferred juncture.
+tests:
+  - tests/test_circuit_breaker.py
+  - tests/test_relay.py
+  - tests/test_service_breaker.py
+license: MIT
+source_status: original
+owner: MatrymLabs
+adapters:
+  - parts/relay.py
+  - parts/service_breaker.py

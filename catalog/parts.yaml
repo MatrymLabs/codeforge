@@ -741,3 +741,30 @@
     government: "resilient calls to a slow upstream registry or verification service"
     security: "bounded retries (no thundering herd); permanent auth failures never retried"
     general: "resilient API/DB/network calls with a bounded, backed-off attempt budget"
+
+- id: circuit-breaker
+  name: Circuit Breaker
+  source: parts/circuit_breaker.py
+  category: resilience
+  tags: [circuit-breaker, resilience, fail-fast, state-machine, recovery]
+  maturity: beta
+  source_status: original
+  license: MIT
+  influence: "circuit breaker pattern (Azure resilience; independently implemented on state-machine)"
+  experimental: >-
+    add half-open concurrency control, rolling-window failure rates, or metrics hooks; or reach for
+    a library (pybreaker, resilience4j). Traded away (v1): a rolling window and concurrency, keeping
+    it a deterministic consecutive-failure breaker composed on our own state-machine part.
+  risk: low
+  reuse_score: 4
+  purpose: >
+    Fail fast when a dependency is broken: trip open after consecutive failures, reject calls
+    immediately, and probe recovery after a reset timeout. Built ON the state-machine part (a part
+    from a part). One core, two adapters: it protects a flaky relay in the game and an unreliable
+    upstream service in a practical app.
+  reuse:
+    game: "a power relay that trips when it fails too often, then cools and re-tests"
+    finance: "protect a flaky payment gateway or ledger service from cascading failures"
+    government: "shield a public service from a slow or down upstream verification API"
+    security: "contain a failing dependency so one broken service cannot take the system down"
+    general: "wrap any unreliable API/DB/RPC call to fail fast and self-heal"
