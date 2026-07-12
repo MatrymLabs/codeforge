@@ -3434,5 +3434,35 @@
     "aliases": [],
     "created": "2026-07-12",
     "updated": "2026-07-12"
+  },
+  {
+    "designation": "MOD-UM10-S01-N001-024-R0",
+    "name": "harvest_lens",
+    "status": "active",
+    "function": "scan source for reusable-pattern candidates not yet in the Hardware Store",
+    "label": "harvest_lens",
+    "file": "parts/harvest_lens.py",
+    "type": "MOD",
+    "domain": "UM10",
+    "sector": "S01",
+    "node": "N001",
+    "sequence": "024",
+    "revision": "R0",
+    "docs": "docs/v3_vision_review.md",
+    "tests": "tests/test_harvest_lens.py",
+    "depends_on": [],
+    "related": [
+      "catalog",
+      "loop"
+    ],
+    "reuse": "automate Hardware Store gap analysis: detect harvestable patterns as code is written",
+    "tags": [
+      "module"
+    ],
+    "notes": "The `harvest` verb; V3 learning tool. Reads only, drafts candidates, never files.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-12",
+    "updated": "2026-07-12"
   }
 ]

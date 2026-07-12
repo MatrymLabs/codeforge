@@ -40,6 +40,7 @@ from parts.engineer import deploy_barrier, diagnostic_scan, field_repair
 from parts.equipment import equip, unequip
 from parts.events import announce, bind_echo, rename_echo, unbind_echo
 from parts.features import features
+from parts.harvest_lens import harvest
 from parts.heralds import heralds
 from parts.items import drop, inventory_text, room_items_text, take
 from parts.jobs import JOBS, bind_calling, calling_index, set_secondary
@@ -74,7 +75,7 @@ HELP_TEXT = (
     "jobs, job <calling>, subjob <calling>, score, equip <item>, unequip <slot>, "
     "attack <target>, repair, scan <target>, deploy, calibrate, channel, journal [text], vitals, "
     "namecheck <name>, features, certify, heralds, title [text], maintenance, arc [status], "
-    "telegraph, chime, "
+    "telegraph, chime, harvest, "
     "unlock <door> with <key>, regs [topic|id], library [id], law [id], "
     "registry [show|find|type|status], loop trace <part-id>, "
     "qa gate [all|<id>], safety review <id>, docs check, pm status, pm metrics, "
@@ -718,6 +719,8 @@ def handle_command(session: Session, signal: str) -> str:
         return telegraph(session)
     if routed_signal == "chime":
         return chime(session)
+    if routed_signal == "harvest":
+        return harvest()
     if routed_signal == "title" or routed_signal.startswith("title "):
         _, _, text = true_signal.partition(" ")
         return title(session, text)

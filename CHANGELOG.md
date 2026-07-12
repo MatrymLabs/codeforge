@@ -7,6 +7,15 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
 ## [Unreleased]
 
 ### Added
+- **V3 Vision Synchronization + the Harvest Lens.** A 25-part engineering review
+  (`docs/v3_vision_review.md`) re-evaluates architecture, terminology, and boundaries against the
+  settled vision: the codebase is already strongly engineering-first, so V3 is synchronization, not
+  redesign (engineering aliases for thematic names, ARC as the single review umbrella, no risky
+  re-packaging or frozen-identifier renames). It recommends one new subsystem, shipped here: the
+  **Harvest Lens** (`parts/harvest_lens.py`, the `harvest` verb) automates the Hardware Store gap
+  analysis, scanning source with `ast` for reusable-pattern signals not yet stocked and drafting
+  candidate cards. Reads only, never files. It already surfaces a real `cache` pattern recurring
+  across the parts library with no card. Filed UM10-024. No new dependencies.
 - **Hardware Store cards harvested from codeforge-client (the gap-analysis loop working).** Building
   the sibling MUD client (`codeforge-client`) exposed reusable patterns; two graduate back into the
   store as full parts. **Stream Framer (`stream-framer`):** frame a byte stream into complete,
