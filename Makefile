@@ -2,12 +2,13 @@
 
 # --- Environment: create/validate the .venv, fail loud on version mismatch.
 # Uses uv when present (a Rust resolver; measured ~20x faster than pip on this host:
-# 85s -> 4s) and falls back to plain venv+pip, so bootstrap never hard-requires uv. ---
+# 85s -> 4s) and falls back to plain venv+pip, so bootstrap never hard-requires uv.
+# With uv, `sync` installs the exact pinned graph from uv.lock (reproducible builds);
+# the pip fallback still resolves fresh -- best-effort without the resolver. ---
 env:
 	@if command -v uv >/dev/null 2>&1; then \
-		echo "→ uv found - fast env build"; \
-		uv venv .venv --clear --python 3.13; \
-		uv pip install --python .venv/bin/python -q -e ".[dev]"; \
+		echo "→ uv found - fast env build (pinned from uv.lock)"; \
+		uv sync --extra dev --python 3.13; \
 	else \
 		echo "→ uv not found (using pip). Install uv for a ~20x faster env: https://docs.astral.sh/uv/"; \
 		python3 -m venv .venv; \

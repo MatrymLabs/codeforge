@@ -20,6 +20,10 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
   toolchain, testing layers, boundary-first typing policy, and idioms policy this repo
   already practices, with APA citations to the 2021-2026 scholarly survey.
 
+- **Pinned dependency graph (`uv.lock`).** The full resolved tree (117 packages, all
+  extras) is committed; `make env` now installs the exact pinned versions via `uv sync`,
+  so any two machines build identical environments. Refresh deliberately with `uv lock`.
+
 ### Fixed
 - **Fuzz finding: platform-default file encoding.** Nine gate call sites read files with
   `read_text()` and no encoding, crashing with `UnicodeDecodeError` on Windows (cp1252)

@@ -93,8 +93,11 @@ never habits.
 ## Reproducibility
 
 `make env` builds the venv (uv-first); SQLite is the zero-config dev backend, PostgreSQL
-the production one, behind one seam. Survey guidance (p. 8) calls for lockfiles;
-adopting one is an open decision for Josh (uv.lock recommended).
+the production one, behind one seam. Per survey guidance (p. 8), the dependency graph is
+pinned in `uv.lock` (committed): with uv, `make env` installs the exact resolved versions
+(`uv sync`), so two machines building the project get identical dependency trees. The pip
+fallback still resolves fresh -- reproducibility is best-effort without the resolver.
+Refresh the pin deliberately with `uv lock`; `uv lock --check` verifies it is current.
 
 ## References (APA 7)
 
