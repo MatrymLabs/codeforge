@@ -2969,5 +2969,90 @@
     "aliases": [],
     "created": "2026-07-12",
     "updated": "2026-07-12"
+  },
+  {
+    "designation": "MOD-UM05-S01-N001-049-R0",
+    "name": "plugin_registry",
+    "status": "active",
+    "function": "extend behavior by explicit registration: no dynamic code loading",
+    "label": "plugin_registry",
+    "file": "parts/plugin_registry.py",
+    "type": "MOD",
+    "domain": "UM05",
+    "sector": "S01",
+    "node": "N001",
+    "sequence": "049",
+    "revision": "R0",
+    "docs": "docs/hardware_store/patterns/plugins.md",
+    "tests": "tests/test_plugin_registry.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "plugin core: explicit-registration registry; heralds (game) + exporters (practical)",
+    "tags": [
+      "module"
+    ],
+    "notes": "Hardware Store part plugin-registry; docs/hardware/plugin-registry.yaml.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-12",
+    "updated": "2026-07-12"
+  },
+  {
+    "designation": "MOD-UM05-S01-N001-050-R0",
+    "name": "exporters",
+    "status": "active",
+    "function": "the practical adapter for the plugin registry: pluggable export providers",
+    "label": "exporters",
+    "file": "parts/exporters.py",
+    "type": "MOD",
+    "domain": "UM05",
+    "sector": "S01",
+    "node": "N001",
+    "sequence": "050",
+    "revision": "R0",
+    "docs": "docs/hardware_store/patterns/plugins.md",
+    "tests": "tests/test_exporters.py",
+    "depends_on": [
+      "plugin_registry"
+    ],
+    "related": [],
+    "reuse": "pluggable export providers (json/csv); the practical face of the plugin registry",
+    "tags": [
+      "module"
+    ],
+    "notes": "",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-12",
+    "updated": "2026-07-12"
+  },
+  {
+    "designation": "MOD-UM04-S01-N001-038-R0",
+    "name": "heralds",
+    "status": "active",
+    "function": "the game adapter for the plugin registry: pluggable in-world heralds",
+    "label": "heralds",
+    "file": "parts/heralds.py",
+    "type": "MOD",
+    "domain": "UM04",
+    "sector": "S01",
+    "node": "N001",
+    "sequence": "038",
+    "revision": "R0",
+    "docs": "docs/hardware_store/patterns/plugins.md",
+    "tests": "tests/test_heralds.py",
+    "depends_on": [
+      "plugin_registry"
+    ],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "module"
+    ],
+    "notes": "The `heralds` verb, pluggable proclamations.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-12",
+    "updated": "2026-07-12"
   }
 ]

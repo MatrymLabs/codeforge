@@ -897,3 +897,29 @@
     government: "an audit-ready readiness record: every control, its status, never faked"
     security: "a security-gate that refuses to report ready without the scan evidence"
     general: "CI release gates, regression sign-off, and readiness checklists"
+
+- id: plugin-registry
+  name: Plugin Registry
+  source: parts/plugin_registry.py
+  category: plugins
+  tags: [plugin, registry, extension, adapter, capability]
+  maturity: beta
+  source_status: original
+  license: MIT
+  influence: "plugin/registry (explicit registration) pattern (independently implemented)"
+  experimental: >-
+    add entry-point discovery or a sandbox once untrusted plugins are in scope. Traded away
+    (deliberately): dynamic import/exec - the caller supplies the object, so the trust boundary
+    stays explicit and safe by construction.
+  risk: low
+  reuse_score: 4
+  purpose: >
+    Register named plugins with validated metadata (version, capabilities) and enable/disable them,
+    never loading arbitrary code. One core, two adapters: pluggable in-world heralds in the game and
+    swappable export providers (json/csv) in a practical app.
+  reuse:
+    game: "pluggable heralds, professions, abilities, or content modules"
+    finance: "swappable report exporters or payment-provider adapters"
+    government: "registered notification or records-export providers, capability-gated"
+    security: "extensions admitted only by explicit registration and capability checks"
+    general: "exporters, notification providers, storage backends, and integrations"
