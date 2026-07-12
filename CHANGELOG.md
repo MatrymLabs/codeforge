@@ -7,6 +7,14 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
 ## [Unreleased]
 
 ### Added
+- **Hardware Store part: Input Sanitizer (`sanitizer`).** Normalize untrusted text deterministically
+  and **idempotently** (sanitizing twice equals once, a property-tested invariant): drop control
+  characters, fold whitespace, trim, optionally lowercase, cap length. Honest scope: it normalizes,
+  it is not a security control, though it does neutralize control chars and log-injection newlines.
+  One core (`parts/sanitizer.py`), two adapters: a sanitized player `title` in the game
+  (`parts/titles.py`) and a stored/logged field cleaner for a practical app
+  (`parts/field_sanitizer.py`). Cataloged, filed, manifest, validation pattern doc extended. No new
+  dependencies. Maturity: beta.
 - **Hardware Store part: Plugin Registry (`plugin-registry`).** Extend behavior by EXPLICIT
   registration, never by loading arbitrary code: a generic `PluginRegistry[P]` that validates plugin
   metadata (a duplicate name or a missing required capability is refused), and enables/disables

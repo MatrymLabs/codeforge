@@ -1,0 +1,29 @@
+part_id: sanitizer
+name: Input Sanitizer
+version: "0.1"
+maturity: beta
+purpose: >
+  Normalize untrusted text deterministically and idempotently: drop control characters, fold
+  whitespace, trim, optionally lowercase, and cap the length.
+source: parts/sanitizer.py
+domain: validation
+inputs: >
+  a string + a SanitizeRule (strip_controls, collapse_whitespace, trim, lowercase, max_length)
+outputs: >
+  a clean, bounded string; SanitizeError on a non-string or a bad rule
+interfaces:
+  - sanitize
+  - SanitizeRule
+security: >
+  it normalizes; it is NOT a security control (not output-escaping, not crypto). Pair it with proper
+  encoding and parameterized queries. It does neutralize control chars and log-injection newlines.
+tests:
+  - tests/test_sanitizer.py
+  - tests/test_titles.py
+  - tests/test_field_sanitizer.py
+license: MIT
+source_status: original
+owner: MatrymLabs
+adapters:
+  - parts/titles.py
+  - parts/field_sanitizer.py
