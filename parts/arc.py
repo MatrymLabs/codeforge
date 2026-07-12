@@ -6,15 +6,17 @@ them into one honest overall verdict (ready | watchlist | blocked). Two load-bea
 truthful: a dimension whose gate has not been wired or has never run is MISSING, and MISSING is
 never a pass; and every dimension cites the source its status came from, never an invented one.
 
-This is slice 1 (docs `blueprints/arc.md`): the pure `compose()` core and the `arc` verb (the ARC
-Chamber panel). The ten dimensions are declared here and reported MISSING until slice 2 wires each
-to its real gate output. ARC is a reader: it mutates no state and runs no gate as a side effect
+Slice 2 (this file) wires the six dimensions that have real FILED evidence to read on disk (ADRs,
+CI + tests, pattern docs, the dependency ledger, benchmarks, security evidence); the four that are
+purely runtime (change, patch, evidence, release) have no stored verdict, so they stay MISSING -
+honestly, never faked. ARC reads only: it opens no gate and runs no check as a side effect
 (architecture law 1). The world is the interface; `arc` is the room's window.
 """
 
 from __future__ import annotations
 
 from dataclasses import dataclass
+from pathlib import Path
 
 # Per-dimension status. MISSING = no wired source yet, or a gate that never ran: never a pass.
 READY = "ready"
@@ -87,14 +89,43 @@ def compose(dimensions: list[Dimension] | tuple[Dimension, ...]) -> ArcReport:
     return ArcReport(dims, verdict)
 
 
-def _unwired_review() -> ArcReport:
-    """Slice 1: every dimension declared and reported MISSING, naming the gate slice 2 will wire."""
-    return compose(
-        [
-            Dimension(name, MISSING, f"{source} (not wired yet: slice 2)")
-            for name, source in DIMENSIONS
-        ]
-    )
+def _count(directory: Path, pattern: str) -> int:
+    """How many files match `pattern` in `directory` (0 if the directory is absent)."""
+    return len(list(directory.glob(pattern))) if directory.is_dir() else 0
+
+
+# The runtime dimensions: real capabilities, but their verdict is per-run and never stored on disk,
+# so there is nothing filed for ARC to read. Honestly MISSING, not faked.
+_RUNTIME = ("change", "patch", "evidence", "release")
+
+
+def filed_review(root: Path | None = None) -> ArcReport:
+    """Read each dimension's FILED evidence from disk and compose a verdict. Reads only."""
+    base = root if root is not None else Path(__file__).resolve().parent.parent
+    adrs = _count(base / "docs" / "adr", "*.md")
+    tests = _count(base / "tests", "test_*.py")
+    ci = (base / ".github" / "workflows" / "ci.yml").exists()
+    patterns = _count(base / "docs" / "hardware_store" / "patterns", "*.md")
+    benches = _count(base / "benchmarks", "*.py")
+    security = _count(base / "security-evidence", "*.json")
+    has_ledger = (base / "dependency_ledger.toml").exists()
+
+    def ready(ok: bool) -> str:
+        return READY if ok else MISSING
+
+    dimensions = [
+        Dimension("architecture", ready(adrs > 0), f"{adrs} ADRs on disk"),
+        Dimension("testing", ready(ci and tests > 0), f"CI workflow + {tests} test files"),
+        Dimension("documentation", ready(adrs > 0 and patterns > 0), f"{patterns} pattern docs"),
+        Dimension("dependency", ready(has_ledger), "dependency_ledger.toml"),
+        Dimension("performance", ready(benches > 0), f"{benches} benchmark files"),
+        Dimension("security", ready(security > 0), f"{security} security-evidence file(s)"),
+    ]
+    dimensions += [
+        Dimension(name, MISSING, "runtime capability; no filed verdict to read")
+        for name in _RUNTIME
+    ]
+    return compose(dimensions)
 
 
 def render(report: ArcReport) -> str:
@@ -114,5 +145,5 @@ def arc(arg: str = "") -> str:
     """The `arc` / `arc status` verb: the ARC Chamber window onto the current readiness verdict."""
     sub = arg.strip().lower()
     if sub in ("", "status"):
-        return render(_unwired_review())
+        return render(filed_review())
     return "Unknown arc action. Try: arc status"

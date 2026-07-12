@@ -13,8 +13,49 @@ from parts.arc import (
     Dimension,
     arc,
     compose,
+    filed_review,
 )
 from parts.session import Session
+
+
+def _seed_evidence(root):
+    """Create the minimal filed evidence ARC reads, under a tmp root."""
+    (root / "docs" / "adr").mkdir(parents=True)
+    (root / "docs" / "adr" / "0001-x.md").write_text("adr")
+    (root / "docs" / "hardware_store" / "patterns").mkdir(parents=True)
+    (root / "docs" / "hardware_store" / "patterns" / "p.md").write_text("pattern")
+    (root / "tests").mkdir()
+    (root / "tests" / "test_x.py").write_text("def test_x(): pass")
+    (root / ".github" / "workflows").mkdir(parents=True)
+    (root / ".github" / "workflows" / "ci.yml").write_text("name: CI")
+    (root / "benchmarks").mkdir()
+    (root / "benchmarks" / "b.py").write_text("x = 1")
+    (root / "security-evidence").mkdir()
+    (root / "security-evidence" / "s.json").write_text("{}")
+    (root / "dependency_ledger.toml").write_text("[deps]\n")
+
+
+def test_filed_review_reads_evidence_and_leaves_runtime_missing(tmp_path):
+    _seed_evidence(tmp_path)
+    status = {d.name: d.status for d in filed_review(tmp_path).dimensions}
+    assert status["architecture"] == READY
+    assert status["testing"] == READY
+    assert status["dependency"] == READY
+    assert status["security"] == READY
+    assert status["change"] == MISSING  # runtime; no filed verdict
+    assert status["release"] == MISSING
+
+
+def test_filed_review_of_an_empty_repo_is_all_missing(tmp_path):
+    report = filed_review(tmp_path)
+    assert all(d.status == MISSING for d in report.dimensions)
+    assert report.verdict == WATCHLIST  # missing is never a pass
+
+
+def test_runtime_missing_holds_the_verdict_on_watchlist(tmp_path):
+    _seed_evidence(tmp_path)
+    # Six dimensions READY, four runtime MISSING -> not READY overall.
+    assert filed_review(tmp_path).verdict == WATCHLIST
 
 
 def _dim(name: str, status: str) -> Dimension:
@@ -73,12 +114,14 @@ def test_a_status_without_a_source_fails_loud():
 # --- the verb / ARC Chamber panel ------------------------------------------
 
 
-def test_arc_status_reports_all_ten_dimensions_missing_in_slice_one():
+def test_arc_status_reports_all_ten_dimensions_with_a_mixed_verdict():
     out = arc("status")
-    assert "VERDICT: WATCHLIST" in out  # nothing wired yet, so nothing is a pass
+    # Slice 2: the runtime dimensions are still MISSING, so the whole verdict stays WATCHLIST.
+    assert "VERDICT: WATCHLIST" in out
     for name, _source in DIMENSIONS:
         assert name in out
-    assert out.count("missing") >= len(DIMENSIONS)
+    assert "ready" in out  # some dimensions now read real filed evidence
+    assert "missing" in out  # the runtime ones honestly have no filed verdict
     assert "not certification" in out  # readiness language, never certification
 
 
