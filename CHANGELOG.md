@@ -7,6 +7,16 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
 ## [Unreleased]
 
 ### Added
+- **Hardware Store cards harvested from codeforge-client (the gap-analysis loop working).** Building
+  the sibling MUD client (`codeforge-client`) exposed reusable patterns; two graduate back into the
+  store as full parts. **Stream Framer (`stream-framer`):** frame a byte stream into complete,
+  delimiter-terminated messages, buffering a partial tail (the `endswith(b"")`-is-always-True scar);
+  one core (`parts/stream_framer.py`), two adapters: a bursty in-world `telegraph`
+  (`parts/telegraph.py`) and a `RecordStream` byte-stream reader (`parts/record_stream.py`). **Typed
+  Signal Bus (`typed-event-bus`):** a typed synchronous pub/sub (`parts/signal_bus.py`, distinct from
+  the in-world echo `events`), two adapters: a world-signal `chime` (`parts/chime.py`) and a
+  domain-event `Notifier` (`parts/notifier.py`). Both cataloged, filed (UM05-055..058, UM04-041/042),
+  manifests, and two new pattern docs (framing, eventing). No new dependencies. Maturity: beta.
 - **ARC review system, slice 1 (`arc`).** ARC (Assurance, Readiness, Control) is CodeForge's
   umbrella engineering-review system, filed first as a gate-validated Blueprint (`blueprints/arc`).
   It adds no new gate: a pure `compose()` reads the ten review dimensions CodeForge already has
