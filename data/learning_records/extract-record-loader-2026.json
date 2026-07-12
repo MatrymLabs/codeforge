@@ -1,0 +1,21 @@
+{
+  "record_id": "extract-record-loader-2026",
+  "title": "Extracting a clone: what the scan finds after you DRY it up",
+  "date": "2026-07-12",
+  "what_changed": "Extracted the JSON-record load pattern the clone scan flagged (shared by blueprint and learning_record) into a new shared part, parts/record_loader.py - a generic, validator-parameterized loader (PEP 695 generics) with load_record and load_dir. Both subsystems now delegate to it; their public APIs and behavior are unchanged. Filed UM05-060.",
+  "why": "The clone scan found ~55-57 node structural duplicates of real loading logic (try/except around json.loads, the from_dict call, the sorted directory glob). Duplicated logic is a maintenance liability - a fix or a hardening has to be made in two places - and the loop's Refactor and Reuse stations say to collapse it into one shared part.",
+  "evidence": [
+    "make check green: 1111 passed; the affected twins (blueprint, learning_record, record_loader) 45 passed serially; record_loader 100% covered",
+    "Behavior preserved: same error types (BlueprintError / LearningRecordError), same 'unreadable <label> at <path>' messages, same recursive glob for blueprints and flat glob for records - so not one existing test changed",
+    "Clone scan before -> after: the ~57-node load_all clone was ELIMINATED (the bodies now differ by the recursive flag); the ~55-node load_blueprint/load_record clone shrank to a 24-node identical delegation",
+    "Net: roughly 110 nodes of duplicated LOGIC replaced by one 15-line shared part plus thin delegations"
+  ],
+  "tradeoffs": "A thin adapter that delegates to a shared core still shows up as a structural clone (the remaining 24-node load_blueprint/load_record match) - because it IS structurally identical, which is the intended DRY end-state, not duplication to remove. The clone detector measures structure, not quality, so its output is a candidate list for human judgment, never an automatic verdict. Extracting record_loader adds one small indirection to remove ~110 nodes of duplicated logic - a good trade.",
+  "future_reuse": "record_loader now has two real consumers, so it is a strong candidate to promote to a Hardware Store card (persistence/data domain) - a promotion, which is Josh's approval gate, so it is recommended not done. The other clones the scan found are the next extraction candidates: the env-override default-path pattern across db/assessment/catalog, and items/npcs trace_*.",
+  "concepts": [
+    "A clone detector measures structural similarity, not badness: two thin adapters delegating to one core legitimately match, so treat its output as candidates for judgment, not verdicts",
+    "Extracting shared logic turns N copies of a body into one core plus N thin delegations - the delegations may still 'match', but the duplicated LOGIC (the real maintenance risk) is gone",
+    "A behavior-preserving refactor keeps identical error types, messages, and semantics, so no test changes - that is how you extract safely and prove you changed structure, not behavior",
+    "Reducing duplication is safe autonomous work; promoting the extracted part to a catalogued Hardware Store card is a separate decision that needs Josh's approval"
+  ]
+}
