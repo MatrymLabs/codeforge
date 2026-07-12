@@ -7,6 +7,15 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
 ## [Unreleased]
 
 ### Added
+- **Continuous Improvement doctrine + Learning Records (the LEARN station).** A doctrine doc
+  (`docs/continuous_improvement.md`) names CodeForge's self-improving loop (Write -> Test -> Analyze ->
+  Refactor -> Compare -> Learn -> Version -> Catalog -> Reuse), mapping each station to an existing
+  part (Harvest Lens = pattern capture, ARC = analyze, the registry `-R`/`superseded_by` = version)
+  and stating the never-overwrite/v2 rule and the controlled-autonomy approval gates. The one missing
+  primitive ships with it: **Learning Records** (`parts/learning_record.py`, the `learnings` verb) -
+  validated, git-diffable knowledge capture (what changed, why, evidence, tradeoffs, future reuse,
+  concepts to understand), distinct from keel records, pioneer experiments, and postmortems. The
+  first record dogfoods the catalog-V3 lesson. Filed UM10-025. No new dependencies.
 - **Hardware Store Catalog V3 realignment (foundation).** A 24-part redesign report
   (`docs/hardware_store/catalog_v3_redesign.md`) adopts a layered identity model - permanent slug
   identity, a re-classifiable catalog address, display designation, metadata tags - which maps onto
