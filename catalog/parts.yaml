@@ -661,3 +661,29 @@
     software: "compare N implementations of one contract against an oracle plus metrics"
     education: "teach evaluator-guided search with a reproducible, inspectable run"
     general: "a human-governed bake-off: candidates in, ranked evidence out, human decides"
+
+- id: workflow-engine
+  name: Workflow Engine
+  source: parts/workflow.py
+  category: orchestration
+  tags: [workflow, state-machine, roles, lifecycle, approval]
+  maturity: beta
+  source_status: original
+  license: MIT
+  influence: "finite-state workflow / lifecycle pattern (original, built on parts/statemachine)"
+  experimental: >-
+    express it as a durable workflow engine (Temporal, Camunda, or a DB-backed state table) once
+    runs must survive a restart and span services. Traded away (v1): persistence and parallelism,
+    keeping the run in-memory and single-threaded, which keeps it pure and testable.
+  risk: low
+  reuse_score: 5
+  purpose: >
+    Drive any lifecycle defined as data: role-gated moves between states, a recorded history
+    trail, and named effects the caller applies. One core, many adapters, proven in the game as a
+    quest (parts/quest) and reused as a business onboarding workflow (parts/onboarding).
+  reuse:
+    game: "a regional quest: accept, begin, and finish a contract"
+    government: "case, permit, or clearance workflow with role-gated steps and an audit trail"
+    finance: "approval routing: who may submit, review, and sign off, recorded as evidence"
+    records: "document lifecycle: draft, review, approve, publish, archive"
+    general: "onboarding, task, incident, or project workflow from one config-driven engine"

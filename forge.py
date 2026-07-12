@@ -52,6 +52,7 @@ from parts.npcs import room_npcs_text, talk, trace_npc
 from parts.pioneer import pioneer
 from parts.pm import pm_metrics, pm_status
 from parts.qualitygate import docs_check, render_gate, render_gate_all, render_safety
+from parts.quest import quest_view
 from parts.ranks import wizard_command
 from parts.registry import (
     registry_find,
@@ -489,6 +490,8 @@ def handle_command(session: Session, signal: str) -> str:
     if routed_signal.startswith(("attack ", "kill ")):
         word = routed_signal.split(" ", 1)[1].strip()
         return attack(session, word)
+    if routed_signal == "quest" or routed_signal.startswith("quest "):
+        return quest_view(session, routed_signal.removeprefix("quest").strip())
     if routed_signal.startswith("equip "):
         return equip(session, routed_signal.split(" ", 1)[1].strip())
     if routed_signal.startswith("unequip "):

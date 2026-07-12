@@ -7,6 +7,13 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
 ## [Unreleased]
 
 ### Added
+- **The Workflow Engine (first manufacturing vertical slice).** One reusable, config-driven
+  workflow part (`parts/workflow.py`, built on the pure `statemachine`) proves the vision's
+  two-way translation: it powers a **regional quest** in the MUD (`parts/quest.py`, the `quest`
+  verb) *and* an **employee-onboarding** workflow through a plain non-game interface
+  (`parts/onboarding.py`) - same core, two adapters. Role-gated moves, a history trail, cataloged
+  in the Hardware Store (`workflow-engine`, beta), filed in the registry, documented
+  (`docs/hardware/workflow_engine.md`), and tested (unit + game + practical + a one-core proof).
 - **NPCs that fight back.** An NPC that carries a seed `atk` stat now strikes back when it
   survives a blow; a training-ground failsafe restores a felled player in place. The
   spiral-ascent Gate boss (the Coilwarden) is the first to use it. The passive training
