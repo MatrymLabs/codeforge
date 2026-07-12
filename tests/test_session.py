@@ -19,9 +19,12 @@ def fresh_world():
     doors_snap = copy.deepcopy(doors.DOORS)
     npcs_snap = copy.deepcopy(npcs.NPCS)
     yield
-    items.ITEMS = items_snap
-    doors.DOORS = doors_snap
-    npcs.NPCS = npcs_snap
+    items.ITEMS.clear()
+    items.ITEMS.update(items_snap)
+    doors.DOORS.clear()
+    doors.DOORS.update(doors_snap)
+    npcs.NPCS.clear()
+    npcs.NPCS.update(npcs_snap)
 
 
 def test_session_starts_at_the_forge_and_alive():

@@ -16,7 +16,8 @@ def fresh_world():
     npcs_snap = copy.deepcopy(npcs.NPCS)
     SESSIONS.clear()
     yield
-    npcs.NPCS = npcs_snap
+    npcs.NPCS.clear()
+    npcs.NPCS.update(npcs_snap)
     SESSIONS.clear()
 
 

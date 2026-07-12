@@ -20,8 +20,10 @@ def fresh_world():
     items_snap = copy.deepcopy(items.ITEMS)
     doors_snap = copy.deepcopy(doors.DOORS)
     yield
-    items.ITEMS = items_snap
-    doors.DOORS = doors_snap
+    items.ITEMS.clear()
+    items.ITEMS.update(items_snap)
+    doors.DOORS.clear()
+    doors.DOORS.update(doors_snap)
 
 
 def play(monkeypatch, capsys, commands: list[str]) -> str:

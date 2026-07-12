@@ -13,7 +13,8 @@ def fresh_world():
     """Snapshot NPCS before each test, restore after."""
     snapshot = copy.deepcopy(npcs.NPCS)
     yield
-    npcs.NPCS = snapshot
+    npcs.NPCS.clear()
+    npcs.NPCS.update(snapshot)
 
 
 def test_librarian_lives_in_the_library():

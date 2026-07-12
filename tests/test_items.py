@@ -13,7 +13,8 @@ def fresh_world():
     """Snapshot ITEMS before each test, restore after. No leakage."""
     snapshot = copy.deepcopy(items.ITEMS)
     yield
-    items.ITEMS = snapshot
+    items.ITEMS.clear()
+    items.ITEMS.update(snapshot)
 
 
 def test_key_starts_in_library():
