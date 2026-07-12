@@ -48,6 +48,10 @@ class PatchTracker:
         """Record passing test evidence (the gate the promotion to canary reads)."""
         self._ledger.record_test(patch_id, check)
 
+    def review_arc(self, patch_id: str, verdict: str = "watchlist") -> None:
+        """Record the ARC readiness verdict (the gate the promotion to deploy reads)."""
+        self._ledger.record_arc(patch_id, verdict)
+
     def advance(self, patch_id: str, event: str, actor: str = "*"):
         return self._ledger.advance(patch_id, event, actor=actor)
 
