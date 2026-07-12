@@ -16,6 +16,7 @@ from parts.accounts import (
     verify_password,
 )
 from parts.accounts import register as register_account
+from parts.calibrate import calibrate
 from parts.character_view import sheet_from_session
 from parts.characters import load_character, restore_character, save_character
 from parts.chat_throttle import shout
@@ -59,7 +60,7 @@ HELP_TEXT = (
     "Commands: look, go <direction> (or n/s/e/w/u/d), "
     "take, drop, inventory, talk <npc>, say <msg>, shout <msg>, name <yourname>, who, "
     "jobs, job <calling>, subjob <calling>, score, equip <item>, unequip <slot>, "
-    "attack <target>, repair, scan <target>, deploy, "
+    "attack <target>, repair, scan <target>, deploy, calibrate, "
     "unlock <door> with <key>, regs [topic|id], library [id], law [id], "
     "registry [show|find|type|status], loop trace <part-id>, "
     "qa gate [all|<id>], safety review <id>, docs check, pm status, pm metrics, "
@@ -679,6 +680,8 @@ def handle_command(session: Session, signal: str) -> str:
         return attack(session, word)
     if routed_signal == "quest" or routed_signal.startswith("quest "):
         return quest_view(session, routed_signal.removeprefix("quest").strip())
+    if routed_signal == "calibrate" or routed_signal.startswith("calibrate "):
+        return calibrate(session, routed_signal.removeprefix("calibrate").strip())
     if routed_signal.startswith("equip "):
         return equip(session, routed_signal.split(" ", 1)[1].strip())
     if routed_signal.startswith("unequip "):

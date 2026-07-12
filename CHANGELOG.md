@@ -7,6 +7,15 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
 ## [Unreleased]
 
 ### Added
+- **Hardware Store part: the Retry Policy (`retry-policy`).** Retry with exponential backoff,
+  independently implemented, framework-free and DETERMINISTIC via an injected sleep: it retries
+  transient failures, re-raises permanent ones immediately, and re-raises the final one (never
+  swallowed). A property test pins the invariants (calls never exceed the budget; one backoff
+  between tries). One core (`parts/retry.py`), two adapters: an auto-retried `calibrate` verb in
+  the game (`parts/calibrate.py`) and a `ResilientCaller` with an attempt audit trail for a
+  practical app (`parts/resilient_call.py`). Cataloged, filed, manifest, pattern doc
+  (`docs/hardware_store/patterns/resilience.md`); `make loop PART=retry-policy` traces it. No new
+  dependencies. Maturity: beta.
 - **Hardware Store part: the Token Bucket rate limiter (`token-bucket`).** A framework-free,
   deterministic rate limiter (token-bucket algorithm, independently implemented) with an
   INJECTED clock, so tests pin exact behavior and a property test proves the conservation law
