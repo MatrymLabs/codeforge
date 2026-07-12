@@ -7,6 +7,16 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
 ## [Unreleased]
 
 ### Added
+- **Holistic code analysis: complexity + clone detection (the Analyze third fold).** Grounds the
+  continuous-improvement loop's Analyze station in the code-learning research ("passing tests = good"
+  is false; add static metrics). Two stdlib-`ast` read-only tools, no new dependency: **complexity**
+  (`parts/complexity.py`, the `complexity` verb) computes McCabe cyclomatic complexity per function
+  and flags hot-spots; **clone_scan** (`parts/clone_scan.py`, the `clones` verb) fingerprints each
+  function by AST shape and finds duplicated logic the Harvest Lens's name/docstring signals miss. On
+  their first live run they flagged real hot-spots (`integrity.build_report` at 26) and a real
+  duplication (`blueprint.load_all` vs `learning_record.load_all`) that passing tests never caught.
+  Filed UM10-026/027; captured in the `holistic-code-analysis-2026` Learning Record. Neither is wired
+  into `make check` (a gate-contract change reserved for Josh).
 - **Continuous Improvement doctrine + Learning Records (the LEARN station).** A doctrine doc
   (`docs/continuous_improvement.md`) names CodeForge's self-improving loop (Write -> Test -> Analyze ->
   Refactor -> Compare -> Learn -> Version -> Catalog -> Reuse), mapping each station to an existing

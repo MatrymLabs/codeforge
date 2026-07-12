@@ -1,0 +1,21 @@
+{
+  "record_id": "holistic-code-analysis-2026",
+  "title": "Grounding the Analyze station: complexity and clone detection find what tests miss",
+  "date": "2026-07-12",
+  "what_changed": "Added two stdlib-ast static-analysis tools that ground the loop's Analyze station in the research's 'third fold': parts/complexity.py (McCabe cyclomatic complexity per function, the `complexity` verb) and parts/clone_scan.py (AST-shape structural clone detection, the `clones` verb). Both are read-only meta-tools filed UM10, wired to the tick, no catalog card (like the Harvest Lens).",
+  "why": "The code-learning research (Szych & Schwerk 2026) showed that 'passing tests = good' is false: many maintainability defects are caught only by static metrics and human review. CodeForge's gate measured correctness, lint, types, and coverage - but never complexity or duplication. This closes the two named gaps from the code-learning-research-2026 record.",
+  "evidence": [
+    "make check green: 1104 passed, 93.90% coverage; both new tools 100% covered; no new dependency (stdlib ast)",
+    "Run live, `complexity` flagged real hot-spots: integrity.build_report (26), qualitygate.run_gate (25), cli.main (21) - genuine refactor candidates",
+    "Run live, `clones` found real structural duplicates NO test caught, including blueprint.load_all vs learning_record.load_all (~57 nodes) - a duplication introduced only the previous session",
+    "cyclomatic complexity and clone shape are both computed from the AST alone, so the tools are deterministic and dependency-free"
+  ],
+  "tradeoffs": "Both are heuristics, honestly labeled: high complexity is a refactor candidate, not a failure; clone detection is reliable for syntactic and renamed (type-1/type-2) clones but not semantic ones (Zhu et al. 2025). Neither is wired into make check as a hard gate - that would be a gate-contract change reserved for Josh - so they inform, they do not block.",
+  "future_reuse": "The clones found are extraction candidates: blueprint and learning_record share a data-record load pattern (a candidate 'record loader' part), and the env-override default-path pattern recurs across db/assessment/catalog (a candidate 'default_path' helper). Metrics worth tracking over time: complexity trend per module and clone count. A maintainability-index measure would complete the third fold.",
+  "concepts": [
+    "Passing tests never proves quality: the research's tree-fold (automated tests + static metrics + human review) is exactly why ARC composes many gates rather than trusting one",
+    "Cyclomatic complexity is 1 + the count of decision points (if/for/while/except/and/or/comprehension), computable straight from the AST with no dependency",
+    "Structural clone detection fingerprints a function by its AST node types, ignoring names and literals - reliable for renamed duplicates, blind to semantic ones, so pair it with the Harvest Lens's signal-based discovery",
+    "The tool caught a duplication its own author had just introduced (load_all/load_record): concrete evidence that automated analysis catches what the writer's eye misses"
+  ]
+}
