@@ -2544,5 +2544,90 @@
     "aliases": [],
     "created": "2026-07-12",
     "updated": "2026-07-12"
+  },
+  {
+    "designation": "MOD-UM05-S01-N001-039-R0",
+    "name": "repository",
+    "status": "active",
+    "function": "the Repository pattern: a collection-like boundary over stored entities",
+    "label": "repository",
+    "file": "parts/repository.py",
+    "type": "MOD",
+    "domain": "UM05",
+    "sector": "S01",
+    "node": "N001",
+    "sequence": "039",
+    "revision": "R0",
+    "docs": "docs/hardware_store/patterns/persistence.md",
+    "tests": "tests/test_repository.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "persistence core: a typed Protocol + in-memory impl; logbook (game) + asset_registry (practical)",
+    "tags": [
+      "module"
+    ],
+    "notes": "Hardware Store part repository; docs/hardware/repository.yaml.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-12",
+    "updated": "2026-07-12"
+  },
+  {
+    "designation": "MOD-UM05-S01-N001-040-R0",
+    "name": "asset_registry",
+    "status": "active",
+    "function": "the practical adapter for the repository: a records/asset registry",
+    "label": "asset_registry",
+    "file": "parts/asset_registry.py",
+    "type": "MOD",
+    "domain": "UM05",
+    "sector": "S01",
+    "node": "N001",
+    "sequence": "040",
+    "revision": "R0",
+    "docs": "docs/hardware_store/patterns/persistence.md",
+    "tests": "tests/test_asset_registry.py",
+    "depends_on": [
+      "repository"
+    ],
+    "related": [],
+    "reuse": "storage-agnostic records/asset registry; the practical face of the repository",
+    "tags": [
+      "module"
+    ],
+    "notes": "",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-12",
+    "updated": "2026-07-12"
+  },
+  {
+    "designation": "MOD-UM04-S01-N001-033-R0",
+    "name": "logbook",
+    "status": "active",
+    "function": "the game adapter for the repository: a player's numbered logbook",
+    "label": "logbook",
+    "file": "parts/logbook.py",
+    "type": "MOD",
+    "domain": "UM04",
+    "sector": "S01",
+    "node": "N001",
+    "sequence": "033",
+    "revision": "R0",
+    "docs": "docs/hardware_store/patterns/persistence.md",
+    "tests": "tests/test_logbook.py",
+    "depends_on": [
+      "repository"
+    ],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "module"
+    ],
+    "notes": "The `journal` verb, a repository-backed logbook.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-12",
+    "updated": "2026-07-12"
   }
 ]

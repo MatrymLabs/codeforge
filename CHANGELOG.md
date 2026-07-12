@@ -7,6 +7,15 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
 ## [Unreleased]
 
 ### Added
+- **Hardware Store part: the Repository (`repository`).** The Repository pattern (Fowler),
+  independently implemented: `Repository[E, K]` is a typed, runtime-checkable **Protocol** (the
+  replaceable storage boundary) and `InMemoryRepository` is the dependency-free implementation.
+  Identity-agnostic via an injected `key_of`; misuse fails loud (`DuplicateKey`/`NotFound`); a
+  property test proves no accidental data loss. One core (`parts/repository.py`), two adapters: a
+  per-player `journal` logbook in the game (`parts/logbook.py`) and a records/asset registry for a
+  practical app (`parts/asset_registry.py`). A database repository is a later adapter satisfying the
+  same Protocol; the domain code would not change. Cataloged, filed, manifest, persistence pattern
+  doc. No new dependencies. Maturity: beta.
 - **Hardware Store part: the Circuit Breaker (`circuit-breaker`).** Fail fast when a dependency is
   broken: trip open after consecutive failures, reject calls immediately, then probe recovery after
   a reset timeout. Independently implemented and, notably, **built ON the `state-machine` part** (a

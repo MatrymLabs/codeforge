@@ -39,6 +39,7 @@ from parts.equipment import equip, unequip
 from parts.events import announce, bind_echo, rename_echo, unbind_echo
 from parts.items import drop, inventory_text, room_items_text, take
 from parts.jobs import JOBS, bind_calling, calling_index, set_secondary
+from parts.logbook import journal
 from parts.npcs import room_npcs_text, talk, trace_npc
 from parts.quest import quest_view
 from parts.ranks import wizard_command
@@ -61,7 +62,7 @@ HELP_TEXT = (
     "Commands: look, go <direction> (or n/s/e/w/u/d), "
     "take, drop, inventory, talk <npc>, say <msg>, shout <msg>, name <yourname>, who, "
     "jobs, job <calling>, subjob <calling>, score, equip <item>, unequip <slot>, "
-    "attack <target>, repair, scan <target>, deploy, calibrate, channel, "
+    "attack <target>, repair, scan <target>, deploy, calibrate, channel, journal [text], "
     "unlock <door> with <key>, regs [topic|id], library [id], law [id], "
     "registry [show|find|type|status], loop trace <part-id>, "
     "qa gate [all|<id>], safety review <id>, docs check, pm status, pm metrics, "
@@ -685,6 +686,9 @@ def handle_command(session: Session, signal: str) -> str:
         return calibrate(session, routed_signal.removeprefix("calibrate").strip())
     if routed_signal == "channel" or routed_signal.startswith("channel "):
         return channel(session, routed_signal.removeprefix("channel").strip())
+    if routed_signal == "journal" or routed_signal.startswith("journal "):
+        _, _, entry = true_signal.partition(" ")
+        return journal(session, entry)
     if routed_signal.startswith("equip "):
         return equip(session, routed_signal.split(" ", 1)[1].strip())
     if routed_signal.startswith("unequip "):

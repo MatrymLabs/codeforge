@@ -1,0 +1,34 @@
+part_id: repository
+name: Repository
+version: "0.1"
+maturity: beta
+purpose: >
+  A collection-like boundary over stored entities: a typed Protocol plus a dependency-free
+  in-memory implementation, so domain code never touches raw storage.
+source: parts/repository.py
+domain: persistence
+inputs: >
+  an injected key_of(entity) for identity; entities to add/update; keys to get/require/remove
+outputs: >
+  stored entities on get/require/list; a bool on remove; DuplicateKey/NotFound on misuse
+interfaces:
+  - Repository (Protocol)
+  - InMemoryRepository.add
+  - InMemoryRepository.get
+  - InMemoryRepository.require
+  - InMemoryRepository.update
+  - InMemoryRepository.remove
+  - InMemoryRepository.list
+security: >
+  no I/O of its own; the in-memory store holds no world state. A real database repository is a
+  later adapter satisfying the same Protocol; changing persistence architecture is Josh's juncture.
+tests:
+  - tests/test_repository.py
+  - tests/test_logbook.py
+  - tests/test_asset_registry.py
+license: MIT
+source_status: original
+owner: MatrymLabs
+adapters:
+  - parts/logbook.py
+  - parts/asset_registry.py

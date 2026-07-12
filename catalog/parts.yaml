@@ -768,3 +768,29 @@
     government: "shield a public service from a slow or down upstream verification API"
     security: "contain a failing dependency so one broken service cannot take the system down"
     general: "wrap any unreliable API/DB/RPC call to fail fast and self-heal"
+
+- id: repository
+  name: Repository
+  source: parts/repository.py
+  category: persistence
+  tags: [repository, persistence, protocol, in-memory, crud]
+  maturity: beta
+  source_status: original
+  license: MIT
+  influence: "Repository pattern (Fowler, PoEAA; independently implemented)"
+  experimental: >-
+    add a SQLAlchemy-backed repository (satisfying the same Protocol), a UnitOfWork, or async CRUD.
+    Traded away (v1): durability and transactions, keeping a pure in-memory store that domain code
+    and tests can use without a database.
+  risk: low
+  reuse_score: 5
+  purpose: >
+    Hide storage behind a small collection-like Protocol (add/get/list/remove), so domain code
+    never touches raw queries. Identity-agnostic via an injected key function. One core, two
+    adapters: a per-player logbook in the game and a records/asset registry in a practical app.
+  reuse:
+    game: "a player's logbook, a relic archive, a quest or character store"
+    records: "an asset, document, or parts registry backed by any storage"
+    finance: "a ledger-entry or transaction store behind a swappable backend"
+    government: "a case or record repository; the domain stays storage-agnostic"
+    general: "any CRUD collection with a swappable in-memory or database backend"
