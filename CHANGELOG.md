@@ -24,6 +24,12 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
   extras) is committed; `make env` now installs the exact pinned versions via `uv sync`,
   so any two machines build identical environments. Refresh deliberately with `uv lock`.
 
+- **EXP-005: lazy command seams (-29% cold startup).** Twenty command-only modules
+  (evolution lab, frameup, console, foundry, qualitygate, pm, career, and the long tail)
+  no longer load at `import forge`; each verb imports its module on first use. PC startup
+  95.8 ms -> 68.4 ms, hot paths unchanged. EXP-006 (parallel `make check`) measured and
+  honestly REJECTED: 0.3 s gain inside noise. Cards in docs/performance_experiments.md.
+
 ### Fixed
 - **Fuzz finding: platform-default file encoding.** Nine gate call sites read files with
   `read_text()` and no encoding, crashing with `UnicodeDecodeError` on Windows (cp1252)

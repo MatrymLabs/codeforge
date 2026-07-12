@@ -16,9 +16,6 @@ from parts.accounts import (
     verify_password,
 )
 from parts.accounts import register as register_account
-from parts.architect import consult
-from parts.blueprint import blueprint
-from parts.career import career
 from parts.character_view import sheet_from_session
 from parts.characters import load_character, restore_character, save_character
 from parts.classroom import (
@@ -34,26 +31,13 @@ from parts.classroom import (
 )
 from parts.combat import attack
 from parts.commands import ADMIN, CORE, Command, CommandSet
-from parts.console import console_menu, diagnostics_view, run_view
 from parts.doors import unlock
 from parts.engineer import deploy_barrier, diagnostic_scan, field_repair
 from parts.equipment import equip, unequip
 from parts.events import announce, bind_echo, rename_echo, unbind_echo
-from parts.evolution.command import evolution
-from parts.foundry import arch_command, forge_command
-from parts.frameup import inspect
-from parts.functions import functions
-from parts.generate import system_generate
 from parts.items import drop, inventory_text, room_items_text, take
 from parts.jobs import JOBS, bind_calling, calling_index, set_secondary
-from parts.law import law
-from parts.library import library
-from parts.loop import render_trace
-from parts.loop import trace as loop_trace
 from parts.npcs import room_npcs_text, talk, trace_npc
-from parts.pioneer import pioneer
-from parts.pm import pm_metrics, pm_status
-from parts.qualitygate import docs_check, render_gate, render_gate_all, render_safety
 from parts.quest import quest_view
 from parts.ranks import wizard_command
 from parts.registry import (
@@ -63,13 +47,9 @@ from parts.registry import (
     registry_status,
     registry_type,
 )
-from parts.regulations import regs
 from parts.save import awaken_snapshot, seal_snapshot
 from parts.score_sheet import render_score_sheet
 from parts.session import SESSIONS, Session, display_name, roster
-from parts.terminal import terminal
-from parts.veritas import render_truth
-from parts.workshop import catalog_view, reuse_search, workshop_menu
 from parts.world import DIRECTIONS, render_room, resolve_move
 
 NAME_RE = re.compile(r"^[a-z][a-z0-9_]{1,15}$")
@@ -87,6 +67,176 @@ HELP_TEXT = (
     "security, ai <prompt>, lesson list, question, answer <A-D>, hint, progress, achievements, "
     "passwd, save, load, quit"
 )
+
+
+# --- Lazy command seams (EXP-004) -------------------------------------------
+# These verbs run at most once per player command, but their modules were paying
+# import cost on EVERY engine start. Command lambdas resolve module globals at
+# CALL time, so each wrapper below defers its module until the verb is first
+# used. Measured on the five-journey harness (docs/performance.md); the tick's
+# hot path (look/move/combat/session) keeps its eager imports.
+
+
+def consult(prompt: str) -> str:
+    from parts.architect import consult as run
+
+    return run(prompt)
+
+
+def blueprint(arg: str = "") -> str:
+    from parts.blueprint import blueprint as run
+
+    return run(arg)
+
+
+def career(arg: str = "", demonstrated: dict[str, int] | None = None) -> str:
+    from parts.career import career as run
+
+    return run(arg, demonstrated=demonstrated)
+
+
+def console_menu() -> str:
+    from parts.console import console_menu as run
+
+    return run()
+
+
+def diagnostics_view() -> str:
+    from parts.console import diagnostics_view as run
+
+    return run()
+
+
+def run_view(name: str) -> str:
+    from parts.console import run_view as run
+
+    return run(name)
+
+
+def evolution(arg: str = "") -> str:
+    from parts.evolution.command import evolution as run
+
+    return run(arg)
+
+
+def forge_command(session: Session, arg: str) -> str:
+    from parts.foundry import forge_command as run
+
+    return run(session, arg)
+
+
+def arch_command(session: Session, arg: str) -> str:
+    from parts.foundry import arch_command as run
+
+    return run(session, arg)
+
+
+def inspect(arg: str = "") -> str:
+    from parts.frameup import inspect as run
+
+    return run(arg)
+
+
+def functions(arg: str = "") -> str:
+    from parts.functions import functions as run
+
+    return run(arg)
+
+
+def system_generate(session: Session, arg: str) -> str:
+    from parts.generate import system_generate as run
+
+    return run(session, arg)
+
+
+def law(arg: str = "") -> str:
+    from parts.law import law as run
+
+    return run(arg)
+
+
+def library(arg: str = "") -> str:
+    from parts.library import library as run
+
+    return run(arg)
+
+
+def pioneer(arg: str = "") -> str:
+    from parts.pioneer import pioneer as run
+
+    return run(arg)
+
+
+def pm_metrics() -> str:
+    from parts.pm import pm_metrics as run
+
+    return run()
+
+
+def pm_status() -> str:
+    from parts.pm import pm_status as run
+
+    return run()
+
+
+def docs_check() -> str:
+    from parts.qualitygate import docs_check as run
+
+    return run()
+
+
+def render_gate(arg: str) -> str:
+    from parts.qualitygate import render_gate as run
+
+    return run(arg)
+
+
+def render_gate_all() -> str:
+    from parts.qualitygate import render_gate_all as run
+
+    return run()
+
+
+def render_safety(arg: str) -> str:
+    from parts.qualitygate import render_safety as run
+
+    return run(arg)
+
+
+def regs(arg: str = "") -> str:
+    from parts.regulations import regs as run
+
+    return run(arg)
+
+
+def terminal(arg: str = "") -> str:
+    from parts.terminal import terminal as run
+
+    return run(arg)
+
+
+def render_truth() -> str:
+    from parts.veritas import render_truth as run
+
+    return run()
+
+
+def catalog_view() -> str:
+    from parts.workshop import catalog_view as run
+
+    return run()
+
+
+def reuse_search(term: str = "") -> str:
+    from parts.workshop import reuse_search as run
+
+    return run(term)
+
+
+def workshop_menu() -> str:
+    from parts.workshop import workshop_menu as run
+
+    return run()
 
 
 def _build_commands() -> CommandSet:
@@ -334,8 +484,9 @@ def _loop_trace_handler(arg: str) -> str:
     part_id = arg.strip()
     if not part_id:
         return "Usage: loop trace <part-id>\n  Example: loop trace workflow-engine"
-    report = loop_trace(part_id)
-    return render_trace(report)
+    from parts.loop import render_trace, trace
+
+    return render_trace(trace(part_id))
 
 
 COMMANDS = _build_commands()
