@@ -714,3 +714,30 @@
     government: "request throttling on public-facing services; fair-use governance"
     security: "brute-force login-attempt limiting per account or IP"
     general: "any 'N per window with bursts' limiter: APIs, email sends, job submission"
+
+- id: retry-policy
+  name: Retry Policy
+  source: parts/retry.py
+  category: resilience
+  tags: [retry, backoff, resilience, transient-fault, recovery]
+  maturity: beta
+  source_status: original
+  license: MIT
+  influence: "retry with exponential backoff (AWS Prescriptive Guidance; independently implemented)"
+  experimental: >-
+    add jitter, a deadline/cancellation token, or an async variant once workloads need them, or
+    reach for a library like tenacity. Traded away (v1): jitter and cancellation, keeping the core
+    pure, deterministic (injected sleep), and dependency-free.
+  risk: low
+  reuse_score: 4
+  purpose: >
+    Retry transient failures with exponential backoff, re-raise permanent ones and the final one
+    (never swallowed). The sleep is injected, so the schedule and attempt count are deterministic.
+    One core, two adapters: it auto-retries a flaky calibration in the game and an unreliable
+    API/DB call in a practical app, with an attempt audit trail.
+  reuse:
+    game: "auto-retry a flaky calibration, asset load, or persistence write"
+    finance: "retry a transient payment-gateway or ledger-service call, recorded as evidence"
+    government: "resilient calls to a slow upstream registry or verification service"
+    security: "bounded retries (no thundering herd); permanent auth failures never retried"
+    general: "resilient API/DB/network calls with a bounded, backed-off attempt budget"

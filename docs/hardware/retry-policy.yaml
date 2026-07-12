@@ -1,0 +1,31 @@
+part_id: retry-policy
+name: Retry Policy
+version: "0.1"
+maturity: beta
+purpose: >
+  Retry with exponential backoff: retry transient failures, re-raise permanent ones and the
+  final one (never swallowed). A deterministic, framework-free retry core with an injected sleep.
+source: parts/retry.py
+domain: resilience
+inputs: >
+  a RetryPolicy (max_attempts, base_delay, factor, max_delay, retry_on) + a callable + an
+  injected sleep + an optional on_retry callback
+outputs: >
+  the callable's result, or the last exception re-raised; an Attempt history via on_retry
+interfaces:
+  - RetryPolicy.is_transient
+  - RetryPolicy.delay_for
+  - run_with_retries
+security: >
+  no I/O and no world-state mutation of its own; it never swallows a failure. The caller is
+  responsible for idempotency of the retried operation.
+tests:
+  - tests/test_retry.py
+  - tests/test_calibrate.py
+  - tests/test_resilient_call.py
+license: MIT
+source_status: original
+owner: MatrymLabs
+adapters:
+  - parts/calibrate.py
+  - parts/resilient_call.py
