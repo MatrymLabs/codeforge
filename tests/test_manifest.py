@@ -2,7 +2,14 @@
 
 import pytest
 
-from parts.manifest import ManifestError, PartManifest, find_manifest, from_dict, to_dict, to_markdown
+from parts.manifest import (
+    ManifestError,
+    PartManifest,
+    find_manifest,
+    from_dict,
+    to_dict,
+    to_markdown,
+)
 
 
 def _valid_raw():

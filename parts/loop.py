@@ -85,7 +85,11 @@ def _stage_registry(part_id: str, root: Path, manifest: object) -> StageResult:
     registry_dir = root / "registry" / "designations"
     collective = load_collective(registry_dir)
     # match by the manifest's source field (authoritative), falling back to part_id
-    source_file = manifest.source if isinstance(manifest, PartManifest) else f"parts/{part_id.replace('-', '_')}.py"
+    source_file = (
+        manifest.source
+        if isinstance(manifest, PartManifest)
+        else f"parts/{part_id.replace('-', '_')}.py"
+    )
     matched = [d for d in collective if getattr(d, "file", "") == source_file]
     if not matched:
         return StageResult("registry", "fail", f"no designation for {source_file}")
@@ -95,7 +99,7 @@ def _stage_registry(part_id: str, root: Path, manifest: object) -> StageResult:
 
 def _stage_assembly(manifest: object, root: Path) -> tuple[StageResult, object]:
     """Stage 5: discover dependencies and compose the assembly."""
-    from parts.assembly import AssemblyError, assemble, render_assembly
+    from parts.assembly import AssemblyError, assemble
     from parts.manifest import PartManifest
 
     if not isinstance(manifest, PartManifest):
@@ -104,7 +108,10 @@ def _stage_assembly(manifest: object, root: Path) -> tuple[StageResult, object]:
         asm = assemble(manifest, root=root)
     except AssemblyError as exc:
         return StageResult("assembly", "fail", str(exc)), None
-    summary = f"{len(asm.source_files)} sources, {len(asm.discovered_imports)} imports, {len(asm.resolved_parts)} catalog parts"
+    summary = (
+        f"{len(asm.source_files)} sources, {len(asm.discovered_imports)} imports, "
+        f"{len(asm.resolved_parts)} catalog parts"
+    )
     return StageResult("assembly", "pass", summary), asm
 
 
@@ -174,7 +181,9 @@ def trace(part_id: str, root: Path | None = None, stamp: str | None = None) -> T
     stages.append(_stage_docs(part_id, base))
 
     # File assembly evidence if we got one
-    if assembly is not None:
+    from parts.assembly import Assembly
+
+    if isinstance(assembly, Assembly):
         file_evidence(assembly, root=base)
 
     # Verdict: pass if no failures

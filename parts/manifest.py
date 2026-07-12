@@ -11,7 +11,7 @@ A malformed manifest fails loud at load -- a bad part is never traced.
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
@@ -21,7 +21,17 @@ from parts import loader_cache
 
 _REQUIRED = ("part_id", "name", "version", "maturity", "purpose", "source", "domain")
 _MATURITY = ("prototype", "beta", "shipped")
-_SOURCE_STATUS = ("original", "stdlib", "public-domain", "cc0", "unlicense", "0bsd", "mit", "bsd", "apache-2.0")
+_SOURCE_STATUS = (
+    "original",
+    "stdlib",
+    "public-domain",
+    "cc0",
+    "unlicense",
+    "0bsd",
+    "mit",
+    "bsd",
+    "apache-2.0",
+)
 
 _ROOT = Path(__file__).resolve().parent.parent
 
@@ -115,8 +125,8 @@ def to_markdown(manifest: PartManifest) -> str:
     lines = [
         f"# Part Manifest: {manifest.name}",
         "",
-        f"| Field | Value |",
-        f"|---|---|",
+        "| Field | Value |",
+        "|---|---|",
         f"| **part_id** | `{manifest.part_id}` |",
         f"| **name** | {manifest.name} |",
         f"| **version** | {manifest.version} ({manifest.maturity}) |",
@@ -132,7 +142,9 @@ def to_markdown(manifest: PartManifest) -> str:
         lines.append(f"| **tests** | `{'`, `'.join(manifest.tests)}` |")
     if manifest.adapters:
         lines.append(f"| **adapters** | `{'`, `'.join(manifest.adapters)}` |")
-    lines.append(f"| **license** | {manifest.license} | **source_status** | {manifest.source_status} |")
+    lines.append(
+        f"| **license** | {manifest.license} | **source_status** | {manifest.source_status} |"
+    )
     lines.append("")
     return "\n".join(lines) + "\n"
 

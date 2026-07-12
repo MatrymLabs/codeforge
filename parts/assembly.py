@@ -16,7 +16,7 @@ from dataclasses import dataclass
 from datetime import date
 from pathlib import Path
 
-from parts.hardware import Part, find_part, load_catalog
+from parts.hardware import Part, load_catalog
 from parts.manifest import PartManifest
 from parts.reporting import write_report
 
@@ -57,10 +57,9 @@ def discover_imports(source_path: Path) -> list[str]:
             for alias in node.names:
                 if alias.name.startswith("parts."):
                     modules.add(alias.name.split(".")[0] + "." + alias.name.split(".")[1])
-        elif isinstance(node, ast.ImportFrom):
-            if node.module and node.module.startswith("parts."):
-                parts = node.module.split(".")
-                modules.add(parts[0] + "." + parts[1])
+        elif isinstance(node, ast.ImportFrom) and node.module and node.module.startswith("parts."):
+            parts = node.module.split(".")
+            modules.add(parts[0] + "." + parts[1])
     return sorted(modules)
 
 
