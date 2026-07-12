@@ -7,6 +7,14 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
 ## [Unreleased]
 
 ### Added
+- **ARC review system, slice 1 (`arc`).** ARC (Assurance, Readiness, Control) is CodeForge's
+  umbrella engineering-review system, filed first as a gate-validated Blueprint (`blueprints/arc`).
+  It adds no new gate: a pure `compose()` reads the ten review dimensions CodeForge already has
+  (architecture, testing, documentation, dependency, performance, security, change, patch, evidence,
+  release) and returns one honest verdict (`ready | watchlist | blocked`). Two load-bearing rules: a
+  MISSING dimension is never a pass, and every status cites its source. The `arc status` verb is the
+  ARC Chamber window (tick-reachable); slice 1 reports every dimension MISSING until slice 2 wires
+  each gate. Filed UM10-023. No new dependencies. Readiness, never certification.
 - **Hardware Store part: Change Ledger (`change-ledger`).** The first slice of the Software Evolution
   Engine (research: patch/change management). Record a `Change` (id, kind, severity, optional CVEs,
   components, rollback plan) and drive it through a **role-gated, evidence-gated** lifecycle
