@@ -2884,5 +2884,90 @@
     "aliases": [],
     "created": "2026-07-12",
     "updated": "2026-07-12"
+  },
+  {
+    "designation": "MOD-UM05-S01-N001-047-R0",
+    "name": "test_evidence",
+    "status": "active",
+    "function": "record check evidence honestly: missing evidence is never a pass",
+    "label": "test_evidence",
+    "file": "parts/test_evidence.py",
+    "type": "MOD",
+    "domain": "UM05",
+    "sector": "S01",
+    "node": "N001",
+    "sequence": "047",
+    "revision": "R0",
+    "docs": "docs/hardware_store/patterns/testing.md",
+    "tests": "tests/test_test_evidence.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "evidence core: honest quality gate; world_cert (game) + release_gate (practical)",
+    "tags": [
+      "module"
+    ],
+    "notes": "Hardware Store part test-evidence; docs/hardware/test-evidence.yaml.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-12",
+    "updated": "2026-07-12"
+  },
+  {
+    "designation": "MOD-UM05-S01-N001-048-R0",
+    "name": "release_gate",
+    "status": "active",
+    "function": "the practical adapter for test evidence: a release-readiness gate",
+    "label": "release_gate",
+    "file": "parts/release_gate.py",
+    "type": "MOD",
+    "domain": "UM05",
+    "sector": "S01",
+    "node": "N001",
+    "sequence": "048",
+    "revision": "R0",
+    "docs": "docs/hardware_store/patterns/testing.md",
+    "tests": "tests/test_release_gate.py",
+    "depends_on": [
+      "test_evidence"
+    ],
+    "related": [],
+    "reuse": "CI release-readiness gate; the practical face of test evidence",
+    "tags": [
+      "module"
+    ],
+    "notes": "",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-12",
+    "updated": "2026-07-12"
+  },
+  {
+    "designation": "MOD-UM04-S01-N001-037-R0",
+    "name": "world_cert",
+    "status": "active",
+    "function": "the game adapter for test evidence: a world-readiness certificate",
+    "label": "world_cert",
+    "file": "parts/world_cert.py",
+    "type": "MOD",
+    "domain": "UM04",
+    "sector": "S01",
+    "node": "N001",
+    "sequence": "037",
+    "revision": "R0",
+    "docs": "docs/hardware_store/patterns/testing.md",
+    "tests": "tests/test_world_cert.py",
+    "depends_on": [
+      "test_evidence"
+    ],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "module"
+    ],
+    "notes": "The `certify` verb, a world-readiness certificate.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-12",
+    "updated": "2026-07-12"
   }
 ]

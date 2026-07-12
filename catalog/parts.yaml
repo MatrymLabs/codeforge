@@ -872,3 +872,28 @@
     government: "gate a new public feature behind a controlled rollout switch"
     security: "an emergency kill switch to disable a risky feature immediately"
     general: "A/B tests, canary releases, and operational on/off switches"
+
+- id: test-evidence
+  name: Test Evidence
+  source: parts/test_evidence.py
+  category: testing
+  tags: [evidence, quality-gate, ci, readiness, testing]
+  maturity: beta
+  source_status: original
+  license: MIT
+  influence: "test evidence / quality gate (independently implemented)"
+  experimental: >-
+    add timestamps, artifact hashes, or a JUnit ingester. Traded away (v1): time and artifacts,
+    keeping a deterministic ledger whose only rule is that missing evidence is never a pass.
+  risk: low
+  reuse_score: 4
+  purpose: >
+    Record check evidence with its environment and commit; pass only when every declared check has
+    PASSED evidence, so a step that never ran can never be reported ready. One core, two adapters: a
+    world-readiness certificate in the game and a release-readiness gate in a practical app.
+  reuse:
+    game: "certify a world/ruleset is ready; show which checks are missing or failing"
+    finance: "sign-off evidence for a change, with gaps visible and dated"
+    government: "an audit-ready readiness record: every control, its status, never faked"
+    security: "a security-gate that refuses to report ready without the scan evidence"
+    general: "CI release gates, regression sign-off, and readiness checklists"

@@ -58,6 +58,7 @@ from parts.score_sheet import render_score_sheet
 from parts.session import SESSIONS, Session, display_name, roster
 from parts.vitals import vitals
 from parts.world import DIRECTIONS, render_room, resolve_move
+from parts.world_cert import certify
 
 NAME_RE = re.compile(r"^[a-z][a-z0-9_]{1,15}$")
 
@@ -66,7 +67,7 @@ HELP_TEXT = (
     "take, drop, inventory, talk <npc>, say <msg>, shout <msg>, name <yourname>, who, "
     "jobs, job <calling>, subjob <calling>, score, equip <item>, unequip <slot>, "
     "attack <target>, repair, scan <target>, deploy, calibrate, channel, journal [text], vitals, "
-    "namecheck <name>, features, "
+    "namecheck <name>, features, certify, "
     "unlock <door> with <key>, regs [topic|id], library [id], law [id], "
     "registry [show|find|type|status], loop trace <part-id>, "
     "qa gate [all|<id>], safety review <id>, docs check, pm status, pm metrics, "
@@ -697,6 +698,8 @@ def handle_command(session: Session, signal: str) -> str:
         return vitals(session)
     if routed_signal == "features":
         return features(session)
+    if routed_signal == "certify":
+        return certify(session)
     if routed_signal == "namecheck" or routed_signal.startswith("namecheck "):
         return name_check(session, routed_signal.removeprefix("namecheck").strip())
     if routed_signal.startswith("equip "):
