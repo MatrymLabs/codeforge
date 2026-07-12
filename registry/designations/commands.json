@@ -675,7 +675,7 @@
     "node": "N001",
     "sequence": "023",
     "revision": "R0",
-    "docs": "",
+    "docs": "docs/manufacturing_loop.md",
     "tests": "tests/test_loop.py",
     "depends_on": [],
     "related": [
@@ -706,7 +706,7 @@
     "node": "N001",
     "sequence": "024",
     "revision": "R0",
-    "docs": "",
+    "docs": "docs/manufacturing_loop.md",
     "tests": "tests/test_loop.py",
     "depends_on": [],
     "related": [
