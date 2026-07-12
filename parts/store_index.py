@@ -10,7 +10,6 @@ numbers are filing aids (parts/catalog.py). It reads only; it never renumbers or
 
 from __future__ import annotations
 
-import os
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -19,6 +18,7 @@ import yaml
 
 from parts import loader_cache
 from parts.hardware import Part, load_catalog
+from parts.paths import resolved_path
 
 _UNFILED = "00"
 
@@ -37,10 +37,9 @@ class Domain:
 
 
 def _domains_path() -> Path:
-    override = os.environ.get("CODEFORGE_DOMAINS")
-    if override:
-        return Path(override).expanduser()
-    return Path(__file__).resolve().parent.parent / "catalog" / "domains.yaml"
+    return resolved_path(
+        "CODEFORGE_DOMAINS", Path(__file__).resolve().parent.parent / "catalog" / "domains.yaml"
+    )
 
 
 def _parse_domains(source: Path) -> list[Domain]:

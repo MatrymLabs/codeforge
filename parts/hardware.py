@@ -12,7 +12,6 @@ catalog has zero side effects (no seed load, no world boot).
 
 from __future__ import annotations
 
-import os
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
@@ -20,6 +19,7 @@ from typing import Any
 import yaml
 
 from parts import loader_cache
+from parts.paths import resolved_path
 
 _REQUIRED = ("id", "name", "source", "category", "purpose", "maturity", "risk", "reuse")
 # "shipped" reads as its own definition (shipped + tested on main) -- no out-of-context
@@ -44,10 +44,9 @@ _SOURCE_STATUS = (
 def _default_catalog_path() -> Path:
     """Where the catalog lives -- resolved at call time so tests can point
     CODEFORGE_CATALOG at a fixture (default args evaluate at def time)."""
-    override = os.environ.get("CODEFORGE_CATALOG")
-    if override:
-        return Path(override).expanduser()
-    return Path(__file__).resolve().parent.parent / "catalog" / "parts.yaml"
+    return resolved_path(
+        "CODEFORGE_CATALOG", Path(__file__).resolve().parent.parent / "catalog" / "parts.yaml"
+    )
 
 
 @dataclass(frozen=True)

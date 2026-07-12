@@ -9,12 +9,13 @@ loud at load, and nothing here has side effects.
 
 from __future__ import annotations
 
-import os
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
 import yaml
+
+from parts.paths import resolved_path
 
 CHOICES = ("A", "B", "C", "D")
 _REQUIRED = ("id", "prompt", "choices", "correct", "hint", "explanation")
@@ -23,10 +24,7 @@ _REQUIRED = ("id", "prompt", "choices", "correct", "hint", "explanation")
 def _default_lessons_dir() -> Path:
     """Where lesson banks live -- resolved at call time so tests can point
     CODEFORGE_LESSONS at a fixture."""
-    override = os.environ.get("CODEFORGE_LESSONS")
-    if override:
-        return Path(override).expanduser()
-    return Path(__file__).resolve().parent.parent / "lessons"
+    return resolved_path("CODEFORGE_LESSONS", Path(__file__).resolve().parent.parent / "lessons")
 
 
 @dataclass(frozen=True)
