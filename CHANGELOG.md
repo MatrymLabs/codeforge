@@ -7,6 +7,14 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
 ## [Unreleased]
 
 ### Added
+- **Hardware Store part: Test Evidence (`test-evidence`).** Record check evidence honestly: an
+  `EvidenceLedger` where you `expect` checks and `record` outcomes (with environment and commit), and
+  `passed()` is true only when every declared check has PASSED evidence. Missing evidence is never a
+  pass (a step that never ran can't be reported ready), and a runner ERROR is distinct from a test
+  FAILED. One core (`parts/test_evidence.py`), two adapters: a `certify` world-readiness certificate
+  in the game (`parts/world_cert.py`) and a `ReleaseGate` for a practical app
+  (`parts/release_gate.py`). Property test pins passed iff all passed. Cataloged, filed, manifest,
+  new testing pattern doc. No new dependencies. Maturity: beta.
 - **Hardware Store part: Feature Flags (`feature-flags`).** Toggle features at runtime without a
   redeploy: a `FlagRegistry` of named flags with defaults, an override that beats the default, reset,
   and retirement; an unknown flag is an error (never silently off) and flags default off. One core

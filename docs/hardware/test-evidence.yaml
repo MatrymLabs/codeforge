@@ -1,0 +1,32 @@
+part_id: test-evidence
+name: Test Evidence
+version: "0.1"
+maturity: beta
+purpose: >
+  Record check evidence honestly: declare required checks, record each outcome with its environment
+  and commit, and pass only when every check has PASSED evidence. Missing evidence is never a pass.
+source: parts/test_evidence.py
+domain: testing
+inputs: >
+  expected check ids; recorded outcomes (passed/failed/error/skipped) with detail; an environment and commit
+outputs: >
+  a list of Evidence; passed(); gaps(); a report. EvidenceError on an unrecordable status
+interfaces:
+  - EvidenceLedger.expect
+  - EvidenceLedger.record
+  - EvidenceLedger.results
+  - EvidenceLedger.passed
+  - EvidenceLedger.gaps
+security: >
+  no I/O of its own; it stores only what is recorded. A runner ERROR is distinct from a check that
+  FAILED, and a missing check is never reported as passed.
+tests:
+  - tests/test_test_evidence.py
+  - tests/test_world_cert.py
+  - tests/test_release_gate.py
+license: MIT
+source_status: original
+owner: MatrymLabs
+adapters:
+  - parts/world_cert.py
+  - parts/release_gate.py
