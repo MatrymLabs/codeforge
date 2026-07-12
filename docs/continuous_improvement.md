@@ -101,12 +101,18 @@ Learning Record). What the code-learning literature says, and how it shapes the 
 - **Visual and tangible learning wins** (Scherer et al. 2020, meta-analysis, g~0.81). The world is
   the interface: execution traces, state diagrams, and game maps are pedagogy, not decoration.
 
-Named gaps the research surfaces (candidates, gated on evidence and Josh's go):
+Named gaps the research surfaced, now **shipped** (the `holistic-code-analysis-2026` Learning Record):
 
-1. **Holistic quality metrics** - an AST-based cyclomatic-complexity / duplication tool that grounds
-   the Analyze station's third fold (stdlib-only; no new dependency).
-2. **Clone / near-duplicate detection** - structural hashing to strengthen the Harvest Lens beyond
-   name/docstring signals.
+1. **Holistic quality metrics** - `parts/complexity.py` (the `complexity` verb): McCabe cyclomatic
+   complexity per function from the AST, flagging hot-spots - the Analyze station's third fold. No
+   new dependency.
+2. **Clone / near-duplicate detection** - `parts/clone_scan.py` (the `clones` verb): structural AST
+   shape hashing that finds duplicated logic the Harvest Lens's name/docstring signals cannot. On its
+   first live run it caught a real duplication (`blueprint.load_all` vs `learning_record.load_all`)
+   that passing tests never flagged.
+
+Both are read-only tools that inform; wiring either into `make check` as a hard gate is a
+gate-contract change reserved for Josh.
 
 ## The Continuous Improvement Report
 

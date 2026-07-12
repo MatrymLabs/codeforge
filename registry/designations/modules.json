@@ -3529,5 +3529,65 @@
     "aliases": [],
     "created": "2026-07-12",
     "updated": "2026-07-12"
+  },
+  {
+    "status": "active",
+    "type": "MOD",
+    "domain": "UM10",
+    "sector": "S01",
+    "node": "N001",
+    "revision": "R0",
+    "related": [
+      "harvest_lens",
+      "arc"
+    ],
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-12",
+    "updated": "2026-07-12",
+    "depends_on": [],
+    "designation": "MOD-UM10-S01-N001-026-R0",
+    "name": "complexity",
+    "label": "complexity",
+    "function": "measure cyclomatic complexity per function (the Analyze station's third fold)",
+    "file": "parts/complexity.py",
+    "sequence": "026",
+    "docs": "docs/continuous_improvement.md",
+    "tests": "tests/test_complexity.py",
+    "reuse": "holistic code evaluation: flag high-complexity functions beyond tests/lint/coverage",
+    "notes": "The `complexity` verb; stdlib ast, no dependency. Reads only."
+  },
+  {
+    "status": "active",
+    "type": "MOD",
+    "domain": "UM10",
+    "sector": "S01",
+    "node": "N001",
+    "revision": "R0",
+    "related": [
+      "harvest_lens",
+      "arc"
+    ],
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-12",
+    "updated": "2026-07-12",
+    "depends_on": [],
+    "designation": "MOD-UM10-S01-N001-027-R0",
+    "name": "clone_scan",
+    "label": "clone_scan",
+    "function": "find structurally duplicated logic across the codebase (AST shape hashing)",
+    "file": "parts/clone_scan.py",
+    "sequence": "027",
+    "docs": "docs/continuous_improvement.md",
+    "tests": "tests/test_clone_scan.py",
+    "reuse": "duplicate-logic detection: upgrade pattern discovery from signals to real clones",
+    "notes": "The `clones` verb; upgrades the Harvest Lens with structural AST clone detection."
   }
 ]

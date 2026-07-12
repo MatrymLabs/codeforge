@@ -33,8 +33,10 @@ from parts.classroom import (
     submit_answer,
     talk_to_codex,
 )
+from parts.clone_scan import clones
 from parts.combat import attack
 from parts.commands import ADMIN, CORE, Command, CommandSet
+from parts.complexity import complexity
 from parts.doors import unlock
 from parts.engineer import deploy_barrier, diagnostic_scan, field_repair
 from parts.equipment import equip, unequip
@@ -78,6 +80,7 @@ HELP_TEXT = (
     "attack <target>, repair, scan <target>, deploy, calibrate, channel, journal [text], vitals, "
     "namecheck <name>, features, certify, heralds, title [text], maintenance, arc [status], "
     "telegraph, chime, harvest, store [find <query>], learnings [show <id>], "
+    "complexity [threshold], clones [min-nodes], "
     "unlock <door> with <key>, regs [topic|id], library [id], law [id], "
     "registry [show|find|type|status], loop trace <part-id>, "
     "qa gate [all|<id>], safety review <id>, docs check, pm status, pm metrics, "
@@ -729,6 +732,12 @@ def handle_command(session: Session, signal: str) -> str:
     if routed_signal == "learnings" or routed_signal.startswith("learnings "):
         _, _, learn_arg = routed_signal.partition(" ")
         return learnings(learn_arg)
+    if routed_signal == "complexity" or routed_signal.startswith("complexity "):
+        _, _, cx_arg = routed_signal.partition(" ")
+        return complexity(cx_arg)
+    if routed_signal == "clones" or routed_signal.startswith("clones "):
+        _, _, cl_arg = routed_signal.partition(" ")
+        return clones(cl_arg)
     if routed_signal == "title" or routed_signal.startswith("title "):
         _, _, text = true_signal.partition(" ")
         return title(session, text)
