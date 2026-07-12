@@ -181,7 +181,9 @@ def trace(part_id: str, root: Path | None = None, stamp: str | None = None) -> T
     stages.append(_stage_docs(part_id, base))
 
     # File assembly evidence if we got one
-    if assembly is not None:
+    from parts.assembly import Assembly
+
+    if isinstance(assembly, Assembly):
         file_evidence(assembly, root=base)
 
     # Verdict: pass if no failures
@@ -211,7 +213,8 @@ def render_trace_text(
         "",
     ]
     for s in stages:
-        icon = {"pass": "[PASS]", "fail": "[FAIL]", "skip": "[SKIP]"}[s.status]
+        # nosec B105: stage-status labels, not credentials (bandit false positive on "pass")
+        icon = {"pass": "[PASS]", "fail": "[FAIL]", "skip": "[SKIP]"}[s.status]  # nosec B105
         lines.append(f"  {icon} {s.stage:12} {s.detail}")
     lines.append("")
     lines.append(f"VERDICT: {verdict.upper()}")
