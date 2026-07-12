@@ -52,7 +52,7 @@ generation). **Nothing risky runs without the Safety layer around it.**
 ## What exists today (the foundation is real)
 
 - **Game layer:** the engine tick (`handle_command`), seed worlds, TCP + browser
-  gateways, combat, ranks, accounts, 223 tests, CI, a live browser demo.
+  gateways, combat, ranks, accounts, a full CI-gated test suite, a live browser demo.
 - **Reusable parts:** `parts/*.py` cards, each with a `CARD:` line and a test twin.
 - **Hardware store, v0:** `make store` (auto inventory) and now **`make hardware`**
   (the cross-domain catalog, `catalog/parts.yaml` + `parts/hardware.py`).

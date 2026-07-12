@@ -107,8 +107,9 @@ working code before theory, one concept at a time.
 
 ## Current state (update as it changes)
 
-- 201 tests green; CI (`check` + `docker`) green; 23 cards in `parts/` (see
-  `make store`).
+- Full suite green; CI (`check` + `docker`) green (live count on the README's CI +
+  coverage badges, never hardcoded here - it drifts). Every `parts/` card has a test
+  twin (see `make store`).
 - Merged feature arcs: seeds, sessions, gateway, events, names, chargen,
   combat, persistence→SQL, ranks, accounts (character@account), front-desk
   login dialogue, proper-noun display, CLI entry points, FastAPI admin,
