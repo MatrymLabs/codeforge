@@ -5,6 +5,11 @@ Assembly card: npcs (targets) + stats (damage) + resources (growth)
 Damage is deterministic in v0: no dice yet, so every number in the
 test twin is exact. The dummy reassembles on defeat -- it is a
 training dummy; collapsing is its job.
+
+An NPC that carries a seed `atk` stat strikes back when it survives a
+blow (the training dummy carries none, so it stays passive). If a
+counter-strike would fell the player, a training-ground failsafe
+restores them in place -- a fight never leaves anyone in a broken state.
 """
 
 from dataclasses import replace
@@ -19,6 +24,7 @@ from parts.progression import (
     mp_gain_per_level,
 )
 from parts.resources import Resource
+from parts.seed import Npc
 from parts.session import Session, display_name
 
 DAMAGE_BASE = 3  # damage dealt = DAMAGE_BASE + strength // 3
@@ -103,6 +109,39 @@ def award_tp(session: Session, amount: int) -> str:
     return f"You gain {amount} TP ({JOBS[job]['name']})."
 
 
+def npc_strike_power(npc: Npc) -> int:
+    """An NPC's counter-attack damage. Deterministic in v0 (no dice); 0 means passive."""
+    return max(0, npc.get("atk", 0))
+
+
+def _fall_and_recover(session: Session, npc: Npc) -> str:
+    """Safe defeat: a felled player is restored in place. Never a broken state (v0 failsafe)."""
+    hp = session.resources["hp"]
+    session.resources["hp"] = hp.heal(hp.maximum)  # back to full; location unchanged
+    return (
+        f"You fall to {npc['name']}, and wake restored at full health. (Training-ground failsafe.)"
+    )
+
+
+def _counter_attack(session: Session, npc: Npc) -> str:
+    """A surviving NPC with an atk stat strikes back. Passive NPCs return ''; text is projection."""
+    power = npc_strike_power(npc)
+    if power <= 0:
+        return ""  # the training dummy and every peaceful NPC: no counter
+    session.resources["hp"] = session.resources["hp"].damage(power)
+    name = npc["name"].capitalize()
+    announce(
+        session.location,
+        f"{name} strikes back at {display_name(session.player_id)} for {power}.",
+        exclude=session.player_id,
+    )
+    hp = session.resources["hp"]
+    line = f"\n{name} strikes back for {power}. (HP {hp.current}/{hp.maximum})"
+    if hp.is_depleted:
+        return f"{line}\n{_fall_and_recover(session, npc)}"
+    return line
+
+
 def attack(session: Session, word: str) -> str:
     """One strike of the training loop."""
     if session.stats is None:
@@ -121,7 +160,8 @@ def attack(session: Session, word: str) -> str:
         exclude=session.player_id,
     )
     if npc["hp_now"] > 0:
-        return f"You strike {npc['name']} for {dmg}. ({npc['hp_now']}/{npc['hp']})"
+        hit = f"You strike {npc['name']} for {dmg}. ({npc['hp_now']}/{npc['hp']})"
+        return f"{hit}{_counter_attack(session, npc)}"
     npc["hp_now"] = npc["hp"]  # the dummy reassembles at full health
     announce(
         session.location,
