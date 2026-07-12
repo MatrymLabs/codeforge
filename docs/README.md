@@ -9,6 +9,7 @@ The one map to everything under `docs/`. New here? Read [RUNNING.md](RUNNING.md)
 - [../CONTRIBUTING.md](../CONTRIBUTING.md), setup and the workshop rules.
 
 ## Architecture and decisions
+- [vision_resync.md](vision_resync.md), the one product vision: CodeForge as a two-output manufacturing platform (World Package + Hardware Store), the three layers, the manufacturing loop, honest working/prototype/planned labels, and the first vertical slice.
 - [optimization_ethos.md](optimization_ethos.md), the Matrym optimization ethos: turn solutions into infrastructure (the loop, the optimization ladder, the evidence standard, the Expansion Review, the critical-junction rule).
 
 - [architecture.md](architecture.md), the engine tick, drivers, and canonical state.

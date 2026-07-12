@@ -7,7 +7,7 @@
 [![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/MatrymLabs/codeforge/badge)](https://scorecard.dev/viewer/?uri=github.com/MatrymLabs/codeforge)
 [![Docs](https://img.shields.io/badge/docs-mkdocs--material-teal)](https://matrymlabs.github.io/codeforge/)
 
-**A Python-native multiplayer MUD engine, built as a workshop of small, tested, reusable parts.**
+**A Python-native software manufacturing platform with two outputs: an installable multiplayer World Package (the MUD you can play in your browser today), and a Hardware Store of reusable parts proven in the game and translated to real software.**
 
 ![Pick a calling, walk to the courtyard, and train against the self-repairing dummy until you level up](docs/demo.gif)
 
@@ -20,10 +20,13 @@ worlds, restart-surviving characters, rank-gated admin verbs, a threaded TCP gat
 that real MUD clients (Mudlet, telnet, nc) connect to today, and a browser gateway you
 can click straight into.
 
-> **Where this is going:** a MUD-powered **engineering proving ground** and a reusable-code
-> **hardware store** - the parts built for the game get cataloged for real-world reuse
-> (government, finance, compliance, records). Browse them with `make hardware`; read the
-> blueprint in [`docs/proving_ground/`](docs/proving_ground/VISION.md).
+> **The vision, honestly labelled:** CodeForge is being assembled as a two-output manufacturing
+> platform - a **World Package** generator (the MUD is the first, and it runs today) and a
+> reusable-parts **Hardware Store** (parts proven in the game, translated to real software:
+> government, finance, compliance, records). The engine and its first world work now; the
+> manufacturing spine (Blueprint -> parts -> assemble -> test -> catalog -> package) is being
+> built one vertical slice at a time. Browse the parts with `make hardware`; read the full plan
+> in [`docs/vision_resync.md`](docs/vision_resync.md).
 
 ```text
 =========================================================
