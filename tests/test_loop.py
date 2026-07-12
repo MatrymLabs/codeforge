@@ -1,8 +1,6 @@
 """Test twin for parts/loop.py -- the manufacturing loop tracer."""
 
-import pytest
-
-from parts.loop import StageResult, TraceReport, main, render_trace, trace
+from parts.loop import TraceReport, main, render_trace, trace
 
 
 def test_trace_workflow_engine_passes_all_stages():
@@ -13,7 +11,9 @@ def test_trace_workflow_engine_passes_all_stages():
     assert report.verdict == "pass"
     # every stage should be pass or skip (skip is OK, e.g. no blueprint)
     for stage in report.stages:
-        assert stage.status in ("pass", "skip"), f"{stage.stage} unexpectedly {stage.status}: {stage.detail}"
+        assert stage.status in ("pass", "skip"), (
+            f"{stage.stage} unexpectedly {stage.status}: {stage.detail}"
+        )
 
 
 def test_trace_unknown_part_reports_manifest_fail():
@@ -27,7 +27,7 @@ def test_trace_unknown_part_reports_manifest_fail():
 def test_trace_report_is_filed_under_reports(tmp_path):
     """Evidence lands at reports/loop/."""
     # Create minimal structure for a trace (will fail, but should still file)
-    report = trace("no-such-part", root=tmp_path, stamp="2026-07-12")
+    trace("no-such-part", root=tmp_path, stamp="2026-07-12")
     report_path = tmp_path / "reports" / "loop"
     assert report_path.exists()
     filed = list(report_path.glob("*.md"))

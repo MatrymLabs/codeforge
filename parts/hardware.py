@@ -118,7 +118,7 @@ def _coerce(raw: Any, index: int) -> Part:
 
 def _parse_catalog(source: Path) -> list[Part]:
     """Parse and validate a catalog file into Parts (a bad row raises before caching)."""
-    data = yaml.safe_load(source.read_text()) or []
+    data = yaml.safe_load(source.read_text(encoding="utf-8")) or []
     if not isinstance(data, list):
         raise CatalogError("catalog root must be a list of parts")
     return [_coerce(entry, number) for number, entry in enumerate(data, start=1)]

@@ -117,7 +117,7 @@ def load_splash() -> str:
     """The pre-login screen is world data: seeds/<world>/splash.txt."""
     path = SEED_DIR / "splash.txt"
     if path.exists():
-        return path.read_text().rstrip("\n")
+        return path.read_text(encoding="utf-8").rstrip("\n")
     return "Welcome, traveler."
 
 

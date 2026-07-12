@@ -73,7 +73,10 @@ testpaths = ["tests"]
 # key is a mistake, not a warning. importlib import mode is the modern default
 # (no sys.path games, no __init__.py needed in tests).
 addopts = "--strict-markers --strict-config --import-mode=importlib"
-markers = ["property: Hypothesis property-based tests (run via `make property`)"]
+markers = [
+    "property: Hypothesis property-based tests (run via `make property`)",
+    "fuzz: hostile-input fuzz tests for trust-boundary gates (run via `make fuzz`)",
+]
 
 [tool.coverage.run]
 # Branch coverage, not just line: line coverage proves a line ran, branch coverage

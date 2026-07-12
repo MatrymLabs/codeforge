@@ -4,19 +4,28 @@ import textwrap
 
 import pytest
 
-from parts.assembly import Assembly, AssemblyError, assemble, discover_imports, file_evidence, resolve_parts
+from parts.assembly import (
+    Assembly,
+    AssemblyError,
+    assemble,
+    discover_imports,
+    file_evidence,
+    resolve_parts,
+)
 from parts.hardware import Part
 from parts.manifest import PartManifest, find_manifest
 
 
 def test_discover_imports_finds_parts_imports(tmp_path):
     src = tmp_path / "example.py"
-    src.write_text(textwrap.dedent("""\
+    src.write_text(
+        textwrap.dedent("""\
         from parts.statemachine import Fired
         from parts.workflow import WorkflowEngine
         import os
         import parts.events
-    """))
+    """)
+    )
     imports = discover_imports(src)
     assert "parts.statemachine" in imports
     assert "parts.workflow" in imports
@@ -32,9 +41,16 @@ def test_discover_imports_ignores_non_parts(tmp_path):
 
 def test_resolve_parts_matches_catalog_entries():
     catalog = [
-        Part(id="state-machine", name="SM", source="parts/statemachine.py",
-             category="c", purpose="p", maturity="shipped", risk="low",
-             reuse={"g": "x"}),
+        Part(
+            id="state-machine",
+            name="SM",
+            source="parts/statemachine.py",
+            category="c",
+            purpose="p",
+            maturity="shipped",
+            risk="low",
+            reuse={"g": "x"},
+        ),
     ]
     imports = ["parts.statemachine", "parts.unknown"]
     resolved = resolve_parts(imports, catalog)

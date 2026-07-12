@@ -35,7 +35,7 @@ def _demo_report_writer() -> tuple[str, str]:
         p = write_report("demo", "hello world", root=Path(d), stamp="2026-07-10")
         return (
             "write_report('demo', 'hello world')",
-            f"wrote {p.name} ({p.read_text().strip()!r})",
+            f"wrote {p.name} ({p.read_text(encoding='utf-8').strip()!r})",
         )
 
 

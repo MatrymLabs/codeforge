@@ -48,8 +48,9 @@ from parts.items import drop, inventory_text, room_items_text, take
 from parts.jobs import JOBS, bind_calling, calling_index, set_secondary
 from parts.law import law
 from parts.library import library
+from parts.loop import render_trace
+from parts.loop import trace as loop_trace
 from parts.npcs import room_npcs_text, talk, trace_npc
-from parts.loop import trace as loop_trace, render_trace
 from parts.pioneer import pioneer
 from parts.pm import pm_metrics, pm_status
 from parts.qualitygate import docs_check, render_gate, render_gate_all, render_safety
@@ -318,7 +319,10 @@ def _build_commands() -> CommandSet:
             "loop",
             "CMD-UM05-S01-N001-024-R0",
             "manufacturing loop commands (try: loop trace <part-id>)",
-            lambda _s, _a: "Usage: loop trace <part-id>\n  Trace a part through every manufacturing stage and file evidence.",
+            lambda _s, _a: (
+                "Usage: loop trace <part-id>\n"
+                "  Trace a part through every manufacturing stage and file evidence."
+            ),
             namespace=CORE,
         )
     )

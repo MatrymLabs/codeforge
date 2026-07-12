@@ -1,4 +1,4 @@
-.PHONY: env fix lint typecheck test property coverage audit security secrets deps sbom bench doctor patch daily check readiness truth cast-plan smoke repo-integrity ship run world store hardware clean serve db-up db-down db-migrate docs-serve docs-build e2e evolution ritual-fast ritual ritual-down unskew loop
+.PHONY: env fix lint typecheck test property fuzz coverage audit security secrets deps sbom bench doctor patch daily check readiness truth cast-plan smoke repo-integrity ship run world store hardware clean serve db-up db-down db-migrate docs-serve docs-build e2e evolution ritual-fast ritual ritual-down unskew loop
 
 # --- Environment: create/validate the .venv, fail loud on version mismatch.
 # Uses uv when present (a Rust resolver; measured ~20x faster than pip on this host:
@@ -31,10 +31,15 @@ typecheck:
 	mypy parts tests forge.py
 
 test:
-	pytest -m "not property"
+	pytest -m "not property and not fuzz"
 
 property:
 	pytest -m property
+
+# Fuzz the trust-boundary gates (hostile input: seed/catalog/manifest YAML). The law:
+# a gate refuses with its own error type, never crashes. Hypothesis-driven, no new deps.
+fuzz:
+	pytest -m fuzz
 
 # The full gate. `coverage` runs the WHOLE suite (property included) once, WITH
 # instrumentation and the threshold -- so `check` covers, tests, and gates in a single
