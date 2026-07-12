@@ -820,3 +820,29 @@
     government: "liveness/readiness of a public service and its dependencies"
     security: "surface a degraded or unknown control instead of a false all-clear"
     general: "a /healthz or /readyz probe aggregating dependency checks for any service"
+
+- id: validator
+  name: Validator
+  source: parts/validation.py
+  category: validation
+  tags: [validation, schema, rules, input, forms]
+  maturity: beta
+  source_status: original
+  license: MIT
+  influence: "accumulate-all-errors input/schema validation (independently implemented)"
+  experimental: >-
+    express it as Pydantic models or a JSON Schema validator for richer typing. Traded away (v1):
+    nested/recursive schemas and coercion, keeping small composable rules over a flat mapping with
+    no dependencies.
+  risk: low
+  reuse_score: 5
+  purpose: >
+    Validate a mapping against composable rules and collect every issue at once, each with its field
+    and a clear message; raise loud on demand. One core, two adapters: it previews a character name
+    in the game and validates a signup payload in a practical app.
+  reuse:
+    game: "preview a character name, an item or ability definition, admin-wizard input"
+    finance: "validate a transaction or onboarding form before it is accepted"
+    government: "enforce record-submission rules with every error reported at once"
+    security: "reject malformed input at the boundary with explicit, non-leaky messages"
+    general: "API payload, config, form, and data-import validation"

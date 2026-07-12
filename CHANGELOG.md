@@ -7,6 +7,14 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
 ## [Unreleased]
 
 ### Added
+- **Hardware Store part: the Validator (`validator`).** Validate a mapping against composable rules
+  and collect every issue at once, each tagged with its field and a clear message; `raise_if_invalid`
+  is the one loud exit. Rule builders cover the common cases (`required`, `matches`, `in_range`,
+  `of_type`, `one_of`, `max_length`), with `required` kept separate from format so an empty field
+  reports once. One core (`parts/validation.py`), two adapters: a `namecheck` name preview in the
+  game (`parts/name_check.py`) and a signup-payload validator for a practical app
+  (`parts/payload_check.py`). Property test pins that a valid value passes and issues never exceed
+  rules. Cataloged, filed, manifest, validation pattern doc. No new dependencies. Maturity: beta.
 - **Hardware Store part: the Health Registry (`health-registry`).** Run named health checks and
   aggregate an honest overall status (worst wins). The load-bearing rule: an UNKNOWN or failing
   check is never reported healthy, and an empty registry is UNKNOWN. A raising check is contained
