@@ -180,5 +180,5 @@ def inspect(arg: str = "") -> str:
 
         report = render_frameup()
         path = write_report("frameup", report, slug="frameup")
-        return report + f"\n\n  (banked to {path.relative_to(_ROOT)})"
+        return report + f"\n\n  (banked to {path.relative_to(_ROOT).as_posix()})"
     return "Unknown inspect view. Try: (blank) · forge · qa · truth · pm · save"

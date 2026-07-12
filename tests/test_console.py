@@ -5,6 +5,8 @@ hung ones, output is capped, and nothing is ever shell-parsed. Fakes are injecte
 so tests stay fast and hermetic; the real allowlist is exercised only via the
 always-available `version` entry."""
 
+import sys
+
 import pytest
 
 from forge import handle_command
@@ -40,14 +42,14 @@ def test_unlisted_command_is_refused_and_never_runs():
 
 
 def test_timeout_kills_a_hung_command():
-    slow = {"sleep": ["python3", "-c", "import time; time.sleep(5)"]}
+    slow = {"sleep": [sys.executable, "-c", "import time; time.sleep(5)"]}
     result = run("sleep", allowlist=slow, timeout=0.5)
     assert result.timed_out
     assert not result.ok
 
 
 def test_output_is_capped():
-    loud = {"loud": ["python3", "-c", "print('x' * 10000)"]}
+    loud = {"loud": [sys.executable, "-c", "print('x' * 10000)"]}
     result = run("loud", allowlist=loud, cap=100)
     assert len(result.output) <= 100 + 40  # cap plus the short truncation notice
     assert "truncated" in result.output
