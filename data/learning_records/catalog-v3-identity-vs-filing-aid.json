@@ -1,0 +1,21 @@
+{
+  "record_id": "catalog-v3-identity-vs-filing-aid",
+  "title": "Identity vs filing aid: modernizing the catalog without renaming a part",
+  "date": "2026-07-12",
+  "what_changed": "The Hardware Store catalog gained a 19-domain engineering taxonomy (catalog/domains.yaml) and a derived addressing + multi-field search tool (parts/store_index.py, the `store` verb). Thirty-one ad-hoc, inconsistently spelled categories were consolidated into stable domains. Zero catalog cards were edited.",
+  "why": "The catalog organized parts by an ad-hoc `category` string with no stable engineering taxonomy and no addressing scheme, so it read like a language reference, not a parts catalog. V3 asked for a layered identity model (permanent identity, re-classifiable address, display, metadata).",
+  "evidence": [
+    "make check green: 1069 passed, 93.73% coverage; store_index.py 100% covered",
+    "The live `store` verb organizes all 40 parts across 19 domains with derived addresses (05.001 circuit-breaker, etc.)",
+    "The catalog loader (parts/hardware.py) picks keys explicitly and ignores unknown ones, proven by the existing catalog tests still passing after the change",
+    "No card slug or registry designation changed, so the manufacturing loop and completeness gate stayed green"
+  ],
+  "tradeoffs": "The catalog address is a derived ordinal that shifts as parts are added (a filing aid, not identity), which is acceptable because the slug id is the stable key. The richer 30-field card template, the seven-stage maturity ladder, and numeric part IDs were deliberately deferred as gated migrations to avoid schema churn now.",
+  "future_reuse": "store_index's address-derivation-from-taxonomy and multi-field search is itself a reusable catalog pattern (a candidate Hardware Store card). The reserved Caching domain is the next harvest target: the Harvest Lens already flagged a cache pattern recurring across ~8 sites with no card.",
+  "concepts": [
+    "Separate permanent IDENTITY (the slug) from mutable CLASSIFICATION (the address): identity never changes, classification may evolve",
+    "'Labels are identity, numbers are filing aids' is an existing CodeForge doctrine the V3 model maps onto exactly",
+    "Prefer additive, reversible migrations over renames; a loader that ignores unknown keys is what makes additive schema evolution safe",
+    "Frozen identifiers (slugs, verbs, DB columns, seed keys) are a hard constraint that shapes every migration"
+  ]
+}

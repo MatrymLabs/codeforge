@@ -3498,5 +3498,36 @@
     "aliases": [],
     "created": "2026-07-12",
     "updated": "2026-07-12"
+  },
+  {
+    "designation": "MOD-UM10-S01-N001-025-R0",
+    "name": "learning_record",
+    "status": "active",
+    "function": "capture an engineering improvement as evidence: what changed and why",
+    "label": "learning_record",
+    "file": "parts/learning_record.py",
+    "type": "MOD",
+    "domain": "UM10",
+    "sector": "S01",
+    "node": "N001",
+    "sequence": "025",
+    "revision": "R0",
+    "docs": "docs/continuous_improvement.md",
+    "tests": "tests/test_learning_record.py",
+    "depends_on": [],
+    "related": [
+      "blueprint",
+      "harvest_lens",
+      "veritas"
+    ],
+    "reuse": "preserve institutional knowledge: capture why an improvement was made and what to learn",
+    "tags": [
+      "module"
+    ],
+    "notes": "The `learnings` verb; the LEARN step of the self-improving loop. Data-driven, fail-loud.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-12",
+    "updated": "2026-07-12"
   }
 ]
