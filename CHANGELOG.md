@@ -6,6 +6,11 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
 
 ## [Unreleased]
 
+## [0.1.0] - 2026-07-12
+
+First tagged release: the flagship as it stands, CI-green on `main`. Versions are
+date-stamped while pre-1.0.
+
 ### Added / Changed
 - **The arch: step into the Proving Ground (`@arch`).** The last rung of the workshop loop.
   An owner-only, read-only `@arch` verb (CMD-UM10-S01-N001-021-R0) shows the Proving Ground:
