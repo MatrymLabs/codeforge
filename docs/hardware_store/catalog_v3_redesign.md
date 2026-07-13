@@ -7,7 +7,7 @@ identifier rename it discusses is a proposal gated on Josh's approval.*
 
 ## 1. Executive Summary
 
-The catalog is healthy (40 parts, each with a core, adapters, tests, provenance) but its
+The catalog is healthy (its parts each with a core, adapters, tests, provenance) but its
 classification is ad hoc: 31 distinct `category` strings, inconsistently spelled (`rate-limiting` vs
 `change_management`), with no stable engineering taxonomy and no addressing scheme. V3 fixes the
 *organization* without disturbing the *parts*. The key realization: the four-layer identity model the

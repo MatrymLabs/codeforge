@@ -37,11 +37,19 @@ _SNAPSHOT_DIRS = frozenset(
 )
 
 
-def _hardcoded_test_counts(root: Path) -> list[str]:
-    """Drift-prone claims: an exact test count in the README or living docs goes stale (it has).
+# Drift-prone count claims: an exact figure in prose goes stale as the code moves. The CI /
+# codecov badges are the one live source. "94% branch coverage" and "435 tests" have both drifted.
+# (A coverage FLOOR is written "floor 85%" / "85% floor", not "85% coverage", so it is not matched.)
+_DRIFT_PATTERNS = (
+    r"\b\d+ tests\b",
+    r"\b\d+(?:\.\d+)?%\s+(?:\w+\s+)?coverage\b",
+)
 
-    Scans README.md and every docs/**.md except dated snapshot dirs (where a count is a
-    point-in-time record, not a live claim). The CI badge is the one live source of the count.
+
+def _hardcoded_counts(root: Path) -> list[str]:
+    """Drift-prone claims: an exact test count or coverage % in the README or living docs goes
+    stale (both have). Scans README.md and every docs/**.md except dated snapshot dirs (where a
+    count is a point-in-time record, not a live claim). The CI/codecov badges are the live source.
     """
     targets = [root / "README.md"]
     docs = root / "docs"
@@ -56,7 +64,8 @@ def _hardcoded_test_counts(root: Path) -> list[str]:
         if not path.exists():
             continue
         text = path.read_text(encoding="utf-8", errors="ignore")
-        hits += [f"{path.name}: {m}" for m in re.findall(r"\b\d+ tests\b", text)]
+        for pattern in _DRIFT_PATTERNS:
+            hits += [f"{path.name}: {m}" for m in re.findall(pattern, text)]
     return hits
 
 
@@ -68,7 +77,7 @@ def truth_checks(root: Path | None = None) -> list[TruthCheck]:
         return TruthCheck(claim, VERIFIED if ok else FLAGGED, good if ok else bad)
 
     over = overclaim_hits(base)
-    counts = _hardcoded_test_counts(base)
+    counts = _hardcoded_counts(base)
     gaps = presence_gaps(base)
     records = load_collective()
     problems = validate(records) if records else ["registry empty"]
@@ -83,7 +92,7 @@ def truth_checks(root: Path | None = None) -> list[TruthCheck]:
             "FLAGS: " + ", ".join(over),
         ),
         check(
-            "README and docs make no drift-prone hardcoded test count",
+            "README and docs make no drift-prone hardcoded test count or coverage %",
             not counts,
             "none (the CI badge is the live source)",
             "hardcoded: " + ", ".join(counts),

@@ -44,4 +44,4 @@ A live LLM brain inside codeforge is `research_more` in the framework decision
 (`docs/full_stack_forge_decision.md`): the seam is here and proven, but running it against a
 real key in a shipped surface (rate limits, cost, prompt-injection hardening, evidence
 capture) is deliberately deferred. The real, exercised LLM pipeline lives in the sibling
-`ai-log-triage` repo (schema-enforced `messages.parse`, mockable boundary, 95% coverage).
+`ai-log-triage` repo (schema-enforced `messages.parse`, mockable boundary, high coverage).
