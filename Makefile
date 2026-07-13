@@ -51,7 +51,7 @@ check: lint typecheck coverage
 # --- Readiness: the global self-audit -- registry validates (gates), then the
 # project dashboard, computed from the registry + QualityGate. Read-only. ---
 readiness:
-	@python3 -c "import sys; from parts.registry import load_collective, validate, unfiled_modules; from parts.pm import pm_status; r=load_collective(); p=validate(r)+['unfiled module (not in the registry): '+m for m in unfiled_modules(r)]; print('Registry: CLEAN (no duplicates, no orphans, every module filed)' if not p else 'Registry PROBLEMS:\n  '+'\n  '.join(p)); print(); print(pm_status()); sys.exit(1 if p else 0)"
+	@python3 -c "import sys; from parts.registry import load_collective, validate, unfiled_modules, untwinned_modules; from parts.pm import pm_status; r=load_collective(); p=validate(r)+['unfiled module (not in the registry): '+m for m in unfiled_modules(r)]+['untested module (no test twin or aggregate): '+m for m in untwinned_modules()]; print('Registry: CLEAN (no duplicates, no orphans, every module filed and tested)' if not p else 'Registry PROBLEMS:\n  '+'\n  '.join(p)); print(); print(pm_status()); sys.exit(1 if p else 0)"
 
 # --- ARC verdicts: run the release checks and FILE the runtime dimensions' verdicts as dated
 # evidence under arc-evidence/ (git-ignored, reproducible from the recorded commit), so ARC can

@@ -373,3 +373,37 @@ def unfiled_modules(
         if rel not in filed:
             unfiled.append(rel)
     return unfiled
+
+
+def untwinned_modules(root: Path | None = None) -> list[str]:
+    """Every parts module (incl. subpackages) with NO test coverage: neither a 1:1 twin
+    (tests/test_<name>.py) nor an aggregate twin (imported by any tests/test_*.py, e.g.
+    tests/test_evolution_bakeoff.py covering several evolution modules).
+
+    The sibling of unfiled_modules: that one enforces 'every module is FILED', this one enforces
+    'every module is TESTED'. Aggregate coverage counts (the ship's real, blessed pattern, per
+    parts/functions._test_twin). Empty list == the test-twin convention holds, enforced not hoped.
+    """
+    base = root if root is not None else _ROOT
+    parts_dir = base / "parts"
+    tests_dir = base / "tests"
+    if not parts_dir.is_dir() or not tests_dir.is_dir():
+        return []
+    test_texts = [
+        p.read_text(encoding="utf-8", errors="ignore") for p in tests_dir.rglob("test_*.py")
+    ]
+    untwinned: list[str] = []
+    modules = sorted(parts_dir.glob("*.py")) + sorted(parts_dir.glob("*/*.py"))
+    for path in modules:
+        if path.name == "__init__.py" or "__pycache__" in path.parts:
+            continue
+        name = path.stem
+        dotted = path.relative_to(base).as_posix()[:-3].replace("/", ".")  # parts.pkg.name
+        has_twin = (tests_dir / f"test_{name}.py").exists()
+        imported = any(
+            (dotted in text) or (f".{name} import" in text) or (f"import {name}" in text)
+            for text in test_texts
+        )
+        if not (has_twin or imported):
+            untwinned.append(path.relative_to(base).as_posix())
+    return untwinned
