@@ -1,4 +1,4 @@
-.PHONY: env fix lint typecheck test property fuzz coverage audit audit-runtime security secrets deps sbom bench doctor patch daily check readiness arc-verdicts truth cast-plan smoke repo-integrity ship run world store hardware clean serve db-up db-down db-migrate docs-serve docs-build e2e evolution ritual-fast ritual ritual-down unskew loop
+.PHONY: env fix lint typecheck test property fuzz coverage audit audit-runtime security secrets deps sbom bench doctor patch daily check readiness arc-verdicts truth cast-plan smoke repo-integrity ship run world store hardware clean serve backup db-up db-down db-migrate docs-serve docs-build e2e evolution ritual-fast ritual ritual-down unskew loop
 
 # --- Environment: create/validate the .venv, fail loud on version mismatch.
 # Uses uv when present (a Rust resolver; measured ~20x faster than pip on this host:
@@ -221,6 +221,12 @@ serve:
 # --- PostgreSQL: the production-shaped backend. SQLite stays the zero-config default;
 # these bring up a local Postgres and run the Alembic migrations against DATABASE_URL.
 # See docs/database.md. ---
+# --- Backup: file a consistent, timestamped snapshot of the SQLite DB under backups/
+# (git-ignored). Safe to run while the server is up (online .backup). Restore: see
+# docs/database.md. For PostgreSQL use pg_dump. ---
+backup:
+	@python3 -c "from parts.db import backup_db; print('backed up ->', backup_db())"
+
 db-up:
 	docker compose up -d db
 

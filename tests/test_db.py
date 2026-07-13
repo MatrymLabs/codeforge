@@ -2,6 +2,8 @@
 
 from pathlib import Path
 
+import pytest
+
 import parts.db as db
 from parts.characters import load_character, put_record, save_character
 from parts.db import CharacterRow, _default_db_path, engine_url, open_archive_session
@@ -72,3 +74,32 @@ def test_unnamed_seats_write_no_rows():
     save_character(Session(player_id="player1"))
     with open_archive_session() as db:
         assert db.get(CharacterRow, "player1") is None
+
+
+def test_backup_db_makes_a_valid_sqlite_copy(monkeypatch, tmp_path):
+    import sqlite3
+
+    from parts.db import backup_db
+
+    monkeypatch.delenv("DATABASE_URL", raising=False)
+    live = tmp_path / "codeforge.db"
+    monkeypatch.setattr(db, "DB_PATH", live)
+    con = sqlite3.connect(live)  # a real SQLite db at DB_PATH with content to preserve
+    con.execute("create table t (x)")
+    con.execute("insert into t values (42)")
+    con.commit()
+    con.close()
+    dest = backup_db(dest_dir=tmp_path / "backups")
+    assert dest.exists() and dest.suffix == ".db"
+    copy = sqlite3.connect(dest)  # the snapshot is a valid, openable copy carrying the row
+    value = copy.execute("select x from t").fetchone()[0]
+    copy.close()
+    assert value == 42
+
+
+def test_backup_db_refuses_a_non_sqlite_backend(monkeypatch):
+    from parts.db import backup_db
+
+    monkeypatch.setenv("DATABASE_URL", "postgresql+psycopg://u:p@localhost/x")
+    with pytest.raises(RuntimeError, match="pg_dump"):
+        backup_db()

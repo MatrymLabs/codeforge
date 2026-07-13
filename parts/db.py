@@ -99,3 +99,27 @@ def open_archive_session() -> SqlSession:
         ArchiveBase.metadata.create_all(engine)  # checkfirst=True: a no-op once migrated
         _ENGINES[url] = engine
     return SqlSession(engine)
+
+
+def backup_db(dest_dir: Path | None = None) -> Path:
+    """Make a consistent, online copy of the SQLite database (safe while the server runs) under
+    a timestamped file, and return its path. The live public demo had no recovery path; `make
+    backup` files a snapshot. Refuses loud on a non-SQLite backend (use pg_dump for PostgreSQL)."""
+    import sqlite3
+    from datetime import UTC, datetime
+
+    url = engine_url()
+    if not url.startswith("sqlite"):
+        raise RuntimeError(
+            f"backup_db supports SQLite only; the backend is {url.split(':', 1)[0]}. "
+            "For PostgreSQL use pg_dump (see docs/database.md)."
+        )
+    if not Path(DB_PATH).exists():
+        raise FileNotFoundError(f"no database to back up at {DB_PATH}")
+    base = dest_dir if dest_dir is not None else Path(DB_PATH).parent / "backups"
+    base.mkdir(parents=True, exist_ok=True)
+    stamp = datetime.now(UTC).strftime("%Y-%m-%dT%H-%M-%SZ")
+    dest = base / f"{Path(DB_PATH).stem}-{stamp}.db"
+    with sqlite3.connect(DB_PATH) as src, sqlite3.connect(dest) as dst:
+        src.backup(dst)  # online snapshot: consistent even under concurrent writes
+    return dest
