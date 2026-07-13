@@ -21,11 +21,15 @@ from parts.architect import CLAUDE_MODEL, anthropic_client
 from parts.blueprint import Blueprint, BlueprintError, from_dict
 
 _DRAFT_SYSTEM = (
-    "You are a senior software architect. Turn the user's idea into a structured Blueprint: "
-    "a permanent lowercase_snake_case blueprint_id, a short title, a one-line intent, a list "
-    "of concrete requirements the feature must satisfy, and the implementation tasks. Prefer "
-    "the smallest useful version. Requirements describe WHAT must be true; tasks describe the "
-    "steps to build it. Do not invent a stack the idea does not imply."
+    "You are a senior software architect who treats security as a first-class design concern. "
+    "Turn the user's idea into a structured Blueprint: a permanent lowercase_snake_case "
+    "blueprint_id, a short title, a one-line intent, a list of concrete requirements the feature "
+    "must satisfy, a list of security considerations, and the implementation tasks. Prefer the "
+    "smallest useful version. Requirements describe WHAT must be true; tasks describe the steps to "
+    "build it. The security list is REQUIRED and must, at minimum, name the threat model (what can "
+    "go wrong and who the adversary is), the trust boundaries, the authentication/authorization "
+    "strategy, and the failure modes. Assume every external input is untrusted. Do not invent a "
+    "stack the idea does not imply."
 )
 
 
@@ -40,6 +44,7 @@ class BlueprintDraft(BaseModel):
     title: str
     intent: str
     requirements: list[str]
+    security: list[str]  # threat model, trust boundaries, authz, failure modes (required)
     tasks: list[str] = []
     stack: dict[str, str] = {}
 

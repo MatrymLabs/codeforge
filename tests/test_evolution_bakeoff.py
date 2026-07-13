@@ -24,7 +24,9 @@ from parts.evolution.subjects import candidate_minimal
 
 
 def _genome(**over: object) -> BlueprintGenome:
-    seed = bp.Blueprint("fit_column", "Fit Column", "Fit text to a fixed width.", ("pure",))
+    seed = bp.Blueprint(
+        "fit_column", "Fit Column", "Fit text to a fixed width.", ("pure",), ("no untrusted input",)
+    )
     base: dict[str, object] = dict(
         genome_id="fit_column",
         seed=seed,

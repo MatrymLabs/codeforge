@@ -14,6 +14,7 @@ _BP = from_dict(
         "title": "Render Me",
         "intent": "A plan to prove the renderer.",
         "requirements": ["Show the requirements.", "Show the tasks."],
+        "security": ["Show the threat model."],
         "tasks": ["Draw the page."],
         "stack": {"engine": "custom Python"},
     }
@@ -31,6 +32,8 @@ def test_render_shows_the_real_content():
     page = render_html(_BP)
     assert "Render Me" in page
     assert "Show the requirements." in page
+    assert "Show the threat model." in page  # the Security section renders
+    assert ">Security<" in page
     assert "Draw the page." in page
     assert "custom Python" in page
 
@@ -46,12 +49,14 @@ def test_hostile_text_is_escaped():
             "title": "<script>alert(1)</script>",
             "intent": "x",
             "requirements": ["<img src=x onerror=alert(1)>"],
+            "security": ["<svg onload=alert(2)>"],
         }
     )
     page = render_html(evil)
     assert "<script>alert(1)</script>" not in page
     assert "&lt;script&gt;" in page
     assert "<img src=x" not in page
+    assert "<svg onload=" not in page  # the Security section is escaped too
 
 
 def test_write_html_files_to_reports(tmp_path):
@@ -75,6 +80,7 @@ def test_fragment_escapes_hostile_text():
             "title": "<script>alert(1)</script>",
             "intent": "x",
             "requirements": ["<b>bad</b>"],
+            "security": ["<b>threat</b>"],
         }
     )
     frag = render_fragment(evil)

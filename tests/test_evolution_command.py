@@ -18,7 +18,9 @@ from parts.evolution.genome import BlueprintGenome
 
 
 def _run():
-    seed = bp.Blueprint("fit_column", "Fit Column", "Fit text to a width.", ("pure",))
+    seed = bp.Blueprint(
+        "fit_column", "Fit Column", "Fit text to a width.", ("pure",), ("no untrusted input",)
+    )
     genome = BlueprintGenome(
         genome_id="fit_column",
         seed=seed,

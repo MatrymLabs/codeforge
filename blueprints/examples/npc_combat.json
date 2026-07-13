@@ -9,6 +9,13 @@
     "A defeated player is handled safely (respawn or fail-safe), never left in a broken state.",
     "The whole loop is reachable through handle_command and pinned by an engine-tick test."
   ],
+  "security": [
+    "Threat model: the adversaries are hostile seed content (an NPC authored with negative, absurd, or missing combat stats) and a griefing player spamming rapid attacks. There is no network trust boundary here; the risk is malformed data and unsafe state, not an external attacker.",
+    "Trust boundaries: combat stats enter ONLY through a validated seed record via the loader gate, never hard-coded and never player-supplied; the engine tick is the only door that mutates hit points (state is canonical, text is a projection).",
+    "AuthN/AuthZ: attacking an NPC is an ordinary player action, so no rank gate applies; but resolution runs strictly through validated engine logic, and no player input can set or overwrite a stat directly.",
+    "Failure modes: missing or invalid combat stats fail loud at the seed loader (never a silent default); a defeated player is handled by a safe respawn/fail-safe and never left in a broken state; self-attack and dead-NPC cases are explicit refusal tests; renderers report the exchange but never mutate hit points.",
+    "Data classification: combat stats are non-sensitive game state; no secrets or PII are involved."
+  ],
   "tasks": [
     "Extend the NPC seed schema with optional combat stats and a loader gate that fails loud.",
     "Add a resolve_exchange(attacker, defender) pure function with acceptance and refusal tests.",
