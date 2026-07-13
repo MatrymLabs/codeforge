@@ -13,6 +13,9 @@ from parts.token_bucket import Clock, ThrottleDecision, TokenBucket
 
 _ATTEMPTS = 5.0  # burst of five attempts
 _REFILL = 1 / 30  # one attempt refills every 30 seconds
+_MAX_KEYS = (
+    100_000  # bound the per-key bucket map so a flood of distinct keys cannot grow it forever
+)
 
 
 class LoginGuard:
@@ -33,6 +36,11 @@ class LoginGuard:
         """Record one login attempt for `key`; allow it or refuse with the wait until the next."""
         bucket = self._buckets.get(key)
         if bucket is None:
+            if len(self._buckets) >= _MAX_KEYS:
+                # Bound memory: forget the oldest-tracked key. Safe, because an evicted key just
+                # gets a fresh (full) bucket if it returns -- the same reset a fully-refilled
+                # bucket would give. A flood of distinct keys can never grow the map without bound.
+                self._buckets.pop(next(iter(self._buckets)))
             bucket = self._buckets[key] = TokenBucket(
                 self._refill, self._attempts, clock=self._clock
             )

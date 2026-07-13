@@ -61,3 +61,14 @@ def _stub_session():
     s = Session(player_id="shouter", location="courtyard")
     SESSIONS["shouter"] = s
     return s
+
+
+def test_the_bucket_map_is_bounded_against_a_flood_of_keys(monkeypatch):
+    # A flood of distinct keys (IPs/accounts) must not grow the bucket map without bound.
+    from parts import login_guard
+
+    monkeypatch.setattr(login_guard, "_MAX_KEYS", 3)
+    guard = login_guard.LoginGuard()
+    for i in range(20):
+        guard.attempt(f"key-{i}")
+    assert len(guard._buckets) <= 3
