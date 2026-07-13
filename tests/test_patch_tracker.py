@@ -53,3 +53,14 @@ def test_a_patch_cannot_reach_canary_before_its_tests_pass():
 def test_one_core_two_adapters_share_the_change_ledger():
     # The practical tracker holds a ChangeLedger, exactly as the game maintenance log does.
     assert isinstance(PatchTracker()._ledger, ChangeLedger)
+
+
+def test_arc_status_of_no_patches_is_missing():
+    assert PatchTracker().arc_status()[0] == "missing"
+
+
+def test_arc_status_reflects_an_unresolved_patch_and_cites_the_tracker():
+    tracker = PatchTracker()
+    tracker.record_dependency_bump("DEP-9", "Bump ruff", "ruff")  # in flight, not terminal
+    status, source = tracker.arc_status()
+    assert status == "watchlist" and "patch_tracker" in source

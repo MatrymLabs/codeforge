@@ -15,6 +15,7 @@ from parts.arc import (
     compose,
     filed_review,
 )
+from parts.arc_ledger import VerdictError, record_verdict
 from parts.session import Session
 
 
@@ -56,6 +57,47 @@ def test_runtime_missing_holds_the_verdict_on_watchlist(tmp_path):
     _seed_evidence(tmp_path)
     # Six dimensions READY, four runtime MISSING -> not READY overall.
     assert filed_review(tmp_path).verdict == WATCHLIST
+
+
+def _file_all_runtime_ready(root):
+    """File a READY verdict for every runtime dimension (what a full gate run would produce)."""
+    for dim in ("change", "patch", "evidence", "release"):
+        record_verdict(dim, READY, f"{dim}-gate: ok", commit="testcommit", root=root)
+
+
+def test_all_ten_compose_to_ready_when_runtime_verdicts_are_filed(tmp_path):
+    # The point of the slice: with the six filed dims READY AND all four runtime verdicts filed
+    # READY, ARC can finally reach a true READY (no longer stuck on WATCHLIST by construction).
+    _seed_evidence(tmp_path)
+    _file_all_runtime_ready(tmp_path)
+    assert filed_review(tmp_path).verdict == READY
+
+
+def test_a_filed_blocked_runtime_verdict_blocks_overall(tmp_path):
+    _seed_evidence(tmp_path)
+    _file_all_runtime_ready(tmp_path)
+    record_verdict("release", BLOCKED, "release_gate: security failed", commit="c", root=tmp_path)
+    assert filed_review(tmp_path).verdict == BLOCKED
+
+
+def test_an_unfiled_runtime_dimension_stays_missing(tmp_path):
+    # The driver files only release+evidence; change+patch have no store and stay MISSING (honest).
+    _seed_evidence(tmp_path)
+    record_verdict("release", READY, "release_gate: ok", commit="c", root=tmp_path)
+    record_verdict("evidence", READY, "test_evidence: ok", commit="c", root=tmp_path)
+    status = {d.name: d.status for d in filed_review(tmp_path).dimensions}
+    assert status["release"] == READY and status["evidence"] == READY
+    assert status["change"] == MISSING and status["patch"] == MISSING
+    assert filed_review(tmp_path).verdict == WATCHLIST  # missing change/patch hold it
+
+
+def test_a_malformed_runtime_verdict_fails_loud(tmp_path):
+    _seed_evidence(tmp_path)
+    directory = tmp_path / "arc-evidence"
+    directory.mkdir()
+    (directory / "2026-07-12-release.json").write_text("{broken", encoding="utf-8")
+    with pytest.raises(VerdictError):
+        filed_review(tmp_path)
 
 
 def _dim(name: str, status: str) -> Dimension:

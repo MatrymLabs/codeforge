@@ -72,3 +72,34 @@ def test_passed_is_true_iff_every_recorded_check_passed(statuses):
     for i, s in enumerate(statuses):
         led.record(f"c{i}", s)
     assert led.passed() == all(s == PASSED for s in statuses)
+
+
+# --- arc_status(): the pure mapping ARC reads (acceptance + refusal) ----------
+
+
+def test_arc_status_of_an_empty_ledger_is_missing():
+    assert EvidenceLedger().arc_status()[0] == "missing"  # nothing recorded, never a pass
+
+
+def test_arc_status_is_ready_when_every_check_passed():
+    led = EvidenceLedger()
+    led.record("a", PASSED)
+    led.record("b", PASSED)
+    assert led.arc_status()[0] == "ready"
+
+
+def test_arc_status_blocks_on_a_failed_or_errored_check():
+    failed = EvidenceLedger()
+    failed.record("a", PASSED)
+    failed.record("b", FAILED)
+    assert failed.arc_status()[0] == "blocked"
+    errored = EvidenceLedger()
+    errored.record("a", ERROR)
+    assert errored.arc_status()[0] == "blocked"
+
+
+def test_arc_status_watchlists_a_soft_gap():
+    led = EvidenceLedger()
+    led.expect("a")  # expected but never run -> MISSING (a soft gap, not a hard fail)
+    led.record("b", PASSED)
+    assert led.arc_status()[0] == "watchlist"

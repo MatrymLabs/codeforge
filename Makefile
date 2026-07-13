@@ -1,4 +1,4 @@
-.PHONY: env fix lint typecheck test property fuzz coverage audit security secrets deps sbom bench doctor patch daily check readiness truth cast-plan smoke repo-integrity ship run world store hardware clean serve db-up db-down db-migrate docs-serve docs-build e2e evolution ritual-fast ritual ritual-down unskew loop
+.PHONY: env fix lint typecheck test property fuzz coverage audit security secrets deps sbom bench doctor patch daily check readiness arc-verdicts truth cast-plan smoke repo-integrity ship run world store hardware clean serve db-up db-down db-migrate docs-serve docs-build e2e evolution ritual-fast ritual ritual-down unskew loop
 
 # --- Environment: create/validate the .venv, fail loud on version mismatch.
 # Uses uv when present (a Rust resolver; measured ~20x faster than pip on this host:
@@ -52,6 +52,14 @@ check: lint typecheck coverage
 # project dashboard, computed from the registry + QualityGate. Read-only. ---
 readiness:
 	@python3 -c "import sys; from parts.registry import load_collective, validate, unfiled_modules; from parts.pm import pm_status; r=load_collective(); p=validate(r)+['unfiled module (not in the registry): '+m for m in unfiled_modules(r)]; print('Registry: CLEAN (no duplicates, no orphans, every module filed)' if not p else 'Registry PROBLEMS:\n  '+'\n  '.join(p)); print(); print(pm_status()); sys.exit(1 if p else 0)"
+
+# --- ARC verdicts: run the release checks and FILE the runtime dimensions' verdicts as dated
+# evidence under arc-evidence/ (git-ignored, reproducible from the recorded commit), so ARC can
+# compose release + evidence from real outcomes. Human-run, not on the inner loop; ARC only READS
+# what this files (`arc status`). change/patch have no store yet and stay honestly MISSING. ---
+arc-verdicts:
+	@python3 -m parts.arc_ledger emit $$(git rev-parse --short HEAD 2>/dev/null || echo unknown)
+	@echo "✓ ARC verdicts filed -> arc-evidence/ (see: arc status)"
 
 # --- Repo integrity: one honest repo-health report (code quality + security +
 # provenance + registry + docs + truth), composed from checks we already own.

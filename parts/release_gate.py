@@ -34,3 +34,8 @@ class ReleaseGate:
 
     def report(self) -> str:
         return self._ledger.report()
+
+    def arc_status(self) -> tuple[str, str]:
+        """The release dimension's ARC verdict, from the evidence core, with a release citation."""
+        status, detail = self._ledger.arc_status()
+        return (status, f"release_gate: {detail}")
