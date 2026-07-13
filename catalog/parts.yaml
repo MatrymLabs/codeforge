@@ -24,7 +24,6 @@
     injection, Django's permission framework, or a policy engine like Casbin/oso
     (RBAC as external policy data). Traded away: the plain, testable refusal path.
   risk: low
-  reuse_score: 5
   purpose: >
     Authorization before capability: check an actor's rank against the rank a
     privileged action requires, and refuse before any of that action's code runs.
@@ -49,7 +48,6 @@
     (Redis pub/sub, RabbitMQ, Kafka) once fan-out must cross processes; Celery for
     durable delivery. Traded away: zero dependencies and in-test determinism.
   risk: low
-  reuse_score: 5
   purpose: >
     Fan an event out to many subscribers, isolating failures: one dead or slow
     consumer can never fault the producer, and a raising sink is pruned.
@@ -74,7 +72,6 @@
     marshmallow / voluptuous) so validation and types come from one declaration
     instead of hand-written gates. Traded away: full control over the error voice.
   risk: low
-  reuse_score: 4
   purpose: >
     Load external data (YAML) through a schema gate so bad states are
     unrepresentable: a malformed row fails loud at load, not deep in a run.
@@ -99,7 +96,6 @@
     or move real isolation to a container / nsjail / firejail sandbox rather than
     an allowlist. Traded away: a tiny, auditable surface with no new attack area.
   risk: low
-  reuse_score: 5
   purpose: >
     Run only allowlisted commands as argument lists (never a shell), in a fixed
     directory, under a timeout and an output cap, with each run logged. Unknown
@@ -125,7 +121,6 @@
     serve it over FastAPI, or integrate an LMS (Moodle / xAPI) for standards-based
     training records. Traded away: a self-contained engine with no server to run.
   risk: low
-  reuse_score: 5
   purpose: >
     Load a question bank from data, ask questions, check answers, hand out hints
     and explanations, and score a run - a domain-agnostic assessment engine.
@@ -151,7 +146,6 @@
     or drive them from a CI matrix instead of a hand-rolled runner. Traded away:
     a single zero-config entry point that reads its own gate list.
   risk: low
-  reuse_score: 4
   purpose: >
     Re-run a suite of checks read-only, stop at the first failure, and prescribe
     the fix - a diagnostic that reports but never mutates.
@@ -176,7 +170,6 @@
     WeasyPrint for PDF), or emit structured events (structlog) to a document store
     instead of Markdown files. Traded away: greppable plain text, diffable in git.
   risk: low
-  reuse_score: 4
   purpose: >
     One writer for dated evidence reports: file any text under reports/<category>/ with a
     consistent dated-path convention, so every producer files the same way. In-repo it is
@@ -203,7 +196,6 @@
     frameless path we declined here, because a documented contract a client can codegen
     from is worth the dependency. Traded away: zero third-party surface.
   risk: low
-  reuse_score: 5
   purpose: >
     Expose data through typed Pydantic models so the contract validates at the edge and
     self-documents in OpenAPI: a client generates types from it, and a schema change surfaces
@@ -229,7 +221,6 @@
     hosted APM (Datadog/Sentry). Traded away: a zero-dependency stdlib metrics registry
     you can read, and no vendor lock-in.
   risk: low
-  reuse_score: 5
   purpose: >
     One HTTP middleware that turns every request into a structured JSON log event and a
     Prometheus metric (count + latency by route template, cardinality bounded), so a service
@@ -255,7 +246,6 @@
     scattered through the app. Traded away: a tiny, mockable seam you can test offline and
     swap brains behind - the SDK is touched in exactly one place.
   risk: medium
-  reuse_score: 4
   purpose: >
     Put an LLM behind a protocol seam with an INJECTED client, so a feature is one API key
     away, its output is schema-enforced and re-validated, and tests drive a fake with no
@@ -281,7 +271,6 @@
     that runs SQLite in dev and tests and PostgreSQL in production, unchanged, with Alembic
     owning the schema.
   risk: low
-  reuse_score: 5
   purpose: >
     One typed ORM behind one URL resolver: SQLite by default (zero-config for dev and tests),
     PostgreSQL when DATABASE_URL is set, with Alembic owning schema migrations. Proven end to
@@ -307,7 +296,6 @@
     away: no template engine and no build step - data projected straight to accessible,
     escaped HTML. (When a real SPA is wanted, that is a separate flagship, not this part.)
   risk: low
-  reuse_score: 4
   purpose: >
     Project data to a semantic, accessible, escaped HTML page or fragment with stdlib only -
     no template engine, no JS build - suitable for server-rendering and HTMX enhancement.
@@ -332,7 +320,6 @@
     small, explicit, frozen catalog that fails loud on a bad value and redacts secrets, with
     no extra dependency beyond Pydantic.
   risk: low
-  reuse_score: 4
   purpose: >
     One typed, validated catalog of the environment: it fails loud on a bad value (a
     non-numeric or out-of-range port), is frozen, and renders with credentials redacted (a
@@ -358,7 +345,6 @@
     event-sourced aggregates. Traded away: a big engine's timers and parallel regions; kept a
     small pure core that returns a refusal with a reason instead of raising.
   risk: low
-  reuse_score: 5
   purpose: >
     Model a lifecycle as explicit states and guarded transitions, so legal moves are a table
     lookup and illegal moves are refused with a reason instead of hidden in scattered flags.
@@ -384,7 +370,6 @@
     JSON for a web view. Traded away: a dependency; kept a dependency-free fixed-width renderer
     pinned by one golden snapshot.
   risk: low
-  reuse_score: 5
   purpose: >
     Turn a structured record into a readable, fixed-width sheet from a decoupled view model
     (not database fields), surviving long names, missing optional fields, and unknown values
@@ -410,7 +395,6 @@
     equipment/status modifier stack. Traded away for now: tuned balance and modifier stacking;
     kept a pure, deterministic, one-file calculator that is exact and testable.
   risk: low
-  reuse_score: 4
   purpose: >
     Compute derived values from base inputs with pure, deterministic, integer formulas, so the
     outputs are exact, testable, and changed in exactly one place when the rules change.
@@ -435,7 +419,6 @@
     away: a schema layer; kept plain validated seed data that fails loud on a bad job and
     fills sensible defaults for optional fields.
   risk: low
-  reuse_score: 4
   purpose: >
     Define roles/classes as validated data (identity, attributes, role tags, ability loadout)
     that a loader gates at load, so new jobs are a data edit, not a code change.
@@ -460,7 +443,6 @@
     machine. Traded away: real-time scheduling; kept a deterministic tick-per-action clock that
     is exact and trivially testable.
   risk: low
-  reuse_score: 4
   purpose: >
     Track named countdowns (cooldowns, effect durations) that advance one tick per action and
     drop themselves at zero, so "is this ready / still active?" is a deterministic lookup.
@@ -484,7 +466,6 @@
     model modifiers as an event-sourced pipeline or a rules DSL. Traded away: extensibility we
     do not need yet; kept a pure, immutable, order-independent stack with two explicit modes.
   risk: low
-  reuse_score: 5
   purpose: >
     Combine many flat/percent modifiers into one effective value by an explicitly chosen
     strategy (additive or compound), pure and order-independent, clamped to bounds.
@@ -509,7 +490,6 @@
     Traded away for now: depth (durability/sets) and persistence; kept a clean slot map whose
     modifiers flow through the ModifierStack into derived stats.
   risk: low
-  reuse_score: 4
   purpose: >
     Equip items into named slots and fold their modifiers into computed stats through a shared
     modifier stack, so gear changes outcomes without special-casing each piece.
@@ -535,7 +515,6 @@
     cross a network or a language boundary. Traded away: a plain frozen dataclass that
     round-trips with no dependency and no schema server.
   risk: low
-  reuse_score: 4
   purpose: >
     Capture design INTENT and constraints as typed, inspectable data, separate from any
     emitted code. Composes an existing spec (the Blueprint) and adds interfaces, invariants,
@@ -559,7 +538,6 @@
     express the rules in a policy engine (OPA/Rego, Casbin) once they must live outside the
     code and be edited by non-engineers. Traded away: plain, testable, typed ConstraintResults.
   risk: low
-  reuse_score: 4
   purpose: >
     Make invalid states inexpressible: reject a candidate before it is built when it violates
     prohibited dependencies, illegal combinations, or governance rules. Returns a typed result
@@ -583,7 +561,6 @@
     back the bank with SQLite or a test-case database once it must persist across machines and
     feed a CI gate. Traded away: an in-memory, JSON-serializable store with zero setup.
   risk: low
-  reuse_score: 4
   purpose: >
     Turn every discovered failure into governed, deduplicated knowledge: normalize a failure to
     a signature, collapse repeats, and keep it so the same defect can never silently recur.
@@ -605,7 +582,6 @@
     swap in a formal Pareto-front or a scikit-style scorer once objectives grow many and
     trade-offs must be plotted. Traded away: a transparent, hand-auditable weighted sum.
   risk: low
-  reuse_score: 4
   purpose: >
     Choose among options honestly: a candidate that fails a hard gate cannot win, and only then
     do weighted objectives produce an overall score. Every raw and normalized metric stays
@@ -628,7 +604,6 @@
     route each evaluator to an LLM or a heavier static analyzer once the dimensions need
     judgement code cannot give. Traded away: deterministic, offline, dependency-free scoring.
   risk: low
-  reuse_score: 4
   purpose: >
     Score one artifact on several quality dimensions with a small set of specialized, read-only
     evaluators. Each returns a structured result (score, findings, evidence); none can merge,
@@ -652,7 +627,6 @@
     Traded away (deliberately, v1): autonomous mutation - the candidates are hand-authored and
     Josh selects the elite.
   risk: low
-  reuse_score: 3
   purpose: >
     Bake off a small population of candidate implementations against an oracle: validate the
     genome, score via the evaluator swarm, apply multi-objective fitness, capture failures as
@@ -676,7 +650,6 @@
     runs must survive a restart and span services. Traded away (v1): persistence and parallelism,
     keeping the run in-memory and single-threaded, which keeps it pure and testable.
   risk: low
-  reuse_score: 5
   purpose: >
     Drive any lifecycle defined as data: role-gated moves between states, a recorded history
     trail, and named effects the caller applies. One core, many adapters, proven in the game as a
@@ -702,7 +675,6 @@
     stops being single-threaded. Traded away (v1): concurrency and cross-process state, keeping
     it pure, deterministic (injected clock), and dependency-free.
   risk: low
-  reuse_score: 4
   purpose: >
     Cap a sustained rate while allowing short bursts up to a capacity, via the token-bucket
     algorithm with an injected clock. Returns an allow/deny decision plus the exact retry_after.
@@ -729,7 +701,6 @@
     reach for a library like tenacity. Traded away (v1): jitter and cancellation, keeping the core
     pure, deterministic (injected sleep), and dependency-free.
   risk: low
-  reuse_score: 4
   purpose: >
     Retry transient failures with exponential backoff, re-raise permanent ones and the final one
     (never swallowed). The sleep is injected, so the schedule and attempt count are deterministic.
@@ -756,7 +727,6 @@
     a library (pybreaker, resilience4j). Traded away (v1): a rolling window and concurrency, keeping
     it a deterministic consecutive-failure breaker composed on our own state-machine part.
   risk: low
-  reuse_score: 4
   purpose: >
     Fail fast when a dependency is broken: trip open after consecutive failures, reject calls
     immediately, and probe recovery after a reset timeout. Built ON the state-machine part (a part
@@ -783,7 +753,6 @@
     Traded away (v1): durability and transactions, keeping a pure in-memory store that domain code
     and tests can use without a database.
   risk: low
-  reuse_score: 5
   purpose: >
     Hide storage behind a small collection-like Protocol (add/get/list/remove), so domain code
     never touches raw queries. Identity-agnostic via an injected key function. One core, two
@@ -809,7 +778,6 @@
     (v1): async checks and timeouts, keeping a synchronous, dependency-free registry whose only
     rule is that unknown is never called healthy.
   risk: low
-  reuse_score: 4
   purpose: >
     Run named checks and aggregate an honest overall status (worst wins); an unknown or failing
     check is never reported healthy, and an empty registry is unknown. One core, two adapters: a
@@ -835,7 +803,6 @@
     nested/recursive schemas and coercion, keeping small composable rules over a flat mapping with
     no dependencies.
   risk: low
-  reuse_score: 5
   purpose: >
     Validate a mapping against composable rules and collect every issue at once, each with its field
     and a clear message; raise loud on demand. One core, two adapters: it previews a character name
@@ -861,7 +828,6 @@
     Traded away (v1): targeting and rollouts, keeping a simple typed registry with a clear
     override-beats-default precedence and no dependencies.
   risk: low
-  reuse_score: 4
   purpose: >
     Toggle features at runtime without a redeploy: register flags with defaults, override them, reset,
     retire; an override beats the default and an unknown flag is an error, never silently off. One
@@ -886,7 +852,6 @@
     add timestamps, artifact hashes, or a JUnit ingester. Traded away (v1): time and artifacts,
     keeping a deterministic ledger whose only rule is that missing evidence is never a pass.
   risk: low
-  reuse_score: 4
   purpose: >
     Record check evidence with its environment and commit; pass only when every declared check has
     PASSED evidence, so a step that never ran can never be reported ready. One core, two adapters: a
@@ -912,7 +877,6 @@
     (deliberately): dynamic import/exec - the caller supplies the object, so the trust boundary
     stays explicit and safe by construction.
   risk: low
-  reuse_score: 4
   purpose: >
     Register named plugins with validated metadata (version, capabilities) and enable/disable them,
     never loading arbitrary code. One core, two adapters: pluggable in-world heralds in the game and
@@ -938,7 +902,6 @@
     unicode folding and HTML/SQL escaping (which belong at the output boundary), keeping a small,
     deterministic, idempotent normalizer.
   risk: low
-  reuse_score: 4
   purpose: >
     Normalize untrusted text deterministically and idempotently: strip control chars, fold
     whitespace, trim, optionally lowercase, cap length. One core, two adapters: a sanitized player
@@ -964,7 +927,6 @@
     canary/rollback telemetry. Traded away (v1): persistence (in-memory) and an approval quorum,
     keeping a small, gated, composable core.
   risk: medium
-  reuse_score: 5
   purpose: >
     Record a change/patch and drive it through a role-gated lifecycle (identified -> triaged ->
     approved -> building -> testing -> canary -> deployed -> verified -> closed, plus reject and
@@ -991,7 +953,6 @@
     add a max-buffer guard to bound memory on a delimiter that never arrives, and a length-prefixed
     framing mode. Traded away (v1): length-prefix and regex framing, keeping a small delimiter framer.
   risk: low
-  reuse_score: 5
   purpose: >
     Frame a byte stream into complete, delimiter-terminated messages, buffering a partial tail until
     the rest arrives, because the naive endswith check silently splits or drops messages. One core,
@@ -1017,7 +978,6 @@
     add wildcard/base-type subscriptions and a once() helper. Traded away (v1): async dispatch and
     subscription priorities, keeping a small synchronous exact-type bus.
   risk: low
-  reuse_score: 5
   purpose: >
     Decouple publishers from subscribers with a typed synchronous pub/sub: subscribe handlers by
     exact signal type, publish a signal to them, neither side knowing the other. One core, two

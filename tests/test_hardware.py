@@ -21,6 +21,12 @@ def test_shipped_catalog_loads_and_every_part_maps_to_a_domain():
     assert all(part.source for part in parts)  # each names its source file
 
 
+def test_reuse_score_is_derived_not_authored():
+    # reuse_score is DERIVED (count of reuse domains), never a hand-entered, ungated claim.
+    parts = load_catalog()
+    assert all(part.reuse_score == len(part.reuse) for part in parts)
+
+
 def test_every_shipped_part_is_free_to_use_and_records_its_pattern():
     # the Free-to-Use rule, enforced: clear provenance + the pattern it was rebuilt from
     parts = load_catalog()
