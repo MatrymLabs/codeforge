@@ -11,6 +11,7 @@ import re
 from dataclasses import dataclass
 from pathlib import Path
 
+from parts.hardware import source_gaps
 from parts.integrity import overclaim_hits, presence_gaps
 from parts.qualitygate import FAIL, gate_all
 from parts.registry import load_collective, validate
@@ -30,12 +31,33 @@ class TruthCheck:
     evidence: str
 
 
-def _readme_hardcoded_test_counts(root: Path) -> list[str]:
-    """Drift-prone claims: an exact test count in the README goes stale (it has, 3x)."""
-    readme = root / "README.md"
-    if not readme.exists():
-        return []
-    return re.findall(r"\b\d+ tests\b", readme.read_text(encoding="utf-8", errors="ignore"))
+# Dated, point-in-time record dirs: a count there is a snapshot, not a drift-prone live claim.
+_SNAPSHOT_DIRS = frozenset(
+    {"captains-log", "keel_records", "pioneer_experiments", "reports", "postmortems"}
+)
+
+
+def _hardcoded_test_counts(root: Path) -> list[str]:
+    """Drift-prone claims: an exact test count in the README or living docs goes stale (it has).
+
+    Scans README.md and every docs/**.md except dated snapshot dirs (where a count is a
+    point-in-time record, not a live claim). The CI badge is the one live source of the count.
+    """
+    targets = [root / "README.md"]
+    docs = root / "docs"
+    if docs.is_dir():
+        targets += [
+            p
+            for p in sorted(docs.rglob("*.md"))
+            if not _SNAPSHOT_DIRS.intersection(p.relative_to(docs).parts)
+        ]
+    hits: list[str] = []
+    for path in targets:
+        if not path.exists():
+            continue
+        text = path.read_text(encoding="utf-8", errors="ignore")
+        hits += [f"{path.name}: {m}" for m in re.findall(r"\b\d+ tests\b", text)]
+    return hits
 
 
 def truth_checks(root: Path | None = None) -> list[TruthCheck]:
@@ -46,11 +68,12 @@ def truth_checks(root: Path | None = None) -> list[TruthCheck]:
         return TruthCheck(claim, VERIFIED if ok else FLAGGED, good if ok else bad)
 
     over = overclaim_hits(base)
-    counts = _readme_hardcoded_test_counts(base)
+    counts = _hardcoded_test_counts(base)
     gaps = presence_gaps(base)
     records = load_collective()
     problems = validate(records) if records else ["registry empty"]
     fails = [r.designation for r in gate_all(records) if r.verdict == FAIL]
+    catalog_gaps = source_gaps()
 
     return [
         check(
@@ -60,7 +83,7 @@ def truth_checks(root: Path | None = None) -> list[TruthCheck]:
             "FLAGS: " + ", ".join(over),
         ),
         check(
-            "README makes no drift-prone hardcoded test count",
+            "README and docs make no drift-prone hardcoded test count",
             not counts,
             "none (the CI badge is the live source)",
             "hardcoded: " + ", ".join(counts),
@@ -76,6 +99,12 @@ def truth_checks(root: Path | None = None) -> list[TruthCheck]:
             not problems,
             "clean",
             "; ".join(problems),
+        ),
+        check(
+            "Every Hardware Store part cites a source file that exists",
+            not catalog_gaps,
+            "all present",
+            "MISSING SOURCE: " + ", ".join(catalog_gaps),
         ),
         check(
             "QA board has no failing objects (active claims backed by tests)",
