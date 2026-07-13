@@ -96,8 +96,10 @@ def main(argv: list[str] | None = None) -> int:
         import uvicorn
 
         from parts.api import app
+        from parts.config import Settings
 
-        uvicorn.run(app, host="0.0.0.0", port=8000)
+        # Honor $PORT like the web command does; Settings types + validates it.
+        uvicorn.run(app, host="0.0.0.0", port=Settings.load().port)
         return 0
     if cmd == "web":
         import uvicorn

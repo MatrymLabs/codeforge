@@ -38,7 +38,7 @@ path with `CODEFORGE_CATALOG`.
   purpose: >               # required · one honest sentence: what it does
     …
   tags: [rbac, security]   # optional
-  reuse_score: 5           # optional · 1-5, how broadly it reuses
+  # reuse_score is DERIVED (the count of reuse domains above), never authored here
 ```
 
 ## Rules
