@@ -50,3 +50,31 @@ source of truth for evolving a real (Postgres) schema.
   service container, after `alembic upgrade head`.
 - **The driver is an optional extra**, folded into the dependency gate (`make deps`) and
   justified in the ledger. codeforge core runs on stdlib `sqlite3` with no extra installed.
+
+## Backup and restore
+
+The live demo persists to a SQLite file (`codeforge.db`) and, before this, had no recovery path.
+
+**Back up** (safe while the server is running - it uses SQLite's online `.backup`):
+
+```
+make backup          # -> backups/codeforge-<UTC-timestamp>.db (git-ignored, reproducible)
+```
+
+`parts.db.backup_db()` files a consistent snapshot even under concurrent writes. On a PostgreSQL
+backend (`DATABASE_URL` set) it refuses loud and points you to `pg_dump`.
+
+**Restore** (SQLite):
+
+1. Stop the server (`make ritual-down`, or kill the `spark`/gateway process; `lsof -i :4000`).
+2. Copy a snapshot over the live file: `cp backups/codeforge-<stamp>.db codeforge.db`.
+3. Restart.
+
+**Schema-drift caveat.** `open_archive_session` runs `create_all(checkfirst=True)`, which creates
+missing *tables* but never missing *columns*. So if the ORM gains a column, a plain restart yields
+a silent "no such column" at runtime. After any model change, run the migration, not just a
+restart:
+
+```
+alembic upgrade head
+```
