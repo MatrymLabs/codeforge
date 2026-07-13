@@ -1,4 +1,4 @@
-.PHONY: env fix lint typecheck test property fuzz coverage audit audit-runtime security secrets deps sbom bench doctor patch daily check readiness arc-verdicts truth cast-plan smoke repo-integrity ship run world store hardware clean serve backup db-up db-down db-migrate docs-serve docs-build e2e evolution ritual-fast ritual ritual-down unskew loop
+.PHONY: env fix lint typecheck test property fuzz coverage audit audit-runtime security sast secrets deps sbom bench doctor patch daily check readiness arc-verdicts truth cast-plan smoke repo-integrity ship run world store hardware clean serve backup db-up db-down db-migrate docs-serve docs-build e2e evolution ritual-fast ritual ritual-down unskew loop
 
 # --- Environment: create/validate the .venv, fail loud on version mismatch.
 # Uses uv when present (a Rust resolver; measured ~20x faster than pip on this host:
@@ -42,11 +42,20 @@ property:
 fuzz:
 	pytest -m fuzz
 
+# Offline SAST for the pre-commit gate: bandit + the secret scan (both local, no network).
+# This is the local/CI parity fix: SRI hashes once passed `make check` locally and then failed
+# CI's secret-scan step, because check did not run it. pip-audit stays out (needs network; CI's
+# blocking audit-runtime gate and `make doctor` cover it).
+sast:
+	bandit -c pyproject.toml -r parts forge.py -q
+	@git ls-files | xargs detect-secrets-hook --baseline .secrets.baseline
+
 # The full gate. `coverage` runs the WHOLE suite (property included) once, WITH
 # instrumentation and the threshold -- so `check` covers, tests, and gates in a single
-# suite run instead of two. `test`/`property` remain as fast, focused, no-coverage
-# targets for the inner dev loop; `make ritual-fast` is the ~1s preflight.
-check: lint typecheck coverage
+# suite run instead of two. `sast` mirrors CI's offline security steps so a green local
+# check cannot fail CI's bandit/secret scan. `test`/`property` remain as fast, focused,
+# no-coverage targets for the inner dev loop; `make ritual-fast` is the ~1s preflight.
+check: lint typecheck coverage sast
 
 # --- Readiness: the global self-audit -- registry validates (gates), then the
 # project dashboard, computed from the registry + QualityGate. Read-only. ---
