@@ -19,7 +19,9 @@ from parts.evolution.subjects import (
 
 
 def _genome() -> BlueprintGenome:
-    seed = bp.Blueprint("slugify", "Slugify", "Normalize text to a label.", ("pure",))
+    seed = bp.Blueprint(
+        "slugify", "Slugify", "Normalize text to a label.", ("pure",), ("no untrusted input",)
+    )
     return BlueprintGenome(
         genome_id="slugify",
         seed=seed,

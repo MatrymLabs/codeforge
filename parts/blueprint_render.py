@@ -51,6 +51,13 @@ def render_html(bp: Blueprint) -> str:
         f"<ol>{reqs}</ol>",
         "</section>",
     ]
+    sec = "".join(f"<li>{esc(s)}</li>" for s in bp.security)
+    body += [
+        '<section aria-labelledby="sec-h">',
+        '<h2 id="sec-h">Security</h2>',
+        f"<ul>{sec}</ul>",
+        "</section>",
+    ]
     if bp.tasks:
         tasks = "".join(f"<li>{esc(t)}</li>" for t in bp.tasks)
         body += [
@@ -101,6 +108,8 @@ def render_fragment(bp: Blueprint) -> str:
         f'<p class="bp-intent">{esc(bp.intent)}</p>',
         "<h3>Requirements</h3>",
         "<ol>" + "".join(f"<li>{esc(r)}</li>" for r in bp.requirements) + "</ol>",
+        "<h3>Security</h3>",
+        "<ul>" + "".join(f"<li>{esc(s)}</li>" for s in bp.security) + "</ul>",
     ]
     if bp.tasks:
         out.append("<h3>Tasks</h3>")

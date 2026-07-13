@@ -1,9 +1,11 @@
 """CARD: blueprint -- the Blueprint: a software idea forged into a structured spec.
 
 The forge's planning artifact. A Blueprint captures an idea as DATA before any code: a
-permanent label, a title, the intent, the requirements it must satisfy, and the tasks that
-would build it. It is authored from the operator's own words (the Architect NPC advises but
-never invents) and saved as a JSON record with a Markdown twin, so a plan is git-diffable
+permanent label, a title, the intent, the requirements it must satisfy, the security it must
+account for (threat model, trust boundaries, authz, failure modes: required, so security is
+designed in, not bolted on), and the tasks that would build it. It is authored from the
+operator's own words (the Architect NPC advises but never invents) and saved as a JSON record
+with a Markdown twin, so a plan is git-diffable
 evidence, not a chat log. A loader gate validates every field and fails loud; the static
 renderer (`parts/blueprint_render.py`) projects it to HTML. State is the JSON; Markdown and
 HTML are projections (architecture law 1: text never mutates the record).
@@ -36,6 +38,9 @@ class Blueprint:
     title: str
     intent: str
     requirements: tuple[str, ...]
+    # Security-by-design: threat model, trust boundaries, authz, failure modes. Required and
+    # fail-loud, so no plan is filed without stating what can go wrong (security left of tests).
+    security: tuple[str, ...]
     tasks: tuple[str, ...] = ()
     stack: tuple[tuple[str, str], ...] = ()  # (layer, choice) pairs; a plan may not have chosen yet
     status: str = "draft"  # draft | validated -- a VeritasGate label, never inflated
@@ -72,6 +77,12 @@ def from_dict(raw: Any) -> Blueprint:
     requirements = _clean_list(raw.get("requirements", []), "requirements", bp_id)
     if not requirements:
         raise BlueprintError(f"blueprint {bp_id!r}: needs at least one requirement")
+    security = _clean_list(raw.get("security", []), "security", bp_id)
+    if not security:
+        raise BlueprintError(
+            f"blueprint {bp_id!r}: needs at least one 'security' consideration "
+            "(threat model, trust boundaries, authz, failure modes) -- security by design"
+        )
     tasks = _clean_list(raw.get("tasks", []), "tasks", bp_id) if raw.get("tasks") else ()
     stack_raw = raw.get("stack", {})
     if not isinstance(stack_raw, dict):
@@ -80,7 +91,7 @@ def from_dict(raw: Any) -> Blueprint:
     status = str(raw.get("status", "draft"))
     if status not in _STATUSES:
         raise BlueprintError(f"blueprint {bp_id!r}: status must be one of {_STATUSES}")
-    return Blueprint(bp_id, title, intent, requirements, tasks, stack, status)
+    return Blueprint(bp_id, title, intent, requirements, security, tasks, stack, status)
 
 
 def to_dict(bp: Blueprint) -> dict[str, Any]:
@@ -90,6 +101,7 @@ def to_dict(bp: Blueprint) -> dict[str, Any]:
         "title": bp.title,
         "intent": bp.intent,
         "requirements": list(bp.requirements),
+        "security": list(bp.security),
         "tasks": list(bp.tasks),
         "stack": {layer: choice for layer, choice in bp.stack},
         "status": bp.status,
@@ -110,6 +122,8 @@ def to_markdown(bp: Blueprint) -> str:
         "",
     ]
     lines += [f"{i}. {r}" for i, r in enumerate(bp.requirements, 1)]
+    lines += ["", "## Security", ""]
+    lines += [f"- {s}" for s in bp.security]
     if bp.tasks:
         lines += ["", "## Tasks", ""]
         lines += [f"- [ ] {t}" for t in bp.tasks]

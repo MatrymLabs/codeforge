@@ -21,10 +21,18 @@
 12. Acceptance criteria: ARC composes all ten dimensions from real sources; the verdict is honest and cited; missing/errored dimensions can never read as ready; make check stays green; the ARC Chamber verb is reachable through handle_command.
 13. Definition of Done: parts/arc.py + test twin + tick test green; the `arc` verb wired and in HELP; filed in the Classification Registry; cataloged if it earns Hardware Store status; a change-management/evidence pattern reference; and this Blueprint moved to status validated once the slice is built and proven.
 
+## Security
+
+- Threat model: the adversary is a dishonest or stale verdict, not a network attacker. The real risks are an evidence artifact that claims READY when it is not, a stale verdict computed at an old commit, and a tampered or malformed evidence file. ARC is offline, read-only, and reachable only through the local tick.
+- Trust boundaries: ARC trusts ONLY the filed artifacts it reads (arc-evidence/, security-evidence/, the registry, ADRs). It never runs a gate as a side effect, never mutates world state or a gate's records (architecture law 1), and holds no secret. The input boundary is the evidence directory; a caller cannot inject a verdict except by filing a signed artifact through the gate that owns it.
+- AuthN/AuthZ: `arc status` is a read-only projection exposing no mutation and no secret, so it is not rank-gated. If ARC ever gains a mutating or owner-only action, it must adopt the existing @-verb rank check (authorization-before-capability) first.
+- Failure modes: a dimension with no filed verdict is MISSING and MISSING is never a pass; a malformed or unreadable artifact fails loud (VerdictError) rather than rendering a false verdict; a stale verdict is a known residual risk (each verdict carries its commit; a staleness downgrade is a later slice). ARC degrades to WATCHLIST, never silently to READY.
+- Data classification: ARC reads non-sensitive evidence metadata only (statuses, counts, commits). No PII, credentials, or CUI pass through it.
+
 ## Tasks
 
-- [x] Slice 1 (read-only compose): parts/arc.py with a pure compose() over dimensions, the `arc status` panel, the verb, and a tick test. Unwired dimensions declared MISSING, never hidden.
-- [~] Slice 2 (wire the real sources): the six filed dimensions read the repo directly. The runtime gates now file a dated verdict via `parts/arc_ledger` (git-ignored `arc-evidence/`, reproducible from the recorded commit), which `make arc-verdicts` produces from real check outcomes; `release` and `evidence` read theirs read-only. `change`/`patch` have no persistent store yet, so they stay honestly MISSING (a store is a later slice, near slice 4). Result: 8/10 dimensions read real filed evidence; a true READY is reachable once a change/patch store lands.
+- [ ] Slice 1 (read-only compose): build parts/arc.py with a pure compose() over a list of dimensions, each dimension a (name, status, source) triple; render an `arc status` panel; wire the verb and a tick test. Sources start as the gates already emitting a verdict; unwired dimensions are declared MISSING, never hidden.
+- [ ] Slice 2 (wire the real sources): feed each of the ten dimensions from its existing gate's output (change_ledger/patch_tracker/test_evidence/qualitygate/integrity/release_gate/make deps/security/performance), read-only.
 - [ ] Slice 3 (the room): make the ARC Chamber a real place per the world-is-the-interface vision, so entering it shows the current ARC verdict.
 - [ ] Slice 4 (flow): let a change record (change_ledger) carry an ARC verdict reference, so 'every meaningful change flows through ARC' becomes literally true, gated by Josh's approval since it touches the change lifecycle.
 - [ ] Throughout: honest labels only (ready | watchlist | blocked), cite every source, never claim certification, and keep ARC a reader that mutates nothing.

@@ -24,6 +24,7 @@ _GOOD_DRAFT = BlueprintDraft(
     title="An AI-drafted plan",
     intent="Prove the drafter end to end.",
     requirements=["It must validate through the same gate."],
+    security=["Threat model: the model's draft is untrusted (Tier-4) until the gate validates it."],
     tasks=["Build it."],
     stack={"engine": "custom Python"},
 )
@@ -80,7 +81,9 @@ def test_none_output_fails_loud():
 
 def test_schema_valid_but_blueprint_invalid_draft_fails_loud():
     # The model returns a schema-valid object with a bad id; the Blueprint gate still refuses.
-    bad = BlueprintDraft(blueprint_id="Bad-Id", title="X", intent="y", requirements=["r"])
+    bad = BlueprintDraft(
+        blueprint_id="Bad-Id", title="X", intent="y", requirements=["r"], security=["s"]
+    )
     with pytest.raises(BlueprintDraftError) as err:
         ClaudeBlueprintDrafter(_FakeClient(parsed=bad)).draft("idea")
     assert "invalid" in str(err.value)

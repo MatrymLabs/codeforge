@@ -29,6 +29,7 @@ _GOOD = {
     "title": "A Sample Plan",
     "intent": "Prove the Blueprint spine end to end.",
     "requirements": ["It must validate loudly.", "It must render to HTML."],
+    "security": ["Threat model: untrusted input at the gate.", "Trust boundary: the loader."],
     "tasks": ["Write the model.", "Write the renderer."],
     "stack": {"engine": "custom Python", "tests": "pytest"},
     "status": "draft",
@@ -55,10 +56,28 @@ def test_markdown_shows_the_plan():
 
 
 def test_tasks_and_stack_are_optional():
-    lean = {"blueprint_id": "lean", "title": "Lean", "intent": "min", "requirements": ["one"]}
+    lean = {
+        "blueprint_id": "lean",
+        "title": "Lean",
+        "intent": "min",
+        "requirements": ["one"],
+        "security": ["threat model: none of note; local-only, no untrusted input"],
+    }
     bp = from_dict(lean)
     assert bp.tasks == ()
     assert bp.stack == ()
+
+
+def test_security_is_required_and_shows_in_markdown():
+    bp = from_dict(_GOOD)
+    assert bp.security == (
+        "Threat model: untrusted input at the gate.",
+        "Trust boundary: the loader.",
+    )
+    md = to_markdown(bp)
+    assert "## Security" in md
+    assert "- Threat model: untrusted input at the gate." in md
+    assert from_dict(to_dict(bp)) == bp  # security round-trips through JSON
 
 
 def test_write_files_the_json_and_markdown_twins(tmp_path):
@@ -99,6 +118,9 @@ def test_shipped_example_is_valid():
         ({"requirements": []}, "at least one requirement"),
         ({"requirements": ["ok", ""]}, "requirements[1]"),
         ({"requirements": "not a list"}, "must be a list"),
+        ({"security": []}, "security"),
+        ({"security": ["ok", "  "]}, "security[1]"),
+        ({"security": "not a list"}, "must be a list"),
         ({"stack": ["not", "a", "map"]}, "stack"),
         ({"status": "shipped"}, "status must be one of"),
     ],

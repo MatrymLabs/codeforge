@@ -20,6 +20,7 @@ def _seed() -> bp.Blueprint:
         title="Score Sheet Renderer",
         intent="Render a character view model as a fixed-width panel.",
         requirements=("pure function", "deterministic output"),
+        security=("threat model: pure function, no untrusted input or state",),
         tasks=("define the view model", "render columns"),
     )
 
