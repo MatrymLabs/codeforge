@@ -62,13 +62,18 @@ class Part:
     risk: str
     reuse: dict[str, str]
     tags: list[str] = field(default_factory=list)
-    reuse_score: int = 0
     source_status: str = "original"  # provenance: original / mit / apache-2.0 / ...
     license: str = "MIT"  # the reuse license (this repo's own code is MIT)
     influence: str = ""  # the KNOWN PATTERN it was rebuilt from -- harvest patterns, not code
     experimental: str = (
         ""  # the road NOT taken: the deliberate alternative (framework or frameless)
     )
+
+    @property
+    def reuse_score(self) -> int:
+        """How broadly this part reuses: DERIVED as the count of reuse domains, never a
+        hand-entered claim (derive-don't-store; no self-flattering, ungated number)."""
+        return len(self.reuse)
 
 
 class CatalogError(ValueError):
@@ -107,7 +112,6 @@ def _coerce(raw: Any, index: int) -> Part:
         risk=risk,
         reuse={str(domain): str(use) for domain, use in reuse.items()},
         tags=[str(tag) for tag in raw.get("tags", [])],
-        reuse_score=int(raw.get("reuse_score", 0)),
         source_status=source_status,
         license=str(raw.get("license", "MIT")),
         influence=str(raw.get("influence", "")),
