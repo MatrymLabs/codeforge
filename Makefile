@@ -1,4 +1,4 @@
-.PHONY: env fix lint typecheck test property fuzz coverage audit security secrets deps sbom bench doctor patch daily check readiness arc-verdicts truth cast-plan smoke repo-integrity ship run world store hardware clean serve db-up db-down db-migrate docs-serve docs-build e2e evolution ritual-fast ritual ritual-down unskew loop
+.PHONY: env fix lint typecheck test property fuzz coverage audit audit-runtime security secrets deps sbom bench doctor patch daily check readiness arc-verdicts truth cast-plan smoke repo-integrity ship run world store hardware clean serve db-up db-down db-migrate docs-serve docs-build e2e evolution ritual-fast ritual ritual-down unskew loop
 
 # --- Environment: create/validate the .venv, fail loud on version mismatch.
 # Uses uv when present (a Rust resolver; measured ~20x faster than pip on this host:
@@ -100,6 +100,16 @@ coverage:
 
 audit:
 	pip-audit --skip-editable
+
+# --- Runtime CVE gate (BLOCKING): audit only the RUNTIME dependency set (what actually
+# ships), so a known CVE in a shipped dependency fails the build and upholds the "zero
+# unresolved high/critical vulns" law. Build-tooling CVEs stay in the informational
+# whole-env `audit`, so an unfixable pip/setuptools advisory never reds the build.
+# A documented exception uses `pip-audit --ignore-vuln <ID>` with a reason. Needs uv. ---
+audit-runtime:
+	@command -v uv >/dev/null 2>&1 || { echo "audit-runtime needs uv (see make env)"; exit 1; }
+	@uv export --no-dev --no-emit-project --format requirements-txt > runtime-requirements.txt
+	pip-audit -r runtime-requirements.txt
 
 # --- SBOM: a CycloneDX software bill of materials (SSDF supply-chain evidence).
 # Generated from the installed environment; the output is git-ignored (reproducible

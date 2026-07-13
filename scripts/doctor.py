@@ -1,8 +1,8 @@
 """Run each quality gate read-only, stop at the first failure, and prescribe the fix.
 
 Reruns the gates (never parses stale logs) so it's always truthful about the
-current state. Blocking gates stop the run; pip-audit is informational - it
-reports CVEs but does not fail doctor, matching the non-blocking CI step.
+current state, and mirrors CI's blocking security surface locally: SAST (bandit),
+the secret scan, and a runtime-dependency CVE gate all block, matching the CI jobs.
 Assumes an activated .venv (run `make env` first if tools aren't on PATH).
 """
 
@@ -69,11 +69,18 @@ GATES: list[tuple[str, list[str], str, str, bool]] = [
         True,
     ),
     (
+        "secrets",
+        ["make", "secrets"],
+        "A tracked file may contain a secret (detect-secrets matched, not in the baseline).",
+        "Remove and rotate the secret; if a false positive, audit it into .secrets.baseline.",
+        True,
+    ),
+    (
         "audit",
-        ["pip-audit", "--skip-editable"],
-        "A dependency has a known CVE (informational -- does not gate CI).",
-        "Upgrade to the fixed version pip-audit named above.",
-        False,
+        ["make", "audit-runtime"],
+        "A shipped runtime dependency has a known CVE (the blocking gate).",
+        "Upgrade to the fixed version, or document an exception via pip-audit --ignore-vuln.",
+        True,
     ),
 ]
 

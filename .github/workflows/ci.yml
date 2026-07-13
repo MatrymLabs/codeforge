@@ -48,10 +48,16 @@ jobs:
           fail_ci_if_error: false
           token: ${{ secrets.CODECOV_TOKEN }}
 
-      # Informational, non-blocking: pip-audit scans the whole environment, so an
-      # unrelated CVE in build tooling (pip/setuptools) should surface without
-      # turning the build red. Review its output; it does not gate the ritual.
-      - name: Dependency CVE audit
+      # Blocking gate: audit the RUNTIME dependency set (what actually ships) and fail on
+      # any known CVE, upholding the "zero unresolved high/critical dependency vulns" law.
+      # A documented exception uses `pip-audit --ignore-vuln <ID>` with a reason.
+      - name: Runtime dependency CVE gate
+        run: make audit-runtime
+
+      # Informational, non-blocking: pip-audit scans the WHOLE environment, so an
+      # unrelated CVE in build tooling (pip/setuptools) surfaces without turning the
+      # build red. Review its output; the runtime gate above is what blocks.
+      - name: Dependency CVE audit (whole env, informational)
         run: make audit
         continue-on-error: true
 
