@@ -139,6 +139,18 @@ def load_catalog(path: Path | None = None) -> list[Part]:
     return loader_cache.load_cached(source, _parse_catalog)
 
 
+def source_gaps(root: Path | None = None, path: Path | None = None) -> list[str]:
+    """Catalog parts whose cited `source` file does not exist on disk: a broken provenance
+    claim. Mirrors career.py's proof-path check (a claim must cite a real artifact, not a
+    ghost). Returns 'id -> source' for each gap; an empty list means every part is honest."""
+    base = root if root is not None else Path(__file__).resolve().parent.parent
+    return [
+        f"{part.id} -> {part.source}"
+        for part in load_catalog(path)
+        if not (base / part.source).exists()
+    ]
+
+
 def find_part(part_id: str, path: Path | None = None) -> Part | None:
     """Return the part with this id, or None."""
     for part in load_catalog(path):

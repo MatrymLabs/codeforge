@@ -11,6 +11,7 @@ import re
 from dataclasses import dataclass
 from pathlib import Path
 
+from parts.hardware import source_gaps
 from parts.integrity import overclaim_hits, presence_gaps
 from parts.qualitygate import FAIL, gate_all
 from parts.registry import load_collective, validate
@@ -72,6 +73,7 @@ def truth_checks(root: Path | None = None) -> list[TruthCheck]:
     records = load_collective()
     problems = validate(records) if records else ["registry empty"]
     fails = [r.designation for r in gate_all(records) if r.verdict == FAIL]
+    catalog_gaps = source_gaps()
 
     return [
         check(
@@ -97,6 +99,12 @@ def truth_checks(root: Path | None = None) -> list[TruthCheck]:
             not problems,
             "clean",
             "; ".join(problems),
+        ),
+        check(
+            "Every Hardware Store part cites a source file that exists",
+            not catalog_gaps,
+            "all present",
+            "MISSING SOURCE: " + ", ".join(catalog_gaps),
         ),
         check(
             "QA board has no failing objects (active claims backed by tests)",

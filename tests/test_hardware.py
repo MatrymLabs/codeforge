@@ -5,7 +5,7 @@ Refusal: a malformed entry fails loud rather than stocking a bad part."""
 
 import pytest
 
-from parts.hardware import CatalogError, catalog_text, find_part, load_catalog
+from parts.hardware import CatalogError, catalog_text, find_part, load_catalog, source_gaps
 
 
 def _write(tmp_path, text: str):
@@ -168,3 +168,19 @@ def test_a_bad_edit_never_poisons_the_cache(tmp_path):
     os.utime(path, ns=(st.st_atime_ns, st.st_mtime_ns + 1_000_000_000))
     with pytest.raises(CatalogError):
         load_catalog(path)  # fails loud on the edit, and does not cache the bad catalog
+
+
+def test_no_shipped_part_cites_a_missing_source_file():
+    # Every catalog part must cite a source file that exists (a real provenance claim,
+    # not a ghost), mirroring career.py's proof-path gate.
+    assert source_gaps() == []
+
+
+def test_source_gaps_flags_a_part_that_cites_a_missing_file(tmp_path):
+    cat = _write(
+        tmp_path,
+        "- id: ghost\n  name: Ghost\n  source: parts/does_not_exist.py\n  category: c\n"
+        "  maturity: beta\n  risk: low\n  reuse: {game: y}\n  purpose: p\n",
+    )
+    gaps = source_gaps(root=tmp_path, path=cat)
+    assert any("ghost" in g and "does_not_exist" in g for g in gaps)
