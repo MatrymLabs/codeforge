@@ -23,10 +23,11 @@ from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
 
-# The four runtime dimensions ARC reads through this ledger, and the honest statuses a verdict
-# may carry (same values as parts/arc.py; kept local so this module does not import arc).
+from parts.verdicts import ARC_STATUSES as _STATUSES
+
+# The four runtime dimensions ARC reads through this ledger; statuses come from verdicts.py (the
+# one home for the ARC readiness tier), so this module and arc.py can never drift apart.
 RUNTIME_DIMENSIONS = ("change", "patch", "evidence", "release")
-_STATUSES = ("ready", "watchlist", "blocked", "missing")
 ARC_EVIDENCE_DIR = "arc-evidence"  # git-ignored, dated, reproducible (mirrors security-evidence/)
 
 

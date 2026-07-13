@@ -23,14 +23,15 @@ from dataclasses import dataclass, field
 from parts.repository import InMemoryRepository
 from parts.test_evidence import PASSED, EvidenceLedger
 from parts.validation import Data, Validator, one_of, required
+from parts.verdicts import BLOCKED, READY, WATCHLIST
 from parts.workflow import ANY_ROLE, Instance, Step, WorkflowEngine, build_workflow
 
 KINDS = ("dependency", "security", "config", "migration", "version")
 SEVERITIES = ("low", "medium", "high", "critical")
-# ARC verdicts a change may carry (slice 4). Injected by the caller (who runs ARC), so the ledger
-# stays decoupled from ARC's file-reading - the same seam as test evidence.
-ARC_VERDICTS = ("ready", "watchlist", "blocked")
-_ARC_BLOCKED = "blocked"
+# ARC verdicts a change may carry (slice 4), from the shared verdicts.py tier (no re-declaration).
+# A change carries a decided verdict, never MISSING, so the subset is ready/watchlist/blocked.
+ARC_VERDICTS = (READY, WATCHLIST, BLOCKED)
+_ARC_BLOCKED = BLOCKED
 
 
 def _tests_passed(ctx: Data) -> str | None:

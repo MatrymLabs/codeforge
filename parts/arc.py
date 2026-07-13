@@ -22,12 +22,10 @@ from pathlib import Path
 
 from parts import arc_ledger
 
-# Per-dimension status. MISSING = no wired source yet, or a gate that never ran: never a pass.
-READY = "ready"
-WATCHLIST = "watchlist"
-BLOCKED = "blocked"
-MISSING = "missing"
-_DIM_STATUSES = (READY, WATCHLIST, BLOCKED, MISSING)
+# Per-dimension status, from the one shared home (verdicts.py); re-exported so callers/tests can
+# still `from parts.arc import READY, ...`. MISSING = no wired source / never ran: never a pass.
+from parts.verdicts import ARC_STATUSES as _DIM_STATUSES
+from parts.verdicts import BLOCKED, MISSING, READY, WATCHLIST
 
 # The ten review dimensions ARC composes, each with the existing gate it will read in slice 2.
 DIMENSIONS: tuple[tuple[str, str], ...] = (
