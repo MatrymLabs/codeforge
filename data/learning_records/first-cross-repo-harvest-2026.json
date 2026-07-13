@@ -1,0 +1,21 @@
+{
+  "record_id": "first-cross-repo-harvest-2026",
+  "title": "The fleet reuse thesis, proven on one real part: harvesting retry into ai-log-triage",
+  "date": "2026-07-12",
+  "what_changed": "ai-log-triage's LLM boundary (ClaudeLLM) had no app-level retry: a transient Anthropic failure (rate limit, connection blip, 529-overloaded) propagated straight up and failed the triage. We harvested CodeForge's retry Hardware Store part (parts/retry.py) into a new src/triage/resilience.py - re-implemented in that repo's voice, not copied - and wired it into the seam. A clean refusal (TriageError / None parse) is deliberately NOT transient, so it raises at once instead of burning attempts. Production now owns one source of retry truth: build_llm disables the SDK's opaque built-in retries (max_retries=0) and retries only genuinely transient Anthropic errors. This is the first cross-repo harvest under ship ADR 0001 (harvest-first reuse).",
+  "why": "The ship's FLEET_ARCHITECTURE.md named the fleet's real architectural frontier: the industry products re-implement patterns CodeForge already proves instead of reusing them. The Q1 plan was to prove the reuse thesis on ONE part before scaling. A resilient LLM boundary was the clearest slice - a genuine product improvement (resilience the boundary lacked) that also demonstrates that a proven CodeForge design travels to another repo with zero coupling.",
+  "evidence": [
+    "ai-log-triage PR #6 merged green: ruff + mypy + tests + property, both CI jobs (ci, security) passing",
+    "resilience.py 100% covered - acceptance (transient recovers), permanent-not-retried, exhaustion-re-raises-unswallowed, backoff cap, and hostile policy construction (parametrized invalid settings); total coverage 95% (floor 90%)",
+    "Zero new dependencies - stdlib (math, time, dataclasses, typing) plus the anthropic SDK already present",
+    "Two LLM-seam tests prove a transient failure recovers on the third try and a refusal does not retry"
+  ],
+  "tradeoffs": "Harvest accepts controlled duplication (the same retry design now lives in two repos) in exchange for zero coupling across the public/private boundary - CodeForge stays independent of its consumers. The duplication is made honest by a provenance docstring naming the source part and the public concept, plus this record. A harvest is not a copy: it adapted to the target - dropped CodeForge's PEP 695 generics for the repo's Python 3.11, and removed an assert the target's stricter bandit gate (no B101 skip) rejected, which left the loop cleaner (no sentinel variable) than the source.",
+  "future_reuse": "This is the template for Phases 4-5: audit federal-guidance-library and ai-log-triage for other patterns CodeForge already provides (validation, circuit-breaker, repository, event-ledger) and harvest them the same way. Publishing the Hardware Store as an installable package is deferred until 3+ parts are shared across 3+ repos (ADR 0001's Q4 checkpoint); until then, harvest-first with recorded provenance.",
+  "concepts": [
+    "Reuse across a public/private boundary is best done by harvesting the design, not importing a package: the consumer re-implements in its own voice with provenance recorded, so there is zero coupling and no public package holding a private product's logic",
+    "A harvest is an adaptation, not a copy - it conforms to the target's language version, lint/security gates, and voice, and can end up cleaner than the source",
+    "Prove a cross-cutting thesis on ONE real, valuable slice before scaling it: a resilient LLM boundary improved the product AND demonstrated the reuse pattern in a single, tested increment",
+    "Own one source of retry truth: an observable, injected-sleep, fully-tested policy at the seam beats a second opaque layer silently multiplying the SDK's built-in retries"
+  ]
+}
