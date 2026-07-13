@@ -43,7 +43,7 @@ world generator.
   progression/equipment; command spine + rank gating; event bus; classification registry;
   Blueprint model (typed); Hardware Store catalog (typed `Part`); classroom/assessment; the
   in-MUD workshop/terminal/console; the assurance + evidence stack; Docker + CI + a live demo.
-  785 tests, branch coverage.
+  the full suite with branch coverage (the CI badge is the live count).
 - **Prototype:** `cast` (plans a package as a dry-run, writes nothing); `foundry` (generate into
   a guarded sandbox, manual promotion); `evolution` lab; `hubble` diagnostic core; `stewardship`
   gates; `blueprint_ai` (Claude-drafted).
