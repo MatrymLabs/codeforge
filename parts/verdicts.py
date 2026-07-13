@@ -1,4 +1,4 @@
-"""CARD: verdicts -- the shared readiness verdict vocabulary: one home for pass/fail/watch/n/a.
+"""CARD: verdicts -- one home for the readiness verdict words (pass/fail/watch/n/a + the ARC tier).
 
 Before this, PASS/FAIL were re-declared independently in qualitygate, stewardship/gate, and
 evolution/fitness, and frameup had to re-declare qualitygate's own "watch" verdict because it
@@ -15,3 +15,11 @@ PASS = "pass"  # nosec B105 - a readiness verdict word, not a password (bandit h
 FAIL = "fail"
 WATCH = "watch"  # a soft gap: not a hard fail, but not clean either
 NA = "n/a"  # not applicable (e.g. a prototype not built yet, so a file check is moot)
+
+# The ARC readiness tier (Assurance/Readiness/Control). Re-declared verbatim in arc, arc_ledger,
+# and change_ledger before this - the exact drift verdicts.py exists to prevent. One home now.
+READY = "ready"
+WATCHLIST = "watchlist"  # any WATCHLIST or MISSING holds the overall verdict off READY
+BLOCKED = "blocked"  # any BLOCKED blocks the overall verdict
+MISSING = "missing"  # no wired source / never ran: MISSING is never a pass
+ARC_STATUSES = (READY, WATCHLIST, BLOCKED, MISSING)
