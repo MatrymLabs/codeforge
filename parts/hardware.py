@@ -62,13 +62,18 @@ class Part:
     risk: str
     reuse: dict[str, str]
     tags: list[str] = field(default_factory=list)
-    reuse_score: int = 0
     source_status: str = "original"  # provenance: original / mit / apache-2.0 / ...
     license: str = "MIT"  # the reuse license (this repo's own code is MIT)
     influence: str = ""  # the KNOWN PATTERN it was rebuilt from -- harvest patterns, not code
     experimental: str = (
         ""  # the road NOT taken: the deliberate alternative (framework or frameless)
     )
+
+    @property
+    def reuse_score(self) -> int:
+        """How broadly this part reuses: DERIVED as the count of reuse domains, never a
+        hand-entered claim (derive-don't-store; no self-flattering, ungated number)."""
+        return len(self.reuse)
 
 
 class CatalogError(ValueError):
@@ -107,7 +112,6 @@ def _coerce(raw: Any, index: int) -> Part:
         risk=risk,
         reuse={str(domain): str(use) for domain, use in reuse.items()},
         tags=[str(tag) for tag in raw.get("tags", [])],
-        reuse_score=int(raw.get("reuse_score", 0)),
         source_status=source_status,
         license=str(raw.get("license", "MIT")),
         influence=str(raw.get("influence", "")),
@@ -133,6 +137,18 @@ def load_catalog(path: Path | None = None) -> list[Part]:
     if not source.exists():
         return []
     return loader_cache.load_cached(source, _parse_catalog)
+
+
+def source_gaps(root: Path | None = None, path: Path | None = None) -> list[str]:
+    """Catalog parts whose cited `source` file does not exist on disk: a broken provenance
+    claim. Mirrors career.py's proof-path check (a claim must cite a real artifact, not a
+    ghost). Returns 'id -> source' for each gap; an empty list means every part is honest."""
+    base = root if root is not None else Path(__file__).resolve().parent.parent
+    return [
+        f"{part.id} -> {part.source}"
+        for part in load_catalog(path)
+        if not (base / part.source).exists()
+    ]
 
 
 def find_part(part_id: str, path: Path | None = None) -> Part | None:

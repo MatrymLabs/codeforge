@@ -11,6 +11,7 @@ The one map to everything under `docs/`. New here? Read [RUNNING.md](RUNNING.md)
 ## Architecture and decisions
 - [vision_resync.md](vision_resync.md), the one product vision: CodeForge as a two-output manufacturing platform (World Package + Hardware Store), the three layers, the manufacturing loop, honest working/prototype/planned labels, and the first vertical slice.
 - [optimization_ethos.md](optimization_ethos.md), the Matrym optimization ethos: turn solutions into infrastructure (the loop, the optimization ladder, the evidence standard, the Expansion Review, the critical-junction rule).
+- [convergence_review.md](convergence_review.md), the Convergence Review (internally the Lemonade Protocol): a repeatable interdisciplinary review method that transfers mature practices across disciplines and classifies gaps by mechanism, not label.
 
 - [architecture.md](architecture.md), the engine tick, drivers, and canonical state.
 - [adr/](adr/), Architecture Decision Records (0001 canonical state, 0002 derive-don't-store, 0003 framework-free).

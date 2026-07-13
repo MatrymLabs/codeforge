@@ -79,7 +79,7 @@ class LocalArchitect:
 # The Anthropic SDK is touched ONLY here, behind the Advisor protocol, so codeforge core
 # never hard-depends on it and CI (no key, fake injected) never reaches the network.
 
-_CLAUDE_MODEL = "claude-opus-4-8"
+CLAUDE_MODEL = "claude-opus-4-8"
 
 _ARCHITECT_SYSTEM = (
     "You are the Architect, a senior engineering pair-programmer standing in the Workshop "
@@ -107,7 +107,7 @@ class ClaudeAdvisor:
     a fake and never touch the network. Only redacted prompt text is sent; secrets never
     leave the machine. Same seam as the local brain, so callers never change."""
 
-    def __init__(self, client: Any, model: str = _CLAUDE_MODEL) -> None:
+    def __init__(self, client: Any, model: str = CLAUDE_MODEL) -> None:
         self._client = client
         self._model = model
 
@@ -148,7 +148,7 @@ def anthropic_client() -> Any:
 def build_claude_advisor(model: str | None = None) -> Advisor:
     """The production Claude-backed Architect. The default brain stays local; this is only
     reached when CODEFORGE_ARCHITECT=claude and a key is present."""
-    return ClaudeAdvisor(anthropic_client(), model or _CLAUDE_MODEL)
+    return ClaudeAdvisor(anthropic_client(), model or CLAUDE_MODEL)
 
 
 _DEFAULT: Advisor = LocalArchitect()

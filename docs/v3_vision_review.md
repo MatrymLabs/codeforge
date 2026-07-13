@@ -72,7 +72,7 @@ the thematic skin lives in the room/verb, not the module.
 ## 7. Recommended Architectural Moves
 
 - **Do NOT re-package `parts/` into subfolders.** The registry domains already provide the logical
-  grouping; physically moving ~111 modules would rewrite imports repo-wide for no functional gain
+  grouping; physically moving every module would rewrite imports repo-wide for no functional gain
   (ADR-0007's declined `src/` move, same reasoning). The move is the registry view, not the folder.
 - Keep the four existing subpackages (`evolution`, `hubble`, `stewardship`, `web`) - they are real
   cohesive clusters.

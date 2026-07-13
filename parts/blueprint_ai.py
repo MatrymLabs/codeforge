@@ -17,10 +17,8 @@ from typing import Any, Protocol
 
 from pydantic import BaseModel
 
-from parts.architect import anthropic_client
+from parts.architect import CLAUDE_MODEL, anthropic_client
 from parts.blueprint import Blueprint, BlueprintError, from_dict
-
-_CLAUDE_MODEL = "claude-opus-4-8"
 
 _DRAFT_SYSTEM = (
     "You are a senior software architect who treats security as a first-class design concern. "
@@ -61,7 +59,7 @@ class ClaudeBlueprintDrafter:
     """A `BlueprintDrafter` backed by the Anthropic Messages API with structured output.
     The client is INJECTED, so tests drive a fake and never touch the network."""
 
-    def __init__(self, client: Any, model: str = _CLAUDE_MODEL) -> None:
+    def __init__(self, client: Any, model: str = CLAUDE_MODEL) -> None:
         self._client = client
         self._model = model
 
@@ -90,4 +88,4 @@ class ClaudeBlueprintDrafter:
 def build_claude_drafter(model: str | None = None) -> BlueprintDrafter:
     """Construct the production Claude drafter. One API key away: needs ANTHROPIC_API_KEY and
     `pip install codeforge[ai]`. Raises ArchitectError if neither is present."""
-    return ClaudeBlueprintDrafter(anthropic_client(), model or _CLAUDE_MODEL)
+    return ClaudeBlueprintDrafter(anthropic_client(), model or CLAUDE_MODEL)

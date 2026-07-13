@@ -48,6 +48,7 @@ nav:
   - Architecture and decisions:
       - Architecture: architecture.md
       - Architecture-first Python: frameless_python.md
+      - Convergence Review (method): convergence_review.md
       - Tooling strategy: tooling_strategy.md
       - Full-stack forge decision: full_stack_forge_decision.md
       - Framework decision matrix: framework_decision_matrix.md
