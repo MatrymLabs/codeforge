@@ -61,15 +61,18 @@ def test_a_planted_overclaim_and_hardcoded_count_are_flagged(tmp_path: Path) -> 
 def test_a_hardcoded_test_count_in_living_docs_is_flagged_but_snapshots_are_exempt(
     tmp_path: Path,
 ) -> None:
-    from parts.veritas import _hardcoded_test_counts
+    from parts.veritas import _hardcoded_counts
 
     (tmp_path / "README.md").write_text("a clean readme with no counts")
     docs = tmp_path / "docs"
     (docs / "reports").mkdir(parents=True)
-    (docs / "scorecard.md").write_text("the suite has 1234 tests today")  # living doc -> caught
-    (docs / "reports" / "2026-07-13.md").write_text("500 tests")  # dated snapshot -> exempt
-    hits = _hardcoded_test_counts(tmp_path)
+    # living doc -> a test count AND a coverage % are both caught
+    (docs / "scorecard.md").write_text("the suite has 1234 tests today at 91.5% branch coverage")
+    (docs / "reports" / "2026-07-13.md").write_text("500 tests, 88% coverage")  # snapshot -> exempt
+    hits = _hardcoded_counts(tmp_path)
     assert any("scorecard.md" in h and "1234 tests" in h for h in hits)
+    assert any("scorecard.md" in h and "coverage" in h for h in hits)
+    assert not any("2026-07-13" in h for h in hits)  # the dated snapshot stays exempt
     assert not any("2026-07-13" in h for h in hits)
 
 

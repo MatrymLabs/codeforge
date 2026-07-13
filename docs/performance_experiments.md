@@ -29,8 +29,8 @@ commit de0f8a5. Reproduce with `python -m benchmarks.perf_journeys`.
 - **Result / Decision:** **VERIFIED IMPROVEMENT (executed 2026-07-11).** catalog search median
   **39 ms -> 91.8 us (~426x)**, p95 67 ms -> 0.12 ms; cProfile confirms `yaml.safe_load` left
   the hot path. Correctness proven: `cached == fresh`, an on-disk edit (mtime) invalidates, a
-  bad edit fails loud and is never cached. Full suite 673 passed (+4 cache tests), 93.30%
-  coverage. No behavior change, no new dependency. Regression guard: the parse-once and
+  bad edit fails loud and is never cached. Full suite passed (+4 cache tests) with branch
+  coverage green. No behavior change, no new dependency. Regression guard: the parse-once and
   mtime-invalidation tests in `test_hardware.py`. **Reuse (SHIPPED 2026-07-11):** the mtime-guarded
   loader cache was promoted to a shared part, `parts/loader_cache.py` (its own test twin), and now
   serves the catalog AND the classification registry (see EXP-002). One solution, three customers.

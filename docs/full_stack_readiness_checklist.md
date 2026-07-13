@@ -10,7 +10,7 @@
 - [x] Error handling (loud validation at boundaries; `SeedError`, gates)
 - [x] Input validation (seed loader gates, rank checks, password parsing rules)
 - [x] AuthN/AuthZ (salted pbkdf2 accounts; rank-gated `@`-verbs; owner Basic auth on admin)
-- [x] Tests (435, 91.5% coverage) + quality gates (`make check`)
+- [x] Tests + quality gates (the CI/codecov badges are the live count) (`make check`)
 - [x] Security boundaries (bandit, Scorecard, CodeQL, secret scan, SBOM)
 - [x] Containerized (Dockerfile, CI docker smoke, live demo)
 - [x] Documented API - FastAPI admin + read-only `GET /api/status`; OpenAPI at `/docs`, linked from the dashboard nav
