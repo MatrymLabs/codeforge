@@ -1,7 +1,9 @@
 # CodeForge V3 - Engineering Review Report
 
-*A Version 3 Vision Synchronization: re-evaluating architecture, terminology, boundaries, and
-philosophy against the settled vision. This is a review and a set of proposals, not a state change.
+*A dated (2026-07-13) Version 3 review artifact, NOT the canonical vision. The canonical product
+vision is [vision_resync.md](vision_resync.md); where this review's framing differs, that governs.
+This re-evaluates architecture, terminology, boundaries, and philosophy against the settled vision.
+It is a review and a set of proposals, not a state change.
 Every rename or move it recommends is gated: persisted identifiers are frozen, and structural moves
 are critical junctures reserved for Josh (see [ADR-0007](adr/0007-repository-layout.md)).*
 

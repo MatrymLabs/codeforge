@@ -1,6 +1,9 @@
 # CodeForge Vision Resync
 
-*One coherent product vision for the whole repository. Written 2026-07-11 (commit `6cf3362`).
+*THE canonical product vision for the whole repository: the single source of truth for what
+CodeForge is. Where any other doc (v3_vision_review, the maturity scorecard, proving_ground/VISION)
+differs on what the product IS, this governs; those are reviews or sub-visions, not competing canon.
+Written 2026-07-11 (commit `6cf3362`).
 Every capability is labelled honestly per the Vision Truth Rule: **working · prototype ·
 planned · experimental · deferred**. Nothing planned is described as working.*
 
