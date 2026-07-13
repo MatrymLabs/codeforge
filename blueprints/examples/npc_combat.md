@@ -3,7 +3,7 @@
 *Turn the training dummy's one-sided combat into a real exchange: an NPC can strike back, so a fight is a loop of blows, not a single command.*
 
 - **id:** `npc_combat`
-- **status:** draft
+- **status:** validated
 
 ## Requirements
 

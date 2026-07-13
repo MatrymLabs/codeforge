@@ -52,9 +52,15 @@ io_or_query_counts · timestamp · profiler · status · budget · noise_band ·
 |---|---|---|---|
 | command (`handle_command` rotation) | 8.5 us | CPU / dispatch | `passed` (fast; not a hotspot) |
 | combat (single strike) | 10.3 us | CPU | `passed` (fast; not a hotspot) |
-| qa gate all (`render_gate_all`) | 8.2 ms -> **2.91 ms** | I/O (was: repeated `stat`) | `improvement_detected` - EXP-002 done (~3.2x; 446->139 stats) |
-| catalog search (`reuse_search`) | 39 ms -> **91.8 us** | serialization (was: repeated YAML parse) | `improvement_detected` - EXP-001 done (~426x), now well within budget |
-| startup (cold `import forge`) | 680 ms -> **202 ms** | startup (was: eager SQLAlchemy import) | `improvement_detected` - EXP-003 done (~3.4x; sqlalchemy deferred to first DB touch) |
+| qa gate all (`render_gate_all`) | 8.2 ms baseline (current: see raw) | I/O (was: repeated `stat`) | EXP-002 shipped the shared stat-memo + loader cache; current median is high-variance on this host - read the raw artifact, not a figure typed here |
+| catalog search (`reuse_search`) | 39 ms baseline (current: see raw) | serialization (was: repeated YAML parse) | EXP-001 shipped (parse-once loader cache; ~426x); current median well within budget - see raw |
+| startup (cold `import forge`) | 680 ms baseline (current: see raw) | startup (was: eager SQLAlchemy import) | EXP-003 shipped (SQLAlchemy import deferred to first DB touch); cold-start median is host/load-sensitive - see raw |
+
+Note: the before ("baseline") figures record the dated optimization experiments; the CURRENT
+median for each journey lives in the raw artifact (below), never a hand-transcribed number here.
+An earlier revision of this table hard-coded post-optimization figures (2.91 ms, 202 us, 202 ms)
+that drifted from the committed raw run; those are removed in favor of the reproducible source,
+the same discipline the README uses for the test count (the badge is the live source, not prose).
 
 Reproduce: `python -m benchmarks.perf_journeys` (raw output under `reports/performance/`,
 git-ignored but reproducible from the recorded commit).
@@ -63,9 +69,14 @@ git-ignored but reproducible from the recorded commit).
 
 - Command response: median <= 50 us (baseline 8.5 us) - generous head-room; user-imperceptible.
 - Combat tick: median <= 100 us (baseline 10.3 us).
-- Catalog/registry search: median <= 5 ms - **met** (EXP-001: 39 ms -> 0.09 ms; ~426x).
-- QA gate all: median <= 5 ms - **met** (EXP-002: 8.2 ms -> 2.91 ms; ~3.2x, shared stat memo + loader cache).
-- Cold startup: <= 300 ms - **met** (EXP-003: 680 ms -> 202 ms; ~3.4x, SQLAlchemy import deferred to first DB touch).
+- Catalog/registry search: target median <= 5 ms. EXP-001 shipped the parse-once loader cache
+  (~426x off a 39 ms baseline); the committed raw median is well within the target - see the artifact.
+- QA gate all: target median <= 5 ms. EXP-002 shipped the shared stat-memo + loader cache off an
+  8.2 ms baseline; the committed raw median on this host is higher and high-variance, so this line
+  does NOT assert "met" - the raw artifact is the source of the current number.
+- Cold startup: target <= 300 ms. EXP-003 shipped the deferred SQLAlchemy import off a 680 ms
+  baseline; the committed cold-subprocess median on this host is higher (host/load-sensitive), so
+  read the raw artifact rather than a claim typed here.
 - Max permitted regression: median +15% over baseline (else `regression_detected`).
 
 Each budget must eventually carry: user impact, current baseline, target, acceptable

@@ -29,5 +29,5 @@
     "persistence": "derive-don't-store (stats recompute on restore)",
     "tests": "pytest twin + engine-tick reachability test"
   },
-  "status": "draft"
+  "status": "validated"
 }

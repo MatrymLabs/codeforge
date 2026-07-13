@@ -62,7 +62,7 @@ def test_blueprints_endpoint_summarizes_filed_plans(client):
     plans = resp.json()
     npc = next(b for b in plans if b["blueprint_id"] == "npc_combat")
     assert npc["title"] == "NPCs that fight back"
-    assert npc["status"] == "draft"
+    assert npc["status"] == "validated"  # the feature is fully built in parts/combat.py
     assert npc["requirement_count"] >= 1
 
 
