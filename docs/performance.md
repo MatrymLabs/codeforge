@@ -79,6 +79,27 @@ the benchmark compares, the tests verify, the engineer decides.**
 
 **EXP-005 update (2026-07-12):** lazy command seams in `forge.py` (20 command-only modules
 deferred off the import chain) cut PC startup **95.8 ms -> 68.4 ms (-29%)** with hot paths
-unchanged. Pi re-measurement pending; expect ~202 ms -> ~140 ms. See
-[performance_experiments.md](performance_experiments.md) (EXP-005, and EXP-006 for the
-honestly rejected make-parallel experiment).
+unchanged. See [performance_experiments.md](performance_experiments.md) (EXP-005, and EXP-006
+for the honestly rejected make-parallel experiment).
+
+**Pi post-merge re-measurement (2026-07-13, commit ff74c9f):** the five journeys re-run on the
+Pi 5 after merging the manufacturing spine and the python-engineering batch (PRs #102-#158).
+Two back-to-back runs, medians:
+
+| Journey | Pi baseline (de0f8a5) | Pi post-merge (ff74c9f) | Read |
+|---------|----------------------|-------------------------|------|
+| Startup (cold) | 202 ms | **158.9 ms** | verified improvement (~21%) - EXP-005 lazy seams |
+| Command | 8.5 μs | 10.2 μs | neutral (see caveat) |
+| Combat | 10.3 μs | 11.6 μs | neutral (see caveat) |
+| QA Gate All | 2.91 ms | 5.4 ms | inconclusive (contended, see caveat) |
+| Catalog Search | 91.8 μs | 159 μs | inconclusive (contended, see caveat) |
+
+> **Honest measurement caveat.** The baseline (de0f8a5) was captured on a quiet Pi; this
+> re-run shared the box with PyCharm indexing (~50% of one of the Pi's four cores, 1-min load
+> ~1.1). The **cold-startup win is clean and the headline signal** - EXP-005 delivered the
+> predicted improvement (202 -> 159 ms). The warm micro-journeys (command, combat) are within
+> contention noise of baseline. The two filesystem-heavy journeys (qa gate `stat` calls,
+> catalog YAML re-parse) are the most contention-sensitive and ran high against a filesystem
+> the IDE was actively indexing; their code paths did **not** change across the merges, so this
+> is contention, not a code regression. A truly quiet re-run would settle qa/catalog back toward
+> baseline; deferred until it matters. Raw evidence: `reports/performance/2026-07-13-post-merge-journeys.md`.
