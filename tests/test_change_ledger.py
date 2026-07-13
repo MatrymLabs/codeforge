@@ -150,3 +150,40 @@ def test_only_legal_transitions_ever_change_state(events):
         after = led.status("PF-1")
         # state changes only on a Fired outcome; a Refusal never moves it
         assert (after != before) == isinstance(outcome, Fired)
+
+
+# --- arc_status(): the pure mapping the ARC evidence driver reads --------------
+
+
+def test_arc_status_of_an_empty_ledger_is_missing():
+    assert _ledger().arc_status()[0] == "missing"  # nothing tracked, never a pass
+
+
+def test_arc_status_watchlists_a_change_in_flight():
+    led = _opened()  # PF-1 sits at 'identified' (non-terminal)
+    status, detail = led.arc_status()
+    assert status == "watchlist" and "1 open" in detail
+
+
+def test_arc_status_blocks_a_rolled_back_change():
+    led = _opened()
+    led.advance("PF-1", "triage")
+    led.advance("PF-1", "approve", actor="approver")
+    led.advance("PF-1", "build")
+    led.advance("PF-1", "test")
+    led.advance("PF-1", "fail")  # testing -> rolled_back
+    assert led.status("PF-1") == "rolled_back"
+    assert led.arc_status()[0] == "blocked"
+
+
+def test_arc_status_is_ready_when_every_change_reached_a_clean_terminal():
+    led = _opened()
+    for event, actor in [("triage", "*"), ("approve", "approver"), ("build", "*"), ("test", "*")]:
+        led.advance("PF-1", event, actor=actor)
+    led.record_test("PF-1", "ci")
+    led.advance("PF-1", "canary", actor="operator")
+    led.record_arc("PF-1", "watchlist")
+    for event, actor in [("deploy", "operator"), ("verify", "operator"), ("close", "*")]:
+        led.advance("PF-1", event, actor=actor)
+    assert led.status("PF-1") == "closed"
+    assert led.arc_status()[0] == "ready"

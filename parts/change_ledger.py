@@ -184,3 +184,27 @@ class ChangeLedger:
 
     def all(self) -> list[Change]:
         return self._repo.list()
+
+    def arc_status(self) -> tuple[str, str]:
+        """Map the ledger's changes to an ARC status (ready|watchlist|blocked|missing) + a detail.
+
+        Honest by construction: an empty ledger is MISSING (nothing tracked, never a pass); a change
+        that rolled back and is not yet closed out blocks; any change still in flight (non-terminal)
+        holds it on the watchlist; only when every change reached a clean terminal is it ready.
+        """
+        changes = self.all()
+        if not changes:
+            return ("missing", "no changes tracked")
+        terminal = {"closed", "rejected"}
+        rolled_back = [c for c in changes if c.status == "rolled_back"]
+        open_changes = [c for c in changes if c.status not in terminal]
+        if rolled_back:
+            status = "blocked"
+        elif open_changes:
+            status = "watchlist"
+        else:
+            status = "ready"
+        detail = (
+            f"{len(changes)} record(s), {len(open_changes)} open, {len(rolled_back)} rolled_back"
+        )
+        return (status, detail)

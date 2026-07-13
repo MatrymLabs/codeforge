@@ -6,17 +6,21 @@ them into one honest overall verdict (ready | watchlist | blocked). Two load-bea
 truthful: a dimension whose gate has not been wired or has never run is MISSING, and MISSING is
 never a pass; and every dimension cites the source its status came from, never an invented one.
 
-Slice 2 (this file) wires the six dimensions that have real FILED evidence to read on disk (ADRs,
-CI + tests, pattern docs, the dependency ledger, benchmarks, security evidence); the four that are
-purely runtime (change, patch, evidence, release) have no stored verdict, so they stay MISSING -
-honestly, never faked. ARC reads only: it opens no gate and runs no check as a side effect
-(architecture law 1). The world is the interface; `arc` is the room's window.
+Eight dimensions now read real FILED evidence. Six read the repo directly (ADRs, CI + tests, pattern
+docs, the dependency ledger, benchmarks, security evidence). Two runtime gates (release, evidence)
+file a dated verdict via parts/arc_ledger when `make arc-verdicts` runs their checks; ARC reads the
+latest, read-only. The last two (change, patch) have no persistent store yet, so they stay MISSING -
+honestly, never faked (a later slice adds the store). Absence of a filed verdict is always MISSING,
+never a pass. ARC reads only: it opens no gate and runs no check as a side effect (architecture
+law 1). The world is the interface; `arc` is the room's window.
 """
 
 from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path
+
+from parts import arc_ledger
 
 # Per-dimension status. MISSING = no wired source yet, or a gate that never ran: never a pass.
 READY = "ready"
@@ -121,11 +125,19 @@ def filed_review(root: Path | None = None) -> ArcReport:
         Dimension("performance", ready(benches > 0), f"{benches} benchmark files"),
         Dimension("security", ready(security > 0), f"{security} security-evidence file(s)"),
     ]
-    dimensions += [
-        Dimension(name, MISSING, "runtime capability; no filed verdict to read")
-        for name in _RUNTIME
-    ]
+    dimensions += [_runtime_dim(name, base) for name in _RUNTIME]
     return compose(dimensions)
+
+
+def _runtime_dim(name: str, root: Path) -> Dimension:
+    """Read a runtime dimension's latest FILED verdict, or MISSING if none is filed. Reads only.
+
+    Absence is MISSING (never a pass); a malformed artifact fails loud via arc_ledger.VerdictError.
+    """
+    verdict = arc_ledger.read_latest(name, root=root)
+    if verdict is None:
+        return Dimension(name, MISSING, "runtime capability; no filed verdict to read")
+    return Dimension(name, verdict.status, f"{verdict.source} (filed {verdict.commit})")
 
 
 def render(report: ArcReport) -> str:

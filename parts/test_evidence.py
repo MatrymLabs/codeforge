@@ -81,3 +81,19 @@ class EvidenceLedger:
             suffix = f"  ({r.detail})" if r.detail else ""
             lines.append(f"  [{r.status:<7}] {r.check_id}{suffix}")
         return "\n".join(lines)
+
+    def arc_status(self) -> tuple[str, str]:
+        """Map this ledger's evidence to an ARC status (ready|watchlist|blocked|missing) + a detail.
+
+        Honest by construction: no evidence at all is MISSING (never a pass); a check that ran and
+        FAILED or ERRORed blocks; a soft gap (expected-but-unrun / skipped) holds the watchlist;
+        only all-PASSED is ready. ARC reads a filed copy of this; it never runs the checks itself.
+        """
+        results = self.results()
+        if not results:
+            return ("missing", "no checks recorded")
+        if self.passed():
+            return ("ready", f"{len(results)} checks, all passed")
+        gap_statuses = {g.status for g in self.gaps()}
+        status = "blocked" if (FAILED in gap_statuses or ERROR in gap_statuses) else "watchlist"
+        return (status, f"{len(results)} checks, {len(self.gaps())} gap(s)")

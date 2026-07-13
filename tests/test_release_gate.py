@@ -36,3 +36,25 @@ def test_one_core_powers_both_the_world_cert_and_the_release_gate():
     gate = ReleaseGate()
     assert isinstance(gate._ledger, EvidenceLedger)  # the release gate uses the core
     assert isinstance(game._certify(), EvidenceLedger)  # the world certificate, same core
+
+
+def test_arc_status_is_ready_and_cited_when_all_pass():
+    gate = ReleaseGate(commit="abc123")
+    for check in ("lint", "tests", "coverage", "security"):
+        gate.record(check, PASSED)
+    status, source = gate.arc_status()
+    assert status == "ready" and "release_gate" in source
+
+
+def test_arc_status_blocks_on_a_failed_check():
+    gate = ReleaseGate(commit="abc123")
+    for check in ("lint", "tests", "coverage"):
+        gate.record(check, PASSED)
+    gate.record("security", FAILED)
+    assert gate.arc_status()[0] == "blocked"
+
+
+def test_arc_status_watchlists_an_unrun_required_check():
+    gate = ReleaseGate(commit="abc123")
+    gate.record("lint", PASSED)  # tests/coverage/security expected but unrecorded -> soft gaps
+    assert gate.arc_status()[0] == "watchlist"

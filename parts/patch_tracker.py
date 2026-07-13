@@ -60,3 +60,8 @@ class PatchTracker:
 
     def history(self, patch_id: str) -> list[dict[str, str]]:
         return self._ledger.history(patch_id)
+
+    def arc_status(self) -> tuple[str, str]:
+        """The patch dimension's ARC verdict, from the same change core, with a patch citation."""
+        status, detail = self._ledger.arc_status()
+        return (status, f"patch_tracker: {detail}")
