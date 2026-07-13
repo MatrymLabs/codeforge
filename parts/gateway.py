@@ -29,6 +29,9 @@ _counter = 0
 # --- the doorman's post: seats, silence, and the turnaway ledger ---
 IDLE_TIMEOUT = 300.0  # seconds of silence before a connection is dropped
 MAX_CONNECTIONS = 128  # concurrent sockets; thread-per-connection has a ceiling
+MAX_LINE_BYTES = (
+    4096  # cap a single client line: a newline-less flood must not be an unbounded read
+)
 MAX_LOGIN_FAILS = 5  # failed logins per client address within the window...
 LOGIN_FAIL_WINDOW = 300.0  # ...before that address is refused for a cooldown
 
@@ -145,7 +148,7 @@ class _GateHandler(socketserver.StreamRequestHandler):
         (hung up or idled out)."""
         self.wfile.write((prompt + " ").encode("utf-8"))
         try:
-            line = self.rfile.readline()
+            line = self.rfile.readline(MAX_LINE_BYTES)
         except OSError:
             return None  # idle timeout or broken pipe
         if not line:
@@ -159,7 +162,7 @@ class _GateHandler(socketserver.StreamRequestHandler):
         keep their echo; Mudlet and telnet go dark.)"""
         self.wfile.write((prompt + " ").encode("utf-8") + _ECHO_OFF)
         try:
-            line = self.rfile.readline()
+            line = self.rfile.readline(MAX_LINE_BYTES)
         except OSError:
             return None  # idle timeout or broken pipe
         self.wfile.write(_ECHO_ON)
@@ -248,7 +251,7 @@ class _GateHandler(socketserver.StreamRequestHandler):
             while session.alive:
                 self.wfile.write(b"> ")
                 try:
-                    line = self.rfile.readline()
+                    line = self.rfile.readline(MAX_LINE_BYTES)
                 except OSError:
                     break  # idle timeout or broken pipe -> disconnect
                 if not line:
