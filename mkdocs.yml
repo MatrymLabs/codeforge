@@ -46,6 +46,7 @@ nav:
   - Getting started:
       - Run it: RUNNING.md
   - Architecture and decisions:
+      - Product vision (canonical): vision_resync.md
       - Architecture: architecture.md
       - Architecture-first Python: frameless_python.md
       - Convergence Review (method): convergence_review.md
