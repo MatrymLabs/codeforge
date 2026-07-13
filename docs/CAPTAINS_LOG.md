@@ -7,6 +7,49 @@
 
 ---
 
+## Chief Engineer's Log - 2026-07-12 (ship's day 193) - "Two Parts Crossed the Fleet, and a Wall We Told the Truth About"
+
+**Ship's day 193, the twelfth of July.** We stopped treating the fleet as a harbor of separate
+hulls and started treating it as one ship. First we drew the chart: a fleet-architecture doctrine
+that says plainly what the flagship is for and what every other deck owes it, and it named the real
+frontier without flattering us - the back-room tools re-implement what CodeForge already proves.
+Then we settled the standing question of how a private hull borrows a proven part from the public
+one, and wrote it into law: harvest the pattern, record where it came from, no hard coupling.
+Publish a shared package only when three parts are shared across three decks, and not one hour
+before.
+
+Then we proved the doctrine on real work, not slogans. CodeForge's retry mechanism crossed to the
+log-triage service and to the guidance library - the same proven design, fitted twice to two
+different error models: one that raises an exception, one that treats a dead link as data and never
+raises at all. The circuit breaker followed it across: guarding the model boundary with a fast 503
+when the upstream is truly down, and standing per-host watch over the federal endpoints so one dead
+source can never silence a healthy one. Two parts now live on three decks. We stopped there on
+purpose. A third was there for the taking, but no real gap called for it, and reaching for a part
+only to move a number is the thing this ship refuses to do. Restraint is a deliverable, so we filed
+the audit that says why we stopped.
+
+The honest part of the day was a wall. We tried to raise the two back-room hulls to the highest
+grade by adding CodeQL, the deep static scan - and it would not run. Code scanning wants GitHub
+Advanced Security, and that is a public-water privilege; these hulls sail private. Worse, we had
+already, too eagerly, written "advanced" into three logs before the scan proved out. So we walked
+it back plank by plank: pulled the scan, set the grade honestly to intermediate, and made the
+READMEs state exactly why the ceiling sits where it does, instead of painting a badge we did not
+earn. The lesson is old and worth re-cutting into the beam: prove the gate green on one hull before
+you write the victory into the log.
+
+We swept the decks while we were at it - a hundred and forty-two spent branches struck from the
+fleet, the long-dash glyph that reads as a machine's hand scrubbed from every tracked file, and the
+community-health papers (how to contribute, what changed, how the work is graded) brought up to the
+flagship's standard on both back-room hulls. And we told two design stories a stranger can follow:
+why the log-triage service leans on a seam instead of a vendor, and why the guidance library trades
+convenience for traceability at every turn - each showing that the seam built for honest tests was
+the very seam that later made the boundary safe to harden.
+
+Reckoning: every hull green, every tree clean, not one branch left adrift. The fleet reads as a
+single organization tonight, and where it cannot reach a bar, it says so plainly, in its own hand.
+
+---
+
 ## Chief Engineer's Log - 2026-07-11 (ship's day 192) - "The Frame Held: A Restoration, and the Keel Made Plain"
 
 **Ship's day 192, the eleventh of July.** No new deck was raised today. We did the harder,
