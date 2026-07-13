@@ -62,3 +62,46 @@ def test_load_ignores_unknown_ids(tmp_path):
     location, _ = awaken_snapshot(path)
     assert location == "forge"
     assert "ghost_item" not in items.ITEMS
+
+
+# --- refusal: hostile / drifted save files degrade honestly, never a stack trace ---
+
+
+def test_a_corrupt_save_starts_fresh_with_an_honest_message(tmp_path):
+    bad = tmp_path / "save.json"
+    bad.write_text("{ not json at all")
+    location, message = awaken_snapshot(bad)
+    assert location  # a real start room, not a crash
+    assert "corrupt" in message.lower()
+    assert bad.exists()  # the file is left untouched for post-mortem
+
+
+def test_a_save_from_a_newer_schema_is_refused_gracefully(tmp_path):
+    newer = tmp_path / "save.json"
+    newer.write_text(json.dumps({"schema_version": 99, "location": "somewhere"}))
+    location, message = awaken_snapshot(newer)
+    assert "newer version" in message
+    assert location != "somewhere"  # a v99 shape is not trusted
+
+
+def test_a_legacy_versionless_save_still_loads(tmp_path):
+    # Every save written before schema_version existed lacks the key: it IS v1 and must load.
+    legacy = tmp_path / "save.json"
+    legacy.write_text(json.dumps({"location": "courtyard", "items": {}, "doors": {}}))
+    location, message = awaken_snapshot(legacy)
+    assert location == "courtyard"
+    assert "Loaded" in message
+
+
+def test_a_partial_save_missing_keys_degrades_not_crashes(tmp_path):
+    partial = tmp_path / "save.json"
+    partial.write_text(json.dumps({"schema_version": 1}))  # no location/items/doors
+    location, message = awaken_snapshot(partial)
+    assert location  # falls back to the start room
+    assert "Loaded" in message
+
+
+def test_seal_stamps_the_schema_version(tmp_path):
+    path = tmp_path / "save.json"
+    seal_snapshot("courtyard", path)
+    assert json.loads(path.read_text())["schema_version"] == 1
