@@ -989,3 +989,52 @@
     government: "notify independent handlers of a record event without coupling them"
     security: "publish a security event to multiple detectors/loggers without coupling"
     general: "any decoupled notification: one publisher, many independent subscribers"
+
+- id: loader-cache
+  name: Loader Cache
+  source: parts/loader_cache.py
+  category: caching
+  tags: [cache, mtime, parse-once, io, performance]
+  maturity: shipped
+  source_status: original
+  license: MIT
+  influence: "mtime-guarded memoization (classic build-tool/loader pattern; independently implemented)"
+  experimental: >-
+    add a size cap / LRU eviction or content-hash invalidation once the working set grows. Traded
+    away (v1): bounded memory and hash invalidation, keeping it pure and stdlib-only. The frameless
+    path was kept over functools.lru_cache because invalidation must key on the file mtime, not args.
+  risk: low
+  purpose: >
+    Parse a file once and reuse the result until the file changes on disk (mtime-guarded), so a
+    repeatedly-read config/data file is not re-parsed every call. A raising parse is never cached
+    (fail-loud, never poison the cache). One core, many loaders: it backs the seed/catalog/registry
+    loaders in the game and any config/data loader in a practical app (EXP-001: ~426x less parse work).
+  reuse:
+    game: "reload world seeds, the Hardware catalog, and the registry without re-parsing unchanged files"
+    finance: "cache a repeatedly-read rate table or config until the file is updated"
+    security: "re-read an allowlist/policy file only when it actually changes on disk"
+    general: "any app that parses the same config/data file many times per run"
+
+- id: record-loader
+  name: Record Loader
+  source: parts/record_loader.py
+  category: persistence
+  tags: [json, records, validation, loader, fail-loud]
+  maturity: shipped
+  source_status: original
+  license: MIT
+  influence: "validated record loader (harvested from a duplication the clone scan flagged; independently implemented)"
+  experimental: >-
+    add schema/version fields or a pluggable format (YAML/TOML) once records need it. Traded away
+    (v1): multi-format and schema-versioning, keeping it JSON + one validate seam. Harvested, not
+    built fresh: the clone scan flagged blueprint and learning_record loading records the same way.
+  risk: low
+  purpose: >
+    Load a validated record from one JSON file, or glob a directory of them, with a caller-supplied
+    validator that fails loud on a bad file. One core, two lives: it loads Blueprints and engineering
+    learning records in the engine, and any validated JSON record set in a practical app.
+  reuse:
+    game: "load filed Blueprints and engineering learning records through one validated gate"
+    finance: "load a directory of validated transaction/config records, refusing a malformed file"
+    government: "load validated policy/source records with fail-loud intake"
+    general: "any 'read validated JSON records from a dir, refuse a bad one' loader"
