@@ -10,8 +10,8 @@ answer to a fleet-hardening research menu: implement the artifact that matters, 
 |-----------|--------|----------|
 | Runs in 5 minutes | **strong** | live Render demo linked in the README; `make check`; browser gateway |
 | README (purpose / install / run / test) | **strong** | value prop, demo GIF, badges, quickstart, honest vision labeling |
-| CI green + automated tests | **strong** | GitHub Actions all-green; **1111 tests**; property + fuzz markers |
-| Coverage | **strong** | ~94% branch coverage, codecov badge (truthful) |
+| CI green + automated tests | **strong** | GitHub Actions all-green; the full suite (count is the CI badge, the live source); property + fuzz markers |
+| Coverage | **strong** | branch coverage above the 85% floor; the codecov badge is the live source (truthful) |
 | Lint + types | **strong** | ruff + mypy clean, pinned, in CI |
 | Security tooling | **strong** | bandit, pip-audit, CodeQL, detect-secrets, SBOM, OpenSSF Scorecard badge |
 | Dependency discipline | **strong** | stdlib-first rule, dependency ledger, `make deps` gate |
@@ -31,7 +31,7 @@ and honest evidence everywhere (readiness, never certification). This is not a t
 
 ## The one real risk: sprawl reading as process-over-product
 
-CodeForge carries **98 docs and 117 parts**, and a growing set of meta-verbs about the codebase
+CodeForge carries a large docs set and Hardware Store, and a growing set of meta-verbs about the codebase
 itself. Each was built well and tested, but in aggregate they carry a hireability *cost*: an
 interviewer skimming for "can this person ship?" can mistake the volume of governance for an absence
 of product. The mitigation is not to delete good work; it is to **stop adding meta-machinery** and
