@@ -30,9 +30,9 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 # The record kinds the Chronicle understands. Slices added, in order: `evidence` (1), `metric`
-# (2), `edge` (3), `incident` (4). A record with any other kind fails loud, so the store never
-# accretes junk.
-KINDS = ("evidence", "metric", "edge", "incident")
+# (2), `edge` (3), `incident` (4), `ai-eval` (5). A record with any other kind fails loud, so the
+# store never accretes junk.
+KINDS = ("evidence", "metric", "edge", "incident", "ai-eval")
 
 # The provenance relations an `edge` may assert (PROV-O flavored). A relation outside this set
 # fails loud, so the graph stays meaningful rather than a free-for-all of ad-hoc verbs.
@@ -121,6 +121,20 @@ def _validate_payload(kind: str, payload: object, where: str) -> None:
             )
         if not isinstance(payload.get("corrective_action", ""), str):
             raise ChronicleError(f"{where}: incident 'corrective_action' must be a string")
+    if kind == "ai-eval":
+        subject = payload.get("subject")
+        score = payload.get("score")
+        model = payload.get("model")
+        if not isinstance(subject, str) or not subject.strip():
+            raise ChronicleError(f"{where}: an ai-eval needs a non-empty 'subject'")
+        if not isinstance(score, (int, float)) or isinstance(score, bool):
+            raise ChronicleError(f"{where}: an ai-eval 'score' must be a number, got {score!r}")
+        if not 0.0 <= score <= 1.0:
+            raise ChronicleError(f"{where}: an ai-eval 'score' must be in [0.0, 1.0], got {score}")
+        if not isinstance(model, str) or not model.strip():
+            raise ChronicleError(f"{where}: an ai-eval needs a non-empty 'model'")
+        if not isinstance(payload.get("passed"), bool):
+            raise ChronicleError(f"{where}: an ai-eval 'passed' must be a bool")
 
 
 def _parse_line(line: str, where: str) -> Record:
@@ -356,6 +370,53 @@ def render_incidents(records: list[Record]) -> str:
     return "\n".join(lines)
 
 
+def record_ai_eval(
+    subject: str,
+    score: float,
+    *,
+    model: str,
+    passed: bool,
+    commit: str,
+    root: Path | None = None,
+    stamp: datetime | None = None,
+) -> Record:
+    """Append one scored AI/Advisor evaluation - a typed convenience over `append`."""
+    return append(
+        "ai-eval",
+        {"subject": subject, "score": score, "model": model, "passed": passed},
+        commit=commit,
+        root=root,
+        stamp=stamp,
+    )
+
+
+def ai_evals(subject: str | None = None, *, root: Path | None = None) -> list[Record]:
+    """Every `ai-eval` record, optionally for one subject, in append order (oldest first)."""
+    recs = read("ai-eval", root=root)
+    return [r for r in recs if subject is None or r.payload.get("subject") == subject]
+
+
+def render_ai_evals(records: list[Record]) -> str:
+    """A read-only MLOps view: the latest score per subject, flagging a drop below the prior one."""
+    if not records:
+        return "No AI evaluations recorded."
+    by_subject: dict[str, list[Record]] = {}
+    for r in records:  # append order, so the last per subject is the latest
+        by_subject.setdefault(r.payload["subject"], []).append(r)
+    lines = ["AI EVALUATIONS - latest per subject (regression = below the prior score)", ""]
+    for subject, series in sorted(by_subject.items()):
+        latest = series[-1]
+        verdict = "pass" if latest.payload["passed"] else "FAIL"
+        flag = ""
+        if len(series) > 1 and latest.payload["score"] < series[-2].payload["score"]:
+            flag = f"  REGRESSION (was {series[-2].payload['score']:g})"
+        lines.append(
+            f"  {subject}: {latest.payload['score']:g} [{verdict}] via "
+            f"{latest.payload['model']} @ {latest.commit}{flag}"
+        )
+    return "\n".join(lines)
+
+
 def render(records: list[Record]) -> str:
     """A read-only human view of the memory (newest first), for the `chronicle` verb."""
     if not records:
@@ -378,6 +439,7 @@ def chronicle(arg: str = "") -> str:
     - `chronicle trend <m>`       the series for metric `<m>` over time
     - `chronicle provenance <n>`  the provenance edges around node `<n>`
     - `chronicle incidents`       the FRACAS register (open first, most severe first)
+    - `chronicle evals`           the AI-evaluation memory (latest score per subject)
 
     Reads only. A tampered or broken ledger surfaces its integrity failure honestly rather than
     crashing the tick (text is a projection; it never mutates the store).
@@ -396,6 +458,8 @@ def chronicle(arg: str = "") -> str:
             return render_provenance(node, provenance(node))
         if tokens and tokens[0].lower() == "incidents":
             return render_incidents(incidents())
+        if tokens and tokens[0].lower() == "evals":
+            return render_ai_evals(ai_evals())
         kind = arg.strip().lower() or None
         if kind is not None and kind not in KINDS:
             return f"Unknown record kind {kind!r}; the Chronicle knows: {', '.join(KINDS)}."
@@ -428,6 +492,9 @@ def main(argv: list[str] | None = None) -> int:
     if args and args[0] == "incidents":
         print(render_incidents(incidents()))
         return 0
+    if args and args[0] == "evals":
+        print(render_ai_evals(ai_evals()))
+        return 0
     if (
         len(args) >= 4 and args[0] == "record-incident"
     ):  # record-incident <severity> <commit> <what...>
@@ -436,7 +503,8 @@ def main(argv: list[str] | None = None) -> int:
         return 0
     print(
         "usage: python -m parts.chronicle {trend <name> | provenance <node> | incidents | "
-        "record-metric <name> <value> <commit> | record-edge <from> <relation> <to> <commit> | "
+        "evals | record-metric <name> <value> <commit> | "
+        "record-edge <from> <relation> <to> <commit> | "
         "record-incident <severity> <commit> <what...>}"
     )
     return 2

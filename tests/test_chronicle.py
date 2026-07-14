@@ -17,15 +17,18 @@ import pytest
 from parts.chronicle import (
     KINDS,
     ChronicleError,
+    ai_evals,
     append,
     incidents,
     provenance,
     read,
     read_latest,
+    record_ai_eval,
     record_edge,
     record_incident,
     record_metric,
     render,
+    render_ai_evals,
     render_incidents,
     render_provenance,
     render_trend,
@@ -88,7 +91,9 @@ def test_render_shows_records_and_reads_empty_state(tmp_path: Path) -> None:
 
 def test_unknown_kind_fails_loud_on_append(tmp_path: Path) -> None:
     with pytest.raises(ChronicleError, match="unknown kind"):
-        append("ai-eval", {"v": 1}, commit="c", root=tmp_path)  # a later-slice kind, not yet valid
+        append(
+            "retention", {"v": 1}, commit="c", root=tmp_path
+        )  # a later-slice kind, not yet valid
 
 
 def test_non_object_payload_fails_loud(tmp_path: Path) -> None:
@@ -134,12 +139,12 @@ def test_a_record_missing_a_field_fails_loud(tmp_path: Path) -> None:
 def test_read_with_an_unknown_kind_fails_loud(tmp_path: Path) -> None:
     append("evidence", {"x": 1}, commit="c", root=tmp_path)
     with pytest.raises(ChronicleError, match="unknown kind"):
-        read("ai-eval", root=tmp_path)  # a later-slice kind, not yet valid
+        read("retention", root=tmp_path)  # a later-slice kind, not yet valid
 
 
-def test_kinds_are_evidence_metric_edge_and_incident() -> None:
+def test_kinds_are_the_five_shipped_kinds() -> None:
     # A guard so a later slice that widens KINDS updates this test deliberately.
-    assert KINDS == ("evidence", "metric", "edge", "incident")
+    assert KINDS == ("evidence", "metric", "edge", "incident", "ai-eval")
 
 
 # --- metric kind + trend series (slice 2) ------------------------------------------------------
@@ -279,6 +284,55 @@ def test_chronicle_incidents_verb() -> None:
 
     # Reads the real (empty in tests) ledger; renders honestly, never crashes.
     assert verb("incidents") == "No incidents recorded."
+
+
+# --- ai-eval kind: scored AI/Advisor evaluation (slice 5) --------------------------------------
+
+
+def test_record_ai_eval_round_trips(tmp_path: Path) -> None:
+    rec = record_ai_eval(
+        "arch.q1", 0.75, model="claude-opus-4-8", passed=True, commit="a", root=tmp_path
+    )
+    assert rec.kind == "ai-eval"
+    assert rec.payload == {
+        "subject": "arch.q1",
+        "score": 0.75,
+        "model": "claude-opus-4-8",
+        "passed": True,
+    }
+
+
+def test_ai_evals_filter_by_subject(tmp_path: Path) -> None:
+    record_ai_eval("q1", 1.0, model="m", passed=True, commit="a", root=tmp_path)
+    record_ai_eval("q2", 0.2, model="m", passed=False, commit="a", root=tmp_path)
+    assert len(ai_evals(root=tmp_path)) == 2
+    assert [r.payload["subject"] for r in ai_evals("q1", root=tmp_path)] == ["q1"]
+
+
+def test_render_ai_evals_flags_a_regression(tmp_path: Path) -> None:
+    record_ai_eval("q", 1.0, model="m", passed=True, commit="a", root=tmp_path, stamp=_STAMP)
+    record_ai_eval("q", 0.5, model="m", passed=True, commit="b", root=tmp_path, stamp=_STAMP)
+    out = render_ai_evals(ai_evals(root=tmp_path))
+    assert "q: 0.5" in out and "REGRESSION (was 1)" in out
+    assert render_ai_evals([]) == "No AI evaluations recorded."
+
+
+def test_ai_eval_refuses_a_score_out_of_range(tmp_path: Path) -> None:
+    with pytest.raises(ChronicleError, match=r"in \[0.0, 1.0\]"):
+        record_ai_eval("q", 1.5, model="m", passed=True, commit="a", root=tmp_path)
+
+
+def test_ai_eval_refuses_an_empty_subject_and_non_bool_passed(tmp_path: Path) -> None:
+    with pytest.raises(ChronicleError, match="non-empty 'subject'"):
+        record_ai_eval("  ", 0.5, model="m", passed=True, commit="a", root=tmp_path)
+    with pytest.raises(ChronicleError, match="'passed' must be a bool"):
+        record_ai_eval("q", 0.5, model="m", passed="yes", commit="a", root=tmp_path)  # type: ignore[arg-type]
+
+
+def test_chronicle_evals_verb() -> None:
+    from parts.chronicle import chronicle as verb
+
+    assert verb("evals") == "No AI evaluations recorded."
 
 
 # --- integration: arc_ledger.emit retains its evidence verdict in the Chronicle ----------------
