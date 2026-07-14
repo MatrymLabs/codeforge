@@ -129,6 +129,32 @@ class Job(TypedDict):
     milestone_perks: list[dict]  # ordered passive perks unlocked at each TP milestone
 
 
+class QuestStep(TypedDict):
+    """One move in a quest: from `state`, event `event` advances to `to`; `effect` is optional."""
+
+    state: str
+    event: str
+    to: str
+    effect: NotRequired[str]
+
+
+class QuestSpec(TypedDict):
+    """A region's story arc, as data: a workflow the player walks with the `quest` verb.
+
+    The engine already drives quests as workflows; this lets a seed SHIP its own arc instead of
+    hardcoding one in Python (the world is data). Optional per seed -- `load_quest` returns None
+    when a seed ships no quest.yaml, and the game falls back to its built-in default.
+    """
+
+    id: str
+    name: str
+    start: str
+    reward_xp: int
+    steps: list[QuestStep]
+    terminal: list[str]
+    labels: dict[str, str]
+
+
 class SeedError(Exception):
     """Raised when a seed file fails validation. Names the exact problem."""
 
@@ -437,3 +463,47 @@ def load_jobs(path: Path) -> dict[str, Job]:
             milestone_perks=[dict(p) for p in merged["milestone_perks"]],
         )
     return jobs
+
+
+def load_quest(path: Path) -> QuestSpec | None:
+    """Load a seed's optional story arc (a workflow, as data). Returns None if the seed ships no
+    quest file; fails loud (SeedError) on a malformed one -- a broken arc must not boot silently."""
+    if not path.exists():
+        return None
+    data = yaml.safe_load(path.read_text(encoding="utf-8"))
+    if not isinstance(data, dict):
+        raise SeedError(f"quest file must be a mapping: {path}")
+    for key in ("id", "start", "steps"):
+        if key not in data:
+            raise SeedError(f"{path}: quest needs '{key}'")
+    steps = data["steps"]
+    if not isinstance(steps, list) or not steps:
+        raise SeedError(f"{path}: quest 'steps' must be a non-empty list")
+    clean_steps: list[QuestStep] = []
+    for raw in steps:
+        if not isinstance(raw, dict) or not all(k in raw for k in ("state", "event", "to")):
+            raise SeedError(f"{path}: each quest step needs 'state', 'event', and 'to'")
+        step: QuestStep = {
+            "state": str(raw["state"]),
+            "event": str(raw["event"]),
+            "to": str(raw["to"]),
+        }
+        if raw.get("effect"):
+            step["effect"] = str(raw["effect"])
+        clean_steps.append(step)
+    reward = data.get("reward_xp", 50)
+    if not isinstance(reward, int) or isinstance(reward, bool) or reward < 0:
+        raise SeedError(f"{path}: 'reward_xp' must be a non-negative integer")
+    terminal = data.get("terminal", [])
+    labels = data.get("labels", {})
+    if not isinstance(terminal, list) or not isinstance(labels, dict):
+        raise SeedError(f"{path}: 'terminal' must be a list and 'labels' a mapping")
+    return QuestSpec(
+        id=str(data["id"]),
+        name=str(data.get("name", _phrase(str(data["id"])).title())),
+        start=str(data["start"]),
+        reward_xp=reward,
+        steps=clean_steps,
+        terminal=[str(t) for t in terminal],
+        labels={str(k): str(v) for k, v in labels.items()},
+    )
