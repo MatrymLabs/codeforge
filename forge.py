@@ -84,7 +84,7 @@ HELP_TEXT = (
     "unlock <door> with <key>, regs [topic|id], library [id], law [id], "
     "registry [show|find|type|status], loop trace <part-id>, "
     "qa gate [all|<id>], safety review <id>, docs check, pm status, pm metrics, "
-    "truth check, career, pioneer, evolution, inspect, functions, terminal, "
+    "truth check, career, pioneer, evolution, chronicle, inspect, functions, terminal, "
     "workshop, catalog, reuse <term>, console, run <check>, diagnostics, "
     "security, ai <prompt>, lesson list, question, answer <A-D>, hint, progress, achievements, "
     "passwd, save, load, quit"
@@ -137,6 +137,12 @@ def run_view(name: str) -> str:
 
 def evolution(arg: str = "") -> str:
     from parts.evolution.command import evolution as run
+
+    return run(arg)
+
+
+def chronicle(arg: str = "") -> str:
+    from parts.chronicle import chronicle as run
 
     return run(arg)
 
@@ -438,6 +444,15 @@ def _build_commands() -> CommandSet:
             "CMD-UM10-S01-N001-022-R0",
             "Blueprint Evolution Lab (read-only): show recorded candidate bake-off runs",
             lambda _s, arg: evolution(arg),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "chronicle",
+            "CMD-UM10-S01-N001-023-R0",
+            "The Chronicle (read-only): show the ship's filed memory, newest first",
+            lambda _s, arg: chronicle(arg),
             namespace=CORE,
         )
     )

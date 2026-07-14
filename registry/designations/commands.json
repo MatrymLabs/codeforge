@@ -722,5 +722,35 @@
     "aliases": [],
     "created": "2026-07-12",
     "updated": "2026-07-12"
+  },
+  {
+    "designation": "CMD-UM10-S01-N001-023-R0",
+    "name": "`chronicle`",
+    "status": "active",
+    "function": "The Chronicle, read-only: show the ship's filed memory (newest first), optionally one kind. Never mutates the store.",
+    "label": "chronicle",
+    "file": "parts/chronicle.py",
+    "type": "CMD",
+    "domain": "UM10",
+    "sector": "S01",
+    "node": "N001",
+    "sequence": "023",
+    "revision": "R0",
+    "docs": "docs/reports/2026-07-13-chronicle-design.md",
+    "tests": "tests/test_chronicle.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "command",
+      "core",
+      "chronicle",
+      "read-only"
+    ],
+    "notes": "CORE verb. Read-only window on the Chronicle ledger; a tampered ledger surfaces its integrity failure rather than crashing the tick.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-14",
+    "updated": "2026-07-14"
   }
 ]

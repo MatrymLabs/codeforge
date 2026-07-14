@@ -3689,5 +3689,36 @@
     "aliases": [],
     "created": "2026-07-13",
     "updated": "2026-07-13"
+  },
+  {
+    "designation": "MOD-UM10-S01-N001-029-R0",
+    "name": "chronicle",
+    "status": "active",
+    "function": "the Chronicle: an append-only, hash-chained record store the ship reads back (its memory)",
+    "label": "chronicle",
+    "file": "parts/chronicle.py",
+    "type": "MOD",
+    "domain": "UM10",
+    "sector": "S01",
+    "node": "N001",
+    "sequence": "029",
+    "revision": "R0",
+    "docs": "docs/reports/2026-07-13-chronicle-design.md",
+    "tests": "tests/test_chronicle.py",
+    "depends_on": [],
+    "related": [
+      "arc_ledger",
+      "arc",
+      "reporting"
+    ],
+    "reuse": "tamper-evident append-only memory: retained, content-hashed, cited records read back for trend/provenance",
+    "tags": [
+      "module"
+    ],
+    "notes": "Chronicle slice 1a: append-only hashed core + the evidence kind + a read-only chronicle verb; arc_ledger.emit retains its evidence verdict here. ARC reads evidence from the Chronicle in slice 1b.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-14",
+    "updated": "2026-07-14"
   }
 ]
