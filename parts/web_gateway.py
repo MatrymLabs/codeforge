@@ -30,6 +30,7 @@ from parts.gateway import (
     MAX_CONNECTIONS,
     TICK_LOCK,
     _next_player_id,
+    _sanitize,
     load_splash,
 )
 from parts.session import SESSIONS, Session
@@ -57,9 +58,12 @@ async def index() -> str:
 async def _pump(ws: WebSocket, outbox: asyncio.Queue[str]) -> None:
     """The one mouth: every line the visitor should see -- prompts, tick
     responses, and broadcasts from other players' sinks -- leaves through
-    here, in order. Keeping sends single-writer avoids interleaved frames."""
+    here, in order. Keeping sends single-writer avoids interleaved frames.
+    Every line is sanitized at this transport edge (as the TCP gateway's _send
+    does), so player-supplied chat can't inject terminal escapes into another
+    visitor's xterm.js session -- this is the public, internet-facing surface."""
     while True:
-        await ws.send_text(await outbox.get())
+        await ws.send_text(_sanitize(await outbox.get()))
 
 
 async def _recv(ws: WebSocket) -> str:
@@ -121,29 +125,35 @@ async def play(ws: WebSocket) -> None:
         await ws.send_text("The forge is full right now. Try again shortly.")
         await ws.close()
         return
+    # Claim the seat, then do ALL of setup inside the try -- so if accept() or the
+    # registration raises (a client aborting the handshake is routine on a public link:
+    # health probes, scanners, bots), the finally still frees the seat. Otherwise the
+    # counter climbs monotonically and, after MAX_CONNECTIONS aborts, turns real
+    # visitors away forever -- an unauthenticated denial of the demo.
     _web_seats += 1
-    await ws.accept()
-
     outbox: asyncio.Queue[str] = asyncio.Queue()
     session = Session(player_id=_next_player_id())
+    mouth: asyncio.Task[None] | None = None
     entered = False
-    with TICK_LOCK:
-        SESSIONS[session.player_id] = session
-        bind_echo(session.player_id, outbox.put_nowait)
-    mouth = asyncio.create_task(_pump(ws, outbox))
     try:
+        await ws.accept()
+        with TICK_LOCK:
+            SESSIONS[session.player_id] = session
+            bind_echo(session.player_id, outbox.put_nowait)
+        mouth = asyncio.create_task(_pump(ws, outbox))
         entered = await _front_desk(ws, outbox, session)
         if entered:
             await _world_loop(ws, outbox, session)
     except (WebSocketDisconnect, TimeoutError):
         pass  # visitor left or idled out -- fall through to teardown
     finally:
-        mouth.cancel()
+        if mouth is not None:
+            mouth.cancel()
         # Deliver any last queued line -- the quit farewell, a final broadcast --
         # before closing. If the visitor already hung up, these sends no-op.
         with contextlib.suppress(WebSocketDisconnect, RuntimeError, OSError):
             while not outbox.empty():
-                await ws.send_text(outbox.get_nowait())
+                await ws.send_text(_sanitize(outbox.get_nowait()))
         with TICK_LOCK:
             if entered:
                 save_character(session)  # only real (registered) players persist
