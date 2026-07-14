@@ -3,18 +3,17 @@
 A seed PACK is a game's content (`seeds/<name>/*.yaml`). A CAST is what leaves the forge:
 a standalone, installable project poured from the engine + one chosen seed pack + config.
 
-Four steps exist today. `plan_cast` is the dry run (lists what a cast *would* contain, writes
-nothing). `generate_cast` POURS a cast: it vendors the engine whole, copies the cast's own seed
-pack, and writes the scaffold + a `generated` manifest (with the engine's real deps declared) -
-proof a package assembles. `validate_cast` smoke-boots the poured cast (one tick) and marks it
-`validated` - proof it RUNS. `install_check` creates a clean venv, installs ONLY the cast's
-declared deps, and boots it there (`isolation_proven`) - proof it runs with NO dependency on
-CodeForge's environment. What remains: detaching the still-vendored-whole engine (the manifest
-never claims `detached`). Two honesty rules hold the line:
+The pipeline: `plan_cast` (dry run, writes nothing) -> `generate_cast` (POURS the engine + the
+cast's own seed + scaffold + a `generated` manifest with real deps declared; proof a package
+assembles) -> `validate_cast` (boots the cast and runs a command corpus; proof it RUNS) ->
+`install_check` (a clean venv + only the cast's declared deps + boot; proof it runs in dependency
+ISOLATION). `pour_selective` (detachment D2) vendors ONLY the target surfaces' module closure
+(`vendored-selective`) and proves the cut with the BROAD harness (every surface command must run),
+so a slimmer game carries none of the engineering stack. Two honesty rules hold the line:
 
-  1. The plan reports `engine_strategy: "vendored-whole"` -- never a false a-la-carte module
-     list. The engine is one coupled package; it cannot yet be selected apart. No claim
-     without correspondence.
+  1. `engine_strategy` is `vendored-whole` by default; `vendored-selective` is offered ONLY behind
+     the broad validation harness that proves every surface command still runs on the cut. Never a
+     false a-la-carte module list; a claim of a cut is made only when the harness passes.
   2. It never touches `seeds/`, `--seed`, or `FORGE_SEED` -- it READS a seed pack and would
      WRITE a new cast elsewhere. The frozen identifiers stay frozen.
 
@@ -40,6 +39,8 @@ BLOCKED = "blocked"
 GENERATED = "generated"  # poured to disk (Phase 2), not yet booted
 VALIDATED = "validated"  # poured AND smoke-booted (boots + ticks in the current environment)
 NOT_VALIDATED = "not_validated"  # poured but failed its smoke boot
+VENDORED_WHOLE = "vendored-whole"  # the cast carries every parts/ module (default, honest interim)
+VENDORED_SELECTIVE = "vendored-selective"  # the cast carries only its surfaces' module closure (D2)
 
 # What a generated cast ignores at runtime - the same categories a cast must never carry.
 _CAST_GITIGNORE = (
@@ -277,14 +278,30 @@ def _scaffold_pyproject(m: CastManifest, deps: list[str], requires_python: str) 
     )
 
 
-def generate_cast(plan: CastPlan, dest: Path, *, root: Path | None = None) -> Path:
-    """Phase 2: pour a planned cast to `dest` - vendor the engine whole, copy the cast's OWN seed
-    pack, and write the scaffold + a `generated` manifest. Returns the cast root.
+def _vendor_selective(parts_src: Path, parts_dest: Path, modules: set[str], ignore: object) -> None:
+    """Copy only the named top-level modules (a file `<m>.py` or a subpackage dir `<m>/`), plus the
+    always-required `__init__.py`. The engine's remaining modules are left out (detachment D2)."""
+    parts_dest.mkdir(parents=True)
+    shutil.copy2(parts_src / "__init__.py", parts_dest / "__init__.py")
+    for m in sorted(modules):
+        as_file, as_dir = parts_src / f"{m}.py", parts_src / m
+        if as_file.is_file():
+            shutil.copy2(as_file, parts_dest / f"{m}.py")
+        elif as_dir.is_dir():
+            shutil.copytree(as_dir, parts_dest / m, ignore=ignore)  # type: ignore[arg-type]
 
-    Honest scope: this ASSEMBLES a standalone project directory (proof that a package assembles).
-    It does NOT detach the engine (vendored whole) or claim the cast boots independently - the
-    manifest records status `generated`, never `detached`/`validated`. Refuses a BLOCKED plan or a
-    non-empty destination; never touches `seeds/` or the frozen identifiers.
+
+def generate_cast(
+    plan: CastPlan, dest: Path, *, modules: set[str] | None = None, root: Path | None = None
+) -> Path:
+    """Phase 2: pour a planned cast to `dest` - vendor the engine (whole by default, or SELECTIVELY
+    when `modules` names the closure to carry, D2), copy the cast's OWN seed pack, and write the
+    scaffold + a `generated` manifest. Returns the cast root.
+
+    Honest scope: this ASSEMBLES a standalone project directory. A selective vendor is only SAFE
+    when a broad harness confirms it (run every surface command against the cut) - the caller does
+    that; this just pours what it is told. Refuses a BLOCKED plan or a non-empty destination; never
+    touches `seeds/` or the frozen identifiers.
     """
     if plan.verdict != READY:
         raise CastError(
@@ -297,13 +314,18 @@ def generate_cast(plan: CastPlan, dest: Path, *, root: Path | None = None) -> Pa
     starter = plan.manifest.starter_seed_pack
     ignore = shutil.ignore_patterns("__pycache__", "*.pyc")
     dest.mkdir(parents=True, exist_ok=True)
-    # 1. the engine, vendored whole (parts/ + forge.py)
-    shutil.copytree(base / "parts", dest / "parts", ignore=ignore)
+    # 1. the engine: vendored WHOLE by default, or SELECTIVELY when a module closure is given (D2)
+    if modules is None:
+        shutil.copytree(base / "parts", dest / "parts", ignore=ignore)
+        strategy = VENDORED_WHOLE
+    else:
+        _vendor_selective(base / "parts", dest / "parts", modules, ignore)
+        strategy = VENDORED_SELECTIVE
     shutil.copy2(base / "forge.py", dest / "forge.py")
     # 2. only this cast's OWN seed pack (never the other games)
     shutil.copytree(base / "seeds" / starter, dest / "seeds" / starter, ignore=ignore)
     # 3. the fresh scaffold + the manifest, marked generated
-    generated = replace(plan.manifest, status=GENERATED)
+    generated = replace(plan.manifest, status=GENERATED, engine_strategy=strategy)
     deps, requires_python = _engine_runtime_deps(base)  # the cast declares the engine's real deps
     write_manifest(generated, dest / "cast_manifest.json")
     (dest / "README.md").write_text(_scaffold_readme(generated), encoding="utf-8")
@@ -315,26 +337,50 @@ def generate_cast(plan: CastPlan, dest: Path, *, root: Path | None = None) -> Pa
     return dest
 
 
-# The one-tick smoke boot both proofs run: import the cast's OWN engine and drive one command.
+# The one-command smoke boot install_check runs (import the cast's OWN engine and drive one tick).
 _BOOT_PROBE = (
     "import forge; from parts.session import Session; "
     "out = forge.handle_command(Session(player_id='_validate'), 'help'); "
     "print(out[:60]); assert out.strip()"
 )
 
+# The broad-harness probe validate_cast runs: boot, then drive EVERY given command, failing loud on
+# the first that raises (a missing module in a selective cast surfaces here) or a non-string return.
+_VALIDATE_PROBE = r"""
+import sys, json
+import forge
+from parts.session import Session
+from parts.world import START_ROOM
+s = Session(player_id="_validate", location=START_ROOM)
+commands = json.loads(sys.argv[1])
+for cmd in commands:
+    try:
+        out = forge.handle_command(s, cmd)
+    except Exception as e:
+        print("COMMAND FAILED: %r -> %s: %s" % (cmd, type(e).__name__, e))
+        sys.exit(3)
+    if not isinstance(out, str):
+        print("COMMAND RETURNED NON-STRING: %r" % cmd)
+        sys.exit(4)
+print("OK: %d commands ran clean" % len(commands))
+"""
 
-def validate_cast(cast_dir: Path, *, timeout: float = 120.0) -> tuple[bool, str]:
-    """Smoke-boot a poured cast to prove it RUNS, not just assembles: in a subprocess with
-    cwd=`cast_dir`, import the cast's OWN engine and run one tick (so `parts/seed.py` resolves the
-    cast's own seed). Records the manifest status `validated` | `not_validated`, and returns
-    `(ok, detail)`.
 
-    Honest scope: this proves the cast boots and ticks in the CURRENT environment (shared
-    third-party deps). The fresh-install, dependency-isolated proof is `install_check`.
+def validate_cast(
+    cast_dir: Path, *, commands: list[str] | None = None, timeout: float = 120.0
+) -> tuple[bool, str]:
+    """Boot a poured cast and run a command corpus against it, proving it RUNS - a subprocess with
+    cwd=`cast_dir`, so `parts/seed.py` resolves the cast's own seed. `commands` defaults to a single
+    tick (`help`); for a SELECTIVE cast, pass the full surface corpus so a wrongly-excluded module
+    fails loud (the broad harness that makes D2 safe). Records `validated` | `not_validated`.
+
+    Honest scope: proves the cast boots + runs in the CURRENT environment; `install_check` is the
+    dependency-isolated fresh-install proof.
     """
+    corpus = commands if commands is not None else ["help"]
     try:
         result = subprocess.run(  # nosec B603 -- fixed argv, no shell; boots the poured cast
-            [sys.executable, "-c", _BOOT_PROBE],
+            [sys.executable, "-c", _VALIDATE_PROBE, json.dumps(corpus)],
             cwd=cast_dir,
             capture_output=True,
             text=True,
@@ -342,9 +388,13 @@ def validate_cast(cast_dir: Path, *, timeout: float = 120.0) -> tuple[bool, str]
             check=False,
         )
         ok = result.returncode == 0 and bool(result.stdout.strip())
-        detail = result.stdout.strip() if ok else (result.stderr.strip()[-200:] or "no output")
+        detail = (
+            result.stdout.strip()
+            if ok
+            else ((result.stdout.strip() + " " + result.stderr.strip())[-200:] or "no output")
+        )
     except subprocess.TimeoutExpired:
-        ok, detail = False, f"cast did not boot within {timeout:.0f}s"
+        ok, detail = False, f"cast did not run the corpus within {timeout:.0f}s"
     manifest_path = cast_dir / "cast_manifest.json"
     if manifest_path.is_file():
         m = read_manifest(manifest_path)
@@ -414,6 +464,35 @@ def install_check(cast_dir: Path, workdir: Path, *, runner=None) -> tuple[bool, 
     return True, "booted in a fresh venv with only its declared deps"
 
 
+def pour_selective(
+    template: str,
+    name: str,
+    dest: Path,
+    surfaces: list[str],
+    *,
+    commit: str = "unknown",
+    root: Path | None = None,
+    tracer=None,
+) -> tuple[Path, bool, str]:
+    """Detachment D2: compute the surfaces' module closure, pour a SELECTIVE cast carrying only it,
+    and validate with the BROAD harness (every surface command). Returns (cast_dir, ok, detail).
+
+    The harness is what makes selective vendoring safe: if the closure wrongly excluded a module a
+    surface command needs, that command fails loud here and the cast is marked not_validated. A
+    `not_validated` selective cast means the closure was insufficient - widen the surface corpus or
+    fall back to a vendored-whole cast; never ship the broken cut.
+    """
+    from parts import coupling
+
+    plan = plan_cast(template, name, commit=commit, root=root)
+    if plan.verdict != READY:
+        raise CastError(f"cannot pour a {plan.verdict.upper()} cast: resolve the blocker(s) first")
+    modules = coupling.closure(surfaces, tracer=tracer)
+    out = generate_cast(plan, Path(dest), modules=modules, root=root)
+    ok, detail = validate_cast(out, commands=coupling.surface_commands(surfaces))
+    return out, ok, detail
+
+
 def main(argv: list[str] | None = None) -> int:
     """CLI. Plan a cast (`<template> <name> [commit]`, `make cast-plan`) or pour one
     (`generate <template> <name> <dest> [commit]`, `make cast`).
@@ -444,6 +523,29 @@ def main(argv: list[str] | None = None) -> int:
         print(f"poured cast '{name}' -> {out}")
         ok, detail = validate_cast(out)  # prove it runs, not just assembles
         print(f"  {'validated (boots + ticks): ' + detail if ok else 'NOT validated: ' + detail}")
+        return 0 if ok else 1
+    if args and args[0] == "generate-selective":
+        if len(args) < 5:
+            print(
+                "usage: python -m parts.cast generate-selective <template> <name> <dest> "
+                "<surfaces-csv> [commit]",
+                file=sys.stderr,
+            )
+            return 2
+        template, name, dest, surfaces_csv = args[1], args[2], args[3], args[4]
+        commit = args[5] if len(args) > 5 else "unknown"
+        surfaces = [s.strip() for s in surfaces_csv.split(",") if s.strip()]
+        from parts.coupling import CouplingError
+
+        try:
+            out, ok, detail = pour_selective(template, name, Path(dest), surfaces, commit=commit)
+        except (CastError, CouplingError) as exc:
+            print(f"cast: {exc}", file=sys.stderr)
+            return 2
+        strat = read_manifest(out / "cast_manifest.json").engine_strategy
+        print(f"poured cast '{name}' ({', '.join(surfaces)}, {strat}) -> {out}")
+        verdict = f"validated: {detail}" if ok else f"NOT validated: {detail}"
+        print(f"  {verdict}")
         return 0 if ok else 1
     if args and args[0] == "validate":
         if len(args) < 2:

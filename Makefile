@@ -1,4 +1,4 @@
-.PHONY: env fix lint typecheck test property fuzz coverage audit audit-runtime security sast secrets deps sbom bench trend ai-eval retention doctor patch daily check readiness arc-verdicts truth cast-plan cast cast-install-check coupling smoke repo-integrity ship run world store hardware clean serve backup db-up db-down db-migrate docs-serve docs-build e2e evolution ritual-fast ritual ritual-down unskew loop
+.PHONY: env fix lint typecheck test property fuzz coverage audit audit-runtime security sast secrets deps sbom bench trend ai-eval retention doctor patch daily check readiness arc-verdicts truth cast-plan cast cast-selective cast-install-check coupling smoke repo-integrity ship run world store hardware clean serve backup db-up db-down db-migrate docs-serve docs-build e2e evolution ritual-fast ritual ritual-down unskew loop
 
 # --- Environment: create/validate the .venv, fail loud on version mismatch.
 # Uses uv when present (a Rust resolver; measured ~20x faster than pip on this host:
@@ -87,6 +87,12 @@ cast-plan:
 # Usage: make cast TEMPLATE=blank_mud NAME=Demo DEST=../codeforge-cast-demo ---
 cast:
 	@python3 -m parts.cast generate $(or $(TEMPLATE),blank_mud) $(or $(NAME),Demo) $(or $(DEST),../codeforge-cast-demo) $$(git rev-parse --short HEAD 2>/dev/null || echo unknown)
+
+# --- Cast (Phase D2): pour a SELECTIVE cast - vendor ONLY the target surfaces' module closure,
+# then validate by running every surface command against it. Falls back honestly (not_validated)
+# if the closure is insufficient. Usage: make cast-selective SURFACES=solo,save NAME=Demo DEST=.. ---
+cast-selective:
+	@python3 -m parts.cast generate-selective $(or $(TEMPLATE),blank_mud) $(or $(NAME),Demo) $(or $(DEST),../codeforge-cast-selective) $(or $(SURFACES),solo,save) $$(git rev-parse --short HEAD 2>/dev/null || echo unknown)
 
 # --- Coupling: read-only engine coupling report (detachment D1). Traces the runtime module
 # closure per surface and lists what a runtime cast could shed. Changes nothing. ---
