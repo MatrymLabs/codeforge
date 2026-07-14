@@ -125,6 +125,15 @@ def test_a_non_utc_stamp_is_converted_before_labelling_it_utc(tmp_path: Path) ->
     assert rec.recorded_utc == "2026-01-01T10:00:00Z"
 
 
+def test_a_naive_stamp_is_taken_as_utc_unchanged(tmp_path: Path) -> None:
+    """A naive stamp (no tzinfo) carries no zone to convert from, so it is taken as UTC as-is
+    rather than being shifted by the host's local zone."""
+    rec = append(
+        "evidence", {"x": 1}, commit="c", root=tmp_path, stamp=datetime(2026, 1, 1, 5, 0, 0)
+    )
+    assert rec.recorded_utc == "2026-01-01T05:00:00Z"
+
+
 def test_a_tampered_payload_is_detected_on_read(tmp_path: Path) -> None:
     append("evidence", {"status": "fail"}, commit="c", root=tmp_path)
     p = _ledger(tmp_path)
