@@ -1,4 +1,4 @@
-.PHONY: env fix lint typecheck test property fuzz coverage audit audit-runtime security sast secrets deps sbom bench trend ai-eval retention doctor patch daily check readiness arc-verdicts truth forge cast-plan cast cast-selective cast-install-check coupling smoke repo-integrity ship run world store hardware clean serve backup db-up db-down db-migrate docs-serve docs-build e2e evolution ritual-fast ritual ritual-down unskew loop
+.PHONY: env fix lint typecheck test property fuzz coverage audit audit-runtime security sast secrets deps sbom bench trend ai-eval retention doctor patch daily check readiness arc-verdicts truth forge cast-plan cast cast-selective cast-install-check coupling smoke repo-integrity ship run world store hardware clean serve backup db-up db-down db-migrate docs-serve docs-build demo-gif e2e evolution ritual-fast ritual ritual-down unskew loop
 
 # --- Environment: create/validate the .venv, fail loud on version mismatch.
 # Uses uv when present (a Rust resolver; measured ~20x faster than pip on this host:
@@ -298,6 +298,12 @@ docs-serve:
 
 docs-build:
 	mkdocs build --strict
+
+# --- Re-record the README demo GIF from real aethryn gameplay (needs `agg`; see the script). ---
+demo-gif:
+	FORGE_SEED=aethryn python scripts/record_demo.py demo.cast
+	agg --theme dracula --font-size 15 --speed 1.2 --fps-cap 24 --last-frame-duration 4 demo.cast docs/demo.gif
+	@rm -f demo.cast && echo "docs/demo.gif re-recorded."
 
 # --- E2E: drive the live dashboard with a real browser (isolated from `make check`). ---
 e2e:
