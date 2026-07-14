@@ -90,15 +90,20 @@ The proof that makes the whole vision legible without finishing the platform:
 - **Game adapter:** a **Quest** (regional quest progression) via MUD commands. This also fills a
   real gap: the World Package has **no quests today**.
 - **Practical adapter:** an **onboarding / approval checklist** driven by the *same* engine
-  through a non-game interface.
-- One core, two adapters: the two-way translation thesis, demonstrated.
+  through a non-game interface - now shipped as the **`codeforge onboard`** CLI (`parts/onboarding`),
+  the practical cousin of the MUD `quest` verb.
+- One core, two adapters, two interfaces (MUD + CLI): the two-way translation thesis, demonstrated
+  and runnable end to end.
 
 ## Priority staircase (build order)
 
 0. **Vision + repo alignment** (this doc). Done.
-1. Manufacturing core: Blueprint `product_type`, Part Manifest, assembly evidence.
-2. **First reusable vertical slice** (the Workflow Engine, above). Next.
-3. Minimal World Package: one region + identity + commands + the quest system + admin + tests.
+1. Manufacturing core: Blueprint `product_type`, Part Manifest, assembly evidence. Done.
+2. **First reusable vertical slice** (the Workflow Engine, above). **Done** - one `WorkflowEngine`
+   core (`parts/workflow`), the game `quest` adapter (MUD), and the practical `onboarding` adapter
+   now runnable through the **`codeforge onboard`** CLI; cataloged in the Hardware Store
+   (`docs/hardware/workflow_engine.*`), `loop trace workflow-engine` = PASS.
+3. **Minimal World Package: one region + identity + commands + the quest system + admin + tests. Next.**
 4. Package export: prove a package assembles, installs, and runs independently.
 5+. Creator wizards, full-stack interface, Hardware Store expansion, advanced modularity,
    production operations. Each gated by the Scope-Control Rule.
