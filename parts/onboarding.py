@@ -9,6 +9,8 @@ in a real business workflow. Its practical cousins are approval, case, and proje
 
 from __future__ import annotations
 
+from collections.abc import Callable
+
 from parts.workflow import Instance, Step, WorkflowEngine, build_workflow
 
 ONBOARDING = build_workflow(
@@ -53,3 +55,47 @@ def run_demo() -> list[str]:
         transcript.append(f"{actor} {event}: {status_line(run)}")
     transcript.append(f"done: {engine.is_done(run)}")
     return transcript
+
+
+def available(engine: WorkflowEngine, run: Instance) -> list[tuple[str, list[str]]]:
+    """The `(action, roles)` pairs fireable from the run's current state, sorted by action."""
+    return sorted(
+        (event, sorted(roles))
+        for (state, event), roles in engine.workflow.roles.items()
+        if state == run.state
+    )
+
+
+def drive(
+    reader: Callable[[str], str] = input,
+    writer: Callable[[str], None] = print,
+) -> Instance:
+    """Run onboarding through a plain terminal interface: the practical adapter's own UI.
+
+    The SAME `WorkflowEngine` that powers the MUD quest, driven here with no game - pick an action,
+    the required role fires it, until the employee is active. IO is injected, so it is fully
+    testable and the loop never touches the network. Reads only from `reader`; writes only to
+    `writer`; the engine, not the interface, owns the state.
+    """
+    engine, run = new_onboarding()
+    writer("Employee onboarding - the Workflow Engine through a practical interface.")
+    writer("Type an action to advance, or 'quit' to stop.")
+    while not engine.is_done(run):
+        writer(f"\n  status: {status_line(run)}")
+        options = available(engine, run)
+        for event, roles in options:
+            writer(f"    - {event}   (role: {', '.join(roles)})")
+        choice = reader("action> ").strip()
+        if choice in ("", "quit", "q"):
+            writer("Left the workflow before completion.")
+            return run
+        match = next((opt for opt in options if opt[0] == choice), None)
+        if match is None:
+            writer(f"  '{choice}' is not available from here.")
+            continue
+        event, roles = match
+        engine.advance(run, event, actor=roles[0])
+        writer(f"  {roles[0]} -> {event}")
+    writer(f"\n  DONE: {status_line(run)}")
+    writer("  trail: " + " -> ".join(h["to"] for h in run.history))
+    return run

@@ -18,6 +18,7 @@ USAGE = """codeforge -- hardware-store counter for the world engine
   codeforge serve                      same thing, formal attire
   codeforge play                       solo terminal session
   codeforge play --seed <game>         boot a different game (see: codeforge seeds)
+  codeforge onboard                    run the onboarding workflow (same engine as the game quest)
   codeforge seeds                      list installed games (seeds)
   codeforge grant <name> <rank>        host-shell authority (player/wizard/owner)
   codeforge migrate <char> <account>   move a v1 password onto an account
@@ -81,6 +82,11 @@ def main(argv: list[str] | None = None) -> int:
         from forge import game_loop
 
         game_loop()
+        return 0
+    if cmd == "onboard":
+        from parts.onboarding import drive
+
+        drive()  # the Workflow Engine's practical adapter: the same core as the game quest
         return 0
     if cmd == "grant" and len(args) == 3:
         from parts.characters import set_rank
