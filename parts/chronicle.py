@@ -29,9 +29,14 @@ from dataclasses import asdict, dataclass
 from datetime import UTC, datetime
 from pathlib import Path
 
-# The record kinds the Chronicle understands. Slice 1 shipped `evidence`; slice 2 adds `metric`
-# (a trend point). A record with any other kind fails loud, so the store never accretes junk.
-KINDS = ("evidence", "metric")
+# The record kinds the Chronicle understands. Slice 1 shipped `evidence`; slice 2 added `metric`
+# (a trend point); slice 3 adds `edge` (a provenance link). A record with any other kind fails
+# loud, so the store never accretes junk.
+KINDS = ("evidence", "metric", "edge")
+
+# The provenance relations an `edge` may assert (PROV-O flavored). A relation outside this set
+# fails loud, so the graph stays meaningful rather than a free-for-all of ad-hoc verbs.
+RELATIONS = ("wasGeneratedBy", "wasDerivedFrom", "wasInformedBy", "wasAttributedTo")
 
 CHRONICLE_DIR = "chronicle"  # git-TRACKED (retained), unlike arc-evidence/ which is git-ignored
 LEDGER_FILE = "ledger.jsonl"
@@ -87,6 +92,15 @@ def _validate_payload(kind: str, payload: object, where: str) -> None:
             raise ChronicleError(f"{where}: a metric record needs a non-empty string 'name'")
         if not isinstance(value, (int, float)) or isinstance(value, bool):
             raise ChronicleError(f"{where}: a metric 'value' must be a number, got {value!r}")
+    if kind == "edge":
+        for field in ("from", "relation", "to"):
+            val = payload.get(field)
+            if not isinstance(val, str) or not val.strip():
+                raise ChronicleError(f"{where}: an edge needs a non-empty string {field!r}")
+        if payload["relation"] not in RELATIONS:
+            raise ChronicleError(
+                f"{where}: unknown edge relation {payload['relation']!r}; expected {RELATIONS}"
+            )
 
 
 def _parse_line(line: str, where: str) -> Record:
@@ -230,6 +244,46 @@ def render_trend(name: str, records: list[Record]) -> str:
     return "\n".join(lines)
 
 
+def record_edge(
+    frm: str,
+    relation: str,
+    to: str,
+    *,
+    commit: str,
+    root: Path | None = None,
+    stamp: datetime | None = None,
+) -> Record:
+    """Append one provenance `edge` (`frm -relation-> to`) - a typed convenience over `append`."""
+    return append(
+        "edge",
+        {"from": frm, "relation": relation, "to": to},
+        commit=commit,
+        root=root,
+        stamp=stamp,
+    )
+
+
+def provenance(node: str, *, root: Path | None = None) -> list[Record]:
+    """Every `edge` touching `node` (as either endpoint), in record order."""
+    return [
+        r for r in read("edge", root=root) if node in (r.payload.get("from"), r.payload.get("to"))
+    ]
+
+
+def render_provenance(node: str, edges: list[Record]) -> str:
+    """A read-only view of the provenance around `node`: its outgoing and incoming edges."""
+    if not edges:
+        return f"No provenance recorded for {node!r}."
+    outgoing = [e for e in edges if e.payload["from"] == node]
+    incoming = [e for e in edges if e.payload["to"] == node]
+    lines = [f"PROVENANCE - {node}  ({len(edges)} edge(s))", ""]
+    for e in outgoing:
+        lines.append(f"  {node} -{e.payload['relation']}-> {e.payload['to']}  @ {e.commit}")
+    for e in incoming:
+        lines.append(f"  {e.payload['from']} -{e.payload['relation']}-> {node}  @ {e.commit}")
+    return "\n".join(lines)
+
+
 def render(records: list[Record]) -> str:
     """A read-only human view of the memory (newest first), for the `chronicle` verb."""
     if not records:
@@ -247,9 +301,10 @@ def render(records: list[Record]) -> str:
 def chronicle(arg: str = "") -> str:
     """The read-only `chronicle` verb: show the ship's filed memory.
 
-    - `chronicle`            all records, newest first
-    - `chronicle <kind>`     just one kind (evidence | metric)
-    - `chronicle trend <m>`  the series for metric `<m>` over time
+    - `chronicle`                 all records, newest first
+    - `chronicle <kind>`          just one kind (evidence | metric | edge)
+    - `chronicle trend <m>`       the series for metric `<m>` over time
+    - `chronicle provenance <n>`  the provenance edges around node `<n>`
 
     Reads only. A tampered or broken ledger surfaces its integrity failure honestly rather than
     crashing the tick (text is a projection; it never mutates the store).
@@ -261,6 +316,11 @@ def chronicle(arg: str = "") -> str:
             if not name:
                 return "usage: chronicle trend <metric-name>"
             return render_trend(name, trend(name))
+        if tokens and tokens[0].lower() == "provenance":
+            node = tokens[1] if len(tokens) > 1 else ""
+            if not node:
+                return "usage: chronicle provenance <node>"
+            return render_provenance(node, provenance(node))
         kind = arg.strip().lower() or None
         if kind is not None and kind not in KINDS:
             return f"Unknown record kind {kind!r}; the Chronicle knows: {', '.join(KINDS)}."
@@ -278,11 +338,22 @@ def main(argv: list[str] | None = None) -> int:
     if len(args) >= 2 and args[0] == "trend":
         print(render_trend(args[1], trend(args[1])))
         return 0
+    if len(args) >= 2 and args[0] == "provenance":
+        print(render_provenance(args[1], provenance(args[1])))
+        return 0
     if len(args) >= 4 and args[0] == "record-metric":
         rec = record_metric(args[1], float(args[2]), commit=args[3])
         print(f"  recorded {rec.payload['name']}={rec.payload['value']} @ {rec.commit} (chronicle)")
         return 0
-    print("usage: python -m parts.chronicle {trend <name> | record-metric <name> <value> <commit>}")
+    if len(args) >= 5 and args[0] == "record-edge":
+        edge = record_edge(args[1], args[2], args[3], commit=args[4])
+        p = edge.payload
+        print(f"  recorded {p['from']} -{p['relation']}-> {p['to']} @ {edge.commit} (chronicle)")
+        return 0
+    print(
+        "usage: python -m parts.chronicle {trend <name> | provenance <node> | "
+        "record-metric <name> <value> <commit> | record-edge <from> <relation> <to> <commit>}"
+    )
     return 2
 
 
