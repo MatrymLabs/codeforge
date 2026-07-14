@@ -114,11 +114,26 @@ def bench(arg: str = "") -> str:
 
 
 def main(argv: list[str] | None = None) -> int:
-    """`make bench`: run the full benchmark, print it, and file the evidence report."""
+    """`make bench`: run the full benchmark, print it, and file the evidence report.
+
+    `--record <commit>` additionally appends the median as a Chronicle `metric` point (the retained
+    trend series); `make trend` uses it. Plain `make bench` never touches the Chronicle.
+    """
+    import sys
+
+    args = list(sys.argv[1:] if argv is None else argv)
     result = benchmark()
     print(render_bench(result))
     path = write_bench_report(result)
     print(f"\n  evidence -> {path}")
+    if args and args[0] == "--record":
+        from parts import chronicle
+
+        commit = args[1] if len(args) > 1 else "unknown"
+        rec = chronicle.record_metric(
+            "engine_tick.median_us", round(result.median_us, 2), commit=commit
+        )
+        print(f"  metric   -> engine_tick.median_us={rec.payload['value']} @ {commit} (chronicle)")
     return 0
 
 

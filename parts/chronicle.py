@@ -29,9 +29,9 @@ from dataclasses import asdict, dataclass
 from datetime import UTC, datetime
 from pathlib import Path
 
-# The record kinds the Chronicle understands. Slice 1 ships `evidence`; later slices extend this
-# tuple (a record with any other kind fails loud, so the store never silently accretes junk).
-KINDS = ("evidence",)
+# The record kinds the Chronicle understands. Slice 1 shipped `evidence`; slice 2 adds `metric`
+# (a trend point). A record with any other kind fails loud, so the store never accretes junk.
+KINDS = ("evidence", "metric")
 
 CHRONICLE_DIR = "chronicle"  # git-TRACKED (retained), unlike arc-evidence/ which is git-ignored
 LEDGER_FILE = "ledger.jsonl"
@@ -76,6 +76,19 @@ def _ledger_path(root: Path | None) -> Path:
     return base / CHRONICLE_DIR / LEDGER_FILE
 
 
+def _validate_payload(kind: str, payload: object, where: str) -> None:
+    """Fail loud if a payload is not the shape its kind requires (checked on append AND on read)."""
+    if not isinstance(payload, dict):
+        raise ChronicleError(f"{where}: payload must be an object, got {type(payload).__name__}")
+    if kind == "metric":
+        name = payload.get("name")
+        value = payload.get("value")
+        if not isinstance(name, str) or not name.strip():
+            raise ChronicleError(f"{where}: a metric record needs a non-empty string 'name'")
+        if not isinstance(value, (int, float)) or isinstance(value, bool):
+            raise ChronicleError(f"{where}: a metric 'value' must be a number, got {value!r}")
+
+
 def _parse_line(line: str, where: str) -> Record:
     """Turn one JSONL line into a validated Record, failing loud on anything malformed."""
     try:
@@ -95,10 +108,7 @@ def _parse_line(line: str, where: str) -> Record:
         raise ChronicleError(f"{where}: malformed record (missing {exc})") from exc
     if record.kind not in KINDS:
         raise ChronicleError(f"{where}: unknown kind {record.kind!r}; expected {KINDS}")
-    if not isinstance(record.payload, dict):
-        raise ChronicleError(
-            f"{where}: payload must be an object, got {type(record.payload).__name__}"
-        )
+    _validate_payload(record.kind, record.payload, where)
     return record
 
 
@@ -157,13 +167,12 @@ def append(
     """Validate, hash-chain, and append one record to the retained ledger; return it.
 
     The record's `prior_hash` links to the current tail of the ledger, so the store is a
-    tamper-evident chain. Fails loud (`ChronicleError`) on an unknown kind or a non-object payload,
-    before anything is written.
+    tamper-evident chain. Fails loud (`ChronicleError`) on an unknown kind or a payload that is not
+    the shape its kind requires, before anything is written.
     """
     if kind not in KINDS:
         raise ChronicleError(f"unknown kind {kind!r}; expected {KINDS}")
-    if not isinstance(payload, dict):
-        raise ChronicleError(f"payload must be an object, got {type(payload).__name__}")
+    _validate_payload(kind, payload, "append")
     existing = read(None, root=root)  # verifies the chain before we extend it
     prior_hash = existing[-1].content_hash if existing else _GENESIS
     when = stamp if stamp is not None else datetime.now(UTC)
@@ -185,6 +194,42 @@ def append(
     return record
 
 
+def record_metric(
+    name: str,
+    value: float,
+    *,
+    commit: str,
+    root: Path | None = None,
+    stamp: datetime | None = None,
+) -> Record:
+    """Append one `metric` point `{name, value}` - a typed convenience over `append`."""
+    return append("metric", {"name": name, "value": value}, commit=commit, root=root, stamp=stamp)
+
+
+def trend(name: str, *, root: Path | None = None) -> list[Record]:
+    """Every recorded `metric` point for `name`, oldest first (a trend series)."""
+    return [r for r in read("metric", root=root) if r.payload.get("name") == name]
+
+
+def render_trend(name: str, records: list[Record]) -> str:
+    """A read-only view of one metric's series over time, with the net first->last direction."""
+    if not records:
+        return f"No metric named {name!r} has been recorded yet."
+    lines = [f"TREND - {name}  ({len(records)} point(s), oldest first)", ""]
+    for r in records:
+        lines.append(f"  [{r.recorded_utc}] {r.payload['value']:>12}  @ {r.commit}")
+    first, last = records[0].payload["value"], records[-1].payload["value"]
+    delta = last - first
+    direction = "flat" if delta == 0 else ("up" if delta > 0 else "down")
+    lines += [
+        "",
+        f"  net: {first:g} -> {last:g}  ({direction} {abs(delta):g})",
+        "  (direction is not a judgment: whether higher or lower is better depends on the metric,",
+        "   and host-relative numbers only compare within the same host.)",
+    ]
+    return "\n".join(lines)
+
+
 def render(records: list[Record]) -> str:
     """A read-only human view of the memory (newest first), for the `chronicle` verb."""
     if not records:
@@ -200,16 +245,46 @@ def render(records: list[Record]) -> str:
 
 
 def chronicle(arg: str = "") -> str:
-    """The read-only `chronicle` verb: show the ship's filed memory (optionally one kind).
+    """The read-only `chronicle` verb: show the ship's filed memory.
+
+    - `chronicle`            all records, newest first
+    - `chronicle <kind>`     just one kind (evidence | metric)
+    - `chronicle trend <m>`  the series for metric `<m>` over time
 
     Reads only. A tampered or broken ledger surfaces its integrity failure honestly rather than
     crashing the tick (text is a projection; it never mutates the store).
     """
-    kind = arg.strip().lower() or None
-    if kind is not None and kind not in KINDS:
-        return f"Unknown record kind {kind!r}; the Chronicle knows: {', '.join(KINDS)}."
+    tokens = arg.split()
     try:
-        records = read(kind)
+        if tokens and tokens[0].lower() == "trend":
+            name = tokens[1] if len(tokens) > 1 else ""
+            if not name:
+                return "usage: chronicle trend <metric-name>"
+            return render_trend(name, trend(name))
+        kind = arg.strip().lower() or None
+        if kind is not None and kind not in KINDS:
+            return f"Unknown record kind {kind!r}; the Chronicle knows: {', '.join(KINDS)}."
+        return render(read(kind))
     except ChronicleError as exc:
         return f"The Chronicle failed its integrity check: {exc}"
-    return render(records)
+
+
+def main(argv: list[str] | None = None) -> int:
+    """CLI: `python -m parts.chronicle trend <name>` (render) or `record-metric <name> <value>
+    <commit>` (append a point). Used by `make trend`; recording is a deliberate, evidenced act."""
+    import sys
+
+    args = list(sys.argv[1:] if argv is None else argv)
+    if len(args) >= 2 and args[0] == "trend":
+        print(render_trend(args[1], trend(args[1])))
+        return 0
+    if len(args) >= 4 and args[0] == "record-metric":
+        rec = record_metric(args[1], float(args[2]), commit=args[3])
+        print(f"  recorded {rec.payload['name']}={rec.payload['value']} @ {rec.commit} (chronicle)")
+        return 0
+    print("usage: python -m parts.chronicle {trend <name> | record-metric <name> <value> <commit>}")
+    return 2
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

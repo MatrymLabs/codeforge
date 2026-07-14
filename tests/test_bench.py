@@ -8,12 +8,16 @@ than measuring noise. Sample counts are tiny here so the suite stays fast.
 from __future__ import annotations
 
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
+import parts.bench as bench_mod
+from parts import chronicle
 from parts.bench import (
     BenchError,
     benchmark,
+    main,
     render_bench,
     write_bench_report,
 )
@@ -64,3 +68,36 @@ def test_bench_reachable_through_the_terminal() -> None:
 
     out = terminal("bench")
     assert "ENGINE TICK BENCHMARK" in out
+
+
+def test_record_flag_appends_the_median_as_a_chronicle_metric(monkeypatch, tmp_path: Path) -> None:
+    # `make trend` uses `bench --record <commit>`. Keep it fast and off the real store:
+    # a tiny canned run, a no-op report write, and a spy for the metric append.
+    canned = benchmark(iterations=50, warmup=5)
+    monkeypatch.setattr(bench_mod, "benchmark", lambda: canned)
+    monkeypatch.setattr(bench_mod, "write_bench_report", lambda r: tmp_path / "r.md")
+    seen: dict[str, object] = {}
+
+    def _spy(name, value, *, commit, root=None, stamp=None):
+        seen.update(name=name, value=value, commit=commit)
+        return SimpleNamespace(payload={"name": name, "value": value})
+
+    monkeypatch.setattr(chronicle, "record_metric", _spy)
+    main(["--record", "deadbee"])
+    assert seen["name"] == "engine_tick.median_us"
+    assert isinstance(seen["value"], float) and seen["commit"] == "deadbee"
+
+
+def test_plain_bench_never_touches_the_chronicle(monkeypatch, tmp_path: Path) -> None:
+    canned = benchmark(iterations=50, warmup=5)
+    monkeypatch.setattr(bench_mod, "benchmark", lambda: canned)
+    monkeypatch.setattr(bench_mod, "write_bench_report", lambda r: tmp_path / "r.md")
+    called = False
+
+    def _boom(*a, **k):
+        nonlocal called
+        called = True
+
+    monkeypatch.setattr(chronicle, "record_metric", _boom)
+    main([])  # no --record
+    assert called is False
