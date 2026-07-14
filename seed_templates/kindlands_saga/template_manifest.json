@@ -1,0 +1,22 @@
+{
+  "template_id": "kindlands_saga",
+  "name": "Kindlands Saga",
+  "description": "The flagship cast: Aethryn's Kindlands Coast poured as a standalone, installable game. The world bible's starting area (Cinderhearth-on-Reach, the Cold Cellar dungeon, the Relighting arc) plus the whole engine.",
+  "starter_seed_pack": "aethryn",
+  "engine_strategy": "vendored-whole",
+  "default_settings": {
+    "genre": "fantasy",
+    "allow_multiplayer": true,
+    "allow_ai_npcs": false,
+    "combat_mode": "turn_based",
+    "save_mode": "local"
+  },
+  "includes": {
+    "engine": true,
+    "ritual": "slim",
+    "registry": true,
+    "qa": true,
+    "veritas": true
+  },
+  "status": "prototype"
+}
