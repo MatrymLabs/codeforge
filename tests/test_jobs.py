@@ -1,7 +1,9 @@
 """Test twin for parts/jobs.py -- chargen from seed to sheet."""
 
+import pytest
+
 from forge import handle_command
-from parts.jobs import JOBS, bind_calling
+from parts.jobs import JOBS, bind_calling, calling_index
 from parts.session import Session
 
 
@@ -21,6 +23,19 @@ def test_assign_job_births_stats_and_resources():
     assert s.resources["hp"].maximum == 20 + 8  # BASE_HP + stamina
     assert s.resources["mp"].maximum == 5 + 14  # BASE_MP + magic
     assert s.resources["hp"].is_full
+
+
+def test_calling_index_aligns_names_even_with_a_long_label(monkeypatch: pytest.MonkeyPatch):
+    """Hostile case: a seed names an 11-char calling next to short ones. The description column
+    must still line up -- the old fixed :<10 width let a long label shove its name out of column."""
+    fake = {
+        "vanguard": {"name": "Vanguard", "description": "short label"},
+        "emberwright": {"name": "Emberwright", "description": "long label (11 chars)"},
+    }
+    monkeypatch.setattr("parts.jobs.JOBS", fake)
+    rows = [ln for ln in calling_index().splitlines() if " -- " in ln]
+    name_columns = {ln.index(job["name"]) for ln, job in zip(rows, fake.values(), strict=True)}
+    assert len(name_columns) == 1  # every calling's name starts at the same column
 
 
 def test_unknown_calling_is_refused():

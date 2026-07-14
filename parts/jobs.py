@@ -22,8 +22,11 @@ BASE_MP = 5  # starting MP is BASE_MP + magic
 def calling_index() -> str:
     """The list a new soul reads before choosing."""
     lines = ["Callings:"]
+    # The world is data: a seed may name a calling of any length ('forgewright',
+    # 'emberwright' are 11), so size the column to the widest label, never a fixed 10.
+    width = max((len(label) for label in JOBS), default=0)
     for label, job in JOBS.items():
-        lines.append(f"  {label:<10} {job['name']} -- {job['description']}")
+        lines.append(f"  {label:<{width}} {job['name']} -- {job['description']}")
     lines.append("Choose with: job <calling>")
     return "\n".join(lines)
 

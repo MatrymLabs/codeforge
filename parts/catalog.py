@@ -14,15 +14,35 @@ from parts.seed import Item, Room, load_rooms
 from parts.world import SEED_PATH
 
 
+def _filed_index(
+    label_head: str, name_head: str, tail_head: str, rows: list[tuple[str, str, str]]
+) -> list[str]:
+    """Render a numbered index, sizing each column to its widest cell. Labels are DATA (a seed
+    may name a room 'cinderhearth_square'), so a fixed column width once collided the LABEL and
+    NAME columns on longer worlds; the widths are computed, never assumed."""
+    num_w = max(len("#"), len(str(len(rows)))) + 2
+    label_w = max(len(label_head), *(len(r[0]) for r in rows)) + 1 if rows else len(label_head) + 1
+    name_w = max(len(name_head), *(len(r[1]) for r in rows)) + 1 if rows else len(name_head) + 1
+    header = f"{'#':<{num_w}}{label_head:<{label_w}}{name_head:<{name_w}}{tail_head}"
+    lines = [header, "-" * len(header)]
+    for number, (label, name, tail) in enumerate(rows, start=1):
+        lines.append(f"{number:<{num_w}}{label:<{label_w}}{name:<{name_w}}{tail}")
+    return lines
+
+
 def room_catalog(rooms: dict[str, Room] | None = None) -> str:
     """Return the numbered room index as display text."""
     if rooms is None:
         rooms = load_rooms(SEED_PATH)
-    header = f"{'#':<4}{'LABEL':<14}{'NAME':<26}EXITS"
-    lines = [header, "-" * len(header)]
-    for number, (label, room) in enumerate(sorted(rooms.items()), start=1):
-        exits = ", ".join(f"{d}->{dest}" for d, dest in room["exits"].items()) or "(none)"
-        lines.append(f"{number:<4}{label:<14}{room['name']:<26}{exits}")
+    rows = [
+        (
+            label,
+            room["name"],
+            ", ".join(f"{d}->{dest}" for d, dest in room["exits"].items()) or "(none)",
+        )
+        for label, room in sorted(rooms.items())
+    ]
+    lines = _filed_index("LABEL", "NAME", "EXITS", rows)
     lines.append(f"\n{len(rooms)} rooms filed.")
     return "\n".join(lines)
 
@@ -31,11 +51,11 @@ def item_catalog(items: dict[str, Item] | None = None) -> str:
     """Return the numbered item index as display text."""
     if items is None:
         items = ITEMS
-    header = f"{'#':<4}{'LABEL':<16}{'NAME':<26}WHERE"
-    lines = [header, "-" * len(header)]
-    for number, (label, item) in enumerate(sorted(items.items()), start=1):
-        where = item["location"].removeprefix("room:")
-        lines.append(f"{number:<4}{label:<16}{item['name'].title():<26}{where}")
+    rows = [
+        (label, item["name"].title(), item["location"].removeprefix("room:"))
+        for label, item in sorted(items.items())
+    ]
+    lines = _filed_index("LABEL", "NAME", "WHERE", rows)
     lines.append(f"\n{len(items)} items filed.")
     return "\n".join(lines)
 
@@ -44,10 +64,8 @@ def npc_catalog(npcs: dict[str, Npc] | None = None) -> str:
     """Return the numbered NPC index as display text."""
     if npcs is None:
         npcs = NPCS
-    header = f"{'#':<4}{'LABEL':<14}{'NAME':<26}ROOM"
-    lines = [header, "-" * len(header)]
-    for number, (label, npc) in enumerate(sorted(npcs.items()), start=1):
-        lines.append(f"{number:<4}{label:<14}{npc['name'].title():<26}{npc['location']}")
+    rows = [(label, npc["name"].title(), npc["location"]) for label, npc in sorted(npcs.items())]
+    lines = _filed_index("LABEL", "NAME", "ROOM", rows)
     lines.append(f"\n{len(npcs)} npcs filed.")
     return "\n".join(lines)
 
