@@ -13,7 +13,7 @@ steps:
   - {state: accepted,      event: relight, to: ember_lit}
   - {state: ember_lit,     event: reforge, to: bridge_mended, effect: "open_door:reach_bridge"}
   - {state: bridge_mended, event: delve,   to: at_the_hearth}
-  - {state: at_the_hearth, event: face,    to: done, effect: award_xp}
+  - {state: at_the_hearth, event: face,    to: done, effect: award_xp, on_defeat: cinder_wight}
 
 terminal: [done]
 

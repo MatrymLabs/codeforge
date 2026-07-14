@@ -53,6 +53,13 @@ _SEED_QUEST = load_quest(SEED_DIR / "quest.yaml")
 _QUEST, _QUEST_NAME, _XP_REWARD = _from_seed(_SEED_QUEST) if _SEED_QUEST else _built_in_quest()
 _ENGINE = WorkflowEngine(_QUEST)
 
+# npc label -> the quest event its defeat fires, so a real fight can advance the arc.
+_DEFEAT_EVENTS: dict[str, str] = (
+    {s["on_defeat"]: s["event"] for s in _SEED_QUEST["steps"] if s.get("on_defeat")}
+    if _SEED_QUEST
+    else {}
+)
+
 _RUNS: dict[str, Instance] = {}  # player_id -> their quest run
 
 
@@ -92,6 +99,21 @@ def _apply_effect(effect: str | None, session: Session) -> str:
 
         doors.open_gate(effect.split(":", 1)[1])  # the label already narrates the opening
     return ""
+
+
+def on_defeat(session: Session, npc_label: str) -> str | None:
+    """Combat hook: if defeating `npc_label` advances this player's quest, fire that step and
+    return its line. Returns None when the npc triggers nothing, or the arc isn't at that step yet
+    (you felled the foe, but haven't walked the story to the beat that its fall completes)."""
+    event = _DEFEAT_EVENTS.get(npc_label)
+    if event is None:
+        return None
+    run = _run(session.player_id)
+    outcome = _ENGINE.advance(run, event)
+    if not isinstance(outcome, Fired):
+        return None
+    extra = _apply_effect(outcome.effect, session)
+    return f"[{_QUEST_NAME}] {_QUEST.labels.get(run.state, run.state)}{extra}"
 
 
 def reset_quests() -> None:

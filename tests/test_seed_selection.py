@@ -69,6 +69,7 @@ def test_aethryn_ships_the_relighting_quest_as_data():
     assert quest["reward_xp"] == 120
     assert quest["start"] == "offered" and quest["terminal"] == ["done"]
     assert quest["steps"][-1]["effect"] == "award_xp"  # finishing the arc awards XP
+    assert quest["steps"][-1]["on_defeat"] == "cinder_wight"  # felling the boss completes it
     # It is a valid workflow graph (start -> ... -> a terminal state), not just a list.
     from parts.workflow import Step, build_workflow
 
