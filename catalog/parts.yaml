@@ -1059,9 +1059,14 @@
     on read: each entry hashes its own payload and the previous entry's hash. Fails loud on a
     broken chain rather than returning a dishonest history. stdlib only (hashlib + json). Harvested
     from the Chronicle (the ship's memory), which now shares this module's one canonical hash.
+  proven_reuse: >-
+    Demonstrated across the fleet, not just documented (harvested pattern, no code copied): the
+    federal-guidance-library reuses it as a tamper-evident guidance-check ledger (`library ledger`),
+    and ai-log-triage reuses it as a triage-decision audit trail (`GET /audit`, NIST AU-family). One
+    part, three jobs in three repos.
   reuse:
     game: "the Chronicle records engine evidence, metrics, and incidents on this canonical hash"
-    government: "a tamper-evident audit trail / evidence bundle for CMMC, NIST 800-171, or NARA records"
+    government: "federal-guidance-library records each guidance check tamper-evidently (library ledger) - a CMMC/NIST/NARA evidence trail"
     finance: "an append-only transaction or posting ledger with cryptographic integrity"
-    compliance: "a chain-of-custody log where any silent alteration of a past entry fails loud"
+    compliance: "ai-log-triage records every triage decision on this pattern for AU-family audit integrity (GET /audit) - fails loud on tampering"
     general: "a dependency-free append-only event store that proves its own history was not rewritten"
