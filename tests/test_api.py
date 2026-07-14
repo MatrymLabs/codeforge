@@ -4,8 +4,9 @@ import pytest
 from fastapi.testclient import TestClient
 
 from parts.accounts import adopt, register
-from parts.api import app
+from parts.api import app, get_login_guard
 from parts.characters import save_character, set_rank
+from parts.login_guard import LoginGuard
 from parts.session import SESSIONS, Session
 
 
@@ -14,6 +15,16 @@ def fresh_sessions():
     SESSIONS.clear()
     yield
     SESSIONS.clear()
+
+
+@pytest.fixture(autouse=True)
+def fresh_login_guard():
+    # One throttle instance per test (shared across that test's requests), so the 5-attempt burst
+    # is real within a test but never leaks across tests.
+    guard = LoginGuard()
+    app.dependency_overrides[get_login_guard] = lambda: guard
+    yield
+    app.dependency_overrides.clear()
 
 
 @pytest.fixture()
@@ -79,6 +90,18 @@ def test_grant_refuses_the_unauthenticated(client):
         "/admin/grant", json={"name": "matrym", "rank": "wizard"}, auth=("matlabs", "wrong")
     )
     assert response.status_code == 401
+
+
+def test_admin_auth_is_rate_limited_against_brute_force(client):
+    """The HTTP admin surface caps guessing the same way the telnet gateway does: a 5-attempt
+    burst, then 429 - so the owner password can't be brute-forced one pbkdf2 at a time."""
+    _owner_account()
+    body = {"name": "matrym", "rank": "wizard"}
+    for _ in range(5):  # the burst: five wrong guesses, each a normal 401
+        assert client.post("/admin/grant", json=body, auth=("matlabs", "wrong")).status_code == 401
+    blocked = client.post("/admin/grant", json=body, auth=("matlabs", "wrong"))  # the sixth
+    assert blocked.status_code == 429
+    assert "Retry-After" in blocked.headers
 
 
 def test_grant_with_owner_credentials_changes_rank(client):

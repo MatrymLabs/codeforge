@@ -13,7 +13,7 @@ capability, same law as the @-verbs.
 
 from typing import Annotated
 
-from fastapi import Depends, FastAPI, HTTPException
+from fastapi import Depends, FastAPI, HTTPException, Request
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
 from pydantic import BaseModel
 from sqlalchemy import select
@@ -23,6 +23,7 @@ from parts.blueprint import load_all as load_blueprints
 from parts.characters import set_rank
 from parts.dashboard import router as dashboard_router
 from parts.db import CharacterRow, open_archive_session
+from parts.login_guard import LoginGuard
 from parts.observability import install_observability
 from parts.ranks import RANK_ORDER
 from parts.world import WORLD
@@ -41,14 +42,37 @@ app.include_router(dashboard_router)
 install_observability(app)
 
 _basic = HTTPBasic()
+# Reuse the Hardware Store throttle (parts/login_guard, built on the token-bucket part): brute-force
+# protection for this surface, the same as the telnet gateway's per-IP lockout. 5-attempt burst,
+# then one every 30s. A shared instance across requests; a dependency seam so tests isolate it.
+_login_guard = LoginGuard()
 
 
-def _require_owner(credentials: Annotated[HTTPBasicCredentials, Depends(_basic)]) -> str:
+def get_login_guard() -> LoginGuard:
+    """Dependency seam for the brute-force throttle - overridden in tests for per-test isolation."""
+    return _login_guard
+
+
+def _require_owner(
+    request: Request,
+    credentials: Annotated[HTTPBasicCredentials, Depends(_basic)],
+    guard: Annotated[LoginGuard, Depends(get_login_guard)],
+) -> str:
     """HTTP Basic: the account must exist, the password must match, and
     the account must hold an owner-ranked character. One generic 401."""
-    # account_password_ok is now constant-time whether or not the account exists (a decoy hash
-    # levels the pbkdf2 cost in parts/accounts), so this gate no longer leaks account existence
-    # by timing. One generic 401, never saying which part failed.
+    # Throttle by client IP FIRST, before the expensive pbkdf2 - so a brute-force attempt (and its
+    # CPU cost) is capped without even paying the hash, and a barred caller is turned away fast.
+    client = request.client.host if request.client else "unknown"
+    decision = guard.attempt(client)
+    if not decision.allowed:
+        raise HTTPException(
+            status_code=429,
+            detail="Too many attempts. Try again later.",
+            headers={"Retry-After": str(int(decision.retry_after) + 1)},
+        )
+    # account_password_ok is constant-time whether or not the account exists (a decoy hash levels
+    # the pbkdf2 cost in parts/accounts), so this gate does not leak account existence by timing.
+    # One generic 401, never saying which part failed.
     ok = account_password_ok(credentials.username, credentials.password) and account_has_owner(
         credentials.username
     )
