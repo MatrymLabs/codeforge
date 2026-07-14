@@ -232,6 +232,9 @@ def _bootable_stub(cast_dir: Path, ok: bool = True) -> None:
         "class Session:\n    def __init__(self, player_id, location=None):\n"
         "        self.player_id = player_id\n"
     )
+    (cast_dir / "parts" / "world.py").write_text(
+        "START_ROOM = 'start'\n"
+    )  # validate probe needs it
     body = (
         "def handle_command(session, text):\n    return 'Commands: help, look'\n"
         if ok
@@ -250,7 +253,7 @@ def test_validate_boots_a_working_cast_and_marks_it_validated(tmp_path: Path) ->
     cast = tmp_path / "cast"
     _bootable_stub(cast, ok=True)
     ok, detail = validate_cast(cast)
-    assert ok and "Commands" in detail
+    assert ok and "commands ran clean" in detail  # default corpus is a single tick
     assert read_manifest(cast / "cast_manifest.json").status == VALIDATED
 
 
@@ -335,3 +338,62 @@ def test_install_check_needs_declared_deps(tmp_path: Path) -> None:
     (cast_dir / "pyproject.toml").write_text("[project]\n", encoding="utf-8")  # no deps
     ok, detail = install_check(cast_dir, tmp_path / "work", runner=lambda c, w: (0, ""))
     assert ok is False and "no dependencies" in detail
+
+
+# --- Detachment D2: selective vendoring behind a broad validation harness -----------------------
+
+
+def _bootable_fixture_engine(root: Path) -> None:
+    """A tiny but BOOTABLE engine fixture: forge + world + session that pour_selective validates."""
+    _fixture_engine(root)  # parts/(x,__init__), forge.py stub, seeds/first-forge+other, template
+    (root / "forge.py").write_text("def handle_command(session, text):\n    return 'ok: ' + text\n")
+    (root / "parts" / "session.py").write_text(
+        "class Session:\n    def __init__(self, player_id, location=None):\n        pass\n"
+    )
+    (root / "parts" / "world.py").write_text("START_ROOM = 'start'\n")
+
+
+def test_generate_selective_vendors_only_the_named_modules(tmp_path: Path) -> None:
+    from parts.cast import VENDORED_SELECTIVE
+
+    _fixture_engine(tmp_path)
+    plan = plan_cast("blank_mud", "Slim", commit="c", root=tmp_path)
+    out = generate_cast(plan, tmp_path / "out", modules={"x"}, root=tmp_path)
+    assert (out / "parts" / "x.py").is_file()
+    assert (out / "parts" / "__init__.py").is_file()  # always carried
+    assert not (out / "parts" / "session.py").exists()  # a module NOT in the closure is shed
+    assert read_manifest(out / "cast_manifest.json").engine_strategy == VENDORED_SELECTIVE
+
+
+def test_validate_cast_runs_a_command_corpus(tmp_path: Path) -> None:
+    from parts.cast import validate_cast
+
+    cast = tmp_path / "cast"
+    _bootable_stub(cast, ok=True)
+    ok, detail = validate_cast(cast, commands=["help", "look", "score"])
+    assert ok and "3 commands ran clean" in detail
+
+
+def test_validate_cast_fails_when_a_surface_command_breaks(tmp_path: Path) -> None:
+    from parts.cast import NOT_VALIDATED, validate_cast
+
+    cast = tmp_path / "cast"
+    _bootable_stub(cast, ok=False)  # handle_command raises -> a wrongly-excluded module would too
+    ok, detail = validate_cast(cast, commands=["help", "look"])
+    assert ok is False and "COMMAND FAILED" in detail
+    assert read_manifest(cast / "cast_manifest.json").status == NOT_VALIDATED
+
+
+def test_pour_selective_end_to_end_validates_the_cut(tmp_path: Path) -> None:
+    from parts.cast import VENDORED_SELECTIVE, pour_selective
+
+    _bootable_fixture_engine(tmp_path)
+    # a fake tracer: the surfaces' closure is exactly the bootable modules (session, world, x)
+    fake = lambda commands: {"session", "world", "x"}  # noqa: E731
+    out, ok, detail = pour_selective(
+        "blank_mud", "SlimGame", tmp_path / "out", ["solo", "save"], root=tmp_path, tracer=fake
+    )
+    assert ok, detail  # the broad harness ran every solo+save command clean against the cut
+    m = read_manifest(out / "cast_manifest.json")
+    assert m.engine_strategy == VENDORED_SELECTIVE and m.status == "validated"
+    assert not (out / "parts" / "other_pack").exists()

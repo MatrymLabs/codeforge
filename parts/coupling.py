@@ -128,6 +128,33 @@ def analyze(tracer: Tracer | None = None) -> CouplingReport:
     )
 
 
+def closure(surfaces: list[str], tracer: Tracer | None = None) -> set[str]:
+    """The union of the runtime module closures for `surfaces` (each traced as base + its commands).
+
+    This is what a `vendored-selective` cast for those surfaces would carry - the modules its
+    commands actually load. A selective cut is only SAFE when a broad harness (run every surface
+    command against the cut) confirms it; this function just computes the candidate set.
+    """
+    trace = tracer or _real_tracer
+    base_cmds = SURFACES[BASE_SURFACE]
+    loaded: set[str] = set()
+    for surface in surfaces:
+        if surface not in SURFACES:
+            raise CouplingError(f"unknown surface {surface!r}; known: {sorted(SURFACES)}")
+        extra = SURFACES[surface] if surface != BASE_SURFACE else []
+        loaded |= trace(base_cmds + extra)
+    return loaded
+
+
+def surface_commands(surfaces: list[str]) -> list[str]:
+    """Every command across the given surfaces (base + each) - the corpus a broad harness runs."""
+    cmds = list(SURFACES[BASE_SURFACE])
+    for surface in surfaces:
+        if surface != BASE_SURFACE:
+            cmds += SURFACES.get(surface, [])
+    return cmds
+
+
 def render_report(report: CouplingReport) -> str:
     """The human view of the coupling report - counts, per-class modules, detachable candidates."""
     candidates = (

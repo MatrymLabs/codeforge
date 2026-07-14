@@ -108,9 +108,13 @@ The proof that makes the whole vision legible without finishing the platform:
    + seed pack + scaffold + a manifest that declares the engine's real deps), VALIDATES it
    (`validate_cast` smoke-boots + one tick -> `validated`), and `make cast-install-check`
    (`install_check`) proves DEPENDENCY ISOLATION - a clean venv, only the cast's declared deps,
-   and it boots (`isolation_proven`). So a package *assembles*, *runs*, and *runs in isolation*
-   (verified end to end on the real engine, ~20s). Only remaining: detaching the vendored-whole
-   engine (a-la-carte module selection) - the big architectural item, a keel decision.
+   and it boots (`isolation_proven`). And detachment is under way: `make coupling` (D1) maps the
+   runtime module closure, and `make cast-selective` (D2, `pour_selective`) vendors ONLY the target
+   surfaces' closure (`vendored-selective`) and PROVES the cut with a broad harness - every surface
+   command must run. Verified: a solo+save cast sheds 53 of 123 modules (carries 70) and passes all
+   16 surface commands clean. So a package *assembles*, *runs*, *runs in isolation*, and can be
+   *selectively detached with proof*. Remaining (each its own keel call): more surface tiers
+   (multiplayer/admin) and D3 true plugin-boundary decoupling.
 5+. Creator wizards, full-stack interface, Hardware Store expansion, advanced modularity,
    production operations. Each gated by the Scope-Control Rule.
 

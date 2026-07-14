@@ -59,3 +59,30 @@ def test_coupling_verb_reachable_through_the_engine_tick(monkeypatch):
 
     out = handle_command(Session(player_id="matrym", location="courtyard"), "coupling")
     assert "ENGINE COUPLING REPORT" in out
+
+
+# --- closure + surface_commands (feed detachment D2) --------------------------------------------
+
+
+def test_closure_unions_the_surface_traces():
+    from parts.coupling import closure
+
+    base = tuple(coupling_mod.SURFACES["solo"])
+    save = tuple(coupling_mod.SURFACES["solo"] + coupling_mod.SURFACES["save"])
+    tracer = _fake_tracer({base: {"a", "b"}, save: {"a", "b", "c"}})
+    assert closure(["solo", "save"], tracer=tracer) == {"a", "b", "c"}
+
+
+def test_closure_rejects_an_unknown_surface():
+    from parts.coupling import CouplingError, closure
+
+    with __import__("pytest").raises(CouplingError, match="unknown surface"):
+        closure(["nope"], tracer=lambda c: set())
+
+
+def test_surface_commands_gathers_base_plus_each_surface():
+    from parts.coupling import SURFACES, surface_commands
+
+    cmds = surface_commands(["solo", "save"])
+    assert set(SURFACES["solo"]).issubset(cmds)
+    assert set(SURFACES["save"]).issubset(cmds)
