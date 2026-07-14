@@ -493,6 +493,87 @@ def pour_selective(
     return out, ok, detail
 
 
+@dataclass(frozen=True)
+class ForgeReport:
+    """The one-command manufacturing summary: a standalone game, and the proof it holds up."""
+
+    name: str
+    cast_dir: Path
+    surfaces: list[str]
+    engine_strategy: str
+    total_modules: int
+    vendored_modules: int
+    validated: bool
+    detail: str
+    seed_pack: str
+    declared_deps: int
+
+
+def _count_engine_modules(parts_dir: Path) -> int:
+    """Top-level engine modules under `parts/` (a `.py` file or a subpackage dir), minus caches."""
+    files = [p for p in parts_dir.glob("*.py") if p.stem != "__init__"]
+    dirs = [d for d in parts_dir.iterdir() if d.is_dir() and d.name != "__pycache__"]
+    return len(files) + len(dirs)
+
+
+def forge_game(
+    template: str,
+    name: str,
+    dest: Path,
+    surfaces: list[str],
+    *,
+    commit: str = "unknown",
+    root: Path | None = None,
+    tracer=None,
+) -> ForgeReport:
+    """The capstone: forge a standalone game in one call - plan, selectively vendor the surfaces'
+    closure, and prove it with the broad harness - and return the manufacturing summary."""
+    out, ok, detail = pour_selective(
+        template, name, Path(dest), surfaces, commit=commit, root=root, tracer=tracer
+    )
+    manifest = read_manifest(out / "cast_manifest.json")
+    return ForgeReport(
+        name=name,
+        cast_dir=out,
+        surfaces=surfaces,
+        engine_strategy=manifest.engine_strategy,
+        total_modules=_count_engine_modules((root or _ROOT) / "parts"),
+        vendored_modules=_count_engine_modules(out / "parts"),
+        validated=ok,
+        detail=detail,
+        seed_pack=manifest.starter_seed_pack,
+        declared_deps=len(_declared_deps(out / "pyproject.toml")),
+    )
+
+
+def render_forge(report: ForgeReport) -> str:
+    """The manufacturing summary: a standalone game and the proof it boots + runs its surfaces."""
+    shed = report.total_modules - report.vendored_modules
+    verdict = (
+        "PASS - boots and every surface command ran"
+        if report.validated
+        else f"FAIL - {report.detail}"
+    )
+    return "\n".join(
+        [
+            f"FORGED: {report.name}  (a standalone CodeForge cast)",
+            "",
+            f"  world (seed):     {report.seed_pack}",
+            f"  surfaces:         {', '.join(report.surfaces)}",
+            f"  engine strategy:  {report.engine_strategy}",
+            f"  engine modules:   {report.vendored_modules} vendored / "
+            f"{report.total_modules} total  ({shed} shed)",
+            f"  declared deps:    {report.declared_deps}",
+            f"  validated:        {verdict}",
+            f"  cast path:        {report.cast_dir}",
+            "",
+            "  Two outputs, one machine: this game is the World Package; the engine and the",
+            "  Hardware Store parts that made it are CodeForge's. For the dependency-isolation",
+            "  proof, run `make cast-install-check DIR=<cast>`; to play, install its deps + boot.",
+        ]
+    )
+
+
 def main(argv: list[str] | None = None) -> int:
     """CLI. Plan a cast (`<template> <name> [commit]`, `make cast-plan`) or pour one
     (`generate <template> <name> <dest> [commit]`, `make cast`).
@@ -524,6 +605,25 @@ def main(argv: list[str] | None = None) -> int:
         ok, detail = validate_cast(out)  # prove it runs, not just assembles
         print(f"  {'validated (boots + ticks): ' + detail if ok else 'NOT validated: ' + detail}")
         return 0 if ok else 1
+    if args and args[0] == "forge":
+        if len(args) < 5:
+            print(
+                "usage: python -m parts.cast forge <template> <name> <dest> <surfaces> [commit]",
+                file=sys.stderr,
+            )
+            return 2
+        template, name, dest, surfaces_csv = args[1], args[2], args[3], args[4]
+        commit = args[5] if len(args) > 5 else "unknown"
+        surfaces = [s.strip() for s in surfaces_csv.split(",") if s.strip()]
+        from parts.coupling import CouplingError
+
+        try:
+            report = forge_game(template, name, Path(dest), surfaces, commit=commit)
+        except (CastError, CouplingError) as exc:
+            print(f"forge: {exc}", file=sys.stderr)
+            return 2
+        print(render_forge(report))
+        return 0 if report.validated else 1
     if args and args[0] == "generate-selective":
         if len(args) < 5:
             print(
