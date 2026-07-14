@@ -1,4 +1,4 @@
-.PHONY: env fix lint typecheck test property fuzz coverage audit audit-runtime security sast secrets deps sbom bench trend doctor patch daily check readiness arc-verdicts truth cast-plan smoke repo-integrity ship run world store hardware clean serve backup db-up db-down db-migrate docs-serve docs-build e2e evolution ritual-fast ritual ritual-down unskew loop
+.PHONY: env fix lint typecheck test property fuzz coverage audit audit-runtime security sast secrets deps sbom bench trend ai-eval doctor patch daily check readiness arc-verdicts truth cast-plan smoke repo-integrity ship run world store hardware clean serve backup db-up db-down db-migrate docs-serve docs-build e2e evolution ritual-fast ritual ritual-down unskew loop
 
 # --- Environment: create/validate the .venv, fail loud on version mismatch.
 # Uses uv when present (a Rust resolver; measured ~20x faster than pip on this host:
@@ -155,6 +155,13 @@ bench:
 trend:
 	@python3 -m parts.bench --record $$(git rev-parse --short HEAD 2>/dev/null || echo unknown)
 	@python3 -m parts.chronicle trend engine_tick.median_us
+
+# --- AI eval: score the offline LocalArchitect against a rubric, RECORD it as a Chronicle
+# ai-eval (eval-regression memory), then show the memory. Network-free; point it at the real
+# ClaudeAdvisor through the same seam to evaluate the LLM. ---
+ai-eval:
+	@python3 -m parts.ai_eval $$(git rev-parse --short HEAD 2>/dev/null || echo unknown)
+	@python3 -m parts.chronicle evals
 
 # --- Doctor: run the gates read-only, stop at the first failure, prescribe the fix ---
 doctor:

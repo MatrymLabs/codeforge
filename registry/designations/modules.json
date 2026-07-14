@@ -3720,5 +3720,38 @@
     "aliases": [],
     "created": "2026-07-14",
     "updated": "2026-07-14"
+  },
+  {
+    "designation": "MOD-UM10-S01-N001-030-R0",
+    "name": "ai_eval",
+    "status": "active",
+    "function": "score an Advisor's answer against a rubric and file it as a Chronicle ai-eval (eval-regression memory)",
+    "label": "ai_eval",
+    "file": "parts/ai_eval.py",
+    "type": "MOD",
+    "domain": "UM10",
+    "sector": "S01",
+    "node": "N001",
+    "sequence": "030",
+    "revision": "R0",
+    "docs": "docs/reports/2026-07-13-chronicle-design.md",
+    "tests": "tests/test_ai_eval.py",
+    "depends_on": [
+      "architect",
+      "chronicle"
+    ],
+    "related": [
+      "blueprint_ai",
+      "chronicle"
+    ],
+    "reuse": "MLOps eval-regression memory: score an AI/Advisor output against a rubric, file it, track it over time behind the network seam",
+    "tags": [
+      "module"
+    ],
+    "notes": "Chronicle slice 5 (ai-eval). Advisor seam (LocalArchitect offline / ClaudeAdvisor live); keyword-coverage rubric, honest not semantic. `make ai-eval` runs the offline sample.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-14",
+    "updated": "2026-07-14"
   }
 ]
