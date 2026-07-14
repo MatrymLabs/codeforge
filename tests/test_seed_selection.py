@@ -6,7 +6,16 @@ import pytest
 
 import parts.seed
 from parts.cli import _pop_seed, main
-from parts.seed import SEEDS_ROOT, available_seeds, load_items, load_jobs, load_npcs, load_rooms
+from parts.seed import (
+    SEEDS_ROOT,
+    SeedError,
+    available_seeds,
+    load_items,
+    load_jobs,
+    load_npcs,
+    load_quest,
+    load_rooms,
+)
 
 SPIRAL = SEEDS_ROOT / "spiral-ascent"
 AETHRYN = SEEDS_ROOT / "aethryn"
@@ -47,6 +56,69 @@ def test_aethryn_cinder_wight_boss_is_attackable_and_strikes_back():
     wight = load_npcs(AETHRYN / "npcs.yaml")["cinder_wight"]
     assert wight["hp"] == 50 and wight["xp"] == 180
     assert wight["atk"] == 7  # the Cold Cellar boss hits back
+
+
+def test_aethryn_ships_the_relighting_quest_as_data():
+    """The flagship's story arc is a seed-shipped workflow, not hardcoded in Python."""
+    quest = load_quest(AETHRYN / "quest.yaml")
+    assert quest is not None
+    assert quest["id"] == "the_relighting" and quest["name"] == "The Relighting"
+    assert quest["reward_xp"] == 120
+    assert quest["start"] == "offered" and quest["terminal"] == ["done"]
+    assert quest["steps"][-1]["effect"] == "award_xp"  # finishing the arc awards XP
+    # It is a valid workflow graph (start -> ... -> a terminal state), not just a list.
+    from parts.workflow import Step, build_workflow
+
+    steps = [Step(s["state"], s["event"], s["to"], effect=s.get("effect")) for s in quest["steps"]]
+    workflow = build_workflow(
+        quest["id"], start=quest["start"], steps=steps, terminal=quest["terminal"]
+    )
+    assert "done" in workflow.terminal
+
+
+def test_a_seed_without_a_quest_file_returns_none():
+    """A seed that ships no quest.yaml (spiral-ascent) has no arc; the game uses its default."""
+    assert load_quest(SPIRAL / "quest.yaml") is None
+
+
+@pytest.mark.parametrize(
+    ("body", "match"),
+    [
+        ("- a\n- b\n", "must be a mapping"),  # a list, not a mapping
+        ("id: x\nsteps:\n  - {state: a, event: go, to: b}\n", "quest needs 'start'"),  # no start
+        ("id: x\nstart: a\nsteps: []\n", "non-empty list"),  # no steps
+        (
+            "id: x\nstart: a\nsteps:\n  - {state: a, event: go}\n",
+            "each quest step needs",
+        ),  # bad step
+        (
+            "id: x\nstart: a\nsteps:\n  - {state: a, event: g, to: b}\nreward_xp: -5\n",
+            "non-negative",
+        ),
+        (
+            "id: x\nstart: a\nsteps:\n  - {state: a, event: g, to: b}\nterminal: nope\n",
+            "must be a list",
+        ),
+    ],
+)
+def test_load_quest_refuses_a_malformed_arc(tmp_path, body, match):
+    """A broken arc must not boot silently: every malformed shape fails loud with a named reason."""
+    bad = tmp_path / "quest.yaml"
+    bad.write_text(body, encoding="utf-8")
+    with pytest.raises(SeedError, match=match):
+        load_quest(bad)
+
+
+def test_load_quest_fills_sensible_defaults(tmp_path):
+    """A minimal valid arc names itself from its id and defaults reward/terminal/labels."""
+    minimal = tmp_path / "quest.yaml"
+    minimal.write_text(
+        "id: hidden_vault\nstart: a\nsteps:\n  - {state: a, event: open, to: b}\n", encoding="utf-8"
+    )
+    quest = load_quest(minimal)
+    assert quest is not None
+    assert quest["name"] == "Hidden Vault"  # derived from the id
+    assert quest["reward_xp"] == 50 and quest["terminal"] == [] and quest["labels"] == {}
 
 
 def test_spiral_seed_passes_every_loader_gate():

@@ -8,28 +8,50 @@ completed contract awards XP). The workflow is defined as data, so a seed could 
 
 from __future__ import annotations
 
+from parts.seed import SEED_DIR, QuestSpec, load_quest
 from parts.session import Session
 from parts.statemachine import Fired
-from parts.workflow import Instance, Step, WorkflowEngine, build_workflow
+from parts.workflow import Instance, Step, Workflow, WorkflowEngine, build_workflow
 
-_QUEST = build_workflow(
-    "coilward_contract",
-    start="offered",
-    steps=[
-        Step("offered", "accept", "accepted"),
-        Step("accepted", "begin", "underway"),
-        Step("underway", "finish", "done", effect="award_xp"),
-    ],
-    terminal=["done"],
-    labels={
-        "offered": "A contract waits at the board: clear the coil-warren.",
-        "accepted": "You have taken the contract.",
-        "underway": "The warren work is underway.",
-        "done": "The contract is fulfilled.",
-    },
-)
+
+def _built_in_quest() -> tuple[Workflow, str, int]:
+    """The default arc for a seed that ships no quest.yaml (e.g. first-forge, spiral-ascent)."""
+    workflow = build_workflow(
+        "coilward_contract",
+        start="offered",
+        steps=[
+            Step("offered", "accept", "accepted"),
+            Step("accepted", "begin", "underway"),
+            Step("underway", "finish", "done", effect="award_xp"),
+        ],
+        terminal=["done"],
+        labels={
+            "offered": "A contract waits at the board: clear the coil-warren.",
+            "accepted": "You have taken the contract.",
+            "underway": "The warren work is underway.",
+            "done": "The contract is fulfilled.",
+        },
+    )
+    return workflow, "Coilward Contract", 50
+
+
+def _from_seed(spec: QuestSpec) -> tuple[Workflow, str, int]:
+    """Build a quest workflow from a seed's quest.yaml -- the arc is data, not Python."""
+    steps = [Step(s["state"], s["event"], s["to"], effect=s.get("effect")) for s in spec["steps"]]
+    workflow = build_workflow(
+        spec["id"],
+        start=spec["start"],
+        steps=steps,
+        terminal=spec["terminal"],
+        labels=spec["labels"],
+    )
+    return workflow, spec["name"], spec["reward_xp"]
+
+
+# The world is data: if this seed ships a quest, walk THAT arc; otherwise the built-in contract.
+_SEED_QUEST = load_quest(SEED_DIR / "quest.yaml")
+_QUEST, _QUEST_NAME, _XP_REWARD = _from_seed(_SEED_QUEST) if _SEED_QUEST else _built_in_quest()
 _ENGINE = WorkflowEngine(_QUEST)
-_XP_REWARD = 50
 
 _RUNS: dict[str, Instance] = {}  # player_id -> their quest run
 
@@ -45,9 +67,9 @@ def quest_view(session: Session, arg: str = "") -> str:
     if not event or event == "status":
         line = _QUEST.labels.get(run.state, run.state)
         if _ENGINE.is_done(run):
-            return f"[Coilward Contract] {line}"
+            return f"[{_QUEST_NAME}] {line}"
         actions = _ENGINE.actions(run)
-        return f"[Coilward Contract] {line}\n  You can: {', '.join(actions) or '(nothing)'}"
+        return f"[{_QUEST_NAME}] {line}\n  You can: {', '.join(actions) or '(nothing)'}"
     outcome = _ENGINE.advance(run, event)
     if not isinstance(outcome, Fired):
         return f"You can't do that now. ({outcome.reason})"
@@ -56,7 +78,7 @@ def quest_view(session: Session, arg: str = "") -> str:
         from parts.combat import award_xp
 
         reward = "\n" + award_xp(session, _XP_REWARD)
-    return f"[Coilward Contract] {_QUEST.labels.get(run.state, run.state)}{reward}"
+    return f"[{_QUEST_NAME}] {_QUEST.labels.get(run.state, run.state)}{reward}"
 
 
 def reset_quests() -> None:

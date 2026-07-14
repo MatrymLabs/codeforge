@@ -1,0 +1,26 @@
+# SEED: aethryn -- quest.yaml (the region's story arc, as data)
+# The Relighting (world bible, "The First Story Arc"): rekindle the coast's first ember,
+# reforge the broken bridge, delve the Cold Cellar, and end the cold at the cellar hearth.
+# Walked with the `quest` verb: quest accept -> relight -> reforge -> delve -> face.
+
+id: the_relighting
+name: The Relighting
+start: offered
+reward_xp: 120
+
+steps:
+  - {state: offered,       event: accept,  to: accepted}
+  - {state: accepted,      event: relight, to: ember_lit}
+  - {state: ember_lit,     event: reforge, to: bridge_mended}
+  - {state: bridge_mended, event: delve,   to: at_the_hearth}
+  - {state: at_the_hearth, event: face,    to: done, effect: award_xp}
+
+terminal: [done]
+
+labels:
+  offered: "Sela speaks of the Relighting: the coast's first ember has gone cold. Will you rekindle it? (quest accept)"
+  accepted: "You take up the Relighting. The first ember gutters on the Waking Shore, waiting. (quest relight)"
+  ember_lit: "The first ember burns again in your hand. But the Old Reach Bridge is broken. (quest reforge)"
+  bridge_mended: "The bridge is reforged and the road north is open. Beneath the square, the Cold Cellar breathes. (quest delve)"
+  at_the_hearth: "The Cinder-Wight stands at the cellar hearth, an old smith the Unforging never let finish. Face it. (quest face)"
+  done: "The cold is broken. Cinderhearth-on-Reach is relit, and the Ember-road to Emberreach lies open."
