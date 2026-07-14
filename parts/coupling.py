@@ -48,6 +48,15 @@ SURFACES: dict[str, list[str]] = {
         "achievements",
     ],
     "save": ["save", "load"],
+    # The @-verbs, driven as owner (the trace/validate probes run at rank=owner so the rank gate
+    # passes and each handler's lazy import fires). These load the wizard/builder stack.
+    "admin": [
+        "@teleport courtyard",
+        "@grant _admin wizard",
+        "@sg item torch",
+        "@arch how do I build a part",
+        "@forge",
+    ],
 }
 # Server entry points a command trace cannot reach, but a multiplayer cast needs. Reported, honest.
 _SERVER_ENTRYPOINTS = ("gateway", "web_gateway")
@@ -86,7 +95,7 @@ _TRACE_PROBE = r"""
 import sys, json
 import forge
 from parts.session import Session
-s = Session(player_id="_trace", location="courtyard")
+s = Session(player_id="_trace", location="courtyard", rank="owner")
 for cmd in json.loads(sys.argv[1]):
     try:
         forge.handle_command(s, cmd)

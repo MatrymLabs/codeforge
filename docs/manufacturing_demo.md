@@ -53,10 +53,10 @@ What that one command did, in order:
 - A cut is claimed **only** when the broad harness passes; `vendored-whole` is the honest default.
 - `make forge` validates in the current environment; the **dependency-isolation** proof is
   `make cast-install-check` (a clean venv). The manifest records `validated`, never `detached`.
-- Surfaces available: `solo`, `save`, and `multiplayer` (the WebSocket + TCP servers, traced by
-  import and validated by import, including the `parts/web/` browser assets). Try
-  `make forge SURFACES=solo,save,multiplayer`. The remaining tier, `admin`, is a noted follow-up
-  (its `@`-verbs need an owner-ranked session to trace).
+- Surfaces available: `solo`, `save`, `multiplayer` (the WebSocket + TCP servers, traced and
+  validated by import, incl. the `parts/web/` browser assets), and `admin` (the `@`-verbs, traced
+  and validated at rank `owner`). Mix them: `make forge SURFACES=solo,save,multiplayer,admin` -
+  even the everything-game sheds ~52 of 126 modules (the engineering/self-audit stack no game runs).
 - The harness earns its keep: a `multiplayer` cut first failed loud because `web_gateway` reads a
   DATA file (`parts/web/index.html`) that module tracing cannot discover - so `web/` is now a
   declared data dependency. A cut is claimed only when the harness passes.
