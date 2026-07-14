@@ -53,16 +53,24 @@ _SEED_QUEST = load_quest(SEED_DIR / "quest.yaml")
 _QUEST, _QUEST_NAME, _XP_REWARD = _from_seed(_SEED_QUEST) if _SEED_QUEST else _built_in_quest()
 _ENGINE = WorkflowEngine(_QUEST)
 
-# (kind, target label) -> the quest event that world action fires, so real play advances the arc.
-# kind is "defeat" (an npc falls), "take" (an item is picked up), or "enter" (a room is entered).
+# step trigger key -> world-event kind. defeat = an npc falls, take = an item is picked up,
+# enter = a room is entered.
 _TRIGGER_KEYS = {"on_defeat": "defeat", "on_take": "take", "on_enter": "enter"}
-_TRIGGERS: dict[tuple[str, str], str] = {}
-if _SEED_QUEST:
-    for _step in _SEED_QUEST["steps"]:
-        for _key, _kind in _TRIGGER_KEYS.items():
-            _target = _step.get(_key)
-            if _target:
-                _TRIGGERS[(_kind, str(_target))] = _step["event"]
+
+
+def _build_triggers(spec: QuestSpec | None) -> dict[tuple[str, str], str]:
+    """Map each step's world-event triggers to the event they fire: (kind, label) -> event."""
+    triggers: dict[tuple[str, str], str] = {}
+    for step in spec["steps"] if spec else []:
+        for key, kind in _TRIGGER_KEYS.items():
+            target = step.get(key)
+            if target:
+                triggers[(kind, str(target))] = step["event"]
+    return triggers
+
+
+# (kind, target label) -> the quest event that world action fires, so real play advances the arc.
+_TRIGGERS = _build_triggers(_SEED_QUEST)
 
 _RUNS: dict[str, Instance] = {}  # player_id -> their quest run
 

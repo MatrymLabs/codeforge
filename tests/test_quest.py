@@ -79,6 +79,33 @@ def test_open_door_effect_reforges_a_barrier():
         doors.DOORS.update(snap)
 
 
+def test_build_triggers_maps_every_world_event_kind():
+    """Each step's on_take/on_enter/on_defeat becomes a (kind, label) -> event entry; a step with
+    no trigger contributes nothing, and a seed with no quest yields an empty map."""
+    from parts.quest import _build_triggers
+
+    spec = {
+        "id": "x",
+        "name": "X",
+        "start": "a",
+        "reward_xp": 0,
+        "steps": [
+            {"state": "a", "event": "e1", "to": "b", "on_take": "item1"},
+            {"state": "b", "event": "e2", "to": "c", "on_enter": "room1"},
+            {"state": "c", "event": "e3", "to": "d", "on_defeat": "boss1"},
+            {"state": "d", "event": "e4", "to": "e"},  # no trigger
+        ],
+        "terminal": ["e"],
+        "labels": {},
+    }
+    assert _build_triggers(spec) == {
+        ("take", "item1"): "e1",
+        ("enter", "room1"): "e2",
+        ("defeat", "boss1"): "e3",
+    }
+    assert _build_triggers(None) == {}  # a seed with no quest has no triggers
+
+
 def test_on_event_advances_the_arc_when_a_world_action_triggers_a_step(monkeypatch):
     """A world action (defeat/take/enter) can fire a quest step. Wired here to the built-in quest's
     first event so the behavior is pinned without depending on the aethryn seed being loaded."""
