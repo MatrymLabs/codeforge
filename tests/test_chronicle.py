@@ -101,6 +101,30 @@ def test_non_object_payload_fails_loud(tmp_path: Path) -> None:
         append("evidence", ["not", "a", "dict"], commit="c", root=tmp_path)  # type: ignore[arg-type]
 
 
+def test_non_serializable_payload_fails_loud_as_chronicle_error(tmp_path: Path) -> None:
+    """A dict is the right shape but a set inside it is not JSON-serializable. The contract is
+    fail-loud with ChronicleError, not a raw TypeError the chronicle() verb can't catch."""
+    with pytest.raises(ChronicleError, match="not JSON-serializable"):
+        append("evidence", {"tags": {1, 2, 3}}, commit="c", root=tmp_path)
+    assert read(root=tmp_path) == []  # the bad record never reached disk
+
+
+def test_a_non_utc_stamp_is_converted_before_labelling_it_utc(tmp_path: Path) -> None:
+    """recorded_utc must be the real UTC instant: a tz-aware stamp in another zone is converted,
+    not just stamped with a 'Z' it hasn't earned."""
+    from datetime import timedelta, timezone
+
+    est = timezone(timedelta(hours=-5))
+    rec = append(
+        "evidence",
+        {"x": 1},
+        commit="c",
+        root=tmp_path,
+        stamp=datetime(2026, 1, 1, 5, 0, 0, tzinfo=est),
+    )
+    assert rec.recorded_utc == "2026-01-01T10:00:00Z"
+
+
 def test_a_tampered_payload_is_detected_on_read(tmp_path: Path) -> None:
     append("evidence", {"status": "fail"}, commit="c", root=tmp_path)
     p = _ledger(tmp_path)
@@ -216,6 +240,15 @@ def test_render_provenance_shows_edges_and_empty_state(tmp_path: Path) -> None:
     record_edge("n", "wasDerivedFrom", "src", commit="a", root=tmp_path)
     out = render_provenance("n", provenance("n", root=tmp_path))
     assert "PROVENANCE - n" in out and "n -wasDerivedFrom-> src" in out
+
+
+def test_render_provenance_shows_a_self_loop_once(tmp_path: Path) -> None:
+    """A self-loop edge (from == to) is one edge; it must render on one line, not double-count
+    into both outgoing and incoming so the body contradicts the header's edge count."""
+    record_edge("n", "wasDerivedFrom", "n", commit="c", root=tmp_path)
+    out = render_provenance("n", provenance("n", root=tmp_path))
+    assert "(1 edge(s))" in out
+    assert out.count("-wasDerivedFrom->") == 1
 
 
 def test_edge_refuses_an_unknown_relation(tmp_path: Path) -> None:
