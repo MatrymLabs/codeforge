@@ -1,33 +1,43 @@
 """CARD: arc -- ARC (Assurance, Readiness, Control): compose gate verdicts into one honest report.
 
 CodeForge's umbrella engineering-review system, the coherent Blueprint filed as `arc`. ARC adds
-NO new gate: it READS the verdicts of the ten review dimensions CodeForge already has and composes
+NO new gate: it READS the verdicts of the review dimensions CodeForge already has and composes
 them into one honest overall verdict (ready | watchlist | blocked). Two load-bearing rules keep it
 truthful: a dimension whose gate has not been wired or has never run is MISSING, and MISSING is
 never a pass; and every dimension cites the source its status came from, never an invented one.
 
-Eight dimensions now read real FILED evidence. Six read the repo directly (ADRs, CI + tests, pattern
+The **Control** axis is read from the Chronicle (the ship's memory): an open high/critical incident
+or a regressed ai-eval holds the verdict at WATCHLIST. That makes the incident/ai-eval records
+load-bearing on readiness, not a store nothing reads (a tampered Chronicle fails loud on read).
+
+Nine dimensions read real FILED evidence. Six read the repo directly (ADRs, CI + tests, pattern
 docs, the dependency ledger, benchmarks, security evidence). Two runtime gates (release, evidence)
-file a dated verdict via parts/arc_ledger when `make arc-verdicts` runs their checks; ARC reads the
-latest, read-only. The last two (change, patch) have no persistent store yet, so they stay MISSING -
-honestly, never faked (a later slice adds the store). Absence of a filed verdict is always MISSING,
-never a pass. ARC reads only: it opens no gate and runs no check as a side effect (architecture
-law 1). The world is the interface; `arc` is the room's window.
+file a dated verdict (release via parts/arc_ledger, evidence via the Chronicle) when
+`make arc-verdicts` runs their checks; ARC reads the latest, read-only. Control reads the Chronicle
+(incidents + ai-eval regressions). The last two (change, patch) have no persistent store yet, so
+they stay MISSING - honestly, never faked (a later slice adds the store). Absence of a filed verdict
+is always MISSING, never a pass. ARC reads only: it opens no gate and runs no check as a side effect
+(architecture law 1). The world is the interface; `arc` is the room's window.
 """
 
 from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 from parts import arc_ledger
+
+if TYPE_CHECKING:
+    from parts.chronicle import Record
 
 # Per-dimension status, from the one shared home (verdicts.py); re-exported so callers/tests can
 # still `from parts.arc import READY, ...`. MISSING = no wired source / never ran: never a pass.
 from parts.verdicts import ARC_STATUSES as _DIM_STATUSES
 from parts.verdicts import BLOCKED, MISSING, READY, WATCHLIST
 
-# The ten review dimensions ARC composes, each with the existing gate it will read in slice 2.
+# The review dimensions ARC composes: the ten assurance/readiness gates, plus the Control axis
+# read from the Chronicle (incidents + ai-eval regressions).
 DIMENSIONS: tuple[tuple[str, str], ...] = (
     ("architecture", "ADRs + frameup"),
     ("testing", "qualitygate / make check"),
@@ -39,6 +49,7 @@ DIMENSIONS: tuple[tuple[str, str], ...] = (
     ("patch", "patch_tracker + make patch"),
     ("evidence", "test_evidence / EvidenceLedger"),
     ("release", "release_gate / make readiness"),
+    ("control", "chronicle: open incidents + ai-eval regressions"),
 )
 
 
@@ -124,7 +135,48 @@ def filed_review(root: Path | None = None) -> ArcReport:
         Dimension("security", ready(security > 0), f"{security} security-evidence file(s)"),
     ]
     dimensions += [_runtime_dim(name, base) for name in _RUNTIME]
+    dimensions.append(_control_dim(base))
     return compose(dimensions)
+
+
+def _eval_regressions(evals: list[Record]) -> list[str]:
+    """Subjects whose latest ai-eval score fell below the prior one (a quality regression)."""
+    by_subject: dict[str, list[Record]] = {}
+    for record in evals:  # append order: the last per subject is the latest
+        by_subject.setdefault(record.payload["subject"], []).append(record)
+    return [
+        subject
+        for subject, series in by_subject.items()
+        if len(series) > 1 and series[-1].payload["score"] < series[-2].payload["score"]
+    ]
+
+
+def _control_dim(root: Path) -> Dimension:
+    """ARC's Control axis, read from the Chronicle: open serious incidents and eval regressions.
+
+    READY when the ship's memory is clean; WATCHLIST when a high/critical incident is open or an
+    ai-eval has regressed. This makes the incident and ai-eval records load-bearing on the readiness
+    verdict rather than a store nothing reads. A tampered Chronicle fails loud on read (the
+    Chronicle's own law), exactly as the evidence dimension does - never a false pass.
+    """
+    from parts import chronicle
+
+    serious = [
+        r
+        for r in chronicle.incidents("open", root=root)
+        if r.payload.get("severity") in ("high", "critical")
+    ]
+    regressions = _eval_regressions(chronicle.ai_evals(root=root))
+    concerns = []
+    if serious:
+        concerns.append(f"{len(serious)} open high/critical incident(s)")
+    if regressions:
+        concerns.append(f"{len(regressions)} ai-eval regression(s): {', '.join(regressions[:3])}")
+    if concerns:
+        return Dimension("control", WATCHLIST, "; ".join(concerns) + " (chronicle)")
+    return Dimension(
+        "control", READY, "no open high/critical incident or eval regression (chronicle)"
+    )
 
 
 def _runtime_dim(name: str, root: Path) -> Dimension:
