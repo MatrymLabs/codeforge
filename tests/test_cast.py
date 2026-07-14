@@ -397,3 +397,39 @@ def test_pour_selective_end_to_end_validates_the_cut(tmp_path: Path) -> None:
     m = read_manifest(out / "cast_manifest.json")
     assert m.engine_strategy == VENDORED_SELECTIVE and m.status == "validated"
     assert not (out / "parts" / "other_pack").exists()
+
+
+# --- the manufacturing capstone: forge a standalone game in one call ----------------------------
+
+
+def test_forge_game_end_to_end_reports_a_validated_cut(tmp_path: Path) -> None:
+    from parts.cast import VENDORED_SELECTIVE, forge_game
+
+    _bootable_fixture_engine(tmp_path)
+    fake = lambda commands: {"session", "world", "x"}  # noqa: E731
+    report = forge_game(
+        "blank_mud", "SlimGame", tmp_path / "out", ["solo", "save"], root=tmp_path, tracer=fake
+    )
+    assert report.validated is True
+    assert report.engine_strategy == VENDORED_SELECTIVE
+    assert report.name == "SlimGame" and report.seed_pack == "first-forge"
+    assert report.vendored_modules <= report.total_modules
+    assert report.declared_deps > 0  # the forged game declares its engine deps
+
+
+def test_render_forge_shows_the_manufacturing_summary(tmp_path: Path) -> None:
+    from parts.cast import forge_game, render_forge
+
+    _bootable_fixture_engine(tmp_path)
+    report = forge_game(
+        "blank_mud",
+        "Demo",
+        tmp_path / "out",
+        ["solo", "save"],
+        root=tmp_path,
+        tracer=lambda c: {"session", "world", "x"},
+    )
+    out = render_forge(report)
+    assert "FORGED: Demo" in out
+    assert "vendored-selective" in out and "shed)" in out
+    assert "PASS" in out and "Two outputs, one machine" in out
