@@ -36,6 +36,23 @@ def test_attack_without_a_calling_is_refused():
     assert "no calling yet" in attack(s, "dummy")
 
 
+def test_defeating_an_npc_surfaces_a_triggered_quest_line(monkeypatch):
+    """Combat rides the quest hook on top: if a fallen npc completes a story beat, its line is
+    appended to the defeat report (the aethryn Cinder-Wight uses this to end the Relighting)."""
+    import parts.quest as quest_mod
+
+    monkeypatch.setattr(
+        quest_mod, "on_defeat", lambda session, label: "[The Relighting] the cold breaks"
+    )
+    s = _fighter()  # courtyard: the training dummy
+    out = ""
+    for _ in range(10):
+        out = attack(s, "dummy")
+        if "collapses" in out:
+            break
+    assert "[The Relighting] the cold breaks" in out  # the quest hook reached the player
+
+
 def test_peaceful_npcs_cannot_be_fought():
     s = _fighter(location="library")
     assert "not something you can fight" in attack(s, "librarian")

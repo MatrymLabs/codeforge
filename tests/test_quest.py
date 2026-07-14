@@ -79,6 +79,31 @@ def test_open_door_effect_reforges_a_barrier():
         doors.DOORS.update(snap)
 
 
+def test_on_defeat_advances_the_arc_when_the_fallen_npc_triggers_a_step(monkeypatch):
+    """A boss's fall can fire a quest step. Wired here to the built-in quest's first event so the
+    behavior is pinned without depending on the aethryn seed being the loaded game."""
+    import parts.quest as quest_mod
+
+    monkeypatch.setattr(quest_mod, "_DEFEAT_EVENTS", {"warren_boss": "accept"})
+    s = _player()
+    line = quest_mod.on_defeat(s, "warren_boss")
+    assert line is not None and "taken the contract" in line  # the arc advanced
+
+
+def test_on_defeat_is_none_for_an_untriggered_npc():
+    from parts.quest import on_defeat
+
+    assert on_defeat(_player(), "some_random_rat") is None  # this npc triggers no step
+
+
+def test_on_defeat_is_none_when_the_step_is_not_reachable_yet(monkeypatch):
+    """Felling the foe before the arc reaches that beat completes nothing (the move is refused)."""
+    import parts.quest as quest_mod
+
+    monkeypatch.setattr(quest_mod, "_DEFEAT_EVENTS", {"warren_boss": "finish"})
+    assert quest_mod.on_defeat(_player(), "warren_boss") is None  # can't finish before accepting
+
+
 def test_apply_effect_is_inert_without_a_calling_or_a_known_effect():
     """award_xp needs a calling (stats) to grant; an unrecognized effect does nothing, quietly."""
     from parts.quest import _apply_effect
