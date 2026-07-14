@@ -3815,5 +3815,34 @@
     "aliases": [],
     "created": "2026-07-14",
     "updated": "2026-07-14"
+  },
+  {
+    "designation": "MOD-UM10-S01-N001-033-R0",
+    "name": "hashchain",
+    "status": "active",
+    "function": "a general tamper-evident append-only hash-chained ledger (the Chronicle's reusable core)",
+    "label": "hashchain",
+    "file": "parts/hashchain.py",
+    "type": "MOD",
+    "domain": "UM10",
+    "sector": "S01",
+    "node": "N001",
+    "sequence": "033",
+    "revision": "R0",
+    "docs": "docs/architecture.md",
+    "tests": "tests/test_hashchain.py",
+    "depends_on": [],
+    "related": [
+      "chronicle"
+    ],
+    "reuse": "harvested Hardware Store part: append-only integrity ledger for audit trails, transaction logs, chain-of-custody",
+    "tags": [
+      "module"
+    ],
+    "notes": "The general primitive harvested from chronicle; chronicle now shares its canonical content_hash. Catalogued as hash-chained-ledger.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-14",
+    "updated": "2026-07-14"
   }
 ]

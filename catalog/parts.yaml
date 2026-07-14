@@ -1038,3 +1038,30 @@
     finance: "load a directory of validated transaction/config records, refusing a malformed file"
     government: "load validated policy/source records with fail-loud intake"
     general: "any 'read validated JSON records from a dir, refuse a bad one' loader"
+
+- id: hash-chained-ledger
+  name: Hash-Chained Ledger
+  source: parts/hashchain.py
+  category: data-integrity
+  tags: [audit, integrity, tamper-evident, hash-chain, append-only, evidence]
+  maturity: shipped
+  source_status: original
+  license: MIT
+  influence: "Merkle / block-chain hash-linking + write-ahead log (original stdlib implementation)"
+  experimental: >-
+    for authenticity (WHO wrote it) sign the head hash (HMAC or asymmetric keys); to catch
+    truncation of the newest records, anchor the head hash in a second store or a printed receipt;
+    for high write volume or cross-process readers, back it with an append-only DB (SQLite WAL,
+    Postgres) instead of a JSONL file. Traded away: zero dependencies and file-simple portability.
+  risk: low
+  purpose: >
+    Append records to a file so any later edit, reorder, or deletion of a PAST record is detected
+    on read: each entry hashes its own payload and the previous entry's hash. Fails loud on a
+    broken chain rather than returning a dishonest history. stdlib only (hashlib + json). Harvested
+    from the Chronicle (the ship's memory), which now shares this module's one canonical hash.
+  reuse:
+    game: "the Chronicle records engine evidence, metrics, and incidents on this canonical hash"
+    government: "a tamper-evident audit trail / evidence bundle for CMMC, NIST 800-171, or NARA records"
+    finance: "an append-only transaction or posting ledger with cryptographic integrity"
+    compliance: "a chain-of-custody log where any silent alteration of a past entry fails loud"
+    general: "a dependency-free append-only event store that proves its own history was not rewritten"
