@@ -92,6 +92,13 @@ def test_grant_refuses_the_unauthenticated(client):
     assert response.status_code == 401
 
 
+def test_get_login_guard_returns_the_shared_throttle():
+    """The production seam hands back the one shared guard (tests override it for isolation)."""
+    from parts.api import _login_guard, get_login_guard
+
+    assert get_login_guard() is _login_guard
+
+
 def test_admin_auth_is_rate_limited_against_brute_force(client):
     """The HTTP admin surface caps guessing the same way the telnet gateway does: a 5-attempt
     burst, then 429 - so the owner password can't be brute-forced one pbkdf2 at a time."""
