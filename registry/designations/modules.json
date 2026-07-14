@@ -3753,5 +3753,37 @@
     "aliases": [],
     "created": "2026-07-14",
     "updated": "2026-07-14"
+  },
+  {
+    "designation": "MOD-UM10-S01-N001-031-R0",
+    "name": "retention",
+    "status": "active",
+    "function": "hold-aware retention analysis for the Chronicle (read-only, R1): disposition not deletion",
+    "label": "retention",
+    "file": "parts/retention.py",
+    "type": "MOD",
+    "domain": "UM10",
+    "sector": "S01",
+    "node": "N001",
+    "sequence": "031",
+    "revision": "R0",
+    "docs": "docs/reports/2026-07-14-retention-design.md",
+    "tests": "tests/test_retention.py",
+    "depends_on": [
+      "chronicle"
+    ],
+    "related": [
+      "chronicle",
+      "seed"
+    ],
+    "reuse": "records retention governance: an append-only store gets hold-aware, dry-run disposition analysis that never deletes",
+    "tags": [
+      "module"
+    ],
+    "notes": "Chronicle retention R1: read-only visibility + dry-run only; real disposition (R2) is owner-gated; physical destruction deferred. Federal rule #10 (any hold wins).",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-14",
+    "updated": "2026-07-14"
   }
 ]

@@ -84,7 +84,7 @@ HELP_TEXT = (
     "unlock <door> with <key>, regs [topic|id], library [id], law [id], "
     "registry [show|find|type|status], loop trace <part-id>, "
     "qa gate [all|<id>], safety review <id>, docs check, pm status, pm metrics, "
-    "truth check, career, pioneer, evolution, chronicle, inspect, functions, terminal, "
+    "truth check, career, pioneer, evolution, chronicle, retention, inspect, functions, terminal, "
     "workshop, catalog, reuse <term>, console, run <check>, diagnostics, "
     "security, ai <prompt>, lesson list, question, answer <A-D>, hint, progress, achievements, "
     "passwd, save, load, quit"
@@ -143,6 +143,12 @@ def evolution(arg: str = "") -> str:
 
 def chronicle(arg: str = "") -> str:
     from parts.chronicle import chronicle as run
+
+    return run(arg)
+
+
+def retention(arg: str = "") -> str:
+    from parts.retention import retention as run
 
     return run(arg)
 
@@ -453,6 +459,15 @@ def _build_commands() -> CommandSet:
             "CMD-UM10-S01-N001-023-R0",
             "The Chronicle (read-only): show the ship's filed memory, newest first",
             lambda _s, arg: chronicle(arg),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "retention",
+            "CMD-UM10-S01-N001-017-R0",
+            "Retention doctor (read-only): what the Chronicle keeps, what a hold protects",
+            lambda _s, arg: retention(arg),
             namespace=CORE,
         )
     )
