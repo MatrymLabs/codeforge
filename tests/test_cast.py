@@ -269,3 +269,69 @@ def test_validate_cli_subcommand(tmp_path: Path, capsys) -> None:
     _bootable_stub(cast, ok=True)
     assert main(["validate", str(cast)]) == 0
     assert "OK" in capsys.readouterr().out
+
+
+# --- Fresh-install proof: a cast declares its deps and boots in a clean venv ---------------------
+
+
+def test_generated_pyproject_declares_dependencies(tmp_path: Path) -> None:
+    _fixture_engine(tmp_path)  # no source pyproject -> generator uses the safe fallback deps
+    plan = plan_cast("blank_mud", "Deps", commit="c", root=tmp_path)
+    out = generate_cast(plan, tmp_path / "out", root=tmp_path)
+    pp = (out / "pyproject.toml").read_text()
+    assert "dependencies = [" in pp
+    assert "pydantic" in pp and "sqlalchemy" in pp
+
+
+def test_declared_deps_reads_the_pyproject(tmp_path: Path) -> None:
+    from parts.cast import _declared_deps
+
+    (tmp_path / "pyproject.toml").write_text(
+        '[project]\ndependencies = ["pyyaml", "pydantic"]\n', encoding="utf-8"
+    )
+    assert _declared_deps(tmp_path / "pyproject.toml") == ["pyyaml", "pydantic"]
+    assert _declared_deps(tmp_path / "nope.toml") == []
+
+
+def test_install_check_boots_in_a_fresh_venv(tmp_path: Path) -> None:
+    from parts.cast import install_check
+
+    _fixture_engine(tmp_path)
+    out = generate_cast(
+        plan_cast("blank_mud", "Iso", commit="c", root=tmp_path), tmp_path / "out", root=tmp_path
+    )
+    steps: list[str] = []
+
+    def fake(cmd, cwd):  # simulate venv + pip install + boot, all succeeding, no network
+        steps.append("venv" if "venv" in cmd else "install" if "install" in cmd else "boot")
+        return 0, "ok"
+
+    ok, detail = install_check(out, tmp_path / "work", runner=fake)
+    assert ok and steps == ["venv", "install", "boot"]
+    assert read_manifest(out / "cast_manifest.json").isolation_proven is True
+
+
+def test_install_check_reports_a_failed_step(tmp_path: Path) -> None:
+    from parts.cast import install_check
+
+    _fixture_engine(tmp_path)
+    out = generate_cast(
+        plan_cast("blank_mud", "Iso", commit="c", root=tmp_path), tmp_path / "out", root=tmp_path
+    )
+    ok, detail = install_check(
+        out,
+        tmp_path / "work",
+        runner=lambda c, w: (1, "pip exploded") if "install" in c else (0, ""),
+    )
+    assert ok is False and "install" in detail
+    assert read_manifest(out / "cast_manifest.json").isolation_proven is False
+
+
+def test_install_check_needs_declared_deps(tmp_path: Path) -> None:
+    from parts.cast import install_check
+
+    (tmp_path / "cast" / "").mkdir(parents=True, exist_ok=True)
+    cast_dir = tmp_path / "cast"
+    (cast_dir / "pyproject.toml").write_text("[project]\n", encoding="utf-8")  # no deps
+    ok, detail = install_check(cast_dir, tmp_path / "work", runner=lambda c, w: (0, ""))
+    assert ok is False and "no dependencies" in detail
