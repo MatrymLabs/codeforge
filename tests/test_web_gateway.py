@@ -2,6 +2,8 @@
 ASGI WebSocket. The same door (handle_command) proven reachable from a
 fourth transport: connect, clear the front desk, drive the tick."""
 
+import contextlib
+
 import pytest
 from fastapi.testclient import TestClient
 
@@ -10,6 +12,18 @@ from parts import doors, items, npcs
 from parts.accounts import account_password_ok
 from parts.session import SESSIONS
 from parts.web_gateway import app
+
+
+def _register_and_enter(ws, handle: str = "hero@co") -> None:
+    ws.receive_text()  # splash
+    ws.receive_text()  # front-desk prompt
+    ws.send_text("new")
+    ws.receive_text()  # character@account prompt
+    ws.send_text(handle)
+    ws.receive_text()  # password prompt
+    ws.send_text("swordfish9")
+    ws.receive_text()  # welcome
+    ws.receive_text()  # scene
 
 
 @pytest.fixture(autouse=True)
@@ -107,3 +121,31 @@ def test_full_gate_turns_visitors_away_when_seated_out():
     client = TestClient(app)
     with client.websocket_connect("/ws") as ws:
         assert "full" in ws.receive_text().lower()
+
+
+def test_a_failed_connection_setup_frees_the_seat(monkeypatch):
+    """A client aborting mid-handshake (routine on a public link) must not leak its seat -
+    otherwise the counter climbs forever and the demo turns everyone away. The seat is claimed
+    inside the try/finally, so setup blowing up still frees it."""
+
+    def boom(*args, **kwargs):
+        raise RuntimeError("client aborted the handshake")
+
+    monkeypatch.setattr(web, "bind_echo", boom)  # a setup step fails after the seat is claimed
+    client = TestClient(app)
+    with contextlib.suppress(Exception), client.websocket_connect("/ws") as ws:
+        ws.receive_text()
+    assert web._web_seats == 0  # freed despite the failure (previously leaked to 1)
+
+
+def test_a_broadcast_cannot_inject_terminal_escapes(monkeypatch):
+    """The public web edge sanitizes every outbound line (like the TCP gateway's _send), so
+    player chat can't push terminal-hijacking escape sequences to another visitor's xterm.js.
+    Proven via the shouter's own echo, which rides the same sanitized transport edge."""
+    client = TestClient(app)
+    with client.websocket_connect("/ws") as ws:
+        _register_and_enter(ws, "shouter@co")
+        ws.send_text("shout hello\x1b[2J\x1b]0;PWNED\x07world")
+        echo = ws.receive_text()  # the "You shout ..." echo, back through the sanitized _pump
+        assert "\x1b" not in echo and "\x07" not in echo  # no raw escape / BEL reached the terminal
+        assert "hello" in echo and "world" in echo  # the text survived, only escapes were stripped
