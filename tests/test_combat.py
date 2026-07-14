@@ -42,7 +42,7 @@ def test_defeating_an_npc_surfaces_a_triggered_quest_line(monkeypatch):
     import parts.quest as quest_mod
 
     monkeypatch.setattr(
-        quest_mod, "on_defeat", lambda session, label: "[The Relighting] the cold breaks"
+        quest_mod, "on_event", lambda session, kind, target: "[The Relighting] the cold breaks"
     )
     s = _fighter()  # courtyard: the training dummy
     out = ""

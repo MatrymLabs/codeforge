@@ -176,5 +176,5 @@ def attack(session: Session, word: str) -> str:
     result = f"{defeat}\n{rewards}"
     from parts import quest  # lazy: combat is the low-level loop; the quest hook rides on top
 
-    quest_line = quest.on_defeat(session, nid)  # a boss's fall may complete a story beat
+    quest_line = quest.on_event(session, "defeat", nid)  # a boss's fall may complete a story beat
     return f"{result}\n{quest_line}" if quest_line else result

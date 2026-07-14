@@ -53,12 +53,24 @@ _SEED_QUEST = load_quest(SEED_DIR / "quest.yaml")
 _QUEST, _QUEST_NAME, _XP_REWARD = _from_seed(_SEED_QUEST) if _SEED_QUEST else _built_in_quest()
 _ENGINE = WorkflowEngine(_QUEST)
 
-# npc label -> the quest event its defeat fires, so a real fight can advance the arc.
-_DEFEAT_EVENTS: dict[str, str] = (
-    {s["on_defeat"]: s["event"] for s in _SEED_QUEST["steps"] if s.get("on_defeat")}
-    if _SEED_QUEST
-    else {}
-)
+# step trigger key -> world-event kind. defeat = an npc falls, take = an item is picked up,
+# enter = a room is entered.
+_TRIGGER_KEYS = {"on_defeat": "defeat", "on_take": "take", "on_enter": "enter"}
+
+
+def _build_triggers(spec: QuestSpec | None) -> dict[tuple[str, str], str]:
+    """Map each step's world-event triggers to the event they fire: (kind, label) -> event."""
+    triggers: dict[tuple[str, str], str] = {}
+    for step in spec["steps"] if spec else []:
+        for key, kind in _TRIGGER_KEYS.items():
+            target = step.get(key)
+            if target:
+                triggers[(kind, str(target))] = step["event"]
+    return triggers
+
+
+# (kind, target label) -> the quest event that world action fires, so real play advances the arc.
+_TRIGGERS = _build_triggers(_SEED_QUEST)
 
 _RUNS: dict[str, Instance] = {}  # player_id -> their quest run
 
@@ -101,11 +113,12 @@ def _apply_effect(effect: str | None, session: Session) -> str:
     return ""
 
 
-def on_defeat(session: Session, npc_label: str) -> str | None:
-    """Combat hook: if defeating `npc_label` advances this player's quest, fire that step and
-    return its line. Returns None when the npc triggers nothing, or the arc isn't at that step yet
-    (you felled the foe, but haven't walked the story to the beat that its fall completes)."""
-    event = _DEFEAT_EVENTS.get(npc_label)
+def on_event(session: Session, kind: str, target: str) -> str | None:
+    """World-event hook: if `kind` (defeat|take|enter) on `target` advances this player's quest,
+    fire that step and return its line. Returns None when the action triggers nothing, or the arc
+    isn't at that beat yet (the engine refuses the out-of-order move -- the `quest <event>` verb
+    stays the fallback, so a trigger is always an additive convenience, never a gate)."""
+    event = _TRIGGERS.get((kind, target))
     if event is None:
         return None
     run = _run(session.player_id)
