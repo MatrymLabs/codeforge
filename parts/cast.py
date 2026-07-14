@@ -23,6 +23,7 @@ See docs/seed_architecture.md for the full doctrine (seed pack vs cast, the phas
 from __future__ import annotations
 
 import json
+import os
 import shutil
 import subprocess  # nosec B404 -- fixed argv, no shell; used only to smoke-boot a poured cast
 import sys
@@ -389,6 +390,13 @@ def validate_cast(
     dependency-isolated fresh-install proof.
     """
     corpus = commands if commands is not None else ["help"]
+    # A cast carries ONLY its own world, so the probe must boot THAT seed, not the engine's
+    # default (first-forge). Read the cast's starter pack and pin FORGE_SEED for the subprocess;
+    # otherwise parts.world falls back to a seed the cast deliberately shed and boots blow up.
+    manifest_path = cast_dir / "cast_manifest.json"
+    env = dict(os.environ)
+    if manifest_path.is_file():
+        env["FORGE_SEED"] = read_manifest(manifest_path).starter_seed_pack
     try:
         result = subprocess.run(  # nosec B603 -- fixed argv, no shell; boots the poured cast
             [sys.executable, "-c", _VALIDATE_PROBE, json.dumps(corpus), json.dumps(imports or [])],
@@ -397,6 +405,7 @@ def validate_cast(
             text=True,
             timeout=timeout,
             check=False,
+            env=env,
         )
         ok = result.returncode == 0 and bool(result.stdout.strip())
         detail = (
@@ -406,7 +415,6 @@ def validate_cast(
         )
     except subprocess.TimeoutExpired:
         ok, detail = False, f"cast did not run the corpus within {timeout:.0f}s"
-    manifest_path = cast_dir / "cast_manifest.json"
     if manifest_path.is_file():
         m = read_manifest(manifest_path)
         write_manifest(replace(m, status=VALIDATED if ok else NOT_VALIDATED), manifest_path)
@@ -458,10 +466,16 @@ def install_check(cast_dir: Path, workdir: Path, *, runner=None) -> tuple[bool, 
     venv = workdir / "venv"
     py = venv / "bin" / "python"
     pip = venv / "bin" / "pip"
+    # Boot the cast's OWN world, not the engine default (a cast sheds every other seed).
+    manifest_path = cast_dir / "cast_manifest.json"
+    boot_probe = _BOOT_PROBE
+    if manifest_path.is_file():
+        seed = read_manifest(manifest_path).starter_seed_pack
+        boot_probe = f"import os; os.environ.setdefault('FORGE_SEED', {seed!r})\n" + _BOOT_PROBE
     steps: list[tuple[list[str], Path | None]] = [
         ([sys.executable, "-m", "venv", str(venv)], None),
         ([str(pip), "install", "--quiet", *deps], None),
-        ([str(py), "-c", _BOOT_PROBE], cast_dir),
+        ([str(py), "-c", boot_probe], cast_dir),
     ]
     for cmd, cwd in steps:
         rc, out = run(cmd, cwd)

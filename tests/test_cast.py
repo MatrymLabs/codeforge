@@ -59,12 +59,20 @@ def test_the_shipped_templates_are_on_the_shelf() -> None:
     templates = available_templates()
     assert "blank_mud" in templates
     assert "fantasy_mud" in templates
+    assert "kindlands_saga" in templates  # the flagship cast
 
 
 def test_a_real_template_loads_with_its_required_keys() -> None:
     tpl = load_template("fantasy_mud")
     assert tpl["template_id"] == "fantasy_mud"
     assert tpl["starter_seed_pack"] == "spiral-ascent"
+    assert tpl["engine_strategy"] == "vendored-whole"
+
+
+def test_the_flagship_template_pours_the_aethryn_world() -> None:
+    tpl = load_template("kindlands_saga")
+    assert tpl["template_id"] == "kindlands_saga"
+    assert tpl["starter_seed_pack"] == "aethryn"  # points at the world bible's seed
     assert tpl["engine_strategy"] == "vendored-whole"
 
 
@@ -265,6 +273,28 @@ def test_validate_reports_a_cast_that_cannot_boot(tmp_path: Path) -> None:
     ok, _detail = validate_cast(cast)
     assert ok is False
     assert read_manifest(cast / "cast_manifest.json").status == NOT_VALIDATED
+
+
+def test_validate_boots_the_casts_own_seed_not_the_engine_default(tmp_path: Path) -> None:
+    """Regression: a cast carries ONLY its own world, so the validate probe must boot THAT
+    seed (via FORGE_SEED), never the engine default first-forge, which the cast deliberately
+    shed. Here parts/world.py refuses any seed but the cast's own -> validate passes only if
+    the probe was launched with FORGE_SEED=aethryn."""
+    from parts.cast import VALIDATED, validate_cast
+
+    cast = tmp_path / "cast"
+    _bootable_stub(cast, ok=True)
+    (cast / "parts" / "world.py").write_text(
+        "import os\n"
+        "seed = os.environ.get('FORGE_SEED', 'first-forge')\n"
+        "assert seed == 'aethryn', 'probe booted the wrong seed: ' + seed\n"
+        "START_ROOM = 'start'\n"
+    )
+    manifest = read_manifest(cast / "cast_manifest.json")
+    write_manifest(replace(manifest, starter_seed_pack="aethryn"), cast / "cast_manifest.json")
+    ok, detail = validate_cast(cast)
+    assert ok, detail  # would fail before the FORGE_SEED fix (probe defaulted to first-forge)
+    assert read_manifest(cast / "cast_manifest.json").status == VALIDATED
 
 
 def test_validate_cli_subcommand(tmp_path: Path, capsys) -> None:
