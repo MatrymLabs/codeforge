@@ -9,7 +9,7 @@
 
 **A Python-native software manufacturing platform with two outputs: an installable multiplayer World Package (the MUD you can play in your browser today), and a Hardware Store of reusable parts proven in the game and translated to real software.**
 
-![Pick a calling and train against the self-repairing dummy until you level up](docs/demo.gif)
+![The Relighting in aethryn: pick up the first ember to relight it, reforge the broken bridge, then fell the Cinder-Wight to break the cold - the whole arc advances from real actions](docs/demo.gif)
 
 📖 **Documentation site:** [matrymlabs.github.io/codeforge](https://matrymlabs.github.io/codeforge/) (built from `docs/` with MkDocs Material, published on GitHub Pages).
 
