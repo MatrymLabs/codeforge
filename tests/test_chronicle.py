@@ -18,12 +18,15 @@ from parts.chronicle import (
     KINDS,
     ChronicleError,
     append,
+    incidents,
     provenance,
     read,
     read_latest,
     record_edge,
+    record_incident,
     record_metric,
     render,
+    render_incidents,
     render_provenance,
     render_trend,
     trend,
@@ -85,7 +88,7 @@ def test_render_shows_records_and_reads_empty_state(tmp_path: Path) -> None:
 
 def test_unknown_kind_fails_loud_on_append(tmp_path: Path) -> None:
     with pytest.raises(ChronicleError, match="unknown kind"):
-        append("incident", {"v": 1}, commit="c", root=tmp_path)  # a later-slice kind, not yet valid
+        append("ai-eval", {"v": 1}, commit="c", root=tmp_path)  # a later-slice kind, not yet valid
 
 
 def test_non_object_payload_fails_loud(tmp_path: Path) -> None:
@@ -131,12 +134,12 @@ def test_a_record_missing_a_field_fails_loud(tmp_path: Path) -> None:
 def test_read_with_an_unknown_kind_fails_loud(tmp_path: Path) -> None:
     append("evidence", {"x": 1}, commit="c", root=tmp_path)
     with pytest.raises(ChronicleError, match="unknown kind"):
-        read("incident", root=tmp_path)
+        read("ai-eval", root=tmp_path)  # a later-slice kind, not yet valid
 
 
-def test_kinds_are_evidence_metric_and_edge() -> None:
+def test_kinds_are_evidence_metric_edge_and_incident() -> None:
     # A guard so a later slice that widens KINDS updates this test deliberately.
-    assert KINDS == ("evidence", "metric", "edge")
+    assert KINDS == ("evidence", "metric", "edge", "incident")
 
 
 # --- metric kind + trend series (slice 2) ------------------------------------------------------
@@ -227,7 +230,75 @@ def test_chronicle_provenance_verb() -> None:
     assert verb("provenance nonexistent_node_xyz").startswith("No provenance")
 
 
+# --- incident kind: FRACAS register (slice 4) --------------------------------------------------
+
+
+def test_record_incident_round_trips(tmp_path: Path) -> None:
+    rec = record_incident("gateway dropped a login", "high", commit="a", root=tmp_path)
+    assert rec.kind == "incident"
+    assert rec.payload["what"] == "gateway dropped a login"
+    assert rec.payload["severity"] == "high"
+    assert rec.payload["status"] == "open" and rec.payload["corrective_action"] == ""
+
+
+def test_incidents_filter_by_status(tmp_path: Path) -> None:
+    record_incident("a", "high", commit="c", root=tmp_path)
+    record_incident(
+        "b", "low", status="closed", corrective_action="fixed", commit="c", root=tmp_path
+    )
+    assert len(incidents(root=tmp_path)) == 2
+    assert len(incidents("open", root=tmp_path)) == 1
+    assert incidents("closed", root=tmp_path)[0].payload["corrective_action"] == "fixed"
+
+
+def test_render_incidents_puts_open_and_severe_first(tmp_path: Path) -> None:
+    record_incident("minor", "low", status="closed", commit="c", root=tmp_path)
+    record_incident("urgent", "critical", commit="c", root=tmp_path)
+    out = render_incidents(incidents(root=tmp_path))
+    assert out.index("urgent") < out.index("minor")  # open+critical before closed+low
+    assert render_incidents(incidents(root=tmp_path, status="none")) == "No incidents recorded."
+
+
+def test_incident_refuses_a_bad_severity(tmp_path: Path) -> None:
+    with pytest.raises(ChronicleError, match="severity must be one of"):
+        record_incident("x", "urgent", commit="c", root=tmp_path)
+
+
+def test_incident_refuses_an_empty_what(tmp_path: Path) -> None:
+    with pytest.raises(ChronicleError, match="needs a non-empty 'what'"):
+        record_incident("   ", "high", commit="c", root=tmp_path)
+
+
+def test_incident_refuses_a_bad_status(tmp_path: Path) -> None:
+    with pytest.raises(ChronicleError, match="status must be one of"):
+        record_incident("x", "high", status="pending", commit="c", root=tmp_path)
+
+
+def test_chronicle_incidents_verb() -> None:
+    from parts.chronicle import chronicle as verb
+
+    # Reads the real (empty in tests) ledger; renders honestly, never crashes.
+    assert verb("incidents") == "No incidents recorded."
+
+
 # --- integration: arc_ledger.emit retains its evidence verdict in the Chronicle ----------------
+
+
+def test_emit_opens_a_fracas_incident_on_a_blocked_release(tmp_path: Path) -> None:
+    from parts.arc_ledger import emit
+
+    emit("badsha", root=tmp_path, runner=lambda check: check != "security")  # security fails
+    opened = incidents("open", root=tmp_path)
+    assert len(opened) == 1
+    assert opened[0].payload["severity"] == "high"
+    assert "release blocked" in opened[0].payload["what"]
+
+
+def test_a_ready_release_files_no_incident(tmp_path: Path) -> None:
+    from parts.arc_ledger import emit
+
+    emit("goodsha", root=tmp_path, runner=lambda check: True)
+    assert incidents(root=tmp_path) == []  # no failure -> no FRACAS noise
 
 
 def test_emit_retains_its_evidence_verdict_in_the_chronicle(tmp_path: Path) -> None:

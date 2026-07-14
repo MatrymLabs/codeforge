@@ -29,14 +29,18 @@ from dataclasses import asdict, dataclass
 from datetime import UTC, datetime
 from pathlib import Path
 
-# The record kinds the Chronicle understands. Slice 1 shipped `evidence`; slice 2 added `metric`
-# (a trend point); slice 3 adds `edge` (a provenance link). A record with any other kind fails
-# loud, so the store never accretes junk.
-KINDS = ("evidence", "metric", "edge")
+# The record kinds the Chronicle understands. Slices added, in order: `evidence` (1), `metric`
+# (2), `edge` (3), `incident` (4). A record with any other kind fails loud, so the store never
+# accretes junk.
+KINDS = ("evidence", "metric", "edge", "incident")
 
 # The provenance relations an `edge` may assert (PROV-O flavored). A relation outside this set
 # fails loud, so the graph stays meaningful rather than a free-for-all of ad-hoc verbs.
 RELATIONS = ("wasGeneratedBy", "wasDerivedFrom", "wasInformedBy", "wasAttributedTo")
+
+# FRACAS (Failure Reporting, Analysis, and Corrective Action) vocabulary for `incident` records.
+INCIDENT_SEVERITIES = ("low", "medium", "high", "critical")
+INCIDENT_STATUSES = ("open", "closed")
 
 CHRONICLE_DIR = "chronicle"  # git-TRACKED (retained), unlike arc-evidence/ which is git-ignored
 LEDGER_FILE = "ledger.jsonl"
@@ -101,6 +105,22 @@ def _validate_payload(kind: str, payload: object, where: str) -> None:
             raise ChronicleError(
                 f"{where}: unknown edge relation {payload['relation']!r}; expected {RELATIONS}"
             )
+    if kind == "incident":
+        what = payload.get("what")
+        if not isinstance(what, str) or not what.strip():
+            raise ChronicleError(f"{where}: an incident needs a non-empty 'what'")
+        if payload.get("severity") not in INCIDENT_SEVERITIES:
+            raise ChronicleError(
+                f"{where}: incident severity must be one of {INCIDENT_SEVERITIES}, "
+                f"got {payload.get('severity')!r}"
+            )
+        if payload.get("status") not in INCIDENT_STATUSES:
+            raise ChronicleError(
+                f"{where}: incident status must be one of {INCIDENT_STATUSES}, "
+                f"got {payload.get('status')!r}"
+            )
+        if not isinstance(payload.get("corrective_action", ""), str):
+            raise ChronicleError(f"{where}: incident 'corrective_action' must be a string")
 
 
 def _parse_line(line: str, where: str) -> Record:
@@ -284,6 +304,58 @@ def render_provenance(node: str, edges: list[Record]) -> str:
     return "\n".join(lines)
 
 
+def record_incident(
+    what: str,
+    severity: str,
+    *,
+    corrective_action: str = "",
+    status: str = "open",
+    commit: str,
+    root: Path | None = None,
+    stamp: datetime | None = None,
+) -> Record:
+    """Append one FRACAS `incident` record - a typed convenience over `append`."""
+    return append(
+        "incident",
+        {
+            "what": what,
+            "severity": severity,
+            "corrective_action": corrective_action,
+            "status": status,
+        },
+        commit=commit,
+        root=root,
+        stamp=stamp,
+    )
+
+
+def incidents(status: str | None = None, *, root: Path | None = None) -> list[Record]:
+    """Every `incident` record, optionally filtered by status (`open` | `closed`)."""
+    recs = read("incident", root=root)
+    return [r for r in recs if status is None or r.payload.get("status") == status]
+
+
+def render_incidents(records: list[Record]) -> str:
+    """A read-only FRACAS view: open first, then most severe first."""
+    if not records:
+        return "No incidents recorded."
+    status_rank = {"open": 0, "closed": 1}
+    sev_rank = {"critical": 0, "high": 1, "medium": 2, "low": 3}
+    ordered = sorted(
+        records,
+        key=lambda r: (
+            status_rank.get(r.payload["status"], 9),
+            sev_rank.get(r.payload["severity"], 9),
+        ),
+    )
+    lines = ["INCIDENTS (FRACAS) - open first, most severe first", ""]
+    for r in ordered:
+        p = r.payload
+        lines.append(f"  [{p['status']:<6}] {p['severity']:>8}  {p['what']}  @ {r.commit}")
+        lines.append(f"      corrective action: {p.get('corrective_action') or '(none yet)'}")
+    return "\n".join(lines)
+
+
 def render(records: list[Record]) -> str:
     """A read-only human view of the memory (newest first), for the `chronicle` verb."""
     if not records:
@@ -302,9 +374,10 @@ def chronicle(arg: str = "") -> str:
     """The read-only `chronicle` verb: show the ship's filed memory.
 
     - `chronicle`                 all records, newest first
-    - `chronicle <kind>`          just one kind (evidence | metric | edge)
+    - `chronicle <kind>`          just one kind (evidence | metric | edge | incident)
     - `chronicle trend <m>`       the series for metric `<m>` over time
     - `chronicle provenance <n>`  the provenance edges around node `<n>`
+    - `chronicle incidents`       the FRACAS register (open first, most severe first)
 
     Reads only. A tampered or broken ledger surfaces its integrity failure honestly rather than
     crashing the tick (text is a projection; it never mutates the store).
@@ -321,6 +394,8 @@ def chronicle(arg: str = "") -> str:
             if not node:
                 return "usage: chronicle provenance <node>"
             return render_provenance(node, provenance(node))
+        if tokens and tokens[0].lower() == "incidents":
+            return render_incidents(incidents())
         kind = arg.strip().lower() or None
         if kind is not None and kind not in KINDS:
             return f"Unknown record kind {kind!r}; the Chronicle knows: {', '.join(KINDS)}."
@@ -350,9 +425,19 @@ def main(argv: list[str] | None = None) -> int:
         p = edge.payload
         print(f"  recorded {p['from']} -{p['relation']}-> {p['to']} @ {edge.commit} (chronicle)")
         return 0
+    if args and args[0] == "incidents":
+        print(render_incidents(incidents()))
+        return 0
+    if (
+        len(args) >= 4 and args[0] == "record-incident"
+    ):  # record-incident <severity> <commit> <what...>
+        inc = record_incident(" ".join(args[3:]), args[1], commit=args[2])
+        print(f"  recorded incident [{inc.payload['severity']}] {inc.payload['what']} (chronicle)")
+        return 0
     print(
-        "usage: python -m parts.chronicle {trend <name> | provenance <node> | "
-        "record-metric <name> <value> <commit> | record-edge <from> <relation> <to> <commit>}"
+        "usage: python -m parts.chronicle {trend <name> | provenance <node> | incidents | "
+        "record-metric <name> <value> <commit> | record-edge <from> <relation> <to> <commit> | "
+        "record-incident <severity> <commit> <what...>}"
     )
     return 2
 
