@@ -104,7 +104,11 @@ The proof that makes the whole vision legible without finishing the platform:
    now runnable through the **`codeforge onboard`** CLI; cataloged in the Hardware Store
    (`docs/hardware/workflow_engine.*`), `loop trace workflow-engine` = PASS.
 3. **Minimal World Package: one region + identity + commands + the quest system + admin + tests. Next.**
-4. Package export: prove a package assembles, installs, and runs independently.
+4. Package export. **In progress:** `make cast` (`cast.generate_cast`) now POURS a standalone
+   project (engine vendored whole + seed pack + scaffold + manifest) - proof a package *assembles*
+   (verified: `import forge` works from a poured cast). Still ahead: detaching the engine and
+   proving the cast *installs and runs on its own* (the manifest stays `generated`, never
+   `detached`/`validated`).
 5+. Creator wizards, full-stack interface, Hardware Store expansion, advanced modularity,
    production operations. Each gated by the Scope-Control Rule.
 

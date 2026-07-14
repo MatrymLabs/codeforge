@@ -3,9 +3,12 @@
 A seed PACK is a game's content (`seeds/<name>/*.yaml`). A CAST is what leaves the forge:
 a standalone, installable project poured from the engine + one chosen seed pack + config.
 
-This is the Phase-1 scaffold. It PLANS a cast -- a dry run that lists what it *would* copy
-and the manifest it *would* write -- and it WRITES NOTHING. Real generation, migration, and
-detachment come in later phases. Two honesty rules hold the line:
+Two phases exist today. `plan_cast` is the dry run (lists what a cast *would* contain, writes
+nothing). `generate_cast` (Phase 2) POURS a cast: it vendors the engine whole, copies the cast's
+own seed pack, and writes the scaffold + a `generated` manifest - proof that a package assembles.
+What remains for later phases: detaching the engine (still vendored whole) and proving the cast
+boots on its own (the manifest never claims `detached`/`validated`). Two honesty rules hold the
+line:
 
   1. The plan reports `engine_strategy: "vendored-whole"` -- never a false a-la-carte module
      list. The engine is one coupled package; it cannot yet be selected apart. No claim
@@ -19,7 +22,8 @@ See docs/seed_architecture.md for the full doctrine (seed pack vs cast, the phas
 from __future__ import annotations
 
 import json
-from dataclasses import asdict, dataclass, field
+import shutil
+from dataclasses import asdict, dataclass, field, replace
 from pathlib import Path
 
 _ROOT = Path(__file__).resolve().parent.parent
@@ -29,6 +33,14 @@ SEEDS_ROOT = _ROOT / "seeds"
 PLANNED = "planned"
 READY = "ready"
 BLOCKED = "blocked"
+GENERATED = "generated"  # a cast that has been poured to disk (Phase 2), not yet detached/validated
+
+# What a generated cast ignores at runtime - the same categories a cast must never carry.
+_CAST_GITIGNORE = (
+    "# A CodeForge cast. Runtime state, secrets, and caches never live in the repo.\n"
+    "*.db\nsave.json\ncharacters.json\naccounts.json\n*.kdbx\n"
+    ".env\n.venv/\n__pycache__/\n*.pyc\nreports/\nsecurity-evidence/\n"
+)
 
 # What a cast must NEVER carry out of the forge -- state, secrets, evidence, flagship
 # identity, the other games. Grounded in .gitignore + the safety rules.
@@ -202,16 +214,110 @@ def render_plan(plan: CastPlan) -> str:
     return "\n".join(lines)
 
 
-def main(argv: list[str] | None = None) -> int:
-    """CLI (`python -m parts.cast <template> <name> [commit]`, `make cast-plan`): plan a cast.
+def _scaffold_readme(m: CastManifest) -> str:
+    return (
+        f"# {m.seed_name}\n\n"
+        f"A standalone game **cast** poured from CodeForge (`{m.template}` template) with the "
+        f"`{m.starter_seed_pack}` seed pack as its world.\n\n"
+        f"- Engine strategy: `{m.engine_strategy}` (the engine is vendored whole).\n"
+        f"- Poured at CodeForge commit `{m.codeforge_commit}`.\n\n"
+        "## Honest status\n"
+        f"This cast is **{m.status}**: the directory is assembled (engine + seed + config).\n"
+        "It is NOT yet detached or proven to boot on its own - that is a later CodeForge phase.\n"
+        "See `cast_manifest.json` for the full provenance and known limitations.\n"
+    )
 
-    Exit 0 if the plan is READY, 1 if BLOCKED. Writes nothing -- it is a dry run.
+
+def _scaffold_seed_toml(m: CastManifest) -> str:
+    return (
+        "# The world this cast runs. The seed pack under seeds/ is the game's content.\n"
+        "[world]\n"
+        f'seed_pack = "{m.starter_seed_pack}"\n'
+        f'name = "{m.seed_name}"\n'
+    )
+
+
+def _scaffold_pyproject(m: CastManifest) -> str:
+    slug = m.seed_name.lower().replace(" ", "-") or "cast"
+    return (
+        "[project]\n"
+        f'name = "{slug}"\n'
+        'version = "0.1.0"\n'
+        f'description = "A CodeForge cast: {m.seed_name}"\n'
+        'requires-python = ">=3.11"\n'
+    )
+
+
+def generate_cast(plan: CastPlan, dest: Path, *, root: Path | None = None) -> Path:
+    """Phase 2: pour a planned cast to `dest` - vendor the engine whole, copy the cast's OWN seed
+    pack, and write the scaffold + a `generated` manifest. Returns the cast root.
+
+    Honest scope: this ASSEMBLES a standalone project directory (proof that a package assembles).
+    It does NOT detach the engine (vendored whole) or claim the cast boots independently - the
+    manifest records status `generated`, never `detached`/`validated`. Refuses a BLOCKED plan or a
+    non-empty destination; never touches `seeds/` or the frozen identifiers.
+    """
+    if plan.verdict != READY:
+        raise CastError(
+            f"cannot generate a {plan.verdict.upper()} cast: resolve the blocker(s) first"
+        )
+    dest = Path(dest)
+    if dest.exists() and any(dest.iterdir()):
+        raise CastError(f"destination {dest} is not empty; refusing to overwrite a cast")
+    base = root or _ROOT
+    starter = plan.manifest.starter_seed_pack
+    ignore = shutil.ignore_patterns("__pycache__", "*.pyc")
+    dest.mkdir(parents=True, exist_ok=True)
+    # 1. the engine, vendored whole (parts/ + forge.py)
+    shutil.copytree(base / "parts", dest / "parts", ignore=ignore)
+    shutil.copy2(base / "forge.py", dest / "forge.py")
+    # 2. only this cast's OWN seed pack (never the other games)
+    shutil.copytree(base / "seeds" / starter, dest / "seeds" / starter, ignore=ignore)
+    # 3. the fresh scaffold + the manifest, marked generated
+    generated = replace(plan.manifest, status=GENERATED)
+    write_manifest(generated, dest / "cast_manifest.json")
+    (dest / "README.md").write_text(_scaffold_readme(generated), encoding="utf-8")
+    (dest / "seed.toml").write_text(_scaffold_seed_toml(generated), encoding="utf-8")
+    (dest / "pyproject.toml").write_text(_scaffold_pyproject(generated), encoding="utf-8")
+    (dest / ".gitignore").write_text(_CAST_GITIGNORE, encoding="utf-8")
+    return dest
+
+
+def main(argv: list[str] | None = None) -> int:
+    """CLI. Plan a cast (`<template> <name> [commit]`, `make cast-plan`) or pour one
+    (`generate <template> <name> <dest> [commit]`, `make cast`).
+
+    Plan writes nothing (exit 0 READY, 1 BLOCKED). Generate pours a standalone project to <dest>.
     """
     import sys
 
     args = argv if argv is not None else sys.argv[1:]
+    if args and args[0] == "generate":
+        if len(args) < 4:
+            print(
+                "usage: python -m parts.cast generate <template> <name> <dest> [commit]",
+                file=sys.stderr,
+            )
+            return 2
+        template, name, dest = args[1], args[2], args[3]
+        commit = args[4] if len(args) > 4 else "unknown"
+        try:
+            plan = plan_cast(template, name, commit=commit)
+            if plan.verdict != READY:
+                print(render_plan(plan))
+                return 1
+            out = generate_cast(plan, Path(dest))
+        except CastError as exc:
+            print(f"cast: {exc}", file=sys.stderr)
+            return 2
+        print(f"poured cast '{name}' -> {out}  (status: generated; see cast_manifest.json)")
+        return 0
     if len(args) < 2:
         print("usage: python -m parts.cast <template> <name> [commit]", file=sys.stderr)
+        print(
+            "       python -m parts.cast generate <template> <name> <dest> [commit]",
+            file=sys.stderr,
+        )
         print(f"templates: {', '.join(available_templates()) or '(none)'}", file=sys.stderr)
         return 2
     template, name = args[0], args[1]
