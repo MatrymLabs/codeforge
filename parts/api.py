@@ -11,7 +11,6 @@ that owns an owner-ranked character -- authorization before
 capability, same law as the @-verbs.
 """
 
-import secrets as _secrets
 from typing import Annotated
 
 from fastapi import Depends, FastAPI, HTTPException
@@ -47,12 +46,13 @@ _basic = HTTPBasic()
 def _require_owner(credentials: Annotated[HTTPBasicCredentials, Depends(_basic)]) -> str:
     """HTTP Basic: the account must exist, the password must match, and
     the account must hold an owner-ranked character. One generic 401."""
+    # account_password_ok is now constant-time whether or not the account exists (a decoy hash
+    # levels the pbkdf2 cost in parts/accounts), so this gate no longer leaks account existence
+    # by timing. One generic 401, never saying which part failed.
     ok = account_password_ok(credentials.username, credentials.password) and account_has_owner(
         credentials.username
     )
     if not ok:
-        # burn comparable time either way; never say which part failed
-        _secrets.compare_digest("a", "b")
         raise HTTPException(status_code=401, detail="Not authorized.")
     return credentials.username
 

@@ -41,6 +41,46 @@ def test_verify_roundtrip_and_rejection():
     assert not verify_password("stranger", "swordfish")
 
 
+def _count_hashes(monkeypatch: pytest.MonkeyPatch) -> list[int]:
+    """Spy on the pbkdf2 hash so a test can assert it fired (constant-time defense), without a
+    flaky timing assertion. Both a real check and the missing-principal decoy route through it."""
+    import parts.accounts as acc
+
+    calls: list[int] = []
+    real = acc._hash_secret
+
+    def spy(password: str, salt: bytes) -> str:
+        calls.append(1)
+        return real(password, salt)
+
+    monkeypatch.setattr(acc, "_hash_secret", spy)
+    return calls
+
+
+def test_an_unknown_character_still_pays_the_hash_cost(monkeypatch: pytest.MonkeyPatch):
+    """Constant-time auth: a missing name must trigger the same pbkdf2 as a real check, or its
+    faster response leaks which names exist (username enumeration)."""
+    calls = _count_hashes(monkeypatch)
+    assert verify_password("no-such-character", "whatever") is False
+    assert len(calls) == 1  # the decoy hash fired -> timing matches a real verify
+
+
+def test_an_unknown_account_still_pays_the_hash_cost(monkeypatch: pytest.MonkeyPatch):
+    from parts.accounts import account_password_ok
+
+    calls = _count_hashes(monkeypatch)
+    assert account_password_ok("no-such-account", "whatever") is False
+    assert len(calls) == 1
+
+
+def test_an_unknown_login_account_still_pays_the_hash_cost(monkeypatch: pytest.MonkeyPatch):
+    from parts.accounts import inspect_login
+
+    calls = _count_hashes(monkeypatch)
+    assert inspect_login("somechar", "no-such-account", "whatever") is False
+    assert len(calls) == 1
+
+
 def test_short_passwords_are_refused():
     _saved_hero()
     assert "at least 8" in set_password("matrym", "abc")
