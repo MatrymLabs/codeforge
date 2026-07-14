@@ -297,6 +297,18 @@ def test_validate_boots_the_casts_own_seed_not_the_engine_default(tmp_path: Path
     assert read_manifest(cast / "cast_manifest.json").status == VALIDATED
 
 
+def test_validate_without_a_manifest_boots_on_the_engine_default(tmp_path: Path) -> None:
+    """A cast dir with no manifest can't name its seed, so validate degrades gracefully to the
+    engine default rather than crashing (exercises the no-manifest branch of the FORGE_SEED pin)."""
+    from parts.cast import validate_cast
+
+    cast = tmp_path / "cast"
+    _bootable_stub(cast, ok=True)
+    (cast / "cast_manifest.json").unlink()  # no manifest -> no FORGE_SEED to pin
+    ok, detail = validate_cast(cast)
+    assert ok and "commands ran clean" in detail
+
+
 def test_validate_cli_subcommand(tmp_path: Path, capsys) -> None:
     cast = tmp_path / "cast"
     _bootable_stub(cast, ok=True)
@@ -358,6 +370,26 @@ def test_install_check_reports_a_failed_step(tmp_path: Path) -> None:
     )
     assert ok is False and "install" in detail
     assert read_manifest(out / "cast_manifest.json").isolation_proven is False
+
+
+def test_install_check_without_a_manifest_uses_the_default_boot_probe(tmp_path: Path) -> None:
+    """No manifest -> the boot step falls back to the plain probe (engine default seed) instead
+    of injecting FORGE_SEED. Covers the no-manifest branch of install_check's seed pin."""
+    from parts.cast import install_check
+
+    cast_dir = tmp_path / "cast"
+    cast_dir.mkdir()
+    (cast_dir / "pyproject.toml").write_text(
+        '[project]\ndependencies = ["pyyaml"]\n', encoding="utf-8"
+    )  # deps present, but no cast_manifest.json
+    steps: list[str] = []
+
+    def fake(cmd, cwd):
+        steps.append("venv" if "venv" in cmd else "install" if "install" in cmd else "boot")
+        return 0, "ok"
+
+    ok, _detail = install_check(cast_dir, tmp_path / "work", runner=fake)
+    assert ok and steps == ["venv", "install", "boot"]
 
 
 def test_install_check_needs_declared_deps(tmp_path: Path) -> None:
