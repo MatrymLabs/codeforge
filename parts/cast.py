@@ -3,12 +3,13 @@
 A seed PACK is a game's content (`seeds/<name>/*.yaml`). A CAST is what leaves the forge:
 a standalone, installable project poured from the engine + one chosen seed pack + config.
 
-Two phases exist today. `plan_cast` is the dry run (lists what a cast *would* contain, writes
+Three steps exist today. `plan_cast` is the dry run (lists what a cast *would* contain, writes
 nothing). `generate_cast` (Phase 2) POURS a cast: it vendors the engine whole, copies the cast's
-own seed pack, and writes the scaffold + a `generated` manifest - proof that a package assembles.
-What remains for later phases: detaching the engine (still vendored whole) and proving the cast
-boots on its own (the manifest never claims `detached`/`validated`). Two honesty rules hold the
-line:
+own seed pack, and writes the scaffold + a `generated` manifest - proof a package assembles.
+`validate_cast` then smoke-boots the poured cast (imports its own engine and runs one tick) and
+marks it `validated` - proof it RUNS. What remains for later phases: detaching the engine (still
+vendored whole) and a dependency-isolated fresh-install proof (the manifest never claims
+`detached`). Two honesty rules hold the line:
 
   1. The plan reports `engine_strategy: "vendored-whole"` -- never a false a-la-carte module
      list. The engine is one coupled package; it cannot yet be selected apart. No claim
@@ -23,6 +24,8 @@ from __future__ import annotations
 
 import json
 import shutil
+import subprocess  # nosec B404 -- fixed argv, no shell; used only to smoke-boot a poured cast
+import sys
 from dataclasses import asdict, dataclass, field, replace
 from pathlib import Path
 
@@ -33,7 +36,9 @@ SEEDS_ROOT = _ROOT / "seeds"
 PLANNED = "planned"
 READY = "ready"
 BLOCKED = "blocked"
-GENERATED = "generated"  # a cast that has been poured to disk (Phase 2), not yet detached/validated
+GENERATED = "generated"  # poured to disk (Phase 2), not yet booted
+VALIDATED = "validated"  # poured AND smoke-booted (boots + ticks in the current environment)
+NOT_VALIDATED = "not_validated"  # poured but failed its smoke boot
 
 # What a generated cast ignores at runtime - the same categories a cast must never carry.
 _CAST_GITIGNORE = (
@@ -283,6 +288,40 @@ def generate_cast(plan: CastPlan, dest: Path, *, root: Path | None = None) -> Pa
     return dest
 
 
+def validate_cast(cast_dir: Path, *, timeout: float = 120.0) -> tuple[bool, str]:
+    """Smoke-boot a poured cast to prove it RUNS, not just assembles: in a subprocess with
+    cwd=`cast_dir`, import the cast's OWN engine and run one tick (so `parts/seed.py` resolves the
+    cast's own seed). Records the manifest status `validated` | `not_validated`, and returns
+    `(ok, detail)`.
+
+    Honest scope: this proves the cast boots and ticks in the CURRENT environment (shared
+    third-party deps). A fresh-install, dependency-isolated proof is the detachment phase, not this.
+    """
+    probe = (
+        "import forge; from parts.session import Session; "
+        "out = forge.handle_command(Session(player_id='_validate'), 'help'); "
+        "print(out[:60]); assert out.strip()"
+    )
+    try:
+        result = subprocess.run(  # nosec B603 -- fixed argv, no shell; boots the poured cast
+            [sys.executable, "-c", probe],
+            cwd=cast_dir,
+            capture_output=True,
+            text=True,
+            timeout=timeout,
+            check=False,
+        )
+        ok = result.returncode == 0 and bool(result.stdout.strip())
+        detail = result.stdout.strip() if ok else (result.stderr.strip()[-200:] or "no output")
+    except subprocess.TimeoutExpired:
+        ok, detail = False, f"cast did not boot within {timeout:.0f}s"
+    manifest_path = cast_dir / "cast_manifest.json"
+    if manifest_path.is_file():
+        m = read_manifest(manifest_path)
+        write_manifest(replace(m, status=VALIDATED if ok else NOT_VALIDATED), manifest_path)
+    return ok, detail
+
+
 def main(argv: list[str] | None = None) -> int:
     """CLI. Plan a cast (`<template> <name> [commit]`, `make cast-plan`) or pour one
     (`generate <template> <name> <dest> [commit]`, `make cast`).
@@ -310,8 +349,17 @@ def main(argv: list[str] | None = None) -> int:
         except CastError as exc:
             print(f"cast: {exc}", file=sys.stderr)
             return 2
-        print(f"poured cast '{name}' -> {out}  (status: generated; see cast_manifest.json)")
-        return 0
+        print(f"poured cast '{name}' -> {out}")
+        ok, detail = validate_cast(out)  # prove it runs, not just assembles
+        print(f"  {'validated (boots + ticks): ' + detail if ok else 'NOT validated: ' + detail}")
+        return 0 if ok else 1
+    if args and args[0] == "validate":
+        if len(args) < 2:
+            print("usage: python -m parts.cast validate <cast-dir>", file=sys.stderr)
+            return 2
+        ok, detail = validate_cast(Path(args[1]))
+        print(f"cast validate: {'OK - ' if ok else 'FAILED - '}{detail}")
+        return 0 if ok else 1
     if len(args) < 2:
         print("usage: python -m parts.cast <template> <name> [commit]", file=sys.stderr)
         print(

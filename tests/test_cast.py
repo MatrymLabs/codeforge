@@ -219,3 +219,53 @@ def test_generate_via_the_cli(tmp_path: Path) -> None:
     plan = plan_cast("blank_mud", "CliCast", commit="c", root=tmp_path)
     out = generate_cast(plan, dest, root=tmp_path)
     assert read_manifest(out / "cast_manifest.json").seed_name == "CliCast"
+
+
+# --- Phase 2 (validate): a poured cast smoke-boots and ticks (proof a package RUNS) -------------
+
+
+def _bootable_stub(cast_dir: Path, ok: bool = True) -> None:
+    """A minimal cast dir the validator can boot in a subprocess, without the 122-module engine."""
+    (cast_dir / "parts").mkdir(parents=True)
+    (cast_dir / "parts" / "__init__.py").write_text("")
+    (cast_dir / "parts" / "session.py").write_text(
+        "class Session:\n    def __init__(self, player_id, location=None):\n"
+        "        self.player_id = player_id\n"
+    )
+    body = (
+        "def handle_command(session, text):\n    return 'Commands: help, look'\n"
+        if ok
+        else "def handle_command(session, text):\n    raise RuntimeError('boom')\n"
+    )
+    (cast_dir / "forge.py").write_text(body)
+    write_manifest(
+        replace(plan_cast("blank_mud", "Stub").manifest, status=GENERATED),
+        cast_dir / "cast_manifest.json",
+    )
+
+
+def test_validate_boots_a_working_cast_and_marks_it_validated(tmp_path: Path) -> None:
+    from parts.cast import VALIDATED, validate_cast
+
+    cast = tmp_path / "cast"
+    _bootable_stub(cast, ok=True)
+    ok, detail = validate_cast(cast)
+    assert ok and "Commands" in detail
+    assert read_manifest(cast / "cast_manifest.json").status == VALIDATED
+
+
+def test_validate_reports_a_cast_that_cannot_boot(tmp_path: Path) -> None:
+    from parts.cast import NOT_VALIDATED, validate_cast
+
+    cast = tmp_path / "cast"
+    _bootable_stub(cast, ok=False)  # forge.handle_command raises
+    ok, _detail = validate_cast(cast)
+    assert ok is False
+    assert read_manifest(cast / "cast_manifest.json").status == NOT_VALIDATED
+
+
+def test_validate_cli_subcommand(tmp_path: Path, capsys) -> None:
+    cast = tmp_path / "cast"
+    _bootable_stub(cast, ok=True)
+    assert main(["validate", str(cast)]) == 0
+    assert "OK" in capsys.readouterr().out
