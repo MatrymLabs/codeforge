@@ -1,0 +1,32 @@
+# SEED: aethryn -- items.yaml
+# location is a plain room label; the engine tags it internally.
+
+first_ember:
+  name: the first ember
+  keywords: [ember, first, spark, flame]
+  location: the_waking_shore
+
+forge_wrench:
+  name: a modular forge wrench
+  keywords: [wrench, tool, forge, modular]
+  location: cinderhearth_square
+
+warm_cloak:
+  name: a warm traveller's cloak
+  keywords: [cloak, warm, travel]
+  location: cinderhearth_square
+
+ember_shard:
+  name: a shard of wild ember
+  keywords: [shard, ember, wild, material]
+  location: reachwood_edge
+
+cellar_key:
+  name: a cold iron key
+  keywords: [key, iron, cellar, cold]
+  location: cold_cellar
+
+cinder_relic:
+  name: the smith's cinder relic
+  keywords: [relic, cinder, smith, forgework]
+  location: cellar_hearth

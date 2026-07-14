@@ -1,0 +1,21 @@
+# SEED: aethryn -- jobs.yaml (callings)
+# The Forger's three first paths, from the world bible: how you shape ember decides
+# how you fight. Stats recompute on restore (derive, don't store).
+
+template:
+  description: A path not yet chosen.
+
+vanguard:
+  name: Vanguard
+  description: Shapes ember into ward and edge, and stands in the front line. Strength and stamina.
+  stats: {strength: 12, speed: 10, stamina: 12, magic: 2}
+
+pathfinder:
+  name: Pathfinder
+  description: Reads the wilds and strikes from the flank. Speed and skill over brute force.
+  stats: {strength: 10, speed: 14, stamina: 9, magic: 3}
+
+emberwright:
+  name: Emberwright
+  description: "A maker first: forges gear and bends raw ember to the will. Patient hands, deep magic."
+  stats: {strength: 9, speed: 9, stamina: 11, magic: 6}

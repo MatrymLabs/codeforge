@@ -9,11 +9,44 @@ from parts.cli import _pop_seed, main
 from parts.seed import SEEDS_ROOT, available_seeds, load_items, load_jobs, load_npcs, load_rooms
 
 SPIRAL = SEEDS_ROOT / "spiral-ascent"
+AETHRYN = SEEDS_ROOT / "aethryn"
 
 
 def test_both_games_are_installed():
     seeds = available_seeds()
     assert "first-forge" in seeds and "spiral-ascent" in seeds
+
+
+def test_flagship_aethryn_is_installed():
+    assert "aethryn" in available_seeds()
+
+
+def test_aethryn_passes_every_loader_gate_and_spawns_on_the_shore():
+    rooms = load_rooms(AETHRYN / "rooms.yaml")
+    # The world bible's Kindlands Coast: the first room is the spawn, no hardcoded start.
+    assert next(iter(rooms)) == "the_waking_shore"
+    assert rooms["cinderhearth_square"]["exits"]["down"] == "cold_cellar"
+    load_items(AETHRYN / "items.yaml")  # gates: valid labels, present location
+    load_npcs(AETHRYN / "npcs.yaml")
+    jobs = load_jobs(AETHRYN / "jobs.yaml")
+    assert "emberwright" in jobs and jobs["pathfinder"]["stats"]["speed"] == 14
+
+
+def test_aethryn_every_exit_and_placement_resolves():
+    rooms = load_rooms(AETHRYN / "rooms.yaml")
+    for label, room in rooms.items():
+        for direction, dest in room["exits"].items():
+            assert dest in rooms, f"{label} exit {direction} -> {dest} is a dead link"
+    for label, item in load_items(AETHRYN / "items.yaml").items():
+        assert item["location"].split(":")[-1] in rooms, f"item {label} floats nowhere"
+    for label, npc in load_npcs(AETHRYN / "npcs.yaml").items():
+        assert npc["location"].split(":")[-1] in rooms, f"npc {label} floats nowhere"
+
+
+def test_aethryn_cinder_wight_boss_is_attackable_and_strikes_back():
+    wight = load_npcs(AETHRYN / "npcs.yaml")["cinder_wight"]
+    assert wight["hp"] == 50 and wight["xp"] == 180
+    assert wight["atk"] == 7  # the Cold Cellar boss hits back
 
 
 def test_spiral_seed_passes_every_loader_gate():
