@@ -14,7 +14,17 @@ from pathlib import Path
 
 import pytest
 
-from parts.chronicle import KINDS, ChronicleError, append, read, read_latest, render
+from parts.chronicle import (
+    KINDS,
+    ChronicleError,
+    append,
+    read,
+    read_latest,
+    record_metric,
+    render,
+    render_trend,
+    trend,
+)
 
 _STAMP = datetime(2026, 7, 14, 12, 0, 0, tzinfo=UTC)
 
@@ -72,7 +82,7 @@ def test_render_shows_records_and_reads_empty_state(tmp_path: Path) -> None:
 
 def test_unknown_kind_fails_loud_on_append(tmp_path: Path) -> None:
     with pytest.raises(ChronicleError, match="unknown kind"):
-        append("metric", {"v": 1}, commit="c", root=tmp_path)  # a later-slice kind, not yet valid
+        append("incident", {"v": 1}, commit="c", root=tmp_path)  # a later-slice kind, not yet valid
 
 
 def test_non_object_payload_fails_loud(tmp_path: Path) -> None:
@@ -121,9 +131,56 @@ def test_read_with_an_unknown_kind_fails_loud(tmp_path: Path) -> None:
         read("incident", root=tmp_path)
 
 
-def test_slice_one_ships_only_the_evidence_kind() -> None:
+def test_kinds_are_evidence_and_metric() -> None:
     # A guard so a later slice that widens KINDS updates this test deliberately.
-    assert KINDS == ("evidence",)
+    assert KINDS == ("evidence", "metric")
+
+
+# --- metric kind + trend series (slice 2) ------------------------------------------------------
+
+
+def test_record_metric_round_trips(tmp_path: Path) -> None:
+    rec = record_metric("engine_tick.median_us", 8.8, commit="aaa111", root=tmp_path)
+    assert rec.kind == "metric"
+    assert rec.payload == {"name": "engine_tick.median_us", "value": 8.8}
+    latest = read_latest("metric", root=tmp_path)
+    assert latest is not None and latest.payload["value"] == 8.8
+
+
+def test_trend_returns_one_names_series_in_order(tmp_path: Path) -> None:
+    record_metric("cov.pct", 90.0, commit="a", root=tmp_path, stamp=_STAMP)
+    record_metric("engine_tick.median_us", 8.8, commit="a", root=tmp_path, stamp=_STAMP)
+    record_metric("engine_tick.median_us", 8.5, commit="b", root=tmp_path, stamp=_STAMP)
+    series = trend("engine_tick.median_us", root=tmp_path)
+    assert [r.payload["value"] for r in series] == [8.8, 8.5]  # only this metric, in order
+
+
+def test_render_trend_shows_the_net_direction(tmp_path: Path) -> None:
+    record_metric("m", 10, commit="a", root=tmp_path, stamp=_STAMP)
+    record_metric("m", 7, commit="b", root=tmp_path, stamp=_STAMP)
+    out = render_trend("m", trend("m", root=tmp_path))
+    assert "TREND - m" in out and "down 3" in out
+    assert render_trend("absent", trend("absent", root=tmp_path)).startswith("No metric named")
+
+
+def test_metric_refuses_a_non_numeric_value(tmp_path: Path) -> None:
+    with pytest.raises(ChronicleError, match="must be a number"):
+        record_metric("m", "fast", commit="a", root=tmp_path)  # type: ignore[arg-type]
+    with pytest.raises(ChronicleError, match="must be a number"):
+        record_metric("m", True, commit="a", root=tmp_path)  # bool is not a metric value
+
+
+def test_metric_refuses_an_empty_name(tmp_path: Path) -> None:
+    with pytest.raises(ChronicleError, match="non-empty string 'name'"):
+        record_metric("   ", 1.0, commit="a", root=tmp_path)
+
+
+def test_chronicle_trend_verb() -> None:
+    from parts.chronicle import chronicle as verb
+
+    assert verb("trend") == "usage: chronicle trend <metric-name>"
+    # Reads the real (empty in tests) ledger; an unrecorded metric renders honestly, never crashes.
+    assert verb("trend nonexistent_metric_xyz").startswith("No metric named")
 
 
 # --- integration: arc_ledger.emit retains its evidence verdict in the Chronicle ----------------
