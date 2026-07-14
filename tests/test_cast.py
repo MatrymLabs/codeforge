@@ -229,7 +229,7 @@ def _bootable_stub(cast_dir: Path, ok: bool = True) -> None:
     (cast_dir / "parts").mkdir(parents=True)
     (cast_dir / "parts" / "__init__.py").write_text("")
     (cast_dir / "parts" / "session.py").write_text(
-        "class Session:\n    def __init__(self, player_id, location=None):\n"
+        "class Session:\n    def __init__(self, player_id, location=None, rank=None):\n"
         "        self.player_id = player_id\n"
     )
     (cast_dir / "parts" / "world.py").write_text(
@@ -348,7 +348,8 @@ def _bootable_fixture_engine(root: Path) -> None:
     _fixture_engine(root)  # parts/(x,__init__), forge.py stub, seeds/first-forge+other, template
     (root / "forge.py").write_text("def handle_command(session, text):\n    return 'ok: ' + text\n")
     (root / "parts" / "session.py").write_text(
-        "class Session:\n    def __init__(self, player_id, location=None):\n        pass\n"
+        "class Session:\n"
+        "    def __init__(self, player_id, location=None, rank=None):\n        pass\n"
     )
     (root / "parts" / "world.py").write_text("START_ROOM = 'start'\n")
 

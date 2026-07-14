@@ -13,8 +13,8 @@ from parts.coupling import CouplingError, analyze, render_report
 
 
 def _fake_tracer(loaded_by: dict[tuple[str, ...], set[str]]):
-    """A tracer returning a canned module set for a given command tuple."""
-    return lambda commands: loaded_by[tuple(commands)]
+    """A tracer returning a canned module set for a command tuple (empty for unlisted ones)."""
+    return lambda commands: loaded_by.get(tuple(commands), set())
 
 
 def test_analyze_classifies_core_optional_and_unreached(monkeypatch):
@@ -107,3 +107,24 @@ def test_surface_imports_lists_the_server_modules():
 
     assert surface_imports(["solo", "multiplayer"]) == ["parts.gateway", "parts.web_gateway"]
     assert surface_imports(["solo", "save"]) == []
+
+
+# --- admin surface (owner-driven @-verbs) -------------------------------------------------------
+
+
+def test_admin_is_a_known_command_surface():
+    from parts.coupling import SURFACES, surface_commands
+
+    assert "admin" in SURFACES
+    cmds = surface_commands(["admin"])
+    assert any(c.startswith("@") for c in cmds)  # the admin corpus is @-verbs
+    assert set(SURFACES["solo"]).issubset(cmds)  # base game is always included
+
+
+def test_closure_includes_admin_modules(monkeypatch):
+    from parts.coupling import closure
+
+    base = tuple(coupling_mod.SURFACES["solo"])
+    admin = tuple(coupling_mod.SURFACES["solo"] + coupling_mod.SURFACES["admin"])
+    tracer = _fake_tracer({base: {"core"}, admin: {"core", "ranks", "foundry"}})
+    assert closure(["solo", "admin"], tracer=tracer) == {"core", "ranks", "foundry"}

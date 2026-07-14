@@ -357,7 +357,7 @@ for mod in json.loads(sys.argv[2]):
     except Exception as e:
         print("IMPORT FAILED: %r -> %s: %s" % (mod, type(e).__name__, e))
         sys.exit(5)
-s = Session(player_id="_validate", location=START_ROOM)
+s = Session(player_id="_validate", location=START_ROOM, rank="owner")
 commands = json.loads(sys.argv[1])
 for cmd in commands:
     try:
