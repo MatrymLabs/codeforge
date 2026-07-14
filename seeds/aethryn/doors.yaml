@@ -1,0 +1,10 @@
+# SEED: aethryn -- doors.yaml (lockable barriers)
+# The Old Reach Bridge is broken: the north exit is barred until the Relighting quest
+# reforges it (quest reforge -> the open_door effect). No key -- it is reforged, not unlocked.
+
+reach_bridge:
+  name: the broken bridge span
+  keywords: [bridge, span, gap]
+  blocks: [old_reach_bridge, north]
+  locked: true
+  key_id: ""

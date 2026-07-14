@@ -73,12 +73,25 @@ def quest_view(session: Session, arg: str = "") -> str:
     outcome = _ENGINE.advance(run, event)
     if not isinstance(outcome, Fired):
         return f"You can't do that now. ({outcome.reason})"
-    reward = ""
-    if outcome.effect == "award_xp" and session.stats is not None:
+    extra = _apply_effect(outcome.effect, session)
+    return f"[{_QUEST_NAME}] {_QUEST.labels.get(run.state, run.state)}{extra}"
+
+
+def _apply_effect(effect: str | None, session: Session) -> str:
+    """Apply a quest step's named effect to the world. The workflow only NAMES effects (it never
+    mutates); the game applies them here. `award_xp` grants the reward; `open_door:<id>` reforges
+    a barrier (e.g. the broken bridge). Returns any extra line to append to the reply."""
+    if not effect:
+        return ""
+    if effect == "award_xp" and session.stats is not None:
         from parts.combat import award_xp
 
-        reward = "\n" + award_xp(session, _XP_REWARD)
-    return f"[{_QUEST_NAME}] {_QUEST.labels.get(run.state, run.state)}{reward}"
+        return "\n" + award_xp(session, _XP_REWARD)
+    if effect.startswith("open_door:"):
+        from parts import doors
+
+        doors.open_gate(effect.split(":", 1)[1])  # the label already narrates the opening
+    return ""
 
 
 def reset_quests() -> None:

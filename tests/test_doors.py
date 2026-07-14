@@ -50,3 +50,18 @@ def test_unlocked_door_allows_movement():
     unlock("door", "key", "library")
     arrived, _ = resolve_move("library", "north")
     assert arrived == "archive"
+
+
+def test_open_gate_opens_a_locked_door_without_a_key():
+    """A quest reforging a bridge opens a barrier by engine decree, carrying no key."""
+    assert doors.DOORS["oak_door"]["locked"] is True
+    assert doors.open_gate("oak_door") is True
+    assert doors.DOORS["oak_door"]["locked"] is False
+    arrived, _ = resolve_move("library", "north")  # the gate is open now
+    assert arrived == "archive"
+
+
+def test_open_gate_is_a_no_op_on_unknown_or_already_open_doors():
+    assert doors.open_gate("no_such_door") is False  # unknown
+    doors.open_gate("oak_door")
+    assert doors.open_gate("oak_door") is False  # already open -> nothing to do

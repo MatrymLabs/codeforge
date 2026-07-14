@@ -61,6 +61,34 @@ def test_viewing_a_finished_quest_shows_its_done_label():
     assert "fulfilled" in out and "You can:" not in out
 
 
+def test_open_door_effect_reforges_a_barrier():
+    """A quest step's open_door effect opens a world barrier (the workflow names it, the game
+    applies it). Proven against the default seed's oak_door standing in for aethryn's bridge."""
+    import copy
+
+    from parts import doors
+    from parts.quest import _apply_effect
+
+    snap = copy.deepcopy(doors.DOORS)
+    try:
+        doors.DOORS["oak_door"]["locked"] = True
+        _apply_effect("open_door:oak_door", _player())
+        assert doors.DOORS["oak_door"]["locked"] is False
+    finally:
+        doors.DOORS.clear()
+        doors.DOORS.update(snap)
+
+
+def test_apply_effect_is_inert_without_a_calling_or_a_known_effect():
+    """award_xp needs a calling (stats) to grant; an unrecognized effect does nothing, quietly."""
+    from parts.quest import _apply_effect
+    from parts.session import Session
+
+    rookie = Session(player_id="rookie")  # no calling -> stats is None
+    assert _apply_effect("award_xp", rookie) == ""  # nothing to grant
+    assert _apply_effect("mystery_effect", _player()) == ""  # unknown effect: inert
+
+
 def test_a_seed_quest_spec_builds_a_named_workflow():
     """A seed can ship its own arc as data; _from_seed turns that spec into the live workflow,
     carrying the seed's name and XP reward (proven here since the default test seed uses the

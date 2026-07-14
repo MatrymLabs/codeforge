@@ -13,31 +13,25 @@ swap items.ITEMS still affect us. Import modules, not mutable state.
 """
 
 from collections.abc import Mapping
-from typing import TypedDict, cast
+from typing import cast
 
 from parts import items
+from parts.seed import SEED_DIR, Door, load_doors
 from parts.statemachine import Guard, Refusal, Transition, advance, build
 
-
-class Door(TypedDict):
-    """The shape every door must have."""
-
-    name: str
-    keywords: list[str]
-    blocks: tuple[str, str]  # (room_id, direction) -- mypy enforces the pair
-    locked: bool
-    key_id: str
+# The world is data: a seed's barriers live in its own doors.yaml (empty if it ships none).
+DOORS: dict[str, Door] = load_doors(SEED_DIR / "doors.yaml")
 
 
-DOORS: dict[str, Door] = {
-    "oak_door": {
-        "name": "the oak door",
-        "keywords": ["door", "oak", "oak door"],
-        "blocks": ("library", "north"),
-        "locked": True,
-        "key_id": "copper_key",
-    },
-}
+def open_gate(door_id: str) -> bool:
+    """Open a door by engine decree (e.g. a quest reforges a bridge) -- no key required. Returns
+    True if a locked door was opened, False if it was unknown or already open. Only engine logic
+    mutates world state; a quest names the effect, this applies it."""
+    door = DOORS.get(door_id)
+    if door is None or not door["locked"]:
+        return False
+    door["locked"] = False
+    return True
 
 
 def barred_door_for(room_id: str, direction: str) -> str | None:
