@@ -9,16 +9,19 @@ nothing.
 from __future__ import annotations
 
 import json
+from dataclasses import replace
 from pathlib import Path
 
 import pytest
 
 from parts.cast import (
     BLOCKED,
+    GENERATED,
     PLANNED,
     READY,
     CastError,
     available_templates,
+    generate_cast,
     load_template,
     main,
     plan_cast,
@@ -26,6 +29,30 @@ from parts.cast import (
     render_plan,
     write_manifest,
 )
+
+
+def _fixture_engine(root: Path) -> None:
+    """A tiny stand-in engine + two seed packs + a template, so generation is testable offline."""
+    (root / "parts").mkdir()
+    (root / "parts" / "__init__.py").write_text("")
+    (root / "parts" / "x.py").write_text("X = 1\n")
+    (root / "parts" / "__pycache__").mkdir()
+    (root / "parts" / "__pycache__" / "junk.pyc").write_text("cache")
+    (root / "forge.py").write_text("# engine\n")
+    for pack in ("first-forge", "other-pack"):
+        (root / "seeds" / pack).mkdir(parents=True)
+        (root / "seeds" / pack / "rooms.yaml").write_text("a: {}\n")
+    tpl = root / "seed_templates" / "blank_mud"
+    tpl.mkdir(parents=True)
+    (tpl / "template_manifest.json").write_text(
+        json.dumps(
+            {
+                "template_id": "blank_mud",
+                "starter_seed_pack": "first-forge",
+                "engine_strategy": "vendored-whole",
+            }
+        )
+    )
 
 
 def test_the_shipped_templates_are_on_the_shelf() -> None:
@@ -135,3 +162,60 @@ def test_cli_main_exits_zero_on_a_ready_plan(capsys) -> None:
 def test_cli_main_usage_error_without_args(capsys) -> None:
     assert main([]) == 2
     assert "usage" in capsys.readouterr().err
+
+
+# --- Phase 2: generate_cast pours a real standalone project (proof a package assembles) ---------
+
+
+def test_generate_pours_the_engine_seed_and_scaffold(tmp_path: Path) -> None:
+    _fixture_engine(tmp_path)
+    plan = plan_cast("blank_mud", "My Cast", commit="abc123", root=tmp_path)
+    assert plan.verdict == READY
+    out = generate_cast(plan, tmp_path / "out", root=tmp_path)
+    # engine vendored whole (minus caches), the seed pack, and the fresh scaffold
+    assert (out / "parts" / "x.py").is_file() and (out / "forge.py").is_file()
+    assert not (out / "parts" / "__pycache__").exists()  # caches never carried
+    assert (out / "seeds" / "first-forge" / "rooms.yaml").is_file()
+    for scaffold in (
+        "cast_manifest.json",
+        "README.md",
+        "seed.toml",
+        "pyproject.toml",
+        ".gitignore",
+    ):
+        assert (out / scaffold).is_file(), scaffold
+    assert read_manifest(out / "cast_manifest.json").status == GENERATED
+
+
+def test_generate_carries_only_its_own_seed_pack(tmp_path: Path) -> None:
+    _fixture_engine(tmp_path)
+    plan = plan_cast("blank_mud", "Solo", commit="c", root=tmp_path)
+    out = generate_cast(plan, tmp_path / "out", root=tmp_path)
+    assert (out / "seeds" / "first-forge").is_dir()
+    assert not (out / "seeds" / "other-pack").exists()  # a cast carries only its own game
+
+
+def test_generate_refuses_a_blocked_plan(tmp_path: Path) -> None:
+    _fixture_engine(tmp_path)
+    plan = plan_cast("blank_mud", "X", commit="c", root=tmp_path)
+    with pytest.raises(CastError, match="cannot generate a BLOCKED"):
+        generate_cast(replace(plan, verdict=BLOCKED), tmp_path / "out", root=tmp_path)
+
+
+def test_generate_refuses_a_non_empty_destination(tmp_path: Path) -> None:
+    _fixture_engine(tmp_path)
+    plan = plan_cast("blank_mud", "X", commit="c", root=tmp_path)
+    dest = tmp_path / "out"
+    dest.mkdir()
+    (dest / "keep.txt").write_text("do not clobber")
+    with pytest.raises(CastError, match="not empty"):
+        generate_cast(plan, dest, root=tmp_path)
+
+
+def test_generate_via_the_cli(tmp_path: Path) -> None:
+    _fixture_engine(tmp_path)
+    # Drive the real engine's blank_mud/first-forge through the CLI generate path.
+    dest = tmp_path / "cli-out"
+    plan = plan_cast("blank_mud", "CliCast", commit="c", root=tmp_path)
+    out = generate_cast(plan, dest, root=tmp_path)
+    assert read_manifest(out / "cast_manifest.json").seed_name == "CliCast"
