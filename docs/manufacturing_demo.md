@@ -53,8 +53,13 @@ What that one command did, in order:
 - A cut is claimed **only** when the broad harness passes; `vendored-whole` is the honest default.
 - `make forge` validates in the current environment; the **dependency-isolation** proof is
   `make cast-install-check` (a clean venv). The manifest records `validated`, never `detached`.
-- The selective cast supports the **traced surface commands**; adding a surface tier (multiplayer,
-  admin) means adding it to `coupling.SURFACES` and re-running the harness.
+- Surfaces available: `solo`, `save`, and `multiplayer` (the WebSocket + TCP servers, traced by
+  import and validated by import, including the `parts/web/` browser assets). Try
+  `make forge SURFACES=solo,save,multiplayer`. The remaining tier, `admin`, is a noted follow-up
+  (its `@`-verbs need an owner-ranked session to trace).
+- The harness earns its keep: a `multiplayer` cut first failed loud because `web_gateway` reads a
+  DATA file (`parts/web/index.html`) that module tracing cannot discover - so `web/` is now a
+  declared data dependency. A cut is claimed only when the harness passes.
 
 See `docs/vision_resync.md` (the staircase), `parts/cast.py` (the pipeline), and
 `docs/reports/2026-07-14-detachment-design.md` (the D1-D3 detachment plan).

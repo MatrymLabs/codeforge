@@ -433,3 +433,16 @@ def test_render_forge_shows_the_manufacturing_summary(tmp_path: Path) -> None:
     assert "FORGED: Demo" in out
     assert "vendored-selective" in out and "shed)" in out
     assert "PASS" in out and "Two outputs, one machine" in out
+
+
+def test_validate_cast_import_checks_server_modules(tmp_path: Path) -> None:
+    from parts.cast import validate_cast
+
+    cast = tmp_path / "cast"
+    _bootable_stub(cast, ok=True)
+    (cast / "parts" / "srv.py").write_text("VALUE = 1\n")  # a server module present in the cut
+    ok, _detail = validate_cast(cast, commands=["help"], imports=["parts.srv"])
+    assert ok  # the server module imports cleanly
+    # a server module MISSING from the cut fails the harness loud (the data-dep trap)
+    bad, detail = validate_cast(cast, commands=["help"], imports=["parts.absent_srv"])
+    assert bad is False and "IMPORT FAILED" in detail

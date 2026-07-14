@@ -86,3 +86,24 @@ def test_surface_commands_gathers_base_plus_each_surface():
     cmds = surface_commands(["solo", "save"])
     assert set(SURFACES["solo"]).issubset(cmds)
     assert set(SURFACES["save"]).issubset(cmds)
+
+
+# --- import-based surfaces (multiplayer: servers + data deps) -----------------------------------
+
+
+def test_closure_handles_an_import_surface():
+    from parts.coupling import closure
+
+    base = tuple(coupling_mod.SURFACES["solo"])
+    cmd_tracer = _fake_tracer({base: {"core"}})
+    imp_tracer = lambda mods: {"gateway", "web_gateway"}  # noqa: E731
+    result = closure(["solo", "multiplayer"], tracer=cmd_tracer, import_tracer=imp_tracer)
+    # base command modules + the imported servers + the declared web data dir
+    assert result == {"core", "gateway", "web_gateway", "web"}
+
+
+def test_surface_imports_lists_the_server_modules():
+    from parts.coupling import surface_imports
+
+    assert surface_imports(["solo", "multiplayer"]) == ["parts.gateway", "parts.web_gateway"]
+    assert surface_imports(["solo", "save"]) == []

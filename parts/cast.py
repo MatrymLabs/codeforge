@@ -351,6 +351,12 @@ import sys, json
 import forge
 from parts.session import Session
 from parts.world import START_ROOM
+for mod in json.loads(sys.argv[2]):
+    try:
+        __import__(mod)
+    except Exception as e:
+        print("IMPORT FAILED: %r -> %s: %s" % (mod, type(e).__name__, e))
+        sys.exit(5)
 s = Session(player_id="_validate", location=START_ROOM)
 commands = json.loads(sys.argv[1])
 for cmd in commands:
@@ -367,12 +373,17 @@ print("OK: %d commands ran clean" % len(commands))
 
 
 def validate_cast(
-    cast_dir: Path, *, commands: list[str] | None = None, timeout: float = 120.0
+    cast_dir: Path,
+    *,
+    commands: list[str] | None = None,
+    imports: list[str] | None = None,
+    timeout: float = 120.0,
 ) -> tuple[bool, str]:
     """Boot a poured cast and run a command corpus against it, proving it RUNS - a subprocess with
     cwd=`cast_dir`, so `parts/seed.py` resolves the cast's own seed. `commands` defaults to a single
     tick (`help`); for a SELECTIVE cast, pass the full surface corpus so a wrongly-excluded module
-    fails loud (the broad harness that makes D2 safe). Records `validated` | `not_validated`.
+    fails loud. `imports` names server modules (multiplayer) that must import in the cut. Together
+    they are the broad harness that makes D2 safe. Records `validated` | `not_validated`.
 
     Honest scope: proves the cast boots + runs in the CURRENT environment; `install_check` is the
     dependency-isolated fresh-install proof.
@@ -380,7 +391,7 @@ def validate_cast(
     corpus = commands if commands is not None else ["help"]
     try:
         result = subprocess.run(  # nosec B603 -- fixed argv, no shell; boots the poured cast
-            [sys.executable, "-c", _VALIDATE_PROBE, json.dumps(corpus)],
+            [sys.executable, "-c", _VALIDATE_PROBE, json.dumps(corpus), json.dumps(imports or [])],
             cwd=cast_dir,
             capture_output=True,
             text=True,
@@ -489,7 +500,11 @@ def pour_selective(
         raise CastError(f"cannot pour a {plan.verdict.upper()} cast: resolve the blocker(s) first")
     modules = coupling.closure(surfaces, tracer=tracer)
     out = generate_cast(plan, Path(dest), modules=modules, root=root)
-    ok, detail = validate_cast(out, commands=coupling.surface_commands(surfaces))
+    ok, detail = validate_cast(
+        out,
+        commands=coupling.surface_commands(surfaces),
+        imports=coupling.surface_imports(surfaces),  # server modules (multiplayer) must import
+    )
     return out, ok, detail
 
 
