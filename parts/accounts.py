@@ -31,6 +31,18 @@ def _secret_matches(password: str, salt_hex: str, expected: str) -> bool:
     return secrets.compare_digest(digest, expected)
 
 
+_DECOY_SALT = b"\x00" * 16  # a fixed, non-secret salt, used only to spend time
+
+
+def _burn_hash(password: str) -> None:
+    """Spend a real pbkdf2's worth of time against a decoy, then discard it. When an account or
+    character does NOT exist, an auth check calls this before returning False, so its response
+    takes the same ~pbkdf2 time as a real check. Without it, a missing name returns ~250,000x
+    faster than a real one -- the whole account roster is enumerable by timing the response. The
+    decoy is never compared to a real secret; it exists only to level the timing."""
+    _hash_secret(password, _DECOY_SALT)
+
+
 # --------------------------------------------------- legacy v1: per-character
 def has_password(casefile: dict[str, Any]) -> bool:
     return bool(casefile.get("auth"))
@@ -52,6 +64,7 @@ def set_password(name: str, password: str) -> str:
 def verify_password(name: str, password: str) -> bool:
     casefile = load_character(name)
     if casefile is None or not has_password(casefile):
+        _burn_hash(password)  # constant-time: an unknown name costs the same as a real check
         return False
     return _secret_matches(password, casefile["auth"]["salt"], casefile["auth"]["hash"])
 
@@ -96,9 +109,10 @@ def inspect_login(char: str, account: str, password: str) -> bool:
 
     with open_archive_session() as db:
         account_row = db.get(AccountRow, account)
-        if account_row is None or not _secret_matches(
-            password, account_row.auth_salt, account_row.auth_hash
-        ):
+        if account_row is None:
+            _burn_hash(password)  # constant-time: an unknown account costs the same as a real check
+            return False
+        if not _secret_matches(password, account_row.auth_salt, account_row.auth_hash):
             return False
         hero_row = db.get(CharacterRow, char)
         return hero_row is not None and hero_row.account == account
@@ -221,9 +235,10 @@ def account_password_ok(account: str, password: str) -> bool:
 
     with open_archive_session() as db:
         account_row = db.get(AccountRow, account)
-        return account_row is not None and _secret_matches(
-            password, account_row.auth_salt, account_row.auth_hash
-        )
+        if account_row is None:
+            _burn_hash(password)  # constant-time: an unknown account costs the same as a real check
+            return False
+        return _secret_matches(password, account_row.auth_salt, account_row.auth_hash)
 
 
 def account_has_owner(account: str) -> bool:
