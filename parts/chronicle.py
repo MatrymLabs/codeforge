@@ -224,9 +224,16 @@ def append(
     existing = read(None, root=root)  # verifies the chain before we extend it
     prior_hash = existing[-1].content_hash if existing else _GENESIS
     when = stamp if stamp is not None else datetime.now(UTC)
+    if when.tzinfo is not None:
+        when = when.astimezone(UTC)  # a field named recorded_utc must be the real UTC instant
     recorded_utc = when.strftime("%Y-%m-%dT%H:%M:%SZ")
     safe_commit = commit or "unknown"
-    content_hash = _digest(kind, payload, safe_commit, recorded_utc, prior_hash)
+    try:
+        content_hash = _digest(kind, payload, safe_commit, recorded_utc, prior_hash)
+    except (TypeError, ValueError) as exc:
+        # The contract is fail-loud with ChronicleError; a non-serializable payload (a set, a
+        # mixed-key dict) must not escape as a raw TypeError the chronicle() verb can't catch.
+        raise ChronicleError(f"payload for {kind!r} is not JSON-serializable: {exc}") from exc
     record = Record(
         kind=kind,
         payload=payload,
@@ -309,7 +316,9 @@ def render_provenance(node: str, edges: list[Record]) -> str:
     if not edges:
         return f"No provenance recorded for {node!r}."
     outgoing = [e for e in edges if e.payload["from"] == node]
-    incoming = [e for e in edges if e.payload["to"] == node]
+    # A self-loop (from == to == node) is already shown as outgoing; excluding it from incoming
+    # keeps the line count matching the header's edge count instead of printing it twice.
+    incoming = [e for e in edges if e.payload["to"] == node and e.payload["from"] != node]
     lines = [f"PROVENANCE - {node}  ({len(edges)} edge(s))", ""]
     for e in outgoing:
         lines.append(f"  {node} -{e.payload['relation']}-> {e.payload['to']}  @ {e.commit}")
