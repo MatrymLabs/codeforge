@@ -23,11 +23,12 @@ content-hash-chain concept is the standard tamper-evident append-only log (hash 
 
 from __future__ import annotations
 
-import hashlib
 import json
 from dataclasses import asdict, dataclass
 from datetime import UTC, datetime
 from pathlib import Path
+
+from parts import hashchain
 
 # The record kinds the Chronicle understands. Slices added, in order: `evidence` (1), `metric`
 # (2), `edge` (3), `incident` (4), `ai-eval` (5). A record with any other kind fails loud, so the
@@ -65,19 +66,18 @@ class Record:
 
 
 def _digest(kind: str, payload: dict, commit: str, recorded_utc: str, prior_hash: str) -> str:
-    """A deterministic sha256 over a record's content (everything but the digest itself)."""
-    canonical = json.dumps(
+    """A deterministic sha256 over a record's content, via the ship's one canonical content hash
+    (`parts/hashchain`), so the Chronicle and the general ledger never drift to different hashing.
+    The field set and canonicalization are unchanged, so on-disk hashes are byte-for-byte stable."""
+    return hashchain.content_hash(
         {
             "kind": kind,
             "payload": payload,
             "commit": commit,
             "recorded_utc": recorded_utc,
             "prior_hash": prior_hash,
-        },
-        sort_keys=True,
-        separators=(",", ":"),
+        }
     )
-    return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
 
 
 def _ledger_path(root: Path | None) -> Path:
