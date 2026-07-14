@@ -52,6 +52,18 @@ SURFACES: dict[str, list[str]] = {
 # Server entry points a command trace cannot reach, but a multiplayer cast needs. Reported, honest.
 _SERVER_ENTRYPOINTS = ("gateway", "web_gateway")
 
+# Import-based surfaces: not command-traceable (they are servers). Their closure is what IMPORTING
+# these modules loads, and their validation is that those modules import in the cut.
+SURFACE_IMPORTS: dict[str, tuple[str, ...]] = {
+    "multiplayer": ("parts.gateway", "parts.web_gateway"),
+}
+# Data dependencies a surface needs beyond its module closure - non-module dirs under parts/ that
+# a module reads at runtime (import tracing cannot discover these). e.g. web_gateway reads the
+# browser page from parts/web/index.html at import, so a multiplayer cast must carry parts/web/.
+SURFACE_DATA: dict[str, tuple[str, ...]] = {
+    "multiplayer": ("web",),
+}
+
 Tracer = Callable[[list[str]], set[str]]
 
 
@@ -98,6 +110,32 @@ def _real_tracer(commands: list[str]) -> set[str]:
     return set(json.loads(result.stdout.strip() or "[]"))
 
 
+_IMPORT_PROBE = r"""
+import sys, json
+import forge
+for mod in json.loads(sys.argv[1]):
+    try:
+        __import__(mod)
+    except Exception:
+        pass
+print(json.dumps(sorted({m.split(".")[1] for m in sys.modules if m.startswith("parts.")})))
+"""
+
+
+def _real_import_tracer(modules: list[str]) -> set[str]:
+    """Boot the engine, then IMPORT `modules` (servers, not command-driven), return `parts/*`."""
+    result = subprocess.run(  # nosec B603 -- fixed argv, no shell; traces a boot + imports
+        [sys.executable, "-c", _IMPORT_PROBE, json.dumps(modules)],
+        cwd=_ROOT,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if result.returncode != 0:
+        raise CouplingError(f"import trace failed: {result.stderr.strip()[-200:]}")
+    return set(json.loads(result.stdout.strip() or "[]"))
+
+
 def _all_modules() -> list[str]:
     return sorted(p.stem for p in (_ROOT / "parts").glob("*.py") if p.stem != "__init__")
 
@@ -128,21 +166,31 @@ def analyze(tracer: Tracer | None = None) -> CouplingReport:
     )
 
 
-def closure(surfaces: list[str], tracer: Tracer | None = None) -> set[str]:
-    """The union of the runtime module closures for `surfaces` (each traced as base + its commands).
-
-    This is what a `vendored-selective` cast for those surfaces would carry - the modules its
-    commands actually load. A selective cut is only SAFE when a broad harness (run every surface
-    command against the cut) confirms it; this function just computes the candidate set.
+def closure(
+    surfaces: list[str],
+    tracer: Tracer | None = None,
+    import_tracer: Tracer | None = None,
+) -> set[str]:
+    """The union of the runtime module closures for `surfaces` - what a `vendored-selective` cast
+    would carry. Command surfaces are traced by driving their commands; import surfaces (servers,
+    e.g. multiplayer) by importing their modules. A cut is only SAFE once the broad harness confirms
+    it; this just computes the candidate set.
     """
     trace = tracer or _real_tracer
+    imp_trace = import_tracer or _real_import_tracer
     base_cmds = SURFACES[BASE_SURFACE]
+    known = sorted(set(SURFACES) | set(SURFACE_IMPORTS))
     loaded: set[str] = set()
     for surface in surfaces:
-        if surface not in SURFACES:
-            raise CouplingError(f"unknown surface {surface!r}; known: {sorted(SURFACES)}")
-        extra = SURFACES[surface] if surface != BASE_SURFACE else []
-        loaded |= trace(base_cmds + extra)
+        if surface in SURFACES:
+            extra = SURFACES[surface] if surface != BASE_SURFACE else []
+            loaded |= trace(base_cmds + extra)
+        elif surface in SURFACE_IMPORTS:
+            loaded |= trace(base_cmds)  # a multiplayer cast still runs the base game
+            loaded |= imp_trace(list(SURFACE_IMPORTS[surface]))  # + the server modules
+            loaded |= set(SURFACE_DATA.get(surface, ()))  # + declared data dirs (web assets)
+        else:
+            raise CouplingError(f"unknown surface {surface!r}; known: {known}")
     return loaded
 
 
@@ -153,6 +201,14 @@ def surface_commands(surfaces: list[str]) -> list[str]:
         if surface != BASE_SURFACE:
             cmds += SURFACES.get(surface, [])
     return cmds
+
+
+def surface_imports(surfaces: list[str]) -> list[str]:
+    """The server/entry modules the harness import-checks for the given surfaces (multiplayer)."""
+    mods: list[str] = []
+    for surface in surfaces:
+        mods += SURFACE_IMPORTS.get(surface, ())
+    return mods
 
 
 def render_report(report: CouplingReport) -> str:
