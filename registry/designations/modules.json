@@ -3251,21 +3251,22 @@
     ],
     "related": [
       "change_ledger",
-      "patch_tracker",
-      "test_evidence",
-      "qualitygate",
+      "chronicle",
       "integrity",
-      "release_gate"
+      "patch_tracker",
+      "qualitygate",
+      "release_gate",
+      "test_evidence"
     ],
     "reuse": "release-readiness dashboard: compose many gate verdicts into one honest verdict",
     "tags": [
       "module"
     ],
-    "notes": "Composes ten dimensions; six read the repo, release/evidence read filed verdicts via arc_ledger, change/patch stay MISSING until a store is added.",
+    "notes": "Composes eleven dimensions: six read the repo, release/evidence read filed verdicts (release via arc_ledger, evidence via the Chronicle), change/patch stay MISSING until a store is added, and Control reads the Chronicle (incidents + ai-eval regressions) to hold readiness.",
     "superseded_by": "",
     "aliases": [],
     "created": "2026-07-12",
-    "updated": "2026-07-13"
+    "updated": "2026-07-14"
   },
   {
     "designation": "MOD-UM05-S01-N001-055-R0",

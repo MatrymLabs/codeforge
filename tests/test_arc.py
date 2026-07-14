@@ -58,10 +58,55 @@ def test_filed_review_reads_evidence_and_leaves_runtime_missing(tmp_path):
     assert status["release"] == MISSING
 
 
-def test_filed_review_of_an_empty_repo_is_all_missing(tmp_path):
+def test_filed_review_of_an_empty_repo_is_all_missing_except_a_clean_control(tmp_path):
     report = filed_review(tmp_path)
-    assert all(d.status == MISSING for d in report.dimensions)
-    assert report.verdict == WATCHLIST  # missing is never a pass
+    by_name = {d.name: d.status for d in report.dimensions}
+    # Every evidence dimension is MISSING (nothing filed)...
+    assert all(s == MISSING for n, s in by_name.items() if n != "control")
+    # ...except Control: an empty Chronicle has no open incident, which is a real pass, not unknown.
+    assert by_name["control"] == READY
+    assert report.verdict == WATCHLIST  # the missing dimensions still hold it
+
+
+def test_an_open_serious_incident_holds_readiness_on_watchlist(tmp_path):
+    from parts import chronicle
+
+    _seed_evidence(tmp_path)
+    _file_all_runtime_ready(tmp_path)  # everything else READY
+    assert filed_review(tmp_path).verdict == READY  # baseline: clean Chronicle -> READY
+    chronicle.record_incident("prod outage", "critical", commit="c", root=tmp_path)
+    report = filed_review(tmp_path)
+    assert {d.name: d.status for d in report.dimensions}["control"] == WATCHLIST
+    assert report.verdict == WATCHLIST  # the Chronicle now holds the verdict
+
+
+def test_a_low_or_closed_incident_does_not_hold_readiness(tmp_path):
+    from parts import chronicle
+
+    _seed_evidence(tmp_path)
+    _file_all_runtime_ready(tmp_path)
+    chronicle.record_incident("minor typo", "low", commit="c", root=tmp_path)
+    chronicle.record_incident("was serious", "high", status="closed", commit="c", root=tmp_path)
+    assert filed_review(tmp_path).verdict == READY  # low + closed do not trip Control
+
+
+def test_an_ai_eval_regression_holds_readiness_on_watchlist(tmp_path):
+    from datetime import UTC, datetime
+
+    from parts import chronicle
+
+    _seed_evidence(tmp_path)
+    _file_all_runtime_ready(tmp_path)
+    stamp = datetime(2026, 7, 1, tzinfo=UTC)
+    chronicle.record_ai_eval(
+        "arch.q", 1.0, model="m", passed=True, commit="a", root=tmp_path, stamp=stamp
+    )
+    chronicle.record_ai_eval(
+        "arch.q", 0.4, model="m", passed=False, commit="b", root=tmp_path, stamp=stamp
+    )
+    report = filed_review(tmp_path)
+    assert {d.name: d.status for d in report.dimensions}["control"] == WATCHLIST
+    assert report.verdict == WATCHLIST
 
 
 def test_runtime_missing_holds_the_verdict_on_watchlist(tmp_path):
