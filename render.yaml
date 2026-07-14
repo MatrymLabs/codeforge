@@ -21,6 +21,8 @@ services:
       # ephemeral anyway; this just makes the intent explicit and avoids /data.)
       - key: CODEFORGE_DB
         value: /tmp/codeforge-demo.db
-      # Which game the demo boots. first-forge is the flagship starter world.
+      # Which game the demo boots. aethryn is the flagship world (the Kindlands
+      # Coast): a full story arc, the Relighting, that a visitor can finish in a
+      # few minutes. State is ephemeral, so the arc resets with every restart.
       - key: FORGE_SEED
-        value: first-forge
+        value: aethryn

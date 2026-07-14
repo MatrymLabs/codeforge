@@ -9,7 +9,7 @@
 
 **A Python-native software manufacturing platform with two outputs: an installable multiplayer World Package (the MUD you can play in your browser today), and a Hardware Store of reusable parts proven in the game and translated to real software.**
 
-![Pick a calling, walk to the courtyard, and train against the self-repairing dummy until you level up](docs/demo.gif)
+![Pick a calling and train against the self-repairing dummy until you level up](docs/demo.gif)
 
 📖 **Documentation site:** [matrymlabs.github.io/codeforge](https://matrymlabs.github.io/codeforge/) (built from `docs/` with MkDocs Material, published on GitHub Pages).
 
@@ -30,7 +30,12 @@ can click straight into.
 
 ```text
 =========================================================
-            T H E   F I R S T   F O R G E
+          A E T H R Y N :  T H E  R E K I N D L I N G
+                 ~ The Kindlands Coast ~
+=========================================================
+ A world that was Forged from ember, and Unforged once.
+ The town forge has just relit. Relight the first ember,
+ then prove yourself.
 =========================================================
 Character (character@account) or NEW: matrym@matlabs
 Password: ********
@@ -46,6 +51,10 @@ The world is going to sleep. Your deeds are remembered.
 
 No install - just click and log in (`NEW` to make a character). It's on a free tier that
 sleeps when idle, so the **first load may take ~30-60s to wake up**; after that it's instant.
+
+The demo boots **aethryn**, the flagship world: wash ashore on the Kindlands Coast, take a
+calling, and walk **the Relighting** - relight the first ember, reforge the Old Reach Bridge,
+and face the Cinder-Wight in the Cold Cellar. The whole arc advances from what you actually do.
 
 Or run it locally:
 
@@ -138,12 +147,18 @@ engine. The spawn point is the first room in the seed, so nothing is hardcoded.
 
 ```bash
 codeforge seeds                       # list installed games
-codeforge play --seed spiral-ascent   # boot a different game (the Spiral Ascent)
-FORGE_SEED=spiral-ascent spark        # same selector for the multiplayer server
+codeforge play --seed aethryn         # the flagship world (the Kindlands Coast)
+codeforge play --seed spiral-ascent   # or the Spiral Ascent
+FORGE_SEED=aethryn spark              # same selector for the multiplayer server
 ```
 
-Shipped seeds: `first-forge` (the fantasy starter) and `spiral-ascent`. Adding a
-new game is a new `seeds/<name>/` folder of YAML - no Python required.
+Shipped seeds: **`aethryn`** (the flagship, and the world the live demo boots),
+`first-forge` (the fantasy starter), and `spiral-ascent`. In aethryn you walk a full
+story arc, **the Relighting**: relight the first ember, reforge the broken Old Reach
+Bridge, and end the cold in the Cold Cellar. It plays from real actions - pick up the
+ember and it relights, walk into the cellar and you delve it, fell the Cinder-Wight and
+the story ends - because the quest, its doors, and their triggers are all **seed data**,
+not Python. Adding a new game (or a new arc) is a new `seeds/<name>/` folder of YAML.
 
 A **seed pack** is a game's *content* (above). A **cast** is the next layer: a standalone,
 installable project poured from the forge - the engine + one chosen seed pack + config,
