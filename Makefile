@@ -1,4 +1,4 @@
-.PHONY: env fix lint typecheck test property fuzz coverage audit audit-runtime security sast secrets deps sbom bench trend ai-eval retention doctor patch daily check readiness arc-verdicts truth cast-plan cast smoke repo-integrity ship run world store hardware clean serve backup db-up db-down db-migrate docs-serve docs-build e2e evolution ritual-fast ritual ritual-down unskew loop
+.PHONY: env fix lint typecheck test property fuzz coverage audit audit-runtime security sast secrets deps sbom bench trend ai-eval retention doctor patch daily check readiness arc-verdicts truth cast-plan cast cast-install-check smoke repo-integrity ship run world store hardware clean serve backup db-up db-down db-migrate docs-serve docs-build e2e evolution ritual-fast ritual ritual-down unskew loop
 
 # --- Environment: create/validate the .venv, fail loud on version mismatch.
 # Uses uv when present (a Rust resolver; measured ~20x faster than pip on this host:
@@ -87,6 +87,12 @@ cast-plan:
 # Usage: make cast TEMPLATE=blank_mud NAME=Demo DEST=../codeforge-cast-demo ---
 cast:
 	@python3 -m parts.cast generate $(or $(TEMPLATE),blank_mud) $(or $(NAME),Demo) $(or $(DEST),../codeforge-cast-demo) $$(git rev-parse --short HEAD 2>/dev/null || echo unknown)
+
+# --- Cast install-check: the FRESH-INSTALL proof. Creates a clean venv, installs ONLY the cast's
+# declared deps, and boots it there - so the cast runs with zero dependency on CodeForge's env.
+# Needs network (pip). Usage: make cast-install-check DIR=../codeforge-cast-demo WORK=/tmp/ci ---
+cast-install-check:
+	@python3 -m parts.cast install-check $(or $(DIR),../codeforge-cast-demo) $(or $(WORK),/tmp/cast-install-check)
 
 # --- Truth: VeritasGate -- check the project's claims correspond to reality
 # (overclaims, drift-prone counts, docs, registry, QA board). Exit 1 on any

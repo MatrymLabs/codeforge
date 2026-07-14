@@ -105,10 +105,12 @@ The proof that makes the whole vision legible without finishing the platform:
    (`docs/hardware/workflow_engine.*`), `loop trace workflow-engine` = PASS.
 3. **Minimal World Package: one region + identity + commands + the quest system + admin + tests. Next.**
 4. Package export. **In progress:** `make cast` POURS a standalone project (engine vendored whole
-   + seed pack + scaffold + manifest) and then VALIDATES it - `cast.validate_cast` smoke-boots the
-   poured cast and runs one tick, marking the manifest `validated`. So a package *assembles* AND
-   *runs* (verified: `make cast` on the real engine returns "validated (boots + ticks)"). Still
-   ahead: detaching the vendored-whole engine and a dependency-isolated fresh-install proof.
+   + seed pack + scaffold + a manifest that declares the engine's real deps), VALIDATES it
+   (`validate_cast` smoke-boots + one tick -> `validated`), and `make cast-install-check`
+   (`install_check`) proves DEPENDENCY ISOLATION - a clean venv, only the cast's declared deps,
+   and it boots (`isolation_proven`). So a package *assembles*, *runs*, and *runs in isolation*
+   (verified end to end on the real engine, ~20s). Only remaining: detaching the vendored-whole
+   engine (a-la-carte module selection) - the big architectural item, a keel decision.
 5+. Creator wizards, full-stack interface, Hardware Store expansion, advanced modularity,
    production operations. Each gated by the Scope-Control Rule.
 

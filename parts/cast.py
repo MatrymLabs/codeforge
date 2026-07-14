@@ -3,13 +3,14 @@
 A seed PACK is a game's content (`seeds/<name>/*.yaml`). A CAST is what leaves the forge:
 a standalone, installable project poured from the engine + one chosen seed pack + config.
 
-Three steps exist today. `plan_cast` is the dry run (lists what a cast *would* contain, writes
-nothing). `generate_cast` (Phase 2) POURS a cast: it vendors the engine whole, copies the cast's
-own seed pack, and writes the scaffold + a `generated` manifest - proof a package assembles.
-`validate_cast` then smoke-boots the poured cast (imports its own engine and runs one tick) and
-marks it `validated` - proof it RUNS. What remains for later phases: detaching the engine (still
-vendored whole) and a dependency-isolated fresh-install proof (the manifest never claims
-`detached`). Two honesty rules hold the line:
+Four steps exist today. `plan_cast` is the dry run (lists what a cast *would* contain, writes
+nothing). `generate_cast` POURS a cast: it vendors the engine whole, copies the cast's own seed
+pack, and writes the scaffold + a `generated` manifest (with the engine's real deps declared) -
+proof a package assembles. `validate_cast` smoke-boots the poured cast (one tick) and marks it
+`validated` - proof it RUNS. `install_check` creates a clean venv, installs ONLY the cast's
+declared deps, and boots it there (`isolation_proven`) - proof it runs with NO dependency on
+CodeForge's environment. What remains: detaching the still-vendored-whole engine (the manifest
+never claims `detached`). Two honesty rules hold the line:
 
   1. The plan reports `engine_strategy: "vendored-whole"` -- never a false a-la-carte module
      list. The engine is one coupled package; it cannot yet be selected apart. No claim
@@ -76,8 +77,9 @@ class CastManifest:
     codeforge_commit: str = "unknown"
     engine_strategy: str = "vendored-whole"
     starter_seed_pack: str = ""
-    status: str = PLANNED  # planned | generated | detached | validated | not_validated
+    status: str = PLANNED  # planned | generated | validated | not_validated | detached
     detached: bool = False
+    isolation_proven: bool = False  # booted in a fresh venv with only its own declared deps
     copied_categories: list[str] = field(default_factory=list)
     excluded_categories: list[str] = field(default_factory=list)
     known_limitations: list[str] = field(default_factory=list)
@@ -242,14 +244,36 @@ def _scaffold_seed_toml(m: CastManifest) -> str:
     )
 
 
-def _scaffold_pyproject(m: CastManifest) -> str:
+def _engine_runtime_deps(base: Path) -> tuple[list[str], str]:
+    """The engine's runtime deps + requires-python, read from the source pyproject so a cast's deps
+    track the engine's. Falls back to a safe minimum if the file is absent (e.g. a test fixture)."""
+    fallback = (["pyyaml", "sqlalchemy", "pydantic"], ">=3.11")
+    pyproject = base / "pyproject.toml"
+    if not pyproject.is_file():
+        return fallback
+    import tomllib
+
+    try:
+        data = tomllib.loads(pyproject.read_text(encoding="utf-8"))
+    except (OSError, tomllib.TOMLDecodeError):
+        return fallback
+    proj = data.get("project", {})
+    deps = [str(d) for d in proj.get("dependencies", [])] or fallback[0]
+    return deps, str(proj.get("requires-python", fallback[1]))
+
+
+def _scaffold_pyproject(m: CastManifest, deps: list[str], requires_python: str) -> str:
     slug = m.seed_name.lower().replace(" ", "-") or "cast"
+    dep_lines = "".join(f'    "{d}",\n' for d in deps)
     return (
         "[project]\n"
         f'name = "{slug}"\n'
         'version = "0.1.0"\n'
         f'description = "A CodeForge cast: {m.seed_name}"\n'
-        'requires-python = ">=3.11"\n'
+        f'requires-python = "{requires_python}"\n'
+        "dependencies = [\n"
+        f"{dep_lines}"
+        "]\n"
     )
 
 
@@ -280,12 +304,23 @@ def generate_cast(plan: CastPlan, dest: Path, *, root: Path | None = None) -> Pa
     shutil.copytree(base / "seeds" / starter, dest / "seeds" / starter, ignore=ignore)
     # 3. the fresh scaffold + the manifest, marked generated
     generated = replace(plan.manifest, status=GENERATED)
+    deps, requires_python = _engine_runtime_deps(base)  # the cast declares the engine's real deps
     write_manifest(generated, dest / "cast_manifest.json")
     (dest / "README.md").write_text(_scaffold_readme(generated), encoding="utf-8")
     (dest / "seed.toml").write_text(_scaffold_seed_toml(generated), encoding="utf-8")
-    (dest / "pyproject.toml").write_text(_scaffold_pyproject(generated), encoding="utf-8")
+    (dest / "pyproject.toml").write_text(
+        _scaffold_pyproject(generated, deps, requires_python), encoding="utf-8"
+    )
     (dest / ".gitignore").write_text(_CAST_GITIGNORE, encoding="utf-8")
     return dest
+
+
+# The one-tick smoke boot both proofs run: import the cast's OWN engine and drive one command.
+_BOOT_PROBE = (
+    "import forge; from parts.session import Session; "
+    "out = forge.handle_command(Session(player_id='_validate'), 'help'); "
+    "print(out[:60]); assert out.strip()"
+)
 
 
 def validate_cast(cast_dir: Path, *, timeout: float = 120.0) -> tuple[bool, str]:
@@ -295,16 +330,11 @@ def validate_cast(cast_dir: Path, *, timeout: float = 120.0) -> tuple[bool, str]
     `(ok, detail)`.
 
     Honest scope: this proves the cast boots and ticks in the CURRENT environment (shared
-    third-party deps). A fresh-install, dependency-isolated proof is the detachment phase, not this.
+    third-party deps). The fresh-install, dependency-isolated proof is `install_check`.
     """
-    probe = (
-        "import forge; from parts.session import Session; "
-        "out = forge.handle_command(Session(player_id='_validate'), 'help'); "
-        "print(out[:60]); assert out.strip()"
-    )
     try:
         result = subprocess.run(  # nosec B603 -- fixed argv, no shell; boots the poured cast
-            [sys.executable, "-c", probe],
+            [sys.executable, "-c", _BOOT_PROBE],
             cwd=cast_dir,
             capture_output=True,
             text=True,
@@ -320,6 +350,68 @@ def validate_cast(cast_dir: Path, *, timeout: float = 120.0) -> tuple[bool, str]
         m = read_manifest(manifest_path)
         write_manifest(replace(m, status=VALIDATED if ok else NOT_VALIDATED), manifest_path)
     return ok, detail
+
+
+def _declared_deps(pyproject_path: Path) -> list[str]:
+    """The dependencies a generated cast declares in its pyproject (empty if none/unreadable)."""
+    if not pyproject_path.is_file():
+        return []
+    import tomllib
+
+    try:
+        data = tomllib.loads(pyproject_path.read_text(encoding="utf-8"))
+    except (OSError, tomllib.TOMLDecodeError):
+        return []
+    return [str(d) for d in data.get("project", {}).get("dependencies", [])]
+
+
+def _real_runner(cmd: list[str], cwd: Path | None) -> tuple[int, str]:
+    """Default step runner for install_check: run one command, return (returncode, combined out)."""
+    proc = subprocess.run(  # nosec B603 -- fixed argv, no shell; venv + pip + boot only
+        cmd, cwd=cwd, capture_output=True, text=True, check=False
+    )
+    return proc.returncode, (proc.stdout + proc.stderr)
+
+
+def _mark_isolation(cast_dir: Path, proven: bool) -> None:
+    manifest_path = cast_dir / "cast_manifest.json"
+    if manifest_path.is_file():
+        write_manifest(
+            replace(read_manifest(manifest_path), isolation_proven=proven), manifest_path
+        )
+
+
+def install_check(cast_dir: Path, workdir: Path, *, runner=None) -> tuple[bool, str]:
+    """Fresh-install proof: create a clean venv under `workdir`, install ONLY the cast's declared
+    deps into it, and boot the cast with that venv - so the cast runs with no dependency on
+    CodeForge's environment. Records manifest `isolation_proven`; returns `(ok, detail)`.
+
+    `runner(cmd, cwd) -> (returncode, output)` is a seam (default: real subprocess), so a test can
+    exercise the orchestration without touching the network or pip. The real run needs network.
+    """
+    run = runner or _real_runner
+    cast_dir, workdir = Path(cast_dir), Path(workdir)
+    deps = _declared_deps(cast_dir / "pyproject.toml")
+    if not deps:
+        return False, "the cast declares no dependencies to install"
+    venv = workdir / "venv"
+    py = venv / "bin" / "python"
+    pip = venv / "bin" / "pip"
+    steps: list[tuple[list[str], Path | None]] = [
+        ([sys.executable, "-m", "venv", str(venv)], None),
+        ([str(pip), "install", "--quiet", *deps], None),
+        ([str(py), "-c", _BOOT_PROBE], cast_dir),
+    ]
+    for cmd, cwd in steps:
+        rc, out = run(cmd, cwd)
+        if rc != 0:
+            _mark_isolation(cast_dir, False)
+            return (
+                False,
+                f"'{cmd[1] if len(cmd) > 1 else cmd[0]}' step failed: {out.strip()[-200:]}",
+            )
+    _mark_isolation(cast_dir, True)
+    return True, "booted in a fresh venv with only its declared deps"
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -359,6 +451,13 @@ def main(argv: list[str] | None = None) -> int:
             return 2
         ok, detail = validate_cast(Path(args[1]))
         print(f"cast validate: {'OK - ' if ok else 'FAILED - '}{detail}")
+        return 0 if ok else 1
+    if args and args[0] == "install-check":
+        if len(args) < 3:
+            print("usage: python -m parts.cast install-check <cast-dir> <workdir>", file=sys.stderr)
+            return 2
+        ok, detail = install_check(Path(args[1]), Path(args[2]))
+        print(f"cast install-check: {'OK - ' if ok else 'FAILED - '}{detail}")
         return 0 if ok else 1
     if len(args) < 2:
         print("usage: python -m parts.cast <template> <name> [commit]", file=sys.stderr)
