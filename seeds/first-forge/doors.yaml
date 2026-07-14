@@ -1,0 +1,10 @@
+# SEED: first-forge -- doors.yaml (lockable barriers)
+# Migrated from the former hardcoded DOORS: the oak door blocks the library's north
+# exit until unlocked with the copper key.
+
+oak_door:
+  name: the oak door
+  keywords: [door, oak, oak door]
+  blocks: [library, north]
+  locked: true
+  key_id: copper_key

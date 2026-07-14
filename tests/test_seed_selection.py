@@ -10,12 +10,15 @@ from parts.seed import (
     SEEDS_ROOT,
     SeedError,
     available_seeds,
+    load_doors,
     load_items,
     load_jobs,
     load_npcs,
     load_quest,
     load_rooms,
 )
+
+FIRST_FORGE = SEEDS_ROOT / "first-forge"
 
 SPIRAL = SEEDS_ROOT / "spiral-ascent"
 AETHRYN = SEEDS_ROOT / "aethryn"
@@ -79,6 +82,34 @@ def test_aethryn_ships_the_relighting_quest_as_data():
 def test_a_seed_without_a_quest_file_returns_none():
     """A seed that ships no quest.yaml (spiral-ascent) has no arc; the game uses its default."""
     assert load_quest(SPIRAL / "quest.yaml") is None
+
+
+def test_aethryn_ships_the_broken_bridge_as_a_seed_door():
+    """The Old Reach Bridge is a locked, keyless barrier -- reforged by the quest, not a key."""
+    doors = load_doors(AETHRYN / "doors.yaml")
+    bridge = doors["reach_bridge"]
+    assert bridge["blocks"] == ("old_reach_bridge", "north")
+    assert bridge["locked"] is True
+    assert bridge["key_id"] == ""  # opened by the reforge quest effect, never a key
+
+
+def test_first_forge_door_is_now_seed_data_not_hardcoded():
+    """The former hardcoded oak_door lives in the seed's doors.yaml (world is data)."""
+    doors = load_doors(FIRST_FORGE / "doors.yaml")
+    assert doors["oak_door"]["blocks"] == ("library", "north")
+    assert doors["oak_door"]["key_id"] == "copper_key"
+
+
+def test_a_seed_without_doors_returns_empty():
+    assert load_doors(SPIRAL / "doors.yaml") == {}
+
+
+def test_load_doors_refuses_a_door_without_a_valid_blocks_pair(tmp_path):
+    """A barrier that doesn't say which exit it guards must fail loud, not gate nothing silently."""
+    bad = tmp_path / "doors.yaml"
+    bad.write_text("gate:\n  name: a gate\n  locked: true\n", encoding="utf-8")  # no blocks
+    with pytest.raises(SeedError, match="'blocks' must be"):
+        load_doors(bad)
 
 
 @pytest.mark.parametrize(

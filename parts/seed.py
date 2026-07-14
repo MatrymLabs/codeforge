@@ -104,6 +104,16 @@ class Npc(TypedDict):
     atk: int  # counter-attack damage; 0 (default) means passive, never strikes back
 
 
+class Door(TypedDict):
+    """The shape every door must have: a lockable barrier on one room's exit."""
+
+    name: str
+    keywords: list[str]
+    blocks: tuple[str, str]  # (room_label, direction) -- the exit this door guards
+    locked: bool
+    key_id: str  # the item label that unlocks it, or "" for a door opened by other means
+
+
 class Job(TypedDict):
     """The shape every job (class/calling) must have.
 
@@ -507,3 +517,42 @@ def load_quest(path: Path) -> QuestSpec | None:
         terminal=[str(t) for t in terminal],
         labels={str(k): str(v) for k, v in labels.items()},
     )
+
+
+def load_doors(path: Path) -> dict[str, Door]:
+    """Load a seed's optional lockable barriers. {} if the seed ships none; fails loud on a bad one.
+    A door with an empty key_id is opened by other means (e.g. a quest effect), never a key."""
+    if not path.exists():
+        return {}
+    entries, template = _open_seed_bin(path, "door")
+    doors: dict[str, Door] = {}
+    for label, fields in entries.items():
+        merged: dict[str, Any] = {
+            "name": _phrase(label).title(),
+            "keywords": _auto_keywords(label),
+            "blocks": None,
+            "locked": True,
+            "key_id": "",
+        }
+        merged.update(template)
+        merged.update(fields)
+        blocks = merged["blocks"]
+        if not (
+            isinstance(blocks, list)
+            and len(blocks) == 2
+            and all(isinstance(part, str) for part in blocks)
+        ):
+            raise SeedError(f"door '{label}': 'blocks' must be [room_label, direction]")
+        _inspect_required_types(
+            label,
+            {**merged, "blocks": tuple(blocks)},
+            (("name", str), ("keywords", list), ("locked", bool), ("key_id", str)),
+        )
+        doors[label] = Door(
+            name=merged["name"],
+            keywords=list(merged["keywords"]),
+            blocks=(str(blocks[0]), str(blocks[1])),
+            locked=bool(merged["locked"]),
+            key_id=str(merged["key_id"]),
+        )
+    return doors
