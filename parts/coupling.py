@@ -240,7 +240,8 @@ def render_report(report: CouplingReport) -> str:
         f"  server entry points:          {len(report.server_entrypoints)} "
         f"({', '.join(report.server_entrypoints)}) - needed for multiplayer, not command-traceable",
         "",
-        f"  up to {candidates} of {report.total} modules were unreached by the traced surfaces.",
+        f"  up to {candidates} of {report.total} modules are detachment candidates "
+        "(outside the solo runtime-core).",
         "  NOT a confirmed-safe cut: this is a command-trace closure, so a module reached only on",
         "  an untried path (e.g. db=save, login_guard=auth, terminal=tty) is a FALSE candidate.",
         "  D2 (selective vendoring) must confirm every cut with a broad per-command harness first.",

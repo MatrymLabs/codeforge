@@ -42,6 +42,21 @@ def test_render_shows_counts_and_the_honest_caveat(monkeypatch):
     assert "b" in out  # the unreached candidate is named
 
 
+def test_render_summary_does_not_call_reached_modules_unreached(monkeypatch):
+    """Honesty: the summary count folds in surface-optional modules, which ARE reached (by their
+    surface). The old wording called that whole set 'unreached by the traced surfaces', flatly
+    contradicting the '+save adds' line directly above it. The summary must not say 'unreached'."""
+    monkeypatch.setattr(coupling_mod, "_all_modules", lambda: ["forgemod", "savemod", "arcmod"])
+    base = tuple(coupling_mod.SURFACES["solo"])
+    save = tuple(coupling_mod.SURFACES["solo"] + coupling_mod.SURFACES["save"])
+    report = analyze(tracer=_fake_tracer({base: {"forgemod"}, save: {"forgemod", "savemod"}}))
+    out = render_report(report)
+    summary = next(ln for ln in out.splitlines() if "of 3 modules" in ln)
+    assert "savemod" not in summary or "unreached" not in summary
+    assert "were unreached by the traced surfaces" not in out  # the dishonest phrasing is gone
+    assert "up to 2 of 3 modules are detachment candidates" in out  # 1 optional + 1 unreached
+
+
 def test_a_failed_trace_fails_loud(monkeypatch):
     def boom(commands):
         raise CouplingError("trace failed: exploded")
