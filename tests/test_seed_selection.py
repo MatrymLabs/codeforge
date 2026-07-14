@@ -70,6 +70,9 @@ def test_aethryn_ships_the_relighting_quest_as_data():
     assert quest["start"] == "offered" and quest["terminal"] == ["done"]
     assert quest["steps"][-1]["effect"] == "award_xp"  # finishing the arc awards XP
     assert quest["steps"][-1]["on_defeat"] == "cinder_wight"  # felling the boss completes it
+    triggers = {(k, s[k]) for s in quest["steps"] for k in ("on_take", "on_enter") if k in s}
+    assert ("on_take", "first_ember") in triggers  # picking up the ember relights it
+    assert ("on_enter", "cold_cellar") in triggers  # entering the cellar delves it
     # It is a valid workflow graph (start -> ... -> a terminal state), not just a list.
     from parts.workflow import Step, build_workflow
 

@@ -7,6 +7,7 @@ terminal driver around it -- a socket gateway will be another.
 
 import re
 
+from parts import quest
 from parts.accounts import (
     has_password,
     inspect_login,
@@ -44,7 +45,7 @@ from parts.events import announce, bind_echo, rename_echo, unbind_echo
 from parts.features import features
 from parts.harvest_lens import harvest
 from parts.heralds import heralds
-from parts.items import drop, inventory_text, room_items_text, take
+from parts.items import drop, inventory_text, room_items_text, take, trace_item
 from parts.jobs import JOBS, bind_calling, calling_index, set_secondary
 from parts.learning_record import learnings
 from parts.logbook import journal
@@ -590,7 +591,9 @@ def _resolve_move(session: Session, direction: str) -> str:
         announce(session.location, f"{me} leaves {direction}.", exclude=session.player_id)
         session.location = arrived
         announce(arrived, f"{me} arrives.", exclude=session.player_id)
-        return render_scene(arrived, viewer=session.player_id)
+        scene = render_scene(arrived, viewer=session.player_id)
+        hook = quest.on_event(session, "enter", arrived)  # entering a room may advance the arc
+        return f"{scene}\n\n{hook}" if hook else scene
     return message
 
 
@@ -884,6 +887,7 @@ def handle_command(session: Session, signal: str) -> str:
         return inventory_text()
     if routed_signal.startswith(("take ", "get ")):
         word = routed_signal.split(" ", 1)[1].strip()
+        picked = trace_item(word, f"room:{session.location}")  # label, captured before it moves
         verdict = take(word, session.location)
         if verdict.startswith("You take"):
             announce(
@@ -891,6 +895,10 @@ def handle_command(session: Session, signal: str) -> str:
                 verdict.replace("You take", f"{display_name(session.player_id)} takes", 1),
                 exclude=session.player_id,
             )
+            if picked:
+                hook = quest.on_event(session, "take", picked)  # a pickup may advance the arc
+                if hook:
+                    verdict = f"{verdict}\n{hook}"
         return verdict
     if routed_signal.startswith("drop "):
         word = routed_signal.split(" ", 1)[1].strip()

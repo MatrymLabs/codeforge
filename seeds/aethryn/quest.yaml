@@ -10,9 +10,9 @@ reward_xp: 120
 
 steps:
   - {state: offered,       event: accept,  to: accepted}
-  - {state: accepted,      event: relight, to: ember_lit}
+  - {state: accepted,      event: relight, to: ember_lit, on_take: first_ember}
   - {state: ember_lit,     event: reforge, to: bridge_mended, effect: "open_door:reach_bridge"}
-  - {state: bridge_mended, event: delve,   to: at_the_hearth}
+  - {state: bridge_mended, event: delve,   to: at_the_hearth, on_enter: cold_cellar}
   - {state: at_the_hearth, event: face,    to: done, effect: award_xp, on_defeat: cinder_wight}
 
 terminal: [done]

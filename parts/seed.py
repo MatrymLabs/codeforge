@@ -142,8 +142,11 @@ class Job(TypedDict):
 class QuestStep(TypedDict):
     """One move in a quest: from `state`, event `event` advances to `to`; `effect` is optional.
 
-    `on_defeat` names an NPC label whose defeat in combat fires this step, so an arc can advance
-    from a real fight (kill the boss) instead of only the `quest <event>` verb.
+    World-event triggers let an arc advance from a real action instead of only the `quest <event>`
+    verb (which always stays a fallback, so a trigger can never dead-end the arc):
+      `on_defeat` -- an NPC label whose defeat in combat fires this step;
+      `on_take`   -- an item label whose pickup fires it;
+      `on_enter`  -- a room label whose entry fires it.
     """
 
     state: str
@@ -151,6 +154,8 @@ class QuestStep(TypedDict):
     to: str
     effect: NotRequired[str]
     on_defeat: NotRequired[str]
+    on_take: NotRequired[str]
+    on_enter: NotRequired[str]
 
 
 class QuestSpec(TypedDict):
@@ -505,8 +510,9 @@ def load_quest(path: Path) -> QuestSpec | None:
         }
         if raw.get("effect"):
             step["effect"] = str(raw["effect"])
-        if raw.get("on_defeat"):
-            step["on_defeat"] = str(raw["on_defeat"])
+        for trigger in ("on_defeat", "on_take", "on_enter"):
+            if raw.get(trigger):
+                step[trigger] = str(raw[trigger])
         clean_steps.append(step)
     reward = data.get("reward_xp", 50)
     if not isinstance(reward, int) or isinstance(reward, bool) or reward < 0:

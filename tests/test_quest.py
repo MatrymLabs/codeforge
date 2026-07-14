@@ -79,29 +79,62 @@ def test_open_door_effect_reforges_a_barrier():
         doors.DOORS.update(snap)
 
 
-def test_on_defeat_advances_the_arc_when_the_fallen_npc_triggers_a_step(monkeypatch):
-    """A boss's fall can fire a quest step. Wired here to the built-in quest's first event so the
-    behavior is pinned without depending on the aethryn seed being the loaded game."""
+def test_on_event_advances_the_arc_when_a_world_action_triggers_a_step(monkeypatch):
+    """A world action (defeat/take/enter) can fire a quest step. Wired here to the built-in quest's
+    first event so the behavior is pinned without depending on the aethryn seed being loaded."""
     import parts.quest as quest_mod
 
-    monkeypatch.setattr(quest_mod, "_DEFEAT_EVENTS", {"warren_boss": "accept"})
+    monkeypatch.setattr(quest_mod, "_TRIGGERS", {("defeat", "warren_boss"): "accept"})
     s = _player()
-    line = quest_mod.on_defeat(s, "warren_boss")
+    line = quest_mod.on_event(s, "defeat", "warren_boss")
     assert line is not None and "taken the contract" in line  # the arc advanced
 
 
-def test_on_defeat_is_none_for_an_untriggered_npc():
-    from parts.quest import on_defeat
+def test_on_event_is_none_for_an_untriggered_action():
+    from parts.quest import on_event
 
-    assert on_defeat(_player(), "some_random_rat") is None  # this npc triggers no step
+    assert on_event(_player(), "defeat", "some_random_rat") is None  # triggers no step
+    assert on_event(_player(), "take", "a_pebble") is None
 
 
-def test_on_defeat_is_none_when_the_step_is_not_reachable_yet(monkeypatch):
-    """Felling the foe before the arc reaches that beat completes nothing (the move is refused)."""
+def test_on_event_is_none_when_the_step_is_not_reachable_yet(monkeypatch):
+    """Firing a trigger before the arc reaches that beat completes nothing (the move is refused)."""
     import parts.quest as quest_mod
 
-    monkeypatch.setattr(quest_mod, "_DEFEAT_EVENTS", {"warren_boss": "finish"})
-    assert quest_mod.on_defeat(_player(), "warren_boss") is None  # can't finish before accepting
+    monkeypatch.setattr(quest_mod, "_TRIGGERS", {("enter", "deep_vault"): "finish"})
+    assert quest_mod.on_event(_player(), "enter", "deep_vault") is None  # can't finish yet
+
+
+def test_taking_an_item_surfaces_a_triggered_quest_line(monkeypatch):
+    """The take tick rides the quest hook: picking up a triggering item advances the arc."""
+    import parts.quest as quest_mod
+    from forge import handle_command
+
+    monkeypatch.setattr(
+        quest_mod,
+        "on_event",
+        lambda s, kind, target: "[Quest] a pickup beat" if kind == "take" else None,
+    )
+    s = Session(player_id="m", location="library")
+    SESSIONS["m"] = s
+    out = handle_command(s, "take key")  # the copper key lives in the library
+    assert "You take" in out and "[Quest] a pickup beat" in out
+
+
+def test_entering_a_room_surfaces_a_triggered_quest_line(monkeypatch):
+    """The movement tick rides the quest hook: entering a triggering room advances the arc."""
+    import parts.quest as quest_mod
+    from forge import handle_command
+
+    monkeypatch.setattr(
+        quest_mod,
+        "on_event",
+        lambda s, kind, target: "[Quest] an entry beat" if kind == "enter" else None,
+    )
+    s = Session(player_id="m", location="forge")
+    SESSIONS["m"] = s
+    out = handle_command(s, "north")  # forge -> courtyard, an open exit
+    assert "Courtyard" in out and "[Quest] an entry beat" in out
 
 
 def test_apply_effect_is_inert_without_a_calling_or_a_known_effect():
