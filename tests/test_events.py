@@ -68,6 +68,19 @@ def test_say_is_heard_by_the_room():
     unbind_echo("b")
 
 
+def test_say_preserves_the_case_of_the_message():
+    """Hostile case: the tick lowercases to ROUTE, but a said line is prose, not a label.
+    'say' once pulled its message from the lowercased text and flattened 'Hello, Wren!' to
+    'hello, wren!' -- the same lower() trap that once ate passwords. Mixed case must survive."""
+    a, _ = _seat("a", "library")
+    _, b_heard = _seat("b", "library")
+    response = handle_command(a, "say Hello, Wren! Meet me at the Old Reach Bridge.")
+    assert response == 'You say, "Hello, Wren! Meet me at the Old Reach Bridge."'
+    assert 'A says, "Hello, Wren! Meet me at the Old Reach Bridge."' in b_heard
+    unbind_echo("a")
+    unbind_echo("b")
+
+
 def test_take_is_seen_by_bystanders():
     a, _ = _seat("a", "library")
     _, b_heard = _seat("b", "library")
