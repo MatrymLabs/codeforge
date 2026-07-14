@@ -174,8 +174,10 @@ def _load_yaml(path: Path) -> object:
 
 def load_policy(path: Path | None = None) -> dict[str, RetentionRule]:
     """The default policy, or a validated override from a YAML `{kind: {period_days, category}}`."""
-    if path is None or not path.exists():
-        return dict(DEFAULT_POLICY)
+    if path is None:
+        return dict(DEFAULT_POLICY)  # no override requested: the built-in policy stands
+    if not path.exists():
+        raise RetentionError(f"{path}: policy file not found (a provided path must exist)")
     raw = _load_yaml(path)
     if not isinstance(raw, dict):
         raise RetentionError(f"{path}: policy must be a mapping of kind -> settings")
@@ -192,8 +194,16 @@ def load_policy(path: Path | None = None) -> dict[str, RetentionRule]:
 
 def load_holds(path: Path | None = None) -> list[Hold]:
     """No holds by default, or a validated list of `{scope, reason}` from YAML."""
-    if path is None or not path.exists():
-        return []
+    if path is None:
+        return []  # no holds file requested: honestly zero holds
+    if not path.exists():
+        # A provided-but-missing holds file must fail loud, never silently degrade to zero holds:
+        # a litigation/audit hold silently dropped would let a held record become disposition-
+        # eligible, and "a hold always wins" is the one rule that must never fail open.
+        raise RetentionError(
+            f"{path}: holds file not found -- refusing to run with zero holds "
+            "(a held record must never silently become disposition-eligible)"
+        )
     raw = _load_yaml(path)
     if not isinstance(raw, list):
         raise RetentionError(f"{path}: holds must be a list of {{scope, reason}}")

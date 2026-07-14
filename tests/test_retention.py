@@ -137,6 +137,22 @@ def test_load_holds_defaults_empty_and_fails_loud_on_a_bad_row(tmp_path: Path) -
         load_holds(bad)
 
 
+def test_load_holds_fails_loud_when_a_provided_path_is_missing(tmp_path: Path) -> None:
+    """Safety-critical: a provided-but-missing holds file must NOT silently degrade to zero
+    holds. Silent [] would let a record under a litigation/audit hold become disposition-eligible;
+    'a hold always wins' must never fail open. (None still means honestly no holds.)"""
+    assert load_holds(None) == []
+    with pytest.raises(RetentionError, match="holds file not found"):
+        load_holds(tmp_path / "moved_away.yaml")
+
+
+def test_load_policy_fails_loud_when_a_provided_path_is_missing(tmp_path: Path) -> None:
+    """A provided-but-missing policy path is a mistake to surface, not to hide behind defaults."""
+    assert load_policy(None) == DEFAULT_POLICY
+    with pytest.raises(RetentionError, match="policy file not found"):
+        load_policy(tmp_path / "gone.yaml")
+
+
 def test_retention_verb_reachable_through_the_engine_tick() -> None:
     from forge import handle_command
     from parts.session import Session
