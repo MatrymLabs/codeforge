@@ -73,6 +73,9 @@ testpaths = ["tests"]
 # key is a mistake, not a warning. importlib import mode is the modern default
 # (no sys.path games, no __init__.py needed in tests).
 addopts = "--strict-markers --strict-config --import-mode=importlib"
+# Repo root on the path so tests can import the dev-only `benchmarks/` harness
+# (it is not part of the installed package, unlike `parts`/`forge`).
+pythonpath = ["."]
 markers = [
     "property: Hypothesis property-based tests (run via `make property`)",
     "fuzz: hostile-input fuzz tests for trust-boundary gates (run via `make fuzz`)",

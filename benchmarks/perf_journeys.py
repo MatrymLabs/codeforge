@@ -119,18 +119,53 @@ def run() -> dict[str, dict]:
     return results
 
 
+def _table(results: dict[str, dict]) -> str:
+    """The aligned journey/median/p95/max/reps table, shared by the console and the report."""
+    lines = [f"{'journey':<18}{'median_us':>12}{'p95_us':>10}{'max_us':>10}{'reps':>8}  kind"]
+    for name, st in results.items():
+        lines.append(
+            f"{name:<18}{st.get('median_us', 0):>12}{st.get('p95_us', 0):>10}"
+            f"{st.get('max_us', 0):>10}{st.get('reps', 0):>8}  {st.get('kind', '')}"
+        )
+    return "\n".join(lines)
+
+
+def render_journeys(results: dict[str, dict]) -> str:
+    """The human-readable dated report of a five-journey run (mirrors `render_bench`)."""
+    return "\n".join(
+        [
+            "FIVE-JOURNEY PERFORMANCE BENCHMARK - startup, command, combat, qa gate, catalog",
+            "",
+            _table(results),
+            "",
+            "  Startup is COLD (a fresh interpreter per rep); the rest WARM (steady state).",
+            "  Renders never mutate state (architecture law 1), so the warm rotations repeat.",
+            "  Measured on this host; numbers scale with CPU. Reproducible:",
+            "  `python -m benchmarks.perf_journeys`.",
+        ]
+    )
+
+
+def write_journeys_report(
+    results: dict[str, dict], root: Path | None = None, stamp: str | None = None
+) -> Path:
+    """File the run as dated performance evidence under reports/performance/ (like the tick)."""
+    from parts.reporting import write_report
+
+    return write_report(
+        "performance", render_journeys(results), root=root, stamp=stamp, slug="five-journeys"
+    )
+
+
 def main() -> None:
     results = run()
     _RAW.mkdir(parents=True, exist_ok=True)
     (_RAW / "five-journeys-raw.json").write_text(
         json.dumps(results, indent=2, sort_keys=True) + "\n", encoding="utf-8"
     )
-    print(f"{'journey':<18}{'median_us':>12}{'p95_us':>10}{'max_us':>10}{'reps':>8}  kind")
-    for name, st in results.items():
-        print(
-            f"{name:<18}{st.get('median_us', 0):>12}{st.get('p95_us', 0):>10}"
-            f"{st.get('max_us', 0):>10}{st.get('reps', 0):>8}  {st.get('kind', '')}"
-        )
+    print(render_journeys(results))
+    path = write_journeys_report(results)
+    print(f"\n  evidence -> {path}")
 
 
 if __name__ == "__main__":
