@@ -782,5 +782,35 @@
     "aliases": [],
     "created": "2026-07-14",
     "updated": "2026-07-14"
+  },
+  {
+    "designation": "CMD-UM10-S01-N001-018-R0",
+    "name": "`coupling`",
+    "status": "active",
+    "function": "Engine coupling report, read-only: trace the runtime module closure and list what a runtime cast could shed. Changes nothing (detachment D1).",
+    "label": "coupling",
+    "file": "parts/coupling.py",
+    "type": "CMD",
+    "domain": "UM10",
+    "sector": "S01",
+    "node": "N001",
+    "sequence": "018",
+    "revision": "R0",
+    "docs": "docs/reports/2026-07-14-detachment-design.md",
+    "tests": "tests/test_coupling.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "command",
+      "core",
+      "coupling",
+      "read-only"
+    ],
+    "notes": "CORE verb. Read-only D1 report; spawns import-trace subprocesses so it is a few seconds.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-14",
+    "updated": "2026-07-14"
   }
 ]
