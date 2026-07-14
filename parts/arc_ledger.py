@@ -182,6 +182,16 @@ def emit(commit: str, *, root: Path | None = None, runner=None) -> list[Path]:
             "evidence", ev_status, f"test_evidence: {ev_detail}", commit=commit, root=root
         ),
     ]
+    # Retain the evidence verdict in the Chronicle too (the ship's memory: git-tracked and
+    # hash-chained). Additive in slice 1a; ARC begins reading evidence from here in slice 1b.
+    from parts import chronicle
+
+    chronicle.append(
+        "evidence",
+        {"status": ev_status, "source": f"test_evidence: {ev_detail}", "dimension": "evidence"},
+        commit=commit,
+        root=root,
+    )
     return filed
 
 
