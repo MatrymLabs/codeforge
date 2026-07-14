@@ -625,7 +625,10 @@ def handle_command(session: Session, signal: str) -> str:
             return _resolve_move(session, DIRECTIONS[word])
         return "You can't go that way."
     if routed_signal.startswith("say "):
-        message = routed_signal.removeprefix("say ").strip()
+        # TRUE case: a said line keeps what the player typed. Routing lowercases to find the
+        # verb, but the message is prose, not a label -- parse it from the original like shout.
+        _, _, message = true_signal.partition(" ")
+        message = message.strip()
         if not message:
             return "Say what?"
         announce(
