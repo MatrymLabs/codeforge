@@ -3786,5 +3786,34 @@
     "aliases": [],
     "created": "2026-07-14",
     "updated": "2026-07-14"
+  },
+  {
+    "designation": "MOD-UM10-S01-N001-032-R0",
+    "name": "coupling",
+    "status": "active",
+    "function": "read-only engine coupling report: trace the runtime module closure per surface and classify what a cast could shed (detachment D1)",
+    "label": "coupling",
+    "file": "parts/coupling.py",
+    "type": "MOD",
+    "domain": "UM10",
+    "sector": "S01",
+    "node": "N001",
+    "sequence": "032",
+    "revision": "R0",
+    "docs": "docs/reports/2026-07-14-detachment-design.md",
+    "tests": "tests/test_coupling.py",
+    "depends_on": [],
+    "related": [
+      "cast"
+    ],
+    "reuse": "dependency/coupling analysis: trace a program's real runtime module closure to see what a slimmer package could shed",
+    "tags": [
+      "module"
+    ],
+    "notes": "Detachment D1 (read-only, keel-signed). Traces via subprocess import corpus; honest under-count caveat; D2 selective vendoring + D3 decoupling each need own keel sign-off.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-14",
+    "updated": "2026-07-14"
   }
 ]

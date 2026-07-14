@@ -84,7 +84,8 @@ HELP_TEXT = (
     "unlock <door> with <key>, regs [topic|id], library [id], law [id], "
     "registry [show|find|type|status], loop trace <part-id>, "
     "qa gate [all|<id>], safety review <id>, docs check, pm status, pm metrics, "
-    "truth check, career, pioneer, evolution, chronicle, retention, inspect, functions, terminal, "
+    "truth check, career, pioneer, evolution, chronicle, retention, coupling, inspect, functions, "
+    "terminal, "
     "workshop, catalog, reuse <term>, console, run <check>, diagnostics, "
     "security, ai <prompt>, lesson list, question, answer <A-D>, hint, progress, achievements, "
     "passwd, save, load, quit"
@@ -149,6 +150,12 @@ def chronicle(arg: str = "") -> str:
 
 def retention(arg: str = "") -> str:
     from parts.retention import retention as run
+
+    return run(arg)
+
+
+def coupling(arg: str = "") -> str:
+    from parts.coupling import coupling as run
 
     return run(arg)
 
@@ -468,6 +475,15 @@ def _build_commands() -> CommandSet:
             "CMD-UM10-S01-N001-017-R0",
             "Retention doctor (read-only): what the Chronicle keeps, what a hold protects",
             lambda _s, arg: retention(arg),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "coupling",
+            "CMD-UM10-S01-N001-018-R0",
+            "Engine coupling report (read-only): what a runtime cast could shed (detachment D1)",
+            lambda _s, arg: coupling(arg),
             namespace=CORE,
         )
     )
