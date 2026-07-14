@@ -24,6 +24,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 from parts.verdicts import ARC_STATUSES as _STATUSES
+from parts.verdicts import BLOCKED
 
 # The four runtime dimensions ARC reads through this ledger; statuses come from verdicts.py (the
 # one home for the ARC readiness tier), so this module and arc.py can never drift apart.
@@ -197,6 +198,12 @@ def emit(commit: str, *, root: Path | None = None, runner=None) -> list[Path]:
     chronicle.record_edge(
         f"release:{commit}", "wasInformedBy", f"evidence:{commit}", commit=commit, root=root
     )
+    # A blocked release IS a reportable failure: open a FRACAS incident (slice 4) awaiting analysis
+    # and a corrective action. A ready release files none - honest, not noise.
+    if rel_status == BLOCKED:
+        chronicle.record_incident(
+            f"release blocked at {commit}: {rel_source}", "high", commit=commit, root=root
+        )
     return filed
 
 
