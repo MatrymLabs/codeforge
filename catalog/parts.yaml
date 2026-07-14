@@ -1065,10 +1065,10 @@
     and ai-log-triage reuses it as a triage-decision audit trail (`GET /audit`, NIST AU-family). One
     part, three jobs in three repos.
   published: >-
-    Published standalone as `matrym-hashchain` (MIT, stdlib-only, CI on 3.10-3.13):
-    https://github.com/MatrymLabs/matrym-hashchain  -  `pip install
-    git+https://github.com/MatrymLabs/matrym-hashchain` then `import hashchain`. The first fleet
-    part to leave the forge as an installable package.
+    Published standalone on PyPI as `matrym-hashchain` (MIT, stdlib-only, CI on 3.10-3.13,
+    trusted-publishing via OIDC): https://pypi.org/project/matrym-hashchain/  -  `pip install
+    matrym-hashchain` then `import hashchain`. The first fleet part to leave the forge as an
+    installable package.
   reuse:
     game: "the Chronicle records engine evidence, metrics, and incidents on this canonical hash"
     government: "federal-guidance-library records each guidance check tamper-evidently (library ledger) - a CMMC/NIST/NARA evidence trail"
