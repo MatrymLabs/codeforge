@@ -28,6 +28,22 @@ def test_catalog_shows_none_for_dead_ends():
     assert "(none)" in room_catalog(rooms)
 
 
+def test_catalog_columns_do_not_collide_on_a_long_label():
+    """Hostile case: a seed label wider than the old fixed :<14 column (e.g. the flagship's
+    'cinderhearth_square', 19 chars) once ran straight into the NAME column. Widths are computed
+    now, so the NAME column starts at the SAME position on every row, short label or long."""
+    rooms: dict[str, Room] = {
+        "cinderhearth_square": Room(name="Cinderhearth Square", desc="d", exits={}),
+        "pit": Room(name="The Pit", desc="d", exits={}),
+    }
+    lines = room_catalog(rooms).splitlines()
+    name_columns = set()
+    for label, name in (("cinderhearth_square", "Cinderhearth Square"), ("pit", "The Pit")):
+        row = next(ln for ln in lines if label in ln and name in ln)
+        name_columns.add(row.index(name))
+    assert len(name_columns) == 1  # both NAME cells start at the same column; no collision
+
+
 def test_npc_catalog_files_the_librarian():
     from parts.catalog import npc_catalog
 
