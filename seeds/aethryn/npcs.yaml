@@ -1,0 +1,57 @@
+# SEED: aethryn -- npcs.yaml
+# hp > 0 makes an NPC attackable; xp is awarded on defeat; atk > 0 makes it strike back.
+# Labels generate names ('reach_wolf' -> "the reach wolf") and keywords.
+
+wren:
+  name: Wren the Smith
+  location: cinderhearth_square
+  keywords: [wren, smith, shopkeeper, merchant]
+  dialogue:
+    - '"The old forge relit the day you washed ashore. Coincidence? In the Kindlands, nothing is."'
+    - '"Blades, cloaks, a good wrench -- everything a new Forger needs. Ask and I will make it."'
+    - '"That bridge north has been broken for years. Gather ember, and you could mend it yourself."'
+
+sela:
+  name: Sela the Loremaster
+  location: cinderhearth_square
+  keywords: [sela, loremaster, scholar, elder]
+  dialogue:
+    - '"Everything you see was Forged from ember. What was made can be remade -- that is the first law."'
+    - '"Long ago the greatest work of all, the First Seed, was sundered. We call it the Unforging."'
+    - '"You can hold ember and give it lasting shape. That makes you a Forger. It also makes you dangerous."'
+
+training_dummy:
+  location: cinderhearth_square
+  keywords: [dummy, training, straw]
+  dialogue:
+    - '"..." The dummy says nothing. Struck down, it quietly reassembles itself. Things here are made.'
+  hp: 20
+  xp: 30
+
+reach_wolf:
+  name: a reach wolf
+  location: reachwood_edge
+  keywords: [wolf, reach, beast]
+  dialogue:
+    - The wolf bares its teeth, eyes bright with wild ember.
+  hp: 15
+  xp: 25
+  atk: 3  # a real fight; it strikes back (the training-ground failsafe still catches a fall)
+
+road_warden:
+  name: the Road-Warden
+  location: the_far_reach
+  keywords: [warden, road, guard, marshal]
+  dialogue:
+    - '"Emberreach lies down this road, and the Warden Gate beyond it. None pass the Gate unproven."'
+    - '"Prove yourself in the Kindlands first, Forger. The Spiral does not suffer the half-ready."'
+
+cinder_wight:
+  name: the Cinder-Wight
+  location: cellar_hearth
+  keywords: [wight, cinder, smith, boss]
+  dialogue:
+    - '"COLD... SO COLD..." The old smith lifts a hammer of grey cinder. It never finished dying.'
+  hp: 50
+  xp: 180
+  atk: 7  # the tutorial dungeon boss; learn its pattern, or reforge it rather than break it

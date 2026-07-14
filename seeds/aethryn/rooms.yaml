@@ -1,0 +1,75 @@
+# SEED: aethryn -- rooms.yaml
+# The flagship world (docs/world_bible.md): the Kindlands Coast, where the Age of
+# Rekindling begins. Everything here was Forged and can be reforged.
+# Same gates as any seed: lowercase_snake_case labels, exits must resolve.
+# The FIRST room is the spawn (START_ROOM), by convention -- no hardcoded start.
+
+template:
+  desc: The Kindlands lie under a low, warm sky, the light of a world that was made.
+
+the_waking_shore:
+  name: The Waking Shore
+  desc: |-
+    You wake on cold sand with no memory of the craft. A single ember gutters
+    at the tideline, nearly out. When your hand nears it, it flares and holds.
+    Something in you answers it. A path of packed cinder leads north into town.
+  exits:
+    north: cinderhearth_square
+
+cinderhearth_square:
+  name: Cinderhearth Square
+  desc: |-
+    The heart of Cinderhearth-on-Reach. The town forge, cold for a generation,
+    has just taken flame again, and folk gather to watch it burn. A training
+    dummy stands ready in the yard, and a cellar door yawns beneath the forge.
+  exits:
+    south: the_waking_shore
+    north: old_reach_bridge
+    east: reachwood_edge
+    down: cold_cellar
+
+old_reach_bridge:
+  name: The Old Reach Bridge
+  desc: |-
+    A stone bridge over the Reach, its center plank long rotted through. Reforge
+    it and the road north opens; the world remembers what you mend. Beyond lies
+    the Ember-road, and somewhere down it, the capital.
+  exits:
+    south: cinderhearth_square
+    north: the_far_reach
+
+reachwood_edge:
+  name: The Reachwood Edge
+  desc: |-
+    Where the town gives way to wild forest. Ember grows strange and bright in
+    the undergrowth here, and not everything in the trees is friendly.
+  exits:
+    west: cinderhearth_square
+
+the_far_reach:
+  name: The Far Reach
+  desc: |-
+    The Ember-road runs on toward Emberreach, City of the Relit Forge, and the
+    Warden Gate that guards the way to the Great Spiral. A road-warden waits at
+    the marker, watching who comes. Your road begins here.
+  exits:
+    south: old_reach_bridge
+
+cold_cellar:
+  name: The Cold Cellar
+  desc: |-
+    Beneath the forge, a sundered making-hall the Unforging left half-real. Its
+    rooms hold the steps of a simple Forge, jumbled out of their proper order.
+    Cold air breathes up from a stair descending into the dark.
+  exits:
+    up: cinderhearth_square
+    down: cellar_hearth
+
+cellar_hearth:
+  name: The Cellar Hearth
+  desc: |-
+    A ruined forge-hall around a dead central hearth. At the anvil stands the
+    Cinder-Wight, an old smith the Unforging never let finish dying. A crack in
+    the far wall breathes colder still, downward, toward the Cinderdeep.
+  exits:
+    up: cold_cellar
