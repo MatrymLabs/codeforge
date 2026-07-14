@@ -7,11 +7,13 @@ evidence is the whole point (records + safety), and each record is reproducible 
 it cites.
 
 - **Written by** `parts/chronicle.py` (`append()`), only through its validating gate.
-- **Read by** the `chronicle` verb (read-only view, incl. `chronicle trend <name>`) and, from
-  slice 1b, ARC's `evidence` dimension.
-- **Kinds:** `evidence` (a retained, cited gate verdict; slice 1) and `metric` (a `{name, value}`
-  trend point; slice 2, e.g. `make trend` records `engine_tick.median_us`). Later slices add
-  `incident`, `ai-eval`, and `edge` (provenance).
+- **Read by** the `chronicle` verb (read-only view, incl. `chronicle trend <name>` and
+  `chronicle provenance <node>`) and, from slice 1b, ARC's `evidence` dimension.
+- **Kinds:** `evidence` (a retained, cited gate verdict; slice 1), `metric` (a `{name, value}`
+  trend point; slice 2, e.g. `make trend` records `engine_tick.median_us`), and `edge` (a
+  `{from, relation, to}` PROV-O provenance link; slice 3, e.g. `make arc-verdicts` records that
+  the evidence `wasGeneratedBy` the gate run and the release `wasInformedBy` the evidence). Later
+  slices add `incident` and `ai-eval`.
 - **Integrity:** every record carries a `content_hash` over its fields plus the prior record's
   hash. Any edit to a past record breaks the chain and fails loud on read (`ChronicleError`); a
   dishonest memory is worse than an error.
