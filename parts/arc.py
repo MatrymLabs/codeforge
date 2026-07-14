@@ -130,12 +130,37 @@ def filed_review(root: Path | None = None) -> ArcReport:
 def _runtime_dim(name: str, root: Path) -> Dimension:
     """Read a runtime dimension's latest FILED verdict, or MISSING if none is filed. Reads only.
 
-    Absence is MISSING (never a pass); a malformed artifact fails loud via arc_ledger.VerdictError.
+    `evidence` is read from the retained Chronicle (slice 1b); change/patch/release read their
+    dated verdicts via arc_ledger. Absence is MISSING (never a pass); a malformed artifact fails
+    loud (arc_ledger.VerdictError or chronicle.ChronicleError).
     """
+    if name == "evidence":
+        return _evidence_dim(root)
     verdict = arc_ledger.read_latest(name, root=root)
     if verdict is None:
         return Dimension(name, MISSING, "runtime capability; no filed verdict to read")
     return Dimension(name, verdict.status, f"{verdict.source} (filed {verdict.commit})")
+
+
+def _evidence_dim(root: Path) -> Dimension:
+    """Read the `evidence` dimension from the retained Chronicle (its `evidence` record kind).
+
+    Slice 1b: evidence moved from the git-ignored arc-evidence/ verdict to the git-tracked,
+    hash-chained Chronicle, so ARC now reads retained, cited evidence. Absence is MISSING (never a
+    pass); a record with an unknown status or an empty source fails loud (ChronicleError).
+    """
+    from parts import chronicle
+
+    record = chronicle.read_latest("evidence", root=root)
+    if record is None:
+        return Dimension("evidence", MISSING, "runtime capability; no filed verdict to read")
+    status = record.payload.get("status")
+    source = str(record.payload.get("source", "")).strip()
+    if not isinstance(status, str) or status not in _DIM_STATUSES or not source:
+        raise chronicle.ChronicleError(
+            f"chronicle evidence record is malformed (status={status!r}, source={source!r})"
+        )
+    return Dimension("evidence", status, f"{source} (filed {record.commit}, chronicle)")
 
 
 def render(report: ArcReport) -> str:

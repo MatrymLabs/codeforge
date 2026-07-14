@@ -150,7 +150,8 @@ def _console_runner(check: str) -> bool:
 
 
 def emit(commit: str, *, root: Path | None = None, runner=None) -> list[Path]:
-    """Run the release checks, map real outcomes to release + evidence verdicts, and file them.
+    """Run the release checks and file the runtime verdicts: release as a dated arc-evidence/
+    verdict, evidence as a retained Chronicle record (slice 1b). Returns the arc-evidence/ paths.
 
     `runner(check) -> bool` is a seam (default: the console runner); tests inject a fake so they
     never touch a subprocess. change/patch have no persistent store yet, so they are NOT filed here
@@ -176,16 +177,12 @@ def emit(commit: str, *, root: Path | None = None, runner=None) -> list[Path]:
 
     rel_status, rel_source = gate.arc_status()
     ev_status, ev_detail = evidence.arc_status()
-    filed = [
-        record_verdict("release", rel_status, rel_source, commit=commit, root=root),
-        record_verdict(
-            "evidence", ev_status, f"test_evidence: {ev_detail}", commit=commit, root=root
-        ),
-    ]
-    # Retain the evidence verdict in the Chronicle too (the ship's memory: git-tracked and
-    # hash-chained). Additive in slice 1a; ARC begins reading evidence from here in slice 1b.
+    # Release stays a dated verdict under arc-evidence/ (git-ignored, reproducible). Evidence now
+    # lives SOLELY in the Chronicle (git-tracked, hash-chained), which ARC reads back (slice 1b) -
+    # a single retained source, not a git-ignored one.
     from parts import chronicle
 
+    filed = [record_verdict("release", rel_status, rel_source, commit=commit, root=root)]
     chronicle.append(
         "evidence",
         {"status": ev_status, "source": f"test_evidence: {ev_detail}", "dimension": "evidence"},
@@ -206,6 +203,7 @@ def main(argv: list[str] | None = None) -> int:
     commit = args[1] if len(args) > 1 else "unknown"
     for path in emit(commit):
         print(f"  filed {path.name}")
+    print("  evidence -> retained in the Chronicle (chronicle/ledger.jsonl)")
     print("change + patch: no persistent store yet -> honestly MISSING (a later slice adds it)")
     return 0
 
