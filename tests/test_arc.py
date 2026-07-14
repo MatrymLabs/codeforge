@@ -3,6 +3,7 @@
 import pytest
 
 from forge import handle_command
+from parts import chronicle
 from parts.arc import (
     BLOCKED,
     DIMENSIONS,
@@ -17,6 +18,16 @@ from parts.arc import (
 )
 from parts.arc_ledger import VerdictError, record_verdict
 from parts.session import Session
+
+
+def _file_evidence(root, status=READY, source="test_evidence: ok", commit="testcommit"):
+    """File an `evidence` verdict where ARC now reads it: the Chronicle (slice 1b)."""
+    chronicle.append(
+        "evidence",
+        {"status": status, "source": source, "dimension": "evidence"},
+        commit=commit,
+        root=root,
+    )
 
 
 def _seed_evidence(root):
@@ -61,8 +72,9 @@ def test_runtime_missing_holds_the_verdict_on_watchlist(tmp_path):
 
 def _file_all_runtime_ready(root):
     """File a READY verdict for every runtime dimension (what a full gate run would produce)."""
-    for dim in ("change", "patch", "evidence", "release"):
+    for dim in ("change", "patch", "release"):
         record_verdict(dim, READY, f"{dim}-gate: ok", commit="testcommit", root=root)
+    _file_evidence(root)  # evidence lives in the Chronicle (slice 1b), not arc-evidence/
 
 
 def test_all_ten_compose_to_ready_when_runtime_verdicts_are_filed(tmp_path):
@@ -84,11 +96,37 @@ def test_an_unfiled_runtime_dimension_stays_missing(tmp_path):
     # The driver files only release+evidence; change+patch have no store and stay MISSING (honest).
     _seed_evidence(tmp_path)
     record_verdict("release", READY, "release_gate: ok", commit="c", root=tmp_path)
-    record_verdict("evidence", READY, "test_evidence: ok", commit="c", root=tmp_path)
+    _file_evidence(tmp_path, source="test_evidence: ok", commit="c")
     status = {d.name: d.status for d in filed_review(tmp_path).dimensions}
     assert status["release"] == READY and status["evidence"] == READY
     assert status["change"] == MISSING and status["patch"] == MISSING
     assert filed_review(tmp_path).verdict == WATCHLIST  # missing change/patch hold it
+
+
+def test_evidence_is_read_from_the_chronicle_not_arc_evidence(tmp_path):
+    # Slice 1b: a record_verdict("evidence") is no longer where ARC looks; the Chronicle is.
+    _seed_evidence(tmp_path)
+    record_verdict("evidence", READY, "stale arc-evidence write", commit="c", root=tmp_path)
+    status = {d.name: d.status for d in filed_review(tmp_path).dimensions}
+    assert (
+        status["evidence"] == MISSING
+    )  # nothing in the Chronicle -> MISSING, ignoring arc-evidence
+    _file_evidence(tmp_path)
+    assert filed_review(tmp_path).dimensions  # sanity
+    status = {d.name: d.status for d in filed_review(tmp_path).dimensions}
+    assert status["evidence"] == READY  # now the Chronicle has it
+
+
+def test_a_malformed_chronicle_evidence_record_fails_loud(tmp_path):
+    _seed_evidence(tmp_path)
+    chronicle.append(
+        "evidence",
+        {"status": "green", "source": "x", "dimension": "evidence"},  # 'green' is not an ARC status
+        commit="c",
+        root=tmp_path,
+    )
+    with pytest.raises(chronicle.ChronicleError, match="malformed"):
+        filed_review(tmp_path)
 
 
 def test_a_malformed_runtime_verdict_fails_loud(tmp_path):

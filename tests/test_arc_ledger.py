@@ -70,19 +70,25 @@ def test_a_partial_artifact_fails_loud(tmp_path):
 # --- the driver: emit() files release+evidence from injected, real outcomes ----
 
 
-def test_emit_files_release_and_evidence_when_checks_pass(tmp_path):
+def test_emit_files_release_to_arc_evidence_and_evidence_to_the_chronicle(tmp_path):
+    from parts import chronicle
+
     filed = emit("abc123", root=tmp_path, runner=lambda check: True)
+    # release stays a dated arc-evidence/ verdict; evidence moved to the Chronicle (slice 1b).
     names = {p.name.split("-", 3)[-1] for p in filed}
-    assert names == {"release.json", "evidence.json"}
+    assert names == {"release.json"}
     assert read_latest("release", root=tmp_path).status == "ready"
-    assert read_latest("evidence", root=tmp_path).status == "ready"
+    assert read_latest("evidence", root=tmp_path) is None  # no longer an arc-evidence/ verdict
+    assert chronicle.read_latest("evidence", root=tmp_path).payload["status"] == "ready"
 
 
 def test_emit_records_a_failing_check_as_blocked(tmp_path):
-    # security fails -> release blocked; evidence (tests+coverage) still ready.
+    from parts import chronicle
+
+    # security fails -> release blocked; evidence (tests+coverage) still ready in the Chronicle.
     emit("abc123", root=tmp_path, runner=lambda check: check != "security")
     assert read_latest("release", root=tmp_path).status == "blocked"
-    assert read_latest("evidence", root=tmp_path).status == "ready"
+    assert chronicle.read_latest("evidence", root=tmp_path).payload["status"] == "ready"
 
 
 def test_emit_does_not_file_change_or_patch(tmp_path):
