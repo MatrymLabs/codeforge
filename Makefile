@@ -1,4 +1,4 @@
-.PHONY: env fix lint typecheck test property fuzz coverage audit audit-runtime security sast secrets deps sbom bench trend ai-eval doctor patch daily check readiness arc-verdicts truth cast-plan smoke repo-integrity ship run world store hardware clean serve backup db-up db-down db-migrate docs-serve docs-build e2e evolution ritual-fast ritual ritual-down unskew loop
+.PHONY: env fix lint typecheck test property fuzz coverage audit audit-runtime security sast secrets deps sbom bench trend ai-eval retention doctor patch daily check readiness arc-verdicts truth cast-plan smoke repo-integrity ship run world store hardware clean serve backup db-up db-down db-migrate docs-serve docs-build e2e evolution ritual-fast ritual ritual-down unskew loop
 
 # --- Environment: create/validate the .venv, fail loud on version mismatch.
 # Uses uv when present (a Rust resolver; measured ~20x faster than pip on this host:
@@ -162,6 +162,11 @@ trend:
 ai-eval:
 	@python3 -m parts.ai_eval $$(git rev-parse --short HEAD 2>/dev/null || echo unknown)
 	@python3 -m parts.chronicle evals
+
+# --- Retention doctor (read-only, R1): show what the Chronicle keeps, what is eligible for
+# review, and what a hold protects. Disposition is not deletion; R1 writes and removes nothing. ---
+retention:
+	@python3 -m parts.retention
 
 # --- Doctor: run the gates read-only, stop at the first failure, prescribe the fix ---
 doctor:

@@ -23,5 +23,11 @@ it cites.
   hash. Any edit to a past record breaks the chain and fails loud on read (`ChronicleError`); a
   dishonest memory is worse than an error.
 
+**Retention (R1, read-only).** `parts/retention.py` + `make retention` (or the `retention` verb)
+show a hold-aware retention doctor: what is within its period, what is eligible for review, and
+what a hold protects. Retention here is **disposition, not deletion** - the append-only chain is
+never broken; R1 writes and removes nothing (dry-run only), real marking is owner-gated at R2, and
+any hold wins (federal rule #10). See `docs/reports/2026-07-14-retention-design.md`.
+
 See `docs/reports/2026-07-13-chronicle-design.md` for the design and `parts/chronicle.py` for the
 CARD. The `ledger.jsonl` appears here once a gate files its first record (e.g. `make arc-verdicts`).
