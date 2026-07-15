@@ -61,6 +61,28 @@ def test_restore_rebuilds_the_full_sheet():
     assert s.resources["hp"].is_full
 
 
+def test_restore_of_a_vanished_job_degrades_not_crashes():
+    """Seeds are games: a character saved under one seed's calling, restored under a seed that
+    lacks it, must become a jobless sheet (re-pick a calling), never crash the login tick."""
+    s = Session(player_id="drifter")
+    restore_character(
+        s, {"job": "calling_from_another_seed", "level": 3, "xp": 200, "location": "courtyard"}
+    )
+    assert s.stats is None  # jobless, honestly degraded
+    assert s.level == 3 and s.location == "courtyard"  # the rest of the sheet still restored
+
+
+def test_restore_clears_transient_combat_and_gear_state():
+    """A restore is a night's rest: cooldowns, statuses, and worn gear from a prior in-place
+    identity must not bleed into the restored hero (equipment folds into derived stats)."""
+    s = Session(player_id="matrym")
+    s.equipped = {"weapon": "sword"}
+    s.cooldowns = {"field_repair": 3}
+    s.statuses = {"analyzed": 2}
+    restore_character(s, {"job": "vanguard", "level": 1, "xp": 0, "location": "courtyard"})
+    assert s.equipped == {} and s.cooldowns == {} and s.statuses == {}
+
+
 def test_restored_hero_matches_a_live_grown_one():
     """The parity law: derive-on-restore must equal grow-in-play."""
     live = _hero()
