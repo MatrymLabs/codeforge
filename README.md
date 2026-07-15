@@ -27,6 +27,14 @@ can click straight into.
 > manufacturing spine (Blueprint -> parts -> assemble -> test -> catalog -> package) is being
 > built one vertical slice at a time. Browse the parts with `make hardware`; read the full plan
 > in [`docs/vision_resync.md`](docs/vision_resync.md).
+>
+> **Proven, not just promised.** The store isn't only a catalog: four of its patterns are
+> re-implemented and running in the fleet's industry repos (a retry policy, a circuit breaker, a
+> token-bucket rate limiter, and a tamper-evident hash-chained ledger), each harvested in the
+> consumer's own voice with recorded provenance - no shared import, zero coupling. The ledger
+> earned a standalone release: [`matrym-hashchain`](https://pypi.org/project/matrym-hashchain/) on
+> PyPI (MIT, stdlib-only) - `pip install matrym-hashchain`. One pattern, proven in the game, then
+> reused in real software and shipped as a package.
 
 ```text
 =========================================================
