@@ -281,6 +281,142 @@ def workshop_menu() -> str:
     return run()
 
 
+# --- account & identity command handlers (filed on the spine; the tick only routes) ---
+# Extracted verbatim from the legacy if-ladder. The command spine preserves the argument's
+# case (parts/commands.py), so a password parsed from `arg` survives -- Architecture Law 7.
+
+
+def _authenticate(session: Session, verb: str, arg: str) -> str:
+    """Register or log in, binding an account to this session and restoring a returning hero.
+
+    `verb` is "register" or "login". A brand-new character is welcomed; a known casefile is
+    restored to its saved scene.
+    """
+    words = arg.split()
+    handle = parse_handle(words[0].lower()) if words else None
+    secret = words[1] if len(words) > 1 else ""  # TRUE case: secrets are never lowered
+    if handle is None or len(words) != 2:
+        return f"Usage: {verb} <character>@<account> <password>"
+    char, account = handle
+    if not NAME_RE.match(char) or not NAME_RE.match(account):
+        return (
+            "Character and account names are 2-16 characters: lowercase "
+            "letters, digits, underscores, starting with a letter."
+        )
+    if char in SESSIONS:
+        return f"Someone here is already {display_name(char)}."
+    if verb == "register":
+        problem = register_account(char, account, secret)
+        if problem:
+            return problem
+    elif not inspect_login(char, account, secret):
+        return "That character, account, and password do not align."
+    old = session.player_id
+    SESSIONS.pop(old, None)
+    session.player_id = char
+    session.account = account
+    SESSIONS[char] = session
+    rename_echo(old, char)
+    casefile = load_character(char)
+    if casefile is not None:
+        announce(session.location, f"{display_name(old)} leaves.", exclude=char)
+        restore_character(session, casefile)
+        session.account = account
+        announce(session.location, f"{display_name(char)} arrives.", exclude=char)
+        return (
+            f"Welcome back, {display_name(char)}@{account}.\n"
+            f"{render_scene(session.location, viewer=char)}"
+        )
+    session.named = True
+    save_character(session)
+    announce(
+        session.location,
+        f"{display_name(old)} is now known as {display_name(char)}.",
+        exclude=char,
+    )
+    return f"Welcome, {display_name(char)}@{account}. Your legend begins. Type JOBS."
+
+
+def _register_cmd(session: Session, arg: str) -> str:
+    return _authenticate(session, "register", arg)
+
+
+def _login_cmd(session: Session, arg: str) -> str:
+    return _authenticate(session, "login", arg)
+
+
+def _passwd_cmd(session: Session, arg: str) -> str:
+    """Rotate an account password: old, new, new-again (secrets keep their case)."""
+    if not session.account:
+        return (
+            "Only account logins can change a password. Try: login <character>@<account> <password>"
+        )
+    words = arg.split()  # TRUE case: secrets are never lowered
+    if len(words) != 3:
+        return "Usage: passwd <old> <new> <new-again>"
+    old, new, again = words
+    if new != again:
+        return "Those new passwords do not match. Nothing changed."
+    problem = reforge_secret(session.account, old, new)
+    if problem:
+        return problem
+    return "Password changed. Use it the next time you log in."
+
+
+def _password_cmd(session: Session, arg: str) -> str:
+    """Protect a bare (accountless) claimed name with a password."""
+    if not session.named:
+        return "Claim a name first: name <yourname>"
+    return set_password(session.player_id, arg.strip())
+
+
+def _name_cmd(session: Session, arg: str) -> str:
+    """Claim or reclaim a bare name, proving a protected one with its password."""
+    words = arg.split()
+    wanted = words[0].lower() if words else ""
+    casefile = load_character(wanted) if wanted else None
+    protected = casefile is not None and has_password(casefile)
+    bad_shape = len(words) > 2 or (len(words) == 2 and not protected)
+    if not wanted or not NAME_RE.match(wanted) or bad_shape:
+        return (
+            "Names are 2-16 characters: lowercase letters, digits, underscores, "
+            "starting with a letter. Try: name matrym"
+        )
+    if wanted in SESSIONS:
+        return f"Someone here is already called {display_name(wanted)}."
+    secret = words[1] if len(words) == 2 else ""
+    if protected and not verify_password(wanted, secret):
+        return f"That name is protected. Prove it is yours: name {wanted} <password>"
+    old = session.player_id
+    SESSIONS.pop(old, None)
+    session.player_id = wanted
+    SESSIONS[wanted] = session
+    rename_echo(old, wanted)
+    if casefile is not None:
+        announce(session.location, f"{display_name(old)} leaves.", exclude=wanted)
+        restore_character(session, casefile)
+        announce(session.location, f"{display_name(wanted)} arrives.", exclude=wanted)
+        nag = (
+            ""
+            if has_password(casefile)
+            else "\n(This name has no password. Protect it: password <secret>)"
+        )
+        # fmt: off
+        return (
+            f"Welcome back, {display_name(wanted)}.{nag}\n"
+            f"{render_scene(session.location, viewer=wanted)}"
+        )
+        # fmt: on
+    session.named = True
+    save_character(session)
+    announce(
+        session.location,
+        f"{display_name(old)} is now known as {display_name(wanted)}.",
+        exclude=wanted,
+    )
+    return f"You are now known as {display_name(wanted)}."
+
+
 def _build_commands() -> CommandSet:
     """The registry command family, filed as CMD-* designations. First family on the
     command spine; the legacy tick still handles everything else via fall-through."""
@@ -545,6 +681,28 @@ def _build_commands() -> CommandSet:
             namespace=CORE,
         )
     )
+    # Account & identity verbs (moved off the legacy if-ladder onto the spine).
+    cs.add(
+        Command(
+            "register", "CMD-04.002", "create an account and enter", _register_cmd, namespace=CORE
+        )
+    )
+    cs.add(
+        Command("login", "CMD-04.003", "log into an account and enter", _login_cmd, namespace=CORE)
+    )
+    cs.add(
+        Command("passwd", "CMD-04.004", "change your account password", _passwd_cmd, namespace=CORE)
+    )
+    cs.add(
+        Command(
+            "password",
+            "CMD-04.005",
+            "protect a claimed name with a password",
+            _password_cmd,
+            namespace=CORE,
+        )
+    )
+    cs.add(Command("name", "CMD-04.006", "claim or reclaim a bare name", _name_cmd, namespace=CORE))
     return cs
 
 
@@ -643,116 +801,6 @@ def handle_command(session: Session, signal: str) -> str:
     if routed_signal == "shout" or routed_signal.startswith("shout "):
         _, _, message = true_signal.partition(" ")
         return shout(session, message)
-    if routed_signal.startswith(("register ", "login ")):
-        verb, _, rest = true_signal.partition(" ")
-        verb = verb.lower()
-        words = rest.split()
-        handle = parse_handle(words[0].lower()) if words else None
-        secret = words[1] if len(words) > 1 else ""  # TRUE case: secrets are never lowered
-        if handle is None or len(words) != 2:
-            return f"Usage: {verb} <character>@<account> <password>"
-        char, account = handle
-        if not NAME_RE.match(char) or not NAME_RE.match(account):
-            return (
-                "Character and account names are 2-16 characters: lowercase "
-                "letters, digits, underscores, starting with a letter."
-            )
-        if char in SESSIONS:
-            return f"Someone here is already {display_name(char)}."
-        if verb == "register":
-            problem = register_account(char, account, secret)
-            if problem:
-                return problem
-        elif not inspect_login(char, account, secret):
-            return "That character, account, and password do not align."
-        old = session.player_id
-        SESSIONS.pop(old, None)
-        session.player_id = char
-        session.account = account
-        SESSIONS[char] = session
-        rename_echo(old, char)
-        casefile = load_character(char)
-        if casefile is not None:
-            announce(session.location, f"{display_name(old)} leaves.", exclude=char)
-            restore_character(session, casefile)
-            session.account = account
-            announce(session.location, f"{display_name(char)} arrives.", exclude=char)
-            return (
-                f"Welcome back, {display_name(char)}@{account}.\n"
-                f"{render_scene(session.location, viewer=char)}"
-            )
-        session.named = True
-        save_character(session)
-        announce(
-            session.location,
-            f"{display_name(old)} is now known as {display_name(char)}.",
-            exclude=char,
-        )
-        return f"Welcome, {display_name(char)}@{account}. Your legend begins. Type JOBS."
-    if routed_signal == "passwd" or routed_signal.startswith("passwd "):
-        if not session.account:
-            return (
-                "Only account logins can change a password. "
-                "Try: login <character>@<account> <password>"
-            )
-        words = true_signal.split()  # TRUE case: secrets are never lowered
-        if len(words) != 4:
-            return "Usage: passwd <old> <new> <new-again>"
-        _, old, new, again = words
-        if new != again:
-            return "Those new passwords do not match. Nothing changed."
-        problem = reforge_secret(session.account, old, new)
-        if problem:
-            return problem
-        return "Password changed. Use it the next time you log in."
-    if routed_signal.startswith("password "):
-        if not session.named:
-            return "Claim a name first: name <yourname>"
-        return set_password(session.player_id, true_signal.split(" ", 1)[1].strip())
-    if routed_signal.startswith("name "):
-        words = true_signal.split(" ", 1)[1].split() if " " in true_signal else []
-        wanted = words[0].lower() if words else ""
-        casefile = load_character(wanted) if wanted else None
-        protected = casefile is not None and has_password(casefile)
-        bad_shape = len(words) > 2 or (len(words) == 2 and not protected)
-        if not wanted or not NAME_RE.match(wanted) or bad_shape:
-            return (
-                "Names are 2-16 characters: lowercase letters, digits, underscores, "
-                "starting with a letter. Try: name matrym"
-            )
-        if wanted in SESSIONS:
-            return f"Someone here is already called {display_name(wanted)}."
-        secret = words[1] if len(words) == 2 else ""
-        if protected and not verify_password(wanted, secret):
-            return f"That name is protected. Prove it is yours: name {wanted} <password>"
-        old = session.player_id
-        SESSIONS.pop(old, None)
-        session.player_id = wanted
-        SESSIONS[wanted] = session
-        rename_echo(old, wanted)
-        if casefile is not None:
-            announce(session.location, f"{display_name(old)} leaves.", exclude=wanted)
-            restore_character(session, casefile)
-            announce(session.location, f"{display_name(wanted)} arrives.", exclude=wanted)
-            nag = (
-                ""
-                if has_password(casefile)
-                else "\n(This name has no password. Protect it: password <secret>)"
-            )
-            # fmt: off
-            return (
-                f"Welcome back, {display_name(wanted)}.{nag}\n"
-                f"{render_scene(session.location, viewer=wanted)}"
-            )
-        # fmt: on
-        session.named = True
-        save_character(session)
-        announce(
-            session.location,
-            f"{display_name(old)} is now known as {display_name(wanted)}.",
-            exclude=wanted,
-        )
-        return f"You are now known as {display_name(wanted)}."
     if routed_signal.startswith("@"):
         return wizard_command(session, routed_signal)
     if routed_signal.startswith(("attack ", "kill ")):

@@ -756,5 +756,120 @@
     ],
     "created": "2026-07-14",
     "updated": "2026-07-14"
+  },
+  {
+    "designation": "CMD-04.002",
+    "name": "register",
+    "status": "active",
+    "function": "create an account and enter",
+    "label": "register",
+    "file": "forge.py",
+    "type": "CMD",
+    "domain": "04",
+    "docs": "docs/architecture.md",
+    "tests": "tests/test_commands.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "command"
+    ],
+    "notes": "Moved off the legacy if-ladder onto the command spine (forge auth-commands refactor).",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-15",
+    "updated": "2026-07-15"
+  },
+  {
+    "designation": "CMD-04.003",
+    "name": "login",
+    "status": "active",
+    "function": "log into an account and enter",
+    "label": "login",
+    "file": "forge.py",
+    "type": "CMD",
+    "domain": "04",
+    "docs": "docs/architecture.md",
+    "tests": "tests/test_commands.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "command"
+    ],
+    "notes": "Moved off the legacy if-ladder onto the command spine (forge auth-commands refactor).",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-15",
+    "updated": "2026-07-15"
+  },
+  {
+    "designation": "CMD-04.004",
+    "name": "passwd",
+    "status": "active",
+    "function": "change your account password",
+    "label": "passwd",
+    "file": "forge.py",
+    "type": "CMD",
+    "domain": "04",
+    "docs": "docs/architecture.md",
+    "tests": "tests/test_commands.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "command"
+    ],
+    "notes": "Moved off the legacy if-ladder onto the command spine (forge auth-commands refactor).",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-15",
+    "updated": "2026-07-15"
+  },
+  {
+    "designation": "CMD-04.005",
+    "name": "password",
+    "status": "active",
+    "function": "protect a claimed name with a password",
+    "label": "password",
+    "file": "forge.py",
+    "type": "CMD",
+    "domain": "04",
+    "docs": "docs/architecture.md",
+    "tests": "tests/test_commands.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "command"
+    ],
+    "notes": "Moved off the legacy if-ladder onto the command spine (forge auth-commands refactor).",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-15",
+    "updated": "2026-07-15"
+  },
+  {
+    "designation": "CMD-04.006",
+    "name": "name",
+    "status": "active",
+    "function": "claim or reclaim a bare name",
+    "label": "name",
+    "file": "forge.py",
+    "type": "CMD",
+    "domain": "04",
+    "docs": "docs/architecture.md",
+    "tests": "tests/test_commands.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "command"
+    ],
+    "notes": "Moved off the legacy if-ladder onto the command spine (forge auth-commands refactor).",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-15",
+    "updated": "2026-07-15"
   }
 ]
