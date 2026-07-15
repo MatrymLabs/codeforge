@@ -111,10 +111,38 @@ def test_a_record_missing_a_field_fails_loud(tmp_path: Path) -> None:
         read(p)
 
 
-def test_appending_to_a_tampered_ledger_fails_loud(tmp_path: Path) -> None:
-    """You cannot quietly extend a history that has already been broken."""
+def test_append_reads_a_tail_larger_than_the_seek_block(tmp_path: Path) -> None:
+    """The tail read walks back in blocks, so a record longer than one block still chains right."""
+    p = _ledger(tmp_path)
+    append(p, {"blob": "x" * 9000})  # a record well over the 4 KiB backward-read block
+    extended = append(p, {"n": 2})
+    assert extended.seq == 1 and extended.prior_hash == read(p)[0].content_hash
+    assert verify(p) is True
+
+
+def test_appending_onto_a_tampered_tail_fails_loud(tmp_path: Path) -> None:
+    """append chains onto the tail, so a tampered TAIL is caught at once -- we never build on
+    garbage. (A tampered EARLIER record is caught on read instead; see the next test.)"""
     p = _ledger(tmp_path)
     append(p, {"n": 1})
     p.write_text(p.read_text().replace('"n": 1', '"n": 2'), encoding="utf-8")
     with pytest.raises(HashChainError, match="tampered"):
         append(p, {"n": 3})
+
+
+def test_appending_after_an_earlier_record_is_tampered_still_extends_but_verify_catches_it(
+    tmp_path: Path,
+) -> None:
+    """append is O(1) -- it reads only the tail, not the whole ledger -- so tampering a PAST record
+    no longer blocks a new append. Integrity is not lost: verify()/read() still catches the break.
+    Tamper-evidence is preserved; only eager re-verification on every append is dropped."""
+    p = _ledger(tmp_path)
+    append(p, {"n": 1})  # the record we will tamper (an EARLIER, non-tail record)
+    append(p, {"n": 2})  # the tail, left intact so append can chain onto it
+    p.write_text(p.read_text().replace('"n": 1', '"n": 999'), encoding="utf-8")
+
+    extended = append(p, {"n": 3})  # succeeds: it validates only the (untampered) tail
+    assert extended.seq == 2
+    assert verify(p) is False  # but the whole-chain check still exposes the tampered past record
+    with pytest.raises(HashChainError, match="tampered"):
+        read(p)
