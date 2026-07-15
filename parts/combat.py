@@ -48,6 +48,7 @@ def _ascend_resources(session: Session) -> None:
 
 def award_xp(session: Session, amount: int) -> str:
     """Add XP; climb every threshold crossed. The curves are law."""
+    amount = max(0, amount)  # an award never DRAINS progress, whatever a caller passes
     session.xp += amount
     lines = [f"You gain {amount} XP."]
     while True:
@@ -77,6 +78,7 @@ def award_jp(session: Session, amount: int) -> str:
     job = session.job
     if not job or job not in session.job_progress:
         return ""
+    amount = max(0, amount)  # an award never DRAINS progress
     prog = session.job_progress[job]
     new_jp = prog.jp + amount
     new_level = prog.job_level
@@ -100,6 +102,7 @@ def award_tp(session: Session, amount: int) -> str:
     job = session.job
     if not job or job not in session.job_progress:
         return ""
+    amount = max(0, amount)  # an award never DRAINS progress
     prog = session.job_progress[job]
     session.job_progress[job] = replace(prog, tp=prog.tp + amount)
     if session.named:
