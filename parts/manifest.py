@@ -18,6 +18,8 @@ from typing import Any
 import yaml
 
 from parts import loader_cache
+from parts.registry import load_collective
+from parts.store_index import display_designation
 
 _REQUIRED = ("part_id", "name", "version", "maturity", "purpose", "source", "domain")
 _MATURITY = ("prototype", "beta", "shipped")
@@ -129,14 +131,39 @@ def to_dict(manifest: PartManifest) -> dict[str, Any]:
     }
 
 
+def registry_designation(source: str, records: list[Any] | None = None) -> str | None:
+    """The registry module designation that files this manifest's `source`, or None if unfiled.
+
+    The cross-link back to the Classification Registry: a manifest addresses a part by its slug,
+    the registry files the same source module by its path. Matching on `source` == the MOD row's
+    `file` ties the two filings together (catalog capability <-> module).
+    """
+    recs = records if records is not None else load_collective()
+    return next((r.designation for r in recs if r.file == source), None)
+
+
+def designations(manifest: PartManifest) -> tuple[str, str]:
+    """The part's two derived filings: (catalog display designation, registry module designation).
+
+    Both are computed, never stored: the catalog `PRT-DD.NNN` is an engineering-domain filing aid,
+    the registry `MOD-DD.NNN` is the module's world-domain filing. A part that is uncatalogued or
+    unfiled renders honestly rather than inventing an id.
+    """
+    catalog = display_designation(manifest.part_id) or "(uncatalogued)"
+    registry = registry_designation(manifest.source) or "(unfiled)"
+    return catalog, registry
+
+
 def to_markdown(manifest: PartManifest) -> str:
-    """Human-readable projection of a manifest."""
+    """Human-readable projection of a manifest, with its derived catalog + registry designations."""
+    catalog, registry = designations(manifest)
     lines = [
         f"# Part Manifest: {manifest.name}",
         "",
         "| Field | Value |",
         "|---|---|",
         f"| **part_id** | `{manifest.part_id}` |",
+        f"| **designation** | `{catalog}` (catalog) · `{registry}` (registry) |",
         f"| **name** | {manifest.name} |",
         f"| **version** | {manifest.version} ({manifest.maturity}) |",
         f"| **purpose** | {manifest.purpose} |",
