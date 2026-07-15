@@ -268,7 +268,7 @@ date-stamped while pre-1.0.
 
 ### Added / Changed
 - **The arch: step into the Proving Ground (`@arch`).** The last rung of the workshop loop.
-  An owner-only, read-only `@arch` verb (CMD-UM10-S01-N001-021-R0) shows the Proving Ground:
+  An owner-only, read-only `@arch` verb (CMD-10.021) shows the Proving Ground:
   the candidate files the Foundry (`@forge`) generated into the `workspace/` sandbox, awaiting
   review. It closes the loop (forge -> review -> promote) without any new risk: it never runs
   or installs generated code, and promotion into `parts/` stays a human branch -> check -> PR
@@ -281,13 +281,13 @@ date-stamped while pre-1.0.
   reworded a networking term to a plain "event loop" for accuracy. Two seeds still ship, so
   "a seed is a game" stays intact.
 - **Proving Ground phases 9-10: the Foundry (human-approved, sandboxed code generation).** The
-  AI-touches-files phases, made safe. `parts/foundry.py` (MOD-UM10-S01-N001-020-R0): a
+  AI-touches-files phases, made safe. `parts/foundry.py` (MOD-10.020): a
   `PatchProposal` is a DATA artifact (target, why, part, risk, test, rollback) - creating one
   writes NOTHING, and a human must `approve()` it first (phase 9). Applying an approved
   proposal generates a NEW file into a git-ignored `workspace/` sandbox: it refuses without
   approval, refuses to overwrite, refuses to escape the sandbox (absolute or `..`), and never
   touches existing source, config, git, or main (phase 10). In-world it is an owner-only
-  `@forge <name>` -> `@forge approve <name>` verb (CMD-UM10-S01-N001-020-R0; a demo visitor,
+  `@forge <name>` -> `@forge approve <name>` verb (CMD-10.020; a demo visitor,
   always rank player, can never reach it). Promoting a candidate into `parts/` stays a human
   branch -> check -> PR step, per docs/proving_ground/SAFETY.md. 17 test cases, refusal-first. The
   workshop cockpit surfaces it under "Owner tools"; the roadmap marks phases 9-10 done.
@@ -332,7 +332,7 @@ date-stamped while pre-1.0.
   on the Pi's aarch64 Chromium and in CI on x86. Flips the last frontend item in the
   full-stack readiness checklist to done.
 - **Observability: structured logs + Prometheus /metrics.** `parts/observability.py`
-  (MOD-UM10-S01-N001-019-R0) wires two operability signals onto the FastAPI surface with one
+  (MOD-10.019) wires two operability signals onto the FastAPI surface with one
   HTTP middleware: **structured JSON request logs** via structlog (method, route, status,
   duration per event) and a **`GET /metrics`** endpoint in Prometheus text exposition
   (request counts + latency sums by method, route template, and status). Series key on the
@@ -344,7 +344,7 @@ date-stamped while pre-1.0.
   middleware records by template, endpoint content type), and an honest advanced career-board
   skill (structured logs + metrics).
 - **AI Blueprint drafter (schema-enforced, mockable).** `parts/blueprint_ai.py`
-  (MOD-UM10-S01-N001-018-R0) turns a freeform idea into a structured Blueprint using the
+  (MOD-10.018) turns a freeform idea into a structured Blueprint using the
   Anthropic Messages API's `messages.parse` with a Pydantic schema (`BlueprintDraft`), then
   re-validates it through the same loud gate a human's Blueprint passes (`from_dict`) and
   forces `status=draft` (AI output is Tier-4). Reachable via a new `blueprint draft <idea>`
@@ -379,7 +379,7 @@ date-stamped while pre-1.0.
   two ways. (1) The `/api/status` route gains explicit `StatusPayload`/`StatusCard` response
   models, so the JSON contract is documented in OpenAPI at `/docs` (the "visible API
   contract" a React/TypeScript client can generate types from). (2) `parts/config.py`
-  (MOD-UM10-S01-N001-017-R0) adds a typed, validated `Settings` catalog of the environment
+  (MOD-10.017) adds a typed, validated `Settings` catalog of the environment
   (PORT, DATABASE_URL, CODEFORGE_ARCHITECT, ...): fails loud on a bad value (a non-numeric or
   out-of-range PORT raises `ConfigError`), is frozen, and renders with credentials redacted.
   The `web` entry point now takes its port from validated `Settings`; a `config` terminal
@@ -410,11 +410,11 @@ date-stamped while pre-1.0.
   ledger. Adds `.env.example`, `docs/architect_brain.md`, and 8 test cases (fake-client call,
   redaction, empty-prompt no-call, key-absent refusal, local fallback).
 - **Blueprint renderer (the forge's planning spine).** An idea becomes a validated Blueprint
-  (`parts/blueprint.py`, MOD-UM10-S01-N001-015-R0): a fail-loud model (JSON record + Markdown
+  (`parts/blueprint.py`, MOD-10.015): a fail-loud model (JSON record + Markdown
   twin, frozen `lowercase_snake_case` identity), then a static, accessible HTML page
-  (`parts/blueprint_render.py`, MOD-UM10-S01-N001-016-R0). Frameless: stdlib `json`/`re`/
+  (`parts/blueprint_render.py`, MOD-10.016). Frameless: stdlib `json`/`re`/
   `html.escape`, no template engine and no new dependency. Reachable through the tick via a
-  `blueprint list | show <id> | render <id>` verb (CMD-UM10-S01-N001-016-R0), pinned by an
+  `blueprint list | show <id> | render <id>` verb (CMD-10.016), pinned by an
   engine-tick test; JSON is canonical, Markdown/HTML are projections (law 1); rendered pages
   are regenerable evidence under `reports/blueprints/` (git-ignored). Ships one example
   (`blueprints/examples/npc_combat`), 32 test cases (validation with hostile cases, files,
@@ -424,7 +424,7 @@ date-stamped while pre-1.0.
   `docs/blueprint_renderer.md`): CodeForge is architecture-first Python; Django/Evennia/React
   stay researched and deferred.
 - **Readiness dashboard (the full-stack proof).** A read-only, server-rendered web page
-  (`parts/dashboard.py`, MOD-UM10-S01-N001-014-R0) that projects real forge evidence, the
+  (`parts/dashboard.py`, MOD-10.014) that projects real forge evidence, the
   career board, the QualityGate audit, the hardware store, and the latest `make bench` run,
   onto four cards, with a JSON twin at `GET /api/status` (the seam a future React front end
   consumes). Frameless: stdlib `html.escape` + f-strings, no template engine and no new
@@ -440,7 +440,7 @@ date-stamped while pre-1.0.
 - **Performance evidence (`make bench`).** A frameless (stdlib time+statistics) benchmark of
   the engine tick: drives a read-only command rotation through `handle_command` and reports
   throughput + latency distribution (median/p95/p99). Files dated evidence under
-  reports/performance/; wired to `terminal bench`; filed as MOD-UM10-S01-N001-013-R0.
+  reports/performance/; wired to `terminal bench`; filed as MOD-10.013.
   Measured ~126k commands/sec, median ~7us on a Pi 5. Gives codeforge its own performance
   artifact (the deep GPU/CPU study lives in pyg-perf-lab).
 - **`make env` uses uv locally too.** When uv is present, `make env` builds the venv with
@@ -472,7 +472,7 @@ date-stamped while pre-1.0.
   `parts/dependencies.py` (stdlib `tomllib`) fails loud on any unjustified one; the test
   twin rides `make check`. All GitHub Actions are pinned to full commit SHA (Dependabot
   maintains them), lifting the OpenSSF Scorecard Pinned-Dependencies check. Filed as
-  MOD-UM10-S01-N001-012-R0.
+  MOD-10.012.
 - **OpenSSF Scorecard wired.** `.github/workflows/scorecard.yml` scores the repo's
   supply-chain/security posture weekly + on push and publishes the result; a truthful
   badge is on the README. Closes the last open Phase-3 tooling item. No runtime dep.

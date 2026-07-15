@@ -100,6 +100,25 @@ def addressed(parts: list[Part], domains: list[Domain]) -> list[tuple[str, Part]
     return out
 
 
+def display_designation(
+    part_id: str,
+    catalog: list[Part] | None = None,
+    domains: list[Domain] | None = None,
+) -> str | None:
+    """The catalog display designation for a part: `PRT-<domain.ordinal>`, or None if uncatalogued.
+
+    Derived from the taxonomy, never stored: the address is a filing aid that may shift as parts
+    are added, while the slug id is identity (ADR-0008, catalog_v3_redesign.md). So a manifest or
+    doc computes this at render time rather than freezing a number that can go stale.
+    """
+    cat = catalog if catalog is not None else load_catalog()
+    doms = domains if domains is not None else load_domains()
+    for address, part in addressed(cat, doms):
+        if part.id == part_id:
+            return f"PRT-{address}"
+    return None
+
+
 def search(parts: list[Part], query: str, *, domains: list[Domain] | None = None) -> list[Part]:
     """Multi-field search: match query against id, name, purpose, category, maturity, tags."""
     q = query.strip().lower()

@@ -1,17 +1,24 @@
 """Test twin for parts/manifest.py -- the typed Part Manifest."""
 
+import re
+
 import pytest
 from hypothesis import given
 from hypothesis import strategies as st
 
+from parts.hardware import load_catalog
 from parts.manifest import (
     ManifestError,
     PartManifest,
+    designations,
     find_manifest,
     from_dict,
+    load_all,
+    registry_designation,
     to_dict,
     to_markdown,
 )
+from parts.store_index import display_designation
 
 
 def _valid_raw():
@@ -86,6 +93,34 @@ def test_shipped_workflow_engine_manifest_loads():
 
 def test_find_manifest_returns_none_for_unknown():
     assert find_manifest("no-such-part-ever") is None
+
+
+# --- traceability: manifest <-> catalog <-> registry all agree (the cross-link gate) ---
+
+_PRT_RE = re.compile(r"^PRT-[0-9]{2}\.[0-9]{3}$")
+_MOD_RE = re.compile(r"^MOD-[0-9]{2}\.[0-9]{3}$")
+
+
+def test_every_shipped_manifest_traces_to_catalog_and_registry():
+    """Every part manifest must resolve to a catalog card AND a filed registry module, and its
+    derived designations must be well-formed. This closes the loop source -> catalog -> registry;
+    a manifest for an uncatalogued or unfiled part is a loose leaf, and this shouts it."""
+    catalogued = {p.id for p in load_catalog()}
+    manifests = load_all()
+    assert manifests, "expected shipped manifests under docs/hardware/"
+    for m in manifests:
+        assert m.part_id in catalogued, f"manifest '{m.part_id}' has no catalog card"
+        catalog, registry = designations(m)
+        assert _PRT_RE.match(catalog), f"{m.part_id}: bad catalog designation {catalog!r}"
+        assert _MOD_RE.match(registry), f"{m.part_id}: source {m.source} not filed as a module"
+
+
+def test_display_designation_is_none_for_an_uncatalogued_part():
+    assert display_designation("no-such-part-ever") is None
+
+
+def test_registry_designation_is_none_for_an_unfiled_source():
+    assert registry_designation("parts/does_not_exist.py") is None
 
 
 # --- Hypothesis property tests: laws the manifest gate must always hold ---
