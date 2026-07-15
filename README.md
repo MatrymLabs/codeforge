@@ -303,7 +303,8 @@ $ forge-audit --path ./codeforge --stage advanced --online --format md
 | ci | ✅ pass | multiple workflow files (`ci`, `codeql`, `docs`, `scorecard`) |
 | collaboration | ✅ pass | a real issue -> PR -> merge history |
 | performance | ✅ pass | a `benchmarks/` directory (and `make bench` / `make trend` record engine-tick timings) |
-| **overall** | **✅ pass** | role signals: testing · security · backend · devops · collaboration · performance |
+| readme | ✅ pass | covers purpose, install, run, test |
+| **overall** | **✅ pass** | role signals: testing · security · backend · devops · collaboration · performance · documentation |
 
 Grading yourself by a rule you don't get to bend is the whole point: an earlier version of
 this table showed `ci` as a `watchlist` with a single workflow file, so the repo added the
