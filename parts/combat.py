@@ -2,9 +2,10 @@
 
 Assembly card: npcs (targets) + stats (damage). Damage is deterministic in v0: no dice
 yet, so every number in the test twin is exact. The dummy reassembles on defeat -- it is a
-training dummy; collapsing is its job. When a foe falls, combat hands the reward to the
-leveling engine (`progression_awards`) rather than climbing the curves itself: damage and
-progression are separate responsibilities.
+training dummy; collapsing is its job. A landed strike advances the combat clock
+(`combat_clock`), so cooldowns thaw and statuses age as rounds pass. When a foe falls,
+combat hands the reward to the leveling engine (`progression_awards`) rather than climbing
+the curves itself: damage, timing, and progression are separate responsibilities.
 
 An NPC that carries a seed `atk` stat strikes back when it survives a
 blow (the training dummy carries none, so it stays passive). If a
@@ -12,6 +13,7 @@ counter-strike would fell the player, a training-ground failsafe
 restores them in place -- a fight never leaves anyone in a broken state.
 """
 
+from parts.combat_clock import advance as advance_clock
 from parts.events import announce
 from parts.npcs import NPCS, trace_npc
 from parts.progression_awards import award_jp, award_tp, award_xp
@@ -71,6 +73,7 @@ def attack(session: Session, word: str) -> str:
         return f"{npc['name'].capitalize()} is not something you can fight."
     dmg = strike_power(session)
     npc["hp_now"] -= dmg
+    advance_clock(session)  # a landed strike is a combat action: cooldowns thaw, statuses age
     announce(
         session.location,
         f"{display_name(session.player_id)} strikes {npc['name']} for {dmg}.",

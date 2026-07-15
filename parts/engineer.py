@@ -14,7 +14,7 @@ a counter), a passive (Systems Thinking, which lengthens Analyzed), and a resour
 
 from __future__ import annotations
 
-from parts.jobs import JOBS
+from parts.combat_clock import advance as tick  # the clock is a combat concept; engineer rides it
 from parts.npcs import NPCS, trace_npc
 from parts.session import Session
 
@@ -30,21 +30,6 @@ ANALYZED_BASE_DURATION = 3  # ticks the Analyzed status lasts, before the inhere
 SYSTEMS_THINKING_ANALYZED_BONUS = 1  # the inherent passive: +duration on Analyzed
 EMERGENCY_REPAIR_COOLDOWN = 5
 EMERGENCY_HP_FRACTION = 0.30  # the counter arms when HP drops to/below 30%
-
-
-def tick(session: Session) -> None:
-    """Advance the combat clock one step: count cooldowns/statuses down, drop the expired, and
-    regenerate the job's custom resource (Power Cells) by its per-tick rate."""
-    for board in (session.cooldowns, session.statuses):
-        for name in list(board):
-            board[name] -= 1
-            if board[name] <= 0:
-                del board[name]
-    power = session.resources.get("power")
-    if power is not None and session.job in JOBS:
-        regen = JOBS[session.job]["power_regen"]
-        if regen and power.current < power.maximum:
-            session.resources["power"] = power.heal(regen)
 
 
 def _wisdom(session: Session) -> int:
