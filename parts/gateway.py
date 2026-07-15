@@ -75,8 +75,17 @@ def _gate_is_barred(ip: str) -> bool:
         return len(recent) >= MAX_LOGIN_FAILS
 
 
+def _forgive_address(ip: str) -> None:
+    """Clear an address's failure tally after a PROVEN-good login. A brute-forcer never reaches
+    this (they never authenticate), so it can't reset the bar -- it only spares a legitimate user
+    who fumbled a few times (a typo, a taken name) and then logged in successfully."""
+    with _ledger_lock:
+        _turnaway_ledger.pop(ip, None)
+
+
 # --- telnet option negotiation (RFC 854/857): the password blackout ---
 IAC, WILL, WONT, DO, DONT = 255, 251, 252, 253, 254
+SB, SE = 250, 240  # subnegotiation begin/end: IAC SB <opt> ...body... IAC SE (variable length)
 ECHO_OPT = 1
 _ECHO_OFF = bytes([IAC, WILL, ECHO_OPT])  # "I will echo" -> client stops echoing
 _ECHO_ON = bytes([IAC, WONT, ECHO_OPT])  # "I won't echo" -> client resumes
@@ -94,6 +103,15 @@ def _strip_telnet(data: bytes) -> bytes:
             if command == IAC:  # escaped literal 255
                 out.append(IAC)
                 i += 2
+            elif command == SB:
+                # Subnegotiation is variable length: skip the whole IAC SB ...body... IAC SE
+                # frame, or the body bytes (window size, terminal type, GMCP...) leak into the
+                # command line -- and, mid-password, corrupt the secret. A client sending it glued
+                # to input (Mudlet et al.) once broke logins. Unterminated frame: drop to the end.
+                j = i + 2
+                while j + 1 < len(data) and not (data[j] == IAC and data[j + 1] == SE):
+                    j += 1
+                i = j + 2 if j + 1 < len(data) else len(data)
             elif command in (WILL, WONT, DO, DONT):
                 i += 3  # three-byte sequence: IAC <verb> <option>
             else:
@@ -212,8 +230,10 @@ class _GateHandler(socketserver.StreamRequestHandler):
                 response = handle_command(session, command)
             self._send(response)
             if response.startswith("Welcome back,"):
+                _forgive_address(ip)  # a proven-good login clears any prior fumbles
                 return True  # the restore response already renders the scene
             if response.startswith("Welcome,"):
+                _forgive_address(ip)
                 self._send(render_scene(session.location, viewer=session.player_id))
                 return True
             _log_turnaway(ip)  # this login/register attempt failed

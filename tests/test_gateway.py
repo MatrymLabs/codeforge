@@ -305,6 +305,27 @@ def test_repeated_failures_rate_limit_the_address(server, monkeypatch):
     refused.close()
 
 
+def test_subnegotiation_bytes_never_pollute_the_secret():
+    """A telnet subnegotiation frame (IAC SB ... IAC SE) glued to input -- e.g. a MUD client's
+    window-size report -- must be fully stripped, or its body corrupts the password mid-login."""
+    frame = bytes([255, 250, 31, 0, 80, 0, 24, 255, 240]) + b"swordfish"  # IAC SB NAWS ... IAC SE
+    assert gateway._strip_telnet(frame).decode("utf-8", "ignore").strip() == "swordfish"
+    # an unterminated frame (split across reads) drops to the end -- never leaks the body
+    assert gateway._strip_telnet(bytes([255, 250, 31, 0, 80]) + b"leak") == b""
+
+
+def test_a_proven_good_login_clears_the_failure_tally(monkeypatch):
+    """Reset-on-success: a legitimate user who fumbled then logged in isn't barred by the leftover
+    failures. A brute-forcer never reaches this (never authenticates), so it can't reset the bar."""
+    monkeypatch.setattr(gateway, "MAX_LOGIN_FAILS", 3)
+    ip = "5.6.7.8"
+    for _ in range(2):
+        gateway._log_turnaway(ip)
+    gateway._forgive_address(ip)
+    assert ip not in gateway._turnaway_ledger
+    assert gateway._gate_is_barred(ip) is False
+
+
 def test_rate_limit_check_never_grows_the_table(server):
     """_gate_is_barred is read-only: connect-only traffic (no failed
     logins) must not add dict entries -- that would be a memory leak an
