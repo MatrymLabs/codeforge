@@ -11,7 +11,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from parts.job_progress import load_job_progress, save_job_progress
-from parts.jobs import BASE_HP, BASE_MP, bind_calling
+from parts.jobs import BASE_HP, BASE_MP, JOBS, bind_calling
 from parts.progression import hp_gain_per_level, mp_gain_per_level
 from parts.resources import Resource
 from parts.session import Session
@@ -103,8 +103,15 @@ def restore_character(session: Session, casefile: dict[str, Any]) -> None:
     session.xp = int(casefile["xp"])
     session.location = str(casefile["location"])
     session.secondary_job = str(casefile.get("secondary_job", ""))
+    # A restore is a night's rest: clear transient combat/gear state so a rename into a saved hero
+    # can't inherit the prior identity's cooldowns, statuses, or worn gear (which fold into stats).
+    session.cooldowns.clear()
+    session.statuses.clear()
+    session.equipped.clear()
     job = str(casefile["job"])
-    if not job:
+    if not job or job not in JOBS:
+        # No calling, or the calling vanished from THIS seed (seeds are games -- a character saved
+        # under another seed pack). Restore a jobless sheet and let them re-pick, never crash.
         return
     bind_calling(session, job)
     # Restore every job record this character earned; bind_calling seeded the active one.
