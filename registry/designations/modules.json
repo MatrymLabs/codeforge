@@ -3844,5 +3844,34 @@
     "aliases": [],
     "created": "2026-07-14",
     "updated": "2026-07-14"
+  },
+  {
+    "designation": "MOD-UM04-S01-N001-043-R0",
+    "name": "gmcp",
+    "status": "active",
+    "function": "structured out-of-band state frames for GMCP-aware clients",
+    "label": "gmcp",
+    "file": "parts/gmcp.py",
+    "type": "MOD",
+    "domain": "UM04",
+    "sector": "S01",
+    "node": "N001",
+    "sequence": "043",
+    "revision": "R0",
+    "docs": "docs/architecture.md",
+    "tests": "tests/test_gmcp.py",
+    "depends_on": [],
+    "related": [
+      "gateway"
+    ],
+    "reuse": "GMCP framing + negotiation reading: any Telnet service that wants to push structured state to a capable client alongside the text stream",
+    "tags": [
+      "module"
+    ],
+    "notes": "Pure card; the TCP gateway owns the socket and decides when to send. Vitals derive through sheet_from_session (derive-don't-store).",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-15",
+    "updated": "2026-07-15"
   }
 ]

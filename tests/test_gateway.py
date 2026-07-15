@@ -379,3 +379,50 @@ def test_client_negotiation_bytes_never_pollute_the_secret(server):
     out = _read_until(sock, b"> ")
     assert "Welcome back, Matrym@matlabs" in out
     sock.close()
+
+
+# --- GMCP: structured out-of-band state for a capable client ---------------
+
+_SB_GMCP = bytes([255, 250, 201])  # IAC SB GMCP (a subnegotiation frame opening)
+_DO_GMCP = bytes([255, 253, 201])  # IAC DO GMCP (a client enabling GMCP)
+
+
+def _saved_hero_with_calling(char="mira", account="mlabs", pw="swordfish", job="vanguard"):
+    """A saved character that has taken a calling, so vitals actually derive on restore."""
+    from parts.jobs import bind_calling
+
+    hero = Session(player_id=char, location="courtyard", named=True, account=account)
+    bind_calling(hero, job)
+    hero.level = 2
+    SESSIONS[char] = hero
+    save_character(hero)
+    SESSIONS.clear()
+    register_account(f"{account}_seed", account, pw)
+    adopt(char, account)
+
+
+def test_a_gmcp_client_receives_room_and_vitals_frames_on_entry(server):
+    """A client that answers the GMCP offer gets Room.Info and Char.Vitals as subnegotiation
+    frames the moment it enters the world -- structured state beside the text scene."""
+    _saved_hero_with_calling()
+    sock = _connect(server)
+    sock.sendall(_DO_GMCP)  # enable GMCP before the dialogue (rides the first input line)
+    _read_until(sock, b"NEW: ")
+    _line(sock, "mira@mlabs")
+    _read_until_raw(sock, b"Password: " + bytes([255, 251, 1]))
+    _line(sock, "swordfish")
+    out = _read_until_raw(sock, b"> ")
+    assert _SB_GMCP in out  # at least one GMCP subnegotiation frame was pushed
+    assert b"Room.Info" in out and b"Broken Courtyard" in out  # the room, as data
+    assert b"Char.Vitals" in out and b'"hp":' in out  # live vitals, as data
+    sock.close()
+
+
+def test_a_plain_client_never_receives_gmcp_frames(server):
+    """A raw client that never answers the offer must not get a single GMCP subnegotiation
+    frame -- only the offer byte (IAC WILL GMCP), never IAC SB GMCP binary in its text stream."""
+    sock = _connect_player(server)  # _connect_player never negotiates GMCP
+    _line(sock, "look")
+    out = _read_until_raw(sock, b"> ")
+    assert _SB_GMCP not in out  # no structured frames leak to a plain-text client
+    sock.close()
