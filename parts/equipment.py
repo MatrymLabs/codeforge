@@ -60,7 +60,10 @@ def apply_stat_modifiers(
     result = dict(base_derived)
     for stat, value in base_derived.items():
         if stat in mods_by_target:
-            bounded = Stat(name=stat, base=value, min_value=0, max_value=9999)
+            # Clamp the incoming derived value into the Stat's own [0, 9999] bounds first:
+            # derived_stats documents that it can return a negative/oversized value on hostile
+            # attributes, and this next pipeline stage must clamp it, not raise on the Stat bound.
+            bounded = Stat(name=stat, base=max(0, min(value, 9999)), min_value=0, max_value=9999)
             result[stat] = ModifierStack(tuple(mods_by_target[stat])).apply(bounded)
     return result
 

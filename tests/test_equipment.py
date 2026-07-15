@@ -121,3 +121,16 @@ def test_equip_and_unequip_reach_through_the_tick() -> None:
     handle_command(s, "take wrench")
     assert "You equip" in handle_command(s, "equip wrench")
     assert "You remove" in handle_command(s, "unequip weapon")
+
+
+# --- defensive consistency: the two pipeline stages agree on out-of-range inputs -----------
+def test_apply_stat_modifiers_clamps_an_out_of_range_derived_stat() -> None:
+    """derived_stats documents it can return a negative/oversized value on hostile attributes;
+    the next stage must clamp it into the Stat's own [0, 9999] bounds, not raise. (Not reachable
+    in normal play - attributes start at 0 - but the two pure functions must not disagree.)"""
+    from parts.derived import derived_stats
+    from parts.equipment import StatModifier, apply_stat_modifiers
+
+    base = derived_stats({"strength": -50}, 0)  # yields a negative ATK
+    out = apply_stat_modifiers(base, {"ATK": [StatModifier("sword", flat=5)]})
+    assert out["ATK"] == 5  # base clamped to 0, then + the flat modifier; no ValueError
