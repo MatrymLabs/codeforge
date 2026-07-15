@@ -978,7 +978,7 @@
     "designation": "MOD-10.007",
     "name": "cast",
     "status": "active",
-    "function": "Seed→cast planner: plan a standalone game project from a seed pack + the engine (dry run).",
+    "function": "Seed\u2192cast planner: plan a standalone game project from a seed pack + the engine (dry run).",
     "label": "cast",
     "file": "parts/cast.py",
     "type": "MOD",
@@ -3648,6 +3648,38 @@
       "module"
     ],
     "notes": "Split from score_sheet (the renderer) so the view model is consumed independently by character_view + equipment; makes the catalog's 'decoupled view model' claim literal.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-15",
+    "updated": "2026-07-15"
+  },
+  {
+    "designation": "MOD-04.045",
+    "name": "progression_awards",
+    "status": "active",
+    "function": "grant XP/JP/TP and climb the curves (the leveling engine)",
+    "label": "progression_awards",
+    "file": "parts/progression_awards.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "docs/architecture.md",
+    "tests": "tests/test_progression_awards.py",
+    "depends_on": [
+      "progression",
+      "jobs",
+      "resources",
+      "events",
+      "session"
+    ],
+    "related": [
+      "combat",
+      "quest"
+    ],
+    "reuse": "one home for the leveling engine: any reward source (a felled NPC, a finished quest, a future achievement) grants progress through the same three monotonic awards, without pulling in strike math",
+    "tags": [
+      "module"
+    ],
+    "notes": "Extracted (modularity audit) from combat.award_xp/award_jp/award_tp + _ascend_resources, so the damage loop and the leveling engine are separate responsibilities. Combat now imports the grants; quest's award_xp hook points here too.",
     "superseded_by": "",
     "aliases": [],
     "created": "2026-07-15",

@@ -103,7 +103,7 @@ def _apply_effect(effect: str | None, session: Session) -> str:
     if not effect:
         return ""
     if effect == "award_xp" and session.stats is not None:
-        from parts.combat import award_xp
+        from parts.progression_awards import award_xp
 
         return "\n" + award_xp(session, _XP_REWARD)
     if effect.startswith("open_door:"):
