@@ -1,14 +1,16 @@
 """CARD: registry -- the CodeForge Classification Registry filing engine.
 
-A hidden backend catalog beneath the fantasy: every filed object gets a unique
-designation (TYPE-UM-SEC-NODE-SEQ-REV) keyed to its frozen runtime label. This card
-is the filing engine -- load records, mint the next free designation, validate the
-collective. It never renames a label; a designation is additive metadata.
+A hidden backend catalog beneath the fantasy: every filed object gets a unique subnet
+designation (TYPE-DD.NNN -- domain code . stable ordinal) keyed to its frozen runtime
+label. This card is the filing engine -- load records, mint the next free designation,
+validate the collective. It never renames a label; a designation is additive metadata.
 
-The designation string is canonical: its six structural components are parsed from
-it, so the record can never contradict its own id. Records live as JSON under
-registry/designations/*.json (schema: registry/schemas/designation.schema.json).
-See docs/classification/CLASSIFICATION_SYSTEM.md.
+The designation string is canonical: its structural components are parsed from it, so
+the record can never contradict its own id. The old Borg format
+(TYPE-UM##-S##-N###-SEQ-REV) is retired to each row's `aliases` and still resolves.
+Records live as JSON under registry/designations/*.json (schema:
+registry/schemas/designation.schema.json). See ADR-0008 and
+docs/classification/CLASSIFICATION_SYSTEM.md.
 """
 
 import json
@@ -43,13 +45,14 @@ TYPES = (
     "SYS",
     "API",
 )
-DOMAINS = tuple(f"UM{n:02d}" for n in range(1, 11))  # UM01..UM10
+DOMAINS = tuple(f"{n:02d}" for n in range(1, 11))  # 01..10 (world domains; see ADR-0008)
 STATUSES = ("prototype", "active", "hardened", "deprecated", "archived", "superseded")
 
+# Subnet designation: TYPE-DD.NNN (domain code . stable ordinal). The old Borg format
+# (TYPE-UM##-S##-N###-SEQ-REV) is retired to each row's `aliases` so it resolves. See ADR-0008.
 DESIGNATION_RE = re.compile(
     r"^(?P<type>UM|SEC|RM|NPC|ITM|QST|CMD|MOD|PRT|DOC|PDF|TXT|REG|LSN|QZ|EV|LOG|SYS|API)"
-    r"-(?P<domain>UM[0-9]{2})-(?P<sector>S[0-9]{2})-(?P<node>N[0-9]{3})"
-    r"-(?P<sequence>[0-9]{3})-(?P<revision>R[0-9]+)$"
+    r"-(?P<domain>[0-9]{2})\.(?P<ordinal>[0-9]{3})$"
 )
 
 
@@ -59,7 +62,7 @@ class RegistryError(ValueError):
 
 @dataclass
 class Designation:
-    """One filed object. The designation is canonical; the six structural fields are
+    """One filed object. The designation is canonical; the structural fields are
     derived from it in __post_init__, so a record can't disagree with its own id."""
 
     designation: str
@@ -71,10 +74,7 @@ class Designation:
     # --- derived from the designation (do not set by hand; __post_init__ overwrites) ---
     type: str = ""
     domain: str = ""
-    sector: str = "S01"
-    node: str = "N001"
-    sequence: str = "001"
-    revision: str = "R0"
+    ordinal: str = "001"
     # --- filing metadata ---
     docs: str = ""
     tests: str = ""
@@ -94,12 +94,9 @@ class Designation:
             raise RegistryError(f"'{self.designation}' is not a valid designation")
         self.type = match.group("type")
         self.domain = match.group("domain")
-        self.sector = match.group("sector")
-        self.node = match.group("node")
-        self.sequence = match.group("sequence")
-        self.revision = match.group("revision")
+        self.ordinal = match.group("ordinal")
         if self.domain not in DOMAINS:
-            raise RegistryError(f"{self.designation}: domain '{self.domain}' is not a unimatrix")
+            raise RegistryError(f"{self.designation}: domain '{self.domain}' is not a known domain")
         if self.status not in STATUSES:
             raise RegistryError(f"{self.designation}: status '{self.status}' not in {STATUSES}")
         for required in ("name", "function", "label", "file"):
@@ -165,45 +162,37 @@ def mint_designation(
     type_: str,
     domain: str,
     existing: list[Designation] | list[str],
-    sector: str = "S01",
-    node: str = "N001",
 ) -> str:
-    """Mint the next free designation for (type, domain, sector, node). Fills the
-    lowest unused sequence, so ids never collide and gaps are reused. Revision R0."""
+    """Mint the next free subnet designation TYPE-DD.NNN for (type, domain). Fills the
+    lowest unused ordinal, so ids never collide and gaps are reused. See ADR-0008."""
     if type_ not in TYPES:
         raise RegistryError(f"type '{type_}' not in {TYPES}")
     if domain not in DOMAINS:
-        raise RegistryError(f"domain '{domain}' is not a unimatrix")
+        raise RegistryError(f"domain '{domain}' is not a known domain")
     used: set[int] = set()
     for item in existing:
         match = DESIGNATION_RE.match(_designation_of(item))
-        if (
-            match
-            and match.group("type") == type_
-            and match.group("domain") == domain
-            and match.group("sector") == sector
-            and match.group("node") == node
-        ):
-            used.add(int(match.group("sequence")))
-    sequence = 1
-    while sequence in used:
-        sequence += 1
-    if sequence > 999:
-        raise RegistryError(f"node {type_}-{domain}-{sector}-{node} is full (999 sequences)")
-    return f"{type_}-{domain}-{sector}-{node}-{sequence:03d}-R0"
+        if match and match.group("type") == type_ and match.group("domain") == domain:
+            used.add(int(match.group("ordinal")))
+    ordinal = 1
+    while ordinal in used:
+        ordinal += 1
+    if ordinal > 999:
+        raise RegistryError(f"domain {type_}-{domain} is full (999 ordinals)")
+    return f"{type_}-{domain}.{ordinal:03d}"
 
 
 DOMAIN_NAMES = {
-    "UM01": "Workshop",
-    "UM02": "City",
-    "UM03": "Library & Classroom",
-    "UM04": "Game systems",
-    "UM05": "Hardware Store",
-    "UM06": "Compliance & regulations",
-    "UM07": "Finance",
-    "UM08": "Records management",
-    "UM09": "AI & API systems",
-    "UM10": "Reports, logs & evidence",
+    "01": "Workshop",
+    "02": "City",
+    "03": "Library & Classroom",
+    "04": "Game systems",
+    "05": "Hardware Store",
+    "06": "Compliance & regulations",
+    "07": "Finance",
+    "08": "Records management",
+    "09": "AI & API systems",
+    "10": "Reports, logs & evidence",
 }
 TYPE_NAMES = {
     "UM": "Unimatrix",
@@ -237,7 +226,7 @@ def _find(designation: str, records: list[Designation]) -> Designation | None:
 
 
 def _row(r: Designation) -> str:
-    return f"{r.designation:26}{r.status:11}{r.name}"
+    return f"{r.designation:14}{r.status:11}{r.name}"
 
 
 def registry_list(registry_dir: Path | None = None) -> str:

@@ -1,17 +1,13 @@
 [
   {
-    "designation": "ITM-UM04-S01-N001-001-R0",
+    "designation": "ITM-04.001",
     "name": "Excalibur, the drawn blade",
     "status": "active",
     "function": "Generatable item pattern (excalibur).",
     "label": "excalibur",
     "file": "catalog/items.yaml",
     "type": "ITM",
-    "domain": "UM04",
-    "sector": "S01",
-    "node": "N001",
-    "sequence": "001",
-    "revision": "R0",
+    "domain": "04",
     "docs": "",
     "tests": "tests/test_generate.py",
     "depends_on": [],
@@ -23,23 +19,21 @@
     ],
     "notes": "Item pattern defined in catalog/items.yaml; generated in-world via @sg (see docs/naming_glossary.md).",
     "superseded_by": "",
-    "aliases": [],
+    "aliases": [
+      "ITM-UM04-S01-N001-001-R0"
+    ],
     "created": "2026-07-09",
     "updated": "2026-07-09"
   },
   {
-    "designation": "ITM-UM04-S01-N001-002-R0",
+    "designation": "ITM-04.002",
     "name": "an iron sword",
     "status": "active",
     "function": "Generatable item pattern (iron_sword).",
     "label": "iron_sword",
     "file": "catalog/items.yaml",
     "type": "ITM",
-    "domain": "UM04",
-    "sector": "S01",
-    "node": "N001",
-    "sequence": "002",
-    "revision": "R0",
+    "domain": "04",
     "docs": "",
     "tests": "tests/test_generate.py",
     "depends_on": [],
@@ -51,23 +45,21 @@
     ],
     "notes": "Item pattern defined in catalog/items.yaml; generated in-world via @sg (see docs/naming_glossary.md).",
     "superseded_by": "",
-    "aliases": [],
+    "aliases": [
+      "ITM-UM04-S01-N001-002-R0"
+    ],
     "created": "2026-07-09",
     "updated": "2026-07-09"
   },
   {
-    "designation": "ITM-UM04-S01-N001-003-R0",
+    "designation": "ITM-04.003",
     "name": "an oaken shield",
     "status": "active",
     "function": "Generatable item pattern (oaken_shield).",
     "label": "oaken_shield",
     "file": "catalog/items.yaml",
     "type": "ITM",
-    "domain": "UM04",
-    "sector": "S01",
-    "node": "N001",
-    "sequence": "003",
-    "revision": "R0",
+    "domain": "04",
     "docs": "",
     "tests": "tests/test_generate.py",
     "depends_on": [],
@@ -79,7 +71,9 @@
     ],
     "notes": "Item pattern defined in catalog/items.yaml; generated in-world via @sg (see docs/naming_glossary.md).",
     "superseded_by": "",
-    "aliases": [],
+    "aliases": [
+      "ITM-UM04-S01-N001-003-R0"
+    ],
     "created": "2026-07-09",
     "updated": "2026-07-09"
   }

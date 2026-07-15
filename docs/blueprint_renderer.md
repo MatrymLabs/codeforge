@@ -7,9 +7,9 @@ would build it. It is the first stage of the forge loop the project is growing t
 
 ## The two parts
 
-- **`parts/blueprint.py`** (MOD-UM10-S01-N001-015-R0) - the model, the fail-loud validator,
+- **`parts/blueprint.py`** (MOD-10.015) - the model, the fail-loud validator,
   the JSON record + Markdown twin writer, and the `blueprint` tick verb.
-- **`parts/blueprint_render.py`** (MOD-UM10-S01-N001-016-R0) - the static HTML/CSS renderer.
+- **`parts/blueprint_render.py`** (MOD-10.016) - the static HTML/CSS renderer.
 
 ## The data contract
 

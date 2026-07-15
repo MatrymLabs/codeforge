@@ -57,7 +57,7 @@ below it, so capability compounds without a bespoke rewrite:
 
 ```
 Classification Registry   registry/*.json + parts/registry.py
-   filing: every object -> a designation (TYPE-UM-SEC-NODE-SEQ-REV) keyed to its label
+   filing: every object -> a designation (TYPE-DD.NNN) keyed to its label
         |
 Command spine             parts/commands.py
    namespaced verbs (CORE bare / ADMIN '@' / SEED), rank-gated; verbs filed as CMD-*

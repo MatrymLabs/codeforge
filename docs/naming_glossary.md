@@ -33,7 +33,7 @@ engine. Each maps to a real, tested module - the metaphor stays in the code; the
 
 | Name | Kind | Plain-English meaning |
 |------|------|-----------------------|
-| **Designation / Classification Registry** (`parts/registry.py`) | Filing | Every object gets a unique designation `TYPE-UM-SEC-NODE-SEQ-REV`, keyed to its frozen runtime label - a hidden filing system beneath the fantasy. Additive metadata, never a rename. |
+| **Designation / Classification Registry** (`parts/registry.py`) | Filing | Every object gets a unique designation `TYPE-DD.NNN`, keyed to its frozen runtime label - a hidden filing system beneath the fantasy. Additive metadata, never a rename. |
 | **CommandSet / the command spine** (`parts/commands.py`) | Dispatch | Namespaced, rank-gated verbs: `CORE` bare words the engine owns, `ADMIN` under the reserved `@` sigil, `SEED` verbs each game owns. A seed can never shadow a reserved word. |
 | **FailsafeRunner** (`parts/console.py`) | Safety | The safe command console: an allowlist runs only vetted checks - never raw shell. |
 | **QualityGate / SafetyReview** (`parts/qualitygate.py`) | Readiness | Grade a filed object (purpose · file · tests · docs · maturity) → `pass\|watch\|fail`; rate its risk. Readiness, never compliance. |

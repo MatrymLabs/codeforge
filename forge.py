@@ -288,7 +288,7 @@ def _build_commands() -> CommandSet:
     cs.add(
         Command(
             "registry",
-            "CMD-UM10-S01-N001-001-R0",
+            "CMD-10.001",
             "list the collective",
             lambda _s, _a: registry_list(),
             namespace=CORE,
@@ -297,7 +297,7 @@ def _build_commands() -> CommandSet:
     cs.add(
         Command(
             "registry show",
-            "CMD-UM10-S01-N001-002-R0",
+            "CMD-10.002",
             "show one record",
             lambda _s, arg: registry_show(arg),
             namespace=CORE,
@@ -306,7 +306,7 @@ def _build_commands() -> CommandSet:
     cs.add(
         Command(
             "registry find",
-            "CMD-UM10-S01-N001-003-R0",
+            "CMD-10.003",
             "search the registry",
             lambda _s, arg: registry_find(arg),
             namespace=CORE,
@@ -315,7 +315,7 @@ def _build_commands() -> CommandSet:
     cs.add(
         Command(
             "registry type",
-            "CMD-UM10-S01-N001-004-R0",
+            "CMD-10.004",
             "filter by type",
             lambda _s, arg: registry_type(arg),
             namespace=CORE,
@@ -324,7 +324,7 @@ def _build_commands() -> CommandSet:
     cs.add(
         Command(
             "registry status",
-            "CMD-UM10-S01-N001-005-R0",
+            "CMD-10.005",
             "filter by status",
             lambda _s, arg: registry_status(arg),
             namespace=CORE,
@@ -333,7 +333,7 @@ def _build_commands() -> CommandSet:
     cs.add(
         Command(
             "@sg",
-            "CMD-UM04-S01-N001-001-R0",
+            "CMD-04.001",
             "system-generate a filed item pattern (wizard+)",
             system_generate,
             namespace=ADMIN,
@@ -343,7 +343,7 @@ def _build_commands() -> CommandSet:
     cs.add(
         Command(
             "@forge",
-            "CMD-UM10-S01-N001-020-R0",
+            "CMD-10.020",
             "the Foundry: propose a part skeleton, approve, generate into the sandbox (owner)",
             lambda s, arg: forge_command(s, arg),
             namespace=ADMIN,
@@ -353,7 +353,7 @@ def _build_commands() -> CommandSet:
     cs.add(
         Command(
             "@arch",
-            "CMD-UM10-S01-N001-021-R0",
+            "CMD-10.021",
             "step through the arch into the Proving Ground: review forged candidates (owner)",
             lambda s, arg: arch_command(s, arg),
             namespace=ADMIN,
@@ -364,7 +364,7 @@ def _build_commands() -> CommandSet:
     cs.add(
         Command(
             "qa gate all",
-            "CMD-UM10-S01-N001-007-R0",
+            "CMD-10.007",
             "grade every filed object for readiness",
             lambda _s, _a: render_gate_all(),
             namespace=CORE,
@@ -373,7 +373,7 @@ def _build_commands() -> CommandSet:
     cs.add(
         Command(
             "qa gate",
-            "CMD-UM10-S01-N001-006-R0",
+            "CMD-10.006",
             "grade one object against the readiness checklist",
             lambda _s, arg: render_gate(arg),
             namespace=CORE,
@@ -382,7 +382,7 @@ def _build_commands() -> CommandSet:
     cs.add(
         Command(
             "safety review",
-            "CMD-UM10-S01-N001-008-R0",
+            "CMD-10.008",
             "rate one object's risk (readiness, not compliance)",
             lambda _s, arg: render_safety(arg),
             namespace=CORE,
@@ -391,7 +391,7 @@ def _build_commands() -> CommandSet:
     cs.add(
         Command(
             "docs check",
-            "CMD-UM10-S01-N001-009-R0",
+            "CMD-10.009",
             "sweep the key docs for gaps",
             lambda _s, _a: docs_check(),
             namespace=CORE,
@@ -401,7 +401,7 @@ def _build_commands() -> CommandSet:
     cs.add(
         Command(
             "pm status",
-            "CMD-UM10-S01-N001-010-R0",
+            "CMD-10.010",
             "project status dashboard (computed, not stored)",
             lambda _s, _a: pm_status(),
             namespace=CORE,
@@ -410,7 +410,7 @@ def _build_commands() -> CommandSet:
     cs.add(
         Command(
             "pm metrics",
-            "CMD-UM10-S01-N001-011-R0",
+            "CMD-10.011",
             "project metrics (objects, QA readiness, docs gaps)",
             lambda _s, _a: pm_metrics(),
             namespace=CORE,
@@ -419,7 +419,7 @@ def _build_commands() -> CommandSet:
     cs.add(
         Command(
             "law",
-            "CMD-UM06-S01-N001-001-R0",
+            "CMD-06.001",
             "legal/policy awareness over tracked sources (not legal advice)",
             lambda _s, arg: law(arg),
             namespace=CORE,
@@ -428,7 +428,7 @@ def _build_commands() -> CommandSet:
     cs.add(
         Command(
             "truth check",
-            "CMD-UM10-S01-N001-012-R0",
+            "CMD-10.012",
             "VeritasGate: check that the project's claims match reality",
             lambda _s, _a: render_truth(),
             namespace=CORE,
@@ -437,7 +437,7 @@ def _build_commands() -> CommandSet:
     cs.add(
         Command(
             "career",
-            "CMD-UM10-S01-N001-013-R0",
+            "CMD-10.013",
             "Career Evidence Sign: map CodeForge work to job-ready skills, with repo proof",
             lambda s, arg: career(arg, demonstrated=demonstrated(s.player_id)),
             namespace=CORE,
@@ -446,7 +446,7 @@ def _build_commands() -> CommandSet:
     cs.add(
         Command(
             "pioneer",
-            "CMD-UM10-S01-N001-014-R0",
+            "CMD-10.014",
             "Pioneer Mode: bold-but-honest engineering (doctrine, risk ladder, experiments)",
             lambda _s, arg: pioneer(arg),
             namespace=CORE,
@@ -455,7 +455,7 @@ def _build_commands() -> CommandSet:
     cs.add(
         Command(
             "evolution",
-            "CMD-UM10-S01-N001-022-R0",
+            "CMD-10.022",
             "Blueprint Evolution Lab (read-only): show recorded candidate bake-off runs",
             lambda _s, arg: evolution(arg),
             namespace=CORE,
@@ -464,7 +464,7 @@ def _build_commands() -> CommandSet:
     cs.add(
         Command(
             "chronicle",
-            "CMD-UM10-S01-N001-023-R0",
+            "CMD-10.023",
             "The Chronicle (read-only): show the ship's filed memory, newest first",
             lambda _s, arg: chronicle(arg),
             namespace=CORE,
@@ -473,7 +473,7 @@ def _build_commands() -> CommandSet:
     cs.add(
         Command(
             "retention",
-            "CMD-UM10-S01-N001-017-R0",
+            "CMD-10.017",
             "Retention doctor (read-only): what the Chronicle keeps, what a hold protects",
             lambda _s, arg: retention(arg),
             namespace=CORE,
@@ -482,7 +482,7 @@ def _build_commands() -> CommandSet:
     cs.add(
         Command(
             "coupling",
-            "CMD-UM10-S01-N001-018-R0",
+            "CMD-10.018",
             "Engine coupling report (read-only): what a runtime cast could shed (detachment D1)",
             lambda _s, arg: coupling(arg),
             namespace=CORE,
@@ -491,7 +491,7 @@ def _build_commands() -> CommandSet:
     cs.add(
         Command(
             "inspect",
-            "CMD-UM10-S01-N001-015-R0",
+            "CMD-10.015",
             "Inspect the forge: an on-demand green/yellow/red frame-up of every system",
             lambda _s, arg: inspect(arg),
             namespace=CORE,
@@ -500,7 +500,7 @@ def _build_commands() -> CommandSet:
     cs.add(
         Command(
             "functions",
-            "CMD-UM05-S01-N001-002-R0",
+            "CMD-05.002",
             "Hardware Store functions check: run a live demo of each reusable part",
             lambda _s, arg: functions(arg),
             namespace=CORE,
@@ -509,7 +509,7 @@ def _build_commands() -> CommandSet:
     cs.add(
         Command(
             "terminal",
-            "CMD-UM01-S01-N001-001-R0",
+            "CMD-01.001",
             "The in-game computer: one console to run every diagnostic program",
             lambda _s, arg: terminal(arg),
             namespace=CORE,
@@ -518,7 +518,7 @@ def _build_commands() -> CommandSet:
     cs.add(
         Command(
             "blueprint",
-            "CMD-UM10-S01-N001-016-R0",
+            "CMD-10.016",
             "Blueprint: browse, read, or render a forged plan (idea -> spec -> HTML)",
             lambda _s, arg: blueprint(arg),
             namespace=CORE,
@@ -527,7 +527,7 @@ def _build_commands() -> CommandSet:
     cs.add(
         Command(
             "loop trace",
-            "CMD-UM05-S01-N001-023-R0",
+            "CMD-05.023",
             "trace a part through every manufacturing stage",
             lambda _s, arg: _loop_trace_handler(arg),
             namespace=CORE,
@@ -536,7 +536,7 @@ def _build_commands() -> CommandSet:
     cs.add(
         Command(
             "loop",
-            "CMD-UM05-S01-N001-024-R0",
+            "CMD-05.024",
             "manufacturing loop commands (try: loop trace <part-id>)",
             lambda _s, _a: (
                 "Usage: loop trace <part-id>\n"
