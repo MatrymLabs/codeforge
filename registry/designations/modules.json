@@ -3684,5 +3684,34 @@
     "aliases": [],
     "created": "2026-07-15",
     "updated": "2026-07-15"
+  },
+  {
+    "designation": "MOD-04.046",
+    "name": "combat_clock",
+    "status": "active",
+    "function": "advance the combat clock one step (the shared round timer)",
+    "label": "combat_clock",
+    "file": "parts/combat_clock.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "docs/architecture.md",
+    "tests": "tests/test_combat_clock.py",
+    "depends_on": [
+      "session",
+      "jobs"
+    ],
+    "related": [
+      "combat",
+      "engineer"
+    ],
+    "reuse": "one job-blind round timer: any combat action from any source (a basic strike, a job ability, a future skill) advances the same cooldown/status/resource clock without the caller knowing which job is seated",
+    "tags": [
+      "module"
+    ],
+    "notes": "Split out of engineer.tick, where the clock was misfiled as an Engineer concern. Engineer re-exports it (tick) for its abilities; combat.attack calls advance on every landed strike, so cooldowns thaw and statuses age as rounds pass (the action-clock model).",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-15",
+    "updated": "2026-07-15"
   }
 ]

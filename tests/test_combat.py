@@ -73,6 +73,25 @@ def test_strikes_wear_the_dummy_down_and_it_reassembles():
     assert npcs.NPCS["training_dummy"]["hp_now"] == 20
 
 
+def test_a_landed_strike_advances_the_combat_clock():
+    """A basic attack is a combat action: it thaws cooldowns and ages statuses, so a player
+    can trade normal blows while a cooldown recovers (not only by spending another ability)."""
+    s = _fighter("engineer")
+    s.cooldowns["field_repair"] = 2
+    s.statuses["barrier"] = 2
+    attack(s, "dummy")
+    assert s.cooldowns["field_repair"] == 1  # one round passed
+    assert s.statuses["barrier"] == 1
+
+
+def test_a_refused_swing_does_not_advance_the_clock():
+    """Only a LANDED strike counts. A swing at nothing (no target) is not a round."""
+    s = _fighter("engineer")
+    s.cooldowns["field_repair"] = 2
+    attack(s, "nobody-here")
+    assert s.cooldowns["field_repair"] == 2  # unchanged: no action was taken
+
+
 def test_attack_flows_through_the_engine_tick():
     from forge import handle_command
 
