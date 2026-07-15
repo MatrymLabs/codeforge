@@ -19,6 +19,7 @@ import time
 from forge import handle_command, render_scene
 from parts.characters import save_character
 from parts.events import SHUTDOWN, bind_echo, unbind_echo
+from parts.gmcp import GMCP_OPT, enables_gmcp, gmcp_frame, room_report, vitals_report
 from parts.seed import SEED_DIR
 from parts.session import SESSIONS, Session
 
@@ -90,6 +91,11 @@ ECHO_OPT = 1
 _ECHO_OFF = bytes([IAC, WILL, ECHO_OPT])  # "I will echo" -> client stops echoing
 _ECHO_ON = bytes([IAC, WONT, ECHO_OPT])  # "I won't echo" -> client resumes
 
+# GMCP (option 201): offer it on connect. A capable client answers DO/WILL GMCP and then gets
+# structured state frames (Char.Vitals, Room.Info) alongside the text; a raw nc never answers, so
+# it stays a plain-text client and sees no binary. Framing + the reply-reader live in parts/gmcp.py.
+_WILL_GMCP = bytes([IAC, WILL, GMCP_OPT])
+
 
 def _strip_telnet(data: bytes) -> bytes:
     """Remove IAC command sequences from raw input. Clients answer our
@@ -157,6 +163,40 @@ class _GateHandler(socketserver.StreamRequestHandler):
         # traffic is tiny interactive lines: exactly what TCP_NODELAY is for.
         with contextlib.suppress(OSError):  # setsockopt is platform-dependent
             self.connection.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
+        # Offer GMCP and start disabled: only a client that answers positively flips it on.
+        # _last_* memoize the last frame sent so we push only what actually changed.
+        self._gmcp_enabled = False
+        self._last_vitals: dict[str, int] | None = None
+        self._last_room: dict[str, object] | None = None
+        with contextlib.suppress(OSError):
+            self.wfile.write(_WILL_GMCP)
+
+    def _note_gmcp(self, raw: bytes) -> None:
+        """Read a client's GMCP negotiation reply out of raw input and record its choice."""
+        verdict = enables_gmcp(raw)
+        if verdict is not None:
+            self._gmcp_enabled = verdict
+
+    def _send_gmcp(self, package: str, data: object) -> None:
+        """Push one GMCP frame, only to a client that enabled GMCP (never to a plain-text nc)."""
+        if not self._gmcp_enabled:
+            return
+        with contextlib.suppress(OSError):
+            self.wfile.write(gmcp_frame(package, data))
+
+    def _push_state(self, session: Session) -> None:
+        """Emit Room.Info and Char.Vitals when they change (and once on entry). No-op until the
+        client enables GMCP, so the reports are not even computed for a plain-text session."""
+        if not self._gmcp_enabled:
+            return
+        room = room_report(session)
+        if room != self._last_room:
+            self._send_gmcp("Room.Info", room)
+            self._last_room = room
+        vitals = vitals_report(session)
+        if vitals is not None and vitals != self._last_vitals:
+            self._send_gmcp("Char.Vitals", vitals)
+            self._last_vitals = vitals
 
     def _send(self, text: str) -> None:
         self.wfile.write((_sanitize(text) + "\r\n").encode("utf-8"))
@@ -171,6 +211,7 @@ class _GateHandler(socketserver.StreamRequestHandler):
             return None  # idle timeout or broken pipe
         if not line:
             return None
+        self._note_gmcp(line)  # the client's GMCP reply often rides the first input
         return _strip_telnet(line).decode("utf-8", errors="ignore").strip()
 
     def _ask_secret(self, prompt: str) -> str | None:
@@ -187,6 +228,7 @@ class _GateHandler(socketserver.StreamRequestHandler):
         self._send("")  # the client didn't echo their Enter; supply the newline
         if not line:
             return None
+        self._note_gmcp(line)
         return _strip_telnet(line).decode("utf-8", errors="ignore").strip()
 
     def _passwd(self, session: Session) -> None:
@@ -268,6 +310,7 @@ class _GateHandler(socketserver.StreamRequestHandler):
             entered = self._front_desk(session)
             if not entered:
                 return
+            self._push_state(session)  # first frames: the scene they logged into
             while session.alive:
                 self.wfile.write(b"> ")
                 try:
@@ -276,6 +319,7 @@ class _GateHandler(socketserver.StreamRequestHandler):
                     break  # idle timeout or broken pipe -> disconnect
                 if not line:
                     break  # client hung up
+                self._note_gmcp(line)  # a client can enable/disable GMCP mid-session
                 text = line.decode("utf-8", errors="ignore")
                 if text.strip().lower() == "passwd":
                     self._passwd(session)  # multi-prompt dialogue with echo blackout
@@ -284,6 +328,7 @@ class _GateHandler(socketserver.StreamRequestHandler):
                     response = handle_command(session, text)
                 if response:
                     self._send(response)
+                self._push_state(session)  # reflect any vitals/room change into GMCP
         except OSError:
             pass  # client dropped (broken pipe / reset) -- disconnect quietly
         finally:
