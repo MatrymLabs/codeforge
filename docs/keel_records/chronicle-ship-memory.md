@@ -69,7 +69,7 @@ surfaced for his call.
   read_latest, empty-store, render, and hostile refusals - tampered payload, reordered chain,
   malformed line, missing field, unknown kind - plus the emit-retention and engine-tick reachability
   tests). Green on `make check`.
-- Registry filings `MOD-UM10-S01-N001-029-R0` + `CMD-UM10-S01-N001-023-R0`; `make readiness` CLEAN.
+- Registry filings `MOD-10.029` + `CMD-10.023`; `make readiness` CLEAN.
 - Additive `arc_ledger.emit` retention verified by `test_emit_retains_its_evidence_verdict_in_the_chronicle`.
 - Retained store scaffolded at `chronicle/` (git-tracked, with a README).
 

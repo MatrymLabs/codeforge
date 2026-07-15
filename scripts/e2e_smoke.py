@@ -128,7 +128,7 @@ def main() -> int:
         # --- CHECK (read-only systems) ---------------------------------------
         step("CHECK regs", s, "regs PUB-NIST-800-171", ["Rev 2", "published"])
         step("CHECK library", s, "library", ["document"])
-        step("CHECK registry", s, "registry show RM-UM03-S01-N001-002-R0", ["Classroom"])
+        step("CHECK registry", s, "registry show RM-03.002", ["Classroom"])
         step("CHECK qa", s, "qa gate all", ["audited"])
         step("CHECK pm", s, "pm status", ["Project Status"])
         step("CHECK docs", s, "docs check", ["Documentation Impact"])
@@ -159,7 +159,7 @@ def main() -> int:
         if grant.returncode == 0 and "owner" in grant.stdout:
             s2 = connect()
             login(s2, "scout@smoke", "lumos_1234", new=False)
-            step("DO @sg forge (owner)", s2, "@sg item excalibur", ["Forged", "ITM-UM04"])
+            step("DO @sg forge (owner)", s2, "@sg item excalibur", ["Forged", "ITM-04"])
             step("DO take", s2, "take excalibur", ["take"])
             step("LOG OUT (owner)", s2, "quit", ["world dims"])
             s2.close()

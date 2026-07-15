@@ -25,7 +25,7 @@ from parts.registry import (
 )
 
 
-def _rec(designation: str = "RM-UM03-S02-N001-001-R0", **over: object) -> Designation:
+def _rec(designation: str = "RM-03.001", **over: object) -> Designation:
     base: dict[str, object] = dict(
         designation=designation,
         name="Classroom of Practical Arts",
@@ -42,24 +42,21 @@ def _rec(designation: str = "RM-UM03-S02-N001-001-R0", **over: object) -> Design
 
 
 def test_structural_fields_are_parsed_from_the_designation() -> None:
-    d = _rec("PRT-UM05-S01-N001-007-R2")
+    d = _rec("PRT-05.007")
     assert d.type == "PRT"
-    assert d.domain == "UM05"
-    assert d.sector == "S01"
-    assert d.node == "N001"
-    assert d.sequence == "007"
-    assert d.revision == "R2"
+    assert d.domain == "05"
+    assert d.ordinal == "007"
 
 
 def test_a_malformed_designation_is_refused() -> None:
     with pytest.raises(RegistryError, match="not a valid designation"):
-        _rec("ROOM-UM03-S02-N1-001-R0")
+        _rec("ROOM-03.1")  # bad type + short ordinal
 
 
 def test_an_unknown_domain_is_refused() -> None:
-    # UM11 matches the id pattern but is not one of the ten unimatrices
-    with pytest.raises(RegistryError, match="not a unimatrix"):
-        _rec("RM-UM11-S01-N001-001-R0")
+    # 11 matches the id pattern but is not one of the ten world domains
+    with pytest.raises(RegistryError, match="not a known domain"):
+        _rec("RM-11.001")
 
 
 def test_a_bad_status_is_refused() -> None:
@@ -81,7 +78,7 @@ def test_load_designations_reads_a_list(tmp_path: Path) -> None:
         json.dumps(
             [
                 {
-                    "designation": "RM-UM03-S02-N001-001-R0",
+                    "designation": "RM-03.001",
                     "name": "Classroom",
                     "status": "prototype",
                     "function": "lessons",
@@ -107,7 +104,7 @@ def test_designations_are_parsed_once_and_cached(tmp_path: Path) -> None:
         json.dumps(
             [
                 {
-                    "designation": "RM-UM03-S02-N001-001-R0",
+                    "designation": "RM-03.001",
                     "name": "Classroom",
                     "status": "prototype",
                     "function": "lessons",
@@ -135,7 +132,7 @@ def test_an_unknown_field_is_refused(tmp_path: Path) -> None:
         json.dumps(
             [
                 {
-                    "designation": "RM-UM03-S02-N001-001-R0",
+                    "designation": "RM-03.001",
                     "name": "x",
                     "status": "prototype",
                     "function": "y",
@@ -153,13 +150,13 @@ def test_an_unknown_field_is_refused(tmp_path: Path) -> None:
 def test_save_then_load_round_trips(tmp_path: Path) -> None:
     path = tmp_path / "designations" / "rooms.json"
     save_designations([_rec()], path)
-    assert load_designations(path)[0].designation == "RM-UM03-S02-N001-001-R0"
+    assert load_designations(path)[0].designation == "RM-03.001"
 
 
 def test_load_collective_merges_every_file(tmp_path: Path) -> None:
-    save_designations([_rec("RM-UM03-S02-N001-001-R0")], tmp_path / "rooms.json")
+    save_designations([_rec("RM-03.001")], tmp_path / "rooms.json")
     save_designations(
-        [_rec("NPC-UM03-S02-N002-001-R0", label="codex", name="Codex", file="seeds/x.yaml")],
+        [_rec("NPC-03.001", label="codex", name="Codex", file="seeds/x.yaml")],
         tmp_path / "npcs.json",
     )
     assert len(load_collective(tmp_path)) == 2
@@ -173,28 +170,28 @@ def test_load_collective_absent_dir_is_empty(tmp_path: Path) -> None:
 
 
 def test_mint_returns_the_first_free_sequence() -> None:
-    assert mint_designation("RM", "UM03", []) == "RM-UM03-S01-N001-001-R0"
+    assert mint_designation("RM", "03", []) == "RM-03.001"
 
 
 def test_mint_fills_the_lowest_gap() -> None:
-    existing = ["RM-UM03-S01-N001-001-R0", "RM-UM03-S01-N001-003-R0"]
-    assert mint_designation("RM", "UM03", existing) == "RM-UM03-S01-N001-002-R0"
+    existing = ["RM-03.001", "RM-03.003"]
+    assert mint_designation("RM", "03", existing) == "RM-03.002"
 
 
-def test_mint_is_scoped_by_domain_and_node() -> None:
-    # a different domain never collides with this node's sequence
-    existing = ["RM-UM08-S01-N001-001-R0"]
-    assert mint_designation("RM", "UM03", existing) == "RM-UM03-S01-N001-001-R0"
+def test_mint_is_scoped_by_domain() -> None:
+    # a different domain never collides with this domain's ordinals
+    existing = ["RM-08.001"]
+    assert mint_designation("RM", "03", existing) == "RM-03.001"
 
 
 def test_a_minted_designation_is_itself_valid() -> None:
-    minted = mint_designation("PRT", "UM05", [], node="N012")
+    minted = mint_designation("PRT", "05", [])
     assert _rec(minted, label="minted", name="m", file="f").designation == minted
 
 
 def test_mint_refuses_a_bad_type() -> None:
     with pytest.raises(RegistryError, match="type"):
-        mint_designation("ROOM", "UM03", [])
+        mint_designation("ROOM", "03", [])
 
 
 # --- validation --------------------------------------------------------------
@@ -214,7 +211,7 @@ def test_validate_flags_duplicate_designations() -> None:
 
 
 def test_validate_flags_a_label_filed_twice_under_one_type() -> None:
-    twins = [_rec("RM-UM03-S02-N001-001-R0"), _rec("RM-UM03-S02-N001-002-R0")]
+    twins = [_rec("RM-03.001"), _rec("RM-03.002")]
     problems = validate(twins, check_files=False)
     assert any("filed 2x" in p for p in problems)
 
@@ -234,7 +231,7 @@ def test_validate_flags_missing_tests(tmp_path: Path) -> None:
 
 
 def test_validate_flags_a_dangling_supersede() -> None:
-    problems = validate([_rec(superseded_by="RM-UM03-S02-N001-999-R0")], check_files=False)
+    problems = validate([_rec(superseded_by="RM-03.999")], check_files=False)
     assert any("is not filed" in p for p in problems)
 
 
@@ -250,7 +247,7 @@ def test_a_prototype_is_exempt_from_the_file_check(tmp_path: Path) -> None:
     planned = _rec(status="prototype", file="seeds/haven-city/rooms.yaml")
     assert validate([planned], root=tmp_path) == []
     # but a non-prototype with the same ghost file is still flagged
-    built = _rec("RM-UM02-S01-N001-009-R0", status="active", file="seeds/haven-city/rooms.yaml")
+    built = _rec("RM-02.009", status="active", file="seeds/haven-city/rooms.yaml")
     assert any("file not found" in p for p in validate([built], root=tmp_path))
 
 
@@ -279,23 +276,23 @@ def test_unfiled_modules_flags_a_missing_designation(tmp_path) -> None:
 @pytest.mark.property
 @given(st.sets(st.integers(min_value=1, max_value=998), max_size=60))
 def test_mint_never_collides_with_any_existing_set(used_sequences):
-    """A minted designation's sequence is never one already filed -- for ANY prior state."""
-    existing = [f"MOD-UM05-S01-N001-{seq:03d}-R0" for seq in used_sequences]
-    minted = mint_designation("MOD", "UM05", existing)
+    """A minted designation's ordinal is never one already filed -- for ANY prior state."""
+    existing = [f"MOD-05.{seq:03d}" for seq in used_sequences]
+    minted = mint_designation("MOD", "05", existing)
     assert minted not in existing
     match = DESIGNATION_RE.match(minted)
     assert match is not None, f"minted an invalid designation: {minted}"
-    assert int(match.group("sequence")) not in used_sequences
+    assert int(match.group("ordinal")) not in used_sequences
 
 
 @pytest.mark.property
 @given(st.sets(st.integers(min_value=1, max_value=998), max_size=60))
 def test_mint_always_fills_the_lowest_gap(used_sequences):
-    """Sequences are recycled: the mint is exactly the smallest unused positive integer."""
-    existing = [f"MOD-UM05-S01-N001-{seq:03d}-R0" for seq in used_sequences]
-    minted = mint_designation("MOD", "UM05", existing)
+    """Ordinals are recycled: the mint is exactly the smallest unused positive integer."""
+    existing = [f"MOD-05.{seq:03d}" for seq in used_sequences]
+    minted = mint_designation("MOD", "05", existing)
     lowest_free = next(n for n in range(1, 1000) if n not in used_sequences)
-    assert minted.split("-")[4] == f"{lowest_free:03d}"
+    assert minted.split(".")[1] == f"{lowest_free:03d}"
 
 
 def test_every_module_is_tested_by_a_twin_or_an_aggregate():

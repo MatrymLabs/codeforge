@@ -31,7 +31,7 @@ several gates rather than one ARC verdict. Neither is a redesign; both are conve
 - **Hardware Store** (`catalog/`, `parts/`, the manufacturing loop) - reusable parts, provenance,
   one core + two adapters, evidence per part. This is the platform thesis, working.
 - **ARC** (`parts/arc.py`) - composes existing gates into one honest readiness verdict; no new gate.
-- **Registry** (`registry/`) - every module filed by domain (UM04 game, UM05 store, UM10 reports).
+- **Registry** (`registry/`) - every module filed by domain (domain 04 game, 05 store, 10 reports).
   This IS the logical package structure, without moving a file.
 - **Evidence spine** - `test_evidence`, `qualitygate`, `integrity`, `change_ledger`, `patch_tracker`.
 - **Engineering-named domain parts** - `validation`, `workflow`, `statemachine`, `repository`,
@@ -109,8 +109,8 @@ ARC as foundational, unchanged.
 
 ## 12. Updated Package Structure
 
-No physical change. The canonical grouping is the **Registry domain**: UM04 (game systems), UM05
-(Hardware Store / reusable parts), UM10 (reports / evidence / review), plus subpackages for cohesive
+No physical change. The canonical grouping is the **Registry domain**: 04 (game systems), 05
+(Hardware Store / reusable parts), 10 (reports / evidence / review), plus subpackages for cohesive
 clusters. Document this mapping in the naming glossary so a reader navigates by domain, not by
 guessing from the flat folder.
 

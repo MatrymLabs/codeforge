@@ -28,7 +28,7 @@ A designation is *attached to* a label, not a replacement for it:
 | Layer | Handle | Example | Who uses it |
 |-------|--------|---------|-------------|
 | Fantasy (runtime) | **label** | `archive` | the engine, save files, seeds |
-| Filing (backend) | **designation** | `RM-UM08-S01-N001-001-R0` | the registry, the ritual, you |
+| Filing (backend) | **designation** | `RM-08.001` | the registry, the ritual, you |
 
 The registry row carries both: `label` is the runtime handle, `designation` is the
 filing handle. If you can't map a designation back to a real label + file, the row
@@ -38,51 +38,57 @@ is invalid.
 
 ## The designation format
 
+Subnet addressing (ADR-0008): a domain code and a stable ordinal, like an IP address.
+The old Borg/Unimatrix format (`TYPE-UM##-S##-N###-SEQ-REV`) is retired to each row's
+`aliases` and still resolves, so nothing that cited an old id breaks.
+
 ```
-[TYPE]-[UM]-[SEC]-[NODE]-[SEQ]-[REV]
-   |     |     |     |      |     |
-   |     |     |     |      |     revision  (R0, R1, ... - bump on a breaking change)
-   |     |     |     |      sequence (001... - unique object number within the node)
-   |     |     |     node     (N001... - a room, service, or module slot)
-   |     |     sector (S01... - a zone/subsystem within the domain)
-   |     unimatrix (UM01... - the major domain)
-   type prefix (RM, NPC, PRT, ...)
+[TYPE]-[DD].[NNN]
+   |     |     |
+   |     |     ordinal (001... - stable object number in the domain; minted once, never renumbered)
+   |     domain code (01... - the world domain, see below)
+   type prefix (RM, MOD, CMD, PRT, ...)
 ```
 
-Example: `RM-UM03-S02-N001-001-R0` reads as *Room · Library/Classroom domain ·
-Sector 02 · Node 001 · object 001 · revision 0.*
+Example: `RM-03.002` reads as *Room · Library/Classroom domain (03) · object 002.*
+`MOD-05.009` is the `telnet_codec` module, filed in the Hardware Store domain (05).
 
 Designations sort cleanly, grep cleanly, and never collide (a validator enforces
-uniqueness - see below). You never hand-type one: a helper mints the next sequence.
+uniqueness - see below). You never hand-type one: a helper mints the next ordinal.
+Identity is always the frozen `label`; the designation is a re-classifiable filing aid
+layered over it (the four-layer model: identity, address, display, metadata).
 
 ### Type prefixes
 
 | Prefix | Object | Prefix | Object |
 |--------|--------|--------|--------|
-| `UM`  | Unimatrix / major domain | `REG` | Regulation / guidance entry |
-| `SEC` | Sector / zone            | `DOC` | Source document |
-| `RM`  | Room                     | `PDF` | Stored PDF artifact |
-| `NPC` | Non-player character     | `TXT` | Extracted text analog |
-| `ITM` | Item                     | `LSN` | Lesson |
-| `QST` | Quest                    | `QZ`  | Quiz |
-| `CMD` | Command (engine-tick verb)| `EV`  | Evidence record |
-| `MOD` | Python module (`parts/*.py`)| `LOG` | Log / report |
-| `PRT` | Reusable code part (a cataloged capability)| `SYS` | System / safety service |
+| `RM`  | Room                     | `REG` | Regulation / guidance entry |
+| `NPC` | Non-player character      | `DOC` | Source document |
+| `ITM` | Item                     | `PDF` | Stored PDF artifact |
+| `QST` | Quest                    | `TXT` | Extracted text analog |
+| `CMD` | Command (engine-tick verb)| `LSN` | Lesson |
+| `MOD` | Python module (`parts/*.py`)| `QZ`  | Quiz |
+| `PRT` | Reusable code part (a cataloged capability)| `EV`  | Evidence record |
+| `SYS` | System / safety service  | `LOG` | Log / report |
 |       |                          | `API` | API connector |
 
 `MOD` vs `PRT`: a **MOD** is a physical `parts/*.py` file. A **PRT** is a reusable
 *capability* that file exposes (e.g. `FailsafeRunner`, `HardwareCatalog`). Often 1:1,
 sometimes many-PRT-per-MOD.
 
-### Unimatrix domains
+### World domains (the `DD` codes)
+
+Registry designations classify *where a thing lives in the ship/world*. The Hardware
+Store catalog uses a separate 19-domain *engineering* taxonomy (what a reusable part
+*does*), addressed the same `domain.ordinal` way; the TYPE prefix tells the two apart.
 
 | Domain | Meaning | Domain | Meaning |
 |--------|---------|--------|---------|
-| `UM01` | Workshop / private engineering space | `UM06` | Compliance & regulations |
-| `UM02` | City / public player space           | `UM07` | Finance systems |
-| `UM03` | Library & Classroom                  | `UM08` | Records management |
-| `UM04` | Game systems (combat, jobs, XP)      | `UM09` | AI NPC & API systems |
-| `UM05` | Hardware Store / reusable parts      | `UM10` | Reports, logs & evidence |
+| `01` | Workshop / private engineering space | `06` | Compliance & regulations |
+| `02` | City / public player space           | `07` | Finance systems |
+| `03` | Library & Classroom                  | `08` | Records management |
+| `04` | Game systems (combat, jobs, XP)      | `09` | AI NPC & API systems |
+| `05` | Hardware Store / reusable parts      | `10` | Reports, logs & evidence |
 
 ### Status vocabulary (controlled - never let stale read as active)
 
@@ -103,12 +109,9 @@ Every designation record carries these fields (schema:
 |---|-------|---------|
 | 1 | `designation` | (the unique ID) |
 | 2 | `name` | human-readable name |
-| 3 | `type` | What is it? |
-| 4 | `domain` (UM) | Where does it belong? |
-| 5 | `sector` | " |
-| 6 | `node` | " |
-| 7 | `sequence` | " |
-| 8 | `revision` | What version is it? |
+| 3 | `type` | What is it? (TYPE prefix) |
+| 4 | `domain` | Where does it belong? (world domain code) |
+| 5 | `ordinal` | Its stable number within the domain |
 | 9 | `status` | Active, prototype, archived, deprecated, superseded? |
 | 10 | `function` | What does it do? |
 | 11 | `label` | the frozen runtime handle it files |
@@ -165,7 +168,7 @@ in-code annotations. The bridge is one line, both directions:
   ```python
   """CARD: library -- read the guidance library's documents.
 
-  DESIGNATION: MOD-UM03-S01-N012-001-R0
+  DESIGNATION: MOD-03.012
   """
   ```
 - **registry → code:** the record's `file` + `tests` fields point back at the module

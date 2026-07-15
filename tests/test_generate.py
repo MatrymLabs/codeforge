@@ -82,5 +82,5 @@ def test_a_player_is_denied_generation() -> None:
 def test_a_wizard_can_generate_through_the_tick() -> None:
     out = handle_command(_at("forge", "wizard"), "@sg item excalibur")
     assert "Forged" in out
-    assert "ITM-UM04-S01-N001-001-R0" in out  # traced to its filed pattern
+    assert "ITM-04.001" in out  # traced to its filed pattern
     assert ITEMS["excalibur"]["location"] == "room:forge"

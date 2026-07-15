@@ -23,7 +23,7 @@ from parts.registry import Designation
 from parts.session import SESSIONS, Session
 
 
-def _rec(designation: str = "PRT-UM05-S01-N001-001-R0", **over: object) -> Designation:
+def _rec(designation: str = "PRT-05.001", **over: object) -> Designation:
     base: dict[str, object] = dict(
         designation=designation,
         name="a part",
@@ -72,7 +72,7 @@ def test_gate_all_stats_each_path_once(monkeypatch: pytest.MonkeyPatch) -> None:
         return real_exists(self)
 
     monkeypatch.setattr(_P, "exists", counting_exists)
-    records = [_rec("PRT-UM05-S01-N001-001-R0"), _rec("PRT-UM05-S01-N001-002-R0")]
+    records = [_rec("PRT-05.001"), _rec("PRT-05.002")]
     gate_all(records)
     # Two records x {file, tests} = 2 distinct paths; each stat'ed once despite QG02/03/05.
     assert len(seen) == len(set(seen)), f"a path was stat'ed more than once: {seen}"
@@ -85,9 +85,7 @@ def test_a_built_object_missing_its_file_fails() -> None:
 
 
 def test_a_prototype_is_exempt_from_file_and_test_checks() -> None:
-    result = run_gate(
-        _rec("RM-UM02-S01-N001-001-R0", status="prototype", file="seeds/haven-city.yaml")
-    )
+    result = run_gate(_rec("RM-02.001", status="prototype", file="seeds/haven-city.yaml"))
     assert result.verdict in (PASS, "watch")  # never a hard fail for not-yet-built
     q2 = next(c for c in result.checks if c.check_id == "QG02")
     assert q2.result == "n/a"
@@ -119,32 +117,30 @@ def test_the_shipped_board_has_no_failures() -> None:
 
 
 def test_an_admin_command_is_rated_higher_risk() -> None:
-    finding = safety_review(
-        _rec("CMD-UM04-S01-N001-001-R0", label="@sg", tags=["command", "admin"])
-    )
+    finding = safety_review(_rec("CMD-04.001", label="@sg", tags=["command", "admin"]))
     assert finding.risk_level == "medium"
     assert finding.approval_required is True
     assert "unsafe_command_execution" in finding.categories
 
 
 def test_a_read_only_object_is_low_risk() -> None:
-    finding = safety_review(_rec("RM-UM01-S01-N001-001-R0", label="workshop"))
+    finding = safety_review(_rec("RM-01.001", label="workshop"))
     assert finding.risk_level == "low"
     assert finding.approval_required is False
 
 
 def test_safety_review_flags_item_and_prototype_branches() -> None:
-    item = safety_review(_rec("ITM-UM04-S01-N001-001-R0", label="excalibur"))
+    item = safety_review(_rec("ITM-04.001", label="excalibur"))
     assert "broken_player_progression" in item.categories
-    proto = safety_review(_rec("RM-UM02-S01-N001-001-R0", status="prototype", label="city"))
+    proto = safety_review(_rec("RM-02.001", status="prototype", label="city"))
     assert "untested_behavior" in proto.categories
 
 
 def test_render_paths_handle_an_unknown_designation() -> None:
     from parts.qualitygate import render_gate, render_safety
 
-    assert "No object" in render_gate("RM-UM09-S09-N999-999-R9")
-    assert "No object" in render_safety("RM-UM09-S09-N999-999-R9")
+    assert "No object" in render_gate("RM-09.999")
+    assert "No object" in render_safety("RM-09.999")
 
 
 # --- DocumentationImpactSweep -------------------------------------------------
@@ -180,13 +176,13 @@ def test_qa_gate_all_through_the_tick() -> None:
 
 
 def test_qa_gate_one_through_the_tick() -> None:
-    out = handle_command(_player(), "qa gate RM-UM03-S01-N001-002-R0")
+    out = handle_command(_player(), "qa gate RM-03.002")
     assert "QualityGate" in out
     assert "Verdict" in out
 
 
 def test_safety_review_through_the_tick() -> None:
-    out = handle_command(_player(), "safety review CMD-UM04-S01-N001-001-R0")
+    out = handle_command(_player(), "safety review CMD-04.001")
     assert "SafetyReview" in out
     assert "Risk level" in out
 

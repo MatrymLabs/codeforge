@@ -33,17 +33,17 @@ def _echo(session: Session, arg: str) -> str:
 
 def test_admin_verb_must_wear_the_sigil() -> None:
     with pytest.raises(CommandError, match="must start with"):
-        Command("sg", "CMD-UM10-S01-N001-009-R0", "x", _echo, namespace=ADMIN)
+        Command("sg", "CMD-10.009", "x", _echo, namespace=ADMIN)
 
 
 def test_only_admin_may_use_the_sigil() -> None:
     with pytest.raises(CommandError, match="only ADMIN"):
-        Command("@forge", "CMD-UM10-S01-N001-009-R0", "x", _echo, namespace=SEED)
+        Command("@forge", "CMD-10.009", "x", _echo, namespace=SEED)
 
 
 def test_a_bad_namespace_is_refused() -> None:
     with pytest.raises(CommandError, match="namespace"):
-        Command("x", "CMD-UM10-S01-N001-009-R0", "x", _echo, namespace="wild")
+        Command("x", "CMD-10.009", "x", _echo, namespace="wild")
 
 
 # --- dispatch: longest-first, rank-gated, fall-through -----------------------
@@ -51,13 +51,11 @@ def test_a_bad_namespace_is_refused() -> None:
 
 def test_longest_verb_wins() -> None:
     cs = CommandSet()
-    cs.add(
-        Command("registry", "CMD-UM10-S01-N001-001-R0", "list", lambda s, a: "list", namespace=CORE)
-    )
+    cs.add(Command("registry", "CMD-10.001", "list", lambda s, a: "list", namespace=CORE))
     cs.add(
         Command(
             "registry show",
-            "CMD-UM10-S01-N001-002-R0",
+            "CMD-10.002",
             "show",
             lambda s, a: f"show:{a}",
             namespace=CORE,
@@ -70,19 +68,13 @@ def test_longest_verb_wins() -> None:
 
 def test_unmatched_input_falls_through_to_none() -> None:
     cs = CommandSet()
-    cs.add(
-        Command("registry", "CMD-UM10-S01-N001-001-R0", "list", lambda s, a: "list", namespace=CORE)
-    )
+    cs.add(Command("registry", "CMD-10.001", "list", lambda s, a: "list", namespace=CORE))
     assert cs.dispatch(Session(player_id="p"), "look") is None
 
 
 def test_an_admin_command_denies_a_mere_player() -> None:
     cs = CommandSet()
-    cs.add(
-        Command(
-            "@sg", "CMD-UM09-S01-N001-001-R0", "generate", _echo, namespace=ADMIN, min_rank="owner"
-        )
-    )
+    cs.add(Command("@sg", "CMD-09.001", "generate", _echo, namespace=ADMIN, min_rank="owner"))
     player = Session(player_id="p")  # default rank: player
     assert "Denied" in str(cs.dispatch(player, "@sg item excalibur"))
     owner = Session(player_id="o")
@@ -92,9 +84,9 @@ def test_an_admin_command_denies_a_mere_player() -> None:
 
 def test_duplicate_verbs_are_refused() -> None:
     cs = CommandSet()
-    cs.add(Command("x", "CMD-UM10-S01-N001-001-R0", "a", _echo, namespace=CORE))
+    cs.add(Command("x", "CMD-10.001", "a", _echo, namespace=CORE))
     with pytest.raises(CommandError, match="duplicate"):
-        cs.add(Command("X", "CMD-UM10-S01-N001-002-R0", "b", _echo, namespace=CORE))
+        cs.add(Command("X", "CMD-10.002", "b", _echo, namespace=CORE))
 
 
 # --- the scale safety net: a seed can't shadow reserved words ----------------
@@ -135,15 +127,15 @@ def _player() -> Session:
 
 
 def test_registry_show_renders_a_room_card() -> None:
-    out = handle_command(_player(), "registry show RM-UM03-S01-N001-002-R0")
-    assert "Designation:  RM-UM03-S01-N001-002-R0" in out
+    out = handle_command(_player(), "registry show RM-03.002")
+    assert "Designation:  RM-03.002" in out
     assert "Classroom of Practical Arts" in out
     assert "Library & Classroom" in out
 
 
 def test_registry_type_and_status_filter() -> None:
     session = _player()
-    assert "RM-UM01-S01-N001-001-R0" in handle_command(session, "registry type RM")
+    assert "RM-01.001" in handle_command(session, "registry type RM")
     assert "prototype" in handle_command(session, "registry status prototype").lower()
 
 

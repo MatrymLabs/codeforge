@@ -204,7 +204,7 @@ Beyond the game, the parts compose into a self-auditing engine. Every command be
 is real, tested, and reachable in the MUD:
 
 - **Classification Registry** - a hidden filing system: every object carries a
-  designation (`TYPE-UM-SEC-NODE-SEQ-REV`) keyed to its runtime label. `registry show
+  designation (`TYPE-DD.NNN`) keyed to its runtime label. `registry show
   <id>`, `registry type CMD`. See [docs/classification/](docs/classification/CLASSIFICATION_SYSTEM.md).
 - **Command spine** - namespaced (`CORE` / `ADMIN @` / `SEED`), rank-gated verbs; a
   seed can never shadow a reserved word.
