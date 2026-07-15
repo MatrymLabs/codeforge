@@ -18,22 +18,15 @@ import json
 
 from parts.character_view import sheet_from_session
 from parts.session import Session
+from parts.telnet_codec import IAC, SB, SE, escape_iac, read_negotiation
 from parts.world import WORLD
 
-# GMCP is Telnet option 201 (0xC9). IAC/SB/SE mirror the gateway's negotiation constants; they
-# live here too so this card frames a subnegotiation without importing the socket layer.
+# GMCP is Telnet option 201 (0xC9). The IAC/SB/SE bytes and the escape/negotiation codec come from
+# parts.telnet_codec, the one home for the Telnet wire; this card only knows the GMCP option and
+# how to shape a GMCP payload. `escape_iac` is re-exported so existing consumers keep importing it.
 GMCP_OPT = 201
-_IAC, _SB, _SE = 255, 250, 240
 
-
-def escape_iac(payload: bytes) -> bytes:
-    """Double every IAC (255) byte in a subnegotiation body.
-
-    Inside `IAC SB ... IAC SE`, a literal 255 must be sent as 255 255 or the client reads it as
-    the start of a command and the frame desyncs. JSON is ASCII-safe, but a UTF-8 payload can
-    carry a 0xFF byte, so escape unconditionally rather than assume.
-    """
-    return payload.replace(bytes([_IAC]), bytes([_IAC, _IAC]))
+__all__ = ["GMCP_OPT", "enables_gmcp", "escape_iac", "gmcp_frame", "room_report", "vitals_report"]
 
 
 def gmcp_frame(package: str, data: object) -> bytes:
@@ -45,29 +38,20 @@ def gmcp_frame(package: str, data: object) -> bytes:
     if not package:
         raise ValueError("GMCP package name must not be empty")
     body = package if data is None else f"{package} {json.dumps(data, separators=(',', ':'))}"
-    return bytes([_IAC, _SB, GMCP_OPT]) + escape_iac(body.encode("utf-8")) + bytes([_IAC, _SE])
+    return bytes([IAC, SB, GMCP_OPT]) + escape_iac(body.encode("utf-8")) + bytes([IAC, SE])
 
 
 def enables_gmcp(data: bytes) -> bool | None:
-    """Read a client's negotiation reply for GMCP support.
+    """Read a client's negotiation reply for GMCP support (the GMCP-specific read_negotiation).
 
     True  -> the client enabled GMCP (`IAC DO GMCP` or `IAC WILL GMCP`): safe to push frames.
     False -> the client refused (`IAC DONT GMCP` or `IAC WONT GMCP`): stop pushing.
     None  -> no GMCP negotiation in this chunk: leave the current decision unchanged.
 
     A raw `nc` never sends any of these, so it never flips to True: it stays a plain-text client
-    and receives no binary GMCP noise. The last GMCP verb in the chunk wins.
+    and receives no binary GMCP noise.
     """
-    _WILL, _WONT, _DO, _DONT = 251, 252, 253, 254
-    verdict: bool | None = None
-    for i in range(len(data) - 2):
-        if data[i] == _IAC and data[i + 2] == GMCP_OPT:
-            verb = data[i + 1]
-            if verb in (_DO, _WILL):
-                verdict = True  # a later WONT/DONT in the same chunk can still override
-            elif verb in (_DONT, _WONT):
-                verdict = False
-    return verdict
+    return read_negotiation(data, GMCP_OPT)
 
 
 def vitals_report(session: Session) -> dict[str, int] | None:

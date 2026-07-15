@@ -22,6 +22,7 @@ from parts.events import SHUTDOWN, bind_echo, unbind_echo
 from parts.gmcp import GMCP_OPT, enables_gmcp, gmcp_frame, room_report, vitals_report
 from parts.seed import SEED_DIR
 from parts.session import SESSIONS, Session
+from parts.telnet_codec import IAC, WILL, WONT, strip_iac
 
 TICK_LOCK = threading.Lock()
 _counter_lock = threading.Lock()
@@ -85,8 +86,9 @@ def _forgive_address(ip: str) -> None:
 
 
 # --- telnet option negotiation (RFC 854/857): the password blackout ---
-IAC, WILL, WONT, DO, DONT = 255, 251, 252, 253, 254
-SB, SE = 250, 240  # subnegotiation begin/end: IAC SB <opt> ...body... IAC SE (variable length)
+# The Telnet wire codec (command bytes, IAC stripping) lives in parts.telnet_codec; the gateway is
+# a consumer of it. `_strip_telnet` is kept as a local alias for the codec's `strip_iac` so callers
+# (and the test twin) that reference it stay stable.
 ECHO_OPT = 1
 _ECHO_OFF = bytes([IAC, WILL, ECHO_OPT])  # "I will echo" -> client stops echoing
 _ECHO_ON = bytes([IAC, WONT, ECHO_OPT])  # "I won't echo" -> client resumes
@@ -96,36 +98,7 @@ _ECHO_ON = bytes([IAC, WONT, ECHO_OPT])  # "I won't echo" -> client resumes
 # it stays a plain-text client and sees no binary. Framing + the reply-reader live in parts/gmcp.py.
 _WILL_GMCP = bytes([IAC, WILL, GMCP_OPT])
 
-
-def _strip_telnet(data: bytes) -> bytes:
-    """Remove IAC command sequences from raw input. Clients answer our
-    negotiation with their own IAC bytes -- those must never end up
-    inside a password."""
-    out = bytearray()
-    i = 0
-    while i < len(data):
-        if data[i] == IAC and i + 1 < len(data):
-            command = data[i + 1]
-            if command == IAC:  # escaped literal 255
-                out.append(IAC)
-                i += 2
-            elif command == SB:
-                # Subnegotiation is variable length: skip the whole IAC SB ...body... IAC SE
-                # frame, or the body bytes (window size, terminal type, GMCP...) leak into the
-                # command line -- and, mid-password, corrupt the secret. A client sending it glued
-                # to input (Mudlet et al.) once broke logins. Unterminated frame: drop to the end.
-                j = i + 2
-                while j + 1 < len(data) and not (data[j] == IAC and data[j + 1] == SE):
-                    j += 1
-                i = j + 2 if j + 1 < len(data) else len(data)
-            elif command in (WILL, WONT, DO, DONT):
-                i += 3  # three-byte sequence: IAC <verb> <option>
-            else:
-                i += 2
-        else:
-            out.append(data[i])
-            i += 1
-    return bytes(out)
+_strip_telnet = strip_iac
 
 
 # Strip terminal control characters (ANSI/VT escapes and other C0/C1
