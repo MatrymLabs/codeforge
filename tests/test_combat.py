@@ -185,6 +185,25 @@ def test_the_seeded_gate_boss_is_a_real_fight():
     assert s.resources["hp"].current == max_hp - 8  # the player took a real blow
 
 
+def test_awards_never_drain_progress_on_a_negative_amount():
+    """Defense in depth: an award is a gain, never a loss - a negative amount (should be impossible
+    after the loader refuses negative NPC xp) is clamped to zero, not subtracted from the player."""
+    from parts.combat import award_tp
+
+    s = _fighter("engineer")
+    s.xp = 100
+    award_jp(s, 50)
+    award_tp(s, 40)
+    jp_before = s.job_progress["engineer"].jp
+    tp_before = s.job_progress["engineer"].tp
+    award_xp(s, -1000)
+    award_jp(s, -1000)
+    award_tp(s, -1000)
+    assert s.xp == 100  # not drained
+    assert s.job_progress["engineer"].jp == jp_before
+    assert s.job_progress["engineer"].tp == tp_before
+
+
 def test_jp_accrues_to_the_active_job_and_levels_it():
     s = _fighter("engineer")
     # cumulative JP to reach job level 2 is 60 (20 for lvl 1 + 40 for lvl 2).

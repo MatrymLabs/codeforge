@@ -26,6 +26,25 @@ def test_a_negative_npc_atk_is_rejected_at_load(tmp_path):
         load_npcs(bad)
 
 
+def test_a_negative_npc_xp_is_rejected_at_load(tmp_path):
+    """xp is awarded on defeat: a negative would DRAIN the victor's XP/JP/TP. Refuse it loud."""
+    from parts.seed import load_npcs
+
+    bad = tmp_path / "npcs.yaml"
+    bad.write_text("leech:\n  location: courtyard\n  hp: 1\n  xp: -500\n")
+    with pytest.raises(SeedError, match="negative xp"):
+        load_npcs(bad)
+
+
+def test_a_negative_npc_hp_is_rejected_at_load(tmp_path):
+    from parts.seed import load_npcs
+
+    bad = tmp_path / "npcs.yaml"
+    bad.write_text("ghost:\n  location: courtyard\n  hp: -5\n")
+    with pytest.raises(SeedError, match="negative hp"):
+        load_npcs(bad)
+
+
 def test_dangling_exit_is_rejected_at_load(tmp_path):
     bad = tmp_path / "rooms.yaml"
     bad.write_text("start:\n  exits:\n    north: mystery_cave\n")

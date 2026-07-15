@@ -366,6 +366,13 @@ def load_npcs(path: Path) -> dict[str, Npc]:
                 f"NPC '{label}' has a negative atk ({merged['atk']}); "
                 "counter-attack damage cannot be negative."
             )
+        # xp is awarded to XP/JP/TP on defeat; a negative value would DRAIN the victor. hp<0 would
+        # read as an unfightable corpse. Refuse both loud and early, as we do for atk.
+        for field in ("xp", "hp"):
+            if merged[field] < 0:
+                raise SeedError(
+                    f"NPC '{label}' has a negative {field} ({merged[field]}); cannot be negative."
+                )
         npcs[label] = Npc(
             name=merged["name"],
             keywords=merged["keywords"],
