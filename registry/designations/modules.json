@@ -3868,7 +3868,37 @@
     "tags": [
       "module"
     ],
-    "notes": "Pure card; the TCP gateway owns the socket and decides when to send. Vitals derive through sheet_from_session (derive-don't-store).",
+    "notes": "Pure card; the TCP gateway owns the socket and decides when to send. Vitals derive through sheet_from_session (derive-don't-store). Consumes parts.telnet_codec for the IAC/SB/SE bytes and escape/negotiation codec.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-15",
+    "updated": "2026-07-15"
+  },
+  {
+    "designation": "MOD-UM04-S01-N001-044-R0",
+    "name": "telnet_codec",
+    "status": "active",
+    "function": "the Telnet byte codec: command bytes, IAC escaping, negotiation reading",
+    "label": "telnet_codec",
+    "file": "parts/telnet_codec.py",
+    "type": "MOD",
+    "domain": "UM04",
+    "sector": "S01",
+    "node": "N001",
+    "sequence": "044",
+    "revision": "R0",
+    "docs": "docs/architecture.md",
+    "tests": "tests/test_telnet_codec.py",
+    "depends_on": [],
+    "related": [
+      "gateway",
+      "gmcp"
+    ],
+    "reuse": "one home for the Telnet wire (RFC 854/855): any Telnet gateway or client that must strip inbound IAC, escape a subnegotiation body, or read an option reply without desyncing",
+    "tags": [
+      "module"
+    ],
+    "notes": "Extracted (batch 1 of the modularity audit) from gateway._strip_telnet (decode) + gmcp.escape_iac/enables_gmcp (encode), which had each re-declared IAC/SB/SE. Pure, socket-free; gateway consumes strip_iac, gmcp consumes escape_iac + read_negotiation.",
     "superseded_by": "",
     "aliases": [],
     "created": "2026-07-15",

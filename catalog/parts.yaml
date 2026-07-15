@@ -1075,3 +1075,32 @@
     finance: "an append-only transaction or posting ledger with cryptographic integrity"
     compliance: "ai-log-triage records every triage decision on this pattern for AU-family audit integrity (GET /audit) - fails loud on tampering"
     general: "a dependency-free append-only event store that proves its own history was not rewritten"
+
+- id: telnet-codec
+  source: parts/telnet_codec.py
+  name: Telnet Codec
+  category: parsing
+  tags: [telnet, protocol, iac, bytes, framing, negotiation, rfc854]
+  maturity: beta
+  source_status: original
+  license: MIT
+  influence: "Telnet RFC 854/855 command framing (original stdlib implementation)"
+  experimental: >-
+    add a streaming decoder that buffers a subnegotiation split across reads (today an unterminated
+    frame is dropped to the end of the chunk), and a typed negotiation state table (which options
+    are enabled) rather than a per-call reply read. Traded away (v1): stateful negotiation tracking,
+    keeping four pure functions over bytes.
+  risk: low
+  purpose: >
+    The Telnet wire codec in one place: the RFC 854/855 command bytes plus escaping a subnegotiation
+    body (double IAC so a 0xFF payload byte cannot desync the client), stripping inbound IAC so a
+    client's negotiation never corrupts a command line, and reading an option reply (DO/WILL enable,
+    DONT/WONT refuse). Pure and socket-free, so the decode and encode sides of a connection share one
+    source of truth instead of each re-declaring the constants. Extracted from the gateway and the
+    GMCP card, which had duplicated it.
+  reuse:
+    game: "the MUD gateway strips inbound IAC and offers GMCP; the GMCP card escapes and frames outbound state"
+    security: "safely decode an untrusted Telnet stream so an injected subnegotiation cannot corrupt the parsed command or a password"
+    government: "speak Telnet to a legacy device or terminal server without a heavyweight dependency, framing bytes correctly"
+    finance: "frame an out-of-band structured feed alongside a legacy line-based Telnet session"
+    general: "any Telnet gateway, client, or option (GMCP, MSDP, NAWS) that must escape, strip, or negotiate IAC without desyncing"
