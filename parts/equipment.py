@@ -10,7 +10,7 @@ modifier math; the score sheet only projects the result.
 from __future__ import annotations
 
 from parts import items  # import the MODULE, not its globals: tests swap items.ITEMS
-from parts.score_sheet import EquipmentLoadout
+from parts.score_sheet_model import EquipmentLoadout
 from parts.session import Session
 from parts.stats import ModifierStack, Stat, StatModifier
 
