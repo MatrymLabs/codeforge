@@ -703,6 +703,65 @@ def _build_commands() -> CommandSet:
         )
     )
     cs.add(Command("name", "CMD-04.006", "claim or reclaim a bare name", _name_cmd, namespace=CORE))
+    # Read-only status/info verbs (moved off the legacy if-ladder onto the spine).
+    cs.add(
+        Command(
+            "vitals", "CMD-04.007", "your current vitals", lambda s, _a: vitals(s), namespace=CORE
+        )
+    )
+    cs.add(
+        Command(
+            "features",
+            "CMD-04.008",
+            "the feature flags in effect",
+            lambda s, _a: features(s),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "certify",
+            "CMD-04.009",
+            "the world-readiness certificate",
+            lambda s, _a: certify(s),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "heralds", "CMD-04.010", "the startup banners", lambda s, _a: heralds(s), namespace=CORE
+        )
+    )
+    cs.add(
+        Command(
+            "maintenance",
+            "CMD-04.011",
+            "the maintenance status",
+            lambda s, _a: maintenance(s),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "telegraph",
+            "CMD-04.012",
+            "the bursty-delivery telegraph",
+            lambda s, _a: telegraph(s),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command("chime", "CMD-04.013", "the event chime", lambda s, _a: chime(s), namespace=CORE)
+    )
+    cs.add(
+        Command(
+            "harvest",
+            "CMD-04.014",
+            "harvest-lens reusable-pattern candidates",
+            lambda _s, _a: harvest(),
+            namespace=CORE,
+        )
+    )
     return cs
 
 
@@ -815,25 +874,9 @@ def handle_command(session: Session, signal: str) -> str:
     if routed_signal == "journal" or routed_signal.startswith("journal "):
         _, _, entry = true_signal.partition(" ")
         return journal(session, entry)
-    if routed_signal == "vitals":
-        return vitals(session)
-    if routed_signal == "features":
-        return features(session)
-    if routed_signal == "certify":
-        return certify(session)
-    if routed_signal == "heralds":
-        return heralds(session)
-    if routed_signal == "maintenance":
-        return maintenance(session)
     if routed_signal == "arc" or routed_signal.startswith("arc "):
         _, _, arc_arg = routed_signal.partition(" ")
         return arc(arc_arg)
-    if routed_signal == "telegraph":
-        return telegraph(session)
-    if routed_signal == "chime":
-        return chime(session)
-    if routed_signal == "harvest":
-        return harvest()
     if routed_signal == "store" or routed_signal.startswith("store "):
         _, _, store_arg = routed_signal.partition(" ")
         return store(store_arg)
