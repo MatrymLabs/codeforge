@@ -1,10 +1,10 @@
-"""CARD: combat -- the training loop: strike, defeat, XP, LEVEL UP.
+"""CARD: combat -- the training loop: strike, defeat, hand off to the leveling engine.
 
-Assembly card: npcs (targets) + stats (damage) + resources (growth)
-+ progression (the salvaged mk1 curves decide when you level).
-Damage is deterministic in v0: no dice yet, so every number in the
-test twin is exact. The dummy reassembles on defeat -- it is a
-training dummy; collapsing is its job.
+Assembly card: npcs (targets) + stats (damage). Damage is deterministic in v0: no dice
+yet, so every number in the test twin is exact. The dummy reassembles on defeat -- it is a
+training dummy; collapsing is its job. When a foe falls, combat hands the reward to the
+leveling engine (`progression_awards`) rather than climbing the curves itself: damage and
+progression are separate responsibilities.
 
 An NPC that carries a seed `atk` stat strikes back when it survives a
 blow (the training dummy carries none, so it stays passive). If a
@@ -12,18 +12,9 @@ counter-strike would fell the player, a training-ground failsafe
 restores them in place -- a fight never leaves anyone in a broken state.
 """
 
-from dataclasses import replace
-
 from parts.events import announce
-from parts.jobs import JOBS
 from parts.npcs import NPCS, trace_npc
-from parts.progression import (
-    get_next_job_level_threshold,
-    get_next_level_threshold,
-    hp_gain_per_level,
-    mp_gain_per_level,
-)
-from parts.resources import Resource
+from parts.progression_awards import award_jp, award_tp, award_xp
 from parts.seed import Npc
 from parts.session import Session, display_name
 
@@ -33,83 +24,6 @@ DAMAGE_BASE = 3  # damage dealt = DAMAGE_BASE + strength // 3
 def strike_power(session: Session) -> int:
     assert session.stats is not None
     return DAMAGE_BASE + session.stats.get("strength").base // 3
-
-
-def _ascend_resources(session: Session) -> None:
-    """Level-up growth uses the mk1 formulas; resources refill in full."""
-    assert session.stats is not None
-    sta = session.stats.get("stamina").base
-    mag = session.stats.get("magic").base
-    new_hp_max = session.resources["hp"].maximum + hp_gain_per_level(sta)
-    new_mp_max = session.resources["mp"].maximum + mp_gain_per_level(mag)
-    session.resources["hp"] = Resource(name="hp", current=new_hp_max, maximum=new_hp_max)
-    session.resources["mp"] = Resource(name="mp", current=new_mp_max, maximum=new_mp_max)
-
-
-def award_xp(session: Session, amount: int) -> str:
-    """Add XP; climb every threshold crossed. The curves are law."""
-    amount = max(0, amount)  # an award never DRAINS progress, whatever a caller passes
-    session.xp += amount
-    lines = [f"You gain {amount} XP."]
-    while True:
-        threshold = get_next_level_threshold(session.level)
-        if threshold is None or session.xp < threshold:
-            break
-        session.level += 1
-        _ascend_resources(session)
-        lines.append(f"*** LEVEL UP! You are now level {session.level}. ***")
-        from parts.characters import save_character
-
-        save_character(session)
-        announce(
-            session.location,
-            f"{display_name(session.player_id)} has reached level {session.level}!",
-            exclude=session.player_id,
-        )
-    return "\n".join(lines)
-
-
-def award_jp(session: Session, amount: int) -> str:
-    """Add JP to the ACTIVE job; climb every job-level threshold crossed. The curves are law.
-
-    JP here is cumulative earned progress toward the job's level (it mirrors XP -> PLvl).
-    Changing jobs never touches another job's record. A seat with no active job earns nothing.
-    """
-    job = session.job
-    if not job or job not in session.job_progress:
-        return ""
-    amount = max(0, amount)  # an award never DRAINS progress
-    prog = session.job_progress[job]
-    new_jp = prog.jp + amount
-    new_level = prog.job_level
-    lines = [f"You gain {amount} JP ({JOBS[job]['name']})."]
-    while True:
-        threshold = get_next_job_level_threshold(new_level)
-        if threshold is None or new_jp < threshold:
-            break
-        new_level += 1
-        lines.append(f"*** {JOBS[job]['name']} advances to job level {new_level}! ***")
-    session.job_progress[job] = replace(prog, jp=new_jp, job_level=new_level)
-    if session.named:
-        from parts.characters import save_character
-
-        save_character(session)
-    return "\n".join(lines)
-
-
-def award_tp(session: Session, amount: int) -> str:
-    """Accrue TP to the ACTIVE job (toward its milestone perks). No leveling; TP just fills."""
-    job = session.job
-    if not job or job not in session.job_progress:
-        return ""
-    amount = max(0, amount)  # an award never DRAINS progress
-    prog = session.job_progress[job]
-    session.job_progress[job] = replace(prog, tp=prog.tp + amount)
-    if session.named:
-        from parts.characters import save_character
-
-        save_character(session)
-    return f"You gain {amount} TP ({JOBS[job]['name']})."
 
 
 def npc_strike_power(npc: Npc) -> int:
