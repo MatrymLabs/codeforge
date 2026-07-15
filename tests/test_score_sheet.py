@@ -15,11 +15,11 @@ from pathlib import Path
 
 import pytest
 
-from parts.score_sheet import (
+from parts.score_sheet import render_score_sheet
+from parts.score_sheet_model import (
     CharacterSheet,
     EquipmentLoadout,
     JobTP,
-    render_score_sheet,
     sheet_from_mapping,
 )
 
@@ -172,7 +172,7 @@ def test_developer_mode_marks_prototype_formulas() -> None:
 
 
 def test_jobs_mode_lists_unlocked_jobs() -> None:
-    from parts.score_sheet import JobLine
+    from parts.score_sheet_model import JobLine
 
     sheet = replace(_matrym(), jobs=(JobLine("Engineer", 9, 1150, 340),), primary_job="Engineer")
     out = render_score_sheet(sheet, display_mode="jobs")

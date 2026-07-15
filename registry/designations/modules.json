@@ -1516,7 +1516,7 @@
     "designation": "MOD-04.028",
     "name": "score_sheet",
     "status": "active",
-    "function": "the character score sheet: its view model and its text renderer",
+    "function": "the character score-sheet text renderer (a fixed-width projection)",
     "label": "score_sheet",
     "file": "parts/score_sheet.py",
     "type": "MOD",
@@ -1524,7 +1524,9 @@
     "docs": "docs/character_system.md",
     "tests": "tests/test_score_sheet.py",
     "depends_on": [],
-    "related": [],
+    "related": [
+      "score_sheet_model"
+    ],
     "reuse": "",
     "tags": [
       "module"
@@ -1535,7 +1537,7 @@
       "MOD-UM04-S01-N001-028-R0"
     ],
     "created": "2026-07-11",
-    "updated": "2026-07-11"
+    "updated": "2026-07-15"
   },
   {
     "designation": "MOD-05.005",
@@ -3623,6 +3625,31 @@
     "aliases": [
       "MOD-UM04-S01-N001-044-R0"
     ],
+    "created": "2026-07-15",
+    "updated": "2026-07-15"
+  },
+  {
+    "designation": "MOD-04.044",
+    "name": "score_sheet_model",
+    "status": "active",
+    "function": "the character score-sheet view model (plain, validated data)",
+    "label": "score_sheet_model",
+    "file": "parts/score_sheet_model.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "docs/character_system.md",
+    "tests": "tests/test_score_sheet_model.py",
+    "depends_on": [],
+    "related": [
+      "score_sheet"
+    ],
+    "reuse": "",
+    "tags": [
+      "module"
+    ],
+    "notes": "Split from score_sheet (the renderer) so the view model is consumed independently by character_view + equipment; makes the catalog's 'decoupled view model' claim literal.",
+    "superseded_by": "",
+    "aliases": [],
     "created": "2026-07-15",
     "updated": "2026-07-15"
   }

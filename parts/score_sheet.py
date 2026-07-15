@@ -1,10 +1,10 @@
-"""CARD: score_sheet -- the character score sheet: its view model and its text renderer.
+"""CARD: score_sheet -- the character score-sheet text renderer (a fixed-width projection).
 
-The score sheet is the readable surface of the character system. This part is deliberately
-a PROJECTION: a `CharacterSheet` view model (plain, validated data) plus `render_score_sheet`,
-which turns it into a fixed-width sheet. The renderer never reaches into the database or the
-Session -- it consumes only the view model, so the same sheet renders from live state, a
-fixture, or a future personnel record without change (the Hardware Store stance).
+The renderer half of the score sheet, split from its view model (parts/score_sheet_model.py).
+It consumes only a `CharacterSheet` -- never the database or the Session -- so the same sheet
+renders from live state, a fixture, or a future personnel record without change (the Hardware
+Store stance). `render_score_sheet` turns a view model into a fixed-width sheet in one of six
+modes.
 
 It is built to survive real data: long names are clipped to their column instead of breaking
 the frame, a missing secondary job reads "Unassigned", absent MP is omitted, and an unknown
@@ -14,125 +14,11 @@ content is pinned by focused field tests. Formulas live elsewhere -- this part o
 
 from __future__ import annotations
 
-from collections.abc import Mapping
-from dataclasses import dataclass, field
-from typing import Any
+from parts.score_sheet_model import ATTR_ORDER, RESIST_ORDER, CharacterSheet
 
 _WIDTH = 70  # the frame width
 _LEFT = 28  # left column width; the divider sits at this index
 _RIGHT = _WIDTH - _LEFT - 1  # right column width (accounts for the divider)
-
-# The canonical attribute and derived-stat order, and the resistance grid order.
-ATTR_ORDER = ("STR", "SPD", "MAG", "STA", "WIS", "LUCK")
-DERIVED_ORDER = ("ATK", "DEF", "EVA", "MAG DEF", "ACC")
-RESIST_ORDER = ("FIR", "ICE", "LGT", "WND", "ERT", "WTR", "HLY", "DRK", "PSN", "CRS")
-
-
-@dataclass(frozen=True)
-class JobTP:
-    """One job's training-progress row: how far toward the next milestone."""
-
-    label: str
-    current: int
-    required: int
-
-
-@dataclass(frozen=True)
-class JobLine:
-    """One unlocked job's standing, for the `jobs` view: its level, JP, and TP."""
-
-    name: str
-    level: int
-    jp: int
-    tp: int
-
-
-@dataclass(frozen=True)
-class EquipmentLoadout:
-    """The equipped items by slot. An empty string means the slot is bare."""
-
-    weapon: str = ""
-    body: str = ""
-    head: str = ""
-    arm: str = ""
-    accessory_1: str = ""
-    accessory_2: str = ""
-
-
-@dataclass(frozen=True)
-class CharacterSheet:
-    """The character-sheet view model: everything the standard sheet displays, and nothing
-    the renderer must compute. Populate it from live state or a fixture; the renderer only
-    reads it. Optional data is honestly optional: `mp=None` has no MP line, `guild=None`
-    omits the guild, `secondary_job=None` reads Unassigned, a missing resistance is unknown.
-    """
-
-    display_name: str
-    player_level: int
-    current_xp: int
-    next_level_xp: int | None
-    hp: tuple[int, int]
-    jp: int
-    race: str
-    primary_job: str
-    primary_job_level: int
-    counter: str
-    movement: str
-    inherent: str
-    signature: str
-    mp: tuple[int, int] | None = None
-    power: tuple[int, int] | None = None  # a custom resource (Power Cells), if the job has one
-    guild: str | None = None
-    rank_title: str = ""
-    secondary_job: str | None = None
-    tp_rows: tuple[JobTP, ...] = ()
-    attributes: dict[str, int] = field(default_factory=dict)
-    derived: dict[str, int] = field(default_factory=dict)
-    equipment: EquipmentLoadout = field(default_factory=EquipmentLoadout)
-    resistances: dict[str, str] = field(default_factory=dict)
-    key_item: str = ""
-    jobs: tuple[JobLine, ...] = ()  # every unlocked job, for the `jobs` view
-
-
-def sheet_from_mapping(data: Mapping[str, Any]) -> CharacterSheet:
-    """Build a view model from a plain mapping (a JSON fixture, or a future state builder).
-
-    Keeps the renderer's input decoupled from any one source: the same shape can come from a
-    saved fixture today or a live-character projection tomorrow.
-    """
-    hp = tuple(data["hp"])
-    mp = tuple(data["mp"]) if data.get("mp") is not None else None
-    tp_rows = tuple(
-        JobTP(label=str(r["label"]), current=int(r["current"]), required=int(r["required"]))
-        for r in data.get("tp_rows", [])
-    )
-    return CharacterSheet(
-        display_name=str(data["display_name"]),
-        player_level=int(data["player_level"]),
-        current_xp=int(data["current_xp"]),
-        next_level_xp=(None if data.get("next_level_xp") is None else int(data["next_level_xp"])),
-        hp=(int(hp[0]), int(hp[1])),
-        mp=(None if mp is None else (int(mp[0]), int(mp[1]))),
-        jp=int(data["jp"]),
-        race=str(data["race"]),
-        guild=(None if data.get("guild") is None else str(data["guild"])),
-        rank_title=str(data.get("rank_title", "")),
-        primary_job=str(data["primary_job"]),
-        primary_job_level=int(data["primary_job_level"]),
-        secondary_job=(None if data.get("secondary_job") is None else str(data["secondary_job"])),
-        counter=str(data["counter"]),
-        movement=str(data["movement"]),
-        inherent=str(data["inherent"]),
-        signature=str(data["signature"]),
-        tp_rows=tp_rows,
-        attributes={str(k): int(v) for k, v in data.get("attributes", {}).items()},
-        derived={str(k): int(v) for k, v in data.get("derived", {}).items()},
-        equipment=EquipmentLoadout(
-            **{str(k): str(v) for k, v in data.get("equipment", {}).items()}
-        ),
-        resistances={str(k): str(v) for k, v in data.get("resistances", {}).items()},
-        key_item=str(data.get("key_item", "")),
-    )
 
 
 # --- rendering helpers -----------------------------------------------------------

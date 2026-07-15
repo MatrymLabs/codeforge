@@ -17,7 +17,7 @@ from parts.derived import derived_stats
 from parts.equipment import apply_equipment, apply_stat_modifiers, equipped_loadout
 from parts.jobs import BASE_HP, BASE_MP, JOBS
 from parts.progression import get_next_level_threshold
-from parts.score_sheet import (
+from parts.score_sheet_model import (
     RESIST_ORDER,
     CharacterSheet,
     EquipmentLoadout,
