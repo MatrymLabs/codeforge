@@ -1,11 +1,11 @@
-.PHONY: env fix lint typecheck test property fuzz coverage audit audit-runtime security sast secrets deps sbom bench trend ai-eval retention doctor patch daily check readiness arc-verdicts truth forge cast-plan cast cast-selective cast-install-check coupling smoke repo-integrity ship run world store hardware clean serve backup db-up db-down db-migrate docs-serve docs-build demo-gif e2e evolution ritual-fast ritual ritual-down unskew loop
+.PHONY: hooks env fix lint typecheck test property fuzz coverage audit audit-runtime security sast secrets deps sbom bench trend ai-eval retention doctor patch daily check readiness arc-verdicts truth forge cast-plan cast cast-selective cast-install-check coupling smoke repo-integrity ship run world store hardware clean serve backup db-up db-down db-migrate docs-serve docs-build demo-gif e2e evolution ritual-fast ritual ritual-down unskew loop
 
 # --- Environment: create/validate the .venv, fail loud on version mismatch.
 # Uses uv when present (a Rust resolver; measured ~20x faster than pip on this host:
 # 85s -> 4s) and falls back to plain venv+pip, so bootstrap never hard-requires uv.
 # With uv, `sync` installs the exact pinned graph from uv.lock (reproducible builds);
 # the pip fallback still resolves fresh -- best-effort without the resolver. ---
-env:
+env: hooks
 	@if command -v uv >/dev/null 2>&1; then \
 		echo "→ uv found - fast env build (pinned from uv.lock)"; \
 		uv sync --extra dev --python 3.13; \
@@ -330,3 +330,7 @@ ritual-down:
 
 unskew:
 	git ls-files | xargs touch
+
+hooks:
+	git config core.hooksPath scripts/hooks
+	@echo "✓ git hooks active (scripts/hooks) - commits on main are refused"
