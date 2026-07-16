@@ -9,7 +9,7 @@ from collections.abc import Iterator
 
 import pytest
 
-from forge import COMMANDS, handle_command
+from forge import COMMANDS, handle_command, render_scene
 from parts.commands import (
     ADMIN,
     CORE,
@@ -148,3 +148,48 @@ def test_every_registry_command_is_filed() -> None:
     filed = {r.designation for r in load_collective()}
     for command in COMMANDS.commands:
         assert command.designation in filed, f"{command.verb} is not filed"
+
+
+# --- stage 2 slice D: movement verbs, now on the spine -----------------------
+
+
+def _walker(location: str = "forge") -> Session:
+    session = Session(player_id="walker", location=location)
+    SESSIONS["walker"] = session
+    return session
+
+
+def test_look_renders_the_scene_through_the_spine() -> None:
+    session = _walker("library")
+    assert handle_command(session, "look") == render_scene("library", viewer="walker")
+
+
+def test_look_alias_l_also_renders() -> None:
+    session = _walker("library")
+    assert handle_command(session, "l") == render_scene("library", viewer="walker")
+
+
+def test_a_bare_direction_moves_through_the_spine() -> None:
+    session = _walker("forge")
+    handle_command(session, "n")
+    assert session.location == "courtyard"  # forge -> north -> courtyard
+
+
+def test_go_forwards_a_direction_word() -> None:
+    session = _walker("forge")
+    handle_command(session, "go north")
+    assert session.location == "courtyard"
+
+
+def test_go_refuses_a_non_direction() -> None:
+    session = _walker("forge")
+    assert handle_command(session, "go banana") == "You can't go that way."
+    assert session.location == "forge"  # unmoved
+
+
+def test_bare_go_refuses() -> None:
+    # The bare verb reaches _go_cmd with an empty arg (the new spine branch): a clear refusal,
+    # where the legacy ladder let bare `go` fall through to "Huh?".
+    session = _walker("forge")
+    assert handle_command(session, "go") == "You can't go that way."
+    assert session.location == "forge"

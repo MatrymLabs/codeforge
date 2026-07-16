@@ -6,6 +6,7 @@ terminal driver around it -- a socket gateway will be another.
 """
 
 import re
+from collections.abc import Callable
 
 from parts import quest
 from parts.accounts import (
@@ -976,6 +977,47 @@ def _build_commands() -> CommandSet:
             namespace=CORE,
         )
     )
+    # Movement verbs (stage 2 slice D). `look` is a pure projection (no arg). The direction
+    # shorthands and `go <dir>` are one action (move a room) sharing one designation: a bare
+    # direction ("n") resolves itself; `go north` forwards the word. Registered via a loop over
+    # DIRECTIONS to avoid twelve near-identical entries; `d=canonical` captures per-verb.
+    cs.add(
+        Command(
+            "look",
+            "CMD-04.034",
+            "look at your surroundings",
+            lambda s, _a: render_scene(s.location, viewer=s.player_id),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "l",
+            "CMD-04.034",
+            "look at your surroundings",
+            lambda s, _a: render_scene(s.location, viewer=s.player_id),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "go",
+            "CMD-04.035",
+            "move in a direction (go <dir>, or n/s/e/w/u/d)",
+            _go_cmd,
+            namespace=CORE,
+        )
+    )
+    for _verb, _canonical in DIRECTIONS.items():
+        cs.add(
+            Command(
+                _verb,
+                "CMD-04.035",
+                "move in a direction",
+                _mover(_canonical),
+                namespace=CORE,
+            )
+        )
     return cs
 
 
@@ -987,9 +1029,6 @@ def _loop_trace_handler(arg: str) -> str:
     from parts.loop import render_trace, trace
 
     return render_trace(trace(part_id))
-
-
-COMMANDS = _build_commands()
 
 
 # A room may declare (in its seed) a live capability to surface on look. The engine renders the
@@ -1028,6 +1067,25 @@ def _resolve_move(session: Session, direction: str) -> str:
     return message
 
 
+def _go_cmd(session: Session, arg: str) -> str:
+    """`go <direction>`: move one room, or a clear refusal for a non-direction (or bare `go`).
+
+    A direction is a label, so it routes case-insensitively (the legacy ladder lowered it too)."""
+    word = arg.strip().lower()
+    if word in DIRECTIONS:
+        return _resolve_move(session, DIRECTIONS[word])
+    return "You can't go that way."
+
+
+def _mover(direction: str) -> Callable[[Session, str], str]:
+    """Bind one canonical direction into a bare-verb move handler (e.g. `n` -> north)."""
+    return lambda session, _arg: _resolve_move(session, direction)
+
+
+# Built after the movement handlers above (the spine references _go_cmd and _mover at build time).
+COMMANDS = _build_commands()
+
+
 def handle_command(session: Session, signal: str) -> str:
     """The engine tick: one player command in, one response out.
 
@@ -1049,15 +1107,6 @@ def handle_command(session: Session, signal: str) -> str:
         return "The world dims. See you next spark."
     if routed_signal == "help":
         return HELP_TEXT
-    if routed_signal in ("look", "l"):
-        return render_scene(session.location, viewer=session.player_id)
-    if routed_signal in DIRECTIONS:
-        return _resolve_move(session, DIRECTIONS[routed_signal])
-    if routed_signal.startswith("go "):
-        word = routed_signal.removeprefix("go ").strip()
-        if word in DIRECTIONS:
-            return _resolve_move(session, DIRECTIONS[word])
-        return "You can't go that way."
     if routed_signal.startswith("@"):
         return wizard_command(session, routed_signal)
     if routed_signal.startswith(("attack ", "kill ")):
