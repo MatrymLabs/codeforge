@@ -8,8 +8,8 @@ dependencies = ["pyyaml", "sqlalchemy", "fastapi", "uvicorn", "websockets", "pyd
 [project.optional-dependencies]
 # Optional feature extras still earn their place: the dependency gate (`make deps`) folds
 # every non-dev extra into the runtime set, so `anthropic` is justified in the ledger.
-ai = ["anthropic>=0.40"]
-postgres = ["psycopg[binary]>=3.2"]
+ai = ["anthropic>=0.116.0"]
+postgres = ["psycopg[binary]>=3.3.4"]
 dev = [
     "ruff",
     "mypy",

@@ -316,7 +316,7 @@ postgres = [
 [package.metadata]
 requires-dist = [
     { name = "alembic", marker = "extra == 'dev'" },
-    { name = "anthropic", marker = "extra == 'ai'", specifier = ">=0.40" },
+    { name = "anthropic", marker = "extra == 'ai'", specifier = ">=0.116.0" },
     { name = "bandit", extras = ["toml"], marker = "extra == 'dev'" },
     { name = "cyclonedx-bom", marker = "extra == 'dev'" },
     { name = "detect-secrets", marker = "extra == 'dev'" },
@@ -327,7 +327,7 @@ requires-dist = [
     { name = "mypy", marker = "extra == 'dev'" },
     { name = "pip-audit", marker = "extra == 'dev'" },
     { name = "playwright", marker = "extra == 'dev'" },
-    { name = "psycopg", extras = ["binary"], marker = "extra == 'postgres'", specifier = ">=3.2" },
+    { name = "psycopg", extras = ["binary"], marker = "extra == 'postgres'", specifier = ">=3.3.4" },
     { name = "pydantic" },
     { name = "pytest", marker = "extra == 'dev'" },
     { name = "pytest-cov", marker = "extra == 'dev'" },
