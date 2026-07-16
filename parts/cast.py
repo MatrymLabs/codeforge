@@ -498,6 +498,7 @@ def pour_selective(
     commit: str = "unknown",
     root: Path | None = None,
     tracer=None,
+    import_tracer=None,
 ) -> tuple[Path, bool, str]:
     """Detachment D2: compute the surfaces' module closure, pour a SELECTIVE cast carrying only it,
     and validate with the BROAD harness (every surface command). Returns (cast_dir, ok, detail).
@@ -506,13 +507,17 @@ def pour_selective(
     surface command needs, that command fails loud here and the cast is marked not_validated. A
     `not_validated` selective cast means the closure was insufficient - widen the surface corpus or
     fall back to a vendored-whole cast; never ship the broken cut.
+
+    `tracer` (command surfaces) and `import_tracer` (server surfaces, e.g. multiplayer) are the two
+    injectable seams: both default to real tracing, and a test supplies fakes so the import surface
+    is exercised without importing the real servers.
     """
     from parts import coupling
 
     plan = plan_cast(template, name, commit=commit, root=root)
     if plan.verdict != READY:
         raise CastError(f"cannot pour a {plan.verdict.upper()} cast: resolve the blocker(s) first")
-    modules = coupling.closure(surfaces, tracer=tracer)
+    modules = coupling.closure(surfaces, tracer=tracer, import_tracer=import_tracer)
     out = generate_cast(plan, Path(dest), modules=modules, root=root)
     ok, detail = validate_cast(
         out,

@@ -416,6 +416,16 @@ def _bootable_fixture_engine(root: Path) -> None:
     (root / "parts" / "world.py").write_text("START_ROOM = 'start'\n")
 
 
+def _bootable_multiplayer_fixture(root: Path) -> None:
+    """The bootable engine plus the multiplayer server tier: importable gateway/web_gateway stubs
+    and the `web/` data dir a multiplayer cast must carry (SURFACE_IMPORTS + SURFACE_DATA)."""
+    _bootable_fixture_engine(root)
+    (root / "parts" / "gateway.py").write_text("# TCP gateway (server stub)\nPORT = 4000\n")
+    (root / "parts" / "web_gateway.py").write_text("# web gateway (server stub)\nROUTE = '/'\n")
+    (root / "parts" / "web").mkdir()
+    (root / "parts" / "web" / "index.html").write_text("<!doctype html><title>cast</title>\n")
+
+
 def test_generate_selective_vendors_only_the_named_modules(tmp_path: Path) -> None:
     from parts.cast import VENDORED_SELECTIVE
 
@@ -476,6 +486,32 @@ def test_pour_selective_validates_an_admin_cast(tmp_path: Path) -> None:
         "blank_mud", "AdminGame", tmp_path / "out", surfaces, root=tmp_path, tracer=fake
     )
     assert ok, detail  # every solo+save+admin command (incl. the @-verbs) ran clean against the cut
+    m = read_manifest(out / "cast_manifest.json")
+    assert m.engine_strategy == VENDORED_SELECTIVE and m.status == "validated"
+
+
+def test_pour_selective_validates_a_multiplayer_cast(tmp_path: Path) -> None:
+    # The import-based server tier: the cut must carry importable gateway/web_gateway + the web/
+    # data dir, and validate by IMPORTING the servers (not by tracing commands). The import surface
+    # is exercised through the injected `import_tracer`, so no real server is imported here.
+    from parts.cast import VENDORED_SELECTIVE, pour_selective
+
+    _bootable_multiplayer_fixture(tmp_path)
+    fake_cmd = lambda commands: {"session", "world", "x"}  # noqa: E731
+    fake_imp = lambda mods: {"gateway", "web_gateway"}  # noqa: E731
+    out, ok, detail = pour_selective(
+        "blank_mud",
+        "MultiGame",
+        tmp_path / "out",
+        ["solo", "save", "multiplayer"],
+        root=tmp_path,
+        tracer=fake_cmd,
+        import_tracer=fake_imp,
+    )
+    assert ok, detail  # the servers imported in the cut and the base commands ran clean
+    assert (out / "parts" / "gateway.py").exists()  # the server modules were vendored
+    assert (out / "parts" / "web_gateway.py").exists()
+    assert (out / "parts" / "web" / "index.html").exists()  # + the declared web data dir
     m = read_manifest(out / "cast_manifest.json")
     assert m.engine_strategy == VENDORED_SELECTIVE and m.status == "validated"
 
