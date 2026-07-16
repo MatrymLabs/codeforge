@@ -14,6 +14,7 @@ restores them in place -- a fight never leaves anyone in a broken state.
 """
 
 from parts.combat_clock import advance as advance_clock
+from parts.engineer import emergency_repair
 from parts.events import announce
 from parts.npcs import NPCS, trace_npc
 from parts.progression_awards import award_jp, award_tp, award_xp
@@ -56,6 +57,12 @@ def _counter_attack(session: Session, npc: Npc) -> str:
     )
     hp = session.resources["hp"]
     line = f"\n{name} strikes back for {power}. (HP {hp.current}/{hp.maximum})"
+    # The Engineer's Emergency Repair reacts to a dangerous blow: it auto-heals once (then cools
+    # down), and can pull the player back from a fall. Returns None for anyone else, or on cooldown.
+    repair = emergency_repair(session)
+    if repair is not None:
+        line = f"{line}\n{repair}"
+        hp = session.resources["hp"]  # re-read: the repair healed, so the fall-check sees the save
     if hp.is_depleted:
         return f"{line}\n{_fall_and_recover(session, npc)}"
     return line
