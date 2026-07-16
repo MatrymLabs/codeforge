@@ -1,0 +1,18 @@
+# CodeForge mutation-testing config (cosmic-ray) - the "Mutate" rung of the testing forge.
+#
+# Scoped to ONE high-value module: hashchain, the published tamper-evidence ledger. Mutation
+# testing runs the test twin once PER MUTANT, so it is slow and stays an on-demand rung
+# (`make mutation`), never a PR/CI gate. To mutate a different module, edit `module-path` and
+# point `test-command` at that module's test twin.
+#
+# Tool note: cosmic-ray is the py3.13-compatible mutation tool (mutmut 2.x/3.x are broken on
+# 3.13); it is installed just-in-time by `make mutation`, not carried in the default dev deps.
+
+[cosmic-ray]
+module-path = "parts/hashchain.py"
+timeout = 30.0
+excluded-modules = []
+test-command = "python -m pytest -x -q tests/test_hashchain.py"
+
+[cosmic-ray.distributor]
+name = "local"

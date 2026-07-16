@@ -42,6 +42,17 @@ property:
 fuzz:
 	pytest -m fuzz
 
+# Mutation testing (cosmic-ray) - the "Mutate" rung. On-demand ONLY: one test run per mutant is
+# slow, so this is never a PR/CI gate. cosmic-ray is not in the default dev deps (its aiohttp/git
+# tree would burden every CI install for a tool CI never runs), so it is installed just-in-time.
+# Scoped by cosmic-ray.toml (hashchain by default). Prints the surviving-mutant rate; a survivor is
+# a mutation the tests did not catch -- investigate it (a real gap) or confirm it is equivalent.
+mutation:
+	@command -v cosmic-ray >/dev/null 2>&1 || { echo "cosmic-ray not installed -- run: pip install cosmic-ray"; exit 1; }
+	cosmic-ray init cosmic-ray.toml .cosmic-ray-session.sqlite
+	cosmic-ray exec cosmic-ray.toml .cosmic-ray-session.sqlite
+	cr-rate .cosmic-ray-session.sqlite
+
 # Offline SAST for the pre-commit gate: bandit + the secret scan (both local, no network).
 # This is the local/CI parity fix: SRI hashes once passed `make check` locally and then failed
 # CI's secret-scan step, because check did not run it. pip-audit stays out (needs network; CI's
