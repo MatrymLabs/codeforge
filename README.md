@@ -301,7 +301,7 @@ $ forge-audit --path ./codeforge --stage advanced --online --format md
 | security | ✅ pass | clean |
 | dependencies | ✅ pass | clean |
 | ci | ✅ pass | multiple workflow files (`ci`, `codeql`, `docs`, `scorecard`) |
-| collaboration | ✅ pass | a real issue -> PR -> merge history |
+| collaboration | ✅ pass | a real issue -> PR -> merge history ([#160](https://github.com/MatrymLabs/codeforge/issues/160) -> [#161](https://github.com/MatrymLabs/codeforge/pull/161)) |
 | performance | ✅ pass | a `benchmarks/` directory (and `make bench` / `make trend` record engine-tick timings) |
 | readme | ✅ pass | covers purpose, install, run, test |
 | **overall** | **✅ pass** | role signals: testing · security · backend · devops · collaboration · performance · documentation |
