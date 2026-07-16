@@ -1674,5 +1674,265 @@
     "aliases": [],
     "created": "2026-07-16",
     "updated": "2026-07-16"
+  },
+  {
+    "designation": "CMD-04.041",
+    "name": "quest",
+    "status": "active",
+    "function": "your quest log (quest <id>)",
+    "label": "quest",
+    "file": "forge.py",
+    "type": "CMD",
+    "domain": "04",
+    "docs": "docs/architecture.md",
+    "tests": "tests/test_commands.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "command"
+    ],
+    "notes": "Moved off the legacy if-ladder onto the command spine (forge world-commands, stage 2 slice F: player action & ability verbs).",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-16",
+    "updated": "2026-07-16"
+  },
+  {
+    "designation": "CMD-04.042",
+    "name": "calibrate",
+    "status": "active",
+    "function": "calibrate an instrument (calibrate <target>)",
+    "label": "calibrate",
+    "file": "forge.py",
+    "type": "CMD",
+    "domain": "04",
+    "docs": "docs/architecture.md",
+    "tests": "tests/test_commands.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "command"
+    ],
+    "notes": "Moved off the legacy if-ladder onto the command spine (forge world-commands, stage 2 slice F: player action & ability verbs).",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-16",
+    "updated": "2026-07-16"
+  },
+  {
+    "designation": "CMD-04.043",
+    "name": "channel",
+    "status": "active",
+    "function": "tune a relay channel (channel <name>)",
+    "label": "channel",
+    "file": "forge.py",
+    "type": "CMD",
+    "domain": "04",
+    "docs": "docs/architecture.md",
+    "tests": "tests/test_commands.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "command"
+    ],
+    "notes": "Moved off the legacy if-ladder onto the command spine (forge world-commands, stage 2 slice F: player action & ability verbs).",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-16",
+    "updated": "2026-07-16"
+  },
+  {
+    "designation": "CMD-04.044",
+    "name": "namecheck",
+    "status": "active",
+    "function": "check whether a name is free (namecheck <name>)",
+    "label": "namecheck",
+    "file": "forge.py",
+    "type": "CMD",
+    "domain": "04",
+    "docs": "docs/architecture.md",
+    "tests": "tests/test_commands.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "command"
+    ],
+    "notes": "Moved off the legacy if-ladder onto the command spine (forge world-commands, stage 2 slice F: player action & ability verbs).",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-16",
+    "updated": "2026-07-16"
+  },
+  {
+    "designation": "CMD-04.045",
+    "name": "scan",
+    "status": "active",
+    "function": "run a diagnostic scan (scan <target>)",
+    "label": "scan",
+    "file": "forge.py",
+    "type": "CMD",
+    "domain": "04",
+    "docs": "docs/architecture.md",
+    "tests": "tests/test_commands.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "command"
+    ],
+    "notes": "Moved off the legacy if-ladder onto the command spine (forge world-commands, stage 2 slice F: player action & ability verbs).",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-16",
+    "updated": "2026-07-16"
+  },
+  {
+    "designation": "CMD-04.046",
+    "name": "equip",
+    "status": "active",
+    "function": "equip an item (equip <item>)",
+    "label": "equip",
+    "file": "forge.py",
+    "type": "CMD",
+    "domain": "04",
+    "docs": "docs/architecture.md",
+    "tests": "tests/test_commands.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "command"
+    ],
+    "notes": "Moved off the legacy if-ladder onto the command spine (forge world-commands, stage 2 slice F: player action & ability verbs).",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-16",
+    "updated": "2026-07-16"
+  },
+  {
+    "designation": "CMD-04.047",
+    "name": "unequip",
+    "status": "active",
+    "function": "unequip a slot (unequip <slot>)",
+    "label": "unequip",
+    "file": "forge.py",
+    "type": "CMD",
+    "domain": "04",
+    "docs": "docs/architecture.md",
+    "tests": "tests/test_commands.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "command"
+    ],
+    "notes": "Moved off the legacy if-ladder onto the command spine (forge world-commands, stage 2 slice F: player action & ability verbs).",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-16",
+    "updated": "2026-07-16"
+  },
+  {
+    "designation": "CMD-04.048",
+    "name": "subjob",
+    "status": "active",
+    "function": "take a secondary calling (subjob <job>)",
+    "label": "subjob",
+    "file": "forge.py",
+    "type": "CMD",
+    "domain": "04",
+    "docs": "docs/architecture.md",
+    "tests": "tests/test_commands.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "command"
+    ],
+    "notes": "Moved off the legacy if-ladder onto the command spine (forge world-commands, stage 2 slice F: player action & ability verbs).",
+    "superseded_by": "",
+    "aliases": [
+      "secondary"
+    ],
+    "created": "2026-07-16",
+    "updated": "2026-07-16"
+  },
+  {
+    "designation": "CMD-04.049",
+    "name": "answer",
+    "status": "active",
+    "function": "answer the current classroom question (answer <choice>)",
+    "label": "answer",
+    "file": "forge.py",
+    "type": "CMD",
+    "domain": "04",
+    "docs": "docs/architecture.md",
+    "tests": "tests/test_commands.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "command"
+    ],
+    "notes": "Moved off the legacy if-ladder onto the command spine (forge world-commands, stage 2 slice F: player action & ability verbs).",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-16",
+    "updated": "2026-07-16"
+  },
+  {
+    "designation": "CMD-04.050",
+    "name": "repair",
+    "status": "active",
+    "function": "the Engineer's field repair",
+    "label": "repair",
+    "file": "forge.py",
+    "type": "CMD",
+    "domain": "04",
+    "docs": "docs/architecture.md",
+    "tests": "tests/test_commands.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "command"
+    ],
+    "notes": "Moved off the legacy if-ladder onto the command spine (forge world-commands, stage 2 slice F: player action & ability verbs).",
+    "superseded_by": "",
+    "aliases": [
+      "field repair"
+    ],
+    "created": "2026-07-16",
+    "updated": "2026-07-16"
+  },
+  {
+    "designation": "CMD-04.051",
+    "name": "deploy",
+    "status": "active",
+    "function": "the Engineer's barrier deployment",
+    "label": "deploy",
+    "file": "forge.py",
+    "type": "CMD",
+    "domain": "04",
+    "docs": "docs/architecture.md",
+    "tests": "tests/test_commands.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "command"
+    ],
+    "notes": "Moved off the legacy if-ladder onto the command spine (forge world-commands, stage 2 slice F: player action & ability verbs).",
+    "superseded_by": "",
+    "aliases": [
+      "deploy barrier",
+      "barrier"
+    ],
+    "created": "2026-07-16",
+    "updated": "2026-07-16"
   }
 ]

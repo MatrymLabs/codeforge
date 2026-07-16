@@ -1067,6 +1067,146 @@ def _build_commands() -> CommandSet:
             namespace=CORE,
         )
     )
+    # Player action & ability verbs (stage 2 slice F). Each forwards a LOWERCASED argument to its
+    # handler (the legacy ladder routed on routed_signal; the spine preserves case, so `.lower()`
+    # keeps it exact). The four no-arg-in-legacy verbs (scan/equip/unequip/subjob) become bare-
+    # tolerant: a bare verb now reaches its handler with an empty arg (a clear refusal), where the
+    # ladder let it fall through to "Huh?". The two ability verbs take no argument.
+    cs.add(
+        Command(
+            "quest",
+            "CMD-04.041",
+            "your quest log (quest <id>)",
+            lambda s, arg: quest_view(s, arg.lower()),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "calibrate",
+            "CMD-04.042",
+            "calibrate an instrument (calibrate <target>)",
+            lambda s, arg: calibrate(s, arg.lower()),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "channel",
+            "CMD-04.043",
+            "tune a relay channel (channel <name>)",
+            lambda s, arg: channel(s, arg.lower()),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "namecheck",
+            "CMD-04.044",
+            "check whether a name is free (namecheck <name>)",
+            lambda s, arg: name_check(s, arg.lower()),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "scan",
+            "CMD-04.045",
+            "run a diagnostic scan (scan <target>)",
+            lambda s, arg: diagnostic_scan(s, arg.lower()),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "equip",
+            "CMD-04.046",
+            "equip an item (equip <item>)",
+            lambda s, arg: equip(s, arg.lower()),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "unequip",
+            "CMD-04.047",
+            "unequip a slot (unequip <slot>)",
+            lambda s, arg: unequip(s, arg.lower()),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "subjob",
+            "CMD-04.048",
+            "take a secondary calling (subjob <job>)",
+            lambda s, arg: set_secondary(s, arg.lower()),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "secondary",
+            "CMD-04.048",
+            "take a secondary calling (secondary <job>)",
+            lambda s, arg: set_secondary(s, arg.lower()),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "answer",
+            "CMD-04.049",
+            "answer the current classroom question (answer <choice>)",
+            lambda s, arg: submit_answer(s.player_id, arg.lower()),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "repair",
+            "CMD-04.050",
+            "the Engineer's field repair",
+            lambda s, _a: field_repair(s),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "field repair",
+            "CMD-04.050",
+            "the Engineer's field repair",
+            lambda s, _a: field_repair(s),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "deploy",
+            "CMD-04.051",
+            "the Engineer's barrier deployment",
+            lambda s, _a: deploy_barrier(s),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "deploy barrier",
+            "CMD-04.051",
+            "the Engineer's barrier deployment",
+            lambda s, _a: deploy_barrier(s),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "barrier",
+            "CMD-04.051",
+            "the Engineer's barrier deployment",
+            lambda s, _a: deploy_barrier(s),
+            namespace=CORE,
+        )
+    )
     return cs
 
 
@@ -1161,30 +1301,12 @@ def handle_command(session: Session, signal: str) -> str:
     if routed_signal.startswith(("attack ", "kill ")):
         word = routed_signal.split(" ", 1)[1].strip()
         return attack(session, word)
-    if routed_signal == "quest" or routed_signal.startswith("quest "):
-        return quest_view(session, routed_signal.removeprefix("quest").strip())
-    if routed_signal == "calibrate" or routed_signal.startswith("calibrate "):
-        return calibrate(session, routed_signal.removeprefix("calibrate").strip())
-    if routed_signal == "channel" or routed_signal.startswith("channel "):
-        return channel(session, routed_signal.removeprefix("channel").strip())
     if routed_signal == "journal" or routed_signal.startswith("journal "):
         _, _, entry = true_signal.partition(" ")
         return journal(session, entry)
     if routed_signal == "title" or routed_signal.startswith("title "):
         _, _, text = true_signal.partition(" ")
         return title(session, text)
-    if routed_signal == "namecheck" or routed_signal.startswith("namecheck "):
-        return name_check(session, routed_signal.removeprefix("namecheck").strip())
-    if routed_signal.startswith("equip "):
-        return equip(session, routed_signal.split(" ", 1)[1].strip())
-    if routed_signal.startswith("unequip "):
-        return unequip(session, routed_signal.split(" ", 1)[1].strip())
-    if routed_signal in ("repair", "field repair"):
-        return field_repair(session)
-    if routed_signal in ("deploy", "deploy barrier", "barrier"):
-        return deploy_barrier(session)
-    if routed_signal.startswith("scan "):
-        return diagnostic_scan(session, routed_signal.split(" ", 1)[1].strip())
     if routed_signal.startswith("job "):
         verdict = bind_calling(session, routed_signal.removeprefix("job "))
         if verdict.startswith("You take up"):
@@ -1195,8 +1317,6 @@ def handle_command(session: Session, signal: str) -> str:
                 exclude=session.player_id,
             )
         return verdict
-    if routed_signal.startswith(("subjob ", "secondary ")):
-        return set_secondary(session, routed_signal.split(" ", 1)[1])
     if routed_signal == "score" or routed_signal.startswith("score "):
         sheet = sheet_from_session(session)
         if sheet is None:
@@ -1215,9 +1335,6 @@ def handle_command(session: Session, signal: str) -> str:
         if rest.startswith("start "):
             return lesson_start(session.player_id, rest[len("start ") :])
         return "Try: lesson list, or lesson start <subject>"
-    if routed_signal == "answer" or routed_signal.startswith("answer "):
-        arg = routed_signal[len("answer ") :] if routed_signal.startswith("answer ") else ""
-        return submit_answer(session.player_id, arg)
     if routed_signal.startswith(("take ", "get ")):
         word = routed_signal.split(" ", 1)[1].strip()
         picked = trace_item(word, f"room:{session.location}")  # label, captured before it moves
