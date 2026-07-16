@@ -2,8 +2,15 @@
 
 import pytest
 
-from parts.seed import DEFAULT_ROOM_DESC, SeedError, load_rooms
+from parts.seed import DEFAULT_ROOM_DESC, SeedError, load_rooms, load_splash
 from parts.world import SEED_PATH
+
+
+def test_load_splash_returns_the_worlds_own_banner():
+    # Splash is world data, loaded by the seed (not the gateway); the first-forge seed's title art.
+    splash = load_splash()
+    assert "F I R S T   F O R G E" in splash  # the seed's spaced title banner
+    assert not splash.endswith("\n")  # trailing newline is stripped for a clean render
 
 
 def test_shipped_seed_loads_with_core_rooms_linked():

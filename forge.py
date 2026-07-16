@@ -65,6 +65,7 @@ from parts.registry import (
 from parts.relay import channel
 from parts.save import awaken_snapshot, seal_snapshot
 from parts.score_sheet import render_score_sheet
+from parts.seed import load_splash
 from parts.session import SESSIONS, Session, display_name, roster
 from parts.store_index import store
 from parts.telegraph import telegraph
@@ -1564,13 +1565,22 @@ def handle_command(session: Session, signal: str) -> str:
     return "Huh? Type HELP for commands."
 
 
+def render_opening(session: Session) -> str:
+    """The solo player's first screen: the world's own splash, then the room they wake in.
+
+    The gateways greet a connection with the seed's splash before login; solo play skipped
+    it and showed a generic line. Now every door onto the world opens with the world's face."""
+    splash = load_splash()
+    scene = render_scene(session.location, viewer=session.player_id)
+    return f"{splash}\n\n{scene}\n\nType HELP for commands."
+
+
 def game_loop() -> None:
     """Terminal driver: reads a keyboard, prints a screen. That's all."""
     session = Session(player_id="player")
     SESSIONS[session.player_id] = session
     bind_echo(session.player_id, print)
-    print("Welcome. Type HELP to begin.")
-    print(render_scene(session.location, viewer=session.player_id))
+    print(render_opening(session))
 
     try:
         while session.alive:

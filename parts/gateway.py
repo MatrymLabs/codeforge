@@ -20,7 +20,7 @@ from forge import handle_command, render_scene
 from parts.characters import save_character
 from parts.events import SHUTDOWN, bind_echo, unbind_echo
 from parts.gmcp import GMCP_OPT, enables_gmcp, gmcp_frame, room_report, vitals_report
-from parts.seed import SEED_DIR
+from parts.seed import load_splash
 from parts.session import SESSIONS, Session
 from parts.telnet_codec import IAC, WILL, WONT, strip_iac
 
@@ -111,14 +111,6 @@ _CONTROL_RE = re.compile(r"[\x00-\x08\x0b\x0c\x0e-\x1f\x7f-\x9f]")
 def _sanitize(text: str) -> str:
     """Remove terminal control characters from text bound for a client."""
     return _CONTROL_RE.sub("", text)
-
-
-def load_splash() -> str:
-    """The pre-login screen is world data: seeds/<world>/splash.txt."""
-    path = SEED_DIR / "splash.txt"
-    if path.exists():
-        return path.read_text(encoding="utf-8").rstrip("\n")
-    return "Welcome, traveler."
 
 
 class ForgeGateServer(socketserver.ThreadingTCPServer):

@@ -274,3 +274,28 @@ def test_score_with_a_bad_mode_surfaces_the_error() -> None:
 def test_lesson_with_an_unknown_subcommand_prompts() -> None:
     out = handle_command(_player(), "lesson wibble")
     assert out == "Try: lesson list, or lesson start <subject>"
+
+
+def test_solo_opening_shows_the_seed_splash_then_the_scene() -> None:
+    # Solo play now opens with the world's own splash (like the gateways), not a generic line.
+    from forge import render_opening
+
+    session = Session(player_id="solo", location="forge")
+    SESSIONS["solo"] = session
+    opening = render_opening(session)
+    assert "F I R S T   F O R G E" in opening  # the seed's splash banner
+    assert render_scene("forge", viewer="solo") in opening  # then the room they wake in
+    assert "Type HELP for commands." in opening
+
+
+def test_game_loop_prints_the_opening_then_runs_one_command(monkeypatch, capsys) -> None:
+    # Drive the terminal loop with a scripted keyboard: it prints the splash opening, then a
+    # single `quit` ends the loop cleanly (the driver's only exit is session.alive going False).
+    import forge
+
+    keys = iter(["quit"])
+    monkeypatch.setattr("builtins.input", lambda _prompt="": next(keys))
+    forge.game_loop()
+    printed = capsys.readouterr().out
+    assert "F I R S T   F O R G E" in printed  # the opening splash reached the screen
+    assert "The world dims" in printed  # quit ran through the spine and ended the loop
