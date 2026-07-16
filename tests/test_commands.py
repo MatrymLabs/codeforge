@@ -208,3 +208,33 @@ def test_complexity_lens_reachable_through_the_spine() -> None:
 
 def test_clones_lens_reachable_through_the_spine() -> None:
     assert "Clone scan" in handle_command(_player(), "clones")
+
+
+# --- stage 2 slice F: ability aliases reach the same handler over the spine ---
+
+
+def test_barrier_alias_deploys_through_the_spine() -> None:
+    from parts.jobs import bind_calling
+
+    session = _player()
+    bind_calling(session, "engineer")  # deploy_barrier needs the Engineer's kit
+    assert "deploy a barrier" in handle_command(session, "barrier")
+
+
+def test_secondary_alias_sets_a_subjob_through_the_spine() -> None:
+    from parts.jobs import bind_calling
+
+    session = _player()
+    bind_calling(session, "engineer")  # a primary is required first
+    assert "as your secondary" in handle_command(session, "secondary scholar")
+
+
+def test_two_word_ability_aliases_dispatch_through_the_spine() -> None:
+    # "field repair" and "deploy barrier" are multi-word verbs (longest-first match); each shares
+    # its one-word form's designation and reaches the same Engineer handler.
+    from parts.jobs import bind_calling
+
+    session = _player()
+    bind_calling(session, "engineer")
+    assert "repair" in handle_command(session, "field repair").lower()
+    assert "barrier" in handle_command(session, "deploy barrier").lower()
