@@ -12,6 +12,7 @@ from pathlib import Path
 
 from parts.integrity import (
     build_report,
+    forward_claims,
     overclaim_hits,
     presence_gaps,
     save_report,
@@ -43,6 +44,44 @@ def test_overclaim_scan_flags_risky_words(tmp_path: Path):
 def test_overclaim_scan_is_clean_when_wording_is_honest(tmp_path: Path):
     (tmp_path / "README.md").write_text("Readiness only. Human review required.")
     assert overclaim_hits(root=tmp_path) == []
+
+
+def test_forward_claims_lists_deliberate_markers_only(tmp_path: Path):
+    # The reverse-drift queue: unchecked boxes, TODO, and label-form Remaining:/Deferred(.
+    (tmp_path / "plan.md").write_text(
+        "- [x] shipped thing\n"  # done -> not a claim
+        "- [ ] the unbuilt thing\n"  # unchecked -> claimed
+        "Remaining: the multiplayer cast\n"  # label form -> claimed
+        "TODO: wire the ledger\n"  # TODO -> claimed
+        "The remaining tests all pass here.\n"  # prose 'remaining' -> NOT a claim
+    )
+    hits = forward_claims(root=tmp_path, docs=("plan.md",))
+    assert len(hits) == 3
+    assert any(":2:" in h and "unbuilt thing" in h for h in hits)
+    assert any("Remaining: the multiplayer cast" in h for h in hits)
+    assert any("TODO: wire the ledger" in h for h in hits)
+    assert not any("tests all pass" in h for h in hits)  # prose is not flagged
+
+
+def test_forward_claims_is_empty_when_a_roadmap_is_fully_reconciled(tmp_path: Path):
+    (tmp_path / "plan.md").write_text("- [x] done\n- [x] also done\nAll shipped and verified.\n")
+    assert forward_claims(root=tmp_path, docs=("plan.md",)) == []
+
+
+def test_forward_claims_skips_a_missing_doc(tmp_path: Path):
+    assert forward_claims(root=tmp_path, docs=("nope.md",)) == []
+
+
+def test_report_surfaces_the_forward_claim_queue():
+    report = build_report(today=date(2026, 7, 9))
+    assert "forward-claim queue:" in report  # the reverse-drift section is always present
+
+
+def test_report_queue_is_zero_when_no_roadmaps_are_present(tmp_path: Path):
+    # A root without the roadmap docs has an empty queue (the claims-absent path).
+    report = build_report(root=tmp_path, today=date(2026, 7, 9))
+    assert "forward-claim queue:  0" in report
+    assert "Reconcile" not in report  # no reconcile next-action when the queue is empty
 
 
 def test_report_is_honest_about_a_missing_secret_scanner():
