@@ -1934,5 +1934,147 @@
     ],
     "created": "2026-07-16",
     "updated": "2026-07-16"
+  },
+  {
+    "designation": "CMD-04.052",
+    "name": "attack",
+    "status": "active",
+    "function": "strike a target (attack <foe>)",
+    "label": "attack",
+    "file": "forge.py",
+    "type": "CMD",
+    "domain": "04",
+    "docs": "docs/architecture.md",
+    "tests": "tests/test_commands.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "command"
+    ],
+    "notes": "Moved off the legacy if-ladder onto the command spine (forge world-commands, stage 2 slice G: world-interaction verbs with side-effects).",
+    "superseded_by": "",
+    "aliases": [
+      "kill"
+    ],
+    "created": "2026-07-16",
+    "updated": "2026-07-16"
+  },
+  {
+    "designation": "CMD-04.053",
+    "name": "job",
+    "status": "active",
+    "function": "take up a calling (job <name>)",
+    "label": "job",
+    "file": "forge.py",
+    "type": "CMD",
+    "domain": "04",
+    "docs": "docs/architecture.md",
+    "tests": "tests/test_commands.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "command"
+    ],
+    "notes": "Moved off the legacy if-ladder onto the command spine (forge world-commands, stage 2 slice G: world-interaction verbs with side-effects).",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-16",
+    "updated": "2026-07-16"
+  },
+  {
+    "designation": "CMD-04.054",
+    "name": "take",
+    "status": "active",
+    "function": "pick up an item (take <item>)",
+    "label": "take",
+    "file": "forge.py",
+    "type": "CMD",
+    "domain": "04",
+    "docs": "docs/architecture.md",
+    "tests": "tests/test_commands.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "command"
+    ],
+    "notes": "Moved off the legacy if-ladder onto the command spine (forge world-commands, stage 2 slice G: world-interaction verbs with side-effects).",
+    "superseded_by": "",
+    "aliases": [
+      "get"
+    ],
+    "created": "2026-07-16",
+    "updated": "2026-07-16"
+  },
+  {
+    "designation": "CMD-04.055",
+    "name": "drop",
+    "status": "active",
+    "function": "drop a carried item (drop <item>)",
+    "label": "drop",
+    "file": "forge.py",
+    "type": "CMD",
+    "domain": "04",
+    "docs": "docs/architecture.md",
+    "tests": "tests/test_commands.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "command"
+    ],
+    "notes": "Moved off the legacy if-ladder onto the command spine (forge world-commands, stage 2 slice G: world-interaction verbs with side-effects).",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-16",
+    "updated": "2026-07-16"
+  },
+  {
+    "designation": "CMD-04.056",
+    "name": "talk",
+    "status": "active",
+    "function": "speak with someone (talk <name>)",
+    "label": "talk",
+    "file": "forge.py",
+    "type": "CMD",
+    "domain": "04",
+    "docs": "docs/architecture.md",
+    "tests": "tests/test_commands.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "command"
+    ],
+    "notes": "Moved off the legacy if-ladder onto the command spine (forge world-commands, stage 2 slice G: world-interaction verbs with side-effects).",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-16",
+    "updated": "2026-07-16"
+  },
+  {
+    "designation": "CMD-04.057",
+    "name": "unlock",
+    "status": "active",
+    "function": "unlock a door with a key (unlock <door> with <key>)",
+    "label": "unlock",
+    "file": "forge.py",
+    "type": "CMD",
+    "domain": "04",
+    "docs": "docs/architecture.md",
+    "tests": "tests/test_commands.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "command"
+    ],
+    "notes": "Moved off the legacy if-ladder onto the command spine (forge world-commands, stage 2 slice G: world-interaction verbs with side-effects).",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-16",
+    "updated": "2026-07-16"
   }
 ]

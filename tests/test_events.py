@@ -98,6 +98,32 @@ def test_take_is_seen_by_bystanders():
     unbind_echo("b")
 
 
+def test_get_is_an_alias_for_take_through_the_spine():
+    # get shares take's designation on the command spine (stage 2 slice G).
+    a, _ = _seat("a", "library")
+    out = handle_command(a, "get key")
+    assert "You take" in out
+    unbind_echo("a")
+
+
+def test_drop_is_seen_by_bystanders():
+    a, _ = _seat("a", "library")
+    _, b_heard = _seat("b", "library")
+    handle_command(a, "take key")  # pick it up first
+    handle_command(a, "drop key")
+    assert "A drops a copper key." in b_heard
+    unbind_echo("a")
+    unbind_echo("b")
+
+
+def test_talk_reaches_a_generic_npc_through_the_spine():
+    # The non-codex path of _talk_cmd: a plain NPC dialogue line (stage 2 slice G).
+    a, _ = _seat("a", "library")
+    out = handle_command(a, "talk librarian")
+    assert "The librarian says" in out
+    unbind_echo("a")
+
+
 def _dead_sink(_text: str) -> None:
     """A client whose socket is gone -- writing to it raises, like a real
     BrokenPipeError / Bad file descriptor."""

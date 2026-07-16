@@ -238,3 +238,9 @@ def test_two_word_ability_aliases_dispatch_through_the_spine() -> None:
     bind_calling(session, "engineer")
     assert "repair" in handle_command(session, "field repair").lower()
     assert "barrier" in handle_command(session, "deploy barrier").lower()
+
+
+def test_unlock_without_with_prompts() -> None:
+    # The no-"with" branch of _unlock_cmd (stage 2 slice G): a usage prompt, no door touched.
+    out = handle_command(_player(), "unlock door")
+    assert out == "Unlock what with what? Try: unlock door with key"

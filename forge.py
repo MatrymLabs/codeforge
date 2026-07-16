@@ -1207,6 +1207,81 @@ def _build_commands() -> CommandSet:
             namespace=CORE,
         )
     )
+    # World-interaction verbs (stage 2 slice G). These mutate the world and broadcast to the room;
+    # their logic lives in named handlers above. attack/kill is a plain arg-forwarder. All were
+    # startswith-only on the ladder, so a bare verb is now a clear refusal instead of "Huh?".
+    cs.add(
+        Command(
+            "attack",
+            "CMD-04.052",
+            "strike a target (attack <foe>)",
+            lambda s, arg: attack(s, arg.lower()),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "kill",
+            "CMD-04.052",
+            "strike a target (kill <foe>)",
+            lambda s, arg: attack(s, arg.lower()),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "job",
+            "CMD-04.053",
+            "take up a calling (job <name>)",
+            _job_cmd,
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "take",
+            "CMD-04.054",
+            "pick up an item (take <item>)",
+            _take_cmd,
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "get",
+            "CMD-04.054",
+            "pick up an item (get <item>)",
+            _take_cmd,
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "drop",
+            "CMD-04.055",
+            "drop a carried item (drop <item>)",
+            _drop_cmd,
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "talk",
+            "CMD-04.056",
+            "speak with someone (talk <name>)",
+            _talk_cmd,
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "unlock",
+            "CMD-04.057",
+            "unlock a door with a key (unlock <door> with <key>)",
+            _unlock_cmd,
+            namespace=CORE,
+        )
+    )
     return cs
 
 
@@ -1271,7 +1346,76 @@ def _mover(direction: str) -> Callable[[Session, str], str]:
     return lambda session, _arg: _resolve_move(session, direction)
 
 
-# Built after the movement handlers above (the spine references _go_cmd and _mover at build time).
+# --- world-interaction handlers (stage 2 slice G) ----------------------------
+# These verbs mutate the world and broadcast to the room, so they are named handlers (not lambdas):
+# the announce/quest-hook/parsing logic is more than one expression. Each lowercases its argument
+# (a label), matching the legacy ladder's routed_signal behavior; the spine preserves case.
+
+
+def _job_cmd(session: Session, arg: str) -> str:
+    """Take up a calling; announce it to the room when it is newly bound."""
+    verdict = bind_calling(session, arg.lower())
+    if verdict.startswith("You take up"):
+        announce(
+            session.location,
+            f"{display_name(session.player_id)} takes up the way "
+            f"of the {JOBS[session.job]['name']}.",
+            exclude=session.player_id,
+        )
+    return verdict
+
+
+def _take_cmd(session: Session, arg: str) -> str:
+    """Pick up an item; announce it, and let a pickup advance the arc."""
+    word = arg.lower()
+    picked = trace_item(word, f"room:{session.location}")  # label, captured before it moves
+    verdict = take(word, session.location)
+    if verdict.startswith("You take"):
+        announce(
+            session.location,
+            verdict.replace("You take", f"{display_name(session.player_id)} takes", 1),
+            exclude=session.player_id,
+        )
+        if picked:
+            hook = quest.on_event(session, "take", picked)  # a pickup may advance the arc
+            if hook:
+                verdict = f"{verdict}\n{hook}"
+    return verdict
+
+
+def _drop_cmd(session: Session, arg: str) -> str:
+    """Drop a carried item; announce it to the room."""
+    word = arg.lower()
+    verdict = drop(word, session.location)
+    if verdict.startswith("You drop"):
+        announce(
+            session.location,
+            verdict.replace("You drop", f"{display_name(session.player_id)} drops", 1),
+            exclude=session.player_id,
+        )
+    return verdict
+
+
+def _talk_cmd(session: Session, arg: str) -> str:
+    """Speak with an NPC. `talk codex` reaches Professor Codex (the classroom guide)."""
+    word = arg.lower()
+    if word == "codex":
+        if trace_npc("codex", session.location) is not None:
+            return talk_to_codex()
+        return "There is no one like that here."
+    return talk(word, session.location)
+
+
+def _unlock_cmd(session: Session, arg: str) -> str:
+    """Unlock a door with a key: `unlock <door> with <key>`."""
+    rest = arg.lower()
+    if " with " in rest:
+        door_word, key_word = (p.strip() for p in rest.split(" with ", 1))
+        return unlock(door_word, key_word, session.location)
+    return "Unlock what with what? Try: unlock door with key"
+
+
+# Built after the movement + world handlers above (the spine references them at build time).
 COMMANDS = _build_commands()
 
 
@@ -1298,25 +1442,12 @@ def handle_command(session: Session, signal: str) -> str:
         return HELP_TEXT
     if routed_signal.startswith("@"):
         return wizard_command(session, routed_signal)
-    if routed_signal.startswith(("attack ", "kill ")):
-        word = routed_signal.split(" ", 1)[1].strip()
-        return attack(session, word)
     if routed_signal == "journal" or routed_signal.startswith("journal "):
         _, _, entry = true_signal.partition(" ")
         return journal(session, entry)
     if routed_signal == "title" or routed_signal.startswith("title "):
         _, _, text = true_signal.partition(" ")
         return title(session, text)
-    if routed_signal.startswith("job "):
-        verdict = bind_calling(session, routed_signal.removeprefix("job "))
-        if verdict.startswith("You take up"):
-            announce(
-                session.location,
-                f"{display_name(session.player_id)} takes up the way "
-                f"of the {JOBS[session.job]['name']}.",
-                exclude=session.player_id,
-            )
-        return verdict
     if routed_signal == "score" or routed_signal.startswith("score "):
         sheet = sheet_from_session(session)
         if sheet is None:
@@ -1335,44 +1466,6 @@ def handle_command(session: Session, signal: str) -> str:
         if rest.startswith("start "):
             return lesson_start(session.player_id, rest[len("start ") :])
         return "Try: lesson list, or lesson start <subject>"
-    if routed_signal.startswith(("take ", "get ")):
-        word = routed_signal.split(" ", 1)[1].strip()
-        picked = trace_item(word, f"room:{session.location}")  # label, captured before it moves
-        verdict = take(word, session.location)
-        if verdict.startswith("You take"):
-            announce(
-                session.location,
-                verdict.replace("You take", f"{display_name(session.player_id)} takes", 1),
-                exclude=session.player_id,
-            )
-            if picked:
-                hook = quest.on_event(session, "take", picked)  # a pickup may advance the arc
-                if hook:
-                    verdict = f"{verdict}\n{hook}"
-        return verdict
-    if routed_signal.startswith("drop "):
-        word = routed_signal.split(" ", 1)[1].strip()
-        verdict = drop(word, session.location)
-        if verdict.startswith("You drop"):
-            announce(
-                session.location,
-                verdict.replace("You drop", f"{display_name(session.player_id)} drops", 1),
-                exclude=session.player_id,
-            )
-        return verdict
-    if routed_signal == "talk codex":
-        if trace_npc("codex", session.location) is not None:
-            return talk_to_codex()
-        return "There is no one like that here."
-    if routed_signal.startswith("talk "):
-        word = routed_signal.split(" ", 1)[1].strip()
-        return talk(word, session.location)
-    if routed_signal.startswith("unlock "):
-        rest = routed_signal.removeprefix("unlock ").strip()
-        if " with " in rest:
-            door_word, key_word = (p.strip() for p in rest.split(" with ", 1))
-            return unlock(door_word, key_word, session.location)
-        return "Unlock what with what? Try: unlock door with key"
     if routed_signal == "save":
         return seal_snapshot(session.location)
     if routed_signal == "load":
