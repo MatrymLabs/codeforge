@@ -2076,5 +2076,191 @@
     "aliases": [],
     "created": "2026-07-16",
     "updated": "2026-07-16"
+  },
+  {
+    "designation": "CMD-04.058",
+    "name": "journal",
+    "status": "active",
+    "function": "write or read your journal (journal <entry>)",
+    "label": "journal",
+    "file": "forge.py",
+    "type": "CMD",
+    "domain": "04",
+    "docs": "docs/architecture.md",
+    "tests": "tests/test_commands.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "command"
+    ],
+    "notes": "Moved off the legacy if-ladder onto the command spine (forge world-commands, stage 2 slice H: progression, classroom & lifecycle verbs - the finale).",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-16",
+    "updated": "2026-07-16"
+  },
+  {
+    "designation": "CMD-04.059",
+    "name": "title",
+    "status": "active",
+    "function": "set your displayed title (title <text>)",
+    "label": "title",
+    "file": "forge.py",
+    "type": "CMD",
+    "domain": "04",
+    "docs": "docs/architecture.md",
+    "tests": "tests/test_commands.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "command"
+    ],
+    "notes": "Moved off the legacy if-ladder onto the command spine (forge world-commands, stage 2 slice H: progression, classroom & lifecycle verbs - the finale).",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-16",
+    "updated": "2026-07-16"
+  },
+  {
+    "designation": "CMD-04.060",
+    "name": "score",
+    "status": "active",
+    "function": "your character sheet (score <mode>)",
+    "label": "score",
+    "file": "forge.py",
+    "type": "CMD",
+    "domain": "04",
+    "docs": "docs/architecture.md",
+    "tests": "tests/test_commands.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "command"
+    ],
+    "notes": "Moved off the legacy if-ladder onto the command spine (forge world-commands, stage 2 slice H: progression, classroom & lifecycle verbs - the finale).",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-16",
+    "updated": "2026-07-16"
+  },
+  {
+    "designation": "CMD-04.061",
+    "name": "lesson",
+    "status": "active",
+    "function": "the classroom menu (lesson list | lesson start <subject>)",
+    "label": "lesson",
+    "file": "forge.py",
+    "type": "CMD",
+    "domain": "04",
+    "docs": "docs/architecture.md",
+    "tests": "tests/test_commands.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "command"
+    ],
+    "notes": "Moved off the legacy if-ladder onto the command spine (forge world-commands, stage 2 slice H: progression, classroom & lifecycle verbs - the finale).",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-16",
+    "updated": "2026-07-16"
+  },
+  {
+    "designation": "CMD-04.062",
+    "name": "save",
+    "status": "active",
+    "function": "seal a snapshot of the world",
+    "label": "save",
+    "file": "forge.py",
+    "type": "CMD",
+    "domain": "04",
+    "docs": "docs/architecture.md",
+    "tests": "tests/test_commands.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "command"
+    ],
+    "notes": "Moved off the legacy if-ladder onto the command spine (forge world-commands, stage 2 slice H: progression, classroom & lifecycle verbs - the finale).",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-16",
+    "updated": "2026-07-16"
+  },
+  {
+    "designation": "CMD-04.063",
+    "name": "load",
+    "status": "active",
+    "function": "restore the world snapshot",
+    "label": "load",
+    "file": "forge.py",
+    "type": "CMD",
+    "domain": "04",
+    "docs": "docs/architecture.md",
+    "tests": "tests/test_commands.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "command"
+    ],
+    "notes": "Moved off the legacy if-ladder onto the command spine (forge world-commands, stage 2 slice H: progression, classroom & lifecycle verbs - the finale).",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-16",
+    "updated": "2026-07-16"
+  },
+  {
+    "designation": "CMD-04.064",
+    "name": "quit",
+    "status": "active",
+    "function": "save and leave the world",
+    "label": "quit",
+    "file": "forge.py",
+    "type": "CMD",
+    "domain": "04",
+    "docs": "docs/architecture.md",
+    "tests": "tests/test_commands.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "command"
+    ],
+    "notes": "Moved off the legacy if-ladder onto the command spine (forge world-commands, stage 2 slice H: progression, classroom & lifecycle verbs - the finale).",
+    "superseded_by": "",
+    "aliases": [
+      "q"
+    ],
+    "created": "2026-07-16",
+    "updated": "2026-07-16"
+  },
+  {
+    "designation": "CMD-04.065",
+    "name": "help",
+    "status": "active",
+    "function": "the command help text",
+    "label": "help",
+    "file": "forge.py",
+    "type": "CMD",
+    "domain": "04",
+    "docs": "docs/architecture.md",
+    "tests": "tests/test_commands.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "command"
+    ],
+    "notes": "Moved off the legacy if-ladder onto the command spine (forge world-commands, stage 2 slice H: progression, classroom & lifecycle verbs - the finale).",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-16",
+    "updated": "2026-07-16"
   }
 ]

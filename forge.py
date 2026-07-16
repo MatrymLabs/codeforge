@@ -1282,6 +1282,91 @@ def _build_commands() -> CommandSet:
             namespace=CORE,
         )
     )
+    # Progression, classroom, and lifecycle verbs (stage 2 slice H, the finale). journal and title
+    # carry PROSE, so they keep the argument's original case (like say/ai); the rest take a label or
+    # no argument. This empties the legacy if-ladder of real verbs: only the reserved router cases
+    # (the '@' admin catch-all, the empty-input guard, and the "Huh?" fall-through) remain below.
+    cs.add(
+        Command(
+            "journal",
+            "CMD-04.058",
+            "write or read your journal (journal <entry>)",
+            lambda s, arg: journal(s, arg),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "title",
+            "CMD-04.059",
+            "set your displayed title (title <text>)",
+            lambda s, arg: title(s, arg),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "score",
+            "CMD-04.060",
+            "your character sheet (score <mode>)",
+            _score_cmd,
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "lesson",
+            "CMD-04.061",
+            "the classroom menu (lesson list | lesson start <subject>)",
+            _lesson_cmd,
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "save",
+            "CMD-04.062",
+            "seal a snapshot of the world",
+            lambda s, _a: seal_snapshot(s.location),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "load",
+            "CMD-04.063",
+            "restore the world snapshot",
+            _load_cmd,
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "quit",
+            "CMD-04.064",
+            "save and leave the world",
+            _quit_cmd,
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "q",
+            "CMD-04.064",
+            "save and leave the world",
+            _quit_cmd,
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "help",
+            "CMD-04.065",
+            "the command help text",
+            lambda _s, _a: HELP_TEXT,
+            namespace=CORE,
+        )
+    )
     return cs
 
 
@@ -1415,7 +1500,45 @@ def _unlock_cmd(session: Session, arg: str) -> str:
     return "Unlock what with what? Try: unlock door with key"
 
 
-# Built after the movement + world handlers above (the spine references them at build time).
+# --- progression, classroom, and lifecycle handlers (stage 2 slice H) --------
+
+
+def _score_cmd(session: Session, arg: str) -> str:
+    """Render the character sheet in a chosen display mode (a label, so lowercased)."""
+    sheet = sheet_from_session(session)
+    if sheet is None:
+        return "You have no calling yet. Type JOBS to see the paths."
+    mode = arg.strip().lower() or "standard"
+    try:
+        return render_score_sheet(sheet, mode)
+    except ValueError as err:
+        return str(err)
+
+
+def _lesson_cmd(session: Session, arg: str) -> str:
+    """The classroom menu: `lesson list` or `lesson start <subject>`."""
+    rest = arg.strip().lower()
+    if rest in ("", "list"):
+        return lesson_list()
+    if rest.startswith("start "):
+        return lesson_start(session.player_id, rest[len("start ") :])
+    return "Try: lesson list, or lesson start <subject>"
+
+
+def _load_cmd(session: Session, _arg: str) -> str:
+    """Restore the world snapshot and show the arrival scene."""
+    session.location, msg = awaken_snapshot()
+    return f"{msg}\n{render_scene(session.location, viewer=session.player_id)}"
+
+
+def _quit_cmd(session: Session, _arg: str) -> str:
+    """Save and leave: the driver's loop ends when the session is no longer alive."""
+    save_character(session)
+    session.alive = False
+    return "The world dims. See you next spark."
+
+
+# Built after the movement + world + lifecycle handlers above (referenced at build time).
 COMMANDS = _build_commands()
 
 
@@ -1434,43 +1557,8 @@ def handle_command(session: Session, signal: str) -> str:
     if handled is not None:
         return handled
 
-    if routed_signal in ("quit", "q"):
-        save_character(session)
-        session.alive = False
-        return "The world dims. See you next spark."
-    if routed_signal == "help":
-        return HELP_TEXT
     if routed_signal.startswith("@"):
         return wizard_command(session, routed_signal)
-    if routed_signal == "journal" or routed_signal.startswith("journal "):
-        _, _, entry = true_signal.partition(" ")
-        return journal(session, entry)
-    if routed_signal == "title" or routed_signal.startswith("title "):
-        _, _, text = true_signal.partition(" ")
-        return title(session, text)
-    if routed_signal == "score" or routed_signal.startswith("score "):
-        sheet = sheet_from_session(session)
-        if sheet is None:
-            return "You have no calling yet. Type JOBS to see the paths."
-        mode = routed_signal[len("score ") :].strip() if " " in routed_signal else "standard"
-        try:
-            return render_score_sheet(sheet, mode)
-        except ValueError as err:
-            return str(err)
-    if routed_signal == "lesson" or routed_signal.startswith("lesson "):
-        rest = (
-            routed_signal[len("lesson ") :].strip() if routed_signal.startswith("lesson ") else ""
-        )
-        if rest in ("", "list"):
-            return lesson_list()
-        if rest.startswith("start "):
-            return lesson_start(session.player_id, rest[len("start ") :])
-        return "Try: lesson list, or lesson start <subject>"
-    if routed_signal == "save":
-        return seal_snapshot(session.location)
-    if routed_signal == "load":
-        session.location, msg = awaken_snapshot()
-        return f"{msg}\n{render_scene(session.location, viewer=session.player_id)}"
     if routed_signal == "":
         return ""
     return "Huh? Type HELP for commands."
