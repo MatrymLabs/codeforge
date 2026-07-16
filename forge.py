@@ -762,6 +762,137 @@ def _build_commands() -> CommandSet:
             namespace=CORE,
         )
     )
+    # Read-only query/panel verbs (stage 2 slice A, moved off the legacy if-ladder). Each is a
+    # pure projection: it reads state and renders, never mutates. Aliases share one designation.
+    cs.add(
+        Command(
+            "jobs",
+            "CMD-04.015",
+            "the callings on offer",
+            lambda _s, _a: calling_index(),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "who",
+            "CMD-04.016",
+            "who is online",
+            lambda s, _a: (
+                "Players online: " + ", ".join(display_name(n) for n in (roster() or [s.player_id]))
+            ),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "workshop",
+            "CMD-04.017",
+            "the workshop menu",
+            lambda _s, _a: workshop_menu(),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "catalog",
+            "CMD-04.018",
+            "the Hardware Store catalog",
+            lambda _s, _a: catalog_view(),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "hardware",
+            "CMD-04.018",
+            "the Hardware Store catalog",
+            lambda _s, _a: catalog_view(),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "parts",
+            "CMD-04.018",
+            "the Hardware Store catalog",
+            lambda _s, _a: catalog_view(),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "console",
+            "CMD-04.019",
+            "the failsafe console menu",
+            lambda _s, _a: console_menu(),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "diagnostics",
+            "CMD-04.020",
+            "the diagnostics lens",
+            lambda _s, _a: diagnostics_view(),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "inventory",
+            "CMD-04.021",
+            "what you carry",
+            lambda _s, _a: inventory_text(),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "i", "CMD-04.021", "what you carry", lambda _s, _a: inventory_text(), namespace=CORE
+        )
+    )
+    cs.add(
+        Command(
+            "inv", "CMD-04.021", "what you carry", lambda _s, _a: inventory_text(), namespace=CORE
+        )
+    )
+    cs.add(
+        Command(
+            "achievements",
+            "CMD-04.022",
+            "your unlocked achievements",
+            lambda s, _a: render_achievements(s.player_id),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "progress",
+            "CMD-04.023",
+            "your classroom progress",
+            lambda s, _a: progress(s.player_id),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "hint",
+            "CMD-04.024",
+            "a hint for the current question",
+            lambda s, _a: hint(s.player_id),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "question",
+            "CMD-04.025",
+            "the current classroom question",
+            lambda s, _a: ask_question(s.player_id),
+            namespace=CORE,
+        )
+    )
     return cs
 
 
@@ -904,8 +1035,6 @@ def handle_command(session: Session, signal: str) -> str:
         return deploy_barrier(session)
     if routed_signal.startswith("scan "):
         return diagnostic_scan(session, routed_signal.split(" ", 1)[1].strip())
-    if routed_signal == "jobs":
-        return calling_index()
     if routed_signal.startswith("job "):
         verdict = bind_calling(session, routed_signal.removeprefix("job "))
         if verdict.startswith("You take up"):
@@ -927,27 +1056,16 @@ def handle_command(session: Session, signal: str) -> str:
             return render_score_sheet(sheet, mode)
         except ValueError as err:
             return str(err)
-    if routed_signal == "who":
-        names = roster() or [session.player_id]
-        return "Players online: " + ", ".join(display_name(n) for n in names)
     if routed_signal == "regs" or routed_signal.startswith("regs "):
         return regs(routed_signal[len("regs ") :] if routed_signal.startswith("regs ") else "")
     if routed_signal == "library" or routed_signal.startswith("library "):
         return library(
             routed_signal[len("library ") :] if routed_signal.startswith("library ") else ""
         )
-    if routed_signal == "workshop":
-        return workshop_menu()
-    if routed_signal in ("catalog", "hardware", "parts"):
-        return catalog_view()
     if routed_signal == "reuse" or routed_signal.startswith("reuse "):
         return reuse_search(
             routed_signal[len("reuse ") :] if routed_signal.startswith("reuse ") else ""
         )
-    if routed_signal == "console":
-        return console_menu()
-    if routed_signal == "diagnostics":
-        return diagnostics_view()
     if routed_signal == "security":
         return run_view("security")
     if routed_signal == "run" or routed_signal.startswith("run "):
@@ -963,19 +1081,9 @@ def handle_command(session: Session, signal: str) -> str:
         if rest.startswith("start "):
             return lesson_start(session.player_id, rest[len("start ") :])
         return "Try: lesson list, or lesson start <subject>"
-    if routed_signal == "question":
-        return ask_question(session.player_id)
     if routed_signal == "answer" or routed_signal.startswith("answer "):
         arg = routed_signal[len("answer ") :] if routed_signal.startswith("answer ") else ""
         return submit_answer(session.player_id, arg)
-    if routed_signal == "hint":
-        return hint(session.player_id)
-    if routed_signal == "progress":
-        return progress(session.player_id)
-    if routed_signal == "achievements":
-        return render_achievements(session.player_id)
-    if routed_signal in ("inventory", "i", "inv"):
-        return inventory_text()
     if routed_signal.startswith(("take ", "get ")):
         word = routed_signal.split(" ", 1)[1].strip()
         picked = trace_item(word, f"room:{session.location}")  # label, captured before it moves
