@@ -244,3 +244,33 @@ def test_unlock_without_with_prompts() -> None:
     # The no-"with" branch of _unlock_cmd (stage 2 slice G): a usage prompt, no door touched.
     out = handle_command(_player(), "unlock door")
     assert out == "Unlock what with what? Try: unlock door with key"
+
+
+# --- stage 2 slice H: classroom + lifecycle verbs, the finale ----------------
+
+
+def test_help_returns_the_help_text_through_the_spine() -> None:
+    from forge import HELP_TEXT
+
+    assert handle_command(_player(), "help") == HELP_TEXT
+
+
+def test_save_and_load_round_trip_through_the_spine() -> None:
+    # conftest quarantines the snapshot into tmp; save seals, load restores.
+    assert "Saved" in handle_command(_player(), "save")
+    out = handle_command(_player(), "load")
+    assert "Loaded" in out and "Huh?" not in out
+
+
+def test_score_with_a_bad_mode_surfaces_the_error() -> None:
+    # The ValueError branch of _score_cmd: the renderer rejects an unknown mode, surfaced as text.
+    from parts.jobs import bind_calling
+
+    session = _player()
+    bind_calling(session, "engineer")
+    assert "unknown display_mode" in handle_command(session, "score no-such-mode")
+
+
+def test_lesson_with_an_unknown_subcommand_prompts() -> None:
+    out = handle_command(_player(), "lesson wibble")
+    assert out == "Try: lesson list, or lesson start <subject>"
