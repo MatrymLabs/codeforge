@@ -1559,5 +1559,120 @@
     ],
     "created": "2026-07-16",
     "updated": "2026-07-16"
+  },
+  {
+    "designation": "CMD-04.036",
+    "name": "arc",
+    "status": "active",
+    "function": "the ARC assurance roll-up (arc <system>)",
+    "label": "arc",
+    "file": "forge.py",
+    "type": "CMD",
+    "domain": "04",
+    "docs": "docs/architecture.md",
+    "tests": "tests/test_commands.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "command"
+    ],
+    "notes": "Moved off the legacy if-ladder onto the command spine (forge world-commands, stage 2 slice E: console/diagnostic verbs).",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-16",
+    "updated": "2026-07-16"
+  },
+  {
+    "designation": "CMD-04.037",
+    "name": "store",
+    "status": "active",
+    "function": "the Hardware Store index (store <part-id>)",
+    "label": "store",
+    "file": "forge.py",
+    "type": "CMD",
+    "domain": "04",
+    "docs": "docs/architecture.md",
+    "tests": "tests/test_commands.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "command"
+    ],
+    "notes": "Moved off the legacy if-ladder onto the command spine (forge world-commands, stage 2 slice E: console/diagnostic verbs).",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-16",
+    "updated": "2026-07-16"
+  },
+  {
+    "designation": "CMD-04.038",
+    "name": "learnings",
+    "status": "active",
+    "function": "the filed Learning Records (learnings <id>)",
+    "label": "learnings",
+    "file": "forge.py",
+    "type": "CMD",
+    "domain": "04",
+    "docs": "docs/architecture.md",
+    "tests": "tests/test_commands.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "command"
+    ],
+    "notes": "Moved off the legacy if-ladder onto the command spine (forge world-commands, stage 2 slice E: console/diagnostic verbs).",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-16",
+    "updated": "2026-07-16"
+  },
+  {
+    "designation": "CMD-04.039",
+    "name": "complexity",
+    "status": "active",
+    "function": "the complexity lens (complexity <target>)",
+    "label": "complexity",
+    "file": "forge.py",
+    "type": "CMD",
+    "domain": "04",
+    "docs": "docs/architecture.md",
+    "tests": "tests/test_commands.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "command"
+    ],
+    "notes": "Moved off the legacy if-ladder onto the command spine (forge world-commands, stage 2 slice E: console/diagnostic verbs).",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-16",
+    "updated": "2026-07-16"
+  },
+  {
+    "designation": "CMD-04.040",
+    "name": "clones",
+    "status": "active",
+    "function": "the clone-detection lens (clones <target>)",
+    "label": "clones",
+    "file": "forge.py",
+    "type": "CMD",
+    "domain": "04",
+    "docs": "docs/architecture.md",
+    "tests": "tests/test_commands.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "command"
+    ],
+    "notes": "Moved off the legacy if-ladder onto the command spine (forge world-commands, stage 2 slice E: console/diagnostic verbs).",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-16",
+    "updated": "2026-07-16"
   }
 ]
