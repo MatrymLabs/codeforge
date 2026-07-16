@@ -7,11 +7,9 @@
 [![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/MatrymLabs/codeforge/badge)](https://scorecard.dev/viewer/?uri=github.com/MatrymLabs/codeforge)
 [![Docs](https://img.shields.io/badge/docs-mkdocs--material-teal)](https://matrymlabs.github.io/codeforge/)
 
-**A Python-native software manufacturing platform with two outputs: an installable multiplayer World Package (the MUD you can play in your browser today), and a Hardware Store of reusable parts proven in the game and translated to real software.**
+**A Python-native multiplayer MUD engine you can play in your browser today, built as a workshop of small, tested, reusable parts.** Under the game, those same parts compose a second output: a Hardware Store of patterns proven in play and translated into real software.
 
 ![The Relighting in aethryn: pick up the first ember to relight it, reforge the broken bridge, then fell the Cinder-Wight to break the cold - the whole arc advances from real actions](docs/demo.gif)
-
-📖 **Documentation site:** [matrymlabs.github.io/codeforge](https://matrymlabs.github.io/codeforge/) (built from `docs/` with MkDocs Material, published on GitHub Pages).
 
 Classic soul: an ASCII splash screen, rooms, locked doors, NPCs, callings, XP, wizards,
 and a training dummy that reassembles itself. Modern body: a pure-function engine tick,
@@ -53,62 +51,30 @@ Welcome back, Matrym@matlabs.
 The world is going to sleep. Your deeds are remembered.
 ```
 
-## Play in your browser 🌐
+## Play it 🌐
 
 ### ▶ [**Play the live demo**](https://codeforge-demo-1kcu.onrender.com/)
 
 No install - just click and log in (`NEW` to make a character). It's on a free tier that
 sleeps when idle, so the **first load may take ~30-60s to wake up**; after that it's instant.
+The demo boots **aethryn**: wash ashore on the Kindlands Coast, take a calling, and walk **the
+Relighting** - relight the first ember, reforge the Old Reach Bridge, face the Cinder-Wight in
+the Cold Cellar. The whole arc advances from what you actually do.
 
-The demo boots **aethryn**, the flagship world: wash ashore on the Kindlands Coast, take a
-calling, and walk **the Relighting** - relight the first ember, reforge the Old Reach Bridge,
-and face the Cinder-Wight in the Cold Cellar. The whole arc advances from what you actually do.
-
-Or run it locally:
-
-```bash
-codeforge web            # serves the browser gate on http://localhost:8000
-```
-
-Same engine, a fourth thin driver: an [xterm.js](https://xtermjs.org) terminal speaks to
-the tick over a WebSocket. The public demo is deliberately safe - ephemeral state, a seat
-cap, and idle timeouts - so a shared link can't be farmed. Deploy your own with the
-included [`render.yaml`](render.yaml) (Render → New → Blueprint; no secrets required).
-
-### The readiness dashboard 📊
+Or run it locally - same engine, thin drivers:
 
 ```bash
-codeforge api            # serves the FastAPI app on http://localhost:8000
+codeforge web     # the browser gate (xterm.js over a WebSocket) on http://localhost:8000
+codeforge api     # the FastAPI readiness dashboard on http://localhost:8000
 ```
 
-`GET /` is a server-rendered dashboard that projects the forge's own evidence, the career
-board, the QualityGate audit, the hardware store, and the latest `make bench` run, onto one
-accessible, responsive page. It is **enhanced with HTMX** (vendored, no JS build, no CDN): a
-live **Refresh** re-computes the board with no page reload, and clicking a **Blueprint**
-renders it in-page - all as progressive enhancement (the page works with JavaScript off). The
-same data is served as typed JSON at `/api/status` (the seam a future React/TypeScript front
-end would consume, documented in OpenAPI at `/docs`). See [`docs/dashboard.md`](docs/dashboard.md).
-
-## Full-Stack Forge Direction 🧭
-
-CodeForge is **architecture-first Python**: frameworks are professional tools that must earn
-their place, not an identity to avoid. The custom tick stays the core; FastAPI carries the
-web layer it already carries; Django, Evennia, and React are researched, deferred options.
-The decision and the scored matrix live in
-[`docs/full_stack_forge_decision.md`](docs/full_stack_forge_decision.md) and
-[`docs/framework_decision_matrix.md`](docs/framework_decision_matrix.md).
-
-The first net-new spine is the **Blueprint renderer**: an idea becomes a validated Blueprint
-(JSON record + Markdown twin), then a static HTML page, all frameless.
-
-```bash
-codeforge play           # then, in the MUD:
-blueprint list           # every filed plan
-blueprint show npc_combat # read the plan as Markdown
-blueprint render npc_combat # project it to a static HTML page (reports/blueprints/)
-```
-
-See [`docs/blueprint_renderer.md`](docs/blueprint_renderer.md).
+The browser gate is a fourth thin driver: an [xterm.js](https://xtermjs.org) terminal speaks to
+the tick over a WebSocket. `codeforge api` serves a server-rendered dashboard at `GET /` that projects the forge's own
+evidence (career board, QualityGate audit, hardware store, latest `make bench`) onto one
+accessible page, HTMX-enhanced but working with JavaScript off; the same data is typed JSON at
+`/api/status` (OpenAPI at `/docs`). The public demo is deliberately safe (ephemeral state, a
+seat cap, idle timeouts); deploy your own with the included [`render.yaml`](render.yaml). See
+[docs/dashboard.md](docs/dashboard.md).
 
 ## Quick start
 
@@ -121,64 +87,34 @@ make check       # lint + typecheck + the full test suite
 spark            # ignite the multiplayer server on port 4000
 ```
 
-Connect from any machine on your network with `nc <host> 4000`, telnet, or **Mudlet**.
-Every connection meets the front desk and must authenticate: log in as
-`character@account`, or register a new legend with `NEW` - there is no anonymous access.
-Characters persist across restarts; passwords are salted pbkdf2 hashes and hidden at the
-prompt (telnet echo blackout); ranks gate the wizard verbs (`@teleport`, `@grant`,
-`@shutdown`).
+Connect from any machine on your network with `nc <host> 4000`, telnet, or **Mudlet**. Every
+connection meets the front desk and must authenticate: log in as `character@account`, or
+register with `NEW` - no anonymous access. Characters persist across restarts; passwords are
+salted pbkdf2 hashes hidden at the prompt (telnet echo blackout); ranks gate the wizard verbs
+(`@teleport`, `@grant`, `@shutdown`).
 
 More doors: `codeforge play` (solo terminal), `codeforge grant <name> <rank>`,
-`codeforge migrate <char> <account>`. The full operator's guide - starting the
-servers, the login flow, and the one-command **ritual** - is
+`codeforge migrate <char> <account>`. The full operator's guide is
 [docs/RUNNING.md](docs/RUNNING.md).
 
-### The ritual
-
-One command lights the whole workshop and drops you at the front desk - gates run,
-GitHub mirrors, the forge lights, the MUD window opens; its counterpart secures
-everything at day's end:
-
-```bash
-make ritual        # or, bound as a phrase: start the ritual
-make ritual-down   # or: complete the ritual   (bank the forge, muster report)
-```
-
-Login uses a bundled stdlib client (`scripts/mud_client.py`) that hides your
+**The ritual** - one command lights the whole workshop and drops you at the front desk (gates
+run, GitHub mirrors, the forge lights, the MUD window opens); `make ritual-down` secures it at
+day's end. Login uses a bundled stdlib client (`scripts/mud_client.py`) that hides your
 password even where `telnet` isn't installed.
 
-### A seed is a game
-
-The engine boots one **seed pack** (a whole world: rooms, items, NPCs, callings,
-splash) at startup - swap the seed and you're playing a different game on the same
-engine. The spawn point is the first room in the seed, so nothing is hardcoded.
+**A seed is a game** - the engine boots one **seed pack** (a whole world: rooms, items, NPCs,
+callings, splash) at startup; swap the seed and you're playing a different game on the same
+engine, spawn point and all as data, nothing hardcoded. In **aethryn** (the flagship, and what
+the demo boots) the whole Relighting arc plays from real actions because the quest, its doors,
+and their triggers are all **seed data, not Python** - a new game is a new `seeds/<name>/` folder
+of YAML. A **cast** is the next layer: a standalone installable project poured from the forge
+(engine + one seed + config). See [docs/seed_architecture.md](docs/seed_architecture.md).
 
 ```bash
 codeforge seeds                       # list installed games
-codeforge play --seed aethryn         # the flagship world (the Kindlands Coast)
-codeforge play --seed spiral-ascent   # or the Spiral Ascent
+codeforge play --seed aethryn         # the flagship world (or: spiral-ascent, first-forge)
 FORGE_SEED=aethryn spark              # same selector for the multiplayer server
 ```
-
-Shipped seeds: **`aethryn`** (the flagship, and the world the live demo boots),
-`first-forge` (the fantasy starter), and `spiral-ascent`. In aethryn you walk a full
-story arc, **the Relighting**: relight the first ember, reforge the broken Old Reach
-Bridge, and end the cold in the Cold Cellar. It plays from real actions - pick up the
-ember and it relights, walk into the cellar and you delve it, fell the Cinder-Wight and
-the story ends - because the quest, its doors, and their triggers are all **seed data**,
-not Python. Adding a new game (or a new arc) is a new `seeds/<name>/` folder of YAML.
-
-A **seed pack** is a game's *content* (above). A **cast** is the next layer: a standalone,
-installable project poured from the forge - the engine + one chosen seed pack + config,
-detached into its own repo. *"CodeForge is the forge; a cast is what leaves it."* The
-Phase-1 scaffold plans a cast (dry run - writes nothing):
-
-```bash
-make cast-plan TEMPLATE=fantasy_mud NAME=Aethris   # what a cast WOULD copy, and never copy
-```
-
-See [docs/seed_architecture.md](docs/seed_architecture.md) for the doctrine and the phased
-plan (whole-engine copy today; module-level selection is Phase-2 decoupling work).
 
 ## Architecture
 
@@ -206,45 +142,18 @@ Three laws hold everywhere:
    resources recompute from job templates and growth formulas, with a parity test
    pinning restore-math equal to play-math.
 
-## Engineering systems
-
-Beyond the game, the parts compose into a self-auditing engine. Every command below
-is real, tested, and reachable in the MUD:
-
-- **Classification Registry** - a hidden filing system: every object carries a
-  designation (`TYPE-DD.NNN`) keyed to its runtime label. `registry show
-  <id>`, `registry type CMD`. See [docs/classification/](docs/classification/CLASSIFICATION_SYSTEM.md).
-- **Command spine** - namespaced (`CORE` / `ADMIN @` / `SEED`), rank-gated verbs; a
-  seed can never shadow a reserved word.
-- **Safety + QA** - `qa gate all` grades every filed object (purpose · file · tests ·
-  docs · maturity); `safety review <id>` rates risk. Readiness only - no compliance
-  claims. See [docs/safety_qa_system.md](docs/safety_qa_system.md).
-- **Project control** - `pm status` computes the dashboard from the registry + the QA
-  gate (no stored copy to drift). See [docs/project_management.md](docs/project_management.md).
-- **Guidance Library** - `library` / `library <id>` read the Federal Guidance
-  Library's stored documents read-only; `regs <id>` cites tracked sources.
-- **Compliance awareness** - `law` / `law <id>` render tracked sources through a
-  legal-*awareness* boundary: never legal advice, always "human review required."
-  See [docs/legal_policy_awareness.md](docs/legal_policy_awareness.md).
-- **System generation** - `@sg item <pattern>` forges a filed item pattern (wizard+,
-  data-driven, refuses the unknown).
-
-The whole flow runs green end-to-end via `make smoke` (start → log in → look → check
-→ do → log out → bank the forge). The startup ritual audits it (`make readiness`).
-
 ## What this demonstrates
 
 Reading this repo, an engineer can *verify*, not take on faith, these skills:
 
 - **Architecture** - a pure-function engine tick (`handle_command`) with thin drivers
-  (terminal · TCP · WebSocket); state is canonical, text is a projection. See
-  [docs/architecture.md](docs/architecture.md).
+  (terminal · TCP · WebSocket); state is canonical, text is a projection.
 - **Testing discipline** - unit twins per card, property-based (Hypothesis), real-socket
   + WebSocket integration, an end-to-end `make smoke`, restore/play parity: the full
   suite runs green on every merge (the CI badge is the live source of truth).
 - **Self-auditing systems** - a classification registry, `qa gate all`, and `pm status`
-  compute readiness from filed data (part + part); the startup ritual runs a security +
-  registry self-check *before* it lights the forge.
+  compute readiness from filed data; the startup ritual runs a security + registry
+  self-check *before* it lights the forge.
 - **Security posture** - rank-gated admin verbs, salted pbkdf2 auth, an allowlisted
   command runner (never raw shell), SAST (bandit + CodeQL) + dependency scanning
   (pip-audit) + secret scanning (detect-secrets) + a CycloneDX SBOM + Dependabot.
@@ -253,29 +162,12 @@ Reading this repo, an engineer can *verify*, not take on faith, these skills:
 - **Systems thinking (20 yrs USAF)** - readiness checks, evidence trails, controlled
   changes, QA gates - mission-system discipline applied to software.
 
-Everything above is **working and tested.** Planned work is marked as such in the
-[roadmap](#roadmap).
-
-**Skills → proof, in the MUD:** the `career` command (in *The Forge Workshop*) renders a
-**Career Evidence Sign** - real software-career skills mapped to the exact repo artifact
-that proves each, grounded in BLS/O*NET research. `career gaps` lists what's still missing.
-It obeys VeritasGate: a skill is only "proven" when its cited artifact actually exists. See
-[docs/career_evidence_board.md](docs/career_evidence_board.md) and
-[docs/resume_mapping.md](docs/resume_mapping.md).
-
-**Bold, but honest:** `pioneer` surfaces **Pioneer Mode** - a disciplined-Maverick framework
-(*bend convention, not truth/safety/trust*) with a risk ladder, a constraint-review template,
-and filed experiment reports. See [docs/pioneer_mode.md](docs/pioneer_mode.md).
-
-**One pane of glass:** `inspect` (inspect the forge) composes every self-audit signal -
-registry · QA board · truth · docs · overclaims · career · pioneer - into one on-demand
-green/yellow/red **frame-up** of the whole machine. See [docs/frame_up.md](docs/frame_up.md).
-
-**How it's built - honestly:** AI-assisted and engineering-directed. AI expands the
+**How it's built, honestly:** AI-assisted and engineering-directed. AI expands the
 creative and analytical surface; the ritual, gates, and self-audit keep it honest;
 tests and evidence prove each claim; I direct, review, and make the calls. What makes
 this *engineering* and not "AI wrote it" is the same thing that proves any engineering -
-the tests, the gates, and the green CI you can run yourself.
+the tests, the gates, and the green CI you can run yourself. See
+[docs/AI_WORKFLOW.md](docs/AI_WORKFLOW.md).
 
 ## Evaluation
 
@@ -310,9 +202,67 @@ Grading yourself by a rule you don't get to bend is the whole point: an earlier 
 this table showed `ci` as a `watchlist` with a single workflow file, so the repo added the
 gates the tool was asking for rather than argue with it.
 
-## The card catalog
+## Testing
 
-Generated from the `CARD:` docstrings in `parts/` (see `make store`):
+A layered suite: unit twins for every card, real-socket gateway tests that walk the login
+dialogue over the wire, browser-gateway tests over a real WebSocket, engine-tick wiring
+tripwires, deterministic combat math, persistence parity, event-bus resilience (a
+dropped client can never crash another player's command), security tests (impostor
+refusal, salted hashes, generic login refusals), and Hypothesis property tests pinning
+the progression curves across thousands of generated cases. CI runs the same
+`make check` as the workbench, plus a `docker` job that builds the image and smoke-tests
+that the gateway boots.
+
+> **🔍 Debugging case study.** That "a dropped client can never crash another player's
+> command" line has a story: an intermittent, "impossible" crash that only surfaced
+> through the launch ritual, cornered with a **PTY reproduction** and fixed at three
+> seams. The write-up - symptom → reproduction → root cause → fix → lesson - is in
+> **[docs/DEBUGGING.md](docs/DEBUGGING.md)**.
+
+## Beyond the game: a self-auditing engineering stack
+
+Under the MUD, the same parts compose an engineering stack that audits itself. Every command
+here is real, tested, and reachable in the game; the whole flow runs green end-to-end via
+`make smoke`, and the startup ritual audits it (`make readiness`). Explore what interests you:
+
+- **Classification Registry** - every object (rooms, NPCs, items, commands, and the code
+  modules themselves) carries a designation (`TYPE-DD.NNN`) keyed to its runtime label;
+  `registry show <id>`, `registry type CMD`. See [docs/classification/](docs/classification/CLASSIFICATION_SYSTEM.md).
+- **Command spine** - namespaced (`CORE` / `ADMIN @` / `SEED`), rank-gated verbs; a seed can
+  never shadow a reserved word.
+- **Safety + QA** - `qa gate all` grades every filed object (purpose · file · tests · docs ·
+  maturity); `safety review <id>` rates risk. Readiness only, no compliance claims. See
+  [docs/safety_qa_system.md](docs/safety_qa_system.md).
+- **Project control** - `pm status` computes the dashboard from the registry + the QA gate (no
+  stored copy to drift). See [docs/project_management.md](docs/project_management.md).
+- **Compliance awareness** - `law` / `library` / `regs` read tracked federal sources through a
+  legal-*awareness* boundary: never legal advice, always "human review required." See
+  [docs/legal_policy_awareness.md](docs/legal_policy_awareness.md).
+- **Career evidence** - `career` renders a Career Evidence Sign: real software-career skills
+  mapped to the exact repo artifact that proves each (BLS/O*NET-grounded), VeritasGate-honest
+  (proven only when the artifact exists); `career gaps` lists what's missing. See
+  [docs/career_evidence_board.md](docs/career_evidence_board.md) and
+  [docs/resume_mapping.md](docs/resume_mapping.md).
+- **Blueprint renderer** - `blueprint list|show|render`: an idea becomes a validated Blueprint
+  (JSON + Markdown twin), then a static HTML page, all frameless. See
+  [docs/blueprint_renderer.md](docs/blueprint_renderer.md).
+- **One pane of glass** - `inspect` composes every self-audit signal (registry · QA · truth ·
+  docs · overclaims · career · pioneer) into one green/yellow/red frame-up. See
+  [docs/frame_up.md](docs/frame_up.md).
+- **Pioneer Mode** - `pioneer`: a disciplined-Maverick framework (*bend convention, not
+  truth/safety/trust*) with a risk ladder, a constraint-review template, and filed experiment
+  reports. See [docs/pioneer_mode.md](docs/pioneer_mode.md).
+- **System generation** - `@sg item <pattern>` forges a filed item pattern (wizard+,
+  data-driven, refuses the unknown).
+
+**Direction:** CodeForge is **architecture-first Python** - frameworks are professional tools
+that must earn their place, not an identity to avoid. The custom tick stays the core; FastAPI
+carries the web layer; Django, Evennia, and React are researched, deferred options. See
+[docs/full_stack_forge_decision.md](docs/full_stack_forge_decision.md) and
+[docs/framework_decision_matrix.md](docs/framework_decision_matrix.md).
+
+<details>
+<summary><b>The card catalog</b> - 40 parts, generated from the <code>CARD:</code> docstrings (<code>make store</code>)</summary>
 
 | Card | Purpose |
 |---|---|
@@ -361,27 +311,20 @@ Salvage note: `stats`, `resources`, and `progression` were ported from an earlie
 Evennia-based prototype -- framework-free kernel code survived the framework it was
 written for, original tests included.
 
-## The forge voice
-
-The names in this repo are chosen in a deliberate voice - workshop invention,
-detective case files, worlds-and-gates - so the code reads like the thing it
-models (`spark`, `Forge`, `Session`, `Seed`, the tick as the only *door*). It's a
-documented convention with hard limits: **clarity outranks poetry, and the data
-contract stays literal** (persisted labels, seed keys, DB columns, and CLI verbs
-never take the metaphor). The vocabulary map is in
-[`docs/naming_glossary.md`](docs/naming_glossary.md); the philosophy and its
-governing boundaries are in [`docs/AI_WORKFLOW.md`](docs/AI_WORKFLOW.md).
+</details>
 
 ## Workshop buttons
 
 **The quality gates form one ladder, not a pile of look-alikes.** `make check` is *the* gate
 (CI runs it: lint + types + tests + coverage; green before merge). `make doctor` runs the same
-gates diagnostically - read-only, stops at the first failure, prescribes the fix (use it when
-`check` is red). `make ritual` is the full ceremony: `check` + security wards + `readiness` +
-`truth` + a `repo-integrity` evidence report + an end-to-end `smoke` test. The single-purpose
-verifiers - `readiness` (registry + PM), `truth` (claims vs reality), `repo-integrity` (dated
-evidence bundle), `smoke` (live socket round-trip) - are the steps the ritual composes; run one
-directly when you want just that check.
+gates diagnostically - read-only, stops at the first failure, prescribes the fix. `make ritual`
+is the full ceremony: `check` + security wards + `readiness` + `truth` + a `repo-integrity`
+evidence report + an end-to-end `smoke` test. The single-purpose verifiers (`readiness`,
+`truth`, `repo-integrity`, `smoke`) are the steps the ritual composes; run one directly when
+you want just that check.
+
+<details>
+<summary><b>The full Makefile button reference</b></summary>
 
 | Command | What it does |
 |---|---|
@@ -389,9 +332,9 @@ directly when you want just that check.
 | `make fix` / `make check` | Auto-fix, then lint + mypy + tests + property tests |
 | `make test` / `make property` | Deterministic suite / Hypothesis property tests, run separately |
 | `make coverage` / `make security` | Coverage report (85% floor) / bandit SAST + dependency CVE scan |
-| `make doctor` | The same gates as `check`, diagnostic: run read-only, stop at the first failure, and prescribe the fix |
+| `make doctor` | The same gates as `check`, diagnostic: read-only, stop at first failure, prescribe the fix |
 | `make patch` | Scan deps for CVEs, apply available security fixes (`pip-audit --fix`), then re-verify + file dated evidence |
-| `make daily` | Apply security patches (+re-verify), then check federal guidance for updates and file them in the Guidance Library (a private companion repo, `FGL_HOME`) |
+| `make daily` | Apply security patches (+re-verify), then check federal guidance for updates and file them in the Guidance Library (`FGL_HOME`) |
 | `spark` · `codeforge serve` | Multiplayer gateway (Ctrl+C sleeps the world) |
 | `codeforge play` | Solo terminal session |
 | `make ritual` / `make ritual-down` | Light the whole workshop (gates → mirror → forge → MUD) / secure it at day's end |
@@ -399,22 +342,12 @@ directly when you want just that check.
 | `make unskew` | Reset tracked-file timestamps (clock-skew cure) |
 | `make ship` | Full check, refuse dirty tree, push |
 
-## Testing
+</details>
 
-A layered suite: unit twins for every card, real-socket gateway tests that walk the login
-dialogue over the wire, browser-gateway tests over a real WebSocket, engine-tick wiring
-tripwires, deterministic combat math, persistence parity, event-bus resilience (a
-dropped client can never crash another player's command), security tests (impostor
-refusal, salted hashes, generic login refusals), and Hypothesis property tests pinning
-the progression curves across thousands of generated cases. CI runs the same
-`make check` as the workbench, plus a `docker` job that builds the image and smoke-tests
-that the gateway boots.
-
-> **🔍 Debugging case study.** That "a dropped client can never crash another player's
-> command" line has a story: an intermittent, "impossible" crash that only surfaced
-> through the launch ritual, cornered with a **PTY reproduction** and fixed at three
-> seams. The write-up - symptom → reproduction → root cause → fix → lesson - is in
-> **[docs/DEBUGGING.md](docs/DEBUGGING.md)**.
+The names in this repo are chosen in a deliberate voice (workshop invention, detective case
+files, worlds-and-gates) so the code reads like the thing it models, with hard limits: clarity
+outranks poetry, and the data contract stays literal (persisted labels, seed keys, DB columns,
+and CLI verbs never take the metaphor). See [docs/naming_glossary.md](docs/naming_glossary.md).
 
 ## Roadmap
 
@@ -429,11 +362,9 @@ that the gateway boots.
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for the workshop rituals: conventional commits,
-the card/test-twin rule, and the verification gates.
-
-This project was built in AI-assisted sessions with human review at every gate;
-[docs/AI_WORKFLOW.md](docs/AI_WORKFLOW.md) documents the guardrails, failure patterns,
-and design invariants that governed those sessions.
+the card/test-twin rule, and the verification gates. This project was built in AI-assisted
+sessions with human review at every gate; [docs/AI_WORKFLOW.md](docs/AI_WORKFLOW.md) documents
+the guardrails, failure patterns, and design invariants that governed those sessions.
 
 ## License
 
