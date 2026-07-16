@@ -893,6 +893,63 @@ def _build_commands() -> CommandSet:
             namespace=CORE,
         )
     )
+    # Arg-forwarding reference/query verbs (stage 2 slice B). regs/library/reuse/run forwarded a
+    # LOWERCASED arg on the legacy ladder; the spine preserves case, so `.lower()` here keeps the
+    # old behavior exactly. `ai` keeps its ORIGINAL-case prompt (a prompt is prose, not a label).
+    cs.add(
+        Command(
+            "regs",
+            "CMD-04.026",
+            "cite tracked federal guidance",
+            lambda _s, arg: regs(arg.lower()),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "library",
+            "CMD-04.027",
+            "read the Guidance Library's documents",
+            lambda _s, arg: library(arg.lower()),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "reuse",
+            "CMD-04.028",
+            "search the Hardware Store for a reusable part",
+            lambda _s, arg: reuse_search(arg.lower()),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "run",
+            "CMD-04.029",
+            "a named readiness-check view",
+            lambda _s, arg: run_view(arg.lower()),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "security",
+            "CMD-04.030",
+            "the security check view",
+            lambda _s, _a: run_view("security"),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "ai",
+            "CMD-04.031",
+            "consult the Architect (advisory AI)",
+            lambda _s, arg: consult(arg),
+            namespace=CORE,
+        )
+    )
     return cs
 
 
@@ -1056,22 +1113,6 @@ def handle_command(session: Session, signal: str) -> str:
             return render_score_sheet(sheet, mode)
         except ValueError as err:
             return str(err)
-    if routed_signal == "regs" or routed_signal.startswith("regs "):
-        return regs(routed_signal[len("regs ") :] if routed_signal.startswith("regs ") else "")
-    if routed_signal == "library" or routed_signal.startswith("library "):
-        return library(
-            routed_signal[len("library ") :] if routed_signal.startswith("library ") else ""
-        )
-    if routed_signal == "reuse" or routed_signal.startswith("reuse "):
-        return reuse_search(
-            routed_signal[len("reuse ") :] if routed_signal.startswith("reuse ") else ""
-        )
-    if routed_signal == "security":
-        return run_view("security")
-    if routed_signal == "run" or routed_signal.startswith("run "):
-        return run_view(routed_signal[len("run ") :] if routed_signal.startswith("run ") else "")
-    if routed_signal == "ai" or routed_signal.startswith("ai "):
-        return consult(true_signal[len("ai ") :].strip() if routed_signal.startswith("ai ") else "")
     if routed_signal == "lesson" or routed_signal.startswith("lesson "):
         rest = (
             routed_signal[len("lesson ") :].strip() if routed_signal.startswith("lesson ") else ""
