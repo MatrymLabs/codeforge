@@ -81,6 +81,14 @@ def test_say_preserves_the_case_of_the_message():
     unbind_echo("b")
 
 
+def test_say_with_no_message_prompts():
+    a, _ = _seat("a", "library")
+    assert handle_command(a, "say") == "Say what?"  # bare say, no broadcast
+    unbind_echo("a")
+    unbind_echo("a")
+    unbind_echo("b")
+
+
 def test_take_is_seen_by_bystanders():
     a, _ = _seat("a", "library")
     _, b_heard = _seat("b", "library")

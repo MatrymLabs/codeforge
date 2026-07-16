@@ -417,6 +417,20 @@ def _name_cmd(session: Session, arg: str) -> str:
     return f"You are now known as {display_name(wanted)}."
 
 
+def _say_cmd(session: Session, message: str) -> str:
+    """CORE `say`: broadcast a said line to the room, keeping the player's ORIGINAL case (the
+    message is prose, not a label). The spine already preserves the argument's case."""
+    message = message.strip()
+    if not message:
+        return "Say what?"
+    announce(
+        session.location,
+        f'{display_name(session.player_id)} says, "{message}"',
+        exclude=session.player_id,
+    )
+    return f'You say, "{message}"'
+
+
 def _build_commands() -> CommandSet:
     """The registry command family, filed as CMD-* designations. First family on the
     command spine; the legacy tick still handles everything else via fall-through."""
@@ -950,6 +964,18 @@ def _build_commands() -> CommandSet:
             namespace=CORE,
         )
     )
+    # Communication verbs (stage 2 slice C). Both broadcast a TRUE-case message (prose, not a
+    # label); the spine preserves the argument's case, so the old true_signal behavior is kept.
+    cs.add(Command("say", "CMD-04.032", "say a line to the room", _say_cmd, namespace=CORE))
+    cs.add(
+        Command(
+            "shout",
+            "CMD-04.033",
+            "shout a line to everyone",
+            lambda s, arg: shout(s, arg),
+            namespace=CORE,
+        )
+    )
     return cs
 
 
@@ -1032,22 +1058,6 @@ def handle_command(session: Session, signal: str) -> str:
         if word in DIRECTIONS:
             return _resolve_move(session, DIRECTIONS[word])
         return "You can't go that way."
-    if routed_signal.startswith("say "):
-        # TRUE case: a said line keeps what the player typed. Routing lowercases to find the
-        # verb, but the message is prose, not a label -- parse it from the original like shout.
-        _, _, message = true_signal.partition(" ")
-        message = message.strip()
-        if not message:
-            return "Say what?"
-        announce(
-            session.location,
-            f'{display_name(session.player_id)} says, "{message}"',
-            exclude=session.player_id,
-        )
-        return f'You say, "{message}"'
-    if routed_signal == "shout" or routed_signal.startswith("shout "):
-        _, _, message = true_signal.partition(" ")
-        return shout(session, message)
     if routed_signal.startswith("@"):
         return wizard_command(session, routed_signal)
     if routed_signal.startswith(("attack ", "kill ")):
