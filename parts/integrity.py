@@ -12,6 +12,7 @@ Run: `make repo-integrity` (or `python -m parts.integrity`).
 
 from __future__ import annotations
 
+import re
 import shutil
 from collections import Counter
 from collections.abc import Callable
@@ -51,6 +52,26 @@ _OVERCLAIM = (
     "audit-ready",
 )
 
+# The canonical LIVING roadmaps/checklists whose forward-looking claims must be reconciled against
+# the code. The overclaim scan catches "done when it isn't"; this catches the mirror -- "remaining
+# when it's already built" -- so a stale claim never silently outlives the work that satisfied it.
+_CLAIM_DOCS = (
+    "DEVELOPMENT_PLAN.md",
+    "docs/vision_resync.md",
+    "docs/repository_maturity_scorecard.md",
+    "docs/github_portfolio_checklist.md",
+    "docs/full_stack_readiness_checklist.md",
+    "docs/reports/security/security-roadmap.md",
+)
+# Deliberate forward-claim markers only, to stay high-signal: an unchecked LIST-ITEM checkbox, a
+# TODO, a "Remaining:/Deferred:/(" label, or a "not yet built/done/wired" phrase. A legend line
+# ("`[ ]` = planned") and prose ("the remaining tests pass") are intentionally NOT matched.
+_CLAIM_RE = re.compile(
+    r"^\s*[-*]\s*\[ \]|\bTODO\b|\b(?:remaining|deferred)\b\s*[:(]"
+    r"|\bnot yet (?:built|done|wired|implemented)\b",
+    re.IGNORECASE,
+)
+
 
 def tool_status(which: Callable[[str], str | None] = shutil.which) -> dict[str, bool]:
     """Which integrity tools are on PATH (inside the venv). `which` is injectable."""
@@ -71,6 +92,27 @@ def overclaim_hits(root: Path | None = None) -> list[str]:
         return []
     text = readme.read_text(encoding="utf-8", errors="ignore").lower()
     return [phrase for phrase in _OVERCLAIM if phrase in text]
+
+
+def forward_claims(root: Path | None = None, docs: tuple[str, ...] = _CLAIM_DOCS) -> list[str]:
+    """Every forward-looking claim in the canonical living roadmaps, as `doc:line: text`.
+
+    A reconciliation queue, not a verdict: this ritual cannot know whether a claim is still true,
+    only that it exists. Surfacing the queue is the point -- reverse drift (a "remaining" that the
+    code already satisfied) rots silently until someone stumbles on it; listed, it gets reviewed.
+    Confirm each is still pending, or tick it done and cite the evidence."""
+    base = root if root is not None else _ROOT
+    hits: list[str] = []
+    for rel in docs:
+        path = base / rel
+        if not path.exists():
+            continue
+        text = path.read_text(encoding="utf-8", errors="ignore")
+        for lineno, line in enumerate(text.splitlines(), 1):
+            if _CLAIM_RE.search(line):
+                snippet = line.strip()[:90]
+                hits.append(f"{rel}:{lineno}: {snippet}")
+    return hits
 
 
 def build_report(
@@ -100,6 +142,7 @@ def build_report(
     reg_problems += [f"unfiled module: {m}" for m in unfiled_modules(records)]
     gaps = presence_gaps(base)
     overclaims = overclaim_hits(base)
+    claims = forward_claims(base)
     qa = Counter(r.verdict for r in gate_all(records))  # keys: pass | watch | fail
 
     status_summary = ", ".join(f"{n} {s}" for s, n in sorted(by_status.items())) or "none"
@@ -121,6 +164,11 @@ def build_report(
         next_actions.append(f"Fix registry: {'; '.join(reg_problems)}.")
     if overclaims:
         next_actions.append(f"Soften overclaims in README: {', '.join(overclaims)}.")
+    if claims:
+        next_actions.append(
+            f"Reconcile {len(claims)} forward claim(s) in the living roadmaps against the code "
+            "(reverse-drift): confirm each is still pending, or tick it done and cite the evidence."
+        )
     if not next_actions:
         next_actions.append(
             "No blocking gaps found - run `make check` + `make security` for the live gates."
@@ -161,6 +209,11 @@ def build_report(
         f"- registry validates:   {reg_line}",
         f"- QA readiness:         {qa['pass']} pass, {qa['watch']} watch, {qa['fail']} fail",
         f"- overclaim scan:       {overclaim_line}",
+        f"- forward-claim queue:  {len(claims)} to reconcile across {len(_CLAIM_DOCS)} roadmaps "
+        "(reverse-drift check; a queue, not a verdict)",
+    ]
+    lines += [f"    {c}" for c in claims]  # the full queue: curated docs keep it bounded
+    lines += [
         "",
         "Recommended Next Actions:",
     ]
