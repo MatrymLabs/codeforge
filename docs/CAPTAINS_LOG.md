@@ -7,6 +7,55 @@
 
 ---
 
+## Chief Engineer's Log - 2026-07-15 (ship's day 196) - "Two Refactors Landed, a False Task Refused, and We Pruned the Front Door"
+
+**Ship's day 196, the fifteenth of July.** This was not a day for new decks. The engine
+is hireable and we know it, so the work turned to the quieter, harder trades:
+correspondence and legibility. We finished cleaving the combat room in two. The leveling
+engine, XP and JP and TP and the climb of the curves, had been tangled up with the damage
+loop for no better reason than history; we lifted it out into its own part and left combat
+to do the one thing combat is for. Then we found the seam we had walked past a dozen times:
+the strike loop never advanced the combat clock, so a fighter could trade blows all day and
+never thaw a cooldown. We did not fix it quietly. We laid the choice in front of the
+Captain, ability-clock or action-clock, and he called it: a round is a round. The clock was
+never the Engineer's to own, so it moved to a part of its own, and now every landed strike
+turns it.
+
+We proved a rule today that is worth more than any of the parts: **verify a claim against
+the code before you act on it.** The bench said the gateway's brute-force throttle merely
+re-hand-rolled the login guard, an easy consolidation. The code said otherwise. The gateway
+counts failures in a sliding window and forgives a fumbling user the moment he succeeds; the
+guard spends a token on every attempt and forgives nothing, because a stateless request has
+no session to pardon. Two right answers to two different questions. To force them into one
+would have deleted the forgiveness, punished the honest user, and broken a test that was
+already standing watch. So we refused the task and wrote down why. A refused task, honestly
+reasoned, is a deliverable.
+
+Our own proof-tool caught us drifting the same day we shipped it. We had taught forge-audit
+to grade a README on four essentials, and it promptly found gaps in our own storefront: two
+scorecards that no longer matched the tool's output, a published part with no test section,
+a guidance library with no install line. We closed every one of them, and the fleet now
+grades clean end to end. No claim without correspondence, even about ourselves. We made the
+collaboration signal clickable while we were there, so an interviewer can follow the loop
+from issue to merge instead of taking our word.
+
+And then, asked what I would do with an already-good repo, I said the honest thing: stop
+building and prune the front door. The README had grown twenty co-equal headlines, and a
+stranger's first five minutes drowned the strong signal, the playable engine and the layered
+tests and the passing scorecard, under a hundred and fifty lines of meta-system. So we cut,
+but we cut presentation, not substance. Not a verb, not a doc, not a line of code was
+deleted; every link survived. We led with the product, folded the disciplines into one
+"beyond the game" room, and shut the long tables behind a click. The Captain keeps that PR
+to review, because the front door is his to hang. The deeper question, whether a MUD that
+also keeps a compliance library and a career board is simply too much surface, we did not
+answer. We only made it possible to see clearly enough to ask it.
+
+The suite ended at 1415 green. VeritasGate says all our claims still correspond. The demo is
+lit, the index page is live, every link on it holds. A good day's reckoning: less noise,
+truer words, and one task we were wise enough not to do.
+
+---
+
 ## Chief Engineer's Log - 2026-07-12 (ship's day 193) - "Two Parts Crossed the Fleet, and a Wall We Told the Truth About"
 
 **Ship's day 193, the twelfth of July.** We stopped treating the fleet as a harbor of separate
