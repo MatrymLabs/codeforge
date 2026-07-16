@@ -38,8 +38,8 @@ and, if ever exposed, the open internet.
   (`_sanitize` in `_send`). The classic MUD sleeper: player-supplied text
   (chat) with raw ESC sequences could corrupt or spoof other terminals.
 - ✅ **Read/idle timeouts** - see DoS section below.
-- 📋 **Input line-length cap** - bound `readline` maxsize to stop a single
-  no-newline line from ballooning memory. (Timeouts already limit slow reads.)
+- ✅ **Input line-length cap** - `MAX_LINE_BYTES = 4096` bounds `readline`
+  (`parts/gateway.py:34`), so a single no-newline flood is not an unbounded read.
 
 ## Authorization & privilege separation
 - ✅ `@`-verbs check rank before running (`parts/ranks.py`; architecture law #5).
@@ -78,4 +78,4 @@ unbounded-growth bug in the turnaway ledger (182 → 184).
 
 **Deferred by design (🧭):** TLS and Argon2id hinge on deployment/dependency
 decisions and would be half-baked as drive-by code. **Still planned (📋):**
-input line-length cap, audit logging of privileged actions, backups + WAL.
+audit logging of privileged actions, backups + WAL.

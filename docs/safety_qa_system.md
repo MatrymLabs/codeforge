@@ -85,7 +85,8 @@ the QA verbs alongside every other command.
 
 - **Built (MVP spine):** QualityGate, SafetyReview, DocumentationImpactSweep, the four
   MUD commands, this doc, and `qa gate all` proven over the real registry.
-- **Next:** EvidenceLedger (save dated gate/review results under `reports/qa/`),
-  the ritual's global readiness report (fold `qa gate all` + `docs check` into
-  `start the ritual`), NCR/CAPA/Hazard logs, and filing the reusable parts (`PRT`)
-  and modules (`MOD`) so the audit covers code, not just rooms/commands/items.
+- **Next:** EvidenceLedger (save dated gate/review results under `reports/qa/`), and
+  NCR/CAPA/Hazard logs. (Already done: the ritual's global readiness report - `parts/integrity.py`
+  folds `qa gate all` + docs presence into one dated report via `make repo-integrity`; and the
+  `MOD` code modules ARE filed in the registry, so the audit already covers code - only `PRT` is
+  derive-not-store by design.)

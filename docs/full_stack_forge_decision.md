@@ -46,7 +46,7 @@ CodeForge is already on the hybrid path, not starting from zero:
 | FastAPI | `use_now` | Already integrated, justified, tested (API + WS + dashboard). |
 | Static Blueprint HTML/CSS renderer | `prototype_now` -> built | The missing spine; frameless, testable, portfolio-visible. |
 | WebSockets | `use_now` | Already in the browser gate. |
-| HTMX | `integrate_later` | Phase-3 interactivity without a JS build. |
+| HTMX | `use_now` -> integrated | Drives the dashboard board swap (`GET /ui/board`); vendored, no JS build. |
 | Jinja templates | `research_more` | Stdlib rendering suffices; adopt only if template complexity grows. |
 | Django / Django admin | `research_more` | No data/admin/auth need SQLAlchemy doesn't already meet. |
 | Flask | `do_not_use_yet` | A second web framework is bloat when FastAPI fills the niche. |

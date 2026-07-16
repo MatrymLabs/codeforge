@@ -1,8 +1,8 @@
 # Performance experiment cards
 
-One card per proposed optimization. **None are executed yet** - this is the measurement
-foundation. Each is a hypothesis to be run later on a branch, with a before/after comparison,
-a correctness proof of output equivalence, and a rollback. All three targets are Level-1
+One card per optimization. **EXP-001 through EXP-005 are executed (verified improvements, run
+2026-07-11/12); EXP-006 is rejected.** Each carries a before/after comparison, a correctness
+proof of output equivalence, and a rollback - see each card's Result. All three targets are Level-1
 (Python/architecture cleanup: caching, lazy import) - **none justify Rust, a compiler, or a
 GPU**, which matches the research (see `performance_research_map.md`).
 

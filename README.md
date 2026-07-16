@@ -353,7 +353,8 @@ and CLI verbs never take the metaphor). See [docs/naming_glossary.md](docs/namin
 
 - ~~Password change command + telnet echo masking (IAC negotiation)~~ - shipped
   (`passwd`, plus a bundled stdlib client that masks the prompt)
-- NPCs that fight back: stakes, defeat, reawakening
+- ~~NPCs that fight back: stakes, defeat, reawakening~~ - shipped (`combat._counter_attack`
+  + seeded hostiles; a felled player reawakens via the training-ground failsafe)
 - Canonical event frames: typed MUD-IL payloads on the bus
 - Seed packs as installable world modules
 - The workshop: build programs via in-MUD commands, then step through an

@@ -14,8 +14,8 @@
 - [x] Security boundaries (bandit, Scorecard, CodeQL, secret scan, SBOM)
 - [x] Containerized (Dockerfile, CI docker smoke, live demo)
 - [x] Documented API - FastAPI admin + read-only `GET /api/status`; OpenAPI at `/docs`, linked from the dashboard nav
-- [~] Database - SQLite via SQLAlchemy (deliberate embedded choice; not PostgreSQL)
-- [ ] Migrations tool (Alembic) - `codeforge migrate-db` exists; not a full migration framework
+- [x] Database - SQLite default via SQLAlchemy (embedded choice); PostgreSQL seam shipped (`DATABASE_URL`, `psycopg` extra, `parts/db.py`)
+- [x] Migrations tool (Alembic) - full framework: `migrations/` (env + 3 versioned migrations); `codeforge migrate-db` wraps it
 
 ## Frontend (phase 1 shipped)
 
