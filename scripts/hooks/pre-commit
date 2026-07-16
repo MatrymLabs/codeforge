@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+# Refuse a commit straight onto a protected branch. The workflow is branch -> PR -> CI -> merge, so a
+# commit on main/master is almost always a slip (edited before branching). Version-controlled and
+# installed via `git config core.hooksPath scripts/hooks` (run by `make hooks`, wired into `make env`).
+#
+# Override for a deliberate main commit: ALLOW_MAIN_COMMIT=1 git commit ...
+set -eu
+
+branch="$(git symbolic-ref --short HEAD 2>/dev/null || true)"
+case "$branch" in
+    main | master)
+        if [ "${ALLOW_MAIN_COMMIT:-}" = "1" ]; then
+            exit 0
+        fi
+        echo "pre-commit: refusing to commit on '$branch'." >&2
+        echo "  Branch first: git checkout -b feat/... (or fix/..., chore/...)." >&2
+        echo "  Deliberate main commit? ALLOW_MAIN_COMMIT=1 git commit ..." >&2
+        exit 1
+        ;;
+esac
+exit 0
