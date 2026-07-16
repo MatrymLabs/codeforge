@@ -38,3 +38,6 @@ workspace/
 
 # setuptools build artifacts (from a local pip install/build)
 build/
+
+# cosmic-ray mutation-testing session db (on-demand `make mutation`; reproducible from cosmic-ray.toml)
+.cosmic-ray-session.sqlite

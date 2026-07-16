@@ -10,7 +10,7 @@ answer to a fleet-hardening research menu: implement the artifact that matters, 
 |-----------|--------|----------|
 | Runs in 5 minutes | **strong** | live Render demo linked in the README; `make check`; browser gateway |
 | README (purpose / install / run / test) | **strong** | value prop, demo GIF, badges, quickstart, honest vision labeling |
-| CI green + automated tests | **strong** | GitHub Actions all-green; the full suite (count is the CI badge, the live source); property + fuzz markers |
+| CI green + automated tests | **strong** | GitHub Actions all-green; the full suite (count is the CI badge, the live source); property + fuzz markers; on-demand mutation rung (`make mutation`, cosmic-ray, see `docs/mutation_testing.md`) |
 | Coverage | **strong** | branch coverage above the 85% floor; the codecov badge is the live source (truthful) |
 | Lint + types | **strong** | ruff + mypy clean, pinned, in CI |
 | Security tooling | **strong** | bandit, pip-audit, CodeQL, detect-secrets, SBOM, OpenSSF Scorecard badge |
