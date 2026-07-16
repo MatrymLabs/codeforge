@@ -1498,5 +1498,66 @@
     "aliases": [],
     "created": "2026-07-16",
     "updated": "2026-07-16"
+  },
+  {
+    "designation": "CMD-04.034",
+    "name": "look",
+    "status": "active",
+    "function": "look at your surroundings",
+    "label": "look",
+    "file": "forge.py",
+    "type": "CMD",
+    "domain": "04",
+    "docs": "docs/architecture.md",
+    "tests": "tests/test_commands.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "command"
+    ],
+    "notes": "Moved off the legacy if-ladder onto the command spine (forge world-commands, stage 2 slice D: movement verbs).",
+    "superseded_by": "",
+    "aliases": [
+      "l"
+    ],
+    "created": "2026-07-16",
+    "updated": "2026-07-16"
+  },
+  {
+    "designation": "CMD-04.035",
+    "name": "go",
+    "status": "active",
+    "function": "move in a direction (go <dir>, or n/s/e/w/u/d)",
+    "label": "go",
+    "file": "forge.py",
+    "type": "CMD",
+    "domain": "04",
+    "docs": "docs/architecture.md",
+    "tests": "tests/test_commands.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "command"
+    ],
+    "notes": "Moved off the legacy if-ladder onto the command spine (forge world-commands, stage 2 slice D: movement verbs).",
+    "superseded_by": "",
+    "aliases": [
+      "north",
+      "n",
+      "south",
+      "s",
+      "east",
+      "e",
+      "west",
+      "w",
+      "up",
+      "u",
+      "down",
+      "d"
+    ],
+    "created": "2026-07-16",
+    "updated": "2026-07-16"
   }
 ]
