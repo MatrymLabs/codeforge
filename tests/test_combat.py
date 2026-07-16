@@ -100,6 +100,15 @@ def test_attack_flows_through_the_engine_tick():
     assert "You strike the training dummy" in out
 
 
+def test_kill_is_an_alias_for_attack_through_the_tick():
+    # kill shares attack's designation on the command spine (stage 2 slice G).
+    from forge import handle_command
+
+    s = _fighter()
+    out = handle_command(s, "kill dummy")
+    assert "You strike the training dummy" in out
+
+
 def _spawn_hostile(label: str = "brawler", location: str = "courtyard", atk: int = 5, hp: int = 50):
     """Place a fighting NPC in a room. Written to both aliased registries; the fixture cleans up."""
     hostile: Npc = {
