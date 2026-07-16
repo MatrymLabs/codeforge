@@ -462,6 +462,24 @@ def test_pour_selective_end_to_end_validates_the_cut(tmp_path: Path) -> None:
     assert not (out / "parts" / "other_pack").exists()
 
 
+def test_pour_selective_validates_an_admin_cast(tmp_path: Path) -> None:
+    # A cast that carries the owner/admin tier: the broad harness must run its @-verbs clean too,
+    # not just the solo+save game. Proves the third command-traceable surface end to end.
+    from parts.cast import VENDORED_SELECTIVE, pour_selective
+    from parts.coupling import surface_commands
+
+    _bootable_fixture_engine(tmp_path)
+    surfaces = ["solo", "save", "admin"]
+    assert any(c.startswith("@") for c in surface_commands(surfaces))  # admin adds owner @-verbs
+    fake = lambda commands: {"session", "world", "x"}  # noqa: E731
+    out, ok, detail = pour_selective(
+        "blank_mud", "AdminGame", tmp_path / "out", surfaces, root=tmp_path, tracer=fake
+    )
+    assert ok, detail  # every solo+save+admin command (incl. the @-verbs) ran clean against the cut
+    m = read_manifest(out / "cast_manifest.json")
+    assert m.engine_strategy == VENDORED_SELECTIVE and m.status == "validated"
+
+
 # --- the manufacturing capstone: forge a standalone game in one call ----------------------------
 
 
