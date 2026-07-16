@@ -1018,6 +1018,55 @@ def _build_commands() -> CommandSet:
                 namespace=CORE,
             )
         )
+    # Console/diagnostic verbs (stage 2 slice E). Each forwards a LOWERCASED argument to a pure
+    # reader (the legacy ladder routed on `routed_signal`, i.e. lowercased); the spine preserves
+    # arg case, so `.lower()` here keeps the old behavior exactly. Bare verb -> empty arg -> the
+    # reader's default view.
+    cs.add(
+        Command(
+            "arc",
+            "CMD-04.036",
+            "the ARC assurance roll-up (arc <system>)",
+            lambda _s, arg: arc(arg.lower()),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "store",
+            "CMD-04.037",
+            "the Hardware Store index (store <part-id>)",
+            lambda _s, arg: store(arg.lower()),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "learnings",
+            "CMD-04.038",
+            "the filed Learning Records (learnings <id>)",
+            lambda _s, arg: learnings(arg.lower()),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "complexity",
+            "CMD-04.039",
+            "the complexity lens (complexity <target>)",
+            lambda _s, arg: complexity(arg.lower()),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "clones",
+            "CMD-04.040",
+            "the clone-detection lens (clones <target>)",
+            lambda _s, arg: clones(arg.lower()),
+            namespace=CORE,
+        )
+    )
     return cs
 
 
@@ -1121,21 +1170,6 @@ def handle_command(session: Session, signal: str) -> str:
     if routed_signal == "journal" or routed_signal.startswith("journal "):
         _, _, entry = true_signal.partition(" ")
         return journal(session, entry)
-    if routed_signal == "arc" or routed_signal.startswith("arc "):
-        _, _, arc_arg = routed_signal.partition(" ")
-        return arc(arc_arg)
-    if routed_signal == "store" or routed_signal.startswith("store "):
-        _, _, store_arg = routed_signal.partition(" ")
-        return store(store_arg)
-    if routed_signal == "learnings" or routed_signal.startswith("learnings "):
-        _, _, learn_arg = routed_signal.partition(" ")
-        return learnings(learn_arg)
-    if routed_signal == "complexity" or routed_signal.startswith("complexity "):
-        _, _, cx_arg = routed_signal.partition(" ")
-        return complexity(cx_arg)
-    if routed_signal == "clones" or routed_signal.startswith("clones "):
-        _, _, cl_arg = routed_signal.partition(" ")
-        return clones(cl_arg)
     if routed_signal == "title" or routed_signal.startswith("title "):
         _, _, text = true_signal.partition(" ")
         return title(session, text)

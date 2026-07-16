@@ -193,3 +193,18 @@ def test_bare_go_refuses() -> None:
     session = _walker("forge")
     assert handle_command(session, "go") == "You can't go that way."
     assert session.location == "forge"
+
+
+# --- stage 2 slice E: console/diagnostic verbs, now on the spine -------------
+
+
+def test_store_index_reachable_through_the_spine() -> None:
+    assert "Hardware Store" in handle_command(_player(), "store")
+
+
+def test_complexity_lens_reachable_through_the_spine() -> None:
+    assert "Complexity hot-spots" in handle_command(_player(), "complexity")
+
+
+def test_clones_lens_reachable_through_the_spine() -> None:
+    assert "Clone scan" in handle_command(_player(), "clones")
