@@ -46,6 +46,17 @@ def available_seeds() -> list[str]:
     return sorted(p.name for p in SEEDS_ROOT.iterdir() if (p / "rooms.yaml").is_file())
 
 
+def load_splash() -> str:
+    """The world's title screen: seeds/<world>/splash.txt (world data, like every seed file).
+
+    Read by every driver that opens a world - the TCP gateway, the web gateway, and the solo
+    terminal loop - so the world's own face greets the player, not a generic banner."""
+    path = SEED_DIR / "splash.txt"
+    if path.exists():
+        return path.read_text(encoding="utf-8").rstrip("\n")
+    return "Welcome, traveler."
+
+
 LABEL_RE = re.compile(r"^[a-z][a-z0-9_]*$")
 DEFAULT_ROOM_DESC = "There is nothing remarkable here yet."
 DEFAULT_DIALOGUE = ['"..."']

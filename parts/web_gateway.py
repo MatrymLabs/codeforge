@@ -31,8 +31,8 @@ from parts.gateway import (
     TICK_LOCK,
     _next_player_id,
     _sanitize,
-    load_splash,
 )
+from parts.seed import load_splash
 from parts.session import SESSIONS, Session
 
 _PAGE = (Path(__file__).parent / "web" / "index.html").read_text(encoding="utf-8")
