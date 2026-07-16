@@ -152,12 +152,33 @@ def test_a_defeated_npc_does_not_counter():
 
 
 def test_a_fallen_player_is_restored_safely():
-    s = _fighter()
+    s = _fighter()  # a vanguard: no Engineer reaction
     _spawn_hostile(atk=9999, hp=50)  # its counter empties the player's HP
     out = attack(s, "brawler")
+    assert "Emergency Repair" not in out  # only an Engineer gets the reaction
     assert "wake restored at full health" in out
     assert s.resources["hp"].is_full  # never a broken state
     assert s.location == "courtyard"  # restored in place
+
+
+def test_an_engineer_emergency_repairs_out_of_a_killing_blow():
+    s = _fighter("engineer")
+    _spawn_hostile(atk=9999, hp=50)  # a counter that would fell anyone else
+    out = attack(s, "brawler")
+    assert "Emergency Repair triggers" in out  # the Engineer's reaction fired
+    assert s.resources["hp"].current > 0  # pulled back from the fall
+    assert "wake restored" not in out  # never needed the training-ground failsafe
+    assert "emergency_repair" in s.cooldowns  # and armed its cooldown
+
+
+def test_emergency_repair_fires_once_then_cools_down():
+    s = _fighter("engineer")
+    _spawn_hostile(atk=9999, hp=9999)  # survives every blow and keeps countering
+    first = attack(s, "brawler")
+    assert "Emergency Repair triggers" in first  # fires the first time
+    second = attack(s, "brawler")
+    assert "Emergency Repair" not in second  # on cooldown now
+    assert "wake restored" in second  # so the failsafe catches this fall instead
 
 
 def test_counterattack_flows_through_the_engine_tick():
