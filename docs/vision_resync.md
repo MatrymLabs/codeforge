@@ -50,9 +50,10 @@ world generator.
 - **Prototype:** `cast` (plans a package as a dry-run, writes nothing); `foundry` (generate into
   a guarded sandbox, manual promotion); `evolution` lab; `hubble` diagnostic core; `stewardship`
   gates; `blueprint_ai` (Claude-drafted).
-- **Planned:** typed WorldManifest family; a quest/workflow engine as a product; configurable
-  statistics and rulesets; creator wizards; package export/detachment; practical adapters
-  (one core, many adapters); the full Part Manifest; a demonstrated game<->practical translation.
+- **Planned:** typed WorldManifest family; configurable statistics and rulesets; creator wizards;
+  the full Part Manifest; more practical adapters beyond the shipped one. (The Workflow Engine as a
+  product, its game/practical adapters, a demonstrated game<->practical translation, and package
+  export/detachment are ALREADY BUILT - see staircase steps 2 and 4 below, not planned.)
 - **Deferred (relative to the spine):** repository split, plugin system, configurable-rules
   language, package-update model. Sound to want; not now.
 

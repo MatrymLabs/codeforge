@@ -50,6 +50,7 @@ is checked unless the artifact exists. Last audited: 2026-07-10.*
 
 ## Open items (ranked)
 
-1. **Frontend/full-stack proof** (headline gap) - the FastAPI dashboard (planned, see
-   `docs/full_stack_readiness_checklist.md`), then a Next.js/TS second flagship.
+1. **React/TS second flagship** - the FastAPI dashboard is shipped (`parts/dashboard.py`, HTMX,
+   a11y, `e2e/`, see `docs/full_stack_readiness_checklist.md`); the remaining full-stack lever is
+   a Next.js/TS `codeforge-web` second flagship.
 2. **Sample PR with a linked issue** - the "collaboration signal"; the PR flow is now live.

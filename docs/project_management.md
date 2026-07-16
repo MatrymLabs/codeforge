@@ -30,7 +30,7 @@ derive: charter, milestones, backlog, risks, decisions.
 | M1 MUD spine | **done** | 18 rooms filed; player moves the spine |
 | M2 Workshop MVP | **done** | workshop/observatory/vault/console rooms + commands |
 | M3 Library + Classroom | **done** | `library`/`library <id>`, Professor Codex, lesson loop |
-| M4 Hardware Store MVP | *partial* | `catalog/parts.yaml` exists; `PRT` parts not yet filed |
+| M4 Hardware Store MVP | **done** | `catalog/parts.yaml` (44 parts, validated); `MOD` filed; `PRT` derived, not stored (by design) |
 | M5 Safety + QA spine | **done** | QualityGate, SafetyReview, DocumentationImpactSweep |
 | M6 AI NPC advisory | *partial* | local Architect NPC (`ai`); no external API |
 | M7 Portfolio-ready | *in progress* | README, live demo, CI badges; CHANGELOG new |
@@ -47,8 +47,8 @@ dashboard MVP** was built. The rest is filed backlog:
 |--------------|-------|----------|-----------|--------|
 | `pm status` / `pm metrics` (computed dashboard) | 11 | **P0 - DONE** | registry, QualityGate | S |
 | Charter/milestones/risks doc (this file) | 11 | **P0 - DONE** | - | S |
-| File `PRT`/`MOD` code parts in the registry | 4/5 | P1 | registry | M |
-| Link `docs` paths on records (close QG04) | 8 | P1 | - | S |
+| File `MOD` code parts in the registry (`PRT` derived, not stored) | 4/5 | **P1 - DONE** | registry | M |
+| Link `docs` paths on records (close QG04) | 8 | **P1 - DONE** | - | S |
 | EvidenceLedger (save gate/review results to `reports/`) | 8 | P1 | QualityGate | M |
 | ADDIE lesson template + 1 Python lesson (registry validator) | 7 | P2 | AssessmentEngine | M |
 | Quiz quit/pause/resume hardening | 7 | P2 | classroom | S |
@@ -74,7 +74,7 @@ Several big-sounding prompts turned out to be **mostly already built** - the not
 | R7 | **Build one prototype city room real** (e.g. City Square) | advances the game/world; seeds-are-data | P3 | S |
 
 Still open from the earlier backlog table: EvidenceLedger, ADDIE lesson #1, LSS DMAIC
-records, filing `PRT`/`MOD` parts. **Recommended first move:** R2 (green board) or R1
+records. **Recommended first move:** R2 (green board) or R1
 (secret scanning) - both small, both close a gap a tool already flagged.
 
 ---

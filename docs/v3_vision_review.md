@@ -171,14 +171,16 @@ a gameplay transport; CI runs with no API key.
 Assurance, Readiness, Control: engineering review, evidence, readiness, quality, documentation
 verification, testing verification, release readiness, dependency review, security review, patch and
 change management - composed into one honest `ready | watchlist | blocked` verdict that reads filed
-evidence and never invents it. Readiness, never certification. Finish slices 2-4 to make "every
-change flows through ARC" literal.
+evidence and never invents it. Readiness, never certification. Finish the change-ledger link to make
+"every change flows through ARC" literal.
 
 ## 22. Migration Roadmap
 
 1. **Docs (this change):** file this report; add the Harvest Lens; expand the naming glossary with
    engineering aliases and the registry-domain map.
-2. **ARC slices 2-4:** wire real gate sources, the ARC Chamber room, then the change-ledger link.
+2. **ARC change-ledger link:** the ARC Chamber room (shipped, `seeds/first-forge/rooms.yaml`) and
+   real gate sources (`arc.py` reads filed evidence) are DONE; the remaining piece is the
+   change/patch-ledger link, which `arc.py` still honestly reports MISSING.
 3. **mkdocs nav regrouping:** organize docs by the section map in section 14 (no file moves).
 4. **Blueprint pipeline doc:** name the author -> validate -> render flow.
 
