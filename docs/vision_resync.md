@@ -111,10 +111,14 @@ The proof that makes the whole vision legible without finishing the platform:
    and it boots (`isolation_proven`). And detachment is under way: `make coupling` (D1) maps the
    runtime module closure, and `make cast-selective` (D2, `pour_selective`) vendors ONLY the target
    surfaces' closure (`vendored-selective`) and PROVES the cut with a broad harness - every surface
-   command must run. Verified: a solo+save cast sheds 53 of 123 modules (carries 70) and passes all
-   16 surface commands clean. So a package *assembles*, *runs*, *runs in isolation*, and can be
-   *selectively detached with proof*. Remaining (each its own keel call): more surface tiers
-   (multiplayer/admin) and D3 true plugin-boundary decoupling.
+   command must run. Verified live across surface tiers: **solo+save** carries 70 of 128 modules
+   (16 commands clean); **+admin** (the owner @-verb tier) carries 74 (21 commands clean, incl. the
+   @-verbs) and now has an end-to-end regression test (`test_pour_selective_validates_an_admin_cast`);
+   **+multiplayer** carries 78 and its `parts/web/` data dir (the import-based server tier: gateway +
+   web_gateway import in the cut). So a package *assembles*, *runs*, *runs in isolation*, and can be
+   *selectively detached with proof across all four surface tiers*. Remaining (each its own keel
+   call): a fixture-level regression test for the multiplayer import surface (it is live-proven and
+   closure-unit-tested today), and D3 true plugin-boundary decoupling.
 5+. Creator wizards, full-stack interface, Hardware Store expansion, advanced modularity,
    production operations. Each gated by the Scope-Control Rule.
 
