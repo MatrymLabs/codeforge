@@ -14,6 +14,7 @@ restores them in place -- a fight never leaves anyone in a broken state.
 """
 
 from parts.combat_clock import advance as advance_clock
+from parts.encounter_log import witness
 from parts.engineer import emergency_repair
 from parts.events import announce, announce_frame
 from parts.frames import StrikeFrame
@@ -39,6 +40,7 @@ def _fall_and_recover(session: Session, npc: Npc) -> str:
     """Safe defeat: a felled player is restored in place. Never a broken state (v0 failsafe)."""
     hp = session.resources["hp"]
     session.resources["hp"] = hp.heal(hp.maximum)  # back to full; location unchanged
+    witness("fall", npc["name"], "felled the player; the failsafe restored them")
     return (
         f"You fall to {npc['name']}, and wake restored at full health. (Training-ground failsafe.)"
     )
@@ -119,6 +121,7 @@ def attack(session: Session, word: str) -> str:
         f"{sentence_case(npc['name'])} collapses -- then reassembles itself.",
         exclude=session.player_id,
     )
+    witness("defeat", npc["name"], "fell in combat")
     defeat = f"You strike {npc['name']} for {dmg}. It collapses -- then reassembles itself."
     rewards = award_xp(session, npc["xp"])
     for extra in (award_jp(session, npc["xp"]), award_tp(session, npc["xp"])):

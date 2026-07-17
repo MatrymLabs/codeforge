@@ -2262,5 +2262,30 @@
     "aliases": [],
     "created": "2026-07-16",
     "updated": "2026-07-16"
+  },
+  {
+    "designation": "CMD-04.066",
+    "name": "encounters",
+    "status": "active",
+    "function": "the after-action log: recent combat encounters and their tallies",
+    "label": "encounters",
+    "file": "forge.py",
+    "type": "CMD",
+    "domain": "04",
+    "docs": "docs/keel_records/encounter-telemetry.md",
+    "tests": "tests/test_encounter_log.py",
+    "depends_on": [],
+    "related": [
+      "encounter_log"
+    ],
+    "reuse": "",
+    "tags": [
+      "command"
+    ],
+    "notes": "Read-only CORE verb rendering parts/encounter_log (the observed leg of the aggression loop). Tick-reachable; renders the bounded ring + tallies, never mutates.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-17",
+    "updated": "2026-07-17"
   }
 ]
