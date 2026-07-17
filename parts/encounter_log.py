@@ -89,8 +89,14 @@ def render_recent(limit: int = 10) -> str:
     return "\n".join(lines)
 
 
+def clear_tally() -> None:
+    """Zero the running tallies WITHOUT touching the ring. The trusted boundary
+    (parts/encounter_flush) calls this after it has aggregated a period's tallies into the
+    Chronicle, so the next period counts from zero while the live ring still shows recent beats."""
+    _tally.clear()
+
+
 def reset() -> None:
-    """Clear the ring and the tallies. Test hook, and the post-flush reset for the trusted
-    boundary once it has aggregated the tallies into the Chronicle."""
+    """Clear the ring and the tallies. Test hook, and a full wipe when a fresh slate is wanted."""
     _ring.clear()
     _tally.clear()

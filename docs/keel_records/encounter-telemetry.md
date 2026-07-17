@@ -7,8 +7,8 @@ reflection below are left for Josh to complete when he can defend the design to 
 
 - **Build (slice 1):** `parts/encounter_log.py` (a bounded, non-chained after-action log) wired into
   the tick at the four encounter beats, plus a read-only `encounters` verb.
-- **Deferred (slice 2, same keel approval):** the trusted-boundary aggregate flush of the tallies
-  into the Chronicle as one metric.
+- **Build (slice 2):** `parts/encounter_flush.py` (the trusted boundary) + the owner-gated
+  `@flush-encounters` verb: aggregate the tallies into the Chronicle as one `metric` per kind.
 - **Ownership level claimed:** *(pending Josh's own claim; undeclared until he defends it)*
 
 ## Intent
@@ -40,10 +40,13 @@ store: the poisoning surface the design forbids.
    read-only `encounters` verb renders the ring + tallies. Wired at the four beats: `open_strike` and
    `leash_break` in `aggression.menace`, `fall` in `combat._fall_and_recover`, `defeat` in
    `combat.attack`.
-2. **Retained layer (slice 2, deferred):** a trusted boundary (an owner command / `make daily`) reads
-   the tallies and records **one aggregate `metric`** into the Chronicle via the existing
-   `record_metric`/`trend` machinery -- never per event, never from the tick. The player never
-   triggers a Chronicle append; a summary count does, at a boundary Josh controls.
+2. **Retained layer (slice 2):** `parts/encounter_flush.flush()` reads the tallies and records **one
+   aggregate `metric`** per non-zero kind into the Chronicle via the existing `record_metric`/`trend`
+   machinery -- never per event, never from the tick. It is reached ONLY through the owner-gated
+   `@flush-encounters` verb, run IN the server process where the in-memory tallies live (a separate
+   CLI/`make` process would only ever see an empty period -- the reason the boundary is an in-process
+   owner verb, not a shell target). The player never triggers a Chronicle append; a summary count
+   does, at a boundary Josh controls. An empty period records nothing.
 
 ## Alternatives considered
 - **Rate-limited player writes into a Chronicle `encounter` kind** -- *rejected.* Even throttled, it
@@ -67,6 +70,7 @@ verb; name why the tick may write the ring but never the Chronicle; predict what
 metric would show after a session of combat.)*
 
 ## Final decision / review point
-Slice 1 ships the live layer behind the full gate. Slice 2 (the aggregate flush) is the same keel
-approval but a separate PR, to be built once the live layer is in. Revisit if a game ever needs
-per-player (not world-scoped) encounter history, or persistent-death changes what "defeat" means.
+Both layers shipped behind the full gate, each its own PR (slice 1 the live layer, slice 2 the
+trusted-boundary flush). Revisit if a game ever needs per-player (not world-scoped) encounter
+history, if persistent-death changes what "defeat" means, or if an automatic in-process flush (on
+session teardown / a world-beat batch) is wanted alongside the manual owner verb.
