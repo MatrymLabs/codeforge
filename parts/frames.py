@@ -50,3 +50,33 @@ class SpeechFrame(Frame):
         # perspective (name, tense, locale) can diverge later without touching the
         # bus or the call site. viewer_id is unused for now, by design.
         return f'{display_name(self.speaker_id)} says, "{self.words}"'
+
+
+@dataclass(frozen=True)
+class StrikeFrame(Frame):
+    """An NPC landed a blow on a player -- a counter or an unprovoked opening strike.
+
+    The second consumer of the typed bus (after SpeechFrame): combat broadcasts a
+    strike as structured data (who hit whom, how, for how much) so a bystander could
+    later see it from their own vantage, without combat re-rendering per viewer."""
+
+    attacker_name: str  # already display-cased, e.g. "The brawler"
+    verb: str  # the opening phrase: "strikes back", "lunges"
+    target_id: str
+    amount: int
+
+    def __post_init__(self) -> None:
+        if not self.attacker_name.strip():
+            raise ValueError("StrikeFrame needs an attacker_name")
+        if not self.verb.strip():
+            raise ValueError("StrikeFrame needs a verb")
+        if not self.target_id:
+            raise ValueError("StrikeFrame needs a target_id")
+        if self.amount <= 0:
+            raise ValueError("StrikeFrame amount must be a positive blow")
+
+    def render_for(self, viewer_id: str) -> str:
+        # Same seam as SpeechFrame: one third-person line today, per-viewer later.
+        return (
+            f"{self.attacker_name} {self.verb} at {display_name(self.target_id)} for {self.amount}."
+        )

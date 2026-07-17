@@ -52,6 +52,46 @@ def test_a_negative_npc_hp_is_rejected_at_load(tmp_path):
         load_npcs(bad)
 
 
+def test_an_aggressive_npc_without_atk_is_rejected_at_load(tmp_path):
+    """An aggressive NPC that cannot land a blow (atk 0) is a contradiction: refuse loud."""
+    from parts.seed import load_npcs
+
+    bad = tmp_path / "npcs.yaml"
+    bad.write_text("poser:\n  location: courtyard\n  hp: 10\n  aggressive: true\n")
+    with pytest.raises(SeedError, match="aggressive but has atk"):
+        load_npcs(bad)
+
+
+def test_an_aggressive_npc_without_hp_is_rejected_at_load(tmp_path):
+    """An aggressive NPC that cannot be fought back (hp 0) is a contradiction: refuse loud."""
+    from parts.seed import load_npcs
+
+    bad = tmp_path / "npcs.yaml"
+    bad.write_text("wraith:\n  location: courtyard\n  atk: 4\n  aggressive: true\n")
+    with pytest.raises(SeedError, match="aggressive but has hp"):
+        load_npcs(bad)
+
+
+def test_a_valid_aggressive_npc_loads(tmp_path):
+    """A properly-armed aggressive NPC (atk + hp) loads and carries the flag."""
+    from parts.seed import load_npcs
+
+    good = tmp_path / "npcs.yaml"
+    good.write_text("reaver:\n  location: courtyard\n  hp: 20\n  atk: 5\n  aggressive: true\n")
+    reaver = load_npcs(good)["reaver"]
+    assert reaver["aggressive"] is True
+    assert reaver["atk"] == 5
+
+
+def test_npcs_are_reactive_by_default(tmp_path):
+    """No `aggressive` key means a reactive/passive NPC -- the flag defaults False."""
+    from parts.seed import load_npcs
+
+    plain = tmp_path / "npcs.yaml"
+    plain.write_text("statue:\n  location: courtyard\n  hp: 10\n  atk: 3\n")
+    assert load_npcs(plain)["statue"]["aggressive"] is False
+
+
 def test_dangling_exit_is_rejected_at_load(tmp_path):
     bad = tmp_path / "rooms.yaml"
     bad.write_text("start:\n  exits:\n    north: mystery_cave\n")

@@ -18,6 +18,7 @@ from parts.accounts import (
     verify_password,
 )
 from parts.accounts import register as register_account
+from parts.aggression import menace
 from parts.arc import arc
 from parts.calibrate import calibrate
 from parts.character_view import sheet_from_session
@@ -1544,15 +1545,8 @@ def _quit_cmd(session: Session, _arg: str) -> str:
 COMMANDS = _build_commands()
 
 
-def handle_command(session: Session, signal: str) -> str:
-    """The engine tick: one player command in, one response out.
-
-    Routing is case-insensitive, but SECRETS keep their case: the
-    original text is preserved and password arguments are parsed
-    from it. Lowercasing a password destroys it."""
-    true_signal = signal.strip()
-    routed_signal = true_signal.lower()
-
+def _route(session: Session, true_signal: str, routed_signal: str) -> str:
+    """Resolve one player command to its response, before the world takes its beat."""
     # The command spine is tried first; it returns None for anything it doesn't own,
     # so the legacy tick below still handles the rest (authorization before capability).
     handled = COMMANDS.dispatch(session, true_signal)
@@ -1564,6 +1558,23 @@ def handle_command(session: Session, signal: str) -> str:
     if routed_signal == "":
         return ""
     return "Huh? Type HELP for commands."
+
+
+def handle_command(session: Session, signal: str) -> str:
+    """The engine tick: one player command in, one response out.
+
+    Routing is case-insensitive, but SECRETS keep their case: the
+    original text is preserved and password arguments are parsed
+    from it. Lowercasing a password destroys it.
+
+    After the player's command resolves, the world takes its beat: any aggressive
+    NPC sharing the room strikes (parts.aggression.menace). The player's command is
+    the only clock the world has -- no background thread, the tick stays the one door."""
+    true_signal = signal.strip()
+    routed_signal = true_signal.lower()
+
+    response = _route(session, true_signal, routed_signal)
+    return f"{response}{menace(session)}"
 
 
 def render_opening(session: Session) -> str:
