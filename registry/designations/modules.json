@@ -3769,5 +3769,33 @@
     "aliases": [],
     "created": "2026-07-17",
     "updated": "2026-07-17"
+  },
+  {
+    "designation": "MOD-10.034",
+    "name": "coverage",
+    "status": "active",
+    "function": "content-reaches-engine gate: every engine capability must be witnessed by a shipped seed (no dark features)",
+    "label": "coverage",
+    "type": "MOD",
+    "domain": "10",
+    "docs": "docs/reports/2026-07-17-convergence-review-repeat.md",
+    "tests": "tests/test_coverage.py",
+    "depends_on": [
+      "seed"
+    ],
+    "related": [
+      "registry",
+      "readiness"
+    ],
+    "reuse": "the anti-recurrence gate from the 2026-07-17 Convergence Review: a curated capability checklist + a per-capability detector over the shipped seed packs, mirroring registry completeness. A capability with zero content is a loud violation unless RESERVED with a reason; a stale reserve (now exercised) is flagged too, so the world-is-data law becomes enforceable.",
+    "file": "parts/coverage.py",
+    "tags": [
+      "module"
+    ],
+    "notes": "Born from the review's convergent finding (capable core, orphaned last inch): proactive NPCs shipped green yet dark in every seed. Wired into make readiness beside the registry completeness gate; the test twin pins zero unexercised capabilities on the live seeds. Adding a headline capability now forces wiring it into content or declaring it RESERVED.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-17",
+    "updated": "2026-07-17"
   }
 ]
