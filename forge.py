@@ -507,7 +507,7 @@ def _build_commands() -> CommandSet:
         Command(
             "@arch",
             "CMD-10.021",
-            "step through the arch into the Proving Ground: review forged candidates (owner)",
+            "step to the arch: review forged candidates, or preview <seed> a built game (owner)",
             lambda s, arg: arch_command(s, arg),
             namespace=ADMIN,
             min_rank="owner",

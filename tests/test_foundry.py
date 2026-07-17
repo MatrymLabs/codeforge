@@ -17,6 +17,7 @@ from parts.foundry import (
     apply_proposal,
     approve,
     forge_command,
+    preview_seed,
     propose,
     render_proposal,
     render_proving_ground,
@@ -175,3 +176,41 @@ def test_arch_is_owner_gated_and_read_only_at_the_tick():
     assert "authority" in denied.lower() or "denied" in denied.lower()
     allowed = handle_command(Session(player_id="o", rank="owner"), "@arch")
     assert "PROVING GROUND" in allowed
+
+
+# --- the arch: read-only preview of a built game ----------------------------
+
+
+def test_arch_preview_shows_the_room_you_would_wake_in():
+    out = preview_seed("first-forge")  # a real installed seed
+    assert "THROUGH THE ARCH: first-forge" in out
+    assert "You would wake in: The Cold Forge" in out  # first-forge's START_ROOM
+    assert "training_dummy" in out  # a known inhabitant, listed read-only
+    assert "does not enter it" in out  # honest: a preview, not a boot
+
+
+def test_arch_preview_without_a_name_lists_installed_games():
+    out = preview_seed("")
+    assert "Name a game to preview" in out
+    assert "first-forge" in out  # a real installed game appears in the listing
+
+
+def test_arch_preview_of_an_unknown_game_is_refused():
+    out = preview_seed("no_such_game")
+    assert "No game named 'no_such_game'" in out
+
+
+def test_arch_preview_does_not_swap_the_running_world():
+    # A projection, never a boot: previewing another seed leaves the live world untouched.
+    from parts import world
+
+    before = world.START_ROOM
+    preview_seed("first-forge")
+    assert before == world.START_ROOM
+
+
+def test_arch_preview_is_owner_gated_at_the_tick():
+    denied = handle_command(Session(player_id="p", rank="player"), "@arch preview first-forge")
+    assert "authority" in denied.lower() or "denied" in denied.lower()
+    allowed = handle_command(Session(player_id="o", rank="owner"), "@arch preview first-forge")
+    assert "THROUGH THE ARCH" in allowed
