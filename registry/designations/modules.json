@@ -3740,5 +3740,34 @@
     "aliases": [],
     "created": "2026-07-16",
     "updated": "2026-07-16"
+  },
+  {
+    "designation": "MOD-04.048",
+    "name": "aggression",
+    "status": "active",
+    "function": "proactive NPCs that strike first on the world beat (the engine tick)",
+    "label": "aggression",
+    "file": "parts/aggression.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "docs/architecture.md",
+    "tests": "tests/test_aggression.py",
+    "depends_on": [
+      "combat",
+      "npcs",
+      "session"
+    ],
+    "related": [
+      "frames"
+    ],
+    "reuse": "the other half of combat: reactive answers a blow, aggression opens one; both share combat's blow resolution and broadcast a typed StrikeFrame, so a proactive foe reuses the failsafe and Engineer reaction unchanged",
+    "tags": [
+      "module"
+    ],
+    "notes": "No background thread: the player's command IS the world's heartbeat (the engine tick is the only door). menace() runs after each tick's response; an aggressive NPC (seed flag, atk>0 + hp>0) sharing the room opens with a strike. Aggressive NPCs open via the beat and never also counter, so they strike once per tick.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-17",
+    "updated": "2026-07-17"
   }
 ]

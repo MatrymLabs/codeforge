@@ -15,7 +15,8 @@ restores them in place -- a fight never leaves anyone in a broken state.
 
 from parts.combat_clock import advance as advance_clock
 from parts.engineer import emergency_repair
-from parts.events import announce
+from parts.events import announce, announce_frame
+from parts.frames import StrikeFrame
 from parts.npcs import NPCS, trace_npc
 from parts.progression_awards import award_jp, award_tp, award_xp
 from parts.seed import Npc
@@ -43,20 +44,24 @@ def _fall_and_recover(session: Session, npc: Npc) -> str:
     )
 
 
-def _counter_attack(session: Session, npc: Npc) -> str:
-    """A surviving NPC with an atk stat strikes back. Passive NPCs return ''; text is projection."""
+def _resolve_npc_blow(session: Session, npc: Npc, verb: str) -> str:
+    """One NPC blow against the player: damage, room broadcast (typed StrikeFrame),
+    the Engineer's Emergency Repair reaction, and the training-ground failsafe. `verb`
+    is the opening phrase ('strikes back', 'lunges') so a counter and an unprovoked
+    strike share one resolution. Returns the attacker-facing line(s) with NO leading
+    newline; a passive NPC (atk 0) cannot land a blow and returns ''."""
     power = npc_strike_power(npc)
     if power <= 0:
-        return ""  # the training dummy and every peaceful NPC: no counter
+        return ""  # the training dummy and every peaceful NPC: no blow
     session.resources["hp"] = session.resources["hp"].damage(power)
     name = npc["name"].capitalize()
-    announce(
+    announce_frame(
         session.location,
-        f"{name} strikes back at {display_name(session.player_id)} for {power}.",
+        StrikeFrame(attacker_name=name, verb=verb, target_id=session.player_id, amount=power),
         exclude=session.player_id,
     )
     hp = session.resources["hp"]
-    line = f"\n{name} strikes back for {power}. (HP {hp.current}/{hp.maximum})"
+    line = f"{name} {verb} for {power}. (HP {hp.current}/{hp.maximum})"
     # The Engineer's Emergency Repair reacts to a dangerous blow: it auto-heals once (then cools
     # down), and can pull the player back from a fall. Returns None for anyone else, or on cooldown.
     repair = emergency_repair(session)
@@ -66,6 +71,20 @@ def _counter_attack(session: Session, npc: Npc) -> str:
     if hp.is_depleted:
         return f"{line}\n{_fall_and_recover(session, npc)}"
     return line
+
+
+def _counter_attack(session: Session, npc: Npc) -> str:
+    """A surviving NPC with an atk stat strikes back. Passive NPCs return ''; text is projection."""
+    body = _resolve_npc_blow(session, npc, "strikes back")
+    return f"\n{body}" if body else ""
+
+
+def open_strike(session: Session, npc: Npc) -> str:
+    """An aggressive NPC strikes first, unprovoked -- the world-beat twin of the counter.
+    Same resolution (damage, failsafe, Engineer reaction); only the opening verb differs.
+    Driven by parts.aggression on the tick, not by a player's blow. Passive NPCs return ''."""
+    body = _resolve_npc_blow(session, npc, "lunges")
+    return f"\n{body}" if body else ""
 
 
 def attack(session: Session, word: str) -> str:
@@ -88,7 +107,10 @@ def attack(session: Session, word: str) -> str:
     )
     if npc["hp_now"] > 0:
         hit = f"You strike {npc['name']} for {dmg}. ({npc['hp_now']}/{npc['hp']})"
-        return f"{hit}{_counter_attack(session, npc)}"
+        # An aggressive NPC's blow arrives on the world beat (parts.aggression), never as a
+        # counter, so it strikes exactly once per tick -- never both counter and open-strike.
+        counter = "" if npc.get("aggressive") else _counter_attack(session, npc)
+        return f"{hit}{counter}"
     npc["hp_now"] = npc["hp"]  # the dummy reassembles at full health
     announce(
         session.location,

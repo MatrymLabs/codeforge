@@ -113,6 +113,7 @@ class Npc(TypedDict):
     hp_now: int  # runtime state, starts at hp
     xp: int  # XP awarded when defeated
     atk: int  # counter-attack damage; 0 (default) means passive, never strikes back
+    aggressive: NotRequired[bool]  # True = strikes first on the world beat; default False
 
 
 class Door(TypedDict):
@@ -354,6 +355,7 @@ def load_npcs(path: Path) -> dict[str, Npc]:
             "hp": 0,
             "xp": 0,
             "atk": 0,
+            "aggressive": False,
             **file_template,
             **raw,
         }
@@ -370,6 +372,7 @@ def load_npcs(path: Path) -> dict[str, Npc]:
                 ("hp", int),
                 ("xp", int),
                 ("atk", int),
+                ("aggressive", bool),
             ),
         )
         if merged["atk"] < 0:
@@ -377,6 +380,19 @@ def load_npcs(path: Path) -> dict[str, Npc]:
                 f"NPC '{label}' has a negative atk ({merged['atk']}); "
                 "counter-attack damage cannot be negative."
             )
+        # An aggressive NPC opens the fight on the world beat; a poser that cannot land a
+        # blow (atk 0) or cannot be fought back (hp 0) is a contradiction -- refuse loud.
+        if merged["aggressive"]:
+            if merged["atk"] <= 0:
+                raise SeedError(
+                    f"NPC '{label}' is aggressive but has atk {merged['atk']}; "
+                    "an aggressive NPC needs atk > 0 to strike first."
+                )
+            if merged["hp"] <= 0:
+                raise SeedError(
+                    f"NPC '{label}' is aggressive but has hp {merged['hp']}; "
+                    "an aggressive NPC must be combatable (hp > 0)."
+                )
         # xp is awarded to XP/JP/TP on defeat; a negative value would DRAIN the victor. hp<0 would
         # read as an unfightable corpse. Refuse both loud and early, as we do for atk.
         for field in ("xp", "hp"):
@@ -394,6 +410,7 @@ def load_npcs(path: Path) -> dict[str, Npc]:
             hp_now=merged["hp"],
             xp=merged["xp"],
             atk=merged["atk"],
+            aggressive=merged["aggressive"],
         )
     return npcs
 
