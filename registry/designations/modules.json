@@ -3856,5 +3856,35 @@
     "aliases": [],
     "created": "2026-07-17",
     "updated": "2026-07-17"
+  },
+  {
+    "designation": "MOD-10.036",
+    "name": "encounter_flush",
+    "status": "active",
+    "function": "the trusted boundary that aggregates encounter tallies into the Chronicle as metrics",
+    "label": "encounter_flush",
+    "file": "parts/encounter_flush.py",
+    "type": "MOD",
+    "domain": "10",
+    "docs": "docs/keel_records/encounter-telemetry.md",
+    "tests": "tests/test_encounter_flush.py",
+    "depends_on": [
+      "encounter_log",
+      "chronicle"
+    ],
+    "related": [
+      "encounter_log",
+      "chronicle",
+      "bench"
+    ],
+    "reuse": "the retained leg of the after-action log: reads a period's tick tallies and records ONE aggregate metric per kind into the Chronicle (feeding chronicle trend), so the player never gets a write path into the tamper-evident ledger; the owner boundary (the @flush-encounters verb, in the server process) is the only place encounter_log and chronicle meet",
+    "tags": [
+      "module"
+    ],
+    "notes": "Slice 2 of encounter telemetry (Convergence Review 2026-07-17). Invoked ONLY by a trusted actor: the owner-gated @flush-encounters verb, run IN the server process where the in-memory tallies live (a separate CLI/make process would only see an empty period). NEVER reached by the tick. An empty period records nothing (no noise). Clears the tallies after flushing so each period counts from zero; the live ring is untouched. Mirrors the bench --record metric precedent.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-17",
+    "updated": "2026-07-17"
   }
 ]

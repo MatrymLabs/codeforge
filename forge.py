@@ -147,6 +147,15 @@ def after_action() -> str:
     return render_recent()
 
 
+def flush_encounters(arg: str) -> str:
+    """The trusted boundary, run IN the server process by an owner: aggregate the after-action
+    tallies into the Chronicle. Owner-gated on the spine, so only a trusted actor reaches it -- the
+    tick never does. An optional arg supplies the commit for provenance (default 'runtime')."""
+    from parts.encounter_flush import flush
+
+    return flush(arg.strip() or "runtime")
+
+
 def evolution(arg: str = "") -> str:
     from parts.evolution.command import evolution as run
 
@@ -516,6 +525,16 @@ def _build_commands() -> CommandSet:
             "CMD-10.021",
             "step to the arch: review forged candidates, or preview <seed> a built game (owner)",
             lambda s, arg: arch_command(s, arg),
+            namespace=ADMIN,
+            min_rank="owner",
+        )
+    )
+    cs.add(
+        Command(
+            "@flush-encounters",
+            "CMD-10.024",
+            "flush the after-action tallies into the Chronicle as metrics (owner)",
+            lambda _s, arg: flush_encounters(arg),
             namespace=ADMIN,
             min_rank="owner",
         )

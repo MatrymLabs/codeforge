@@ -2287,5 +2287,31 @@
     "aliases": [],
     "created": "2026-07-17",
     "updated": "2026-07-17"
+  },
+  {
+    "designation": "CMD-10.024",
+    "name": "@flush-encounters",
+    "status": "active",
+    "function": "flush the after-action tallies into the Chronicle as metrics (owner)",
+    "label": "@flush-encounters",
+    "file": "forge.py",
+    "type": "CMD",
+    "domain": "10",
+    "depends_on": [],
+    "related": [
+      "encounter_flush",
+      "encounter_log"
+    ],
+    "reuse": "",
+    "docs": "docs/keel_records/encounter-telemetry.md",
+    "tests": "tests/test_encounter_flush.py",
+    "tags": [
+      "command"
+    ],
+    "notes": "Owner-gated ADMIN verb (the trusted boundary run IN the server process, where the encounter tallies live). Aggregates parts/encounter_log tallies into the Chronicle via parts/encounter_flush; the tick never reaches it. Slice 2 of encounter telemetry (Convergence Review 2026-07-17).",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-17",
+    "updated": "2026-07-17"
   }
 ]
