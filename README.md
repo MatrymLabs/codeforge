@@ -355,6 +355,9 @@ and CLI verbs never take the metaphor). See [docs/naming_glossary.md](docs/namin
   (`passwd`, plus a bundled stdlib client that masks the prompt)
 - ~~NPCs that fight back: stakes, defeat, reawakening~~ - shipped (`combat._counter_attack`
   + seeded hostiles; a felled player reawakens via the training-ground failsafe)
+- ~~Proactive NPCs that strike first~~ - shipped (`parts/aggression.py` `menace()` on the world
+  beat, leashed and telegraphed; a seed `aggressive` flag arms a hostile, `test_play_smoke.py`
+  drives the live boss)
 - Canonical event frames: typed MUD-IL payloads on the bus
 - Seed packs as installable world modules
 - The workshop: build programs via in-MUD commands, then step through an
