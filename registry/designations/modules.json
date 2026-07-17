@@ -3797,5 +3797,35 @@
     "aliases": [],
     "created": "2026-07-17",
     "updated": "2026-07-17"
+  },
+  {
+    "designation": "MOD-04.049",
+    "name": "ai_throttle",
+    "status": "active",
+    "function": "the game adapter that rate-limits the ai verb calls to the Architect",
+    "label": "ai_throttle",
+    "file": "parts/ai_throttle.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "docs/hardware_store/patterns/rate_limiting.md",
+    "tests": "tests/test_ai_throttle.py",
+    "depends_on": [
+      "token_bucket",
+      "architect",
+      "session"
+    ],
+    "related": [
+      "chat_throttle",
+      "login_guard"
+    ],
+    "reuse": "the token bucket third life: the SAME TokenBucket core that throttles shouts (chat_throttle) and logins (login_guard) caps a player consultations, so the ai verb cannot be spammed into a token-cost DoS the day the demo runs a live Claude brain",
+    "tags": [
+      "module"
+    ],
+    "notes": "Consulting the Architect can reach a live model (CODEFORGE_ARCHITECT=claude + ANTHROPIC_API_KEY); an un-capped ai verb at player rank is a paid-API DoS. A per-player bucket (burst of 3, one back every 30s) refuses over-asking loud with the exact wait. The cap applies to the free local guide too so behavior is uniform and the gate is armed before the brain goes live. Convergence Review 2026-07-17 finding (latent token-cost DoS).",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-17",
+    "updated": "2026-07-17"
   }
 ]
