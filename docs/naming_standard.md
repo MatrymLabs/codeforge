@@ -71,8 +71,9 @@ an external franchise or pop-culture property. The vibe is aspiration; the vocab
 ## Rule 7 - Acronyms earn their letters
 
 A named acronym subsystem (ARC = Assurance, Readiness, Control; AURA = Adaptive Unified Reasoning
-Assistant) must expand to something engineering-meaningful and be spelled out on first use in any
-doc. No acronym that does not stand for a real, useful phrase.
+Assistant, *planned* - vision prose today, no `parts/aura*.py` yet) must expand to something
+engineering-meaningful and be spelled out on first use in any doc. No acronym that does not stand
+for a real, useful phrase, and a not-yet-built one says so.
 
 ## Rule 8 - Consistency across every surface
 
