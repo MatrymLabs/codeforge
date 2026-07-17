@@ -12,6 +12,7 @@ sinks render per-recipient.
 
 from collections.abc import Callable
 
+from parts.frames import Frame
 from parts.session import SESSIONS
 
 EchoSink = Callable[[str], None]
@@ -58,6 +59,20 @@ def announce(room: str, text: str, exclude: str = "") -> None:
         sink = _ECHO_SINKS.get(player_id)
         if sink is not None:
             _deliver(player_id, sink, text)
+
+
+def announce_frame(room: str, frame: Frame, exclude: str = "") -> None:
+    """Deliver a typed Frame to every seated player in a room except the actor,
+    rendering it PER RECIPIENT. The typed successor to announce(): the payload is a
+    structured Frame, and each sink receives text the frame projects for its own
+    viewer, instead of one line pre-rendered for the whole room."""
+    # Snapshot: _deliver may prune a dead sink mid-loop (mutates _ECHO_SINKS).
+    for player_id, session in list(SESSIONS.items()):
+        if player_id == exclude or session.location != room:
+            continue
+        sink = _ECHO_SINKS.get(player_id)
+        if sink is not None:
+            _deliver(player_id, sink, frame.render_for(player_id))
 
 
 def broadcast(text: str) -> None:

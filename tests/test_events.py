@@ -6,7 +6,8 @@ import pytest
 
 from forge import handle_command, render_scene
 from parts import doors, items, npcs
-from parts.events import _ECHO_SINKS, announce, bind_echo, broadcast, unbind_echo
+from parts.events import _ECHO_SINKS, announce, announce_frame, bind_echo, broadcast, unbind_echo
+from parts.frames import SpeechFrame
 from parts.session import SESSIONS, Session
 
 
@@ -43,6 +44,20 @@ def test_announce_reaches_room_but_not_actor():
     assert b_heard == ["something happens."]
     assert a_heard == []
     assert c_heard == []
+    for pid in ("a", "b", "c"):
+        unbind_echo(pid)
+
+
+def test_announce_frame_renders_per_recipient_and_excludes_actor():
+    # The typed successor to announce(): a SpeechFrame is delivered, and each sink
+    # receives text the frame renders for its own viewer (same room only, not the actor).
+    _, a_heard = _seat("a", "library")
+    _, b_heard = _seat("b", "library")
+    _, c_heard = _seat("c", "forge")
+    announce_frame("library", SpeechFrame(speaker_id="a", words="hello there"), exclude="a")
+    assert b_heard == ['A says, "hello there"']  # rendered per-recipient
+    assert a_heard == []  # the actor is excluded (they get the tick return instead)
+    assert c_heard == []  # another room hears nothing
     for pid in ("a", "b", "c"):
         unbind_echo(pid)
 
