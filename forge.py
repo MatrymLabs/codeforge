@@ -141,6 +141,12 @@ def run_view(name: str) -> str:
     return run(name)
 
 
+def after_action() -> str:
+    from parts.encounter_log import render_recent
+
+    return render_recent()
+
+
 def evolution(arg: str = "") -> str:
     from parts.evolution.command import evolution as run
 
@@ -1367,6 +1373,15 @@ def _build_commands() -> CommandSet:
             "CMD-04.065",
             "the command help text",
             lambda _s, _a: HELP_TEXT,
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "encounters",
+            "CMD-04.066",
+            "the after-action log: recent combat encounters and their tallies",
+            lambda _s, _a: after_action(),
             namespace=CORE,
         )
     )

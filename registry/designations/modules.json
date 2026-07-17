@@ -3827,5 +3827,34 @@
     "aliases": [],
     "created": "2026-07-17",
     "updated": "2026-07-17"
+  },
+  {
+    "designation": "MOD-10.035",
+    "name": "encounter_log",
+    "status": "active",
+    "function": "the after-action log: a bounded, non-chained trace of combat encounters",
+    "label": "encounter_log",
+    "file": "parts/encounter_log.py",
+    "type": "MOD",
+    "domain": "10",
+    "docs": "docs/keel_records/encounter-telemetry.md",
+    "tests": "tests/test_encounter_log.py",
+    "depends_on": [
+      "session"
+    ],
+    "related": [
+      "chronicle",
+      "aggression",
+      "combat"
+    ],
+    "reuse": "the observed leg of the aggression loop: a bounded ring the player tick CAN write to without a path into the tamper-evident Chronicle; a trusted boundary later flushes its tallies as one aggregate Chronicle metric, never per event",
+    "tags": [
+      "module"
+    ],
+    "notes": "Poisoning-surface-safe encounter telemetry (Convergence Review 2026-07-17 'observed' leg). Two invariants: the tick writes here and this module imports nothing from chronicle (no player-reachable append into the hash-chained ledger); and the ring is CAP-bounded + ephemeral so a flood rolls it instead of growing. Running tallies by kind feed a later trusted aggregate flush (slice 2).",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-17",
+    "updated": "2026-07-17"
   }
 ]

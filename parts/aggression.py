@@ -12,6 +12,7 @@ state stays canonical, mutated solely by validated combat logic.
 """
 
 from parts.combat import open_strike
+from parts.encounter_log import witness
 from parts.npcs import NPCS, npcs_in
 from parts.session import Session, sentence_case
 
@@ -45,10 +46,12 @@ def menace(session: Session) -> str:
         if session.aggro_beats[nid] >= LEASH:
             # the leash snaps taut on this beat: the foe disengages instead of striking
             lines.append(f"\n{sentence_case(npc['name'])} breaks off its assault.")
+            witness("leash_break", npc["name"], "broke off its assault")
             continue
         blow = open_strike(session, npc)
         if blow:  # a passive foe (atk 0) lands nothing; skip its empty line
             lines.append(blow)
+            witness("open_strike", npc["name"], "struck first on the world beat")
             if "wake restored" in blow:  # the failsafe fired: one near-death per beat, then stop
                 break
     return "".join(lines)
