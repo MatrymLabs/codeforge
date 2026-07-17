@@ -314,6 +314,19 @@ def test_subnegotiation_bytes_never_pollute_the_secret():
     assert gateway._strip_telnet(bytes([255, 250, 31, 0, 80]) + b"leak") == b""
 
 
+def test_main_loop_strips_iac_glued_to_a_command(server):
+    """The login prompts already strip IAC; the MAIN input loop must too. A client that glues a
+    window-size report (IAC SB NAWS ... IAC SE) to a command must still route the command, not
+    let the frame's body bytes decode into garbage and fall through to 'Huh?'."""
+    sock = _connect_player(server)
+    frame = bytes([255, 250, 31, 0, 80, 0, 24, 255, 240])  # IAC SB NAWS 80x24 IAC SE
+    sock.sendall(frame + b"look\n")
+    out = _read_until(sock, b"> ")
+    assert "Huh?" not in out
+    assert "Cold Forge" in out  # the command reached the tick and rendered the room
+    sock.close()
+
+
 def test_a_proven_good_login_clears_the_failure_tally(monkeypatch):
     """Reset-on-success: a legitimate user who fumbled then logged in isn't barred by the leftover
     failures. A brute-forcer never reaches this (never authenticates), so it can't reset the bar."""

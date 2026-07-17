@@ -285,7 +285,11 @@ class _GateHandler(socketserver.StreamRequestHandler):
                 if not line:
                     break  # client hung up
                 self._note_gmcp(line)  # a client can enable/disable GMCP mid-session
-                text = line.decode("utf-8", errors="ignore")
+                # Strip mid-session IAC negotiation (window-size, terminal-type, GMCP frames a
+                # client glues to input) before the tick reads it -- the same codec the login
+                # prompts (`_ask_line`/`_ask_secret`) already run. Without it, a client's answering
+                # IAC bytes leak into the command line as decoded garbage and route to "Huh?".
+                text = _strip_telnet(line).decode("utf-8", errors="ignore")
                 if text.strip().lower() == "passwd":
                     self._passwd(session)  # multi-prompt dialogue with echo blackout
                     continue
