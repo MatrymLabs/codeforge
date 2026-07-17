@@ -105,10 +105,10 @@ HELP_TEXT = (
 # hot path (look/move/combat/session) keeps its eager imports.
 
 
-def consult(prompt: str) -> str:
-    from parts.architect import consult as run
+def ask_architect(session: Session, prompt: str) -> str:
+    from parts.ai_throttle import ask_architect as run
 
-    return run(prompt)
+    return run(session, prompt)
 
 
 def blueprint(arg: str = "") -> str:
@@ -964,7 +964,7 @@ def _build_commands() -> CommandSet:
             "ai",
             "CMD-04.031",
             "consult the Architect (advisory AI)",
-            lambda _s, arg: consult(arg),
+            lambda s, arg: ask_architect(s, arg),
             namespace=CORE,
         )
     )
