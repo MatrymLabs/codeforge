@@ -17,6 +17,7 @@ from typing import cast
 
 from parts import items
 from parts.seed import SEED_DIR, Door, load_doors
+from parts.session import sentence_case
 from parts.statemachine import Guard, Refusal, Transition, advance, build
 
 # The world is data: a seed's barriers live in its own doors.yaml (empty if it ships none).
@@ -65,7 +66,7 @@ def _key_fits(ctx: Mapping[str, object]) -> str | None:
     if key_iid is None:
         return "You aren't carrying that."
     if key_iid != door["key_id"]:
-        return f"{items.ITEMS[key_iid]['name'].capitalize()} doesn't fit the lock."
+        return f"{sentence_case(items.ITEMS[key_iid]['name'])} doesn't fit the lock."
     return None
 
 
@@ -92,7 +93,7 @@ def unlock(door_word: str, key_word: str, room_id: str) -> str:
     if isinstance(outcome, Refusal):
         # An open door has no unlock edge (no_transition); a locked door refuses via the guard.
         if not door["locked"]:
-            return f"{door['name'].capitalize()} is already unlocked."
+            return f"{sentence_case(door['name'])} is already unlocked."
         return outcome.reason
 
     # Fired(effect="open"): the machine decided; this module applies the effect.

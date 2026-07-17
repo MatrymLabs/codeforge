@@ -6,6 +6,7 @@ MUD-IL shape: verb=talk, direct_object=npc.
 """
 
 from parts.seed import SEED_DIR, Npc, load_npcs
+from parts.session import sentence_case
 
 NPCS: dict[str, Npc] = load_npcs(SEED_DIR / "npcs.yaml")
 
@@ -30,7 +31,7 @@ def talk(word: str, room_id: str) -> str:
     npc = NPCS[nid]
     line = npc["dialogue"][npc["next_line"]]
     npc["next_line"] = (npc["next_line"] + 1) % len(npc["dialogue"])
-    return f"{npc['name'].capitalize()} says: {line}"
+    return f"{sentence_case(npc['name'])} says: {line}"
 
 
 def _presence_line(nid: str) -> str:
@@ -38,7 +39,7 @@ def _presence_line(nid: str) -> str:
     the world beat is never a surprise: the room render is the player's only danger rubric."""
     npc = NPCS[nid]
     hostile = ", and looks hostile" if npc.get("aggressive") else ""
-    return f"{npc['name'].capitalize()} is here{hostile}."
+    return f"{sentence_case(npc['name'])} is here{hostile}."
 
 
 def room_npcs_text(room_id: str) -> str:
