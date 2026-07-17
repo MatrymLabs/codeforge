@@ -103,3 +103,44 @@ which room, which foe). True autonomy (NPCs that act with no player in the room,
 patrol) still needs fork B (a real clock) and is a separate keel decision. In the v0 training-ground
 model every NPC reassembles on defeat, so an aggressive foe you "kill" reassembles and keeps coming;
 that is intended for v0 and is where a persistent-death model would later change the feel.
+
+## Follow-up: bounded, armed, telegraphed (2026-07-17, Convergence Review)
+
+The repeat Convergence Review ([../reports/2026-07-17-convergence-review-repeat.md](../reports/2026-07-17-convergence-review-repeat.md))
+convened eight discipline seats the same day this feature shipped, and seven of them converged on the
+same gap: the capability was green in unit tests but its last inch was orphaned. Three seats found real
+hazards in this feature specifically:
+
+- **Safety/Systems (FMEA):** the failsafe prevents *death* but creates a *soft-lock*. It removed the
+  only natural loop-exit (death) without adding an engineered one, so a player who cannot out-damage a
+  foe loops forever (hit, restore, hit). It also left the multi-aggressor case uncapped: N aggressors
+  deal N full blows per beat and a restored player is re-felled inside the same tick.
+- **Human-Factors/DX:** an aggressive foe was not telegraphed; the room render was identical for a
+  hostile and a peaceful NPC, so a strike on the beat was a surprise, unfair.
+- **Architecture/Fleet + Cross-disciplinary:** the feature was dark in every shipped seed, so a stranger
+  who plays the game never met it; and no test owned "does the game actually play?"
+
+**Decision (Josh, this session): discharge the systemic condition, not just patch one finding.** The
+build (branch `feat/aggression-real-and-bounded`):
+1. **Bounded (safety).** An aggression **leash** (`parts/aggression.py`, `LEASH = 5`): a foe breaks off
+   after N unanswered beats; a player strike resets the count (`combat.attack`), so a real fight keeps
+   it engaged but a player who stops fighting is released. The beat also stops after the first
+   fall-and-recover, so a restored player is never re-felled in one tick.
+2. **Fair (human factors).** The room render telegraphs hostility (`parts/npcs.py` `_presence_line`):
+   "The Cinder-Wight is here, and looks hostile."
+3. **Real (content).** `cinder_wight`, the aethryn tutorial boss, is armed `aggressive: true`, so the
+   feature is live in a game a stranger can play (its room has an exit, so the leash and a real escape
+   route both apply).
+4. **Proven (does it play?).** `tests/test_play_smoke.py` drives the REAL armed boss through
+   `handle_command` end to end: read the danger, take an unprovoked blow, fight back, be released by the
+   leash, never left in a broken state.
+
+**Deferred by design (its own decision):** "observed" (encounter telemetry to the Chronicle). Writing to
+the hash-chained Chronicle from the player-reachable tick would open the exact poisoning surface the
+Security seat praised as *closed* (no player-reachable append path). That is a real security tradeoff, so
+telemetry gets its own keel decision (a bounded, validated, non-chained encounter log, or a rate-limited
+writer), not a cram into this PR. Also deferred: proper-noun name casing (`.capitalize()` mangles
+"Cinder-Wight" to "cinder-wight"; pre-existing and fleet-wide, a prune-the-branches fix).
+
+**What Josh learned:** *(for Josh, per doctrine: e.g. trace why the leash lives in `menace` and the reset
+in `attack`, or explain why telemetry-to-the-Chronicle was deferred on a security ground.)*

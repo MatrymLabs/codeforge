@@ -33,9 +33,17 @@ def talk(word: str, room_id: str) -> str:
     return f"{npc['name'].capitalize()} says: {line}"
 
 
+def _presence_line(nid: str) -> str:
+    """One room-render line for an NPC. An aggressive foe is telegraphed so a strike on
+    the world beat is never a surprise: the room render is the player's only danger rubric."""
+    npc = NPCS[nid]
+    hostile = ", and looks hostile" if npc.get("aggressive") else ""
+    return f"{npc['name'].capitalize()} is here{hostile}."
+
+
 def room_npcs_text(room_id: str) -> str:
     """Extra line(s) for room rendering. Empty string if nobody here."""
     here = npcs_in(room_id)
     if not here:
         return ""
-    return "\n".join(f"{NPCS[nid]['name'].capitalize()} is here." for nid in here)
+    return "\n".join(_presence_line(nid) for nid in here)

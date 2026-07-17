@@ -15,13 +15,22 @@ from parts.combat import open_strike
 from parts.npcs import NPCS, npcs_in
 from parts.session import Session
 
+# Unanswered world-beats an aggressive foe presses before it breaks off. The leash is the
+# engineered exit the failsafe alone does not give: a player who cannot out-damage a foe and
+# stops fighting is released instead of looped forever (hit -> restore -> hit). A player strike
+# resets the count (parts.combat.attack), so a real fight keeps the foe engaged.
+LEASH = 5
+
 
 def menace(session: Session) -> str:
-    """Every aggressive NPC sharing the player's room opens with a strike this beat.
+    """Every aggressive NPC sharing the player's room opens with a strike this beat, until it
+    hits the leash and breaks off.
 
-    Returns the combined strike line(s) (each already newline-led), or '' if none
-    engage. A player with no calling yet (no stats) or a session no longer alive is
-    left alone -- you cannot draw blood from someone who has not entered the fight."""
+    Returns the combined line(s) (each already newline-led), or '' if none engage. A player
+    with no calling yet (no stats) or a session no longer alive is left alone. Two hazards are
+    bounded here: the LEASH releases a foe after too many unanswered beats, and the loop stops
+    after the first blow that fells the player, so a restored player is never re-felled by a
+    second aggressor inside one beat."""
     if session.stats is None or not session.alive:
         return ""
     lines: list[str] = []
@@ -29,7 +38,17 @@ def menace(session: Session) -> str:
         npc = NPCS[nid]
         if not npc.get("aggressive"):
             continue
+        beats = session.aggro_beats.get(nid, 0)
+        if beats >= LEASH:
+            continue  # already broken off; it waits for the player to re-provoke it
+        session.aggro_beats[nid] = beats + 1
+        if session.aggro_beats[nid] >= LEASH:
+            # the leash snaps taut on this beat: the foe disengages instead of striking
+            lines.append(f"\n{npc['name'].capitalize()} breaks off its assault.")
+            continue
         blow = open_strike(session, npc)
         if blow:  # a passive foe (atk 0) lands nothing; skip its empty line
             lines.append(blow)
+            if "wake restored" in blow:  # the failsafe fired: one near-death per beat, then stop
+                break
     return "".join(lines)

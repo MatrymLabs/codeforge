@@ -22,6 +22,26 @@ def test_librarian_lives_in_the_library():
     assert "librarian" in room_npcs_text("library").lower()
 
 
+def test_an_aggressive_npc_is_telegraphed_in_the_room():
+    """A hostile foe is flagged in the room render so a strike on the world beat is never a
+    surprise: the room text is the player's only rubric for reading danger."""
+    npcs.NPCS["reaver"] = {
+        "name": "the reaver",
+        "keywords": ["reaver"],
+        "location": "library",
+        "dialogue": ["..."],
+        "next_line": 0,
+        "hp": 20,
+        "hp_now": 20,
+        "xp": 10,
+        "atk": 5,
+        "aggressive": True,
+    }
+    text = room_npcs_text("library")
+    assert "The reaver is here, and looks hostile." in text
+    assert "The librarian is here." in text  # a peaceful NPC keeps the plain line, no false alarm
+
+
 def test_talk_cycles_dialogue_and_wraps():
     first = talk("librarian", "library")
     second = talk("librarian", "library")
