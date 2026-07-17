@@ -110,6 +110,13 @@ def test_reserved_words_covers_core_and_admin() -> None:
     assert "registry" in reserved_words(COMMANDS)
 
 
+def test_admin_verbs_are_derived_from_the_spine() -> None:
+    verbs = COMMANDS.admin_verbs()
+    assert verbs == sorted(verbs)  # sorted, so a listing is stable
+    assert all(v.startswith("@") for v in verbs)  # only sigil verbs
+    assert {"@sg", "@forge", "@arch"} <= set(verbs)  # the real admin surface, not a subset
+
+
 # --- reachable through the engine tick, over the real registry ---------------
 
 

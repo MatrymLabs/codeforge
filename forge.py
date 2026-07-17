@@ -1554,7 +1554,7 @@ def _route(session: Session, true_signal: str, routed_signal: str) -> str:
         return handled
 
     if routed_signal.startswith("@"):
-        return wizard_command(session, routed_signal)
+        return wizard_command(session, routed_signal, COMMANDS.admin_verbs())
     if routed_signal == "":
         return ""
     return "Huh? Type HELP for commands."

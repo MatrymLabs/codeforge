@@ -10,10 +10,17 @@ Bootstrap rule: the first crown is granted from the host shell
 to the machine is the one authority the engine cannot outrank.
 """
 
+from collections.abc import Sequence
+
 from parts.characters import save_character
 from parts.events import SHUTDOWN, announce, broadcast
 from parts.session import SESSIONS, Session, display_name
 from parts.world import WORLD
+
+# The '@'-verbs this router handles directly. The rest of the admin verbs live on the command
+# spine (@sg, @forge, @arch, ...); wizard_command receives them so its "known verbs" listing is
+# the full set, derived, never a hand-kept list that omits half the surface.
+_LEGACY_WIZARD_VERBS = ("@teleport", "@grant", "@shutdown")
 
 RANK_ORDER = {"player": 0, "wizard": 1, "owner": 2}
 
@@ -67,8 +74,10 @@ def shutdown_world(session: Session) -> str:
     return "The world sleeps."
 
 
-def wizard_command(session: Session, raw: str) -> str:
-    """Route all @-verbs. Authorization happens HERE, before any verb runs."""
+def wizard_command(session: Session, raw: str, spine_admin_verbs: Sequence[str] = ()) -> str:
+    """Route the legacy @-verbs this module owns. Authorization happens HERE, before any verb
+    runs. The spine's ADMIN verbs are dispatched upstream; they're passed in only so an unknown
+    verb's "known" listing names the full admin surface instead of this module's slice of it."""
     verb, _, rest = raw.partition(" ")
     if verb == "@teleport":
         if not has_rank(session, "wizard"):
@@ -82,4 +91,5 @@ def wizard_command(session: Session, raw: str) -> str:
         if not has_rank(session, "owner"):
             return "You lack the authority for that."
         return shutdown_world(session)
-    return "Unknown wizard verb. Known: @teleport, @grant, @shutdown."
+    known = sorted({*_LEGACY_WIZARD_VERBS, *spine_admin_verbs})
+    return f"Unknown wizard verb. Known: {', '.join(known)}."
