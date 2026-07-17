@@ -3713,5 +3713,32 @@
     "aliases": [],
     "created": "2026-07-15",
     "updated": "2026-07-15"
+  },
+  {
+    "designation": "MOD-04.047",
+    "name": "frames",
+    "status": "active",
+    "function": "typed, per-recipient event frames for the room bus",
+    "label": "frames",
+    "file": "parts/frames.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "docs/architecture.md",
+    "tests": "tests/test_frames.py",
+    "depends_on": [
+      "session"
+    ],
+    "related": [
+      "events"
+    ],
+    "reuse": "a structured event carries its fields, not a baked string, so any sink can render it for its own viewer (name, tense, locale) at delivery; the typed successor the events bus promised, proven first on say",
+    "tags": [
+      "module"
+    ],
+    "notes": "The typed frame the events docstring promised. events.announce_frame delivers a Frame and asks it to render_for each recipient; the say verb is the first migrated call site while the string announce() path stays intact for the rest.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-16",
+    "updated": "2026-07-16"
   }
 ]

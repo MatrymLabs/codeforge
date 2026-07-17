@@ -42,8 +42,9 @@ from parts.complexity import complexity
 from parts.doors import unlock
 from parts.engineer import deploy_barrier, diagnostic_scan, field_repair
 from parts.equipment import equip, unequip
-from parts.events import announce, bind_echo, rename_echo, unbind_echo
+from parts.events import announce, announce_frame, bind_echo, rename_echo, unbind_echo
 from parts.features import features
+from parts.frames import SpeechFrame
 from parts.harvest_lens import harvest
 from parts.heralds import heralds
 from parts.items import drop, inventory_text, room_items_text, take, trace_item
@@ -425,9 +426,9 @@ def _say_cmd(session: Session, message: str) -> str:
     message = message.strip()
     if not message:
         return "Say what?"
-    announce(
+    announce_frame(
         session.location,
-        f'{display_name(session.player_id)} says, "{message}"',
+        SpeechFrame(speaker_id=session.player_id, words=message),
         exclude=session.player_id,
     )
     return f'You say, "{message}"'
