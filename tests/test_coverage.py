@@ -100,3 +100,31 @@ def test_a_stale_reserve_is_flagged(monkeypatch):
     monkeypatch.setitem(cov.RESERVED, "quest", "was reserved")
     problems = _violations(_full_map())  # quest IS witnessed in the full map
     assert any("stale reserve" in p and "quest" in p for p in problems)
+
+
+# --- the human render --------------------------------------------------------------------------
+
+
+def _world_without_aggression(tmp_path):
+    """A copy of the live seeds with the aethryn boss disarmed, so proactive_combat goes dark."""
+    import shutil
+
+    world = tmp_path / "seeds"
+    shutil.copytree(cov.SEEDS_ROOT, world)
+    npcs = world / "aethryn" / "npcs.yaml"
+    npcs.write_text("\n".join(x for x in npcs.read_text().splitlines() if "aggressive: true" not in x))
+    return world
+
+
+def test_report_flags_a_dark_capability_and_a_problems_verdict(tmp_path):
+    report = cov.coverage_report(_world_without_aggression(tmp_path))
+    assert "witnessed by" in report  # the covered capabilities still render their packs
+    assert "DARK" in report  # proactive_combat, now unarmed
+    assert "Coverage PROBLEMS" in report  # the verdict flips on a dark capability
+
+
+def test_report_renders_a_reserved_capability_and_stays_clean(tmp_path, monkeypatch):
+    monkeypatch.setitem(cov.RESERVED, "proactive_combat", "held for a later pack")
+    report = cov.coverage_report(_world_without_aggression(tmp_path))
+    assert "RESERVED (held for a later pack)" in report  # the reserve branch renders
+    assert "CLEAN" in report  # a reserved dark capability is not a violation
