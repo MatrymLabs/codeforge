@@ -1,7 +1,7 @@
 """Test twin for parts/catalog.py -- the numbered filing view."""
 
 from parts.catalog import room_catalog
-from parts.seed import Room
+from parts.seed import Item, Npc, Room
 
 
 def test_catalog_numbers_rooms_alphabetically():
@@ -60,3 +60,44 @@ def test_item_catalog_files_the_copper_key():
     assert "copper_key" in out
     assert "library" in out
     assert "items filed." in out
+
+
+def test_npc_catalog_preserves_a_multi_word_proper_noun():
+    """The filing table sentence-cases a name (a capitalized cell) without str.title() mangling an
+    authored proper noun: 'Wren the Smith' must not become 'Wren The Smith'."""
+    from parts.catalog import npc_catalog
+
+    npcs = {
+        "wren": Npc(
+            name="Wren the Smith",
+            keywords=["wren"],
+            location="forge",
+            dialogue=["..."],
+            next_line=0,
+            hp=10,
+            hp_now=10,
+            xp=5,
+            atk=0,
+        )
+    }
+    out = npc_catalog(npcs)
+    assert "Wren the Smith" in out
+    assert "Wren The Smith" not in out
+
+
+def test_item_catalog_capitalizes_a_lowercase_authored_name():
+    """A lower-case authored item name renders capitalized in the table (like the room column),
+    but a hyphenated proper noun keeps its internal caps."""
+    from parts.catalog import item_catalog
+
+    items = {
+        "copper_key": Item(
+            name="a copper key", location="room:library", keywords=["key"], slot="", mods={}
+        ),
+        "relic": Item(
+            name="the Ember-Relic", location="room:forge", keywords=["relic"], slot="", mods={}
+        ),
+    }
+    out = item_catalog(items)
+    assert "A copper key" in out  # capitalized cell
+    assert "The Ember-Relic" in out  # internal cap preserved, not 'The Ember-relic'

@@ -11,6 +11,7 @@ inspects world state without mutating it.
 from parts.items import ITEMS
 from parts.npcs import NPCS, Npc
 from parts.seed import Item, Room, load_rooms
+from parts.session import sentence_case
 from parts.world import SEED_PATH
 
 
@@ -52,7 +53,7 @@ def item_catalog(items: dict[str, Item] | None = None) -> str:
     if items is None:
         items = ITEMS
     rows = [
-        (label, item["name"].title(), item["location"].removeprefix("room:"))
+        (label, sentence_case(item["name"]), item["location"].removeprefix("room:"))
         for label, item in sorted(items.items())
     ]
     lines = _filed_index("LABEL", "NAME", "WHERE", rows)
@@ -64,7 +65,9 @@ def npc_catalog(npcs: dict[str, Npc] | None = None) -> str:
     """Return the numbered NPC index as display text."""
     if npcs is None:
         npcs = NPCS
-    rows = [(label, npc["name"].title(), npc["location"]) for label, npc in sorted(npcs.items())]
+    rows = [
+        (label, sentence_case(npc["name"]), npc["location"]) for label, npc in sorted(npcs.items())
+    ]
     lines = _filed_index("LABEL", "NAME", "ROOM", rows)
     lines.append(f"\n{len(npcs)} npcs filed.")
     return "\n".join(lines)
