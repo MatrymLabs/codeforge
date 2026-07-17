@@ -21,6 +21,8 @@ import re
 from dataclasses import dataclass, field, replace
 from pathlib import Path
 
+from parts.seed import SEEDS_ROOT, load_npcs, load_rooms
+
 _SANDBOX = "workspace"  # the only directory generation may write into (git-ignored)
 _RISK = ("low", "medium", "high")
 _LABEL = re.compile(r"^[a-z][a-z0-9_]*$")
@@ -257,7 +259,60 @@ def render_proving_ground(root: Path | None = None) -> str:
     return "\n".join(lines)
 
 
+# --- previewing a game through the arch (read-only: look, don't enter) -----------------------
+#
+# Seed selection is frozen at boot (parts/seed.SEED_NAME, read once at import). The arch can still
+# LOOK at another built game without swapping the running world: it loads that seed's data
+# read-only and renders the room you would wake in and its inhabitants. A projection, never a boot;
+# world state is never mutated. Stepping THROUGH the arch to actually play a built game is a later
+# rung of the loop, and a separate architecture decision (runtime world entry).
+
+
+def preview_seed(seed_name: str, seeds_root: Path | None = None) -> str:
+    """Look through the arch at a built game WITHOUT entering it: the room you would wake in, its
+    exits, and its inhabitants, loaded read-only. Empty name lists installed games; an unknown
+    game is refused. The running world is never swapped."""
+    base = seeds_root if seeds_root is not None else SEEDS_ROOT
+    installed = (
+        sorted(p.name for p in base.iterdir() if (p / "rooms.yaml").is_file())
+        if base.is_dir()
+        else []
+    )
+    listing = ", ".join(installed) if installed else "(none installed)"
+    if not seed_name:
+        return (
+            f"Name a game to preview through the arch: @arch preview <seed>. Installed: {listing}"
+        )
+    if seed_name not in installed:
+        return f"No game named '{seed_name}' is installed. Installed: {listing}"
+    seed_dir = base / seed_name
+    rooms = load_rooms(seed_dir / "rooms.yaml")
+    start = rooms[next(iter(rooms))]  # the seed's first room: where a player wakes (START_ROOM)
+    npc_path = seed_dir / "npcs.yaml"
+    npcs = load_npcs(npc_path) if npc_path.is_file() else {}
+    exits = ", ".join(start["exits"]) or "(none)"
+    roster = ", ".join(sorted(npcs)) if npcs else "(none)"
+    return "\n".join(
+        [
+            f"THROUGH THE ARCH: {seed_name}  (preview -- the running world is unchanged)",
+            "",
+            f"  You would wake in: {start['name']}",
+            f"    {start['desc']}",
+            f"    Exits: {exits}",
+            "",
+            f"  Rooms: {len(rooms)}    Inhabitants: {len(npcs)} ({roster})",
+            "",
+            "  A preview only: the arch shows the world, it does not enter it. Stepping through to",
+            "  play what you built is a later rung of the loop.",
+        ]
+    )
+
+
 def arch_command(session: object, arg: str = "", root: Path | None = None) -> str:
-    """The owner-only `@arch` verb: step into the Proving Ground and review the forged
-    candidates. Read-only; rank is enforced by the command spine (ADMIN, min_rank owner)."""
+    """The owner-only `@arch` verb: step into the Proving Ground. With no argument, review the
+    forged candidates; `@arch preview <seed>` looks read-only at a built game. Rank is enforced by
+    the command spine (ADMIN, min_rank owner)."""
+    tokens = arg.split()
+    if tokens and tokens[0].lower() == "preview":
+        return preview_seed(tokens[1] if len(tokens) > 1 else "")
     return render_proving_ground(root)
