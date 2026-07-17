@@ -80,6 +80,11 @@ class CommandSet:
         """The commands this player's rank can actually reach."""
         return [c for c in self.commands if has_rank(session, c.min_rank)]
 
+    def admin_verbs(self) -> list[str]:
+        """Every ADMIN-namespace ('@'-sigil) verb on the spine, sorted. A 'known verbs' listing
+        derives from this so it can never drift from what's actually registered."""
+        return sorted(c.verb for c in self.commands if c.namespace == ADMIN)
+
     def dispatch(self, session: Session, text: str) -> str | None:
         hit = self._match(text)
         if hit is None:

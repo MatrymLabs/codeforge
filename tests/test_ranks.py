@@ -38,6 +38,16 @@ def test_players_are_refused_every_wizard_verb():
     assert p.rank == "player"
 
 
+def test_an_unknown_wizard_verb_lists_the_full_admin_surface():
+    """The 'known verbs' listing is derived from the command spine, so an unknown @-verb names
+    the spine's ADMIN verbs (@sg/@forge/@arch) alongside this module's legacy trio -- it can't
+    silently omit half the admin surface the way a hand-kept list did."""
+    out = handle_command(_seat("root", "owner"), "@bogus")
+    assert "Unknown wizard verb" in out
+    for verb in ("@teleport", "@grant", "@shutdown", "@sg", "@forge", "@arch"):
+        assert verb in out
+
+
 def test_teleport_moves_a_wizard_and_is_witnessed():
     w = _seat("gandalf", "wizard")
     _seat("bystander", location="library")
