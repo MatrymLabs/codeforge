@@ -44,6 +44,10 @@ class Session:
     # each a name -> remaining-ticks countdown. A fresh session starts with a clear board.
     cooldowns: dict[str, int] = field(default_factory=dict)
     statuses: dict[str, int] = field(default_factory=dict)
+    # Aggression leash: unanswered world-beats per aggressive NPC sharing the room. A player's
+    # strike resets that NPC's count; after LEASH beats with no answer the foe breaks off, so a
+    # player who cannot win but stops fighting is never soft-locked. Transient, not persisted.
+    aggro_beats: dict[str, int] = field(default_factory=dict)
     # Per-job progression, keyed by job id. A character keeps a record per job they take up,
     # so switching jobs never erases a prior job's level. Persisted via the job_progress card.
     job_progress: dict[str, JobProgress] = field(default_factory=dict)

@@ -100,6 +100,8 @@ def attack(session: Session, word: str) -> str:
     dmg = strike_power(session)
     npc["hp_now"] -= dmg
     advance_clock(session)  # a landed strike is a combat action: cooldowns thaw, statuses age
+    if npc.get("aggressive"):
+        session.aggro_beats[nid] = 0  # the player answered the foe: re-engage its leash from zero
     announce(
         session.location,
         f"{display_name(session.player_id)} strikes {npc['name']} for {dmg}.",

@@ -3764,7 +3764,7 @@
     "tags": [
       "module"
     ],
-    "notes": "No background thread: the player's command IS the world's heartbeat (the engine tick is the only door). menace() runs after each tick's response; an aggressive NPC (seed flag, atk>0 + hp>0) sharing the room opens with a strike. Aggressive NPCs open via the beat and never also counter, so they strike once per tick.",
+    "notes": "No background thread: the player's command IS the world's heartbeat (the engine tick is the only door). menace() runs after each tick's response; an aggressive NPC (seed flag, atk>0 + hp>0) sharing the room opens with a strike. Aggressive NPCs open via the beat and never also counter, so they strike once per tick. Two hazards bounded (Convergence Review 2026-07-17): a LEASH releases a foe after N unanswered beats (a player strike resets it) so the failsafe never soft-locks a fight, and the beat stops after the first fall-and-recover so a restored player is not re-felled by a second aggressor in one tick. Live in the aethryn seed (cinder_wight); hostility telegraphed in the room render.",
     "superseded_by": "",
     "aliases": [],
     "created": "2026-07-17",

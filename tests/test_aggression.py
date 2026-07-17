@@ -12,7 +12,7 @@ import copy
 import pytest
 
 from parts import npcs
-from parts.aggression import menace
+from parts.aggression import LEASH, menace
 from parts.combat import open_strike
 from parts.jobs import bind_calling
 from parts.seed import Npc
@@ -100,6 +100,34 @@ def test_an_aggressive_npc_strikes_once_per_tick_not_twice():
     assert s.resources["hp"].current == max_hp - 6  # exactly one NPC blow, not two
 
 
+def test_the_leash_releases_a_foe_that_is_never_answered():
+    """A player who cannot win but stops fighting is not soft-locked: after LEASH unanswered
+    beats the foe breaks off and strikes no more (the engineered exit the failsafe lacks)."""
+    s = _fighter()
+    _spawn_aggressor(atk=2, hp=50)
+    max_hp = s.resources["hp"].maximum
+    out = ""
+    for _ in range(LEASH):  # LEASH beats: (LEASH-1) strikes, then the break-off
+        out = menace(s)
+    assert "breaks off" in out  # the leash snapped taut on the final beat
+    assert s.resources["hp"].current == max_hp - 2 * (LEASH - 1)  # only the pre-leash blows landed
+    assert menace(s) == ""  # broken off: silent until re-provoked
+
+
+def test_answering_a_foe_re_engages_the_leash():
+    """A real fight keeps the foe engaged: a player strike resets the leash to zero."""
+    s = _fighter()
+    _spawn_aggressor(atk=2, hp=50)
+    from forge import handle_command
+
+    for _ in range(LEASH - 1):  # climb the leash without answering
+        menace(s)
+    handle_command(s, "attack reaver")  # answer it: resets the count
+    out = menace(s)
+    assert "lunges" in out  # re-engaged, striking again
+    assert "breaks off" not in out
+
+
 # --- refusal / hostile -------------------------------------------------------------------------
 
 
@@ -133,6 +161,17 @@ def test_a_felled_player_is_restored_by_the_failsafe():
     assert "wake restored at full health" in out
     assert s.resources["hp"].is_full  # never a broken state
     assert s.location == "courtyard"  # restored in place
+
+
+def test_a_second_aggressor_never_re_fells_a_restored_player():
+    """Multi-aggressor blast is bounded: the beat stops after the first blow that fells the
+    player, so a failsafe-restored player is not immediately re-felled inside the same tick."""
+    s = _fighter()
+    _spawn_aggressor(label="wight", atk=9999, hp=50)
+    _spawn_aggressor(label="brute", atk=9999, hp=50)  # a second lethal foe in the same room
+    out = menace(s)
+    assert out.count("wake restored") == 1  # exactly one near-death this beat, not two
+    assert s.resources["hp"].is_full  # restored, and not struck down again
 
 
 def test_open_strike_from_a_passive_npc_lands_nothing():

@@ -55,3 +55,4 @@ cinder_wight:
   hp: 50
   xp: 180
   atk: 7  # the tutorial dungeon boss; learn its pattern, or reforge it rather than break it
+  aggressive: true  # it never finished dying: strikes on the world beat (leash releases if you stop)
