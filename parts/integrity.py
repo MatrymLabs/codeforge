@@ -12,6 +12,7 @@ Run: `make repo-integrity` (or `python -m parts.integrity`).
 
 from __future__ import annotations
 
+import os
 import re
 import shutil
 from collections import Counter
@@ -56,13 +57,31 @@ _OVERCLAIM = (
 # the code. The overclaim scan catches "done when it isn't"; this catches the mirror -- "remaining
 # when it's already built" -- so a stale claim never silently outlives the work that satisfied it.
 _CLAIM_DOCS = (
-    "DEVELOPMENT_PLAN.md",
     "docs/vision_resync.md",
     "docs/repository_maturity_scorecard.md",
     "docs/github_portfolio_checklist.md",
     "docs/full_stack_readiness_checklist.md",
     "docs/reports/security/security-roadmap.md",
 )
+# Living roadmaps that live in the SHIP repo, not this one. The ship's DEVELOPMENT_PLAN.md drives
+# codeforge but sits across the repo boundary, so a claim there (a filed feature still called
+# "unbuilt") is invisible to a ritual that only reads its own tree -- exactly how proactive NPCs
+# stayed "a candidate future slice" in the plan after they shipped. Reaching the ship plan closes
+# that cross-repo blind spot, the same way the `regs` verb reaches the FGL registry read-only.
+_SHIP_CLAIM_DOCS = ("DEVELOPMENT_PLAN.md",)
+
+
+def _ship_home(root: Path | None = None) -> Path | None:
+    """The MatrymLabs ship checkout (where DEVELOPMENT_PLAN.md lives), or None when not mounted.
+    Resolved from SHIP_HOME, else the sibling of the codeforge root. Returns None unless the plan
+    is actually there, so the gate degrades cleanly off-ship (as in CI, where the ship repo isn't
+    checked out) instead of failing -- a read-only seam, never a hard dependency."""
+    base = root if root is not None else _ROOT
+    env = os.environ.get("SHIP_HOME", "").strip()
+    candidate = Path(env) if env else base.parent
+    return candidate if (candidate / _SHIP_CLAIM_DOCS[0]).exists() else None
+
+
 # Deliberate forward-claim markers only, to stay high-signal: an unchecked LIST-ITEM checkbox, a
 # TODO, a "Remaining:/Deferred:/(" label, or a "not yet built/done/wired" phrase. A legend line
 # ("`[ ]` = planned") and prose ("the remaining tests pass") are intentionally NOT matched.
@@ -103,15 +122,21 @@ def forward_claims(root: Path | None = None, docs: tuple[str, ...] = _CLAIM_DOCS
     Confirm each is still pending, or tick it done and cite the evidence."""
     base = root if root is not None else _ROOT
     hits: list[str] = []
-    for rel in docs:
-        path = base / rel
+
+    def scan(path: Path, label: str) -> None:
         if not path.exists():
-            continue
+            return
         text = path.read_text(encoding="utf-8", errors="ignore")
         for lineno, line in enumerate(text.splitlines(), 1):
             if _CLAIM_RE.search(line):
-                snippet = line.strip()[:90]
-                hits.append(f"{rel}:{lineno}: {snippet}")
+                hits.append(f"{label}:{lineno}: {line.strip()[:90]}")
+
+    for rel in docs:  # this repo's roadmaps
+        scan(base / rel, rel)
+    ship = _ship_home(base)  # the ship's plan, across the repo boundary (when mounted)
+    if ship is not None:
+        for rel in _SHIP_CLAIM_DOCS:
+            scan(ship / rel, f"ship:{rel}")
     return hits
 
 
@@ -143,6 +168,7 @@ def build_report(
     gaps = presence_gaps(base)
     overclaims = overclaim_hits(base)
     claims = forward_claims(base)
+    n_roadmaps = len(_CLAIM_DOCS) + (len(_SHIP_CLAIM_DOCS) if _ship_home(base) else 0)
     qa = Counter(r.verdict for r in gate_all(records))  # keys: pass | watch | fail
 
     status_summary = ", ".join(f"{n} {s}" for s, n in sorted(by_status.items())) or "none"
@@ -209,8 +235,8 @@ def build_report(
         f"- registry validates:   {reg_line}",
         f"- QA readiness:         {qa['pass']} pass, {qa['watch']} watch, {qa['fail']} fail",
         f"- overclaim scan:       {overclaim_line}",
-        f"- forward-claim queue:  {len(claims)} to reconcile across {len(_CLAIM_DOCS)} roadmaps "
-        "(reverse-drift check; a queue, not a verdict)",
+        f"- forward-claim queue:  {len(claims)} to reconcile across {n_roadmaps} roadmaps "
+        f"(reverse-drift{' incl. ship plan' if _ship_home(base) else ''}; a queue, not a verdict)",
     ]
     lines += [f"    {c}" for c in claims]  # the full queue: curated docs keep it bounded
     lines += [

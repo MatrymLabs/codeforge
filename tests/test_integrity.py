@@ -10,6 +10,8 @@ runs the real suite.
 from datetime import date
 from pathlib import Path
 
+import pytest
+
 from parts.integrity import (
     build_report,
     forward_claims,
@@ -72,13 +74,41 @@ def test_forward_claims_skips_a_missing_doc(tmp_path: Path):
     assert forward_claims(root=tmp_path, docs=("nope.md",)) == []
 
 
+def test_forward_claims_reaches_the_ship_plan_when_mounted(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    """Cross-repo reverse-drift: the ship's DEVELOPMENT_PLAN.md lives outside this tree, so a
+    claim there is invisible unless the ritual reaches across the boundary via SHIP_HOME."""
+    ship = tmp_path / "ship"
+    ship.mkdir()
+    (ship / "DEVELOPMENT_PLAN.md").write_text("- [x] shipped slice\n- [ ] the still-unbuilt rung\n")
+    monkeypatch.setenv("SHIP_HOME", str(ship))
+    hits = forward_claims(root=tmp_path, docs=())
+    assert len(hits) == 1
+    assert hits[0].startswith("ship:DEVELOPMENT_PLAN.md:2:")
+    assert "still-unbuilt rung" in hits[0]
+
+
+def test_forward_claims_degrades_cleanly_when_the_ship_is_not_mounted(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    """Off-ship (as in CI), no plan is reachable, so the ship scan contributes nothing and the
+    gate never fails on a missing sibling repo."""
+    monkeypatch.setenv("SHIP_HOME", str(tmp_path / "nowhere"))
+    assert forward_claims(root=tmp_path, docs=()) == []
+
+
 def test_report_surfaces_the_forward_claim_queue():
     report = build_report(today=date(2026, 7, 9))
     assert "forward-claim queue:" in report  # the reverse-drift section is always present
 
 
-def test_report_queue_is_zero_when_no_roadmaps_are_present(tmp_path: Path):
-    # A root without the roadmap docs has an empty queue (the claims-absent path).
+def test_report_queue_is_zero_when_no_roadmaps_are_present(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    # A root without the roadmap docs has an empty queue (the claims-absent path). Clear SHIP_HOME
+    # so an ambient ship checkout can't leak claims into this hermetic case.
+    monkeypatch.delenv("SHIP_HOME", raising=False)
     report = build_report(root=tmp_path, today=date(2026, 7, 9))
     assert "forward-claim queue:  0" in report
     assert "Reconcile" not in report  # no reconcile next-action when the queue is empty
