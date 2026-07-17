@@ -65,3 +65,19 @@ def test_open_gate_is_a_no_op_on_unknown_or_already_open_doors():
     assert doors.open_gate("no_such_door") is False  # unknown
     doors.open_gate("oak_door")
     assert doors.open_gate("oak_door") is False  # already open -> nothing to do
+
+
+def test_a_wrong_key_reports_it_does_not_fit_with_the_key_named():
+    """The guard's refusal starts a sentence with the carried key's authored name, sentence-cased
+    (not str.capitalize(), which would lower-case a proper-noun key)."""
+    take("key", "library")  # carries the copper key
+    doors.DOORS["oak_door"]["key_id"] = "some_other_key"  # fixture restores after
+    result = unlock("door", "key", "library")
+    assert result == "A copper key doesn't fit the lock."
+
+
+def test_unlocking_an_already_open_door_says_so_with_the_door_named():
+    take("key", "library")
+    unlock("door", "key", "library")  # now open
+    result = unlock("door", "key", "library")  # unlock again
+    assert result == "The oak door is already unlocked."

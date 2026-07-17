@@ -13,7 +13,7 @@ state stays canonical, mutated solely by validated combat logic.
 
 from parts.combat import open_strike
 from parts.npcs import NPCS, npcs_in
-from parts.session import Session
+from parts.session import Session, sentence_case
 
 # Unanswered world-beats an aggressive foe presses before it breaks off. The leash is the
 # engineered exit the failsafe alone does not give: a player who cannot out-damage a foe and
@@ -44,7 +44,7 @@ def menace(session: Session) -> str:
         session.aggro_beats[nid] = beats + 1
         if session.aggro_beats[nid] >= LEASH:
             # the leash snaps taut on this beat: the foe disengages instead of striking
-            lines.append(f"\n{npc['name'].capitalize()} breaks off its assault.")
+            lines.append(f"\n{sentence_case(npc['name'])} breaks off its assault.")
             continue
         blow = open_strike(session, npc)
         if blow:  # a passive foe (atk 0) lands nothing; skip its empty line

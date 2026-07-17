@@ -11,7 +11,7 @@ from __future__ import annotations
 
 from parts import items  # import the MODULE, not its globals: tests swap items.ITEMS
 from parts.score_sheet_model import EquipmentLoadout
-from parts.session import Session
+from parts.session import Session, sentence_case
 from parts.stats import ModifierStack, Stat, StatModifier
 
 SLOTS = ("weapon", "body", "head", "arm", "accessory_1", "accessory_2")
@@ -25,9 +25,9 @@ def equip(session: Session, word: str) -> str:
     item = items.ITEMS[iid]
     slot = item["slot"]
     if not slot:
-        return f"{item['name'].capitalize()} is not something you can equip."
+        return f"{sentence_case(item['name'])} is not something you can equip."
     if slot not in SLOTS:
-        return f"{item['name'].capitalize()} names an unknown slot '{slot}'."
+        return f"{sentence_case(item['name'])} names an unknown slot '{slot}'."
     session.equipped[slot] = iid
     return f"You equip {item['name']} ({slot})."
 

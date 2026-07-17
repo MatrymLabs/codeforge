@@ -20,7 +20,7 @@ from parts.frames import StrikeFrame
 from parts.npcs import NPCS, trace_npc
 from parts.progression_awards import award_jp, award_tp, award_xp
 from parts.seed import Npc
-from parts.session import Session, display_name
+from parts.session import Session, display_name, sentence_case
 
 DAMAGE_BASE = 3  # damage dealt = DAMAGE_BASE + strength // 3
 
@@ -54,7 +54,7 @@ def _resolve_npc_blow(session: Session, npc: Npc, verb: str) -> str:
     if power <= 0:
         return ""  # the training dummy and every peaceful NPC: no blow
     session.resources["hp"] = session.resources["hp"].damage(power)
-    name = npc["name"].capitalize()
+    name = sentence_case(npc["name"])
     announce_frame(
         session.location,
         StrikeFrame(attacker_name=name, verb=verb, target_id=session.player_id, amount=power),
@@ -96,7 +96,7 @@ def attack(session: Session, word: str) -> str:
         return "There is no one like that here."
     npc = NPCS[nid]
     if npc["hp"] <= 0:
-        return f"{npc['name'].capitalize()} is not something you can fight."
+        return f"{sentence_case(npc['name'])} is not something you can fight."
     dmg = strike_power(session)
     npc["hp_now"] -= dmg
     advance_clock(session)  # a landed strike is a combat action: cooldowns thaw, statuses age
@@ -116,7 +116,7 @@ def attack(session: Session, word: str) -> str:
     npc["hp_now"] = npc["hp"]  # the dummy reassembles at full health
     announce(
         session.location,
-        f"{npc['name'].capitalize()} collapses -- then reassembles itself.",
+        f"{sentence_case(npc['name'])} collapses -- then reassembles itself.",
         exclude=session.player_id,
     )
     defeat = f"You strike {npc['name']} for {dmg}. It collapses -- then reassembles itself."

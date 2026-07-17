@@ -70,3 +70,12 @@ def display_name(player_id: str) -> str:
     capitalized at the last moment ('matrym' -> 'Matrym',
     'iron_fist' -> 'Iron Fist'). Never stored, always derived."""
     return player_id.replace("_", " ").title()
+
+
+def sentence_case(name: str) -> str:
+    """Start a sentence with an already-authored name, preserving its internal casing.
+    str.capitalize() lower-cases the rest ('the Cinder-Wight' -> 'The cinder-wight') and
+    str.title() re-cases every word ('Wren the Smith' -> 'Wren The Smith'); both mangle a proper
+    noun a seed spelled out on purpose. This only lifts the first character, so 'the Cinder-Wight'
+    -> 'The Cinder-Wight' and 'Professor Codex' stays 'Professor Codex'."""
+    return name[:1].upper() + name[1:]

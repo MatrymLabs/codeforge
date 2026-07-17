@@ -113,3 +113,35 @@ def test_display_name_is_projection_only():
     assert display_name("matrym") == "Matrym"
     assert display_name("iron_fist") == "Iron Fist"
     assert display_name("player1") == "Player1"
+
+
+def test_sentence_case_preserves_authored_proper_nouns():
+    from parts.session import sentence_case
+
+    # only the first character is lifted; the rest of an authored name is left alone
+    assert (
+        sentence_case("the Cinder-Wight") == "The Cinder-Wight"
+    )  # capitalize() -> 'The cinder-wight'
+    assert sentence_case("Wren the Smith") == "Wren the Smith"  # title() -> 'Wren The Smith'
+    assert sentence_case("Professor Codex") == "Professor Codex"  # already correct, untouched
+    assert sentence_case("a reach wolf") == "A reach wolf"  # lower-case authored -> sentence start
+    assert sentence_case("") == ""  # empty is safe, no index error
+
+
+def test_room_render_preserves_a_hyphenated_proper_noun():
+    """The room's presence line starts a sentence with the NPC's name; an internal-cap proper
+    noun must survive it (the reported 'Cinder-Wight' mangle)."""
+    npcs.NPCS["the_wight"] = {
+        "name": "the Cinder-Wight",
+        "keywords": ["wight"],
+        "location": "forge",
+        "dialogue": ["..."],
+        "next_line": 0,
+        "hp": 30,
+        "hp_now": 30,
+        "xp": 10,
+        "atk": 6,
+    }
+    line = npcs.room_npcs_text("forge")
+    assert "The Cinder-Wight is here." in line
+    assert "cinder-wight" not in line  # never the mangled lower-case form

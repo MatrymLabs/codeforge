@@ -16,7 +16,7 @@ from __future__ import annotations
 
 from parts.combat_clock import advance as tick  # the clock is a combat concept; engineer rides it
 from parts.npcs import NPCS, trace_npc
-from parts.session import Session
+from parts.session import Session, sentence_case
 
 _JOB = "engineer"
 
@@ -75,7 +75,7 @@ def diagnostic_scan(session: Session, word: str) -> str:
         return "There is no one like that here to scan."
     npc = NPCS[nid]
     if npc["hp"] <= 0:
-        return f"{npc['name'].capitalize()} is inert -- nothing to analyze."
+        return f"{sentence_case(npc['name'])} is inert -- nothing to analyze."
     tick(session)
     duration = analyzed_duration(session)
     session.statuses["analyzed"] = duration
