@@ -18,6 +18,16 @@ worlds, restart-surviving characters, rank-gated admin verbs, a threaded TCP gat
 that real MUD clients (Mudlet, telnet, nc) connect to today, and a browser gateway you
 can click straight into.
 
+> **For a backend / platform reviewer:** the game is the proof the services run. Jump
+> straight to the code that carries the substance a back-end role screens for, each proven by a test:
+>
+> | Concern | In the engine |
+> | --- | --- |
+> | Concurrency & networking | threaded TCP gateway + asyncio WebSocket pump ([`parts/gateway.py`](parts/gateway.py), [`parts/web_gateway.py`](parts/web_gateway.py)); hand-rolled telnet negotiation ([`parts/telnet_codec.py`](parts/telnet_codec.py)); a `TCP_NODELAY` fix cut per-command latency ~20-40x |
+> | Persistence & data modeling | SQLAlchemy 2.0 typed ORM ([`parts/db.py`](parts/db.py)); a parity test pins derive-on-restore == grow-in-play ([`tests/test_characters.py`](tests/test_characters.py)) |
+> | API surface | FastAPI status/admin behind owner-account Basic auth ([`parts/api.py`](parts/api.py)), consumed by a separate typed React client |
+> | Security boundary | salted pbkdf2-sha256 (600k iterations, constant-time compare, never plaintext) ([`parts/accounts.py`](parts/accounts.py)); authorization checked before capability on every admin verb ([`parts/ranks.py`](parts/ranks.py)) |
+
 > **The vision, honestly labelled:** CodeForge is being assembled as a two-output manufacturing
 > platform - a **World Package** generator (the MUD is the first, and it runs today) and a
 > reusable-parts **Hardware Store** (parts proven in the game, translated to real software:
