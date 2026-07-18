@@ -1,0 +1,6 @@
+# Terraform working dirs + state are never committed; the lock file IS.
+.terraform/
+*.tfstate
+*.tfstate.*
+terraform.tfvars
+crash.log
