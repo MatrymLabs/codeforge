@@ -104,6 +104,26 @@ def test_quit_delivers_the_farewell_before_the_socket_closes():
         assert "world dims" in ws.receive_text().lower()
 
 
+def test_short_password_reprompts_in_place_over_ws():
+    """Web parity with the telnet fix: a too-short password re-prompts the
+    password (keeping the handle), it does not drop back to the top menu."""
+    client = TestClient(app)
+    with client.websocket_connect("/ws") as ws:
+        ws.receive_text()  # splash
+        ws.receive_text()  # front-desk prompt
+        ws.send_text("new")
+        assert "character@account" in ws.receive_text()
+        ws.send_text("test@testing")
+        assert "password" in ws.receive_text().lower()  # "Choose a password:"
+        ws.send_text("short")  # 5 chars, under the floor
+        assert "Passwords need at least" in ws.receive_text()  # nudge...
+        reprompt = ws.receive_text()  # ...then the password prompt AGAIN
+        assert "password" in reprompt.lower()
+        assert "NEW" not in reprompt  # not the top menu
+        ws.send_text("swordfish9")  # a valid password now
+        assert "Welcome, Test@testing" in ws.receive_text()  # handle survived
+
+
 def test_a_wrong_password_is_refused_then_the_door_reprompts():
     client = TestClient(app)
     with client.websocket_connect("/ws") as ws:

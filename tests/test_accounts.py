@@ -3,7 +3,7 @@
 import pytest
 
 from forge import handle_command
-from parts.accounts import has_password, set_password, verify_password
+from parts.accounts import has_password, password_fixable, register, set_password, verify_password
 from parts.characters import load_character, save_character
 from parts.session import SESSIONS, Session
 
@@ -160,6 +160,21 @@ def test_register_second_character_needs_the_account_password():
     assert "not its password" in _tick(alt, "register duelist@matlabs wrongpass")
     out = _tick(alt, "register duelist@matlabs swordfish")
     assert "Welcome, Duelist@matlabs" in out
+
+
+def test_password_fixable_marks_password_errors_but_not_handle_errors():
+    """The front desks re-prompt the password in place ONLY for errors a new
+    password can fix (too short, wrong account password), never for handle
+    problems (bad/taken name) or success."""
+    s = _fresh()
+    _tick(s, "register matrym@matlabs swordfish")
+    SESSIONS.clear()
+    # fixable-by-password:
+    assert password_fixable(register("newbie", "newco", "short")) is True  # too short
+    assert password_fixable(register("duelist", "matlabs", "wrongpass")) is True  # wrong acct pw
+    # NOT fixable by a new password:
+    assert password_fixable(register("matrym", "evilcorp", "hunter2x")) is False  # name taken
+    assert password_fixable("") is False  # success (empty problem)
 
 
 def test_register_cannot_hijack_an_existing_character():
