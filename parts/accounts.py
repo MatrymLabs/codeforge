@@ -20,6 +20,7 @@ from parts.characters import load_character, put_record
 _ITERATIONS = 600_000
 MIN_PASSWORD_LEN = 8  # NIST SP 800-63B floor: length beats composition rules
 _TOO_SHORT = f"Passwords need at least {MIN_PASSWORD_LEN} characters."
+_ACCOUNT_MISMATCH_MSG = "That account exists and this is not its password."
 
 
 def _hash_secret(password: str, salt: bytes) -> str:
@@ -98,8 +99,17 @@ def register(char: str, account: str, password: str) -> str:
             )
             db.commit()
         elif not _secret_matches(password, account_row.auth_salt, account_row.auth_hash):
-            return "That account exists and this is not its password."
+            return _ACCOUNT_MISMATCH_MSG
     return ""
+
+
+def password_fixable(register_response: str) -> bool:
+    """True when a `register` result is one the visitor can fix by simply typing a
+    DIFFERENT password (too short, or the wrong password for an account that already
+    exists) -- as opposed to a handle problem (bad or taken name) a new password can
+    never solve. The front desks use this to re-prompt the password in place instead
+    of abandoning the registration."""
+    return register_response in (_TOO_SHORT, _ACCOUNT_MISMATCH_MSG)
 
 
 def inspect_login(char: str, account: str, password: str) -> bool:

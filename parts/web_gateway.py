@@ -23,6 +23,7 @@ from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.responses import HTMLResponse
 
 from forge import handle_command, render_scene
+from parts.accounts import password_fixable
 from parts.characters import save_character
 from parts.events import bind_echo, unbind_echo
 from parts.gateway import (
@@ -77,6 +78,25 @@ async def _ask(ws: WebSocket, outbox: asyncio.Queue[str], prompt: str) -> str:
     return (await _recv(ws)).strip()
 
 
+_REGISTER_TRIES = 3
+
+
+async def _register_dialogue(ws: WebSocket, outbox: asyncio.Queue[str], session: Session) -> str:
+    """NEW-account sub-dialogue over WS: a password the tick rejects (too short, or
+    wrong for an existing account) re-prompts the password in place -- keeping the
+    chosen handle -- instead of dropping to the top menu. Returns the final response."""
+    handle = await _ask(ws, outbox, "Choose your character@account:")
+    response = ""
+    for attempt in range(_REGISTER_TRIES):
+        secret = await _ask(ws, outbox, "Choose a password:")
+        with TICK_LOCK:
+            response = handle_command(session, f"register {handle} {secret}")
+        if not password_fixable(response) or attempt == _REGISTER_TRIES - 1:
+            return response
+        outbox.put_nowait(response)  # nudge, then re-ask the password in place
+    return response
+
+
 async def _front_desk(ws: WebSocket, outbox: asyncio.Queue[str], session: Session) -> bool:
     """The connection ritual over WS: authenticate before the world. The
     dialogue assembles login/register tick commands; the tick decides."""
@@ -87,14 +107,11 @@ async def _front_desk(ws: WebSocket, outbox: asyncio.Queue[str], session: Sessio
             outbox.put_nowait("Login required: enter your character@account, or type NEW.")
             continue
         if who == "new":
-            handle = await _ask(ws, outbox, "Choose your character@account:")
-            secret = await _ask(ws, outbox, "Choose a password:")
-            command = f"register {handle} {secret}"
+            response = await _register_dialogue(ws, outbox, session)
         else:
             secret = await _ask(ws, outbox, "Password:")
-            command = f"login {who} {secret}"
-        with TICK_LOCK:
-            response = handle_command(session, command)
+            with TICK_LOCK:
+                response = handle_command(session, f"login {who} {secret}")
         outbox.put_nowait(response)
         if response.startswith("Welcome back,"):
             return True  # the restore response already rendered the scene

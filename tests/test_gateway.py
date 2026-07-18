@@ -149,6 +149,43 @@ def test_register_over_the_wire_seats_and_enters(server):
     sock.close()
 
 
+def test_short_password_reprompts_in_place_then_registers(server):
+    """A NEW visitor who fumbles the password LENGTH is re-prompted for the
+    password in place -- keeping the handle they already chose -- not dumped
+    back to the top menu (the death spiral a captured session exposed)."""
+    sock = _connect(server)
+    _read_until(sock, b"NEW: ")
+    _line(sock, "new")
+    _read_until(sock, b"account: ")
+    _line(sock, "test@testing")
+    _read_until(sock, b"password: " + bytes([255, 251, 1]))
+    _line(sock, "short")  # 5 chars: under the 8-char floor
+    nudge = _read_until(sock, b"password: " + bytes([255, 251, 1]))
+    assert "Passwords need at least" in nudge  # it nudged...
+    assert "NEW:" not in nudge  # ...and re-asked in place, NOT back at the top
+    _line(sock, "swordfish9")  # a valid password now
+    scene = _read_until(sock, b"> ")
+    assert "Welcome, Test@testing" in scene  # the ORIGINAL handle survived
+    sock.close()
+
+
+def test_repeated_short_passwords_are_bounded_not_infinite(server):
+    """The in-place retry is bounded: after _REGISTER_TRIES too-short tries the
+    registration ends as one turnaway and the visitor is returned to the desk,
+    never looped forever on the same prompt."""
+    sock = _connect(server)
+    _read_until(sock, b"NEW: ")
+    _line(sock, "new")
+    _read_until(sock, b"account: ")
+    _line(sock, "test@testing")
+    for _ in range(gateway._REGISTER_TRIES):
+        _read_until(sock, b"password: " + bytes([255, 251, 1]))
+        _line(sock, "short")
+    back = _read_until(sock, b"NEW: ")  # returned to the top desk prompt
+    assert "Passwords need at least" in back
+    sock.close()
+
+
 def test_login_dialogue_restores_a_hero_over_the_wire(server):
     _saved_account()
     sock = _connect(server)

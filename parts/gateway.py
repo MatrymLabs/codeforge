@@ -17,6 +17,7 @@ import threading
 import time
 
 from forge import handle_command, render_scene
+from parts.accounts import password_fixable
 from parts.characters import save_character
 from parts.events import SHUTDOWN, bind_echo, unbind_echo
 from parts.gmcp import GMCP_OPT, enables_gmcp, gmcp_frame, room_report, vitals_report
@@ -83,6 +84,13 @@ def _forgive_address(ip: str) -> None:
     who fumbled a few times (a typo, a taken name) and then logged in successfully."""
     with _ledger_lock:
         _turnaway_ledger.pop(ip, None)
+
+
+# How many passwords a NEW visitor may try before the whole registration is
+# counted a failed attempt. A rejected password (too short, or the wrong one for
+# an existing account) is a fixable typo, not a login attack, so it re-prompts in
+# place instead of dropping to the top and burning a door attempt.
+_REGISTER_TRIES = 3
 
 
 # --- telnet option negotiation (RFC 854/857): the password blackout ---
@@ -209,6 +217,30 @@ class _GateHandler(socketserver.StreamRequestHandler):
             response = handle_command(session, f"passwd {old} {new} {again}")
         self._send(response)
 
+    def _register_dialogue(self, session: Session) -> str | None:
+        """The NEW-account sub-dialogue. A password the tick rejects (too short, or
+        wrong for an account that already exists) re-prompts the password IN PLACE,
+        keeping the handle the visitor already chose, instead of dropping them to the
+        top menu and spending a door attempt on a typo (the bug this closed). Returns
+        the tick's final `register` response for the caller to send, or None if the
+        visitor walked away mid-registration."""
+        handle = self._ask("Choose your character@account:")
+        if handle is None:
+            return None
+        handle = handle.strip()
+        response = ""
+        for attempt in range(_REGISTER_TRIES):
+            secret = self._ask_secret("Choose a password:")
+            if secret is None:
+                return None
+            with TICK_LOCK:
+                response = handle_command(session, f"register {handle} {secret.strip()}")
+            last_try = attempt == _REGISTER_TRIES - 1
+            if not password_fixable(response) or last_try:
+                return response  # success, a handle problem, or out of tries
+            self._send(response)  # a fixable password: nudge, then re-ask in place
+        return response
+
     def _front_desk(self, session: Session) -> bool:
         """The classic connection ritual: authenticate BEFORE the world.
         The dialogue assembles login/register commands for the engine
@@ -227,14 +259,15 @@ class _GateHandler(socketserver.StreamRequestHandler):
                 self._send("Login required: enter your character@account, or type NEW.")
                 continue
             if who == "new":
-                handle = self._ask("Choose your character@account:") or ""
-                secret = self._ask_secret("Choose a password:") or ""
-                command = f"register {handle.strip()} {secret.strip()}"
+                response = self._register_dialogue(session)
+                if response is None:
+                    return False  # the visitor walked away mid-registration
             else:
-                secret = self._ask_secret("Password:") or ""
-                command = f"login {who} {secret.strip()}"
-            with TICK_LOCK:
-                response = handle_command(session, command)
+                secret = self._ask_secret("Password:")
+                if secret is None:
+                    return False
+                with TICK_LOCK:
+                    response = handle_command(session, f"login {who} {secret.strip()}")
             self._send(response)
             if response.startswith("Welcome back,"):
                 _forgive_address(ip)  # a proven-good login clears any prior fumbles
