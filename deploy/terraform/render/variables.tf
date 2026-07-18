@@ -27,9 +27,15 @@ variable "plan" {
 }
 
 variable "image" {
-  description = "Image to deploy. The public GHCR image published by the publish-image workflow."
+  description = "Image repository to deploy (WITHOUT the tag). The public GHCR image published by the publish-image workflow."
   type        = string
-  default     = "ghcr.io/matrymlabs/codeforge:latest"
+  default     = "ghcr.io/matrymlabs/codeforge"
+}
+
+variable "image_tag" {
+  description = "Image tag to deploy (the Render provider requires the tag as its own field, not in image_url)."
+  type        = string
+  default     = "latest"
 }
 
 variable "forge_seed" {

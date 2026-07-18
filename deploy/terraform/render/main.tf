@@ -20,6 +20,7 @@ resource "render_web_service" "codeforge" {
   runtime_source = {
     image = {
       image_url = var.image
+      tag       = var.image_tag
     }
   }
 
