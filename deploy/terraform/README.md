@@ -7,6 +7,11 @@ removes it cleanly. This is the vendor-neutral peer of [`../../render.yaml`](../
 (the Render Blueprint that runs the public browser demo): same container, one
 declarative spec that is not tied to a single host.
 
+> **Cloud variant:** [`render/`](render/) manages a live Render web service (the
+> same image) with the Render Terraform provider - a real hosted target, managed
+> as code. It provisions a service distinct from the live demo, so applying it is
+> safe. See [`render/README.md`](render/README.md).
+
 ## What it provisions
 
 | Resource | Purpose |
