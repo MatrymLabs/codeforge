@@ -1,0 +1,9 @@
+# Copy to terraform.tfvars and edit. Every value is optional (see variables.tf
+# for defaults). terraform.tfvars is git-ignored so a real deploy's values stay
+# out of version control.
+
+# image          = "ghcr.io/matrymlabs/codeforge:latest"
+# container_name = "codeforge"
+# host_port      = 4000
+# forge_seed     = "aethryn"
+# data_volume    = "codeforge_data"

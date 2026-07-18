@@ -1,0 +1,36 @@
+# Publish the CodeForge container image to the GitHub Container Registry (GHCR).
+# Free for public repos; the image lands at ghcr.io/matrymlabs/codeforge and is
+# what deploy/terraform/ provisions. Publishes on merge to main and on version
+# tags -- NOT on pull requests (a PR must not mutate the published `latest`).
+# Uses the raw docker CLI (no third-party actions to pin), matching the `docker`
+# build+smoke job in ci.yml.
+name: publish-image
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    env:
+      IMAGE: ghcr.io/matrymlabs/codeforge
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0  # v7
+
+      - name: Log in to GHCR
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u '${{ github.actor }}' --password-stdin
+
+      - name: Build and tag (commit sha + latest)
+        run: docker build -t "$IMAGE:${GITHUB_SHA}" -t "$IMAGE:latest" .
+
+      - name: Push
+        run: |
+          docker push "$IMAGE:${GITHUB_SHA}"
+          docker push "$IMAGE:latest"

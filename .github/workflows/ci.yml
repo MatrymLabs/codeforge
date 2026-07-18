@@ -155,3 +155,24 @@ jobs:
           curl -sf http://localhost:8000/api/status | grep -q '"engine":"codeforge"'
           curl -sf http://localhost:8000/api/blueprints | grep -q 'npc_combat'
           docker rm -f cfapi
+
+  # Proves the infrastructure-as-code (deploy/terraform/) is well-formed: format,
+  # provider init, and validate. It does NOT apply (that needs a Docker daemon +
+  # the published image); the live demo runs on Render via render.yaml.
+  terraform:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0  # v7
+      - name: Install Terraform
+        run: |
+          TF_VER=1.9.8
+          mkdir -p "$HOME/.local/bin"
+          curl -fsSL -o tf.zip "https://releases.hashicorp.com/terraform/${TF_VER}/terraform_${TF_VER}_linux_amd64.zip"
+          unzip -o -q tf.zip -d "$HOME/.local/bin"
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+      - name: Format, init, validate
+        working-directory: deploy/terraform
+        run: |
+          terraform fmt -check -recursive
+          terraform init -backend=false
+          terraform validate

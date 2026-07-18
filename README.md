@@ -83,8 +83,10 @@ the tick over a WebSocket. `codeforge api` serves a server-rendered dashboard at
 evidence (career board, QualityGate audit, hardware store, latest `make bench`) onto one
 accessible page, HTMX-enhanced but working with JavaScript off; the same data is typed JSON at
 `/api/status` (OpenAPI at `/docs`). The public demo is deliberately safe (ephemeral state, a
-seat cap, idle timeouts); deploy your own with the included [`render.yaml`](render.yaml). See
-[docs/dashboard.md](docs/dashboard.md).
+seat cap, idle timeouts); deploy your own with the included [`render.yaml`](render.yaml), or
+provision the same container anywhere with the portable Terraform module in
+[`deploy/terraform/`](deploy/terraform/) (the image is published to GHCR by CI). See
+[docs/dashboard.md](docs/dashboard.md) and [ADR-0009](docs/adr/0009-deployment-as-code.md).
 
 ## Quick start
 
