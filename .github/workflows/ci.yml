@@ -170,9 +170,15 @@ jobs:
           curl -fsSL -o tf.zip "https://releases.hashicorp.com/terraform/${TF_VER}/terraform_${TF_VER}_linux_amd64.zip"
           unzip -o -q tf.zip -d "$HOME/.local/bin"
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
-      - name: Format, init, validate
+      - name: Format check (all modules)
+        run: terraform fmt -check -recursive deploy/terraform
+      - name: Init + validate (local-docker module)
         working-directory: deploy/terraform
         run: |
-          terraform fmt -check -recursive
+          terraform init -backend=false
+          terraform validate
+      - name: Init + validate (render module)
+        working-directory: deploy/terraform/render
+        run: |
           terraform init -backend=false
           terraform validate

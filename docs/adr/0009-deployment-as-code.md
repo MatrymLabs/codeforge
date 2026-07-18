@@ -39,9 +39,12 @@ replacing either:
 
 - The **live public demo runs on Render** via `render.yaml`, not this Terraform. The Terraform
   is the portable, vendor-neutral peer that provisions the *same* container anywhere.
-- A live `terraform apply` to a cloud host is a **separate, deliberately-deferred step**: it
-  needs a cloud account and may bill, so it is not part of this slice and not run in CI. When
-  taken, it is its own decision with its own evidence.
+- A live `terraform apply` to a cloud host is a **separate, credentialed step**, not run in CI.
+  The [`deploy/terraform/render/`](../../deploy/terraform/render/) module makes it available: it
+  manages a live Render web service (the `free` plan, a service distinct from the public demo, so
+  it never touches it) with the Render Terraform provider. The API key is read from
+  `RENDER_API_KEY` in the environment, so the secret never enters a `.tf` file, tfvars, or state.
+  Applying it is a deliberate, human-run step with the account that owns it.
 - `.terraform.lock.hcl` is committed (multi-platform hashes) for reproducibility; state and
   `terraform.tfvars` are git-ignored.
 

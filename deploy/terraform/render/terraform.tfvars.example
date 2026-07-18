@@ -1,0 +1,10 @@
+# Copy to terraform.tfvars and fill. terraform.tfvars is git-ignored.
+# The API key is NOT set here: export it instead so it never lands in a file:
+#   export RENDER_API_KEY=rnd_xxxxxxxx
+
+# render_owner_id = "tea-xxxxxxxxxxxxxxxx"   # your Render workspace owner id (or export RENDER_OWNER_ID)
+# service_name    = "codeforge-iac"
+# region          = "oregon"
+# plan            = "free"
+# image           = "ghcr.io/matrymlabs/codeforge:latest"
+# forge_seed      = "aethryn"
