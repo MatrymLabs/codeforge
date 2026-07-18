@@ -34,6 +34,22 @@ terraform output url                      # the public URL
 terraform destroy
 ```
 
+## Refreshing to a newer image
+
+The service deploys `ghcr.io/matrymlabs/codeforge:latest`, but Render pulls the image
+at deploy time and does **not** auto-pull a new `:latest` on its own (the Render Terraform
+provider does not expose an auto-deploy flag for image sources, only for repo/Dockerfile
+sources). So after CI republishes the image, refresh the running service one of two ways:
+
+- **Redeploy from here:** re-run `terraform apply` pointing at a fresh tag or digest, e.g.
+  `terraform apply -var 'image_tag=<new-sha>'` (a changed tag forces a new deploy), or
+- **Render dashboard:** the service's *Manual Deploy -> Deploy latest reference*, or turn on
+  the service's own auto-deploy there.
+
+The public browser demo (`codeforge-demo`, `render.yaml`) is a repo/Dockerfile source and
+already auto-deploys on every push to `main`; this image-based service is the deliberate
+tradeoff for deploying a *prebuilt, pinned* artifact.
+
 ## Cost + safety
 
 - **Plan is `free`.** A Render free web service does not bill, and it sleeps when
