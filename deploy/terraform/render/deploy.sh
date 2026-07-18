@@ -43,9 +43,13 @@ fi
 export RENDER_OWNER_ID
 echo "Owner id: $RENDER_OWNER_ID"
 
-# 3) Provision. `apply` previews the plan and asks before it creates anything.
+# 3) Provision. Plan to a file, then apply that exact plan -- no interactive
+#    "yes" prompt to fumble (a stray "yes" typed at the shell runs the Unix `yes`
+#    command and spams the terminal). You still SEE the plan before it applies.
 terraform init -input=false
-terraform apply
+terraform plan -out=tfplan
+terraform apply -input=false tfplan
+rm -f tfplan
 echo
 echo "Live URL:"
 terraform output -raw url
