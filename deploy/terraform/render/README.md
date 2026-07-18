@@ -17,6 +17,8 @@ applying this never touches the public demo.
 
 ## Apply it (needs your Render account)
 
+**One command:** `./deploy.sh` (prompts for your API key, derives the owner id, runs the guarded apply). Or do it by hand:
+
 The provider reads the API key from the environment, so the secret never enters a
 `.tf` file, `terraform.tfvars`, or state:
 
