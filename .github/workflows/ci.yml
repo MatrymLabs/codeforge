@@ -166,6 +166,7 @@ jobs:
       - name: Install Terraform
         run: |
           TF_VER=1.9.8
+          mkdir -p "$HOME/.local/bin"
           curl -fsSL -o tf.zip "https://releases.hashicorp.com/terraform/${TF_VER}/terraform_${TF_VER}_linux_amd64.zip"
           unzip -o -q tf.zip -d "$HOME/.local/bin"
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
