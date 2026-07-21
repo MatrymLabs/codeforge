@@ -28,6 +28,9 @@ _MATURITY = ("prototype", "beta", "shipped")
 _RISK = ("low", "medium", "high")
 # Free-to-Use rule: only stock parts whose provenance is clearly free to use. A part's
 # source_status must be one of these; anything unclear is not stocked in the first place.
+# "clean-room" is original code (MIT, ours) produced by a documented clean-room study of a
+# historical mechanism, so it is free to use -- BUT it must carry a `provenance` trail (a
+# clean-room claim without a recorded behavior-spec + license class is not honest).
 _SOURCE_STATUS = (
     "original",
     "stdlib",
@@ -38,6 +41,7 @@ _SOURCE_STATUS = (
     "mit",
     "bsd",
     "apache-2.0",
+    "clean-room",
 )
 
 
@@ -62,8 +66,9 @@ class Part:
     risk: str
     reuse: dict[str, str]
     tags: list[str] = field(default_factory=list)
-    source_status: str = "original"  # provenance: original / mit / apache-2.0 / ...
+    source_status: str = "original"  # provenance: original / mit / apache-2.0 / clean-room / ...
     license: str = "MIT"  # the reuse license (this repo's own code is MIT)
+    provenance: str = ""  # required when source_status is 'clean-room': the traceability trail
     influence: str = ""  # the KNOWN PATTERN it was rebuilt from -- harvest patterns, not code
     experimental: str = (
         ""  # the road NOT taken: the deliberate alternative (framework or frameless)
@@ -97,6 +102,12 @@ def _coerce(raw: Any, index: int) -> Part:
         raise CatalogError(
             f"part {raw['id']!r}: source_status must be a free-to-use status {_SOURCE_STATUS}"
         )
+    provenance = str(raw.get("provenance", "")).strip()
+    if source_status == "clean-room" and not provenance:
+        raise CatalogError(
+            f"part {raw['id']!r}: source_status 'clean-room' requires a 'provenance' trail "
+            "(behavior spec + license class); a clean-room claim without a record is not honest"
+        )
     reuse = raw["reuse"]
     if not isinstance(reuse, dict) or not reuse:
         raise CatalogError(
@@ -114,6 +125,7 @@ def _coerce(raw: Any, index: int) -> Part:
         tags=[str(tag) for tag in raw.get("tags", [])],
         source_status=source_status,
         license=str(raw.get("license", "MIT")),
+        provenance=provenance,
         influence=str(raw.get("influence", "")),
         experimental=str(raw.get("experimental", "")).strip(),
     )
@@ -177,6 +189,8 @@ def catalog_text(path: Path | None = None) -> str:
             f"[{part.id}] {part.name}  ({part.category} | {part.maturity} | risk={part.risk})"
         )
         lines.append(f"    source: {part.source}  ({part.source_status}, {part.license})")
+        if part.provenance:
+            lines.append(f"    provenance: {part.provenance}")
         if part.influence:
             lines.append(f"    pattern: {part.influence}")
         lines.append(f"    {part.purpose}")

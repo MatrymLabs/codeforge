@@ -25,8 +25,9 @@ path with `CODEFORGE_CATALOG`.
   category: authorization  # required · one word (authorization, messaging, …)
   maturity: shipped        # required · prototype | beta | shipped
   risk: low                # required · low | medium | high
-  source_status: original  # optional (default original) · original | mit | apache-2.0 | ...
+  source_status: original  # optional (default original) · original | mit | apache-2.0 | clean-room | ...
   license: MIT             # optional (default MIT) · this repo's own code is MIT
+  provenance: "…"          # required IFF source_status is clean-room · the traceability trail
   influence: "…"           # optional · the KNOWN PATTERN it was rebuilt from
   experimental: "…"        # optional · the road NOT taken: the deliberate alternative (framework or frameless)
   reuse:                   # required · non-empty map of domain -> concrete use
@@ -60,6 +61,13 @@ path with `CODEFORGE_CATALOG`.
   original CodeForge parts. `source_status` records the provenance; an unclear license
   means the part is not stocked in the first place (the loader refuses any status
   outside the free-to-use set). Every part here is `original` - this repo's own MIT code.
+- **Clean-room provenance is honest, not a loophole.** `source_status: clean-room` marks a
+  part whose code is original (MIT, ours) but whose *mechanism* was learned by a documented
+  clean-room study of a historical source (see
+  [`../../research/legacy_muds/CLEAN_ROOM_POLICY.md`](../../research/legacy_muds/CLEAN_ROOM_POLICY.md)).
+  It is free to use, but the loader **requires** a `provenance` trail (behavior spec + license
+  class) - a clean-room claim without a record fails loud, exactly like a `source` that cites a
+  missing file. Study ideas, never copy expression from a restricted source.
 - **Harvest patterns, not code (proven, not asserted).** `influence` records the *known
   pattern* a part was rebuilt from (RBAC, pub/sub, allowlist-without-a-shell). The part
   is an original implementation *of the pattern* - the concept is reused, the expression
