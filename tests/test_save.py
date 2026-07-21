@@ -104,4 +104,56 @@ def test_a_partial_save_missing_keys_degrades_not_crashes(tmp_path):
 def test_seal_stamps_the_schema_version(tmp_path):
     path = tmp_path / "save.json"
     seal_snapshot("courtyard", path)
-    assert json.loads(path.read_text())["schema_version"] == 1
+    assert json.loads(path.read_text())["schema_version"] == 2  # v2: items carry their prototype
+
+
+# --- instance persistence (Fork A, slice 2) -------------------------------------------
+def test_a_cloned_instance_round_trips_through_save_and_load(tmp_path):
+    path = tmp_path / "save.json"
+    iid = items.clone("copper_key", "forge")  # a spawned instance on the forge floor
+    seal_snapshot("forge", path)
+    items.drop_clones()  # simulate a fresh world: the clone is gone
+    assert iid not in items.ITEMS
+    location, msg = awaken_snapshot(path)
+    assert "Loaded" in msg and location == "forge"
+    assert iid in items.ITEMS  # rebuilt at its exact id
+    assert items.ITEMS[iid]["location"] == "room:forge"
+    assert items.prototype_of(iid) == "copper_key"
+
+
+def test_restore_clears_stale_clones_not_in_the_snapshot(tmp_path):
+    path = tmp_path / "save.json"
+    kept = items.clone("copper_key", "forge")
+    seal_snapshot("forge", path)  # snapshot holds `kept` only
+    stale = items.clone("copper_key", "library")  # spawned AFTER the snapshot
+    assert stale in items.ITEMS
+    awaken_snapshot(path)
+    assert kept in items.ITEMS  # in the snapshot -> rebuilt
+    assert stale not in items.ITEMS  # not in the snapshot -> cleared (idempotent restore)
+
+
+def test_a_legacy_v1_save_still_loads(tmp_path):
+    path = tmp_path / "save.json"
+    # v1 shape: no schema_version, items are bare location strings
+    path.write_text(
+        json.dumps({"location": "forge", "items": {"copper_key": "room:forge"}, "doors": {}})
+    )
+    take("key", "library")  # move the key first, so the restore visibly moves it back
+    location, msg = awaken_snapshot(path)
+    assert "Loaded" in msg and location == "forge"
+    assert items.ITEMS["copper_key"]["location"] == "room:forge"
+
+
+def test_clone_refuses_past_the_instance_ceiling(monkeypatch):
+    monkeypatch.setattr(items, "MAX_INSTANCES_PER_PROTOTYPE", 3)
+    items.clone("copper_key", "forge")  # 2 instances (seed + 1)
+    items.clone("copper_key", "forge")  # 3 instances -> at the ceiling
+    with pytest.raises(items.ItemError, match="ceiling"):
+        items.clone("copper_key", "forge")
+
+
+def test_count_instances_counts_the_seed_item_and_its_clones():
+    assert items.count_instances("copper_key") == 1  # just the seed item
+    items.clone("copper_key", "forge")
+    items.clone("copper_key", "forge")
+    assert items.count_instances("copper_key") == 3
