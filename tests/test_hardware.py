@@ -65,6 +65,35 @@ def test_a_non_free_to_use_source_status_is_refused(tmp_path):
         load_catalog(path)
 
 
+def test_a_clean_room_part_with_a_provenance_trail_loads(tmp_path):
+    # Acceptance: clean-room provenance is free-to-use (original MIT code from a documented
+    # study of a historical mechanism) as long as it records its trail.
+    path = _write(
+        tmp_path,
+        "- id: x\n  name: X\n  source: parts/x.py\n  category: c\n  maturity: prototype\n"
+        "  risk: low\n  source_status: clean-room\n"
+        "  provenance: 'Diku zone-reset behavior (Class B, LGPL family); studied not copied; "
+        "see research/legacy_muds/behavior_specs/zone_reset.md'\n"
+        "  reuse: {game: y}\n  purpose: z\n",
+    )
+    part = load_catalog(path)[0]
+    assert part.source_status == "clean-room"
+    assert "zone_reset.md" in part.provenance
+    assert "provenance:" in catalog_text(path)  # the trail is shown, not hidden
+
+
+def test_a_clean_room_claim_without_a_provenance_trail_is_refused(tmp_path):
+    # Refusal: you cannot claim clean-room provenance without recording the behavior spec +
+    # license class -- an unrecorded clean-room claim is not honest (mirrors source_gaps).
+    path = _write(
+        tmp_path,
+        "- id: x\n  name: X\n  source: parts/x.py\n  category: c\n  maturity: prototype\n"
+        "  risk: low\n  source_status: clean-room\n  reuse: {game: y}\n  purpose: z\n",
+    )
+    with pytest.raises(CatalogError, match="clean-room"):
+        load_catalog(path)
+
+
 def test_find_part_by_id():
     parts = load_catalog()
     first = parts[0]
