@@ -3916,5 +3916,32 @@
     "aliases": [],
     "created": "2026-07-21",
     "updated": "2026-07-21"
+  },
+  {
+    "designation": "MOD-04.051",
+    "name": "hourglass",
+    "status": "active",
+    "function": "a beat-driven delay queue: fire a payload after N world beats",
+    "label": "hourglass",
+    "file": "parts/hourglass.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "docs/architecture.md",
+    "tests": "tests/test_hourglass.py",
+    "depends_on": [],
+    "related": [
+      "doors",
+      "zones",
+      "aggression"
+    ],
+    "reuse": "a tick-driven timer wheel: any deferred work run off one logical clock with no threads (game effects, retry-after, timeouts, TTL, a review/retention countdown)",
+    "tags": [
+      "module"
+    ],
+    "notes": "Second clean-room harvest of the legacy-MUD archaeology program: the MUD event/delayed-action queue (Diku/Merc event system; Erwin Andreasen's PD event snippet), license class A. Studied clean-room from public behavior (research/legacy_muds/behavior_specs/delayed_event_queue.md); no historical code copied. Honors law 4: it never runs itself - parts.forge advances the shared WORLD_SANDS on the world beat (no thread). First in-engine consumer: self-closing doors (a seed door's recloses_after arms a relock via the queue; parts.doors + forge._sands_beat). Bounded (MAX_TIMERS) against a scheduling DoS. Hardware Card delay-queue (source_status clean-room).",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-21",
+    "updated": "2026-07-21"
   }
 ]

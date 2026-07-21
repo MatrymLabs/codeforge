@@ -22,6 +22,62 @@ def fresh_world():
     doors.DOORS.update(doors_snap)
 
 
+@pytest.fixture(autouse=True)
+def fresh_sands():
+    """The shared world timer is a global the beat drains every command -- reset it around each
+    door test so a scheduled reclose never leaks into another test's beat."""
+    from parts.hourglass import WORLD_SANDS
+
+    WORLD_SANDS.clear()
+    yield
+    WORLD_SANDS.clear()
+
+
+# --- self-closing doors (the Hourglass consumer) --------------------------------------
+def test_reclose_relocks_an_open_self_closing_door():
+    doors.DOORS["oak_door"]["locked"] = False
+    doors.DOORS["oak_door"]["recloses_after"] = 3
+    assert doors.reclose("oak_door") == ("library", "the oak door")
+    assert doors.DOORS["oak_door"]["locked"] is True
+
+
+def test_reclose_is_idempotent_on_a_shut_or_unknown_door():
+    assert doors.reclose("oak_door") is None  # already locked (its seed default)
+    assert doors.reclose("no_such_door") is None
+
+
+def test_unlocking_a_self_closing_door_arms_the_world_timer():
+    from parts.hourglass import WORLD_SANDS
+
+    doors.DOORS["oak_door"]["recloses_after"] = 5
+    take("key", "library")
+    unlock("door", "key", "library")
+    assert doors.DOORS["oak_door"]["locked"] is False
+    assert WORLD_SANDS.remaining("reclose:oak_door") == 5  # armed, counting down
+
+
+def test_a_plain_door_does_not_arm_the_world_timer():
+    from parts.hourglass import WORLD_SANDS
+
+    take("key", "library")
+    unlock("door", "key", "library")  # oak_door ships no recloses_after -> stays open
+    assert WORLD_SANDS.pending() == 0
+
+
+def test_a_self_closing_door_slams_shut_on_a_later_world_beat():
+    from forge import handle_command
+    from parts.session import Session
+
+    doors.DOORS["oak_door"]["recloses_after"] = 2
+    take("key", "library")
+    session = Session(player_id="tester", location="library")
+    handle_command(session, "unlock door with key")  # arms after=2; this beat -> remaining 1
+    assert doors.DOORS["oak_door"]["locked"] is False
+    out = handle_command(session, "look")  # next beat -> fires -> relock
+    assert doors.DOORS["oak_door"]["locked"] is True
+    assert "slams shut" in out  # the player, standing in the room, sees it
+
+
 def test_oak_door_starts_locked():
     assert barred_door_for("library", "north") == "oak_door"
 

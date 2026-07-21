@@ -124,6 +124,10 @@ class Door(TypedDict):
     blocks: tuple[str, str]  # (room_label, direction) -- the exit this door guards
     locked: bool
     key_id: str  # the item label that unlocks it, or "" for a door opened by other means
+    # Optional: a self-closing "portcullis" -- after a player UNLOCKS it, the world beat relocks
+    # it this many beats later (0/absent = stays open once unlocked). Quest-opened doors never
+    # set this, so a reforged bridge stays reforged.
+    recloses_after: NotRequired[int]
 
 
 class Job(TypedDict):
@@ -601,6 +605,7 @@ def load_doors(path: Path) -> dict[str, Door]:
             "blocks": None,
             "locked": True,
             "key_id": "",
+            "recloses_after": 0,
         }
         merged.update(template)
         merged.update(fields)
@@ -616,13 +621,22 @@ def load_doors(path: Path) -> dict[str, Door]:
             {**merged, "blocks": tuple(blocks)},
             (("name", str), ("keywords", list), ("locked", bool), ("key_id", str)),
         )
-        doors[label] = Door(
+        recloses = merged["recloses_after"]
+        if not isinstance(recloses, int) or isinstance(recloses, bool) or recloses < 0:
+            raise SeedError(
+                f"door '{label}': 'recloses_after' must be a non-negative integer "
+                f"(beats before a self-closing door relocks), got {recloses!r}."
+            )
+        door = Door(
             name=merged["name"],
             keywords=list(merged["keywords"]),
             blocks=(str(blocks[0]), str(blocks[1])),
             locked=bool(merged["locked"]),
             key_id=str(merged["key_id"]),
         )
+        if recloses:
+            door["recloses_after"] = recloses
+        doors[label] = door
     return doors
 
 

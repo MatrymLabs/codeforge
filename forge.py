@@ -40,7 +40,7 @@ from parts.clone_scan import clones
 from parts.combat import attack
 from parts.commands import ADMIN, CORE, Command, CommandSet
 from parts.complexity import complexity
-from parts.doors import unlock
+from parts.doors import reclose, unlock
 from parts.engineer import deploy_barrier, diagnostic_scan, field_repair
 from parts.equipment import equip, unequip
 from parts.events import announce, announce_frame, bind_echo, rename_echo, unbind_echo
@@ -48,6 +48,7 @@ from parts.features import features
 from parts.frames import SpeechFrame
 from parts.harvest_lens import harvest
 from parts.heralds import heralds
+from parts.hourglass import WORLD_SANDS
 from parts.items import drop, inventory_text, room_items_text, take, trace_item
 from parts.jobs import JOBS, bind_calling, calling_index, set_secondary
 from parts.learning_record import learnings
@@ -1613,8 +1614,27 @@ def handle_command(session: Session, signal: str) -> str:
     routed_signal = true_signal.lower()
 
     response = _route(session, true_signal, routed_signal)
-    beat = f"{menace(session)}{tick_zones(session)}"
+    beat = f"{menace(session)}{tick_zones(session)}{_sands_beat(session)}"
     return f"{response}{beat}"
+
+
+def _sands_beat(session: Session) -> str:
+    """Advance the shared world timer one beat and apply any deferred effects that came due.
+
+    The player's command is the only clock: this drains parts.hourglass.WORLD_SANDS the same way
+    menace and tick_zones ride the beat, with no background thread. Returns any line the acting
+    player should see because they are in the affected room (else '')."""
+    lines: list[str] = []
+    for event in WORLD_SANDS.advance():
+        if isinstance(event, tuple) and len(event) == 2 and event[0] == "reclose":
+            closed = reclose(event[1])
+            if closed is not None:
+                room, name = closed
+                slam = f"{name} slams shut."
+                announce(room, slam, exclude=session.player_id)
+                if session.location == room:
+                    lines.append(f"\n{slam}")
+    return "".join(lines)
 
 
 def render_opening(session: Session) -> str:

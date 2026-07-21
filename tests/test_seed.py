@@ -2,8 +2,27 @@
 
 import pytest
 
-from parts.seed import DEFAULT_ROOM_DESC, SeedError, load_rooms, load_splash
+from parts.seed import DEFAULT_ROOM_DESC, SeedError, load_doors, load_rooms, load_splash
 from parts.world import SEED_PATH
+
+
+def test_a_self_closing_door_loads_its_recloses_after(tmp_path):
+    doors = tmp_path / "doors.yaml"
+    doors.write_text("gate:\n  blocks: [hall, north]\n  key_id: brass_key\n  recloses_after: 4\n")
+    assert load_doors(doors)["gate"]["recloses_after"] == 4
+
+
+def test_a_plain_door_carries_no_recloses_after_key(tmp_path):
+    doors = tmp_path / "doors.yaml"
+    doors.write_text("gate:\n  blocks: [hall, north]\n")
+    assert "recloses_after" not in load_doors(doors)["gate"]  # opt-in: absent unless declared
+
+
+def test_a_negative_recloses_after_is_rejected(tmp_path):
+    doors = tmp_path / "doors.yaml"
+    doors.write_text("gate:\n  blocks: [hall, north]\n  recloses_after: -2\n")
+    with pytest.raises(SeedError, match="recloses_after"):
+        load_doors(doors)
 
 
 def test_load_splash_returns_the_worlds_own_banner():
