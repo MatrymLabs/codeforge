@@ -6,9 +6,10 @@ due per its mode. Refusal: a malformed zone fails loud rather than booting a bro
 
 import pytest
 
-import parts.zones as zones
+import parts.seed as seed  # reference SeedError via the module: other suites importlib.reload
+import parts.zones as zones  # parts.seed, so a class imported at collection would not match
 from forge import handle_command
-from parts.seed import SEEDS_ROOT, SeedError, Zone, load_rooms, load_zones
+from parts.seed import SEEDS_ROOT, Zone, load_rooms, load_zones
 from parts.session import Session
 from parts.world import START_ROOM
 from parts.zones import area_line, tick_zones, zone_of, zones_due
@@ -59,8 +60,10 @@ def test_the_shipped_aethryn_seed_declares_valid_areas():
 
 # --- loader: refusal (fail loud) --------------------------------------------------------
 def test_a_zone_naming_a_missing_room_is_refused(tmp_path):
-    path = _write(tmp_path, "coast:\n  rooms: [a, nowhere]\n  reset_mode: never\n  beats_between: 1\n")
-    with pytest.raises(SeedError, match="does not exist"):
+    path = _write(
+        tmp_path, "coast:\n  rooms: [a, nowhere]\n  reset_mode: never\n  beats_between: 1\n"
+    )
+    with pytest.raises(seed.SeedError, match="does not exist"):
         load_zones(path, KNOWN)
 
 
@@ -70,26 +73,26 @@ def test_a_room_claimed_by_two_zones_is_refused(tmp_path):
         "coast:\n  rooms: [a]\n  reset_mode: never\n  beats_between: 1\n"
         "reef:\n  rooms: [a]\n  reset_mode: never\n  beats_between: 1\n",
     )
-    with pytest.raises(SeedError, match="at most one zone"):
+    with pytest.raises(seed.SeedError, match="at most one zone"):
         load_zones(path, KNOWN)
 
 
 def test_an_unknown_reset_mode_is_refused(tmp_path):
     path = _write(tmp_path, "coast:\n  rooms: [a]\n  reset_mode: sometimes\n  beats_between: 1\n")
-    with pytest.raises(SeedError, match="reset_mode"):
+    with pytest.raises(seed.SeedError, match="reset_mode"):
         load_zones(path, KNOWN)
 
 
 @pytest.mark.parametrize("bad", ["0", "-3", "true"])
 def test_a_non_positive_cadence_is_refused(tmp_path, bad):
     path = _write(tmp_path, f"coast:\n  rooms: [a]\n  reset_mode: always\n  beats_between: {bad}\n")
-    with pytest.raises(SeedError, match="beats_between"):
+    with pytest.raises(seed.SeedError, match="beats_between"):
         load_zones(path, KNOWN)
 
 
 def test_a_zone_with_no_rooms_is_refused(tmp_path):
     path = _write(tmp_path, "empty:\n  rooms: []\n  reset_mode: never\n  beats_between: 1\n")
-    with pytest.raises(SeedError, match="at least one member room"):
+    with pytest.raises(seed.SeedError, match="at least one member room"):
         load_zones(path, KNOWN)
 
 
@@ -135,7 +138,9 @@ def test_below_cadence_is_not_yet_due(monkeypatch):
 
 # --- scheduler: the beat advances and a due area resets ---------------------------------
 def test_the_beat_advances_the_clock_and_a_due_area_resets(monkeypatch):
-    _install(monkeypatch, {"pit": Zone(name="Pit", rooms=["a"], reset_mode="always", beats_between=3)})
+    _install(
+        monkeypatch, {"pit": Zone(name="Pit", rooms=["a"], reset_mode="always", beats_between=3)}
+    )
     outside = Session(player_id="p", location="b")
     assert tick_zones(outside) == ""  # the beat is silent to the player
     assert zones._beats["pit"] == 1
