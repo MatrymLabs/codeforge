@@ -16,6 +16,7 @@ from collections.abc import Mapping
 from typing import cast
 
 from parts import items
+from parts.hourglass import WORLD_SANDS
 from parts.seed import SEED_DIR, Door, load_doors
 from parts.session import sentence_case
 from parts.statemachine import Guard, Refusal, Transition, advance, build
@@ -27,12 +28,36 @@ DOORS: dict[str, Door] = load_doors(SEED_DIR / "doors.yaml")
 def open_gate(door_id: str) -> bool:
     """Open a door by engine decree (e.g. a quest reforges a bridge) -- no key required. Returns
     True if a locked door was opened, False if it was unknown or already open. Only engine logic
-    mutates world state; a quest names the effect, this applies it."""
+    mutates world state; a quest names the effect, this applies it.
+
+    A quest-opened door is PERMANENT: it never schedules a reclose (a reforged bridge stays
+    reforged). Only a player unlocking a `recloses_after` door arms the self-closing timer."""
     door = DOORS.get(door_id)
     if door is None or not door["locked"]:
         return False
     door["locked"] = False
     return True
+
+
+def _arm_reclose(door_id: str, door: Door) -> None:
+    """A self-closing door, freshly unlocked by a player, schedules its own relock on the shared
+    world timer (parts.hourglass): the world beat will slam it shut after `recloses_after` beats.
+    Doors without the field never arm, so ordinary and quest doors are untouched."""
+    recloses = door.get("recloses_after", 0)
+    if recloses:
+        WORLD_SANDS.schedule(f"reclose:{door_id}", after=recloses, payload=("reclose", door_id))
+
+
+def reclose(door_id: str) -> tuple[str, str] | None:
+    """Relock a self-closing door (the effect the world beat applies when its timer fires).
+    Returns (room_label, door_name) if it actually closed, or None if the door is unknown or was
+    already shut -- idempotent, so a door reopened before its timer fires is not double-slammed.
+    Only engine logic mutates world state; the beat names the effect, this applies it."""
+    door = DOORS.get(door_id)
+    if door is None or door["locked"]:
+        return None
+    door["locked"] = True
+    return door["blocks"][0], door["name"]
 
 
 def barred_door_for(room_id: str, direction: str) -> str | None:
@@ -98,6 +123,7 @@ def unlock(door_word: str, key_word: str, room_id: str) -> str:
 
     # Fired(effect="open"): the machine decided; this module applies the effect.
     door["locked"] = False
+    _arm_reclose(did, door)  # a self-closing door starts its relock countdown now
     key_iid = items.trace_item(key_word, "player")
     assert key_iid is not None  # the key_fits guard already proved the key is carried
     return f"You unlock {door['name']} with {items.ITEMS[key_iid]['name']}."

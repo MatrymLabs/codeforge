@@ -1135,3 +1135,33 @@
     game: "areas group rooms and show an area banner; the scheduler marks an area due to refill on the world beat"
     general: "a single-clock periodic scheduler: advance recurring work off one logical beat, no background thread or wall-clock timer"
     compliance: "a cadence tracker - flag a grouped resource 'due for review' after N beats/events, mirroring the guidance library's stale-past-cadence doctor"
+
+- id: delay-queue
+  name: Hourglass
+  source: parts/hourglass.py
+  category: scheduling
+  tags: [timer, delay, queue, tick, scheduler, legacy-mud]
+  maturity: beta
+  source_status: clean-room
+  provenance: >-
+    The MUD "event queue" / delayed-action mechanism (the Diku/Merc event system; Erwin
+    Andreasen's public-domain event snippet, reused across the tradition, e.g. Aardwolf) -
+    license class A, public-domain lineage. Studied clean-room from public behavior
+    (research/legacy_muds/behavior_specs/delayed_event_queue.md); no historical code, comments,
+    names, or structure copied. Original Python, made to honor "the tick is the only clock" (it
+    never runs itself; the caller advances it).
+  license: MIT
+  influence: "MUD delayed-event queue (Diku/Merc event system) - fire a payload after N ticks (clean-room reimplementation)"
+  experimental: >-
+    a hashed timer wheel for very large horizons (O(1) advance instead of the O(n) per-beat scan);
+    today the linear scan is simplest and fast at game scale. Traded away (v1): sub-linear advance.
+  risk: low
+  purpose: >
+    A beat-driven delay queue: schedule a labelled payload to fire after N beats (or every N),
+    advance one beat at a time, and collect what came due. It never runs itself - the caller's
+    clock advances it (the world beat in-engine, no background thread), so deferred work rides one
+    logical clock. Bounded against a scheduling denial-of-service.
+  reuse:
+    game: "fire a deferred effect on the world beat - a self-closing door relocks, a status wears off, an area resets"
+    general: "a tick-driven timer wheel / delay queue: run deferred work off one logical clock with no threads or wall-clock timers (retry-after, timeouts, TTL expiry, debounce)"
+    records: "decrement a review or retention countdown each processing cycle and fire the follow-up when it comes due"
