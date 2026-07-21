@@ -49,7 +49,7 @@ from parts.frames import SpeechFrame
 from parts.harvest_lens import harvest
 from parts.heralds import heralds
 from parts.hourglass import WORLD_SANDS
-from parts.items import drop, inventory_text, room_items_text, take, trace_item
+from parts.items import drop, inventory_text, prototype_of, room_items_text, take, trace_item
 from parts.jobs import JOBS, bind_calling, calling_index, set_secondary
 from parts.learning_record import learnings
 from parts.logbook import journal
@@ -1504,7 +1504,11 @@ def _take_cmd(session: Session, arg: str) -> str:
             exclude=session.player_id,
         )
         if picked:
-            hook = quest.on_event(session, "take", picked)  # a pickup may advance the arc
+            # match the quest by prototype: picking up a cloned instance of a quest item still
+            # fires its on_take (a seed item's prototype is its own label, so this is unchanged).
+            hook = quest.on_event(
+                session, "take", prototype_of(picked)
+            )  # a pickup may advance the arc
             if hook:
                 verdict = f"{verdict}\n{hook}"
     return verdict

@@ -99,6 +99,10 @@ class Item(TypedDict):
     location: str  # "room:<label>" or "player"
     slot: str  # equipment slot, or "" for a non-equippable item
     mods: dict[str, int]  # flat stat modifiers this item grants when equipped
+    # The seed label this item is an INSTANCE of. A seed label is a prototype (a template);
+    # runtime items are instances cloned from it (parts.items.clone). Seed-placed items are their
+    # own prototype. Optional so existing Item literals stay valid; readers use prototype_of().
+    prototype: NotRequired[str]
 
 
 class Npc(TypedDict):
@@ -363,6 +367,7 @@ def load_items(path: Path) -> dict[str, Item]:
             location=tagged,
             slot=merged["slot"],
             mods=dict(merged["mods"]),
+            prototype=label,  # a seed-placed item is its own prototype
         )
     return items
 
