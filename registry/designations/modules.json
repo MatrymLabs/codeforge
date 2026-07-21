@@ -3886,5 +3886,35 @@
     "aliases": [],
     "created": "2026-07-17",
     "updated": "2026-07-17"
+  },
+  {
+    "designation": "MOD-04.050",
+    "name": "zones",
+    "status": "active",
+    "function": "areas that group rooms and advance a reset clock on the world beat",
+    "label": "zones",
+    "file": "parts/zones.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "docs/architecture.md",
+    "tests": "tests/test_zones.py",
+    "depends_on": [
+      "seed",
+      "world",
+      "session"
+    ],
+    "related": [
+      "aggression",
+      "seed"
+    ],
+    "reuse": "a single-clock periodic scheduler plus room-grouping: advance recurring work off one logical beat (no background thread), and group any labelled world nodes into named regions with a cadence",
+    "tags": [
+      "module"
+    ],
+    "notes": "First clean-room harvest of the legacy-MUD archaeology program: area/zone grouping + reset cadence, studied clean-room from the Diku/Circle/tbaMUD family (license class B, LGPL) via research/legacy_muds/behavior_specs/zone_reset.md; no historical code/names/structure copied. Rides the world beat like aggression.menace (architecture law 4, no background thread); areas come due per reset_mode (never/empty_only/always) + beats_between. The repopulation ACTION is a deferred no-op seam (_perform_reset) pending an object-instancing + quest-permanent + felled-NPC model. Hardware Card zone-scheduler (source_status clean-room).",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-21",
+    "updated": "2026-07-21"
   }
 ]

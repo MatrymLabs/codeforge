@@ -1104,3 +1104,34 @@
     government: "speak Telnet to a legacy device or terminal server without a heavyweight dependency, framing bytes correctly"
     finance: "frame an out-of-band structured feed alongside a legacy line-based Telnet session"
     general: "any Telnet gateway, client, or option (GMCP, MSDP, NAWS) that must escape, strip, or negotiate IAC without desyncing"
+
+- id: zone-scheduler
+  name: Zone Scheduler
+  source: parts/zones.py
+  category: scheduling
+  tags: [areas, regions, tick, cadence, scheduler, legacy-mud]
+  maturity: prototype
+  source_status: clean-room
+  provenance: >-
+    Area/zone grouping + reset cadence, a mechanism common to the MUD tradition and best
+    documented in the Diku/Circle/tbaMUD family (license class B, LGPL). Studied clean-room from
+    public behavior (research/legacy_muds/behavior_specs/zone_reset.md); no historical code,
+    comments, names, or structure copied. Original beat-driven Python, made to honor CodeForge's
+    "the tick is the only clock" law. The repop action is deferred by design (see parts/zones.py).
+  license: MIT
+  influence: "MUD zone/area reset (Diku family) - grouping + cadence on a logical tick (clean-room reimplementation)"
+  experimental: >-
+    land the repop action once the model is decided (object instancing for item restock, a
+    resettable-vs-quest-permanent flag for doors, and whether felled NPCs stay down), and track
+    per-area occupancy through a real session registry instead of the acting-player proxy. Traded
+    away (v1): any world mutation, keeping the scheduler and grouping provable and safe first.
+  risk: low
+  purpose: >
+    Group rooms into named areas over the flat world graph, and advance each area's reset clock on
+    the world beat (the same single clock aggression uses, no background thread): when an area
+    reaches its cadence under its reset_mode (never / empty_only / always) it comes due. Grouping
+    and the beat-driven scheduler are proven; the repopulation action is a deferred seam.
+  reuse:
+    game: "areas group rooms and show an area banner; the scheduler marks an area due to refill on the world beat"
+    general: "a single-clock periodic scheduler: advance recurring work off one logical beat, no background thread or wall-clock timer"
+    compliance: "a cadence tracker - flag a grouped resource 'due for review' after N beats/events, mirroring the guidance library's stale-past-cadence doctor"
