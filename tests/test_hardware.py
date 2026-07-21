@@ -28,9 +28,12 @@ def test_reuse_score_is_derived_not_authored():
 
 
 def test_every_shipped_part_is_free_to_use_and_records_its_pattern():
-    # the Free-to-Use rule, enforced: clear provenance + the pattern it was rebuilt from
+    # the Free-to-Use rule, enforced: clear provenance + the pattern it was rebuilt from. A part is
+    # either purely `original`, or `clean-room` (original code studied from a historical mechanism) -
+    # and a clean-room part must carry its provenance trail (the loader also enforces this).
     parts = load_catalog()
-    assert all(part.source_status == "original" for part in parts)
+    assert all(part.source_status in ("original", "clean-room") for part in parts)
+    assert all(part.provenance for part in parts if part.source_status == "clean-room")
     assert all(part.license for part in parts)
     assert all(part.influence for part in parts), "each part should record its known pattern"
 

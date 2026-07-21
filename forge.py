@@ -75,6 +75,7 @@ from parts.titles import title
 from parts.vitals import vitals
 from parts.world import DIRECTIONS, dynamic_capability, render_room, resolve_move
 from parts.world_cert import certify
+from parts.zones import area_line, tick_zones
 
 NAME_RE = re.compile(r"^[a-z][a-z0-9_]{1,15}$")
 
@@ -1425,6 +1426,9 @@ _DYNAMIC_PANELS = {"arc": lambda: arc("status")}
 def render_scene(location: str, viewer: str = "") -> str:
     """The full projection of a room: place, things, people, players."""
     scene = [render_room(location)]
+    area = area_line(location)  # the room's area banner, or '' if it belongs to no zone
+    if area:
+        scene.append(area)
     panel = _DYNAMIC_PANELS.get(dynamic_capability(location))
     if panel is not None:
         scene.append(panel())
@@ -1602,13 +1606,15 @@ def handle_command(session: Session, signal: str) -> str:
     from it. Lowercasing a password destroys it.
 
     After the player's command resolves, the world takes its beat: any aggressive
-    NPC sharing the room strikes (parts.aggression.menace). The player's command is
-    the only clock the world has -- no background thread, the tick stays the one door."""
+    NPC sharing the room strikes (parts.aggression.menace) and every area advances its
+    reset clock (parts.zones.tick_zones). The player's command is the only clock the world
+    has -- no background thread, the tick stays the one door."""
     true_signal = signal.strip()
     routed_signal = true_signal.lower()
 
     response = _route(session, true_signal, routed_signal)
-    return f"{response}{menace(session)}"
+    beat = f"{menace(session)}{tick_zones(session)}"
+    return f"{response}{beat}"
 
 
 def render_opening(session: Session) -> str:

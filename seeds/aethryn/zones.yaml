@@ -1,0 +1,22 @@
+# Areas of aethryn: named groups of rooms with a reset policy (the world is data).
+# reset_mode: never (grouping only) | empty_only (refill when unoccupied) | always.
+# The reset SCHEDULER rides the world beat; the repop action is deferred by design
+# (see parts/zones.py and research/legacy_muds/behavior_specs/zone_reset.md).
+
+kindlands_coast:
+  name: The Kindlands Coast
+  rooms: [the_waking_shore, reachwood_edge, the_far_reach]
+  reset_mode: empty_only
+  beats_between: 12
+
+cinderhearth:
+  name: Cinderhearth
+  rooms: [cinderhearth_square, old_reach_bridge]
+  reset_mode: never
+  beats_between: 20
+
+cold_cellar:
+  name: The Cold Cellar
+  rooms: [cold_cellar, cellar_hearth]
+  reset_mode: always
+  beats_between: 8

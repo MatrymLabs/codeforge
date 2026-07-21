@@ -187,6 +187,26 @@ class QuestSpec(TypedDict):
     labels: dict[str, str]
 
 
+# Zone reset modes: how eager an area is to refill on the world beat. `never` groups rooms
+# only (no reset); `empty_only` refills when no player occupies it; `always` refills on cadence.
+RESET_MODES = ("never", "empty_only", "always")
+
+
+class Zone(TypedDict):
+    """An AREA: a named group of rooms with a reset policy.
+
+    Grouping over the flat room graph (regions/areas), a mechanism common to the MUD
+    tradition (best documented in the Diku/Circle/tbaMUD family, LGPL). The reset POLICY is
+    declared here as data; the beat-driven scheduler that reads it lives in `parts/zones.py`.
+    Labels, not vnums: a zone names its member rooms by their existing room labels.
+    """
+
+    name: str  # display name of the area
+    rooms: list[str]  # member room labels
+    reset_mode: str  # one of RESET_MODES
+    beats_between: int  # world beats between reset opportunities (> 0)
+
+
 class SeedError(Exception):
     """Raised when a seed file fails validation. Names the exact problem."""
 
@@ -604,3 +624,66 @@ def load_doors(path: Path) -> dict[str, Door]:
             key_id=str(merged["key_id"]),
         )
     return doors
+
+
+def load_zones(path: Path, known_rooms: set[str]) -> dict[str, Zone]:
+    """Load a seed's optional AREAS: named groups of rooms with a reset policy.
+
+    {} if the seed ships no zones.yaml; fails loud on a bad one. Every member room must exist
+    in this seed, no room may belong to two zones, `reset_mode` must be a known mode, and
+    `beats_between` must be a positive integer. `known_rooms` is the loaded room-label set, so
+    a zone can never name a room that isn't there (the cross-component gate, as for items/npcs).
+    """
+    if not path.exists():
+        return {}
+    entries, template = _open_seed_bin(path, "zone")
+    zones: dict[str, Zone] = {}
+    claimed: dict[str, str] = {}  # room label -> the zone that already claims it
+    for label, fields in entries.items():
+        merged: dict[str, Any] = {
+            "name": _phrase(label).title(),
+            "rooms": [],
+            "reset_mode": "never",
+            "beats_between": 10,
+        }
+        merged.update(template)
+        merged.update(fields)
+        _inspect_required_types(
+            label,
+            merged,
+            (("name", str), ("rooms", list), ("reset_mode", str), ("beats_between", int)),
+        )
+        if isinstance(merged["beats_between"], bool) or merged["beats_between"] <= 0:
+            raise SeedError(
+                f"zone '{label}': 'beats_between' must be a positive integer, "
+                f"got {merged['beats_between']!r}."
+            )
+        if merged["reset_mode"] not in RESET_MODES:
+            raise SeedError(
+                f"zone '{label}': 'reset_mode' must be one of {RESET_MODES}, "
+                f"got {merged['reset_mode']!r}."
+            )
+        if not merged["rooms"]:
+            raise SeedError(f"zone '{label}': must name at least one member room.")
+        members: list[str] = []
+        for room in merged["rooms"]:
+            if not isinstance(room, str):
+                raise SeedError(f"zone '{label}': room labels must be strings, got {room!r}.")
+            if room not in known_rooms:
+                raise SeedError(
+                    f"zone '{label}' names room '{room}', which does not exist in this seed."
+                )
+            if room in claimed:
+                raise SeedError(
+                    f"zone '{label}' claims room '{room}', already claimed by "
+                    f"zone '{claimed[room]}'. A room belongs to at most one zone."
+                )
+            claimed[room] = label
+            members.append(room)
+        zones[label] = Zone(
+            name=str(merged["name"]),
+            rooms=members,
+            reset_mode=str(merged["reset_mode"]),
+            beats_between=int(merged["beats_between"]),
+        )
+    return zones
