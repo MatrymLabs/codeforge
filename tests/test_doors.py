@@ -64,6 +64,15 @@ def test_a_plain_door_does_not_arm_the_world_timer():
     assert WORLD_SANDS.pending() == 0
 
 
+def test_a_cloned_key_opens_the_door_by_prototype():
+    # instancing: a door keyed to `copper_key` opens for ANY instance of it -- here a cloned key
+    # carried in the pack, not the seed singleton. The match is by prototype, not id.
+    items.clone("copper_key", "player")  # a fresh copper_key instance, straight into the pack
+    result = unlock("door", "key", "library")
+    assert "unlock" in result
+    assert doors.DOORS["oak_door"]["locked"] is False
+
+
 def test_a_self_closing_door_slams_shut_on_a_later_world_beat():
     from forge import handle_command
     from parts.session import Session

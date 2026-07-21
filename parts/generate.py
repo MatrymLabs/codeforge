@@ -73,7 +73,9 @@ def generate_item(
     name = str(spec.get("name") or f"a {key.replace('_', ' ')}")
     keywords = list(spec.get("keywords") or [key])
     label = _unique_label(key, set(ITEMS))
-    ITEMS[label] = Item(name=name, keywords=keywords, location=f"room:{room_id}", slot="", mods={})
+    ITEMS[label] = Item(
+        name=name, keywords=keywords, location=f"room:{room_id}", slot="", mods={}, prototype=label
+    )
     return label, f"[SYSTEM] Forged: {name}  ({_pattern_designation(key)} / instance: {label})"
 
 

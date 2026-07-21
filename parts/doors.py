@@ -90,7 +90,10 @@ def _key_fits(ctx: Mapping[str, object]) -> str | None:
     key_iid = items.trace_item(key_word, "player")
     if key_iid is None:
         return "You aren't carrying that."
-    if key_iid != door["key_id"]:
+    # Match by PROTOTYPE, not instance id: a door keyed to `copper_key` opens for any instance of
+    # copper_key (a seed key or a cloned one). A seed key's prototype is its own label, so this is
+    # unchanged for the singleton case.
+    if items.prototype_of(key_iid) != door["key_id"]:
         return f"{sentence_case(items.ITEMS[key_iid]['name'])} doesn't fit the lock."
     return None
 
