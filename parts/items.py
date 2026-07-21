@@ -20,6 +20,13 @@ ITEMS: dict[str, Item] = load_items(SEED_DIR / "items.yaml")
 PROTOTYPES: dict[str, Item] = {label: copy.deepcopy(item) for label, item in ITEMS.items()}
 
 
+# Hard ceiling on how many live instances one prototype may have at once. Persisting clones means
+# they can accumulate across save/load, so an unbounded spawner is a growth/DoS risk; clone()
+# refuses past this ceiling. A gameplay-tuned per-prototype cap (the Diku "max exists" rule) is a
+# spawn-policy concern for a later slice; this is the safety ceiling beneath it.
+MAX_INSTANCES_PER_PROTOTYPE = 256
+
+
 class ItemError(ValueError):
     """A bad item operation (e.g. cloning an unknown prototype): fail loud."""
 
@@ -30,6 +37,41 @@ def prototype_of(iid: str) -> str:
     thing."""
     item = ITEMS.get(iid)
     return item.get("prototype", iid) if item else iid
+
+
+def count_instances(prototype: str) -> int:
+    """How many live items are instances of this prototype (the seed item counts as one)."""
+    return sum(1 for iid in ITEMS if prototype_of(iid) == prototype)
+
+
+def is_clone(iid: str) -> bool:
+    """True if this item is a SPAWNED instance of a seed prototype -- not the seed item itself,
+    and not an @sg runtime creation (whose prototype is its own, unseeded label)."""
+    proto = prototype_of(iid)
+    return iid != proto and proto in PROTOTYPES
+
+
+def drop_clones() -> None:
+    """Remove every spawned instance of a seed prototype (keep the seed items and @sg creations).
+    Used on restore so the snapshot's clone set is authoritative and stale clones never pile up."""
+    for iid in [iid for iid in ITEMS if is_clone(iid)]:
+        del ITEMS[iid]
+
+
+def restore_instance(iid: str, prototype: str, location: str) -> None:
+    """Rebuild a persisted instance at its EXACT id (so clones round-trip through save/load).
+    `location` is the already-tagged string as stored. Fails loud on an unknown prototype."""
+    template = PROTOTYPES.get(prototype)
+    if template is None:
+        raise ItemError(f"cannot restore instance {iid!r}: unknown prototype {prototype!r}")
+    ITEMS[iid] = Item(
+        name=template["name"],
+        keywords=list(template["keywords"]),
+        location=location,
+        slot=template["slot"],
+        mods=dict(template["mods"]),
+        prototype=prototype,
+    )
 
 
 def _mint_instance_id(prototype: str) -> str:
@@ -51,6 +93,11 @@ def clone(prototype: str, location: str) -> str:
     template = PROTOTYPES.get(prototype)
     if template is None:
         raise ItemError(f"unknown item prototype {prototype!r}; cannot clone it")
+    if count_instances(prototype) >= MAX_INSTANCES_PER_PROTOTYPE:
+        raise ItemError(
+            f"prototype {prototype!r} is at its instance ceiling ({MAX_INSTANCES_PER_PROTOTYPE}); "
+            "refusing to spawn more (bounds runaway growth)"
+        )
     iid = _mint_instance_id(prototype)
     tagged = "player" if location == "player" else f"room:{location.removeprefix('room:')}"
     ITEMS[iid] = Item(
