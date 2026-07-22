@@ -11,14 +11,26 @@ from __future__ import annotations
 import pytest
 
 from parts import world_manifest as wm
+from parts.stat_rules import DEFAULT_RULESET, RulesetError, apply_ruleset
 from parts.world_manifest import (
     WorldManifestError,
     check_world,
     describe_world,
     from_dict,
+    load_ruleset,
     to_dict,
     to_markdown,
 )
+
+_A_RULES_BLOCK = """
+rules:
+  ATK: {base: 50, level: false, terms: [{coeff: 5.0, attributes: [strength]}]}
+  DEF: {base: 0, level: false, terms: [{coeff: 1.0, attributes: [stamina]}]}
+  EVA: {base: 0, level: false, terms: [{coeff: 1.0, attributes: [speed]}]}
+  MAG DEF: {base: 0, level: false, terms: [{coeff: 1.0, attributes: [wisdom]}]}
+  ACC: {base: 90, level: false, terms: [{coeff: 1.0, attributes: [luck]}]}
+"""
+_TEN_ATTRS = dict.fromkeys(("strength", "speed", "magic", "stamina", "wisdom", "luck"), 10)
 
 _VALID = {
     "world_id": "first-forge",
@@ -104,3 +116,40 @@ def test_check_world_skips_a_derived_manifest(tmp_path) -> None:
         parents=True
     )  # no world.yaml -> derived, nothing to reconcile
     assert check_world("bare", root=tmp_path) == []
+
+
+# --- load_ruleset: a world declares its combat balance (wires #292 + #293) --------------
+def _seed_dir(tmp_path, name: str, body: str):
+    seed = tmp_path / name
+    seed.mkdir()
+    (seed / "world.yaml").write_text(body)
+    return seed
+
+
+def test_load_ruleset_reads_a_declared_rules_block(tmp_path) -> None:
+    seed = _seed_dir(
+        tmp_path, "brawler", "world_id: brawler\ntitle: B\nstart_room: pit\n" + _A_RULES_BLOCK
+    )
+    ruleset = load_ruleset(seed)
+    assert apply_ruleset(ruleset, _TEN_ATTRS, 5)["ATK"] == 100  # base 50 + strength(10) * 5
+
+
+def test_load_ruleset_defaults_without_a_world_yaml(tmp_path) -> None:
+    (tmp_path / "bare").mkdir()
+    assert load_ruleset(tmp_path / "bare") == DEFAULT_RULESET
+
+
+def test_load_ruleset_defaults_without_a_rules_block(tmp_path) -> None:
+    seed = _seed_dir(tmp_path, "plain", "world_id: plain\ntitle: P\nstart_room: r\n")
+    assert load_ruleset(seed) == DEFAULT_RULESET  # a world.yaml with no rules -> default balance
+
+
+def test_load_ruleset_fails_loud_on_a_malformed_block(tmp_path) -> None:
+    # a rules block that omits stats is a broken balance -- refused loud, not silently defaulted
+    body = (
+        "world_id: broken\ntitle: B\nstart_room: r\n"
+        "rules:\n  ATK: {base: 0, level: false, terms: [{coeff: 1.0, attributes: [strength]}]}\n"
+    )
+    seed = _seed_dir(tmp_path, "broken", body)
+    with pytest.raises(RulesetError):
+        load_ruleset(seed)

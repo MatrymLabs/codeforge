@@ -35,3 +35,20 @@ def test_a_missing_attribute_reads_zero_not_a_crash() -> None:
     result = derived_stats({"strength": 6}, level=0)  # only one attribute present
     assert set(result) == set(DERIVED_STATS)
     assert result["ATK"] == 12  # strength 6 * 2, everything else 0
+
+
+def test_derived_stats_uses_the_active_world_ruleset(monkeypatch) -> None:
+    # A world's declared balance reaches the sheet: derived_stats() with no ruleset arg uses the
+    # module-level active ruleset, bound at import from the booted world's world.yaml.
+    import parts.derived as derived
+    from parts.stat_rules import from_dict
+
+    custom = from_dict(
+        {
+            stat: {"base": 999, "level": False, "terms": [{"coeff": 0.0, "attributes": ["luck"]}]}
+            for stat in ("ATK", "DEF", "EVA", "MAG DEF", "ACC")
+        }
+    )
+    monkeypatch.setattr(derived, "_ACTIVE_RULESET", custom)
+    ten = dict.fromkeys(("strength", "speed", "magic", "stamina", "wisdom", "luck"), 10)
+    assert derived.derived_stats(ten, 5)["ATK"] == 999  # picked up the active ruleset, no arg

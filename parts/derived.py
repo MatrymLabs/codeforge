@@ -16,16 +16,24 @@ from __future__ import annotations
 
 from collections.abc import Mapping
 
-from parts.stat_rules import DEFAULT_RULESET, DERIVED_STATS, Ruleset, apply_ruleset
+from parts.seed import SEED_DIR
+from parts.stat_rules import DERIVED_STATS, Ruleset, apply_ruleset
+from parts.world_manifest import load_ruleset
 
 __all__ = ["DERIVED_STATS", "derived_stats"]
+
+# The ACTIVE balance, bound at import from the booted world's world.yaml `rules:` block (or the
+# default prototype balance when it declares none) -- the same seed-defined-at-import pattern as
+# world.START_ROOM. This is where #292 (WorldManifest) and #293 (stat rulesets) meet: a world's
+# declared balance actually reaches the sheet and combat, no call site threading a ruleset.
+_ACTIVE_RULESET: Ruleset = load_ruleset(SEED_DIR)
 
 
 def derived_stats(
     attributes: Mapping[str, int], level: int, ruleset: Ruleset | None = None
 ) -> dict[str, int]:
-    """Compute the five derived combat stats under a ruleset (default = the prototype balance).
+    """Compute the five derived combat stats under a ruleset (default = the active world's balance).
 
     A missing attribute reads 0 rather than raising: the sheet must render a partial character.
     """
-    return apply_ruleset(ruleset if ruleset is not None else DEFAULT_RULESET, attributes, level)
+    return apply_ruleset(ruleset if ruleset is not None else _ACTIVE_RULESET, attributes, level)

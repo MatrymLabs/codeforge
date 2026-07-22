@@ -21,6 +21,9 @@ from typing import Any
 
 import yaml
 
+from parts.stat_rules import DEFAULT_RULESET, Ruleset
+from parts.stat_rules import from_dict as ruleset_from_dict
+
 _ROOT = Path(__file__).resolve().parent.parent
 _ID_RE = re.compile(r"^[a-z][a-z0-9-]*$")  # seed ids are lowercase, hyphenated (first-forge)
 
@@ -145,6 +148,20 @@ def describe_world(seed_name: str, root: Path | None = None) -> WorldManifest:
         description="(derived: this seed ships no world.yaml)",
         declared=False,
     )
+
+
+def load_ruleset(seed_dir: Path) -> Ruleset:
+    """The stat ruleset a world declares in its world.yaml `rules:` block, or the default balance.
+
+    A world overrides combat balance as DATA: a `rules:` block in world.yaml is validated by
+    stat_rules.from_dict (fails loud on a bad block). No world.yaml, or no `rules:` block, means the
+    default prototype balance -- so every existing seed is unchanged."""
+    manifest_path = seed_dir / "world.yaml"
+    if not manifest_path.exists():
+        return DEFAULT_RULESET
+    raw = yaml.safe_load(manifest_path.read_text(encoding="utf-8")) or {}
+    rules = raw.get("rules") if isinstance(raw, dict) else None
+    return ruleset_from_dict(rules) if rules is not None else DEFAULT_RULESET
 
 
 def check_world(seed_name: str, root: Path | None = None) -> list[str]:
