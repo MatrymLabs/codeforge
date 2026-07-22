@@ -1,0 +1,14 @@
+# The typed identity of this World Package (validated by parts/world_manifest.py).
+# Edit this and the world's declared identity changes -- no Python required.
+world_id: first-forge
+title: CodeForge -- The First Forge
+start_room: forge
+version: "1"
+description: >-
+  The starter world. Wash ashore a Forger, relight the first ember, learn the
+  forge and its callings, and begin the climb up the Spiral.
+authors:
+  - MatrymLabs
+tags:
+  - starter
+  - tutorial
