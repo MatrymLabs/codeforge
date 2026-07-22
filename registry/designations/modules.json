@@ -4089,5 +4089,32 @@
     "aliases": [],
     "created": "2026-07-22",
     "updated": "2026-07-22"
+  },
+  {
+    "designation": "MOD-04.054",
+    "name": "stat_rules",
+    "status": "active",
+    "function": "a typed, configurable ruleset for the derived combat stats: balance as data, not hardcode",
+    "label": "stat_rules",
+    "file": "parts/stat_rules.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "docs/character_system.md",
+    "tests": "tests/test_stat_rules.py",
+    "depends_on": [],
+    "related": [
+      "derived",
+      "world_manifest",
+      "blueprint"
+    ],
+    "reuse": "lift the derived-stat coefficients out of Python into a typed Ruleset (base + round(sum(coeff*attrs)) + level); DEFAULT_RULESET is byte-identical to the prototype formulas; a world can declare its own balance",
+    "tags": [
+      "module"
+    ],
+    "notes": "The 'configurable statistics and rulesets' vision item. parts/derived now applies DEFAULT_RULESET (parity-pinned) and accepts a ruleset override. Wiring a world's declared ruleset into live combat is a follow-on.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-22",
+    "updated": "2026-07-22"
   }
 ]
