@@ -12,9 +12,11 @@ Run: `make repo-integrity` (or `python -m parts.integrity`).
 
 from __future__ import annotations
 
+import json
 import os
 import re
 import shutil
+import subprocess  # nosec B404 -- fixed argv, no shell; reads `git log` for one date, read-only
 from collections import Counter
 from collections.abc import Callable
 from datetime import date
@@ -140,6 +142,90 @@ def forward_claims(root: Path | None = None, docs: tuple[str, ...] = _CLAIM_DOCS
     return hits
 
 
+# Evidence currency: the mirror of the forward-claim queue, aimed one layer up. forward_claims
+# catches a roadmap that says "remaining" for shipped work; this catches shipped CAPABILITY that
+# never reached the evidence surfaces (the Career Evidence board, and by extension the storefront).
+# A convergence review found exactly this: six PRs of supply-chain tooling shipped while the board
+# claimed none of it. The signal is git-grounded (capability changed AFTER the board's last update),
+# so it fires the moment a build arc outruns its evidence, not on a calendar the board could dodge.
+_CAREER_MATRIX = "data/career/career_evidence_matrix.json"
+_CAPABILITY_PATHS = ("parts", ".github/workflows", "forge.py")
+_CURRENCY_STALE_DAYS = 30  # calendar fallback when git history is unavailable (e.g. a tarball)
+
+
+def _latest_capability_change(root: Path | None = None) -> date | None:
+    """The date of the newest commit touching a capability path (`parts/`, workflows, `forge.py`),
+    read from git. None when git or the history is unavailable (a tarball, a shallow clone with the
+    path unchanged): a read-only seam, so the currency check degrades to a calendar fallback instead
+    of failing. Injected into `career_currency_gaps` so the pure check never shells git in tests."""
+    base = root if root is not None else _ROOT
+    try:
+        proc = subprocess.run(  # nosec B603 B607 -- fixed argv, no shell; git log, read-only
+            [
+                "git",
+                "-C",
+                str(base),
+                "log",
+                "-1",
+                "--format=%cd",
+                "--date=short",
+                "--",
+                *_CAPABILITY_PATHS,
+            ],
+            capture_output=True,
+            text=True,
+            timeout=10,
+            check=False,
+        )
+    except (OSError, subprocess.SubprocessError):
+        return None
+    stamp = proc.stdout.strip()
+    if proc.returncode != 0 or not stamp:
+        return None
+    try:
+        return date.fromisoformat(stamp)
+    except ValueError:
+        return None
+
+
+def career_currency_gaps(
+    root: Path | None = None,
+    today: date | None = None,
+    capability_change: date | None = None,
+) -> list[str]:
+    """Reconciliation queue for evidence currency: has shipped capability outrun the career board?
+
+    A queue, not a verdict (like `forward_claims`): it cannot know whether the newest capability is
+    board-worthy, only that the board has not been touched since it shipped. Prefer the git-grounded
+    signal (`capability_change` after the board's `last_updated`); with no git, fall back to a plain
+    calendar staleness so the check still nudges off-VCS. The fix is always human: claim the shipped
+    work on the board (and storefront), or bump `last_updated` once you confirm it is current."""
+    base = root if root is not None else _ROOT
+    stamp = today if today is not None else date.today()
+    path = base / _CAREER_MATRIX
+    if not path.exists():
+        return []
+    try:
+        board = json.loads(path.read_text(encoding="utf-8"))["career_board"]
+        last = date.fromisoformat(board["last_updated"])
+    except (json.JSONDecodeError, KeyError, TypeError, ValueError):
+        return [f"{_CAREER_MATRIX}: last_updated is missing or unparseable"]
+    if capability_change is not None:
+        if capability_change > last:
+            return [
+                f"capability changed {capability_change.isoformat()} after the career board's last "
+                f"update {last.isoformat()}: claim the shipped work on the board (and storefront), "
+                "or bump last_updated once confirmed current."
+            ]
+        return []  # board is current with respect to the newest capability change
+    if (stamp - last).days > _CURRENCY_STALE_DAYS:
+        return [
+            f"career board last updated {last.isoformat()} ({(stamp - last).days} days ago; no git "
+            "to check capability): run a convergence pass to confirm shipped work is claimed."
+        ]
+    return []
+
+
 def build_report(
     root: Path | None = None, today: date | None = None, tools: dict[str, bool] | None = None
 ) -> str:
@@ -169,6 +255,7 @@ def build_report(
     overclaims = overclaim_hits(base)
     claims = forward_claims(base)
     n_roadmaps = len(_CLAIM_DOCS) + (len(_SHIP_CLAIM_DOCS) if _ship_home(base) else 0)
+    currency = career_currency_gaps(base, stamp, _latest_capability_change(base))
     qa = Counter(r.verdict for r in gate_all(records))  # keys: pass | watch | fail
 
     status_summary = ", ".join(f"{n} {s}" for s, n in sorted(by_status.items())) or "none"
@@ -194,6 +281,11 @@ def build_report(
         next_actions.append(
             f"Reconcile {len(claims)} forward claim(s) in the living roadmaps against the code "
             "(reverse-drift): confirm each is still pending, or tick it done and cite the evidence."
+        )
+    if currency:
+        next_actions.append(
+            "Reconcile evidence currency: claim shipped capability on the board + storefront,"
+            " or bump last_updated once confirmed current."
         )
     if not next_actions:
         next_actions.append(
@@ -237,8 +329,11 @@ def build_report(
         f"- overclaim scan:       {overclaim_line}",
         f"- forward-claim queue:  {len(claims)} to reconcile across {n_roadmaps} roadmaps "
         f"(reverse-drift{' incl. ship plan' if _ship_home(base) else ''}; a queue, not a verdict)",
+        f"- evidence currency:    {len(currency)} career-board reconciliation(s) "
+        "(shipped capability vs the claimed board; a queue, not a verdict)",
     ]
     lines += [f"    {c}" for c in claims]  # the full queue: curated docs keep it bounded
+    lines += [f"    {c}" for c in currency]
     lines += [
         "",
         "Recommended Next Actions:",
