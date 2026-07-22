@@ -18,6 +18,7 @@ import time
 
 from forge import handle_command, render_scene
 from parts.accounts import password_fixable
+from parts.bulkhead import Bulkhead, BulkheadFull
 from parts.characters import save_character
 from parts.events import SHUTDOWN, bind_echo, unbind_echo
 from parts.gmcp import GMCP_OPT, enables_gmcp, gmcp_frame, room_report, vitals_report
@@ -38,8 +39,10 @@ MAX_LINE_BYTES = (
 MAX_LOGIN_FAILS = 5  # failed logins per client address within the window...
 LOGIN_FAIL_WINDOW = 300.0  # ...before that address is refused for a cooldown
 
-_seats_filled = 0
-_seats_lock = threading.Lock()
+# Concurrent-session cap, as the Hardware Store's bulkhead part: admit up to MAX_CONNECTIONS
+# handlers, reject the overflow fast (a full-forge message) so a connection flood cannot exhaust the
+# thread-per-connection pool. This replaces a hand-rolled locked counter with the shelf part it was.
+_SEATS = Bulkhead(MAX_CONNECTIONS)
 _turnaway_ledger: dict[str, list[float]] = {}
 _ledger_lock = threading.Lock()
 
@@ -281,17 +284,13 @@ class _GateHandler(socketserver.StreamRequestHandler):
         return False
 
     def handle(self) -> None:
-        global _seats_filled
-        with _seats_lock:
-            if _seats_filled >= MAX_CONNECTIONS:
-                self._send("The forge is full right now. Try again shortly.")
-                return
-            _seats_filled += 1
+        # One bulkhead slot per connection: held for the session's life, released on exit even if
+        # the handler raises. A full compartment refuses fast instead of over-filling the pool.
         try:
-            self._serve_player()
-        finally:
-            with _seats_lock:
-                _seats_filled = max(0, _seats_filled - 1)
+            with _SEATS.slot():
+                self._serve_player()
+        except BulkheadFull:
+            self._send("The forge is full right now. Try again shortly.")
 
     def _serve_player(self) -> None:
         player_id = _next_player_id()

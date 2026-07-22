@@ -110,9 +110,11 @@ compartments). Use `bulkhead.run(fn)` or `with bulkhead.slot():`; a slot is alwa
 the guarded work raises.
 
 Bulkhead only means something where work runs CONCURRENTLY, so unlike its single-threaded shelf-mates
-it guards its counter with a lock. Its natural home is the **threaded TCP gateway** (cap concurrent
-command handlers so a connection flood cannot exhaust the pool). Wiring it into the gateway is a
-deferred slice; the part and its concurrency test ship first.
+it guards its counter with a lock. It is **wired into the threaded TCP gateway**: the seat cap
+(`parts/gateway._SEATS`) is a `Bulkhead(MAX_CONNECTIONS)`, and `handle()` runs each connection inside
+a `slot()` so a connection flood is refused fast ("the forge is full") instead of exhausting the
+thread-per-connection pool. This replaced a hand-rolled locked counter with the shelf part it always
+was -- the gateway proved the pattern; the part harvests it.
 
 **Invariants (tested, incl. a deterministic concurrency test):** the cap holds under contention (two
 threads hold slots on an Event; a third is rejected `BulkheadFull`); a slot is released even when the
@@ -129,5 +131,5 @@ work raises; a limit < 1 or a bool/non-int fails loud at construction.
 For retry: jitter, a cancellation token, an async variant. For the circuit breaker: half-open
 concurrency control, a rolling-window failure rate, and metrics hooks. For the deadline: a hard-timeout
 variant that interrupts a thread, and propagating one deadline across nested calls (a context). For
-the bulkhead: a bounded wait-queue (block N waiters instead of rejecting at once), a per-key/per-tenant
-compartment, and wiring it into the gateway's connection handling. All deliberate later slices.
+the bulkhead: a bounded wait-queue (block N waiters instead of rejecting at once) and a
+per-key/per-tenant compartment. All deliberate later slices.

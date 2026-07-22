@@ -11,6 +11,7 @@ import parts.gateway as gateway
 from parts import doors, items, npcs
 from parts.accounts import adopt
 from parts.accounts import register as register_account
+from parts.bulkhead import Bulkhead
 from parts.characters import save_character
 from parts.gateway import ForgeGateServer, _GateHandler, _sanitize
 from parts.session import SESSIONS, Session
@@ -23,7 +24,7 @@ def fresh_world():
     npcs_snap = copy.deepcopy(npcs.NPCS)
     SESSIONS.clear()
     gateway._counter = 0
-    gateway._seats_filled = 0
+    gateway._SEATS = Bulkhead(gateway.MAX_CONNECTIONS)  # fresh, empty seat bulkhead per test
     gateway._turnaway_ledger.clear()
     yield
     items.ITEMS.clear()
@@ -401,7 +402,7 @@ def test_stale_failure_addresses_are_swept_out(monkeypatch):
 
 
 def test_connection_cap_refuses_when_full(server, monkeypatch):
-    monkeypatch.setattr(gateway, "MAX_CONNECTIONS", 1)
+    monkeypatch.setattr(gateway, "_SEATS", Bulkhead(1))  # the seat bulkhead admits exactly one
     holder = _connect_player(server)  # occupies the only slot
     overflow = _connect(server)
     assert "forge is full" in _drain_to_close(overflow)
