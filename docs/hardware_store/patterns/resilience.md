@@ -77,8 +77,32 @@ trip and recovery are deterministic; a property test proves it opens exactly whe
 - Evidence: `tests/test_circuit_breaker.py`, `tests/test_relay.py`, `tests/test_service_breaker.py`;
   manifest `docs/hardware/circuit-breaker.yaml`; `make loop PART=circuit-breaker`. Maturity `beta`.
 
+## The part: `deadline`
+
+`parts/deadline.py` -- the timeout primitive of the resilience family, sized for a single-threaded
+engine. A hard timeout interrupts a thread; a `Deadline(seconds, clock=...)` interrupts nothing. It
+is a budget you POLL -- `remaining()`, `expired()`, or `check()` (which raises `DeadlineExceeded`) --
+between steps, so a long job yields the moment its budget is spent. The clock is injected (default
+`time.monotonic`), so the budget is deterministic under test.
+
+**Composition:** `run_with_retries(fn, policy, deadline=Deadline(5.0))` caps the TOTAL wall-clock time
+of a retry loop. Without it, retry bounds only the attempt COUNT; a slow dependency under a generous
+`max_attempts` could still run for minutes. The deadline stops retrying the moment the budget is
+spent and re-raises the last transient failure, unswallowed.
+
+**Invariants (tested):** the budget clamps at zero (never negative, even if the clock steps back); a
+zero budget is expired immediately; a negative / non-finite / bool / non-numeric budget fails loud at
+construction (`DeadlineError`).
+
+- **Practical:** a time-bounded retry (`run_with_retries(..., deadline=...)`) -- retry within an SLA,
+  not just an attempt count.
+- **General:** any long span whose caller must stay responsive -- a real-time timed challenge, a
+  batch that must finish inside a window.
+- Evidence: `tests/test_deadline.py`, plus the composition tests in `tests/test_retry.py`. Maturity `beta`.
+
 ## Deferred (needs Josh's approval)
 
-For retry: jitter, a deadline/cancellation token, an async variant. For the circuit breaker:
-half-open concurrency control, a rolling-window failure rate, and metrics hooks. All deliberate
-later slices.
+For retry: jitter, a cancellation token, an async variant. For the circuit breaker: half-open
+concurrency control, a rolling-window failure rate, and metrics hooks. For the deadline: a hard-timeout
+variant that interrupts a thread, and propagating one deadline across nested calls (a context). All
+deliberate later slices.

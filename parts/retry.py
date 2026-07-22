@@ -11,6 +11,10 @@ exact backoff schedule and attempt count without waiting. It holds no I/O of its
 lives: it auto-retries a flaky calibration in the game (`parts/calibrate`) and an unreliable API/DB
 call in a practical app (`parts/resilient_call`).
 
+Composes with the Hardware Store's `deadline` part: pass an optional `Deadline` to bound the TOTAL
+wall-clock time of the retry loop, so a flaky call retries within a time budget, not just an attempt
+count. When the budget is spent, retrying stops early and the last transient failure is re-raised.
+
 Provenance: independently_implemented_pattern (retry/exponential-backoff; see
 docs/hardware/retry-policy.yaml). No code copied.
 """
@@ -21,6 +25,8 @@ import math
 import time
 from collections.abc import Callable
 from dataclasses import dataclass
+
+from parts.deadline import Deadline
 
 Sleep = Callable[[float], None]
 OnRetry = Callable[["Attempt"], None]
@@ -85,8 +91,12 @@ def run_with_retries[T](
     *,
     sleep: Sleep = time.sleep,
     on_retry: OnRetry | None = None,
+    deadline: Deadline | None = None,
 ) -> T:
-    """Run `fn` under `policy`. Retry transient failures; re-raise permanent and final ones."""
+    """Run `fn` under `policy`. Retry transient failures; re-raise permanent and final ones.
+
+    An optional `deadline` caps the TOTAL wall-clock time: once its budget is spent, retrying stops
+    early (no further attempt) and the last transient failure is re-raised, unswallowed."""
     last: Exception | None = None
     for attempt in range(1, policy.max_attempts + 1):
         try:
@@ -95,10 +105,12 @@ def run_with_retries[T](
             if not policy.is_transient(exc):
                 raise  # permanent: do not retry, do not swallow
             last = exc
+            if deadline is not None and deadline.expired():
+                break  # time budget spent: stop retrying, re-raise the last failure below
             if attempt < policy.max_attempts:
                 delay = policy.delay_for(attempt)
                 if on_retry is not None:
                     on_retry(Attempt(attempt, delay, repr(exc)))
                 sleep(delay)
     assert last is not None  # max_attempts >= 1, so the loop body ran and set last
-    raise last  # attempts exhausted: re-raise the last transient failure, unswallowed
+    raise last  # attempts exhausted (or budget spent): re-raise the last transient failure
