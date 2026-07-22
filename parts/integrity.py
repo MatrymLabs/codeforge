@@ -19,6 +19,7 @@ import shutil
 import subprocess  # nosec B404 -- fixed argv, no shell; reads `git log` for one date, read-only
 from collections import Counter
 from collections.abc import Callable
+from dataclasses import dataclass
 from datetime import date
 from pathlib import Path
 
@@ -226,72 +227,98 @@ def career_currency_gaps(
     return []
 
 
-def build_report(
-    root: Path | None = None, today: date | None = None, tools: dict[str, bool] | None = None
-) -> str:
-    """Assemble the integrity report from in-process signals + tool detection.
+@dataclass(frozen=True)
+class _ReportData:
+    """The signals the report is assembled from -- gathered once, then rendered. Splitting the
+    gather from the render keeps build_report a thin orchestrator, not a 30-branch monolith."""
 
-    `tools` is injectable (a name->present map) so tests are deterministic regardless
-    of what's installed in the current environment."""
-    base = root if root is not None else _ROOT
-    stamp = today if today is not None else date.today()
-    tools = tools if tools is not None else tool_status()
+    parts_count: int
+    status_summary: str
+    no_influence: list[str]
+    reg_problems: list[str]
+    gaps: list[str]
+    overclaims: list[str]
+    claims: list[str]
+    n_roadmaps: int
+    currency: list[str]
+    qa: Counter[str]
 
-    def tool_line(name: str, live: str) -> str:
-        return f"detected (run `{live}`)" if tools.get(name) else "not_configured"
 
+def _gather_signals(base: Path, stamp: date, tools: dict[str, bool]) -> _ReportData:
+    """Run every in-process check the report reads: catalog, registry (+ completeness), presence,
+    overclaim, forward-claim + evidence-currency queues, and QA readiness. No I/O of its own beyond
+    the checks it composes."""
     parts = load_catalog()
     by_status: dict[str, int] = {}
     for p in parts:
         by_status[p.source_status] = by_status.get(p.source_status, 0) + 1
-    no_influence = [p.id for p in parts if not p.influence]
 
     records = load_collective()
     reg_problems = validate(records) if records else ["registry empty"]
     # Completeness: the registry claims to file the code modules themselves, so an unfiled
     # module is a real gap the internal-consistency validate() cannot see.
     reg_problems += [f"unfiled module: {m}" for m in unfiled_modules(records)]
-    gaps = presence_gaps(base)
-    overclaims = overclaim_hits(base)
-    claims = forward_claims(base)
-    n_roadmaps = len(_CLAIM_DOCS) + (len(_SHIP_CLAIM_DOCS) if _ship_home(base) else 0)
-    currency = career_currency_gaps(base, stamp, _latest_capability_change(base))
-    qa = Counter(r.verdict for r in gate_all(records))  # keys: pass | watch | fail
 
-    status_summary = ", ".join(f"{n} {s}" for s, n in sorted(by_status.items())) or "none"
-    reg_line = "yes" if not reg_problems else "NO -- " + "; ".join(reg_problems)
-    overclaim_line = "none found" if not overclaims else "FLAGS: " + ", ".join(overclaims)
+    return _ReportData(
+        parts_count=len(parts),
+        status_summary=", ".join(f"{n} {s}" for s, n in sorted(by_status.items())) or "none",
+        no_influence=[p.id for p in parts if not p.influence],
+        reg_problems=reg_problems,
+        gaps=presence_gaps(base),
+        overclaims=overclaim_hits(base),
+        claims=forward_claims(base),
+        n_roadmaps=len(_CLAIM_DOCS) + (len(_SHIP_CLAIM_DOCS) if _ship_home(base) else 0),
+        currency=career_currency_gaps(base, stamp, _latest_capability_change(base)),
+        qa=Counter(r.verdict for r in gate_all(records)),  # keys: pass | watch | fail
+    )
+
+
+def _next_actions(tools: dict[str, bool], data: _ReportData) -> list[str]:
+    """The recommended next actions: one per open gap, in fixed order; a clean-bill line if none."""
+    actions: list[str] = []
+    if not (tools.get("gitleaks") or tools.get("detect-secrets")):
+        actions.append("Configure secret scanning: add `make secrets` (detect-secrets, baselined).")
+    if data.gaps:
+        actions.append(f"Add missing presentation files: {', '.join(data.gaps)}.")
+    if data.reg_problems:
+        actions.append(f"Fix registry: {'; '.join(data.reg_problems)}.")
+    if data.overclaims:
+        actions.append(f"Soften overclaims in README: {', '.join(data.overclaims)}.")
+    if data.claims:
+        n_claims = len(data.claims)
+        actions.append(
+            f"Reconcile {n_claims} forward claim(s) in the living roadmaps against the code "
+            "(reverse-drift): confirm each is still pending, or tick it done and cite the evidence."
+        )
+    if data.currency:
+        actions.append(
+            "Reconcile evidence currency: claim shipped capability on the board + storefront,"
+            " or bump last_updated once confirmed current."
+        )
+    if not actions:
+        actions.append(
+            "No blocking gaps found - run `make check` + `make security` for the live gates."
+        )
+    return actions
+
+
+def _report_lines(
+    base: Path, stamp: date, tools: dict[str, bool], data: _ReportData, actions: list[str]
+) -> list[str]:
+    """Render the gathered signals into the report's exact lines (presentation only, no checks)."""
+
+    def tool_line(name: str, live: str) -> str:
+        return f"detected (run `{live}`)" if tools.get(name) else "not_configured"
+
+    reg_line = "yes" if not data.reg_problems else "NO -- " + "; ".join(data.reg_problems)
+    overclaim_line = "none found" if not data.overclaims else "FLAGS: " + ", ".join(data.overclaims)
     secret_scan = (
         "detected"
         if (tools.get("gitleaks") or tools.get("detect-secrets"))
         else "not_configured - recommend detect-secrets (baselined) or gitleaks"
     )
-    next_actions = []
-    if not (tools.get("gitleaks") or tools.get("detect-secrets")):
-        next_actions.append(
-            "Configure secret scanning: add `make secrets` (detect-secrets, baselined)."
-        )
-    if gaps:
-        next_actions.append(f"Add missing presentation files: {', '.join(gaps)}.")
-    if reg_problems:
-        next_actions.append(f"Fix registry: {'; '.join(reg_problems)}.")
-    if overclaims:
-        next_actions.append(f"Soften overclaims in README: {', '.join(overclaims)}.")
-    if claims:
-        next_actions.append(
-            f"Reconcile {len(claims)} forward claim(s) in the living roadmaps against the code "
-            "(reverse-drift): confirm each is still pending, or tick it done and cite the evidence."
-        )
-    if currency:
-        next_actions.append(
-            "Reconcile evidence currency: claim shipped capability on the board + storefront,"
-            " or bump last_updated once confirmed current."
-        )
-    if not next_actions:
-        next_actions.append(
-            "No blocking gaps found - run `make check` + `make security` for the live gates."
-        )
-
+    qa_line = f"{data.qa['pass']} pass, {data.qa['watch']} watch, {data.qa['fail']} fail"
+    n_claims = len(data.claims)
     lines = [
         "CodeForge Repo Integrity Report",
         "",
@@ -311,41 +338,56 @@ def build_report(
         "",
         "License / Source Origin:",
         f"- project LICENSE:   {'present' if (base / 'LICENSE').exists() else 'MISSING'}",
-        f"- catalog parts:     {len(parts)}  ({status_summary})",
-        f"- parts missing pattern (influence): {', '.join(no_influence) or 'none'}",
+        f"- catalog parts:     {data.parts_count}  ({data.status_summary})",
+        f"- parts missing pattern (influence): {', '.join(data.no_influence) or 'none'}",
         "- dependency licenses: not scanned (scancode not_configured -- see limitations)",
         "",
         "Originality Awareness:",
-        f"- by source_status:  {status_summary}",
+        f"- by source_status:  {data.status_summary}",
         "- similarity scan:   not run (no code uploaded to any third-party service)",
         "- LIMITATION:        this organizes evidence; it does NOT prove universal originality.",
         "",
         "Professional Presentation:",
-        f"- key files:  {'all present' if not gaps else 'MISSING: ' + ', '.join(gaps)}",
+        f"- key files:  {'all present' if not data.gaps else 'MISSING: ' + ', '.join(data.gaps)}",
         "",
         "Truth / VeritasGate:",
         f"- registry validates:   {reg_line}",
-        f"- QA readiness:         {qa['pass']} pass, {qa['watch']} watch, {qa['fail']} fail",
+        f"- QA readiness:         {qa_line}",
         f"- overclaim scan:       {overclaim_line}",
-        f"- forward-claim queue:  {len(claims)} to reconcile across {n_roadmaps} roadmaps "
+        f"- forward-claim queue:  {n_claims} to reconcile across {data.n_roadmaps} roadmaps "
         f"(reverse-drift{' incl. ship plan' if _ship_home(base) else ''}; a queue, not a verdict)",
-        f"- evidence currency:    {len(currency)} career-board reconciliation(s) "
+        f"- evidence currency:    {len(data.currency)} career-board reconciliation(s) "
         "(shipped capability vs the claimed board; a queue, not a verdict)",
     ]
-    lines += [f"    {c}" for c in claims]  # the full queue: curated docs keep it bounded
-    lines += [f"    {c}" for c in currency]
+    lines += [f"    {c}" for c in data.claims]  # the full queue: curated docs keep it bounded
+    lines += [f"    {c}" for c in data.currency]
     lines += [
         "",
         "Recommended Next Actions:",
     ]
-    lines += [f"{i}. {a}" for i, a in enumerate(next_actions, start=1)]
+    lines += [f"{i}. {a}" for i, a in enumerate(actions, start=1)]
     lines += [
         "",
         "This report organizes evidence. It does not prove legal originality, security,",
         "or compliance. Similarity is a signal; license metadata is evidence; tests prove",
         "behavior; documentation proves intent; human judgment makes the call.",
     ]
-    return "\n".join(lines)
+    return lines
+
+
+def build_report(
+    root: Path | None = None, today: date | None = None, tools: dict[str, bool] | None = None
+) -> str:
+    """Assemble the integrity report from in-process signals + tool detection.
+
+    A thin orchestrator: gather the signals once, decide the next actions, render the lines. `tools`
+    is injectable (a name->present map) so tests are deterministic whatever is installed."""
+    base = root if root is not None else _ROOT
+    stamp = today if today is not None else date.today()
+    tools = tools if tools is not None else tool_status()
+    data = _gather_signals(base, stamp, tools)
+    actions = _next_actions(tools, data)
+    return "\n".join(_report_lines(base, stamp, tools, data, actions))
 
 
 def save_report(text: str, root: Path | None = None, today: date | None = None) -> Path:
