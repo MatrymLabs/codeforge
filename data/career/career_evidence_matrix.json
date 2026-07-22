@@ -2,7 +2,7 @@
   "career_board": {
     "title": "Career Evidence Sign",
     "purpose": "Map CodeForge work to real software-career skills -- each with the exact repo artifact that proves it, and the honest gaps.",
-    "last_updated": "2026-07-10",
+    "last_updated": "2026-07-22",
     "market_note": "Basis: BLS 2024 medians (Software Developers $133,080 - QA/Testers $102,610 - Technical Writers $91,670; ~317,700 CS/IT openings/yr through 2034) + O*NET work styles + current public postings (Roblox, Extreme Networks, Wyetech, Veeva, BioIntelliSense, PlayOn, Xsolla). CodeForge's strongest overlap: internal tools - release/build - DevOps/SRE - QA automation - technical docs.",
     "status_legend": "proven=current repo artifact | partial=some proof, needs more | missing=no proof | planned=idea only | needs_update=stale | human_review_required=uncertain",
     "levels": [
@@ -519,6 +519,19 @@
               "keel": "I designed the guided search to be bounded and human-final: hard gates before weighted objectives, no autonomous mutation in v1, and the human kept outside the loop for security-sensitive edits.",
               "record": "docs/keel_records/adv-evolution-guided-search.md"
             }
+          },
+          {
+            "skill_id": "adv.security.supply_chain",
+            "skill": "Build supply-chain security evidence: SBOM, dependency + license auditing",
+            "why_it_matters": "Supply-chain security (NIST SSDF, SBOMs, dependency and license auditing) is a 2026 hiring bar for platform and security-adjacent roles. CodeForge ships the evidence stack (CycloneDX SBOM via `make sbom`, pip-audit + Dependabot dependency auditing, CodeQL, detect-secrets); the forge-audit flagship extends it into a four-layer license-compliance evaluator (per-file SPDX scan, GPL/AGPL dependency scan, SBOM validation + a staleness cross-check), proven against real repos it did not build.",
+            "repo_proof": [
+              ".github/dependabot.yml",
+              ".github/workflows/codeql.yml",
+              "Makefile",
+              ".secrets.baseline"
+            ],
+            "status": "proven",
+            "next_proof_task": "Surface forge-audit's four-layer license scorecard (SBOM validation + freshness) in the codeforge README Evaluation section."
           }
         ]
       }
