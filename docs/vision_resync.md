@@ -48,9 +48,15 @@ part through the full loop is the deeper next slice; the spine itself is execute
   Blueprint model (typed); Hardware Store catalog (typed `Part`); classroom/assessment; the
   in-MUD workshop/terminal/console; the assurance + evidence stack; Docker + CI + a live demo.
   the full suite with branch coverage (the CI badge is the live count).
-- **Prototype:** `cast` (plans a package as a dry-run, writes nothing); `foundry` (generate into
-  a guarded sandbox, manual promotion); `evolution` lab; `hubble` diagnostic core; `stewardship`
-  gates; `blueprint_ai` (Claude-drafted).
+  `cast` (generates + boots + validates + selectively vendors a standalone game; `make forge`
+  live-proven, green test twin; the one unproven-in-CI edge is fresh-venv dependency isolation);
+  `foundry` (propose -> approve -> generate into the git-ignored `workspace/` sandbox; the
+  `@forge`/`@arch` owner verbs + `forge_line.forge_new` are real callers, tested);
+  `blueprint_ai` (Claude-drafted Blueprints on a mockable, offline-tested seam behind the
+  `blueprint` verb); the connected manufacturing spine (`forge_line`, both directions).
+- **Prototype:** `evolution` lab (the pipeline is tested end-to-end with a tick verb, but its
+  runnable demo script needs a fix before it earns "working"); `hubble` diagnostic core (built +
+  tested, not yet wired to a caller); `stewardship` gates (built + tested, currently dormant).
 - **Planned:** typed WorldManifest family; configurable statistics and rulesets; creator wizards;
   the full Part Manifest; more practical adapters beyond the shipped one. (The Workflow Engine as a
   product, its game/practical adapters, a demonstrated game<->practical translation, and package
