@@ -1,7 +1,7 @@
 """Test twin for parts/service_health.py -- the practical adapter + the one-core proof."""
 
-from parts.health import HealthRegistry
 from parts.service_health import ServiceHealth
+from parts.shelf.health import HealthRegistry
 
 
 def test_a_service_is_ready_only_when_every_dependency_is_healthy():

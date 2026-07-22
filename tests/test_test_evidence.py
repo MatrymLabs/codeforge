@@ -1,10 +1,10 @@
-"""Test twin for parts/test_evidence.py -- honest evidence: missing is never a pass."""
+"""Test twin for parts/shelf/test_evidence.py -- honest evidence: missing is never a pass."""
 
 import pytest
 from hypothesis import given
 from hypothesis import strategies as st
 
-from parts.test_evidence import (
+from parts.shelf.test_evidence import (
     ERROR,
     FAILED,
     PASSED,

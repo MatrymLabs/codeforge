@@ -1,4 +1,4 @@
-"""Test twin for parts/config.py -- the typed, validated environment catalog.
+"""Test twin for parts/shelf/config.py -- the typed, validated environment catalog.
 
 Acceptance: defaults hold, values load and coerce, the render redacts credentials. Refusal
 (hostile cases): a non-numeric PORT and an out-of-range port fail loud with a named error.
@@ -7,7 +7,7 @@ Acceptance: defaults hold, values load and coerce, the render redacts credential
 import pytest
 from pydantic import ValidationError
 
-from parts.config import ConfigError, Settings, render_config
+from parts.shelf.config import ConfigError, Settings, render_config
 
 
 def test_defaults_when_the_env_is_empty():

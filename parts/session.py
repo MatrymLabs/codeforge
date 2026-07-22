@@ -13,7 +13,7 @@ from dataclasses import dataclass, field
 
 from parts.job_progress import JobProgress
 from parts.resources import Resource
-from parts.stats import StatBlock
+from parts.shelf.stats import StatBlock
 
 
 def _spawn() -> str:

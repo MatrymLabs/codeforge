@@ -5,7 +5,7 @@ maturity: beta
 purpose: >
   Toggle features at runtime without a redeploy: register named flags with defaults, override them,
   reset to default, retire them; an override beats the default and an unknown flag is an error.
-source: parts/feature_flags.py
+source: parts/shelf/feature_flags.py
 domain: configuration
 inputs: >
   flag names + defaults; enable/disable/reset/retire calls; a name to query with is_on

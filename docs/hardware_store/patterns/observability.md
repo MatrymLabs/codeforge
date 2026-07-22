@@ -15,7 +15,7 @@ structured logs and metrics already ship as the separate `observability` part.*
 
 ## The part: `health-registry`
 
-`parts/health.py` -- a `HealthRegistry` of named checks (each a `Callable[[], str]` returning a
+`parts/shelf/health.py` -- a `HealthRegistry` of named checks (each a `Callable[[], str]` returning a
 status, or a bool via `healthy_if`). `run()` returns a `HealthResult` per check; `overall()`
 aggregates by **worst-wins** severity; `report()` renders a panel. The **load-bearing rule**: an
 **UNKNOWN state is never reported as healthy**. A check that raises or returns an unrecognized value

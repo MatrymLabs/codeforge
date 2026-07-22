@@ -15,7 +15,7 @@ Patterns for CodeForge" (section 19, Testing Harnesses) and the Software Parts d
 
 ## The part: `test-evidence`
 
-`parts/test_evidence.py` -- an `EvidenceLedger`: `expect` the checks you require, `record` each
+`parts/shelf/test_evidence.py` -- an `EvidenceLedger`: `expect` the checks you require, `record` each
 outcome (with the ledger's environment and commit), and ask `passed()`. The **load-bearing rules**: an
 expected-but-unrecorded check is `MISSING` (a step that never ran can never be a pass), a runner
 `ERROR` is **distinct** from a test `FAILED`, and `passed()` is true only when there is at least one

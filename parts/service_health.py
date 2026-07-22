@@ -10,7 +10,7 @@ from __future__ import annotations
 
 from collections.abc import Callable
 
-from parts.health import HEALTHY, Check, HealthRegistry, healthy_if
+from parts.shelf.health import HEALTHY, Check, HealthRegistry, healthy_if
 
 
 class ServiceHealth:

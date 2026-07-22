@@ -1,7 +1,7 @@
 """CARD: assembly -- discover what parts compose a product and file the evidence.
 
 An Assembly records which parts were used to build a product, at what versions, with
-what dependencies, and files dated evidence via parts/reporting. It discovers internal
+what dependencies, and files dated evidence via parts/shelf/reporting. It discovers internal
 dependencies by walking the source's AST (stdlib ast, no third-party tools) and cross-
 references them against the Hardware Store catalog.
 
@@ -18,7 +18,7 @@ from pathlib import Path
 
 from parts.hardware import Part, load_catalog
 from parts.manifest import PartManifest
-from parts.reporting import write_report
+from parts.shelf.reporting import write_report
 
 _ROOT = Path(__file__).resolve().parent.parent
 

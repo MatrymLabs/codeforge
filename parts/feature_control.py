@@ -11,7 +11,7 @@ from __future__ import annotations
 import os
 from collections.abc import Mapping
 
-from parts.feature_flags import FlagRegistry
+from parts.shelf.feature_flags import FlagRegistry
 
 _TRUTHY = ("1", "true", "on", "yes")
 

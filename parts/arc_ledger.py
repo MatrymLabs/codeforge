@@ -159,7 +159,7 @@ def emit(commit: str, *, root: Path | None = None, runner=None) -> list[Path]:
     and stay MISSING by absence (honest, not fabricated).
     """
     from parts.release_gate import ReleaseGate
-    from parts.test_evidence import FAILED, PASSED, EvidenceLedger
+    from parts.shelf.test_evidence import FAILED, PASSED, EvidenceLedger
 
     run_check = runner if runner is not None else _console_runner
     lint_ok = run_check("lint")

@@ -11,7 +11,7 @@ from parts.job_progress import JobProgress
 from parts.resources import Resource
 from parts.seed import SEED_DIR, load_jobs
 from parts.session import Session
-from parts.stats import Stat, StatBlock
+from parts.shelf.stats import Stat, StatBlock
 
 JOBS = load_jobs(SEED_DIR / "jobs.yaml")
 

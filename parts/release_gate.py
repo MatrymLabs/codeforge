@@ -8,7 +8,7 @@ Its cousins are CI gates, regression sign-off, and release checklists.
 
 from __future__ import annotations
 
-from parts.test_evidence import EvidenceLedger
+from parts.shelf.test_evidence import EvidenceLedger
 
 _REQUIRED = ("lint", "tests", "coverage", "security")
 

@@ -1,10 +1,10 @@
-"""Test twin for parts/feature_flags.py -- runtime flags with override precedence."""
+"""Test twin for parts/shelf/feature_flags.py -- runtime flags with override precedence."""
 
 import pytest
 from hypothesis import given
 from hypothesis import strategies as st
 
-from parts.feature_flags import FeatureFlagError, FlagRegistry
+from parts.shelf.feature_flags import FeatureFlagError, FlagRegistry
 
 
 def _reg() -> FlagRegistry:

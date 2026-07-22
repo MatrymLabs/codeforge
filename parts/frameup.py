@@ -176,7 +176,7 @@ def inspect(arg: str = "") -> str:
 
         return pm_status()
     if a == "save":
-        from parts.reporting import write_report
+        from parts.shelf.reporting import write_report
 
         report = render_frameup()
         path = write_report("frameup", report, slug="frameup")

@@ -5,7 +5,7 @@ maturity: beta
 purpose: >
   Record check evidence honestly: declare required checks, record each outcome with its environment
   and commit, and pass only when every check has PASSED evidence. Missing evidence is never a pass.
-source: parts/test_evidence.py
+source: parts/shelf/test_evidence.py
 domain: testing
 inputs: >
   expected check ids; recorded outcomes (passed/failed/error/skipped) with detail; an environment and commit

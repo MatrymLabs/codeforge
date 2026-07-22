@@ -12,7 +12,19 @@ from __future__ import annotations
 from datetime import date
 from pathlib import Path
 
-_ROOT = Path(__file__).resolve().parent.parent
+
+def _find_root() -> Path:
+    """The repo root, found by walking up to the pyproject.toml marker. A relocatable shelf core
+    must not assume its own depth under the root (moving reporting.py once broke a fixed
+    parent-count); this stays correct wherever the core is filed. Tests inject `root` regardless."""
+    here = Path(__file__).resolve()
+    for parent in here.parents:
+        if (parent / "pyproject.toml").exists():
+            return parent
+    return here.parent
+
+
+_ROOT = _find_root()
 
 
 def report_path(

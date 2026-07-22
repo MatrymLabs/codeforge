@@ -1,10 +1,10 @@
-"""Test twin for parts/reporting.py -- the shared ReportWriter."""
+"""Test twin for parts/shelf/reporting.py -- the shared ReportWriter."""
 
 from __future__ import annotations
 
 from pathlib import Path
 
-from parts.reporting import report_path, write_report
+from parts.shelf.reporting import report_path, write_report
 
 
 def test_report_path_is_dated_under_the_category(tmp_path: Path) -> None:
