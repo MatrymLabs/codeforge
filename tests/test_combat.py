@@ -232,3 +232,66 @@ def test_defeating_an_enemy_awards_tp():
             break
     assert "TP (Engineer)" in out
     assert s.job_progress["engineer"].tp > 0
+
+
+# --- loot drops on defeat (object instancing consumer) --------------------------------
+def test_defeating_an_npc_spawns_its_loot_drops():
+    from parts import items
+
+    items_snap = copy.deepcopy(items.ITEMS)
+    try:
+        s = _fighter(location="courtyard")
+        thief = Npc(
+            name="the straw thief",
+            keywords=["thief"],
+            location="courtyard",
+            dialogue=['"..."'],
+            next_line=0,
+            hp=1,
+            hp_now=1,
+            xp=1,
+            atk=0,
+        )
+        thief["drops"] = ["copper_key"]
+        npcs.NPCS["straw_thief"] = thief
+        out = attack(s, "thief")
+        assert "drops to the ground" in out
+        dropped = [
+            iid
+            for iid in items.ITEMS
+            if items.prototype_of(iid) == "copper_key"
+            and items.ITEMS[iid]["location"] == "room:courtyard"
+        ]
+        assert (
+            dropped
+        )  # a fresh copper_key instance on the courtyard floor (a clone, not the seed key)
+    finally:
+        items.ITEMS.clear()
+        items.ITEMS.update(items_snap)
+
+
+def test_a_drop_of_an_unknown_prototype_is_skipped_not_a_crash():
+    from parts import items
+
+    items_snap = copy.deepcopy(items.ITEMS)
+    try:
+        s = _fighter(location="courtyard")
+        gremlin = Npc(
+            name="the gremlin",
+            keywords=["gremlin"],
+            location="courtyard",
+            dialogue=['"..."'],
+            next_line=0,
+            hp=1,
+            hp_now=1,
+            xp=1,
+            atk=0,
+        )
+        gremlin["drops"] = ["no_such_item"]
+        npcs.NPCS["gremlin"] = gremlin
+        out = attack(s, "gremlin")  # unknown prototype -> no drop line, no crash
+        assert "drops to the ground" not in out
+        assert "reassembles" in out  # the defeat still resolved cleanly
+    finally:
+        items.ITEMS.clear()
+        items.ITEMS.update(items_snap)

@@ -118,6 +118,10 @@ class Npc(TypedDict):
     xp: int  # XP awarded when defeated
     atk: int  # counter-attack damage; 0 (default) means passive, never strikes back
     aggressive: NotRequired[bool]  # True = strikes first on the world beat; default False
+    # Item prototype labels this NPC drops when defeated: a fresh instance of each is spawned into
+    # the room (parts.items.clone). Optional; a bare NPC drops nothing. Loot is real object
+    # instancing -- the drop is a new instance, so it never collides with the seed original.
+    drops: NotRequired[list[str]]
 
 
 class Door(TypedDict):
@@ -385,6 +389,7 @@ def load_npcs(path: Path) -> dict[str, Npc]:
             "xp": 0,
             "atk": 0,
             "aggressive": False,
+            "drops": [],
             **file_template,
             **raw,
         }
@@ -429,7 +434,12 @@ def load_npcs(path: Path) -> dict[str, Npc]:
                 raise SeedError(
                     f"NPC '{label}' has a negative {field} ({merged[field]}); cannot be negative."
                 )
-        npcs[label] = Npc(
+        drops = merged["drops"]
+        if not isinstance(drops, list) or not all(isinstance(d, str) for d in drops):
+            raise SeedError(
+                f"NPC '{label}': 'drops' must be a list of item prototype labels (strings)."
+            )
+        npc = Npc(
             name=merged["name"],
             keywords=merged["keywords"],
             location=merged["location"],
@@ -441,6 +451,9 @@ def load_npcs(path: Path) -> dict[str, Npc]:
             atk=merged["atk"],
             aggressive=merged["aggressive"],
         )
+        if drops:
+            npc["drops"] = list(drops)
+        npcs[label] = npc
     return npcs
 
 
