@@ -115,3 +115,67 @@ def test_jp_thresholds_always_ahead_of_current_total(level):
 def test_hp_and_mp_gains_are_always_positive(stat):
     assert hp_gain_per_level(stat) >= 4
     assert mp_gain_per_level(stat) >= 1
+
+
+# --- configurable curve: a world can declare its own progression (config, not hardcode) -------
+import parts.progression as prog  # noqa: E402
+from parts.world_manifest import world_block  # noqa: E402
+
+_A_PROGRESSION_BLOCK = """
+progression:
+  xp: {base: 10, cap: 10, tiers: [[1, 10, 1]]}
+  jp: {base: 5, cap: 5, tiers: [[1, 5, 1]]}
+"""
+
+
+def test_the_default_tracks_are_the_locked_curve() -> None:
+    assert prog.DEFAULT_TRACKS == (prog.XP_TRACK, prog.JP_TRACK)
+
+
+def test_a_world_can_declare_its_own_progression(tmp_path) -> None:
+    seed = tmp_path / "grindy"
+    seed.mkdir()
+    (seed / "world.yaml").write_text(
+        "world_id: grindy\ntitle: G\nstart_room: r\n" + _A_PROGRESSION_BLOCK
+    )
+    xp_track, jp_track = prog.tracks_from_dict(world_block(seed, "progression"))
+    # xp: base 10, single tier x1 -> cumulative to lvl 3 = 10*(1+2+3) = 60
+    assert prog._cumulative(xp_track, 3) == 60
+    assert jp_track[2] == 5  # cap
+
+
+def test_get_next_level_threshold_uses_the_active_track(monkeypatch) -> None:
+    # A world's declared curve reaches the public API: the functions read the active track.
+    monkeypatch.setattr(prog, "_ACTIVE_XP_TRACK", (10, [(1, 10, 1)], 10))
+    assert prog.get_next_level_threshold(2) == 60  # cumulative to lvl 3 under the declared curve
+
+
+def test_a_seed_without_a_progression_block_uses_the_default(tmp_path) -> None:
+    seed = tmp_path / "plain"
+    seed.mkdir()
+    (seed / "world.yaml").write_text("world_id: plain\ntitle: P\nstart_room: r\n")
+    assert world_block(seed, "progression") is None  # -> _load_active_tracks falls back to default
+
+
+@pytest.mark.parametrize(
+    "block",
+    [
+        "not a mapping",
+        {"xp": {"base": 10, "cap": 10, "tiers": [[1, 10, 1]]}},  # missing jp
+        {
+            "xp": {"base": 0, "cap": 10, "tiers": [[1, 10, 1]]},
+            "jp": {"base": 5, "cap": 5, "tiers": [[1, 5, 1]]},
+        },  # base <= 0
+        {
+            "xp": {"base": 10, "cap": 10, "tiers": []},
+            "jp": {"base": 5, "cap": 5, "tiers": [[1, 5, 1]]},
+        },  # empty tiers
+        {
+            "xp": {"base": 10, "cap": 10, "tiers": [[9, 1, 1]]},
+            "jp": {"base": 5, "cap": 5, "tiers": [[1, 5, 1]]},
+        },  # start > end
+    ],
+)
+def test_a_malformed_progression_block_fails_loud(block) -> None:
+    with pytest.raises(prog.ProgressionError):
+        prog.tracks_from_dict(block)

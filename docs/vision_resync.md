@@ -84,8 +84,9 @@ removed: the rule is "don't preserve merely because it exists," and equally "don
 3. ~~**World is content-driven, not manifest/config-driven**~~ **MOSTLY ADDRESSED:** a typed
    `WorldManifest` gives a seed a declared identity, and a typed stat `Ruleset` makes the derived
    combat balance configurable -- a world's `world.yaml` `rules:` block now reaches live combat
-   (`parts/derived` applies the booted world's ruleset). Remaining: `progression.py`'s level curve
-   is still hardcoded ("locked design"), and equipment/status modifiers are not yet config-driven.
+   (`parts/derived` applies the booted world's ruleset), and a `progression:` block makes the XP/JP
+   level curves configurable too (`parts/progression` applies the booted world's tracks). Remaining:
+   equipment/status modifiers and the per-level HP/MP/stat gains are not yet config-driven.
 4. **Game<->practical translation is unproven** - the defining thesis has zero working demos.
 5. **Subsystem sprawl** dilutes focus.
 
