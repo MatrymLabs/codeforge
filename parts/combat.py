@@ -13,6 +13,7 @@ counter-strike would fell the player, a training-ground failsafe
 restores them in place -- a fight never leaves anyone in a broken state.
 """
 
+from parts import items
 from parts.combat_clock import advance as advance_clock
 from parts.encounter_log import witness
 from parts.engineer import emergency_repair
@@ -128,7 +129,26 @@ def attack(session: Session, word: str) -> str:
         if extra:
             rewards = f"{rewards}\n{extra}"
     result = f"{defeat}\n{rewards}"
+    loot = _spawn_drops(session, npc)  # a felled foe may drop loot: fresh instances on the ground
+    if loot:
+        result = f"{result}\n{loot}"
     from parts import quest  # lazy: combat is the low-level loop; the quest hook rides on top
 
     quest_line = quest.on_event(session, "defeat", nid)  # a boss's fall may complete a story beat
     return f"{result}\n{quest_line}" if quest_line else result
+
+
+def _spawn_drops(session: Session, npc: Npc) -> str:
+    """Spawn a defeated NPC's loot: a fresh instance of each drop prototype into the room (object
+    instancing, so a drop never collides with the seed original). An unknown prototype or a
+    prototype at its instance ceiling is skipped, never a crash. Returns the drop line(s), or ''."""
+    lines: list[str] = []
+    for prototype in npc.get("drops", []):
+        try:
+            iid = items.clone(prototype, session.location)
+        except items.ItemError:
+            continue  # unknown prototype, or at the spawn ceiling: no drop, and no crash
+        drop_line = f"{sentence_case(items.ITEMS[iid]['name'])} drops to the ground."
+        lines.append(drop_line)
+        announce(session.location, drop_line, exclude=session.player_id)
+    return "\n".join(lines)

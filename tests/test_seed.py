@@ -2,8 +2,27 @@
 
 import pytest
 
-from parts.seed import DEFAULT_ROOM_DESC, SeedError, load_doors, load_rooms, load_splash
+from parts.seed import DEFAULT_ROOM_DESC, SeedError, load_doors, load_npcs, load_rooms, load_splash
 from parts.world import SEED_PATH
+
+
+def test_an_npc_drops_list_loads(tmp_path):
+    npcsf = tmp_path / "npcs.yaml"
+    npcsf.write_text("wight:\n  location: cell\n  hp: 5\n  drops: [cold_shard, ember]\n")
+    assert load_npcs(npcsf)["wight"]["drops"] == ["cold_shard", "ember"]
+
+
+def test_a_plain_npc_carries_no_drops_key(tmp_path):
+    npcsf = tmp_path / "npcs.yaml"
+    npcsf.write_text("rat:\n  location: cell\n")
+    assert "drops" not in load_npcs(npcsf)["rat"]  # opt-in: absent unless declared
+
+
+def test_a_non_list_drops_is_rejected(tmp_path):
+    npcsf = tmp_path / "npcs.yaml"
+    npcsf.write_text("wight:\n  location: cell\n  drops: cold_shard\n")
+    with pytest.raises(SeedError, match="drops"):
+        load_npcs(npcsf)
 
 
 def test_a_self_closing_door_loads_its_recloses_after(tmp_path):
@@ -178,7 +197,7 @@ def test_room_fields_win_over_template(tmp_path):
 
 # --- items and NPCs join the seed ---
 
-from parts.seed import SEED_DIR, inspect_world_links, load_items, load_npcs  # noqa: E402
+from parts.seed import SEED_DIR, inspect_world_links, load_items  # noqa: E402
 
 
 def test_shipped_items_seed_loads_the_copper_key():
