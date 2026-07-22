@@ -179,3 +179,42 @@ def test_a_seed_without_a_progression_block_uses_the_default(tmp_path) -> None:
 def test_a_malformed_progression_block_fails_loud(block) -> None:
     with pytest.raises(prog.ProgressionError):
         prog.tracks_from_dict(block)
+
+
+# --- configurable per-level gains (the last hardcoded progression piece) ----------------
+def test_the_default_gains_are_the_locked_growth() -> None:
+    assert prog.hp_gain_per_level(10) == 6 and prog.mp_gain_per_level(10) == 3  # 4+10//4, 1+10//4
+    assert prog.hp_gain_per_level(0) == 4  # base only
+
+
+def test_gains_use_the_active_world_gains(monkeypatch) -> None:
+    monkeypatch.setattr(
+        prog, "_ACTIVE_GAINS", prog.Gains(hp_base=10, hp_per=2, mp_base=0, mp_per=1)
+    )
+    assert prog.hp_gain_per_level(10) == 15  # 10 + 10//2
+    assert prog.mp_gain_per_level(3) == 3  # 0 + 3//1
+
+
+def test_a_world_can_declare_its_own_gains() -> None:
+    gains = prog.gains_from_dict({"hp_base": 8, "hp_per": 2, "mp_base": 2, "mp_per": 5})
+    assert gains == prog.Gains(hp_base=8, hp_per=2, mp_base=2, mp_per=5)
+
+
+def test_gains_partial_block_fills_defaults() -> None:
+    gains = prog.gains_from_dict({"hp_base": 9})  # only override hp_base
+    assert gains == prog.Gains(hp_base=9, hp_per=4, mp_base=1, mp_per=4)
+
+
+@pytest.mark.parametrize(
+    "block",
+    [
+        "not a mapping",
+        {"hp_per": 0},  # zero divisor
+        {"mp_per": -1},  # negative divisor
+        {"hp_base": -1},  # negative base
+        {"hp_base": "lots"},  # non-int
+    ],
+)
+def test_a_malformed_gains_block_fails_loud(block) -> None:
+    with pytest.raises(prog.ProgressionError):
+        prog.gains_from_dict(block)

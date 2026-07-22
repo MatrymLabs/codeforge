@@ -12,6 +12,8 @@ marginal cost of levels 1..N, matching the locked checkpoints
 those checkpoints forever: if the numbers drift, the build goes red.
 """
 
+from dataclasses import dataclass
+
 from parts.seed import SEED_DIR
 from parts.world_manifest import world_block
 
@@ -26,13 +28,13 @@ MAX_ALLOC_PER_STAT_PER_LEVEL = 3  # cumulative cap: 3 x (plvl - 1) per stat
 
 
 def hp_gain_per_level(sta):
-    """HP gained on a PLvl-up: base 4, +1 per 4 points of STA."""
-    return 4 + sta // 4
+    """HP gained on a PLvl-up: base + 1 per `per` points of STA (default base 4, per 4)."""
+    return _ACTIVE_GAINS.hp_base + sta // _ACTIVE_GAINS.hp_per
 
 
 def mp_gain_per_level(mag):
-    """MP gained on a PLvl-up: base 1, +1 per 4 points of MAG."""
-    return 1 + mag // 4
+    """MP gained on a PLvl-up: base + 1 per `per` points of MAG (default base 1, per 4)."""
+    return _ACTIVE_GAINS.mp_base + mag // _ACTIVE_GAINS.mp_per
 
 
 XP_BASE = 25
@@ -187,3 +189,48 @@ def _load_active_tracks():
 _active = _load_active_tracks()
 _ACTIVE_XP_TRACK = _active[0]
 _ACTIVE_JP_TRACK = _active[1]
+
+
+@dataclass(frozen=True)
+class Gains:
+    """The per-level HP/MP growth: hp = hp_base + STA // hp_per; mp = mp_base + MAG // mp_per."""
+
+    hp_base: int
+    hp_per: int
+    mp_base: int
+    mp_per: int
+
+
+DEFAULT_GAINS = Gains(hp_base=4, hp_per=4, mp_base=1, mp_per=4)  # the locked design (July 2026)
+
+
+def gains_from_dict(raw):
+    """Build + validate the per-level gains from a world's `gains:` block. Fails loud; the two
+    `*_per` divisors must be positive (a zero would divide by zero on a level-up)."""
+    if not isinstance(raw, dict):
+        raise ProgressionError("a gains block must be a mapping")
+    values = {}
+    for field, default, positive in (
+        ("hp_base", 4, False),
+        ("hp_per", 4, True),
+        ("mp_base", 1, False),
+        ("mp_per", 4, True),
+    ):
+        value = raw.get(field, default)
+        if not isinstance(value, int) or isinstance(value, bool):
+            raise ProgressionError(f"gains: {field!r} must be an int")
+        if positive and value <= 0:
+            raise ProgressionError(f"gains: {field!r} must be positive (it is a divisor)")
+        if not positive and value < 0:
+            raise ProgressionError(f"gains: {field!r} must be non-negative")
+        values[field] = value
+    return Gains(**values)
+
+
+def _load_active_gains():
+    """The per-level gains the booted world declares in world.yaml `gains:`, else the default."""
+    block = world_block(SEED_DIR, "gains")
+    return gains_from_dict(block) if block is not None else DEFAULT_GAINS
+
+
+_ACTIVE_GAINS = _load_active_gains()
