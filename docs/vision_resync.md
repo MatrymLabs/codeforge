@@ -35,9 +35,10 @@ Idea -> Intake -> Requirements -> Search Existing Parts -> Blueprint -> Select M
 ```
 
 **Most stations already exist** (Blueprint, Search, Test, Diagnose, Catalog, Package-plan,
-Deploy, Monitor, Improve). What is missing is the **connective tissue**: one path that runs the
-loop end to end for a single part. Building that proof is the current priority, not a bigger
-world generator.
+Deploy, Monitor, Improve). The **connective tissue** now exists too: `parts/forge_line.py` (the
+`line` runner) runs the loop end to end for a single built part, station by station, and reports a
+verdict at each stop (read-and-verify only; the ASSEMBLE stop is a dry-run). Generating a *brand-new*
+part through the full loop is the deeper next slice; the spine itself is executed.
 
 ## Capability status (honest labels)
 
@@ -68,7 +69,9 @@ removed: the rule is "don't preserve merely because it exists," and equally "don
 
 ## Highest architectural risks
 
-1. **No connected manufacturing spine** - the vision's heart is unexecuted.
+1. ~~**No connected manufacturing spine** - the vision's heart is unexecuted.~~ **CLOSED:**
+   `parts/forge_line.py` runs the loop end to end for one built part (read-and-verify). The deeper
+   risk that remains is generating a *brand-new* part through the full loop, not the spine's absence.
 2. **Monolithic engine** ("vendored-whole") - blocks Layer-2 modularity and package export.
 3. **World is content-driven, not manifest/config-driven** - the "configuration-driven"
    requirement is unmet; rules and attributes are semi-hardcoded (`derived.py`: "PROTOTYPE

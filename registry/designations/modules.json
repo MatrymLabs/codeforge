@@ -4022,5 +4022,43 @@
     "aliases": [],
     "created": "2026-07-22",
     "updated": "2026-07-22"
+  },
+  {
+    "designation": "MOD-10.037",
+    "name": "forge_line",
+    "status": "active",
+    "function": "run one part through every manufacturing station in order and report a verdict per stop (the connected spine)",
+    "label": "forge_line",
+    "file": "parts/forge_line.py",
+    "type": "MOD",
+    "domain": "10",
+    "docs": "docs/vision_resync.md",
+    "tests": "tests/test_forge_line.py",
+    "depends_on": [
+      "hardware",
+      "store_index",
+      "blueprint",
+      "foundry",
+      "qualitygate",
+      "complexity",
+      "clone_scan",
+      "manifest",
+      "registry",
+      "reporting"
+    ],
+    "related": [
+      "harvest_lens",
+      "complexity",
+      "cast"
+    ],
+    "reuse": "the manufacturing conveyor: chains the existing stations end-to-end, read-and-verify only, for any built part",
+    "tags": [
+      "module"
+    ],
+    "notes": "The vision heart made executable: search->blueprint->assemble->test->diagnose->document->catalog+file->package for one part, an observable per-stop verdict. Read-only + injected Writer seam; no data mutation, no subprocess.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-22",
+    "updated": "2026-07-22"
   }
 ]
