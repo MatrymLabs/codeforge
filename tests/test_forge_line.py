@@ -12,7 +12,7 @@ from pathlib import Path
 
 import pytest
 
-from parts.forge_line import render_line, run_line
+from parts.forge_line import forge_new, render_line, run_line
 from parts.verdicts import FAIL, NA, PASS, WATCH
 
 _STATIONS = [
@@ -92,3 +92,47 @@ def test_render_line_is_pure_and_one_line_per_station() -> None:
     assert render_line(run) == text  # pure: repeated render is identical, no disk write
     body = [line for line in text.splitlines() if line.startswith("[")]
     assert len(body) == len(run.stations) == 8
+
+
+# --- forge_new: the line's other direction (START a new part, sandboxed) ---------------
+def test_forge_new_generates_a_scaffold_into_the_sandbox(tmp_path: Path) -> None:
+    (tmp_path / "parts").mkdir()  # so the module-exists gap check has a tree to look in
+    fake = FakeWriter()
+    run = forge_new(
+        "spiral_cache", intent="cache on a spiral", root=tmp_path, writer=fake, stamp="2026-07-22"
+    )
+    assert run.verdict == WATCH  # a scaffold is STARTED, honestly not finished
+    assert run.stations[0].verdict == PASS  # SEARCH: a genuine gap
+    assert next(s for s in run.stations if s.station == "ASSEMBLE").verdict == PASS
+    assert (tmp_path / "workspace" / "spiral_cache.py").exists()  # REAL sandboxed generation
+    # TEST/DOCUMENT/CATALOG+FILE honestly WATCH: not implemented, manifested, or filed yet
+    assert sum(1 for s in run.stations if s.verdict == WATCH) >= 3
+    assert len(fake.calls) == 1  # only PACKAGE writes (DOCUMENT watches, nothing to render)
+
+
+def test_forge_new_refuses_an_existing_module(tmp_path: Path) -> None:
+    (tmp_path / "parts").mkdir()
+    (tmp_path / "parts" / "already_here.py").write_text("x = 1\n")
+    run = forge_new("already_here", root=tmp_path, writer=FakeWriter(), stamp="2026-07-22")
+    assert run.stations[0].verdict == FAIL and "already exists" in run.stations[0].detail
+    assert run.verdict == FAIL
+    assert not (tmp_path / "workspace").exists()  # a refusal generates nothing
+
+
+def test_forge_new_refuses_a_part_already_stocked() -> None:
+    # token_bucket is a real built + catalogued part -> SEARCH refuses, never regenerates it
+    run = forge_new("token_bucket", root=None, writer=FakeWriter(), stamp="2026-07-22")
+    assert run.stations[0].verdict == FAIL
+
+
+def test_forge_new_rejects_an_invalid_name(tmp_path: Path) -> None:
+    (tmp_path / "parts").mkdir()
+    run = forge_new("Bad-Name", root=tmp_path, writer=FakeWriter(), stamp="2026-07-22")
+    assert run.verdict == FAIL  # blueprint_id regex + the sandbox proposal both reject it
+    assert not (tmp_path / "workspace").exists()  # never generated a bad-named file
+
+
+def test_the_forge_verb_needs_a_name() -> None:
+    from parts.forge_line import forge
+
+    assert "forge what" in forge("")
