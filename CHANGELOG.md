@@ -23,6 +23,27 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
   scanner now reports **zero** progression clone pairs (down from four). progression.py 100% covered.
 
 ### Added
+- **Object instancing: the item model gains prototypes + clones, with loot to prove it (#273-#276).**
+  A seed label is now a PROTOTYPE (a template); runtime items are INSTANCES cloned from it
+  (`items.clone`) - the keystone the legacy-MUD archaeology kept hitting, since a singleton
+  label-keyed model could not express "two of a thing." Additive: a seed-placed item is its own
+  prototype, so every existing world, render, and save is byte-identical. Slices: foundation
+  (prototype + prototype-aware matching for door keys and quest pickups), persistence (snapshot v2
+  round-trips clones at their exact ids; a hard per-prototype ceiling bounds spawn growth), the first
+  gameplay consumer (a felled NPC's optional `drops` spawn fresh instances on the floor), and the
+  flagship payoff - the aethryn **Cinder-Wight drops its "hammer of grey cinder"**, via a new
+  drop-only prototype (`location: nowhere`, the Diku/LP "object prototype" idea made native to
+  instancing). A keel record (`docs/keel_records/object-instancing.md`) governs the core-model change.
+- **Hourglass: a beat-driven delay queue, the second clean-room harvest from the archaeology (#272).**
+  Schedule a payload to fire after N world beats (or every N), advance on the tick, collect what came
+  due - deterministic, bounded against a scheduling DoS, and it never runs itself (the world beat
+  drives it, no background thread). First in-engine consumer: self-closing doors (a seed door's
+  `recloses_after` arms a relock via the queue). Studied clean-room from the MUD event/delayed-action
+  queue (license class A); Hardware Card `delay-queue` (`source_status: clean-room`).
+- **Zone/area grouping + a beat-driven reset scheduler, the first clean-room harvest (#271).** A seed
+  declares AREAS (`zones.yaml`) grouping rooms by label; a room render gains an area banner, and each
+  area advances a reset clock on the world beat (honoring "the tick is the only clock"). Hardware Card
+  `zone-scheduler` (`source_status: clean-room`, studied from the Diku/Circle/tbaMUD family).
 - **ARC slice 4: every change flows through ARC before it ships (the ARC blueprint is complete).**
   A `Change` now carries an `arc_verdict`, and a new `arc_clear` guard gates `deploy` (canary ->
   deployed): a change cannot deploy unless it carries a **recorded, non-blocked** ARC verdict -
