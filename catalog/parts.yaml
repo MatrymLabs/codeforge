@@ -841,7 +841,7 @@
 
 - id: validator
   name: Validator
-  source: parts/validation.py
+  source: parts/shelf/validation.py
   category: validation
   tags: [validation, schema, rules, input, forms]
   maturity: beta
@@ -940,7 +940,7 @@
 
 - id: sanitizer
   name: Input Sanitizer
-  source: parts/sanitizer.py
+  source: parts/shelf/sanitizer.py
   category: validation
   tags: [sanitize, normalize, input, hardening, idempotent]
   maturity: beta
@@ -992,7 +992,7 @@
 
 - id: stream-framer
   name: Stream Framer
-  source: parts/stream_framer.py
+  source: parts/shelf/stream_framer.py
   category: parsing
   tags: [framing, stream, protocol, buffer, bytes]
   maturity: beta
@@ -1127,7 +1127,7 @@
     general: "a dependency-free append-only event store that proves its own history was not rewritten"
 
 - id: telnet-codec
-  source: parts/telnet_codec.py
+  source: parts/shelf/telnet_codec.py
   name: Telnet Codec
   category: parsing
   tags: [telnet, protocol, iac, bytes, framing, negotiation, rfc854]

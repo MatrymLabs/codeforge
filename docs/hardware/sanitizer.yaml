@@ -5,7 +5,7 @@ maturity: beta
 purpose: >
   Normalize untrusted text deterministically and idempotently: drop control characters, fold
   whitespace, trim, optionally lowercase, and cap the length.
-source: parts/sanitizer.py
+source: parts/shelf/sanitizer.py
 domain: validation
 inputs: >
   a string + a SanitizeRule (strip_controls, collapse_whitespace, trim, lowercase, max_length)

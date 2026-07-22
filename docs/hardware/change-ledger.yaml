@@ -24,7 +24,7 @@ assembled_from:
   - parts/shelf/repository.py
   - parts/workflow.py
   - parts/shelf/statemachine.py
-  - parts/validation.py
+  - parts/shelf/validation.py
   - parts/test_evidence.py
 tests:
   - tests/test_change_ledger.py

@@ -8,8 +8,8 @@ the adapter and the rule differ.
 
 from __future__ import annotations
 
-from parts.sanitizer import SanitizeRule, sanitize
 from parts.session import Session
+from parts.shelf.sanitizer import SanitizeRule, sanitize
 
 _RULE = SanitizeRule(max_length=24)
 _TITLES: dict[str, str] = {}

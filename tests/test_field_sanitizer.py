@@ -24,7 +24,7 @@ def test_clean_record_sanitizes_strings_and_passes_other_types():
 def test_one_core_powers_both_the_game_title_and_the_practical_field():
     import parts.field_sanitizer as practical
     import parts.titles as game
-    from parts.sanitizer import sanitize
+    from parts.shelf.sanitizer import sanitize
 
     assert game.sanitize is sanitize
     assert practical.sanitize is sanitize

@@ -6,7 +6,7 @@ purpose: >
   Frame a byte stream into complete, delimiter-terminated messages, buffering a partial tail until
   the rest arrives. Exists because the naive endswith check (and endswith(b"") always True) silently
   splits or drops messages.
-source: parts/stream_framer.py
+source: parts/shelf/stream_framer.py
 domain: parsing
 inputs: >
   byte chunks fed one at a time, plus an optional delimiter (default b"\n"), encoding, and strip bytes

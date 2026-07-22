@@ -1,10 +1,10 @@
-"""Test twin for parts/validation.py -- composable rules that collect every issue at once."""
+"""Test twin for parts/shelf/validation.py -- composable rules that collect every issue at once."""
 
 import pytest
 from hypothesis import given
 from hypothesis import strategies as st
 
-from parts.validation import (
+from parts.shelf.validation import (
     ValidationFailed,
     Validator,
     in_range,

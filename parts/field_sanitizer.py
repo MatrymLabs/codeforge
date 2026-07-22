@@ -10,7 +10,7 @@ from __future__ import annotations
 
 from collections.abc import Mapping
 
-from parts.sanitizer import SanitizeRule, sanitize
+from parts.shelf.sanitizer import SanitizeRule, sanitize
 
 _FIELD_RULE = SanitizeRule(max_length=200)
 

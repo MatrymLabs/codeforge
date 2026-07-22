@@ -18,12 +18,12 @@ import json
 
 from parts.character_view import sheet_from_session
 from parts.session import Session
-from parts.telnet_codec import IAC, SB, SE, escape_iac, read_negotiation
+from parts.shelf.telnet_codec import IAC, SB, SE, escape_iac, read_negotiation
 from parts.world import WORLD
 
 # GMCP is Telnet option 201 (0xC9). The IAC/SB/SE bytes and the escape/negotiation codec come from
-# parts.telnet_codec, the one home for the Telnet wire; this card only knows the GMCP option and
-# how to shape a GMCP payload. `escape_iac` is re-exported so existing consumers keep importing it.
+# parts.shelf.telnet_codec, the one home for the Telnet wire; this card only knows the GMCP option
+# and how to shape a GMCP payload. `escape_iac` is re-exported so consumers keep importing it here.
 GMCP_OPT = 201
 
 __all__ = ["GMCP_OPT", "enables_gmcp", "escape_iac", "gmcp_frame", "room_report", "vitals_report"]

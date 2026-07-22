@@ -16,7 +16,7 @@ exposed graduates back into the CodeForge Hardware Store as a reusable part.*
 
 ## The part: `stream-framer`
 
-`parts/stream_framer.py` -- a `StreamFramer`: `feed(chunk)` returns every complete,
+`parts/shelf/stream_framer.py` -- a `StreamFramer`: `feed(chunk)` returns every complete,
 delimiter-terminated message the chunk finished (delimiter removed, decoded), holding a partial tail;
 `flush()` returns any buffered partial (e.g. a prompt with no trailing delimiter). Delimiter,
 encoding, and CR-strip are configurable; an empty delimiter fails loud.

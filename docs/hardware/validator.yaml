@@ -5,7 +5,7 @@ maturity: beta
 purpose: >
   Validate a mapping against composable rules and collect every issue at once, each tagged with its
   field and a readable message; raise_if_invalid is the one loud exit.
-source: parts/validation.py
+source: parts/shelf/validation.py
 domain: validation
 inputs: >
   a Validator built from rules (required, matches, in_range, of_type, one_of, max_length) + a

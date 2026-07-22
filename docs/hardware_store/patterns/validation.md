@@ -15,7 +15,7 @@ present, what types they have, and constraints."*
 
 ## The part: `validator`
 
-`parts/validation.py` -- validate a mapping against a `Validator` (a bundle of small `Rule`
+`parts/shelf/validation.py` -- validate a mapping against a `Validator` (a bundle of small `Rule`
 callables) and get a `ValidationResult`: `is_valid`, and every `Issue` at once (each tagged with its
 `field` and a readable message). `raise_if_invalid()` is the one loud exit (`ValidationFailed`
 carries the result). Rule builders cover the common cases: `required`, `matches`, `of_type`,
@@ -58,7 +58,7 @@ when invalid, carrying the result.
 
 ## The companion part: `sanitizer`
 
-`parts/sanitizer.py` -- where the validator *checks*, the sanitizer *normalizes*. `sanitize(text,
+`parts/shelf/sanitizer.py` -- where the validator *checks*, the sanitizer *normalizes*. `sanitize(text,
 rule)` drops control characters, folds every run of whitespace to one space, trims, optionally
 lowercases, and caps the length. It is **deterministic and idempotent** (sanitizing twice equals
 once, a property-tested invariant), and honest about its scope: it normalizes, it is **not** a

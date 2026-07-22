@@ -24,7 +24,7 @@ from parts.gmcp import GMCP_OPT, enables_gmcp, gmcp_frame, room_report, vitals_r
 from parts.seed import load_splash
 from parts.session import SESSIONS, Session
 from parts.shelf.bulkhead import Bulkhead, BulkheadFull
-from parts.telnet_codec import IAC, WILL, WONT, strip_iac
+from parts.shelf.telnet_codec import IAC, WILL, WONT, strip_iac
 
 TICK_LOCK = threading.Lock()
 _counter_lock = threading.Lock()
@@ -97,8 +97,8 @@ _REGISTER_TRIES = 3
 
 
 # --- telnet option negotiation (RFC 854/857): the password blackout ---
-# The Telnet wire codec (command bytes, IAC stripping) lives in parts.telnet_codec; the gateway is
-# a consumer of it. `_strip_telnet` is kept as a local alias for the codec's `strip_iac` so callers
+# The Telnet wire codec (command bytes, IAC stripping) lives in parts.shelf.telnet_codec; the
+# gate is a consumer of it. `_strip_telnet` is a local alias for the codec's `strip_iac` so callers
 # (and the test twin) that reference it stay stable.
 ECHO_OPT = 1
 _ECHO_OFF = bytes([IAC, WILL, ECHO_OPT])  # "I will echo" -> client stops echoing

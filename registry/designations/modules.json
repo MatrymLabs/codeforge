@@ -2578,7 +2578,7 @@
     "status": "active",
     "function": "collect validation issues into a result: valid, or a list of clear errors",
     "label": "validation",
-    "file": "parts/validation.py",
+    "file": "parts/shelf/validation.py",
     "type": "MOD",
     "domain": "05",
     "docs": "docs/hardware_store/patterns/validation.md",
@@ -2894,7 +2894,7 @@
     "status": "active",
     "function": "normalize untrusted text: strip control chars, collapse whitespace, cap length",
     "label": "sanitizer",
-    "file": "parts/sanitizer.py",
+    "file": "parts/shelf/sanitizer.py",
     "type": "MOD",
     "domain": "05",
     "docs": "docs/hardware_store/patterns/validation.md",
@@ -3093,7 +3093,7 @@
     "status": "active",
     "function": "frame a byte stream into complete messages, buffering partials",
     "label": "stream_framer",
-    "file": "parts/stream_framer.py",
+    "file": "parts/shelf/stream_framer.py",
     "type": "MOD",
     "domain": "05",
     "docs": "docs/hardware_store/patterns/framing.md",
@@ -3645,7 +3645,7 @@
     "tags": [
       "module"
     ],
-    "notes": "Pure card; the TCP gateway owns the socket and decides when to send. Vitals derive through sheet_from_session (derive-don't-store). Consumes parts.telnet_codec for the IAC/SB/SE bytes and escape/negotiation codec.",
+    "notes": "Pure card; the TCP gateway owns the socket and decides when to send. Vitals derive through sheet_from_session (derive-don't-store). Consumes parts.shelf.telnet_codec for the IAC/SB/SE bytes and escape/negotiation codec.",
     "superseded_by": "",
     "aliases": [
       "MOD-UM04-S01-N001-043-R0"
@@ -3659,7 +3659,7 @@
     "status": "active",
     "function": "the Telnet byte codec: command bytes, IAC escaping, negotiation reading",
     "label": "telnet_codec",
-    "file": "parts/telnet_codec.py",
+    "file": "parts/shelf/telnet_codec.py",
     "type": "MOD",
     "domain": "05",
     "docs": "docs/architecture.md",
