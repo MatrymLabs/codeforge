@@ -764,6 +764,31 @@
     security: "bound how long a handshake or verification step may run before it is abandoned"
     general: "any long span whose caller must stay responsive: poll the budget between steps"
 
+- id: bulkhead
+  name: Bulkhead
+  source: parts/bulkhead.py
+  category: resilience
+  tags: [bulkhead, concurrency, isolation, resilience, fail-fast, thread-safe]
+  maturity: beta
+  source_status: original
+  license: MIT
+  influence: "bulkhead isolation pattern (Hystrix / resilience4j; independently implemented, thread-safe)"
+  experimental: >-
+    add a bounded WAIT queue (block up to N waiters with a timeout instead of rejecting at once), or
+    a per-key bulkhead so one tenant cannot starve another. Traded away (v1): queueing and fairness,
+    keeping a deterministic fail-fast compartment.
+  risk: low
+  purpose: >
+    Cap how many operations run through a section at once, so a flood behind one slow dependency is
+    contained instead of exhausting every worker (a ship's watertight compartments). Fail-fast: it
+    rejects the overflow immediately with BulkheadFull. Thread-safe, for concurrent surfaces like the
+    threaded gateway or a worker pool.
+  reuse:
+    game: "cap concurrent command handlers on the threaded gateway so a flood cannot exhaust the pool"
+    business: "bound in-flight calls to a slow upstream so it cannot consume all worker threads"
+    security: "contain a resource-exhaustion (DoS) attempt to one compartment, not the whole service"
+    general: "any thread pool / concurrent fan-out that must stay within a hard in-flight limit"
+
 - id: repository
   name: Repository
   source: parts/repository.py

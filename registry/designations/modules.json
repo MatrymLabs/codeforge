@@ -2334,6 +2334,33 @@
     "updated": "2026-07-22"
   },
   {
+    "designation": "MOD-05.063",
+    "name": "bulkhead",
+    "status": "active",
+    "function": "bound concurrent work; reject the overflow fast so one dependency cannot exhaust the pool",
+    "label": "bulkhead",
+    "file": "parts/bulkhead.py",
+    "type": "MOD",
+    "domain": "05",
+    "docs": "docs/hardware_store/patterns/resilience.md",
+    "tests": "tests/test_bulkhead.py",
+    "depends_on": [],
+    "related": [
+      "token_bucket",
+      "circuit_breaker",
+      "deadline"
+    ],
+    "reuse": "resilience concurrency-cap; a thread-safe compartment for the threaded gateway or a worker pool",
+    "tags": [
+      "module"
+    ],
+    "notes": "Hardware Store part bulkhead; completes the resilience quartet (rate-limit + retry + circuit-breaker + bulkhead); wiring into the gateway is a deferred slice.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-22",
+    "updated": "2026-07-22"
+  },
+  {
     "designation": "MOD-05.038",
     "name": "service_breaker",
     "status": "active",

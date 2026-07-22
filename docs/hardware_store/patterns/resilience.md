@@ -100,9 +100,34 @@ construction (`DeadlineError`).
   batch that must finish inside a window.
 - Evidence: `tests/test_deadline.py`, plus the composition tests in `tests/test_retry.py`. Maturity `beta`.
 
+## The part: `bulkhead`
+
+`parts/bulkhead.py` -- the concurrency-cap of the resilience family, and the one shelf-mate that is
+**thread-safe by design**. A `Bulkhead(limit)` admits at most `limit` operations through a section at
+once and rejects the overflow immediately (`BulkheadFull`), so a flood backed up behind one slow
+dependency is contained in its compartment instead of consuming every worker (a ship's watertight
+compartments). Use `bulkhead.run(fn)` or `with bulkhead.slot():`; a slot is always released, even if
+the guarded work raises.
+
+Bulkhead only means something where work runs CONCURRENTLY, so unlike its single-threaded shelf-mates
+it guards its counter with a lock. Its natural home is the **threaded TCP gateway** (cap concurrent
+command handlers so a connection flood cannot exhaust the pool). Wiring it into the gateway is a
+deferred slice; the part and its concurrency test ship first.
+
+**Invariants (tested, incl. a deterministic concurrency test):** the cap holds under contention (two
+threads hold slots on an Event; a third is rejected `BulkheadFull`); a slot is released even when the
+work raises; a limit < 1 or a bool/non-int fails loud at construction.
+
+- **Practical:** bound in-flight calls to a slow upstream, or concurrent handlers on the gateway.
+- **Composition:** the full resilience shelf lines up -- rate-limit the arrival rate (`token-bucket`),
+  bound the in-flight count (`bulkhead`), fail fast on a dead dependency (`circuit-breaker`), retry the
+  transient failures (`retry`) within a time budget (`deadline`).
+- Evidence: `tests/test_bulkhead.py`. Maturity `beta`.
+
 ## Deferred (needs Josh's approval)
 
 For retry: jitter, a cancellation token, an async variant. For the circuit breaker: half-open
 concurrency control, a rolling-window failure rate, and metrics hooks. For the deadline: a hard-timeout
-variant that interrupts a thread, and propagating one deadline across nested calls (a context). All
-deliberate later slices.
+variant that interrupts a thread, and propagating one deadline across nested calls (a context). For
+the bulkhead: a bounded wait-queue (block N waiters instead of rejecting at once), a per-key/per-tenant
+compartment, and wiring it into the gateway's connection handling. All deliberate later slices.
