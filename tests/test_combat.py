@@ -295,3 +295,87 @@ def test_a_drop_of_an_unknown_prototype_is_skipped_not_a_crash():
     finally:
         items.ITEMS.clear()
         items.ITEMS.update(items_snap)
+
+
+# --- weighted loot tables (Tier 1 #2) -------------------------------------------------
+class _Rng:
+    """A stub RNG that returns a fixed roll, so a loot draw is forced (proves the seam is
+    injectable and combat stays deterministic in tests)."""
+
+    def __init__(self, roll: int) -> None:
+        self._roll = roll
+
+    def randint(self, a: int, b: int) -> int:
+        return self._roll
+
+
+def _felled_foe_with(drops: list[str] | None = None, loot: dict[str, int] | None = None) -> None:
+    foe = Npc(
+        name="the goblin",
+        keywords=["goblin"],
+        location="courtyard",
+        dialogue=['"..."'],
+        next_line=0,
+        hp=1,
+        hp_now=1,
+        xp=1,
+        atk=0,
+    )
+    if drops is not None:
+        foe["drops"] = drops
+    if loot is not None:
+        foe["loot"] = loot
+    npcs.NPCS["goblin"] = foe
+
+
+def test_a_loot_roll_can_force_an_item(monkeypatch):
+    from parts import combat, items
+
+    snap = copy.deepcopy(items.ITEMS)
+    try:
+        s = _fighter(location="courtyard")
+        _felled_foe_with(loot={"copper_key": 1, "nothing": 5})  # copper_key is the rare outcome
+        monkeypatch.setattr(combat, "_LOOT_RNG", _Rng(1))  # roll 1 -> the first entry (copper_key)
+        out = attack(s, "goblin")
+        assert "drops to the ground" in out
+        assert any(
+            items.prototype_of(i) == "copper_key" and items.ITEMS[i]["location"] == "room:courtyard"
+            for i in items.ITEMS
+        )
+    finally:
+        items.ITEMS.clear()
+        items.ITEMS.update(snap)
+
+
+def test_a_loot_roll_can_come_up_nothing(monkeypatch):
+    from parts import combat, items
+
+    snap = copy.deepcopy(items.ITEMS)
+    try:
+        s = _fighter(location="courtyard")
+        _felled_foe_with(loot={"copper_key": 1, "nothing": 5})
+        monkeypatch.setattr(combat, "_LOOT_RNG", _Rng(6))  # roll 6 -> the last entry (nothing)
+        out = attack(s, "goblin")
+        assert "drops to the ground" not in out
+        assert "reassembles" in out  # the defeat still resolved
+    finally:
+        items.ITEMS.clear()
+        items.ITEMS.update(snap)
+
+
+def test_guaranteed_drops_and_a_weighted_roll_both_fire(monkeypatch):
+    from parts import combat, items
+
+    snap = copy.deepcopy(items.ITEMS)
+    try:
+        s = _fighter(location="courtyard")
+        _felled_foe_with(drops=["copper_key"], loot={"copper_key": 1})  # 1 guaranteed + 1 rolled
+        monkeypatch.setattr(combat, "_LOOT_RNG", _Rng(1))
+        attack(s, "goblin")
+        dropped = [
+            i for i in items.items_in("room:courtyard") if items.prototype_of(i) == "copper_key"
+        ]
+        assert len(dropped) == 2  # one from drops, one from the loot roll -- distinct instances
+    finally:
+        items.ITEMS.clear()
+        items.ITEMS.update(snap)

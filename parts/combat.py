@@ -1,8 +1,10 @@
 """CARD: combat -- the training loop: strike, defeat, hand off to the leveling engine.
 
 Assembly card: npcs (targets) + stats (damage). Damage is deterministic in v0: no dice
-yet, so every number in the test twin is exact. The dummy reassembles on defeat -- it is a
-training dummy; collapsing is its job. A landed strike advances the combat clock
+yet, so every number in the test twin is exact. The one randomness is a defeated foe's
+WEIGHTED loot roll (`_roll_loot`, parts.weighted_table), and even that is seedable: it draws
+from `_LOOT_RNG`, a module-level RNG tests replace for exact outcomes. The dummy reassembles on
+defeat -- it is a training dummy; collapsing is its job. A landed strike advances the combat clock
 (`combat_clock`), so cooldowns thaw and statuses age as rounds pass. When a foe falls,
 combat hands the reward to the leveling engine (`progression_awards`) rather than climbing
 the curves itself: damage, timing, and progression are separate responsibilities.
@@ -12,6 +14,8 @@ blow (the training dummy carries none, so it stays passive). If a
 counter-strike would fell the player, a training-ground failsafe
 restores them in place -- a fight never leaves anyone in a broken state.
 """
+
+import random
 
 from parts import items
 from parts.combat_clock import advance as advance_clock
@@ -23,6 +27,11 @@ from parts.npcs import NPCS, trace_npc
 from parts.progression_awards import award_jp, award_tp, award_xp
 from parts.seed import Npc
 from parts.session import Session, display_name, sentence_case
+from parts.weighted_table import WeightedTable
+
+# Loot-only randomness. Combat MATH stays deterministic (no dice in damage); only a defeated foe's
+# WEIGHTED loot table rolls here. A module-level RNG so tests seed or replace it for exact draws.
+_LOOT_RNG = random.Random()  # nosec B311 -- game loot, not security; seeded for tests, not secrecy
 
 DAMAGE_BASE = 3  # damage dealt = DAMAGE_BASE + strength // 3
 
@@ -129,26 +138,43 @@ def attack(session: Session, word: str) -> str:
         if extra:
             rewards = f"{rewards}\n{extra}"
     result = f"{defeat}\n{rewards}"
-    loot = _spawn_drops(session, npc)  # a felled foe may drop loot: fresh instances on the ground
-    if loot:
-        result = f"{result}\n{loot}"
+    # guaranteed drops, then one weighted loot roll -- both spawn fresh instances on the floor
+    haul = "\n".join(
+        part for part in (_spawn_drops(session, npc), _roll_loot(session, npc)) if part
+    )
+    if haul:
+        result = f"{result}\n{haul}"
     from parts import quest  # lazy: combat is the low-level loop; the quest hook rides on top
 
     quest_line = quest.on_event(session, "defeat", nid)  # a boss's fall may complete a story beat
     return f"{result}\n{quest_line}" if quest_line else result
 
 
+def _spawn_loot(session: Session, prototype: str) -> str:
+    """Spawn one loot instance into the room (object instancing, so it never collides with the seed
+    original), announce it, and return the line -- or '' if the prototype is unknown or at its
+    instance ceiling (skipped, never a crash). The shared spawn used by drops and the loot roll."""
+    try:
+        iid = items.clone(prototype, session.location)
+    except items.ItemError:
+        return ""
+    line = f"{sentence_case(items.ITEMS[iid]['name'])} drops to the ground."
+    announce(session.location, line, exclude=session.player_id)
+    return line
+
+
 def _spawn_drops(session: Session, npc: Npc) -> str:
-    """Spawn a defeated NPC's loot: a fresh instance of each drop prototype into the room (object
-    instancing, so a drop never collides with the seed original). An unknown prototype or a
-    prototype at its instance ceiling is skipped, never a crash. Returns the drop line(s), or ''."""
-    lines: list[str] = []
-    for prototype in npc.get("drops", []):
-        try:
-            iid = items.clone(prototype, session.location)
-        except items.ItemError:
-            continue  # unknown prototype, or at the spawn ceiling: no drop, and no crash
-        drop_line = f"{sentence_case(items.ITEMS[iid]['name'])} drops to the ground."
-        lines.append(drop_line)
-        announce(session.location, drop_line, exclude=session.player_id)
-    return "\n".join(lines)
+    """Spawn a defeated NPC's GUARANTEED drops (`drops`): a fresh instance of each. Returns the
+    drop line(s), or ''."""
+    return "\n".join(line for p in npc.get("drops", []) if (line := _spawn_loot(session, p)))
+
+
+def _roll_loot(session: Session, npc: Npc) -> str:
+    """Roll a defeated NPC's WEIGHTED loot table (`loot`) once and spawn the outcome. Outcomes are
+    item prototypes plus the reserved `nothing` (a no-drop weight); the draw uses the module RNG so
+    it is seedable. Returns the loot line, or '' (no table, or 'nothing' rolled)."""
+    table = npc.get("loot")
+    if not table:
+        return ""
+    outcome = WeightedTable(list(table.items())).pick(_LOOT_RNG)
+    return "" if outcome == "nothing" else _spawn_loot(session, outcome)

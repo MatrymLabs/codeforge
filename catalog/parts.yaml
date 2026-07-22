@@ -1165,3 +1165,26 @@
     game: "fire a deferred effect on the world beat - a self-closing door relocks, a status wears off, an area resets"
     general: "a tick-driven timer wheel / delay queue: run deferred work off one logical clock with no threads or wall-clock timers (retry-after, timeouts, TTL expiry, debounce)"
     records: "decrement a review or retention countdown each processing cycle and fire the follow-up when it comes due"
+
+- id: weighted-table
+  name: Weighted Table
+  source: parts/weighted_table.py
+  category: sampling
+  tags: [loot, spawn, weighted, random, sampling, legacy-mud]
+  maturity: shipped
+  source_status: original
+  license: MIT
+  influence: "the MUD loot/spawn table (Diku/Merc lineage) - textbook weighted random selection, original implementation"
+  experimental: >-
+    an alias-method table for O(1) draws at very large N (today's cumulative walk is O(n), fine at
+    loot-table scale), or reservoir sampling for a streamed distribution. Traded away (v1): the
+    simplest correct thing over premature optimization.
+  risk: low
+  purpose: >
+    Pick one outcome from a fixed set, proportional to integer weights, using a caller-injected
+    random.Random so the draw is reproducible under a seed. The loot/spawn table the game needs, and
+    a generic weighted choice for anything else - it never owns its own randomness.
+  reuse:
+    game: "a defeated foe's weighted loot roll, a weighted spawn or random encounter (combat injects a seedable RNG so tests stay exact)"
+    general: "any weighted choice from a fixed distribution with a reproducible, seedable draw - A/B bucketing, sampled test inputs, spreading load across weighted backends"
+    finance: "sample a transaction/account population by weighted stratum for a reproducible audit spot-check"

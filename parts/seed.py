@@ -129,6 +129,10 @@ class Npc(TypedDict):
     # the room (parts.items.clone). Optional; a bare NPC drops nothing. Loot is real object
     # instancing -- the drop is a new instance, so it never collides with the seed original.
     drops: NotRequired[list[str]]
+    # A WEIGHTED loot table rolled once on defeat: {item_prototype -> weight}, plus the reserved
+    # key `nothing` for a no-drop weight. One outcome is picked proportional to weight and spawned.
+    # `drops` (above) is guaranteed; `loot` is the chance roll. Optional.
+    loot: NotRequired[dict[str, int]]
 
 
 class Door(TypedDict):
@@ -407,6 +411,7 @@ def load_npcs(path: Path) -> dict[str, Npc]:
             "atk": 0,
             "aggressive": False,
             "drops": [],
+            "loot": {},
             **file_template,
             **raw,
         }
@@ -456,6 +461,15 @@ def load_npcs(path: Path) -> dict[str, Npc]:
             raise SeedError(
                 f"NPC '{label}': 'drops' must be a list of item prototype labels (strings)."
             )
+        loot = merged["loot"]
+        if not isinstance(loot, dict) or not all(
+            isinstance(k, str) and isinstance(w, int) and not isinstance(w, bool) and w > 0
+            for k, w in loot.items()
+        ):
+            raise SeedError(
+                f"NPC '{label}': 'loot' must be a mapping of item prototype (or 'nothing') "
+                "to a positive integer weight."
+            )
         npc = Npc(
             name=merged["name"],
             keywords=merged["keywords"],
@@ -470,6 +484,8 @@ def load_npcs(path: Path) -> dict[str, Npc]:
         )
         if drops:
             npc["drops"] = list(drops)
+        if loot:
+            npc["loot"] = dict(loot)
         npcs[label] = npc
     return npcs
 
@@ -494,6 +510,12 @@ def inspect_world_links(
         for drop in npc.get("drops", []):  # loot must name a real item prototype (caught at boot)
             if drop not in items:
                 raise SeedError(f"NPC '{label}' drops '{drop}', which is not an item in this seed.")
+        for outcome in npc.get("loot", {}):  # weighted loot: every outcome but `nothing` is real
+            if outcome != "nothing" and outcome not in items:
+                raise SeedError(
+                    f"NPC '{label}' loot names '{outcome}', which is not an item in this seed "
+                    "(use 'nothing' for a no-drop weight)."
+                )
 
 
 def load_jobs(path: Path) -> dict[str, Job]:
