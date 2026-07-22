@@ -11,10 +11,10 @@ import parts.gateway as gateway
 from parts import doors, items, npcs
 from parts.accounts import adopt
 from parts.accounts import register as register_account
-from parts.bulkhead import Bulkhead
 from parts.characters import save_character
 from parts.gateway import ForgeGateServer, _GateHandler, _sanitize
 from parts.session import SESSIONS, Session
+from parts.shelf.bulkhead import Bulkhead
 
 
 @pytest.fixture(autouse=True)

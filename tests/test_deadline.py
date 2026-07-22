@@ -11,7 +11,7 @@ import math
 
 import pytest
 
-from parts.deadline import Deadline, DeadlineError, DeadlineExceeded
+from parts.shelf.deadline import Deadline, DeadlineError, DeadlineExceeded
 
 
 class FakeClock:

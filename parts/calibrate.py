@@ -13,8 +13,8 @@ from __future__ import annotations
 import random
 from collections.abc import Callable
 
-from parts.retry import RetryPolicy, run_with_retries
 from parts.session import Session
+from parts.shelf.retry import RetryPolicy, run_with_retries
 
 _POLICY = RetryPolicy(max_attempts=4, base_delay=0.0)  # zero delay: never block the tick
 _rng_override: Callable[[], float] | None = None

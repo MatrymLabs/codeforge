@@ -14,7 +14,7 @@ from collections.abc import Callable
 
 import pytest
 
-from parts.bulkhead import Bulkhead, BulkheadError, BulkheadFull
+from parts.shelf.bulkhead import Bulkhead, BulkheadError, BulkheadFull
 
 
 def _wait_until(pred: Callable[[], bool], timeout: float = 2.0) -> bool:

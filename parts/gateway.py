@@ -18,12 +18,12 @@ import time
 
 from forge import handle_command, render_scene
 from parts.accounts import password_fixable
-from parts.bulkhead import Bulkhead, BulkheadFull
 from parts.characters import save_character
 from parts.events import SHUTDOWN, bind_echo, unbind_echo
 from parts.gmcp import GMCP_OPT, enables_gmcp, gmcp_frame, room_report, vitals_report
 from parts.seed import load_splash
 from parts.session import SESSIONS, Session
+from parts.shelf.bulkhead import Bulkhead, BulkheadFull
 from parts.telnet_codec import IAC, WILL, WONT, strip_iac
 
 TICK_LOCK = threading.Lock()

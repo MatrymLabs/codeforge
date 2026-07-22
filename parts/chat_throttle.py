@@ -10,7 +10,7 @@ from __future__ import annotations
 
 from parts.events import announce
 from parts.session import Session, display_name
-from parts.token_bucket import Clock, TokenBucket
+from parts.shelf.token_bucket import Clock, TokenBucket
 
 _RATE = 1 / 20  # one shout refills every 20 seconds
 _CAPACITY = 3.0  # a burst of three

@@ -27,7 +27,7 @@ import time
 from collections.abc import Callable
 from dataclasses import dataclass
 
-from parts.deadline import Deadline
+from parts.shelf.deadline import Deadline
 
 Sleep = Callable[[float], None]
 OnRetry = Callable[["Attempt"], None]

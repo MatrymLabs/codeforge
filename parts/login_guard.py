@@ -9,7 +9,7 @@ practical cousins are API quotas, email-send caps, and any "N per window" govern
 
 from __future__ import annotations
 
-from parts.token_bucket import Clock, ThrottleDecision, TokenBucket
+from parts.shelf.token_bucket import Clock, ThrottleDecision, TokenBucket
 
 _ATTEMPTS = 5.0  # burst of five attempts
 _REFILL = 1 / 30  # one attempt refills every 30 seconds

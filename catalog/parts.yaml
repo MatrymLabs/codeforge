@@ -663,7 +663,7 @@
 
 - id: token-bucket
   name: Token Bucket
-  source: parts/token_bucket.py
+  source: parts/shelf/token_bucket.py
   category: rate-limiting
   tags: [rate-limit, throttle, token-bucket, resilience, backpressure]
   maturity: beta
@@ -689,7 +689,7 @@
 
 - id: retry-policy
   name: Retry Policy
-  source: parts/retry.py
+  source: parts/shelf/retry.py
   category: resilience
   tags: [retry, backoff, resilience, transient-fault, recovery]
   maturity: beta
@@ -741,7 +741,7 @@
 
 - id: deadline
   name: Deadline
-  source: parts/deadline.py
+  source: parts/shelf/deadline.py
   category: resilience
   tags: [deadline, timeout, time-budget, resilience, deterministic]
   maturity: beta
@@ -766,7 +766,7 @@
 
 - id: bulkhead
   name: Bulkhead
-  source: parts/bulkhead.py
+  source: parts/shelf/bulkhead.py
   category: resilience
   tags: [bulkhead, concurrency, isolation, resilience, fail-fast, thread-safe]
   maturity: beta

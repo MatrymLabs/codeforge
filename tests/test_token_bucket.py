@@ -4,7 +4,7 @@ import pytest
 from hypothesis import given
 from hypothesis import strategies as st
 
-from parts.token_bucket import RateLimitError, TokenBucket
+from parts.shelf.token_bucket import RateLimitError, TokenBucket
 
 
 class FakeClock:

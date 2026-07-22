@@ -5,7 +5,7 @@ maturity: beta
 purpose: >
   Rate limiting by the token-bucket algorithm: cap a sustained rate while allowing short
   bursts up to a capacity. A deterministic, framework-free limiter with an injected clock.
-source: parts/token_bucket.py
+source: parts/shelf/token_bucket.py
 domain: rate-limiting
 inputs: >
   a rate (tokens/sec), a capacity (burst size), an injected clock, and a per-action cost

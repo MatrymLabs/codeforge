@@ -6,7 +6,7 @@ import pytest
 from hypothesis import given
 from hypothesis import strategies as st
 
-from parts.retry import Attempt, RetryError, RetryPolicy, run_with_retries
+from parts.shelf.retry import Attempt, RetryError, RetryPolicy, run_with_retries
 
 
 class RecordingSleep:
@@ -147,7 +147,7 @@ class AdvancingSleep:
 
 
 def test_a_deadline_stops_retrying_once_the_time_budget_is_spent() -> None:
-    from parts.deadline import Deadline
+    from parts.shelf.deadline import Deadline
 
     clock = _Clock()
     sleep = AdvancingSleep(clock)
@@ -161,7 +161,7 @@ def test_a_deadline_stops_retrying_once_the_time_budget_is_spent() -> None:
 
 
 def test_a_generous_deadline_does_not_cut_a_normal_retry_short() -> None:
-    from parts.deadline import Deadline
+    from parts.shelf.deadline import Deadline
 
     clock = _Clock()
     sleep = AdvancingSleep(clock)

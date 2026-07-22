@@ -5,7 +5,7 @@ maturity: beta
 purpose: >
   Retry with exponential backoff: retry transient failures, re-raise permanent ones and the
   final one (never swallowed). A deterministic, framework-free retry core with an injected sleep.
-source: parts/retry.py
+source: parts/shelf/retry.py
 domain: resilience
 inputs: >
   a RetryPolicy (max_attempts, base_delay, factor, max_delay, retry_on) + a callable + an
