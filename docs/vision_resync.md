@@ -81,9 +81,11 @@ removed: the rule is "don't preserve merely because it exists," and equally "don
    `parts/forge_line.py` runs the loop end to end for one built part (read-and-verify). The deeper
    risk that remains is generating a *brand-new* part through the full loop, not the spine's absence.
 2. **Monolithic engine** ("vendored-whole") - blocks Layer-2 modularity and package export.
-3. **World is content-driven, not manifest/config-driven** - the "configuration-driven"
-   requirement is unmet; rules and attributes are semi-hardcoded (`derived.py`: "PROTOTYPE
-   BALANCE"; `progression.py`: "locked design").
+3. ~~**World is content-driven, not manifest/config-driven**~~ **MOSTLY ADDRESSED:** a typed
+   `WorldManifest` gives a seed a declared identity, and a typed stat `Ruleset` makes the derived
+   combat balance configurable -- a world's `world.yaml` `rules:` block now reaches live combat
+   (`parts/derived` applies the booted world's ruleset). Remaining: `progression.py`'s level curve
+   is still hardcoded ("locked design"), and equipment/status modifiers are not yet config-driven.
 4. **Game<->practical translation is unproven** - the defining thesis has zero working demos.
 5. **Subsystem sprawl** dilutes focus.
 
