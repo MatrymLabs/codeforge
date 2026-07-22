@@ -22,6 +22,7 @@ docs/hardware/retry-policy.yaml). No code copied.
 from __future__ import annotations
 
 import math
+import random
 import time
 from collections.abc import Callable
 from dataclasses import dataclass
@@ -30,6 +31,10 @@ from parts.deadline import Deadline
 
 Sleep = Callable[[float], None]
 OnRetry = Callable[["Attempt"], None]
+
+# Default source of backoff jitter. Not security-sensitive (it spreads retries in time to avoid a
+# thundering herd), so a plain Random is right; callers inject a seeded one for deterministic tests.
+_JITTER_RNG = random.Random()  # nosec B311 -- backoff jitter, not a security decision
 
 
 class RetryError(ValueError):
@@ -62,6 +67,7 @@ class RetryPolicy:
     factor: float = 2.0
     max_delay: float = 30.0
     retry_on: tuple[type[Exception], ...] = (Exception,)
+    jitter: bool = False  # full jitter: sleep a random span in [0, the capped backoff] each try
 
     def __post_init__(self) -> None:
         if not isinstance(self.max_attempts, int) or isinstance(self.max_attempts, bool):
@@ -92,11 +98,14 @@ def run_with_retries[T](
     sleep: Sleep = time.sleep,
     on_retry: OnRetry | None = None,
     deadline: Deadline | None = None,
+    rng: random.Random | None = None,
 ) -> T:
     """Run `fn` under `policy`. Retry transient failures; re-raise permanent and final ones.
 
     An optional `deadline` caps the TOTAL wall-clock time: once its budget is spent, retrying stops
-    early (no further attempt) and the last transient failure is re-raised, unswallowed."""
+    early (no further attempt) and the last transient failure is re-raised, unswallowed. When the
+    policy sets `jitter`, each backoff is a random span in [0, the capped delay] (full jitter, to
+    spread a fleet's retries and avoid a thundering herd); inject `rng` for a deterministic test."""
     last: Exception | None = None
     for attempt in range(1, policy.max_attempts + 1):
         try:
@@ -109,6 +118,8 @@ def run_with_retries[T](
                 break  # time budget spent: stop retrying, re-raise the last failure below
             if attempt < policy.max_attempts:
                 delay = policy.delay_for(attempt)
+                if policy.jitter:
+                    delay = (rng or _JITTER_RNG).uniform(0.0, delay)  # full jitter in [0, ceiling]
                 if on_retry is not None:
                     on_retry(Attempt(attempt, delay, repr(exc)))
                 sleep(delay)

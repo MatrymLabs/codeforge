@@ -1,5 +1,7 @@
 """Test twin for parts/retry.py -- deterministic retry/backoff via an injected sleep."""
 
+import random
+
 import pytest
 from hypothesis import given
 from hypothesis import strategies as st
@@ -168,3 +170,39 @@ def test_a_generous_deadline_does_not_cut_a_normal_retry_short() -> None:
     policy = RetryPolicy(max_attempts=5, base_delay=0.1, factor=2.0)
     assert run_with_retries(fn, policy, sleep=sleep, deadline=deadline) == "ok"
     assert fn.calls["calls"] == 3  # the deadline never interfered
+
+
+# --- full jitter (spread retries; deterministic under an injected seed) ----------------
+def test_jitter_off_sleeps_the_exact_ceiling() -> None:
+    # The default (jitter=False) is unchanged: each backoff is the exact capped delay.
+    sleep = RecordingSleep()
+    policy = RetryPolicy(max_attempts=4, base_delay=0.1, factor=2.0)
+    with pytest.raises(Transient):
+        run_with_retries(_flaky(failures=100), policy, sleep=sleep)
+    assert sleep.delays == [policy.delay_for(i) for i in range(1, 4)]  # 3 exact backoffs
+
+
+def test_full_jitter_keeps_each_backoff_within_its_ceiling() -> None:
+    sleep = RecordingSleep()
+    policy = RetryPolicy(max_attempts=6, base_delay=0.1, factor=2.0, jitter=True)
+    with pytest.raises(Transient):
+        run_with_retries(_flaky(failures=100), policy, sleep=sleep, rng=random.Random(1234))
+    ceilings = [policy.delay_for(i) for i in range(1, 6)]  # 5 backoffs between 6 tries
+    assert len(sleep.delays) == 5
+    assert all(0.0 <= d <= ceil for d, ceil in zip(sleep.delays, ceilings, strict=True))
+    assert sleep.delays != ceilings  # jitter actually moved them off the ceiling
+
+
+def test_jitter_is_reproducible_under_a_fixed_seed() -> None:
+    def run_once() -> list[float]:
+        sleep = RecordingSleep()
+        with pytest.raises(Transient):
+            run_with_retries(
+                _flaky(failures=100),
+                RetryPolicy(max_attempts=5, jitter=True),
+                sleep=sleep,
+                rng=random.Random(42),
+            )
+        return sleep.delays
+
+    assert run_once() == run_once()  # same seed -> identical jittered schedule

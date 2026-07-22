@@ -53,8 +53,8 @@ responsibility** -- the part retries, it does not make an operation safe to repe
 - Tests: `tests/test_retry.py` (unit + property + fail-loud), `tests/test_calibrate.py` (game + tick),
   `tests/test_resilient_call.py` (practical + a one-core proof).
 - Manifest: `docs/hardware/retry-policy.yaml`. Trace it: `make loop PART=retry-policy`.
-- **Maturity: `beta`** -- demonstrated in two contexts and tested, but not `stable` (no jitter,
-  cancellation, or async yet -- deferred junctures).
+- **Maturity: `beta`** -- demonstrated in two contexts and tested, with optional full jitter
+  (`RetryPolicy(jitter=True)`, injected RNG); not `stable` (no cancellation or async yet -- deferred).
 
 ## The part: `circuit-breaker`
 
@@ -128,7 +128,7 @@ work raises; a limit < 1 or a bool/non-int fails loud at construction.
 
 ## Deferred (needs Josh's approval)
 
-For retry: jitter, a cancellation token, an async variant. For the circuit breaker: half-open
+For retry: a cancellation token and an async variant. For the circuit breaker: half-open
 concurrency control, a rolling-window failure rate, and metrics hooks. For the deadline: a hard-timeout
 variant that interrupts a thread, and propagating one deadline across nested calls (a context). For
 the bulkhead: a bounded wait-queue (block N waiters instead of rejecting at once) and a
