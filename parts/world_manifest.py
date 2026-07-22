@@ -150,17 +150,26 @@ def describe_world(seed_name: str, root: Path | None = None) -> WorldManifest:
     )
 
 
+def world_block(seed_dir: Path, key: str) -> Any:
+    """The raw `<key>:` sub-block of a seed's world.yaml (e.g. 'rules', 'progression'), or None.
+
+    The shared reader for the world's optional config blocks. Returns None when the seed ships no
+    world.yaml or declares no such block -- so a caller falls back to its own default. Reads only,
+    and imports nothing world-specific, so any config module can use it without an import cycle."""
+    manifest_path = seed_dir / "world.yaml"
+    if not manifest_path.exists():
+        return None
+    raw = yaml.safe_load(manifest_path.read_text(encoding="utf-8")) or {}
+    return raw.get(key) if isinstance(raw, dict) else None
+
+
 def load_ruleset(seed_dir: Path) -> Ruleset:
     """The stat ruleset a world declares in its world.yaml `rules:` block, or the default balance.
 
     A world overrides combat balance as DATA: a `rules:` block in world.yaml is validated by
     stat_rules.from_dict (fails loud on a bad block). No world.yaml, or no `rules:` block, means the
     default prototype balance -- so every existing seed is unchanged."""
-    manifest_path = seed_dir / "world.yaml"
-    if not manifest_path.exists():
-        return DEFAULT_RULESET
-    raw = yaml.safe_load(manifest_path.read_text(encoding="utf-8")) or {}
-    rules = raw.get("rules") if isinstance(raw, dict) else None
+    rules = world_block(seed_dir, "rules")
     return ruleset_from_dict(rules) if rules is not None else DEFAULT_RULESET
 
 

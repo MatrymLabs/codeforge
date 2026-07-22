@@ -12,6 +12,9 @@ marginal cost of levels 1..N, matching the locked checkpoints
 those checkpoints forever: if the numbers drift, the build goes red.
 """
 
+from parts.seed import SEED_DIR
+from parts.world_manifest import world_block
+
 # ---------------------------------------------------------------------------
 # Per-PLvl gains (locked design July 2026):
 # each level grants stat points (spent via `allocate`, max 3 into any single
@@ -82,22 +85,22 @@ def _next_threshold(track, current):
 
 def get_xp_tier_multiplier(level):
     """Return the tier multiplier (1, 2, 3, 6, or 15) for a given PLvl."""
-    return _tier_multiplier(XP_TRACK, level)
+    return _tier_multiplier(_ACTIVE_XP_TRACK, level)
 
 
 def marginal_xp_for_level(level):
     """XP cost of the single level `level` (0 if out of range 1-255)."""
-    return _marginal(XP_TRACK, level)
+    return _marginal(_ACTIVE_XP_TRACK, level)
 
 
 def cumulative_xp_for_level(level):
     """Total XP to reach a given PLvl (inclusive sum of levels 1..level)."""
-    return _cumulative(XP_TRACK, level)
+    return _cumulative(_ACTIVE_XP_TRACK, level)
 
 
 def get_next_level_threshold(current_level):
     """Total XP to reach the next PLvl, or None if at cap (255)."""
-    return _next_threshold(XP_TRACK, current_level)
+    return _next_threshold(_ACTIVE_XP_TRACK, current_level)
 
 
 JP_BASE = 20
@@ -114,19 +117,73 @@ JP_TRACK = (JP_BASE, JP_TIERS, 30)
 
 def get_jp_tier_multiplier(level):
     """Return the tier multiplier (1, 3, or 8) for a given Job Lvl."""
-    return _tier_multiplier(JP_TRACK, level)
+    return _tier_multiplier(_ACTIVE_JP_TRACK, level)
 
 
 def marginal_jp_for_level(level):
     """JP cost of the single Job Lvl `level` (0 if out of range 1-30)."""
-    return _marginal(JP_TRACK, level)
+    return _marginal(_ACTIVE_JP_TRACK, level)
 
 
 def cumulative_jp_for_level(level):
     """Total JP to reach a given Job Lvl (inclusive sum of levels 1..level)."""
-    return _cumulative(JP_TRACK, level)
+    return _cumulative(_ACTIVE_JP_TRACK, level)
 
 
 def get_next_job_level_threshold(current_job_level):
     """Total JP to reach the next Job Lvl, or None if at cap (30)."""
-    return _next_threshold(JP_TRACK, current_job_level)
+    return _next_threshold(_ACTIVE_JP_TRACK, current_job_level)
+
+
+class ProgressionError(ValueError):
+    """A progression config was declared with an invalid field. Fails loud at construction."""
+
+
+def _track_from_dict(name, raw):
+    """Validate + build one (base, tiers, cap) track from a mapping. Fails loud by field."""
+    if not isinstance(raw, dict):
+        raise ProgressionError(f"the {name!r} track must be a mapping")
+    base, cap, tiers_raw = raw.get("base"), raw.get("cap"), raw.get("tiers")
+    if not isinstance(base, int) or isinstance(base, bool) or base <= 0:
+        raise ProgressionError(f"{name!r} track: 'base' must be a positive int")
+    if not isinstance(cap, int) or isinstance(cap, bool) or cap <= 0:
+        raise ProgressionError(f"{name!r} track: 'cap' must be a positive int")
+    if not isinstance(tiers_raw, list) or not tiers_raw:
+        raise ProgressionError(f"{name!r} track: 'tiers' must be a non-empty list")
+    tiers = []
+    for tier in tiers_raw:
+        if not isinstance(tier, (list, tuple)) or len(tier) != 3:
+            raise ProgressionError(f"{name!r} track: each tier must be [start, end, multiplier]")
+        start, end, mult = tier
+        if not all(isinstance(x, int) and not isinstance(x, bool) for x in (start, end, mult)):
+            raise ProgressionError(f"{name!r} track: tier values must be ints")
+        if start > end:
+            raise ProgressionError(f"{name!r} track: tier start {start} > end {end}")
+        tiers.append((start, end, mult))
+    return (base, tiers, cap)
+
+
+def tracks_from_dict(raw):
+    """Build + validate the (xp, jp) tracks from a world's `progression:` block. Fails loud."""
+    if not isinstance(raw, dict):
+        raise ProgressionError("a progression block must be a mapping")
+    for axis in ("xp", "jp"):
+        if axis not in raw:
+            raise ProgressionError(f"progression block is missing the {axis!r} track")
+    return (_track_from_dict("xp", raw["xp"]), _track_from_dict("jp", raw["jp"]))
+
+
+# The default curves, captured before the active binding below (the checkpoint test pins these).
+DEFAULT_TRACKS = (XP_TRACK, JP_TRACK)
+
+
+def _load_active_tracks():
+    """The (xp, jp) tracks the world declares in world.yaml `progression:`, else the default."""
+    block = world_block(SEED_DIR, "progression")
+    return tracks_from_dict(block) if block is not None else DEFAULT_TRACKS
+
+
+# Bound at import from the booted world -- same seed-defined-at-import pattern as the stat ruleset.
+_active = _load_active_tracks()
+_ACTIVE_XP_TRACK = _active[0]
+_ACTIVE_JP_TRACK = _active[1]
