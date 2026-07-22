@@ -12,7 +12,7 @@ from __future__ import annotations
 import time
 from collections.abc import Callable
 
-from parts.retry import Attempt, RetryPolicy, Sleep, run_with_retries
+from parts.shelf.retry import Attempt, RetryPolicy, Sleep, run_with_retries
 
 
 class ResilientCaller:

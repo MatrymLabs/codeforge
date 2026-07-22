@@ -3,7 +3,7 @@
 import pytest
 
 from parts.resilient_call import ResilientCaller
-from parts.retry import RetryPolicy
+from parts.shelf.retry import RetryPolicy
 
 
 class NoSleep:
@@ -51,7 +51,7 @@ def test_one_core_powers_both_the_game_calibrate_and_the_practical_caller():
     # The whole point of the slice: both adapters run through the same run_with_retries core.
     import parts.calibrate as game
     import parts.resilient_call as practical
-    from parts.retry import run_with_retries
+    from parts.shelf.retry import run_with_retries
 
     assert game.run_with_retries is run_with_retries
     assert practical.run_with_retries is run_with_retries
