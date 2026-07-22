@@ -50,6 +50,8 @@ def test_aethryn_every_exit_and_placement_resolves():
         for direction, dest in room["exits"].items():
             assert dest in rooms, f"{label} exit {direction} -> {dest} is a dead link"
     for label, item in load_items(AETHRYN / "items.yaml").items():
+        if item["location"] in ("player", "nowhere"):
+            continue  # a carried item or a drop-only prototype (spawned by loot), not room-placed
         assert item["location"].split(":")[-1] in rooms, f"item {label} floats nowhere"
     for label, npc in load_npcs(AETHRYN / "npcs.yaml").items():
         assert npc["location"].split(":")[-1] in rooms, f"npc {label} floats nowhere"
