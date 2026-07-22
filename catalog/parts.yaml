@@ -333,7 +333,7 @@
 
 - id: state-machine
   name: State Machine
-  source: parts/statemachine.py
+  source: parts/shelf/statemachine.py
   category: control-flow
   tags: [fsm, state-machine, lifecycle, workflow, guards]
   maturity: shipped
@@ -715,7 +715,7 @@
 
 - id: circuit-breaker
   name: Circuit Breaker
-  source: parts/circuit_breaker.py
+  source: parts/shelf/circuit_breaker.py
   category: resilience
   tags: [circuit-breaker, resilience, fail-fast, state-machine, recovery]
   maturity: beta

@@ -5,7 +5,7 @@ maturity: beta
 purpose: >
   Fail fast when a dependency is broken: trip to OPEN after consecutive failures, reject calls
   immediately, then probe recovery after a reset timeout. Built ON the state-machine part.
-source: parts/circuit_breaker.py
+source: parts/shelf/circuit_breaker.py
 domain: resilience
 inputs: >
   a failure_threshold, a reset_timeout, an injected clock, and a callable to protect
@@ -16,7 +16,7 @@ interfaces:
   - CircuitBreaker.state
   - CircuitBreaker.allow
 dependencies:
-  - parts.statemachine
+  - parts.shelf.statemachine
 security: >
   no I/O and no world-state mutation of its own; it never swallows a failure (records then re-raises).
   Not thread-safe by design; a concurrent variant is a deferred juncture.

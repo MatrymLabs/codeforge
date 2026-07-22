@@ -16,7 +16,16 @@ from __future__ import annotations
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass, field
 
-from parts.statemachine import Fired, Guard, Machine, Outcome, Refusal, Transition, advance, build
+from parts.shelf.statemachine import (
+    Fired,
+    Guard,
+    Machine,
+    Outcome,
+    Refusal,
+    Transition,
+    advance,
+    build,
+)
 
 ANY_ROLE = "*"  # a step open to any actor
 

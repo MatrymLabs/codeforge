@@ -15,7 +15,7 @@ doc covers the retry/backoff part; the circuit breaker is a later slice in the s
 
 ## The part: `retry-policy`
 
-`parts/retry.py` -- a frozen `RetryPolicy(max_attempts, base_delay, factor, max_delay, retry_on)`
+`parts/shelf/retry.py` -- a frozen `RetryPolicy(max_attempts, base_delay, factor, max_delay, retry_on)`
 with `is_transient(exc)` and `delay_for(attempt)` (capped exponential backoff), and
 `run_with_retries(fn, policy, *, sleep, on_retry)`. It **retries transient failures**, **re-raises a
 permanent one immediately**, and after the last attempt **re-raises the final failure (never
@@ -58,14 +58,14 @@ responsibility** -- the part retries, it does not make an operation safe to repe
 
 ## The part: `circuit-breaker`
 
-`parts/circuit_breaker.py` -- the other half of the resilience family. It guards calls to a flaky
+`parts/shelf/circuit_breaker.py` -- the other half of the resilience family. It guards calls to a flaky
 dependency: **CLOSED** it passes calls and counts consecutive failures; at a threshold it trips to
 **OPEN** and rejects calls immediately (`CircuitOpen`, no waiting on a dead service); after a reset
 timeout it moves to **HALF_OPEN** and lets one probe through -- success closes it, failure re-opens
 it. Provenance: `independently_implemented_pattern` (Azure resilience pattern; no code copied).
 
 **Composition, not reinvention:** the three-state lifecycle IS a state machine, so the breaker is
-built ON the Hardware Store's own `state-machine` part (`parts/statemachine`) -- a part from a part.
+built ON the Hardware Store's own `state-machine` part (`parts/shelf/statemachine`) -- a part from a part.
 The manufacturing loop's assembly stage shows that real dependency. The clock is injected, so the
 trip and recovery are deterministic; a property test proves it opens exactly when a run of
 `threshold` consecutive failures occurs.
@@ -79,7 +79,7 @@ trip and recovery are deterministic; a property test proves it opens exactly whe
 
 ## The part: `deadline`
 
-`parts/deadline.py` -- the timeout primitive of the resilience family, sized for a single-threaded
+`parts/shelf/deadline.py` -- the timeout primitive of the resilience family, sized for a single-threaded
 engine. A hard timeout interrupts a thread; a `Deadline(seconds, clock=...)` interrupts nothing. It
 is a budget you POLL -- `remaining()`, `expired()`, or `check()` (which raises `DeadlineExceeded`) --
 between steps, so a long job yields the moment its budget is spent. The clock is injected (default
@@ -102,7 +102,7 @@ construction (`DeadlineError`).
 
 ## The part: `bulkhead`
 
-`parts/bulkhead.py` -- the concurrency-cap of the resilience family, and the one shelf-mate that is
+`parts/shelf/bulkhead.py` -- the concurrency-cap of the resilience family, and the one shelf-mate that is
 **thread-safe by design**. A `Bulkhead(limit)` admits at most `limit` operations through a section at
 once and rejects the overflow immediately (`BulkheadFull`), so a flood backed up behind one slow
 dependency is contained in its compartment instead of consuming every worker (a ship's watertight

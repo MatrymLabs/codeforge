@@ -2,8 +2,8 @@
 
 import pytest
 
-from parts.circuit_breaker import OPEN, CircuitBreaker, CircuitOpen
 from parts.service_breaker import ServiceBreakers
+from parts.shelf.circuit_breaker import OPEN, CircuitBreaker, CircuitOpen
 
 
 class FakeClock:

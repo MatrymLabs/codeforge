@@ -12,12 +12,12 @@ one core part proven in the game and reused in a practical application. Part Man
 | **version** | 0.1 (beta) |
 | **maturity** | `beta` (demonstrated in two contexts; not yet stable, not yet persistent) |
 | **purpose** | Drive any lifecycle defined as data: role-gated moves between states, a recorded history trail, and named effects the caller applies. |
-| **source** | `parts/workflow.py` (built on the pure FSM `parts/statemachine.py`) |
+| **source** | `parts/workflow.py` (built on the pure FSM `parts/shelf/statemachine.py`) |
 | **domain** | orchestration |
 | **inputs** | a workflow definition (states, steps with roles/guards/effects, terminal states) + an `Instance` + an event + an actor role |
 | **outputs** | a `Fired(dst, effect)` or `Refusal(reason)`; a mutated local `Instance` with history |
 | **interfaces** | `build_workflow(...)`, `WorkflowEngine.open/actions/advance/is_done` |
-| **dependencies** | `parts.statemachine` (internal, stdlib-only) |
+| **dependencies** | `parts.shelf.statemachine` (internal, stdlib-only) |
 | **security** | never mutates world state; effects are names the caller applies; role gating refuses before firing |
 | **tests** | `tests/test_workflow.py` (core), `tests/test_quest.py` (game), `tests/test_onboarding.py` (practical + one-core proof) |
 | **license** | MIT · **source_status** original · **owner** MatrymLabs |

@@ -23,7 +23,7 @@ import time
 from collections.abc import Callable
 from dataclasses import dataclass, field
 
-from parts.statemachine import Fired, Transition, advance, build
+from parts.shelf.statemachine import Fired, Transition, advance, build
 
 Clock = Callable[[], float]
 
