@@ -2,14 +2,14 @@
 
 A player runs `namecheck <name>` to see, before registering, whether a name is allowed and, if not,
 exactly why. The rules (required, the name pattern, not a reserved word) live in a `Validator`
-(parts/validation). The SAME validation core checks a signup payload in a practical app
+(parts/shelf/validation). The SAME validation core checks a signup payload in a practical app
 (parts/payload_check); only the adapter and the rule set differ.
 """
 
 from __future__ import annotations
 
 from parts.session import Session
-from parts.validation import Data, Issue, Validator, matches, required
+from parts.shelf.validation import Data, Issue, Validator, matches, required
 
 _RESERVED = ("admin", "system", "root", "null", "owner", "wizard")
 _NAME_PATTERN = (

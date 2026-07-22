@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from collections.abc import Iterable
 
-from parts.stream_framer import StreamFramer
+from parts.shelf.stream_framer import StreamFramer
 
 
 class RecordStream:

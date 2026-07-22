@@ -1,10 +1,10 @@
-"""Test twin for parts/sanitizer.py -- deterministic, idempotent input normalization."""
+"""Test twin for parts/shelf/sanitizer.py -- deterministic, idempotent input normalization."""
 
 import pytest
 from hypothesis import given
 from hypothesis import strategies as st
 
-from parts.sanitizer import DEFAULT, SanitizeError, SanitizeRule, sanitize
+from parts.shelf.sanitizer import DEFAULT, SanitizeError, SanitizeRule, sanitize
 
 
 def test_it_strips_control_characters():
