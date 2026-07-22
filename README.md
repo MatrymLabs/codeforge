@@ -208,7 +208,8 @@ $ forge-audit --path ./codeforge --stage advanced --online --format md
 | collaboration | ✅ pass | a real issue -> PR -> merge history ([#160](https://github.com/MatrymLabs/codeforge/issues/160) -> [#161](https://github.com/MatrymLabs/codeforge/pull/161)) |
 | performance | ✅ pass | a `benchmarks/` directory (and `make bench` / `make trend` record engine-tick timings) |
 | readme | ✅ pass | covers purpose, install, run, test |
-| **overall** | **✅ pass** | role signals: testing · security · backend · devops · collaboration · performance · documentation |
+| license | ✅ pass | MIT ([LICENSE](LICENSE)) + provenance ([THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)) |
+| **overall** | **✅ pass** | role signals: testing · security · backend · devops · collaboration · performance · documentation · compliance |
 
 Grading yourself by a rule you don't get to bend is the whole point: an earlier version of
 this table showed `ci` as a `watchlist` with a single workflow file, so the repo added the
