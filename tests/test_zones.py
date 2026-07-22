@@ -9,7 +9,8 @@ import pytest
 import parts.seed as seed  # reference SeedError via the module: other suites importlib.reload
 import parts.zones as zones  # parts.seed, so a class imported at collection would not match
 from forge import handle_command
-from parts.seed import SEEDS_ROOT, Zone, load_rooms, load_zones
+from parts import items
+from parts.seed import SEEDS_ROOT, Item, Zone, load_rooms, load_zones
 from parts.session import Session
 from parts.world import START_ROOM
 from parts.zones import area_line, tick_zones, zone_of, zones_due
@@ -160,3 +161,60 @@ def test_look_shows_the_area_and_the_tick_advances_the_clock(monkeypatch):
     out = handle_command(session, "look")
     assert "[Area: Home Ward]" in out  # the area banner reaches the player
     assert zones._beats["home"] == 1  # the same command advanced the area clock (one door)
+
+
+# --- repop: _perform_reset restocks resettable items (Tier 1, #1) ----------------------
+def _shard(resettable: bool) -> Item:
+    item = Item(
+        name="a shard of ember",
+        keywords=["shard"],
+        location="room:a",
+        slot="",
+        mods={},
+        prototype="shard",
+    )
+    if resettable:
+        item["resettable"] = True
+    return item
+
+
+def _repop_world(monkeypatch, prototype: Item, present: bool) -> None:
+    monkeypatch.setattr(items, "PROTOTYPES", {"shard": prototype})
+    live = {"shard": dict(prototype)} if present else {}
+    monkeypatch.setattr(items, "ITEMS", live)
+    monkeypatch.setattr(
+        zones, "ZONES", {"z": Zone(name="Z", rooms=["a"], reset_mode="always", beats_between=1)}
+    )
+
+
+def _shards_home() -> list[str]:
+    return [iid for iid in items.items_in("room:a") if items.prototype_of(iid) == "shard"]
+
+
+def test_reset_restocks_a_missing_resettable_item(monkeypatch):
+    _repop_world(monkeypatch, _shard(resettable=True), present=False)  # taken -> absent from room a
+    assert _shards_home() == []
+    zones._perform_reset("z")
+    assert len(_shards_home()) == 1  # a fresh instance respawned in its home room
+
+
+def test_reset_leaves_a_non_resettable_item_absent(monkeypatch):
+    _repop_world(monkeypatch, _shard(resettable=False), present=False)  # a quest item / key
+    zones._perform_reset("z")
+    assert _shards_home() == []  # opt-in: never respawns
+
+
+def test_reset_does_not_pile_up_when_the_item_is_already_home(monkeypatch):
+    _repop_world(monkeypatch, _shard(resettable=True), present=True)  # already in room a
+    zones._perform_reset("z")
+    assert len(_shards_home()) == 1  # idempotent: still exactly one, no duplicate
+
+
+def test_reset_only_touches_its_own_area(monkeypatch):
+    # the shard's home (room a) is NOT in this zone's rooms -> not restocked
+    _repop_world(monkeypatch, _shard(resettable=True), present=False)
+    monkeypatch.setattr(
+        zones, "ZONES", {"z": Zone(name="Z", rooms=["b"], reset_mode="always", beats_between=1)}
+    )
+    zones._perform_reset("z")
+    assert _shards_home() == []

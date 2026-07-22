@@ -106,6 +106,10 @@ class Item(TypedDict):
     # runtime items are instances cloned from it (parts.items.clone). Seed-placed items are their
     # own prototype. Optional so existing Item literals stay valid; readers use prototype_of().
     prototype: NotRequired[str]
+    # Opt-in: this item REPOPULATES on an area reset. If a `resettable` item is absent from its
+    # home room when its area comes due (parts.zones), a fresh instance is spawned there. Default
+    # off, so quest items and keys never respawn (no duplicated ember, no second key).
+    resettable: NotRequired[bool]
 
 
 class Npc(TypedDict):
@@ -353,6 +357,7 @@ def load_items(path: Path) -> dict[str, Item]:
             "keywords": _auto_keywords(label),
             "slot": "",
             "mods": {},
+            "resettable": False,
             **file_template,
             **raw,
         }
@@ -372,7 +377,9 @@ def load_items(path: Path) -> dict[str, Item]:
         # -- e.g. loot a foe drops on defeat. This is the Diku/LP "object prototype" idea, made
         # native to instancing. `player` and room labels place a live instance as before.
         tagged = loc if loc in ("player", UNPLACED) else f"room:{loc}"
-        items[label] = Item(
+        if not isinstance(merged["resettable"], bool):
+            raise SeedError(f"Item '{label}': 'resettable' must be true or false.")
+        item = Item(
             name=merged["name"],
             keywords=merged["keywords"],
             location=tagged,
@@ -380,6 +387,9 @@ def load_items(path: Path) -> dict[str, Item]:
             mods=dict(merged["mods"]),
             prototype=label,  # a seed-placed item is its own prototype
         )
+        if merged["resettable"]:
+            item["resettable"] = True  # opt-in: repopulates on an area reset
+        items[label] = item
     return items
 
 

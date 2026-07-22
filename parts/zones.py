@@ -13,11 +13,13 @@ Two halves live here:
   clock parts.aggression.menace uses, no background thread (architecture law 4). When an
   area comes due per its reset_mode + beats_between, `tick_zones` fires it.
 
-The repop ACTION is deferred by design (see `_perform_reset`): safe area repopulation needs
-machinery CodeForge does not yet have. The scheduler and grouping are proven; the mutation
-lands once that model is decided.
+The repop ACTION (shipped): when a due area fires, `_perform_reset` restocks its RESETTABLE items
+-- any seed item flagged `resettable` that has gone missing from its home room respawns there as a
+fresh instance (parts.items.clone). Object instancing makes this safe: a respawn never collides
+with a copy a player carried off, and opt-in `resettable` leaves quest items and keys untouched.
 """
 
+from parts import items
 from parts.seed import SEED_DIR, Zone, load_zones
 from parts.session import Session
 from parts.world import WORLD
@@ -70,16 +72,29 @@ def zones_due(here: str = "") -> list[str]:
 
 
 def _perform_reset(label: str) -> None:
-    """The repop action for a due area. DEFERRED by design: a safe no-op until the model is
-    decided. Safe area repopulation needs machinery CodeForge does not yet have:
-    - object instancing for item restock (items are singletons keyed by label, so a naive
-      restock would duplicate a quest item or pull it from a player's pack);
-    - a resettable-vs-quest-permanent model for doors (re-locking the reforged bridge would
-      soft-lock the arc);
-    - a decision on whether felled NPCs stay down (combat reassembles them in place today, and
-      healing a foe mid-fight would break combat).
-    Kept as the single seam where the action will land, so wiring it later touches one place."""
-    return None
+    """Restock a due area's RESETTABLE items: any item flagged `resettable` in the seed whose home
+    room is in this area, and which is currently absent from that room, is respawned there as a
+    fresh instance (parts.items.clone).
+
+    Object instancing (which the earlier deferral waited on) makes this safe: the respawn is a new
+    instance, so it never collides with a copy a player carried off, and opt-in `resettable` means
+    quest items, keys, and the reforged bridge are never touched. A prototype at its spawn ceiling
+    is skipped, never a crash. Doors and NPC respawn stay out of scope (doors carry quest-permanent
+    state; felled NPCs already reassemble in combat) -- item repop is the safe, observable slice.
+    Only engine logic mutates world state; the beat names the effect, this applies it."""
+    rooms = set(ZONES[label]["rooms"])
+    for prototype, template in items.PROTOTYPES.items():
+        if not template.get("resettable"):
+            continue
+        home = template["location"]  # "room:<label>" for a placed item
+        if not home.startswith("room:") or home.removeprefix("room:") not in rooms:
+            continue
+        if any(items.prototype_of(iid) == prototype for iid in items.items_in(home)):
+            continue  # an instance is already home -- nothing to restock
+        try:
+            items.clone(prototype, home)
+        except items.ItemError:
+            continue  # at the spawn ceiling: skip this one, keep the beat alive
 
 
 def tick_zones(session: Session) -> str:
@@ -87,8 +102,8 @@ def tick_zones(session: Session) -> str:
 
     The player's command is the only clock (architecture law 4): this rides the same beat as
     parts.aggression.menace -- no background thread, no second door into world state. When an
-    area comes due it is reset and its counter returns to zero. Returns '' -- the beat is silent
-    to the player (the repop action is a documented no-op; see `_perform_reset`)."""
+    area comes due it is reset (its resettable items restock; see `_perform_reset`) and its counter
+    returns to zero. Returns '' -- the restock is silent; the player sees it on their next look."""
     here = session.location
     for label in ZONES:
         _beats[label] = _beats.get(label, 0) + 1

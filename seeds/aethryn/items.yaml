@@ -20,6 +20,7 @@ ember_shard:
   name: a shard of wild ember
   keywords: [shard, ember, wild, material]
   location: reachwood_edge
+  resettable: true  # a wild-ember node: take it, and the coast regrows one once the area is quiet
 
 cellar_key:
   name: a cold iron key

@@ -293,3 +293,22 @@ def test_cross_gate_catches_npc_in_missing_room(tmp_path):
     bad_npcs = load_npcs(path)
     with pytest.raises(SeedError, match="the_void"):
         inspect_world_links(rooms, {}, bad_npcs)
+
+
+def test_a_resettable_item_loads_the_flag(tmp_path):
+    itemsf = tmp_path / "items.yaml"
+    itemsf.write_text("shard:\n  location: cave\n  resettable: true\n")
+    assert load_items(itemsf)["shard"]["resettable"] is True
+
+
+def test_a_plain_item_carries_no_resettable_key(tmp_path):
+    itemsf = tmp_path / "items.yaml"
+    itemsf.write_text("shard:\n  location: cave\n")
+    assert "resettable" not in load_items(itemsf)["shard"]  # opt-in: absent unless declared
+
+
+def test_a_non_bool_resettable_is_rejected(tmp_path):
+    itemsf = tmp_path / "items.yaml"
+    itemsf.write_text("shard:\n  location: cave\n  resettable: maybe\n")
+    with pytest.raises(SeedError, match="resettable"):
+        load_items(itemsf)
