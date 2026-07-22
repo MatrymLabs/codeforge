@@ -312,3 +312,37 @@ def test_a_non_bool_resettable_is_rejected(tmp_path):
     itemsf.write_text("shard:\n  location: cave\n  resettable: maybe\n")
     with pytest.raises(SeedError, match="resettable"):
         load_items(itemsf)
+
+
+def test_an_npc_loot_table_loads(tmp_path):
+    npcsf = tmp_path / "npcs.yaml"
+    npcsf.write_text("wight:\n  location: cell\n  hp: 5\n  loot: {shard: 3, nothing: 7}\n")
+    assert load_npcs(npcsf)["wight"]["loot"] == {"shard": 3, "nothing": 7}
+
+
+def test_a_plain_npc_carries_no_loot_key(tmp_path):
+    npcsf = tmp_path / "npcs.yaml"
+    npcsf.write_text("rat:\n  location: cell\n")
+    assert "loot" not in load_npcs(npcsf)["rat"]  # opt-in: absent unless declared
+
+
+def test_a_non_positive_loot_weight_is_rejected(tmp_path):
+    npcsf = tmp_path / "npcs.yaml"
+    npcsf.write_text("wight:\n  location: cell\n  loot: {shard: 0}\n")
+    with pytest.raises(SeedError, match="loot"):
+        load_npcs(npcsf)
+
+
+def test_world_links_reject_a_loot_naming_a_missing_item(tmp_path):
+    (tmp_path / "rooms.yaml").write_text("cell:\n")
+    (tmp_path / "items.yaml").write_text("shard:\n  location: cell\n")
+    (tmp_path / "npcs.yaml").write_text(
+        "wight:\n  location: cell\n  hp: 5\n  loot: {shard: 1, nothing: 2}\n"
+    )
+    rooms = load_rooms(tmp_path / "rooms.yaml")
+    items = load_items(tmp_path / "items.yaml")
+    npcs = load_npcs(tmp_path / "npcs.yaml")
+    inspect_world_links(rooms, items, npcs)  # ok: shard is real, `nothing` is the reserved no-drop
+    npcs["wight"]["loot"] = {"ghost": 1}
+    with pytest.raises(SeedError, match="loot"):
+        inspect_world_links(rooms, items, npcs)

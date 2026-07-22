@@ -3943,5 +3943,31 @@
     "aliases": [],
     "created": "2026-07-21",
     "updated": "2026-07-21"
+  },
+  {
+    "designation": "MOD-04.052",
+    "name": "weighted_table",
+    "status": "active",
+    "function": "pick an outcome by weight (loot tables, spawn tables, weighted sampling)",
+    "label": "weighted_table",
+    "file": "parts/weighted_table.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "docs/architecture.md",
+    "tests": "tests/test_weighted_table.py",
+    "depends_on": [],
+    "related": [
+      "combat",
+      "items"
+    ],
+    "reuse": "weighted random selection over a fixed distribution with a seedable draw: game loot/spawn, plus A/B bucketing, sampled test inputs, weighted load spread",
+    "tags": [
+      "module"
+    ],
+    "notes": "The MUD loot/spawn table (Diku/Merc lineage) as a reusable part: textbook weighted random selection over a cumulative distribution, original implementation. Never owns randomness - the caller injects a random.Random, so combat MATH stays deterministic (only the loot REWARD rolls; combat._LOOT_RNG is the seam tests seed). First consumer: an NPC's weighted `loot` table rolled once on defeat (combat._roll_loot), alongside guaranteed `drops`. Composes with object instancing: the picked outcome spawns as a fresh instance. Outcomes are item prototypes plus reserved `nothing`.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-22",
+    "updated": "2026-07-22"
   }
 ]
