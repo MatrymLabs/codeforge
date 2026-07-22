@@ -1,8 +1,8 @@
-"""Test twin for parts/record_loader.py -- the shared JSON-record loader extracted from a clone."""
+"""Test twin for parts/shelf/record_loader.py -- the shared JSON-record loader (from a clone)."""
 
 import pytest
 
-from parts.record_loader import load_dir, load_record
+from parts.shelf.record_loader import load_dir, load_record
 
 
 class _Err(ValueError):

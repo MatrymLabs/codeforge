@@ -20,7 +20,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 
-from parts.repository import InMemoryRepository
+from parts.shelf.repository import InMemoryRepository
 from parts.test_evidence import PASSED, EvidenceLedger
 from parts.validation import Data, Validator, one_of, required
 from parts.verdicts import BLOCKED, READY, WATCHLIST

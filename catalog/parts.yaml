@@ -791,7 +791,7 @@
 
 - id: repository
   name: Repository
-  source: parts/repository.py
+  source: parts/shelf/repository.py
   category: persistence
   tags: [repository, persistence, protocol, in-memory, crud]
   maturity: beta
@@ -1042,7 +1042,7 @@
 
 - id: loader-cache
   name: Loader Cache
-  source: parts/loader_cache.py
+  source: parts/shelf/loader_cache.py
   category: caching
   tags: [cache, mtime, parse-once, io, performance]
   maturity: shipped
@@ -1067,7 +1067,7 @@
 
 - id: record-loader
   name: Record Loader
-  source: parts/record_loader.py
+  source: parts/shelf/record_loader.py
   category: persistence
   tags: [json, records, validation, loader, fail-loud]
   maturity: shipped
@@ -1091,7 +1091,7 @@
 
 - id: hash-chained-ledger
   name: Hash-Chained Ledger
-  source: parts/hashchain.py
+  source: parts/shelf/hashchain.py
   category: data-integrity
   tags: [audit, integrity, tamper-evident, hash-chain, append-only, evidence]
   maturity: shipped
@@ -1218,7 +1218,7 @@
 
 - id: weighted-table
   name: Weighted Table
-  source: parts/weighted_table.py
+  source: parts/shelf/weighted_table.py
   category: sampling
   tags: [loot, spawn, weighted, random, sampling, legacy-mud]
   maturity: shipped

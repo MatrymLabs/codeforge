@@ -15,7 +15,7 @@ for CodeForge" (section 5, Persistence / Repository Pattern), which cites Fowler
 
 ## The part: `repository`
 
-`parts/repository.py` -- `Repository[E, K]` is a typed, `@runtime_checkable` **Protocol** (the
+`parts/shelf/repository.py` -- `Repository[E, K]` is a typed, `@runtime_checkable` **Protocol** (the
 replaceable storage boundary: `add`, `get`, `require`, `update`, `remove`, `list`, `count`).
 `InMemoryRepository[E, K]` is the dependency-free, dict-backed implementation. It is
 **identity-agnostic**: entities need no base class and no `.id`; an injected `key_of` reads each

@@ -21,7 +21,7 @@ security: >
   it governs a change record; it is NOT an authorization system. Approval and deploy are role-gated
   by actor string only (no identity/authn). Pair it with real auth at the call site.
 assembled_from:
-  - parts/repository.py
+  - parts/shelf/repository.py
   - parts/workflow.py
   - parts/shelf/statemachine.py
   - parts/validation.py

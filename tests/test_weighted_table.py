@@ -1,4 +1,4 @@
-"""Test twin for parts/weighted_table.py -- weighted selection with an injected RNG.
+"""Test twin for parts/shelf/weighted_table.py -- weighted selection with an injected RNG.
 
 Acceptance: a seeded RNG makes the draw reproducible; the distribution honours the weights.
 Refusal: an empty table or a non-positive weight fails loud.
@@ -8,7 +8,7 @@ from random import Random
 
 import pytest
 
-from parts.weighted_table import WeightedTable, WeightedTableError
+from parts.shelf.weighted_table import WeightedTable, WeightedTableError
 
 
 def test_pick_is_reproducible_under_a_seed():

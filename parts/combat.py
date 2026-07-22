@@ -2,7 +2,7 @@
 
 Assembly card: npcs (targets) + stats (damage). Damage is deterministic in v0: no dice
 yet, so every number in the test twin is exact. The one randomness is a defeated foe's
-WEIGHTED loot roll (`_roll_loot`, parts.weighted_table), and even that is seedable: it draws
+WEIGHTED loot roll (`_roll_loot`, parts.shelf.weighted_table), and even that is seedable: it draws
 from `_LOOT_RNG`, a module-level RNG tests replace for exact outcomes. The dummy reassembles on
 defeat -- it is a training dummy; collapsing is its job. A landed strike advances the combat clock
 (`combat_clock`), so cooldowns thaw and statuses age as rounds pass. When a foe falls,
@@ -27,7 +27,7 @@ from parts.npcs import NPCS, trace_npc
 from parts.progression_awards import award_jp, award_tp, award_xp
 from parts.seed import Npc
 from parts.session import Session, display_name, sentence_case
-from parts.weighted_table import WeightedTable
+from parts.shelf.weighted_table import WeightedTable
 
 # Loot-only randomness. Combat MATH stays deterministic (no dice in damage); only a defeated foe's
 # WEIGHTED loot table rolls here. A module-level RNG so tests seed or replace it for exact draws.

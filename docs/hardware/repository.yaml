@@ -5,7 +5,7 @@ maturity: beta
 purpose: >
   A collection-like boundary over stored entities: a typed Protocol plus a dependency-free
   in-memory implementation, so domain code never touches raw storage.
-source: parts/repository.py
+source: parts/shelf/repository.py
 domain: persistence
 inputs: >
   an injected key_of(entity) for identity; entities to add/update; keys to get/require/remove

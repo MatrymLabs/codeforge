@@ -19,7 +19,7 @@ from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any
 
-from parts import loader_cache
+from parts.shelf import loader_cache
 
 _ROOT = Path(__file__).resolve().parent.parent  # the repo root (parts/ -> root)
 REGISTRY_DIR = _ROOT / "registry" / "designations"
