@@ -4060,5 +4060,34 @@
     "aliases": [],
     "created": "2026-07-22",
     "updated": "2026-07-22"
+  },
+  {
+    "designation": "MOD-04.053",
+    "name": "world_manifest",
+    "status": "active",
+    "function": "a typed, validated identity for a World Package (a seed): id, title, start_room, authors",
+    "label": "world_manifest",
+    "file": "parts/world_manifest.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "docs/vision_resync.md",
+    "tests": "tests/test_world_manifest.py",
+    "depends_on": [
+      "seed"
+    ],
+    "related": [
+      "manifest",
+      "blueprint",
+      "world"
+    ],
+    "reuse": "the World Package's typed identity model; declared in seeds/<world>/world.yaml or derived for manifest-less seeds; check_world reconciles the declared spawn against the real one",
+    "tags": [
+      "module"
+    ],
+    "notes": "Makes a seed's implicit identity (dir name, splash, first-room spawn) EXPLICIT + typed, like blueprint/manifest. Reads + validates only, never mutates a seed. Ships first-forge/world.yaml as the first declared manifest.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-22",
+    "updated": "2026-07-22"
   }
 ]
