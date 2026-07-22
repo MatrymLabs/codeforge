@@ -2354,7 +2354,7 @@
     "tags": [
       "module"
     ],
-    "notes": "Hardware Store part bulkhead; completes the resilience quartet (rate-limit + retry + circuit-breaker + bulkhead); wiring into the gateway is a deferred slice.",
+    "notes": "Hardware Store part bulkhead; completes the resilience quartet (rate-limit + retry + circuit-breaker + bulkhead); WIRED as the gateway seat cap (parts/gateway._SEATS).",
     "superseded_by": "",
     "aliases": [],
     "created": "2026-07-22",
