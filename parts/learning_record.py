@@ -15,7 +15,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from parts import record_loader
+from parts.shelf import record_loader
 
 # Identity is a permanent lowercase kebab/snake label, like a blueprint or part id.
 _ID = re.compile(r"^[a-z][a-z0-9_-]*$")

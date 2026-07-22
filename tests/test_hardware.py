@@ -170,7 +170,7 @@ def test_the_catalog_is_parsed_once_and_cached(tmp_path):
 
 
 def test_cached_result_equals_a_fresh_parse(tmp_path):
-    from parts import loader_cache
+    from parts.shelf import loader_cache
 
     path = _write(tmp_path, _one_part("alpha"))
     cached = load_catalog(path)

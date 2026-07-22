@@ -3,7 +3,7 @@
 import pytest
 
 from parts.asset_registry import Asset, AssetRegistry
-from parts.repository import DuplicateKey, InMemoryRepository, NotFound
+from parts.shelf.repository import DuplicateKey, InMemoryRepository, NotFound
 
 
 def test_register_find_and_list():

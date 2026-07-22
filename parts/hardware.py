@@ -18,8 +18,8 @@ from typing import Any
 
 import yaml
 
-from parts import loader_cache
 from parts.paths import resolved_path
+from parts.shelf import loader_cache
 
 _REQUIRED = ("id", "name", "source", "category", "purpose", "maturity", "risk", "reuse")
 # "shipped" reads as its own definition (shipped + tested on main) -- no out-of-context
@@ -143,7 +143,7 @@ def load_catalog(path: Path | None = None) -> list[Part]:
     """Load and validate the catalog. A missing catalog is empty, not an error.
 
     Parsed once and reused until `catalog/parts.yaml` changes on disk, via the shared
-    mtime-guarded loader cache (EXP-001; the pattern now lives in `parts/loader_cache.py`).
+    mtime-guarded loader cache (EXP-001; the pattern now lives in `parts/shelf/loader_cache.py`).
     """
     source = path or _default_catalog_path()
     if not source.exists():

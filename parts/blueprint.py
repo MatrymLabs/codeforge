@@ -19,7 +19,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from parts import record_loader
+from parts.shelf import record_loader
 
 # Identity is a permanent lowercase_snake_case label (frozen identifier, like room/item keys).
 _LABEL = re.compile(r"^[a-z][a-z0-9_]*$")

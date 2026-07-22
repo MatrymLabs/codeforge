@@ -1,4 +1,4 @@
-"""Test twin for parts/loader_cache.py -- the shared mtime-guarded parse-once cache.
+"""Test twin for parts/shelf/loader_cache.py -- the shared mtime-guarded parse-once cache.
 
 Acceptance: parse once, reuse until the file changes. Refusal: a bad parse fails loud
 every call and never poisons the cache. These are the invariants every customer (the
@@ -12,7 +12,7 @@ from pathlib import Path
 
 import pytest
 
-from parts import loader_cache
+from parts.shelf import loader_cache
 
 
 def _write(tmp_path: Path, text: str) -> Path:

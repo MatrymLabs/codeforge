@@ -12,8 +12,9 @@ def _isolated_database(tmp_path, monkeypatch):
       process. The tests still prove hash/verify/rotate LOGIC, just not the 600k
       strength (that's a production config, not a behavior).
     """
-    from parts import accounts, db, loader_cache
+    from parts import accounts, db
     from parts.session import SESSIONS
+    from parts.shelf import loader_cache
 
     # The shared parse-once cache is keyed by resolved path + mtime; clear it so a tmp file
     # reused across tests (same path, coarse mtime granularity) can never serve stale data.
