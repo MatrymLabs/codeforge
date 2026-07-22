@@ -739,6 +739,31 @@
     security: "contain a failing dependency so one broken service cannot take the system down"
     general: "wrap any unreliable API/DB/RPC call to fail fast and self-heal"
 
+- id: deadline
+  name: Deadline
+  source: parts/deadline.py
+  category: resilience
+  tags: [deadline, timeout, time-budget, resilience, deterministic]
+  maturity: beta
+  source_status: original
+  license: MIT
+  influence: "deadline / time-budget pattern (gRPC / context deadlines; independently implemented, injected clock)"
+  experimental: >-
+    add a hard-timeout variant that interrupts a thread (signal / thread-join), or propagate one
+    deadline across nested calls (a context). Traded away (v1): thread interruption, keeping it a
+    deterministic, pollable budget the single-threaded engine checks between steps.
+  risk: low
+  purpose: >
+    A pollable time budget: a fixed span from a start instant, after which work should stop. The
+    single-threaded cousin of a timeout, it interrupts nothing, just answers "time's up" when polled
+    between steps. Composes with the retry part to bound a retry loop's TOTAL wall-clock time, not
+    just its attempt count.
+  reuse:
+    game: "a real-time timed challenge: act within N seconds or the window closes"
+    business: "cap a retry loop or a batch job so it finishes inside an SLA, staying responsive"
+    security: "bound how long a handshake or verification step may run before it is abandoned"
+    general: "any long span whose caller must stay responsive: poll the budget between steps"
+
 - id: repository
   name: Repository
   source: parts/repository.py

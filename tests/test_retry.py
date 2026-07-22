@@ -119,3 +119,52 @@ def test_fn_is_called_at_most_max_attempts_and_sleeps_are_one_fewer(max_attempts
     assert calls <= max_attempts  # the attempt budget is never exceeded
     assert len(sleep.delays) == calls - 1  # one backoff between each pair of tries
     assert succeeded == (failures < max_attempts)
+
+
+# --- composition with the deadline part: a TOTAL time budget across retries -------------
+class _Clock:
+    """A fake monotonic clock, hand-advanced by the AdvancingSleep below."""
+
+    def __init__(self) -> None:
+        self.now = 0.0
+
+    def __call__(self) -> float:
+        return self.now
+
+
+class AdvancingSleep:
+    """A fake sleep that advances a shared clock, so a Deadline expires in lockstep with backoff."""
+
+    def __init__(self, clock: _Clock) -> None:
+        self.clock = clock
+        self.delays: list[float] = []
+
+    def __call__(self, delay: float) -> None:
+        self.delays.append(delay)
+        self.clock.now += delay
+
+
+def test_a_deadline_stops_retrying_once_the_time_budget_is_spent() -> None:
+    from parts.deadline import Deadline
+
+    clock = _Clock()
+    sleep = AdvancingSleep(clock)
+    deadline = Deadline(1.0, clock=clock)  # one second total, regardless of attempt count
+    fn = _flaky(failures=100)  # never succeeds within the window
+    policy = RetryPolicy(max_attempts=10, base_delay=0.5, factor=2.0)  # sleeps 0.5, 1.0, 2.0, ...
+    with pytest.raises(Transient):
+        run_with_retries(fn, policy, sleep=sleep, deadline=deadline)
+    # 0.5s (attempt 1) then 1.0s takes the clock to 1.5s, so attempt 3 sees the spent budget
+    assert fn.calls["calls"] == 3  # cut short by the deadline, well under the 10-attempt budget
+
+
+def test_a_generous_deadline_does_not_cut_a_normal_retry_short() -> None:
+    from parts.deadline import Deadline
+
+    clock = _Clock()
+    sleep = AdvancingSleep(clock)
+    deadline = Deadline(1000.0, clock=clock)  # plenty of budget
+    fn = _flaky(failures=2)  # succeeds on the 3rd try
+    policy = RetryPolicy(max_attempts=5, base_delay=0.1, factor=2.0)
+    assert run_with_retries(fn, policy, sleep=sleep, deadline=deadline) == "ok"
+    assert fn.calls["calls"] == 3  # the deadline never interfered

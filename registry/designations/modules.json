@@ -2308,6 +2308,32 @@
     "updated": "2026-07-12"
   },
   {
+    "designation": "MOD-05.062",
+    "name": "deadline",
+    "status": "active",
+    "function": "a pollable time budget: a fixed span after which work should stop",
+    "label": "deadline",
+    "file": "parts/deadline.py",
+    "type": "MOD",
+    "domain": "05",
+    "docs": "docs/hardware_store/patterns/resilience.md",
+    "tests": "tests/test_deadline.py",
+    "depends_on": [],
+    "related": [
+      "retry",
+      "resilient_call"
+    ],
+    "reuse": "resilience time-budget; caps a retry loop's TOTAL wall-clock time (composes with retry)",
+    "tags": [
+      "module"
+    ],
+    "notes": "Hardware Store part deadline; the single-threaded timeout cousin; wired into run_with_retries via an optional deadline= argument.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-22",
+    "updated": "2026-07-22"
+  },
+  {
     "designation": "MOD-05.038",
     "name": "service_breaker",
     "status": "active",
