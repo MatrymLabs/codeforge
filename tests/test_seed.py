@@ -2,8 +2,48 @@
 
 import pytest
 
-from parts.seed import DEFAULT_ROOM_DESC, SeedError, load_doors, load_npcs, load_rooms, load_splash
+from parts.seed import (
+    DEFAULT_ROOM_DESC,
+    SEEDS_ROOT,
+    SeedError,
+    inspect_world_links,
+    load_doors,
+    load_items,
+    load_npcs,
+    load_rooms,
+    load_splash,
+)
 from parts.world import SEED_PATH
+
+
+def test_an_unplaced_prototype_loads_with_a_nowhere_location(tmp_path):
+    itemsf = tmp_path / "items.yaml"
+    itemsf.write_text("trophy:\n  location: nowhere\n")
+    # a drop-only prototype: never tagged room:, never placed, only spawned by clone()
+    assert load_items(itemsf)["trophy"]["location"] == "nowhere"
+
+
+def test_world_links_accept_a_nowhere_prototype_and_reject_a_bad_drop(tmp_path):
+    (tmp_path / "rooms.yaml").write_text("cell:\n")
+    (tmp_path / "items.yaml").write_text("trophy:\n  location: nowhere\n")
+    (tmp_path / "npcs.yaml").write_text("wight:\n  location: cell\n  hp: 5\n  drops: [trophy]\n")
+    rooms = load_rooms(tmp_path / "rooms.yaml")
+    items = load_items(tmp_path / "items.yaml")
+    npcs = load_npcs(tmp_path / "npcs.yaml")
+    inspect_world_links(rooms, items, npcs)  # no raise: unplaced item ok, drop names a real item
+    npcs["wight"]["drops"] = ["ghost_item"]  # now a drop that names nothing real
+    with pytest.raises(SeedError, match="drops"):
+        inspect_world_links(rooms, items, npcs)
+
+
+def test_aethryn_boss_drops_a_valid_unplaced_prototype():
+    root = SEEDS_ROOT / "aethryn"
+    rooms = load_rooms(root / "rooms.yaml")
+    items = load_items(root / "items.yaml")
+    npcs = load_npcs(root / "npcs.yaml")
+    inspect_world_links(rooms, items, npcs)  # the whole flagship seed still links cleanly
+    assert npcs["cinder_wight"]["drops"] == ["cinder_hammer"]
+    assert items["cinder_hammer"]["location"] == "nowhere"  # drop-only, never on the cellar floor
 
 
 def test_an_npc_drops_list_loads(tmp_path):
@@ -197,7 +237,7 @@ def test_room_fields_win_over_template(tmp_path):
 
 # --- items and NPCs join the seed ---
 
-from parts.seed import SEED_DIR, inspect_world_links, load_items  # noqa: E402
+from parts.seed import SEED_DIR  # noqa: E402
 
 
 def test_shipped_items_seed_loads_the_copper_key():

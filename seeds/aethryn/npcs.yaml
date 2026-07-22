@@ -56,3 +56,4 @@ cinder_wight:
   xp: 180
   atk: 7  # the tutorial dungeon boss; learn its pattern, or reforge it rather than break it
   aggressive: true  # it never finished dying: strikes on the world beat (leash releases if you stop)
+  drops: [cinder_hammer]  # felled, the old smith yields its grey-cinder hammer (object instancing)

@@ -58,6 +58,9 @@ def load_splash() -> str:
 
 
 LABEL_RE = re.compile(r"^[a-z][a-z0-9_]*$")
+# The sentinel `location` for a drop-only prototype: a template never placed in the world, only
+# spawned by clone() (loot, timed spawns). Reserved -- a room may not be labelled this.
+UNPLACED = "nowhere"
 DEFAULT_ROOM_DESC = "There is nothing remarkable here yet."
 DEFAULT_DIALOGUE = ['"..."']
 # The six canonical attributes (JRPG character system): the loader fills any a job omits.
@@ -364,7 +367,11 @@ def load_items(path: Path) -> dict[str, Item]:
             if not isinstance(amount, int) or isinstance(amount, bool):
                 raise SeedError(f"Item '{label}': mod '{target}' must be an integer")
         loc = merged["location"]
-        tagged = loc if loc == "player" else f"room:{loc}"
+        # `nowhere` is a drop-only PROTOTYPE: a template that is never placed in a room (so it
+        # never renders or can be taken from the floor), existing only to be spawned by clone()
+        # -- e.g. loot a foe drops on defeat. This is the Diku/LP "object prototype" idea, made
+        # native to instancing. `player` and room labels place a live instance as before.
+        tagged = loc if loc in ("player", UNPLACED) else f"room:{loc}"
         items[label] = Item(
             name=merged["name"],
             keywords=merged["keywords"],
@@ -464,7 +471,7 @@ def inspect_world_links(
     placed in a room that exists. Runs at boot, before any player."""
     for label, item in items.items():
         loc = item["location"]
-        if loc != "player" and loc.removeprefix("room:") not in rooms:
+        if loc not in ("player", UNPLACED) and loc.removeprefix("room:") not in rooms:
             raise SeedError(
                 f"Item '{label}' is placed in room '{loc.removeprefix('room:')}', "
                 "which does not exist."
@@ -474,6 +481,9 @@ def inspect_world_links(
             raise SeedError(
                 f"NPC '{label}' is placed in room '{npc['location']}', which does not exist."
             )
+        for drop in npc.get("drops", []):  # loot must name a real item prototype (caught at boot)
+            if drop not in items:
+                raise SeedError(f"NPC '{label}' drops '{drop}', which is not an item in this seed.")
 
 
 def load_jobs(path: Path) -> dict[str, Job]:

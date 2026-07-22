@@ -30,3 +30,10 @@ cinder_relic:
   name: the smith's cinder relic
   keywords: [relic, cinder, smith, forgework]
   location: cellar_hearth
+
+# Drop-only prototype: the Cinder-Wight's own weapon, never placed on the floor -- it exists only
+# to be dropped when the wight falls (location: nowhere = a template spawned by loot, not seeded).
+cinder_hammer:
+  name: a hammer of grey cinder
+  keywords: [hammer, cinder, grey hammer]
+  location: nowhere
