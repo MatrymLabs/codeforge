@@ -23,7 +23,13 @@ from parts.evolution.subjects import SLUGIFY_INPUTS, slugify_oracle
 def _genome(genome_id: str, title: str, intent: str, purpose: str) -> BlueprintGenome:
     return BlueprintGenome(
         genome_id=genome_id,
-        seed=bp.Blueprint(genome_id, title, intent, ("pure function",)),
+        seed=bp.Blueprint(
+            genome_id,
+            title,
+            intent,
+            ("pure function",),
+            ("pure function: no security-sensitive surface",),
+        ),
         purpose=purpose,
         test_obligations=("matches the oracle on every input",),
         documentation_obligations=("CARD docstring",),

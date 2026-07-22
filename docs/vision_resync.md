@@ -53,10 +53,12 @@ part through the full loop is the deeper next slice; the spine itself is execute
   `foundry` (propose -> approve -> generate into the git-ignored `workspace/` sandbox; the
   `@forge`/`@arch` owner verbs + `forge_line.forge_new` are real callers, tested);
   `blueprint_ai` (Claude-drafted Blueprints on a mockable, offline-tested seam behind the
-  `blueprint` verb); the connected manufacturing spine (`forge_line`, both directions).
-- **Prototype:** `evolution` lab (the pipeline is tested end-to-end with a tick verb, but its
-  runnable demo script needs a fix before it earns "working"); `hubble` diagnostic core (built +
-  tested, not yet wired to a caller); `stewardship` gates (built + tested, currently dormant).
+  `blueprint` verb); `evolution` lab (evaluator-guided SELECTION over candidate blueprints -- hard
+  gates then weighted objectives, human_decision_required, nothing auto-promoted; the `evolution`
+  tick verb + a runnable `make evolution` demo; NOT autonomous search); the connected manufacturing
+  spine (`forge_line`, both directions).
+- **Prototype:** `hubble` diagnostic core (built + tested, not yet wired to a caller);
+  `stewardship` gates (built + tested, currently dormant).
 - **Planned:** typed WorldManifest family; configurable statistics and rulesets; creator wizards;
   the full Part Manifest; more practical adapters beyond the shipped one. (The Workflow Engine as a
   product, its game/practical adapters, a demonstrated game<->practical translation, and package
