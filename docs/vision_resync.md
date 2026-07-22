@@ -78,9 +78,13 @@ removed: the rule is "don't preserve merely because it exists," and equally "don
 ## Highest architectural risks
 
 1. ~~**No connected manufacturing spine** - the vision's heart is unexecuted.~~ **CLOSED:**
-   `parts/forge_line.py` runs the loop end to end for one built part (read-and-verify). The deeper
-   risk that remains is generating a *brand-new* part through the full loop, not the spine's absence.
-2. **Monolithic engine** ("vendored-whole") - blocks Layer-2 modularity and package export.
+   `parts/forge_line.py` runs the loop end to end in both directions -- `run_line` inspects a built
+   part station by station, and `forge_new` generates a brand-new part's scaffold through the loop
+   into the git-ignored sandbox. The heart executes.
+2. **Monolithic engine** ("vendored-whole") - **partly addressed:** `cast`/`forge` pour a
+   *vendored-selective* package (the surface-closure harness sheds the modules a game never runs),
+   so package export works and is proven; the residual is a *physical* Layer-2 split of the engine,
+   deliberately deferred (the repo-split junction).
 3. ~~**World is content-driven, not manifest/config-driven**~~ **MOSTLY ADDRESSED:** a typed
    `WorldManifest` gives a seed a declared identity, and a typed stat `Ruleset` makes the derived
    combat balance configurable -- a world's `world.yaml` `rules:` block now reaches live combat
@@ -89,8 +93,11 @@ removed: the rule is "don't preserve merely because it exists," and equally "don
    (both via `parts/progression`, applying the booted world's tracks + gains). A world now declares
    its identity, combat balance, level curves, and growth as validated data. The only balance still
    hardcoded is the equipment/status modifier stack -- a separate system, not a config gap.
-4. **Game<->practical translation is unproven** - the defining thesis has zero working demos.
-5. **Subsystem sprawl** dilutes focus.
+4. ~~**Game<->practical translation is unproven**~~ **PROVEN:** the Workflow Engine (below) powers a
+   MUD quest AND a CLI onboarding workflow from one core, and every Hardware Store part carries a
+   game adapter + a practical adapter, each tested. The defining thesis has working demos.
+5. **Subsystem sprawl** dilutes focus (a design observation, not a defect -- each peripheral
+   subsystem is individually sound and deferred relative to the spine, per the scope note above).
 
 ## The first vertical slice: the Workflow Engine
 
