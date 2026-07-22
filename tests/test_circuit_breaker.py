@@ -6,7 +6,7 @@ import pytest
 from hypothesis import given
 from hypothesis import strategies as st
 
-from parts.circuit_breaker import (
+from parts.shelf.circuit_breaker import (
     CLOSED,
     HALF_OPEN,
     OPEN,

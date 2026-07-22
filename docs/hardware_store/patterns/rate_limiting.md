@@ -17,7 +17,7 @@ token-bucket and leaky-bucket algorithms as the standard implementations.*
 
 ## The part: `token-bucket`
 
-`parts/token_bucket.py` -- a `TokenBucket(rate, capacity, clock)` that refills at `rate` tokens/sec
+`parts/shelf/token_bucket.py` -- a `TokenBucket(rate, capacity, clock)` that refills at `rate` tokens/sec
 up to `capacity`, and a `ThrottleDecision(allowed, tokens_left, retry_after, reason)`. `check()`
 peeks; `consume()` takes tokens if available, else refuses with the exact `retry_after`. The clock is
 **injected** (default `time.monotonic`), so behavior is deterministic and the conservation-law

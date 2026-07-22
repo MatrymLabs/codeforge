@@ -44,37 +44,39 @@ class AssemblyError(ValueError):
 def discover_imports(source_path: Path) -> list[str]:
     """Walk the AST of a Python file and return all `parts.*` imports (sorted, deduped).
 
-    Returns module names like 'parts.statemachine', not file paths.
+    Returns module names like 'parts.shelf.statemachine', not file paths.
     """
     try:
         tree = ast.parse(source_path.read_text(encoding="utf-8"), filename=str(source_path))
     except (OSError, SyntaxError) as exc:
         raise AssemblyError(f"cannot parse {source_path}: {exc}") from exc
 
+    # Keep the FULL dotted module (not just parts.X): a Hardware Store part on a shelf is
+    # parts.shelf.statemachine, and truncating to parts.shelf would lose which part it is. Flat
+    # parts (parts.hardware) are unaffected -- their full path already is two components.
     modules: set[str] = set()
     for node in ast.walk(tree):
         if isinstance(node, ast.Import):
             for alias in node.names:
                 if alias.name.startswith("parts."):
-                    modules.add(alias.name.split(".")[0] + "." + alias.name.split(".")[1])
+                    modules.add(alias.name)
         elif isinstance(node, ast.ImportFrom) and node.module and node.module.startswith("parts."):
-            parts = node.module.split(".")
-            modules.add(parts[0] + "." + parts[1])
+            modules.add(node.module)
     return sorted(modules)
 
 
 def resolve_parts(imports: list[str], catalog: list[Part]) -> list[str]:
     """Map discovered imports to catalog part_ids.
 
-    An import like 'parts.statemachine' maps to the catalog entry whose source is
-    'parts/statemachine.py'. Returns sorted, deduped part_ids.
+    An import like 'parts.shelf.statemachine' maps to the catalog entry whose source is
+    'parts/shelf/statemachine.py'. Returns sorted, deduped part_ids.
     """
     source_to_id: dict[str, str] = {}
     for part in catalog:
         source_to_id[part.source] = part.id
     matched: set[str] = set()
     for imp in imports:
-        # parts.statemachine -> parts/statemachine.py
+        # parts.shelf.statemachine -> parts/shelf/statemachine.py
         file_path = imp.replace(".", "/") + ".py"
         if file_path in source_to_id:
             matched.add(source_to_id[file_path])

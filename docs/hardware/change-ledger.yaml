@@ -23,7 +23,7 @@ security: >
 assembled_from:
   - parts/repository.py
   - parts/workflow.py
-  - parts/statemachine.py
+  - parts/shelf/statemachine.py
   - parts/validation.py
   - parts/test_evidence.py
 tests:

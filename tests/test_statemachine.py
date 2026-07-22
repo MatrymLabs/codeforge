@@ -15,7 +15,7 @@ import pytest
 from hypothesis import given
 from hypothesis import strategies as st
 
-from parts.statemachine import Fired, Refusal, Transition, advance, build
+from parts.shelf.statemachine import Fired, Refusal, Transition, advance, build
 
 # A tiny door machine reused across cases: locked --unlock[key_fits]--> open.
 _DOOR = build(

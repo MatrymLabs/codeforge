@@ -4,7 +4,7 @@ import pytest
 from hypothesis import given
 from hypothesis import strategies as st
 
-from parts.statemachine import Fired, Refusal
+from parts.shelf.statemachine import Fired, Refusal
 from parts.workflow import (
     ANY_ROLE,
     Step,

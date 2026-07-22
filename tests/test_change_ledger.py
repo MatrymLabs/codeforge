@@ -6,7 +6,7 @@ from hypothesis import strategies as st
 
 from parts.change_ledger import ChangeLedger, _arc_clear, _tests_passed
 from parts.repository import DuplicateKey
-from parts.statemachine import Fired, Refusal
+from parts.shelf.statemachine import Fired, Refusal
 from parts.validation import ValidationFailed
 
 

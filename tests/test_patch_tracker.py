@@ -2,7 +2,7 @@
 
 from parts.change_ledger import ChangeLedger
 from parts.patch_tracker import PatchTracker
-from parts.statemachine import Fired, Refusal
+from parts.shelf.statemachine import Fired, Refusal
 
 
 def _walk_to_verified(tracker: PatchTracker, patch_id: str) -> None:

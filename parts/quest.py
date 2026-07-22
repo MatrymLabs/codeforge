@@ -10,7 +10,7 @@ from __future__ import annotations
 
 from parts.seed import SEED_DIR, QuestSpec, load_quest
 from parts.session import Session
-from parts.statemachine import Fired
+from parts.shelf.statemachine import Fired
 from parts.workflow import Instance, Step, Workflow, WorkflowEngine, build_workflow
 
 

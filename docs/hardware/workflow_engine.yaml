@@ -19,7 +19,7 @@ interfaces:
   - WorkflowEngine.advance
   - WorkflowEngine.is_done
 dependencies:
-  - parts.statemachine
+  - parts.shelf.statemachine
 security: >
   never mutates world state; effects are names the caller applies;
   role gating refuses before firing

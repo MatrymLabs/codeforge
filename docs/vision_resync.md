@@ -22,9 +22,14 @@ connects the stations is being assembled one vertical slice at a time.
 | **2. World Package** (runtime) | The generated/assembled deployable world | `accounts`, `world`, `rooms`/`items`/`npcs`, `commands`, `combat`, `jobs`, `progression`, `gateway`(TCP), `web_gateway`(WS), `classroom`, `assessment` |
 | **3. Hardware Store** | Reusable parts usable by the platform, packages, and outside apps | `statemachine`, `resources`, `reporting`, `config`, `registry`; catalog in `hardware`/`store` |
 
-The layer boundary is **conceptual today, not physical**: the engine is one coupled package
-(`cast` reports `engine_strategy: "vendored-whole"`, honestly), so a generated world would still
-carry the whole platform. Making Layer-2 modules optional is a major effort, deliberately deferred.
+The layer boundary was conceptual for most of the repo's life; it is now **becoming physical, one
+family at a time**. The Hardware Store's resilience family and its FSM core (`token_bucket`, `retry`,
+`deadline`, `bulkhead`, `circuit_breaker`, `statemachine`) live in their own package, `parts/shelf/`,
+with the dependency arrow pointing one way (engine -> shelf). The rest of the reusable cores follow
+the same proven recipe (move + retarget catalog/registry/manifests/importers + declare the
+subpackage), each behind a green gate. Full Layer-2 optionality (a world carrying only what it runs)
+is already proven functionally by `cast`'s vendored-selective pour; the physical package split is the
+structural counterpart, now under way rather than deferred.
 
 ## The manufacturing loop (the heart of CodeForge)
 
@@ -63,8 +68,11 @@ part through the full loop is the deeper next slice; the spine itself is execute
   the full Part Manifest; more practical adapters beyond the shipped one. (The Workflow Engine as a
   product, its game/practical adapters, a demonstrated game<->practical translation, and package
   export/detachment are ALREADY BUILT - see staircase steps 2 and 4 below, not planned.)
-- **Deferred (relative to the spine):** repository split, plugin system, configurable-rules
-  language, package-update model. Sound to want; not now.
+- **In progress:** the physical repository split -- the Hardware Store's reusable cores are moving
+  onto `parts/shelf/`, family by family, each behind a green gate (the resilience family + FSM core
+  have landed).
+- **Deferred (relative to the spine):** plugin system, configurable-rules language, package-update
+  model. Sound to want; not now.
 
 ## Scope discipline (what conflicts, honestly)
 
@@ -81,10 +89,11 @@ removed: the rule is "don't preserve merely because it exists," and equally "don
    `parts/forge_line.py` runs the loop end to end in both directions -- `run_line` inspects a built
    part station by station, and `forge_new` generates a brand-new part's scaffold through the loop
    into the git-ignored sandbox. The heart executes.
-2. **Monolithic engine** ("vendored-whole") - **partly addressed:** `cast`/`forge` pour a
+2. **Monolithic engine** ("vendored-whole") - **being addressed, both ways:** `cast`/`forge` pour a
    *vendored-selective* package (the surface-closure harness sheds the modules a game never runs),
-   so package export works and is proven; the residual is a *physical* Layer-2 split of the engine,
-   deliberately deferred (the repo-split junction).
+   so package export works and is proven; and the *physical* Layer-2 split (the repo-split junction)
+   is now under way -- the resilience family + FSM core are physically separated into `parts/shelf/`,
+   with the rest of the reusable cores following the same proven, gated recipe.
 3. ~~**World is content-driven, not manifest/config-driven**~~ **MOSTLY ADDRESSED:** a typed
    `WorldManifest` gives a seed a declared identity, and a typed stat `Ruleset` makes the derived
    combat balance configurable -- a world's `world.yaml` `rules:` block now reaches live combat
@@ -109,7 +118,7 @@ The proof that makes the whole vision legible without finishing the platform:
 > GitHub.**
 
 - **Reusable core:** a config-driven `WorkflowEngine` (states, guarded transitions, roles) built
-  on the existing, already-tested pure FSM (`parts/statemachine.py`). Because the core exists,
+  on the existing, already-tested pure FSM (`parts/shelf/statemachine.py`). Because the core exists,
   the slice is genuinely finishable.
 - **Game adapter:** a **Quest** (regional quest progression) via MUD commands. This also fills a
   real gap: the World Package has **no quests today**.

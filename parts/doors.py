@@ -19,7 +19,7 @@ from parts import items
 from parts.hourglass import WORLD_SANDS
 from parts.seed import SEED_DIR, Door, load_doors
 from parts.session import sentence_case
-from parts.statemachine import Guard, Refusal, Transition, advance, build
+from parts.shelf.statemachine import Guard, Refusal, Transition, advance, build
 
 # The world is data: a seed's barriers live in its own doors.yaml (empty if it ships none).
 DOORS: dict[str, Door] = load_doors(SEED_DIR / "doors.yaml")
