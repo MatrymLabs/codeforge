@@ -82,6 +82,7 @@ class CastManifest:
     status: str = PLANNED  # planned | generated | validated | not_validated | detached
     detached: bool = False
     isolation_proven: bool = False  # booted in a fresh venv with only its own declared deps
+    surfaces: list[str] = field(default_factory=list)  # the surfaces a selective cast was cut for
     copied_categories: list[str] = field(default_factory=list)
     excluded_categories: list[str] = field(default_factory=list)
     known_limitations: list[str] = field(default_factory=list)
@@ -293,7 +294,12 @@ def _vendor_selective(parts_src: Path, parts_dest: Path, modules: set[str], igno
 
 
 def generate_cast(
-    plan: CastPlan, dest: Path, *, modules: set[str] | None = None, root: Path | None = None
+    plan: CastPlan,
+    dest: Path,
+    *,
+    modules: set[str] | None = None,
+    surfaces: list[str] | None = None,
+    root: Path | None = None,
 ) -> Path:
     """Phase 2: pour a planned cast to `dest` - vendor the engine (whole by default, or SELECTIVELY
     when `modules` names the closure to carry, D2), copy the cast's OWN seed pack, and write the
@@ -325,8 +331,11 @@ def generate_cast(
     shutil.copy2(base / "forge.py", dest / "forge.py")
     # 2. only this cast's OWN seed pack (never the other games)
     shutil.copytree(base / "seeds" / starter, dest / "seeds" / starter, ignore=ignore)
-    # 3. the fresh scaffold + the manifest, marked generated
-    generated = replace(plan.manifest, status=GENERATED, engine_strategy=strategy)
+    # 3. the fresh scaffold + manifest, marked generated (record the surfaces of a selective cut,
+    #    so `cast update` can recompute the closure later without re-guessing what the cast was for)
+    generated = replace(
+        plan.manifest, status=GENERATED, engine_strategy=strategy, surfaces=list(surfaces or [])
+    )
     deps, requires_python = _engine_runtime_deps(base)  # the cast declares the engine's real deps
     write_manifest(generated, dest / "cast_manifest.json")
     (dest / "README.md").write_text(_scaffold_readme(generated), encoding="utf-8")
@@ -518,7 +527,7 @@ def pour_selective(
     if plan.verdict != READY:
         raise CastError(f"cannot pour a {plan.verdict.upper()} cast: resolve the blocker(s) first")
     modules = coupling.closure(surfaces, tracer=tracer, import_tracer=import_tracer)
-    out = generate_cast(plan, Path(dest), modules=modules, root=root)
+    out = generate_cast(plan, Path(dest), modules=modules, surfaces=surfaces, root=root)
     ok, detail = validate_cast(
         out,
         commands=coupling.surface_commands(surfaces),

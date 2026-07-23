@@ -36,9 +36,11 @@ from dataclasses import dataclass, field, replace
 from pathlib import Path
 
 from parts.cast import (
+    VENDORED_SELECTIVE,
     CastError,
     _declared_deps,
     _engine_runtime_deps,
+    _vendor_selective,
     read_manifest,
     validate_cast,
     write_manifest,
@@ -88,9 +90,13 @@ class CastDrift:
 
     @property
     def in_sync(self) -> bool:
-        """Fully in sync: no engine drift, no dep drift, no local edits, pin verifiable."""
+        """Fully in sync: nothing changed, no NEW upstream module, no owner-only/local edits, no dep
+        drift, pin verifiable. A selective cast's SHED modules are expected and do not count (else a
+        current selective cast would forever read as drifted)."""
         return (
-            not self.has_engine_drift
+            not self.changed
+            and not self.newly_upstream
+            and not self.cast_only
             and not self.has_dep_drift
             and not self.locally_modified
             and self.pin_verifiable
@@ -421,14 +427,16 @@ def _apply_update(
     source_root: Path,
     drift: CastDrift,
     *,
+    modules: set[str] | None,
     validate: bool,
     validator,
 ) -> UpdateOutcome:
     """Back up the engine, re-vendor from the source, re-validate, and roll back on any failure.
 
-    The mutation is bracketed by a backup: if validation fails or anything raises, the cast is
-    restored to exactly its prior engine. The manifest's pinned commit advances only on success.
-    Never commits -- the owner reviews and commits the update."""
+    `modules` None re-vendors the WHOLE engine (copytree); a set re-vendors only that closure (a
+    selective cast, via the same `_vendor_selective` the pour uses). The mutation is bracketed by a
+    backup: if validation fails or anything raises, the cast is restored to its prior engine.
+    The manifest's pinned commit advances only on success. Never commits -- the owner does."""
     ignore = shutil.ignore_patterns("__pycache__", "*.pyc")
     backup = Path(tempfile.mkdtemp(prefix="cast-update-backup-"))
     try:
@@ -436,7 +444,10 @@ def _apply_update(
         shutil.copy2(cast_dir / "forge.py", backup / "forge.py")
 
         shutil.rmtree(cast_dir / "parts")
-        shutil.copytree(source_root / "parts", cast_dir / "parts", ignore=ignore)
+        if modules is None:
+            shutil.copytree(source_root / "parts", cast_dir / "parts", ignore=ignore)
+        else:
+            _vendor_selective(source_root / "parts", cast_dir / "parts", modules, ignore)
         shutil.copy2(source_root / "forge.py", cast_dir / "forge.py")
         revendored = len(_engine_files(cast_dir))
 
@@ -474,6 +485,20 @@ def _apply_update(
         shutil.rmtree(backup, ignore_errors=True)
 
 
+def _selective_validator(surfaces: list[str]):
+    """A validator that boots the cast and drives the surfaces' full corpus (the D2 harness)."""
+    from parts import coupling
+
+    def _check(cast_dir: Path) -> tuple[bool, str]:
+        return validate_cast(
+            cast_dir,
+            commands=coupling.surface_commands(surfaces),
+            imports=coupling.surface_imports(surfaces),
+        )
+
+    return _check
+
+
 def update_cast(
     cast_dir: Path | str,
     source_root: Path | str,
@@ -481,17 +506,19 @@ def update_cast(
     force: bool = False,
     validate: bool = True,
     validator=None,
+    closure_fn=None,
     resolve_commit=_resolve_commit,
     commit_present=_commit_present,
     read_at_commit=_read_at_commit,
 ) -> UpdateOutcome:
-    """Apply an engine update to a poured cast (vendored-whole), guarded by the broad harness.
+    """Apply an engine update to a poured cast, guarded by the broad harness.
 
-    Reads the drift first, then REFUSES rather than risk the owner's work: a selective cast (its
-    surfaces are not recorded, so the closure can't be recomputed), local edits or an unverifiable
-    pin without `force`, or a cast in sync. On apply it backs up, re-vendors from the source,
-    re-validates, and rolls back on failure; it advances the manifest's pin only on success, and
-    never commits. `validator` is the injectable re-validation seam (default: boot the cast)."""
+    Reads the drift first, then REFUSES rather than risk the owner's work: a selective cast whose
+    surfaces were not recorded at pour (re-pour to enable updates), local edits or an unverifiable
+    pin without `force`, or a cast in sync. On apply it backs up, re-vendors from the source (WHOLE,
+    or the surfaces' recomputed closure for selective), re-validates with the matching corpus,
+    and rolls back on failure; it advances the manifest's pin only on success and never commits.
+    `validator` and `closure_fn` are injectable seams (default: boot cast / coupling.closure)."""
     cast_dir, source_root = Path(cast_dir), Path(source_root)
     drift = diff_cast(
         cast_dir,
@@ -501,10 +528,12 @@ def update_cast(
         read_at_commit=read_at_commit,
     )
     here, there = drift.pinned_commit, drift.target_commit
-    if drift.engine_strategy == "vendored-selective":
+    manifest = read_manifest(cast_dir / "cast_manifest.json")
+    selective = drift.engine_strategy == VENDORED_SELECTIVE
+    if selective and not manifest.surfaces:
         return UpdateOutcome(
             False,
-            "selective casts cannot be updated yet (surfaces not recorded at pour)",
+            "selective cast has no recorded surfaces (poured before recording); re-pour to update",
             here,
             there,
         )
@@ -527,7 +556,17 @@ def update_cast(
             here,
             there,
         )
-    return _apply_update(cast_dir, source_root, drift, validate=validate, validator=validator)
+    if selective:
+        from parts import coupling
+
+        modules = (closure_fn or coupling.closure)(manifest.surfaces)
+        check = validator or _selective_validator(manifest.surfaces)
+    else:
+        modules = None
+        check = validator
+    return _apply_update(
+        cast_dir, source_root, drift, modules=modules, validate=validate, validator=check
+    )
 
 
 def render_update(outcome: UpdateOutcome) -> str:
