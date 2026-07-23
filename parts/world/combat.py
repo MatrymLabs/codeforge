@@ -56,6 +56,23 @@ def _fall_and_recover(session: Session, npc: Npc) -> str:
     )
 
 
+def _fall_to_death(session: Session, npc: Npc) -> str:
+    """A LETHAL foe (a boss) fells the player: no in-place failsafe. The player wakes at their start
+    room at full health, and the foe recovers -- the fight is earned again. Levels are kept."""
+    from parts.world.world import START_ROOM  # lazy: world binds seed state at import
+
+    session.location = START_ROOM
+    hp = session.resources["hp"]
+    session.resources["hp"] = hp.heal(hp.maximum)
+    npc["hp_now"] = npc["hp"]  # the boss recovers for the rematch
+    witness("fall", npc["name"], "felled the player, who woke where their road began")
+    foe = sentence_case(npc["name"])
+    return (
+        f"{foe} fells you. Darkness takes you -- and you wake where your road "
+        "began, whole but shaken. It still waits below."
+    )
+
+
 def _resolve_npc_blow(session: Session, npc: Npc, verb: str) -> str:
     """One NPC blow against the player: damage, room broadcast (typed StrikeFrame),
     the Engineer's Emergency Repair reaction, and the training-ground failsafe. `verb`
@@ -81,7 +98,10 @@ def _resolve_npc_blow(session: Session, npc: Npc, verb: str) -> str:
         line = f"{line}\n{repair}"
         hp = session.resources["hp"]  # re-read: the repair healed, so the fall-check sees the save
     if hp.is_depleted:
-        return f"{line}\n{_fall_and_recover(session, npc)}"
+        fall = (
+            _fall_to_death(session, npc) if npc.get("lethal") else _fall_and_recover(session, npc)
+        )
+        return f"{line}\n{fall}"
     return line
 
 

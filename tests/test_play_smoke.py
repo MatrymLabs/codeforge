@@ -65,13 +65,14 @@ def test_a_stranger_can_play_the_proactive_combat_loop():
     assert "lunges for 7" in trade
     assert "strikes back" not in trade
 
-    # Stop fighting: the leash releases the foe within its window, and the player is never
-    # left dead - the failsafe catches any fatal beat en route.
-    released = False
+    # Stop fighting: the fight always ends SAFELY within its window -- either the leash releases the
+    # foe, or (the Cinder-Wight is a lethal boss) a fatal beat sends the player home. Never dead.
+    safe_exit = False
+    start_room = s.location
     for _ in range(LEASH + 1):
         out = handle_command(s, "look")
-        assert s.resources["hp"].current > 0  # never a broken state, beat after beat
-        if "breaks off its assault" in out:
-            released = True
+        assert s.resources["hp"].current > 0  # never a broken state: failsafe, or a homeward fall
+        if "breaks off its assault" in out or s.location != start_room:
+            safe_exit = True  # leash released, or the lethal boss sent the player home
             break
-    assert released  # the soft-lock exit fired: the fight ends, badly-but-safely
+    assert safe_exit  # the soft-lock exit fired: the fight ends, badly-but-safely
