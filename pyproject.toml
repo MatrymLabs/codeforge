@@ -11,7 +11,10 @@ dependencies = ["pyyaml", "sqlalchemy", "fastapi", "uvicorn", "websockets", "pyd
 ai = ["anthropic>=0.118.0"]
 postgres = ["psycopg[binary]>=3.3.4"]
 dev = [
-    "ruff",
+    # Pinned: `ruff format --check` is a hard gate, so it must be reproducible. Unpinned, CI installs
+    # the latest ruff and local lags -- a minor bump (0.15 -> 0.16) reformatted and reddened CI once.
+    # Bump this deliberately (change the pin, then `make fix`), never by drift.
+    "ruff==0.16.0",
     "mypy",
     "types-PyYAML",
     "pytest",
