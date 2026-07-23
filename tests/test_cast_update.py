@@ -117,10 +117,27 @@ def test_a_source_that_is_not_a_checkout_is_refused(tmp_path: Path) -> None:
 def test_engine_files_skips_pycache_and_hashes_content(tmp_path: Path) -> None:
     _engine_tree(tmp_path, _BASE)
     (tmp_path / "parts" / "__pycache__").mkdir()
-    (tmp_path / "parts" / "__pycache__" / "junk.pyc").write_text("cache")
+    (tmp_path / "parts" / "__pycache__" / "cached.py").write_text("x = 1\n")  # a .py in a cache
     files = _engine_files(tmp_path)
     assert "forge.py" in files and "parts/world/combat.py" in files
-    assert not any("__pycache__" in f for f in files)  # caches never compared
+    assert not any("__pycache__" in f for f in files)  # caches never compared, even a .py within
+
+
+def test_engine_files_tolerates_a_missing_forge_or_parts(tmp_path: Path) -> None:
+    assert _engine_files(tmp_path) == {}  # neither forge.py nor parts/ -> empty, no crash
+    (tmp_path / "forge.py").write_text("y = 1\n")  # forge.py but no parts/
+    assert list(_engine_files(tmp_path)) == ["forge.py"]
+
+
+def test_resolve_commit_degrades_when_git_cannot_run(tmp_path: Path, monkeypatch) -> None:
+    # the git call raising (OSError: no git on PATH) must degrade to 'unknown', never propagate
+    import parts.cast_update as cu
+
+    def _boom(*args, **kwargs):
+        raise OSError("git not found")
+
+    monkeypatch.setattr(cu.subprocess, "run", _boom)
+    assert cu._resolve_commit(tmp_path) == "unknown"
 
 
 def test_resolve_commit_returns_unknown_outside_a_repo(tmp_path: Path) -> None:
