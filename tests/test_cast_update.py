@@ -183,13 +183,28 @@ def test_render_names_every_drift_bucket() -> None:
         engine_strategy="vendored-selective",
         changed=["parts/world/combat.py"],
         upstream_only=["parts/new_core.py"],
+        newly_upstream=["parts/new_core.py"],
         cast_only=["parts/house_rules.py"],
+        pin_verifiable=True,
     )
     out = render_drift(drift)
     assert "parts/world/combat.py" in out  # changed
-    assert "parts/new_core.py" in out  # upstream-only
+    assert "parts/new_core.py" in out  # newly upstream (split of upstream-only)
     assert "parts/house_rules.py" in out  # cast-only
     assert "Read-only report" in out  # never mistaken for an apply
+
+
+def test_render_falls_back_to_raw_upstream_when_pin_unverifiable() -> None:
+    drift = CastDrift(
+        cast_dir="c",
+        pinned_commit="dead",
+        target_commit="b",
+        engine_strategy="vendored-selective",
+        upstream_only=["parts/pm.py"],
+        pin_verifiable=False,  # cannot split new-vs-shed without the pin
+    )
+    out = render_drift(drift)
+    assert "upstream-only (new upstream, or shed" in out and "parts/pm.py" in out
 
 
 def test_cli_diff_prints_a_report(tmp_path, capsys) -> None:
@@ -211,6 +226,65 @@ def test_cli_diff_refuses_a_dir_that_is_not_a_cast(tmp_path, capsys) -> None:
     _engine_tree(source, _BASE)
     assert main(["diff", str(cast), str(source)]) == 2
     assert "not a poured cast" in capsys.readouterr().err
+
+
+# --- Slice 3: split upstream_only into newly-upstream vs shed (by the pin) ----------------------
+
+
+def test_upstream_only_splits_into_new_and_shed(tmp_path: Path) -> None:
+    cast, source = tmp_path / "cast", tmp_path / "src"
+    _poured_cast(cast, _BASE, commit="aaa111", strategy="vendored-selective")
+    source_files = dict(_BASE)
+    source_files["parts/pm.py"] = "# a dev-tool shed at pour\n"  # existed at the pin -> shed
+    source_files["parts/brand_new.py"] = "# appeared upstream since pour\n"  # absent at pin -> new
+    _engine_tree(source, source_files)
+    at_pin = dict(_BASE)
+    at_pin["parts/pm.py"] = (
+        "# a dev-tool shed at pour\n"  # pm existed at the pin; brand_new did not
+    )
+    drift = diff_cast(
+        cast,
+        source,
+        resolve_commit=lambda r: "bbb222",
+        commit_present=lambda r, c: True,
+        read_at_commit=_pin_reader(at_pin),
+    )
+    assert drift.upstream_only == ["parts/brand_new.py", "parts/pm.py"]  # the raw union, sorted
+    assert drift.newly_upstream == ["parts/brand_new.py"]  # absent at the pin: genuinely new
+    assert drift.shed == ["parts/pm.py"]  # present at the pin: deliberately not carried
+
+
+def test_a_whole_cast_has_no_shed_only_new(tmp_path: Path) -> None:
+    # a vendored-whole cast carried everything at pour, so upstream_only is all genuinely new
+    cast, source = tmp_path / "cast", tmp_path / "src"
+    _poured_cast(cast, _BASE, commit="aaa111", strategy="vendored-whole")
+    source_files = dict(_BASE)
+    source_files["parts/brand_new.py"] = "# new upstream\n"
+    _engine_tree(source, source_files)
+    drift = diff_cast(
+        cast,
+        source,
+        resolve_commit=lambda r: "bbb222",
+        commit_present=lambda r, c: True,
+        read_at_commit=_pin_reader(_BASE),  # brand_new absent at pin -> new; nothing shed
+    )
+    assert drift.newly_upstream == ["parts/brand_new.py"] and drift.shed == []
+
+
+def test_render_splits_new_from_shed_when_verifiable() -> None:
+    drift = CastDrift(
+        cast_dir="c",
+        pinned_commit="a",
+        target_commit="b",
+        engine_strategy="vendored-selective",
+        upstream_only=["parts/brand_new.py", "parts/pm.py"],
+        newly_upstream=["parts/brand_new.py"],
+        shed=["parts/pm.py"],
+        pin_verifiable=True,
+    )
+    out = render_drift(drift)
+    assert "newly upstream since your pin" in out and "parts/brand_new.py" in out
+    assert "shed by this cast" in out and "parts/pm.py" in out
 
 
 # --- Slice 2: local-edit detection (vendored file vs the source AT THE PIN) --------------------
