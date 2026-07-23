@@ -617,6 +617,19 @@ def main(argv: list[str] | None = None) -> int:
     import sys
 
     args = argv if argv is not None else sys.argv[1:]
+    if args and args[0] == "diff":
+        if len(args) < 3:
+            print("usage: python -m parts.cast diff <cast_dir> <source_root>", file=sys.stderr)
+            return 2
+        from parts.cast_update import diff_cast, render_drift
+
+        try:
+            drift = diff_cast(args[1], args[2])
+        except CastError as exc:
+            print(f"cast: {exc}", file=sys.stderr)
+            return 2
+        print(render_drift(drift))
+        return 0
     if args and args[0] == "generate":
         if len(args) < 4:
             print(

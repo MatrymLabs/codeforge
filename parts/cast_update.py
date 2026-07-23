@@ -111,3 +111,42 @@ def diff_cast(
         upstream_only=sorted(src_files.keys() - cast_files.keys()),
         cast_only=sorted(cast_files.keys() - src_files.keys()),
     )
+
+
+def _section(title: str, items: list[str]) -> list[str]:
+    body = [f"    - {m}" for m in items] if items else ["    (none)"]
+    return [f"  {title} ({len(items)}):", *body]
+
+
+def render_drift(drift: CastDrift) -> str:
+    """A human-readable drift report: the commit delta then the engine file drift, honestly labeled.
+
+    In sync == no file drift (the target carries the same engine). Otherwise it names the three
+    buckets so a reader knows exactly what an apply step would touch. It states plainly that this is
+    read-only, so no one mistakes the report for an update."""
+    lines = [
+        f"Cast drift -- {drift.cast_dir}",
+        "=" * 40,
+        "",
+        f"  engine strategy:  {drift.engine_strategy}",
+        f"  pinned commit:    {drift.pinned_commit}",
+        f"  target commit:    {drift.target_commit}",
+        "",
+    ]
+    if not drift.has_engine_drift:
+        lines.append("  engine: IN SYNC with the target (no file drift).")
+        return "\n".join(lines)
+    lines += _section("changed upstream (a fix you could pull)", drift.changed)
+    lines += [
+        "",
+        *_section("upstream-only (new upstream, or shed by a selective cast)", drift.upstream_only),
+    ]
+    lines += [
+        "",
+        *_section("cast-only (your local additions, or removed upstream)", drift.cast_only),
+    ]
+    lines += [
+        "",
+        "  Read-only report. Applying an update (re-vendor + revalidate) is a separate step.",
+    ]
+    return "\n".join(lines)

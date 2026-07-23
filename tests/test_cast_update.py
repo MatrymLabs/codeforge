@@ -13,8 +13,8 @@ from pathlib import Path
 
 import pytest
 
-from parts.cast import CastError, CastManifest, write_manifest
-from parts.cast_update import CastDrift, _engine_files, _resolve_commit, diff_cast
+from parts.cast import CastError, CastManifest, main, write_manifest
+from parts.cast_update import CastDrift, _engine_files, _resolve_commit, diff_cast, render_drift
 
 
 def _engine_tree(root: Path, files: dict[str, str]) -> None:
@@ -133,6 +133,50 @@ def test_resolve_commit_reads_the_real_checkout() -> None:
     repo_root = Path(__file__).resolve().parent.parent
     commit = _resolve_commit(repo_root)
     assert commit != "unknown" and commit.strip() == commit and len(commit) >= 4
+
+
+def test_render_shows_in_sync_when_there_is_no_drift() -> None:
+    drift = CastDrift(cast_dir="c", pinned_commit="a", target_commit="a", engine_strategy="whole")
+    out = render_drift(drift)
+    assert "IN SYNC" in out and "pinned commit:    a" in out
+
+
+def test_render_names_every_drift_bucket() -> None:
+    drift = CastDrift(
+        cast_dir="c",
+        pinned_commit="a",
+        target_commit="b",
+        engine_strategy="vendored-selective",
+        changed=["parts/world/combat.py"],
+        upstream_only=["parts/new_core.py"],
+        cast_only=["parts/house_rules.py"],
+    )
+    out = render_drift(drift)
+    assert "parts/world/combat.py" in out  # changed
+    assert "parts/new_core.py" in out  # upstream-only
+    assert "parts/house_rules.py" in out  # cast-only
+    assert "Read-only report" in out  # never mistaken for an apply
+
+
+def test_cli_diff_prints_a_report(tmp_path, capsys) -> None:
+    cast, source = tmp_path / "cast", tmp_path / "src"
+    _poured_cast(cast, _BASE, commit="aaa111", strategy="vendored-whole")
+    _engine_tree(source, _BASE)
+    assert main(["diff", str(cast), str(source)]) == 0
+    assert "Cast drift" in capsys.readouterr().out
+
+
+def test_cli_diff_usage_error_without_args(capsys) -> None:
+    assert main(["diff"]) == 2
+    assert "usage" in capsys.readouterr().err
+
+
+def test_cli_diff_refuses_a_dir_that_is_not_a_cast(tmp_path, capsys) -> None:
+    cast, source = tmp_path / "cast", tmp_path / "src"
+    _engine_tree(cast, _BASE)  # no manifest
+    _engine_tree(source, _BASE)
+    assert main(["diff", str(cast), str(source)]) == 2
+    assert "not a poured cast" in capsys.readouterr().err
 
 
 def test_drift_is_a_frozen_report(tmp_path: Path) -> None:
