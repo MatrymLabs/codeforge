@@ -27,6 +27,7 @@ from typing import Any, NotRequired, TypedDict
 import yaml
 
 from parts.shelf.conditions import ConditionError, validate
+from parts.shelf.reward_curve import LEVEL_MAX, LEVEL_MIN, TIER_MULTIPLIERS
 
 # A seed IS a game. The engine loads one seed pack at startup; swap the seed and
 # codeforge boots a different game (fantasy `first-forge`, `spiral-ascent`, ...).
@@ -133,6 +134,11 @@ class Npc(TypedDict):
     # sent back to your start room at full health while it recovers, not revived in place. Default
     # False, so every training-ground foe stays gentle. A lethal foe must be combatable (hp > 0).
     lethal: NotRequired[bool]
+    # Optional: a level (1-300) and tier (normal/elite/boss) that scale the kill reward through the
+    # challenge curve (parts.shelf.reward_curve): fighting up pays more, grays pay nothing. A foe
+    # WITHOUT a level keeps its flat `xp` award (the tutorial default). Validated at load.
+    level: NotRequired[int]
+    tier: NotRequired[str]
     # Item prototype labels this NPC drops when defeated: a fresh instance of each is spawned into
     # the room (parts.world.items.clone). Optional; a bare NPC drops nothing. Loot is real object
     # instancing -- the drop is a new instance, so it never collides with the seed original.
@@ -507,6 +513,28 @@ def load_npcs(path: Path) -> dict[str, Npc]:
                 f"NPC '{label}': 'loot' must be a mapping of item prototype (or 'nothing') "
                 "to a positive integer weight."
             )
+        # Optional challenge rating: a 'level' (1-300) and 'tier' feed the reward curve so a kill
+        # pays by the gap between fighter and foe. Both are opt-in -- a levelless foe keeps its flat
+        # xp -- but a tier without a level is a contradiction (nothing to scale), so refuse it loud.
+        level = merged.get("level")
+        if level is not None and (
+            not isinstance(level, int)
+            or isinstance(level, bool)
+            or not LEVEL_MIN <= level <= LEVEL_MAX
+        ):
+            raise SeedError(
+                f"NPC '{label}': 'level' must be an integer {LEVEL_MIN}-{LEVEL_MAX}, got {level!r}."
+            )
+        tier = merged.get("tier")
+        if tier is not None and tier not in TIER_MULTIPLIERS:
+            raise SeedError(
+                f"NPC '{label}': 'tier' must be one of {sorted(TIER_MULTIPLIERS)}, got {tier!r}."
+            )
+        if tier is not None and level is None:
+            raise SeedError(
+                f"NPC '{label}': 'tier' {tier!r} is set but 'level' is not; a tier only scales a "
+                "levelled foe. Give the NPC a level or drop the tier."
+            )
         npc = Npc(
             name=merged["name"],
             keywords=merged["keywords"],
@@ -521,6 +549,9 @@ def load_npcs(path: Path) -> dict[str, Npc]:
         )
         if merged["lethal"]:
             npc["lethal"] = True
+        if level is not None:
+            npc["level"] = level
+            npc["tier"] = tier if tier is not None else "normal"
         if drops:
             npc["drops"] = list(drops)
         if loot:

@@ -59,8 +59,9 @@ def test_aethryn_every_exit_and_placement_resolves():
 
 def test_aethryn_cinder_wight_boss_is_attackable_and_strikes_back():
     wight = load_npcs(AETHRYN / "npcs.yaml")["cinder_wight"]
-    assert wight["hp"] == 50 and wight["xp"] == 180
+    assert wight["hp"] == 50
     assert wight["atk"] == 7  # the Cold Cellar boss hits back
+    assert wight["level"] == 8 and wight["tier"] == "boss"  # a boss-tier, curve-scaled reward
 
 
 def test_aethryn_ships_the_relighting_quest_as_data():

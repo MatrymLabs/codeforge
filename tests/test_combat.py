@@ -415,3 +415,46 @@ def test_the_aethryn_boss_is_lethal():
     aethryn_npcs = load_npcs(seeds / "aethryn" / "npcs.yaml")
     assert aethryn_npcs["cinder_wight"].get("lethal") is True  # a real boss
     assert aethryn_npcs["reach_wolf"].get("lethal") is not True  # the road foe stays forgiving
+
+
+def test_reward_amounts_are_flat_for_a_levelless_foe():
+    """A foe without a level keeps the tutorial economy: XP, JP and TP all equal its flat xp."""
+    from parts.world.combat import _reward_amounts
+
+    s = _fighter()
+    assert _reward_amounts(s, {"xp": 30}) == (30, 30, 30)
+
+
+def test_reward_amounts_scale_by_the_challenge_gap_for_a_levelled_foe():
+    """Fight up and a levelled foe pays; outclass it by 15+ levels and its xp drops to nothing."""
+    from parts.world.combat import _reward_amounts
+
+    s = _fighter()  # vanguard, player level 1
+    s.level = 1
+    assert _reward_amounts(s, {"xp": 0, "level": 3, "tier": "normal"})[0] > 0
+    s.level = 30  # far past it: a gray
+    assert _reward_amounts(s, {"xp": 0, "level": 3, "tier": "normal"})[0] == 0
+
+
+def test_a_boss_tier_pays_ten_times_a_normal_of_the_same_level():
+    from parts.world.combat import _reward_amounts
+
+    s = _fighter()
+    s.level = 5
+    normal = _reward_amounts(s, {"xp": 0, "level": 8, "tier": "normal"})
+    boss = _reward_amounts(s, {"xp": 0, "level": 8, "tier": "boss"})
+    assert boss[0] == normal[0] * 10  # the boss multiplier is x10 the level's base
+
+
+def test_land_hit_awards_the_scaled_xp_not_the_flat_field():
+    """The wiring reaches the grant: a levelled foe with xp:0 still pays its curve reward."""
+    from parts.world.combat import land_hit
+
+    s = _fighter()
+    s.level = 5
+    npc = {"name": "the wolf", "hp": 1, "hp_now": 1, "xp": 0, "atk": 0}
+    npc["level"], npc["tier"] = 8, "normal"
+    before = s.xp
+    defeated, _ = land_hit(s, npc, "wolf_1", 5)
+    assert defeated
+    assert s.xp - before == 80  # level 8 x XP_PER_LEVEL 10 x gap 1.0 -- not the flat xp:0

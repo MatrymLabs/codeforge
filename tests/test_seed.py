@@ -65,6 +65,48 @@ def test_a_non_list_drops_is_rejected(tmp_path):
         load_npcs(npcsf)
 
 
+def test_a_levelled_foe_loads_its_level_and_tier(tmp_path):
+    npcsf = tmp_path / "npcs.yaml"
+    npcsf.write_text("wolf:\n  location: cell\n  hp: 15\n  atk: 3\n  level: 3\n  tier: normal\n")
+    wolf = load_npcs(npcsf)["wolf"]
+    assert wolf["level"] == 3
+    assert wolf["tier"] == "normal"
+
+
+def test_a_levelled_foe_without_a_tier_defaults_to_normal(tmp_path):
+    npcsf = tmp_path / "npcs.yaml"
+    npcsf.write_text("wolf:\n  location: cell\n  hp: 15\n  level: 3\n")  # tier omitted
+    assert load_npcs(npcsf)["wolf"]["tier"] == "normal"
+
+
+def test_a_levelless_foe_carries_no_level_or_tier_key(tmp_path):
+    npcsf = tmp_path / "npcs.yaml"
+    npcsf.write_text("rat:\n  location: cell\n  hp: 5\n  xp: 10\n")
+    rat = load_npcs(npcsf)["rat"]
+    assert "level" not in rat and "tier" not in rat  # opt-in: absent keeps the flat economy
+
+
+def test_an_out_of_range_level_is_rejected(tmp_path):
+    npcsf = tmp_path / "npcs.yaml"
+    npcsf.write_text("wolf:\n  location: cell\n  hp: 15\n  level: 999\n")
+    with pytest.raises(SeedError, match="level"):
+        load_npcs(npcsf)
+
+
+def test_an_unknown_tier_is_rejected(tmp_path):
+    npcsf = tmp_path / "npcs.yaml"
+    npcsf.write_text("wolf:\n  location: cell\n  hp: 15\n  level: 3\n  tier: legendary\n")
+    with pytest.raises(SeedError, match="tier"):
+        load_npcs(npcsf)
+
+
+def test_a_tier_without_a_level_is_rejected(tmp_path):
+    npcsf = tmp_path / "npcs.yaml"
+    npcsf.write_text("wolf:\n  location: cell\n  hp: 15\n  tier: boss\n")  # nothing to scale
+    with pytest.raises(SeedError, match="tier"):
+        load_npcs(npcsf)
+
+
 def test_a_self_closing_door_loads_its_recloses_after(tmp_path):
     doors = tmp_path / "doors.yaml"
     doors.write_text("gate:\n  blocks: [hall, north]\n  key_id: brass_key\n  recloses_after: 4\n")

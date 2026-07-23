@@ -35,8 +35,9 @@ reach_wolf:
   dialogue:
     - The wolf bares its teeth, eyes bright with wild ember.
   hp: 15
-  xp: 25
   atk: 3  # a real fight; it strikes back (the training-ground failsafe still catches a fall)
+  level: 3  # a modest step above a fresh Forger: full reward now, worth nothing once you outclass it
+  tier: normal
 
 road_warden:
   name: the Road-Warden
@@ -53,8 +54,9 @@ cinder_wight:
   dialogue:
     - '"COLD... SO COLD..." The old smith lifts a hammer of grey cinder. It never finished dying.'
   hp: 50
-  xp: 180
   atk: 7  # the tutorial dungeon boss; learn its pattern, or reforge it rather than break it
+  level: 8  # a real gulf above the wolves: a boss-tier reward for closing it
+  tier: boss  # x10 the level's base reward -- the climax of the Kindlands arc pays for the climb
   aggressive: true  # it never finished dying: strikes on the world beat (leash releases if you stop)
   lethal: true  # a real boss: fall to it and you wake in town while it recovers, no failsafe revive
   drops: [cinder_hammer]  # felled, the old smith yields its grey-cinder hammer (object instancing)
