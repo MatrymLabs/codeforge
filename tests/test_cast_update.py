@@ -14,18 +14,22 @@ from pathlib import Path
 
 import pytest
 
-from parts.cast import CastError, CastManifest, main, write_manifest
+from parts.cast import CastError, CastManifest, main, read_manifest, write_manifest
 from parts.cast_update import (
     CastDrift,
+    UpdateOutcome,
     _commit_present,
     _engine_files,
     _read_at_commit,
     _req_name,
     _resolve_commit,
+    _restore_engine,
     audit_requirements,
     diff_cast,
     render_audit,
     render_drift,
+    render_update,
+    update_cast,
 )
 
 
@@ -516,3 +520,240 @@ def test_drift_is_a_frozen_report(tmp_path: Path) -> None:
     drift = CastDrift(cast_dir="c", pinned_commit="a", target_commit="b", engine_strategy="w")
     with pytest.raises(FrozenInstanceError):
         drift.changed = ["x"]  # type: ignore[misc]  # frozen: a report never mutates
+
+
+# --- U2: apply an engine update to a poured cast, safely -----------------------------------------
+
+_BUMPED = {**_BASE, "parts/world/combat.py": "def hit():\n    return 2\n"}  # an upstream fix
+_OK = lambda cd: (True, "commands ran clean")  # noqa: E731  a passing validator
+_COMBAT = "parts/world/combat.py"
+
+
+def _whole_cast_with_upstream_fix(tmp_path: Path, *, commit="aaa111", strategy="vendored-whole"):
+    """A vendored-whole cast at _BASE + a source with a one-line upstream fix to combat."""
+    cast, source = tmp_path / "cast", tmp_path / "src"
+    _poured_cast(cast, _BASE, commit=commit, strategy=strategy)
+    _engine_tree(source, _BUMPED)
+    return cast, source
+
+
+def test_update_applies_the_fix_and_bumps_the_pin(tmp_path: Path) -> None:
+    cast, source = _whole_cast_with_upstream_fix(tmp_path)
+    outcome = update_cast(
+        cast,
+        source,
+        validator=_OK,
+        resolve_commit=lambda r: "bbb222",
+        commit_present=lambda r, c: True,
+        read_at_commit=_pin_reader(_BASE),  # pin == cast content -> no local edits
+    )
+    assert outcome.applied and "updated and revalidated" in outcome.reason
+    assert outcome.from_commit == "aaa111" and outcome.to_commit == "bbb222"
+    assert (cast / _COMBAT).read_text() == "def hit():\n    return 2\n"  # carries the source now
+    assert read_manifest(cast / "cast_manifest.json").codeforge_commit == "bbb222"  # pin advanced
+
+
+def test_update_refuses_a_selective_cast(tmp_path: Path) -> None:
+    cast, source = _whole_cast_with_upstream_fix(tmp_path, strategy="vendored-selective")
+    outcome = update_cast(
+        cast,
+        source,
+        validator=_OK,
+        resolve_commit=lambda r: "bbb222",
+        commit_present=lambda r, c: True,
+        read_at_commit=_pin_reader(_BASE),
+    )
+    assert not outcome.applied and "selective" in outcome.reason
+    assert (cast / _COMBAT).read_text() == "def hit():\n    return 1\n"  # untouched
+
+
+def test_update_refuses_local_edits_without_force(tmp_path: Path) -> None:
+    cast, source = tmp_path / "cast", tmp_path / "src"
+    edited = {**_BASE, _COMBAT: "def hit():\n    return 999  # owner\n"}
+    _poured_cast(cast, edited, commit="aaa111", strategy="vendored-whole")
+    _engine_tree(source, _BUMPED)
+    outcome = update_cast(
+        cast,
+        source,
+        validator=_OK,
+        resolve_commit=lambda r: "bbb222",
+        commit_present=lambda r, c: True,
+        read_at_commit=_pin_reader(_BASE),  # pin != cast -> a local edit
+    )
+    assert not outcome.applied and "local edit" in outcome.reason
+    assert (cast / _COMBAT).read_text() == "def hit():\n    return 999  # owner\n"  # not clobbered
+
+
+def test_force_overrides_local_edits(tmp_path: Path) -> None:
+    cast, source = tmp_path / "cast", tmp_path / "src"
+    edited = {**_BASE, _COMBAT: "def hit():\n    return 999  # owner\n"}
+    _poured_cast(cast, edited, commit="aaa111", strategy="vendored-whole")
+    _engine_tree(source, _BUMPED)
+    outcome = update_cast(
+        cast,
+        source,
+        force=True,
+        validator=_OK,
+        resolve_commit=lambda r: "bbb222",
+        commit_present=lambda r, c: True,
+        read_at_commit=_pin_reader(_BASE),
+    )
+    assert outcome.applied
+    assert (cast / _COMBAT).read_text() == "def hit():\n    return 2\n"  # force clobbered the edit
+
+
+def test_update_refuses_an_unverifiable_pin_without_force(tmp_path: Path) -> None:
+    cast, source = _whole_cast_with_upstream_fix(tmp_path, commit="deadbee")
+    outcome = update_cast(
+        cast,
+        source,
+        validator=_OK,
+        resolve_commit=lambda r: "bbb222",
+        commit_present=lambda r, c: False,  # pin not in the source
+        read_at_commit=_raise_oserror,
+    )
+    assert not outcome.applied and "cannot verify" in outcome.reason
+
+
+def test_update_noop_when_already_in_sync(tmp_path: Path) -> None:
+    cast, source = tmp_path / "cast", tmp_path / "src"
+    _poured_cast(cast, _BASE, commit="aaa111", strategy="vendored-whole")
+    _engine_tree(source, _BASE)
+    outcome = update_cast(
+        cast,
+        source,
+        validator=_OK,
+        resolve_commit=lambda r: "aaa111",
+        commit_present=lambda r, c: True,
+        read_at_commit=_pin_reader(_BASE),
+    )
+    assert not outcome.applied and "already in sync" in outcome.reason
+
+
+def test_update_rolls_back_when_validation_fails(tmp_path: Path) -> None:
+    cast, source = _whole_cast_with_upstream_fix(tmp_path)
+    outcome = update_cast(
+        cast,
+        source,
+        validator=lambda cd: (False, "a command raised"),
+        resolve_commit=lambda r: "bbb222",
+        commit_present=lambda r, c: True,
+        read_at_commit=_pin_reader(_BASE),
+    )
+    assert not outcome.applied and outcome.rolled_back and "rolled back" in outcome.reason
+    assert (cast / _COMBAT).read_text() == "def hit():\n    return 1\n"  # restored
+    assert read_manifest(cast / "cast_manifest.json").codeforge_commit == "aaa111"  # pin unchanged
+
+
+def test_update_can_skip_validation(tmp_path: Path) -> None:
+    cast, source = _whole_cast_with_upstream_fix(tmp_path)
+    outcome = update_cast(
+        cast,
+        source,
+        validate=False,
+        resolve_commit=lambda r: "bbb222",
+        commit_present=lambda r, c: True,
+        read_at_commit=_pin_reader(_BASE),
+    )
+    assert outcome.applied and not outcome.validated and "validation skipped" in outcome.reason
+
+
+def test_update_rolls_back_and_raises_on_an_unexpected_error(tmp_path: Path) -> None:
+    cast, source = _whole_cast_with_upstream_fix(tmp_path)
+
+    def _boom_validator(cd):
+        raise RuntimeError("kaboom")
+
+    with pytest.raises(CastError, match="rolled back"):
+        update_cast(
+            cast,
+            source,
+            validator=_boom_validator,
+            resolve_commit=lambda r: "bbb222",
+            commit_present=lambda r, c: True,
+            read_at_commit=_pin_reader(_BASE),
+        )
+    assert (cast / _COMBAT).read_text() == "def hit():\n    return 1\n"  # restored after the crash
+
+
+def test_update_default_validator_delegates_to_validate_cast(tmp_path: Path, monkeypatch) -> None:
+    # validator=None uses _default_validator, which boots the cast via parts.cast.validate_cast
+    import parts.cast_update as cu
+
+    monkeypatch.setattr(cu, "validate_cast", lambda cd: (True, "delegated"))
+    cast, source = _whole_cast_with_upstream_fix(tmp_path)
+    outcome = update_cast(
+        cast,
+        source,
+        validator=None,
+        resolve_commit=lambda r: "bbb222",
+        commit_present=lambda r, c: True,
+        read_at_commit=_pin_reader(_BASE),
+    )
+    assert outcome.applied  # the default validator path ran and passed
+
+
+def test_restore_engine_when_the_cast_has_no_parts(tmp_path: Path) -> None:
+    backup = tmp_path / "backup"
+    (backup / "parts").mkdir(parents=True)
+    (backup / "parts" / "x.py").write_text("X = 1\n")
+    (backup / "forge.py").write_text("f\n")
+    cast = tmp_path / "cast"
+    cast.mkdir()  # no parts/ yet -> the exists() guard is False
+    _restore_engine(cast, backup)
+    assert (cast / "parts" / "x.py").read_text() == "X = 1\n" and (
+        cast / "forge.py"
+    ).read_text() == "f\n"
+
+
+def test_render_update_heads_and_rollback_line() -> None:
+    applied = UpdateOutcome(True, "engine updated and revalidated", "a", "b", 5, True)
+    assert "UPDATED" in render_update(applied) and "commit the update yourself" in render_update(
+        applied
+    )
+    noop = UpdateOutcome(False, "already in sync with the target; nothing to update", "a", "a")
+    assert "NO-OP" in render_update(noop)
+    refused = UpdateOutcome(False, "2 local edit(s) would be overwritten; ...", "a", "b")
+    assert "REFUSED" in render_update(refused)
+    rolled = UpdateOutcome(
+        False, "update failed validation, rolled back: boom", "a", "b", rolled_back=True
+    )
+    assert "rolled back" in render_update(rolled) and "restored" in render_update(rolled)
+
+
+def test_cli_update_applies_and_returns_zero(tmp_path, capsys, monkeypatch) -> None:
+    import parts.cast_update as cu
+
+    monkeypatch.setattr(
+        cu,
+        "update_cast",
+        lambda c, s, **k: UpdateOutcome(True, "engine updated and revalidated", "a", "b", 5, True),
+    )
+    assert main(["update", "somecast", "somesrc"]) == 0
+    assert "UPDATED" in capsys.readouterr().out
+
+
+def test_cli_update_refusal_returns_nonzero(tmp_path, capsys, monkeypatch) -> None:
+    import parts.cast_update as cu
+
+    monkeypatch.setattr(
+        cu, "update_cast", lambda c, s, **k: UpdateOutcome(False, "3 local edit(s) ...", "a", "b")
+    )
+    assert main(["update", "d", "s"]) == 1  # a safety refusal signals "action needed"
+    assert "REFUSED" in capsys.readouterr().out
+
+
+def test_cli_update_usage_error(capsys) -> None:
+    assert main(["update"]) == 2
+    assert "usage" in capsys.readouterr().err
+
+
+def test_cli_update_reports_a_cast_error(capsys, monkeypatch) -> None:
+    import parts.cast_update as cu
+
+    def _raise(c, s, **k):
+        raise CastError("boom")
+
+    monkeypatch.setattr(cu, "update_cast", _raise)
+    assert main(["update", "d", "s"]) == 2
+    assert "cast: boom" in capsys.readouterr().err

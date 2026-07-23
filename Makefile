@@ -120,6 +120,13 @@ cast-selective:
 cast-diff:
 	@python3 -m parts.cast diff $(or $(DIR),../codeforge-forged-game) $(or $(SOURCE),.) $(if $(AUDIT),--audit)
 
+# --- Cast update (package-update U2): APPLY an engine update to a poured cast, guarded by the broad
+# harness. Backs up, re-vendors from this checkout, re-validates, rolls back on failure; never
+# commits (the owner commits). Refuses local edits / selective casts unless FORCE=1. Usage:
+# make cast-update DIR=../codeforge-forged-game SOURCE=. [FORCE=1] ---
+cast-update:
+	@python3 -m parts.cast update $(or $(DIR),../codeforge-forged-game) $(or $(SOURCE),.) $(if $(FORCE),--force)
+
 # --- Coupling: read-only engine coupling report (detachment D1). Traces the runtime module
 # closure per surface and lists what a runtime cast could shed. Changes nothing. ---
 coupling:

@@ -29,12 +29,20 @@ import hashlib
 import json
 import os
 import re
+import shutil
 import subprocess  # nosec B404 -- fixed argv, no shell; used only to read the source's git commit
 import tempfile
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from pathlib import Path
 
-from parts.cast import CastError, _declared_deps, _engine_runtime_deps, read_manifest
+from parts.cast import (
+    CastError,
+    _declared_deps,
+    _engine_runtime_deps,
+    read_manifest,
+    validate_cast,
+    write_manifest,
+)
 
 
 @dataclass(frozen=True)
@@ -377,3 +385,169 @@ def render_audit(findings: list[str]) -> str:
     if not findings:
         return "\n  dependency audit: no known vulnerabilities in the cast's declared deps."
     return "\n".join(["", *_section("dependency vulnerabilities (pip-audit)", findings)])
+
+
+# --- U2: apply an engine update to a poured cast, safely -----------------------------------------
+
+
+@dataclass(frozen=True)
+class UpdateOutcome:
+    """The result of an update attempt. `applied` is the only 'the cast changed' signal."""
+
+    applied: bool
+    reason: str
+    from_commit: str
+    to_commit: str
+    files_revendored: int = 0
+    validated: bool = False
+    rolled_back: bool = False
+
+
+def _default_validator(cast_dir: Path) -> tuple[bool, str]:
+    """The real re-validation: boot the updated cast and run its command corpus (parts.cast)."""
+    return validate_cast(cast_dir)
+
+
+def _restore_engine(cast_dir: Path, backup: Path) -> None:
+    """Put the backed-up engine (parts/ + forge.py) back, replacing whatever is there now."""
+    if (cast_dir / "parts").exists():
+        shutil.rmtree(cast_dir / "parts")
+    shutil.copytree(backup / "parts", cast_dir / "parts")
+    shutil.copy2(backup / "forge.py", cast_dir / "forge.py")
+
+
+def _apply_update(
+    cast_dir: Path,
+    source_root: Path,
+    drift: CastDrift,
+    *,
+    validate: bool,
+    validator,
+) -> UpdateOutcome:
+    """Back up the engine, re-vendor from the source, re-validate, and roll back on any failure.
+
+    The mutation is bracketed by a backup: if validation fails or anything raises, the cast is
+    restored to exactly its prior engine. The manifest's pinned commit advances only on success.
+    Never commits -- the owner reviews and commits the update."""
+    ignore = shutil.ignore_patterns("__pycache__", "*.pyc")
+    backup = Path(tempfile.mkdtemp(prefix="cast-update-backup-"))
+    try:
+        shutil.copytree(cast_dir / "parts", backup / "parts", ignore=ignore)
+        shutil.copy2(cast_dir / "forge.py", backup / "forge.py")
+
+        shutil.rmtree(cast_dir / "parts")
+        shutil.copytree(source_root / "parts", cast_dir / "parts", ignore=ignore)
+        shutil.copy2(source_root / "forge.py", cast_dir / "forge.py")
+        revendored = len(_engine_files(cast_dir))
+
+        if validate:
+            ok, detail = (validator or _default_validator)(cast_dir)
+            if not ok:
+                _restore_engine(cast_dir, backup)
+                return UpdateOutcome(
+                    applied=False,
+                    reason=f"update failed validation, rolled back: {detail}",
+                    from_commit=drift.pinned_commit,
+                    to_commit=drift.target_commit,
+                    rolled_back=True,
+                )
+
+        manifest = read_manifest(cast_dir / "cast_manifest.json")
+        write_manifest(
+            replace(manifest, codeforge_commit=drift.target_commit),
+            cast_dir / "cast_manifest.json",
+        )
+        return UpdateOutcome(
+            applied=True,
+            reason="engine updated and revalidated"
+            if validate
+            else "engine updated (validation skipped)",
+            from_commit=drift.pinned_commit,
+            to_commit=drift.target_commit,
+            files_revendored=revendored,
+            validated=validate,
+        )
+    except Exception as exc:  # any mid-flight failure: restore, then fail loud
+        _restore_engine(cast_dir, backup)
+        raise CastError(f"update failed and was rolled back: {exc}") from exc
+    finally:
+        shutil.rmtree(backup, ignore_errors=True)
+
+
+def update_cast(
+    cast_dir: Path | str,
+    source_root: Path | str,
+    *,
+    force: bool = False,
+    validate: bool = True,
+    validator=None,
+    resolve_commit=_resolve_commit,
+    commit_present=_commit_present,
+    read_at_commit=_read_at_commit,
+) -> UpdateOutcome:
+    """Apply an engine update to a poured cast (vendored-whole), guarded by the broad harness.
+
+    Reads the drift first, then REFUSES rather than risk the owner's work: a selective cast (its
+    surfaces are not recorded, so the closure can't be recomputed), local edits or an unverifiable
+    pin without `force`, or a cast in sync. On apply it backs up, re-vendors from the source,
+    re-validates, and rolls back on failure; it advances the manifest's pin only on success, and
+    never commits. `validator` is the injectable re-validation seam (default: boot the cast)."""
+    cast_dir, source_root = Path(cast_dir), Path(source_root)
+    drift = diff_cast(
+        cast_dir,
+        source_root,
+        resolve_commit=resolve_commit,
+        commit_present=commit_present,
+        read_at_commit=read_at_commit,
+    )
+    here, there = drift.pinned_commit, drift.target_commit
+    if drift.engine_strategy == "vendored-selective":
+        return UpdateOutcome(
+            False,
+            "selective casts cannot be updated yet (surfaces not recorded at pour)",
+            here,
+            there,
+        )
+    if drift.in_sync:
+        return UpdateOutcome(
+            False, "already in sync with the target; nothing to update", here, there
+        )
+    if not drift.pin_verifiable and not force:
+        return UpdateOutcome(
+            False,
+            f"cannot verify local edits (pin {here} not in the source); re-run with force",
+            here,
+            there,
+        )
+    if drift.locally_modified and not force:
+        n = len(drift.locally_modified)
+        return UpdateOutcome(
+            False,
+            f"{n} local edit(s) would be overwritten; commit/stash them or re-run with force",
+            here,
+            there,
+        )
+    return _apply_update(cast_dir, source_root, drift, validate=validate, validator=validator)
+
+
+def render_update(outcome: UpdateOutcome) -> str:
+    """A human-readable update result: what happened, and (on success) the reminder to commit it."""
+    if outcome.applied:
+        head = "UPDATED"
+    elif "already in sync" in outcome.reason:
+        head = "NO-OP"
+    else:
+        head = "REFUSED"
+    lines = [
+        f"Cast update: {head}",
+        f"  {outcome.from_commit} -> {outcome.to_commit}",
+        f"  {outcome.reason}",
+    ]
+    if outcome.applied:
+        lines.append(
+            f"  re-vendored {outcome.files_revendored} file(s); validated={outcome.validated}"
+        )
+        lines.append("  Review the diff and commit the update yourself (never auto-committed).")
+    if outcome.rolled_back:
+        lines.append("  The cast was restored to its previous engine (rolled back).")
+    return "\n".join(lines)
