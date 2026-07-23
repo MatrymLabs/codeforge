@@ -1,4 +1,4 @@
-.PHONY: hooks env fix lint typecheck test property fuzz coverage audit audit-runtime security sast secrets deps sbom bench trend ai-eval retention doctor patch daily check readiness arc-verdicts truth forge cast-plan cast cast-selective cast-install-check coupling shelf-pour smoke repo-integrity ship run world store hardware clean serve backup db-up db-down db-migrate docs-serve docs-build demo-gif e2e evolution ritual-fast ritual ritual-down unskew loop
+.PHONY: hooks env fix lint typecheck test property fuzz coverage audit audit-runtime security sast secrets deps sbom bench trend ai-eval retention doctor patch daily check readiness arc-verdicts truth forge cast-plan cast cast-selective cast-install-check coupling shelf-pour shelf-build smoke repo-integrity ship run world store hardware clean serve backup db-up db-down db-migrate docs-serve docs-build demo-gif e2e evolution ritual-fast ritual ritual-down unskew loop
 
 # --- Environment: create/validate the .venv, fail loud on version mismatch.
 # Uses uv when present (a Rust resolver; measured ~20x faster than pip on this host:
@@ -121,6 +121,12 @@ coupling:
 # nothing in the repo; writes into DEST (git-ignored). Usage: make shelf-pour DEST=../codeforge-shelf ---
 shelf-pour:
 	@python3 -m parts.shelf_pour $(or $(DEST),workspace/shelf-pour)
+
+# --- Shelf-build: the release-grade proof. Pour, then build the wheel and install it into a FRESH
+# venv -- proving `pip install codeforge-shelf` works for a stranger. Needs network (pip). Then
+# `twine upload` (your PyPI trigger). Usage: make shelf-build DEST=.. WORK=.. ---
+shelf-build:
+	@python3 -m parts.shelf_pour build $(or $(DEST),workspace/shelf-pour) $(or $(WORK),workspace/shelf-build)
 
 # --- Cast install-check: the FRESH-INSTALL proof. Creates a clean venv, installs ONLY the cast's
 # declared deps, and boots it there - so the cast runs with zero dependency on CodeForge's env.

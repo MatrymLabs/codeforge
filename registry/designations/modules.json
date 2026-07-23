@@ -4109,7 +4109,7 @@
     "tags": [
       "module"
     ],
-    "notes": "Vendors the 27 shelf cores under codeforge_shelf (renamed off parts, so verify isolates the engine), auto-detects third-party deps from the AST, writes pyproject + README. verify_pour imports every core; verify_pour_tests runs the poured (engine-free) twins under pytest. 25 of 27 twins pour standalone; 2 (console, observability) hold engine integration tests in-repo. make shelf-pour button; writes only into DEST.",
+    "notes": "Vendors the 27 shelf cores under codeforge_shelf (renamed off parts, so verify isolates the engine), auto-detects third-party deps from the AST, writes pyproject + README. verify_pour imports every core; verify_pour_tests runs the poured (engine-free) twins under pytest. 25 of 27 twins pour standalone; 2 (console, observability) hold engine integration tests in-repo. make shelf-pour pours + verifies; make shelf-build builds the wheel and installs it in a fresh venv (release-grade). Rich pyproject metadata + bundled LICENSE make it publishable. Writes only into DEST.",
     "superseded_by": "",
     "aliases": [],
     "created": "2026-07-23",
