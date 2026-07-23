@@ -472,6 +472,7 @@ def test_pour_selective_end_to_end_validates_the_cut(tmp_path: Path) -> None:
     assert ok, detail  # the broad harness ran every solo+save command clean against the cut
     m = read_manifest(out / "cast_manifest.json")
     assert m.engine_strategy == VENDORED_SELECTIVE and m.status == "validated"
+    assert m.surfaces == ["solo", "save"]  # recorded at pour, so `cast update` can recompute later
     assert not (out / "parts" / "other_pack").exists()
 
 

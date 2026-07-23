@@ -70,7 +70,9 @@ def _engine_tree(root: Path, files: dict[str, str]) -> None:
         path.write_text(body)
 
 
-def _poured_cast(root: Path, files: dict[str, str], *, commit: str, strategy: str) -> None:
+def _poured_cast(
+    root: Path, files: dict[str, str], *, commit: str, strategy: str, surfaces=()
+) -> None:
     """A poured cast: an engine tree plus a cast_manifest.json pinning its source commit."""
     _engine_tree(root, files)
     write_manifest(
@@ -80,6 +82,7 @@ def _poured_cast(root: Path, files: dict[str, str], *, commit: str, strategy: st
             template="blank_mud",
             codeforge_commit=commit,
             engine_strategy=strategy,
+            surfaces=list(surfaces),
         ),
         root / "cast_manifest.json",
     )
@@ -553,7 +556,8 @@ def test_update_applies_the_fix_and_bumps_the_pin(tmp_path: Path) -> None:
     assert read_manifest(cast / "cast_manifest.json").codeforge_commit == "bbb222"  # pin advanced
 
 
-def test_update_refuses_a_selective_cast(tmp_path: Path) -> None:
+def test_update_refuses_a_selective_cast_without_recorded_surfaces(tmp_path: Path) -> None:
+    # a selective cast poured before surface-recording can't have its closure recomputed -> refuse
     cast, source = _whole_cast_with_upstream_fix(tmp_path, strategy="vendored-selective")
     outcome = update_cast(
         cast,
@@ -563,8 +567,38 @@ def test_update_refuses_a_selective_cast(tmp_path: Path) -> None:
         commit_present=lambda r, c: True,
         read_at_commit=_pin_reader(_BASE),
     )
-    assert not outcome.applied and "selective" in outcome.reason
+    assert not outcome.applied and "no recorded surfaces" in outcome.reason
     assert (cast / _COMBAT).read_text() == "def hit():\n    return 1\n"  # untouched
+
+
+def test_update_applies_to_a_selective_cast_with_recorded_surfaces(tmp_path: Path) -> None:
+    # a selective cast WITH surfaces: recompute the closure, re-vendor only it, re-validate
+    cast, source = tmp_path / "cast", tmp_path / "src"
+    _poured_cast(
+        cast, _BASE, commit="aaa111", strategy="vendored-selective", surfaces=["solo", "save"]
+    )
+    _engine_tree(source, _BUMPED)
+    seen = {}
+
+    def _closure(surfaces):
+        seen["surfaces"] = surfaces
+        return {"world"}  # the recomputed closure carries the world subpackage
+
+    outcome = update_cast(
+        cast,
+        source,
+        validator=_OK,
+        closure_fn=_closure,
+        resolve_commit=lambda r: "bbb222",
+        commit_present=lambda r, c: True,
+        read_at_commit=_pin_reader(_BASE),
+    )
+    assert outcome.applied and seen["surfaces"] == [
+        "solo",
+        "save",
+    ]  # the recorded surfaces drove it
+    assert (cast / _COMBAT).read_text() == "def hit():\n    return 2\n"  # re-vendored from source
+    assert read_manifest(cast / "cast_manifest.json").codeforge_commit == "bbb222"
 
 
 def test_update_refuses_local_edits_without_force(tmp_path: Path) -> None:
@@ -757,3 +791,39 @@ def test_cli_update_reports_a_cast_error(capsys, monkeypatch) -> None:
     monkeypatch.setattr(cu, "update_cast", _raise)
     assert main(["update", "d", "s"]) == 2
     assert "cast: boom" in capsys.readouterr().err
+
+
+def test_selective_validator_drives_the_surface_corpus(monkeypatch) -> None:
+    # the default selective validator boots the cast with the surfaces' commands + server imports
+    import parts.cast_update as cu
+    from parts import coupling
+
+    calls: dict[str, list[str]] = {}
+    monkeypatch.setattr(coupling, "surface_commands", lambda s: ["look"])
+    monkeypatch.setattr(coupling, "surface_imports", lambda s: ["parts.gateway"])
+
+    def _fake_validate(cd, *, commands, imports):
+        calls["commands"], calls["imports"] = commands, imports
+        return (True, "ran clean")
+
+    monkeypatch.setattr(cu, "validate_cast", _fake_validate)
+    ok, detail = cu._selective_validator(["solo"])(Path("/nonexistent"))
+    assert ok and calls["commands"] == ["look"] and calls["imports"] == ["parts.gateway"]
+
+
+def test_update_noop_for_a_current_selective_cast(tmp_path: Path) -> None:
+    # a selective cast that only "lacks" its shed modules is in sync -> a no-op, not a re-vendor
+    cast, source = tmp_path / "cast", tmp_path / "src"
+    _poured_cast(cast, _BASE, commit="aaa111", strategy="vendored-selective", surfaces=["solo"])
+    fuller = {**_BASE, "parts/pm.py": "# a shed dev-tool the source still has\n"}
+    _engine_tree(source, fuller)
+    outcome = update_cast(
+        cast,
+        source,
+        validator=_OK,
+        closure_fn=lambda s: {"world"},
+        resolve_commit=lambda r: "aaa111",
+        commit_present=lambda r, c: True,
+        read_at_commit=_pin_reader(fuller),  # pm existed at the pin -> shed (expected), not new
+    )
+    assert not outcome.applied and "already in sync" in outcome.reason
