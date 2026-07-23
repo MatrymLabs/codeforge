@@ -15,10 +15,12 @@ Two lenses on the same vendored tree:
   - local edits vs the PIN (locally_modified): what the OWNER changed since pour, which a blind
     re-vendor would overwrite. U2's apply step must refuse to clobber these.
 
-Honest scope: this compares engine FILE CONTENT (forge.py + parts/**/*.py). For a vendored-selective
-cast, `upstream_only` includes modules the cast deliberately SHED, not only new ones; telling "shed"
-from "genuinely new" is the selective-closure slice. Local-edit detection needs the pinned commit
-present in the source repo; when it is not, the report says so honestly (pin_verifiable=False).
+Honest scope: this compares engine FILE CONTENT (forge.py + parts/**/*.py). `upstream_only` is split
+by the pin into `newly_upstream` (absent at the pin: genuinely new engine modules) and `shed`
+(present at the pin: the cast chose not to carry them). That is a file-history split, not a surface
+re-trace: whether a NEWLY-upstream module actually enters this cast's SURFACE closure needs the
+cast's surfaces recorded at pour time (a future slice / U2 concern). All pin-relative lenses need
+the pinned commit present in the source repo; when it is not, the report says so (pin_verifiable).
 """
 
 from __future__ import annotations
@@ -47,6 +49,12 @@ class CastDrift:
     locally_modified: list[str] = field(
         default_factory=list
     )  # carried files the OWNER changed since pour (an update would overwrite these)
+    newly_upstream: list[str] = field(
+        default_factory=list
+    )  # upstream_only files ABSENT at the pin: genuinely new engine modules an update would add
+    shed: list[str] = field(
+        default_factory=list
+    )  # upstream_only files PRESENT at the pin: deliberately not carried (a selective cast's cut)
     pin_verifiable: bool = True  # could the pinned commit's tree be read to check for local edits?
 
     @property
@@ -154,14 +162,24 @@ def diff_cast(
     # Local-edit lens: a carried file whose content differs from the source AT THE PIN was edited by
     # the owner after pour. Only checkable when the pinned commit is present in the source repo; a
     # file absent at the pin is owner-ADDED (cast_only), not a local edit, so it is skipped here.
+    upstream_only = sorted(src_files.keys() - cast_files.keys())
     pinned = manifest.codeforge_commit
     pin_verifiable = commit_present(source_root, pinned)
     locally_modified: list[str] = []
+    newly_upstream: list[str] = []
+    shed: list[str] = []
     if pin_verifiable:
         for rel in sorted(cast_files):
             original = read_at_commit(source_root, pinned, rel)
             if original is not None and hashlib.sha256(original).hexdigest() != cast_files[rel]:
                 locally_modified.append(rel)
+        # Split upstream_only by the pin: a file present at the pin was SHED (the cast chose not to
+        # carry it); one absent at the pin is genuinely NEW upstream (an update would add it).
+        for rel in upstream_only:
+            if read_at_commit(source_root, pinned, rel) is None:
+                newly_upstream.append(rel)
+            else:
+                shed.append(rel)
 
     return CastDrift(
         cast_dir=str(cast_dir),
@@ -169,9 +187,11 @@ def diff_cast(
         target_commit=resolve_commit(source_root),
         engine_strategy=manifest.engine_strategy,
         changed=sorted(f for f in shared if cast_files[f] != src_files[f]),
-        upstream_only=sorted(src_files.keys() - cast_files.keys()),
+        upstream_only=upstream_only,
         cast_only=sorted(cast_files.keys() - src_files.keys()),
         locally_modified=locally_modified,
+        newly_upstream=newly_upstream,
+        shed=shed,
         pin_verifiable=pin_verifiable,
     )
 
@@ -214,10 +234,21 @@ def render_drift(drift: CastDrift) -> str:
         title = "locally modified since pour (an update would overwrite these)"
         lines += [*_section(title, drift.locally_modified), ""]
     lines += _section("changed upstream (a fix you could pull)", drift.changed)
-    lines += [
-        "",
-        *_section("upstream-only (new upstream, or shed by a selective cast)", drift.upstream_only),
-    ]
+    if drift.pin_verifiable:
+        # Split by the pin: genuinely new engine modules vs modules this cast deliberately shed.
+        lines += [
+            "",
+            *_section(
+                "newly upstream since your pin (an update would add these)", drift.newly_upstream
+            ),
+        ]
+        lines += [
+            "",
+            *_section("shed by this cast (not carried; expected for a selective cut)", drift.shed),
+        ]
+    else:
+        title = "upstream-only (new upstream, or shed by a selective cast)"
+        lines += ["", *_section(title, drift.upstream_only)]
     lines += [
         "",
         *_section("cast-only (your local additions, or removed upstream)", drift.cast_only),
