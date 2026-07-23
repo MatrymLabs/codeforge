@@ -59,6 +59,7 @@ mutation:
 # blocking audit-runtime gate and `make doctor` cover it).
 sast:
 	bandit -c pyproject.toml -r parts forge.py -q
+	bandit -c pyproject.toml -r . -q --severity-level medium --exclude ./.venv,./.git
 	@git ls-files | xargs detect-secrets-hook --baseline .secrets.baseline
 
 # The full gate. `coverage` runs the WHOLE suite (property included) once, WITH
@@ -181,8 +182,13 @@ sbom:
 	@echo "✓ SBOM -> reports/security/sbom.cdx.json"
 
 # SAST + dependency CVEs. bandit gates; audit is informational (see doctor).
+# Two bandit passes: core code (parts + forge.py) at ALL severities (keeps low-severity password
+# findings like B105/B106), plus the WHOLE repo at medium+ (matches forge-audit's bar, so the
+# flagship's own gate catches whole-repo medium issues -- e.g. a hardcoded /tmp in a test -- before
+# the proof-tool does). Both must pass.
 security:
 	bandit -c pyproject.toml -r parts forge.py -q
+	bandit -c pyproject.toml -r . -q --severity-level medium --exclude ./.venv,./.git
 	pip-audit --skip-editable
 	@git ls-files | xargs detect-secrets-hook --baseline .secrets.baseline
 

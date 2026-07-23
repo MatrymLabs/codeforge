@@ -35,7 +35,7 @@ class FakeWriter:
 
     def __call__(self, category: str, text: str) -> Path:
         self.calls.append((category, text))
-        return Path(f"/tmp/fake-{len(self.calls)}.md")
+        return Path(f"fake-{len(self.calls)}.md")  # synthetic path, never written (offline proof)
 
 
 def _boom(*_a: object, **_k: object) -> object:
