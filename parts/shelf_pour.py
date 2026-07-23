@@ -216,6 +216,8 @@ def _pyproject(deps: list[str], test_deps: list[str]) -> str:
         f'Source = "{_HOMEPAGE}"\n\n'
         "[tool.setuptools]\n"
         f'packages = ["{PACKAGE}"]\n\n'
+        "[tool.setuptools.package-data]\n"
+        f'{PACKAGE} = ["py.typed"]\n\n'  # ship the PEP 561 marker so consumers get the types
         "[tool.pytest.ini_options]\n"
         'markers = ["property: hypothesis-driven property tests"]\n'
     )
@@ -230,18 +232,63 @@ def _readme(cores: list[str], deps: list[str], n_tests: int, held: list[str]) ->
         if held
         else ""
     )
+    repo = "https://github.com/MatrymLabs/codeforge-shelf"
+    badges = (
+        f"[![test]({repo}/actions/workflows/test.yml/badge.svg)]"
+        f"({repo}/actions/workflows/test.yml)\n"
+        "[![PyPI](https://img.shields.io/pypi/v/codeforge-shelf.svg)]"
+        "(https://pypi.org/project/codeforge-shelf/)\n"
+        "[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)]"
+        "(https://opensource.org/licenses/MIT)\n"
+    )
+    usage = (
+        "```python\n"
+        "import time\n"
+        "from codeforge_shelf.token_bucket import TokenBucket\n\n"
+        "bucket = TokenBucket(rate=5, capacity=10, clock=time.monotonic)\n"
+        "decision = bucket.consume(cost=1)\n"
+        "if decision.allowed:\n"
+        "    ...  # do the rate-limited work; else wait decision.retry_after\n"
+        "```\n"
+    )
     return (
         "# CodeForge Hardware Store\n\n"
+        f"{badges}\n"
         "Reusable, engine-agnostic Python cores, proven in the CodeForge MUD and poured here as a\n"
-        "standalone package. No game engine is required to use them.\n\n"
+        "standalone package. No game engine is required to use them. Fully typed (PEP 561).\n\n"
+        "## Install\n\n"
+        "```sh\n"
+        "pip install codeforge-shelf\n"
+        f"# or, unreleased: pip install git+{_HOMEPAGE}-shelf\n"
+        "```\n\n"
         f"Third-party dependencies: {dep_note}.\n\n"
+        "## Usage\n\n"
+        f"{usage}\n"
         f"## Cores ({len(cores)})\n\n"
         f"{listing}\n\n"
-        f"## Tests\n\n"
+        "## Tests\n\n"
         f"{n_tests} test twins ship with the package and pass with no engine present "
         "(`pip install .[test] && pytest`).\n"
-        f"{held_note}"
+        f"{held_note}\n"
+        "## Provenance\n\n"
+        f"Generated from [CodeForge]({_HOMEPAGE}) by its `parts/shelf_pour.py`, which vendors the\n"
+        "engine-agnostic cores of `parts/shelf/` under a fresh package name and proves they\n"
+        "import and test standalone. Re-poured, never hand-edited.\n"
     )
+
+
+_CHANGELOG = """\
+# Changelog
+
+All notable changes to `codeforge-shelf`. This package is generated (poured) from CodeForge; the
+version tracks the pour, not hand edits.
+
+## 0.1.0
+
+- Initial release: the CodeForge Hardware Store poured standalone -- reusable, engine-agnostic
+  Python cores extracted from the CodeForge MUD with a one-way dependency, fully typed (PEP 561),
+  shipping their engine-free test twins (they pass with no engine present).
+"""
 
 
 def pour_shelf(dest: Path, *, shelf_dir: Path | None = None) -> PouredShelf:
@@ -266,6 +313,7 @@ def pour_shelf(dest: Path, *, shelf_dir: Path | None = None) -> PouredShelf:
         f'"""The CodeForge Hardware Store, poured standalone from {_SOURCE_PKG}."""\n',
         encoding="utf-8",
     )
+    (pkg_dir / "py.typed").write_text("", encoding="utf-8")  # PEP 561: the cores are annotated
     names = [c.stem for c in cores]
     for core in cores:
         (pkg_dir / core.name).write_text(
@@ -281,6 +329,7 @@ def pour_shelf(dest: Path, *, shelf_dir: Path | None = None) -> PouredShelf:
             poured_tests.append(twin.stem.removeprefix("test_"))  # core name, matching tests_held
     (dest / "pyproject.toml").write_text(_pyproject(deps, test_deps), encoding="utf-8")
     (dest / "README.md").write_text(_readme(names, deps, len(poured_tests), held), encoding="utf-8")
+    (dest / "CHANGELOG.md").write_text(_CHANGELOG, encoding="utf-8")
     license_src = src.parent.parent / "LICENSE"  # the repo's MIT license travels with the package
     if license_src.is_file():
         (dest / "LICENSE").write_text(license_src.read_text(encoding="utf-8"), encoding="utf-8")
