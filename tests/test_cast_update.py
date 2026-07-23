@@ -14,7 +14,24 @@ from pathlib import Path
 import pytest
 
 from parts.cast import CastError, CastManifest, main, write_manifest
-from parts.cast_update import CastDrift, _engine_files, _resolve_commit, diff_cast, render_drift
+from parts.cast_update import (
+    CastDrift,
+    _commit_present,
+    _engine_files,
+    _read_at_commit,
+    _resolve_commit,
+    diff_cast,
+    render_drift,
+)
+
+
+def _raise_oserror(*args, **kwargs):
+    raise OSError("git not found")
+
+
+def _pin_reader(files: dict[str, str]):
+    """A fake read_at_commit: returns the given files' bytes at the pin, None for anything else."""
+    return lambda root, commit, rel: files[rel].encode() if rel in files else None
 
 
 def _engine_tree(root: Path, files: dict[str, str]) -> None:
@@ -194,6 +211,105 @@ def test_cli_diff_refuses_a_dir_that_is_not_a_cast(tmp_path, capsys) -> None:
     _engine_tree(source, _BASE)
     assert main(["diff", str(cast), str(source)]) == 2
     assert "not a poured cast" in capsys.readouterr().err
+
+
+# --- Slice 2: local-edit detection (vendored file vs the source AT THE PIN) --------------------
+
+
+def test_a_locally_edited_file_is_flagged(tmp_path: Path) -> None:
+    cast, source = tmp_path / "cast", tmp_path / "src"
+    edited = dict(_BASE)
+    edited["parts/world/combat.py"] = "def hit():\n    return 999  # owner tweak after pour\n"
+    _poured_cast(cast, edited, commit="aaa111", strategy="vendored-whole")
+    _engine_tree(source, edited)  # target == cast content, so no 'changed'; but the PIN had _BASE
+    drift = diff_cast(
+        cast,
+        source,
+        resolve_commit=lambda r: "aaa111",
+        commit_present=lambda r, c: True,
+        read_at_commit=_pin_reader(_BASE),  # the pin's combat.py was the original
+    )
+    assert drift.locally_modified == ["parts/world/combat.py"]
+    assert drift.pin_verifiable and not drift.in_sync
+
+
+def test_an_owner_added_file_is_not_a_local_edit(tmp_path: Path) -> None:
+    cast, source = tmp_path / "cast", tmp_path / "src"
+    with_extra = dict(_BASE)
+    with_extra["parts/house_rules.py"] = "HOUSE = 1\n"  # added by the owner AFTER pour
+    _poured_cast(cast, with_extra, commit="aaa111", strategy="vendored-whole")
+    _engine_tree(source, _BASE)
+    drift = diff_cast(
+        cast,
+        source,
+        resolve_commit=lambda r: "aaa111",
+        commit_present=lambda r, c: True,
+        read_at_commit=_pin_reader(
+            _BASE
+        ),  # house_rules absent at the pin -> None -> added, not edited
+    )
+    assert drift.locally_modified == []  # absent-at-pin is owner-ADDED, not a local edit
+    assert drift.cast_only == ["parts/house_rules.py"]
+
+
+def test_pin_absent_from_source_cannot_verify_local_edits(tmp_path: Path) -> None:
+    cast, source = tmp_path / "cast", tmp_path / "src"
+    _poured_cast(cast, _BASE, commit="deadbee", strategy="vendored-whole")
+    _engine_tree(source, _BASE)
+    drift = diff_cast(
+        cast,
+        source,
+        resolve_commit=lambda r: "tgt",
+        commit_present=lambda r, c: False,  # the pin is not in the source repo
+        read_at_commit=_raise_oserror,  # must NOT be called when the pin is unverifiable
+    )
+    assert not drift.pin_verifiable and drift.locally_modified == []
+
+
+def test_render_flags_local_edits_as_overwrite_risk() -> None:
+    drift = CastDrift(
+        cast_dir="c",
+        pinned_commit="a",
+        target_commit="b",
+        engine_strategy="whole",
+        locally_modified=["parts/world/combat.py"],
+        pin_verifiable=True,
+    )
+    out = render_drift(drift)
+    assert "local edits:      1 file(s) modified" in out
+    assert "an update would overwrite these" in out and "parts/world/combat.py" in out
+
+
+def test_render_says_when_it_cannot_verify_the_pin() -> None:
+    drift = CastDrift(
+        cast_dir="c",
+        pinned_commit="deadbee",
+        target_commit="b",
+        engine_strategy="whole",
+        pin_verifiable=False,
+    )
+    out = render_drift(drift)
+    assert "cannot verify" in out and "deadbee" in out
+
+
+def test_commit_present_and_read_at_commit_on_the_real_repo() -> None:
+    # git cat-file / git show are LOCAL (no network); exercise the real seams against this checkout
+    repo = Path(__file__).resolve().parent.parent
+    head = _resolve_commit(repo)
+    assert _commit_present(repo, head)
+    assert not _commit_present(repo, "unknown")  # early-out on the sentinel, no git call
+    assert not _commit_present(repo, "0000000")  # a well-formed but non-existent commit
+    blob = _read_at_commit(repo, head, "forge.py")
+    assert blob is not None and b"handle_command" in blob
+    assert _read_at_commit(repo, head, "no/such/file.py") is None  # absent path -> None
+
+
+def test_git_history_seams_degrade_when_git_raises(tmp_path: Path, monkeypatch) -> None:
+    import parts.cast_update as cu
+
+    monkeypatch.setattr(cu.subprocess, "run", _raise_oserror)
+    assert cu._commit_present(tmp_path, "abc1234") is False
+    assert cu._read_at_commit(tmp_path, "abc1234", "forge.py") is None
 
 
 def test_drift_is_a_frozen_report(tmp_path: Path) -> None:

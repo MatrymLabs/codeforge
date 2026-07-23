@@ -10,10 +10,15 @@ nothing.
 The source is a SEAM: a directory (a codeforge checkout at a chosen ref), with commit resolution
 injected, so the diff runs offline and tests never shell out or touch the network.
 
-Honest scope (U1 slice 1): this compares engine FILE CONTENT (forge.py + parts/**/*.py). For a
-vendored-selective cast, `upstream_only` includes modules the cast deliberately SHED, not only new
-ones -- distinguishing "shed" from "genuinely new" is the selective-closure slice. Detecting the
-owner's OWN local edits is the next slice; this one reports drift vs the target, not vs the pin.
+Two lenses on the same vendored tree:
+  - drift vs the TARGET source (changed / upstream-only / cast-only): what an update would bring.
+  - local edits vs the PIN (locally_modified): what the OWNER changed since pour, which a blind
+    re-vendor would overwrite. U2's apply step must refuse to clobber these.
+
+Honest scope: this compares engine FILE CONTENT (forge.py + parts/**/*.py). For a vendored-selective
+cast, `upstream_only` includes modules the cast deliberately SHED, not only new ones; telling "shed"
+from "genuinely new" is the selective-closure slice. Local-edit detection needs the pinned commit
+present in the source repo; when it is not, the report says so honestly (pin_verifiable=False).
 """
 
 from __future__ import annotations
@@ -39,11 +44,20 @@ class CastDrift:
     cast_only: list[str] = field(
         default_factory=list
     )  # in the cast, not source (owner-added/removed)
+    locally_modified: list[str] = field(
+        default_factory=list
+    )  # carried files the OWNER changed since pour (an update would overwrite these)
+    pin_verifiable: bool = True  # could the pinned commit's tree be read to check for local edits?
 
     @property
     def has_engine_drift(self) -> bool:
         """True when any engine file changed, appeared upstream, or is cast-only."""
         return bool(self.changed or self.upstream_only or self.cast_only)
+
+    @property
+    def in_sync(self) -> bool:
+        """Fully in sync: no drift vs the target AND no unverified/local edits vs the pin."""
+        return not self.has_engine_drift and not self.locally_modified and self.pin_verifiable
 
 
 def _sha(path: Path) -> str:
@@ -80,18 +94,52 @@ def _resolve_commit(source_root: Path) -> str:
         return "unknown"
 
 
+def _commit_present(source_root: Path, commit: str) -> bool:
+    """True if <commit> exists in the source repo; '' / 'unknown' -> False. Never raises."""
+    if commit in ("", "unknown"):
+        return False
+    try:
+        done = subprocess.run(  # nosec B603 B607 -- fixed argv, no shell; read-only existence check
+            ["git", "-C", str(source_root), "cat-file", "-e", f"{commit}^{{commit}}"],
+            capture_output=True,
+            timeout=10,
+            check=False,
+        )
+        return done.returncode == 0
+    except (OSError, subprocess.SubprocessError):
+        return False
+
+
+def _read_at_commit(source_root: Path, commit: str, relpath: str) -> bytes | None:
+    """The bytes of <relpath> at <commit> via `git show`, or None if absent. Never raises."""
+    try:
+        done = subprocess.run(  # nosec B603 B607 -- fixed argv, no shell; read-only blob read
+            ["git", "-C", str(source_root), "show", f"{commit}:{relpath}"],
+            capture_output=True,
+            timeout=10,
+            check=False,
+        )
+        return done.stdout if done.returncode == 0 else None
+    except (OSError, subprocess.SubprocessError):
+        return None
+
+
 def diff_cast(
     cast_dir: Path | str,
     source_root: Path | str,
     *,
     resolve_commit=_resolve_commit,
+    commit_present=_commit_present,
+    read_at_commit=_read_at_commit,
 ) -> CastDrift:
     """Report the drift between a poured cast's engine and a target source checkout (read-only).
 
     `cast_dir` is a poured cast (must carry a cast_manifest.json); `source_root` is a codeforge
-    checkout at the ref to compare against. `resolve_commit` is the injectable seam that names the
-    source's commit (defaults to `git rev-parse`), so tests run offline. Fails loud if either side
-    is not what it claims (no manifest, or a source with no engine)."""
+    checkout at the ref to compare against. Two lenses: drift vs the target (changed / upstream-only
+    / cast-only), and local edits vs the PIN (files the owner changed since pour). The three git
+    calls are injectable seams (resolve_commit / commit_present / read_at_commit), so tests run
+    offline. Fails loud if either side is not what it claims (no manifest, or a source with no
+    engine)."""
     cast_dir, source_root = Path(cast_dir), Path(source_root)
     manifest_path = cast_dir / "cast_manifest.json"
     if not manifest_path.is_file():
@@ -102,14 +150,29 @@ def diff_cast(
     cast_files = _engine_files(cast_dir)
     src_files = _engine_files(source_root)
     shared = cast_files.keys() & src_files.keys()
+
+    # Local-edit lens: a carried file whose content differs from the source AT THE PIN was edited by
+    # the owner after pour. Only checkable when the pinned commit is present in the source repo; a
+    # file absent at the pin is owner-ADDED (cast_only), not a local edit, so it is skipped here.
+    pinned = manifest.codeforge_commit
+    pin_verifiable = commit_present(source_root, pinned)
+    locally_modified: list[str] = []
+    if pin_verifiable:
+        for rel in sorted(cast_files):
+            original = read_at_commit(source_root, pinned, rel)
+            if original is not None and hashlib.sha256(original).hexdigest() != cast_files[rel]:
+                locally_modified.append(rel)
+
     return CastDrift(
         cast_dir=str(cast_dir),
-        pinned_commit=manifest.codeforge_commit,
+        pinned_commit=pinned,
         target_commit=resolve_commit(source_root),
         engine_strategy=manifest.engine_strategy,
         changed=sorted(f for f in shared if cast_files[f] != src_files[f]),
         upstream_only=sorted(src_files.keys() - cast_files.keys()),
         cast_only=sorted(cast_files.keys() - src_files.keys()),
+        locally_modified=locally_modified,
+        pin_verifiable=pin_verifiable,
     )
 
 
@@ -124,6 +187,16 @@ def render_drift(drift: CastDrift) -> str:
     In sync == no file drift (the target carries the same engine). Otherwise it names the three
     buckets so a reader knows exactly what an apply step would touch. It states plainly that this is
     read-only, so no one mistakes the report for an update."""
+    if not drift.pin_verifiable:
+        local_line = (
+            f"  local edits:      cannot verify (pin {drift.pinned_commit} not in the source)"
+        )
+    elif drift.locally_modified:
+        local_line = (
+            f"  local edits:      {len(drift.locally_modified)} file(s) modified since pour"
+        )
+    else:
+        local_line = "  local edits:      none (vendored engine matches the pin)"
     lines = [
         f"Cast drift -- {drift.cast_dir}",
         "=" * 40,
@@ -131,11 +204,15 @@ def render_drift(drift: CastDrift) -> str:
         f"  engine strategy:  {drift.engine_strategy}",
         f"  pinned commit:    {drift.pinned_commit}",
         f"  target commit:    {drift.target_commit}",
+        local_line,
         "",
     ]
-    if not drift.has_engine_drift:
-        lines.append("  engine: IN SYNC with the target (no file drift).")
+    if drift.in_sync:
+        lines.append("  engine: IN SYNC with the target (no file drift, no local edits).")
         return "\n".join(lines)
+    if drift.locally_modified:
+        title = "locally modified since pour (an update would overwrite these)"
+        lines += [*_section(title, drift.locally_modified), ""]
     lines += _section("changed upstream (a fix you could pull)", drift.changed)
     lines += [
         "",
