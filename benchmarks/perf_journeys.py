@@ -150,7 +150,7 @@ def write_journeys_report(
     results: dict[str, dict], root: Path | None = None, stamp: str | None = None
 ) -> Path:
     """File the run as dated performance evidence under reports/performance/ (like the tick)."""
-    from parts.reporting import write_report
+    from parts.shelf.reporting import write_report
 
     return write_report(
         "performance", render_journeys(results), root=root, stamp=stamp, slug="five-journeys"

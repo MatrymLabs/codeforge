@@ -393,7 +393,7 @@ def build_report(
 def save_report(text: str, root: Path | None = None, today: date | None = None) -> Path:
     """Write the report under reports/repo_integrity/<date>-repo-integrity.md via the shared
     ReportWriter (one dated-report seam for every producer)."""
-    from parts.reporting import write_report
+    from parts.shelf.reporting import write_report
 
     stamp = (today if today is not None else date.today()).isoformat()
     return write_report("repo_integrity", text, root=root, stamp=stamp, slug="repo-integrity")

@@ -1,7 +1,7 @@
 """Test twin for parts/release_gate.py -- the practical adapter + the one-core proof."""
 
 from parts.release_gate import ReleaseGate
-from parts.test_evidence import FAILED, PASSED, EvidenceLedger
+from parts.shelf.test_evidence import FAILED, PASSED, EvidenceLedger
 
 
 def test_a_release_is_ready_only_when_every_required_check_passes():

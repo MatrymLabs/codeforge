@@ -1,4 +1,4 @@
-"""Test twin for parts/observability.py -- structured logs + Prometheus /metrics.
+"""Test twin for parts/shelf/observability.py -- structured logs + Prometheus /metrics.
 
 Acceptance: the metrics registry renders valid Prometheus exposition; the middleware records
 a request by method/route/status; /metrics serves it with the right content type; the logger
@@ -10,7 +10,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 from parts.api import app
-from parts.observability import METRICS, Metrics, configure_logging, get_logger
+from parts.shelf.observability import METRICS, Metrics, configure_logging, get_logger
 
 
 @pytest.fixture(autouse=True)

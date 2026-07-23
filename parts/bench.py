@@ -101,7 +101,7 @@ def write_bench_report(
     result: BenchResult, root: Path | None = None, stamp: str | None = None
 ) -> Path:
     """File the run as dated performance evidence under reports/performance/."""
-    from parts.reporting import write_report
+    from parts.shelf.reporting import write_report
 
     return write_report(
         "performance", render_bench(result), root=root, stamp=stamp, slug="engine-tick"

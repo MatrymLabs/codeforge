@@ -2,7 +2,7 @@
 
 `certify` records evidence for a world's readiness checks (the seed loaded NPCs and callings) and
 reports whether the world is certified, or which checks are missing/failing. It uses an
-`EvidenceLedger` (parts/test_evidence), so a check with no evidence is never counted as a pass. The
+`EvidenceLedger` (parts/shelf/test_evidence), so a check with no evidence is never a pass. The
 SAME evidence core backs a release-readiness gate in a practical app (`parts/release_gate`).
 """
 
@@ -11,7 +11,7 @@ from __future__ import annotations
 from parts.jobs import JOBS
 from parts.npcs import NPCS
 from parts.session import Session
-from parts.test_evidence import FAILED, PASSED, EvidenceLedger
+from parts.shelf.test_evidence import FAILED, PASSED, EvidenceLedger
 
 
 def _certify() -> EvidenceLedger:

@@ -91,7 +91,7 @@ def _run(name: str) -> str:
 
         return run_bench()
     if name == "config":
-        from parts.config import render_config
+        from parts.shelf.config import render_config
 
         return render_config()
     return f"no such program '{name}'"

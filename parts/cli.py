@@ -102,7 +102,7 @@ def main(argv: list[str] | None = None) -> int:
         import uvicorn
 
         from parts.api import app
-        from parts.config import Settings
+        from parts.shelf.config import Settings
 
         # Honor $PORT like the web command does; Settings types + validates it.
         uvicorn.run(app, host="0.0.0.0", port=Settings.load().port)
@@ -110,7 +110,7 @@ def main(argv: list[str] | None = None) -> int:
     if cmd == "web":
         import uvicorn
 
-        from parts.config import Settings
+        from parts.shelf.config import Settings
         from parts.web_gateway import app as web_app
 
         # Hosts (Render/Fly) hand us the port on $PORT; Settings types + validates it.

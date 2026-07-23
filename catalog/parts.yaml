@@ -158,7 +158,7 @@
 
 - id: report-writer
   name: Report Writer
-  source: parts/reporting.py
+  source: parts/shelf/reporting.py
   category: evidence
   tags: [reporting, evidence, audit-trail, filing, reuse]
   maturity: shipped
@@ -209,7 +209,7 @@
 
 - id: observability
   name: Observability Middleware
-  source: parts/observability.py
+  source: parts/shelf/observability.py
   category: observability
   tags: [observability, metrics, logging, prometheus, structlog, middleware]
   maturity: shipped
@@ -308,7 +308,7 @@
 
 - id: typed-settings
   name: Typed Settings Catalog
-  source: parts/config.py
+  source: parts/shelf/config.py
   category: configuration
   tags: [config, pydantic, settings, validation, twelve-factor]
   maturity: shipped
@@ -455,7 +455,7 @@
 
 - id: modifier-stack
   name: Modifier Stack
-  source: parts/stats.py
+  source: parts/shelf/stats.py
   category: rules-engine
   tags: [modifiers, stacking, additive, compound, buffs]
   maturity: shipped
@@ -816,7 +816,7 @@
 
 - id: health-registry
   name: Health Registry
-  source: parts/health.py
+  source: parts/shelf/health.py
   category: observability
   tags: [health-check, readiness, observability, diagnostics, monitoring]
   maturity: beta
@@ -866,7 +866,7 @@
 
 - id: feature-flags
   name: Feature Flags
-  source: parts/feature_flags.py
+  source: parts/shelf/feature_flags.py
   category: configuration
   tags: [feature-flag, toggle, configuration, rollout, kill-switch]
   maturity: beta
@@ -891,7 +891,7 @@
 
 - id: test-evidence
   name: Test Evidence
-  source: parts/test_evidence.py
+  source: parts/shelf/test_evidence.py
   category: testing
   tags: [evidence, quality-gate, ci, readiness, testing]
   maturity: beta

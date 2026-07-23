@@ -29,7 +29,7 @@ def _demo_rank_gate() -> tuple[str, str]:
 
 
 def _demo_report_writer() -> tuple[str, str]:
-    from parts.reporting import write_report
+    from parts.shelf.reporting import write_report
 
     with tempfile.TemporaryDirectory() as d:
         p = write_report("demo", "hello world", root=Path(d), stamp="2026-07-10")

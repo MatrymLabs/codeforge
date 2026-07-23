@@ -34,7 +34,7 @@ from parts import (
     registry,
     store_index,
 )
-from parts.reporting import write_report
+from parts.shelf.reporting import write_report
 from parts.verdicts import FAIL, NA, PASS, WATCH
 
 _ROOT = Path(__file__).resolve().parent.parent

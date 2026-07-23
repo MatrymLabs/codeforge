@@ -1,10 +1,10 @@
-"""Test twin for parts/health.py -- the health-check registry and its honest aggregation."""
+"""Test twin for parts/shelf/health.py -- the health-check registry and its honest aggregation."""
 
 import pytest
 from hypothesis import given
 from hypothesis import strategies as st
 
-from parts.health import (
+from parts.shelf.health import (
     DEGRADED,
     HEALTHY,
     UNHEALTHY,

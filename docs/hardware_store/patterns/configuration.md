@@ -15,7 +15,7 @@ feature-flag part; typed settings already ship as the separate `typed-settings` 
 
 ## The part: `feature-flags`
 
-`parts/feature_flags.py` -- a `FlagRegistry` of named flags with defaults. `is_on` returns the
+`parts/shelf/feature_flags.py` -- a `FlagRegistry` of named flags with defaults. `is_on` returns the
 override if set, else the default; `enable`/`disable`/`reset` manage overrides; `retire` removes a
 flag (flag retirement); `snapshot` gives the reproducible current state. An **unknown flag is an
 error, never silently off**, and flags **default off** so beta content never ships on by accident.

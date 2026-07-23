@@ -26,7 +26,7 @@ from parts.score_sheet_model import (
 )
 from parts.seed import Job
 from parts.session import Session, display_name
-from parts.stats import StatModifier
+from parts.shelf.stats import StatModifier
 
 # Sheet attribute code -> engine stat name.
 _ATTR_CODES = {

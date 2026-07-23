@@ -12,7 +12,7 @@ from __future__ import annotations
 from parts import items  # import the MODULE, not its globals: tests swap items.ITEMS
 from parts.score_sheet_model import EquipmentLoadout
 from parts.session import Session, sentence_case
-from parts.stats import ModifierStack, Stat, StatModifier
+from parts.shelf.stats import ModifierStack, Stat, StatModifier
 
 SLOTS = ("weapon", "body", "head", "arm", "accessory_1", "accessory_2")
 

@@ -24,8 +24,8 @@ from parts.characters import set_rank
 from parts.dashboard import router as dashboard_router
 from parts.db import CharacterRow, open_archive_session
 from parts.login_guard import LoginGuard
-from parts.observability import install_observability
 from parts.ranks import RANK_ORDER
+from parts.shelf.observability import install_observability
 from parts.world import WORLD
 
 app = FastAPI(

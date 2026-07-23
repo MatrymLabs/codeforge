@@ -5,7 +5,7 @@ maturity: beta
 purpose: >
   Run named health checks and aggregate an honest overall status (worst wins). An UNKNOWN or
   failing check is never reported as healthy; an empty registry is UNKNOWN.
-source: parts/health.py
+source: parts/shelf/health.py
 domain: observability
 inputs: >
   named checks (Callable[[], str] returning a status), or bool predicates via healthy_if
