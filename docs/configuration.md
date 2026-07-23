@@ -27,7 +27,7 @@ terminal config        # prints the effective, validated config (secrets redacte
 ```python
 from parts.config import Settings
 
-settings = Settings.load()          # reads + validates the process environment
+settings = Settings.load()  # reads + validates the process environment
 uvicorn.run(app, port=settings.port)  # e.g. the `web` entry point uses this
 ```
 

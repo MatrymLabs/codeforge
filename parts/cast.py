@@ -618,17 +618,28 @@ def main(argv: list[str] | None = None) -> int:
 
     args = argv if argv is not None else sys.argv[1:]
     if args and args[0] == "diff":
-        if len(args) < 3:
-            print("usage: python -m parts.cast diff <cast_dir> <source_root>", file=sys.stderr)
+        rest = [a for a in args[1:] if a != "--audit"]
+        do_audit = "--audit" in args[1:]
+        if len(rest) < 2:
+            print(
+                "usage: python -m parts.cast diff <cast_dir> <source_root> [--audit]",
+                file=sys.stderr,
+            )
             return 2
-        from parts.cast_update import diff_cast, render_drift
+        from parts.cast_update import audit_requirements, diff_cast, render_audit, render_drift
 
         try:
-            drift = diff_cast(args[1], args[2])
+            drift = diff_cast(rest[0], rest[1])
         except CastError as exc:
             print(f"cast: {exc}", file=sys.stderr)
             return 2
         print(render_drift(drift))
+        if (
+            do_audit
+        ):  # opt-in CVE scan (needs network); default off so `make cast-diff` stays offline
+            print(
+                render_audit(audit_requirements(_declared_deps(Path(rest[0]) / "pyproject.toml")))
+            )
         return 0
     if args and args[0] == "generate":
         if len(args) < 4:

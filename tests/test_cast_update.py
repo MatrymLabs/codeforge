@@ -8,6 +8,7 @@ difference counts as changed; an identical tree reports no drift.
 
 from __future__ import annotations
 
+import json
 from dataclasses import FrozenInstanceError
 from pathlib import Path
 
@@ -19,9 +20,32 @@ from parts.cast_update import (
     _commit_present,
     _engine_files,
     _read_at_commit,
+    _req_name,
     _resolve_commit,
+    audit_requirements,
     diff_cast,
+    render_audit,
     render_drift,
+)
+
+
+def _write_pyproject(root: Path, deps: list[str]) -> None:
+    """Write a minimal pyproject.toml declaring `deps` under [project].dependencies."""
+    body = "dependencies = [\n" + "".join(f'    "{d}",\n' for d in deps) + "]\n"
+    (root / "pyproject.toml").write_text(f'[project]\nname = "x"\nversion = "0"\n{body}')
+
+
+_PIP_AUDIT_JSON = json.dumps(
+    {
+        "dependencies": [
+            {
+                "name": "pyyaml",
+                "version": "5.3",
+                "vulns": [{"id": "PYSEC-1", "fix_versions": ["5.4"]}],
+            },
+            {"name": "sqlalchemy", "version": "2.0", "vulns": []},
+        ]
+    }
 )
 
 
@@ -226,6 +250,108 @@ def test_cli_diff_refuses_a_dir_that_is_not_a_cast(tmp_path, capsys) -> None:
     _engine_tree(source, _BASE)
     assert main(["diff", str(cast), str(source)]) == 2
     assert "not a poured cast" in capsys.readouterr().err
+
+
+# --- Slice 4: dependency delta (offline) + CVE audit (pip-audit behind a runner seam) -----------
+
+
+def test_dependency_delta_is_reported(tmp_path: Path) -> None:
+    cast, source = tmp_path / "cast", tmp_path / "src"
+    _poured_cast(cast, _BASE, commit="aaa111", strategy="vendored-whole")
+    _write_pyproject(cast, ["pyyaml>=6.0", "sqlalchemy>=2.0", "old-lib>=1.0"])
+    _engine_tree(source, _BASE)
+    _write_pyproject(source, ["pyyaml>=6.0", "sqlalchemy>=2.1", "new-lib>=3.0"])
+    drift = diff_cast(cast, source, resolve_commit=lambda r: "bbb222")
+    assert drift.deps_added == ["new-lib>=3.0"]
+    assert drift.deps_removed == ["old-lib>=1.0"]
+    assert drift.deps_changed == ["sqlalchemy: sqlalchemy>=2.0 -> sqlalchemy>=2.1"]
+    assert drift.has_dep_drift and not drift.in_sync
+
+
+def test_no_dep_delta_without_pyprojects(tmp_path: Path) -> None:
+    # a bare fixture (no pyproject either side) gets no phantom delta -- deps are not compared
+    cast, source = tmp_path / "cast", tmp_path / "src"
+    _poured_cast(cast, _BASE, commit="aaa111", strategy="vendored-whole")
+    _engine_tree(source, _BASE)
+    drift = diff_cast(cast, source, resolve_commit=lambda r: "aaa111")
+    assert not drift.has_dep_drift and drift.deps_added == []
+
+
+def test_req_name_normalizes_pep503() -> None:
+    assert _req_name("PyYAML>=6.0") == "pyyaml"
+    assert _req_name("SQLAlchemy>=2.0") == "sqlalchemy"
+    assert _req_name("typing_extensions") == "typing-extensions"
+
+
+def test_render_shows_the_dependency_sections() -> None:
+    drift = CastDrift(
+        cast_dir="c",
+        pinned_commit="a",
+        target_commit="b",
+        engine_strategy="whole",
+        deps_added=["new-lib>=3.0"],
+        deps_changed=["sqlalchemy: >=2.0 -> >=2.1"],
+        pin_verifiable=True,
+    )
+    out = render_drift(drift)
+    assert "dependencies:     2 change(s)" in out
+    assert "dependencies added upstream" in out and "new-lib>=3.0" in out
+    assert "dependency version specs changed" in out and "sqlalchemy: >=2.0 -> >=2.1" in out
+
+
+def test_audit_requirements_flags_a_vuln_via_the_runner_seam() -> None:
+    findings = audit_requirements(["pyyaml==5.3"], runner=lambda reqs: _PIP_AUDIT_JSON)
+    assert findings == ["pyyaml 5.3: PYSEC-1 (fix: 5.4)"]  # the clean dep contributes nothing
+
+
+def test_audit_requirements_no_reqs_never_calls_the_runner() -> None:
+    assert audit_requirements([], runner=_raise_oserror) == []  # empty -> no scan, runner untouched
+
+
+def test_audit_requirements_tolerates_bad_json() -> None:
+    assert audit_requirements(["x==1"], runner=lambda reqs: "not json at all") == []
+
+
+def test_render_audit_clean_and_with_findings() -> None:
+    assert "no known vulnerabilities" in render_audit([])
+    out = render_audit(["pyyaml 5.3: PYSEC-1 (fix: 5.4)"])
+    assert "dependency vulnerabilities (pip-audit)" in out and "PYSEC-1" in out
+
+
+def test_pip_audit_runner_shells_out_and_cleans_up(monkeypatch) -> None:
+    # cover the real runner offline: mock subprocess, prove it writes a reqs file and removes it
+    import parts.cast_update as cu
+
+    captured: dict[str, list[str]] = {}
+
+    class _Done:
+        stdout = '{"dependencies": []}'
+
+    def _fake_run(cmd, **kwargs):
+        captured["cmd"] = list(cmd)
+        assert Path(cmd[2]).is_file()  # the requirements temp file exists during the run
+        return _Done()
+
+    monkeypatch.setattr(cu.subprocess, "run", _fake_run)
+    out = cu._pip_audit_runner(["pyyaml>=6.0"])
+    assert '"dependencies"' in out
+    assert captured["cmd"][0] == "pip-audit" and captured["cmd"][1] == "-r"
+    assert not Path(captured["cmd"][2]).exists()  # temp file cleaned up afterward
+
+
+def test_cli_diff_audit_flag_runs_the_scan(tmp_path, capsys, monkeypatch) -> None:
+    import parts.cast_update as cu
+
+    monkeypatch.setattr(
+        cu, "audit_requirements", lambda reqs, **k: ["pyyaml 5.3: PYSEC-1 (fix: 5.4)"]
+    )
+    cast, source = tmp_path / "cast", tmp_path / "src"
+    _poured_cast(cast, _BASE, commit="aaa111", strategy="vendored-whole")
+    _write_pyproject(cast, ["pyyaml==5.3"])
+    _engine_tree(source, _BASE)
+    assert main(["diff", str(cast), str(source), "--audit"]) == 0
+    out = capsys.readouterr().out
+    assert "dependency vulnerabilities (pip-audit)" in out and "PYSEC-1" in out
 
 
 # --- Slice 3: split upstream_only into newly-upstream vs shed (by the pin) ----------------------
