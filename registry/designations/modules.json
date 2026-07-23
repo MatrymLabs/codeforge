@@ -4062,6 +4062,32 @@
     "updated": "2026-07-22"
   },
   {
+    "designation": "MOD-10.038",
+    "name": "shelf_boundary",
+    "status": "active",
+    "function": "prove the Hardware Store shelf imports no engine part (the one-way dependency, enforced)",
+    "label": "shelf_boundary",
+    "file": "parts/shelf_boundary.py",
+    "type": "MOD",
+    "domain": "10",
+    "docs": "docs/vision_resync.md",
+    "tests": "tests/test_shelf_boundary.py",
+    "depends_on": [],
+    "related": [
+      "integrity",
+      "registry"
+    ],
+    "reuse": "a Lens on any layered package: assert the reusable layer imports nothing from the layer that depends on it",
+    "tags": [
+      "module"
+    ],
+    "notes": "Reads each parts/shelf module's AST; flags any import of a non-shelf parts.* module. Wired into the repo-integrity ritual so a re-coupling regression surfaces. Read-only, no mutation.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-23",
+    "updated": "2026-07-23"
+  },
+  {
     "designation": "MOD-04.053",
     "name": "world_manifest",
     "status": "active",

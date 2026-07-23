@@ -26,6 +26,7 @@ from pathlib import Path
 from parts.hardware import load_catalog
 from parts.qualitygate import gate_all
 from parts.registry import load_collective, unfiled_modules, validate
+from parts.shelf_boundary import shelf_boundary_gaps
 
 _ROOT = Path(__file__).resolve().parent.parent
 _REPORT_DIR = _ROOT / "reports" / "repo_integrity"
@@ -241,6 +242,7 @@ class _ReportData:
     claims: list[str]
     n_roadmaps: int
     currency: list[str]
+    boundary: list[str]
     qa: Counter[str]
 
 
@@ -269,6 +271,7 @@ def _gather_signals(base: Path, stamp: date, tools: dict[str, bool]) -> _ReportD
         claims=forward_claims(base),
         n_roadmaps=len(_CLAIM_DOCS) + (len(_SHIP_CLAIM_DOCS) if _ship_home(base) else 0),
         currency=career_currency_gaps(base, stamp, _latest_capability_change(base)),
+        boundary=shelf_boundary_gaps(base),
         qa=Counter(r.verdict for r in gate_all(records)),  # keys: pass | watch | fail
     )
 
@@ -295,6 +298,11 @@ def _next_actions(tools: dict[str, bool], data: _ReportData) -> list[str]:
             "Reconcile evidence currency: claim shipped capability on the board + storefront,"
             " or bump last_updated once confirmed current."
         )
+    if data.boundary:
+        actions.append(
+            "Restore the shelf boundary: a Hardware Store core imports an engine part, "
+            f"re-coupling it ({'; '.join(data.boundary)}). Move the dependency or the core."
+        )
     if not actions:
         actions.append(
             "No blocking gaps found - run `make check` + `make security` for the live gates."
@@ -318,6 +326,11 @@ def _report_lines(
         else "not_configured - recommend detect-secrets (baselined) or gitleaks"
     )
     qa_line = f"{data.qa['pass']} pass, {data.qa['watch']} watch, {data.qa['fail']} fail"
+    boundary_line = (
+        "clean (engine -> shelf, one way)"
+        if not data.boundary
+        else "VIOLATED -- " + "; ".join(data.boundary)
+    )
     n_claims = len(data.claims)
     lines = [
         "CodeForge Repo Integrity Report",
@@ -358,6 +371,9 @@ def _report_lines(
         f"(reverse-drift{' incl. ship plan' if _ship_home(base) else ''}; a queue, not a verdict)",
         f"- evidence currency:    {len(data.currency)} career-board reconciliation(s) "
         "(shipped capability vs the claimed board; a queue, not a verdict)",
+        "",
+        "Architecture / Hardware Store:",
+        f"- shelf boundary:       {boundary_line}",
     ]
     lines += [f"    {c}" for c in data.claims]  # the full queue: curated docs keep it bounded
     lines += [f"    {c}" for c in data.currency]
