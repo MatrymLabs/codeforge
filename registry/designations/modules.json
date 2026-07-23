@@ -4143,6 +4143,34 @@
     "updated": "2026-07-23"
   },
   {
+    "designation": "MOD-10.041",
+    "name": "cast_update",
+    "status": "active",
+    "function": "read-only drift report for a poured cast vs a fresh engine source (U1: know before you touch)",
+    "label": "cast_update",
+    "file": "parts/cast_update.py",
+    "type": "MOD",
+    "domain": "10",
+    "docs": "docs/vision_resync.md",
+    "tests": "tests/test_cast_update.py",
+    "depends_on": [
+      "cast"
+    ],
+    "related": [
+      "cast",
+      "coupling"
+    ],
+    "reuse": "the read-before-mutate pattern (like the coupling report before a selective cut): report drift between a vendored snapshot and its source, so any apply step is a separate, evidenced, keel-gated decision",
+    "notes": "U1 slice 1 of the package-update model. Compares engine file content (forge.py + parts/**/*.py) between a cast and a target source checkout: changed / upstream-only / cast-only + the commit delta. The source is a mockable seam (a directory + injected commit resolver), so it runs offline. Reads only; an apply step (re-vendor + revalidate) is a later, keel-gated build.",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-23",
+    "updated": "2026-07-23"
+  },
+  {
     "designation": "MOD-04.053",
     "name": "world_manifest",
     "status": "active",
