@@ -16,7 +16,7 @@ Legend: ✅ done · 🔨 next · 📋 planned · 🧭 later (gated/advanced)
 | 3 | **Workshop command menu** | ✅ | The `workshop` cockpit now advertises its real live tools: `catalog`/`hardware`/`parts`, `reuse <term>`, `blueprint` (browse/show/render/draft), `ai <prompt>`, and `console`/`diagnostics`/`security`. Only `patch proposal` and `arch` remain "coming" (the file-editing phases). |
 | 4 | **Hardware catalog** | ✅ | `catalog/parts.yaml` + `parts/hardware.py`; `make hardware` lists parts with cross-domain reuse; ≥4 real parts stocked. |
 | 5 | **AI NPC (read-only)** | 🟡 | `parts/architect.py`: `ai <prompt>` in-world. A **local rule-based** Architect navigates you to the right command/part today, behind a swappable `Advisor` seam; a Claude-backed brain drops in next (same interface, redacted context, key from env, mocked in tests). Advisory only - no edits, no execution. |
-| 6 | **Diagnostic console** | ✅ | `parts/console.py` (`FailsafeRunner`) runs an **allowlisted, read-only** set as argument lists (no shell), under a timeout + output cap, each run logged. In-world: `console`, `run <check>`, `diagnostics`. Refuses anything off the list. |
+| 6 | **Diagnostic console** | ✅ | `parts/shelf/console.py` (`FailsafeRunner`) runs an **allowlisted, read-only** set as argument lists (no shell), under a timeout + output cap, each run logged. In-world: `console`, `run <check>`, `diagnostics`. Refuses anything off the list. |
 | 7 | **Report system** | ✅ | `parts/reporting.py` (`write_report`) files dated evidence under `reports/<kind>/`; used by the bench, frame-up, repo-integrity, and blueprint renderers. |
 | 8 | **AI planning mode** | ✅ | `blueprint` drafts a structured plan: `blueprint draft <idea>` uses the Claude Architect (schema-enforced `messages.parse`) to author a Blueprint, re-validated through the same gate and always a Tier-4 draft. `parts/blueprint_ai.py`, no direct edits. |
 | 9 | **Safe patch proposal** | ✅ | `parts/foundry.py`: a `PatchProposal` (target, why, part, risk, test, rollback) is a data artifact - creating one writes NOTHING; a human must `approve()` it first. Tested with refusal cases. |
@@ -56,7 +56,7 @@ Repo-safe, low-risk, high-signal - the base of the climb:
 5. ✅ Wire `catalog`/`hardware`/`parts` + `reuse <term>` in-world to `parts/hardware.py` (read-only). *(done)*
 6. 📋 Stock 2-3 more real parts in the catalog as they prove reusable.
 7. 📋 `reports/` scaffold + a tiny `save_report()` helper (write + summarize).
-8. 📋 `parts/console.py` - the `CommandRelay` skeleton with the allowlist (Phase 6), tests first, **no execution of anything not on the list**.
+8. 📋 `parts/shelf/console.py` - the `CommandRelay` skeleton with the allowlist (Phase 6), tests first, **no execution of anything not on the list**.
 9. 📋 `parts/architect.py` - the AI seam as a `Protocol` (mockable), read-only, context **redacted**; tests use a fake, never the network.
 10. 📋 Document a first `PatchProposal` shape (no implementation) so Phase 9 has a target.
 

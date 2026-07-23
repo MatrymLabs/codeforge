@@ -1,7 +1,7 @@
 """Test twin for parts/onboarding.py -- the practical adapter + the one-core-two-adapters proof."""
 
 from parts.onboarding import ONBOARDING, available, drive, new_onboarding, run_demo
-from parts.workflow import WorkflowEngine
+from parts.shelf.workflow import WorkflowEngine
 
 
 def test_the_onboarding_flow_reaches_active():

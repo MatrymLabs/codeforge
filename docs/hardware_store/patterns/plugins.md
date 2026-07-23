@@ -15,7 +15,7 @@ for CodeForge" (section 17, Plugin / Adapter Architecture), and the Software Par
 
 ## The part: `plugin-registry`
 
-`parts/plugin_registry.py` -- a generic `PluginRegistry[P]`. `register(info, plugin)` validates on the
+`parts/shelf/plugin_registry.py` -- a generic `PluginRegistry[P]`. `register(info, plugin)` validates on the
 way in (a duplicate name is refused; a plugin missing a capability the registry `requires` is
 refused); `disable`/`enable` toggle a plugin; `get`/`active` return only enabled plugins. **The trust
 boundary is explicit and safe by construction: it never imports or executes arbitrary code** -- the

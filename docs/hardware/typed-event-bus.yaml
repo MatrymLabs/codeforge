@@ -5,7 +5,7 @@ maturity: beta
 purpose: >
   Decouple publishers from subscribers with a typed synchronous pub/sub: subscribe handlers by exact
   signal type, publish a signal to them, neither side knowing the other.
-source: parts/signal_bus.py
+source: parts/shelf/signal_bus.py
 domain: eventing
 inputs: >
   signal types to subscribe handlers to, and Signal instances to publish

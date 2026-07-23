@@ -127,7 +127,8 @@ def test_console_runner_maps_an_allowlisted_result_to_a_bool(monkeypatch):
     import parts.arc_ledger as mod
 
     monkeypatch.setattr(
-        "parts.console.run", lambda check, allowlist=None: SimpleNamespace(ok=(check == "lint"))
+        "parts.shelf.console.run",
+        lambda check, allowlist=None: SimpleNamespace(ok=(check == "lint")),
     )
     assert mod._console_runner("lint") is True
     assert mod._console_runner("security") is False

@@ -11,7 +11,7 @@ from __future__ import annotations
 
 from collections.abc import Callable
 
-from parts.workflow import Instance, Step, WorkflowEngine, build_workflow
+from parts.shelf.workflow import Instance, Step, WorkflowEngine, build_workflow
 
 ONBOARDING = build_workflow(
     "employee_onboarding",

@@ -16,9 +16,9 @@ from collections.abc import Mapping
 from typing import cast
 
 from parts import items
-from parts.hourglass import WORLD_SANDS
 from parts.seed import SEED_DIR, Door, load_doors
 from parts.session import sentence_case
+from parts.shelf.hourglass import WORLD_SANDS
 from parts.shelf.statemachine import Guard, Refusal, Transition, advance, build
 
 # The world is data: a seed's barriers live in its own doors.yaml (empty if it ships none).
@@ -41,7 +41,7 @@ def open_gate(door_id: str) -> bool:
 
 def _arm_reclose(door_id: str, door: Door) -> None:
     """A self-closing door, freshly unlocked by a player, schedules its own relock on the shared
-    world timer (parts.hourglass): the world beat will slam it shut after `recloses_after` beats.
+    world timer (parts.shelf.hourglass): the world beat slams it shut after `recloses_after` beats.
     Doors without the field never arm, so ordinary and quest doors are untouched."""
     recloses = door.get("recloses_after", 0)
     if recloses:

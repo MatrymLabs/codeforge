@@ -22,14 +22,14 @@ connects the stations is being assembled one vertical slice at a time.
 | **2. World Package** (runtime) | The generated/assembled deployable world | `accounts`, `world`, `rooms`/`items`/`npcs`, `commands`, `combat`, `jobs`, `progression`, `gateway`(TCP), `web_gateway`(WS), `classroom`, `assessment` |
 | **3. Hardware Store** | Reusable parts usable by the platform, packages, and outside apps | `statemachine`, `resources`, `reporting`, `config`, `registry`; catalog in `hardware`/`store` |
 
-The layer boundary was conceptual for most of the repo's life; it is now **becoming physical, one
-family at a time**. The Hardware Store's resilience family and its FSM core (`token_bucket`, `retry`,
-`deadline`, `bulkhead`, `circuit_breaker`, `statemachine`) live in their own package, `parts/shelf/`,
-with the dependency arrow pointing one way (engine -> shelf). The rest of the reusable cores follow
-the same proven recipe (move + retarget catalog/registry/manifests/importers + declare the
-subpackage), each behind a green gate. Full Layer-2 optionality (a world carrying only what it runs)
-is already proven functionally by `cast`'s vendored-selective pour; the physical package split is the
-structural counterpart, now under way rather than deferred.
+The layer boundary was conceptual for most of the repo's life; **Layer 3 is now physical**. Every
+reusable, engine-agnostic core -- 27 across six families (resilience, FSM, data, wire, input
+hardening, observability, config, infra) -- lives in its own package, `parts/shelf/`, with the
+dependency arrow pointing one way: engine -> shelf, never the reverse. The remaining cataloged parts
+import engine modules (`session`, `verdicts`, `hardware`, ...), so they are correctly Layer 1/2, not
+relocatable Layer-3 cores. Full Layer-2 optionality (a world carrying only what it runs) is already
+proven functionally by `cast`'s vendored-selective pour; a further physical split of the
+platform/world engine itself is a separate, larger question, not required by the two-outputs thesis.
 
 ## The manufacturing loop (the heart of CodeForge)
 
@@ -68,10 +68,11 @@ part through the full loop is the deeper next slice; the spine itself is execute
   the full Part Manifest; more practical adapters beyond the shipped one. (The Workflow Engine as a
   product, its game/practical adapters, a demonstrated game<->practical translation, and package
   export/detachment are ALREADY BUILT - see staircase steps 2 and 4 below, not planned.)
-- **In progress:** the physical repository split -- the Hardware Store's reusable cores are moving
-  onto `parts/shelf/`, family by family, each behind a green gate (the resilience family + FSM core
-  have landed).
-- **Deferred (relative to the spine):** plugin system, configurable-rules language, package-update
+- **Done (this campaign):** the physical Hardware Store extraction -- all 27 engine-agnostic
+  reusable cores now live in `parts/shelf/` (six families, six merged stages), each behind a green
+  gate, one-way engine -> shelf dependency. Layer 3 is physical.
+- **Deferred (relative to the spine):** a physical Layer-1/2 engine split (functional optionality is
+  already proven via vendored-selective), plugin system, configurable-rules language, package-update
   model. Sound to want; not now.
 
 ## Scope discipline (what conflicts, honestly)
@@ -89,11 +90,11 @@ removed: the rule is "don't preserve merely because it exists," and equally "don
    `parts/forge_line.py` runs the loop end to end in both directions -- `run_line` inspects a built
    part station by station, and `forge_new` generates a brand-new part's scaffold through the loop
    into the git-ignored sandbox. The heart executes.
-2. **Monolithic engine** ("vendored-whole") - **being addressed, both ways:** `cast`/`forge` pour a
-   *vendored-selective* package (the surface-closure harness sheds the modules a game never runs),
-   so package export works and is proven; and the *physical* Layer-2 split (the repo-split junction)
-   is now under way -- the resilience family + FSM core are physically separated into `parts/shelf/`,
-   with the rest of the reusable cores following the same proven, gated recipe.
+2. **Monolithic engine** ("vendored-whole") - **the Hardware Store is now physically separated:**
+   `cast`/`forge` pour a *vendored-selective* package (proven), AND every engine-agnostic reusable
+   core is physically extracted into `parts/shelf/` (27 cores, six families, one-way dependency).
+   What remains one package is the platform/world engine itself (Layer 1/2), which vendored-selective
+   already makes optional functionally; a physical Layer-1/2 split is deferred as a separate question.
 3. ~~**World is content-driven, not manifest/config-driven**~~ **MOSTLY ADDRESSED:** a typed
    `WorldManifest` gives a seed a declared identity, and a typed stat `Ruleset` makes the derived
    combat balance configurable -- a world's `world.yaml` `rules:` block now reaches live combat
@@ -133,7 +134,7 @@ The proof that makes the whole vision legible without finishing the platform:
 0. **Vision + repo alignment** (this doc). Done.
 1. Manufacturing core: Blueprint `product_type`, Part Manifest, assembly evidence. Done.
 2. **First reusable vertical slice** (the Workflow Engine, above). **Done** - one `WorkflowEngine`
-   core (`parts/workflow`), the game `quest` adapter (MUD), and the practical `onboarding` adapter
+   core (`parts/shelf/workflow`), the game `quest` adapter (MUD), and the practical `onboarding` adapter
    now runnable through the **`codeforge onboard`** CLI; cataloged in the Hardware Store
    (`docs/hardware/workflow_engine.*`), `loop trace workflow-engine` = PASS.
 3. **Minimal World Package: one region + identity + commands + the quest system + admin + tests. Next.**

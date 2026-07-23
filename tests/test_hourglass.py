@@ -1,4 +1,4 @@
-"""Test twin for parts/hourglass.py -- the beat-driven delay queue.
+"""Test twin for parts/shelf/hourglass.py -- the beat-driven delay queue.
 
 Acceptance: a scheduled payload fires after exactly N beats; repeating timers rearm.
 Refusal: a nonsensical schedule (non-positive delay, negative period, overflowing the queue)
@@ -7,7 +7,7 @@ fails loud rather than queuing garbage.
 
 import pytest
 
-from parts.hourglass import MAX_TIMERS, Hourglass, HourglassError
+from parts.shelf.hourglass import MAX_TIMERS, Hourglass, HourglassError
 
 
 def test_a_timer_fires_after_exactly_n_beats():

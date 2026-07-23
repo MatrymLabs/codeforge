@@ -76,7 +76,7 @@ def test_aethryn_ships_the_relighting_quest_as_data():
     assert ("on_take", "first_ember") in triggers  # picking up the ember relights it
     assert ("on_enter", "cold_cellar") in triggers  # entering the cellar delves it
     # It is a valid workflow graph (start -> ... -> a terminal state), not just a list.
-    from parts.workflow import Step, build_workflow
+    from parts.shelf.workflow import Step, build_workflow
 
     steps = [Step(s["state"], s["event"], s["to"], effect=s.get("effect")) for s in quest["steps"]]
     workflow = build_workflow(

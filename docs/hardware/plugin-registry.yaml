@@ -5,7 +5,7 @@ maturity: beta
 purpose: >
   Extend behavior by explicit registration: register named plugins with metadata (version,
   capabilities), validated in; enable/disable them. It never imports or executes arbitrary code.
-source: parts/plugin_registry.py
+source: parts/shelf/plugin_registry.py
 domain: plugins
 inputs: >
   PluginInfo (name, version, capabilities) + an already-constructed plugin object; enable/disable

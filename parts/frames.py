@@ -23,7 +23,7 @@ class Frame:
     """Marker base for a typed event frame. Subclasses are frozen dataclasses that
     carry structured fields and know how to render themselves for one viewer.
 
-    Kept a plain marker (like parts.signal_bus.Signal) rather than an ABC so the
+    Kept a plain marker (like parts.shelf.signal_bus.Signal) rather than an ABC so the
     contract is one method, tested directly."""
 
     def render_for(self, viewer_id: str) -> str:

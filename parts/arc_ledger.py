@@ -145,7 +145,7 @@ _CHECK_CMDS: dict[str, list[str]] = {
 
 def _console_runner(check: str) -> bool:
     """Default runner: run one allowlisted check via the safe console runner; True iff it passed."""
-    from parts import console  # lazy: keep this module's import path light for arc.py
+    from parts.shelf import console  # lazy: keep this module's import path light for arc.py
 
     return console.run(check, allowlist=_CHECK_CMDS).ok
 

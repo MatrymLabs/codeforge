@@ -16,7 +16,7 @@ Hardware Store.*
 
 ## The part: `typed-event-bus`
 
-`parts/signal_bus.py` -- a `SignalBus`: `subscribe(signal_type, handler)` registers a handler for an
+`parts/shelf/signal_bus.py` -- a `SignalBus`: `subscribe(signal_type, handler)` registers a handler for an
 exact signal type; `publish(signal)` delivers it to that type's subscribers in subscription order;
 `subscribers(type)` counts them. Signals are frozen dataclasses subclassing `Signal`.
 

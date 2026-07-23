@@ -1,6 +1,6 @@
 """CARD: quest -- the game adapter for the Workflow Engine: a regional quest as a workflow.
 
-A quest is a workflow (`parts/workflow`) whose states a player walks with the `quest` MUD verb.
+A quest is a workflow (`parts/shelf/workflow`) whose states a player walks with the `quest` verb.
 It proves the reusable core lives in the game: the SAME `WorkflowEngine` that drives a business
 onboarding checklist (`parts/onboarding`) drives this quest -- only the effect differs (here, a
 completed contract awards XP). The workflow is defined as data, so a seed could ship its own.
@@ -11,7 +11,7 @@ from __future__ import annotations
 from parts.seed import SEED_DIR, QuestSpec, load_quest
 from parts.session import Session
 from parts.shelf.statemachine import Fired
-from parts.workflow import Instance, Step, Workflow, WorkflowEngine, build_workflow
+from parts.shelf.workflow import Instance, Step, Workflow, WorkflowEngine, build_workflow
 
 
 def _built_in_quest() -> tuple[Workflow, str, int]:
