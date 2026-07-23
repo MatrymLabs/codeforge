@@ -1646,6 +1646,32 @@
     "updated": "2026-07-23"
   },
   {
+    "designation": "MOD-05.065",
+    "name": "reward_curve",
+    "status": "active",
+    "function": "challenge-scaled kill rewards: the gap-band curve + tiers (harvested from Haven)",
+    "label": "reward_curve",
+    "file": "parts/shelf/reward_curve.py",
+    "type": "MOD",
+    "domain": "05",
+    "docs": "docs/vision_resync.md",
+    "tests": "tests/test_reward_curve.py",
+    "depends_on": [],
+    "related": [
+      "progression",
+      "combat"
+    ],
+    "reuse": "the challenge-scaled reward pattern: pay proportional to the level GAP between a foe and the earner -- full within a band, a capped bonus for fighting up, zero for trivial grays -- reusable anywhere a system should reward difficulty, not repetition (loot, XP, bounty, task pay)",
+    "notes": "The engine of a 1-300 climb, harvested faithfully from Haven's locked reward design (July 2026). Pure functions over ints (stdlib only): gap_multiplier (full within +/-5, +5%/level bonus fighting up capped at +50%, linear taper to 0 at -15), tiers (normal x1 / elite x3 / boss x10), clamp_level (1-300), xp_for_kill (PLvl gap) + jp_for_kill (10:1 job schema). Fails loud on an unknown tier. NOT yet wired to combat -- that (enemy level/tier + scaled awards) is the next slice.",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-23",
+    "updated": "2026-07-23"
+  },
+  {
     "designation": "MOD-01.004",
     "name": "evolution_genome",
     "status": "active",
