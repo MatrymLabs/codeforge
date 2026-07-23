@@ -31,10 +31,15 @@ can click straight into.
 > **The vision, honestly labelled:** CodeForge is being assembled as a two-output manufacturing
 > platform - a **World Package** generator (the MUD is the first, and it runs today) and a
 > reusable-parts **Hardware Store** (parts proven in the game, translated to real software:
-> government, finance, compliance, records). The engine and its first world work now; the
-> manufacturing spine (Blueprint -> parts -> assemble -> test -> catalog -> package) is being
-> built one vertical slice at a time. Browse the parts with `make hardware`; read the full plan
-> in [`docs/vision_resync.md`](docs/vision_resync.md).
+> government, finance, compliance, records). The World Package runs today, and the Hardware Store
+> is now **physically real and shipped**: its 27 engine-agnostic cores live in their own package
+> (`parts/shelf/`, a one-way engine -> shelf dependency the build enforces), pour standalone via
+> `make shelf-pour`, and are published as
+> [`codeforge-shelf`](https://github.com/MatrymLabs/codeforge-shelf) --
+> `pip install git+https://github.com/MatrymLabs/codeforge-shelf` installs the library and imports
+> it with no game engine present (its 25 shipped test twins pass standalone in the package's own
+> CI). Browse the parts with `make hardware` or `make store`; read the full plan in
+> [`docs/vision_resync.md`](docs/vision_resync.md).
 >
 > **Proven, not just promised.** The store isn't only a catalog: four of its patterns are
 > re-implemented and running in the fleet's industry repos (a retry policy, a circuit breaker, a
