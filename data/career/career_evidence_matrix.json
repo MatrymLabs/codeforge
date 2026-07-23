@@ -2,7 +2,7 @@
   "career_board": {
     "title": "Career Evidence Sign",
     "purpose": "Map CodeForge work to real software-career skills -- each with the exact repo artifact that proves it, and the honest gaps.",
-    "last_updated": "2026-07-22",
+    "last_updated": "2026-07-23",
     "market_note": "Basis: BLS 2024 medians (Software Developers $133,080 - QA/Testers $102,610 - Technical Writers $91,670; ~317,700 CS/IT openings/yr through 2034) + O*NET work styles + current public postings (Roblox, Extreme Networks, Wyetech, Veeva, BioIntelliSense, PlayOn, Xsolla). CodeForge's strongest overlap: internal tools - release/build - DevOps/SRE - QA automation - technical docs.",
     "status_legend": "proven=current repo artifact | partial=some proof, needs more | missing=no proof | planned=idea only | needs_update=stale | human_review_required=uncertain",
     "levels": [
@@ -282,7 +282,9 @@
             "repo_proof": [
               "catalog/parts.yaml",
               "parts/reporting.py",
-              "tests/test_reporting.py"
+              "tests/test_reporting.py",
+              "parts/shelf/__init__.py",
+              "parts/shelf_boundary.py"
             ],
             "status": "proven",
             "next_proof_task": "Catalog more reusable parts as they mature, each with a reuse map."
@@ -412,10 +414,13 @@
             "why_it_matters": "Platform/lead roles shape how others work.",
             "repo_proof": [
               "docs/seed_architecture.md",
-              "parts/cast.py"
+              "parts/cast.py",
+              "parts/shelf_pour.py",
+              "parts/shelf_boundary.py",
+              "tests/test_shelf_pour.py"
             ],
-            "status": "partial",
-            "next_proof_task": "Ship real cast generation so another dev can pour a project."
+            "status": "proven",
+            "next_proof_task": "Publish codeforge-shelf to a package index (deferred: a distribution decision), or split Layer 1/2 physically."
           },
           {
             "skill_id": "adv.rollback.thinking",
