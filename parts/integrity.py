@@ -27,6 +27,7 @@ from parts.hardware import load_catalog
 from parts.qualitygate import gate_all
 from parts.registry import load_collective, unfiled_modules, validate
 from parts.shelf_boundary import shelf_boundary_gaps
+from parts.world_boundary import world_boundary_gaps
 
 _ROOT = Path(__file__).resolve().parent.parent
 _REPORT_DIR = _ROOT / "reports" / "repo_integrity"
@@ -243,6 +244,7 @@ class _ReportData:
     n_roadmaps: int
     currency: list[str]
     boundary: list[str]
+    world_boundary: list[str]
     qa: Counter[str]
 
 
@@ -272,6 +274,7 @@ def _gather_signals(base: Path, stamp: date, tools: dict[str, bool]) -> _ReportD
         n_roadmaps=len(_CLAIM_DOCS) + (len(_SHIP_CLAIM_DOCS) if _ship_home(base) else 0),
         currency=career_currency_gaps(base, stamp, _latest_capability_change(base)),
         boundary=shelf_boundary_gaps(base),
+        world_boundary=world_boundary_gaps(base),
         qa=Counter(r.verdict for r in gate_all(records)),  # keys: pass | watch | fail
     )
 
@@ -303,6 +306,12 @@ def _next_actions(tools: dict[str, bool], data: _ReportData) -> list[str]:
             "Restore the shelf boundary: a Hardware Store core imports an engine part, "
             f"re-coupling it ({'; '.join(data.boundary)}). Move the dependency or the core."
         )
+    if data.world_boundary:
+        actions.append(
+            "Restore the world boundary: a World Package (Layer 2) module imports the "
+            f"platform ({'; '.join(data.world_boundary)}). A shipped game must not need the "
+            "dev-tools; move the dependency or the module."
+        )
     if not actions:
         actions.append(
             "No blocking gaps found - run `make check` + `make security` for the live gates."
@@ -330,6 +339,11 @@ def _report_lines(
         "clean (engine -> shelf, one way)"
         if not data.boundary
         else "VIOLATED -- " + "; ".join(data.boundary)
+    )
+    world_boundary_line = (
+        "clean (platform -> world, one way)"
+        if not data.world_boundary
+        else "VIOLATED -- " + "; ".join(data.world_boundary)
     )
     n_claims = len(data.claims)
     lines = [
@@ -374,6 +388,7 @@ def _report_lines(
         "",
         "Architecture / Hardware Store:",
         f"- shelf boundary:       {boundary_line}",
+        f"- world boundary:       {world_boundary_line}",
     ]
     lines += [f"    {c}" for c in data.claims]  # the full queue: curated docs keep it bounded
     lines += [f"    {c}" for c in data.currency]
