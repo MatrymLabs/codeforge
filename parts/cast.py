@@ -641,6 +641,25 @@ def main(argv: list[str] | None = None) -> int:
                 render_audit(audit_requirements(_declared_deps(Path(rest[0]) / "pyproject.toml")))
             )
         return 0
+    if args and args[0] == "update":
+        rest = [a for a in args[1:] if a != "--force"]
+        force = "--force" in args[1:]
+        if len(rest) < 2:
+            print(
+                "usage: python -m parts.cast update <cast_dir> <source_root> [--force]",
+                file=sys.stderr,
+            )
+            return 2
+        from parts.cast_update import render_update, update_cast
+
+        try:
+            outcome = update_cast(rest[0], rest[1], force=force)
+        except CastError as exc:
+            print(f"cast: {exc}", file=sys.stderr)
+            return 2
+        print(render_update(outcome))
+        # 0 when the cast is on the target (applied or in sync); 1 when a refusal needs action
+        return 0 if outcome.applied or "already in sync" in outcome.reason else 1
     if args and args[0] == "generate":
         if len(args) < 4:
             print(
