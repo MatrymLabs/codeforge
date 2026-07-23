@@ -128,6 +128,22 @@ def _abilities_file(tmp_path: Path, body: str) -> Path:
     return p
 
 
+def test_every_shipped_seed_abilities_file_loads() -> None:
+    # every seeds/<world>/abilities.yaml is valid data (fails loud here, not at a player's boot)
+    seeds = Path(__file__).resolve().parent.parent / "seeds"
+    files = sorted(seeds.glob("*/abilities.yaml"))
+    assert files  # at least first-forge ships one
+    for f in files:
+        assert load_abilities(f)  # non-empty and well-formed
+
+
+def test_aethryn_ships_a_moveset_for_each_calling() -> None:
+    seeds = Path(__file__).resolve().parent.parent / "seeds"
+    ab = load_abilities(seeds / "aethryn" / "abilities.yaml")
+    wielders = {job for a in ab.values() for job in a["jobs"]}
+    assert wielders == {"vanguard", "pathfinder", "emberwright"}  # every aethryn calling armed
+
+
 def test_load_abilities_accepts_a_wellformed_file(tmp_path: Path) -> None:
     p = _abilities_file(
         tmp_path,

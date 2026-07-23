@@ -1,0 +1,53 @@
+# SEED: aethryn -- abilities.yaml (each calling's ember-forged moveset)
+# `use <ability> [on <target>]` fires one; `skills` lists what your calling can wield.
+
+# Vanguard -- ward and edge, strength and stamina.
+ember_edge:
+  name: Ember Edge
+  kind: strike
+  power: 6
+  scales: strength
+  mp_cost: 3
+  jobs: [vanguard]
+
+ward:
+  name: Ward
+  kind: heal
+  power: 7
+  scales: stamina
+  mp_cost: 5
+  jobs: [vanguard]
+
+# Pathfinder -- reads the wilds, strikes from the flank; speed over brute force.
+flank_strike:
+  name: Flank Strike
+  kind: strike
+  power: 6
+  scales: speed
+  mp_cost: 3
+  jobs: [pathfinder]
+
+hunters_mark:
+  name: Hunter's Mark
+  kind: strike
+  power: 9
+  scales: speed
+  mp_cost: 5
+  jobs: [pathfinder]
+
+# Emberwright -- a maker who bends raw ember; patient hands, deep magic.
+ember_bolt:
+  name: Ember Bolt
+  kind: strike
+  power: 5
+  scales: magic
+  mp_cost: 3
+  jobs: [emberwright]
+
+kindle:
+  name: Kindle
+  kind: heal
+  power: 8
+  scales: magic
+  mp_cost: 5
+  jobs: [emberwright]
