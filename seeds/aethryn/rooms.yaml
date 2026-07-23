@@ -51,9 +51,10 @@ the_far_reach:
   desc: |-
     The Ember-road runs on toward Emberreach, City of the Relit Forge, and the
     Warden Gate that guards the way to the Great Spiral. A road-warden waits at
-    the marker, watching who comes. Your road begins here.
+    the marker, watching who comes. The road climbs north, and it is not gentle.
   exits:
     south: old_reach_bridge
+    north: emberroad_climb
 
 cold_cellar:
   name: The Cold Cellar
@@ -73,3 +74,93 @@ cellar_hearth:
     the far wall breathes colder still, downward, toward the Cinderdeep.
   exits:
     up: cold_cellar
+
+# --- The Ember-road: the climb from the Kindlands Coast up to Emberreach. ---
+# The old paved Forgework connecting capitals (world bible s.22). The Kindlands are behind
+# you; the road foes here run levels ~10-13, a real step up from the coast. Fight up, or fall.
+
+emberroad_climb:
+  name: The Ember-road
+  desc: |-
+    The paved Forgework of the Ember-road climbs north out of the Kindlands, its
+    old cinder-stones still warm underfoot. Wild ember has gone feral in the ditches,
+    and stray things move where the light of Cinderhearth no longer reaches. A hollow
+    opens to the east; the road runs on north toward a wayfarer's rest.
+  exits:
+    south: the_far_reach
+    north: wayfarers_rest
+    east: strayfire_hollow
+
+strayfire_hollow:
+  name: Strayfire Hollow
+  desc: |-
+    A blind dell off the road where feral ember pools and burns without a maker.
+    Reavers of the road den here, drawn to the wild fire. It is no place to linger
+    unproven, but the bold have taken good steel off the dead.
+  exits:
+    west: emberroad_climb
+
+wayfarers_rest:
+  name: A Wayfarer's Rest
+  desc: |-
+    A walled waystation on the Ember-road, its brazier kept lit for travellers by
+    old Concord custom. The walls hold the strayfire back; here you can breathe.
+    The road climbs the last stretch north to the gates of Emberreach.
+  exits:
+    south: emberroad_climb
+    north: emberreach_gates
+
+# --- Emberreach, City of the Relit Forge (world bible s.25): large, safe, service-dense. ---
+# No foes inside the walls -- this is the mid-game hub: the Grand Forge, the Orders' Row,
+# the Market Quarter, and the Warden Gate that teases the road up the Great Spiral.
+
+emberreach_gates:
+  name: The Gates of Emberreach
+  desc: |-
+    The great cinder-iron gates of Emberreach stand open under banners of the Relit
+    Forge. A gate-warden of the Concord greets the road-weary. Beyond the arch the
+    capital hums with the work of the Rekindling: the Grand Forge burns to the north.
+  exits:
+    south: wayfarers_rest
+    north: the_grand_forge
+
+the_grand_forge:
+  name: The Grand Forge
+  desc: |-
+    The heart of Emberreach: the great relit Forge roars in the city center, and the
+    Church of the First Flame keeps its light. The city's Loremaster works here, at the
+    root of the world's memory. The Orders' Row lies west, the Market Quarter east, and
+    the Warden Gate stands to the north.
+  exits:
+    south: emberreach_gates
+    west: orders_row
+    east: market_quarter
+    north: warden_gate
+
+orders_row:
+  name: The Orders' Row
+  desc: |-
+    A colonnade of guild-halls: the Making, the Gathering, the Warcraft, and the Knowing
+    Orders keep their doors here, where a Forger chooses a road and trains a craft. A
+    recruiter watches the street for new talent come up from the coast.
+  exits:
+    east: the_grand_forge
+
+market_quarter:
+  name: The Market Quarter
+  desc: |-
+    Stalls and shopfronts crowd the Market Quarter, and the Cooling-Sea docks send their
+    trade up from the water. A trader calls her wares over the din. Everything the wider
+    Anvil makes passes through here sooner or later.
+  exits:
+    west: the_grand_forge
+
+warden_gate:
+  name: The Warden Gate
+  desc: |-
+    The Concord's seat and the threshold of the Wardenmarch: beyond this gate the
+    Ember-road climbs to the Coilfoot Range and the first Coils of the Great Spiral.
+    A gate-keeper of the Wardens holds the arch. None pass to the ascent unproven --
+    the Warden's test waits here for a Forger ready to climb. Not yet. Not yet.
+  exits:
+    south: the_grand_forge

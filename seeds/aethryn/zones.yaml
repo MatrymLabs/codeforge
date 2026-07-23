@@ -20,3 +20,15 @@ cold_cellar:
   rooms: [cold_cellar, cellar_hearth]
   reset_mode: always
   beats_between: 8
+
+ember_road:
+  name: The Ember-road
+  rooms: [emberroad_climb, strayfire_hollow, wayfarers_rest]
+  reset_mode: empty_only  # the road's strayfire and reavers repopulate once the stretch is quiet
+  beats_between: 10
+
+emberreach:
+  name: Emberreach, City of the Relit Forge
+  rooms: [emberreach_gates, the_grand_forge, orders_row, market_quarter, warden_gate]
+  reset_mode: never  # a living capital, not a repop field: its NPCs and shops persist
+  beats_between: 20

@@ -44,8 +44,9 @@ road_warden:
   location: the_far_reach
   keywords: [warden, road, guard, marshal]
   dialogue:
-    - '"Emberreach lies down this road, and the Warden Gate beyond it. None pass the Gate unproven."'
-    - '"Prove yourself in the Kindlands first, Forger. The Spiral does not suffer the half-ready."'
+    - '"So the coast is relit. Word travels fast on the Ember-road. Emberreach lies north, Forger."'
+    - '"The road climbs hard from here, and the strayfire dens run thick. Go proven, or go home."'
+    - '"At the capital you will choose your Order and your road. The Warden Gate tests the rest."'
 
 cinder_wight:
   name: the Cinder-Wight
@@ -61,3 +62,77 @@ cinder_wight:
   lethal: true  # a real boss: fall to it and you wake in town while it recovers, no failsafe revive
   drops: [cinder_hammer]  # felled, the old smith yields its grey-cinder hammer (object instancing)
   loot: {ember_shard: 2, nothing: 3}  # and, by chance, a shard of the wild ember it hoarded
+
+# --- The Ember-road foes (level-banded: level+tier scale the reward by the challenge gap). ---
+# hp/atk are tuned for pacing; level/tier feed parts.shelf.reward_curve. A coast-fresh Forger
+# (level ~5-6) fights UP here, so a kill pays well -- but the road can put you down.
+
+cinder_stray:
+  name: a cinder stray
+  location: emberroad_climb
+  keywords: [stray, cinder, beast, feral]
+  dialogue:
+    - The cinder stray circles, wild ember guttering along its spine.
+  hp: 40
+  atk: 6
+  aggressive: true  # feral: it opens the fight on the world beat (leash releases if you disengage)
+  level: 10
+  tier: normal
+  drops: [ember_shard]  # feral ember clings to it: a shard for the taking
+
+road_reaver:
+  name: a road reaver
+  location: strayfire_hollow
+  keywords: [reaver, road, brigand, raider]
+  dialogue:
+    - '"Toll''s gone up, coast-rat. Steel or ember -- your pick which you leave."'
+  hp: 70
+  atk: 11
+  aggressive: true
+  level: 13
+  tier: elite  # a real threat: elite pays x3 the level''s base -- the road''s best return
+  drops: [reaver_blade]
+  loot: {ember_shard: 2, nothing: 2}
+
+# --- Emberreach: the safe capital hub (world bible s.25). Peaceful service NPCs. ---
+
+emberreach_warden:
+  name: the Gate-Warden of Emberreach
+  location: emberreach_gates
+  keywords: [warden, gate, guard, concord]
+  dialogue:
+    - '"Up from the coast, and still breathing. Welcome to Emberreach, City of the Relit Forge."'
+    - '"The Grand Forge burns north. The Orders keep their Row to the west, the Market to the east."'
+
+grandforge_loremaster:
+  name: Master Ilya, the Loremaster
+  location: the_grand_forge
+  keywords: [ilya, loremaster, master, scholar]
+  dialogue:
+    - '"Sela sent word of you from the coast. The First Flame remembers every Forger who relights it."'
+    - '"The Great Archive holds what the world was. The Grand Forge makes what it will be. Study both."'
+    - '"The Unforging sundered the First Seed. Every ember you carry is a piece of the answer."'
+
+order_recruiter:
+  name: a recruiter of the Orders
+  location: orders_row
+  keywords: [recruiter, orders, guild, order]
+  dialogue:
+    - '"Four Orders keep the Row: the Making, the Gathering, the Warcraft, the Knowing. Choose well."'
+    - '"A Forger without an Order is a spark without a hearth. Train a craft; earn your place."'
+
+market_trader:
+  name: a Market-Quarter trader
+  location: market_quarter
+  keywords: [trader, merchant, market, shopkeeper]
+  dialogue:
+    - '"Cooling-Sea goods, coast-craft, Spiral salvage -- if the Anvil makes it, it crosses my stall."'
+    - '"Ember-shards fetch a fair price up here. The road pays those who survive it, eh?"'
+
+warden_keeper:
+  name: the Keeper of the Warden Gate
+  location: warden_gate
+  keywords: [keeper, warden, gate, wardenmarch]
+  dialogue:
+    - '"Beyond this arch: the Wardenmarch, the Coilfoot Range, and the first Coils of the Great Spiral."'
+    - '"None climb unproven. When your spark is ready, the Warden''s test will open the way. Not today."'

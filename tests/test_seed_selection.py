@@ -64,6 +64,45 @@ def test_aethryn_cinder_wight_boss_is_attackable_and_strikes_back():
     assert wight["level"] == 8 and wight["tier"] == "boss"  # a boss-tier, curve-scaled reward
 
 
+def test_aethryn_ember_road_climbs_from_the_coast_to_emberreach():
+    """The pour past the Kindlands: the Far Reach now opens north onto the Ember-road, which
+    climbs through the road and the waystation to the gates of the capital."""
+    rooms = load_rooms(AETHRYN / "rooms.yaml")
+    assert rooms["the_far_reach"]["exits"]["north"] == "emberroad_climb"
+    assert rooms["emberroad_climb"]["exits"]["north"] == "wayfarers_rest"
+    assert rooms["wayfarers_rest"]["exits"]["north"] == "emberreach_gates"
+    assert rooms["emberreach_gates"]["exits"]["north"] == "the_grand_forge"
+    # the capital is a hub: the Grand Forge reaches the Orders' Row, the Market, and the Warden Gate
+    forge_exits = rooms["the_grand_forge"]["exits"]
+    assert {"orders_row", "market_quarter", "warden_gate"} <= set(forge_exits.values())
+
+
+def test_aethryn_road_foes_are_level_banded_above_the_coast():
+    """The Ember-road foes carry levels/tiers well above the coast, so fighting up pays; the city
+    stays safe (its service NPCs are peaceful, hp 0)."""
+    npcs = load_npcs(AETHRYN / "npcs.yaml")
+    stray, reaver = npcs["cinder_stray"], npcs["road_reaver"]
+    assert stray["level"] == 10 and stray["tier"] == "normal"
+    assert reaver["level"] == 13 and reaver["tier"] == "elite"  # a road threat pays elite (x3)
+    assert stray["hp"] > 0 and reaver["hp"] > 0  # combatable
+    for keeper in ("emberreach_warden", "grandforge_loremaster", "market_trader", "warden_keeper"):
+        assert npcs[keeper]["hp"] == 0, f"{keeper} should be a peaceful city NPC"
+
+
+def test_aethryn_road_reward_pays_for_the_climb():
+    """A coast-fresh Forger fighting the level-13 elite reaver earns far more than a coast wolf: the
+    scaled economy rewards closing the gap (fighting up), not farming grays."""
+    from parts.world.combat import _reward_amounts
+    from parts.world.session import Session
+
+    npcs = load_npcs(AETHRYN / "npcs.yaml")
+    session = Session(player_id="climber", location="strayfire_hollow")
+    session.level = 6
+    reaver_xp = _reward_amounts(session, npcs["road_reaver"])[0]
+    wolf_xp = _reward_amounts(session, npcs["reach_wolf"])[0]
+    assert reaver_xp > wolf_xp * 5  # the road's elite dwarfs a coast kill
+
+
 def test_aethryn_ships_the_relighting_quest_as_data():
     """The flagship's story arc is a seed-shipped workflow, not hardcoded in Python."""
     quest = load_quest(AETHRYN / "quest.yaml")
