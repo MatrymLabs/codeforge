@@ -26,6 +26,8 @@ from typing import Any, NotRequired, TypedDict
 
 import yaml
 
+from parts.shelf.conditions import ConditionError, validate
+
 # A seed IS a game. The engine loads one seed pack at startup; swap the seed and
 # codeforge boots a different game (fantasy `first-forge`, `spiral-ascent`, ...).
 # Selection is by the FORGE_SEED env var, read once at import -- you choose which
@@ -149,6 +151,10 @@ class Door(TypedDict):
     # it this many beats later (0/absent = stays open once unlocked). Quest-opened doors never
     # set this, so a reforged bridge stays reforged.
     recloses_after: NotRequired[int]
+    # Optional: a safe condition (parts.shelf.conditions) gating the unlock, evaluated against the
+    # actor's state (level, rank). Validated at load; a door with a requires the actor doesn't meet
+    # stays barred even with the key. Absent = no extra gate.
+    requires: NotRequired[str]
 
 
 class Job(TypedDict):
@@ -689,6 +695,16 @@ def load_doors(path: Path) -> dict[str, Door]:
                 f"door '{label}': 'recloses_after' must be a non-negative integer "
                 f"(beats before a self-closing door relocks), got {recloses!r}."
             )
+        requires = merged.get("requires")
+        if requires is not None:
+            if not isinstance(requires, str):
+                raise SeedError(
+                    f"door '{label}': 'requires' must be a condition string, got {requires!r}."
+                )
+            try:
+                validate(requires)  # a load-time gate: reject a malformed/unsafe condition now
+            except ConditionError as exc:
+                raise SeedError(f"door '{label}': invalid 'requires' condition: {exc}") from exc
         door = Door(
             name=merged["name"],
             keywords=list(merged["keywords"]),
@@ -698,6 +714,8 @@ def load_doors(path: Path) -> dict[str, Door]:
         )
         if recloses:
             door["recloses_after"] = recloses
+        if requires is not None:
+            door["requires"] = requires
         doors[label] = door
     return doors
 

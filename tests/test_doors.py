@@ -146,3 +146,44 @@ def test_unlocking_an_already_open_door_says_so_with_the_door_named():
     unlock("door", "key", "library")  # now open
     result = unlock("door", "key", "library")  # unlock again
     assert result == "The oak door is already unlocked."
+
+
+# --- requires: a safe condition gating the unlock (parts.shelf.conditions) -----------------------
+
+
+def test_a_gated_door_bars_an_actor_who_fails_the_requirement():
+    doors.DOORS["oak_door"]["requires"] = "rank == 'wizard'"
+    items.clone("copper_key", "player")  # carries the right key...
+    result = unlock("door", "key", "library", {"level": 1, "rank": "player"})
+    assert "warded" in result  # ...but the ward bars a non-wizard
+    assert doors.DOORS["oak_door"]["locked"] is True  # stayed locked despite the key
+
+
+def test_a_gated_door_opens_for_an_actor_who_meets_the_requirement():
+    doors.DOORS["oak_door"]["requires"] = "rank == 'wizard' and level >= 5"
+    items.clone("copper_key", "player")
+    result = unlock("door", "key", "library", {"level": 10, "rank": "wizard"})
+    assert "unlock" in result and doors.DOORS["oak_door"]["locked"] is False
+
+
+def test_a_gated_door_with_no_actor_context_stays_barred():
+    doors.DOORS["oak_door"]["requires"] = "level >= 5"
+    items.clone("copper_key", "player")
+    result = unlock("door", "key", "library")  # no actor -> unknown name -> unmet, never opens
+    assert "warded" in result and doors.DOORS["oak_door"]["locked"] is True
+
+
+def test_load_doors_rejects_an_unsafe_requires_condition(tmp_path):
+    from parts.world.seed import SeedError, load_doors
+
+    (tmp_path / "doors.yaml").write_text(
+        "trap_door:\n"
+        "  name: the trap door\n"
+        "  keywords: [door]\n"
+        "  blocks: [library, north]\n"
+        "  locked: true\n"
+        "  key_id: copper_key\n"
+        "  requires: \"__import__('os')\"\n"  # a forbidden construct
+    )
+    with pytest.raises(SeedError, match="invalid 'requires' condition"):
+        load_doors(tmp_path / "doors.yaml")

@@ -1590,6 +1590,32 @@
     "updated": "2026-07-11"
   },
   {
+    "designation": "MOD-05.064",
+    "name": "conditions",
+    "status": "active",
+    "function": "a safe boolean-expression evaluator for seed-declared gates (allowlist AST)",
+    "label": "conditions",
+    "file": "parts/shelf/conditions.py",
+    "type": "MOD",
+    "domain": "05",
+    "docs": "docs/vision_resync.md",
+    "tests": "tests/test_conditions.py",
+    "depends_on": [],
+    "related": [
+      "seed",
+      "doors"
+    ],
+    "reuse": "the safe-eval-by-allowlist pattern: parse an expression, admit ONLY a whitelist of AST node types (comparisons, boolean ops, names, constants), refuse everything else at parse time -- reusable anywhere untrusted config must gate on state without an eval() footgun",
+    "notes": "The configurable-rules language (the last deferred junction). validate() parses + allowlist-checks an expression (a seed-load gate); evaluate() resolves names from a context dict and returns a bool. No calls/attributes/subscripts/imports/comprehensions/arithmetic are reachable, so there is no path to __import__ or an object's internals. Wired to doors: a door's optional `requires` condition is validated at load and evaluated at unlock against the actor's {level, rank}; a gated door stays barred on a failed or broken context.",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-23",
+    "updated": "2026-07-23"
+  },
+  {
     "designation": "MOD-01.004",
     "name": "evolution_genome",
     "status": "active",
