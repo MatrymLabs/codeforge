@@ -9,10 +9,10 @@ modifier math; the score sheet only projects the result.
 
 from __future__ import annotations
 
-from parts import items  # import the MODULE, not its globals: tests swap items.ITEMS
-from parts.score_sheet_model import EquipmentLoadout
-from parts.session import Session, sentence_case
 from parts.shelf.stats import ModifierStack, Stat, StatModifier
+from parts.world import items  # import the MODULE, not its globals: tests swap items.ITEMS
+from parts.world.score_sheet_model import EquipmentLoadout
+from parts.world.session import Session, sentence_case
 
 SLOTS = ("weapon", "body", "head", "arm", "accessory_1", "accessory_2")
 

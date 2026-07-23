@@ -16,9 +16,9 @@ from __future__ import annotations
 
 from collections.abc import Mapping
 
-from parts.seed import SEED_DIR
-from parts.stat_rules import DERIVED_STATS, Ruleset, apply_ruleset
-from parts.world_manifest import load_ruleset
+from parts.world.seed import SEED_DIR
+from parts.world.stat_rules import DERIVED_STATS, Ruleset, apply_ruleset
+from parts.world.world_manifest import load_ruleset
 
 __all__ = ["DERIVED_STATS", "derived_stats"]
 

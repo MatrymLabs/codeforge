@@ -11,8 +11,8 @@ import pytest
 
 from forge import handle_command
 from parts.generate import generate_item, load_patterns, system_generate
-from parts.items import ITEMS
-from parts.session import SESSIONS, Session
+from parts.world.items import ITEMS
+from parts.world.session import SESSIONS, Session
 
 _PATTERNS = {
     "excalibur": {"name": "Excalibur, the drawn blade", "keywords": ["excalibur", "sword"]},

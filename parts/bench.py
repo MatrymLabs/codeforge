@@ -51,7 +51,7 @@ def benchmark(
         raise BenchError("rotation must name at least one command")
 
     from forge import handle_command  # lazy: the tick is the top, parts do not import it eagerly
-    from parts.session import Session
+    from parts.world.session import Session
 
     session = Session(player_id="_bench")
     perf = time.perf_counter

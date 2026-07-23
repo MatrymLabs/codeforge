@@ -9,7 +9,7 @@ import pytest
 
 from forge import handle_command
 from parts.ai_throttle import _CAPACITY, ask_architect, reset_ai_throttle
-from parts.session import SESSIONS, Session
+from parts.world.session import SESSIONS, Session
 
 _THROTTLED = "The Architect is still thinking"
 

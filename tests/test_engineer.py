@@ -1,4 +1,4 @@
-"""Test twin for parts/engineer.py -- the Engineer's combat kit, all deterministic.
+"""Test twin for parts/world/engineer.py -- the Engineer's combat kit, all deterministic.
 
 Proves the four combat pillars the vertical slice requires: a skill (Field Repair) that heals
 and spends MP, a cooldown that recovers over ticks, a status (Analyzed via Diagnostic Scan)
@@ -13,8 +13,8 @@ import copy
 import pytest
 
 from forge import handle_command
-from parts import engineer, npcs
-from parts.engineer import (
+from parts.world import engineer, npcs
+from parts.world.engineer import (
     analyzed_duration,
     deploy_barrier,
     diagnostic_scan,
@@ -23,9 +23,9 @@ from parts.engineer import (
     field_repair_heal,
     tick,
 )
-from parts.jobs import bind_calling
-from parts.resources import Resource
-from parts.session import SESSIONS, Session
+from parts.world.jobs import bind_calling
+from parts.world.resources import Resource
+from parts.world.session import SESSIONS, Session
 
 
 @pytest.fixture(autouse=True)

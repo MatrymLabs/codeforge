@@ -11,15 +11,15 @@ its own Session pointed at the same world.
 
 from dataclasses import dataclass, field
 
-from parts.job_progress import JobProgress
-from parts.resources import Resource
 from parts.shelf.stats import StatBlock
+from parts.world.job_progress import JobProgress
+from parts.world.resources import Resource
 
 
 def _spawn() -> str:
     """The seed's first room. Imported lazily so `codeforge grant` (which touches
     Session but not the world) doesn't pay to load the whole seed."""
-    from parts.world import START_ROOM
+    from parts.world.world import START_ROOM
 
     return START_ROOM
 

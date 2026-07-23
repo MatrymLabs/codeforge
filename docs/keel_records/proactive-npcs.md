@@ -5,8 +5,8 @@ critical-junction design decision and its build slice. Per the doctrine, AI prop
 approves; **AI does not assign ownership**. The level-4 ownership claim and the "what I learned"
 reflection below are left for Josh to complete when he can defend the design to an interviewer.*
 
-- **Build:** proactive/aggressive NPCs (`parts/aggression.py` + a shared blow resolution in
-  `parts/combat.py` + a typed `StrikeFrame`), wired into the engine tick.
+- **Build:** proactive/aggressive NPCs (`parts/world/aggression.py` + a shared blow resolution in
+  `parts/world/combat.py` + a typed `StrikeFrame`), wired into the engine tick.
 - **Ownership level claimed:** *(pending Josh's own claim; undeclared until he defends it)*
 
 ## Intent
@@ -63,9 +63,9 @@ step once the workload justifies it, but is not the smallest safe experiment.
   second consumer of the typed bus with no test regressions (bystander text unchanged).
 
 ## AI contribution
-AI-assisted implementation of `parts/aggression.py` (`menace`), the `_resolve_npc_blow` extraction +
-`open_strike` in `parts/combat.py` (behavior-preserving refactor of `_counter_attack`), the
-`StrikeFrame` in `parts/frames.py`, the `aggressive` seed field + loud validation in `parts/seed.py`,
+AI-assisted implementation of `parts/world/aggression.py` (`menace`), the `_resolve_npc_blow` extraction +
+`open_strike` in `parts/world/combat.py` (behavior-preserving refactor of `_counter_attack`), the
+`StrikeFrame` in `parts/world/frames.py`, the `aggressive` seed field + loud validation in `parts/world/seed.py`,
 the `_route`/`handle_command` beat wiring in `forge.py`, the test twins (`tests/test_aggression.py`,
 plus `StrikeFrame` cases in `tests/test_frames.py` and seed-validation cases in `tests/test_seed.py`),
 the Classification Registry filing `MOD-04.048`, and this record.
@@ -77,7 +77,7 @@ the tick, no thread). He holds the acceptance bar: capability dormant until a ga
 preserved for every existing seed, one blow per beat, and the failsafe unbroken.
 
 ## Tests / evidence
-- `parts/aggression.py` twinned by `tests/test_aggression.py` (acceptance: opens on the beat, reaches
+- `parts/world/aggression.py` twinned by `tests/test_aggression.py` (acceptance: opens on the beat, reaches
   through `handle_command`, exactly one blow per tick when attacked; refusal: reactive NPC never
   opens, another room is no threat, a callingless player is left alone; the failsafe restores a felled
   player). `StrikeFrame` acceptance + hostile refusal in `tests/test_frames.py`; seed-validation
@@ -122,11 +122,11 @@ hazards in this feature specifically:
 
 **Decision (Josh, this session): discharge the systemic condition, not just patch one finding.** The
 build (branch `feat/aggression-real-and-bounded`):
-1. **Bounded (safety).** An aggression **leash** (`parts/aggression.py`, `LEASH = 5`): a foe breaks off
+1. **Bounded (safety).** An aggression **leash** (`parts/world/aggression.py`, `LEASH = 5`): a foe breaks off
    after N unanswered beats; a player strike resets the count (`combat.attack`), so a real fight keeps
    it engaged but a player who stops fighting is released. The beat also stops after the first
    fall-and-recover, so a restored player is never re-felled in one tick.
-2. **Fair (human factors).** The room render telegraphs hostility (`parts/npcs.py` `_presence_line`):
+2. **Fair (human factors).** The room render telegraphs hostility (`parts/world/npcs.py` `_presence_line`):
    "The Cinder-Wight is here, and looks hostile."
 3. **Real (content).** `cinder_wight`, the aethryn tutorial boss, is armed `aggressive: true`, so the
    feature is live in a game a stranger can play (its room has an exit, so the leash and a real escape

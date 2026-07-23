@@ -7,11 +7,11 @@ the session. The score sheet itself lives in score_sheet/character_view --
 this card only assembles the character; the sheet is its projection.
 """
 
-from parts.job_progress import JobProgress
-from parts.resources import Resource
-from parts.seed import SEED_DIR, load_jobs
-from parts.session import Session
 from parts.shelf.stats import Stat, StatBlock
+from parts.world.job_progress import JobProgress
+from parts.world.resources import Resource
+from parts.world.seed import SEED_DIR, load_jobs
+from parts.world.session import Session
 
 JOBS = load_jobs(SEED_DIR / "jobs.yaml")
 

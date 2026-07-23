@@ -2,7 +2,7 @@
 
 from forge import handle_command
 from parts.maintenance import maintenance
-from parts.session import Session
+from parts.world.session import Session
 
 
 def _player() -> Session:

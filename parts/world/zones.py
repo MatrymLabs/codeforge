@@ -10,19 +10,19 @@ Two halves live here:
 - Grouping (shipped): a seed declares AREAS in zones.yaml; a room render gains an area
   banner; labels, not vnums.
 - The reset SCHEDULER (shipped): a per-area beat counter rides the world beat -- the same
-  clock parts.aggression.menace uses, no background thread (architecture law 4). When an
+  clock parts.world.aggression.menace uses, no background thread (architecture law 4). When an
   area comes due per its reset_mode + beats_between, `tick_zones` fires it.
 
 The repop ACTION (shipped): when a due area fires, `_perform_reset` restocks its RESETTABLE items
 -- any seed item flagged `resettable` that has gone missing from its home room respawns there as a
-fresh instance (parts.items.clone). Object instancing makes this safe: a respawn never collides
+fresh instance (parts.world.items.clone). Object instancing keeps it safe: a respawn never collides
 with a copy a player carried off, and opt-in `resettable` leaves quest items and keys untouched.
 """
 
-from parts import items
-from parts.seed import SEED_DIR, Zone, load_zones
-from parts.session import Session
-from parts.world import WORLD
+from parts.world import items
+from parts.world.seed import SEED_DIR, Zone, load_zones
+from parts.world.session import Session
+from parts.world.world import WORLD
 
 ZONES: dict[str, Zone] = load_zones(SEED_DIR / "zones.yaml", set(WORLD))
 
@@ -74,7 +74,7 @@ def zones_due(here: str = "") -> list[str]:
 def _perform_reset(label: str) -> None:
     """Restock a due area's RESETTABLE items: any item flagged `resettable` in the seed whose home
     room is in this area, and which is currently absent from that room, is respawned there as a
-    fresh instance (parts.items.clone).
+    fresh instance (parts.world.items.clone).
 
     Object instancing (which the earlier deferral waited on) makes this safe: the respawn is a new
     instance, so it never collides with a copy a player carried off, and opt-in `resettable` means
@@ -101,7 +101,7 @@ def tick_zones(session: Session) -> str:
     """Advance every area's beat counter by one world beat, then fire any that are due.
 
     The player's command is the only clock (architecture law 4): this rides the same beat as
-    parts.aggression.menace -- no background thread, no second door into world state. When an
+    parts.world.aggression.menace -- no background thread, no second door into world state. When an
     area comes due it is reset (its resettable items restock; see `_perform_reset`) and its counter
     returns to zero. Returns '' -- the restock is silent; the player sees it on their next look."""
     here = session.location

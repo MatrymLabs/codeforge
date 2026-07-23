@@ -234,13 +234,14 @@ def test_generate_via_the_cli(tmp_path: Path) -> None:
 
 def _bootable_stub(cast_dir: Path, ok: bool = True) -> None:
     """A minimal cast dir the validator can boot in a subprocess, without the 122-module engine."""
-    (cast_dir / "parts").mkdir(parents=True)
+    (cast_dir / "parts" / "world").mkdir(parents=True)  # the World Package is a subpackage now
     (cast_dir / "parts" / "__init__.py").write_text("")
-    (cast_dir / "parts" / "session.py").write_text(
+    (cast_dir / "parts" / "world" / "__init__.py").write_text("")
+    (cast_dir / "parts" / "world" / "session.py").write_text(
         "class Session:\n    def __init__(self, player_id, location=None, rank=None):\n"
         "        self.player_id = player_id\n"
     )
-    (cast_dir / "parts" / "world.py").write_text(
+    (cast_dir / "parts" / "world" / "world.py").write_text(
         "START_ROOM = 'start'\n"
     )  # validate probe needs it
     body = (
@@ -278,13 +279,13 @@ def test_validate_reports_a_cast_that_cannot_boot(tmp_path: Path) -> None:
 def test_validate_boots_the_casts_own_seed_not_the_engine_default(tmp_path: Path) -> None:
     """Regression: a cast carries ONLY its own world, so the validate probe must boot THAT
     seed (via FORGE_SEED), never the engine default first-forge, which the cast deliberately
-    shed. Here parts/world.py refuses any seed but the cast's own -> validate passes only if
+    shed. Here parts/world/world.py refuses any seed but the cast's own -> validate passes only if
     the probe was launched with FORGE_SEED=aethryn."""
     from parts.cast import VALIDATED, validate_cast
 
     cast = tmp_path / "cast"
     _bootable_stub(cast, ok=True)
-    (cast / "parts" / "world.py").write_text(
+    (cast / "parts" / "world" / "world.py").write_text(
         "import os\n"
         "seed = os.environ.get('FORGE_SEED', 'first-forge')\n"
         "assert seed == 'aethryn', 'probe booted the wrong seed: ' + seed\n"
@@ -409,11 +410,13 @@ def _bootable_fixture_engine(root: Path) -> None:
     """A tiny but BOOTABLE engine fixture: forge + world + session that pour_selective validates."""
     _fixture_engine(root)  # parts/(x,__init__), forge.py stub, seeds/first-forge+other, template
     (root / "forge.py").write_text("def handle_command(session, text):\n    return 'ok: ' + text\n")
-    (root / "parts" / "session.py").write_text(
+    (root / "parts" / "world").mkdir(parents=True)  # the World Package is a subpackage now
+    (root / "parts" / "world" / "__init__.py").write_text("")
+    (root / "parts" / "world" / "session.py").write_text(
         "class Session:\n"
         "    def __init__(self, player_id, location=None, rank=None):\n        pass\n"
     )
-    (root / "parts" / "world.py").write_text("START_ROOM = 'start'\n")
+    (root / "parts" / "world" / "world.py").write_text("START_ROOM = 'start'\n")
 
 
 def _bootable_multiplayer_fixture(root: Path) -> None:
@@ -461,8 +464,8 @@ def test_pour_selective_end_to_end_validates_the_cut(tmp_path: Path) -> None:
     from parts.cast import VENDORED_SELECTIVE, pour_selective
 
     _bootable_fixture_engine(tmp_path)
-    # a fake tracer: the surfaces' closure is exactly the bootable modules (session, world, x)
-    fake = lambda commands: {"session", "world", "x"}  # noqa: E731
+    # a fake tracer: the closure collapses parts.world.* to the "world" subpackage, plus top-level x
+    fake = lambda commands: {"world", "x"}  # noqa: E731
     out, ok, detail = pour_selective(
         "blank_mud", "SlimGame", tmp_path / "out", ["solo", "save"], root=tmp_path, tracer=fake
     )
@@ -481,7 +484,7 @@ def test_pour_selective_validates_an_admin_cast(tmp_path: Path) -> None:
     _bootable_fixture_engine(tmp_path)
     surfaces = ["solo", "save", "admin"]
     assert any(c.startswith("@") for c in surface_commands(surfaces))  # admin adds owner @-verbs
-    fake = lambda commands: {"session", "world", "x"}  # noqa: E731
+    fake = lambda commands: {"world", "x"}  # noqa: E731
     out, ok, detail = pour_selective(
         "blank_mud", "AdminGame", tmp_path / "out", surfaces, root=tmp_path, tracer=fake
     )
@@ -497,7 +500,7 @@ def test_pour_selective_validates_a_multiplayer_cast(tmp_path: Path) -> None:
     from parts.cast import VENDORED_SELECTIVE, pour_selective
 
     _bootable_multiplayer_fixture(tmp_path)
-    fake_cmd = lambda commands: {"session", "world", "x"}  # noqa: E731
+    fake_cmd = lambda commands: {"world", "x"}  # noqa: E731
     fake_imp = lambda mods: {"gateway", "web_gateway"}  # noqa: E731
     out, ok, detail = pour_selective(
         "blank_mud",
@@ -523,7 +526,7 @@ def test_forge_game_end_to_end_reports_a_validated_cut(tmp_path: Path) -> None:
     from parts.cast import VENDORED_SELECTIVE, forge_game
 
     _bootable_fixture_engine(tmp_path)
-    fake = lambda commands: {"session", "world", "x"}  # noqa: E731
+    fake = lambda commands: {"world", "x"}  # noqa: E731
     report = forge_game(
         "blank_mud", "SlimGame", tmp_path / "out", ["solo", "save"], root=tmp_path, tracer=fake
     )
@@ -544,7 +547,7 @@ def test_render_forge_shows_the_manufacturing_summary(tmp_path: Path) -> None:
         tmp_path / "out",
         ["solo", "save"],
         root=tmp_path,
-        tracer=lambda c: {"session", "world", "x"},
+        tracer=lambda c: {"world", "x"},
     )
     out = render_forge(report)
     assert "FORGED: Demo" in out

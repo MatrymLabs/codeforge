@@ -17,17 +17,17 @@ restores them in place -- a fight never leaves anyone in a broken state.
 
 import random
 
-from parts import items
-from parts.combat_clock import advance as advance_clock
-from parts.encounter_log import witness
-from parts.engineer import emergency_repair
-from parts.events import announce, announce_frame
-from parts.frames import StrikeFrame
-from parts.npcs import NPCS, trace_npc
-from parts.progression_awards import award_jp, award_tp, award_xp
-from parts.seed import Npc
-from parts.session import Session, display_name, sentence_case
 from parts.shelf.weighted_table import WeightedTable
+from parts.world import items
+from parts.world.combat_clock import advance as advance_clock
+from parts.world.encounter_log import witness
+from parts.world.engineer import emergency_repair
+from parts.world.events import announce, announce_frame
+from parts.world.frames import StrikeFrame
+from parts.world.npcs import NPCS, trace_npc
+from parts.world.progression_awards import award_jp, award_tp, award_xp
+from parts.world.seed import Npc
+from parts.world.session import Session, display_name, sentence_case
 
 # Loot-only randomness. Combat MATH stays deterministic (no dice in damage); only a defeated foe's
 # WEIGHTED loot table rolls here. A module-level RNG so tests seed or replace it for exact draws.
@@ -94,7 +94,7 @@ def _counter_attack(session: Session, npc: Npc) -> str:
 def open_strike(session: Session, npc: Npc) -> str:
     """An aggressive NPC strikes first, unprovoked -- the world-beat twin of the counter.
     Same resolution (damage, failsafe, Engineer reaction); only the opening verb differs.
-    Driven by parts.aggression on the tick, not by a player's blow. Passive NPCs return ''."""
+    Driven by parts.world.aggression on the tick, not by a player's blow. Passive NPCs return ''."""
     body = _resolve_npc_blow(session, npc, "lunges")
     return f"\n{body}" if body else ""
 
@@ -121,7 +121,7 @@ def attack(session: Session, word: str) -> str:
     )
     if npc["hp_now"] > 0:
         hit = f"You strike {npc['name']} for {dmg}. ({npc['hp_now']}/{npc['hp']})"
-        # An aggressive NPC's blow arrives on the world beat (parts.aggression), never as a
+        # An aggressive NPC's blow arrives on the world beat (parts.world.aggression), never as a
         # counter, so it strikes exactly once per tick -- never both counter and open-strike.
         counter = "" if npc.get("aggressive") else _counter_attack(session, npc)
         return f"{hit}{counter}"
@@ -144,7 +144,7 @@ def attack(session: Session, word: str) -> str:
     )
     if haul:
         result = f"{result}\n{haul}"
-    from parts import quest  # lazy: combat is the low-level loop; the quest hook rides on top
+    from parts.world import quest  # lazy: combat is the low-level loop; the quest hook rides on top
 
     quest_line = quest.on_event(session, "defeat", nid)  # a boss's fall may complete a story beat
     return f"{result}\n{quest_line}" if quest_line else result

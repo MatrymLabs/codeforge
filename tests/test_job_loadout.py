@@ -9,8 +9,8 @@ from __future__ import annotations
 
 import pytest
 
-from parts.jobs import JOBS
-from parts.seed import SeedError, load_jobs
+from parts.world.jobs import JOBS
+from parts.world.seed import SeedError, load_jobs
 
 
 def test_the_shipped_engineer_carries_its_full_loadout() -> None:

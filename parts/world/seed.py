@@ -32,7 +32,9 @@ import yaml
 # program the proving ground runs when it powers on, not while it's running.
 # Default: the repo's seeds/ dir. CODEFORGE_SEEDS_ROOT overrides it for installed /
 # containerized deploys where the package lives apart from the seed files.
-_default_seeds_root = Path(__file__).resolve().parent.parent / "seeds"
+_default_seeds_root = (
+    Path(__file__).resolve().parent.parent.parent / "seeds"
+)  # parts/world/ -> repo root
 SEEDS_ROOT = Path(os.environ.get("CODEFORGE_SEEDS_ROOT", str(_default_seeds_root)))
 DEFAULT_SEED = "first-forge"
 SEED_NAME = os.environ.get("FORGE_SEED", DEFAULT_SEED)
@@ -103,11 +105,11 @@ class Item(TypedDict):
     slot: str  # equipment slot, or "" for a non-equippable item
     mods: dict[str, int]  # flat stat modifiers this item grants when equipped
     # The seed label this item is an INSTANCE of. A seed label is a prototype (a template);
-    # runtime items are instances cloned from it (parts.items.clone). Seed-placed items are their
+    # runtime items are instances cloned from it (parts.world.items.clone). Seed items are their
     # own prototype. Optional so existing Item literals stay valid; readers use prototype_of().
     prototype: NotRequired[str]
     # Opt-in: this item REPOPULATES on an area reset. If a `resettable` item is absent from its
-    # home room when its area comes due (parts.zones), a fresh instance is spawned there. Default
+    # home room when its area comes due (parts.world.zones), a fresh instance spawns there. Default
     # off, so quest items and keys never respawn (no duplicated ember, no second key).
     resettable: NotRequired[bool]
 
@@ -126,7 +128,7 @@ class Npc(TypedDict):
     atk: int  # counter-attack damage; 0 (default) means passive, never strikes back
     aggressive: NotRequired[bool]  # True = strikes first on the world beat; default False
     # Item prototype labels this NPC drops when defeated: a fresh instance of each is spawned into
-    # the room (parts.items.clone). Optional; a bare NPC drops nothing. Loot is real object
+    # the room (parts.world.items.clone). Optional; a bare NPC drops nothing. Loot is real object
     # instancing -- the drop is a new instance, so it never collides with the seed original.
     drops: NotRequired[list[str]]
     # A WEIGHTED loot table rolled once on defeat: {item_prototype -> weight}, plus the reserved
@@ -220,7 +222,7 @@ class Zone(TypedDict):
 
     Grouping over the flat room graph (regions/areas), a mechanism common to the MUD
     tradition (best documented in the Diku/Circle/tbaMUD family, LGPL). The reset POLICY is
-    declared here as data; the beat-driven scheduler that reads it lives in `parts/zones.py`.
+    declared here as data; the beat-driven scheduler that reads it lives in `parts/world/zones.py`.
     Labels, not vnums: a zone names its member rooms by their existing room labels.
     """
 

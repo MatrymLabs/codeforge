@@ -424,7 +424,7 @@ def test_emit_records_the_gate_runs_provenance_edges(tmp_path: Path) -> None:
 
 def test_chronicle_verb_reachable_through_the_engine_tick() -> None:
     from forge import handle_command
-    from parts.session import Session
+    from parts.world.session import Session
 
     out = handle_command(Session(player_id="matrym", location="courtyard"), "chronicle")
     assert "hronicle" in out.lower()  # empty or populated, the panel always names itself

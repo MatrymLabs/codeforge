@@ -39,7 +39,7 @@ def test_one_core_powers_both_the_game_logbook_and_the_practical_registry():
     reg.register(Asset("A-1", "Laptop"))
     assert isinstance(reg._repo, InMemoryRepository)  # the practical registry uses the core
     game.reset_logbooks()
-    from parts.session import SESSIONS, Session
+    from parts.world.session import SESSIONS, Session
 
     s = Session(player_id="scribe", location="courtyard")
     SESSIONS["scribe"] = s

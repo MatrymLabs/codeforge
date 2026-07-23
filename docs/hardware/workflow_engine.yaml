@@ -31,5 +31,5 @@ license: MIT
 source_status: original
 owner: MatrymLabs
 adapters:
-  - parts/quest.py
+  - parts/world/quest.py
   - parts/onboarding.py

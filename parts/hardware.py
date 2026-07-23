@@ -18,8 +18,8 @@ from typing import Any
 
 import yaml
 
-from parts.paths import resolved_path
 from parts.shelf import loader_cache
+from parts.world.paths import resolved_path
 
 _REQUIRED = ("id", "name", "source", "category", "purpose", "maturity", "risk", "reuse")
 # "shipped" reads as its own definition (shipped + tested on main) -- no out-of-context

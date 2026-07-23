@@ -147,7 +147,7 @@ def main() -> int:
             [
                 sys.executable,
                 "-c",
-                "import sys, parts.characters as c; print(c.set_rank(sys.argv[1], sys.argv[2]))",
+                "import sys, parts.world.characters as c; print(c.set_rank(sys.argv[1], sys.argv[2]))",  # noqa: E501
                 "scout",
                 "owner",
             ],

@@ -9,9 +9,9 @@ decision.*
 
 The inaugural board (2026-07-13) ran when the ship "felt done." A great deal has shipped since:
 the whole Chronicle (five record kinds plus retention R1), ARC completion and its Control
-dimension, auth and secure-by-design hardening, GMCP, typed event frames (`parts/frames.py`),
+dimension, auth and secure-by-design hardening, GMCP, typed event frames (`parts/world/frames.py`),
 the proving-ground `@arch preview` (`parts/foundry.py`), and proactive NPCs
-(`parts/aggression.py`, PR #247, shipped the morning of this review). A large build spree is the
+(`parts/world/aggression.py`, PR #247, shipped the morning of this review). A large build spree is the
 exact moment the doctrine says to re-run the board: a new capability "feels done" before a stranger
 has ever exercised it.
 
@@ -47,9 +47,9 @@ output.
 |---|---|---|---|
 | Records/Provenance | The Chronicle is an empty vault on `main`; every producer is human-run, none in CI | `chronicle/` (README only) | CONFIRMED |
 | Quality/Observability | ARC `performance` checks that benchmark files exist, not that the tick got slower; a 10x regression stays green | `parts/arc.py:134` | CONFIRMED |
-| Safety/Systems | The failsafe prevents death but creates a soft-lock; no disengage/leash; the multi-aggressor blast radius is uncapped | `parts/aggression.py:27` | CONFIRMED (design) |
+| Safety/Systems | The failsafe prevents death but creates a soft-lock; no disengage/leash; the multi-aggressor blast radius is uncapped | `parts/world/aggression.py:27` | CONFIRMED (design) |
 | Security/AI-gov | The telnet codec is orphaned on the main input loop (login paths strip it, the game loop does not) | `parts/gateway.py:288` vs `:180,197` | CONFIRMED |
-| Human-Factors/DX | An aggressive foe is not telegraphed; the `telegraph` part exists but combat does not use it; `look` takes no argument | `parts/npcs.py:41` | CONFIRMED |
+| Human-Factors/DX | An aggressive foe is not telegraphed; the `telegraph` part exists but combat does not use it; `look` takes no argument | `parts/world/npcs.py:41` | CONFIRMED |
 | Cross-disciplinary | "Proactive" is a false label: the beat ticks only for the typing player, so idle and AFK players are immune | `forge.py:1577` | CONFIRMED |
 | Architecture/Fleet | The feature is dark in every shipped game; `cinder_wight` (the aethryn boss) is the ideal empty call site | `seeds/*/npcs.yaml` | CONFIRMED |
 
@@ -115,7 +115,7 @@ proactive-NPC slice shipped hours before the review, exactly the case the board 
 7. **Reusable Hardware Store components.** Primary harvest candidate: `foundry._resolve_in_sandbox`,
    a small stdlib sandbox-path-safety primitive that ai-log-triage (evidence bundles) and
    federal-guidance-library (change reports) both need as a shared "sandboxed writer" guard.
-   Secondary: `parts/frames.py` is reuse-worthy but not shelved in the catalog.
+   Secondary: `parts/world/frames.py` is reuse-worthy but not shelved in the catalog.
 8. **Blueprint updates.** The aggression feature shipped without a leash/disengage design; a
    Blueprint for "bounded hostile encounter" (leash, multi-aggressor cap, telegraph, failsafe as a
    hazard control not just a death preventer) would capture the FMEA the dormant switch currently

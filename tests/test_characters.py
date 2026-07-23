@@ -1,14 +1,14 @@
-"""Test twin for parts/characters.py -- restart survival."""
+"""Test twin for parts/world/characters.py -- restart survival."""
 
 import copy
 
 import pytest
 
-from parts import npcs
-from parts.characters import load_character, restore_character, save_character
-from parts.combat import award_xp
-from parts.jobs import bind_calling
-from parts.session import SESSIONS, Session
+from parts.world import npcs
+from parts.world.characters import load_character, restore_character, save_character
+from parts.world.combat import award_xp
+from parts.world.jobs import bind_calling
+from parts.world.session import SESSIONS, Session
 
 
 @pytest.fixture(autouse=True)

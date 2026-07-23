@@ -3,7 +3,7 @@
 import pytest
 
 from parts.heralds import _REGISTRY, heralds, reset_heralds
-from parts.session import SESSIONS, Session
+from parts.world.session import SESSIONS, Session
 
 
 @pytest.fixture(autouse=True)

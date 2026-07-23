@@ -1,14 +1,21 @@
-"""Test twin for parts/events.py -- broadcasts, presence, and say."""
+"""Test twin for parts/world/events.py -- broadcasts, presence, and say."""
 
 import copy
 
 import pytest
 
 from forge import handle_command, render_scene
-from parts import doors, items, npcs
-from parts.events import _ECHO_SINKS, announce, announce_frame, bind_echo, broadcast, unbind_echo
-from parts.frames import SpeechFrame
-from parts.session import SESSIONS, Session
+from parts.world import doors, items, npcs
+from parts.world.events import (
+    _ECHO_SINKS,
+    announce,
+    announce_frame,
+    bind_echo,
+    broadcast,
+    unbind_echo,
+)
+from parts.world.frames import SpeechFrame
+from parts.world.session import SESSIONS, Session
 
 
 @pytest.fixture(autouse=True)

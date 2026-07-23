@@ -8,8 +8,8 @@ in a practical app (`parts/feature_control`); only the adapter differs.
 
 from __future__ import annotations
 
-from parts.session import Session
 from parts.shelf.feature_flags import FlagRegistry
+from parts.world.session import Session
 
 _REGISTRY = FlagRegistry()
 _REGISTRY.register("beta_quests", default=False, description="show experimental quests")

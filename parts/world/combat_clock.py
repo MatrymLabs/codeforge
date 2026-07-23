@@ -13,8 +13,8 @@ concept, not an Engineer one. Engineer re-exports it (`tick`) for its own abilit
 
 from __future__ import annotations
 
-from parts.jobs import JOBS
-from parts.session import Session
+from parts.world.jobs import JOBS
+from parts.world.session import Session
 
 
 def advance(session: Session) -> None:

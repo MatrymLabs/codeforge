@@ -23,9 +23,6 @@ from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.responses import HTMLResponse
 
 from forge import handle_command, render_scene
-from parts.accounts import password_fixable
-from parts.characters import save_character
-from parts.events import bind_echo, unbind_echo
 from parts.gateway import (
     IDLE_TIMEOUT,
     MAX_CONNECTIONS,
@@ -33,8 +30,11 @@ from parts.gateway import (
     _next_player_id,
     _sanitize,
 )
-from parts.seed import load_splash
-from parts.session import SESSIONS, Session
+from parts.world.accounts import password_fixable
+from parts.world.characters import save_character
+from parts.world.events import bind_echo, unbind_echo
+from parts.world.seed import load_splash
+from parts.world.session import SESSIONS, Session
 
 _PAGE = (Path(__file__).parent / "web" / "index.html").read_text(encoding="utf-8")
 

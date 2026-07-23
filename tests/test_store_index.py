@@ -4,7 +4,6 @@ import pytest
 
 from forge import handle_command
 from parts.hardware import Part
-from parts.session import Session
 from parts.store_index import (
     Domain,
     DomainError,
@@ -14,6 +13,7 @@ from parts.store_index import (
     render_index,
     search,
 )
+from parts.world.session import Session
 
 _DOMAINS = [
     Domain("05", "Resilience", frozenset({"resilience", "rate-limiting"})),

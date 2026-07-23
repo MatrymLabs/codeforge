@@ -1,11 +1,11 @@
-"""Test twin for parts/npcs.py -- presence, talk, and the dialogue cycle."""
+"""Test twin for parts/world/npcs.py -- presence, talk, and the dialogue cycle."""
 
 import copy
 
 import pytest
 
-from parts import npcs
-from parts.npcs import npcs_in, room_npcs_text, talk
+from parts.world import npcs
+from parts.world.npcs import npcs_in, room_npcs_text, talk
 
 
 @pytest.fixture(autouse=True)

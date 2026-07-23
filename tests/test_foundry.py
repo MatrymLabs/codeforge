@@ -23,7 +23,7 @@ from parts.foundry import (
     render_proving_ground,
     scaffold_part,
 )
-from parts.session import Session
+from parts.world.session import Session
 
 
 @pytest.fixture(autouse=True)
@@ -202,7 +202,7 @@ def test_arch_preview_of_an_unknown_game_is_refused():
 
 def test_arch_preview_does_not_swap_the_running_world():
     # A projection, never a boot: previewing another seed leaves the live world untouched.
-    from parts import world
+    from parts.world import world
 
     before = world.START_ROOM
     preview_seed("first-forge")

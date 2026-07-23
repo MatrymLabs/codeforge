@@ -1,11 +1,11 @@
-"""Test twin for parts/items.py -- containment and item commands."""
+"""Test twin for parts/world/items.py -- containment and item commands."""
 
 import copy
 
 import pytest
 
-from parts import items
-from parts.items import drop, inventory_text, items_in, take
+from parts.world import items
+from parts.world.items import drop, inventory_text, items_in, take
 
 
 @pytest.fixture(autouse=True)

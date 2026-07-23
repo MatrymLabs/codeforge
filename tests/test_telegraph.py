@@ -1,8 +1,8 @@
 """Test twin for parts/telegraph.py -- the game adapter for the stream framer."""
 
 from forge import handle_command
-from parts.session import Session
 from parts.telegraph import telegraph
+from parts.world.session import Session
 
 
 def _player() -> Session:

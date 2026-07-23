@@ -1,10 +1,10 @@
-"""Test twin for parts/quest.py -- the game adapter: a quest driven by the Workflow Engine."""
+"""Test twin for parts/world/quest.py -- the game adapter: a quest driven by the Workflow Engine."""
 
 import pytest
 
-from parts.jobs import bind_calling
-from parts.quest import quest_view, reset_quests
-from parts.session import SESSIONS, Session
+from parts.world.jobs import bind_calling
+from parts.world.quest import quest_view, reset_quests
+from parts.world.session import SESSIONS, Session
 
 
 @pytest.fixture(autouse=True)
@@ -66,8 +66,8 @@ def test_open_door_effect_reforges_a_barrier():
     applies it). Proven against the default seed's oak_door standing in for aethryn's bridge."""
     import copy
 
-    from parts import doors
-    from parts.quest import _apply_effect
+    from parts.world import doors
+    from parts.world.quest import _apply_effect
 
     snap = copy.deepcopy(doors.DOORS)
     try:
@@ -82,7 +82,7 @@ def test_open_door_effect_reforges_a_barrier():
 def test_build_triggers_maps_every_world_event_kind():
     """Each step's on_take/on_enter/on_defeat becomes a (kind, label) -> event entry; a step with
     no trigger contributes nothing, and a seed with no quest yields an empty map."""
-    from parts.quest import _build_triggers
+    from parts.world.quest import _build_triggers
 
     spec = {
         "id": "x",
@@ -109,7 +109,7 @@ def test_build_triggers_maps_every_world_event_kind():
 def test_on_event_advances_the_arc_when_a_world_action_triggers_a_step(monkeypatch):
     """A world action (defeat/take/enter) can fire a quest step. Wired here to the built-in quest's
     first event so the behavior is pinned without depending on the aethryn seed being loaded."""
-    import parts.quest as quest_mod
+    import parts.world.quest as quest_mod
 
     monkeypatch.setattr(quest_mod, "_TRIGGERS", {("defeat", "warren_boss"): "accept"})
     s = _player()
@@ -118,7 +118,7 @@ def test_on_event_advances_the_arc_when_a_world_action_triggers_a_step(monkeypat
 
 
 def test_on_event_is_none_for_an_untriggered_action():
-    from parts.quest import on_event
+    from parts.world.quest import on_event
 
     assert on_event(_player(), "defeat", "some_random_rat") is None  # triggers no step
     assert on_event(_player(), "take", "a_pebble") is None
@@ -126,7 +126,7 @@ def test_on_event_is_none_for_an_untriggered_action():
 
 def test_on_event_is_none_when_the_step_is_not_reachable_yet(monkeypatch):
     """Firing a trigger before the arc reaches that beat completes nothing (the move is refused)."""
-    import parts.quest as quest_mod
+    import parts.world.quest as quest_mod
 
     monkeypatch.setattr(quest_mod, "_TRIGGERS", {("enter", "deep_vault"): "finish"})
     assert quest_mod.on_event(_player(), "enter", "deep_vault") is None  # can't finish yet
@@ -134,7 +134,7 @@ def test_on_event_is_none_when_the_step_is_not_reachable_yet(monkeypatch):
 
 def test_taking_an_item_surfaces_a_triggered_quest_line(monkeypatch):
     """The take tick rides the quest hook: picking up a triggering item advances the arc."""
-    import parts.quest as quest_mod
+    import parts.world.quest as quest_mod
     from forge import handle_command
 
     monkeypatch.setattr(
@@ -150,7 +150,7 @@ def test_taking_an_item_surfaces_a_triggered_quest_line(monkeypatch):
 
 def test_entering_a_room_surfaces_a_triggered_quest_line(monkeypatch):
     """The movement tick rides the quest hook: entering a triggering room advances the arc."""
-    import parts.quest as quest_mod
+    import parts.world.quest as quest_mod
     from forge import handle_command
 
     monkeypatch.setattr(
@@ -166,8 +166,8 @@ def test_entering_a_room_surfaces_a_triggered_quest_line(monkeypatch):
 
 def test_apply_effect_is_inert_without_a_calling_or_a_known_effect():
     """award_xp needs a calling (stats) to grant; an unrecognized effect does nothing, quietly."""
-    from parts.quest import _apply_effect
-    from parts.session import Session
+    from parts.world.quest import _apply_effect
+    from parts.world.session import Session
 
     rookie = Session(player_id="rookie")  # no calling -> stats is None
     assert _apply_effect("award_xp", rookie) == ""  # nothing to grant
@@ -178,7 +178,7 @@ def test_a_seed_quest_spec_builds_a_named_workflow():
     """A seed can ship its own arc as data; _from_seed turns that spec into the live workflow,
     carrying the seed's name and XP reward (proven here since the default test seed uses the
     built-in fallback)."""
-    from parts.quest import _from_seed
+    from parts.world.quest import _from_seed
 
     spec = {
         "id": "test_arc",

@@ -1,6 +1,6 @@
 """Alembic environment: migrations run against the same models and URL the engine uses.
 
-The URL comes from `parts.db.engine_url()` (DATABASE_URL for PostgreSQL, else the SQLite
+The URL comes from `parts.world.db.engine_url()` (DATABASE_URL for PostgreSQL, else the SQLite
 file), so `alembic upgrade head` targets whatever backend the app targets. The target
 metadata is `ArchiveBase.metadata`, so autogenerate sees the real ORM tables.
 """
@@ -10,7 +10,7 @@ from logging.config import fileConfig
 from alembic import context
 from sqlalchemy import engine_from_config, pool
 
-from parts.db import ArchiveBase, engine_url
+from parts.world.db import ArchiveBase, engine_url
 
 config = context.config
 # Feed the live URL in, overriding the placeholder in alembic.ini.

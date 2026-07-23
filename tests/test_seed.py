@@ -1,8 +1,8 @@
-"""Test twin for parts/seed.py -- loading, the room template, and the gates."""
+"""Test twin for parts/world/seed.py -- loading, the room template, and the gates."""
 
 import pytest
 
-from parts.seed import (
+from parts.world.seed import (
     DEFAULT_ROOM_DESC,
     SEEDS_ROOT,
     SeedError,
@@ -13,7 +13,7 @@ from parts.seed import (
     load_rooms,
     load_splash,
 )
-from parts.world import SEED_PATH
+from parts.world.world import SEED_PATH
 
 
 def test_an_unplaced_prototype_loads_with_a_nowhere_location(tmp_path):
@@ -103,7 +103,7 @@ def test_missing_file_raises_seed_error(tmp_path):
 
 
 def test_a_negative_npc_atk_is_rejected_at_load(tmp_path):
-    from parts.seed import load_npcs
+    from parts.world.seed import load_npcs
 
     bad = tmp_path / "npcs.yaml"
     bad.write_text("brawler:\n  location: courtyard\n  atk: -1\n")
@@ -113,7 +113,7 @@ def test_a_negative_npc_atk_is_rejected_at_load(tmp_path):
 
 def test_a_negative_npc_xp_is_rejected_at_load(tmp_path):
     """xp is awarded on defeat: a negative would DRAIN the victor's XP/JP/TP. Refuse it loud."""
-    from parts.seed import load_npcs
+    from parts.world.seed import load_npcs
 
     bad = tmp_path / "npcs.yaml"
     bad.write_text("leech:\n  location: courtyard\n  hp: 1\n  xp: -500\n")
@@ -122,7 +122,7 @@ def test_a_negative_npc_xp_is_rejected_at_load(tmp_path):
 
 
 def test_a_negative_npc_hp_is_rejected_at_load(tmp_path):
-    from parts.seed import load_npcs
+    from parts.world.seed import load_npcs
 
     bad = tmp_path / "npcs.yaml"
     bad.write_text("ghost:\n  location: courtyard\n  hp: -5\n")
@@ -132,7 +132,7 @@ def test_a_negative_npc_hp_is_rejected_at_load(tmp_path):
 
 def test_an_aggressive_npc_without_atk_is_rejected_at_load(tmp_path):
     """An aggressive NPC that cannot land a blow (atk 0) is a contradiction: refuse loud."""
-    from parts.seed import load_npcs
+    from parts.world.seed import load_npcs
 
     bad = tmp_path / "npcs.yaml"
     bad.write_text("poser:\n  location: courtyard\n  hp: 10\n  aggressive: true\n")
@@ -142,7 +142,7 @@ def test_an_aggressive_npc_without_atk_is_rejected_at_load(tmp_path):
 
 def test_an_aggressive_npc_without_hp_is_rejected_at_load(tmp_path):
     """An aggressive NPC that cannot be fought back (hp 0) is a contradiction: refuse loud."""
-    from parts.seed import load_npcs
+    from parts.world.seed import load_npcs
 
     bad = tmp_path / "npcs.yaml"
     bad.write_text("wraith:\n  location: courtyard\n  atk: 4\n  aggressive: true\n")
@@ -152,7 +152,7 @@ def test_an_aggressive_npc_without_hp_is_rejected_at_load(tmp_path):
 
 def test_a_valid_aggressive_npc_loads(tmp_path):
     """A properly-armed aggressive NPC (atk + hp) loads and carries the flag."""
-    from parts.seed import load_npcs
+    from parts.world.seed import load_npcs
 
     good = tmp_path / "npcs.yaml"
     good.write_text("reaver:\n  location: courtyard\n  hp: 20\n  atk: 5\n  aggressive: true\n")
@@ -163,7 +163,7 @@ def test_a_valid_aggressive_npc_loads(tmp_path):
 
 def test_npcs_are_reactive_by_default(tmp_path):
     """No `aggressive` key means a reactive/passive NPC -- the flag defaults False."""
-    from parts.seed import load_npcs
+    from parts.world.seed import load_npcs
 
     plain = tmp_path / "npcs.yaml"
     plain.write_text("statue:\n  location: courtyard\n  hp: 10\n  atk: 3\n")
@@ -199,7 +199,7 @@ def test_seed_loader_prefers_libyaml(tmp_path):
     # that the duplicate-key gate above runs on the C loader (whose composer keeps duplicates).
     import yaml
 
-    from parts.seed import _UniqueKeyLoader
+    from parts.world.seed import _UniqueKeyLoader
 
     if yaml.__with_libyaml__:
         assert issubclass(_UniqueKeyLoader, yaml.CSafeLoader), "seed loader should use libyaml"
@@ -237,7 +237,7 @@ def test_room_fields_win_over_template(tmp_path):
 
 # --- items and NPCs join the seed ---
 
-from parts.seed import SEED_DIR  # noqa: E402
+from parts.world.seed import SEED_DIR  # noqa: E402
 
 
 def test_shipped_items_seed_loads_the_copper_key():

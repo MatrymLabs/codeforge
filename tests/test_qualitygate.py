@@ -20,7 +20,7 @@ from parts.qualitygate import (
     safety_review,
 )
 from parts.registry import Designation
-from parts.session import SESSIONS, Session
+from parts.world.session import SESSIONS, Session
 
 
 def _rec(designation: str = "PRT-05.001", **over: object) -> Designation:

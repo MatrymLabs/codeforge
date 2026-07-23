@@ -1,4 +1,4 @@
-"""Test twin for parts/frames.py -- typed, per-recipient event frames.
+"""Test twin for parts/world/frames.py -- typed, per-recipient event frames.
 
 Acceptance: a SpeechFrame renders the same third-person line the old string bus produced, and
 projects the speaker's label per the display-name rule. Refusal: an empty speaker or empty/blank
@@ -8,7 +8,7 @@ to render until a subclass implements it.
 
 import pytest
 
-from parts.frames import Frame, SpeechFrame, StrikeFrame
+from parts.world.frames import Frame, SpeechFrame, StrikeFrame
 
 # --- acceptance --------------------------------------------------------------------------------
 

@@ -1,4 +1,4 @@
-"""Test twin for parts/session.py and the engine tick.
+"""Test twin for parts/world/session.py and the engine tick.
 
 Note what is MISSING here: no monkeypatch, no capsys, no fake
 keyboard. The engine tick is a plain function -- command in,
@@ -9,8 +9,8 @@ import copy
 import pytest
 
 from forge import handle_command
-from parts import doors, items, npcs
-from parts.session import SESSIONS, Session
+from parts.world import doors, items, npcs
+from parts.world.session import SESSIONS, Session
 
 
 @pytest.fixture(autouse=True)
@@ -94,7 +94,7 @@ def test_name_refuses_taken_and_invalid_names():
 
 
 def test_broadcasts_follow_the_new_name():
-    from parts.events import announce, bind_echo, unbind_echo
+    from parts.world.events import announce, bind_echo, unbind_echo
 
     s = Session(player_id="player1", location="library")
     SESSIONS["player1"] = s
@@ -108,7 +108,7 @@ def test_broadcasts_follow_the_new_name():
 
 
 def test_display_name_is_projection_only():
-    from parts.session import display_name
+    from parts.world.session import display_name
 
     assert display_name("matrym") == "Matrym"
     assert display_name("iron_fist") == "Iron Fist"
@@ -116,7 +116,7 @@ def test_display_name_is_projection_only():
 
 
 def test_sentence_case_preserves_authored_proper_nouns():
-    from parts.session import sentence_case
+    from parts.world.session import sentence_case
 
     # only the first character is lifted; the rest of an authored name is left alone
     assert (

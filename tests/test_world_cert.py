@@ -1,6 +1,6 @@
 """Test twin for parts/world_cert.py -- the game adapter: a world-readiness certificate."""
 
-from parts.session import SESSIONS, Session
+from parts.world.session import SESSIONS, Session
 from parts.world_cert import certify
 
 

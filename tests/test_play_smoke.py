@@ -13,11 +13,11 @@ import copy
 
 import pytest
 
-from parts import npcs
-from parts.aggression import LEASH
-from parts.jobs import bind_calling
-from parts.seed import SEEDS_ROOT, load_npcs
-from parts.session import SESSIONS, Session
+from parts.world import npcs
+from parts.world.aggression import LEASH
+from parts.world.jobs import bind_calling
+from parts.world.seed import SEEDS_ROOT, load_npcs
+from parts.world.session import SESSIONS, Session
 
 
 @pytest.fixture(autouse=True)

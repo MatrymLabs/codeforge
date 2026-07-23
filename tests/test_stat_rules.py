@@ -1,4 +1,4 @@
-"""Test twin for parts/stat_rules.py -- the configurable derived-stat ruleset.
+"""Test twin for parts/world/stat_rules.py -- the configurable derived-stat ruleset.
 
 Parity (the DEFAULT_RULESET reproduces the documented prototype formulas exactly) AND config
 (a declared ruleset produces different, valid stats) AND refusal (a malformed ruleset fails loud).
@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import pytest
 
-from parts.stat_rules import (
+from parts.world.stat_rules import (
     DEFAULT_RULESET,
     DERIVED_STATS,
     RulesetError,
@@ -31,7 +31,7 @@ def test_a_missing_attribute_reads_zero() -> None:
 
 
 def test_derived_still_matches_the_ruleset() -> None:
-    from parts.derived import derived_stats
+    from parts.world.derived import derived_stats
 
     assert derived_stats(_TEN, 5) == apply_ruleset(DEFAULT_RULESET, _TEN, 5)
 

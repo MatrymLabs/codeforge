@@ -1,8 +1,8 @@
 """Test twin for parts/cli.py -- the dispatch table, not the servers."""
 
-from parts.characters import save_character
 from parts.cli import main
-from parts.session import SESSIONS, Session
+from parts.world.characters import save_character
+from parts.world.session import SESSIONS, Session
 
 
 def test_unknown_verbs_print_usage_and_fail(capsys):

@@ -14,9 +14,11 @@ a counter), a passive (Systems Thinking, which lengthens Analyzed), and a resour
 
 from __future__ import annotations
 
-from parts.combat_clock import advance as tick  # the clock is a combat concept; engineer rides it
-from parts.npcs import NPCS, trace_npc
-from parts.session import Session, sentence_case
+from parts.world.combat_clock import (
+    advance as tick,
+)  # the clock is a combat concept; engineer rides it
+from parts.world.npcs import NPCS, trace_npc
+from parts.world.session import Session, sentence_case
 
 _JOB = "engineer"
 

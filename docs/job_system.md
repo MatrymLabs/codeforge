@@ -7,7 +7,7 @@ engine's data-driven job schema realizes.
 
 > **Status, honestly labelled.** This document is the **design** (the intended, complete
 > system). The engine already ships the data-driven substrate it targets: the `Job` loadout
-> schema in `parts/seed.py`, real-time combat ticks, per-tick resource regen, and independent
+> schema in `parts/world/seed.py`, real-time combat ticks, per-tick resource regen, and independent
 > job levels (see [`character_system.md`](character_system.md)). A subset of jobs is realized in
 > `seeds/*/jobs.yaml` today (the Engineer is the reference implementation); the remaining jobs
 > here are designed for future implementation as seed data. Nothing below claims to be shipped
@@ -149,14 +149,14 @@ Sidearm (engineered), Instrument, Natural (unarmed or beast-form).
 | Nature | Natural, Instrument, Polearm | Leather, Ward | Totem, Trinket |
 
 Equipment carries flat and proc modifiers that fold into derived stats through the existing
-`ModifierStack` (see `parts/equipment.py`), so gear tunes a build without the job knowing about
+`ModifierStack` (see `parts/world/equipment.py`), so gear tunes a build without the job knowing about
 any specific item.
 
 ---
 
 ## 6. Progression and mastery
 
-Two independent tracks, already implemented (`parts/progression.py`):
+Two independent tracks, already implemented (`parts/world/progression.py`):
 
 - **Player Level (XP -> PLvl, cap 255).** Global. Grants stat points to allocate (capped at 3
   per stat per level), raising the six attributes toward a build's identity.
@@ -1414,7 +1414,7 @@ x four chosen slots x gear, and the roster of twenty produces this depth many ti
 The core promise: **the combat engine knows nothing about specific jobs.** A job is data plus a
 set of ability *components*; adding one changes no core loop.
 
-**A job is a data record.** It maps onto the shipped `Job` schema (`parts/seed.py`) exactly:
+**A job is a data record.** It maps onto the shipped `Job` schema (`parts/world/seed.py`) exactly:
 
 ```yaml
 myjob:

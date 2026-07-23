@@ -4,9 +4,9 @@ import importlib
 
 import pytest
 
-import parts.seed
+import parts.world.seed
 from parts.cli import _pop_seed, main
-from parts.seed import (
+from parts.world.seed import (
     SEEDS_ROOT,
     SeedError,
     available_seeds,
@@ -204,9 +204,9 @@ def test_seeds_root_honors_env_override(tmp_path, monkeypatch):
     (tmp_path / "solo-game" / "rooms.yaml").write_text("start:\n")
     monkeypatch.setenv("CODEFORGE_SEEDS_ROOT", str(tmp_path))
     try:
-        importlib.reload(parts.seed)
-        assert tmp_path == parts.seed.SEEDS_ROOT
-        assert parts.seed.available_seeds() == ["solo-game"]
+        importlib.reload(parts.world.seed)
+        assert tmp_path == parts.world.seed.SEEDS_ROOT
+        assert parts.world.seed.available_seeds() == ["solo-game"]
     finally:
         monkeypatch.delenv("CODEFORGE_SEEDS_ROOT", raising=False)
-        importlib.reload(parts.seed)  # restore the default root for other tests
+        importlib.reload(parts.world.seed)  # restore the default root for other tests

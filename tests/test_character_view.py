@@ -1,4 +1,4 @@
-"""Test twin for parts/character_view.py -- building a sheet from a live job definition.
+"""Test twin for parts/world/character_view.py -- building a sheet from a live job definition.
 
 Proves the vertical slice: the seeded Engineer becomes a correct CharacterSheet -- player
 level separate from job level, the six attributes and the loadout from the job data, HP/MP
@@ -10,11 +10,11 @@ from __future__ import annotations
 
 import pytest
 
-from parts.character_view import build_job_sheet, sheet_from_session
-from parts.job_progress import JobProgress
-from parts.jobs import bind_calling
-from parts.score_sheet import render_score_sheet
-from parts.session import Session
+from parts.world.character_view import build_job_sheet, sheet_from_session
+from parts.world.job_progress import JobProgress
+from parts.world.jobs import bind_calling
+from parts.world.score_sheet import render_score_sheet
+from parts.world.session import Session
 
 
 def test_the_engineer_builds_a_correct_sheet() -> None:
@@ -72,9 +72,9 @@ def test_a_session_with_no_calling_has_no_sheet() -> None:
 
 
 def test_the_sheet_shows_declared_resistances_and_normal_otherwise() -> None:
-    from parts.character_view import sheet_from_session
-    from parts.jobs import bind_calling
-    from parts.session import Session
+    from parts.world.character_view import sheet_from_session
+    from parts.world.jobs import bind_calling
+    from parts.world.session import Session
 
     s = Session(player_id="matrym")
     bind_calling(s, "engineer")
@@ -87,10 +87,10 @@ def test_the_sheet_shows_declared_resistances_and_normal_otherwise() -> None:
 
 
 def test_milestone_perks_raise_derived_stats_when_unlocked() -> None:
-    from parts.character_view import TP_MILESTONE, perks_unlocked, sheet_from_session
-    from parts.job_progress import JobProgress
-    from parts.jobs import JOBS, bind_calling
-    from parts.session import Session
+    from parts.world.character_view import TP_MILESTONE, perks_unlocked, sheet_from_session
+    from parts.world.job_progress import JobProgress
+    from parts.world.jobs import JOBS, bind_calling
+    from parts.world.session import Session
 
     s = Session(player_id="matrym")
     bind_calling(s, "engineer")

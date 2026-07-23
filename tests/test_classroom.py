@@ -8,7 +8,7 @@ import pytest
 from forge import handle_command
 from parts.assessment import find_lesson
 from parts.classroom import _ACHIEVEMENTS, _LEARNERS, demonstrated
-from parts.session import SESSIONS, Session
+from parts.world.session import SESSIONS, Session
 
 
 @pytest.fixture(autouse=True)

@@ -8,13 +8,13 @@ import time
 import pytest
 
 import parts.gateway as gateway
-from parts import doors, items, npcs
-from parts.accounts import adopt
-from parts.accounts import register as register_account
-from parts.characters import save_character
 from parts.gateway import ForgeGateServer, _GateHandler, _sanitize
-from parts.session import SESSIONS, Session
 from parts.shelf.bulkhead import Bulkhead
+from parts.world import doors, items, npcs
+from parts.world.accounts import adopt
+from parts.world.accounts import register as register_account
+from parts.world.characters import save_character
+from parts.world.session import SESSIONS, Session
 
 
 @pytest.fixture(autouse=True)
@@ -268,7 +268,7 @@ def _login(srv: ForgeGateServer, char="matrym", account="matlabs", pw="swordfish
 def test_passwd_flow_rotates_the_secret_with_blackout(server):
     """Bare 'passwd' in-world triggers the three-prompt dialogue, each
     prompt echo-blacked-out; the new secret then opens the door."""
-    from parts.accounts import account_password_ok
+    from parts.world.accounts import account_password_ok
 
     _saved_account()
     sock = _login(server)
@@ -288,7 +288,7 @@ def test_passwd_flow_rotates_the_secret_with_blackout(server):
 
 
 def test_passwd_flow_rejects_a_mismatch_over_the_wire(server):
-    from parts.accounts import account_password_ok
+    from parts.world.accounts import account_password_ok
 
     _saved_account()
     sock = _login(server)
@@ -440,7 +440,7 @@ _DO_GMCP = bytes([255, 253, 201])  # IAC DO GMCP (a client enabling GMCP)
 
 def _saved_hero_with_calling(char="mira", account="mlabs", pw="swordfish", job="vanguard"):
     """A saved character that has taken a calling, so vitals actually derive on restore."""
-    from parts.jobs import bind_calling
+    from parts.world.jobs import bind_calling
 
     hero = Session(player_id=char, location="courtyard", named=True, account=account)
     bind_calling(hero, job)

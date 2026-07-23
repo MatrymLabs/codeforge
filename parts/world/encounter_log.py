@@ -23,7 +23,7 @@ from __future__ import annotations
 from collections import Counter, deque
 from dataclasses import dataclass
 
-from parts.session import sentence_case
+from parts.world.session import sentence_case
 
 # The observed encounter beats. A kind outside this set is a wiring bug, not player input, so it
 # fails loud (the call sites use these constants; a typo turns a test red instead of logging junk).

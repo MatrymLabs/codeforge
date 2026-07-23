@@ -155,7 +155,7 @@ def test_load_policy_fails_loud_when_a_provided_path_is_missing(tmp_path: Path) 
 
 def test_retention_verb_reachable_through_the_engine_tick() -> None:
     from forge import handle_command
-    from parts.session import Session
+    from parts.world.session import Session
 
     out = handle_command(Session(player_id="matrym", location="courtyard"), "retention")
     assert "RETENTION DOCTOR" in out  # read-only doctor over the (empty in tests) Chronicle

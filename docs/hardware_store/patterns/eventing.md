@@ -25,7 +25,7 @@ subscribers is a no-op; multiple handlers fire in subscription order; the subscr
 
 ## GAME-TO-PRACTICAL TRANSLATION
 
-- **Game component:** a gate-`chime` (`parts/chime.py`).
+- **Game component:** a gate-`chime` (`parts/world/chime.py`).
 - **Core behavior:** decouple a publisher from any number of independent reacting subscribers.
 - **Game-specific presentation:** "The gate-chime rings for a merchant." per published arrival.
 - **Reusable domain logic:** the whole `SignalBus` (game-free).
@@ -37,7 +37,7 @@ subscribers is a no-op; multiple handlers fire in subscription order; the subscr
 
 ## Adapters (one core, two lives)
 
-- **Game:** `parts/chime.py` -- the `chime` verb subscribes a chime that rings when a
+- **Game:** `parts/world/chime.py` -- the `chime` verb subscribes a chime that rings when a
   `TravellerArrived` world signal is published. Tick-reachable.
 - **Practical:** `parts/notifier.py` -- a `Notifier` publishes an `OrderPlaced` domain event and fans
   it to every subscribed handler (audit, receipt, metrics).

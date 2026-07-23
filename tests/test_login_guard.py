@@ -56,7 +56,7 @@ def test_one_core_powers_both_the_game_shout_and_the_practical_login_guard():
 
 
 def _stub_session():
-    from parts.session import SESSIONS, Session
+    from parts.world.session import SESSIONS, Session
 
     s = Session(player_id="shouter", location="courtyard")
     SESSIONS["shouter"] = s

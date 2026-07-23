@@ -70,9 +70,11 @@ part through the full loop is the deeper next slice; the spine itself is execute
   export/detachment are ALREADY BUILT - see staircase steps 2 and 4 below, not planned.)
 - **Done (this campaign):** the physical Hardware Store extraction -- all 27 engine-agnostic
   reusable cores now live in `parts/shelf/` (six families, six merged stages), each behind a green
-  gate, one-way engine -> shelf dependency. Layer 3 is physical.
-- **Deferred (relative to the spine):** a physical Layer-1/2 engine split (functional optionality is
-  already proven via vendored-selective), plugin system, configurable-rules language, package-update
+  gate, one-way engine -> shelf dependency. Layer 3 is physical. AND the physical Layer-1/2 split:
+  the 33-module World Package now lives in `parts/world/` (a real subpackage), the platform imports
+  it but never the reverse, and `world_boundary` enforces that one-way arrow in the integrity
+  ritual. Layers 1, 2, and 3 are all physical now.
+- **Deferred (relative to the spine):** plugin system, configurable-rules language, package-update
   model. Sound to want; not now.
 
 ## Scope discipline (what conflicts, honestly)

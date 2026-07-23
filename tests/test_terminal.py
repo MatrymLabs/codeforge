@@ -52,7 +52,7 @@ def test_unknown_program_is_reported_not_run() -> None:
 
 def test_terminal_is_reachable_through_the_engine_tick() -> None:
     from forge import handle_command
-    from parts.session import Session
+    from parts.world.session import Session
 
     out = handle_command(Session(player_id="term"), "terminal")
     assert "Programs" in out and "diagnostic console" in out

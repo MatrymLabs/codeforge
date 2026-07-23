@@ -1,10 +1,10 @@
-"""Test twin for parts/progression.py -- mk1 checkpoints plus Hypothesis laws."""
+"""Test twin for parts/world/progression.py -- mk1 checkpoints plus Hypothesis laws."""
 
 import pytest
 from hypothesis import given
 from hypothesis import strategies as st
 
-from parts.progression import (
+from parts.world.progression import (
     cumulative_jp_for_level,
     cumulative_xp_for_level,
     get_jp_tier_multiplier,
@@ -118,8 +118,8 @@ def test_hp_and_mp_gains_are_always_positive(stat):
 
 
 # --- configurable curve: a world can declare its own progression (config, not hardcode) -------
-import parts.progression as prog  # noqa: E402
-from parts.world_manifest import world_block  # noqa: E402
+import parts.world.progression as prog  # noqa: E402
+from parts.world.world_manifest import world_block  # noqa: E402
 
 _A_PROGRESSION_BLOCK = """
 progression:

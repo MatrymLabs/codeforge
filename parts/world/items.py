@@ -8,7 +8,7 @@ Functions RETURN text; the game loop decides what to print.
 
 import copy
 
-from parts.seed import SEED_DIR, Item, load_items
+from parts.world.seed import SEED_DIR, Item, load_items
 
 ITEMS: dict[str, Item] = load_items(SEED_DIR / "items.yaml")
 

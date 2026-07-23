@@ -340,7 +340,7 @@ def generate_cast(
 
 # The one-command smoke boot install_check runs (import the cast's OWN engine and drive one tick).
 _BOOT_PROBE = (
-    "import forge; from parts.session import Session; "
+    "import forge; from parts.world.session import Session; "
     "out = forge.handle_command(Session(player_id='_validate'), 'help'); "
     "print(out[:60]); assert out.strip()"
 )
@@ -350,8 +350,8 @@ _BOOT_PROBE = (
 _VALIDATE_PROBE = r"""
 import sys, json
 import forge
-from parts.session import Session
-from parts.world import START_ROOM
+from parts.world.session import Session
+from parts.world.world import START_ROOM
 for mod in json.loads(sys.argv[2]):
     try:
         __import__(mod)
@@ -381,7 +381,7 @@ def validate_cast(
     timeout: float = 120.0,
 ) -> tuple[bool, str]:
     """Boot a poured cast and run a command corpus against it, proving it RUNS - a subprocess with
-    cwd=`cast_dir`, so `parts/seed.py` resolves the cast's own seed. `commands` defaults to a single
+    cwd=`cast_dir`, so `parts/world/seed.py` resolves the cast's seed. `commands` defaults to one
     tick (`help`); for a SELECTIVE cast, pass the full surface corpus so a wrongly-excluded module
     fails loud. `imports` names server modules (multiplayer) that must import in the cut. Together
     they are the broad harness that makes D2 safe. Records `validated` | `not_validated`.
@@ -392,7 +392,7 @@ def validate_cast(
     corpus = commands if commands is not None else ["help"]
     # A cast carries ONLY its own world, so the probe must boot THAT seed, not the engine's
     # default (first-forge). Read the cast's starter pack and pin FORGE_SEED for the subprocess;
-    # otherwise parts.world falls back to a seed the cast deliberately shed and boots blow up.
+    # otherwise parts.world.world falls back to a seed the cast deliberately shed and boots blow up.
     manifest_path = cast_dir / "cast_manifest.json"
     env = dict(os.environ)
     if manifest_path.is_file():

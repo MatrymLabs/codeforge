@@ -22,7 +22,7 @@ from hypothesis import strategies as st
 
 from parts.hardware import CatalogError, _parse_catalog
 from parts.manifest import ManifestError, from_dict
-from parts.seed import SeedError, load_rooms
+from parts.world.seed import SeedError, load_rooms
 
 # YAML-representable junk: scalars, lists, and dicts, recursively (depth-capped).
 _scalars = (

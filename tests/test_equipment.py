@@ -1,4 +1,4 @@
-"""Test twin for parts/equipment.py -- gear into slots, modifiers into derived stats.
+"""Test twin for parts/world/equipment.py -- gear into slots, modifiers into derived stats.
 
 Acceptance: a carried equippable item goes into its slot, its modifiers raise the derived
 stats through the ModifierStack, and the sheet shows it; unequip reverses it. Refusal: a
@@ -13,12 +13,12 @@ import copy
 import pytest
 
 from forge import handle_command
-from parts import items
-from parts.character_view import sheet_from_session
-from parts.equipment import apply_equipment, equip, equipped_loadout, unequip
-from parts.jobs import bind_calling
-from parts.seed import SeedError, load_items
-from parts.session import Session
+from parts.world import items
+from parts.world.character_view import sheet_from_session
+from parts.world.equipment import apply_equipment, equip, equipped_loadout, unequip
+from parts.world.jobs import bind_calling
+from parts.world.seed import SeedError, load_items
+from parts.world.session import Session
 
 
 @pytest.fixture(autouse=True)
@@ -128,8 +128,8 @@ def test_apply_stat_modifiers_clamps_an_out_of_range_derived_stat() -> None:
     """derived_stats documents it can return a negative/oversized value on hostile attributes;
     the next stage must clamp it into the Stat's own [0, 9999] bounds, not raise. (Not reachable
     in normal play - attributes start at 0 - but the two pure functions must not disagree.)"""
-    from parts.derived import derived_stats
-    from parts.equipment import StatModifier, apply_stat_modifiers
+    from parts.world.derived import derived_stats
+    from parts.world.equipment import StatModifier, apply_stat_modifiers
 
     base = derived_stats({"strength": -50}, 0)  # yields a negative ATK
     out = apply_stat_modifiers(base, {"ATK": [StatModifier("sword", flat=5)]})

@@ -89,12 +89,12 @@ def main(argv: list[str] | None = None) -> int:
         drive()  # the Workflow Engine's practical adapter: the same core as the game quest
         return 0
     if cmd == "grant" and len(args) == 3:
-        from parts.characters import set_rank
+        from parts.world.characters import set_rank
 
         print(set_rank(args[1], args[2]))
         return 0
     if cmd == "migrate" and len(args) == 3:
-        from parts.accounts import migrate
+        from parts.world.accounts import migrate
 
         print(migrate(args[1], args[2]))
         return 0
@@ -117,14 +117,14 @@ def main(argv: list[str] | None = None) -> int:
         uvicorn.run(web_app, host="0.0.0.0", port=Settings.load().port)
         return 0
     if cmd == "migrate-db":
-        from parts.accounts import import_legacy_json
+        from parts.world.accounts import import_legacy_json
 
         print(import_legacy_json())
         return 0
     if cmd == "passwd" and len(args) == 2:
         import getpass
 
-        from parts.accounts import rotate_account_secret
+        from parts.world.accounts import rotate_account_secret
 
         pw = getpass.getpass(f"New password for {args[1]}: ")
         again = getpass.getpass("Type it again: ")

@@ -8,11 +8,11 @@ This is the first World Console component: an admin view that
 inspects world state without mutating it.
 """
 
-from parts.items import ITEMS
-from parts.npcs import NPCS, Npc
-from parts.seed import Item, Room, load_rooms
-from parts.session import sentence_case
-from parts.world import SEED_PATH
+from parts.world.items import ITEMS
+from parts.world.npcs import NPCS, Npc
+from parts.world.seed import Item, Room, load_rooms
+from parts.world.session import sentence_case
+from parts.world.world import SEED_PATH
 
 
 def _filed_index(

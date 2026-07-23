@@ -15,7 +15,7 @@ from typing import Any
 
 import yaml
 
-from parts.paths import resolved_path
+from parts.world.paths import resolved_path
 
 CHOICES = ("A", "B", "C", "D")
 _REQUIRED = ("id", "prompt", "choices", "correct", "hint", "explanation")

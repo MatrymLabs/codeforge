@@ -1,8 +1,8 @@
-"""Test twin for parts/chime.py -- the game adapter for the signal bus."""
+"""Test twin for parts/world/chime.py -- the game adapter for the signal bus."""
 
 from forge import handle_command
-from parts.chime import chime
-from parts.session import Session
+from parts.world.chime import chime
+from parts.world.session import Session
 
 
 def _player() -> Session:

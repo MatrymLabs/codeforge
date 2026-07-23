@@ -1,4 +1,4 @@
-"""Test twin for parts/aggression.py -- proactive NPCs that strike on the world beat.
+"""Test twin for parts/world/aggression.py -- proactive NPCs that strike on the world beat.
 
 Acceptance: an aggressive NPC sharing the player's room opens with a strike each tick,
 reachable through the engine tick (handle_command), and lands exactly one blow per beat
@@ -11,18 +11,18 @@ import copy
 
 import pytest
 
-from parts import npcs
-from parts.aggression import LEASH, menace
-from parts.combat import open_strike
-from parts.jobs import bind_calling
-from parts.seed import Npc
-from parts.session import SESSIONS, Session
+from parts.world import npcs
+from parts.world.aggression import LEASH, menace
+from parts.world.combat import open_strike
+from parts.world.jobs import bind_calling
+from parts.world.seed import Npc
+from parts.world.session import SESSIONS, Session
 
 
 @pytest.fixture(autouse=True)
 def fresh_world():
     # Restore in place (clear + update, never rebind): aggression/combat hold
-    # `from parts.npcs import NPCS`, so rebinding npcs.NPCS would strand that alias.
+    # `from parts.world.npcs import NPCS`, so rebinding npcs.NPCS would strand that alias.
     npcs_snap = copy.deepcopy(npcs.NPCS)
     SESSIONS.clear()
     yield

@@ -1,13 +1,13 @@
-"""Test twin for parts/doors.py -- locks, keys, and gated movement."""
+"""Test twin for parts/world/doors.py -- locks, keys, and gated movement."""
 
 import copy
 
 import pytest
 
-from parts import doors, items
-from parts.doors import barred_door_for, unlock
-from parts.items import take
-from parts.world import resolve_move
+from parts.world import doors, items
+from parts.world.doors import barred_door_for, unlock
+from parts.world.items import take
+from parts.world.world import resolve_move
 
 
 @pytest.fixture(autouse=True)
@@ -75,7 +75,7 @@ def test_a_cloned_key_opens_the_door_by_prototype():
 
 def test_a_self_closing_door_slams_shut_on_a_later_world_beat():
     from forge import handle_command
-    from parts.session import Session
+    from parts.world.session import Session
 
     doors.DOORS["oak_door"]["recloses_after"] = 2
     take("key", "library")

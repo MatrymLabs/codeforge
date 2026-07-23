@@ -8,10 +8,10 @@ SAME evidence core backs a release-readiness gate in a practical app (`parts/rel
 
 from __future__ import annotations
 
-from parts.jobs import JOBS
-from parts.npcs import NPCS
-from parts.session import Session
 from parts.shelf.test_evidence import FAILED, PASSED, EvidenceLedger
+from parts.world.jobs import JOBS
+from parts.world.npcs import NPCS
+from parts.world.session import Session
 
 
 def _certify() -> EvidenceLedger:

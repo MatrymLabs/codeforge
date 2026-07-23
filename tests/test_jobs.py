@@ -1,10 +1,10 @@
-"""Test twin for parts/jobs.py -- chargen from seed to sheet."""
+"""Test twin for parts/world/jobs.py -- chargen from seed to sheet."""
 
 import pytest
 
 from forge import handle_command
-from parts.jobs import JOBS, bind_calling, calling_index
-from parts.session import Session
+from parts.world.jobs import JOBS, bind_calling, calling_index
+from parts.world.session import Session
 
 
 def test_jobs_load_from_seed_with_labels():
@@ -32,7 +32,7 @@ def test_calling_index_aligns_names_even_with_a_long_label(monkeypatch: pytest.M
         "vanguard": {"name": "Vanguard", "description": "short label"},
         "emberwright": {"name": "Emberwright", "description": "long label (11 chars)"},
     }
-    monkeypatch.setattr("parts.jobs.JOBS", fake)
+    monkeypatch.setattr("parts.world.jobs.JOBS", fake)
     rows = [ln for ln in calling_index().splitlines() if " -- " in ln]
     name_columns = {ln.index(job["name"]) for ln, job in zip(rows, fake.values(), strict=True)}
     assert len(name_columns) == 1  # every calling's name starts at the same column
@@ -60,7 +60,7 @@ def test_full_chargen_through_the_engine_tick():
 
 
 def test_set_secondary_equips_a_subjob_and_opens_its_record():
-    from parts.jobs import set_secondary
+    from parts.world.jobs import set_secondary
 
     s = Session(player_id="matrym")
     bind_calling(s, "engineer")
@@ -71,7 +71,7 @@ def test_set_secondary_equips_a_subjob_and_opens_its_record():
 
 
 def test_secondary_refusals():
-    from parts.jobs import set_secondary
+    from parts.world.jobs import set_secondary
 
     fresh = Session(player_id="matrym")
     assert "primary calling first" in set_secondary(fresh, "scholar")  # no primary yet
@@ -82,8 +82,8 @@ def test_secondary_refusals():
 
 
 def test_the_sheet_shows_the_equipped_secondary():
-    from parts.character_view import sheet_from_session
-    from parts.jobs import set_secondary
+    from parts.world.character_view import sheet_from_session
+    from parts.world.jobs import set_secondary
 
     s = Session(player_id="matrym")
     bind_calling(s, "engineer")

@@ -18,15 +18,15 @@ from fastapi.security import HTTPBasic, HTTPBasicCredentials
 from pydantic import BaseModel
 from sqlalchemy import select
 
-from parts.accounts import account_has_owner, account_password_ok
 from parts.blueprint import load_all as load_blueprints
-from parts.characters import set_rank
 from parts.dashboard import router as dashboard_router
-from parts.db import CharacterRow, open_archive_session
 from parts.login_guard import LoginGuard
-from parts.ranks import RANK_ORDER
 from parts.shelf.observability import install_observability
-from parts.world import WORLD
+from parts.world.accounts import account_has_owner, account_password_ok
+from parts.world.characters import set_rank
+from parts.world.db import CharacterRow, open_archive_session
+from parts.world.ranks import RANK_ORDER
+from parts.world.world import WORLD
 
 app = FastAPI(
     title="CodeForge Admin API",

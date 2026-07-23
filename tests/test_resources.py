@@ -1,8 +1,8 @@
-"""Test twin for parts/resources.py -- ported from mk1 test_kernel."""
+"""Test twin for parts/world/resources.py -- ported from mk1 test_kernel."""
 
 import pytest
 
-from parts.resources import Resource
+from parts.world.resources import Resource
 
 
 def test_valid_resource_constructs():

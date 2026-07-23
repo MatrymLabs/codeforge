@@ -10,17 +10,17 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
-from parts.job_progress import load_job_progress, save_job_progress
-from parts.jobs import BASE_HP, BASE_MP, JOBS, bind_calling
-from parts.progression import hp_gain_per_level, mp_gain_per_level
-from parts.resources import Resource
-from parts.session import Session
+from parts.world.job_progress import load_job_progress, save_job_progress
+from parts.world.jobs import BASE_HP, BASE_MP, JOBS, bind_calling
+from parts.world.progression import hp_gain_per_level, mp_gain_per_level
+from parts.world.resources import Resource
+from parts.world.session import Session
 
-# parts.db is imported lazily inside each function that touches persistence (below), so a
+# parts.world.db is imported lazily inside each function that touches persistence (below), so a
 # DB-free `import forge` never pays the ~400ms SQLAlchemy import (EXP-003). CharacterRow is
 # needed only for annotations here, so it stays under TYPE_CHECKING.
 if TYPE_CHECKING:
-    from parts.db import CharacterRow
+    from parts.world.db import CharacterRow
 
 
 def _archive_row_to_casefile(archive_row: CharacterRow) -> dict[str, Any]:
@@ -39,7 +39,7 @@ def _archive_row_to_casefile(archive_row: CharacterRow) -> dict[str, Any]:
 
 
 def load_character(name: str) -> dict[str, Any] | None:
-    from parts.db import CharacterRow, open_archive_session
+    from parts.world.db import CharacterRow, open_archive_session
 
     with open_archive_session() as db:
         archive_row = db.get(CharacterRow, name)
@@ -48,8 +48,8 @@ def load_character(name: str) -> dict[str, Any] | None:
 
 def put_record(name: str, casefile: dict[str, Any]) -> None:
     """Write one full casefile through the single storage door."""
-    from parts.db import CharacterRow, open_archive_session
-    from parts.world import START_ROOM
+    from parts.world.db import CharacterRow, open_archive_session
+    from parts.world.world import START_ROOM
 
     auth = casefile.get("auth") or {}
     with open_archive_session() as db:
@@ -73,7 +73,7 @@ def save_character(session: Session) -> None:
     the merge-save law, now enforced by the schema itself."""
     if not session.named:
         return
-    from parts.db import CharacterRow, open_archive_session
+    from parts.world.db import CharacterRow, open_archive_session
 
     with open_archive_session() as db:
         archive_row = db.get(CharacterRow, session.player_id) or CharacterRow(
@@ -130,7 +130,7 @@ def restore_character(session: Session, casefile: dict[str, Any]) -> None:
 
 def set_rank(name: str, rank: str) -> str:
     """Host-shell grant: the bootstrap authority."""
-    from parts.db import CharacterRow, open_archive_session
+    from parts.world.db import CharacterRow, open_archive_session
 
     with open_archive_session() as db:
         archive_row = db.get(CharacterRow, name)

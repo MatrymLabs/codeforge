@@ -14,8 +14,8 @@ from parts.gmcp import (
     room_report,
     vitals_report,
 )
-from parts.jobs import bind_calling
-from parts.session import Session
+from parts.world.jobs import bind_calling
+from parts.world.session import Session
 
 IAC, SB, SE = 255, 250, 240
 WILL, WONT, DO, DONT = 251, 252, 253, 254

@@ -21,8 +21,8 @@ is the subsystem-level audit behind it.
 | **web_gateway / `_pump`** | Driver | The browser gate: play over a WebSocket; `_pump` is its single outbound mouth. |
 | **the doorman** (`_turnaway_ledger`, `_gate_is_barred`, `_log_turnaway`) | Security | Per-address login rate-limiting at the front desk - who has been turned away, and whether the gate is barred. |
 | **echo sink / `bind_echo` / `announce`** | Event bus | Each player binds a sink that delivers room events to them; `announce` fans an event out to everyone else present. |
-| **Frame** (`parts/frames.py`: `SpeechFrame`, `StrikeFrame`) | Event bus | Typed, per-recipient event frames on the room bus - a structured payload (who did what) rendered per listener, where a bare broadcast string is too flat. |
-| **menace / aggression** (`parts/aggression.py`) | Game AI | Proactive NPCs that strike on the world's beat: a seed-flagged hostile opens combat first, leashed and telegraphed, driven by the tick (no background thread). |
+| **Frame** (`parts/world/frames.py`: `SpeechFrame`, `StrikeFrame`) | Event bus | Typed, per-recipient event frames on the room bus - a structured payload (who did what) rendered per listener, where a bare broadcast string is too flat. |
+| **menace / aggression** (`parts/world/aggression.py`) | Game AI | Proactive NPCs that strike on the world's beat: a seed-flagged hostile opens combat first, leashed and telegraphed, driven by the tick (no background thread). |
 | **`reforge_secret`** | Account | Re-hash an account's password (self-service `passwd`) - forge the secret anew. |
 | **Archive / `open_archive_session`** | Persistence | The canonical store (SQLite) where character case files are kept and restored. |
 | **`render_scene` / `render_room`** | Projection | Turn canonical state into the text a player sees. Projections never mutate state. |

@@ -15,11 +15,11 @@ swap items.ITEMS still affect us. Import modules, not mutable state.
 from collections.abc import Mapping
 from typing import cast
 
-from parts import items
-from parts.seed import SEED_DIR, Door, load_doors
-from parts.session import sentence_case
 from parts.shelf.hourglass import WORLD_SANDS
 from parts.shelf.statemachine import Guard, Refusal, Transition, advance, build
+from parts.world import items
+from parts.world.seed import SEED_DIR, Door, load_doors
+from parts.world.session import sentence_case
 
 # The world is data: a seed's barriers live in its own doors.yaml (empty if it ships none).
 DOORS: dict[str, Door] = load_doors(SEED_DIR / "doors.yaml")

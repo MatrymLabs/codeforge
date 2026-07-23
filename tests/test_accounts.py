@@ -1,11 +1,17 @@
-"""Test twin for parts/accounts.py -- names with proof."""
+"""Test twin for parts/world/accounts.py -- names with proof."""
 
 import pytest
 
 from forge import handle_command
-from parts.accounts import has_password, password_fixable, register, set_password, verify_password
-from parts.characters import load_character, save_character
-from parts.session import SESSIONS, Session
+from parts.world.accounts import (
+    has_password,
+    password_fixable,
+    register,
+    set_password,
+    verify_password,
+)
+from parts.world.characters import load_character, save_character
+from parts.world.session import SESSIONS, Session
 
 
 @pytest.fixture(autouse=True)
@@ -44,7 +50,7 @@ def test_verify_roundtrip_and_rejection():
 def _count_hashes(monkeypatch: pytest.MonkeyPatch) -> list[int]:
     """Spy on the pbkdf2 hash so a test can assert it fired (constant-time defense), without a
     flaky timing assertion. Both a real check and the missing-principal decoy route through it."""
-    import parts.accounts as acc
+    import parts.world.accounts as acc
 
     calls: list[int] = []
     real = acc._hash_secret
@@ -66,7 +72,7 @@ def test_an_unknown_character_still_pays_the_hash_cost(monkeypatch: pytest.Monke
 
 
 def test_an_unknown_account_still_pays_the_hash_cost(monkeypatch: pytest.MonkeyPatch):
-    from parts.accounts import account_password_ok
+    from parts.world.accounts import account_password_ok
 
     calls = _count_hashes(monkeypatch)
     assert account_password_ok("no-such-account", "whatever") is False
@@ -74,7 +80,7 @@ def test_an_unknown_account_still_pays_the_hash_cost(monkeypatch: pytest.MonkeyP
 
 
 def test_an_unknown_login_account_still_pays_the_hash_cost(monkeypatch: pytest.MonkeyPatch):
-    from parts.accounts import inspect_login
+    from parts.world.accounts import inspect_login
 
     calls = _count_hashes(monkeypatch)
     assert inspect_login("somechar", "no-such-account", "whatever") is False
@@ -207,7 +213,7 @@ def test_handles_must_be_well_formed():
 
 
 def test_migrate_moves_a_character_password_onto_a_new_account():
-    from parts.accounts import inspect_login, migrate
+    from parts.world.accounts import inspect_login, migrate
 
     hero = Session(player_id="matrym", location="courtyard", named=True)
     SESSIONS["matrym"] = hero
@@ -237,7 +243,7 @@ def test_mixed_case_passwords_survive_the_tick():
 
 def test_cli_rotation_then_tick_login_roundtrip():
     """The exact saga, pinned forever: passwd via CLI, login via door."""
-    from parts.accounts import rotate_account_secret
+    from parts.world.accounts import rotate_account_secret
 
     s = _fresh()
     _tick(s, "register matrym@matlabs starter1")
@@ -266,7 +272,7 @@ def test_passwd_changes_the_account_password_end_to_end():
 
 
 def test_passwd_refuses_the_wrong_old_password():
-    from parts.accounts import account_password_ok
+    from parts.world.accounts import account_password_ok
 
     s = _fresh()
     _tick(s, "register matrym@matlabs starter1")
@@ -275,7 +281,7 @@ def test_passwd_refuses_the_wrong_old_password():
 
 
 def test_passwd_refuses_mismatched_new_passwords():
-    from parts.accounts import account_password_ok
+    from parts.world.accounts import account_password_ok
 
     s = _fresh()
     _tick(s, "register matrym@matlabs starter1")
@@ -302,7 +308,7 @@ def test_passwd_requires_an_account():
 
 
 def test_passwd_refuses_a_too_short_new_password():
-    from parts.accounts import account_password_ok
+    from parts.world.accounts import account_password_ok
 
     s = _fresh()
     _tick(s, "register matrym@matlabs starter1")
@@ -317,7 +323,7 @@ def test_passwd_shows_usage_on_wrong_shape():
 
 
 def test_password_floor_is_eight_characters():
-    from parts.accounts import MIN_PASSWORD_LEN
+    from parts.world.accounts import MIN_PASSWORD_LEN
 
     assert MIN_PASSWORD_LEN == 8
     s = _fresh()
@@ -326,7 +332,7 @@ def test_password_floor_is_eight_characters():
 
 
 def test_reforge_secret_directly_verifies_then_rotates():
-    from parts.accounts import account_password_ok, reforge_secret
+    from parts.world.accounts import account_password_ok, reforge_secret
 
     s = _fresh()
     _tick(s, "register matrym@matlabs starter1")

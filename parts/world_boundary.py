@@ -8,9 +8,10 @@ the world must NOT depend on the platform -- so a game can ship without the dev-
 the platform, so that independence is enforced, not merely current. A violation re-couples the game
 to the workshop and quietly breaks the "two outputs" separation.
 
-The World Package is a DECLARED set (WORLD_MODULES) -- the transitive import closure of the game
-runtime, the way the Hardware Store shelf is a directory. A game module may import other world
-modules and the shelf (Layer 3, the shared reusable cores); importing anything else in `parts/` is a
+The World Package is a physical directory (`parts/world/`), the way the Hardware Store shelf is a
+directory. WORLD_MODULES is discovered from that directory -- the world IS its folder, so the set
+cannot drift from a hand-maintained list. A game module may import other world modules
+(`parts.world.*`) and the shelf (Layer 3, `parts.shelf.*`); importing anything else in `parts/` is a
 platform reach. Reads and reports; it mutates nothing. Empty list == the boundary holds.
 """
 
@@ -21,46 +22,22 @@ from pathlib import Path
 
 _ROOT = Path(__file__).resolve().parent.parent
 
-# The World Package: the game runtime's transitive import closure. Declared, like the shelf is a
-# dir. A new game module belongs here; the completeness check (test twin) pins that this set is the
-# real closure of the game seed, so it cannot silently drift.
-WORLD_MODULES = frozenset(
-    {
-        "accounts",
-        "aggression",
-        "character_view",
-        "characters",
-        "chime",
-        "combat",
-        "combat_clock",
-        "db",
-        "derived",
-        "doors",
-        "encounter_log",
-        "engineer",
-        "equipment",
-        "events",
-        "frames",
-        "items",
-        "job_progress",
-        "jobs",
-        "npcs",
-        "paths",
-        "progression",
-        "progression_awards",
-        "quest",
-        "ranks",
-        "resources",
-        "score_sheet",
-        "score_sheet_model",
-        "seed",
-        "session",
-        "stat_rules",
-        "world",
-        "world_manifest",
-        "zones",
-    }
-)
+
+def _world_dir(root: Path | None = None) -> Path:
+    return (root if root is not None else _ROOT) / "parts" / "world"
+
+
+def _discover_world(root: Path | None = None) -> frozenset[str]:
+    """The World Package's modules, read straight from `parts/world/` (the world is its dir)."""
+    d = _world_dir(root)
+    if not d.is_dir():
+        return frozenset()
+    return frozenset(p.stem for p in d.glob("*.py") if p.stem != "__init__")
+
+
+# The World Package: every module physically filed under parts/world/. Discovered, not declared, so
+# a new game module is a member the moment it lands in the directory -- no list to keep in sync.
+WORLD_MODULES = _discover_world()
 
 
 class WorldBoundaryError(ValueError):
@@ -68,7 +45,8 @@ class WorldBoundaryError(ValueError):
 
 
 def _parts_imports(source: str, where: str) -> set[str]:
-    """The leaf name of every `parts.*` module a source imports; `parts.shelf.*` -> 'shelf'."""
+    """The world-relative name of every `parts.*` import: `parts.world.X` -> 'X' (the intra-world
+    module), `parts.shelf.*` -> 'shelf', any other `parts.Y` -> 'Y' (a platform reach)."""
     try:
         tree = ast.parse(source, filename=where)
     except SyntaxError as exc:
@@ -82,8 +60,16 @@ def _parts_imports(source: str, where: str) -> set[str]:
             names = [a.name for a in node.names if a.name.startswith("parts")]
         for name in names:
             parts = name.split(".")
-            if len(parts) >= 2:
-                found.add("shelf" if parts[1] == "shelf" else parts[1])
+            if len(parts) < 2:
+                continue
+            if parts[1] == "shelf":
+                found.add("shelf")
+            elif parts[1] == "world":
+                found.add(
+                    parts[2] if len(parts) >= 3 else "world"
+                )  # unwrap to the intra-world module
+            else:
+                found.add(parts[1])
     return found
 
 
@@ -97,11 +83,12 @@ def world_import_violations(root: Path | None = None) -> dict[str, list[str]]:
 
     A world module may import other world modules and the shelf; importing any other `parts.*`
     module re-couples the game to the manufacturing platform, which this reports."""
-    base = (root if root is not None else _ROOT) / "parts"
+    base = _world_dir(root)
+    if not base.is_dir():
+        return {}
     violations: dict[str, list[str]] = {}
-    for module in sorted(WORLD_MODULES):
-        path = base / f"{module}.py"
-        if not path.is_file():
+    for path in sorted(base.glob("*.py")):
+        if path.stem == "__init__":
             continue
         platform = sorted(
             m
@@ -109,7 +96,7 @@ def world_import_violations(root: Path | None = None) -> dict[str, list[str]]:
             if _is_platform(m)
         )
         if platform:
-            violations[module] = platform
+            violations[path.stem] = platform
     return violations
 
 

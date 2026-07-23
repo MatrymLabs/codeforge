@@ -1,9 +1,9 @@
 """Test twin for ARC slice 3: the ARC Chamber room surfaces the readiness verdict on look."""
 
 from forge import handle_command, render_scene
-from parts.seed import load_rooms
-from parts.session import Session
-from parts.world import WORLD, dynamic_capability
+from parts.world.seed import load_rooms
+from parts.world.session import Session
+from parts.world.world import WORLD, dynamic_capability
 
 
 def test_the_chamber_exists_and_is_reachable_both_ways():

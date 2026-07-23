@@ -66,7 +66,7 @@ def test_render_lists_parts_with_run_or_tested_status() -> None:
 
 def test_functions_reachable_through_the_engine_tick() -> None:
     from forge import handle_command
-    from parts.session import Session
+    from parts.world.session import Session
 
     out = handle_command(Session(player_id="fn"), "functions")
     assert "FUNCTIONS CHECK" in out

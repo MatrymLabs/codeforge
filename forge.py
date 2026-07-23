@@ -8,23 +8,9 @@ terminal driver around it -- a socket gateway will be another.
 import re
 from collections.abc import Callable
 
-from parts import quest
-from parts.accounts import (
-    has_password,
-    inspect_login,
-    parse_handle,
-    reforge_secret,
-    set_password,
-    verify_password,
-)
-from parts.accounts import register as register_account
-from parts.aggression import menace
 from parts.arc import arc
 from parts.calibrate import calibrate
-from parts.character_view import sheet_from_session
-from parts.characters import load_character, restore_character, save_character
 from parts.chat_throttle import shout
-from parts.chime import chime
 from parts.classroom import (
     ask_question,
     demonstrated,
@@ -37,26 +23,15 @@ from parts.classroom import (
     talk_to_codex,
 )
 from parts.clone_scan import clones
-from parts.combat import attack
 from parts.commands import ADMIN, CORE, Command, CommandSet
 from parts.complexity import complexity
-from parts.doors import reclose, unlock
-from parts.engineer import deploy_barrier, diagnostic_scan, field_repair
-from parts.equipment import equip, unequip
-from parts.events import announce, announce_frame, bind_echo, rename_echo, unbind_echo
 from parts.features import features
-from parts.frames import SpeechFrame
 from parts.harvest_lens import harvest
 from parts.heralds import heralds
-from parts.items import drop, inventory_text, prototype_of, room_items_text, take, trace_item
-from parts.jobs import JOBS, bind_calling, calling_index, set_secondary
 from parts.learning_record import learnings
 from parts.logbook import journal
 from parts.maintenance import maintenance
 from parts.name_check import name_check
-from parts.npcs import room_npcs_text, talk, trace_npc
-from parts.quest import quest_view
-from parts.ranks import wizard_command
 from parts.registry import (
     registry_find,
     registry_list,
@@ -66,17 +41,42 @@ from parts.registry import (
 )
 from parts.relay import channel
 from parts.save import awaken_snapshot, seal_snapshot
-from parts.score_sheet import render_score_sheet
-from parts.seed import load_splash
-from parts.session import SESSIONS, Session, display_name, roster
 from parts.shelf.hourglass import WORLD_SANDS
 from parts.store_index import store
 from parts.telegraph import telegraph
 from parts.titles import title
 from parts.vitals import vitals
-from parts.world import DIRECTIONS, dynamic_capability, render_room, resolve_move
+from parts.world import quest
+from parts.world.accounts import (
+    has_password,
+    inspect_login,
+    parse_handle,
+    reforge_secret,
+    set_password,
+    verify_password,
+)
+from parts.world.accounts import register as register_account
+from parts.world.aggression import menace
+from parts.world.character_view import sheet_from_session
+from parts.world.characters import load_character, restore_character, save_character
+from parts.world.chime import chime
+from parts.world.combat import attack
+from parts.world.doors import reclose, unlock
+from parts.world.engineer import deploy_barrier, diagnostic_scan, field_repair
+from parts.world.equipment import equip, unequip
+from parts.world.events import announce, announce_frame, bind_echo, rename_echo, unbind_echo
+from parts.world.frames import SpeechFrame
+from parts.world.items import drop, inventory_text, prototype_of, room_items_text, take, trace_item
+from parts.world.jobs import JOBS, bind_calling, calling_index, set_secondary
+from parts.world.npcs import room_npcs_text, talk, trace_npc
+from parts.world.quest import quest_view
+from parts.world.ranks import wizard_command
+from parts.world.score_sheet import render_score_sheet
+from parts.world.seed import load_splash
+from parts.world.session import SESSIONS, Session, display_name, roster
+from parts.world.world import DIRECTIONS, dynamic_capability, render_room, resolve_move
+from parts.world.zones import area_line, tick_zones
 from parts.world_cert import certify
-from parts.zones import area_line, tick_zones
 
 NAME_RE = re.compile(r"^[a-z][a-z0-9_]{1,15}$")
 
@@ -144,7 +144,7 @@ def run_view(name: str) -> str:
 
 
 def after_action() -> str:
-    from parts.encounter_log import render_recent
+    from parts.world.encounter_log import render_recent
 
     return render_recent()
 
@@ -1611,8 +1611,8 @@ def handle_command(session: Session, signal: str) -> str:
     from it. Lowercasing a password destroys it.
 
     After the player's command resolves, the world takes its beat: any aggressive
-    NPC sharing the room strikes (parts.aggression.menace) and every area advances its
-    reset clock (parts.zones.tick_zones). The player's command is the only clock the world
+    NPC sharing the room strikes (parts.world.aggression.menace) and every area advances its
+    reset clock (parts.world.zones.tick_zones). The player's command is the only clock the world
     has -- no background thread, the tick stays the one door."""
     true_signal = signal.strip()
     routed_signal = true_signal.lower()

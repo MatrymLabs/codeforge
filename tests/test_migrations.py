@@ -14,7 +14,7 @@ from pathlib import Path
 from alembic import command
 from alembic.config import Config
 
-import parts.db as db
+import parts.world.db as db
 
 _REPO = Path(__file__).resolve().parent.parent
 
