@@ -88,7 +88,7 @@ def _demo_event_ledger() -> tuple[str, str]:
 
 
 def _demo_safe_runner() -> tuple[str, str]:
-    from parts.console import ALLOWLIST, CommandRefused, run
+    from parts.shelf.console import ALLOWLIST, CommandRefused, run
 
     try:
         run("rm -rf /")  # not on the allowlist

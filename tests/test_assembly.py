@@ -21,14 +21,14 @@ def test_discover_imports_finds_parts_imports(tmp_path):
     src.write_text(
         textwrap.dedent("""\
         from parts.shelf.statemachine import Fired
-        from parts.workflow import WorkflowEngine
+        from parts.shelf.workflow import WorkflowEngine
         import os
         import parts.events
     """)
     )
     imports = discover_imports(src)
     assert "parts.shelf.statemachine" in imports
-    assert "parts.workflow" in imports
+    assert "parts.shelf.workflow" in imports
     assert "parts.events" in imports
     assert "os" not in imports
 

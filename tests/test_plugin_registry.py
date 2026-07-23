@@ -1,8 +1,8 @@
-"""Test twin for parts/plugin_registry.py -- explicit registration, capabilities, disable."""
+"""Test twin for parts/shelf/plugin_registry.py -- explicit registration, capabilities, disable."""
 
 import pytest
 
-from parts.plugin_registry import PluginError, PluginInfo, PluginRegistry
+from parts.shelf.plugin_registry import PluginError, PluginInfo, PluginRegistry
 
 
 def test_register_and_get_a_plugin():

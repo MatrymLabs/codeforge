@@ -48,7 +48,6 @@ from parts.features import features
 from parts.frames import SpeechFrame
 from parts.harvest_lens import harvest
 from parts.heralds import heralds
-from parts.hourglass import WORLD_SANDS
 from parts.items import drop, inventory_text, prototype_of, room_items_text, take, trace_item
 from parts.jobs import JOBS, bind_calling, calling_index, set_secondary
 from parts.learning_record import learnings
@@ -70,6 +69,7 @@ from parts.save import awaken_snapshot, seal_snapshot
 from parts.score_sheet import render_score_sheet
 from parts.seed import load_splash
 from parts.session import SESSIONS, Session, display_name, roster
+from parts.shelf.hourglass import WORLD_SANDS
 from parts.store_index import store
 from parts.telegraph import telegraph
 from parts.titles import title
@@ -126,19 +126,19 @@ def career(arg: str = "", demonstrated: dict[str, int] | None = None) -> str:
 
 
 def console_menu() -> str:
-    from parts.console import console_menu as run
+    from parts.shelf.console import console_menu as run
 
     return run()
 
 
 def diagnostics_view() -> str:
-    from parts.console import diagnostics_view as run
+    from parts.shelf.console import diagnostics_view as run
 
     return run()
 
 
 def run_view(name: str) -> str:
-    from parts.console import run_view as run
+    from parts.shelf.console import run_view as run
 
     return run(name)
 
@@ -1625,7 +1625,7 @@ def handle_command(session: Session, signal: str) -> str:
 def _sands_beat(session: Session) -> str:
     """Advance the shared world timer one beat and apply any deferred effects that came due.
 
-    The player's command is the only clock: this drains parts.hourglass.WORLD_SANDS the same way
+    The player's command is the only clock: this drains parts.shelf.hourglass.WORLD_SANDS as before
     menace and tick_zones ride the beat, with no background thread. Returns any line the acting
     player should see because they are in the affected room (else '')."""
     lines: list[str] = []

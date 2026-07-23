@@ -10,8 +10,8 @@ from __future__ import annotations
 
 from collections.abc import Callable
 
-from parts.plugin_registry import PluginInfo, PluginRegistry
 from parts.session import Session
+from parts.shelf.plugin_registry import PluginInfo, PluginRegistry
 
 Herald = Callable[[], str]
 

@@ -12,7 +12,7 @@ one core part proven in the game and reused in a practical application. Part Man
 | **version** | 0.1 (beta) |
 | **maturity** | `beta` (demonstrated in two contexts; not yet stable, not yet persistent) |
 | **purpose** | Drive any lifecycle defined as data: role-gated moves between states, a recorded history trail, and named effects the caller applies. |
-| **source** | `parts/workflow.py` (built on the pure FSM `parts/shelf/statemachine.py`) |
+| **source** | `parts/shelf/workflow.py` (built on the pure FSM `parts/shelf/statemachine.py`) |
 | **domain** | orchestration |
 | **inputs** | a workflow definition (states, steps with roles/guards/effects, terminal states) + an `Instance` + an event + an actor role |
 | **outputs** | a `Fired(dst, effect)` or `Refusal(reason)`; a mutated local `Instance` with history |

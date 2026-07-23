@@ -440,7 +440,7 @@ Quests are layered so there is always something at the player's scale:
 - **Player-driven content**: Forgers who reach high rank can *author* quests, rooms, and areas (the
   builder endgame), turning players into content-makers.
 
-*(Engine reading: a quest is a `parts/workflow.py` state machine, exactly the vertical slice already
+*(Engine reading: a quest is a `parts/shelf/workflow.py` state machine, exactly the vertical slice already
 built (`parts/quest.py`). A dynamic quest is a workflow seeded with world state; player-authored
 content is the builder tools writing Seed data.)*
 
@@ -687,5 +687,5 @@ flagship world proves the flagship engine, because they were designed as the sam
 
 *This bible is design, not engine. It is realized as data in `seeds/*.yaml`; the engine that runs it
 stays genre-neutral and reusable. See `docs/vision_resync.md` (the platform), `parts/quest.py` and
-`parts/workflow.py` (quests as the reference vertical slice), and `chronicle/README.md` (the world's
+`parts/shelf/workflow.py` (quests as the reference vertical slice), and `chronicle/README.md` (the world's
 memory made literal).*

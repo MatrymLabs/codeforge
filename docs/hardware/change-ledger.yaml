@@ -22,7 +22,7 @@ security: >
   by actor string only (no identity/authn). Pair it with real auth at the call site.
 assembled_from:
   - parts/shelf/repository.py
-  - parts/workflow.py
+  - parts/shelf/workflow.py
   - parts/shelf/statemachine.py
   - parts/shelf/validation.py
   - parts/shelf/test_evidence.py

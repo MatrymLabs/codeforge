@@ -5,7 +5,7 @@ maturity: beta
 purpose: >
   Drive any lifecycle defined as data: role-gated moves between states, a recorded
   history trail, and named effects the caller applies.
-source: parts/workflow.py
+source: parts/shelf/workflow.py
 domain: orchestration
 inputs: >
   a workflow definition (states, steps with roles/guards/effects, terminal states)

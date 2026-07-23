@@ -37,7 +37,7 @@ engine. Each maps to a real, tested module - the metaphor stays in the code; the
 |------|------|-----------------------|
 | **Designation / Classification Registry** (`parts/registry.py`) | Filing | Every object gets a unique designation `TYPE-DD.NNN`, keyed to its frozen runtime label - a hidden filing system beneath the fantasy. Additive metadata, never a rename. |
 | **CommandSet / the command spine** (`parts/commands.py`) | Dispatch | Namespaced, rank-gated verbs: `CORE` bare words the engine owns, `ADMIN` under the reserved `@` sigil, `SEED` verbs each game owns. A seed can never shadow a reserved word. |
-| **FailsafeRunner** (`parts/console.py`) | Safety | The safe command console: an allowlist runs only vetted checks - never raw shell. |
+| **FailsafeRunner** (`parts/shelf/console.py`) | Safety | The safe command console: an allowlist runs only vetted checks - never raw shell. |
 | **QualityGate / SafetyReview** (`parts/qualitygate.py`) | Readiness | Grade a filed object (purpose · file · tests · docs · maturity) → `pass\|watch\|fail`; rate its risk. Readiness, never compliance. |
 | **ProjectControl / `pm status`** (`parts/pm.py`) | PM | The project dashboard, *computed* from the registry + QualityGate - no stored copy to drift. |
 | **the Archivist / `library`** (`parts/library.py`) | Library | Read the guidance library's preserved documents, read-only. |

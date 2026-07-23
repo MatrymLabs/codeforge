@@ -26,7 +26,7 @@ def fresh_world():
 def fresh_sands():
     """The shared world timer is a global the beat drains every command -- reset it around each
     door test so a scheduled reclose never leaks into another test's beat."""
-    from parts.hourglass import WORLD_SANDS
+    from parts.shelf.hourglass import WORLD_SANDS
 
     WORLD_SANDS.clear()
     yield
@@ -47,7 +47,7 @@ def test_reclose_is_idempotent_on_a_shut_or_unknown_door():
 
 
 def test_unlocking_a_self_closing_door_arms_the_world_timer():
-    from parts.hourglass import WORLD_SANDS
+    from parts.shelf.hourglass import WORLD_SANDS
 
     doors.DOORS["oak_door"]["recloses_after"] = 5
     take("key", "library")
@@ -57,7 +57,7 @@ def test_unlocking_a_self_closing_door_arms_the_world_timer():
 
 
 def test_a_plain_door_does_not_arm_the_world_timer():
-    from parts.hourglass import WORLD_SANDS
+    from parts.shelf.hourglass import WORLD_SANDS
 
     take("key", "library")
     unlock("door", "key", "library")  # oak_door ships no recloses_after -> stays open

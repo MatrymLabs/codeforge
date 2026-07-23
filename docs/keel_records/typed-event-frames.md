@@ -45,7 +45,7 @@ migration path for the next verbs.
 - **Big-bang: migrate every `announce` call site + change the sink signature to accept frames.**
   Rejected: a rewrite of a core system across three transports; large blast radius, against the
   ship's "a refactor is a rename, not a rewrite" rule.
-- **Base the frames on `parts/signal_bus.py` (the general typed pub/sub).** Considered and deferred:
+- **Base the frames on `parts/shelf/signal_bus.py` (the general typed pub/sub).** Considered and deferred:
   it would couple the in-world echo bus to the general bus; the two are deliberately distinct today.
   Revisit if a later slice wants routing/subscription semantics.
 - **Render per-recipient inside each sink (push frames all the way to the transport).** Deferred:

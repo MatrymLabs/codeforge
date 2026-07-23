@@ -10,7 +10,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from parts.signal_bus import Handler, Signal, SignalBus
+from parts.shelf.signal_bus import Handler, Signal, SignalBus
 
 
 @dataclass(frozen=True)

@@ -12,7 +12,7 @@ import json
 from collections.abc import Sequence
 from typing import Protocol, runtime_checkable
 
-from parts.plugin_registry import PluginError, PluginInfo, PluginRegistry
+from parts.shelf.plugin_registry import PluginError, PluginInfo, PluginRegistry
 
 Row = dict[str, object]
 

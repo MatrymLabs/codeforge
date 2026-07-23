@@ -4,7 +4,7 @@ The Workshop room is where you engineer through the world. This card renders the
 menu: the real tools the Workshop fronts today -- browse the reusable-parts catalog, search
 it, plan with blueprints (browse/read/render, and draft one with the Claude Architect), ask
 the advisory Architect NPC, and run allowlisted read-only diagnostics. Anything that RUNS
-goes through the safe command relay (`parts/console.py`); anything that would EDIT files is
+goes through the safe command relay (`parts/shelf/console.py`); anything that would EDIT files is
 still gated on the later Proving Ground phases (see docs/proving_ground/). This card itself
 never executes a subprocess -- it renders the menu; the verbs do the work.
 """

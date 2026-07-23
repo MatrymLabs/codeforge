@@ -350,7 +350,7 @@
             "why_it_matters": "SRE/release roles want gates that prevent unsafe actions.",
             "repo_proof": [
               "scripts/ritual_down.sh",
-              "parts/console.py"
+              "parts/shelf/console.py"
             ],
             "status": "proven",
             "next_proof_task": "Keep the allowlisted runner (never raw shell) + push-ready gate documented."

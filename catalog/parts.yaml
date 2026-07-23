@@ -84,7 +84,7 @@
 
 - id: safe-runner
   name: Failsafe Runner
-  source: parts/console.py
+  source: parts/shelf/console.py
   category: security
   tags: [allowlist, subprocess, sandbox, governance]
   maturity: shipped
@@ -638,7 +638,7 @@
 
 - id: workflow-engine
   name: Workflow Engine
-  source: parts/workflow.py
+  source: parts/shelf/workflow.py
   category: orchestration
   tags: [workflow, state-machine, roles, lifecycle, approval]
   maturity: beta
@@ -915,7 +915,7 @@
 
 - id: plugin-registry
   name: Plugin Registry
-  source: parts/plugin_registry.py
+  source: parts/shelf/plugin_registry.py
   category: plugins
   tags: [plugin, registry, extension, adapter, capability]
   maturity: beta
@@ -1017,7 +1017,7 @@
 
 - id: typed-event-bus
   name: Typed Signal Bus
-  source: parts/signal_bus.py
+  source: parts/shelf/signal_bus.py
   category: eventing
   tags: [events, pubsub, decoupling, signals, observer]
   maturity: beta
@@ -1188,7 +1188,7 @@
 
 - id: delay-queue
   name: Hourglass
-  source: parts/hourglass.py
+  source: parts/shelf/hourglass.py
   category: scheduling
   tags: [timer, delay, queue, tick, scheduler, legacy-mud]
   maturity: beta

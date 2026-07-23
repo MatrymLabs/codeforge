@@ -47,7 +47,7 @@ Inspect explicitly for:
 
 - **Insecure defaults / disabled TLS** (`verify=False`, unverified SSL contexts).
 - **Dangerous subprocess** (shell strings, unallowlisted commands; the ship uses the
-  allowlisted `parts/console.py` runner, never raw shell).
+  allowlisted `parts/shelf/console.py` runner, never raw shell).
 - **Insecure deserialization** (`pickle`, `yaml.load` without `SafeLoader`, `eval`/`exec`).
 - **Weak authentication / authorization gaps** (a capability reachable before its rank check).
 - **Unsafe package recommendations** (unpinned, low-reputation, or hallucinated dependencies).
