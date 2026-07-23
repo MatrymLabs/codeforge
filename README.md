@@ -34,12 +34,11 @@ can click straight into.
 > government, finance, compliance, records). The World Package runs today, and the Hardware Store
 > is now **physically real and shipped**: its 27 engine-agnostic cores live in their own package
 > (`parts/shelf/`, a one-way engine -> shelf dependency the build enforces), pour standalone via
-> `make shelf-pour`, and are published as
-> [`codeforge-shelf`](https://github.com/MatrymLabs/codeforge-shelf) --
-> `pip install git+https://github.com/MatrymLabs/codeforge-shelf` installs the library and imports
-> it with no game engine present (its 25 shipped test twins pass standalone in the package's own
-> CI). Browse the parts with `make hardware` or `make store`; read the full plan in
-> [`docs/vision_resync.md`](docs/vision_resync.md).
+> `make shelf-pour`, and published to PyPI as
+> [`codeforge-shelf`](https://pypi.org/project/codeforge-shelf/) -- `pip install codeforge-shelf`
+> installs the library and imports it with no game engine present (its 25 shipped test twins pass
+> standalone in the package's own CI). Browse the parts with `make hardware` or `make store`; read
+> the full plan in [`docs/vision_resync.md`](docs/vision_resync.md).
 >
 > **Proven, not just promised.** The store isn't only a catalog: four of its patterns are
 > re-implemented and running in the fleet's industry repos (a retry policy, a circuit breaker, a
