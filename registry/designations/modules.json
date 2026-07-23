@@ -4091,7 +4091,7 @@
     "designation": "MOD-10.039",
     "name": "shelf_pour",
     "status": "active",
-    "function": "pour the Hardware Store shelf as a standalone installable package and prove it imports with no engine present",
+    "function": "pour the Hardware Store shelf as a standalone installable package and prove it imports AND passes its own tests with no engine present",
     "label": "shelf_pour",
     "file": "parts/shelf_pour.py",
     "type": "MOD",
@@ -4109,7 +4109,7 @@
     "tags": [
       "module"
     ],
-    "notes": "Vendors the 27 shelf cores under codeforge_shelf (renamed off parts, so verify isolates the engine), auto-detects third-party deps from the AST, writes pyproject + README. verify_pour imports every core in a subprocess. make shelf-pour button; writes only into DEST.",
+    "notes": "Vendors the 27 shelf cores under codeforge_shelf (renamed off parts, so verify isolates the engine), auto-detects third-party deps from the AST, writes pyproject + README. verify_pour imports every core; verify_pour_tests runs the poured (engine-free) twins under pytest. 25 of 27 twins pour standalone; 2 (console, observability) hold engine integration tests in-repo. make shelf-pour button; writes only into DEST.",
     "superseded_by": "",
     "aliases": [],
     "created": "2026-07-23",
