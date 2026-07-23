@@ -1,0 +1,34 @@
+# SEED: first-forge -- abilities.yaml (usable combat moves, per calling)
+# `use <ability> [on <target>]` fires one; `skills` lists what your calling can wield.
+
+power_strike:
+  name: Power Strike
+  kind: strike
+  power: 6
+  scales: strength
+  mp_cost: 3
+  jobs: [vanguard, engineer]
+
+arcane_bolt:
+  name: Arcane Bolt
+  kind: strike
+  power: 5
+  scales: magic
+  mp_cost: 4
+  jobs: [scholar, artificer]
+
+overclock:
+  name: Overclock
+  kind: strike
+  power: 4
+  scales: speed
+  mp_cost: 3
+  jobs: [artificer, engineer]
+
+mend:
+  name: Mend
+  kind: heal
+  power: 8
+  scales: wisdom
+  mp_cost: 5
+  jobs: [scholar]
