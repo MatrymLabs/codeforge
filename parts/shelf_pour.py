@@ -148,7 +148,9 @@ jobs:
         with:
           python-version: "3.13"
       - run: python -m pip install --upgrade pip
-      - run: python -m pip install .[test]
+      - run: python -m pip install .[test,dev]
+      - run: ruff format --check .
+      - run: ruff check .
       - run: pytest -q
 """
 
@@ -196,7 +198,7 @@ def _pyproject(deps: list[str], test_deps: list[str]) -> str:
         'version = "0.1.0"\n'
         'description = "The CodeForge Hardware Store: reusable, engine-agnostic Python cores."\n'
         'readme = "README.md"\n'
-        'requires-python = ">=3.11"\n'
+        'requires-python = ">=3.12"\n'
         'license = "MIT"\n'
         'license-files = ["LICENSE"]\n'
         'authors = [{ name = "MatrymLabs" }]\n'
@@ -210,7 +212,8 @@ def _pyproject(deps: list[str], test_deps: list[str]) -> str:
         "[project.optional-dependencies]\n"
         "test = [\n"
         f"{test_lines}"
-        "]\n\n"
+        "]\n"
+        'dev = ["ruff"]\n\n'
         "[project.urls]\n"
         f'Homepage = "{_HOMEPAGE}"\n'
         f'Source = "{_HOMEPAGE}"\n\n'
@@ -219,7 +222,15 @@ def _pyproject(deps: list[str], test_deps: list[str]) -> str:
         "[tool.setuptools.package-data]\n"
         f'{PACKAGE} = ["py.typed"]\n\n'  # ship the PEP 561 marker so consumers get the types
         "[tool.pytest.ini_options]\n"
-        'markers = ["property: hypothesis-driven property tests"]\n'
+        'markers = ["property: hypothesis-driven property tests"]\n\n'
+        # The cores are already lint-clean in CodeForge; ship the same config so a codeforge-shelf
+        # contributor lints identically. Target 3.12 -- the cores use PEP 695 type-parameter syntax
+        # (`class Foo[T]`, 3.12+), which is also the package's true requires-python floor.
+        "[tool.ruff]\n"
+        "line-length = 100\n"
+        'target-version = "py312"\n\n'
+        "[tool.ruff.lint]\n"
+        'select = ["E", "F", "I", "UP", "B", "SIM"]\n'
     )
 
 
