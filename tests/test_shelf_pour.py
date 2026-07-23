@@ -162,6 +162,23 @@ def test_pour_writes_a_rich_readme_and_changelog(tmp_path: Path) -> None:
     assert (tmp_path / "CHANGELOG.md").read_text(encoding="utf-8").startswith("# Changelog")
 
 
+def test_pour_ships_a_ruff_config_and_the_correct_python_floor(tmp_path: Path) -> None:
+    pour_shelf(tmp_path)
+    pyproject = (tmp_path / "pyproject.toml").read_text(encoding="utf-8")
+    assert "[tool.ruff]" in pyproject and "[tool.ruff.lint]" in pyproject
+    assert 'dev = ["ruff"]' in pyproject
+    # the cores use PEP 695 type params (`class Foo[T]`, 3.12+), so the floor + ruff target are 3.12
+    assert 'requires-python = ">=3.12"' in pyproject
+    assert 'target-version = "py312"' in pyproject
+
+
+def test_the_test_workflow_lints_before_running_tests(tmp_path: Path) -> None:
+    pour_shelf(tmp_path)
+    wf = (tmp_path / ".github" / "workflows" / "test.yml").read_text(encoding="utf-8")
+    assert "ruff format --check" in wf and "ruff check" in wf
+    assert ".[test,dev]" in wf  # installs ruff (the dev extra) for the lint step
+
+
 def test_pour_writes_ci_and_release_workflows(tmp_path: Path) -> None:
     pour_shelf(tmp_path)
     test_wf = tmp_path / ".github" / "workflows" / "test.yml"

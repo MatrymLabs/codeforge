@@ -39,7 +39,10 @@ Pick one. Both claim a public name that cannot be un-claimed, so this is Josh's 
 ## Honesty notes
 
 - Version is `0.1.0`; bump it in `shelf_pour._pyproject` before each release.
-- `requires-python = ">=3.11"` is the declared floor; the cores are developed and tested on 3.13.
-  If you publish, run the suite on the lowest supported version first, or raise the floor to `3.13`.
+- `requires-python = ">=3.12"` is the declared floor -- the cores use PEP 695 type-parameter syntax
+  (`class Foo[T]`), which is 3.12+; they are developed and tested on 3.13. If you publish, run the
+  suite on the lowest supported version first, or raise the floor to `3.13`.
+- The poured package ships its own `[tool.ruff]` config (matching CodeForge, target 3.12) and a
+  `dev` extra with ruff; the generated CI lints (`ruff format --check` + `ruff check`) before tests.
 - The 2 engine-coupled twins (`console`, `observability`) keep their integration tests in this repo;
   the poured package ships the 25 standalone twins and passes them with no engine present.
