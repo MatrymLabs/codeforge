@@ -17,6 +17,7 @@ restores them in place -- a fight never leaves anyone in a broken state.
 
 import random
 
+from parts.shelf.reward_curve import jp_for_kill, xp_for_kill
 from parts.shelf.weighted_table import WeightedTable
 from parts.world import items
 from parts.world.combat_clock import advance as advance_clock
@@ -119,6 +120,22 @@ def open_strike(session: Session, npc: Npc) -> str:
     return f"\n{body}" if body else ""
 
 
+def _reward_amounts(session: Session, npc: Npc) -> tuple[int, int, int]:
+    """The (XP, JP, TP) a kill pays. A levelled foe scales through the challenge curve -- fight up
+    and earn more, grays pay nothing -- by the gap between fighter and foe; a levelless foe keeps
+    its flat `xp` for all three (the tutorial economy). TP rides the job axis alongside JP."""
+    level = npc.get("level")
+    if level is None:
+        flat = npc["xp"]
+        return (flat, flat, flat)
+    tier = npc.get("tier", "normal")
+    job = session.job
+    job_level = session.job_progress[job].job_level if job and job in session.job_progress else 1
+    xp = xp_for_kill(session.level, level, tier)
+    jp = jp_for_kill(job_level, level, tier)
+    return (xp, jp, jp)
+
+
 def land_hit(session: Session, npc: Npc, nid: str, dmg: int) -> tuple[bool, str]:
     """Apply `dmg` to `npc` and resolve the outcome; return (defeated, tail).
 
@@ -139,8 +156,9 @@ def land_hit(session: Session, npc: Npc, nid: str, dmg: int) -> tuple[bool, str]
         exclude=session.player_id,
     )
     witness("defeat", npc["name"], "fell in combat")
-    rewards = award_xp(session, npc["xp"])
-    for extra in (award_jp(session, npc["xp"]), award_tp(session, npc["xp"])):
+    xp_award, jp_award, tp_award = _reward_amounts(session, npc)
+    rewards = award_xp(session, xp_award)
+    for extra in (award_jp(session, jp_award), award_tp(session, tp_award)):
         if extra:
             rewards = f"{rewards}\n{extra}"
     # guaranteed drops, then one weighted loot roll -- both spawn fresh instances on the floor
