@@ -50,3 +50,14 @@ relighting_record:
   name: the Grand Forge's relighting record
   keywords: [record, relighting, ledger, archive]
   location: the_grand_forge
+
+# Drop-only prototypes for the ascent (location: nowhere = spawned by a boss's fall, not placed).
+warden_sigil:
+  name: the Concord's warden sigil
+  keywords: [sigil, warden, concord, token]
+  location: nowhere
+
+coil_keystone:
+  name: a keystone of the first Coil
+  keywords: [keystone, coil, spiral, stone]
+  location: nowhere
