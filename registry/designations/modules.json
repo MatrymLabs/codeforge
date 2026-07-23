@@ -4088,6 +4088,34 @@
     "updated": "2026-07-23"
   },
   {
+    "designation": "MOD-10.039",
+    "name": "shelf_pour",
+    "status": "active",
+    "function": "pour the Hardware Store shelf as a standalone installable package and prove it imports with no engine present",
+    "label": "shelf_pour",
+    "file": "parts/shelf_pour.py",
+    "type": "MOD",
+    "domain": "10",
+    "docs": "docs/vision_resync.md",
+    "tests": "tests/test_shelf_pour.py",
+    "depends_on": [
+      "shelf_boundary"
+    ],
+    "related": [
+      "cast",
+      "shelf_boundary"
+    ],
+    "reuse": "cast pours a game; this pours the library: vendor a package layer under a fresh name, auto-declare its deps, prove it imports standalone",
+    "tags": [
+      "module"
+    ],
+    "notes": "Vendors the 27 shelf cores under codeforge_shelf (renamed off parts, so verify isolates the engine), auto-detects third-party deps from the AST, writes pyproject + README. verify_pour imports every core in a subprocess. make shelf-pour button; writes only into DEST.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-23",
+    "updated": "2026-07-23"
+  },
+  {
     "designation": "MOD-04.053",
     "name": "world_manifest",
     "status": "active",
