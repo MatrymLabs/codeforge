@@ -177,4 +177,4 @@ def _main(argv: list[str]) -> int:
 
 
 if __name__ == "__main__":
-    raise SystemExit(_main(sys.argv))
+    raise SystemExit(_main(sys.argv))  # pragma: no cover

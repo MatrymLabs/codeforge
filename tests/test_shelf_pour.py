@@ -14,6 +14,7 @@ import pytest
 from parts.shelf_pour import (
     PACKAGE,
     ShelfPourError,
+    _main,
     _rewrite,
     pour_shelf,
     shelf_third_party_deps,
@@ -81,3 +82,18 @@ def test_rewrite_rebinds_the_package_off_parts() -> None:
     out = _rewrite("from parts.shelf.retry import run\nimport parts.shelf.statemachine\n")
     assert "parts.shelf" not in out
     assert f"from {PACKAGE}.retry import run" in out
+
+
+def test_dep_detection_fails_loud_on_an_unparseable_core(tmp_path: Path) -> None:
+    shelf = tmp_path / "shelf"
+    shelf.mkdir()
+    (shelf / "broken.py").write_text("import (\n")  # not valid Python
+    with pytest.raises(ShelfPourError, match="cannot parse"):
+        shelf_third_party_deps(shelf)
+
+
+def test_main_pours_and_verifies(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    rc = _main(["shelf_pour", str(tmp_path)])
+    assert rc == 0
+    out = capsys.readouterr().out
+    assert "poured" in out and "PASS" in out
