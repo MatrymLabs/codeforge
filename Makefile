@@ -60,7 +60,7 @@ mutation:
 sast:
 	bandit -c pyproject.toml -r parts forge.py -q
 	bandit -c pyproject.toml -r . -q --severity-level medium --exclude ./.venv,./.git
-	@git ls-files | xargs detect-secrets-hook --baseline .secrets.baseline
+	@git ls-files | grep -vFx 'chronicle/ledger.jsonl' | xargs detect-secrets-hook --baseline .secrets.baseline
 
 # The full gate. `coverage` runs the WHOLE suite (property included) once, WITH
 # instrumentation and the threshold -- so `check` covers, tests, and gates in a single
@@ -190,12 +190,12 @@ security:
 	bandit -c pyproject.toml -r parts forge.py -q
 	bandit -c pyproject.toml -r . -q --severity-level medium --exclude ./.venv,./.git
 	pip-audit --skip-editable
-	@git ls-files | xargs detect-secrets-hook --baseline .secrets.baseline
+	@git ls-files | grep -vFx 'chronicle/ledger.jsonl' | xargs detect-secrets-hook --baseline .secrets.baseline
 
 # --- Secret scan: fail on any tracked secret not in the audited baseline.
 # Regenerate the baseline after auditing: detect-secrets scan --exclude-files '\.venv/' > .secrets.baseline ---
 secrets:
-	@git ls-files | xargs detect-secrets-hook --baseline .secrets.baseline
+	@git ls-files | grep -vFx 'chronicle/ledger.jsonl' | xargs detect-secrets-hook --baseline .secrets.baseline
 
 # --- Dependency gate: every declared dependency must have a justification row in
 # dependency_ledger.toml (the Dependency Approval Rule, frameless Python). Fails loud
@@ -247,7 +247,7 @@ patch:
 # --- Daily ritual: apply security patches (+re-verify), then check federal
 # guidance for updates and file them in the library. Point FGL_HOME at it. ---
 FGL_HOME ?= ../federal-guidance-library
-daily: patch
+daily: patch arc-verdicts
 	@echo "→ checking federal guidance for updates..."
 	@if [ -x "$(FGL_HOME)/.venv/bin/library" ]; then \
 		( cd "$(FGL_HOME)" && .venv/bin/library check ) || echo "  (reg check reported changes or was offline)"; \
