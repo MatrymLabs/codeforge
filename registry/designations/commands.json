@@ -2289,6 +2289,57 @@
     "updated": "2026-07-17"
   },
   {
+    "designation": "CMD-04.067",
+    "name": "use",
+    "status": "active",
+    "function": "channel a combat ability (use <ability> [on <foe>])",
+    "label": "use",
+    "file": "forge.py",
+    "type": "CMD",
+    "domain": "04",
+    "docs": "docs/architecture.md",
+    "tests": "tests/test_abilities.py",
+    "depends_on": [],
+    "related": [
+      "abilities",
+      "combat"
+    ],
+    "reuse": "",
+    "tags": [
+      "command"
+    ],
+    "notes": "CORE verb firing a job's usable ability (parts/world/abilities). A strike reuses combat.land_hit; a heal restores HP; each spends MP. Tick-reachable; refuses no-calling / unknown / wrong-job / no-MP / bad-target.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-23",
+    "updated": "2026-07-23"
+  },
+  {
+    "designation": "CMD-04.068",
+    "name": "skills",
+    "status": "active",
+    "function": "list the abilities your calling can wield",
+    "label": "skills",
+    "file": "forge.py",
+    "type": "CMD",
+    "domain": "04",
+    "docs": "docs/architecture.md",
+    "tests": "tests/test_abilities.py",
+    "depends_on": [],
+    "related": [
+      "abilities"
+    ],
+    "reuse": "",
+    "tags": [
+      "command"
+    ],
+    "notes": "Read-only CORE verb listing a calling's moveset (parts/world/abilities.render_abilities). Tick-reachable; never mutates.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-23",
+    "updated": "2026-07-23"
+  },
+  {
     "designation": "CMD-10.024",
     "name": "@flush-encounters",
     "status": "active",

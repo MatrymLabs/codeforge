@@ -182,6 +182,22 @@ class Job(TypedDict):
     milestone_perks: list[dict]  # ordered passive perks unlocked at each TP milestone
 
 
+class Ability(TypedDict):
+    """A usable combat ability: what it does, what it scales on, and which jobs may wield it.
+
+    An ability turns a fight from one repeated `attack` into a job's own moveset. `strike` deals
+    damage scaled by an attribute; `heal` restores the wielder's HP. `jobs` names the callings that
+    may use it, so the job->ability link lives in the data, not hardcoded. Validated at load.
+    """
+
+    name: str  # display name, e.g. "Power Strike"
+    kind: str  # "strike" (damage a target) | "heal" (restore own HP)
+    power: int  # flat base magnitude before the stat scale
+    scales: str  # the attribute it scales on (strength/magic/...), or "" for flat
+    mp_cost: int  # MP spent to use it
+    jobs: list[str]  # job labels that may use this ability
+
+
 class QuestStep(TypedDict):
     """One move in a quest: from `state`, event `event` advances to `to`; `effect` is optional.
 
@@ -718,6 +734,66 @@ def load_doors(path: Path) -> dict[str, Door]:
             door["requires"] = requires
         doors[label] = door
     return doors
+
+
+def load_abilities(path: Path) -> dict[str, Ability]:
+    """Load a seed's optional combat abilities. {} if the seed ships none; fails loud on a bad one.
+
+    Each ability is a usable move: `kind` strike/heal, `power` its base magnitude, `scales` the
+    attribute it grows on (one of the six, or "" for flat), `mp_cost` the MP it spends, and `jobs`
+    the callings that may wield it. Structure and every attribute name are checked at load."""
+    if not path.exists():
+        return {}
+    entries, template = _open_seed_bin(path, "ability")
+    abilities: dict[str, Ability] = {}
+    attrs = set(DEFAULT_JOB_STATS)
+    for label, fields in entries.items():
+        merged: dict[str, Any] = {
+            "name": _phrase(label).title(),
+            "kind": "strike",
+            "power": 0,
+            "scales": "",
+            "mp_cost": 0,
+            "jobs": [],
+        }
+        merged.update(template)
+        merged.update(fields)
+        _inspect_required_types(
+            label,
+            merged,
+            (
+                ("name", str),
+                ("kind", str),
+                ("power", int),
+                ("scales", str),
+                ("mp_cost", int),
+                ("jobs", list),
+            ),
+        )
+        if merged["kind"] not in ("strike", "heal"):
+            raise SeedError(
+                f"ability '{label}': 'kind' must be 'strike' or 'heal', got {merged['kind']!r}."
+            )
+        for num_field in ("power", "mp_cost"):
+            value = merged[num_field]
+            if isinstance(value, bool) or value < 0:
+                raise SeedError(
+                    f"ability '{label}': '{num_field}' must be a non-negative int, got {value!r}."
+                )
+        scales = merged["scales"]
+        if scales and scales not in attrs:
+            raise SeedError(
+                f"ability '{label}': 'scales' must be an attribute or empty, got {scales!r}."
+            )
+        abilities[label] = Ability(
+            name=str(merged["name"]),
+            kind=str(merged["kind"]),
+            power=int(merged["power"]),
+            scales=str(scales),
+            mp_cost=int(merged["mp_cost"]),
+            jobs=[str(j) for j in merged["jobs"]],
+        )
+    return abilities
 
 
 def load_zones(path: Path, known_rooms: set[str]) -> dict[str, Zone]:

@@ -99,6 +99,44 @@ def open_strike(session: Session, npc: Npc) -> str:
     return f"\n{body}" if body else ""
 
 
+def land_hit(session: Session, npc: Npc, nid: str, dmg: int) -> tuple[bool, str]:
+    """Apply `dmg` to `npc` and resolve the outcome; return (defeated, tail).
+
+    Advances the combat clock, re-engages an aggressive foe, and on defeat reassembles the target,
+    witnesses it, awards XP/JP/TP, spawns drops + a loot roll, and fires the quest hook -- returning
+    that as `tail` (empty when the foe survives). The CALLER owns the actor's own line, the room
+    strike broadcast, and any counter, so `attack` and an ability share this defeat/award core."""
+    npc["hp_now"] -= dmg
+    advance_clock(session)  # a landed strike is a combat action: cooldowns thaw, statuses age
+    if npc.get("aggressive"):
+        session.aggro_beats[nid] = 0  # the player answered the foe: re-engage its leash from zero
+    if npc["hp_now"] > 0:
+        return (False, "")
+    npc["hp_now"] = npc["hp"]  # the dummy reassembles at full health
+    announce(
+        session.location,
+        f"{sentence_case(npc['name'])} collapses -- then reassembles itself.",
+        exclude=session.player_id,
+    )
+    witness("defeat", npc["name"], "fell in combat")
+    rewards = award_xp(session, npc["xp"])
+    for extra in (award_jp(session, npc["xp"]), award_tp(session, npc["xp"])):
+        if extra:
+            rewards = f"{rewards}\n{extra}"
+    # guaranteed drops, then one weighted loot roll -- both spawn fresh instances on the floor
+    haul = "\n".join(
+        part for part in (_spawn_drops(session, npc), _roll_loot(session, npc)) if part
+    )
+    if haul:
+        rewards = f"{rewards}\n{haul}"
+    from parts.world import quest  # lazy: combat is the low-level loop; the quest hook rides on top
+
+    quest_line = quest.on_event(session, "defeat", nid)  # a boss's fall may complete a story beat
+    if quest_line:
+        rewards = f"{rewards}\n{quest_line}"
+    return (True, rewards)
+
+
 def attack(session: Session, word: str) -> str:
     """One strike of the training loop."""
     if session.stats is None:
@@ -110,44 +148,18 @@ def attack(session: Session, word: str) -> str:
     if npc["hp"] <= 0:
         return f"{sentence_case(npc['name'])} is not something you can fight."
     dmg = strike_power(session)
-    npc["hp_now"] -= dmg
-    advance_clock(session)  # a landed strike is a combat action: cooldowns thaw, statuses age
-    if npc.get("aggressive"):
-        session.aggro_beats[nid] = 0  # the player answered the foe: re-engage its leash from zero
     announce(
         session.location,
         f"{display_name(session.player_id)} strikes {npc['name']} for {dmg}.",
         exclude=session.player_id,
     )
-    if npc["hp_now"] > 0:
-        hit = f"You strike {npc['name']} for {dmg}. ({npc['hp_now']}/{npc['hp']})"
+    defeated, tail = land_hit(session, npc, nid, dmg)
+    if not defeated:
         # An aggressive NPC's blow arrives on the world beat (parts.world.aggression), never as a
         # counter, so it strikes exactly once per tick -- never both counter and open-strike.
         counter = "" if npc.get("aggressive") else _counter_attack(session, npc)
-        return f"{hit}{counter}"
-    npc["hp_now"] = npc["hp"]  # the dummy reassembles at full health
-    announce(
-        session.location,
-        f"{sentence_case(npc['name'])} collapses -- then reassembles itself.",
-        exclude=session.player_id,
-    )
-    witness("defeat", npc["name"], "fell in combat")
-    defeat = f"You strike {npc['name']} for {dmg}. It collapses -- then reassembles itself."
-    rewards = award_xp(session, npc["xp"])
-    for extra in (award_jp(session, npc["xp"]), award_tp(session, npc["xp"])):
-        if extra:
-            rewards = f"{rewards}\n{extra}"
-    result = f"{defeat}\n{rewards}"
-    # guaranteed drops, then one weighted loot roll -- both spawn fresh instances on the floor
-    haul = "\n".join(
-        part for part in (_spawn_drops(session, npc), _roll_loot(session, npc)) if part
-    )
-    if haul:
-        result = f"{result}\n{haul}"
-    from parts.world import quest  # lazy: combat is the low-level loop; the quest hook rides on top
-
-    quest_line = quest.on_event(session, "defeat", nid)  # a boss's fall may complete a story beat
-    return f"{result}\n{quest_line}" if quest_line else result
+        return f"You strike {npc['name']} for {dmg}. ({npc['hp_now']}/{npc['hp']}){counter}"
+    return f"You strike {npc['name']} for {dmg}. It collapses -- then reassembles itself.\n{tail}"
 
 
 def _spawn_loot(session: Session, prototype: str) -> str:

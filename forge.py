@@ -48,6 +48,7 @@ from parts.telegraph import telegraph
 from parts.titles import title
 from parts.vitals import vitals
 from parts.world import quest
+from parts.world.abilities import render_abilities, use_ability
 from parts.world.accounts import (
     has_password,
     inspect_login,
@@ -85,7 +86,8 @@ HELP_TEXT = (
     "Commands: look, go <direction> (or n/s/e/w/u/d), "
     "take, drop, inventory, talk <npc>, say <msg>, shout <msg>, name <yourname>, who, "
     "jobs, job <calling>, subjob <calling>, score, equip <item>, unequip <slot>, "
-    "attack <target>, repair, scan <target>, deploy, calibrate, channel, journal [text], vitals, "
+    "attack <target>, skills, use <ability> [on <foe>], repair, scan <target>, deploy, calibrate, "
+    "channel, journal [text], vitals, "
     "namecheck <name>, features, certify, heralds, title [text], maintenance, arc [status], "
     "telegraph, chime, harvest, store [find <query>], learnings [show <id>], "
     "complexity [threshold], clones [min-nodes], "
@@ -1261,6 +1263,24 @@ def _build_commands() -> CommandSet:
             "CMD-04.052",
             "strike a target (kill <foe>)",
             lambda s, arg: attack(s, arg.lower()),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "use",
+            "CMD-04.067",
+            "channel a combat ability (use <ability> [on <foe>])",
+            lambda s, arg: use_ability(s, arg),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "skills",
+            "CMD-04.068",
+            "list the abilities your calling can wield",
+            lambda s, _arg: render_abilities(s),
             namespace=CORE,
         )
     )

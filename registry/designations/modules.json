@@ -225,6 +225,36 @@
     "updated": "2026-07-09"
   },
   {
+    "designation": "MOD-04.055",
+    "name": "abilities",
+    "status": "active",
+    "function": "a job's usable combat moves: stat-scaled strikes and self-heals, spending MP",
+    "label": "abilities",
+    "file": "parts/world/abilities.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "docs/architecture.md",
+    "tests": "tests/test_abilities.py",
+    "depends_on": [
+      "combat",
+      "seed"
+    ],
+    "related": [
+      "combat",
+      "jobs",
+      "resources"
+    ],
+    "reuse": "the data-driven moveset pattern: an ability is a validated record (kind/power/scales/mp_cost/jobs), so who fights how lives in the seed, not in code -- and a strike reuses the combat defeat/award path rather than forking it",
+    "notes": "The 'combat wiring' batch the Job card deferred. abilities.yaml (per seed) defines strikes (power + stat//3 damage) and heals; each costs MP; the ability's jobs list decides which callings may wield it. `use <ability> [on <target>]` fires one (reusing combat.land_hit for defeat/loot/quest), `skills` lists a calling's moveset. Refuses no-calling / unknown / wrong-job / no-MP / bad-target. Live in first-forge (4 abilities across 4 jobs).",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-23",
+    "updated": "2026-07-23"
+  },
+  {
     "designation": "MOD-10.001",
     "name": "commands",
     "status": "active",
