@@ -131,9 +131,20 @@ def _rewrite(source: str) -> str:
     return re.sub(rf"\b{re.escape(_SOURCE_PKG)}\b", PACKAGE, source)
 
 
+_HOMEPAGE = "https://github.com/MatrymLabs/codeforge"
+
+
 def _pyproject(deps: list[str], test_deps: list[str]) -> str:
     dep_lines = "".join(f'    "{d}",\n' for d in deps)
     test_lines = "".join(f'    "{d}",\n' for d in test_deps)
+    # No "License ::" classifier: PEP 639 supersedes it with the SPDX `license` expression below,
+    # and modern setuptools errors if both are present.
+    classifiers = (
+        '    "Development Status :: 4 - Beta",\n'
+        '    "Intended Audience :: Developers",\n'
+        '    "Programming Language :: Python :: 3",\n'
+        '    "Typing :: Typed",\n'
+    )
     return (
         "[build-system]\n"
         'requires = ["setuptools>=68"]\n'
@@ -142,7 +153,15 @@ def _pyproject(deps: list[str], test_deps: list[str]) -> str:
         'name = "codeforge-shelf"\n'
         'version = "0.1.0"\n'
         'description = "The CodeForge Hardware Store: reusable, engine-agnostic Python cores."\n'
+        'readme = "README.md"\n'
         'requires-python = ">=3.11"\n'
+        'license = "MIT"\n'
+        'license-files = ["LICENSE"]\n'
+        'authors = [{ name = "MatrymLabs" }]\n'
+        'keywords = ["reusable", "stdlib", "resilience", "patterns", "hardware-store"]\n'
+        "classifiers = [\n"
+        f"{classifiers}"
+        "]\n"
         "dependencies = [\n"
         f"{dep_lines}"
         "]\n\n"
@@ -150,6 +169,9 @@ def _pyproject(deps: list[str], test_deps: list[str]) -> str:
         "test = [\n"
         f"{test_lines}"
         "]\n\n"
+        "[project.urls]\n"
+        f'Homepage = "{_HOMEPAGE}"\n'
+        f'Source = "{_HOMEPAGE}"\n\n'
         "[tool.setuptools]\n"
         f'packages = ["{PACKAGE}"]\n\n'
         "[tool.pytest.ini_options]\n"
@@ -217,6 +239,9 @@ def pour_shelf(dest: Path, *, shelf_dir: Path | None = None) -> PouredShelf:
             poured_tests.append(twin.stem.removeprefix("test_"))  # core name, matching tests_held
     (dest / "pyproject.toml").write_text(_pyproject(deps, test_deps), encoding="utf-8")
     (dest / "README.md").write_text(_readme(names, deps, len(poured_tests), held), encoding="utf-8")
+    license_src = src.parent.parent / "LICENSE"  # the repo's MIT license travels with the package
+    if license_src.is_file():
+        (dest / "LICENSE").write_text(license_src.read_text(encoding="utf-8"), encoding="utf-8")
     return PouredShelf(
         path=dest,
         package=PACKAGE,
@@ -228,9 +253,9 @@ def pour_shelf(dest: Path, *, shelf_dir: Path | None = None) -> PouredShelf:
     )
 
 
-def _real_runner(cmd: list[str], cwd: Path) -> tuple[int, str]:
+def _real_runner(cmd: list[str], cwd: Path | None) -> tuple[int, str]:
     proc = subprocess.run(  # nosec B603 -- fixed argv (sys.executable), no shell, poured dir only
-        cmd, cwd=str(cwd), capture_output=True, text=True
+        cmd, cwd=str(cwd) if cwd is not None else None, capture_output=True, text=True
     )
     return proc.returncode, (proc.stdout + proc.stderr)
 
@@ -276,8 +301,63 @@ def verify_pour_tests(dest: Path, *, runner=None) -> tuple[bool, str]:
     return True, f"poured tests pass with no engine present ({summary.strip()})"
 
 
+def verify_pour_build(dest: Path, workdir: Path, *, runner=None) -> tuple[bool, str]:
+    """The pip-installable proof: build a wheel, install it into a FRESH venv, and import it.
+
+    This is the release-grade check -- it proves `pip install codeforge-shelf` works for a stranger
+    with only the declared deps, not just that the source imports in this repo. Needs network (pip),
+    so it is a manual button, not a CI gate; the runner seam lets the test drive it offline. Returns
+    `(ok, detail)`. `runner(cmd, cwd) -> (rc, output)`."""
+    run = runner or _real_runner
+    dest, workdir = Path(dest), Path(workdir)
+    if not (dest / "pyproject.toml").is_file():
+        return False, f"no package to build at {dest}"
+    venv = workdir / "venv"
+    py = venv / "bin" / "python"
+    dist = workdir / "dist"
+    # `pip wheel` builds via setuptools (fetched in an isolated build env, so it needs network);
+    # `--no-deps` on install below means the probe imports only pure-stdlib cores -- so the wheel
+    # install + import step itself is network-free.
+    wheel_cmd = [sys.executable, "-m", "pip", "wheel", "--no-deps", "-w", str(dist), str(dest)]
+    for cmd in ([sys.executable, "-m", "venv", str(venv)], wheel_cmd):
+        rc, out = run(cmd, None)
+        if rc != 0:
+            return (
+                False,
+                f"'{cmd[2] if len(cmd) > 2 else cmd[0]}' step failed: {out.strip()[-160:]}",
+            )
+    wheels = sorted(dist.glob("codeforge_shelf-*.whl"))
+    if not wheels:
+        return False, "no wheel was produced"
+    probe = f"import {PACKAGE}.retry, {PACKAGE}.statemachine; print('installed import ok')"
+    for cmd in (
+        [str(py), "-m", "pip", "install", "--quiet", "--no-deps", str(wheels[-1])],
+        [str(py), "-c", probe],
+    ):
+        rc, out = run(cmd, None)
+        if rc != 0:
+            return False, f"install/import failed: {out.strip()[-160:]}"
+    return True, f"built {wheels[-1].name} and imported it from a fresh venv"
+
+
+def _build_main(argv: list[str]) -> int:
+    """`... build <dest> <workdir>`: pour, then build the wheel + install it in a fresh venv."""
+    dest = Path(argv[2]) if len(argv) > 2 else _ROOT / "workspace" / "shelf-pour"
+    workdir = Path(argv[3]) if len(argv) > 3 else _ROOT / "workspace" / "shelf-build"
+    pour_shelf(dest)
+    ok, detail = verify_pour_build(dest, workdir)
+    print(f"built {dest} -> {workdir}")
+    print(f"  build:   {'PASS' if ok else 'FAIL'} - {detail}")
+    print(
+        "  publish: `twine upload` the wheel/sdist, or push to a codeforge-shelf repo (your call)"
+    )
+    return 0 if ok else 1
+
+
 def _main(argv: list[str]) -> int:
-    """`python3 -m parts.shelf_pour <dest>`: pour the shelf, then prove it imports + tests pass."""
+    """`python3 -m parts.shelf_pour [build] <dest>`: pour + prove imports/tests (or build)."""
+    if len(argv) > 1 and argv[1] == "build":
+        return _build_main(argv)
     dest = Path(argv[1]) if len(argv) > 1 else _ROOT / "workspace" / "shelf-pour"
     poured = pour_shelf(dest)
     imports_ok, imports_detail = verify_pour(dest)
@@ -290,6 +370,7 @@ def _main(argv: list[str]) -> int:
         f"           {len(poured.tests)} poured, {len(poured.tests_held)} held (engine tests): "
         f"{', '.join(poured.tests_held) or 'none'}"
     )
+    print("  publish: LICENSE + metadata written; `make shelf-build` to build the wheel")
     return 0 if imports_ok and tests_ok else 1
 
 

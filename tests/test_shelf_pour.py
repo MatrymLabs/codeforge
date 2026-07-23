@@ -20,6 +20,7 @@ from parts.shelf_pour import (
     pour_shelf,
     shelf_third_party_deps,
     verify_pour,
+    verify_pour_build,
     verify_pour_tests,
 )
 
@@ -132,6 +133,84 @@ def test_verify_pour_tests_on_a_pour_without_tests_is_honest(tmp_path: Path) -> 
     (tmp_path / PACKAGE).mkdir()  # a package dir but no tests/
     ok, detail = verify_pour_tests(tmp_path)
     assert not ok and "no poured tests" in detail
+
+
+def test_pour_writes_release_metadata_and_license(tmp_path: Path) -> None:
+    pour_shelf(tmp_path)
+    assert (tmp_path / "LICENSE").read_text(encoding="utf-8").startswith("MIT License")
+    pyproject = (tmp_path / "pyproject.toml").read_text(encoding="utf-8")
+    for token in ('license = "MIT"', "authors =", "classifiers =", "[project.urls]", "readme ="):
+        assert token in pyproject
+    # PEP 639: the SPDX license expression forbids a redundant License classifier
+    assert "License :: OSI Approved" not in pyproject
+
+
+def test_verify_pour_build_orchestrates_build_and_install(tmp_path: Path) -> None:
+    pour_shelf(tmp_path)
+    work = tmp_path / "work"
+
+    def fake(cmd: list[str], cwd: Path | None) -> tuple[int, str]:
+        if "wheel" in cmd:  # simulate pip wheel producing the artifact at its -w target
+            dist = Path(cmd[cmd.index("-w") + 1])
+            dist.mkdir(parents=True, exist_ok=True)
+            (dist / "codeforge_shelf-0.1.0-py3-none-any.whl").write_text("")
+        return 0, "ok"
+
+    ok, detail = verify_pour_build(tmp_path, work, runner=fake)
+    assert ok and "imported it from a fresh venv" in detail
+
+
+def test_verify_pour_build_reports_a_failed_step(tmp_path: Path) -> None:
+    pour_shelf(tmp_path)
+
+    def fails(cmd: list[str], cwd: Path | None) -> tuple[int, str]:
+        return 1, "venv: boom"
+
+    ok, detail = verify_pour_build(tmp_path, tmp_path / "w", runner=fails)
+    assert not ok and "boom" in detail
+
+
+def test_verify_pour_build_needs_a_package(tmp_path: Path) -> None:
+    ok, detail = verify_pour_build(tmp_path, tmp_path / "w")  # nothing poured
+    assert not ok and "no package to build" in detail
+
+
+def test_verify_pour_build_flags_a_missing_wheel(tmp_path: Path) -> None:
+    pour_shelf(tmp_path)
+
+    def no_wheel(cmd: list[str], cwd: Path | None) -> tuple[int, str]:
+        return 0, "ok"  # steps 'succeed' but never create a wheel
+
+    ok, detail = verify_pour_build(tmp_path, tmp_path / "w", runner=no_wheel)
+    assert not ok and "no wheel" in detail
+
+
+def test_verify_pour_build_reports_a_failed_install(tmp_path: Path) -> None:
+    pour_shelf(tmp_path)
+
+    def build_ok_install_bad(cmd: list[str], cwd: Path | None) -> tuple[int, str]:
+        if "wheel" in cmd:
+            dist = Path(cmd[cmd.index("-w") + 1])
+            dist.mkdir(parents=True, exist_ok=True)
+            (dist / "codeforge_shelf-0.1.0-py3-none-any.whl").write_text("")
+        if "install" in cmd:
+            return 1, "pip install: resolution impossible"
+        return 0, "ok"
+
+    ok, detail = verify_pour_build(tmp_path, tmp_path / "w", runner=build_ok_install_bad)
+    assert not ok and "install/import failed" in detail
+
+
+def test_main_build_subcommand_runs_the_build(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str], monkeypatch: pytest.MonkeyPatch
+) -> None:
+    import parts.shelf_pour as sp
+
+    # the real build needs network (pip); stub the verify so the CLI dispatch is covered offline
+    monkeypatch.setattr(sp, "verify_pour_build", lambda dest, work, **k: (True, "built a wheel"))
+    rc = sp._main(["shelf_pour", "build", str(tmp_path), str(tmp_path / "w")])
+    assert rc == 0
+    assert "build:   PASS" in capsys.readouterr().out
 
 
 def test_dep_detection_fails_loud_on_an_unparseable_core(tmp_path: Path) -> None:
