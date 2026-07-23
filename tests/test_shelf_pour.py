@@ -145,6 +145,17 @@ def test_pour_writes_release_metadata_and_license(tmp_path: Path) -> None:
     assert "License :: OSI Approved" not in pyproject
 
 
+def test_pour_writes_ci_and_release_workflows(tmp_path: Path) -> None:
+    pour_shelf(tmp_path)
+    test_wf = tmp_path / ".github" / "workflows" / "test.yml"
+    release_wf = tmp_path / ".github" / "workflows" / "release.yml"
+    assert "pytest -q" in test_wf.read_text(encoding="utf-8")
+    release = release_wf.read_text(encoding="utf-8")
+    # Trusted Publishing: OIDC id-token, no stored PyPI token, on a GitHub Release
+    assert "id-token: write" in release and "pypa/gh-action-pypi-publish" in release
+    assert "release:" in release and "types: [published]" in release
+
+
 def test_verify_pour_build_orchestrates_build_and_install(tmp_path: Path) -> None:
     pour_shelf(tmp_path)
     work = tmp_path / "work"

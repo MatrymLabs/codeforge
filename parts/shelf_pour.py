@@ -133,6 +133,48 @@ def _rewrite(source: str) -> str:
 
 _HOMEPAGE = "https://github.com/MatrymLabs/codeforge"
 
+# CI for the published repo: run the poured tests on every push, and publish to PyPI on a GitHub
+# Release via Trusted Publishing (OIDC -- no stored token). The `pypi` environment is the deploy
+# gate the maintainer configures as the PyPI pending-publisher's environment.
+_TEST_WORKFLOW = """\
+name: test
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - run: python -m pip install --upgrade pip
+      - run: python -m pip install .[test]
+      - run: pytest -q
+"""
+
+_RELEASE_WORKFLOW = """\
+name: release
+on:
+  release:
+    types: [published]
+permissions:
+  contents: read
+jobs:
+  pypi:
+    runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      id-token: write  # Trusted Publishing (OIDC): no API token stored anywhere
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - run: python -m pip install build
+      - run: python -m build  # sdist + wheel
+      - uses: pypa/gh-action-pypi-publish@release/v1
+"""
+
 
 def _pyproject(deps: list[str], test_deps: list[str]) -> str:
     dep_lines = "".join(f'    "{d}",\n' for d in deps)
@@ -242,6 +284,10 @@ def pour_shelf(dest: Path, *, shelf_dir: Path | None = None) -> PouredShelf:
     license_src = src.parent.parent / "LICENSE"  # the repo's MIT license travels with the package
     if license_src.is_file():
         (dest / "LICENSE").write_text(license_src.read_text(encoding="utf-8"), encoding="utf-8")
+    workflows = dest / ".github" / "workflows"
+    workflows.mkdir(parents=True, exist_ok=True)
+    (workflows / "test.yml").write_text(_TEST_WORKFLOW, encoding="utf-8")
+    (workflows / "release.yml").write_text(_RELEASE_WORKFLOW, encoding="utf-8")
     return PouredShelf(
         path=dest,
         package=PACKAGE,
