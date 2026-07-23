@@ -135,4 +135,51 @@ warden_keeper:
   keywords: [keeper, warden, gate, wardenmarch]
   dialogue:
     - '"Beyond this arch: the Wardenmarch, the Coilfoot Range, and the first Coils of the Great Spiral."'
-    - '"None climb unproven. When your spark is ready, the Warden''s test will open the way. Not today."'
+    - '"The Sentinel is the test, Forger. Put the grey guardian down and the ascent is yours to climb."'
+    - '"Many come up from the coast sure of their spark. The Sentinel has cooled most of them. Prove it."'
+
+# --- The Warden's Test and the First Coil (level-banded bosses: the ascent's real danger). ---
+# These run well above Emberreach. Bosses are lethal (fall and you wake in town, no failsafe) and
+# boss-tier (x10 reward): felling one pays for the whole climb to it.
+
+warden_sentinel:
+  name: the Warden Sentinel
+  location: warden_gate
+  keywords: [sentinel, warden, guardian, grey]
+  dialogue:
+    - The Sentinel's grey Forgework grinds awake, and cold light kindles in its eye-slit.
+  hp: 90
+  atk: 14
+  aggressive: true  # it bars the arch: it strikes the moment you present yourself for the test
+  lethal: true  # the Warden's test is real: fall and you wake in Emberreach while it reforms
+  level: 17
+  tier: boss  # the gate-boss of the Warden's test -- x10 the level's base reward
+  drops: [warden_sigil]  # felled, it yields the Concord sigil that marks a proven Forger
+
+spiral_wisp:
+  name: an ember-wisp
+  location: coilfoot_ascent
+  keywords: [wisp, ember, spiral, wraithfire]
+  dialogue:
+    - The ember-wisp gutters closer, half-alive and hungry for a maker's warmth.
+  hp: 45
+  atk: 9
+  aggressive: true
+  level: 18
+  tier: normal
+  drops: [ember_shard]
+
+gate_forgewraith:
+  name: the Coil Forgewraith
+  location: coil_first_landing
+  keywords: [forgewraith, wraith, coil, gate]
+  dialogue:
+    - '"YOU CLIMB... INTO WHAT WAS UNMADE..." The Forgewraith rises in a column of grey fire.'
+  hp: 120
+  atk: 18
+  aggressive: true
+  lethal: true
+  level: 22
+  tier: boss  # the first Gate-boss of the Great Spiral: the ascent's first true wall
+  drops: [coil_keystone]
+  loot: {ember_shard: 3, nothing: 2}

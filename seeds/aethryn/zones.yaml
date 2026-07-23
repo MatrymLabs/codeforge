@@ -32,3 +32,15 @@ emberreach:
   rooms: [emberreach_gates, the_grand_forge, orders_row, market_quarter, warden_gate]
   reset_mode: never  # a living capital, not a repop field: its NPCs and shops persist
   beats_between: 20
+
+wardenmarch:
+  name: The Wardenmarch
+  rooms: [the_wardenmarch]
+  reset_mode: never  # Concord country: a threshold, not a repop field
+  beats_between: 20
+
+great_spiral_coil_1:
+  name: The Great Spiral - First Coil
+  rooms: [coilfoot_ascent, coil_first_landing]
+  reset_mode: empty_only  # the ascent's wisps and Gate-boss reform once the Coil is quiet
+  beats_between: 14

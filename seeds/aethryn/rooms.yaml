@@ -160,7 +160,41 @@ warden_gate:
   desc: |-
     The Concord's seat and the threshold of the Wardenmarch: beyond this gate the
     Ember-road climbs to the Coilfoot Range and the first Coils of the Great Spiral.
-    A gate-keeper of the Wardens holds the arch. None pass to the ascent unproven --
-    the Warden's test waits here for a Forger ready to climb. Not yet. Not yet.
+    A Warden Sentinel of grey Forgework bars the arch, and the gate-keeper watches
+    to see if you are the Forger who can put it down. This is the Warden's test.
   exits:
     south: the_grand_forge
+    north: the_wardenmarch
+
+# --- The Wardenmarch and the First Coil of the Great Spiral (world bible s.20, s.24). ---
+# Past the Warden's test the megadungeon ascent begins: an endless climb of Coils, one
+# Gate-boss per floor. The first Coil runs levels ~18-22 -- true above-Emberreach danger.
+
+the_wardenmarch:
+  name: The Wardenmarch
+  desc: |-
+    Beyond the gate the Concord's own country: watch-cairns and old Forgework mark the
+    road to the Coilfoot Range, where the Great Spiral lifts out of the world. The air
+    thins and hums. Emberreach is behind you now. The ascent is ahead, and up.
+  exits:
+    south: warden_gate
+    north: coilfoot_ascent
+
+coilfoot_ascent:
+  name: The Coilfoot Ascent
+  desc: |-
+    The base of the first Coil, where the Great Spiral's lowest stair winds up into cloud.
+    Loose ember-wisps drift off the old Forgework, half-alive and hostile to the living.
+    The stair climbs up; the Wardenmarch lies back to the south.
+  exits:
+    south: the_wardenmarch
+    up: coil_first_landing
+
+coil_first_landing:
+  name: The First Coil Landing
+  desc: |-
+    A wide forged landing on the first Coil, ringed by cold ascent-lamps. At its center
+    a Forgewraith keeps the stair -- the first Gate-boss of the Spiral, made of the wrath
+    the Unforging left behind. The way further up is dark, and waits for another day.
+  exits:
+    down: coilfoot_ascent

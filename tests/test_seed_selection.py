@@ -103,6 +103,25 @@ def test_aethryn_road_reward_pays_for_the_climb():
     assert reaver_xp > wolf_xp * 5  # the road's elite dwarfs a coast kill
 
 
+def test_aethryn_wardens_test_opens_the_ascent_to_the_first_coil():
+    """Past Emberreach the Warden Gate opens north onto the Wardenmarch, then the Great Spiral's
+    first Coil - the megadungeon ascent begins."""
+    rooms = load_rooms(AETHRYN / "rooms.yaml")
+    assert rooms["warden_gate"]["exits"]["north"] == "the_wardenmarch"
+    assert rooms["the_wardenmarch"]["exits"]["north"] == "coilfoot_ascent"
+    assert rooms["coilfoot_ascent"]["exits"]["up"] == "coil_first_landing"
+
+
+def test_aethryn_ascent_bosses_are_lethal_and_boss_tier():
+    """The Warden Sentinel (the test) and the Coil Forgewraith (the first Gate-boss) are lethal
+    boss-tier foes well above Emberreach - real ascent stakes."""
+    npcs = load_npcs(AETHRYN / "npcs.yaml")
+    sentinel, wraith = npcs["warden_sentinel"], npcs["gate_forgewraith"]
+    assert sentinel["level"] == 17 and sentinel["tier"] == "boss" and sentinel.get("lethal") is True
+    assert wraith["level"] == 22 and wraith["tier"] == "boss" and wraith.get("lethal") is True
+    assert wraith["level"] > sentinel["level"]  # the Coil climbs above the gate test
+
+
 def test_aethryn_ships_the_relighting_quest_as_data():
     """The flagship's story arc is a seed-shipped workflow, not hardcoded in Python."""
     quest = load_quest(AETHRYN / "quest.yaml")
