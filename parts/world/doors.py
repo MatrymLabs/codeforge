@@ -15,6 +15,7 @@ swap items.ITEMS still affect us. Import modules, not mutable state.
 from collections.abc import Mapping
 from typing import cast
 
+from parts.shelf.conditions import ConditionError, evaluate
 from parts.shelf.hourglass import WORLD_SANDS
 from parts.shelf.statemachine import Guard, Refusal, Transition, advance, build
 from parts.world import items
@@ -111,11 +112,33 @@ def _door_state(door: Door) -> str:
     return _LOCKED if door["locked"] else _OPEN
 
 
-def unlock(door_word: str, key_word: str, room_id: str) -> str:
+def _requirement_unmet(door: Door, actor: dict[str, object] | None) -> str | None:
+    """The reason a door's `requires` condition bars this actor, or None (no gate, or it passes).
+
+    The condition was validated at seed load, so it is well-formed; a missing actor name or an
+    uncomparable value here is treated as UNMET -- a gated door never opens on a broken context."""
+    expr = door.get("requires")
+    if not expr:
+        return None
+    try:
+        met = evaluate(expr, dict(actor or {}))
+    except ConditionError:
+        met = False
+    if met:
+        return None
+    return f"{sentence_case(door['name'])} is warded; you do not meet its condition."
+
+
+def unlock(
+    door_word: str, key_word: str, room_id: str, actor: dict[str, object] | None = None
+) -> str:
     did = trace_door(door_word, room_id)
     if did is None:
         return "You don't see that here."
     door = DOORS[did]
+    barred = _requirement_unmet(door, actor)
+    if barred is not None:
+        return barred
     ctx: dict[str, object] = {"door": door, "key_word": key_word, "room_id": room_id}
     outcome = advance(_DOOR_MACHINE, _door_state(door), "unlock", ctx, _DOOR_GUARDS)
     if isinstance(outcome, Refusal):

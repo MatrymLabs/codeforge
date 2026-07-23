@@ -1553,7 +1553,9 @@ def _unlock_cmd(session: Session, arg: str) -> str:
     rest = arg.lower()
     if " with " in rest:
         door_word, key_word = (p.strip() for p in rest.split(" with ", 1))
-        return unlock(door_word, key_word, session.location)
+        # the actor context a door's optional `requires` condition is evaluated against
+        actor = {"level": session.level, "rank": session.rank}
+        return unlock(door_word, key_word, session.location, actor)
     return "Unlock what with what? Try: unlock door with key"
 
 
