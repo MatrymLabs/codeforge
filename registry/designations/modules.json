@@ -4116,6 +4116,33 @@
     "updated": "2026-07-23"
   },
   {
+    "designation": "MOD-10.040",
+    "name": "world_boundary",
+    "status": "active",
+    "function": "prove the World Package (Layer 2) imports no manufacturing-platform (Layer 1) module",
+    "label": "world_boundary",
+    "file": "parts/world_boundary.py",
+    "type": "MOD",
+    "domain": "10",
+    "docs": "docs/vision_resync.md",
+    "tests": "tests/test_world_boundary.py",
+    "depends_on": [],
+    "related": [
+      "shelf_boundary",
+      "integrity",
+      "cast"
+    ],
+    "reuse": "the shelf_boundary pattern applied to a layer defined by a declared closure, not a directory: assert the lower layer imports nothing from the layer built on it",
+    "notes": "Declares the World Package as WORLD_MODULES (the game runtime's import closure); flags any world module importing a non-world, non-shelf parts module (a platform reach). Test twin pins the closure (completeness, no drift) + zero live violations. Wired into the repo-integrity ritual. Locks in the Layer-1/2 separation the recon found (world -> platform = 0); cast already pours a world standalone.",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-23",
+    "updated": "2026-07-23"
+  },
+  {
     "designation": "MOD-04.053",
     "name": "world_manifest",
     "status": "active",

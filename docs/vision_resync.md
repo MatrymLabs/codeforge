@@ -93,8 +93,11 @@ removed: the rule is "don't preserve merely because it exists," and equally "don
 2. **Monolithic engine** ("vendored-whole") - **the Hardware Store is now physically separated:**
    `cast`/`forge` pour a *vendored-selective* package (proven), AND every engine-agnostic reusable
    core is physically extracted into `parts/shelf/` (27 cores, six families, one-way dependency).
-   What remains one package is the platform/world engine itself (Layer 1/2), which vendored-selective
-   already makes optional functionally; a physical Layer-1/2 split is deferred as a separate question.
+   What remains one package is the platform/world engine itself (Layer 1/2), but its separation is
+   now real and ENFORCED: the World Package (Layer 2) imports the manufacturing platform (Layer 1)
+   zero times, and `parts/world_boundary` (wired into the repo-integrity ritual) fails if a game
+   module ever reaches into the dev-tools -- so a world stays shippable without the workshop. Only
+   the physical dir reorg (a structural-tidiness-only migration) is deferred; the boundary is held.
 3. ~~**World is content-driven, not manifest/config-driven**~~ **MOSTLY ADDRESSED:** a typed
    `WorldManifest` gives a seed a declared identity, and a typed stat `Ruleset` makes the derived
    combat balance configurable -- a world's `world.yaml` `rules:` block now reaches live combat
