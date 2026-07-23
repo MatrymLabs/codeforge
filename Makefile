@@ -1,4 +1,4 @@
-.PHONY: hooks env fix lint typecheck test property fuzz coverage audit audit-runtime security sast secrets deps sbom bench trend ai-eval retention doctor patch daily check readiness arc-verdicts truth forge cast-plan cast cast-selective cast-install-check coupling smoke repo-integrity ship run world store hardware clean serve backup db-up db-down db-migrate docs-serve docs-build demo-gif e2e evolution ritual-fast ritual ritual-down unskew loop
+.PHONY: hooks env fix lint typecheck test property fuzz coverage audit audit-runtime security sast secrets deps sbom bench trend ai-eval retention doctor patch daily check readiness arc-verdicts truth forge cast-plan cast cast-selective cast-install-check coupling shelf-pour smoke repo-integrity ship run world store hardware clean serve backup db-up db-down db-migrate docs-serve docs-build demo-gif e2e evolution ritual-fast ritual ritual-down unskew loop
 
 # --- Environment: create/validate the .venv, fail loud on version mismatch.
 # Uses uv when present (a Rust resolver; measured ~20x faster than pip on this host:
@@ -115,6 +115,12 @@ cast-selective:
 # closure per surface and lists what a runtime cast could shed. Changes nothing. ---
 coupling:
 	@python3 -m parts.coupling
+
+# --- Shelf-pour: pour the Hardware Store shelf as a standalone installable package (renamed off
+# `parts`, deps auto-declared) and PROVE it imports every core with zero engine present. Changes
+# nothing in the repo; writes into DEST (git-ignored). Usage: make shelf-pour DEST=../codeforge-shelf ---
+shelf-pour:
+	@python3 -m parts.shelf_pour $(or $(DEST),workspace/shelf-pour)
 
 # --- Cast install-check: the FRESH-INSTALL proof. Creates a clean venv, installs ONLY the cast's
 # declared deps, and boots it there - so the cast runs with zero dependency on CodeForge's env.
