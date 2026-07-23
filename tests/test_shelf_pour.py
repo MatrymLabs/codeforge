@@ -16,9 +16,11 @@ from parts.shelf_pour import (
     ShelfPourError,
     _main,
     _rewrite,
+    poolable_twins,
     pour_shelf,
     shelf_third_party_deps,
     verify_pour,
+    verify_pour_tests,
 )
 
 
@@ -84,6 +86,54 @@ def test_rewrite_rebinds_the_package_off_parts() -> None:
     assert f"from {PACKAGE}.retry import run" in out
 
 
+def test_pour_ships_the_engine_free_twins_and_holds_the_rest(tmp_path: Path) -> None:
+    poured = pour_shelf(tmp_path)
+    # the engine-coupled twins are held back, named -- not silently dropped
+    assert set(poured.tests_held) == {"console", "observability"}
+    assert len(poured.tests) >= 20 and "console" not in poured.tests
+    # test deps are auto-declared beyond the runtime deps
+    assert "pytest" in poured.test_dependencies
+    for name in poured.tests:
+        assert (tmp_path / "tests" / f"test_{name}.py").exists()
+
+
+def test_the_poured_tests_pass_with_no_engine(tmp_path: Path) -> None:
+    # the reusability gold standard: the poured library passes its OWN tests, engine absent
+    pour_shelf(tmp_path)
+    ok, detail = verify_pour_tests(tmp_path)
+    assert ok, detail
+    assert "no engine present" in detail
+
+
+def test_poolable_twins_splits_engine_free_from_coupled() -> None:
+    poolable, held = poolable_twins()
+    assert set(held) == {"console", "observability"}
+    assert all(p.name.startswith("test_") for p in poolable)
+
+
+def test_pyproject_declares_test_extras_and_markers(tmp_path: Path) -> None:
+    pour_shelf(tmp_path)
+    pyproject = (tmp_path / "pyproject.toml").read_text(encoding="utf-8")
+    assert "[project.optional-dependencies]" in pyproject and '"pytest"' in pyproject
+    assert "[tool.pytest.ini_options]" in pyproject  # the property mark is registered
+
+
+def test_verify_pour_tests_reports_a_failed_run(tmp_path: Path) -> None:
+    pour_shelf(tmp_path)
+
+    def failing(cmd: list[str], cwd: Path) -> tuple[int, str]:
+        return 1, "1 failed, 3 passed"
+
+    ok, detail = verify_pour_tests(tmp_path, runner=failing)
+    assert not ok and "failed" in detail
+
+
+def test_verify_pour_tests_on_a_pour_without_tests_is_honest(tmp_path: Path) -> None:
+    (tmp_path / PACKAGE).mkdir()  # a package dir but no tests/
+    ok, detail = verify_pour_tests(tmp_path)
+    assert not ok and "no poured tests" in detail
+
+
 def test_dep_detection_fails_loud_on_an_unparseable_core(tmp_path: Path) -> None:
     shelf = tmp_path / "shelf"
     shelf.mkdir()
@@ -92,8 +142,43 @@ def test_dep_detection_fails_loud_on_an_unparseable_core(tmp_path: Path) -> None
         shelf_third_party_deps(shelf)
 
 
-def test_main_pours_and_verifies(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+def _fake_repo(tmp_path: Path) -> tuple[Path, Path]:
+    """A synthetic root with parts/shelf/ + tests/, matching pour_shelf's default layout."""
+    shelf = tmp_path / "parts" / "shelf"
+    tests = tmp_path / "tests"
+    shelf.mkdir(parents=True)
+    tests.mkdir()
+    (shelf / "__init__.py").write_text("")
+    return shelf, tests
+
+
+def test_a_twin_that_cannot_be_parsed_fails_loud(tmp_path: Path) -> None:
+    shelf, tests = _fake_repo(tmp_path)
+    (shelf / "widget.py").write_text("x = 1\n")
+    (tests / "test_widget.py").write_text("def broken(:\n")  # unparseable twin
+    with pytest.raises(ShelfPourError, match="cannot parse"):
+        poolable_twins(shelf, tests)
+
+
+def test_a_core_without_a_twin_is_skipped(tmp_path: Path) -> None:
+    shelf, tests = _fake_repo(tmp_path)
+    (shelf / "orphan.py").write_text("x = 1\n")  # no test_orphan.py
+    poolable, held = poolable_twins(shelf, tests)
+    assert poolable == [] and held == []
+
+
+def test_pour_with_no_poolable_twins_writes_no_tests_dir(tmp_path: Path) -> None:
+    shelf, _tests = _fake_repo(tmp_path)
+    (shelf / "solo.py").write_text("x = 1\n")  # a core, but no twin anywhere
+    poured = pour_shelf(tmp_path / "out", shelf_dir=shelf)
+    assert poured.tests == () and not (tmp_path / "out" / "tests").exists()
+
+
+def test_main_pours_verifies_and_runs_tests(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
     rc = _main(["shelf_pour", str(tmp_path)])
     assert rc == 0
     out = capsys.readouterr().out
-    assert "poured" in out and "PASS" in out
+    assert "imports: PASS" in out and "tests:   PASS" in out
+    assert "held" in out  # the honest report of engine-coupled twins
