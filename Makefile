@@ -1,4 +1,4 @@
-.PHONY: hooks env fix lint typecheck test property fuzz coverage audit audit-runtime security sast secrets deps sbom bench trend ai-eval retention doctor patch daily check readiness arc-verdicts truth forge cast-plan cast cast-selective cast-install-check coupling shelf-pour shelf-build smoke repo-integrity ship run world store hardware clean serve backup db-up db-down db-migrate docs-serve docs-build demo-gif e2e evolution ritual-fast ritual ritual-down unskew loop
+.PHONY: hooks env fix lint typecheck test property fuzz coverage audit audit-runtime security sast secrets deps sbom bench trend ai-eval retention doctor patch daily check readiness arc-verdicts truth forge cast-plan cast cast-selective cast-install-check cast-diff cast-update plugins coupling shelf-pour shelf-build smoke repo-integrity ship run world store hardware clean serve backup db-up db-down db-migrate docs-serve docs-build demo-gif e2e evolution ritual-fast ritual ritual-down unskew loop
 
 # --- Environment: create/validate the .venv, fail loud on version mismatch.
 # Uses uv when present (a Rust resolver; measured ~20x faster than pip on this host:
@@ -126,6 +126,11 @@ cast-diff:
 # make cast-update DIR=../codeforge-forged-game SOURCE=. [FORCE=1] ---
 cast-update:
 	@python3 -m parts.cast update $(or $(DIR),../codeforge-forged-game) $(or $(SOURCE),.) $(if $(FORCE),--force)
+
+# --- Plugins: list the third-party command plugins loaded from plugins/ at boot, and any that were
+# rejected (loud, never silent). The plugin boundary (D3): SEED verbs only, no collision. ---
+plugins:
+	@python3 -c "import forge; from parts.plugins import render_plugins; print(render_plugins(forge.PLUGIN_LOAD))"
 
 # --- Coupling: read-only engine coupling report (detachment D1). Traces the runtime module
 # closure per surface and lists what a runtime cast could shed. Changes nothing. ---

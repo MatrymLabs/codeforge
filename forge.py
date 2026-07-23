@@ -32,6 +32,7 @@ from parts.learning_record import learnings
 from parts.logbook import journal
 from parts.maintenance import maintenance
 from parts.name_check import name_check
+from parts.plugins import PluginLoad, load_plugins
 from parts.registry import (
     registry_find,
     registry_list,
@@ -450,6 +451,11 @@ def _say_cmd(session: Session, message: str) -> str:
         exclude=session.player_id,
     )
     return f'You say, "{message}"'
+
+
+# The result of the plugin discovery pass at spine-build time (None until _build_commands runs).
+# A `plugins` diagnostic reads it so a rejected plugin is visible, never silently dropped.
+PLUGIN_LOAD: PluginLoad | None = None
 
 
 def _build_commands() -> CommandSet:
@@ -1406,6 +1412,11 @@ def _build_commands() -> CommandSet:
             namespace=CORE,
         )
     )
+    # Third-party command plugins register LAST (so collision checks see every built-in verb). The
+    # plugins/ dir is absent by default, so this is a no-op until an operator adds one. The
+    # kept for a diagnostic; a rejected plugin is recorded, never silently dropped.
+    global PLUGIN_LOAD
+    PLUGIN_LOAD = load_plugins(cs)
     return cs
 
 
