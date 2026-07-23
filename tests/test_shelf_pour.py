@@ -145,6 +145,23 @@ def test_pour_writes_release_metadata_and_license(tmp_path: Path) -> None:
     assert "License :: OSI Approved" not in pyproject
 
 
+def test_pour_ships_a_py_typed_marker(tmp_path: Path) -> None:
+    # the classifier claims Typing :: Typed -- back it with the PEP 561 marker + package-data
+    pour_shelf(tmp_path)
+    assert (tmp_path / PACKAGE / "py.typed").exists()
+    pyproject = (tmp_path / "pyproject.toml").read_text(encoding="utf-8")
+    assert "[tool.setuptools.package-data]" in pyproject and '"py.typed"' in pyproject
+
+
+def test_pour_writes_a_rich_readme_and_changelog(tmp_path: Path) -> None:
+    pour_shelf(tmp_path)
+    readme = (tmp_path / "README.md").read_text(encoding="utf-8")
+    assert "badge.svg" in readme  # CI/PyPI/license badges
+    assert "pip install codeforge-shelf" in readme and "## Usage" in readme
+    assert "## Provenance" in readme
+    assert (tmp_path / "CHANGELOG.md").read_text(encoding="utf-8").startswith("# Changelog")
+
+
 def test_pour_writes_ci_and_release_workflows(tmp_path: Path) -> None:
     pour_shelf(tmp_path)
     test_wf = tmp_path / ".github" / "workflows" / "test.yml"
