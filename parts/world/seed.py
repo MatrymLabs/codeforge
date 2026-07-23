@@ -129,6 +129,10 @@ class Npc(TypedDict):
     xp: int  # XP awarded when defeated
     atk: int  # counter-attack damage; 0 (default) means passive, never strikes back
     aggressive: NotRequired[bool]  # True = strikes first on the world beat; default False
+    # A LETHAL foe (a boss) is NOT covered by the training-ground failsafe: fall to it and you are
+    # sent back to your start room at full health while it recovers, not revived in place. Default
+    # False, so every training-ground foe stays gentle. A lethal foe must be combatable (hp > 0).
+    lethal: NotRequired[bool]
     # Item prototype labels this NPC drops when defeated: a fresh instance of each is spawned into
     # the room (parts.world.items.clone). Optional; a bare NPC drops nothing. Loot is real object
     # instancing -- the drop is a new instance, so it never collides with the seed original.
@@ -434,6 +438,7 @@ def load_npcs(path: Path) -> dict[str, Npc]:
             "xp": 0,
             "atk": 0,
             "aggressive": False,
+            "lethal": False,
             "drops": [],
             "loot": {},
             **file_template,
@@ -453,8 +458,16 @@ def load_npcs(path: Path) -> dict[str, Npc]:
                 ("xp", int),
                 ("atk", int),
                 ("aggressive", bool),
+                ("lethal", bool),
             ),
         )
+        # A lethal foe must be combatable: an hp-0 poser can never fell anyone, so 'lethal' on it
+        # is a contradiction -- refuse loud rather than ship a boss that can't be a boss.
+        if merged["lethal"] and merged["hp"] <= 0:
+            raise SeedError(
+                f"NPC '{label}' is lethal but has hp {merged['hp']}; a lethal foe must be "
+                "combatable (hp > 0)."
+            )
         if merged["atk"] < 0:
             raise SeedError(
                 f"NPC '{label}' has a negative atk ({merged['atk']}); "
@@ -506,6 +519,8 @@ def load_npcs(path: Path) -> dict[str, Npc]:
             atk=merged["atk"],
             aggressive=merged["aggressive"],
         )
+        if merged["lethal"]:
+            npc["lethal"] = True
         if drops:
             npc["drops"] = list(drops)
         if loot:

@@ -1,13 +1,14 @@
 """Test twin for parts/world/combat.py -- deterministic training-loop math."""
 
 import copy
+from pathlib import Path
 
 import pytest
 
 from parts.world import npcs
 from parts.world.combat import attack, strike_power
 from parts.world.jobs import bind_calling
-from parts.world.seed import Npc
+from parts.world.seed import Npc, SeedError, load_npcs
 from parts.world.session import SESSIONS, Session
 
 
@@ -109,7 +110,13 @@ def test_kill_is_an_alias_for_attack_through_the_tick():
     assert "You strike the training dummy" in out
 
 
-def _spawn_hostile(label: str = "brawler", location: str = "courtyard", atk: int = 5, hp: int = 50):
+def _spawn_hostile(
+    label: str = "brawler",
+    location: str = "courtyard",
+    atk: int = 5,
+    hp: int = 50,
+    lethal: bool = False,
+):
     """Place a fighting NPC in a room. Written to both aliased registries; the fixture cleans up."""
     hostile: Npc = {
         "name": f"the {label}",
@@ -122,6 +129,8 @@ def _spawn_hostile(label: str = "brawler", location: str = "courtyard", atk: int
         "xp": 10,
         "atk": atk,
     }
+    if lethal:
+        hostile["lethal"] = True
     npcs.NPCS[label] = hostile  # combat.py's NPCS alias sees this (same object, no rebinds)
     return label
 
@@ -168,6 +177,18 @@ def test_a_fallen_player_is_restored_safely():
     assert "wake restored at full health" in out
     assert s.resources["hp"].is_full  # never a broken state
     assert s.location == "courtyard"  # restored in place
+
+
+def test_a_lethal_foe_kills_and_sends_the_player_home():
+    from parts.world.world import START_ROOM
+
+    s = _fighter()  # courtyard, a vanguard
+    _spawn_hostile(atk=9999, hp=50, lethal=True)  # a real boss: no training-ground failsafe
+    out = attack(s, "brawler")
+    assert "wake where your road began" in out and "wake restored" not in out
+    assert s.location == START_ROOM and s.location != "courtyard"  # sent home, not revived in place
+    assert s.resources["hp"].is_full  # full health at the start room
+    assert npcs.NPCS["brawler"]["hp_now"] == npcs.NPCS["brawler"]["hp"]  # the boss recovered
 
 
 def test_an_engineer_emergency_repairs_out_of_a_killing_blow():
@@ -379,3 +400,18 @@ def test_guaranteed_drops_and_a_weighted_roll_both_fire(monkeypatch):
     finally:
         items.ITEMS.clear()
         items.ITEMS.update(snap)
+
+
+def test_load_npcs_refuses_a_lethal_peaceful_foe(tmp_path):
+    # a lethal foe must be combatable: hp 0 + lethal is a contradiction, refused at load
+    p = tmp_path / "npcs.yaml"
+    p.write_text("ghost:\n  location: courtyard\n  hp: 0\n  lethal: true\n")
+    with pytest.raises(SeedError, match="lethal but has hp 0"):
+        load_npcs(p)
+
+
+def test_the_aethryn_boss_is_lethal():
+    seeds = Path(__file__).resolve().parent.parent / "seeds"
+    aethryn_npcs = load_npcs(seeds / "aethryn" / "npcs.yaml")
+    assert aethryn_npcs["cinder_wight"].get("lethal") is True  # a real boss
+    assert aethryn_npcs["reach_wolf"].get("lethal") is not True  # the road foe stays forgiving

@@ -56,5 +56,6 @@ cinder_wight:
   xp: 180
   atk: 7  # the tutorial dungeon boss; learn its pattern, or reforge it rather than break it
   aggressive: true  # it never finished dying: strikes on the world beat (leash releases if you stop)
+  lethal: true  # a real boss: fall to it and you wake in town while it recovers, no failsafe revive
   drops: [cinder_hammer]  # felled, the old smith yields its grey-cinder hammer (object instancing)
   loot: {ember_shard: 2, nothing: 3}  # and, by chance, a shard of the wild ember it hoarded
