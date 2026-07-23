@@ -259,7 +259,7 @@ def _readme(cores: list[str], deps: list[str], n_tests: int, held: list[str]) ->
         "## Install\n\n"
         "```sh\n"
         "pip install codeforge-shelf\n"
-        f"# or, unreleased: pip install git+{_HOMEPAGE}-shelf\n"
+        f"# or from source: pip install git+{_HOMEPAGE}-shelf\n"
         "```\n\n"
         f"Third-party dependencies: {dep_note}.\n\n"
         "## Usage\n\n"
