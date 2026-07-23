@@ -4171,6 +4171,34 @@
     "updated": "2026-07-23"
   },
   {
+    "designation": "MOD-10.042",
+    "name": "plugins",
+    "status": "active",
+    "function": "discover and register third-party command plugins from a plugins/ directory (D3 seam)",
+    "label": "plugins",
+    "file": "parts/plugins.py",
+    "type": "MOD",
+    "domain": "10",
+    "docs": "docs/vision_resync.md",
+    "tests": "tests/test_plugins.py",
+    "depends_on": [
+      "commands"
+    ],
+    "related": [
+      "commands",
+      "cast"
+    ],
+    "reuse": "the extend-through-a-declared-seam pattern: a plugin adds SEED commands via the existing command spine, validated (SEED-only, no collision) before it touches the engine, so third parties extend without forking",
+    "notes": "The plugin boundary (detachment D3). Scans a plugins/ dir, imports each module, calls its register() hook, and validates the contributed Commands (SEED namespace only, no verb collision, atomic) before adding them to the spine. A broken/rejected plugin is named in PluginLoad.errors and skipped, never silently loaded or crashing the engine. Wired into forge._build_commands (loads last, sees every built-in verb); dormant until a plugins/ dir exists.",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-23",
+    "updated": "2026-07-23"
+  },
+  {
     "designation": "MOD-04.053",
     "name": "world_manifest",
     "status": "active",
