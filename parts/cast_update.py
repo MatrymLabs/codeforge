@@ -26,11 +26,15 @@ the pinned commit present in the source repo; when it is not, the report says so
 from __future__ import annotations
 
 import hashlib
+import json
+import os
+import re
 import subprocess  # nosec B404 -- fixed argv, no shell; used only to read the source's git commit
+import tempfile
 from dataclasses import dataclass, field
 from pathlib import Path
 
-from parts.cast import CastError, read_manifest
+from parts.cast import CastError, _declared_deps, _engine_runtime_deps, read_manifest
 
 
 @dataclass(frozen=True)
@@ -55,6 +59,13 @@ class CastDrift:
     shed: list[str] = field(
         default_factory=list
     )  # upstream_only files PRESENT at the pin: deliberately not carried (a selective cast's cut)
+    deps_added: list[str] = field(
+        default_factory=list
+    )  # runtime deps the source has, the cast lacks
+    deps_removed: list[str] = field(
+        default_factory=list
+    )  # deps the cast declares, the source dropped
+    deps_changed: list[str] = field(default_factory=list)  # "name: <cast spec> -> <source spec>"
     pin_verifiable: bool = True  # could the pinned commit's tree be read to check for local edits?
 
     @property
@@ -63,9 +74,19 @@ class CastDrift:
         return bool(self.changed or self.upstream_only or self.cast_only)
 
     @property
+    def has_dep_drift(self) -> bool:
+        """True when the cast's declared runtime deps differ from the source's."""
+        return bool(self.deps_added or self.deps_removed or self.deps_changed)
+
+    @property
     def in_sync(self) -> bool:
-        """Fully in sync: no drift vs the target AND no unverified/local edits vs the pin."""
-        return not self.has_engine_drift and not self.locally_modified and self.pin_verifiable
+        """Fully in sync: no engine drift, no dep drift, no local edits, pin verifiable."""
+        return (
+            not self.has_engine_drift
+            and not self.has_dep_drift
+            and not self.locally_modified
+            and self.pin_verifiable
+        )
 
 
 def _sha(path: Path) -> str:
@@ -132,6 +153,32 @@ def _read_at_commit(source_root: Path, commit: str, relpath: str) -> bytes | Non
         return None
 
 
+_REQ_NAME = re.compile(r"^([A-Za-z0-9._-]+)")
+
+
+def _req_name(requirement: str) -> str:
+    """The PEP 503-normalized name of a requirement string ('PyYAML>=6' -> 'pyyaml')."""
+    match = _REQ_NAME.match(requirement.strip())
+    name = match.group(1) if match else requirement.strip()
+    return re.sub(r"[-_.]+", "-", name).lower()
+
+
+def _dep_delta(
+    cast_deps: list[str], source_deps: list[str]
+) -> tuple[list[str], list[str], list[str]]:
+    """Compare two requirement lists by name: (added, removed, changed). Offline, pure."""
+    cast_by = {_req_name(d): d for d in cast_deps}
+    src_by = {_req_name(d): d for d in source_deps}
+    added = sorted(src_by[n] for n in src_by.keys() - cast_by.keys())
+    removed = sorted(cast_by[n] for n in cast_by.keys() - src_by.keys())
+    changed = sorted(
+        f"{n}: {cast_by[n]} -> {src_by[n]}"
+        for n in cast_by.keys() & src_by.keys()
+        if cast_by[n] != src_by[n]
+    )
+    return added, removed, changed
+
+
 def diff_cast(
     cast_dir: Path | str,
     source_root: Path | str,
@@ -181,6 +228,16 @@ def diff_cast(
             else:
                 shed.append(rel)
 
+    # Dependency lens (offline): the cast's declared runtime deps vs the source's. Only meaningful
+    # when BOTH sides carry a pyproject; a bare fixture without one gets no phantom delta.
+    deps_added: list[str] = []
+    deps_removed: list[str] = []
+    deps_changed: list[str] = []
+    if (cast_dir / "pyproject.toml").is_file() and (source_root / "pyproject.toml").is_file():
+        deps_added, deps_removed, deps_changed = _dep_delta(
+            _declared_deps(cast_dir / "pyproject.toml"), _engine_runtime_deps(source_root)[0]
+        )
+
     return CastDrift(
         cast_dir=str(cast_dir),
         pinned_commit=pinned,
@@ -192,6 +249,9 @@ def diff_cast(
         locally_modified=locally_modified,
         newly_upstream=newly_upstream,
         shed=shed,
+        deps_added=deps_added,
+        deps_removed=deps_removed,
+        deps_changed=deps_changed,
         pin_verifiable=pin_verifiable,
     )
 
@@ -217,6 +277,11 @@ def render_drift(drift: CastDrift) -> str:
         )
     else:
         local_line = "  local edits:      none (vendored engine matches the pin)"
+    if drift.has_dep_drift:
+        n = len(drift.deps_added) + len(drift.deps_removed) + len(drift.deps_changed)
+        dep_line = f"  dependencies:     {n} change(s) vs the source (see below)"
+    else:
+        dep_line = "  dependencies:     match the source"
     lines = [
         f"Cast drift -- {drift.cast_dir}",
         "=" * 40,
@@ -225,10 +290,11 @@ def render_drift(drift: CastDrift) -> str:
         f"  pinned commit:    {drift.pinned_commit}",
         f"  target commit:    {drift.target_commit}",
         local_line,
+        dep_line,
         "",
     ]
     if drift.in_sync:
-        lines.append("  engine: IN SYNC with the target (no file drift, no local edits).")
+        lines.append("  engine: IN SYNC with the target (no file drift, no dep drift, no edits).")
         return "\n".join(lines)
     if drift.locally_modified:
         title = "locally modified since pour (an update would overwrite these)"
@@ -253,8 +319,61 @@ def render_drift(drift: CastDrift) -> str:
         "",
         *_section("cast-only (your local additions, or removed upstream)", drift.cast_only),
     ]
+    if drift.has_dep_drift:
+        lines += ["", *_section("dependencies added upstream", drift.deps_added)]
+        lines += ["", *_section("dependencies removed upstream", drift.deps_removed)]
+        lines += ["", *_section("dependency version specs changed", drift.deps_changed)]
     lines += [
         "",
         "  Read-only report. Applying an update (re-vendor + revalidate) is a separate step.",
     ]
     return "\n".join(lines)
+
+
+def _pip_audit_runner(requirements: list[str]) -> str:
+    """Run pip-audit against `requirements`, returning its JSON output. NEEDS NETWORK (the vuln DB).
+
+    The seam the CVE audit is mocked at: unit tests inject a fake so they never hit the network."""
+    with tempfile.NamedTemporaryFile("w", suffix=".txt", delete=False) as handle:
+        handle.write("\n".join(requirements) + "\n")
+        reqfile = handle.name
+    try:
+        done = subprocess.run(  # nosec B603 B607 -- fixed argv, no shell; read-only dependency audit
+            ["pip-audit", "-r", reqfile, "-f", "json"],
+            capture_output=True,
+            text=True,
+            timeout=120,
+            check=False,
+        )
+        return done.stdout
+    finally:
+        os.unlink(reqfile)
+
+
+def audit_requirements(requirements: list[str], *, runner=_pip_audit_runner) -> list[str]:
+    """The known-CVE lines for `requirements` via pip-audit (behind a runner seam). Empty == clean.
+
+    Each line is `<name> <version>: <vuln id> (fix: <versions>)`. `runner` returns pip-audit's JSON;
+    the default shells out (network), tests inject a fake. Malformed JSON yields no findings, not a
+    crash -- the audit is advisory, and a broken scan must not read as a clean bill of health here,
+    so the caller distinguishes 'ran clean' from 'did not run' by the runner it passes."""
+    if not requirements:
+        return []
+    try:
+        data = json.loads(runner(requirements))
+    except (json.JSONDecodeError, TypeError):
+        return []
+    findings: list[str] = []
+    for dep in data.get("dependencies", []):
+        name, version = dep.get("name", "?"), dep.get("version", "?")
+        for vuln in dep.get("vulns", []):
+            fix = ", ".join(vuln.get("fix_versions", [])) or "no fix listed"
+            findings.append(f"{name} {version}: {vuln.get('id', '?')} (fix: {fix})")
+    return sorted(findings)
+
+
+def render_audit(findings: list[str]) -> str:
+    """The dependency-audit section: the CVE findings, or an all-clear line."""
+    if not findings:
+        return "\n  dependency audit: no known vulnerabilities in the cast's declared deps."
+    return "\n".join(["", *_section("dependency vulnerabilities (pip-audit)", findings)])

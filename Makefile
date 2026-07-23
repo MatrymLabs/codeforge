@@ -113,11 +113,12 @@ cast-selective:
 	@python3 -m parts.cast generate-selective $(or $(TEMPLATE),blank_mud) $(or $(NAME),Demo) $(or $(DEST),../codeforge-cast-selective) $(or $(SURFACES),solo,save) $$(git rev-parse --short HEAD 2>/dev/null || echo unknown)
 
 # --- Cast diff (package-update U1): read-only drift report between a poured cast's vendored engine
-# and this checkout (the target source). Names changed / upstream-only / cast-only engine files +
-# the commit delta. Changes nothing; applying an update is a separate step. Usage:
-# make cast-diff DIR=../codeforge-forged-game SOURCE=. ---
+# and this checkout (the target source). Names changed / upstream-only / cast-only engine files, the
+# commit delta, local edits vs the pin, and the dependency delta. Changes nothing; applying an update
+# is a separate step. AUDIT=1 adds a pip-audit CVE scan (needs network). Usage:
+# make cast-diff DIR=../codeforge-forged-game SOURCE=. [AUDIT=1] ---
 cast-diff:
-	@python3 -m parts.cast diff $(or $(DIR),../codeforge-forged-game) $(or $(SOURCE),.)
+	@python3 -m parts.cast diff $(or $(DIR),../codeforge-forged-game) $(or $(SOURCE),.) $(if $(AUDIT),--audit)
 
 # --- Coupling: read-only engine coupling report (detachment D1). Traces the runtime module
 # closure per surface and lists what a runtime cast could shed. Changes nothing. ---
