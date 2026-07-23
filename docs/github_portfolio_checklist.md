@@ -43,7 +43,7 @@ is checked unless the artifact exists. Last audited: 2026-07-10.*
   package + root `forge.py` (the tick). Persisted identifiers (labels, CLI verbs, CARD names)
   are frozen; a rename would break save files/seeds for cosmetic conformance. Documented in
   `CLAUDE.md` (Governing boundaries).
-- **SQLite not PostgreSQL.** Deliberate embedded choice behind `parts/db.py`; the DB seam is
+- **SQLite not PostgreSQL.** Deliberate embedded choice behind `parts/world/db.py`; the DB seam is
   the only caller, so a Postgres backend is swappable. See the full-stack readiness checklist.
 - **Profile README + pinning** are manual GitHub-UI actions (not repo files); tracked in the
   hirability backlog, not claimable here.

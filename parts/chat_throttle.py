@@ -8,9 +8,9 @@ throttles login attempts in a practical app (parts/login_guard); only the adapte
 
 from __future__ import annotations
 
-from parts.events import announce
-from parts.session import Session, display_name
 from parts.shelf.token_bucket import Clock, TokenBucket
+from parts.world.events import announce
+from parts.world.session import Session, display_name
 
 _RATE = 1 / 20  # one shout refills every 20 seconds
 _CAPACITY = 3.0  # a burst of three

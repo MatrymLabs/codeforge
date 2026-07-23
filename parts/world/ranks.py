@@ -6,16 +6,16 @@ Capability without authorization is a bug. Ranks order power
 record, so authority survives restarts.
 
 Bootstrap rule: the first crown is granted from the host shell
-(python3 -m parts.characters grant <name> owner). Physical access
+(python3 -m parts.world.characters grant <name> owner). Physical access
 to the machine is the one authority the engine cannot outrank.
 """
 
 from collections.abc import Sequence
 
-from parts.characters import save_character
-from parts.events import SHUTDOWN, announce, broadcast
-from parts.session import SESSIONS, Session, display_name
-from parts.world import WORLD
+from parts.world.characters import save_character
+from parts.world.events import SHUTDOWN, announce, broadcast
+from parts.world.session import SESSIONS, Session, display_name
+from parts.world.world import WORLD
 
 # The '@'-verbs this router handles directly. The rest of the admin verbs live on the command
 # spine (@sg, @forge, @arch, ...); wizard_command receives them so its "known verbs" listing is

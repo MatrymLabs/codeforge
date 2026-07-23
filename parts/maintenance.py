@@ -9,7 +9,7 @@ practical app (parts/patch_tracker); only the adapter differs.
 from __future__ import annotations
 
 from parts.change_ledger import ChangeLedger
-from parts.session import Session
+from parts.world.session import Session
 
 
 def _build_log() -> ChangeLedger:

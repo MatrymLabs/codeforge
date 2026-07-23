@@ -1,4 +1,4 @@
-"""Test twin for parts/world_manifest.py -- the typed World Package identity.
+"""Test twin for parts/world/world_manifest.py -- the typed World Package identity.
 
 Acceptance (a valid mapping builds a manifest; a real seed's world.yaml loads; a manifest-less
 seed is derived, not missing) AND refusal (a bad id / missing title / missing start_room / a
@@ -10,9 +10,9 @@ from __future__ import annotations
 
 import pytest
 
-from parts import world_manifest as wm
-from parts.stat_rules import DEFAULT_RULESET, RulesetError, apply_ruleset
-from parts.world_manifest import (
+from parts.world import world_manifest as wm
+from parts.world.stat_rules import DEFAULT_RULESET, RulesetError, apply_ruleset
+from parts.world.world_manifest import (
     WorldManifestError,
     check_world,
     describe_world,

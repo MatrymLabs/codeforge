@@ -1,6 +1,6 @@
 # Persistence: SQLite by default, PostgreSQL for production
 
-CodeForge persists through the SQLAlchemy 2.0 ORM behind one seam (`parts/db.py`). The rest
+CodeForge persists through the SQLAlchemy 2.0 ORM behind one seam (`parts/world/db.py`). The rest
 of the engine never sees SQL. Two backends live behind that seam:
 
 | Backend | When | Config | Schema |
@@ -61,7 +61,7 @@ The live demo persists to a SQLite file (`codeforge.db`) and, before this, had n
 make backup          # -> backups/codeforge-<UTC-timestamp>.db (git-ignored, reproducible)
 ```
 
-`parts.db.backup_db()` files a consistent snapshot even under concurrent writes. On a PostgreSQL
+`parts.world.db.backup_db()` files a consistent snapshot even under concurrent writes. On a PostgreSQL
 backend (`DATABASE_URL` set) it refuses loud and points you to `pg_dump`.
 
 **Restore** (SQLite):

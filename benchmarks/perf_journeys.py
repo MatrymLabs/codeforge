@@ -68,12 +68,12 @@ def measure_startup(reps: int = 15) -> dict:
 def run() -> dict[str, dict]:
     """Measure all five journeys and return {journey: stats}. Imports the real handlers."""
     from forge import handle_command
-    from parts import npcs
     from parts.bench import benchmark as command_bench
-    from parts.jobs import bind_calling
     from parts.qualitygate import render_gate_all
-    from parts.session import Session
     from parts.workshop import reuse_search
+    from parts.world import npcs
+    from parts.world.jobs import bind_calling
+    from parts.world.session import Session
 
     results: dict[str, dict] = {}
 
@@ -95,7 +95,7 @@ def run() -> dict[str, dict]:
     # 3. one combat sequence (single strike; reset dummy HP per rep so it is comparable) ---
     fighter = Session(player_id="_bench", location="courtyard")
     bind_calling(fighter, "vanguard")
-    from parts.npcs import trace_npc
+    from parts.world.npcs import trace_npc
 
     dummy_id = trace_npc("dummy", "courtyard")
     assert dummy_id is not None, "expected a training dummy in courtyard"

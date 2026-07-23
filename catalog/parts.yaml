@@ -12,7 +12,7 @@
 
 - id: rank-gate
   name: Rank Gate
-  source: parts/ranks.py
+  source: parts/world/ranks.py
   category: authorization
   tags: [rbac, permissions, security, governance]
   maturity: shipped
@@ -36,7 +36,7 @@
 
 - id: event-ledger
   name: Event Ledger
-  source: parts/events.py
+  source: parts/world/events.py
   category: messaging
   tags: [events, audit, fan-out, resilience]
   maturity: shipped
@@ -60,7 +60,7 @@
 
 - id: validated-loader
   name: Validated Loader
-  source: parts/seed.py
+  source: parts/world/seed.py
   category: data-integrity
   tags: [validation, schema, config, fail-loud]
   maturity: shipped
@@ -259,7 +259,7 @@
 
 - id: backend-seam
   name: Dual Backend Seam
-  source: parts/db.py
+  source: parts/world/db.py
   category: persistence
   tags: [database, sqlalchemy, postgresql, sqlite, alembic, migrations]
   maturity: shipped
@@ -358,7 +358,7 @@
 
 - id: score-sheet-renderer
   name: Character Score Sheet Renderer
-  source: parts/score_sheet.py
+  source: parts/world/score_sheet.py
   category: presentation
   tags: [view-model, fixed-width, renderer, dashboard, report]
   maturity: beta
@@ -383,7 +383,7 @@
 
 - id: derived-stat-calculator
   name: Derived Stat Calculator
-  source: parts/derived.py
+  source: parts/world/derived.py
   category: rules-engine
   tags: [formula, derived-values, deterministic, prototype-balance]
   maturity: prototype
@@ -407,7 +407,7 @@
 
 - id: job-loadout-schema
   name: Data-Driven Job Loadout
-  source: parts/seed.py
+  source: parts/world/seed.py
   category: content-schema
   tags: [data-driven, class-system, roles, validation, loadout]
   maturity: beta
@@ -431,7 +431,7 @@
 
 - id: cooldown-status-clock
   name: Cooldown and Status Clock
-  source: parts/engineer.py
+  source: parts/world/engineer.py
   category: mechanics
   tags: [cooldown, status-effect, ttl, rate-limit, timer]
   maturity: beta
@@ -478,7 +478,7 @@
 
 - id: equipment-slots
   name: Equipment Slot System
-  source: parts/equipment.py
+  source: parts/world/equipment.py
   category: mechanics
   tags: [equipment, slots, modifiers, loadout, gear]
   maturity: beta
@@ -1157,7 +1157,7 @@
 
 - id: zone-scheduler
   name: Zone Scheduler
-  source: parts/zones.py
+  source: parts/world/zones.py
   category: scheduling
   tags: [areas, regions, tick, cadence, scheduler, legacy-mud]
   maturity: prototype
@@ -1167,7 +1167,7 @@
     documented in the Diku/Circle/tbaMUD family (license class B, LGPL). Studied clean-room from
     public behavior (research/legacy_muds/behavior_specs/zone_reset.md); no historical code,
     comments, names, or structure copied. Original beat-driven Python, made to honor CodeForge's
-    "the tick is the only clock" law. The repop action is deferred by design (see parts/zones.py).
+    "the tick is the only clock" law. The repop action is deferred by design (see parts/world/zones.py).
   license: MIT
   influence: "MUD zone/area reset (Diku family) - grouping + cadence on a logical tick (clean-room reimplementation)"
   experimental: >-

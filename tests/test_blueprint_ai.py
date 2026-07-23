@@ -17,7 +17,7 @@ from parts.blueprint_ai import (
     ClaudeBlueprintDrafter,
     build_claude_drafter,
 )
-from parts.session import Session
+from parts.world.session import Session
 
 _GOOD_DRAFT = BlueprintDraft(
     blueprint_id="ai_idea",

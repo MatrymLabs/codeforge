@@ -22,8 +22,8 @@ import sys
 os.environ.setdefault("FORGE_SEED", "aethryn")
 
 import forge  # noqa: E402  (import after FORGE_SEED so the world loads the flagship)
-from parts.session import Session  # noqa: E402
-from parts.world import START_ROOM  # noqa: E402
+from parts.world.session import Session  # noqa: E402
+from parts.world.world import START_ROOM  # noqa: E402
 
 WIDTH, HEIGHT = 94, 32
 AMBER_PROMPT = "\x1b[1;38;5;214m> \x1b[0m"

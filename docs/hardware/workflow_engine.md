@@ -21,7 +21,7 @@ one core part proven in the game and reused in a practical application. Part Man
 | **security** | never mutates world state; effects are names the caller applies; role gating refuses before firing |
 | **tests** | `tests/test_workflow.py` (core), `tests/test_quest.py` (game), `tests/test_onboarding.py` (practical + one-core proof) |
 | **license** | MIT · **source_status** original · **owner** MatrymLabs |
-| **adapters** | MUD command adapter (`parts/quest.py`), plain-function adapter (`parts/onboarding.py`); a web/API adapter is a later slice |
+| **adapters** | MUD command adapter (`parts/world/quest.py`), plain-function adapter (`parts/onboarding.py`); a web/API adapter is a later slice |
 
 ## Core behavior (domain logic, game-free)
 
@@ -31,7 +31,7 @@ It renders nothing and mutates no world state, honoring the architecture laws.
 
 ## Game demonstration
 
-`parts/quest.py` -- the **Coilward Contract**: a player walks `offered -> accepted -> underway ->
+`parts/world/quest.py` -- the **Coilward Contract**: a player walks `offered -> accepted -> underway ->
 done` with the `quest` MUD verb; finishing fires the `award_xp` effect. Reachable through the
 engine tick (`handle_command(session, "quest ...")`).
 

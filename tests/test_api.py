@@ -3,11 +3,11 @@
 import pytest
 from fastapi.testclient import TestClient
 
-from parts.accounts import adopt, register
 from parts.api import app, get_login_guard
-from parts.characters import save_character, set_rank
 from parts.login_guard import LoginGuard
-from parts.session import SESSIONS, Session
+from parts.world.accounts import adopt, register
+from parts.world.characters import save_character, set_rank
+from parts.world.session import SESSIONS, Session
 
 
 @pytest.fixture(autouse=True)
@@ -73,7 +73,7 @@ def test_blueprints_endpoint_summarizes_filed_plans(client):
     plans = resp.json()
     npc = next(b for b in plans if b["blueprint_id"] == "npc_combat")
     assert npc["title"] == "NPCs that fight back"
-    assert npc["status"] == "validated"  # the feature is fully built in parts/combat.py
+    assert npc["status"] == "validated"  # the feature is fully built in parts/world/combat.py
     assert npc["requirement_count"] >= 1
 
 

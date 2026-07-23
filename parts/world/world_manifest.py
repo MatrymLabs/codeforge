@@ -21,10 +21,10 @@ from typing import Any
 
 import yaml
 
-from parts.stat_rules import DEFAULT_RULESET, Ruleset
-from parts.stat_rules import from_dict as ruleset_from_dict
+from parts.world.stat_rules import DEFAULT_RULESET, Ruleset
+from parts.world.stat_rules import from_dict as ruleset_from_dict
 
-_ROOT = Path(__file__).resolve().parent.parent
+_ROOT = Path(__file__).resolve().parent.parent.parent  # parts/world/ -> repo root
 _ID_RE = re.compile(r"^[a-z][a-z0-9-]*$")  # seed ids are lowercase, hyphenated (first-forge)
 
 
@@ -122,7 +122,9 @@ def _first_room(seed_dir: Path) -> str:
     rooms = seed_dir / "rooms.yaml"
     if not rooms.exists():
         return ""
-    from parts.seed import load_rooms  # lazy: seed.py binds env at import, keep this module light
+    from parts.world.seed import (
+        load_rooms,
+    )  # lazy: seed.py binds env at import, keep this module light
 
     return next(iter(load_rooms(rooms)), "")
 

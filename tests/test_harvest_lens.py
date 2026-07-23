@@ -11,7 +11,7 @@ from parts.harvest_lens import (
     scan_source,
     stocked_signals,
 )
-from parts.session import Session
+from parts.world.session import Session
 
 _SRC = '''
 class RetryPolicy:

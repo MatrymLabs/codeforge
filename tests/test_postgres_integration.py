@@ -12,7 +12,7 @@ import pytest
 from sqlalchemy import create_engine, select
 from sqlalchemy.orm import Session as SqlSession
 
-from parts.db import ArchiveBase, CharacterRow
+from parts.world.db import ArchiveBase, CharacterRow
 
 _URL = os.environ.get("POSTGRES_TEST_URL", "").strip()
 

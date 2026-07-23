@@ -1,4 +1,4 @@
-"""Test twin for parts/zones.py + seed.load_zones -- areas and the beat-driven reset scheduler.
+"""Test twin for parts/world/zones.py + seed.load_zones -- areas and the beat-driven reset loop.
 
 Acceptance: a valid zones pack groups rooms; the scheduler advances on the world beat and comes
 due per its mode. Refusal: a malformed zone fails loud rather than booting a broken area.
@@ -6,14 +6,14 @@ due per its mode. Refusal: a malformed zone fails loud rather than booting a bro
 
 import pytest
 
-import parts.seed as seed  # reference SeedError via the module: other suites importlib.reload
-import parts.zones as zones  # parts.seed, so a class imported at collection would not match
+import parts.world.seed as seed  # reference SeedError via the module: other suites importlib.reload
+import parts.world.zones as zones  # parts.world.seed, so a class imported at collection won't match
 from forge import handle_command
-from parts import items
-from parts.seed import SEEDS_ROOT, Item, Zone, load_rooms, load_zones
-from parts.session import Session
-from parts.world import START_ROOM
-from parts.zones import area_line, tick_zones, zone_of, zones_due
+from parts.world import items
+from parts.world.seed import SEEDS_ROOT, Item, Zone, load_rooms, load_zones
+from parts.world.session import Session
+from parts.world.world import START_ROOM
+from parts.world.zones import area_line, tick_zones, zone_of, zones_due
 
 KNOWN = {"a", "b", "c"}
 

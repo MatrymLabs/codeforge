@@ -1,6 +1,6 @@
 """CARD: aggression -- proactive NPCs that strike on the world's beat.
 
-Reactive combat (parts.combat) answers a player's blow. Aggression is its other
+Reactive combat (parts.world.combat) answers a player's blow. Aggression is its other
 half: an NPC flagged `aggressive` in the seed does not wait to be hit. On each
 world beat -- every engine tick, the only clock the world has -- an aggressive NPC
 that shares a room with the acting player opens with a strike of its own.
@@ -11,15 +11,15 @@ combat to resolve an unprovoked blow and returns the line for the tick to append
 state stays canonical, mutated solely by validated combat logic.
 """
 
-from parts.combat import open_strike
-from parts.encounter_log import witness
-from parts.npcs import NPCS, npcs_in
-from parts.session import Session, sentence_case
+from parts.world.combat import open_strike
+from parts.world.encounter_log import witness
+from parts.world.npcs import NPCS, npcs_in
+from parts.world.session import Session, sentence_case
 
 # Unanswered world-beats an aggressive foe presses before it breaks off. The leash is the
 # engineered exit the failsafe alone does not give: a player who cannot out-damage a foe and
 # stops fighting is released instead of looped forever (hit -> restore -> hit). A player strike
-# resets the count (parts.combat.attack), so a real fight keeps the foe engaged.
+# resets the count (parts.world.combat.attack), so a real fight keeps the foe engaged.
 LEASH = 5
 
 

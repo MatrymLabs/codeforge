@@ -12,16 +12,16 @@ progression/jobs/resources/session -- no combat internals -- so it composes clea
 
 from dataclasses import replace
 
-from parts.events import announce
-from parts.jobs import JOBS
-from parts.progression import (
+from parts.world.events import announce
+from parts.world.jobs import JOBS
+from parts.world.progression import (
     get_next_job_level_threshold,
     get_next_level_threshold,
     hp_gain_per_level,
     mp_gain_per_level,
 )
-from parts.resources import Resource
-from parts.session import Session, display_name
+from parts.world.resources import Resource
+from parts.world.session import Session, display_name
 
 
 def _ascend_resources(session: Session) -> None:
@@ -47,7 +47,7 @@ def award_xp(session: Session, amount: int) -> str:
         session.level += 1
         _ascend_resources(session)
         lines.append(f"*** LEVEL UP! You are now level {session.level}. ***")
-        from parts.characters import save_character
+        from parts.world.characters import save_character
 
         save_character(session)
         announce(
@@ -80,7 +80,7 @@ def award_jp(session: Session, amount: int) -> str:
         lines.append(f"*** {JOBS[job]['name']} advances to job level {new_level}! ***")
     session.job_progress[job] = replace(prog, jp=new_jp, job_level=new_level)
     if session.named:
-        from parts.characters import save_character
+        from parts.world.characters import save_character
 
         save_character(session)
     return "\n".join(lines)
@@ -95,7 +95,7 @@ def award_tp(session: Session, amount: int) -> str:
     prog = session.job_progress[job]
     session.job_progress[job] = replace(prog, tp=prog.tp + amount)
     if session.named:
-        from parts.characters import save_character
+        from parts.world.characters import save_character
 
         save_character(session)
     return f"You gain {amount} TP ({JOBS[job]['name']})."

@@ -7,8 +7,8 @@ lines. The SAME framer core reads a byte-stream of records in a practical app (p
 
 from __future__ import annotations
 
-from parts.session import Session
 from parts.shelf.stream_framer import StreamFramer
+from parts.world.session import Session
 
 # A dispatch delivered in awkward bursts: line breaks fall mid-burst, and the last line arrives
 # with no trailing newline, so the framer's partial tail must be flushed to read it.

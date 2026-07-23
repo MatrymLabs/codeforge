@@ -3,7 +3,7 @@
 import pytest
 
 from parts.calibrate import calibrate, set_calibration_rng
-from parts.session import SESSIONS, Session
+from parts.world.session import SESSIONS, Session
 
 
 @pytest.fixture(autouse=True)

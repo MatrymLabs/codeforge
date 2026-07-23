@@ -1,6 +1,6 @@
 Alembic migrations for CodeForge's SQLAlchemy schema.
 
-The environment (env.py) reads the live URL from parts.db.engine_url() (DATABASE_URL for
+The environment (env.py) reads the live URL from parts.world.db.engine_url() (DATABASE_URL for
 PostgreSQL, else the SQLite file) and the target metadata from ArchiveBase.metadata.
 
   make db-migrate                                    # alembic upgrade head

@@ -22,7 +22,7 @@ from parts.blueprint import (
     to_markdown,
     write_blueprint,
 )
-from parts.session import Session
+from parts.world.session import Session
 
 _GOOD = {
     "blueprint_id": "sample_plan",

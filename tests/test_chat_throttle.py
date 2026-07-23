@@ -3,7 +3,7 @@
 import pytest
 
 from parts.chat_throttle import reset_throttles, shout
-from parts.session import SESSIONS, Session
+from parts.world.session import SESSIONS, Session
 
 
 class FakeClock:

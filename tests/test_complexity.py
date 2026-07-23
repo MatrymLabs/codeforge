@@ -12,7 +12,7 @@ from parts.complexity import (
     render,
     scan_source,
 )
-from parts.session import Session
+from parts.world.session import Session
 
 _SRC = """
 def branchy(x):

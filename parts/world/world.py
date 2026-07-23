@@ -4,10 +4,10 @@ The world is data -- and now it lives in a seed file, not in Python.
 resolve_move is the only function that changes a player's location.
 """
 
-from parts.doors import DOORS, barred_door_for
-from parts.items import ITEMS
-from parts.npcs import NPCS
-from parts.seed import SEED_DIR, Room, inspect_world_links, load_rooms
+from parts.world.doors import DOORS, barred_door_for
+from parts.world.items import ITEMS
+from parts.world.npcs import NPCS
+from parts.world.seed import SEED_DIR, Room, inspect_world_links, load_rooms
 
 SEED_PATH = SEED_DIR / "rooms.yaml"
 

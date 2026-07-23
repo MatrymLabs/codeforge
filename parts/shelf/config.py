@@ -39,7 +39,7 @@ class Settings(BaseModel):
 
     port: int = Field(default=8000, ge=1, le=65535)
     architect_brain: Literal["local", "claude"] = "local"
-    database_url: str = ""  # empty -> the SQLite default (see parts/db.py)
+    database_url: str = ""  # empty -> the SQLite default (see parts/world/db.py)
     codeforge_db: str = ""  # empty -> repo-root default path
     seed: str = ""  # empty -> the default seed
     anthropic_key_present: bool = False

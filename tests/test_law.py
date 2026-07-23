@@ -13,7 +13,7 @@ import pytest
 
 from forge import handle_command
 from parts.law import law, law_detail, law_index
-from parts.session import SESSIONS, Session
+from parts.world.session import SESSIONS, Session
 
 # ruff: noqa: E501  (the CSV fixture below has inherently long data lines)
 _CSV = """source_id,domain,authority_tier,source_name,official_url,api_url,citation_format,document_owner,internal_owner,refresh_frequency,last_checked,last_changed,current_version_or_date,status,legal_reliance_note,related_internal_controls,review_required

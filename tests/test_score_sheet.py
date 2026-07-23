@@ -1,4 +1,4 @@
-"""Test twin for parts/score_sheet.py -- the character score sheet.
+"""Test twin for parts/world/score_sheet.py -- the character score sheet.
 
 Per the spec's testing guidance: ONE golden snapshot pins the format (regression detection),
 focused field tests pin the content, alignment tests pin the frame, and a battery of edge
@@ -15,8 +15,8 @@ from pathlib import Path
 
 import pytest
 
-from parts.score_sheet import render_score_sheet
-from parts.score_sheet_model import (
+from parts.world.score_sheet import render_score_sheet
+from parts.world.score_sheet_model import (
     CharacterSheet,
     EquipmentLoadout,
     JobTP,
@@ -172,7 +172,7 @@ def test_developer_mode_marks_prototype_formulas() -> None:
 
 
 def test_jobs_mode_lists_unlocked_jobs() -> None:
-    from parts.score_sheet_model import JobLine
+    from parts.world.score_sheet_model import JobLine
 
     sheet = replace(_matrym(), jobs=(JobLine("Engineer", 9, 1150, 340),), primary_job="Engineer")
     out = render_score_sheet(sheet, display_mode="jobs")

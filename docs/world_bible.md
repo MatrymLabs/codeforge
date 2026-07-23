@@ -441,7 +441,7 @@ Quests are layered so there is always something at the player's scale:
   builder endgame), turning players into content-makers.
 
 *(Engine reading: a quest is a `parts/shelf/workflow.py` state machine, exactly the vertical slice already
-built (`parts/quest.py`). A dynamic quest is a workflow seeded with world state; player-authored
+built (`parts/world/quest.py`). A dynamic quest is a workflow seeded with world state; player-authored
 content is the builder tools writing Seed data.)*
 
 ---
@@ -686,6 +686,6 @@ Forgers who reshape the world, which is exactly what a CodeForge builder does to
 flagship world proves the flagship engine, because they were designed as the same idea, told twice.
 
 *This bible is design, not engine. It is realized as data in `seeds/*.yaml`; the engine that runs it
-stays genre-neutral and reusable. See `docs/vision_resync.md` (the platform), `parts/quest.py` and
+stays genre-neutral and reusable. See `docs/vision_resync.md` (the platform), `parts/world/quest.py` and
 `parts/shelf/workflow.py` (quests as the reference vertical slice), and `chronicle/README.md` (the world's
 memory made literal).*

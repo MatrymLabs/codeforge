@@ -17,7 +17,7 @@ from parts.arc import (
     filed_review,
 )
 from parts.arc_ledger import VerdictError, record_verdict
-from parts.session import Session
+from parts.world.session import Session
 
 
 def _file_evidence(root, status=READY, source="test_evidence: ok", commit="testcommit"):

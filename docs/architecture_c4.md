@@ -47,12 +47,12 @@ flowchart TB
     tick["The engine tick<br/>forge.py :: handle_command<br/><b>the only door that mutates state</b>"]
 
     subgraph subsystems["Subsystems (parts/*)"]
-        seedloader["Seed loader<br/>parts/seed.py"]
+        seedloader["Seed loader<br/>parts/world/seed.py"]
         registry["Classification registry<br/>parts/registry.py"]
-        ranks["Authorization / ranks<br/>parts/ranks.py"]
-        events["Event bus<br/>parts/events.py"]
+        ranks["Authorization / ranks<br/>parts/world/ranks.py"]
+        events["Event bus<br/>parts/world/events.py"]
         quality["Safety + QualityGate<br/>parts/qualitygate.py"]
-        persistence["Persistence<br/>parts/db.py + parts/save.py"]
+        persistence["Persistence<br/>parts/world/db.py + parts/save.py"]
     end
 
     seedsdata[("seeds/&lt;pack&gt;/*.yaml + splash.txt")]
@@ -79,12 +79,12 @@ flowchart TB
 | TCP gateway | telnet front desk: authenticate before the world | `parts/gateway.py` |
 | Terminal loop | solo local driver | `parts/terminal.py` |
 | Web admin | rank-gated FastAPI admin surface | `parts/api.py` |
-| Seed loader | validate and load the world from data, failing loud at the gate | `parts/seed.py` |
+| Seed loader | validate and load the world from data, failing loud at the gate | `parts/world/seed.py` |
 | Classification registry | file every object and module (the tech-order index) | `parts/registry.py` |
-| Authorization | rank checks before capability | `parts/ranks.py` |
-| Event bus | per-player echo sinks and room broadcasts | `parts/events.py` |
+| Authorization | rank checks before capability | `parts/world/ranks.py` |
+| Event bus | per-player echo sinks and room broadcasts | `parts/world/events.py` |
 | Safety + QualityGate | readiness gates before risky actions | `parts/qualitygate.py` |
-| Persistence | minimal canonical state; stats recompute on restore | `parts/db.py`, `parts/save.py` |
+| Persistence | minimal canonical state; stats recompute on restore | `parts/world/db.py`, `parts/save.py` |
 
 Every module path in this file is asserted to exist by the correspondence test, so a rename
 that forgets the map turns the suite red instead of leaving a lie on the page.

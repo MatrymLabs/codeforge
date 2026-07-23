@@ -15,11 +15,11 @@ from typing import Any
 
 import yaml
 
-from parts.events import announce
-from parts.items import ITEMS
 from parts.registry import load_collective
-from parts.seed import Item
-from parts.session import Session, display_name
+from parts.world.events import announce
+from parts.world.items import ITEMS
+from parts.world.seed import Item
+from parts.world.session import Session, display_name
 
 _ROOT = Path(__file__).resolve().parent.parent
 CATALOG_PATH = Path(os.environ.get("CODEFORGE_ITEM_CATALOG", str(_ROOT / "catalog" / "items.yaml")))

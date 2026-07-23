@@ -9,8 +9,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from parts.score_sheet import _MODES
-from parts.seed import Job
+from parts.world.score_sheet import _MODES
+from parts.world.seed import Job
 
 _DOC = (Path(__file__).resolve().parent.parent / "docs" / "character_system.md").read_text(
     encoding="utf-8"

@@ -1,7 +1,7 @@
 """Test twin for parts/vitals.py -- the game adapter: a world-vitals health panel."""
 
-from parts.session import SESSIONS, Session
 from parts.vitals import vitals
+from parts.world.session import SESSIONS, Session
 
 
 def _player() -> Session:

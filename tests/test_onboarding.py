@@ -30,7 +30,7 @@ def test_run_demo_is_a_full_non_game_transcript():
 
 def test_one_core_powers_both_the_game_quest_and_the_practical_workflow():
     # The whole point of the vertical slice: the SAME engine class drives both adapters.
-    from parts import quest
+    from parts.world import quest
 
     assert isinstance(quest._ENGINE, WorkflowEngine)  # the game quest
     game_engine = quest._ENGINE

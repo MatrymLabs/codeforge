@@ -22,6 +22,7 @@ from pathlib import Path
 
 PARTS_DIR = Path(__file__).resolve().parent
 SHELF_DIR = PARTS_DIR / "shelf"
+WORLD_DIR = PARTS_DIR / "world"  # the World Package (Layer 2) is its own subpackage now
 TESTS_DIR = PARTS_DIR.parent / "tests"
 
 _CARD_WIDTH = 17
@@ -81,7 +82,8 @@ def _render(
 def hardware_store_catalog() -> str:
     """Return the two-shelf parts inventory as display text: reusable cores, then engine parts."""
     shelf = _stock(SHELF_DIR)
-    engine = _stock(PARTS_DIR)
+    # Engine parts = the platform (parts/) + the World Package (parts/world/), sorted by card.
+    engine = sorted(_stock(PARTS_DIR) + _stock(WORLD_DIR))
     lines = ["CODEFORGE HARDWARE STORE", "=" * 24, ""]
     lines += _render(
         "Reusable cores (parts/shelf/ -- engine-agnostic; poured via `make shelf-pour`):",

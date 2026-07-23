@@ -5,8 +5,8 @@ NPCs are born from the seed (seeds/first-forge/npcs.yaml).
 MUD-IL shape: verb=talk, direct_object=npc.
 """
 
-from parts.seed import SEED_DIR, Npc, load_npcs
-from parts.session import sentence_case
+from parts.world.seed import SEED_DIR, Npc, load_npcs
+from parts.world.session import sentence_case
 
 NPCS: dict[str, Npc] = load_npcs(SEED_DIR / "npcs.yaml")
 

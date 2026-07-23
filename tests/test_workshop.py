@@ -7,8 +7,8 @@ wired until the tick proves it)."""
 import pytest
 
 from forge import handle_command
-from parts.session import SESSIONS, Session
 from parts.workshop import catalog_view, reuse_search, workshop_menu
+from parts.world.session import SESSIONS, Session
 
 
 @pytest.fixture(autouse=True)

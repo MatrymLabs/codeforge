@@ -70,7 +70,7 @@ def test_coupling_verb_reachable_through_the_engine_tick(monkeypatch):
     monkeypatch.setattr(coupling_mod, "_all_modules", lambda: ["core", "dev"])
     monkeypatch.setattr(coupling_mod, "_real_tracer", lambda commands: {"core"})
     from forge import handle_command
-    from parts.session import Session
+    from parts.world.session import Session
 
     out = handle_command(Session(player_id="matrym", location="courtyard"), "coupling")
     assert "ENGINE COUPLING REPORT" in out

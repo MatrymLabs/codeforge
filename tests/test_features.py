@@ -3,7 +3,7 @@
 import pytest
 
 from parts.features import _REGISTRY, feature_on, features, reset_features
-from parts.session import SESSIONS, Session
+from parts.world.session import SESSIONS, Session
 
 
 @pytest.fixture(autouse=True)

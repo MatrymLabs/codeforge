@@ -1,4 +1,4 @@
-"""Test twin for parts/derived.py -- the prototype derived-stat formulas.
+"""Test twin for parts/world/derived.py -- the prototype derived-stat formulas.
 
 The formulas are prototype balance, but they are DETERMINISTIC, so the numbers are pinned
 exactly: a formula change is a visible, reviewable diff, never a silent drift. A partial
@@ -7,7 +7,7 @@ attribute set must still produce all five stats (the sheet renders incomplete ch
 
 from __future__ import annotations
 
-from parts.derived import DERIVED_STATS, derived_stats
+from parts.world.derived import DERIVED_STATS, derived_stats
 
 # A fixed attribute set so the expected numbers are exact.
 _ATTRS = {"strength": 10, "speed": 12, "magic": 8, "stamina": 11, "wisdom": 13, "luck": 9}
@@ -40,8 +40,8 @@ def test_a_missing_attribute_reads_zero_not_a_crash() -> None:
 def test_derived_stats_uses_the_active_world_ruleset(monkeypatch) -> None:
     # A world's declared balance reaches the sheet: derived_stats() with no ruleset arg uses the
     # module-level active ruleset, bound at import from the booted world's world.yaml.
-    import parts.derived as derived
-    from parts.stat_rules import from_dict
+    import parts.world.derived as derived
+    from parts.world.stat_rules import from_dict
 
     custom = from_dict(
         {

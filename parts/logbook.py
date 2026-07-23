@@ -10,8 +10,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from parts.session import Session
 from parts.shelf.repository import InMemoryRepository
+from parts.world.session import Session
 
 
 @dataclass(frozen=True)

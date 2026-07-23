@@ -8,10 +8,10 @@ completed contract awards XP). The workflow is defined as data, so a seed could 
 
 from __future__ import annotations
 
-from parts.seed import SEED_DIR, QuestSpec, load_quest
-from parts.session import Session
 from parts.shelf.statemachine import Fired
 from parts.shelf.workflow import Instance, Step, Workflow, WorkflowEngine, build_workflow
+from parts.world.seed import SEED_DIR, QuestSpec, load_quest
+from parts.world.session import Session
 
 
 def _built_in_quest() -> tuple[Workflow, str, int]:
@@ -103,11 +103,11 @@ def _apply_effect(effect: str | None, session: Session) -> str:
     if not effect:
         return ""
     if effect == "award_xp" and session.stats is not None:
-        from parts.progression_awards import award_xp
+        from parts.world.progression_awards import award_xp
 
         return "\n" + award_xp(session, _XP_REWARD)
     if effect.startswith("open_door:"):
-        from parts import doors
+        from parts.world import doors
 
         doors.open_gate(effect.split(":", 1)[1])  # the label already narrates the opening
     return ""

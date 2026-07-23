@@ -1,4 +1,4 @@
-"""Test twin for parts/combat_clock.py -- the shared round timer, exercised directly.
+"""Test twin for parts/world/combat_clock.py -- the shared round timer, exercised directly.
 
 The clock is job-blind: it counts down whatever cooldowns/statuses a session carries and
 regenerates the job's Power Cells. These pin that behavior without any ability or combat in
@@ -6,9 +6,9 @@ the loop. Engineer's twin proves its abilities ride the same clock; combat's twi
 basic strike advances it.
 """
 
-from parts.combat_clock import advance
-from parts.jobs import bind_calling
-from parts.session import Session
+from parts.world.combat_clock import advance
+from parts.world.jobs import bind_calling
+from parts.world.session import Session
 
 
 def test_cooldowns_count_down_and_the_expired_drop_off():

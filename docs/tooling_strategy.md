@@ -36,7 +36,7 @@ clear `integrate_now` candidate (OpenSSF Scorecard); everything else is already 
 | CI | GitHub Actions `ci.yml` + `codeql.yml` + docker smoke | `.github/workflows/` |
 | Supply chain | Dependabot, CodeQL, SBOM artifact | `.github/dependabot.yml`, `codeql.yml` |
 | Docs | rich raw Markdown, ADRs, runbooks, postmortems | `docs/` |
-| Data / state | SQLite via SQLAlchemy behind `parts/db.py` | `parts/db.py` |
+| Data / state | SQLite via SQLAlchemy behind `parts/world/db.py` | `parts/world/db.py` |
 
 Runtime dependencies (the shipped wheel), every one justified in `dependency_ledger.toml`:
 `pyyaml`, `sqlalchemy`, `fastapi`, `uvicorn`, `websockets`, `pydantic`, `structlog`. Everything

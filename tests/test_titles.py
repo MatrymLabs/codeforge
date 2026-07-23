@@ -2,8 +2,8 @@
 
 import pytest
 
-from parts.session import SESSIONS, Session
 from parts.titles import reset_titles, title
+from parts.world.session import SESSIONS, Session
 
 
 @pytest.fixture(autouse=True)

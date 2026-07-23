@@ -94,7 +94,7 @@ def test_evolution_is_reachable_and_read_only_through_the_tick(evo_dir: Path) ->
     # A feature isn't wired until handle_command proves a player can reach it -- and reaching
     # it must NOT produce a run (the MUD never executes the lab).
     from forge import handle_command
-    from parts.session import Session
+    from parts.world.session import Session
 
     out = handle_command(Session(player_id="evo_tick"), "evolution")
     assert "EVOLUTION LAB" in out

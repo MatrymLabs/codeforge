@@ -12,8 +12,8 @@ sinks render per-recipient.
 
 from collections.abc import Callable
 
-from parts.frames import Frame
-from parts.session import SESSIONS
+from parts.world.frames import Frame
+from parts.world.session import SESSIONS
 
 EchoSink = Callable[[str], None]
 

@@ -3,7 +3,7 @@
 import pytest
 
 from parts.relay import channel, reset_relay
-from parts.session import SESSIONS, Session
+from parts.world.session import SESSIONS, Session
 
 
 @pytest.fixture(autouse=True)

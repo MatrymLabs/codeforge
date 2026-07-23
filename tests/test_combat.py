@@ -1,20 +1,20 @@
-"""Test twin for parts/combat.py -- deterministic training-loop math."""
+"""Test twin for parts/world/combat.py -- deterministic training-loop math."""
 
 import copy
 
 import pytest
 
-from parts import npcs
-from parts.combat import attack, strike_power
-from parts.jobs import bind_calling
-from parts.seed import Npc
-from parts.session import SESSIONS, Session
+from parts.world import npcs
+from parts.world.combat import attack, strike_power
+from parts.world.jobs import bind_calling
+from parts.world.seed import Npc
+from parts.world.session import SESSIONS, Session
 
 
 @pytest.fixture(autouse=True)
 def fresh_world():
     # Restore in place (clear + update, never rebind): combat.py holds
-    # `from parts.npcs import NPCS`, so rebinding npcs.NPCS would strand that alias.
+    # `from parts.world.npcs import NPCS`, so rebinding npcs.NPCS would strand that alias.
     npcs_snap = copy.deepcopy(npcs.NPCS)
     SESSIONS.clear()
     yield
@@ -38,7 +38,7 @@ def test_attack_without_a_calling_is_refused():
 def test_defeating_an_npc_surfaces_a_triggered_quest_line(monkeypatch):
     """Combat rides the quest hook on top: if a fallen npc completes a story beat, its line is
     appended to the defeat report (the aethryn Cinder-Wight uses this to end the Relighting)."""
-    import parts.quest as quest_mod
+    import parts.world.quest as quest_mod
 
     monkeypatch.setattr(
         quest_mod, "on_event", lambda session, kind, target: "[The Relighting] the cold breaks"
@@ -127,7 +127,7 @@ def _spawn_hostile(label: str = "brawler", location: str = "courtyard", atk: int
 
 
 def test_npc_strike_power_reads_the_atk_stat():
-    from parts.combat import npc_strike_power
+    from parts.world.combat import npc_strike_power
 
     _spawn_hostile(atk=5)
     assert npc_strike_power(npcs.NPCS["brawler"]) == 5
@@ -201,7 +201,7 @@ def test_counterattack_flows_through_the_engine_tick():
 
 def test_the_seeded_gate_boss_is_a_real_fight():
     """The spiral-ascent Coilwarden is wired for combat: reachable in play, and it hits back."""
-    from parts.seed import SEEDS_ROOT, load_npcs
+    from parts.world.seed import SEEDS_ROOT, load_npcs
 
     boss = load_npcs(SEEDS_ROOT / "spiral-ascent" / "npcs.yaml")["coilwarden"]
     npcs.NPCS["coilwarden"] = boss  # its seed location is gate_chamber
@@ -236,7 +236,7 @@ def test_defeating_an_enemy_awards_tp():
 
 # --- loot drops on defeat (object instancing consumer) --------------------------------
 def test_defeating_an_npc_spawns_its_loot_drops():
-    from parts import items
+    from parts.world import items
 
     items_snap = copy.deepcopy(items.ITEMS)
     try:
@@ -271,7 +271,7 @@ def test_defeating_an_npc_spawns_its_loot_drops():
 
 
 def test_a_drop_of_an_unknown_prototype_is_skipped_not_a_crash():
-    from parts import items
+    from parts.world import items
 
     items_snap = copy.deepcopy(items.ITEMS)
     try:
@@ -329,7 +329,7 @@ def _felled_foe_with(drops: list[str] | None = None, loot: dict[str, int] | None
 
 
 def test_a_loot_roll_can_force_an_item(monkeypatch):
-    from parts import combat, items
+    from parts.world import combat, items
 
     snap = copy.deepcopy(items.ITEMS)
     try:
@@ -348,7 +348,7 @@ def test_a_loot_roll_can_force_an_item(monkeypatch):
 
 
 def test_a_loot_roll_can_come_up_nothing(monkeypatch):
-    from parts import combat, items
+    from parts.world import combat, items
 
     snap = copy.deepcopy(items.ITEMS)
     try:
@@ -364,7 +364,7 @@ def test_a_loot_roll_can_come_up_nothing(monkeypatch):
 
 
 def test_guaranteed_drops_and_a_weighted_roll_both_fire(monkeypatch):
-    from parts import combat, items
+    from parts.world import combat, items
 
     snap = copy.deepcopy(items.ITEMS)
     try:

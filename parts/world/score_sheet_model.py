@@ -1,6 +1,6 @@
 """CARD: score_sheet_model -- the character score-sheet view model (plain, validated data).
 
-The data half of the score sheet, split from its renderer (parts/score_sheet.py) so the two
+The data half of the score sheet, split from its renderer (parts/world/score_sheet.py) so the two
 evolve and are consumed independently: the model serves the engine-coupled builder
 (character_view) and equipment, while the renderer serves the CLI. This is the "decoupled view
 model" the Hardware Store card names, made literal.

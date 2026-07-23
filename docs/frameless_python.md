@@ -30,9 +30,9 @@ What CodeForge is **not defined by** any one tool:
 | Concern | How CodeForge does it | Standard-library / own-architecture proof |
 |---|---|---|
 | CLI parsing | hand-rolled argv dispatch, no argparse framework | `parts/cli.py` |
-| Config / content | YAML seeds validated by my own loader gates | `parts/seed.py` |
-| State | SQLite via SQLAlchemy (a data tool, behind my own `parts/db.py`) | `parts/db.py` |
-| Events | my own in-process event bus | `parts/events.py` |
+| Config / content | YAML seeds validated by my own loader gates | `parts/world/seed.py` |
+| State | SQLite via SQLAlchemy (a data tool, behind my own `parts/world/db.py`) | `parts/world/db.py` |
+| Events | my own in-process event bus | `parts/world/events.py` |
 | Reports | my own `ReportWriter`, plain Markdown | `parts/reporting.py` |
 | Classification | my own registry + designations, not a plugin framework | `parts/registry.py` |
 | Task running | Make + shell, the Ritual | `Makefile` |

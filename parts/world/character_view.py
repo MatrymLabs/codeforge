@@ -13,20 +13,20 @@ pretend they exist.
 
 from __future__ import annotations
 
-from parts.derived import derived_stats
-from parts.equipment import apply_equipment, apply_stat_modifiers, equipped_loadout
-from parts.jobs import BASE_HP, BASE_MP, JOBS
-from parts.progression import get_next_level_threshold
-from parts.score_sheet_model import (
+from parts.shelf.stats import StatModifier
+from parts.world.derived import derived_stats
+from parts.world.equipment import apply_equipment, apply_stat_modifiers, equipped_loadout
+from parts.world.jobs import BASE_HP, BASE_MP, JOBS
+from parts.world.progression import get_next_level_threshold
+from parts.world.score_sheet_model import (
     RESIST_ORDER,
     CharacterSheet,
     EquipmentLoadout,
     JobLine,
     JobTP,
 )
-from parts.seed import Job
-from parts.session import Session, display_name
-from parts.shelf.stats import StatModifier
+from parts.world.seed import Job
+from parts.world.session import Session, display_name
 
 # Sheet attribute code -> engine stat name.
 _ATTR_CODES = {

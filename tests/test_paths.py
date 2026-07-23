@@ -1,8 +1,8 @@
-"""Test twin for parts/paths.py -- the env-override path resolver."""
+"""Test twin for parts/world/paths.py -- the env-override path resolver."""
 
 from pathlib import Path
 
-from parts.paths import resolved_path
+from parts.world.paths import resolved_path
 
 
 def test_default_used_when_unset(tmp_path, monkeypatch):

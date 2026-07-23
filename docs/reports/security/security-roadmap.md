@@ -13,7 +13,7 @@ and, if ever exposed, the open internet.
 ✅ done · 🔨 in progress · 📋 planned · 🧭 deferred (needs infra/deploy decisions)
 
 ## Authentication & credentials
-- ✅ **pbkdf2-sha256, per-account salt, constant-time compare** (`parts/accounts.py`).
+- ✅ **pbkdf2-sha256, per-account salt, constant-time compare** (`parts/world/accounts.py`).
 - ✅ **Generic login refusals** - no user-enumeration oracle.
 - ✅ **Password floor raised to 8** (`MIN_PASSWORD_LEN`, NIST SP 800-63B).
   Was 4 (trivially brute-forceable).
@@ -42,7 +42,7 @@ and, if ever exposed, the open internet.
   (`parts/gateway.py:34`), so a single no-newline flood is not an unbounded read.
 
 ## Authorization & privilege separation
-- ✅ `@`-verbs check rank before running (`parts/ranks.py`; architecture law #5).
+- ✅ `@`-verbs check rank before running (`parts/world/ranks.py`; architecture law #5).
 - ✅ No `eval`/`exec` verb exposed (the classic MUD escalation vector).
 - 📋 **Audit-log privileged actions** (actor + target + verb).
 

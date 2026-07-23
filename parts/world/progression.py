@@ -14,8 +14,8 @@ those checkpoints forever: if the numbers drift, the build goes red.
 
 from dataclasses import dataclass
 
-from parts.seed import SEED_DIR
-from parts.world_manifest import world_block
+from parts.world.seed import SEED_DIR
+from parts.world.world_manifest import world_block
 
 # ---------------------------------------------------------------------------
 # Per-PLvl gains (locked design July 2026):

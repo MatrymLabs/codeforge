@@ -266,7 +266,7 @@ def test_career_dispatch_routes_each_view() -> None:
 def test_career_is_reachable_through_the_engine_tick() -> None:
     # A feature isn't wired until handle_command proves a player can reach it.
     from forge import handle_command
-    from parts.session import Session
+    from parts.world.session import Session
 
     out = handle_command(Session(player_id="career_tick"), "career gaps")
     assert "GAPS" in out

@@ -8,7 +8,7 @@ defend the design to an interviewer.*
 
 - **Build:** the prototype/instance foundation for items - a `prototype` field, a `clone(prototype,
   location)` spawn primitive, and prototype-aware matching for door keys and quest pickups
-  (`parts/items.py`, `parts/seed.py` Item, `parts/doors.py`, `parts/generate.py`, `forge.py`).
+  (`parts/world/items.py`, `parts/world/seed.py` Item, `parts/world/doors.py`, `parts/generate.py`, `forge.py`).
 - **Ownership level claimed:** *(pending Josh's own claim; undeclared until he defends it)*
 
 ## Intent

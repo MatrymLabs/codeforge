@@ -21,7 +21,7 @@ import re
 from dataclasses import dataclass, field, replace
 from pathlib import Path
 
-from parts.seed import SEEDS_ROOT, load_npcs, load_rooms
+from parts.world.seed import SEEDS_ROOT, load_npcs, load_rooms
 
 _SANDBOX = "workspace"  # the only directory generation may write into (git-ignored)
 _RISK = ("low", "medium", "high")

@@ -71,7 +71,7 @@ def test_pioneer_dispatch_routes_each_view() -> None:
 
 def test_pioneer_is_reachable_through_the_engine_tick() -> None:
     from forge import handle_command
-    from parts.session import Session
+    from parts.world.session import Session
 
     out = handle_command(Session(player_id="pio"), "pioneer risks")
     assert "risk ladder" in out

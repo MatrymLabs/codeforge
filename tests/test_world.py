@@ -1,6 +1,6 @@
-"""Test twin for parts/world.py -- graph integrity and movement."""
+"""Test twin for parts/world/world.py -- graph integrity and movement."""
 
-from parts.world import DIRECTIONS, WORLD, resolve_move
+from parts.world.world import DIRECTIONS, WORLD, resolve_move
 
 
 def test_all_exits_lead_to_real_rooms():

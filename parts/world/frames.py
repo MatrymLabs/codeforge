@@ -16,7 +16,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from parts.session import display_name
+from parts.world.session import display_name
 
 
 class Frame:

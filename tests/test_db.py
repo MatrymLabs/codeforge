@@ -1,13 +1,13 @@
-"""Test twin for parts/db.py -- the schema holds the laws now."""
+"""Test twin for parts/world/db.py -- the schema holds the laws now."""
 
 from pathlib import Path
 
 import pytest
 
-import parts.db as db
-from parts.characters import load_character, put_record, save_character
-from parts.db import CharacterRow, _default_db_path, engine_url, open_archive_session
-from parts.session import SESSIONS, Session
+import parts.world.db as db
+from parts.world.characters import load_character, put_record, save_character
+from parts.world.db import CharacterRow, _default_db_path, engine_url, open_archive_session
+from parts.world.session import SESSIONS, Session
 
 
 def test_engine_url_defaults_to_sqlite_at_db_path(monkeypatch, tmp_path):
@@ -37,7 +37,9 @@ def test_default_db_path_is_absolute_and_repo_anchored(monkeypatch):
     p = _default_db_path()
     assert p.is_absolute()
     assert p.name == "codeforge.db"
-    assert p.parent == Path(db.__file__).resolve().parent.parent  # repo root
+    assert (
+        p.parent == Path(db.__file__).resolve().parent.parent.parent
+    )  # parts/world/db.py -> repo root
 
 
 def test_codeforge_db_env_overrides_the_default(monkeypatch, tmp_path):
@@ -79,7 +81,7 @@ def test_unnamed_seats_write_no_rows():
 def test_backup_db_makes_a_valid_sqlite_copy(monkeypatch, tmp_path):
     import sqlite3
 
-    from parts.db import backup_db
+    from parts.world.db import backup_db
 
     monkeypatch.delenv("DATABASE_URL", raising=False)
     live = tmp_path / "codeforge.db"
@@ -98,7 +100,7 @@ def test_backup_db_makes_a_valid_sqlite_copy(monkeypatch, tmp_path):
 
 
 def test_backup_db_refuses_a_non_sqlite_backend(monkeypatch):
-    from parts.db import backup_db
+    from parts.world.db import backup_db
 
     monkeypatch.setenv("DATABASE_URL", "postgresql+psycopg://u:p@localhost/x")
     with pytest.raises(RuntimeError, match="pg_dump"):

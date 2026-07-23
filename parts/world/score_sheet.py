@@ -1,6 +1,6 @@
 """CARD: score_sheet -- the character score-sheet text renderer (a fixed-width projection).
 
-The renderer half of the score sheet, split from its view model (parts/score_sheet_model.py).
+The renderer half of the score sheet, split from its view model (parts/world/score_sheet_model.py).
 It consumes only a `CharacterSheet` -- never the database or the Session -- so the same sheet
 renders from live state, a fixture, or a future personnel record without change (the Hardware
 Store stance). `render_score_sheet` turns a view model into a fixed-width sheet in one of six
@@ -14,7 +14,7 @@ content is pinned by focused field tests. Formulas live elsewhere -- this part o
 
 from __future__ import annotations
 
-from parts.score_sheet_model import ATTR_ORDER, RESIST_ORDER, CharacterSheet
+from parts.world.score_sheet_model import ATTR_ORDER, RESIST_ORDER, CharacterSheet
 
 _WIDTH = 70  # the frame width
 _LEFT = 28  # left column width; the divider sits at this index

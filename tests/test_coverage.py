@@ -16,7 +16,7 @@ from parts.coverage import (
     _violations,
     unexercised_capabilities,
 )
-from parts.seed import Door, Item, Job, Npc, QuestSpec
+from parts.world.seed import Door, Item, Job, Npc, QuestSpec
 
 
 def _pack(**kw: object) -> PackContent:

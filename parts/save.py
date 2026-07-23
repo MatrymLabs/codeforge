@@ -8,12 +8,12 @@ door lock states. Rendered text is a projection; it is not saved.
 import json
 from pathlib import Path
 
-from parts import doors, items
+from parts.world import doors, items
 
 SAVE_PATH = Path("save.json")
 # Version the snapshot shape so a future change is a migration, not a crash. A file with no
 # schema_version is a legacy v1 save (items were `{iid: location}` strings) and keeps loading.
-# v2 records each item as `{prototype, location}`, so SPAWNED INSTANCES (parts.items.clone)
+# v2 records each item as `{prototype, location}`, so SPAWNED INSTANCES (parts.world.items.clone)
 # round-trip: a v2 restore rebuilds them, where a v1 save had no instances to rebuild.
 SCHEMA_VERSION = 2
 
@@ -60,7 +60,7 @@ def awaken_snapshot(path: Path = SAVE_PATH) -> tuple[str, str]:
     Degrades honestly, never with a stack trace: a malformed file or a save written by a
     NEWER schema starts a fresh world with a plain message (the file is left untouched).
     """
-    from parts.world import START_ROOM
+    from parts.world.world import START_ROOM
 
     if not path.exists():
         return (START_ROOM, "No saved world found.")

@@ -3,7 +3,7 @@
 import pytest
 
 from parts.logbook import journal, reset_logbooks
-from parts.session import SESSIONS, Session
+from parts.world.session import SESSIONS, Session
 
 
 @pytest.fixture(autouse=True)

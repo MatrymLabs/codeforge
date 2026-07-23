@@ -46,7 +46,7 @@ Example: `job engineer`, then `subjob scholar`.
 - **TP (Training Progress)** fills toward **milestone perks**: each full milestone
   (currently 500 TP) unlocks the job's next passive perk, which raises a derived stat.
 
-Both curves are locked design (`parts/progression.py`); XP, JP, and TP are all awarded on a kill.
+Both curves are locked design (`parts/world/progression.py`); XP, JP, and TP are all awarded on a kill.
 
 ### Fight, and the Engineer's kit
 
@@ -109,22 +109,22 @@ Derived combat stats (ATK, DEF, EVA, MAG DEF, ACC) are computed, never stored, i
 layers - all folded through the same order-independent `ModifierStack` (`parts/stats.py`):
 
 ```
-base = derived_stats(attributes, level)        # parts/derived.py (prototype formulas)
-  -> apply_equipment(...)                       # equipped gear's mods       (parts/equipment.py)
-  -> apply_stat_modifiers(..., perk_modifiers)  # unlocked milestone perks   (parts/character_view.py)
+base = derived_stats(attributes, level)        # parts/world/derived.py (prototype formulas)
+  -> apply_equipment(...)                       # equipped gear's mods       (parts/world/equipment.py)
+  -> apply_stat_modifiers(..., perk_modifiers)  # unlocked milestone perks   (parts/world/character_view.py)
 ```
 
 Because everything flows through one stack, gear and perks stack the same way, and rebalancing
-means editing one file (`parts/derived.py` for the base formulas, the seed data for gear/perks).
+means editing one file (`parts/world/derived.py` for the base formulas, the seed data for gear/perks).
 
 ### The view-model seam (why the renderer is engine-free)
 
 The score sheet is a **projection** ([ADR-0005](adr/0005-character-sheet-view-model.md)):
 
-- `parts/score_sheet.py` - a pure `CharacterSheet` view model + `render_score_sheet(sheet, mode)`.
+- `parts/world/score_sheet.py` - a pure `CharacterSheet` view model + `render_score_sheet(sheet, mode)`.
   It reads only the view model: no database, no `Session`. That is why it is reusable (a
   personnel dashboard, a training transcript) and testable from a fixture.
-- `parts/character_view.py` - `sheet_from_session(session)` does the engine-coupled assembly:
+- `parts/world/character_view.py` - `sheet_from_session(session)` does the engine-coupled assembly:
   attributes from the stat block, resources from the pools, per-job level/JP/TP from the
   persisted record, derived stats through the pipeline above.
 
@@ -141,10 +141,10 @@ A saved character keeps only minimal facts; stats and resources recompute on res
 
 | Knob | Where |
 |---|---|
-| Base derived-stat formulas | `parts/derived.py` |
-| XP -> PLvl and JP -> Job Level curves (locked) | `parts/progression.py` |
+| Base derived-stat formulas | `parts/world/derived.py` |
+| XP -> PLvl and JP -> Job Level curves (locked) | `parts/world/progression.py` |
 | TP per milestone (500) | `character_view.TP_MILESTONE` |
-| Engineer costs/cooldowns/thresholds | constants at the top of `parts/engineer.py` |
+| Engineer costs/cooldowns/thresholds | constants at the top of `parts/world/engineer.py` |
 | Job stats, resistances, power, perks, gear | the seed YAML (`seeds/<pack>/`) |
 
 ### Worked example: add a new job

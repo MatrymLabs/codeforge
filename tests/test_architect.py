@@ -12,7 +12,7 @@ from parts.architect import (
     build_claude_advisor,
     consult,
 )
-from parts.session import SESSIONS, Session
+from parts.world.session import SESSIONS, Session
 
 # --- a fake Anthropic client: the same shape the SDK exposes, no network -----
 

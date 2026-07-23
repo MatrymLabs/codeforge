@@ -20,8 +20,8 @@ _ROOT = Path(__file__).resolve().parent.parent
 
 # --- Live demos: (call shown, output shown). Each is pure or uses a temp dir. -----------
 def _demo_rank_gate() -> tuple[str, str]:
-    from parts.ranks import has_rank
-    from parts.session import Session
+    from parts.world.ranks import has_rank
+    from parts.world.session import Session
 
     novice = has_rank(Session(player_id="novice", rank="player"), "wizard")
     owner = has_rank(Session(player_id="owner", rank="owner"), "wizard")
@@ -51,7 +51,7 @@ def _demo_assessment() -> tuple[str, str]:
 
 
 def _demo_validated_loader() -> tuple[str, str]:
-    from parts.seed import SeedError, load_rooms
+    from parts.world.seed import SeedError, load_rooms
 
     with tempfile.TemporaryDirectory() as d:
         bad = Path(d) / "rooms.yaml"
@@ -67,8 +67,8 @@ def _demo_validated_loader() -> tuple[str, str]:
 
 
 def _demo_event_ledger() -> tuple[str, str]:
-    from parts.events import announce, bind_echo, unbind_echo
-    from parts.session import SESSIONS, Session
+    from parts.world.events import announce, bind_echo, unbind_echo
+    from parts.world.session import SESSIONS, Session
 
     pid = "_fn_evt_demo"
     got: list[str] = []

@@ -43,7 +43,7 @@ broadcast.
 
 1. **Isolate sink failures at the bus.** `announce()` now delivers through a
    guard that swallows and **prunes** a raising sink - one bad client can never
-   take down another. (`parts/events.py`)
+   take down another. (`parts/world/events.py`)
 2. **Never leak a session.** `_serve_player` unbinds its session in a `finally`,
    even if the front-desk handshake raises, so a mid-login drop can't linger.
    (`parts/gateway.py`)

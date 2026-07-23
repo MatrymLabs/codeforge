@@ -94,7 +94,7 @@ class CouplingReport:
 _TRACE_PROBE = r"""
 import sys, json
 import forge
-from parts.session import Session
+from parts.world.session import Session
 s = Session(player_id="_trace", location="courtyard", rank="owner")
 for cmd in json.loads(sys.argv[1]):
     try:

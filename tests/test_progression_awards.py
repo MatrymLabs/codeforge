@@ -1,4 +1,4 @@
-"""Test twin for parts/progression_awards.py -- the leveling engine, exercised directly.
+"""Test twin for parts/world/progression_awards.py -- the leveling engine, exercised directly.
 
 These call the grants (award_xp/jp/tp) straight, with no combat in the loop: they pin the
 curve-climbing math, the monotonic clamp, active-job isolation, and named-character
@@ -8,10 +8,10 @@ real `attack()`; this twin proves the engine in isolation.
 
 import pytest
 
-from parts.events import bind_echo, unbind_echo
-from parts.jobs import bind_calling
-from parts.progression_awards import award_jp, award_tp, award_xp
-from parts.session import SESSIONS, Session
+from parts.world.events import bind_echo, unbind_echo
+from parts.world.jobs import bind_calling
+from parts.world.progression_awards import award_jp, award_tp, award_xp
+from parts.world.session import SESSIONS, Session
 
 
 @pytest.fixture(autouse=True)
@@ -88,7 +88,7 @@ def test_a_seat_with_no_active_job_earns_no_jp():
 
 
 def test_earned_jp_persists_for_a_named_character():
-    from parts.characters import load_character, restore_character
+    from parts.world.characters import load_character, restore_character
 
     s = Session(player_id="matrym", location="courtyard", named=True)
     SESSIONS["matrym"] = s
@@ -103,7 +103,7 @@ def test_earned_jp_persists_for_a_named_character():
 
 def test_jp_only_touches_the_active_job():
     s = _fighter("engineer")
-    from parts.job_progress import JobProgress
+    from parts.world.job_progress import JobProgress
 
     s.job_progress["scholar"] = JobProgress("scholar", job_level=5, jp=200)
     award_jp(s, 30)
@@ -121,7 +121,7 @@ def test_no_active_job_earns_no_tp():
 
 
 def test_earned_tp_persists_for_a_named_character():
-    from parts.characters import load_character, restore_character
+    from parts.world.characters import load_character, restore_character
 
     s = Session(player_id="matrym", location="courtyard", named=True)
     SESSIONS["matrym"] = s

@@ -8,10 +8,10 @@ import pytest
 from fastapi.testclient import TestClient
 
 import parts.web_gateway as web
-from parts import doors, items, npcs
-from parts.accounts import account_password_ok
-from parts.session import SESSIONS
 from parts.web_gateway import app
+from parts.world import doors, items, npcs
+from parts.world.accounts import account_password_ok
+from parts.world.session import SESSIONS
 
 
 def _register_and_enter(ws, handle: str = "hero@co") -> None:

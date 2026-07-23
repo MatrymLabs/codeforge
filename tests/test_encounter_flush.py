@@ -10,9 +10,10 @@ from pathlib import Path
 
 import pytest
 
-from parts import encounter_flush, encounter_log
+from parts import encounter_flush
 from parts.chronicle import read, trend
 from parts.encounter_flush import flush
+from parts.world import encounter_log
 
 
 @pytest.fixture(autouse=True)
@@ -62,7 +63,7 @@ def test_the_flush_verb_is_owner_gated_and_reaches_the_boundary():
     tick never flushes); an owner with an empty period reaches the boundary and is told nothing was
     flushed -- proving reachability + gating without writing the real (git-tracked) ledger."""
     from forge import handle_command
-    from parts.session import SESSIONS, Session
+    from parts.world.session import SESSIONS, Session
 
     encounter_log.clear_tally()  # empty period: the owner path writes nothing to the real ledger
     player = Session(player_id="mortal", rank="player")

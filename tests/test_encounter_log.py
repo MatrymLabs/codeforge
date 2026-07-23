@@ -1,4 +1,4 @@
-"""Test twin for parts/encounter_log.py -- the after-action log (aggression's 'observed' leg).
+"""Test twin for parts/world/encounter_log.py -- the after-action log (aggression's 'observed' leg).
 
 Pins the two design invariants (this store is bounded, and it never reaches the Chronicle) plus the
 wiring: the player's tick actually produces telemetry, and the `encounters` verb renders it.
@@ -9,8 +9,8 @@ import inspect
 
 import pytest
 
-from parts import encounter_log, npcs
-from parts.encounter_log import (
+from parts.world import encounter_log, npcs
+from parts.world.encounter_log import (
     CAP,
     EncounterError,
     recent,
@@ -19,8 +19,8 @@ from parts.encounter_log import (
     tally,
     witness,
 )
-from parts.seed import Npc
-from parts.session import SESSIONS, Session
+from parts.world.seed import Npc
+from parts.world.session import SESSIONS, Session
 
 
 @pytest.fixture(autouse=True)
@@ -36,7 +36,7 @@ def fresh_log():
 
 
 def _fighter(location: str = "courtyard") -> Session:
-    from parts.jobs import bind_calling
+    from parts.world.jobs import bind_calling
 
     s = Session(player_id="matrym", location=location)
     bind_calling(s, "vanguard")
@@ -119,7 +119,7 @@ def test_the_encounters_verb_renders_through_the_tick():
 
 
 def test_felling_a_foe_witnesses_a_defeat():
-    from parts.combat import attack
+    from parts.world.combat import attack
 
     s = _fighter()
     for _ in range(10):  # strike until the dummy collapses
@@ -130,7 +130,7 @@ def test_felling_a_foe_witnesses_a_defeat():
 
 
 def test_an_aggressive_open_strike_is_witnessed():
-    from parts.aggression import menace
+    from parts.world.aggression import menace
 
     npcs.NPCS["reaver"] = Npc(
         name="the reaver",

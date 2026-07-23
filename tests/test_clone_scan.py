@@ -4,7 +4,7 @@ import pytest
 
 from forge import handle_command
 from parts.clone_scan import CloneError, find_clones, render, scan_repo, shape
-from parts.session import Session
+from parts.world.session import Session
 
 # Same structure and operators, different names and literals: a type-2 clone.
 _A = """
