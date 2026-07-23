@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import pytest
 
 
@@ -30,3 +32,21 @@ def _isolated_database(tmp_path, monkeypatch):
     monkeypatch.delenv("DATABASE_URL", raising=False)
     monkeypatch.setattr(db, "DB_PATH", tmp_path / "test.db")
     monkeypatch.setattr(accounts, "_ITERATIONS", 1000)
+
+    # The Chronicle ledger is a real, git-tracked state file too. Now that main RETAINS evidence
+    # (no longer an empty vault), a test that reads it with the default root would depend on the
+    # committed ledger's contents. Quarantine root=None into tmp, so tests see an empty store unless
+    # they populate their own; a test that means to read the real ledger passes an explicit root.
+    from parts import chronicle
+
+    _real_ledger_path = chronicle._ledger_path
+    _repo_root = Path(chronicle.__file__).resolve().parent.parent
+    # Redirect BOTH the default (root=None) and an explicit repo-root read to tmp: ARC reads the
+    # Chronicle with root=repo_root, so covering only root=None would let a test read the real one.
+    monkeypatch.setattr(
+        chronicle,
+        "_ledger_path",
+        lambda root: _real_ledger_path(
+            tmp_path if root is None or Path(root).resolve() == _repo_root else root
+        ),
+    )

@@ -247,7 +247,7 @@ patch:
 # --- Daily ritual: apply security patches (+re-verify), then check federal
 # guidance for updates and file them in the library. Point FGL_HOME at it. ---
 FGL_HOME ?= ../federal-guidance-library
-daily: patch
+daily: patch arc-verdicts
 	@echo "→ checking federal guidance for updates..."
 	@if [ -x "$(FGL_HOME)/.venv/bin/library" ]; then \
 		( cd "$(FGL_HOME)" && .venv/bin/library check ) || echo "  (reg check reported changes or was offline)"; \

@@ -4,7 +4,9 @@ Acceptance: records append and read back in order, the hash chain links each rec
 predecessor, read_latest/kind-filter/empty-store behave. Refusal (the point of a tamper-evident
 log): an edited payload, a reordered chain, a malformed line, a missing field, an unknown kind, or
 a non-object payload all fail loud with ChronicleError rather than returning a dishonest memory.
-Every test uses tmp_path, so the real (git-tracked) chronicle/ dir is never touched.
+Nearly every test uses tmp_path, so the real (git-tracked) chronicle/ dir is never touched; the one
+exception reads the retained ledger with an explicit repo root, on purpose, to pin that main's
+Chronicle is not an empty vault.
 """
 
 from __future__ import annotations
@@ -426,3 +428,34 @@ def test_chronicle_verb_reachable_through_the_engine_tick() -> None:
 
     out = handle_command(Session(player_id="matrym", location="courtyard"), "chronicle")
     assert "hronicle" in out.lower()  # empty or populated, the panel always names itself
+
+
+def test_the_retained_chronicle_is_not_an_empty_vault():
+    """The ship's memory carries real, hash-chained evidence on main -- not a README-only vault.
+
+    Discharges the 2026-07-17 convergence review's residual "orphaned last inch": the Chronicle core
+    + producers existed, but nothing ran + retained a ledger. `make daily` now records the ARC gate
+    verdict, so the store accumulates on the human ritual. conftest quarantines the Chronicle for
+    every test (even an explicit repo root), so this reads the committed ledger FILE directly to
+    check main's real state, not the empty tmp store."""
+    import json
+    from pathlib import Path
+
+    ledger = Path(__file__).resolve().parent.parent / "chronicle" / "ledger.jsonl"
+    assert ledger.is_file(), "no retained Chronicle ledger on main -- run `make arc-verdicts`"
+    records = [json.loads(line) for line in ledger.read_text().splitlines() if line.strip()]
+    assert len(records) >= 1, "the retained Chronicle is empty -- run `make arc-verdicts`"
+    assert any(
+        r["kind"] == "evidence" for r in records
+    )  # at least one retained, cited gate verdict
+
+
+def test_make_daily_records_to_the_chronicle():
+    """The wired last inch: `make daily` runs arc-verdicts, which appends the gate verdict to the
+    retained Chronicle. So the store keeps accumulating on the HUMAN ritual cadence (not a robot
+    auto-committing from CI, which the keel deferred). Pins the wiring vs a silent regression."""
+    from pathlib import Path
+
+    makefile = (Path(__file__).resolve().parent.parent / "Makefile").read_text(encoding="utf-8")
+    daily = next(line for line in makefile.splitlines() if line.startswith("daily:"))
+    assert "arc-verdicts" in daily
