@@ -351,7 +351,7 @@ docs-build:
 # --- Re-record the README demo GIF from real aethryn gameplay (needs `agg`; see the script). ---
 demo-gif:
 	FORGE_SEED=aethryn python scripts/record_demo.py demo.cast
-	agg --theme dracula --font-size 15 --speed 1.2 --fps-cap 24 --last-frame-duration 4 demo.cast docs/demo.gif
+	agg --theme dracula --font-size 15 --speed 1.5 --fps-cap 24 --last-frame-duration 4 demo.cast docs/demo.gif
 	@rm -f demo.cast && echo "docs/demo.gif re-recorded."
 
 # --- E2E: drive the live dashboard with a real browser (isolated from `make check`). ---

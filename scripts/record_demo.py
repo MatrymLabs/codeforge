@@ -25,25 +25,28 @@ import forge  # noqa: E402  (import after FORGE_SEED so the world loads the flag
 from parts.world.session import Session  # noqa: E402
 from parts.world.world import START_ROOM  # noqa: E402
 
-WIDTH, HEIGHT = 94, 32
+WIDTH, HEIGHT = 94, 34
 AMBER_PROMPT = "\x1b[1;38;5;214m> \x1b[0m"
 
-# The arc, played from real actions: relight fires on the pickup, delve on entering the cellar,
-# and the fight ends the story. (label, seconds to hold the reply on screen)
-NARRATIVE: list[tuple[str, float]] = [
-    ("look", 1.9),
+# The CRADLE: wake on the shore, see the callings, take one, learn its moves, take the spark, and
+# take up the Relighting. (label, seconds to hold the reply on screen)
+CRADLE: list[tuple[str, float]] = [
+    ("look", 2.1),
+    ("jobs", 1.8),
     ("job vanguard", 1.5),
-    ("quest accept", 1.9),
-    ("get ember", 2.1),
-    ("north", 2.0),
-    ("quest reforge", 2.0),
-    ("down", 2.1),
-    ("down", 1.9),
+    ("skills", 1.9),
+    ("get ember", 1.8),
+    ("north", 1.9),
+    ("quest accept", 2.1),
 ]
 
 
 def build_cast(session: Session) -> list[list[object]]:
-    """Drive the game and return asciinema v2 output events with paced, synthetic timestamps."""
+    """Drive the game and return asciinema v2 output events with paced, synthetic timestamps.
+
+    A real, reproducible walkthrough of the whole aethryn arc: creation + callings, ability combat,
+    leveling, the self-reforging bridge, the lethal boss, and the victory epilogue. Combat is
+    deterministic, so every run yields the same session."""
     events: list[list[object]] = []
     clock = 0.0
 
@@ -61,20 +64,46 @@ def build_cast(session: Session) -> list[list[object]]:
     def play(cmd: str) -> str:
         return (forge.handle_command(session, cmd) or "").strip()
 
+    def beat(cmd: str, hold: float) -> str:
+        prompt_and_type(cmd)
+        reply = play(cmd)
+        emit(reply + "\r\n\r\n", hold)
+        return reply
+
     with open("seeds/aethryn/splash.txt", encoding="utf-8") as handle:
         splash = handle.read().rstrip("\n")
     emit("\x1b[38;5;214m" + splash + "\x1b[0m\r\n\r\n", 2.0)
     emit("Welcome, Forger. Type HELP to begin.\r\n\r\n", 1.1)
 
-    for cmd, hold in NARRATIVE:
-        prompt_and_type(cmd)
-        emit(play(cmd) + "\r\n\r\n", hold)
+    # 1. The cradle.
+    for cmd, hold in CRADLE:
+        beat(cmd, hold)
 
-    for _ in range(12):  # the fight: brisk strikes, a long hold on the killing blow
-        prompt_and_type("attack wight")
-        reply = play("attack wight")
-        done = "cold is broken" in reply.lower()
-        emit(reply + "\r\n\r\n", 3.2 if done else 0.6)
+    # 2. Cross the broken bridge -- it reforges itself as you carry your spark onto it.
+    beat("north", 2.2)
+
+    # 3. Into the wilds: strike the reach wolf with a job ability, and grow stronger.
+    beat("south", 0.9)
+    beat("east", 1.4)
+    for i in range(4):  # visible fights: an ability strike, a plain strike, and a level-up lands
+        beat("use ember edge on wolf" if i % 2 == 0 else "attack wolf", 1.4)
+    while session.level < 5:  # then grind off-screen until strong enough to face the boss
+        play("attack wolf")
+
+    # 4. Delve: walk back and down into the Cold Cellar -- entering it advances the quest.
+    beat("west", 0.9)
+    beat("down", 1.3)
+    beat("down", 1.6)
+
+    # 5. The lethal boss: alternate an ability and a strike (checking MP first, so a skill only
+    #    fires when it can) until the Relighting is complete; hold long on the victory epilogue.
+    for i in range(16):
+        can_cast = session.resources["mp"].current >= 3  # Ember Edge costs 3 MP
+        cmd = "use ember edge on wight" if (i % 2 == 0 and can_cast) else "attack wight"
+        prompt_and_type(cmd)
+        reply = play(cmd)
+        done = "relighting is complete" in reply.lower()
+        emit(reply + "\r\n\r\n", 4.5 if done else 0.7)
         if done:
             break
 
