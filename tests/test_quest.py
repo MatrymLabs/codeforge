@@ -192,3 +192,23 @@ def test_a_seed_quest_spec_builds_a_named_workflow():
     workflow, name, reward = _from_seed(spec)
     assert name == "Test Arc" and reward == 10
     assert workflow.workflow_id == "test_arc" and "b" in workflow.terminal
+
+
+def test_aethryn_relighting_arc_self_completes_from_natural_play():
+    # the aethryn arc must play itself cradle-to-grave: after the opt-in `accept`, every beat fires
+    # from a real world action (a natural trigger), and it ends on felling the boss with a reward.
+    from pathlib import Path
+
+    from parts.world.seed import load_quest
+
+    seeds = Path(__file__).resolve().parent.parent / "seeds"
+    spec = load_quest(seeds / "aethryn" / "quest.yaml")
+    assert spec is not None and spec["name"] == "The Relighting"
+    for step in spec["steps"]:
+        if step["event"] == "accept":
+            continue
+        natural = step.get("on_take") or step.get("on_enter") or step.get("on_defeat")
+        assert natural, f"step '{step['event']}' has no natural trigger -- the arc would soft-lock"
+    face = next(s for s in spec["steps"] if s["to"] == "done")
+    assert face.get("on_defeat") == "cinder_wight" and face.get("effect") == "award_xp"
+    assert "done" in spec["terminal"]
