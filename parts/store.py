@@ -1,12 +1,17 @@
-"""CARD: store -- the hardware store inventory. List engine parts and purposes.
+"""CARD: store -- the hardware store inventory. List the parts and their purposes.
 
 The store catalog is GENERATED from the code itself: every part
 declares 'CARD: <name> -- <purpose>' as the first line of its
 docstring. Docs derived from source never go stale.
 
-Two catalogs, two audiences:
-- parts/catalog.py files WORLD content for game operators.
-- parts/store.py  files ENGINE parts for developers.
+Two shelves, one store (since the physical extraction):
+- parts/shelf/ holds the REUSABLE cores (engine-agnostic Layer 3; poured
+  standalone via `make shelf-pour`). These are the actual Hardware Store.
+- parts/       holds the ENGINE parts (the platform + world). They import
+  the shelf, never the reverse.
+
+The reusable shelf also shows each core's public INTERFACE (its top-level
+classes and functions), so the catalog reads like a real parts spec sheet.
 
 Safety note: modules are read with ast, never imported -- listing
 the store has zero side effects (no seed load, no world boot).
@@ -16,7 +21,10 @@ import ast
 from pathlib import Path
 
 PARTS_DIR = Path(__file__).resolve().parent
+SHELF_DIR = PARTS_DIR / "shelf"
 TESTS_DIR = PARTS_DIR.parent / "tests"
+
+_CARD_WIDTH = 17
 
 
 def inspect_card(path: Path) -> tuple[str, str] | None:
@@ -32,13 +40,21 @@ def inspect_card(path: Path) -> tuple[str, str] | None:
     return (name.strip(), purpose.strip().rstrip("."))
 
 
-def hardware_store_catalog() -> str:
-    """Return the numbered parts inventory as display text."""
-    card_width = 13
-    header = f"{'#':<4}{'CARD':<{card_width}}{'TESTED':<8}PURPOSE"
-    lines = ["CODEFORGE HARDWARE STORE -- engine parts inventory", "", header, "-" * len(header)]
-    stocked: list[tuple[str, str, str]] = []
-    for path in sorted(PARTS_DIR.glob("*.py")):
+def public_interface(path: Path) -> tuple[str, ...]:
+    """The module's public API: top-level classes and functions not starting with `_`."""
+    tree = ast.parse(path.read_text(encoding="utf-8"))
+    return tuple(
+        node.name
+        for node in tree.body
+        if isinstance(node, (ast.ClassDef, ast.FunctionDef, ast.AsyncFunctionDef))
+        and not node.name.startswith("_")
+    )
+
+
+def _stock(directory: Path) -> list[tuple[str, str, str, str]]:
+    """Every carded module in a dir as (card_name, tested, purpose, interface), sorted by file."""
+    rows: list[tuple[str, str, str, str]] = []
+    for path in sorted(directory.glob("*.py")):
         if path.name.startswith("_"):
             continue
         card = inspect_card(path)
@@ -46,10 +62,39 @@ def hardware_store_catalog() -> str:
             continue
         name, purpose = card
         tested = "yes" if (TESTS_DIR / f"test_{path.stem}.py").exists() else "NO"
-        stocked.append((name, tested, purpose))
-    for number, (name, tested, purpose) in enumerate(stocked, start=1):
-        lines.append(f"{number:<4}{name:<{card_width}}{tested:<8}{purpose}")
-    lines.append(f"\n{len(stocked)} parts stocked.")
+        rows.append((name, tested, purpose, ", ".join(public_interface(path))))
+    return rows
+
+
+def _render(
+    title: str, rows: list[tuple[str, str, str, str]], *, show_interface: bool
+) -> list[str]:
+    header = f"{'#':<4}{'CARD':<{_CARD_WIDTH}}{'TESTED':<8}PURPOSE"
+    lines = [title, "-" * len(header), header]
+    for number, (name, tested, purpose, interface) in enumerate(rows, start=1):
+        lines.append(f"{number:<4}{name:<{_CARD_WIDTH}}{tested:<8}{purpose}")
+        if show_interface and interface:
+            lines.append(f"    {'':<{_CARD_WIDTH}}-> {interface}")
+    return lines
+
+
+def hardware_store_catalog() -> str:
+    """Return the two-shelf parts inventory as display text: reusable cores, then engine parts."""
+    shelf = _stock(SHELF_DIR)
+    engine = _stock(PARTS_DIR)
+    lines = ["CODEFORGE HARDWARE STORE", "=" * 24, ""]
+    lines += _render(
+        "Reusable cores (parts/shelf/ -- engine-agnostic; poured via `make shelf-pour`):",
+        shelf,
+        show_interface=True,
+    )
+    lines += [""]
+    lines += _render(
+        "Engine parts (parts/ -- the platform + world; they import the shelf, never the reverse):",
+        engine,
+        show_interface=False,
+    )
+    lines.append(f"\n{len(shelf)} reusable cores + {len(engine)} engine parts stocked.")
     return "\n".join(lines)
 
 
