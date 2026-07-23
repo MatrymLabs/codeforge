@@ -26,10 +26,15 @@ Pick one. Both claim a public name that cannot be un-claimed, so this is Josh's 
    - Create `MatrymLabs/codeforge-shelf` (public), push the poured tree.
    - Consumers: `pip install git+https://github.com/MatrymLabs/codeforge-shelf`.
 
-2. **PyPI** (a real `pip install codeforge-shelf`):
-   - Reserve the project name on PyPI (once claimed, it is yours permanently).
-   - Preferred: **Trusted Publishing** (OIDC from a GitHub Actions release job -- no stored token).
-   - Or: `python -m build` (adds an sdist) then `twine upload dist/*` with an API token.
+2. **PyPI** (a real `pip install codeforge-shelf`) -- **Trusted Publishing, no token stored.**
+   The poured repo already ships `.github/workflows/release.yml` (OIDC publish on a GitHub
+   Release) and `test.yml` (runs the poured tests). Two one-time human steps:
+   1. On PyPI: add a **pending publisher** for the project `codeforge-shelf` -- repository
+      `MatrymLabs/codeforge-shelf`, workflow `release.yml`, environment `pypi`. (This reserves the
+      name; once claimed it is permanently yours.)
+   2. On GitHub: create the `pypi` environment (Settings -> Environments), then cut a
+      **Release** tagged `v0.1.0`. The release workflow builds sdist + wheel and publishes.
+   - Manual fallback: `python -m build` then `twine upload dist/*` with an API token.
 
 ## Honesty notes
 
