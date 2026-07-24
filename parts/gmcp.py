@@ -26,7 +26,16 @@ from parts.world.world import WORLD
 # and how to shape a GMCP payload. `escape_iac` is re-exported so consumers keep importing it here.
 GMCP_OPT = 201
 
-__all__ = ["GMCP_OPT", "enables_gmcp", "escape_iac", "gmcp_frame", "room_report", "vitals_report"]
+__all__ = [
+    "GMCP_OPT",
+    "enables_gmcp",
+    "escape_iac",
+    "gmcp_frame",
+    "quest_report",
+    "room_report",
+    "target_report",
+    "vitals_report",
+]
 
 
 def gmcp_frame(package: str, data: object) -> bytes:
@@ -92,3 +101,33 @@ def room_report(session: Session) -> dict[str, object]:
         "name": room["name"],
         "exits": dict(room["exits"]),
     }
+
+
+def target_report(session: Session) -> dict[str, object] | None:
+    """A Char.Target payload for the foe the player is fighting, or None when not in combat.
+
+    Combat here resolves per-strike, so there is no stored "current target"; the honest signal is
+    a foe in the player's own room that is engaged -- either an aggressor hounding them
+    (`aggro_beats`) or one already wounded (`hp_now < hp`). A non-combatant (a shopkeeper, no `hp`)
+    is never a target. Read-only projection of live NPC state, like the room and vitals reports.
+    """
+    from parts.world.npcs import NPCS, npcs_in
+    from parts.world.session import sentence_case
+
+    for nid in npcs_in(session.location):
+        npc = NPCS[nid]
+        hp = npc.get("hp") or 0
+        if hp <= 0:  # a non-combatant (shopkeeper, teacher) has no health bar to show
+            continue
+        hp_now = npc.get("hp_now", hp)
+        if nid in session.aggro_beats or hp_now < hp:  # engaged: hounding us, or already bloodied
+            return {"name": sentence_case(npc["name"]), "hp": hp_now, "maxhp": hp}
+    return None
+
+
+def quest_report(session: Session) -> dict[str, str] | None:
+    """A Char.Quest payload for the player's foremost unfinished story quest, or None when the
+    authored arcs are all done. Delegates to the quest card's own read-only projection."""
+    from parts.world.quest import active_quest
+
+    return active_quest(session)
