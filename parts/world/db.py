@@ -66,6 +66,9 @@ class CharacterRow(ArchiveBase):
     equipped_gear: Mapped[str] = mapped_column(default="")
     # The purse: coins earned from kills, spent at shops. A simple persisted scalar.
     coins: Mapped[int] = mapped_column(default=0)
+    # The current state of this seed's quest arc, or "" (still at the start / no run). Restored into
+    # the quest engine on login so a story-in-progress survives a restart; ignored across seeds.
+    quest_state: Mapped[str] = mapped_column(default="")
     auth_salt: Mapped[str | None] = mapped_column(default=None)  # legacy v1 char passwords
     auth_hash: Mapped[str | None] = mapped_column(default=None)
 

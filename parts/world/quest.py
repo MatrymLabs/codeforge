@@ -129,6 +129,23 @@ def on_event(session: Session, kind: str, target: str) -> str | None:
     return f"[{_QUEST_NAME}] {_QUEST.labels.get(run.state, run.state)}{extra}"
 
 
+def save_state(player_id: str) -> str:
+    """A player's current quest state, for persistence. "" when they have no run yet (still at
+    the start), so a brand-new character stores nothing and the default arc greets them."""
+    run = _RUNS.get(player_id)
+    return run.state if run else ""
+
+
+def restore_state(player_id: str, state: str) -> None:
+    """Seed a player's quest run to a persisted state so their arc survives a restart.
+
+    Ignored when empty or not a real state of THIS seed's quest -- a character saved under another
+    seed pack (whose quest states differ) simply starts this seed's arc fresh, never a crash."""
+    if not state or state not in _QUEST.machine.states:
+        return
+    _RUNS[player_id] = Instance(_QUEST.workflow_id, state, [], {})
+
+
 def reset_quests() -> None:
     """Test hook: clear all in-flight quest runs."""
     _RUNS.clear()

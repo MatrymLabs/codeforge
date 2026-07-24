@@ -53,6 +53,7 @@ def test_save_and_load_roundtrip():
         "order": "",
         "equipped_gear": "",
         "coins": 0,
+        "quest_state": "",
     }
     assert load_character("stranger") is None
 
@@ -147,3 +148,19 @@ def test_an_unknown_persisted_prototype_is_skipped_not_fatal():
     }
     restore_character(fresh, casefile)  # must not raise
     assert "weapon" not in fresh.equipped  # the vanished prototype is skipped
+
+
+def test_quest_progress_persists_across_a_save_and_restore():
+    """A story-in-progress survives logout: the quest state saves with the character and reseeds."""
+    from parts.world.quest import quest_view, reset_quests, save_state
+
+    reset_quests()
+    s = _hero()
+    quest_view(s, "accept")  # advance the arc off its start
+    assert save_state("matrym") == "accepted"
+    save_character(s)
+
+    reset_quests()  # simulate a server restart: in-memory quest runs are gone
+    fresh = Session(player_id="matrym", location="courtyard")
+    restore_character(fresh, load_character("matrym"))
+    assert save_state("matrym") == "accepted"  # the arc came back
