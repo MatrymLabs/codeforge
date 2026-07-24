@@ -17,7 +17,15 @@ import threading
 import time
 
 from forge import handle_command, render_scene
-from parts.gmcp import GMCP_OPT, enables_gmcp, gmcp_frame, room_report, vitals_report
+from parts.gmcp import (
+    GMCP_OPT,
+    enables_gmcp,
+    gmcp_frame,
+    quest_report,
+    room_report,
+    target_report,
+    vitals_report,
+)
 from parts.shelf.bulkhead import Bulkhead, BulkheadFull
 from parts.shelf.telnet_codec import IAC, WILL, WONT, strip_iac
 from parts.world.accounts import password_fixable
@@ -144,6 +152,8 @@ class _GateHandler(socketserver.StreamRequestHandler):
         self._gmcp_enabled = False
         self._last_vitals: dict[str, int] | None = None
         self._last_room: dict[str, object] | None = None
+        self._last_target: dict[str, object] = {}  # {} means "no foe"; clears the client's tracker
+        self._last_quest: dict[str, str] = {}  # {} means "no active quest"
         with contextlib.suppress(OSError):
             self.wfile.write(_WILL_GMCP)
 
@@ -173,6 +183,16 @@ class _GateHandler(socketserver.StreamRequestHandler):
         if vitals is not None and vitals != self._last_vitals:
             self._send_gmcp("Char.Vitals", vitals)
             self._last_vitals = vitals
+        # Char.Target / Char.Quest: an empty {} clears the client's tracker when a fight ends or an
+        # arc completes, so a change from "something" to "nothing" is pushed exactly once.
+        target = target_report(session) or {}
+        if target != self._last_target:
+            self._send_gmcp("Char.Target", target)
+            self._last_target = target
+        quest = quest_report(session) or {}
+        if quest != self._last_quest:
+            self._send_gmcp("Char.Quest", quest)
+            self._last_quest = quest
 
     def _send(self, text: str) -> None:
         self.wfile.write((_sanitize(text) + "\r\n").encode("utf-8"))

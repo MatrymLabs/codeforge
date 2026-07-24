@@ -466,6 +466,7 @@ def test_a_gmcp_client_receives_room_and_vitals_frames_on_entry(server):
     assert _SB_GMCP in out  # at least one GMCP subnegotiation frame was pushed
     assert b"Room.Info" in out and b"Broken Courtyard" in out  # the room, as data
     assert b"Char.Vitals" in out and b'"hp":' in out  # live vitals, as data
+    assert b"Char.Quest" in out  # the active story arc, as data (the tracker lights up)
     sock.close()
 
 

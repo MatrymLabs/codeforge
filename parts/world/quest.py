@@ -149,6 +149,22 @@ def _line(quest: _Quest, run: Instance) -> str:
     return f"[{quest.name}] {quest.workflow.labels.get(run.state, run.state)}"
 
 
+def active_quest(session: Session) -> dict[str, str] | None:
+    """The player's foremost UNFINISHED story quest, as a small projection for a GMCP tracker, or
+    None when every authored arc is done. Bounties are excluded -- they live on the contracts board,
+    and one tracker line should follow the story, not the churn of generated hunts. Read-only: it
+    never opens or advances a run beyond what viewing already does (architecture law 1)."""
+    from parts.world.bounties import is_bounty
+
+    for qid, quest in _QUESTS.items():
+        if is_bounty(qid):
+            continue
+        run = _run(session.player_id, qid)
+        if not quest.engine.is_done(run):
+            return {"name": quest.name, "step": quest.workflow.labels.get(run.state, run.state)}
+    return None
+
+
 def _list_all(session: Session) -> str:
     """The STORY quests (hand-authored arcs), with the player's state and moves. Generated bounties
     are counted, not listed here -- they live under the `contracts` verb, never flooding this."""

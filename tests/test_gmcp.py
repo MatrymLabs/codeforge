@@ -11,7 +11,9 @@ from parts.gmcp import (
     enables_gmcp,
     escape_iac,
     gmcp_frame,
+    quest_report,
     room_report,
+    target_report,
     vitals_report,
 )
 from parts.world.jobs import bind_calling
@@ -139,3 +141,53 @@ def test_room_report_on_an_unknown_location_renders_honestly():
     session = Session(player_id="lost", location="void_that_is_not_seeded")
     report = room_report(session)
     assert report == {"num": "void_that_is_not_seeded", "name": "(nowhere)", "exits": {}}
+
+
+# --- Char.Target: the foe you are fighting ---------------------------------
+
+
+def test_target_report_is_none_when_not_in_combat():
+    session = _hero()  # spawns away from any foe, engaged with nothing
+    assert target_report(session) is None
+
+
+def test_target_report_names_an_engaged_foe_with_its_hp():
+    session = _hero()
+    session.location = "courtyard"  # where the training dummy stands
+    session.aggro_beats["training_dummy"] = 1  # engaged: it is hounding us this beat
+    report = target_report(session)
+    assert report == {"name": "The training dummy", "hp": 20, "maxhp": 20}
+
+
+def test_target_report_reads_a_wounded_foe_even_without_aggression(monkeypatch):
+    from parts.world.npcs import NPCS
+
+    session = _hero()
+    session.location = "courtyard"
+    monkeypatch.setitem(NPCS["training_dummy"], "hp_now", 7)  # a bloodied foe, restored after test
+    report = target_report(session)
+    assert report == {"name": "The training dummy", "hp": 7, "maxhp": 20}
+
+
+def test_target_report_skips_a_non_combatant():
+    session = _hero()
+    session.location = "library"  # the librarian lives here: hp 0, never a target
+    session.aggro_beats["librarian"] = 1  # even if flagged, a 0-hp NPC has no health bar
+    assert target_report(session) is None
+
+
+# --- Char.Quest: the story arc you are on ----------------------------------
+
+
+def test_quest_report_tracks_the_active_story_quest():
+    report = quest_report(_hero())
+    assert report is not None
+    assert set(report) == {"name", "step"}
+    assert report["name"] and report["step"]  # a live name and a human-readable step
+
+
+def test_quest_report_is_none_when_no_authored_quest_is_active(monkeypatch):
+    from parts.world import quest as quest_card
+
+    monkeypatch.setattr(quest_card, "_QUESTS", {})  # a world with no story arcs
+    assert quest_report(_hero()) is None
