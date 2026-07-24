@@ -15,7 +15,7 @@ from __future__ import annotations
 
 from parts.shelf.stats import StatModifier
 from parts.world.derived import derived_stats
-from parts.world.equipment import apply_equipment, apply_stat_modifiers, equipped_loadout
+from parts.world.equipment import apply_stat_modifiers, equipped_loadout, equipped_modifiers
 from parts.world.jobs import BASE_HP, BASE_MP, JOBS
 from parts.world.progression import get_next_level_threshold
 from parts.world.score_sheet_model import (
@@ -55,6 +55,23 @@ def _perk_modifiers(job: Job, tp: int) -> dict[str, list[StatModifier]]:
             StatModifier(source=perk["name"], flat=perk["amount"])
         )
     return mods
+
+
+def session_stat_modifiers(session: Session) -> dict[str, list[StatModifier]]:
+    """Every flat stat modifier a live character carries, merged by target: equipped gear + the
+    active job's unlocked perks + the sworn Order. This is the ONE place the sheet and combat both
+    read, so a mod that bends a stat on the score sheet bends it in a fight too (no drift)."""
+    from parts.world.orders import order_modifiers
+
+    merged: dict[str, list[StatModifier]] = {}
+    sources = [equipped_modifiers(session), order_modifiers(session.order)]
+    if session.job in JOBS:
+        progress = session.job_progress.get(session.job)
+        sources.append(_perk_modifiers(JOBS[session.job], progress.tp if progress else 0))
+    for source in sources:
+        for stat, mods in source.items():
+            merged.setdefault(stat, []).extend(mods)
+    return merged
 
 
 def build_job_sheet(
@@ -141,10 +158,10 @@ def sheet_from_session(session: Session) -> CharacterSheet | None:
         signature=job["signature"],
         secondary_job=secondary,
         attributes={code: attrs[name] for code, name in _ATTR_CODES.items()},
-        # Base formulas, then equipped gear, then unlocked job perks -- all through the stack.
+        # Base formulas, then every carried modifier (gear + job perks + sworn Order) through the
+        # stack -- the same composition combat reads, so the sheet never lies about a fight.
         derived=apply_stat_modifiers(
-            apply_equipment(derived_stats(attrs, session.level), session),
-            _perk_modifiers(job, progress.tp if progress else 0),
+            derived_stats(attrs, session.level), session_stat_modifiers(session)
         ),
         tp_rows=tp_rows,
         equipment=equipped_loadout(session),
