@@ -34,16 +34,22 @@ cinder_relic:
 
 # Drop-only prototype: the Cinder-Wight's own weapon, never placed on the floor -- it exists only
 # to be dropped when the wight falls (location: nowhere = a template spawned by loot, not seeded).
+# Equippable: felling a boss now yields real gear (slot + flat stat mods), so the climb makes you
+# stronger, not just richer in keepsakes. This hammer is the first weapon the ladder hands you.
 cinder_hammer:
   name: a hammer of grey cinder
   keywords: [hammer, cinder, grey hammer]
   location: nowhere
+  slot: weapon
+  mods: {ATK: 5, DEF: 1}
 
 # Drop-only prototype: the road reaver's blade, spawned only when a reaver falls (location: nowhere).
 reaver_blade:
   name: a notched reaver's blade
   keywords: [blade, sword, reaver, notched]
   location: nowhere
+  slot: weapon
+  mods: {ATK: 9, ACC: 5}  # a step up from the cinder hammer: the road pays in better steel
 
 # A placed lore relic in the capital: the Grand Forge's record of the coast's relighting.
 relighting_record:
@@ -52,18 +58,46 @@ relighting_record:
   location: the_grand_forge
 
 # Drop-only prototypes for the ascent (location: nowhere = spawned by a boss's fall, not placed).
+# The gear ladder fills every slot as you climb: weapon (hammer/blade), body (cindershell), head
+# (wraithlamp), arm (ashlord gauntlet), and two accessories (sigil, keystone).
 warden_sigil:
   name: the Concord's warden sigil
   keywords: [sigil, warden, concord, token]
   location: nowhere
+  slot: accessory_1
+  mods: {DEF: 5, MAG DEF: 5}  # the proven-Forger's ward: it turns a blow and a curse alike
 
 coil_keystone:
   name: a keystone of the first Coil
   keywords: [keystone, coil, spiral, stone]
   location: nowhere
+  slot: accessory_2
+  mods: {ATK: 7, MAG DEF: 6}  # a shard of the Spiral's own Forgework, worn for its edge
 
-# Drop-only prototype: the Hollow Smith's black-iron ingot (location: nowhere = spawned on its fall).
+# Drop-only prototype: the Hollow Smith's black-iron ingot (a crafting material, not gear).
 hollow_ingot:
   name: an ingot of hollow black iron
   keywords: [ingot, iron, hollow, black]
   location: nowhere
+
+# --- Armor drops that complete the gear ladder (body / head / arm). All drop-only. ---
+cindershell_plate:
+  name: a plate of cindershell
+  keywords: [plate, cindershell, armor, body]
+  location: nowhere
+  slot: body
+  mods: {DEF: 8, EVA: 2}  # the Hollow Smith's dead shell, reforged into armor
+
+wraithlamp_circlet:
+  name: a wraithlamp circlet
+  keywords: [circlet, wraithlamp, crown, head]
+  location: nowhere
+  slot: head
+  mods: {MAG DEF: 8, ACC: 4}  # the Forgewraith's cold light, bound to ward the mind
+
+ashlord_gauntlet:
+  name: the Ashlord's gauntlet
+  keywords: [gauntlet, ashlord, glove, arm]
+  location: nowhere
+  slot: arm
+  mods: {ATK: 9, DEF: 5}  # the Second Coil's prize: a maker's grip turned to war
