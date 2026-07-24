@@ -493,3 +493,34 @@ def test_def_from_an_order_mitigates_a_blow_and_a_landed_hit_always_stings():
     before = s.resources["hp"].current
     _resolve_npc_blow(s, gnat, "nips")
     assert s.resources["hp"].current == before - 1  # 2 - 4 floored at 1
+
+
+def test_coin_reward_scales_with_level_and_tier():
+    from parts.world.combat import _coin_reward
+
+    assert _coin_reward({"level": 10, "tier": "normal", "xp": 0}) == 10
+    assert _coin_reward({"level": 10, "tier": "elite", "xp": 0}) == 30  # elite x3
+    assert _coin_reward({"level": 10, "tier": "boss", "xp": 0}) == 100  # boss x10
+    assert _coin_reward({"xp": 50}) == 5  # a levelless foe pays a token purse (xp // 10)
+
+
+def test_a_kill_fills_the_purse():
+    from parts.world.combat import attack
+
+    s = _fighter()  # the courtyard training dummy
+    before = s.coins
+    out = ""
+    for _ in range(12):
+        out = attack(s, "dummy")
+        if "collapses" in out:
+            break
+    assert "coins" in out  # the reward line shows the purse
+    assert s.coins > before  # a kill fills the purse
+
+
+def test_wallet_reports_the_purse_through_the_engine_tick():
+    from forge import handle_command
+
+    s = _fighter()
+    s.coins = 250
+    assert "250 coins" in handle_command(s, "wallet")

@@ -52,6 +52,7 @@ def test_save_and_load_roundtrip():
         "account": "",
         "order": "",
         "equipped_gear": "",
+        "coins": 0,
     }
     assert load_character("stranger") is None
 

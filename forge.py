@@ -86,7 +86,8 @@ NAME_RE = re.compile(r"^[a-z][a-z0-9_]{1,15}$")
 HELP_TEXT = (
     "Commands: look, go <direction> (or n/s/e/w/u/d), "
     "take, drop, inventory, talk <npc>, say <msg>, shout <msg>, name <yourname>, who, "
-    "jobs, job <calling>, subjob <calling>, join <order>, score, equip <item>, unequip <slot>, "
+    "jobs, job <calling>, subjob <calling>, join <order>, wallet, score, equip <item>, "
+    "unequip <slot>, "
     "attack <target>, skills, use <ability> [on <foe>], repair, scan <target>, deploy, calibrate, "
     "channel, journal [text], vitals, "
     "namecheck <name>, features, certify, heralds, title [text], maintenance, arc [status], "
@@ -1300,6 +1301,15 @@ def _build_commands() -> CommandSet:
             "CMD-04.069",
             "swear to an Order (join <order>)",
             lambda s, arg: swear_order(s, arg),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "wallet",
+            "CMD-04.070",
+            "check your purse",
+            lambda s, _a: f"Your purse holds {s.coins} coins.",
             namespace=CORE,
         )
     )

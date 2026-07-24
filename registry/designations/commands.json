@@ -2389,5 +2389,30 @@
     "aliases": [],
     "created": "2026-07-24",
     "updated": "2026-07-24"
+  },
+  {
+    "designation": "CMD-04.070",
+    "name": "wallet",
+    "status": "active",
+    "function": "check your purse (coin balance)",
+    "label": "wallet",
+    "file": "forge.py",
+    "type": "CMD",
+    "domain": "04",
+    "docs": "docs/architecture.md",
+    "tests": "tests/test_combat.py",
+    "depends_on": [],
+    "related": [
+      "attack"
+    ],
+    "reuse": "",
+    "tags": [
+      "command"
+    ],
+    "notes": "Reads session.coins (persisted characters.coins, Alembic a2b8f1e6c04d). Coins are earned per kill (combat._coin_reward: level x tier, levelless foe pays xp//10) and will be spent at shops.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-24",
+    "updated": "2026-07-24"
   }
 ]
