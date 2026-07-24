@@ -58,6 +58,6 @@ def test_each_migration_steps_down_one_revision_at_a_time(monkeypatch, tmp_path)
     monkeypatch.setattr(db, "DB_PATH", target)
 
     command.upgrade(_config(), "head")
-    for _ in range(3):  # three filed revisions, three individual steps
+    for _ in range(4):  # four filed revisions, four individual steps
         command.downgrade(_config(), "-1")
     assert not ({"characters", "accounts", "job_progress"} & _tables(target))

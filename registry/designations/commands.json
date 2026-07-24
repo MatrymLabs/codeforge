@@ -2364,5 +2364,30 @@
     "aliases": [],
     "created": "2026-07-17",
     "updated": "2026-07-17"
+  },
+  {
+    "designation": "CMD-04.069",
+    "name": "join",
+    "status": "active",
+    "function": "swear to an Order (join <order>)",
+    "label": "join",
+    "file": "forge.py",
+    "type": "CMD",
+    "domain": "04",
+    "docs": "docs/architecture.md",
+    "tests": "tests/test_orders.py",
+    "depends_on": [],
+    "related": [
+      "job"
+    ],
+    "reuse": "",
+    "tags": [
+      "command"
+    ],
+    "notes": "The Orders faction join verb (parts/world/orders.swear_order): lists the Row when bare, swears a named hero to an Order and persists it. Refuses unnamed / unknown Order.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-24",
+    "updated": "2026-07-24"
   }
 ]
