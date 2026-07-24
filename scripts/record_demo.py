@@ -18,8 +18,15 @@ from __future__ import annotations
 import json
 import os
 import sys
+import tempfile
 
 os.environ.setdefault("FORGE_SEED", "aethryn")
+# The coda swears an Order (a named-hero action that persists), so point at a throwaway DB -- the
+# recorder must never touch real save state, and a fresh file boots with the full current schema.
+_demo_db = os.path.join(tempfile.gettempdir(), "codeforge_demo_recorder.db")
+if os.path.exists(_demo_db):
+    os.remove(_demo_db)
+os.environ.setdefault("CODEFORGE_DB", _demo_db)
 
 import forge  # noqa: E402  (import after FORGE_SEED so the world loads the flagship)
 from parts.world.session import Session  # noqa: E402
@@ -107,6 +114,16 @@ def build_cast(session: Session) -> list[list[object]]:
         if done:
             break
 
+    # 6. The living game, on the coast: the boss dropped gear + coins. Take up the hammer and
+    #    equip it, swear an Order (both bend your stats in a real fight), check the purse, and see
+    #    the coast is only the first of three roads -- the Spiral and the Cinderdeep still call.
+    session.named = True  # a proven Forger: named heroes may swear an Order (and their deeds save)
+    beat("get hammer", 1.6)
+    beat("equip hammer", 1.9)
+    beat("join warcraft", 2.2)
+    beat("wallet", 1.7)
+    beat("quest", 3.4)
+
     return events
 
 
@@ -114,7 +131,7 @@ def main(argv: list[str] | None = None) -> int:
     args = list(sys.argv[1:] if argv is None else argv)
     cast_path = args[0] if args else "demo.cast"
     events = build_cast(Session(player_id="forger", location=START_ROOM))
-    header = {"version": 2, "width": WIDTH, "height": HEIGHT, "title": "CodeForge: The Relighting"}
+    header = {"version": 2, "width": WIDTH, "height": HEIGHT, "title": "CodeForge: The Kindlands"}
     with open(cast_path, "w", encoding="utf-8") as handle:
         handle.write(json.dumps(header) + "\n")
         for event in events:
