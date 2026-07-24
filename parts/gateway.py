@@ -13,6 +13,7 @@ import contextlib
 import re
 import socket
 import socketserver
+import sys
 import threading
 import time
 
@@ -361,6 +362,15 @@ class _GateHandler(socketserver.StreamRequestHandler):
 
 
 def serve(host: str = "0.0.0.0", port: int = 4000) -> None:
+    # Power-on check: refuse to serve on a database whose columns are behind the models, rather
+    # than crash the first login on `no such column`. Read-only; it names the fix, never migrates.
+    from parts.world.schema_guard import SchemaError, require_current_schema
+
+    try:
+        require_current_schema()
+    except SchemaError as exc:
+        print(f"REFUSING TO START: {exc}", file=sys.stderr)
+        raise SystemExit(2) from exc
     with ForgeGateServer((host, port), _GateHandler) as server:
         SHUTDOWN["hook"] = server.shutdown
         print(f"CodeForge gateway listening on {host}:{port}")

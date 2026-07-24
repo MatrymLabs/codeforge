@@ -59,6 +59,7 @@ _GAME_SEED = {
     "orders",
     "shop",
     "spiral",
+    "schema_guard",
 }
 
 
