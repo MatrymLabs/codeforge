@@ -122,6 +122,19 @@ def test_aethryn_ascent_bosses_are_lethal_and_boss_tier():
     assert wraith["level"] > sentinel["level"]  # the Coil climbs above the gate test
 
 
+def test_aethryn_ships_the_descent_the_downward_counterpart_quest():
+    """Both roads carry a story: The Descent frames the Cinderdeep as The Ascent frames the Spiral.
+    It self-completes from real deeds and ends on stilling the Hollow Smith at the maw."""
+    descent = load_quest(AETHRYN / "quests" / "the_descent.yaml")
+    assert descent is not None
+    assert descent["id"] == "the_descent" and descent["name"] == "The Descent"
+    assert descent["terminal"] == ["descended"]
+    for step in descent["steps"]:  # every beat fires from a real world deed, never a soft-lock
+        assert step.get("on_defeat") or step.get("on_enter") or step.get("on_take")
+    last = next(s for s in descent["steps"] if s["to"] == "descended")
+    assert last.get("on_defeat") == "hollow_smith" and last.get("effect") == "award_xp"
+
+
 def test_aethryn_second_coil_climbs_above_the_first():
     """The Spiral keeps ascending: the First Coil Landing opens up into the Second Coil, which
     climbs through a bridgespan to its own Gate-boss, the Ashlord (higher than the first)."""
