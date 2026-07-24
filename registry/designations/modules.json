@@ -56,6 +56,66 @@
     "updated": "2026-07-24"
   },
   {
+    "designation": "MOD-04.064",
+    "name": "membership",
+    "status": "active",
+    "function": "which account owns a character, behind a storage port",
+    "label": "membership",
+    "file": "parts/world/membership.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "docs/persistence_ports.md",
+    "tests": "tests/test_membership_store.py",
+    "depends_on": [],
+    "related": [
+      "MOD-04.001",
+      "MOD-04.065"
+    ],
+    "reuse": "the account-to-character membership contract, framework-free",
+    "tags": [
+      "module",
+      "port"
+    ],
+    "notes": "assimilation batch 3 - the MembershipStore port + in-memory adapter",
+    "superseded_by": "",
+    "aliases": [
+      "MOD-UM04-S01-N001-064-R0"
+    ],
+    "created": "2026-07-24",
+    "updated": "2026-07-24"
+  },
+  {
+    "designation": "MOD-04.065",
+    "name": "membership_sql",
+    "status": "active",
+    "function": "the SQLAlchemy adapter for the MembershipStore port",
+    "label": "membership_sql",
+    "file": "parts/world/membership_sql.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "docs/persistence_ports.md",
+    "tests": "tests/test_membership_store.py",
+    "depends_on": [
+      "MOD-04.064"
+    ],
+    "related": [
+      "MOD-04.001",
+      "MOD-04.064"
+    ],
+    "reuse": "the persistence-port pattern: the character-membership columns behind a store",
+    "tags": [
+      "module",
+      "adapter"
+    ],
+    "notes": "assimilation batch 3 - seals the last CharacterRow access out of accounts.py (now framework-free)",
+    "superseded_by": "",
+    "aliases": [
+      "MOD-UM04-S01-N001-065-R0"
+    ],
+    "created": "2026-07-24",
+    "updated": "2026-07-24"
+  },
+  {
     "designation": "MOD-04.002",
     "name": "api",
     "status": "active",

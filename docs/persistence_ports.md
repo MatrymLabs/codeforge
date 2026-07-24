@@ -90,11 +90,34 @@ a trailing optional `store=`, so all callers (`forge`, `cli`, `api`, `gateway`) 
 credential path (register -> check -> rotate -> reforge, mixed-case preserved, wrong rejected) runs
 over an injected in-memory store with **no database touched**.
 
-**Deliberately left for the next boundary:** character-membership row access - `adopt`, the character
-half of `inspect_login`/`migrate`, and the owner-rank query - still reads `CharacterRow` directly.
-That is a `characters.py` seam (a membership/character store), not an account-credential one, so it is
-a separate batch. Splitting it keeps each batch narrow and preserves the auth path's transaction
-semantics.
+This batch sealed `AccountRow` only. The character-membership row access it left - `adopt`, the
+character half of `inspect_login`/`migrate`, and the owner-rank query - is extracted next, in batch 3.
+
+## Batch 3: the membership seam (accounts.py becomes framework-free)
+
+The third boundary is the remaining `CharacterRow` access inside `accounts.py`: which account owns a
+character (`account_of`), pointing a character at an account (`set_account`), retiring a v1
+per-character password onto an account (`retire_v1_and_set_account`), and the owner-rank query
+(`has_owner`). "Membership IS the character row's account column," so this is a distinct seam from the
+account *credential*, and distinct again from a character's gameplay columns (which stay with
+`characters.py` - a larger seam, not this batch).
+
+The port is `MembershipStore` (in `parts/world/membership.py`); the adapter is `SqlMembershipStore`
+(in `parts/world/membership_sql.py`, MOD-04.065), the only place those columns are touched for auth.
+The in-memory adapter is seeded with the characters that exist (`name -> (account, rank)`), so the
+contract runs without a database. `inspect_login`, `adopt`, `migrate`, `account_has_owner`, and
+`import_legacy_json` now take a trailing optional `membership=` and route through the port.
+
+The payoff: **`parts/world/accounts.py` now imports no ORM row at all.** Credentials sit behind
+`AccountCredentialStore`, membership behind `MembershipStore`; the module holds only crypto policy and
+composition. `tests/test_membership_store.py` runs the contract against both adapters and proves
+`adopt`/`account_has_owner`/`inspect_login` run over injected in-memory stores with no database. The
+28 `test_accounts.py` tests, plus the gateway and api suites, pass unchanged.
+
+**Deliberately left for a later batch (needs sign-off):** the core character persistence in
+`parts/world/characters.py` (`save_character`, `load_character`, `put_record`, `restore_character`).
+That is a central domain/persistence model - a keel-level change - so it stops for Josh, not an
+autonomous batch.
 
 ## The template for the next boundary
 
