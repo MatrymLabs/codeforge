@@ -2514,5 +2514,30 @@
     "aliases": [],
     "created": "2026-07-24",
     "updated": "2026-07-24"
+  },
+  {
+    "designation": "CMD-04.075",
+    "name": "ask",
+    "status": "active",
+    "function": "ask an NPC about a topic (ask <npc> about <topic>)",
+    "label": "ask",
+    "file": "forge.py",
+    "type": "CMD",
+    "domain": "04",
+    "docs": "docs/architecture.md",
+    "tests": "tests/test_npcs.py",
+    "depends_on": [],
+    "related": [
+      "talk"
+    ],
+    "reuse": "",
+    "tags": [
+      "command"
+    ],
+    "notes": "parts/world/npcs.ask: topic-based conversation over Npc.topics (keyword -> reply lines). Bare `ask <npc>` lists topics. Backward-compatible with `talk` (no-topics NPC has nothing to ask).",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-24",
+    "updated": "2026-07-24"
   }
 ]

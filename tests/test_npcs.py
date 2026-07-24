@@ -58,3 +58,63 @@ def test_talk_in_the_wrong_room_finds_no_one():
 
 def test_talk_to_unknown_name_finds_no_one():
     assert talk("dragon", "library") == "There is no one like that here."
+
+
+# --- ask: topic-based conversation (over Npc.topics) --------------------------------------------
+
+
+def _with_topics():
+    """Give the librarian topics for the ask tests (restored by the fixture)."""
+    npcs.NPCS["librarian"]["topics"] = {
+        "archive": ["The archive holds every case we have filed."],
+        "codex": ["Professor Codex teaches in the classroom.", "Ask it about lessons."],
+    }
+
+
+def test_ask_returns_a_topic_response():
+    from parts.world.npcs import ask
+
+    _with_topics()
+    out = ask("librarian", "archive", "library")
+    assert "every case we have filed" in out
+
+
+def test_a_multi_line_topic_returns_all_its_lines():
+    from parts.world.npcs import ask
+
+    _with_topics()
+    out = ask("librarian", "codex", "library")
+    assert "teaches in the classroom" in out and "Ask it about lessons" in out
+
+
+def test_a_bare_ask_lists_the_topics():
+    from parts.world.npcs import ask
+
+    _with_topics()
+    out = ask("librarian", "", "library")
+    assert "archive" in out and "codex" in out
+
+
+def test_an_unknown_topic_is_refused_with_the_options():
+    from parts.world.npcs import ask
+
+    _with_topics()
+    out = ask("librarian", "dragons", "library")
+    assert "nothing to say" in out and "archive" in out
+
+
+def test_asking_an_npc_with_no_topics():
+    from parts.world.npcs import ask
+
+    assert "nothing more to discuss" in ask("librarian", "anything", "library")  # no topics set
+
+
+def test_ask_flows_through_the_engine_tick():
+    import forge
+    from parts.world.session import SESSIONS, Session
+
+    _with_topics()
+    s = Session(player_id="reader", location="library")
+    SESSIONS["reader"] = s
+    assert "every case we have filed" in forge.handle_command(s, "ask librarian about archive")
+    SESSIONS.clear()

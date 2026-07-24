@@ -436,3 +436,16 @@ def test_a_consumable_with_a_bad_effect_is_rejected(tmp_path):
     itemsf.write_text("potion:\n  location: cell\n  consume: {stamina: 5}\n")  # only hp/mp allowed
     with pytest.raises(SeedError, match="consume"):
         load_items(itemsf)
+
+
+def test_npc_topics_load(tmp_path):
+    npcsf = tmp_path / "npcs.yaml"
+    npcsf.write_text("sage:\n  location: cell\n  topics:\n    lore:\n      - The old tale.\n")
+    assert load_npcs(npcsf)["sage"]["topics"]["lore"] == ["The old tale."]
+
+
+def test_npc_topics_with_an_empty_reply_list_are_rejected(tmp_path):
+    npcsf = tmp_path / "npcs.yaml"
+    npcsf.write_text("sage:\n  location: cell\n  topics:\n    lore: []\n")
+    with pytest.raises(SeedError, match="topics"):
+        load_npcs(npcsf)
