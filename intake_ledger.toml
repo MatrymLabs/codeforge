@@ -1,0 +1,85 @@
+# Technology Intake ledger -- controlled adoption, Python-native (docs/technology_intake.md).
+#
+# Python owns the orchestration; every other technology enters through an explicit boundary and an
+# onboarding record here. `make intake` fails if any record is INCOMPLETE (an APPROVED technology
+# missing one of the ten requirements: purpose, owner, contract, security_review, license_review,
+# compatibility, testing_strategy, failure_strategy, upgrade_strategy, removal_strategy) or
+# INCONSISTENT (an unknown classification/decision, a NATIVE_PYTHON row that is not Python, or an
+# external-hosted role with no proposed_boundary).
+#
+# Keys under [tech.<id>] are the intake_id. Classifications: NATIVE_PYTHON, PYTHON_PACKAGE,
+# PYTHON_FRAMEWORK_EXTENSION, COMPILED_EXTENSION, SUBPROCESS_WORKER, EXTERNAL_SERVICE,
+# CLIENT_TECHNOLOGY, BUILD_TARGET, RENDER_TARGET, DEV_TOOL, RESEARCH_REFERENCE, REJECTED.
+# Decisions: approved, held, rejected, stdlib_first, research_only, integrate_later.
+
+# ----- approved: the Qt desktop render target (codeforge-client GUI) -------------------
+[tech.pyside6]
+technology_name = "PySide6"
+technology_type = "GUI framework (Qt for Python bindings)"
+vendor_or_maintainer = "The Qt Company (Qt for Python)"
+classification = "RENDER_TARGET"
+language = "python"
+license = "LGPL-3.0"
+provenance_status = "verified (official PyPI wheels, all target platforms)"
+proposed_role = "the native desktop rendering surface for the client (mudclient-gui)"
+proposed_boundary = "the codeforge-client ui_qt package; the tested spine never imports Qt"
+existing_codeforge_equivalent = "the Textual TUI shell (a terminal render target); Qt is the desktop one"
+capability_gap = "a native windowed desktop client; Textual renders only in a terminal"
+decision = "approved"
+reviewer = "Josh"
+stage = "deployed"
+purpose = "render the client as a native desktop app that reuses the whole tested spine"
+owner = "Josh / codeforge-client"
+contract = "SpineWorker Qt-signal seam + ClientConfig; no widget touches the network, no spine imports Qt"
+security_review = "no network or subprocess of its own; renders local data; runs headless (offscreen) in CI"
+license_review = "LGPL-3.0, dynamically linked through PySide6; compatible with the MIT application"
+compatibility = "Python 3.13; wheels for linux-x64, linux-arm64, macOS, Windows"
+testing_strategy = "pytest-qt headless (QT_QPA_PLATFORM=offscreen): widget, automation, and tab suites"
+failure_strategy = "an optional [gui] extra; the spine and the Textual TUI run with no Qt installed"
+upgrade_strategy = "pinned range PySide6>=6.5; bump deliberately, re-run the offscreen suite"
+removal_strategy = "drop the ui_qt package and the [gui] extra; the spine and TUI are untouched"
+
+# ----- approved: the headless Qt test driver -----------------------------------------
+[tech.pytest_qt]
+technology_name = "pytest-qt"
+technology_type = "test plugin"
+vendor_or_maintainer = "pytest-dev"
+classification = "DEV_TOOL"
+language = "python"
+license = "MIT"
+provenance_status = "verified (PyPI)"
+proposed_role = "drive the Qt widgets in the test suite, headless, without a display"
+proposed_boundary = ""
+existing_codeforge_equivalent = "the Textual pilot tests the TUI; nothing tested Qt before"
+capability_gap = "headless Qt widget + signal testing"
+decision = "approved"
+reviewer = "Josh"
+stage = "deployed"
+purpose = "prove the Qt shell without a live server or a display"
+owner = "Josh / codeforge-client"
+contract = "the qtbot fixture over an offscreen QApplication; tests never touch the network"
+security_review = "development-only; never ships in a wheel; no runtime footprint"
+license_review = "MIT, permissive, compatible"
+compatibility = "Python 3.13; pairs with the pinned PySide6"
+testing_strategy = "itself the test harness; skipped via importorskip where Qt is absent"
+failure_strategy = "a dev extra only; absence skips the Qt tests, never breaks the build"
+upgrade_strategy = "unpinned dev tool; bump with PySide6 and re-run the suite"
+removal_strategy = "remove the Qt tests and the dev entry; nothing shipped depends on it"
+
+# ----- research only: studied, not adopted (frameless is the identity) ----------------
+[tech.evennia]
+technology_name = "Evennia"
+technology_type = "Python MUD/MU* framework"
+vendor_or_maintainer = "Evennia project"
+classification = "RESEARCH_REFERENCE"
+language = "python"
+license = "BSD-3-Clause"
+provenance_status = "verified"
+proposed_role = "study its mechanisms (rooms, scripts, typeclasses) for the frameless engine"
+existing_codeforge_equivalent = "the frameless engine (forge.py tick, seeds, parts) IS the alternative"
+capability_gap = "none to integrate; frameless is the deliberate architectural identity"
+decision = "research_only"
+reviewer = "Josh"
+stage = "gap_analyzed"
+purpose = "harvest ideas from a mature framework without adopting the framework"
+owner = "Josh"
