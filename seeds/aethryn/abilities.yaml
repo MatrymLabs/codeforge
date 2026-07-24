@@ -165,3 +165,133 @@ disable:
   scales: wisdom
   mp_cost: 5
   jobs: [saboteur]
+
+# --- Batch 2 movesets (Arcane + Divine families). ---
+
+# Arcanist -- raw force.
+arcane_bolt_a:
+  name: Arcane Lance
+  kind: strike
+  power: 9
+  scales: magic
+  mp_cost: 3
+  jobs: [arcanist]
+mana_ward:
+  name: Mana Ward
+  kind: heal
+  power: 9
+  scales: wisdom
+  mp_cost: 5
+  jobs: [arcanist]
+
+# Elementalist -- let it run.
+firestorm:
+  name: Firestorm
+  kind: strike
+  power: 13
+  scales: magic
+  mp_cost: 6
+  jobs: [elementalist]
+frostbite:
+  name: Frostbite
+  kind: strike
+  power: 8
+  scales: magic
+  mp_cost: 3
+  jobs: [elementalist]
+
+# Chronomancer -- steal time.
+haste_strike:
+  name: Quicken
+  kind: strike
+  power: 8
+  scales: wisdom
+  mp_cost: 3
+  jobs: [chronomancer]
+rewind:
+  name: Rewind
+  kind: heal
+  power: 12
+  scales: wisdom
+  mp_cost: 6
+  jobs: [chronomancer]
+
+# Summoner -- fight through the spirit.
+spirit_lash:
+  name: Spirit Lash
+  kind: strike
+  power: 10
+  scales: magic
+  mp_cost: 4
+  jobs: [summoner]
+emberkin:
+  name: Emberkin's Mending
+  kind: heal
+  power: 10
+  scales: magic
+  mp_cost: 5
+  jobs: [summoner]
+
+# Cleric -- mend and smite.
+smite:
+  name: Smite
+  kind: strike
+  power: 8
+  scales: wisdom
+  mp_cost: 4
+  jobs: [cleric]
+heal:
+  name: Heal
+  kind: heal
+  power: 13
+  scales: wisdom
+  mp_cost: 6
+  jobs: [cleric]
+
+# Oracle -- bend the odds.
+hex:
+  name: Hex
+  kind: strike
+  power: 9
+  scales: luck
+  mp_cost: 4
+  jobs: [oracle]
+foresight:
+  name: Foresight
+  kind: heal
+  power: 9
+  scales: luck
+  mp_cost: 5
+  jobs: [oracle]
+
+# Templar -- faith made armor.
+holy_strike:
+  name: Holy Strike
+  kind: strike
+  power: 9
+  scales: wisdom
+  mp_cost: 3
+  jobs: [templar]
+consecrate:
+  name: Consecrate
+  kind: heal
+  power: 8
+  scales: stamina
+  mp_cost: 5
+  jobs: [templar]
+
+# Warden -- keep the line whole.
+ward_line:
+  name: Ward Line
+  kind: heal
+  power: 10
+  scales: stamina
+  mp_cost: 5
+  jobs: [warden]
+banish:
+  name: Banish
+  kind: strike
+  power: 8
+  scales: wisdom
+  mp_cost: 4
+  jobs: [warden]
