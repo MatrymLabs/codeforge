@@ -4,7 +4,7 @@ import copy
 
 import pytest
 
-from parts.world import npcs
+from parts.world import items, npcs
 from parts.world.characters import load_character, restore_character, save_character
 from parts.world.combat import award_xp
 from parts.world.jobs import bind_calling
@@ -14,10 +14,13 @@ from parts.world.session import SESSIONS, Session
 @pytest.fixture(autouse=True)
 def fresh_world():
     npcs_snap = copy.deepcopy(npcs.NPCS)
+    items_snap = copy.deepcopy(items.ITEMS)  # gear tests clone into ITEMS; restore so nothing leaks
     SESSIONS.clear()
     yield
     npcs.NPCS.clear()
     npcs.NPCS.update(npcs_snap)
+    items.ITEMS.clear()
+    items.ITEMS.update(items_snap)
     SESSIONS.clear()
 
 
@@ -48,6 +51,7 @@ def test_save_and_load_roundtrip():
         "rank": "player",
         "account": "",
         "order": "",
+        "equipped_gear": "",
     }
     assert load_character("stranger") is None
 
@@ -111,3 +115,34 @@ def test_name_command_restores_a_saved_hero():
     assert fresh.level == 2
     assert fresh.location == "courtyard"
     assert fresh.resources["hp"].maximum == 39
+
+
+def test_equipped_gear_persists_across_a_save_and_restore():
+    """Worn gear survives logout: it is stored by prototype and re-cloned + re-equipped on login."""
+    from parts.world.equipment import equip
+    from parts.world.items import clone, prototype_of
+
+    s = _hero()
+    clone("forge_wrench", "player")
+    equip(s, "wrench")
+    assert "weapon" in s.equipped
+    save_character(s)
+
+    fresh = Session(player_id="matrym", location="courtyard")
+    restore_character(fresh, load_character("matrym"))
+    assert "weapon" in fresh.equipped
+    assert prototype_of(fresh.equipped["weapon"]) == "forge_wrench"  # same gear, fresh instance
+
+
+def test_an_unknown_persisted_prototype_is_skipped_not_fatal():
+    """A saved slot referencing a since-removed prototype must skip, never crash the login."""
+    fresh = Session(player_id="ghost", location="courtyard")
+    casefile = {
+        "job": "vanguard",
+        "level": 1,
+        "xp": 0,
+        "location": "courtyard",
+        "equipped_gear": '{"weapon": "vanished_relic"}',
+    }
+    restore_character(fresh, casefile)  # must not raise
+    assert "weapon" not in fresh.equipped  # the vanished prototype is skipped

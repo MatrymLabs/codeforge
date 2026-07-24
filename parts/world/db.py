@@ -61,6 +61,9 @@ class CharacterRow(ArchiveBase):
     # The sworn Order (guild-allegiance), or "". The DB column is "sworn_order" because ORDER is a
     # SQL reserved word; the Python attribute stays `order` for the rest of the code.
     order: Mapped[str] = mapped_column("sworn_order", default="")
+    # Equipped gear as a JSON map {slot: prototype_label}, or "". Items are ephemeral instances, so
+    # we persist the PROTOTYPE per slot and re-clone it on restore -- worn gear survives logout.
+    equipped_gear: Mapped[str] = mapped_column(default="")
     auth_salt: Mapped[str | None] = mapped_column(default=None)  # legacy v1 char passwords
     auth_hash: Mapped[str | None] = mapped_column(default=None)
 
