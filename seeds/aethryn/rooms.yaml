@@ -74,6 +74,7 @@ cellar_hearth:
     the far wall breathes colder still, downward, toward the Cinderdeep.
   exits:
     up: cold_cellar
+    down: cinderdeep_descent
 
 # --- The Ember-road: the climb from the Kindlands Coast up to Emberreach. ---
 # The old paved Forgework connecting capitals (world bible s.22). The Kindlands are behind
@@ -231,3 +232,46 @@ coil_second_landing:
     The way further up the Spiral is sealed in grey light, and waits for another day.
   exits:
     down: coil_bridgespan
+
+# --- The Cinderdeep (world bible: the downward branch). The coast's OTHER road: down from the ---
+# cellar hearth instead of north up the Ember-road. A mid-band depths dungeon (levels ~10-15),
+# a parallel to the early road -- a Forger chooses to climb the Spiral or delve the deep.
+
+cinderdeep_descent:
+  name: The Cinderdeep Descent
+  desc: |-
+    The crack in the hearth-wall opens into a throat of cold stone winding down below the
+    coast. This is the Cinderdeep: where the Unforging's damage ran deepest and the old
+    making-works drowned. Deep-crawlers ward the dark. The hearth is back up the way you came.
+  exits:
+    up: cellar_hearth
+    down: sunken_forgeworks
+
+sunken_forgeworks:
+  name: The Sunken Forgeworks
+  desc: |-
+    A drowned making-hall, its anvils under black water and its lamps long cold. Drowned
+    makers still move at their benches, hammering work that will never set. A vein of dead
+    ember runs off to the east; the descent goes on, down, into deeper cold.
+  exits:
+    up: cinderdeep_descent
+    east: the_cold_vein
+    down: cinderdeep_maw
+
+the_cold_vein:
+  name: The Cold Vein
+  desc: |-
+    A seam of dead ember threads the rock here, grey and starless, and something has made
+    a lair of it. A lurker of the vein feeds on what warmth strays this deep. The only way
+    on is back west to the forgeworks.
+  exits:
+    west: sunken_forgeworks
+
+cinderdeep_maw:
+  name: The Cinderdeep Maw
+  desc: |-
+    The deep bottoms out in a cold maw of ruined Forgework. Here the Hollow Smith keeps its
+    dead anvil -- a maker the Unforging emptied and never let stop. Below it the Cinderdeep
+    goes deeper still, into dark the coast has no map for. That way is not open yet.
+  exits:
+    up: sunken_forgeworks

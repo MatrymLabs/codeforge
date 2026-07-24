@@ -227,3 +227,61 @@ gate_ashlord:
   tier: boss  # the Second Coil's Gate-boss: the ascent's next true wall (x10 reward)
   drops: [coil_keystone]
   loot: {ember_shard: 3, nothing: 2}
+
+# --- The Cinderdeep foes (the downward road: a mid-band depths line, levels ~10-15). ---
+# A parallel to the early Ember-road -- the coast's OTHER way out. Its floor is the Hollow Smith.
+
+deep_crawler:
+  name: a deep-crawler
+  location: cinderdeep_descent
+  keywords: [crawler, deep, thing, dark]
+  dialogue:
+    - Something many-legged unfolds from the cold stone and tastes the air for warmth.
+  hp: 42
+  atk: 7
+  aggressive: true
+  level: 10
+  tier: normal
+  drops: [ember_shard]
+
+drowned_maker:
+  name: a drowned maker
+  location: sunken_forgeworks
+  keywords: [maker, drowned, smith, worker]
+  dialogue:
+    - The drowned maker lifts a rusted hammer, still trying to finish a work the sea took.
+  hp: 55
+  atk: 9
+  aggressive: true
+  level: 12
+  tier: normal
+  drops: [ember_shard]
+
+cold_vein_lurker:
+  name: the Cold-Vein Lurker
+  location: the_cold_vein
+  keywords: [lurker, vein, cold, feeder]
+  dialogue:
+    - The lurker peels away from the dead-ember seam, starved for a living warmth.
+  hp: 80
+  atk: 13
+  aggressive: true
+  level: 14
+  tier: elite  # it hoards the vein's last warmth: an elite kill (x3) for the delving
+  drops: [ember_shard]
+  loot: {ember_shard: 2, nothing: 2}
+
+hollow_smith:
+  name: the Hollow Smith
+  location: cinderdeep_maw
+  keywords: [smith, hollow, maker, boss]
+  dialogue:
+    - '"EMPTY... THE WORK IS EMPTY..." The Hollow Smith raises an anvil-hammer of black iron.'
+  hp: 110
+  atk: 17
+  aggressive: true
+  lethal: true
+  level: 15
+  tier: boss  # the Cinderdeep's floor-boss: the deep road's climax (x10 reward)
+  drops: [hollow_ingot]
+  loot: {ember_shard: 3, nothing: 2}

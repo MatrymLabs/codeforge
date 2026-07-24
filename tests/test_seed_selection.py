@@ -135,6 +135,20 @@ def test_aethryn_second_coil_climbs_above_the_first():
     assert ashlord["level"] > wraith["level"]  # each Coil's Gate-boss climbs above the last
 
 
+def test_aethryn_cinderdeep_is_the_downward_road_from_the_cellar():
+    """The coast's OTHER road: down from the cellar hearth into the Cinderdeep, a mid-band depths
+    line parallel to the early Ember-road, floored by the Hollow Smith."""
+    rooms = load_rooms(AETHRYN / "rooms.yaml")
+    assert rooms["cellar_hearth"]["exits"]["down"] == "cinderdeep_descent"
+    assert rooms["cinderdeep_descent"]["exits"]["down"] == "sunken_forgeworks"
+    assert rooms["sunken_forgeworks"]["exits"]["down"] == "cinderdeep_maw"
+    npcs = load_npcs(AETHRYN / "npcs.yaml")
+    smith = npcs["hollow_smith"]
+    assert smith["level"] == 15 and smith["tier"] == "boss" and smith.get("lethal") is True
+    # the deep is a mid-band alternative: its foes sit near the early road, not the Spiral's Coils
+    assert npcs["deep_crawler"]["level"] == 10 and npcs["cold_vein_lurker"]["tier"] == "elite"
+
+
 def test_aethryn_ships_the_relighting_quest_as_data():
     """The flagship's story arc is a seed-shipped workflow, not hardcoded in Python."""
     quest = load_quest(AETHRYN / "quest.yaml")

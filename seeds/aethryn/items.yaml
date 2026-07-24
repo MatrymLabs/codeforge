@@ -61,3 +61,9 @@ coil_keystone:
   name: a keystone of the first Coil
   keywords: [keystone, coil, spiral, stone]
   location: nowhere
+
+# Drop-only prototype: the Hollow Smith's black-iron ingot (location: nowhere = spawned on its fall).
+hollow_ingot:
+  name: an ingot of hollow black iron
+  keywords: [ingot, iron, hollow, black]
+  location: nowhere
