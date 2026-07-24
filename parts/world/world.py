@@ -24,6 +24,12 @@ if _spiral_config is not None:
     WORLD[_spiral_config["attach"]]["exits"]["up"] = _spiral_first
 inspect_world_links(WORLD, ITEMS, NPCS)
 
+# With the full foe set assembled (seed + the procedural Spiral), generate a hunt-contract for
+# every combatant foe -- side-content at volume, folded into the quest engine (parts.world.quest).
+from parts.world.quest import register_bounties  # noqa: E402 -- after NPCS is complete
+
+register_bounties(NPCS)
+
 # The spawn point is seed-defined, not hardcoded: the FIRST room in rooms.yaml.
 # (first-forge -> "forge"; spiral-ascent -> "spiral_landing".)
 START_ROOM: str = next(iter(WORLD))
