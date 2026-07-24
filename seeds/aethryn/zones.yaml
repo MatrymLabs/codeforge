@@ -56,3 +56,9 @@ cinderdeep:
   rooms: [cinderdeep_descent, sunken_forgeworks, the_cold_vein, cinderdeep_maw]
   reset_mode: empty_only  # the deep's crawlers and its Hollow Smith reform once the delve is quiet
   beats_between: 12
+
+great_spiral_coil_3:
+  name: The Great Spiral - Third Coil
+  rooms: [coil_third_ascent, coil_stormreach, coil_third_landing]
+  reset_mode: empty_only  # the storm's husks and its Stormlord reform once the Coil is quiet
+  beats_between: 16

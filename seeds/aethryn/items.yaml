@@ -101,3 +101,11 @@ ashlord_gauntlet:
   location: nowhere
   slot: arm
   mods: {ATK: 9, DEF: 5}  # the Second Coil's prize: a maker's grip turned to war
+
+# The Third Coil's prize: a weapon a full tier above the road's blade (drop-only, Gate-boss loot).
+stormlord_edge:
+  name: the Stormlord's edge
+  keywords: [edge, blade, stormlord, storm]
+  location: nowhere
+  slot: weapon
+  mods: {ATK: 14, ACC: 6}  # the ascent's reward: real power for the higher climb

@@ -135,6 +135,23 @@ def test_aethryn_second_coil_climbs_above_the_first():
     assert ashlord["level"] > wraith["level"]  # each Coil's Gate-boss climbs above the last
 
 
+def test_aethryn_third_coil_climbs_the_spiral_higher():
+    """The Spiral ascends past the Ashlord: the Second Coil Landing opens up into the storm-wracked
+    Third Coil, whose Gate-boss (the Stormlord) out-levels every wall before it and drops a weapon
+    a tier above the road's blade."""
+    rooms = load_rooms(AETHRYN / "rooms.yaml")
+    assert rooms["coil_second_landing"]["exits"]["up"] == "coil_third_ascent"
+    assert rooms["coil_third_ascent"]["exits"]["up"] == "coil_stormreach"
+    assert rooms["coil_stormreach"]["exits"]["up"] == "coil_third_landing"
+    npcs = load_npcs(AETHRYN / "npcs.yaml")
+    stormlord, ashlord = npcs["gate_stormlord"], npcs["gate_ashlord"]
+    assert stormlord["level"] == 38 and stormlord["tier"] == "boss"
+    assert stormlord["level"] > ashlord["level"]  # each Coil climbs above the last
+    assert "stormlord_edge" in stormlord["drops"]
+    edge = load_items(AETHRYN / "items.yaml")["stormlord_edge"]
+    assert edge["slot"] == "weapon" and edge["mods"]["ATK"] > 9  # above the reaver blade
+
+
 def test_aethryn_cinderdeep_is_the_downward_road_from_the_cellar():
     """The coast's OTHER road: down from the cellar hearth into the Cinderdeep, a mid-band depths
     line parallel to the early Ember-road, floored by the Hollow Smith."""
