@@ -8,6 +8,7 @@ facts; stats and resources recompute on restore.
 
 from __future__ import annotations
 
+import json
 from typing import TYPE_CHECKING, Any
 
 from parts.world.job_progress import load_job_progress, save_job_progress
@@ -23,6 +24,36 @@ if TYPE_CHECKING:
     from parts.world.db import CharacterRow
 
 
+def _serialize_gear(session: Session) -> str:
+    """Worn gear as a {slot: prototype} JSON map for persistence, or "" when nothing is equipped.
+
+    We store the PROTOTYPE (the seed label), never the ephemeral instance id: instances die with
+    the process, but a prototype re-clones into fresh gear on restore. Empty stays "" (clean)."""
+    from parts.world.items import prototype_of
+
+    gear = {slot: prototype_of(iid) for slot, iid in session.equipped.items()}
+    return json.dumps(gear, sort_keys=True) if gear else ""
+
+
+def _restore_gear(session: Session, raw: str) -> None:
+    """Re-clone and re-equip the gear a character logged out wearing (best-effort, never a crash).
+
+    An unknown or un-cloneable prototype (a since-removed seed, an @sg one-off) is skipped, not
+    fatal -- logging in must never fail because one item vanished from the world."""
+    if not raw:
+        return
+    try:
+        gear = json.loads(raw)
+    except (ValueError, TypeError):
+        return
+    from parts.world.equipment import SLOTS
+    from parts.world.items import PROTOTYPES, clone
+
+    for slot, prototype in gear.items():
+        if slot in SLOTS and isinstance(prototype, str) and prototype in PROTOTYPES:
+            session.equipped[slot] = clone(prototype, "player")
+
+
 def _archive_row_to_casefile(archive_row: CharacterRow) -> dict[str, Any]:
     casefile: dict[str, Any] = {
         "job": archive_row.job,
@@ -33,6 +64,7 @@ def _archive_row_to_casefile(archive_row: CharacterRow) -> dict[str, Any]:
         "rank": archive_row.rank,
         "account": archive_row.account,
         "order": archive_row.order,
+        "equipped_gear": archive_row.equipped_gear,
     }
     if archive_row.auth_salt and archive_row.auth_hash:
         casefile["auth"] = {"salt": archive_row.auth_salt, "hash": archive_row.auth_hash}
@@ -63,6 +95,7 @@ def put_record(name: str, casefile: dict[str, Any]) -> None:
         archive_row.rank = casefile.get("rank", "player")
         archive_row.account = casefile.get("account", "")
         archive_row.order = casefile.get("order", "")
+        archive_row.equipped_gear = casefile.get("equipped_gear", "")
         archive_row.auth_salt = auth.get("salt")
         archive_row.auth_hash = auth.get("hash")
         db.add(archive_row)
@@ -89,6 +122,7 @@ def save_character(session: Session) -> None:
         archive_row.rank = session.rank
         archive_row.account = session.account
         archive_row.order = session.order
+        archive_row.equipped_gear = _serialize_gear(session)
         db.add(archive_row)
         db.commit()
     # Persist per-job progress AFTER the character row exists (the foreign key needs it).
@@ -112,6 +146,8 @@ def restore_character(session: Session, casefile: dict[str, Any]) -> None:
     session.cooldowns.clear()
     session.statuses.clear()
     session.equipped.clear()
+    # ...then re-clone and re-equip THIS hero's own persisted gear (folds back into their stats).
+    _restore_gear(session, str(casefile.get("equipped_gear", "")))
     job = str(casefile["job"])
     if not job or job not in JOBS:
         # No calling, or the calling vanished from THIS seed (seeds are games -- a character saved
