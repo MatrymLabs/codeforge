@@ -47,6 +47,7 @@ def test_save_and_load_roundtrip():
         "location": "courtyard",
         "rank": "player",
         "account": "",
+        "order": "",
     }
     assert load_character("stranger") is None
 

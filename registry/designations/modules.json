@@ -4335,5 +4335,34 @@
     "aliases": [],
     "created": "2026-07-22",
     "updated": "2026-07-22"
+  },
+  {
+    "designation": "MOD-04.056",
+    "name": "orders",
+    "status": "active",
+    "function": "the Orders a Forger may swear to: a persisted guild-allegiance on the character record",
+    "label": "orders",
+    "file": "parts/world/orders.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "docs/architecture.md",
+    "tests": "tests/test_orders.py",
+    "depends_on": [
+      "session",
+      "characters"
+    ],
+    "related": [
+      "ranks",
+      "jobs"
+    ],
+    "reuse": "the allegiance-primitive pattern: an Order is one lowercase label persisted like a rank, joined via `join <order>`; the roster + join gate live here so future Order perks compose on top",
+    "notes": "Slice 1a of the Orders faction (the four bible Orders: making/gathering/warcraft/knowing). Adds characters.sworn_order (Alembic d5f9c2a1b3e7; ORDER is a SQL reserved word, so the column is sworn_order and the attribute is order). `join` swears a NAMED hero to an Order and persists it; refuses unnamed / unknown. Perks fold in a later slice.",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-24",
+    "updated": "2026-07-24"
   }
 ]

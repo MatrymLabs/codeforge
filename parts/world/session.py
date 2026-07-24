@@ -36,6 +36,7 @@ class Session:
     account: str = ""
     job: str = ""
     secondary_job: str = ""  # the equipped subjob label, or "" for none
+    order: str = ""  # the sworn Order (guild-allegiance) label, or "" for none; persisted
     level: int = 1
     xp: int = 0
     stats: StatBlock | None = None

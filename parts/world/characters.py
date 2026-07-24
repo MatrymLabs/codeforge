@@ -32,6 +32,7 @@ def _archive_row_to_casefile(archive_row: CharacterRow) -> dict[str, Any]:
         "location": archive_row.location,
         "rank": archive_row.rank,
         "account": archive_row.account,
+        "order": archive_row.order,
     }
     if archive_row.auth_salt and archive_row.auth_hash:
         casefile["auth"] = {"salt": archive_row.auth_salt, "hash": archive_row.auth_hash}
@@ -61,6 +62,7 @@ def put_record(name: str, casefile: dict[str, Any]) -> None:
         archive_row.location = casefile.get("location", START_ROOM)
         archive_row.rank = casefile.get("rank", "player")
         archive_row.account = casefile.get("account", "")
+        archive_row.order = casefile.get("order", "")
         archive_row.auth_salt = auth.get("salt")
         archive_row.auth_hash = auth.get("hash")
         db.add(archive_row)
@@ -86,6 +88,7 @@ def save_character(session: Session) -> None:
         archive_row.location = session.location
         archive_row.rank = session.rank
         archive_row.account = session.account
+        archive_row.order = session.order
         db.add(archive_row)
         db.commit()
     # Persist per-job progress AFTER the character row exists (the foreign key needs it).
@@ -99,6 +102,7 @@ def restore_character(session: Session, casefile: dict[str, Any]) -> None:
     session.named = True
     session.rank = str(casefile.get("rank", "player"))
     session.account = str(casefile.get("account", ""))
+    session.order = str(casefile.get("order", ""))
     session.level = int(casefile["level"])
     session.xp = int(casefile["xp"])
     session.location = str(casefile["location"])

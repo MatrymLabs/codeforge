@@ -71,6 +71,7 @@ from parts.world.frames import SpeechFrame
 from parts.world.items import drop, inventory_text, prototype_of, room_items_text, take, trace_item
 from parts.world.jobs import JOBS, bind_calling, calling_index, set_secondary
 from parts.world.npcs import room_npcs_text, talk, trace_npc
+from parts.world.orders import swear_order
 from parts.world.quest import quest_view
 from parts.world.ranks import wizard_command
 from parts.world.score_sheet import render_score_sheet
@@ -85,7 +86,7 @@ NAME_RE = re.compile(r"^[a-z][a-z0-9_]{1,15}$")
 HELP_TEXT = (
     "Commands: look, go <direction> (or n/s/e/w/u/d), "
     "take, drop, inventory, talk <npc>, say <msg>, shout <msg>, name <yourname>, who, "
-    "jobs, job <calling>, subjob <calling>, score, equip <item>, unequip <slot>, "
+    "jobs, job <calling>, subjob <calling>, join <order>, score, equip <item>, unequip <slot>, "
     "attack <target>, skills, use <ability> [on <foe>], repair, scan <target>, deploy, calibrate, "
     "channel, journal [text], vitals, "
     "namecheck <name>, features, certify, heralds, title [text], maintenance, arc [status], "
@@ -1290,6 +1291,15 @@ def _build_commands() -> CommandSet:
             "CMD-04.053",
             "take up a calling (job <name>)",
             _job_cmd,
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "join",
+            "CMD-04.069",
+            "swear to an Order (join <order>)",
+            lambda s, arg: swear_order(s, arg),
             namespace=CORE,
         )
     )
