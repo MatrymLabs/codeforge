@@ -376,3 +376,17 @@ def test_aethryn_ships_a_second_quest_the_ascent():
     assert {"gate_forgewraith", "gate_ashlord"} <= {s.get("on_defeat") for s in ascent["steps"]}
     last = next(s for s in ascent["steps"] if s["to"] == "ascended")
     assert last.get("on_defeat") == "gate_ashlord" and last.get("effect") == "award_xp"
+
+
+def test_aethryn_ships_the_summit_capstone_quest():
+    """The endgame arc names the procedural summit by its stable labels and ends on felling the
+    Spiral Sovereign at the top of the 1-255 climb."""
+    from parts.world.spiral import SUMMIT_BOSS, SUMMIT_ROOM
+
+    summit = load_quest(AETHRYN / "quests" / "the_summit.yaml")
+    assert summit is not None and summit["name"] == "The Summit"
+    assert summit["terminal"] == ["crowned"]
+    triggers = {(s.get("on_enter") or s.get("on_defeat")) for s in summit["steps"]}
+    assert SUMMIT_ROOM in triggers and SUMMIT_BOSS in triggers  # names the stable summit labels
+    last = next(s for s in summit["steps"] if s["to"] == "crowned")
+    assert last.get("on_defeat") == SUMMIT_BOSS and last.get("effect") == "award_xp"
