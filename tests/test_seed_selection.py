@@ -330,3 +330,18 @@ def test_seeds_root_honors_env_override(tmp_path, monkeypatch):
     finally:
         monkeypatch.delenv("CODEFORGE_SEEDS_ROOT", raising=False)
         importlib.reload(parts.world.seed)  # restore the default root for other tests
+
+
+def test_aethryn_ships_a_second_quest_the_ascent():
+    """The flagship now ships TWO arcs: the Relighting (quest.yaml) and the Ascent (quests/)."""
+
+    ascent = load_quest(AETHRYN / "quests" / "the_ascent.yaml")
+    assert ascent is not None
+    assert ascent["id"] == "the_ascent" and ascent["name"] == "The Ascent"
+    assert ascent["reward_xp"] == 300 and ascent["terminal"] == ["ascended"]
+    # every beat past the start fires from a real world deed (a natural trigger), never a soft-lock
+    for step in ascent["steps"]:
+        assert step.get("on_defeat") or step.get("on_enter") or step.get("on_take")
+    # the arc ends on felling the first Coil's Gate-boss with a reward
+    last = next(s for s in ascent["steps"] if s["to"] == "ascended")
+    assert last.get("on_defeat") == "gate_forgewraith" and last.get("effect") == "award_xp"

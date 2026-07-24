@@ -1,0 +1,26 @@
+# SEED: aethryn -- quests/the_ascent.yaml (the second arc: the road up the Great Spiral)
+# The Ascent plays itself from real deeds, past the Relighting: fell the Warden Sentinel to earn
+# the ascent, climb onto the first Coil, and best its Gate-boss. The `quest the_ascent <event>`
+# verb stays a fallback if you take the beats out of order.
+
+id: the_ascent
+name: The Ascent
+start: unproven
+reward_xp: 300
+
+steps:
+  - {state: unproven, event: prove,  to: proven,   on_defeat: warden_sentinel, effect: award_xp}
+  - {state: proven,   event: climb,  to: climbing, on_enter: coil_first_landing}
+  - {state: climbing, event: ascend, to: ascended, on_defeat: gate_forgewraith, effect: award_xp}
+
+terminal: [ascended]
+
+labels:
+  unproven: "The Warden Gate bars the way to the Great Spiral. Prove your spark: put the Warden Sentinel down."
+  proven: "The Sentinel is fallen; the ascent is open. Climb the Coilfoot stair onto the first Coil of the Spiral."
+  climbing: "You stand on the first Coil. Its Gate-boss, the Forgewraith, keeps the stair. Best it to complete the ascent."
+  ascended: |-
+    *** THE ASCENT IS WON ***
+    The Forgewraith's grey fire gutters out, and the first Coil is yours. The Spiral climbs on
+    above you, Coil beyond Coil, toward the Forge at its summit. You are a Forger of the ascent
+    now, proven on the Warden's road. The way up is long. You have taken its first true step.
