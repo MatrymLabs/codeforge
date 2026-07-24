@@ -57,7 +57,8 @@ def _from_seed(spec: QuestSpec) -> tuple[Workflow, str, int]:
 
 def _load_specs() -> list[QuestSpec]:
     """Every quest spec this seed ships: `quest.yaml` first (the primary arc), then `quests/*.yaml`
-    in name order. The world stays data; adding a story is dropping in a YAML file, not code."""
+    in name order, then GENERATED bounties (one hunt-contract per combatant foe -- side-content at
+    volume, parts.world.bounties). The world stays data; adding a story is a YAML file."""
     specs: list[QuestSpec] = []
     primary = load_quest(SEED_DIR / "quest.yaml")
     if primary:
@@ -68,6 +69,10 @@ def _load_specs() -> list[QuestSpec]:
             spec = load_quest(path)
             if spec:
                 specs.append(spec)
+    from parts.world.bounties import generate_bounties
+    from parts.world.seed import load_npcs
+
+    specs.extend(generate_bounties(load_npcs(SEED_DIR / "npcs.yaml")))
     return specs
 
 
@@ -108,11 +113,12 @@ def _load_quests() -> dict[str, _Quest]:
 
 
 _QUESTS = _load_quests()
-# (kind, target) -> quest_id: the ONE quest a world action advances (seed authors avoid collisions;
-# the last-loaded wins if two share a trigger). Built from every quest's own trigger map.
-_EVENT_ROUTES: dict[tuple[str, str], str] = {
-    trigger: qid for qid, quest in _QUESTS.items() for trigger in quest.triggers
-}
+# (kind, target) -> [quest_id, ...]: EVERY quest a world action advances. A single foe can advance
+# both an authored arc and its generated bounty, so a defeat fans out to all who trigger on it.
+_EVENT_ROUTES: dict[tuple[str, str], list[str]] = {}
+for _qid, _quest in _QUESTS.items():
+    for _trigger in _quest.triggers:
+        _EVENT_ROUTES.setdefault(_trigger, []).append(_qid)
 
 _RUNS: dict[str, dict[str, Instance]] = {}  # player_id -> {quest_id: their run of that quest}
 
@@ -131,9 +137,16 @@ def _line(quest: _Quest, run: Instance) -> str:
 
 
 def _list_all(session: Session) -> str:
-    """Every quest this seed offers, with the player's state and available moves in each."""
+    """The STORY quests (hand-authored arcs), with the player's state and moves. Generated bounties
+    are counted, not listed here -- they live under the `contracts` verb, never flooding this."""
+    from parts.world.bounties import is_bounty
+
     blocks = []
+    bounty_count = 0
     for qid, quest in _QUESTS.items():
+        if is_bounty(qid):
+            bounty_count += 1
+            continue
         run = _run(session.player_id, qid)
         line = _line(quest, run)
         if quest.engine.is_done(run):
@@ -142,7 +155,29 @@ def _list_all(session: Session) -> str:
             actions = quest.engine.actions(run)
             hint = f"  ({qid}: {', '.join(actions)})" if actions else ""
             blocks.append(line + hint)
-    return "Your quests:\n" + "\n".join(blocks)
+    tail = f"\n{bounty_count} hunt-contracts on the board (type CONTRACTS)." if bounty_count else ""
+    return "Your quests:\n" + "\n".join(blocks) + tail
+
+
+def contracts_view(session: Session) -> str:
+    """The `contracts` verb: the bounty board -- every generated hunt-contract and its status."""
+    from parts.world.bounties import is_bounty
+
+    open_lines: list[str] = []
+    done_lines: list[str] = []
+    for qid, quest in _QUESTS.items():
+        if not is_bounty(qid):
+            continue
+        run = _run(session.player_id, qid)
+        label = quest.workflow.labels.get(run.state, run.state)
+        (done_lines if quest.engine.is_done(run) else open_lines).append(f"  {label}")
+    if not open_lines and not done_lines:
+        return "There are no hunt-contracts on the board."
+    parts = ["The bounty board:"]
+    parts.extend(open_lines)
+    if done_lines:
+        parts.append(f"Collected: {len(done_lines)}.")
+    return "\n".join(parts)
 
 
 def _advance(session: Session, quest_id: str, event: str) -> str:
@@ -201,16 +236,18 @@ def on_event(session: Session, kind: str, target: str) -> str | None:
     """World-event hook: if `kind` (defeat|take|enter) on `target` advances any quest, fire that
     step and return its line. Returns None when nothing triggers, or the arc isn't at that beat yet
     (the engine refuses an out-of-order move -- the `quest <event>` verb stays the fallback)."""
-    quest_id = _EVENT_ROUTES.get((kind, target))
-    if quest_id is None:
+    quest_ids = _EVENT_ROUTES.get((kind, target))
+    if not quest_ids:
         return None
-    quest = _QUESTS[quest_id]
-    run = _run(session.player_id, quest_id)
-    outcome = quest.engine.advance(run, quest.triggers[(kind, target)])
-    if not isinstance(outcome, Fired):
-        return None
-    extra = _apply_effect(quest, outcome.effect, session)
-    return f"{_line(quest, run)}{extra}"
+    lines = []
+    for quest_id in quest_ids:  # a defeat can advance an authored arc AND its bounty at once
+        quest = _QUESTS[quest_id]
+        run = _run(session.player_id, quest_id)
+        outcome = quest.engine.advance(run, quest.triggers[(kind, target)])
+        if isinstance(outcome, Fired):
+            extra = _apply_effect(quest, outcome.effect, session)
+            lines.append(f"{_line(quest, run)}{extra}")
+    return "\n".join(lines) if lines else None
 
 
 def save_state(player_id: str) -> str:

@@ -2539,5 +2539,30 @@
     "aliases": [],
     "created": "2026-07-24",
     "updated": "2026-07-24"
+  },
+  {
+    "designation": "CMD-04.076",
+    "name": "contracts",
+    "status": "active",
+    "function": "the bounty board (generated hunt-contracts)",
+    "label": "contracts",
+    "file": "forge.py",
+    "type": "CMD",
+    "domain": "04",
+    "docs": "docs/architecture.md",
+    "tests": "tests/test_bounties.py",
+    "depends_on": [],
+    "related": [
+      "quest"
+    ],
+    "reuse": "",
+    "tags": [
+      "command"
+    ],
+    "notes": "quest.contracts_view: lists generated bounty quests + status.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-24",
+    "updated": "2026-07-24"
   }
 ]

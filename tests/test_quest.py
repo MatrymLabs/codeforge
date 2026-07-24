@@ -124,7 +124,7 @@ def test_on_event_advances_the_arc_when_a_world_action_triggers_a_step(monkeypat
 
     qid = next(iter(quest_mod._QUESTS))
     monkeypatch.setitem(quest_mod._QUESTS[qid].triggers, ("defeat", "warren_boss"), "accept")
-    monkeypatch.setitem(quest_mod._EVENT_ROUTES, ("defeat", "warren_boss"), qid)
+    monkeypatch.setitem(quest_mod._EVENT_ROUTES, ("defeat", "warren_boss"), [qid])
     s = _player()
     line = quest_mod.on_event(s, "defeat", "warren_boss")
     assert line is not None and "taken the contract" in line  # the arc advanced
@@ -143,7 +143,7 @@ def test_on_event_is_none_when_the_step_is_not_reachable_yet(monkeypatch):
 
     qid = next(iter(quest_mod._QUESTS))
     monkeypatch.setitem(quest_mod._QUESTS[qid].triggers, ("enter", "deep_vault"), "finish")
-    monkeypatch.setitem(quest_mod._EVENT_ROUTES, ("enter", "deep_vault"), qid)
+    monkeypatch.setitem(quest_mod._EVENT_ROUTES, ("enter", "deep_vault"), [qid])
     assert quest_mod.on_event(_player(), "enter", "deep_vault") is None  # can't finish yet
 
 
