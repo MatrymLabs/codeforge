@@ -64,6 +64,8 @@ class CharacterRow(ArchiveBase):
     # Equipped gear as a JSON map {slot: prototype_label}, or "". Items are ephemeral instances, so
     # we persist the PROTOTYPE per slot and re-clone it on restore -- worn gear survives logout.
     equipped_gear: Mapped[str] = mapped_column(default="")
+    # The purse: coins earned from kills, spent at shops. A simple persisted scalar.
+    coins: Mapped[int] = mapped_column(default=0)
     auth_salt: Mapped[str | None] = mapped_column(default=None)  # legacy v1 char passwords
     auth_hash: Mapped[str | None] = mapped_column(default=None)
 

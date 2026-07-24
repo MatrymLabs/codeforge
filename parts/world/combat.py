@@ -149,6 +149,19 @@ def _reward_amounts(session: Session, npc: Npc) -> tuple[int, int, int]:
     return (xp, jp, jp)
 
 
+# Coins a kill drops per tier, multiplied by the foe's level (a boss is worth far more than a
+# stray). A levelless tutorial foe pays a token purse off its flat xp, so first-forge still earns.
+_TIER_COINS = {"normal": 1, "elite": 3, "boss": 10}
+
+
+def _coin_reward(npc: Npc) -> int:
+    """The coins a felled foe drops. Scales with level and tier; a levelless foe pays a token."""
+    level = npc.get("level")
+    if level is None:
+        return max(1, npc["xp"] // 10)
+    return level * _TIER_COINS.get(npc.get("tier", "normal"), 1)
+
+
 def land_hit(session: Session, npc: Npc, nid: str, dmg: int) -> tuple[bool, str]:
     """Apply `dmg` to `npc` and resolve the outcome; return (defeated, tail).
 
@@ -174,6 +187,9 @@ def land_hit(session: Session, npc: Npc, nid: str, dmg: int) -> tuple[bool, str]
     for extra in (award_jp(session, jp_award), award_tp(session, tp_award)):
         if extra:
             rewards = f"{rewards}\n{extra}"
+    coins = _coin_reward(npc)
+    session.coins += coins
+    rewards = f"{rewards}\nYou find {coins} coins. (purse: {session.coins})"
     # guaranteed drops, then one weighted loot roll -- both spawn fresh instances on the floor
     haul = "\n".join(
         part for part in (_spawn_drops(session, npc), _roll_loot(session, npc)) if part
