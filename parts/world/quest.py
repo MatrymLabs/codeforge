@@ -17,7 +17,7 @@ import json
 
 from parts.shelf.statemachine import Fired
 from parts.shelf.workflow import Instance, Step, Workflow, WorkflowEngine, build_workflow
-from parts.world.seed import SEED_DIR, QuestSpec, load_quest
+from parts.world.seed import SEED_DIR, Npc, QuestSpec, load_quest
 from parts.world.session import Session
 
 
@@ -56,9 +56,9 @@ def _from_seed(spec: QuestSpec) -> tuple[Workflow, str, int]:
 
 
 def _load_specs() -> list[QuestSpec]:
-    """Every quest spec this seed ships: `quest.yaml` first (the primary arc), then `quests/*.yaml`
-    in name order, then GENERATED bounties (one hunt-contract per combatant foe -- side-content at
-    volume, parts.world.bounties). The world stays data; adding a story is a YAML file."""
+    """The seed's AUTHORED quest specs: `quest.yaml` (the primary arc) then `quests/*.yaml` in name
+    order. Generated bounties are added later (register_bounties), once the full foe set (with the
+    procedural Spiral) is assembled. The world stays data; a story is a YAML file."""
     specs: list[QuestSpec] = []
     primary = load_quest(SEED_DIR / "quest.yaml")
     if primary:
@@ -69,10 +69,6 @@ def _load_specs() -> list[QuestSpec]:
             spec = load_quest(path)
             if spec:
                 specs.append(spec)
-    from parts.world.bounties import generate_bounties
-    from parts.world.seed import load_npcs
-
-    specs.extend(generate_bounties(load_npcs(SEED_DIR / "npcs.yaml")))
     return specs
 
 
@@ -119,6 +115,23 @@ _EVENT_ROUTES: dict[tuple[str, str], list[str]] = {}
 for _qid, _quest in _QUESTS.items():
     for _trigger in _quest.triggers:
         _EVENT_ROUTES.setdefault(_trigger, []).append(_qid)
+
+
+def register_bounties(npcs: dict[str, Npc]) -> None:
+    """Generate hunt-contracts from the LIVE foe set and fold them into the quest engine. Called by
+    world.py once the world -- including the procedural Spiral -- is fully assembled, so a bounty
+    exists for EVERY combatant foe (seed + generated), not only authored ones. Idempotent."""
+    from parts.world.bounties import generate_bounties
+
+    for spec in generate_bounties(npcs):
+        if spec["id"] in _QUESTS:
+            continue  # never double-register
+        workflow, name, xp = _from_seed(spec)
+        quest = _Quest(workflow, name, xp, spec)
+        _QUESTS[spec["id"]] = quest
+        for trigger in quest.triggers:
+            _EVENT_ROUTES.setdefault(trigger, []).append(spec["id"])
+
 
 _RUNS: dict[str, dict[str, Instance]] = {}  # player_id -> {quest_id: their run of that quest}
 

@@ -68,3 +68,21 @@ def test_contracts_view_lists_a_bounty_and_a_defeat_collects_it(monkeypatch):
     assert "hunt-contracts on the board" in quest._list_all(s)  # counted in the story view
     line = quest.on_event(s, "defeat", "brawler")
     assert line is not None and "Bounty collected" in line  # felling it collects the contract
+
+
+def test_register_bounties_folds_contracts_into_the_engine_idempotently():
+    # world.py calls this once the full foe set (seed + Spiral) is assembled, so bounties cover
+    # every combatant foe -- and a second call never duplicates.
+    from parts.world import quest
+
+    npcs = {"grumpf": _foe(hp=40, level=12, name="the grumpf")}
+    try:
+        quest.register_bounties(npcs)
+        assert "bounty_grumpf" in quest._QUESTS
+        route = quest._EVENT_ROUTES[("defeat", "grumpf")]
+        assert "bounty_grumpf" in route
+        quest.register_bounties(npcs)  # idempotent
+        assert quest._EVENT_ROUTES[("defeat", "grumpf")] == route  # no duplicate route
+    finally:
+        quest._QUESTS.pop("bounty_grumpf", None)
+        quest._EVENT_ROUTES.pop(("defeat", "grumpf"), None)
