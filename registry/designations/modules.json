@@ -4454,5 +4454,32 @@
     "aliases": [],
     "created": "2026-07-24",
     "updated": "2026-07-24"
+  },
+  {
+    "designation": "MOD-05.066",
+    "name": "affixes",
+    "status": "active",
+    "function": "roll a rarity and named affixes onto a base item (the loot-variety factory)",
+    "label": "affixes",
+    "file": "parts/shelf/affixes.py",
+    "type": "MOD",
+    "domain": "05",
+    "docs": "docs/architecture.md",
+    "tests": "tests/test_affixes.py",
+    "depends_on": [],
+    "related": [
+      "weighted_table",
+      "combat",
+      "spiral"
+    ],
+    "reuse": "the item-side of the generation lever (compare spiral for the world side): a pure, rng-injected factory that turns one base prototype into a spread of rarities+affixes, so hand-authored items yield AAA-style loot variety. Deterministic given a random.Random, like weighted_table.",
+    "notes": "5 rarity tiers (common..legendary) scaling base mods + affix count; prefix/suffix affixes each add a derived-stat mod scaled by item level. combat._spawn_loot rolls it onto a levelled foe's EQUIPPABLE drops ('a Cruel notched blade of the Bear [rare]'). Session-scoped for now (persisted gear stores the base prototype, so affix persistence is a follow-up).",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-24",
+    "updated": "2026-07-24"
   }
 ]
