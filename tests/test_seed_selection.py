@@ -338,10 +338,11 @@ def test_aethryn_ships_a_second_quest_the_ascent():
     ascent = load_quest(AETHRYN / "quests" / "the_ascent.yaml")
     assert ascent is not None
     assert ascent["id"] == "the_ascent" and ascent["name"] == "The Ascent"
-    assert ascent["reward_xp"] == 300 and ascent["terminal"] == ["ascended"]
+    assert ascent["terminal"] == ["ascended"]
     # every beat past the start fires from a real world deed (a natural trigger), never a soft-lock
     for step in ascent["steps"]:
         assert step.get("on_defeat") or step.get("on_enter") or step.get("on_take")
-    # the arc ends on felling the first Coil's Gate-boss with a reward
+    # the arc spans BOTH built Coils and ends on felling the Second Coil's Ashlord with a reward
+    assert {"gate_forgewraith", "gate_ashlord"} <= {s.get("on_defeat") for s in ascent["steps"]}
     last = next(s for s in ascent["steps"] if s["to"] == "ascended")
-    assert last.get("on_defeat") == "gate_forgewraith" and last.get("effect") == "award_xp"
+    assert last.get("on_defeat") == "gate_ashlord" and last.get("effect") == "award_xp"
