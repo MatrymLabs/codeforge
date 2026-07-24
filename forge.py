@@ -73,7 +73,7 @@ from parts.world.items import drop, inventory_text, prototype_of, room_items_tex
 from parts.world.jobs import JOBS, bind_calling, calling_index, set_secondary
 from parts.world.npcs import ask, room_npcs_text, talk, trace_npc
 from parts.world.orders import swear_order
-from parts.world.quest import quest_view
+from parts.world.quest import contracts_view, quest_view
 from parts.world.ranks import wizard_command
 from parts.world.score_sheet import render_score_sheet
 from parts.world.seed import load_splash
@@ -88,7 +88,7 @@ NAME_RE = re.compile(r"^[a-z][a-z0-9_]{1,15}$")
 HELP_TEXT = (
     "Commands: look, go <direction> (or n/s/e/w/u/d), "
     "take, drop, inventory, talk <npc>, ask <npc> about <topic>, say <msg>, name <yourname>, who, "
-    "jobs, job <calling>, subjob <calling>, join <order>, wallet, quaff <item>, score, "
+    "jobs, job <calling>, subjob <calling>, join <order>, wallet, quaff <item>, contracts, score, "
     "equip <item>, unequip <slot>, "
     "attack <target>, skills, use <ability> [on <foe>], repair, scan <target>, deploy, calibrate, "
     "channel, journal [text], vitals, "
@@ -1312,6 +1312,15 @@ def _build_commands() -> CommandSet:
             "CMD-04.070",
             "check your purse",
             lambda s, _a: f"Your purse holds {s.coins} coins.",
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "contracts",
+            "CMD-04.076",
+            "the bounty board (generated hunt-contracts)",
+            lambda s, _a: contracts_view(s),
             namespace=CORE,
         )
     )

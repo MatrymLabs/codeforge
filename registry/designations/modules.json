@@ -4481,5 +4481,34 @@
     "aliases": [],
     "created": "2026-07-24",
     "updated": "2026-07-24"
+  },
+  {
+    "designation": "MOD-04.060",
+    "name": "bounties",
+    "status": "active",
+    "function": "generate hunt-contracts from the world's foes (side-content at volume)",
+    "label": "bounties",
+    "file": "parts/world/bounties.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "docs/architecture.md",
+    "tests": "tests/test_bounties.py",
+    "depends_on": [
+      "seed"
+    ],
+    "related": [
+      "quest",
+      "spiral",
+      "affixes"
+    ],
+    "reuse": "the generation lever pointed at quests (compare spiral for the world, affixes for loot): every combatant levelled foe becomes a one-step bounty QuestSpec, folded into the multi-quest engine -- real trackable side-quests at volume, deterministic, systemic not hand-crafted",
+    "notes": "generate_bounties(npcs) -> QuestSpecs id bounty_<foe> (posted -> collected on_defeat, award_xp = level*12). quest._load_specs folds them in; _list_all counts them (not floods); `contracts` verb (CMD-04.076) lists the board. Needed the _EVENT_ROUTES fan-out fix: a defeat now advances ALL matching quests (an authored arc AND its bounty), not just the last-loaded.",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-24",
+    "updated": "2026-07-24"
   }
 ]

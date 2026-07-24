@@ -54,6 +54,7 @@ _GAME_SEED = {
     "engineer",
     "quest",
     "chime",
+    "bounties",
     "consumables",
     "orders",
     "shop",
