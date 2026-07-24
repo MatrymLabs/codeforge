@@ -1,0 +1,26 @@
+# SEED: aethryn -- quests/the_descent.yaml (the coast's downward arc: into the Cinderdeep)
+# The Descent is The Ascent's counterpart: where the Spiral climbs, the deep sinks. It plays itself
+# from real deeds -- delve the Cinderdeep from the cellar, sink to its maw, and still the Hollow
+# Smith at the bottom. The `quest the_descent <event>` verb stays a fallback for out-of-order beats.
+
+id: the_descent
+name: The Descent
+start: unbroached
+reward_xp: 250
+
+steps:
+  - {state: unbroached, event: delve, to: delving,     on_enter: cinderdeep_descent}
+  - {state: delving,    event: sink,  to: at_the_maw,  on_enter: cinderdeep_maw}
+  - {state: at_the_maw, event: still, to: descended,   on_defeat: hollow_smith, effect: award_xp}
+
+terminal: [descended]
+
+labels:
+  unbroached: "A crack breathes cold beneath the cellar hearth, down toward the Cinderdeep. Delve it, if you dare."
+  delving: "You are in the Cinderdeep, where the Unforging cut deepest. Sink to its maw, and end what waits there."
+  at_the_maw: "The deep bottoms out at the maw. The Hollow Smith keeps its dead anvil -- still it, and the delve is done."
+  descended: |-
+    *** THE DESCENT IS ENDED ***
+    The Hollow Smith lays down its black-iron hammer, and the cold at the bottom of the Cinderdeep
+    goes quiet. You have walked the coast's other road, down into what the Unforging emptied, and
+    come back up with your spark intact. Some Forgers climb the Spiral. You have sounded the deep.
