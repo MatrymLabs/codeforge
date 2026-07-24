@@ -59,3 +59,45 @@ saboteur:
   name: Saboteur
   description: Poisons, snares, and unmakes a foe before it swings. Cunning over muscle.
   stats: {strength: 8, speed: 13, stamina: 9, magic: 8, wisdom: 9, luck: 8}
+
+# Arcane family: casters who bend ember to force and time (magic/wisdom).
+arcanist:
+  name: Arcanist
+  description: "Raw force made law: bolts, wards, and the patient shaping of power. Deep magic."
+  stats: {strength: 3, speed: 7, stamina: 8, magic: 16, wisdom: 12, luck: 6}
+
+elementalist:
+  name: Elementalist
+  description: Calls fire, frost, and storm and lets them run. Magic first, wisdom to steer it.
+  stats: {strength: 4, speed: 8, stamina: 8, magic: 15, wisdom: 11, luck: 7}
+
+chronomancer:
+  name: Chronomancer
+  description: Steals time from the enemy and lends it to allies. Wisdom married to deep magic.
+  stats: {strength: 3, speed: 9, stamina: 8, magic: 13, wisdom: 15, luck: 8}
+
+summoner:
+  name: Summoner
+  description: Binds a spirit of the deep ember and fights through it. Magic, wisdom, and nerve.
+  stats: {strength: 4, speed: 7, stamina: 9, magic: 14, wisdom: 13, luck: 8}
+
+# Divine family: menders and wardens who turn faith into force (wisdom/magic).
+cleric:
+  name: Cleric
+  description: Mends the line and calls light down on what breaks it. Wisdom above all.
+  stats: {strength: 5, speed: 7, stamina: 10, magic: 12, wisdom: 15, luck: 7}
+
+oracle:
+  name: Oracle
+  description: Reads what comes and bends the odds toward it. Wisdom and an uncanny luck.
+  stats: {strength: 4, speed: 8, stamina: 9, magic: 11, wisdom: 14, luck: 12}
+
+templar:
+  name: Templar
+  description: "Faith made armor: smites the unmade and shields the living. Wisdom and iron."
+  stats: {strength: 11, speed: 6, stamina: 13, magic: 8, wisdom: 12, luck: 5}
+
+warden:
+  name: Warden
+  description: Keeps the ward-line whole and turns curses aside. Stamina and steady wisdom.
+  stats: {strength: 8, speed: 6, stamina: 14, magic: 9, wisdom: 13, luck: 6}

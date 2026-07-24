@@ -407,3 +407,17 @@ def test_aethryn_ships_the_martial_and_precision_job_families():
     abilities = load_abilities(AETHRYN / "abilities.yaml")
     for job in ("duelist", "berserker", "ranger", "saboteur"):
         assert any(job in a["jobs"] for a in abilities.values()), f"{job} has no abilities"
+
+
+def test_aethryn_ships_the_arcane_and_divine_job_families():
+    """Batch 2 of the 30 callings: the Arcane (Arcanist/Elementalist/Chronomancer/Summoner) and
+    Divine (Cleric/Oracle/Templar/Warden) families, magic/wisdom-led."""
+    jobs = load_jobs(AETHRYN / "jobs.yaml")
+    arcane = ("arcanist", "elementalist", "chronomancer", "summoner")
+    divine = ("cleric", "oracle", "templar", "warden")
+    for job in arcane + divine:
+        assert job in jobs, f"{job} calling missing"
+    assert len(jobs) >= 18  # 3 original + Martial/Precision (7) + Arcane/Divine (8)
+    # casters lean magic/wisdom; the Arcanist out-magics the Martial Berserker
+    assert jobs["arcanist"]["stats"]["magic"] > jobs["berserker"]["stats"]["magic"]
+    assert jobs["cleric"]["stats"]["wisdom"] > jobs["berserker"]["stats"]["wisdom"]
