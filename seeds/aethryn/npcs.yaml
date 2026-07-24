@@ -183,3 +183,47 @@ gate_forgewraith:
   tier: boss  # the first Gate-boss of the Great Spiral: the ascent's first true wall
   drops: [coil_keystone]
   loot: {ember_shard: 3, nothing: 2}
+
+# --- The Second Coil foes (the ascent climbs: levels ~25-28, one Gate-boss). ---
+
+coil_revenant:
+  name: a coil revenant
+  location: coil_second_ascent
+  keywords: [revenant, coil, climber, grey]
+  dialogue:
+    - The revenant turns its unfinished face toward you, mistaking your warmth for the way home.
+  hp: 60
+  atk: 13
+  aggressive: true
+  level: 25
+  tier: normal
+  drops: [ember_shard]
+
+ashen_sentinel:
+  name: the Ashen Sentinel
+  location: coil_bridgespan
+  keywords: [sentinel, ashen, span, guardian]
+  dialogue:
+    - The Ashen Sentinel plants itself across the span, ash sloughing from grey Forgework.
+  hp: 95
+  atk: 16
+  aggressive: true
+  level: 26
+  tier: elite  # it holds the only crossing: an elite toll for the span (x3 reward)
+  drops: [ember_shard]
+  loot: {ember_shard: 2, nothing: 2}
+
+gate_ashlord:
+  name: the Coil Ashlord
+  location: coil_second_landing
+  keywords: [ashlord, ash, lord, coil]
+  dialogue:
+    - '"I WAS A MAKER... NOW I AM THE ASH OF ONE..." The Ashlord unfolds in blue-cold fire.'
+  hp: 160
+  atk: 22
+  aggressive: true
+  lethal: true
+  level: 28
+  tier: boss  # the Second Coil's Gate-boss: the ascent's next true wall (x10 reward)
+  drops: [coil_keystone]
+  loot: {ember_shard: 3, nothing: 2}

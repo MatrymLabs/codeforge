@@ -195,6 +195,39 @@ coil_first_landing:
   desc: |-
     A wide forged landing on the first Coil, ringed by cold ascent-lamps. At its center
     a Forgewraith keeps the stair -- the first Gate-boss of the Spiral, made of the wrath
-    the Unforging left behind. The way further up is dark, and waits for another day.
+    the Unforging left behind. Past it the stair climbs on, up into the Second Coil.
   exits:
     down: coilfoot_ascent
+    up: coil_second_ascent
+
+# --- The Second Coil of the Great Spiral (world bible s.24): the ascent climbs, levels ~24-28. ---
+# Higher than the first Coil, colder, and hungrier. Its Gate-boss, the Ashlord, keeps the stair.
+
+coil_second_ascent:
+  name: The Second Coil Ascent
+  desc: |-
+    The stair narrows as the Second Coil lifts higher into the Spiral's cold. Revenants of
+    fallen climbers walk the forged steps, grey and unfinished, mistaking the living for
+    the way home. The First Coil falls away below; the stair climbs on toward a bridgespan.
+  exits:
+    down: coil_first_landing
+    up: coil_bridgespan
+
+coil_bridgespan:
+  name: The Coil Bridgespan
+  desc: |-
+    A slender Forgework bridge arcs between two turns of the Spiral, ascent-lamps guttering
+    along its rail above a fall with no bottom. An Ashen Sentinel walks the span, and there
+    is no room to go around. Beyond it the stair reaches the Second Coil's landing.
+  exits:
+    down: coil_second_ascent
+    up: coil_second_landing
+
+coil_second_landing:
+  name: The Second Coil Landing
+  desc: |-
+    A high forged landing where the Second Coil's cold burns blue. The Ashlord holds the
+    stair here -- a Gate-boss grown from a Forge-master the Unforging turned to ash and will.
+    The way further up the Spiral is sealed in grey light, and waits for another day.
+  exits:
+    down: coil_bridgespan

@@ -122,6 +122,19 @@ def test_aethryn_ascent_bosses_are_lethal_and_boss_tier():
     assert wraith["level"] > sentinel["level"]  # the Coil climbs above the gate test
 
 
+def test_aethryn_second_coil_climbs_above_the_first():
+    """The Spiral keeps ascending: the First Coil Landing opens up into the Second Coil, which
+    climbs through a bridgespan to its own Gate-boss, the Ashlord (higher than the first)."""
+    rooms = load_rooms(AETHRYN / "rooms.yaml")
+    assert rooms["coil_first_landing"]["exits"]["up"] == "coil_second_ascent"
+    assert rooms["coil_second_ascent"]["exits"]["up"] == "coil_bridgespan"
+    assert rooms["coil_bridgespan"]["exits"]["up"] == "coil_second_landing"
+    npcs = load_npcs(AETHRYN / "npcs.yaml")
+    ashlord, wraith = npcs["gate_ashlord"], npcs["gate_forgewraith"]
+    assert ashlord["level"] == 28 and ashlord["tier"] == "boss" and ashlord.get("lethal") is True
+    assert ashlord["level"] > wraith["level"]  # each Coil's Gate-boss climbs above the last
+
+
 def test_aethryn_ships_the_relighting_quest_as_data():
     """The flagship's story arc is a seed-shipped workflow, not hardcoded in Python."""
     quest = load_quest(AETHRYN / "quest.yaml")
