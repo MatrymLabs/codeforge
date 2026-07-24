@@ -147,6 +147,11 @@ class Npc(TypedDict):
     # key `nothing` for a no-drop weight. One outcome is picked proportional to weight and spawned.
     # `drops` (above) is guaranteed; `loot` is the chance roll. Optional.
     loot: NotRequired[dict[str, int]]
+    # A SHOP this NPC keeps (a merchant). `sells` maps an item prototype to its coin price (buy one
+    # and a fresh instance is cloned into your hands); `buys` maps a prototype to the coins it pays
+    # for one. Both optional within the shop. Prices are positive ints; prototypes are cross-checked
+    # against the seed's items at boot (inspect_world_links). Optional -- a bare NPC keeps no shop.
+    shop: NotRequired[dict[str, dict[str, int]]]
 
 
 class Door(TypedDict):
@@ -535,6 +540,24 @@ def load_npcs(path: Path) -> dict[str, Npc]:
                 f"NPC '{label}': 'tier' {tier!r} is set but 'level' is not; a tier only scales a "
                 "levelled foe. Give the NPC a level or drop the tier."
             )
+        # Optional shop: a merchant's `sells`/`buys` price tables. Prices are positive ints; the
+        # prototypes are cross-checked against the seed's items at boot (inspect_world_links).
+        shop = merged.get("shop")
+        if shop is not None:
+            if not isinstance(shop, dict) or set(shop) - {"sells", "buys"}:
+                raise SeedError(
+                    f"NPC '{label}': 'shop' must be a mapping with only 'sells' and/or 'buys'."
+                )
+            for side in ("sells", "buys"):
+                table = shop.get(side, {})
+                if not isinstance(table, dict) or not all(
+                    isinstance(k, str) and isinstance(v, int) and not isinstance(v, bool) and v > 0
+                    for k, v in table.items()
+                ):
+                    raise SeedError(
+                        f"NPC '{label}': shop '{side}' must map an item prototype to a positive "
+                        "integer price."
+                    )
         npc = Npc(
             name=merged["name"],
             keywords=merged["keywords"],
@@ -556,6 +579,8 @@ def load_npcs(path: Path) -> dict[str, Npc]:
             npc["drops"] = list(drops)
         if loot:
             npc["loot"] = dict(loot)
+        if shop:
+            npc["shop"] = {side: dict(table) for side, table in shop.items()}
         npcs[label] = npc
     return npcs
 
@@ -580,6 +605,13 @@ def inspect_world_links(
         for drop in npc.get("drops", []):  # loot must name a real item prototype (caught at boot)
             if drop not in items:
                 raise SeedError(f"NPC '{label}' drops '{drop}', which is not an item in this seed.")
+        for side in ("sells", "buys"):  # a shop's wares must name real item prototypes
+            for proto in npc.get("shop", {}).get(side, {}):
+                if proto not in items:
+                    raise SeedError(
+                        f"NPC '{label}' shop {side} names '{proto}', which is not an item "
+                        "in this seed."
+                    )
         for outcome in npc.get("loot", {}):  # weighted loot: every outcome but `nothing` is real
             if outcome != "nothing" and outcome not in items:
                 raise SeedError(
