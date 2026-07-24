@@ -56,6 +56,7 @@ _GAME_SEED = {
     "chime",
     "orders",
     "shop",
+    "spiral",
 }
 
 
