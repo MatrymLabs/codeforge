@@ -4510,5 +4510,28 @@
     "aliases": [],
     "created": "2026-07-24",
     "updated": "2026-07-24"
+  },
+  {
+    "designation": "MOD-04.061",
+    "name": "schema_guard",
+    "status": "active",
+    "function": "refuse to serve on a database whose columns are behind the models (fail loud, name the fix)",
+    "label": "schema_guard",
+    "file": "parts/world/schema_guard.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "docs/architecture.md",
+    "tests": "tests/test_schema_guard.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "module"
+    ],
+    "notes": "power-on schema-drift guard; complements create_all (which adds tables, not columns)",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-24",
+    "updated": "2026-07-24"
   }
 ]
