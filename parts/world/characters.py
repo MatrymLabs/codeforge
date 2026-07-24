@@ -25,21 +25,29 @@ if TYPE_CHECKING:
 
 
 def _serialize_gear(session: Session) -> str:
-    """Worn gear as a {slot: prototype} JSON map for persistence, or "" when nothing is equipped.
+    """Worn gear as a {slot: {prototype, name, mods}} JSON map, or "" when nothing is equipped.
 
-    We store the PROTOTYPE (the seed label), never the ephemeral instance id: instances die with
-    the process, but a prototype re-clones into fresh gear on restore. Empty stays "" (clean)."""
-    from parts.world.items import prototype_of
+    We store the PROTOTYPE (the seed label to re-clone) PLUS the instance's rolled name and mods, so
+    an AFFIXED drop ('a Cruel blade of the Bear [rare]') survives logout with its rarity intact --
+    not just the base weapon. Instances die with the process; this is enough to rebuild them."""
+    from parts.world.items import ITEMS, prototype_of
 
-    gear = {slot: prototype_of(iid) for slot, iid in session.equipped.items()}
+    gear: dict[str, dict[str, Any]] = {}
+    for slot, iid in session.equipped.items():
+        item = ITEMS.get(iid)
+        if item is not None:
+            gear[slot] = {
+                "prototype": prototype_of(iid),
+                "name": item["name"],
+                "mods": item["mods"],
+            }
     return json.dumps(gear, sort_keys=True) if gear else ""
 
 
 def _restore_gear(session: Session, raw: str) -> None:
-    """Re-clone and re-equip the gear a character logged out wearing (best-effort, never a crash).
-
-    An unknown or un-cloneable prototype (a since-removed seed, an @sg one-off) is skipped, not
-    fatal -- logging in must never fail because one item vanished from the world."""
+    """Re-clone and re-equip the gear a character logged out wearing, RESTORING any rolled affixes
+    (name + mods). Best-effort, never a crash: an unknown/removed prototype is skipped, and the old
+    bare-prototype format (a plain string) still restores the base item (backward-compatible)."""
     if not raw:
         return
     try:
@@ -47,11 +55,21 @@ def _restore_gear(session: Session, raw: str) -> None:
     except (ValueError, TypeError):
         return
     from parts.world.equipment import SLOTS
-    from parts.world.items import PROTOTYPES, clone
+    from parts.world.items import ITEMS, PROTOTYPES, clone
 
-    for slot, prototype in gear.items():
-        if slot in SLOTS and isinstance(prototype, str) and prototype in PROTOTYPES:
-            session.equipped[slot] = clone(prototype, "player")
+    for slot, saved in gear.items():
+        if slot not in SLOTS:
+            continue
+        prototype = saved if isinstance(saved, str) else saved.get("prototype")
+        if not isinstance(prototype, str) or prototype not in PROTOTYPES:
+            continue
+        iid = clone(prototype, "player")
+        if isinstance(saved, dict):  # restore the rolled affixes over the fresh base clone
+            if isinstance(saved.get("name"), str):
+                ITEMS[iid]["name"] = saved["name"]
+            if isinstance(saved.get("mods"), dict):
+                ITEMS[iid]["mods"] = {k: v for k, v in saved["mods"].items() if isinstance(v, int)}
+        session.equipped[slot] = iid
 
 
 def _archive_row_to_casefile(archive_row: CharacterRow) -> dict[str, Any]:

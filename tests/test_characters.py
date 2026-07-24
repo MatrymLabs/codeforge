@@ -167,3 +167,38 @@ def test_quest_progress_persists_across_a_save_and_restore():
     fresh = Session(player_id="matrym", location="courtyard")
     restore_character(fresh, load_character("matrym"))
     assert json.loads(save_state("matrym")) == saved  # the arc came back
+
+
+def test_affixed_gear_keeps_its_rarity_across_a_save_and_restore():
+    """A rolled legendary survives logout with its name and mods, not just the base weapon."""
+    from parts.world.equipment import equip
+    from parts.world.items import ITEMS, clone
+
+    s = _hero()
+    iid = clone("forge_wrench", "player")
+    ITEMS[iid]["name"] = "a Savage forge wrench of Ruin"  # a rolled affix instance
+    ITEMS[iid]["mods"] = {"ATK": 20, "ACC": 8}
+    equip(s, "wrench")
+    save_character(s)
+
+    fresh = Session(player_id="matrym", location="courtyard")
+    restore_character(fresh, load_character("matrym"))
+    worn = ITEMS[fresh.equipped["weapon"]]
+    assert worn["name"] == "a Savage forge wrench of Ruin" and worn["mods"]["ATK"] == 20
+
+
+def test_the_legacy_bare_prototype_gear_format_still_restores():
+    """An old save (equipped_gear as {slot: 'prototype'}) restores the base item, not a crash."""
+    fresh = Session(player_id="matrym", location="courtyard")
+    casefile = {
+        "job": "vanguard",
+        "level": 1,
+        "xp": 0,
+        "location": "courtyard",
+        "equipped_gear": '{"weapon": "forge_wrench"}',  # the pre-affix-persistence format
+    }
+    restore_character(fresh, casefile)
+    from parts.world.items import ITEMS, prototype_of
+
+    assert prototype_of(fresh.equipped["weapon"]) == "forge_wrench"
+    assert ITEMS[fresh.equipped["weapon"]]["name"]  # a real base clone, no override
