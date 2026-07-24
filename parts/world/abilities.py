@@ -30,6 +30,20 @@ def abilities_for(job: str) -> list[tuple[str, Ability]]:
     return sorted(pairs, key=lambda pair: pair[1]["name"].lower())
 
 
+def _wielded_jobs(session: Session) -> set[str]:
+    """The jobs whose kit a character can wield NOW: the primary AND the sworn subjob (FFXI-style
+    -- your subjob lends its moves). Empty labels are dropped, so a subjob-less seat is fine."""
+    return {job for job in (session.job, session.secondary_job) if job}
+
+
+def abilities_for_session(session: Session) -> list[tuple[str, Ability]]:
+    """Every ability a character may wield: their primary job's AND their subjob's, deduped and
+    sorted. This is the switchable kit -- change your subjob and a different moveset opens up."""
+    jobs = _wielded_jobs(session)
+    pairs = [(label, a) for label, a in ABILITIES.items() if jobs & set(a["jobs"])]
+    return sorted(pairs, key=lambda pair: pair[1]["name"].lower())
+
+
 def _magnitude(session: Session, ability: Ability) -> int:
     """An ability's effect size: its flat power plus a third of the attribute it scales on."""
     scaled = (
@@ -51,15 +65,17 @@ def render_abilities(session: Session) -> str:
     """List the abilities the player's calling can wield (the `skills` verb)."""
     if session.stats is None:
         return "You have no calling yet. Type JOBS before you learn skills."
-    pairs = abilities_for(session.job)
+    pairs = abilities_for_session(session)
     if not pairs:
         return "Your calling has no abilities yet."
+    subjob_only = {label for label, _ in pairs} - {label for label, _ in abilities_for(session.job)}
     lines = ["Abilities:"]
-    for _label, a in pairs:
+    for label, a in pairs:
         target = "self" if a["kind"] == "heal" else "a target"
         scale = f" +{a['scales']}/3" if a["scales"] else ""
+        via = "  (subjob)" if label in subjob_only else ""
         lines.append(
-            f"  {a['name']} ({a['kind']} {target}, {a['mp_cost']} MP): {a['power']}{scale}"
+            f"  {a['name']} ({a['kind']} {target}, {a['mp_cost']} MP): {a['power']}{scale}{via}"
         )
     lines.append("Use one with:  use <ability> [on <target>]")
     return "\n".join(lines)
@@ -74,7 +90,7 @@ def use_ability(session: Session, arg: str) -> str:
     if found is None:
         return f"You know no ability called '{name.strip()}'. Type SKILLS to see yours."
     label, ability = found
-    if session.job not in ability["jobs"]:
+    if not _wielded_jobs(session) & set(ability["jobs"]):
         return f"Your calling cannot wield {ability['name']}. Type SKILLS to see yours."
     mp = session.resources["mp"]
     if mp.current < ability["mp_cost"]:

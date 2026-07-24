@@ -186,3 +186,36 @@ def test_using_an_ability_on_a_peaceful_npc_refuses() -> None:
 def test_load_abilities_refuses_a_malformed_ability(tmp_path: Path, body: str, match: str) -> None:
     with pytest.raises(SeedError, match=match):
         load_abilities(_abilities_file(tmp_path, body))
+
+
+# --- subjob lends its kit: switching a subjob opens a different moveset (FFXI-style) -------------
+
+
+def test_a_subjob_lends_its_kit_so_switching_opens_a_new_moveset() -> None:
+    from parts.world.abilities import abilities_for_session
+    from parts.world.jobs import set_secondary
+
+    s = _at_dummy("vanguard")
+    assert [a["name"] for _, a in abilities_for_session(s)] == ["Power Strike"]  # primary only
+    set_secondary(s, "scholar")
+    names = {a["name"] for _, a in abilities_for_session(s)}
+    assert {"Power Strike", "Arcane Bolt", "Mend"} <= names  # the subjob's moves are lent
+
+
+def test_a_subjob_ability_is_wieldable_not_refused_by_calling() -> None:
+    from parts.world.jobs import set_secondary
+
+    s = _at_dummy("vanguard")
+    assert "cannot wield" in use_ability(s, "arcane bolt on dummy")  # refused before a subjob
+    set_secondary(s, "scholar")
+    after = use_ability(s, "arcane bolt on dummy")
+    assert "cannot wield" not in after  # the subjob lends it (may still gate on MP, not on calling)
+
+
+def test_render_abilities_marks_the_subjob_moves() -> None:
+    from parts.world.jobs import set_secondary
+
+    s = _at_dummy("vanguard")
+    set_secondary(s, "scholar")
+    out = render_abilities(s)
+    assert "Arcane Bolt" in out and "(subjob)" in out  # the borrowed moves are flagged
