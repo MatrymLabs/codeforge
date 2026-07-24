@@ -149,6 +149,40 @@ def test_aethryn_cinderdeep_is_the_downward_road_from_the_cellar():
     assert npcs["deep_crawler"]["level"] == 10 and npcs["cold_vein_lurker"]["tier"] == "elite"
 
 
+def test_aethryn_boss_drops_are_real_gear_across_every_slot():
+    """Felling a boss now yields equippable gear, not just keepsakes: the ladder fills all six
+    equipment slots (weapon, body, head, arm, two accessories) with flat stat mods."""
+    from parts.world.equipment import SLOTS
+    from parts.world.stat_rules import DERIVED_STATS
+
+    items = load_items(AETHRYN / "items.yaml")
+    ladder = {
+        "cinder_hammer": "weapon",
+        "reaver_blade": "weapon",
+        "cindershell_plate": "body",
+        "wraithlamp_circlet": "head",
+        "ashlord_gauntlet": "arm",
+        "warden_sigil": "accessory_1",
+        "coil_keystone": "accessory_2",
+    }
+    covered = set()
+    for label, slot in ladder.items():
+        gear = items[label]
+        assert gear["slot"] == slot, f"{label} should equip in {slot}"
+        assert gear["mods"], f"{label} must grant stat mods to be worth equipping"
+        assert all(target in DERIVED_STATS for target in gear["mods"]), f"{label} mods a real stat"
+        covered.add(slot)
+    assert covered == set(SLOTS)  # every equipment slot has a drop on the ladder
+
+
+def test_aethryn_gate_bosses_drop_their_gear():
+    """The Coil Gate-bosses drop their signature gear, not only a charm."""
+    npcs = load_npcs(AETHRYN / "npcs.yaml")
+    assert "wraithlamp_circlet" in npcs["gate_forgewraith"]["drops"]
+    assert "ashlord_gauntlet" in npcs["gate_ashlord"]["drops"]
+    assert "cindershell_plate" in npcs["hollow_smith"]["drops"]
+
+
 def test_aethryn_ships_the_relighting_quest_as_data():
     """The flagship's story arc is a seed-shipped workflow, not hardcoded in Python."""
     quest = load_quest(AETHRYN / "quest.yaml")
