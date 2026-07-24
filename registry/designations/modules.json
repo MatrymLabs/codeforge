@@ -4425,5 +4425,34 @@
     "aliases": [],
     "created": "2026-07-24",
     "updated": "2026-07-24"
+  },
+  {
+    "designation": "MOD-04.059",
+    "name": "consumables",
+    "status": "active",
+    "function": "quaff a carried item for a one-shot restore (potions and their kin)",
+    "label": "consumables",
+    "file": "parts/world/consumables.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "docs/architecture.md",
+    "tests": "tests/test_consumables.py",
+    "depends_on": [
+      "items",
+      "session"
+    ],
+    "related": [
+      "equipment",
+      "shop"
+    ],
+    "reuse": "the consumable-item pattern: an item declares a `consume` effect ({hp/mp: amount}) in the seed; `quaff <item>` restores those pools and spends the item -- gear you equip, and supplies you spend, are two item categories over one Item schema",
+    "notes": "The item category the game lacked. Item TypedDict gains `consume` (validated at load: hp/mp -> positive int); clone() carries it to instances; `quaff` (CMD-04.074) applies it and removes the item. Distinct from `use <ability>`. Live in aethryn (healing/mana draughts, shop-stocked) + first-forge.",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-24",
+    "updated": "2026-07-24"
   }
 ]

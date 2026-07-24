@@ -2489,5 +2489,30 @@
     "aliases": [],
     "created": "2026-07-24",
     "updated": "2026-07-24"
+  },
+  {
+    "designation": "CMD-04.074",
+    "name": "quaff",
+    "status": "active",
+    "function": "drink a consumable (quaff <item>)",
+    "label": "quaff",
+    "file": "forge.py",
+    "type": "CMD",
+    "domain": "04",
+    "docs": "docs/architecture.md",
+    "tests": "tests/test_consumables.py",
+    "depends_on": [],
+    "related": [
+      "equip"
+    ],
+    "reuse": "",
+    "tags": [
+      "command"
+    ],
+    "notes": "parts/world/consumables.quaff: spend a carried consumable, restore hp/mp.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-24",
+    "updated": "2026-07-24"
   }
 ]

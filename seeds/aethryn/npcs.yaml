@@ -131,6 +131,8 @@ market_trader:
   shop:
     # Coin sinks: the early gear ladder, so a coast Forger can outfit before the road/ascent.
     sells:
+      healing_draught: 12
+      mana_draught: 12
       cinder_hammer: 40      # a starter weapon (ATK 5, DEF 1)
       reaver_blade: 90       # the better blade (ATK 9, ACC 5)
       cindershell_plate: 140  # body armor (DEF 8, EVA 2)

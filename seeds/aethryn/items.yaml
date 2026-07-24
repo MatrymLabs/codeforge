@@ -109,3 +109,18 @@ stormlord_edge:
   location: nowhere
   slot: weapon
   mods: {ATK: 14, ACC: 6}  # the ascent's reward: real power for the higher climb
+
+# Consumables: spend them for a one-shot restore (quaff <item>). Placed on the coast + shop-stocked.
+healing_draught:
+  name: a healing draught
+  keywords: [draught, healing, potion, heal]
+  location: cinderhearth_square
+  resettable: true
+  consume: {hp: 30}
+
+mana_draught:
+  name: a mana draught
+  keywords: [draught, mana, potion]
+  location: cinderhearth_square
+  resettable: true
+  consume: {mp: 15}

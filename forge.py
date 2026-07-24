@@ -63,6 +63,7 @@ from parts.world.character_view import sheet_from_session
 from parts.world.characters import load_character, restore_character, save_character
 from parts.world.chime import chime
 from parts.world.combat import attack
+from parts.world.consumables import quaff
 from parts.world.doors import reclose, unlock
 from parts.world.engineer import deploy_barrier, diagnostic_scan, field_repair
 from parts.world.equipment import equip, unequip
@@ -87,8 +88,8 @@ NAME_RE = re.compile(r"^[a-z][a-z0-9_]{1,15}$")
 HELP_TEXT = (
     "Commands: look, go <direction> (or n/s/e/w/u/d), "
     "take, drop, inventory, talk <npc>, say <msg>, shout <msg>, name <yourname>, who, "
-    "jobs, job <calling>, subjob <calling>, join <order>, wallet, score, equip <item>, "
-    "unequip <slot>, "
+    "jobs, job <calling>, subjob <calling>, join <order>, wallet, quaff <item>, score, "
+    "equip <item>, unequip <slot>, "
     "attack <target>, skills, use <ability> [on <foe>], repair, scan <target>, deploy, calibrate, "
     "channel, journal [text], vitals, "
     "namecheck <name>, features, certify, heralds, title [text], maintenance, arc [status], "
@@ -1311,6 +1312,15 @@ def _build_commands() -> CommandSet:
             "CMD-04.070",
             "check your purse",
             lambda s, _a: f"Your purse holds {s.coins} coins.",
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "quaff",
+            "CMD-04.074",
+            "drink a consumable (quaff <item>)",
+            lambda s, arg: quaff(s, arg),
             namespace=CORE,
         )
     )

@@ -18,3 +18,9 @@ forge_wrench:
   location: workshop
   slot: weapon
   mods: {ATK: 6, ACC: 3}
+
+healing_draught:
+  name: a healing draught
+  keywords: [draught, healing, potion, heal]
+  location: courtyard
+  consume: {hp: 20}

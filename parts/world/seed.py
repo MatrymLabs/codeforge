@@ -115,6 +115,10 @@ class Item(TypedDict):
     # home room when its area comes due (parts.world.zones), a fresh instance spawns there. Default
     # off, so quest items and keys never respawn (no duplicated ember, no second key).
     resettable: NotRequired[bool]
+    # A CONSUMABLE's one-shot effect: a map of resource -> restore amount, e.g. {hp: 30} or
+    # {hp: 20, mp: 10}. `quaff <item>` spends the item and restores those pools. Optional -- a bare
+    # item is not consumable. Only `hp`/`mp` are honoured; a positive int each. Validated at load.
+    consume: NotRequired[dict[str, int]]
 
 
 class Npc(TypedDict):
@@ -422,6 +426,20 @@ def load_items(path: Path) -> dict[str, Item]:
         tagged = loc if loc in ("player", UNPLACED) else f"room:{loc}"
         if not isinstance(merged["resettable"], bool):
             raise SeedError(f"Item '{label}': 'resettable' must be true or false.")
+        consume = merged.get("consume")
+        if consume is not None and (
+            not isinstance(consume, dict)
+            or not all(
+                pool in ("hp", "mp")
+                and isinstance(amount, int)
+                and not isinstance(amount, bool)
+                and amount > 0
+                for pool, amount in consume.items()
+            )
+        ):
+            raise SeedError(
+                f"Item '{label}': 'consume' must map hp/mp to a positive integer restore."
+            )
         item = Item(
             name=merged["name"],
             keywords=merged["keywords"],
@@ -432,6 +450,8 @@ def load_items(path: Path) -> dict[str, Item]:
         )
         if merged["resettable"]:
             item["resettable"] = True  # opt-in: repopulates on an area reset
+        if consume:
+            item["consume"] = dict(consume)
         items[label] = item
     return items
 
