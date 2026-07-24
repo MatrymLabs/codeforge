@@ -138,10 +138,13 @@ def test_every_shipped_seed_abilities_file_loads() -> None:
 
 
 def test_aethryn_ships_a_moveset_for_each_calling() -> None:
+    from parts.world.seed import load_jobs
+
     seeds = Path(__file__).resolve().parent.parent / "seeds"
     ab = load_abilities(seeds / "aethryn" / "abilities.yaml")
     wielders = {job for a in ab.values() for job in a["jobs"]}
-    assert wielders == {"vanguard", "pathfinder", "emberwright"}  # every aethryn calling armed
+    callings = set(load_jobs(seeds / "aethryn" / "jobs.yaml"))  # loader drops 'template'
+    assert wielders == callings  # EVERY aethryn calling is armed (no unarmed switchable job)
 
 
 def test_load_abilities_accepts_a_wellformed_file(tmp_path: Path) -> None:
