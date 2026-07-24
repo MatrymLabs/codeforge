@@ -390,3 +390,20 @@ def test_aethryn_ships_the_summit_capstone_quest():
     assert SUMMIT_ROOM in triggers and SUMMIT_BOSS in triggers  # names the stable summit labels
     last = next(s for s in summit["steps"] if s["to"] == "crowned")
     assert last.get("on_defeat") == SUMMIT_BOSS and last.get("effect") == "award_xp"
+
+
+def test_aethryn_ships_the_martial_and_precision_job_families():
+    """Batch 1 of the 30 switchable callings: the Martial (Duelist/Sentinel/Berserker) and
+    Precision (Ranger/Scout/Shadowblade/Saboteur) families, each a distinct stat spread."""
+    jobs = load_jobs(AETHRYN / "jobs.yaml")
+    for job in ("duelist", "sentinel", "berserker", "ranger", "scout", "shadowblade", "saboteur"):
+        assert job in jobs, f"{job} calling missing"
+    # family stat identity: the Berserker leans strength, the Scout leans speed
+    assert jobs["berserker"]["stats"]["strength"] > jobs["scout"]["stats"]["strength"]
+    assert jobs["scout"]["stats"]["speed"] > jobs["berserker"]["stats"]["speed"]
+    # each new calling carries a moveset (switchable in/out via the subjob kit)
+    from parts.world.seed import load_abilities
+
+    abilities = load_abilities(AETHRYN / "abilities.yaml")
+    for job in ("duelist", "berserker", "ranger", "saboteur"):
+        assert any(job in a["jobs"] for a in abilities.values()), f"{job} has no abilities"

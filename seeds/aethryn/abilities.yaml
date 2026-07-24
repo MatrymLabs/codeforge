@@ -51,3 +51,117 @@ kindle:
   scales: magic
   mp_cost: 5
   jobs: [emberwright]
+
+# --- Batch 1 movesets (Martial + Precision families). strike scales on the family's key stat. ---
+
+# Duelist -- read and punish.
+riposte:
+  name: Riposte
+  kind: strike
+  power: 7
+  scales: speed
+  mp_cost: 3
+  jobs: [duelist]
+closing_sentence:
+  name: Closing Sentence
+  kind: strike
+  power: 11
+  scales: strength
+  mp_cost: 6
+  jobs: [duelist]
+
+# Sentinel -- guard and turn.
+shield_bash:
+  name: Shield Bash
+  kind: strike
+  power: 6
+  scales: stamina
+  mp_cost: 3
+  jobs: [sentinel]
+longwatch:
+  name: Longwatch
+  kind: heal
+  power: 9
+  scales: stamina
+  mp_cost: 5
+  jobs: [sentinel]
+
+# Berserker -- escalate.
+frenzy_strike:
+  name: Frenzy Strike
+  kind: strike
+  power: 9
+  scales: strength
+  mp_cost: 3
+  jobs: [berserker]
+bloodrush:
+  name: Bloodrush
+  kind: strike
+  power: 14
+  scales: strength
+  mp_cost: 7
+  jobs: [berserker]
+
+# Ranger -- aim.
+aimed_shot:
+  name: Aimed Shot
+  kind: strike
+  power: 7
+  scales: speed
+  mp_cost: 3
+  jobs: [ranger]
+snipe:
+  name: Snipe
+  kind: strike
+  power: 12
+  scales: luck
+  mp_cost: 6
+  jobs: [ranger]
+
+# Scout -- evade and jab.
+quick_shot:
+  name: Quick Shot
+  kind: strike
+  power: 6
+  scales: speed
+  mp_cost: 2
+  jobs: [scout]
+second_wind:
+  name: Second Wind
+  kind: heal
+  power: 7
+  scales: speed
+  mp_cost: 4
+  jobs: [scout]
+
+# Shadowblade -- open from the dark.
+backstab:
+  name: Backstab
+  kind: strike
+  power: 10
+  scales: speed
+  mp_cost: 4
+  jobs: [shadowblade]
+killing_dark:
+  name: Killing Dark
+  kind: strike
+  power: 15
+  scales: luck
+  mp_cost: 7
+  jobs: [shadowblade]
+
+# Saboteur -- unmake.
+toxin:
+  name: Toxin
+  kind: strike
+  power: 8
+  scales: magic
+  mp_cost: 3
+  jobs: [saboteur]
+disable:
+  name: Disable
+  kind: strike
+  power: 10
+  scales: wisdom
+  mp_cost: 5
+  jobs: [saboteur]

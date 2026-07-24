@@ -19,3 +19,43 @@ emberwright:
   name: Emberwright
   description: "A maker first: forges gear and bends raw ember to the will. Patient hands, deep magic."
   stats: {strength: 9, speed: 9, stamina: 11, magic: 6}
+
+# --- Batch 1 of the 30 callings (job_system.md families). Distinct stat spreads; each carries a
+# --- two-move kit in abilities.yaml. Switchable in/out via primary + subjob (the kit is lent).
+
+# Martial family: close-quarters specialists (strength/stamina).
+duelist:
+  name: Duelist
+  description: Wins isolated exchanges by baiting the read and punishing it. Speed married to strength.
+  stats: {strength: 12, speed: 12, stamina: 9, magic: 3, wisdom: 4, luck: 8}
+
+sentinel:
+  name: Sentinel
+  description: Stands between harm and the line, and turns blows aside. Stamina above all.
+  stats: {strength: 10, speed: 6, stamina: 15, magic: 4, wisdom: 6, luck: 5}
+
+berserker:
+  name: Berserker
+  description: Spends its own safety to buy runaway power. Raw strength, little restraint.
+  stats: {strength: 16, speed: 8, stamina: 12, magic: 1, wisdom: 2, luck: 6}
+
+# Precision family: agile strikers who win by speed and angle (speed/luck).
+ranger:
+  name: Ranger
+  description: Strikes from range and reads the ground. Speed and a keen, lucky eye.
+  stats: {strength: 9, speed: 15, stamina: 9, magic: 4, wisdom: 7, luck: 8}
+
+scout:
+  name: Scout
+  description: Fast, elusive, and never where the blow lands. Speed and luck over armor.
+  stats: {strength: 7, speed: 16, stamina: 8, magic: 5, wisdom: 8, luck: 10}
+
+shadowblade:
+  name: Shadowblade
+  description: Ends fights from the dark in a single opened throat. Speed, edge, and fortune.
+  stats: {strength: 11, speed: 14, stamina: 8, magic: 6, wisdom: 5, luck: 9}
+
+saboteur:
+  name: Saboteur
+  description: Poisons, snares, and unmakes a foe before it swings. Cunning over muscle.
+  stats: {strength: 8, speed: 13, stamina: 9, magic: 8, wisdom: 9, luck: 8}
