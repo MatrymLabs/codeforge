@@ -5,11 +5,11 @@ iterations, constant-time compare). Characters are masks worn by
 their account: membership IS the character row's account column.
 Login refusals stay generic -- no enumeration gifts.
 
-The crypto and its timing defenses live here and never cross a boundary. Account credential
-persistence (the `accounts` table) lives behind the `AccountCredentialStore` PORT; the SQLAlchemy
-adapter is accounts_sql (docs/persistence_ports.md). Character-membership row access (adopt, the
-character half of login/migrate, the owner-rank query) still reads the character row directly -- the
-next boundary the assimilation campaign will extract.
+The crypto and its timing defenses live here and never cross a boundary. This module touches no ORM
+row directly: account credential persistence lives behind the `AccountCredentialStore` PORT (adapter
+accounts_sql), and account membership -- who owns a character, the owner-rank query, v1-auth
+retirement -- lives behind the `MembershipStore` PORT (adapter membership_sql). See
+docs/persistence_ports.md.
 """
 
 from __future__ import annotations
@@ -20,6 +20,7 @@ from dataclasses import dataclass
 from typing import Any, Protocol, runtime_checkable
 
 from parts.world.characters import load_character, put_record
+from parts.world.membership import MembershipStore
 
 # parts.world.db is imported lazily inside the functions that touch persistence (below), so a
 # DB-free `import forge` (play/command sessions, benchmarks, most tests) never pays the
@@ -116,6 +117,14 @@ def _default_store() -> AccountCredentialStore:
     return SqlAccountCredentialStore()
 
 
+def _default_membership() -> MembershipStore:
+    """The default membership backend: the SQL adapter, imported lazily (EXP-003). Account-to-
+    character linkage lives behind its own port so this module touches no ORM row directly."""
+    from parts.world.membership_sql import SqlMembershipStore
+
+    return SqlMembershipStore()
+
+
 # --------------------------------------------------- legacy v1: per-character
 def has_password(casefile: dict[str, Any]) -> bool:
     return bool(casefile.get("auth"))
@@ -180,7 +189,11 @@ def password_fixable(register_response: str) -> bool:
 
 
 def inspect_login(
-    char: str, account: str, password: str, store: AccountCredentialStore | None = None
+    char: str,
+    account: str,
+    password: str,
+    store: AccountCredentialStore | None = None,
+    membership: MembershipStore | None = None,
 ) -> bool:
     """One generic verdict: account exists, password matches, and the
     character belongs to that account. Which part failed is a secret."""
@@ -191,24 +204,14 @@ def inspect_login(
         return False
     if not _secret_matches(password, secret.salt_hex, secret.hash_hex):
         return False
-    # Character membership still reads the character row directly -- the next boundary to extract.
-    from parts.world.db import CharacterRow, open_archive_session
-
-    with open_archive_session() as db:
-        hero_row = db.get(CharacterRow, char)
-        return hero_row is not None and hero_row.account == account
+    seat = (membership or _default_membership()).account_of(char)
+    return seat is not None and seat == account
 
 
-def adopt(char: str, account: str) -> str:
+def adopt(char: str, account: str, membership: MembershipStore | None = None) -> str:
     """Attach an existing character to an account (migration/admin)."""
-    from parts.world.db import CharacterRow, open_archive_session
-
-    with open_archive_session() as db:
-        hero_row = db.get(CharacterRow, char)
-        if hero_row is None:
-            return f"No saved character named {char}."
-        hero_row.account = account
-        db.commit()
+    if not (membership or _default_membership()).set_account(char, account):
+        return f"No saved character named {char}."
     return f"{char} now belongs to {account}."
 
 
@@ -244,7 +247,12 @@ def reforge_secret(
     return ""
 
 
-def migrate(char: str, account: str, store: AccountCredentialStore | None = None) -> str:
+def migrate(
+    char: str,
+    account: str,
+    store: AccountCredentialStore | None = None,
+    membership: MembershipStore | None = None,
+) -> str:
     """Move a v1 character-password onto a NEW account."""
     casefile = load_character(char)
     if casefile is None:
@@ -256,20 +264,13 @@ def migrate(char: str, account: str, store: AccountCredentialStore | None = None
         return f"Account {account} already exists; migration only creates new accounts."
     auth = casefile["auth"]
     store.create(account, auth["salt"], auth["hash"])
-    # The character's seat + v1 columns still move on the character row -- the next boundary.
-    from parts.world.db import CharacterRow, open_archive_session
-
-    with open_archive_session() as db:
-        hero_row = db.get(CharacterRow, char)
-        assert hero_row is not None
-        hero_row.account = account
-        hero_row.auth_salt = None
-        hero_row.auth_hash = None
-        db.commit()
+    (membership or _default_membership()).retire_v1_and_set_account(char, account)
     return f"{char}@{account} is ready. Log in with the same password."
 
 
-def import_legacy_json(store: AccountCredentialStore | None = None) -> str:
+def import_legacy_json(
+    store: AccountCredentialStore | None = None, membership: MembershipStore | None = None
+) -> str:
     """One-time importer: characters.json + accounts.json -> SQLite."""
     import json
     from pathlib import Path
@@ -283,17 +284,12 @@ def import_legacy_json(store: AccountCredentialStore | None = None) -> str:
     accts = Path("accounts.json")
     if accts.exists():
         store = store or _default_store()
-        from parts.world.db import CharacterRow, open_archive_session
-
-        with open_archive_session() as db:
-            for name, entry in json.loads(accts.read_text(encoding="utf-8")).items():
-                if store.find(name) is None and entry.get("auth"):
-                    store.create(name, entry["auth"]["salt"], entry["auth"]["hash"])
-                for member in entry.get("characters", []):
-                    hero_row = db.get(CharacterRow, member)
-                    if hero_row is not None:
-                        hero_row.account = name
-            db.commit()
+        membership = membership or _default_membership()
+        for name, entry in json.loads(accts.read_text(encoding="utf-8")).items():
+            if store.find(name) is None and entry.get("auth"):
+                store.create(name, entry["auth"]["salt"], entry["auth"]["hash"])
+            for member in entry.get("characters", []):
+                membership.set_account(member, name)  # a no-op if the member has no record
     if not moved and not accts.exists():
         return "No legacy JSON found; nothing to import."
     return f"Imported {len(moved)} character(s) into codeforge.db. Legacy files left untouched."
@@ -312,12 +308,6 @@ def account_password_ok(
     return _secret_matches(password, secret.salt_hex, secret.hash_hex)
 
 
-def account_has_owner(account: str) -> bool:
+def account_has_owner(account: str, membership: MembershipStore | None = None) -> bool:
     """True if any character on this account holds the owner rank."""
-    from sqlalchemy import select
-
-    from parts.world.db import CharacterRow, open_archive_session
-
-    with open_archive_session() as db:
-        archive_rows = db.scalars(select(CharacterRow).where(CharacterRow.account == account))
-        return any(archive_row.rank == "owner" for archive_row in archive_rows)
+    return (membership or _default_membership()).has_owner(account)
