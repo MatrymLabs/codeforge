@@ -295,3 +295,53 @@ banish:
   scales: wisdom
   mp_cost: 4
   jobs: [warden]
+
+# --- Batch 3 movesets (Engineering + Nature + cross-family). ---
+turret_fire:
+  {name: Turret Fire, kind: strike, power: 8, scales: magic, mp_cost: 3, jobs: [engineer]}
+field_mend:
+  {name: Field Mend, kind: heal, power: 9, scales: magic, mp_cost: 5, jobs: [engineer]}
+relic_burst:
+  {name: Relic Burst, kind: strike, power: 12, scales: magic, mp_cost: 6, jobs: [artificer]}
+overcharge:
+  {name: Overcharge, kind: strike, power: 9, scales: magic, mp_cost: 4, jobs: [artificer]}
+rapid_fire:
+  {name: Rapid Fire, kind: strike, power: 7, scales: speed, mp_cost: 2, jobs: [gunsmith]}
+called_shot:
+  {name: Called Shot, kind: strike, power: 13, scales: luck, mp_cost: 6, jobs: [gunsmith]}
+rig_slam:
+  {name: Rig Slam, kind: strike, power: 10, scales: stamina, mp_cost: 4, jobs: [mechanist]}
+plating:
+  {name: Plating, kind: heal, power: 10, scales: stamina, mp_cost: 5, jobs: [mechanist]}
+thornlash:
+  {name: Thornlash, kind: strike, power: 9, scales: wisdom, mp_cost: 3, jobs: [druid]}
+regrowth:
+  {name: Regrowth, kind: heal, power: 12, scales: wisdom, mp_cost: 6, jobs: [druid]}
+maul:
+  {name: Maul, kind: strike, power: 11, scales: strength, mp_cost: 4, jobs: [beastmaster]}
+pack_bond:
+  {name: Pack Bond, kind: heal, power: 8, scales: stamina, mp_cost: 4, jobs: [beastmaster]}
+chain_lightning:
+  {name: Chain Lightning, kind: strike, power: 13, scales: magic, mp_cost: 6, jobs: [stormcaller]}
+gale:
+  {name: Gale, kind: strike, power: 8, scales: magic, mp_cost: 3, jobs: [stormcaller]}
+stonefall:
+  {name: Stonefall, kind: strike, power: 11, scales: stamina, mp_cost: 5, jobs: [geomancer]}
+terraheal:
+  {name: Terraheal, kind: heal, power: 10, scales: wisdom, mp_cost: 5, jobs: [geomancer]}
+reap:
+  {name: Reap, kind: strike, power: 12, scales: strength, mp_cost: 5, jobs: [reaver]}
+soul_eater:
+  {name: Soul Eater, kind: strike, power: 15, scales: strength, mp_cost: 7, jobs: [reaver]}
+sleight:
+  {name: Sleight, kind: strike, power: 8, scales: luck, mp_cost: 3, jobs: [trickster]}
+lucky_break:
+  {name: Lucky Break, kind: heal, power: 10, scales: luck, mp_cost: 5, jobs: [trickster]}
+rune_blast:
+  {name: Rune Blast, kind: strike, power: 12, scales: magic, mp_cost: 5, jobs: [runesmith]}
+ward_rune:
+  {name: Ward Rune, kind: heal, power: 9, scales: magic, mp_cost: 5, jobs: [runesmith]}
+word_of_ruin:
+  {name: Word of Ruin, kind: strike, power: 14, scales: wisdom, mp_cost: 7, jobs: [hierophant]}
+benediction:
+  {name: Benediction, kind: heal, power: 14, scales: wisdom, mp_cost: 7, jobs: [hierophant]}

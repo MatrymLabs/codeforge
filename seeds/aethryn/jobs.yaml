@@ -101,3 +101,66 @@ warden:
   name: Warden
   description: Keeps the ward-line whole and turns curses aside. Stamina and steady wisdom.
   stats: {strength: 8, speed: 6, stamina: 14, magic: 9, wisdom: 13, luck: 6}
+
+# Engineering family: makers who fight through gadgetry (magic/speed).
+engineer:
+  name: Engineer
+  description: Deploys barriers and turrets and keeps the works running. Clever hands, quick feet.
+  stats: {strength: 7, speed: 12, stamina: 11, magic: 11, wisdom: 10, luck: 6}
+
+artificer:
+  name: Artificer
+  description: Forges relics mid-fight and spends them for effect. Magic and a maker's patience.
+  stats: {strength: 6, speed: 10, stamina: 10, magic: 13, wisdom: 12, luck: 7}
+
+gunsmith:
+  name: Gunsmith
+  description: Trades in range and rate of fire. Speed on the trigger, a lucky bead.
+  stats: {strength: 8, speed: 14, stamina: 9, magic: 8, wisdom: 8, luck: 10}
+
+mechanist:
+  name: Mechanist
+  description: Rides a walking rig and lets it soak what it dishes. Stamina bolted to magic.
+  stats: {strength: 10, speed: 8, stamina: 14, magic: 10, wisdom: 9, luck: 5}
+
+# Nature family: those who fight with the wilds themselves (stamina/wisdom).
+druid:
+  name: Druid
+  description: Bends grove and storm and shifts shape to suit the fight. Wisdom and deep roots.
+  stats: {strength: 8, speed: 9, stamina: 13, magic: 11, wisdom: 13, luck: 6}
+
+beastmaster:
+  name: Beastmaster
+  description: Fights beside a bound beast and shares its ferocity. Stamina and a wild bond.
+  stats: {strength: 12, speed: 11, stamina: 12, magic: 5, wisdom: 9, luck: 8}
+
+stormcaller:
+  name: Stormcaller
+  description: Calls the sky down in chain and gale. Magic to summon it, wisdom to aim it.
+  stats: {strength: 5, speed: 10, stamina: 9, magic: 14, wisdom: 12, luck: 8}
+
+geomancer:
+  name: Geomancer
+  description: Reads the land and turns its temper into a weapon. Stamina and steady wisdom.
+  stats: {strength: 9, speed: 7, stamina: 13, magic: 12, wisdom: 12, luck: 6}
+
+# Cross-family specialists that round the roster to thirty.
+reaver:
+  name: Reaver
+  description: Reaps a felled foe's strength to fuel the next kill. Strength that feeds on itself.
+  stats: {strength: 15, speed: 10, stamina: 11, magic: 3, wisdom: 4, luck: 7}
+
+trickster:
+  name: Trickster
+  description: Wins on angles, feints, and a stolen edge. Speed and outrageous luck.
+  stats: {strength: 6, speed: 15, stamina: 8, magic: 7, wisdom: 8, luck: 13}
+
+runesmith:
+  name: Runesmith
+  description: Carves force into rune and lets it detonate. Deep magic, a smith's patience.
+  stats: {strength: 7, speed: 8, stamina: 10, magic: 15, wisdom: 11, luck: 6}
+
+hierophant:
+  name: Hierophant
+  description: Turns a whole line's faith into a single ruinous word. Wisdom raised to law.
+  stats: {strength: 6, speed: 7, stamina: 11, magic: 12, wisdom: 16, luck: 6}
