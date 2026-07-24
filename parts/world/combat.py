@@ -17,6 +17,7 @@ restores them in place -- a fight never leaves anyone in a broken state.
 
 import random
 
+from parts.shelf import affixes
 from parts.shelf.reward_curve import jp_for_kill, xp_for_kill
 from parts.shelf.weighted_table import WeightedTable
 from parts.world import items
@@ -229,23 +230,39 @@ def attack(session: Session, word: str) -> str:
     return f"You strike {npc['name']} for {dmg}. It collapses -- then reassembles itself.\n{tail}"
 
 
-def _spawn_loot(session: Session, prototype: str) -> str:
+def _spawn_loot(session: Session, prototype: str, level: int = 0) -> str:
     """Spawn one loot instance into the room (object instancing, so it never collides with the seed
     original), announce it, and return the line -- or '' if the prototype is unknown or at its
-    instance ceiling (skipped, never a crash). The shared spawn used by drops and the loot roll."""
+    instance ceiling (skipped, never a crash). The shared spawn used by drops and the loot roll.
+
+    An EQUIPPABLE drop from a levelled foe runs through the affix factory (parts.shelf.affixes): it
+    rolls a rarity + named affixes onto the instance, so one base weapon falls as a spread of gear
+    ('a Cruel notched blade of the Bear [rare]'). Non-gear and levelless drops are unchanged."""
     try:
         iid = items.clone(prototype, session.location)
     except items.ItemError:
         return ""
-    line = f"{sentence_case(items.ITEMS[iid]['name'])} drops to the ground."
+    item = items.ITEMS[iid]
+    rarity = ""
+    if item.get("slot") and level > 0:  # a levelled foe's gear rolls a rarity + affixes
+        base = item["name"]  # drop the leading article so "Fleet a blade" reads "Fleet blade"
+        for article in ("a ", "an ", "the "):
+            if base.lower().startswith(article):
+                base = base[len(article) :]
+                break
+        rolled = affixes.roll(_LOOT_RNG, base, item["mods"], level)
+        item["name"], item["mods"] = rolled.name, rolled.mods
+        rarity = "" if rolled.rarity == "common" else f" [{rolled.rarity}]"
+    line = f"{sentence_case(item['name'])}{rarity} drops to the ground."
     announce(session.location, line, exclude=session.player_id)
     return line
 
 
 def _spawn_drops(session: Session, npc: Npc) -> str:
     """Spawn a defeated NPC's GUARANTEED drops (`drops`): a fresh instance of each. Returns the
-    drop line(s), or ''."""
-    return "\n".join(line for p in npc.get("drops", []) if (line := _spawn_loot(session, p)))
+    drop line(s), or ''. A levelled foe's equippable drops roll a rarity + affixes."""
+    level = npc.get("level", 0)
+    return "\n".join(line for p in npc.get("drops", []) if (line := _spawn_loot(session, p, level)))
 
 
 def _roll_loot(session: Session, npc: Npc) -> str:
@@ -256,4 +273,4 @@ def _roll_loot(session: Session, npc: Npc) -> str:
     if not table:
         return ""
     outcome = WeightedTable(list(table.items())).pick(_LOOT_RNG)
-    return "" if outcome == "nothing" else _spawn_loot(session, outcome)
+    return "" if outcome == "nothing" else _spawn_loot(session, outcome, npc.get("level", 0))
