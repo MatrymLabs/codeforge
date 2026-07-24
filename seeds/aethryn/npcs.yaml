@@ -19,6 +19,18 @@ sela:
     - '"Everything you see was Forged from ember. What was made can be remade -- that is the first law."'
     - '"Long ago the greatest work of all, the First Seed, was sundered. We call it the Unforging."'
     - '"You can hold ember and give it lasting shape. That makes you a Forger. It also makes you dangerous."'
+  # ask sela about <topic> -- a real conversation, not a cycling line.
+  topics:
+    unforging:
+      - '"The Unforging was the day a making came apart. It sundered the First Seed and left the world half-real."'
+      - '"Its scars are everywhere: the drowned cellar, the cold on the coast, the wights that never finished dying."'
+    forger:
+      - '"A Forger holds ember and gives it lasting shape. Every calling on the Orders'' Row is one road into that gift."'
+    spiral:
+      - '"The Great Spiral climbs out of the world past Emberreach, Coil upon Coil, toward the Forge at its summit."'
+      - '"They say the one who crowns it looks upon the Forge itself. None living has."'
+    cinderdeep:
+      - '"Down, where the Unforging cut deepest, the making-works drowned. The Cinderdeep is the coast''s other road, and colder."'
 
 training_dummy:
   location: cinderhearth_square

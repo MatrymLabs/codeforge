@@ -71,7 +71,7 @@ from parts.world.events import announce, announce_frame, bind_echo, rename_echo,
 from parts.world.frames import SpeechFrame
 from parts.world.items import drop, inventory_text, prototype_of, room_items_text, take, trace_item
 from parts.world.jobs import JOBS, bind_calling, calling_index, set_secondary
-from parts.world.npcs import room_npcs_text, talk, trace_npc
+from parts.world.npcs import ask, room_npcs_text, talk, trace_npc
 from parts.world.orders import swear_order
 from parts.world.quest import quest_view
 from parts.world.ranks import wizard_command
@@ -87,7 +87,7 @@ NAME_RE = re.compile(r"^[a-z][a-z0-9_]{1,15}$")
 
 HELP_TEXT = (
     "Commands: look, go <direction> (or n/s/e/w/u/d), "
-    "take, drop, inventory, talk <npc>, say <msg>, shout <msg>, name <yourname>, who, "
+    "take, drop, inventory, talk <npc>, ask <npc> about <topic>, say <msg>, name <yourname>, who, "
     "jobs, job <calling>, subjob <calling>, join <order>, wallet, quaff <item>, score, "
     "equip <item>, unequip <slot>, "
     "attack <target>, skills, use <ability> [on <foe>], repair, scan <target>, deploy, calibrate, "
@@ -1389,6 +1389,15 @@ def _build_commands() -> CommandSet:
     )
     cs.add(
         Command(
+            "ask",
+            "CMD-04.075",
+            "ask about a topic (ask <npc> about <topic>)",
+            _ask_cmd,
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
             "unlock",
             "CMD-04.057",
             "unlock a door with a key (unlock <door> with <key>)",
@@ -1624,6 +1633,12 @@ def _talk_cmd(session: Session, arg: str) -> str:
             return talk_to_codex()
         return "There is no one like that here."
     return talk(word, session.location)
+
+
+def _ask_cmd(session: Session, arg: str) -> str:
+    """`ask <npc> about <topic>` (or bare `ask <npc>` to list topics): topic-based conversation."""
+    who, _, topic = arg.lower().partition(" about ")
+    return ask(who.strip(), topic.strip(), session.location)
 
 
 def _unlock_cmd(session: Session, arg: str) -> str:

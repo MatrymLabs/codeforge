@@ -156,6 +156,10 @@ class Npc(TypedDict):
     # for one. Both optional within the shop. Prices are positive ints; prototypes are cross-checked
     # against the seed's items at boot (inspect_world_links). Optional -- a bare NPC keeps no shop.
     shop: NotRequired[dict[str, dict[str, int]]]
+    # TOPICS a player can ask this NPC about: a keyword -> the response line(s). `ask <npc> about
+    # <topic>` looks one up; a bare `ask <npc>` lists them. This turns a cycling dialogue list into
+    # a real conversation. Keys are lowercase keywords; each maps to a non-empty list of strings.
+    topics: NotRequired[dict[str, list[str]]]
 
 
 class Door(TypedDict):
@@ -560,6 +564,21 @@ def load_npcs(path: Path) -> dict[str, Npc]:
                 f"NPC '{label}': 'tier' {tier!r} is set but 'level' is not; a tier only scales a "
                 "levelled foe. Give the NPC a level or drop the tier."
             )
+        # Optional conversation topics: a keyword -> non-empty list of response lines.
+        topics = merged.get("topics")
+        if topics is not None and (
+            not isinstance(topics, dict)
+            or not all(
+                isinstance(key, str)
+                and isinstance(lines, list)
+                and lines
+                and all(isinstance(line, str) for line in lines)
+                for key, lines in topics.items()
+            )
+        ):
+            raise SeedError(
+                f"NPC '{label}': 'topics' must map a keyword to a non-empty list of reply strings."
+            )
         # Optional shop: a merchant's `sells`/`buys` price tables. Prices are positive ints; the
         # prototypes are cross-checked against the seed's items at boot (inspect_world_links).
         shop = merged.get("shop")
@@ -601,6 +620,8 @@ def load_npcs(path: Path) -> dict[str, Npc]:
             npc["loot"] = dict(loot)
         if shop:
             npc["shop"] = {side: dict(table) for side, table in shop.items()}
+        if topics:
+            npc["topics"] = {key: list(lines) for key, lines in topics.items()}
         npcs[label] = npc
     return npcs
 

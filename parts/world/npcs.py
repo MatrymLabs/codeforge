@@ -34,6 +34,29 @@ def talk(word: str, room_id: str) -> str:
     return f"{sentence_case(npc['name'])} says: {line}"
 
 
+def ask(word: str, topic: str, room_id: str) -> str:
+    """`ask <npc> about <topic>`: a topic-based conversation. A bare topic lists what the NPC can
+    discuss; an unknown topic says so and lists the options. Turns a cycling dialogue into a real
+    exchange, without breaking `talk` (NPCs with no topics simply have nothing to ask about)."""
+    nid = trace_npc(word, room_id)
+    if nid is None:
+        return "There is no one like that here."
+    npc = NPCS[nid]
+    name = sentence_case(npc["name"])
+    topics = npc.get("topics")
+    if not topics:
+        return f"{name} has nothing more to discuss. (Try TALK.)"
+    if not topic.strip():
+        return f"You could ask {name} about: " + ", ".join(sorted(topics)) + "."
+    key = topic.strip().lower()
+    lines = topics.get(key) or next((ls for t, ls in topics.items() if key in t or t in key), None)
+    if lines is None:
+        options = ", ".join(sorted(topics))
+        return f"{name} has nothing to say about that. Ask about: {options}."
+    body = "\n".join(lines)
+    return f"{name} says: {body}"
+
+
 def _presence_line(nid: str) -> str:
     """One room-render line for an NPC. An aggressive foe is telegraphed so a strike on
     the world beat is never a surprise: the room render is the player's only danger rubric."""
