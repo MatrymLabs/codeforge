@@ -62,6 +62,40 @@ Deleting `job_progress_sql.py` and pointing `_default_store()` at `InMemoryJobPr
 leave a working, framework-free game (minus persistence). That is the removability the intake
 doctrine requires: the framework is a plugged-in adapter, not a load-bearing part of the domain.
 
+## Batch 2: the account-credential seam (auth, extra care)
+
+The second boundary is auth-critical, so it was extracted with a tighter scope than job progression.
+`parts/world/accounts.py` mixed **stdlib crypto** (salted pbkdf2, constant-time compare, a
+missing-principal timing decoy, generic refusals - already framework-free) with **SQLAlchemy
+`AccountRow` access**. Only the second thing is a leak.
+
+The rule that made it safe: **the security policy never crosses the boundary.** The port
+(`AccountCredentialStore`) deals in hex strings, never passwords, and does no hashing. Every crypto
+call stays in `accounts.py`, still hit by the timing-spy tests that hook `accounts._hash_secret`
+(`tests/test_accounts.py`). The port has three methods:
+
+| Method | Meaning |
+| --- | --- |
+| `find(account) -> AccountSecret \| None` | the stored salt+hash, or None |
+| `create(account, salt_hex, hash_hex)` | insert a new account (caller confirmed it is new) |
+| `set_secret(account, salt_hex, hash_hex)` | rotate an existing account; missing is a no-op |
+
+`SqlAccountCredentialStore` (in `parts/world/accounts_sql.py`, MOD-04.063) is the only place that
+touches the `accounts` table; `InMemoryAccountCredentialStore` is a dict. Every AccountRow access
+(`register`, `inspect_login`, `rotate_account_secret`, `reforge_secret`, `migrate`,
+`import_legacy_json`, `account_password_ok`) now runs through the port. The public signatures gained
+a trailing optional `store=`, so all callers (`forge`, `cli`, `api`, `gateway`) are unchanged.
+
+`tests/test_account_store.py` runs the contract against both adapters **and** proves the whole
+credential path (register -> check -> rotate -> reforge, mixed-case preserved, wrong rejected) runs
+over an injected in-memory store with **no database touched**.
+
+**Deliberately left for the next boundary:** character-membership row access - `adopt`, the character
+half of `inspect_login`/`migrate`, and the owner-rank query - still reads `CharacterRow` directly.
+That is a `characters.py` seam (a membership/character store), not an account-credential one, so it is
+a separate batch. Splitting it keeps each batch narrow and preserves the auth path's transaction
+semantics.
+
 ## The template for the next boundary
 
 1. Find a framework leaking into a `parts/world/` domain module.

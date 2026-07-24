@@ -25,6 +25,37 @@
     "updated": "2026-07-09"
   },
   {
+    "designation": "MOD-04.063",
+    "name": "accounts_sql",
+    "status": "active",
+    "function": "the SQLAlchemy adapter for the AccountCredentialStore port",
+    "label": "accounts_sql",
+    "file": "parts/world/accounts_sql.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "docs/persistence_ports.md",
+    "tests": "tests/test_account_store.py",
+    "depends_on": [
+      "MOD-04.001"
+    ],
+    "related": [
+      "MOD-04.001",
+      "MOD-04.062"
+    ],
+    "reuse": "the persistence-port pattern applied to auth: crypto in-domain, the framework behind a store",
+    "tags": [
+      "module",
+      "adapter"
+    ],
+    "notes": "assimilation batch 2 - seals AccountRow access out of the accounts domain module; character-membership rows are the next boundary",
+    "superseded_by": "",
+    "aliases": [
+      "MOD-UM04-S01-N001-063-R0"
+    ],
+    "created": "2026-07-24",
+    "updated": "2026-07-24"
+  },
+  {
     "designation": "MOD-04.002",
     "name": "api",
     "status": "active",
