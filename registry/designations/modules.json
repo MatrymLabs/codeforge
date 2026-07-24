@@ -1543,6 +1543,36 @@
     "updated": "2026-07-11"
   },
   {
+    "designation": "MOD-04.062",
+    "name": "job_progress_sql",
+    "status": "active",
+    "function": "the SQLAlchemy adapter for the JobProgressStore port",
+    "label": "job_progress_sql",
+    "file": "parts/world/job_progress_sql.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "docs/persistence_ports.md",
+    "tests": "tests/test_job_progress_store.py",
+    "depends_on": [
+      "MOD-04.027"
+    ],
+    "related": [
+      "MOD-04.027"
+    ],
+    "reuse": "the persistence-port pattern: a framework kept behind a narrow Python contract",
+    "tags": [
+      "module",
+      "adapter"
+    ],
+    "notes": "assimilation batch 1 - extracts SQLAlchemy leakage out of the job_progress domain module",
+    "superseded_by": "",
+    "aliases": [
+      "MOD-UM04-S01-N001-062-R0"
+    ],
+    "created": "2026-07-24",
+    "updated": "2026-07-24"
+  },
+  {
     "designation": "MOD-04.028",
     "name": "score_sheet",
     "status": "active",
