@@ -421,3 +421,20 @@ def test_aethryn_ships_the_arcane_and_divine_job_families():
     # casters lean magic/wisdom; the Arcanist out-magics the Martial Berserker
     assert jobs["arcanist"]["stats"]["magic"] > jobs["berserker"]["stats"]["magic"]
     assert jobs["cleric"]["stats"]["wisdom"] > jobs["berserker"]["stats"]["wisdom"]
+
+
+def test_aethryn_ships_the_full_thirty_switchable_callings():
+    """The AAA-pivot target: 30 distinct callings a player can modulate and swap in/out. Every one
+    has a two-move kit, so a subjob genuinely changes your loadout."""
+    from parts.world.seed import load_abilities
+
+    jobs = load_jobs(AETHRYN / "jobs.yaml")
+    assert len(jobs) == 30, f"expected 30 callings, got {len(jobs)}"
+    abilities = load_abilities(AETHRYN / "abilities.yaml")
+    armed = {job for a in abilities.values() for job in a["jobs"]}
+    assert armed == set(jobs)  # every calling is armed - none is a dead switch
+    # each calling carries at least two moves (a signature + a utility)
+    from collections import Counter
+
+    per_job = Counter(job for a in abilities.values() for job in a["jobs"])
+    assert all(count >= 2 for count in per_job.values()), "a calling has fewer than 2 abilities"
