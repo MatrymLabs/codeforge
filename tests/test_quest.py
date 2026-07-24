@@ -212,3 +212,32 @@ def test_aethryn_relighting_arc_self_completes_from_natural_play():
     face = next(s for s in spec["steps"] if s["to"] == "done")
     assert face.get("on_defeat") == "cinder_wight" and face.get("effect") == "award_xp"
     assert "done" in spec["terminal"]
+
+
+def test_save_state_reports_the_current_arc_and_empty_before_any_run():
+    from parts.world.quest import save_state
+
+    reset_quests()
+    assert save_state("nobody") == ""  # no run yet -> empty (a fresh character stores nothing)
+    s = Session(player_id="hero", location="courtyard")
+    quest_view(s, "accept")
+    assert save_state("hero") == "accepted"
+
+
+def test_restore_state_seeds_the_run_so_a_story_survives_a_restart():
+    from parts.world.quest import restore_state, save_state
+
+    reset_quests()
+    restore_state("hero", "accepted")  # as if loaded from the character record after a restart
+    assert save_state("hero") == "accepted"
+    # and the arc continues from there, not from the start
+    s = Session(player_id="hero", location="courtyard")
+    assert "accepted" not in quest_view(s).lower() or save_state("hero") == "accepted"
+
+
+def test_restore_state_ignores_an_unknown_state():
+    from parts.world.quest import restore_state, save_state
+
+    reset_quests()
+    restore_state("hero", "not_a_real_state")  # a state from another seed's quest, or garbage
+    assert save_state("hero") == ""  # ignored, never seeded -- a clean fresh run

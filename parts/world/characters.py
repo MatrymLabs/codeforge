@@ -66,6 +66,7 @@ def _archive_row_to_casefile(archive_row: CharacterRow) -> dict[str, Any]:
         "order": archive_row.order,
         "equipped_gear": archive_row.equipped_gear,
         "coins": archive_row.coins,
+        "quest_state": archive_row.quest_state,
     }
     if archive_row.auth_salt and archive_row.auth_hash:
         casefile["auth"] = {"salt": archive_row.auth_salt, "hash": archive_row.auth_hash}
@@ -98,6 +99,7 @@ def put_record(name: str, casefile: dict[str, Any]) -> None:
         archive_row.order = casefile.get("order", "")
         archive_row.equipped_gear = casefile.get("equipped_gear", "")
         archive_row.coins = int(casefile.get("coins", 0))
+        archive_row.quest_state = casefile.get("quest_state", "")
         archive_row.auth_salt = auth.get("salt")
         archive_row.auth_hash = auth.get("hash")
         db.add(archive_row)
@@ -126,6 +128,9 @@ def save_character(session: Session) -> None:
         archive_row.order = session.order
         archive_row.equipped_gear = _serialize_gear(session)
         archive_row.coins = session.coins
+        from parts.world.quest import save_state
+
+        archive_row.quest_state = save_state(session.player_id)
         db.add(archive_row)
         db.commit()
     # Persist per-job progress AFTER the character row exists (the foreign key needs it).
@@ -152,6 +157,10 @@ def restore_character(session: Session, casefile: dict[str, Any]) -> None:
     session.equipped.clear()
     # ...then re-clone and re-equip THIS hero's own persisted gear (folds back into their stats).
     _restore_gear(session, str(casefile.get("equipped_gear", "")))
+    # ...and seed their quest arc back to where they left it, so a story-in-progress survives.
+    from parts.world.quest import restore_state
+
+    restore_state(session.player_id, str(casefile.get("quest_state", "")))
     job = str(casefile["job"])
     if not job or job not in JOBS:
         # No calling, or the calling vanished from THIS seed (seeds are games -- a character saved
