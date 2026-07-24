@@ -4533,5 +4533,30 @@
     "aliases": [],
     "created": "2026-07-24",
     "updated": "2026-07-24"
+  },
+  {
+    "designation": "MOD-10.043",
+    "name": "intake",
+    "status": "active",
+    "function": "the Technology Intake Office: controlled, Python-native adoption; every onboarding record complete + consistent",
+    "label": "intake",
+    "file": "parts/intake.py",
+    "type": "MOD",
+    "domain": "10",
+    "docs": "docs/technology_intake.md",
+    "tests": "tests/test_intake.py",
+    "depends_on": [],
+    "related": [
+      "dependencies"
+    ],
+    "reuse": "",
+    "tags": [
+      "module"
+    ],
+    "notes": "Reads intake_ledger.toml (stdlib tomllib); sibling of the dependency gate; frameless. make intake.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-24",
+    "updated": "2026-07-24"
   }
 ]

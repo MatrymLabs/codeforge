@@ -1,4 +1,4 @@
-.PHONY: hooks env fix lint typecheck test property fuzz coverage audit audit-runtime security sast secrets deps sbom bench trend ai-eval retention doctor patch daily check readiness arc-verdicts truth forge cast-plan cast cast-selective cast-install-check cast-diff cast-update plugins coupling shelf-pour shelf-build smoke repo-integrity ship run world store hardware clean serve backup db-up db-down db-migrate docs-serve docs-build demo-gif e2e evolution ritual-fast ritual ritual-down unskew loop
+.PHONY: hooks env fix lint typecheck test property fuzz coverage audit audit-runtime security sast secrets deps intake sbom bench trend ai-eval retention doctor patch daily check readiness arc-verdicts truth forge cast-plan cast cast-selective cast-install-check cast-diff cast-update plugins coupling shelf-pour shelf-build smoke repo-integrity ship run world store hardware clean serve backup db-up db-down db-migrate docs-serve docs-build demo-gif e2e evolution ritual-fast ritual ritual-down unskew loop
 
 # --- Environment: create/validate the .venv, fail loud on version mismatch.
 # Uses uv when present (a Rust resolver; measured ~20x faster than pip on this host:
@@ -222,6 +222,12 @@ secrets:
 # on an unjustified dependency; warns on a stale ledger row. Stdlib only (tomllib). ---
 deps:
 	@python -m parts.dependencies
+
+# --- Intake: the Technology Intake Office (docs/technology_intake.md). Controlled adoption,
+# Python-native: fails loud if any onboarding record is incomplete (an approved technology
+# missing one of the ten requirements) or inconsistent. Stdlib only (tomllib). ---
+intake:
+	@python -m parts.intake
 
 # --- Bench: measure the engine tick (handle_command) throughput + latency and file a
 # dated performance-evidence report under reports/performance/. Frameless (stdlib). ---
