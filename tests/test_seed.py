@@ -423,3 +423,16 @@ def test_a_shop_naming_an_unknown_prototype_is_rejected_at_boot(tmp_path):
     ns = load_npcs(tmp_path / "npcs.yaml")
     with pytest.raises(SeedError, match="shop sells names"):
         inspect_world_links(rooms, its, ns)
+
+
+def test_a_consumable_item_loads_its_effect(tmp_path):
+    itemsf = tmp_path / "items.yaml"
+    itemsf.write_text("potion:\n  location: cell\n  consume: {hp: 30, mp: 10}\n")
+    assert load_items(itemsf)["potion"]["consume"] == {"hp": 30, "mp": 10}
+
+
+def test_a_consumable_with_a_bad_effect_is_rejected(tmp_path):
+    itemsf = tmp_path / "items.yaml"
+    itemsf.write_text("potion:\n  location: cell\n  consume: {stamina: 5}\n")  # only hp/mp allowed
+    with pytest.raises(SeedError, match="consume"):
+        load_items(itemsf)

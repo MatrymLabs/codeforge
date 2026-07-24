@@ -108,6 +108,8 @@ def clone(prototype: str, location: str) -> str:
         mods=dict(template["mods"]),
         prototype=prototype,
     )
+    if template.get("consume"):  # a cloned potion keeps its one-shot effect
+        ITEMS[iid]["consume"] = dict(template["consume"])
     return iid
 
 
