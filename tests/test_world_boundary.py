@@ -55,6 +55,7 @@ _GAME_SEED = {
     "quest",
     "chime",
     "orders",
+    "shop",
 }
 
 

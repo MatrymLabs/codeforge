@@ -2414,5 +2414,80 @@
     "aliases": [],
     "created": "2026-07-24",
     "updated": "2026-07-24"
+  },
+  {
+    "designation": "CMD-04.071",
+    "name": "shop",
+    "status": "active",
+    "function": "list a merchant's wares",
+    "label": "shop",
+    "file": "forge.py",
+    "type": "CMD",
+    "domain": "04",
+    "docs": "docs/architecture.md",
+    "tests": "tests/test_shop.py",
+    "depends_on": [],
+    "related": [
+      "wallet"
+    ],
+    "reuse": "",
+    "tags": [
+      "command"
+    ],
+    "notes": "The shop economy verb (parts/world/shop). Finds the merchant in the player's room.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-24",
+    "updated": "2026-07-24"
+  },
+  {
+    "designation": "CMD-04.072",
+    "name": "buy",
+    "status": "active",
+    "function": "buy an item (buy <item>)",
+    "label": "buy",
+    "file": "forge.py",
+    "type": "CMD",
+    "domain": "04",
+    "docs": "docs/architecture.md",
+    "tests": "tests/test_shop.py",
+    "depends_on": [],
+    "related": [
+      "wallet"
+    ],
+    "reuse": "",
+    "tags": [
+      "command"
+    ],
+    "notes": "The shop economy verb (parts/world/shop). Finds the merchant in the player's room.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-24",
+    "updated": "2026-07-24"
+  },
+  {
+    "designation": "CMD-04.073",
+    "name": "sell",
+    "status": "active",
+    "function": "sell a carried item (sell <item>)",
+    "label": "sell",
+    "file": "forge.py",
+    "type": "CMD",
+    "domain": "04",
+    "docs": "docs/architecture.md",
+    "tests": "tests/test_shop.py",
+    "depends_on": [],
+    "related": [
+      "wallet"
+    ],
+    "reuse": "",
+    "tags": [
+      "command"
+    ],
+    "notes": "The shop economy verb (parts/world/shop). Finds the merchant in the player's room.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-24",
+    "updated": "2026-07-24"
   }
 ]

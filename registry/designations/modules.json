@@ -4366,5 +4366,35 @@
     "aliases": [],
     "created": "2026-07-24",
     "updated": "2026-07-24"
+  },
+  {
+    "designation": "MOD-04.057",
+    "name": "shop",
+    "status": "active",
+    "function": "buy and sell at a merchant's stall (the coin economy's spending end)",
+    "label": "shop",
+    "file": "parts/world/shop.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "docs/architecture.md",
+    "tests": "tests/test_shop.py",
+    "depends_on": [
+      "items",
+      "npcs",
+      "session"
+    ],
+    "related": [
+      "combat",
+      "characters"
+    ],
+    "reuse": "the seed-declared shop pattern: a merchant NPC carries a `shop` (sells/buys price tables) so what a stall trades is world data, not code; buy clones a fresh instance, sell removes a carried one, both find the keeper in the room",
+    "notes": "The coin economy's spending end (coins earned in combat._coin_reward, persisted characters.coins). `shop` lists wares, `buy <item>` spends coins for a cloned instance, `sell <item>` pays for a carried item the shop buys. Prices cross-checked against seed items at boot (inspect_world_links). Live on the Emberreach market_trader.",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-24",
+    "updated": "2026-07-24"
   }
 ]

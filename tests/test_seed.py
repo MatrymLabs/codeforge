@@ -388,3 +388,38 @@ def test_world_links_reject_a_loot_naming_a_missing_item(tmp_path):
     npcs["wight"]["loot"] = {"ghost": 1}
     with pytest.raises(SeedError, match="loot"):
         inspect_world_links(rooms, items, npcs)
+
+
+def test_a_valid_shop_loads_its_sells_and_buys(tmp_path):
+    npcsf = tmp_path / "npcs.yaml"
+    npcsf.write_text(
+        "trader:\n  location: cell\n  shop:\n    sells: {gem: 10}\n    buys: {ore: 3}\n"
+    )
+    trader = load_npcs(npcsf)["trader"]
+    assert trader["shop"]["sells"] == {"gem": 10} and trader["shop"]["buys"] == {"ore": 3}
+
+
+def test_a_plain_npc_carries_no_shop_key(tmp_path):
+    npcsf = tmp_path / "npcs.yaml"
+    npcsf.write_text("rat:\n  location: cell\n")
+    assert "shop" not in load_npcs(npcsf)["rat"]  # opt-in: absent unless declared
+
+
+def test_a_shop_with_a_nonpositive_price_is_rejected(tmp_path):
+    npcsf = tmp_path / "npcs.yaml"
+    npcsf.write_text("trader:\n  location: cell\n  shop:\n    sells: {gem: 0}\n")
+    with pytest.raises(SeedError, match="shop"):
+        load_npcs(npcsf)
+
+
+def test_a_shop_naming_an_unknown_prototype_is_rejected_at_boot(tmp_path):
+    (tmp_path / "rooms.yaml").write_text("cell:\n")
+    (tmp_path / "items.yaml").write_text("gem:\n  location: cell\n")
+    (tmp_path / "npcs.yaml").write_text(
+        "trader:\n  location: cell\n  shop:\n    sells: {ghost: 5}\n"
+    )
+    rooms = load_rooms(tmp_path / "rooms.yaml")
+    its = load_items(tmp_path / "items.yaml")
+    ns = load_npcs(tmp_path / "npcs.yaml")
+    with pytest.raises(SeedError, match="shop sells names"):
+        inspect_world_links(rooms, its, ns)

@@ -128,6 +128,18 @@ market_trader:
   dialogue:
     - '"Cooling-Sea goods, coast-craft, Spiral salvage -- if the Anvil makes it, it crosses my stall."'
     - '"Ember-shards fetch a fair price up here. The road pays those who survive it, eh?"'
+  shop:
+    # Coin sinks: the early gear ladder, so a coast Forger can outfit before the road/ascent.
+    sells:
+      cinder_hammer: 40      # a starter weapon (ATK 5, DEF 1)
+      reaver_blade: 90       # the better blade (ATK 9, ACC 5)
+      cindershell_plate: 140  # body armor (DEF 8, EVA 2)
+    # Coin taps: the trader buys your salvage and spare gear, so loot has a use.
+    buys:
+      ember_shard: 4
+      hollow_ingot: 25
+      reaver_blade: 30
+      warden_sigil: 60
 
 warden_keeper:
   name: the Keeper of the Warden Gate

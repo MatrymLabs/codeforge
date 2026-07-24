@@ -77,6 +77,7 @@ from parts.world.ranks import wizard_command
 from parts.world.score_sheet import render_score_sheet
 from parts.world.seed import load_splash
 from parts.world.session import SESSIONS, Session, display_name, roster
+from parts.world.shop import buy, render_shop, sell
 from parts.world.world import DIRECTIONS, dynamic_capability, render_room, resolve_move
 from parts.world.zones import area_line, tick_zones
 from parts.world_cert import certify
@@ -1310,6 +1311,33 @@ def _build_commands() -> CommandSet:
             "CMD-04.070",
             "check your purse",
             lambda s, _a: f"Your purse holds {s.coins} coins.",
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "shop",
+            "CMD-04.071",
+            "list a merchant's wares",
+            lambda s, _a: render_shop(s),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "buy",
+            "CMD-04.072",
+            "buy an item (buy <item>)",
+            lambda s, arg: buy(s, arg),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "sell",
+            "CMD-04.073",
+            "sell a carried item (sell <item>)",
+            lambda s, arg: sell(s, arg),
             namespace=CORE,
         )
     )
