@@ -1,0 +1,11 @@
+# SEED: aethryn -- spiral.yaml (procedural extension of the Great Spiral toward the summit)
+# The world bible frames the Spiral as an endless ascent (s.24). Coils 1-3 are hand-authored;
+# this config drives a validated GENERATOR (parts/world/spiral.py) that extends the climb Coil by
+# Coil up to the level cap -- the 1-255 ceiling -- so the summit is real, not hand-typed 25 times.
+# The generated Coils are seed-SHAPED data (rooms/foes/bosses) run through the same loader gates.
+
+attach: coil_third_landing   # the hand-authored landing the generated Coils climb up from
+first_coil: 4                # Coils 1-3 are hand-authored; generation continues from here
+base_level: 47               # the 4th Coil's Gate-boss level (a step above the Stormlord's 38)
+levels_per_coil: 9           # each higher Coil's Gate-boss climbs this many levels
+top_level: 255               # the Spiral's summit: the final Gate-boss, the progression ceiling

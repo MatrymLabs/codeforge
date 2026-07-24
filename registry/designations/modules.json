@@ -4396,5 +4396,34 @@
     "aliases": [],
     "created": "2026-07-24",
     "updated": "2026-07-24"
+  },
+  {
+    "designation": "MOD-04.058",
+    "name": "spiral",
+    "status": "active",
+    "function": "procedurally extend the Great Spiral toward the summit (the 1-255 climb)",
+    "label": "spiral",
+    "file": "parts/world/spiral.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "docs/architecture.md",
+    "tests": "tests/test_spiral.py",
+    "depends_on": [
+      "seed",
+      "reward_curve"
+    ],
+    "related": [
+      "world",
+      "combat"
+    ],
+    "reuse": "the validated-generator pattern: a seed's spiral.yaml drives a DETERMINISTIC factory that emits seed-shaped Coils (rooms + husk + lethal Gate-boss each, level-scaled), merged into the world before the same loader gates validate them -- the world stays data, code is only its factory",
+    "notes": "Reaches the literal 1-255 ceiling without hand-authoring ~25 YAML Coils. load_spiral_config reads seeds/<seed>/spiral.yaml (attach/first_coil/base_level/levels_per_coil/top_level, all validated); generate_spiral chains Coils from the attach room up to the summit (the first Gate-boss at top_level). world.py merges rooms+npcs + sets attach.up before inspect_world_links. aethryn: 25 Coils (4-28), summit = the Spiral Sovereign at L255. No randomness (reproducible).",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-24",
+    "updated": "2026-07-24"
   }
 ]

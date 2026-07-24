@@ -8,10 +8,20 @@ from parts.world.doors import DOORS, barred_door_for
 from parts.world.items import ITEMS
 from parts.world.npcs import NPCS
 from parts.world.seed import SEED_DIR, Room, inspect_world_links, load_rooms
+from parts.world.spiral import generate_spiral, load_spiral_config
 
 SEED_PATH = SEED_DIR / "rooms.yaml"
 
 WORLD: dict[str, Room] = load_rooms(SEED_PATH)
+# Procedurally extend the Great Spiral toward the summit if the seed opts in (spiral.yaml). The
+# generated Coils are seed-shaped data, merged BEFORE validation so the same loader gates check
+# them, and the seed's attach room grows an `up` exit onto the first generated Coil.
+_spiral_config = load_spiral_config(SEED_DIR / "spiral.yaml")
+if _spiral_config is not None:
+    _spiral_rooms, _spiral_npcs, _spiral_first = generate_spiral(_spiral_config, WORLD)
+    WORLD.update(_spiral_rooms)
+    NPCS.update(_spiral_npcs)
+    WORLD[_spiral_config["attach"]]["exits"]["up"] = _spiral_first
 inspect_world_links(WORLD, ITEMS, NPCS)
 
 # The spawn point is seed-defined, not hardcoded: the FIRST room in rooms.yaml.
