@@ -44,3 +44,9 @@ great_spiral_coil_1:
   rooms: [coilfoot_ascent, coil_first_landing]
   reset_mode: empty_only  # the ascent's wisps and Gate-boss reform once the Coil is quiet
   beats_between: 14
+
+great_spiral_coil_2:
+  name: The Great Spiral - Second Coil
+  rooms: [coil_second_ascent, coil_bridgespan, coil_second_landing]
+  reset_mode: empty_only  # the Coil's revenants and Gate-boss reform once the stair is quiet
+  beats_between: 14
