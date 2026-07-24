@@ -458,3 +458,38 @@ def test_land_hit_awards_the_scaled_xp_not_the_flat_field():
     defeated, _ = land_hit(s, npc, "wolf_1", 5)
     assert defeated
     assert s.xp - before == 80  # level 8 x XP_PER_LEVEL 10 x gap 1.0 -- not the flat xp:0
+
+
+def test_a_sworn_order_raises_strike_power():
+    """The Warcraft Order's ATK perk is real in a fight, not just on the sheet."""
+    from parts.world.combat import strike_power
+
+    s = _fighter("vanguard")
+    s.named = True
+    base = strike_power(s)
+    s.order = "warcraft"  # ATK +4
+    assert strike_power(s) == base + 4
+
+
+def test_def_from_an_order_mitigates_a_blow_and_a_landed_hit_always_stings():
+    """DEF (here from the Making Order) turns a blow, but a hit never drops below 1 damage."""
+    from parts.world.combat import _resolve_npc_blow
+
+    s = _fighter("vanguard")
+    s.named = True
+    brute = {"name": "a brute", "atk": 6, "hp": 10, "hp_now": 10}
+    before = s.resources["hp"].current
+    _resolve_npc_blow(s, brute, "hits")
+    assert s.resources["hp"].current == before - 6  # no order: full damage
+
+    s.resources["hp"] = s.resources["hp"].heal(999)
+    s.order = "making"  # DEF +4
+    before = s.resources["hp"].current
+    _resolve_npc_blow(s, brute, "hits")
+    assert s.resources["hp"].current == before - 2  # 6 - 4 mitigated
+
+    s.resources["hp"] = s.resources["hp"].heal(999)
+    gnat = {"name": "a gnat", "atk": 2, "hp": 5, "hp_now": 5}
+    before = s.resources["hp"].current
+    _resolve_npc_blow(s, gnat, "nips")
+    assert s.resources["hp"].current == before - 1  # 2 - 4 floored at 1

@@ -37,9 +37,20 @@ _LOOT_RNG = random.Random()  # nosec B311 -- game loot, not security; seeded for
 DAMAGE_BASE = 3  # damage dealt = DAMAGE_BASE + strength // 3
 
 
+def _stat_bonus(session: Session, stat: str) -> int:
+    """The total flat bonus to a derived stat from everything a character carries: equipped gear,
+    the active job's perks, and the sworn Order. Combat reads the SAME composition as the score
+    sheet (character_view.session_stat_modifiers), so gear and perks are real in a fight, not paper.
+    An ungeared, orderless character gets 0 -- the base balance is unchanged."""
+    from parts.world.character_view import session_stat_modifiers
+
+    return sum(mod.flat for mod in session_stat_modifiers(session).get(stat, []))
+
+
 def strike_power(session: Session) -> int:
     assert session.stats is not None
-    return DAMAGE_BASE + session.stats.get("strength").base // 3
+    # Base damage (attribute-driven), plus the ATK bonus your gear/perks/Order add on top.
+    return DAMAGE_BASE + session.stats.get("strength").base // 3 + _stat_bonus(session, "ATK")
 
 
 def npc_strike_power(npc: Npc) -> int:
@@ -80,9 +91,11 @@ def _resolve_npc_blow(session: Session, npc: Npc, verb: str) -> str:
     is the opening phrase ('strikes back', 'lunges') so a counter and an unprovoked
     strike share one resolution. Returns the attacker-facing line(s) with NO leading
     newline; a passive NPC (atk 0) cannot land a blow and returns ''."""
-    power = npc_strike_power(npc)
-    if power <= 0:
+    raw = npc_strike_power(npc)
+    if raw <= 0:
         return ""  # the training dummy and every peaceful NPC: no blow
+    # Your DEF (from gear/perks/Order) turns the blow, but a landed hit always stings: floor at 1.
+    power = max(1, raw - _stat_bonus(session, "DEF"))
     session.resources["hp"] = session.resources["hp"].damage(power)
     name = sentence_case(npc["name"])
     announce_frame(
