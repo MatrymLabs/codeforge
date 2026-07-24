@@ -91,3 +91,14 @@ def test_the_flagship_seed_reaches_the_summit_at_level_255():
     _rooms, npcs, first = generate_spiral(config, {"coil_third_landing": {"exits": {}}})
     assert any(n["level"] == 255 for n in npcs.values())  # the aethryn Spiral truly hits 255
     assert first == "coil_4_ascent"
+
+
+def test_the_summit_uses_stable_labels_for_a_capstone_quest():
+    """The summit room + Gate-boss carry fixed labels (not the Coil number), so a quest can name
+    them however tall the Spiral runs."""
+    from parts.world.spiral import SUMMIT_BOSS, SUMMIT_ROOM
+
+    rooms, npcs, _ = generate_spiral(_CONFIG, _ROOMS)
+    assert SUMMIT_ROOM in rooms and SUMMIT_ROOM == "the_spiral_summit"
+    assert SUMMIT_BOSS in npcs and npcs[SUMMIT_BOSS]["level"] == 255
+    assert npcs[SUMMIT_BOSS]["location"] == SUMMIT_ROOM

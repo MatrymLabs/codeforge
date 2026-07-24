@@ -22,6 +22,11 @@ import yaml
 from parts.shelf.reward_curve import LEVEL_MAX
 from parts.world.seed import Npc, Room, SeedError
 
+# Stable labels for the summit room + its Gate-boss (the top of the climb), so a capstone quest can
+# name them no matter how many Coils a config generates below.
+SUMMIT_ROOM = "the_spiral_summit"
+SUMMIT_BOSS = "spiral_sovereign"
+
 _ORDINALS = {4: "Fourth", 5: "Fifth", 6: "Sixth", 7: "Seventh", 8: "Eighth", 9: "Ninth"}
 
 
@@ -122,7 +127,10 @@ def generate_spiral(
     for index, n in enumerate(numbers):
         boss_level = _boss_level(config, n)
         summit = boss_level >= config["top_level"]
-        ascent_id, landing_id = f"coil_{n}_ascent", f"coil_{n}_landing"
+        ascent_id = f"coil_{n}_ascent"
+        # The summit room + boss carry STABLE labels (not the Coil number) so a capstone quest can
+        # reference them regardless of how many Coils the config generates below.
+        landing_id = SUMMIT_ROOM if summit else f"coil_{n}_landing"
         below = attach if index == 0 else f"coil_{numbers[index - 1]}_landing"
         above = "" if summit else f"coil_{numbers[index + 1]}_ascent"
 
@@ -164,7 +172,7 @@ def generate_spiral(
             max(1, boss_level - 4),
             boss=False,
         )
-        boss_id = f"spiral_gate_{n}"
+        boss_id = SUMMIT_BOSS if summit else f"spiral_gate_{n}"
         boss_name = "the Spiral Sovereign" if summit else f"the {ord_name} Coil Gate-boss"
         npcs[boss_id] = _foe(boss_id, boss_name, landing_id, boss_level, boss=True)
 

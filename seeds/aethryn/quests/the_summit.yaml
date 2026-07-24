@@ -1,0 +1,27 @@
+# SEED: aethryn -- quests/the_summit.yaml (the capstone: the top of the Great Spiral, at the cap)
+# The endgame. Past the hand-authored Coils and up the procedural Spiral (parts/world/spiral.py),
+# the climb ends at the summit, where the Spiral Sovereign stands at the level ceiling. Reach the
+# crown, best the Sovereign, and the 1-255 climb is done. The stable summit labels
+# (spiral.SUMMIT_ROOM / SUMMIT_BOSS) let this arc name the top no matter how tall the Spiral runs.
+
+id: the_summit
+name: The Summit
+start: climbing
+reward_xp: 5000
+
+steps:
+  - {state: climbing,    event: reach, to: at_the_summit, on_enter: the_spiral_summit}
+  - {state: at_the_summit, event: crown, to: crowned,     on_defeat: spiral_sovereign, effect: award_xp}
+
+terminal: [crowned]
+
+labels:
+  climbing: "Somewhere far above, past Coil upon Coil, the Great Spiral ends. Climb to the summit, if you can reach it."
+  at_the_summit: "You stand at the summit of the Great Spiral. The Spiral Sovereign holds the last stair, at the very top of the climb. End it."
+  crowned: |-
+    *** YOU HAVE REACHED THE TOP ***
+    The Spiral Sovereign falls, and the Great Spiral is climbed to its crown. Below you, Coil upon
+    Coil, the whole ascent lies conquered -- from the ember you woke beside on the Waking Shore to
+    the Forge that burns at the summit of the world. You washed ashore with nothing and no memory
+    of the craft. You leave the top of the Spiral a Forger who has climbed the whole of it.
+    The Kindlands are relit. The deep is sounded. The Spiral is crowned. Well forged, to the last.
