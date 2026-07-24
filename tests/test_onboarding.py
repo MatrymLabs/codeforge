@@ -32,8 +32,8 @@ def test_one_core_powers_both_the_game_quest_and_the_practical_workflow():
     # The whole point of the vertical slice: the SAME engine class drives both adapters.
     from parts.world import quest
 
-    assert isinstance(quest._ENGINE, WorkflowEngine)  # the game quest
-    game_engine = quest._ENGINE
+    game_engine = quest._QUESTS["coilward_contract"].engine  # the game quest (the built-in arc)
+    assert isinstance(game_engine, WorkflowEngine)
     biz_engine, biz_run = new_onboarding()  # the practical workflow
     assert isinstance(biz_engine, WorkflowEngine)
     assert type(game_engine) is type(biz_engine)

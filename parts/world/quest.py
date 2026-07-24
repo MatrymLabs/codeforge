@@ -1,12 +1,19 @@
-"""CARD: quest -- the game adapter for the Workflow Engine: a regional quest as a workflow.
+"""CARD: quest -- the game adapter for the Workflow Engine: a seed's quests as workflows.
 
 A quest is a workflow (`parts/shelf/workflow`) whose states a player walks with the `quest` verb.
 It proves the reusable core lives in the game: the SAME `WorkflowEngine` that drives a business
-onboarding checklist (`parts/onboarding`) drives this quest -- only the effect differs (here, a
-completed contract awards XP). The workflow is defined as data, so a seed could ship its own.
+onboarding checklist (`parts/onboarding`) drives these quests -- only the effect differs (here, a
+completed contract awards XP). The arcs are DATA: a seed ships `quest.yaml` (its primary arc) and
+any number of `quests/*.yaml`, so a world declares many stories, not one hard-coded in Python.
+
+A player carries one run PER quest; the map of their in-flight states persists (save_state /
+restore_state), so a story survives a restart. World events (a foe felled, a room entered) advance
+whichever quest declares that trigger; the `quest` verb is always the fallback.
 """
 
 from __future__ import annotations
+
+import json
 
 from parts.shelf.statemachine import Fired
 from parts.shelf.workflow import Instance, Step, Workflow, WorkflowEngine, build_workflow
@@ -15,7 +22,7 @@ from parts.world.session import Session
 
 
 def _built_in_quest() -> tuple[Workflow, str, int]:
-    """The default arc for a seed that ships no quest.yaml (e.g. first-forge, spiral-ascent)."""
+    """The default arc for a seed that ships no quests at all (a bare seed)."""
     workflow = build_workflow(
         "coilward_contract",
         start="offered",
@@ -36,7 +43,7 @@ def _built_in_quest() -> tuple[Workflow, str, int]:
 
 
 def _from_seed(spec: QuestSpec) -> tuple[Workflow, str, int]:
-    """Build a quest workflow from a seed's quest.yaml -- the arc is data, not Python."""
+    """Build a quest workflow from a seed's quest spec -- the arc is data, not Python."""
     steps = [Step(s["state"], s["event"], s["to"], effect=s.get("effect")) for s in spec["steps"]]
     workflow = build_workflow(
         spec["id"],
@@ -48,64 +55,141 @@ def _from_seed(spec: QuestSpec) -> tuple[Workflow, str, int]:
     return workflow, spec["name"], spec["reward_xp"]
 
 
-# The world is data: if this seed ships a quest, walk THAT arc; otherwise the built-in contract.
-_SEED_QUEST = load_quest(SEED_DIR / "quest.yaml")
-_QUEST, _QUEST_NAME, _XP_REWARD = _from_seed(_SEED_QUEST) if _SEED_QUEST else _built_in_quest()
-_ENGINE = WorkflowEngine(_QUEST)
+def _load_specs() -> list[QuestSpec]:
+    """Every quest spec this seed ships: `quest.yaml` first (the primary arc), then `quests/*.yaml`
+    in name order. The world stays data; adding a story is dropping in a YAML file, not code."""
+    specs: list[QuestSpec] = []
+    primary = load_quest(SEED_DIR / "quest.yaml")
+    if primary:
+        specs.append(primary)
+    quests_dir = SEED_DIR / "quests"
+    if quests_dir.is_dir():
+        for path in sorted(quests_dir.glob("*.yaml")):
+            spec = load_quest(path)
+            if spec:
+                specs.append(spec)
+    return specs
+
+
+class _Quest:
+    """One loaded quest: its workflow, display name, XP reward, engine, and world-event triggers."""
+
+    def __init__(self, workflow: Workflow, name: str, xp: int, spec: QuestSpec | None) -> None:
+        self.workflow = workflow
+        self.name = name
+        self.xp = xp
+        self.engine = WorkflowEngine(workflow)
+        self.events = {event for (_state, event) in workflow.roles}  # every event this quest knows
+        # (kind, target label) -> the event that world action fires in THIS quest.
+        self.triggers: dict[tuple[str, str], str] = {}
+        for step in spec["steps"] if spec else []:
+            for key, kind in _TRIGGER_KEYS.items():
+                target = step.get(key)
+                if target:
+                    self.triggers[(kind, str(target))] = step["event"]
+
 
 # step trigger key -> world-event kind. defeat = an npc falls, take = an item is picked up,
 # enter = a room is entered.
 _TRIGGER_KEYS = {"on_defeat": "defeat", "on_take": "take", "on_enter": "enter"}
 
 
-def _build_triggers(spec: QuestSpec | None) -> dict[tuple[str, str], str]:
-    """Map each step's world-event triggers to the event they fire: (kind, label) -> event."""
-    triggers: dict[tuple[str, str], str] = {}
-    for step in spec["steps"] if spec else []:
-        for key, kind in _TRIGGER_KEYS.items():
-            target = step.get(key)
-            if target:
-                triggers[(kind, str(target))] = step["event"]
-    return triggers
+def _load_quests() -> dict[str, _Quest]:
+    """The seed's quests by id (the built-in contract if the seed ships none)."""
+    specs = _load_specs()
+    if not specs:
+        wf, name, xp = _built_in_quest()
+        return {wf.workflow_id: _Quest(wf, name, xp, None)}
+    quests: dict[str, _Quest] = {}
+    for spec in specs:
+        wf, name, xp = _from_seed(spec)
+        quests[spec["id"]] = _Quest(wf, name, xp, spec)
+    return quests
 
 
-# (kind, target label) -> the quest event that world action fires, so real play advances the arc.
-_TRIGGERS = _build_triggers(_SEED_QUEST)
+_QUESTS = _load_quests()
+# (kind, target) -> quest_id: the ONE quest a world action advances (seed authors avoid collisions;
+# the last-loaded wins if two share a trigger). Built from every quest's own trigger map.
+_EVENT_ROUTES: dict[tuple[str, str], str] = {
+    trigger: qid for qid, quest in _QUESTS.items() for trigger in quest.triggers
+}
 
-_RUNS: dict[str, Instance] = {}  # player_id -> their quest run
+_RUNS: dict[str, dict[str, Instance]] = {}  # player_id -> {quest_id: their run of that quest}
 
 
-def _run(player_id: str) -> Instance:
-    return _RUNS.setdefault(player_id, _ENGINE.open())
+def _run(player_id: str, quest_id: str) -> Instance:
+    """The player's run of one quest, opened fresh at its start the first time it is touched."""
+    player_runs = _RUNS.setdefault(player_id, {})
+    if quest_id not in player_runs:
+        player_runs[quest_id] = _QUESTS[quest_id].engine.open()
+    return player_runs[quest_id]
+
+
+def _line(quest: _Quest, run: Instance) -> str:
+    """One quest's `[Name] label` line for the current state."""
+    return f"[{quest.name}] {quest.workflow.labels.get(run.state, run.state)}"
+
+
+def _list_all(session: Session) -> str:
+    """Every quest this seed offers, with the player's state and available moves in each."""
+    blocks = []
+    for qid, quest in _QUESTS.items():
+        run = _run(session.player_id, qid)
+        line = _line(quest, run)
+        if quest.engine.is_done(run):
+            blocks.append(line + " (complete)")
+        else:
+            actions = quest.engine.actions(run)
+            hint = f"  ({qid}: {', '.join(actions)})" if actions else ""
+            blocks.append(line + hint)
+    return "Your quests:\n" + "\n".join(blocks)
+
+
+def _advance(session: Session, quest_id: str, event: str) -> str:
+    """Fire one event in one quest, apply its effect, and report the new state."""
+    quest = _QUESTS[quest_id]
+    run = _run(session.player_id, quest_id)
+    outcome = quest.engine.advance(run, event)
+    if not isinstance(outcome, Fired):
+        return f"You can't do that now. ({outcome.reason})"
+    extra = _apply_effect(quest, outcome.effect, session)
+    return f"{_line(quest, run)}{extra}"
 
 
 def quest_view(session: Session, arg: str = "") -> str:
-    """The `quest` verb: show the quest, or advance it (`quest accept|begin|finish`)."""
-    run = _run(session.player_id)
-    event = arg.strip().lower()
-    if not event or event == "status":
-        line = _QUEST.labels.get(run.state, run.state)
-        if _ENGINE.is_done(run):
-            return f"[{_QUEST_NAME}] {line}"
-        actions = _ENGINE.actions(run)
-        return f"[{_QUEST_NAME}] {line}\n  You can: {', '.join(actions) or '(nothing)'}"
-    outcome = _ENGINE.advance(run, event)
-    if not isinstance(outcome, Fired):
-        return f"You can't do that now. ({outcome.reason})"
-    extra = _apply_effect(outcome.effect, session)
-    return f"[{_QUEST_NAME}] {_QUEST.labels.get(run.state, run.state)}{extra}"
+    """The `quest` verb. Bare: list every quest. `quest <id>`: show one. `quest <id> <event>` or
+    `quest <event>`: advance (a bare event applies to the first quest that legally accepts it, so
+    single-quest play still reads `quest accept`)."""
+    arg = arg.strip().lower()
+    if not arg or arg == "status":
+        return _list_all(session)
+    parts = arg.split()
+    if parts[0] in _QUESTS:
+        quest_id = parts[0]
+        if len(parts) == 1:
+            return _line(_QUESTS[quest_id], _run(session.player_id, quest_id))
+        return _advance(session, quest_id, parts[1])
+    # A bare event: apply it to the first quest that can legally fire it right now...
+    for quest_id, quest in _QUESTS.items():
+        if arg in quest.engine.actions(_run(session.player_id, quest_id)):
+            return _advance(session, quest_id, arg)
+    # ...else, if some quest KNOWS the event (just not now), let its engine give the real refusal.
+    for quest_id, quest in _QUESTS.items():
+        if arg in quest.events:
+            return _advance(session, quest_id, arg)
+    return f"No quest here can do '{arg}'. Type QUEST to see your quests."
 
 
-def _apply_effect(effect: str | None, session: Session) -> str:
+def _apply_effect(quest: _Quest, effect: str | None, session: Session) -> str:
     """Apply a quest step's named effect to the world. The workflow only NAMES effects (it never
-    mutates); the game applies them here. `award_xp` grants the reward; `open_door:<id>` reforges
-    a barrier (e.g. the broken bridge). Returns any extra line to append to the reply."""
+    mutates); the game applies them here. `award_xp` grants the quest's reward; `open_door:<id>`
+    reforges a barrier (e.g. the broken bridge). Returns any extra line to append to the reply."""
     if not effect:
         return ""
     if effect == "award_xp" and session.stats is not None:
         from parts.world.progression_awards import award_xp
 
-        return "\n" + award_xp(session, _XP_REWARD)
+        return "\n" + award_xp(session, quest.xp)
     if effect.startswith("open_door:"):
         from parts.world import doors
 
@@ -114,36 +198,50 @@ def _apply_effect(effect: str | None, session: Session) -> str:
 
 
 def on_event(session: Session, kind: str, target: str) -> str | None:
-    """World-event hook: if `kind` (defeat|take|enter) on `target` advances this player's quest,
-    fire that step and return its line. Returns None when the action triggers nothing, or the arc
-    isn't at that beat yet (the engine refuses the out-of-order move -- the `quest <event>` verb
-    stays the fallback, so a trigger is always an additive convenience, never a gate)."""
-    event = _TRIGGERS.get((kind, target))
-    if event is None:
+    """World-event hook: if `kind` (defeat|take|enter) on `target` advances any quest, fire that
+    step and return its line. Returns None when nothing triggers, or the arc isn't at that beat yet
+    (the engine refuses an out-of-order move -- the `quest <event>` verb stays the fallback)."""
+    quest_id = _EVENT_ROUTES.get((kind, target))
+    if quest_id is None:
         return None
-    run = _run(session.player_id)
-    outcome = _ENGINE.advance(run, event)
+    quest = _QUESTS[quest_id]
+    run = _run(session.player_id, quest_id)
+    outcome = quest.engine.advance(run, quest.triggers[(kind, target)])
     if not isinstance(outcome, Fired):
         return None
-    extra = _apply_effect(outcome.effect, session)
-    return f"[{_QUEST_NAME}] {_QUEST.labels.get(run.state, run.state)}{extra}"
+    extra = _apply_effect(quest, outcome.effect, session)
+    return f"{_line(quest, run)}{extra}"
 
 
 def save_state(player_id: str) -> str:
-    """A player's current quest state, for persistence. "" when they have no run yet (still at
-    the start), so a brand-new character stores nothing and the default arc greets them."""
-    run = _RUNS.get(player_id)
-    return run.state if run else ""
+    """A player's in-flight quest states as a {quest_id: state} JSON map, for persistence. "" when
+    they have touched no quest yet, so a brand-new character stores nothing."""
+    runs = _RUNS.get(player_id)
+    if not runs:
+        return ""
+    return json.dumps({qid: run.state for qid, run in runs.items()}, sort_keys=True)
 
 
-def restore_state(player_id: str, state: str) -> None:
-    """Seed a player's quest run to a persisted state so their arc survives a restart.
-
-    Ignored when empty or not a real state of THIS seed's quest -- a character saved under another
-    seed pack (whose quest states differ) simply starts this seed's arc fresh, never a crash."""
-    if not state or state not in _QUEST.machine.states:
+def restore_state(player_id: str, raw: str) -> None:
+    """Reseed a player's quest runs from a persisted {quest_id: state} map so their stories survive
+    a restart. Skips any unknown quest or state (a record from another seed) -- never a crash. A
+    bare state string (the pre-multi-quest format) is honored against the primary quest."""
+    if not raw:
         return
-    _RUNS[player_id] = Instance(_QUEST.workflow_id, state, [], {})
+    try:
+        states = json.loads(raw)
+    except (ValueError, TypeError):
+        states = raw  # a legacy single-state string; matched to the primary quest below
+    if isinstance(states, str):
+        primary = next(iter(_QUESTS))
+        states = {primary: states}
+    if not isinstance(states, dict):
+        return
+    for quest_id, state in states.items():
+        quest = _QUESTS.get(quest_id)
+        if quest and isinstance(state, str) and state in quest.workflow.machine.states:
+            run = Instance(quest.workflow.workflow_id, state, [], {})
+            _RUNS.setdefault(player_id, {})[quest_id] = run
 
 
 def reset_quests() -> None:
