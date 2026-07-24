@@ -229,9 +229,42 @@ coil_second_landing:
   desc: |-
     A high forged landing where the Second Coil's cold burns blue. The Ashlord holds the
     stair here -- a Gate-boss grown from a Forge-master the Unforging turned to ash and will.
-    The way further up the Spiral is sealed in grey light, and waits for another day.
+    Past it the stair climbs on, up into the storm-wracked Third Coil of the Spiral.
   exits:
     down: coil_bridgespan
+    up: coil_third_ascent
+
+# --- The Third Coil of the Great Spiral: higher, storm-wracked, levels ~31-38. Each Coil is a ---
+# harder wall than the last (world bible s.24 -- the megadungeon's endless ascent).
+
+coil_third_ascent:
+  name: The Third Coil Ascent
+  desc: |-
+    The Spiral's third turn climbs into a standing storm of forge-lightning, the old Coilwork
+    humming with charge. Stormbound husks -- climbers the ascent burned hollow -- walk the steps.
+    The Second Coil falls away below; the stair climbs on toward a wind-scoured reach.
+  exits:
+    down: coil_second_landing
+    up: coil_stormreach
+
+coil_stormreach:
+  name: The Stormreach
+  desc: |-
+    A wind-scoured reach of the Third Coil where the forge-storm never breaks. A Coil Harrier
+    rides the gale, striking at what climbs. There is no shelter here but the stair, up, to the
+    landing above -- or back down, out of the wind.
+  exits:
+    down: coil_third_ascent
+    up: coil_third_landing
+
+coil_third_landing:
+  name: The Third Coil Landing
+  desc: |-
+    The storm breaks open onto a vast forged landing crowned in lightning. The Stormlord keeps
+    the stair -- a Gate-boss of living forge-storm, the Third Coil's wall. The Spiral climbs on
+    above into cloud and dark, Coil beyond Coil, further than any map the Kindlands hold.
+  exits:
+    down: coil_stormreach
 
 # --- The Cinderdeep (world bible: the downward branch). The coast's OTHER road: down from the ---
 # cellar hearth instead of north up the Ember-road. A mid-band depths dungeon (levels ~10-15),

@@ -297,3 +297,47 @@ hollow_smith:
   tier: boss  # the Cinderdeep's floor-boss: the deep road's climax (x10 reward)
   drops: [hollow_ingot, cindershell_plate]
   loot: {ember_shard: 3, nothing: 2}
+
+# --- The Third Coil foes (the ascent climbs on: levels ~31-38, one Gate-boss). ---
+
+stormbound_husk:
+  name: a stormbound husk
+  location: coil_third_ascent
+  keywords: [husk, stormbound, climber, hollow]
+  dialogue:
+    - The husk turns, forge-lightning arcing in its hollow chest, and reaches for your warmth.
+  hp: 75
+  atk: 20
+  aggressive: true
+  level: 31
+  tier: normal
+  drops: [ember_shard]
+
+coil_harrier:
+  name: the Coil Harrier
+  location: coil_stormreach
+  keywords: [harrier, coil, storm, rider]
+  dialogue:
+    - The Harrier banks out of the gale, trailing forge-fire, and dives.
+  hp: 120
+  atk: 26
+  aggressive: true
+  level: 34
+  tier: elite  # it owns the wind-scoured reach: an elite toll (x3) for crossing
+  drops: [ember_shard]
+  loot: {ember_shard: 3, nothing: 2}
+
+gate_stormlord:
+  name: the Coil Stormlord
+  location: coil_third_landing
+  keywords: [stormlord, storm, lord, coil]
+  dialogue:
+    - '"THE SPIRAL DOES NOT SUFFER THE UNMADE TO CLIMB..." The Stormlord rises in a pillar of forge-lightning.'
+  hp: 220
+  atk: 32
+  aggressive: true
+  lethal: true
+  level: 38
+  tier: boss  # the Third Coil's Gate-boss: the highest wall yet (x10 reward)
+  drops: [coil_keystone, stormlord_edge]
+  loot: {ember_shard: 4, nothing: 2}
