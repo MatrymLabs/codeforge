@@ -6,6 +6,6 @@
 
 attach: coil_third_landing   # the hand-authored landing the generated Coils climb up from
 first_coil: 4                # Coils 1-3 are hand-authored; generation continues from here
-base_level: 47               # the 4th Coil's Gate-boss level (a step above the Stormlord's 38)
+base_level: 43               # the 4th Coil's Gate-boss (its husk lands at 39, right above Stormlord 38)
 levels_per_coil: 9           # each higher Coil's Gate-boss climbs this many levels
 top_level: 255               # the Spiral's summit: the final Gate-boss, the progression ceiling
