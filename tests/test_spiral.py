@@ -117,6 +117,20 @@ def test_the_flagship_seed_reaches_the_summit_at_level_255():
     assert 38 < lowest <= 40, f"a dead band opened at the Spiral seam (lowest generated {lowest})"
 
 
+def test_spiral_zones_name_every_generated_coil():
+    """The generated Coils get area identity: every generated room lands in exactly one named zone
+    (so the back half renders an '[Area: The Nth Coil]' banner, not an anonymous stretch)."""
+    from parts.world.spiral import SUMMIT_ROOM, spiral_zones
+
+    rooms, _, _ = generate_spiral(_CONFIG, _ROOMS)
+    zones = spiral_zones(_CONFIG)
+    zoned = [room for zone in zones.values() for room in zone["rooms"]]
+    assert set(zoned) == set(rooms)  # exact cover: no generated room is left anonymous
+    assert len(zoned) == len(set(zoned))  # and none is in two zones
+    summit_zone = next(z for z in zones.values() if SUMMIT_ROOM in z["rooms"])
+    assert summit_zone["name"] == "The Spiral Summit"  # the summit is its own named area
+
+
 def test_the_summit_uses_stable_labels_for_a_capstone_quest():
     """The summit room + Gate-boss carry fixed labels (not the Coil number), so a quest can name
     them however tall the Spiral runs."""
