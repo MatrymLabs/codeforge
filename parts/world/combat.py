@@ -251,7 +251,7 @@ def _spawn_loot(session: Session, prototype: str, level: int = 0) -> str:
                 base = base[len(article) :]
                 break
         rolled = affixes.roll(_LOOT_RNG, base, item["mods"], level)
-        item["name"], item["mods"] = rolled.name, rolled.mods
+        item["name"], item["mods"], item["rarity"] = rolled.name, rolled.mods, rolled.rarity
         rarity = "" if rolled.rarity == "common" else f" [{rolled.rarity}]"
     line = f"{sentence_case(item['name'])}{rarity} drops to the ground."
     announce(session.location, line, exclude=session.player_id)

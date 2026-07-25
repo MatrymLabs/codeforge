@@ -119,6 +119,10 @@ class Item(TypedDict):
     # {hp: 20, mp: 10}. `quaff <item>` spends the item and restores those pools. Optional -- a bare
     # item is not consumable. Only `hp`/`mp` are honoured; a positive int each. Validated at load.
     consume: NotRequired[dict[str, int]]
+    # The rarity tier a levelled drop rolled (parts.shelf.affixes): common/uncommon/rare/epic/
+    # legendary. Set when combat rolls affixes onto an instance; absent (read as "common") on a
+    # base seed item. A client colours the loadout by it; readers use `.get("rarity", "common")`.
+    rarity: NotRequired[str]
 
 
 class Npc(TypedDict):

@@ -170,7 +170,7 @@ def test_quest_progress_persists_across_a_save_and_restore():
 
 
 def test_affixed_gear_keeps_its_rarity_across_a_save_and_restore():
-    """A rolled legendary survives logout with its name and mods, not just the base weapon."""
+    """A rolled legendary survives logout with its name, mods, AND rarity tier."""
     from parts.world.equipment import equip
     from parts.world.items import ITEMS, clone
 
@@ -178,6 +178,7 @@ def test_affixed_gear_keeps_its_rarity_across_a_save_and_restore():
     iid = clone("forge_wrench", "player")
     ITEMS[iid]["name"] = "a Savage forge wrench of Ruin"  # a rolled affix instance
     ITEMS[iid]["mods"] = {"ATK": 20, "ACC": 8}
+    ITEMS[iid]["rarity"] = "legendary"
     equip(s, "wrench")
     save_character(s)
 
@@ -185,6 +186,7 @@ def test_affixed_gear_keeps_its_rarity_across_a_save_and_restore():
     restore_character(fresh, load_character("matrym"))
     worn = ITEMS[fresh.equipped["weapon"]]
     assert worn["name"] == "a Savage forge wrench of Ruin" and worn["mods"]["ATK"] == 20
+    assert worn["rarity"] == "legendary"  # the tier survives, so a client can still colour it
 
 
 def test_the_legacy_bare_prototype_gear_format_still_restores():
