@@ -20,7 +20,7 @@ from typing import Any
 import yaml
 
 from parts.shelf.reward_curve import LEVEL_MAX
-from parts.world.seed import Npc, Room, SeedError
+from parts.world.seed import Npc, Room, SeedError, Zone
 
 # Stable labels for the summit room + its Gate-boss (the top of the climb), so a capstone quest can
 # name them no matter how many Coils a config generates below.
@@ -229,3 +229,25 @@ def generate_spiral(
 
     first_room = f"coil_{numbers[0]}_ascent" if numbers else attach
     return rooms, npcs, first_room
+
+
+def spiral_zones(config: dict[str, Any]) -> dict[str, Zone]:
+    """One AREA per generated Coil (its ascent + landing rooms), so the procedural Spiral is not a
+    stretch of anonymous rooms: each Coil renders its own '[Area: The Nth Coil]' banner, like the
+    hand-authored world, giving the back half identity and a player their bearings on the climb.
+
+    reset_mode is `never` (grouping + banner only): the generated rooms hold no resettable items,
+    and felled foes already reassemble in combat, so there is nothing to repop -- the honest policy
+    is a named area, not a reset that does nothing. Every generated room lands in one zone."""
+    zones: dict[str, Zone] = {}
+    for n in _coil_numbers(config):
+        boss_level = _boss_level(config, n)
+        summit = boss_level >= config["top_level"]
+        landing = SUMMIT_ROOM if summit else f"coil_{n}_landing"
+        zones[f"spiral_coil_{n}"] = Zone(
+            name="The Spiral Summit" if summit else f"The {_ordinal(n)} Coil",
+            rooms=[f"coil_{n}_ascent", landing],
+            reset_mode="never",
+            beats_between=20,
+        )
+    return zones

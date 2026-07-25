@@ -22,9 +22,15 @@ with a copy a player carried off, and opt-in `resettable` leaves quest items and
 from parts.world import items
 from parts.world.seed import SEED_DIR, Zone, load_zones
 from parts.world.session import Session
+from parts.world.spiral import load_spiral_config, spiral_zones
 from parts.world.world import WORLD
 
 ZONES: dict[str, Zone] = load_zones(SEED_DIR / "zones.yaml", set(WORLD))
+# The procedural Great Spiral names its own areas too, so the generated Coils render an area banner
+# like the rest of the world (parts.world.spiral.spiral_zones) -- no anonymous stretch up the climb.
+_spiral_config = load_spiral_config(SEED_DIR / "spiral.yaml")
+if _spiral_config is not None:
+    ZONES.update(spiral_zones(_spiral_config))
 
 # Per-area beat counter: world beats since this area last came due. Runtime state, never
 # persisted (derive, don't store) -- a fresh boot starts every area at zero.
