@@ -57,6 +57,18 @@ def test_aethryn_every_exit_and_placement_resolves():
         assert npc["location"].split(":")[-1] in rooms, f"npc {label} floats nowhere"
 
 
+def test_aethryn_wren_keeps_a_coast_shop_so_act_one_has_an_economy():
+    """The starting coast now has a functional till: Wren sells heals and a starter blade, so a
+    fresh Forger can spend the coins the wolves drop instead of reaching mid-game for a shop."""
+    npcs = load_npcs(AETHRYN / "npcs.yaml")
+    wren = npcs["wren"]
+    assert "shop" in wren, "the coast town smith keeps no shop -- Act 1 has no economy"
+    sells = wren["shop"]["sells"]
+    assert sells.get("healing_draught") and sells.get("mana_draught")  # heals on the coast
+    assert "cinder_hammer" in sells  # a starter weapon you can buy, not only delve for
+    assert wren["shop"]["buys"].get("ember_shard")  # and coast salvage has a buyer
+
+
 def test_aethryn_cinder_wight_boss_is_attackable_and_strikes_back():
     wight = load_npcs(AETHRYN / "npcs.yaml")["cinder_wight"]
     assert wight["hp"] == 50
