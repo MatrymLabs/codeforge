@@ -29,6 +29,26 @@ SUMMIT_BOSS = "spiral_sovereign"
 
 _ORDINALS = {4: "Fourth", 5: "Fifth", 6: "Sixth", 7: "Seventh", 8: "Eighth", 9: "Ninth"}
 
+# Each Coil takes a deterministic elemental theme, cycled by Coil number, so the climb is a varied
+# gauntlet instead of one room twenty-five times. A themed Coil's foes strike with its element, and
+# its Gate-boss RESISTS that element but is WEAK to a counter -- so the elemental system (examine,
+# resistances, the co-pilot's advice) turns the back half into a real tactical ascent: read the
+# Coil, bring the right element. No randomness -- the cycle is by index, so the world stays
+# reproducible. `adj` flavours the rooms/foes; `element` is the foes' attack type; a boss resists
+# `element` and is weak to `weak`; `warden` names the Gate-boss.
+_THEMES = [
+    {"adj": "forge-storm", "element": "FIR", "weak": "ICE", "warden": "Emberwrought"},
+    {"adj": "frost-wracked", "element": "ICE", "weak": "FIR", "warden": "Rimebound"},
+    {"adj": "storm-wound", "element": "LGT", "weak": "ERT", "warden": "Stormshod"},
+    {"adj": "shadow-eaten", "element": "DRK", "weak": "HLY", "warden": "Nightclad"},
+    {"adj": "stonebound", "element": "ERT", "weak": "WND", "warden": "Stoneworn"},
+]
+
+
+def _theme(config: dict[str, Any], n: int) -> dict[str, str]:
+    """The elemental theme for Coil `n`, cycled deterministically from the first Coil."""
+    return _THEMES[(n - config["first_coil"]) % len(_THEMES)]
+
 
 def _ordinal(n: int) -> str:
     """A display ordinal for a Coil number (Fourth, Fifth, ... then plain '12th' past the named)."""
@@ -85,9 +105,19 @@ def _coil_numbers(config: dict[str, Any]) -> list[int]:
     return numbers
 
 
-def _foe(label: str, name: str, room: str, level: int, *, boss: bool) -> Npc:
+def _foe(
+    label: str,
+    name: str,
+    room: str,
+    level: int,
+    *,
+    boss: bool,
+    element: str | None = None,
+    resistances: dict[str, str] | None = None,
+) -> Npc:
     """A generated Spiral foe: a husk (normal) or a lethal Gate-boss, with level/tier-scaled reward
-    and hp/atk tuned to its level. Bosses drop a Coil keystone (an existing accessory prototype)."""
+    and hp/atk tuned to its level. An optional `element` types its blows and an optional
+    `resistances` grid makes a boss an elemental puzzle. Bosses drop a Coil keystone."""
     hp = (90 if boss else 50) + level * (5 if boss else 3)
     atk = (14 if boss else 8) + level // 2
     npc = Npc(
@@ -104,6 +134,10 @@ def _foe(label: str, name: str, room: str, level: int, *, boss: bool) -> Npc:
         level=level,
         tier="boss" if boss else "normal",
     )
+    if element:
+        npc["attack_element"] = element
+    if resistances:
+        npc["resistances"] = resistances
     if boss:
         npc["lethal"] = True
         npc["drops"] = ["coil_keystone"]
@@ -135,11 +169,12 @@ def generate_spiral(
         above = "" if summit else f"coil_{numbers[index + 1]}_ascent"
 
         ord_name = _ordinal(n)
+        theme = _theme(config, n)
         rooms[ascent_id] = Room(
             name=f"The {ord_name} Coil Ascent",
             desc=(
-                f"The {ord_name} turn of the Great Spiral climbs higher into the forge-storm, the "
-                "old Coilwork singing with charge. Husks of fallen climbers walk the steps. The "
+                f"The {ord_name} turn of the Great Spiral climbs higher, the old Coilwork here run "
+                f"through with {theme['adj']} charge. Husks of fallen climbers walk the steps. The "
                 "stair goes on, up, toward the landing above."
             ),
             exits={"down": below, "up": landing_id},
@@ -152,8 +187,9 @@ def generate_spiral(
             )
         else:
             landing_desc = (
-                f"The {ord_name} Coil's landing, ringed in cold ascent-lamps above a fall with no "
-                "bottom. Its Gate-boss keeps the stair; best it, and the Spiral climbs on above."
+                f"The {ord_name} Coil's landing, a {theme['adj']} ring of cold ascent-lamps over a "
+                "fall with no bottom. Its Gate-warden keeps the stair; best it, and the Spiral "
+                "climbs on above."
             )
         landing_exits = {"down": ascent_id}
         if above:
@@ -164,17 +200,32 @@ def generate_spiral(
             exits=landing_exits,
         )
 
+        # A husk carries the Coil's element (its blows are typed) but no resistance grid, so it is
+        # farmable with any element -- the tactical puzzle is the Gate-warden, which resists the
+        # Coil's element and is weak to a counter. The summit Sovereign stays untyped: a final test
+        # of everything, not one more elemental gate.
         husk_id = f"spiral_husk_{n}"
         npcs[husk_id] = _foe(
             husk_id,
-            f"a Coil husk of the {ord_name} turn",
+            f"a {theme['adj']} husk of the {ord_name} turn",
             ascent_id,
             max(1, boss_level - 4),
             boss=False,
+            element=theme["element"],
         )
         boss_id = SUMMIT_BOSS if summit else f"spiral_gate_{n}"
-        boss_name = "the Spiral Sovereign" if summit else f"the {ord_name} Coil Gate-boss"
-        npcs[boss_id] = _foe(boss_id, boss_name, landing_id, boss_level, boss=True)
+        if summit:
+            npcs[boss_id] = _foe(boss_id, "the Spiral Sovereign", landing_id, boss_level, boss=True)
+        else:
+            npcs[boss_id] = _foe(
+                boss_id,
+                f"the {theme['warden']} Gate-warden of the {ord_name} Coil",
+                landing_id,
+                boss_level,
+                boss=True,
+                element=theme["element"],
+                resistances={theme["element"]: "Resist", theme["weak"]: "Weak"},
+            )
 
     first_room = f"coil_{numbers[0]}_ascent" if numbers else attach
     return rooms, npcs, first_room
