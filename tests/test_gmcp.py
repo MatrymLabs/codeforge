@@ -151,8 +151,9 @@ def test_items_report_lists_the_equipped_loadout_and_is_empty_when_bare():
     assert items_report(session) == {}  # nothing worn: an empty frame clears the client panel
     iid = clone("forge_wrench", "player")
     session.equipped["weapon"] = iid
+    session.equipped["ghost"] = "vanished_instance"  # an equipped id with no ITEMS entry is skipped
     try:
-        assert items_report(session) == {"weapon": "a modular forge wrench"}
+        assert items_report(session) == {"weapon": "a modular forge wrench"}  # the ghost is omitted
     finally:
         ITEMS.pop(iid, None)  # conftest clears SESSIONS, not ITEMS: do not leak this instance
 
