@@ -136,6 +136,26 @@ def test_main_passes_on_the_seeded_ledger(capsys):
     assert "ADDIE loop: PASS" in capsys.readouterr().out
 
 
+# --- the addie verb, in the world -----------------------------------------------------
+
+
+def test_the_addie_verb_renders_the_loop():
+    from parts.addie import addie
+
+    assert "ADDIE loop:" in addie("")
+    assert "ADDIE loop:" in addie("status")
+    assert "Unknown addie action" in addie("wat")
+
+
+def test_the_addie_verb_is_reachable_through_the_engine_tick():
+    # a feature is not wired until handle_command proves it reachable (the CARD convention)
+    from forge import handle_command
+    from parts.world.session import Session
+
+    out = handle_command(Session(player_id="matrym", location="courtyard"), "addie")
+    assert "ADDIE loop:" in out
+
+
 # --- the brief self-check renders every phase -----------------------------------------
 
 

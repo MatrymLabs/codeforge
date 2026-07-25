@@ -8,6 +8,7 @@ terminal driver around it -- a socket gateway will be another.
 import re
 from collections.abc import Callable
 
+from parts.addie import addie
 from parts.arc import arc
 from parts.calibrate import calibrate
 from parts.chat_throttle import shout
@@ -1070,6 +1071,15 @@ def _build_commands() -> CommandSet:
             "CMD-04.036",
             "the ARC assurance roll-up (arc <system>)",
             lambda _s, arg: arc(arg.lower()),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "addie",
+            "CMD-04.077",
+            "the ADDIE continuous-improvement loop (addie status)",
+            lambda _s, arg: addie(arg.lower()),
             namespace=CORE,
         )
     )

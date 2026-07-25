@@ -211,6 +211,15 @@ def render_addie(ledger: Path = _LEDGER) -> str:
     return "\n".join(lines)
 
 
+def addie(arg: str = "") -> str:
+    """The `addie` / `addie status` verb: the world's window onto the filed continuous-improvement
+    cycles. Text is a projection, never a mutation (architecture law 1)."""
+    sub = arg.strip().lower()
+    if sub in ("", "status"):
+        return render_addie()
+    return "Unknown addie action. Try: addie status"
+
+
 def main(argv: list[str] | None = None) -> int:
     """`python -m parts.addie` / `make addie`: print the report, exit non-zero on a FAIL."""
     print(render_addie())
