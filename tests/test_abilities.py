@@ -175,7 +175,7 @@ def test_using_an_ability_on_a_peaceful_npc_refuses() -> None:
 @pytest.mark.parametrize(
     "body, match",
     [
-        ("bad:\n  kind: explode\n  jobs: [vanguard]\n", "must be 'strike', 'heal', or 'brand'"),
+        ("bad:\n  kind: explode\n  jobs: [vanguard]\n", "'strike', 'heal', 'brand', or 'daze'"),
         (
             "bad:\n  kind: strike\n  scales: charisma\n  jobs: [vanguard]\n",
             "'scales' must be an attribute",
@@ -222,6 +222,17 @@ def test_render_abilities_marks_the_subjob_moves() -> None:
     set_secondary(s, "scholar")
     out = render_abilities(s)
     assert "Arcane Bolt" in out and "(subjob)" in out  # the borrowed moves are flagged
+
+
+def test_a_daze_ability_dazes_a_foe_without_damage() -> None:
+    """A `daze` is pure crowd control: it sets the foe's daze counter (power = beats) and deals no
+    damage. Covers the daze branch of use_ability."""
+    s = _at_dummy("engineer")  # the engineer wields Concuss (daze, power 2)
+    dummy = npcs.NPCS["training_dummy"]
+    hp_before = dummy["hp_now"]
+    out = use_ability(s, "concuss on dummy")
+    assert "daze" in out.lower() and dummy.get("dazed") == 2  # power 2 -> 2 beats
+    assert dummy["hp_now"] == hp_before  # a daze does no immediate damage
 
 
 def test_a_brand_ability_burns_the_target_on_the_world_beat() -> None:

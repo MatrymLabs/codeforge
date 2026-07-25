@@ -152,6 +152,10 @@ class Npc(TypedDict):
     # saps `damage` HP on each world beat until `ticks` runs out (never below 1: you land the
     # finishing blow). Cleared when the foe reassembles. Never seeded; combat sets and clears it.
     burn: NotRequired[dict[str, int]]
+    # Runtime state: beats a foe is DAZED, applied by a `daze` ability -- it skips that many of its
+    # world-beat strikes (crowd control on an aggressive foe), decremented each beat by menace.
+    # Cleared when the foe reassembles. Never seeded; combat sets and clears it.
+    dazed: NotRequired[int]
     # Optional: an ELEMENT its blows carry (a RESIST code -- FIR/ICE/LGT/...). When set, the
     # player's job resistance to that element scales the incoming blow (Weak amplifies, Resist
     # halves, Immune nullifies, Absorb heals). Absent = an untyped (physical) blow no resistance
@@ -232,8 +236,9 @@ class Ability(TypedDict):
     """
 
     name: str  # display name, e.g. "Power Strike"
-    kind: str  # "strike" (damage a target) | "heal" (restore HP) | "brand" (a burn DoT on a foe)
-    power: int  # flat base magnitude before the stat scale
+    # "strike" (damage) | "heal" (self) | "brand" (a burn DoT on a foe) | "daze" (skip its strikes)
+    kind: str
+    power: int  # flat base magnitude before the stat scale (for `daze`, the number of beats)
     scales: str  # the attribute it scales on (strength/magic/...), or "" for flat
     mp_cost: int  # MP spent to use it
     jobs: list[str]  # job labels that may use this ability
@@ -944,9 +949,9 @@ def load_abilities(path: Path) -> dict[str, Ability]:
                 ("jobs", list),
             ),
         )
-        if merged["kind"] not in ("strike", "heal", "brand"):
+        if merged["kind"] not in ("strike", "heal", "brand", "daze"):
             raise SeedError(
-                f"ability '{label}': 'kind' must be 'strike', 'heal', or 'brand', "
+                f"ability '{label}': 'kind' must be 'strike', 'heal', 'brand', or 'daze', "
                 f"got {merged['kind']!r}."
             )
         for num_field in ("power", "mp_cost"):

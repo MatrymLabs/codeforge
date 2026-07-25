@@ -39,6 +39,14 @@ def menace(session: Session) -> str:
         npc = NPCS[nid]
         if not npc.get("aggressive"):
             continue
+        dazed = npc.get("dazed", 0)
+        if dazed > 0:  # crowd control: a dazed foe skips this beat's strike and does not press
+            npc["dazed"] = dazed - 1  # the leash (the player buys real respite while it reels)
+            if npc["dazed"] <= 0:
+                npc.pop("dazed", None)
+            lines.append(f"\n{sentence_case(npc['name'])} reels, too dazed to strike.")
+            witness("dazed", npc["name"], "was too dazed to strike")
+            continue
         beats = session.aggro_beats.get(nid, 0)
         if beats >= LEASH:
             continue  # already broken off; it waits for the player to re-provoke it
