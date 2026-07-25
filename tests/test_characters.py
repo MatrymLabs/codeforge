@@ -189,6 +189,28 @@ def test_affixed_gear_keeps_its_rarity_across_a_save_and_restore():
     assert worn["rarity"] == "legendary"  # the tier survives, so a client can still colour it
 
 
+def test_restoring_pre_rarity_dict_gear_applies_no_rarity():
+    """Gear saved before the rarity field (a dict with name/mods but no 'rarity') restores fine and
+    simply carries no rarity - the backward-compatible path."""
+    from parts.world.items import ITEMS
+
+    s = _hero()
+    restore_character(
+        s,
+        {
+            "job": "vanguard",
+            "level": 1,
+            "xp": 0,
+            "location": "courtyard",
+            "equipped_gear": '{"weapon": {"prototype": "forge_wrench", "name": "an old blade", '
+            '"mods": {}}}',
+        },
+    )
+    worn = ITEMS[s.equipped["weapon"]]
+    assert worn["name"] == "an old blade"
+    assert "rarity" not in worn  # nothing in the save -> no rarity applied
+
+
 def test_the_legacy_bare_prototype_gear_format_still_restores():
     """An old save (equipped_gear as {slot: 'prototype'}) restores the base item, not a crash."""
     fresh = Session(player_id="matrym", location="courtyard")
