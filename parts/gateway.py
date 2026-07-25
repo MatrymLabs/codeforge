@@ -156,7 +156,7 @@ class _GateHandler(socketserver.StreamRequestHandler):
         self._last_room: dict[str, object] | None = None
         self._last_target: dict[str, object] = {}  # {} means "no foe"; clears the client's tracker
         self._last_quest: dict[str, str] = {}  # {} means "no active quest"
-        self._last_items: dict[str, str] = {}  # {} means "nothing worn"; clears the client's panel
+        self._last_items: dict[str, dict[str, object]] = {}  # {} = nothing worn; clears the panel
         with contextlib.suppress(OSError):
             self.wfile.write(_WILL_GMCP)
 
