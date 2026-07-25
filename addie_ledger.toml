@@ -1,0 +1,37 @@
+# The ADDIE ledger: the MAJOR continuous-improvement cycles CodeForge has run (docs/addie_loop.md).
+#
+# Minor work runs the ADDIE self-check silently and files nothing here (the doctrine stays
+# lightweight). Major work files a [cycle.<id>] table that closes the whole loop: analyze, design,
+# develop, implement, evaluate, and next_cycle. `make addie` (and the test twin on `make check`)
+# fails loud if any filed cycle skipped a phase or left the loop open. scale is "minor" or "major".
+
+[cycle.addie_loop]
+subject = "Add the ADDIE continuous-improvement loop to CodeForge itself"
+scale = "major"
+analyze = """CodeForge has strong point gates (ARC, Ritual, intake, qualitygate, security) but no
+encoded LOOP discipline: nothing structurally stops it from building without understanding or
+declaring success without evaluation. The vision asks it to learn in a loop, not move in a straight
+line. Gap: a lightweight, composable self-check. Success = a machine-checkable five-phase record
+that refuses the four failure modes, reusing the existing gate pattern, overriding no control."""
+design = """Smallest coherent solution: parts/addie.py, mirroring the intake.py gate (record -> gaps
+-> audit -> render -> make button + test twin), plus a doctrine doc. Boundary: ADDIE adds NO
+authority and overrides no control - it is the loop those controls run inside. An AddieSelfCheck
+carries the five phases + next_cycle; gaps() names the four failure modes; a minor cycle is silent,
+a major cycle must close the loop. Rollback: delete the part + ledger + doc + make target; nothing
+depends on it. No new dependency (stdlib tomllib)."""
+develop = """Built parts/addie.py (CARD: addie): PHASES, SCALES, AddieSelfCheck, self_check() for
+in-code use, gaps() validator, read_ledger/audit_addie over addie_ledger.toml, render_self_check +
+render_addie. Reused the intake.py pattern rather than inventing a new gate shape. Frameless."""
+implement = """Wired: make addie + python -m parts.addie (control panel), addie_ledger.toml seeded
+with this cycle (dogfooded), docs/addie_loop.md (the doctrine + how it composes with Blueprints, ARC,
+AURA, Ritual, Hardware Store, testing, security, docs, fleet governance), filed in the module
+registry (MOD-10.044), test twin tests/test_addie.py riding make check."""
+evaluate = """Evidence: make check green with the new test twin (acceptance: this cycle passes;
+refusal: a major cycle missing evaluate reports 'declared success without evaluation', missing
+analyze reports 'built without understanding', unknown scale is refused, a minor cycle needs only a
+subject). The gate refuses an incomplete loop, so success cannot be declared without evaluation -
+the invariant is enforced on itself. Overrides no existing control; boundaries clean."""
+next_cycle = """Reanalyze: should ADDIE become a read-only ARC dimension (continuous-improvement),
+reading this ledger the way ARC reads its other filed evidence? And should a MUD verb ('addie')
+surface the loop in the world, as 'arc' does? Both are deferred as honest next slices, not built
+speculatively now."""
