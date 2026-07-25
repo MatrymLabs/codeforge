@@ -28,6 +28,7 @@ import yaml
 
 from parts.shelf.conditions import ConditionError, validate
 from parts.shelf.reward_curve import LEVEL_MAX, LEVEL_MIN, TIER_MULTIPLIERS
+from parts.world.score_sheet_model import RESIST_ORDER  # the canonical element/status codes
 
 # A seed IS a game. The engine loads one seed pack at startup; swap the seed and
 # codeforge boots a different game (fantasy `first-forge`, `spiral-ascent`, ...).
@@ -151,6 +152,11 @@ class Npc(TypedDict):
     # saps `damage` HP on each world beat until `ticks` runs out (never below 1: you land the
     # finishing blow). Cleared when the foe reassembles. Never seeded; combat sets and clears it.
     burn: NotRequired[dict[str, int]]
+    # Optional: an ELEMENT its blows carry (a RESIST code -- FIR/ICE/LGT/...). When set, the
+    # player's job resistance to that element scales the incoming blow (Weak amplifies, Resist
+    # halves, Immune nullifies, Absorb heals). Absent = an untyped (physical) blow no resistance
+    # touches. This makes the score sheet's resistance grid matter. Validated against RESIST_ORDER.
+    attack_element: NotRequired[str]
     # Item prototype labels this NPC drops when defeated: a fresh instance of each is spawned into
     # the room (parts.world.items.clone). Optional; a bare NPC drops nothing. Loot is real object
     # instancing -- the drop is a new instance, so it never collides with the seed original.
@@ -587,6 +593,15 @@ def load_npcs(path: Path) -> dict[str, Npc]:
             raise SeedError(
                 f"NPC '{label}': 'topics' must map a keyword to a non-empty list of reply strings."
             )
+        # Optional attack element: a typed blow whose damage the player's job resistance scales.
+        # Must be one of the canonical resistance codes, so a foe can never carry an element the
+        # score sheet has no row for -- refuse an unknown one loud rather than ship a dead type.
+        element = merged.get("attack_element")
+        if element is not None and element not in RESIST_ORDER:
+            raise SeedError(
+                f"NPC '{label}': 'attack_element' must be one of {list(RESIST_ORDER)}, "
+                f"got {element!r}."
+            )
         # Optional shop: a merchant's `sells`/`buys` price tables. Prices are positive ints; the
         # prototypes are cross-checked against the seed's items at boot (inspect_world_links).
         shop = merged.get("shop")
@@ -630,6 +645,8 @@ def load_npcs(path: Path) -> dict[str, Npc]:
             npc["shop"] = {side: dict(table) for side, table in shop.items()}
         if topics:
             npc["topics"] = {key: list(lines) for key, lines in topics.items()}
+        if element is not None:
+            npc["attack_element"] = element
         npcs[label] = npc
     return npcs
 

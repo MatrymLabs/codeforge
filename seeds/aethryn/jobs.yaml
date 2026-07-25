@@ -19,6 +19,7 @@ emberwright:
   name: Emberwright
   description: "A maker first: forges gear and bends raw ember to the will. Patient hands, deep magic."
   stats: {strength: 9, speed: 9, stamina: 11, magic: 6}
+  resistances: {FIR: Resist}  # a life at the forge: flame does half (the Cinder-Wight burns less)
 
 # --- Batch 1 of the 30 callings (job_system.md families). Distinct stat spreads; each carries a
 # --- two-move kit in abilities.yaml. Switchable in/out via primary + subjob (the kit is lent).

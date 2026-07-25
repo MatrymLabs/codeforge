@@ -86,6 +86,20 @@ def test_the_sheet_shows_declared_resistances_and_normal_otherwise() -> None:
     assert len(sheet.resistances) == 10  # all ten elements present
 
 
+def test_session_resistance_reads_the_calling_and_defaults_to_normal() -> None:
+    """The seam combat reads: a declared resistance is real, an undeclared one (or no calling)
+    reads Normal -- the same grid the sheet renders, so a fight never lies about it."""
+    from parts.world.character_view import session_resistance
+    from parts.world.jobs import bind_calling
+    from parts.world.session import Session
+
+    assert session_resistance(Session(player_id="matrym"), "FIR") == "Normal"  # no calling yet
+    s = Session(player_id="matrym")
+    bind_calling(s, "engineer")
+    assert session_resistance(s, "LGT") == "Weak"  # declared on the engineer
+    assert session_resistance(s, "FIR") == "Normal"  # undeclared -> Normal, never unknown
+
+
 def test_milestone_perks_raise_derived_stats_when_unlocked() -> None:
     from parts.world.character_view import TP_MILESTONE, perks_unlocked, sheet_from_session
     from parts.world.job_progress import JobProgress

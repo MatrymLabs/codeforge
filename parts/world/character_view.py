@@ -74,6 +74,16 @@ def session_stat_modifiers(session: Session) -> dict[str, list[StatModifier]]:
     return merged
 
 
+def session_resistance(session: Session, code: str) -> str:
+    """The player's resistance level (Weak/Normal/Resist/Immune/Absorb) to one element/status
+    `code`, read from the active calling. This is the ONE place combat reads resistances, the same
+    grid the score sheet renders -- so a resistance shown on the sheet is real in a fight. A
+    calling that declares nothing for the code (or no calling at all) reads Normal."""
+    if session.job not in JOBS:
+        return "Normal"
+    return JOBS[session.job]["resistances"].get(code, "Normal")
+
+
 def build_job_sheet(
     job_label: str,
     display_name: str,
