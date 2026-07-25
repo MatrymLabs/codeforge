@@ -10,6 +10,7 @@ from parts.world.seed import (
     SEEDS_ROOT,
     SeedError,
     available_seeds,
+    load_abilities,
     load_doors,
     load_items,
     load_jobs,
@@ -82,6 +83,30 @@ def test_aethryn_capital_npcs_hold_real_conversations():
     # every topic is a non-empty list of reply lines (the loader gate, re-asserted for content)
     for who in (ilya, recruiter, keeper):
         assert all(lines and all(isinstance(x, str) for x in lines) for lines in who.values())
+
+
+def test_aethryn_elemental_abilities_carry_their_element():
+    """The caster Jobs have elemental identity: their thematically-elemental strikes are TYPED, so
+    their whole kit interacts with foe resistances and the themed Spiral (a stormcaller's lightning
+    is resisted by a storm Coil; bring a geomancer's stone). Only the elemental moves are typed, so
+    the roster reads as distinct rather than a wall of untyped strikes."""
+    ab = load_abilities(AETHRYN / "abilities.yaml")
+    expected = {
+        "firestorm": "FIR",
+        "frostbite": "ICE",
+        "chain_lightning": "LGT",
+        "gale": "WND",
+        "stonefall": "ERT",
+        "smite": "HLY",
+        "holy_strike": "HLY",
+        "killing_dark": "DRK",
+        "toxin": "PSN",
+        "hex": "CRS",
+        "turret_fire": "FIR",
+        "word_of_ruin": "DRK",
+    }
+    for label, element in expected.items():
+        assert ab[label].get("element") == element, f"{label} should strike with {element}"
 
 
 def test_aethryn_side_quests_vary_beyond_kill_bounties():
