@@ -229,6 +229,13 @@ deps:
 intake:
 	@python -m parts.intake
 
+# --- ADDIE: the continuous-improvement loop (docs/addie_loop.md). A systems-engineering self-check
+# that fails loud if any filed MAJOR cycle skipped a phase (built without understanding, designed
+# without evidence, implemented without integration, declared success without evaluation). It
+# overrides no control; it is the loop the controls run inside. Stdlib only (tomllib). ---
+addie:
+	@python -m parts.addie
+
 # --- Bench: measure the engine tick (handle_command) throughput + latency and file a
 # dated performance-evidence report under reports/performance/. Frameless (stdlib). ---
 bench:
