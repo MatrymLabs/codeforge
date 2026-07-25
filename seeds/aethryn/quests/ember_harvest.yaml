@@ -1,0 +1,21 @@
+# SEED: aethryn -- quests/ember_harvest.yaml (a GATHER side-quest, not a kill-bounty)
+# Side content with variety: this plays itself from picking up wild ember (on_take), so a player who
+# gathers is rewarded for it -- a different verb from the hunt-contracts on the bounty board.
+
+id: ember_harvest
+name: The Ember Harvest
+start: unasked
+reward_xp: 60
+
+steps:
+  - {state: unasked, event: gather, to: gathered, on_take: ember_shard, effect: award_xp}
+
+terminal: [gathered]
+
+labels:
+  unasked: "Wild ember still wells up along the coast, where the Unforging thinned the world. Gather a shard, and the Loremasters will thank you for the study."
+  gathered: |-
+    *** EMBER GATHERED ***
+    You lift a shard of wild ember, warm and faintly singing, from where it welled up through the
+    cold stone. The Loremasters study such shards for what they still remember of the First Seed.
+    A small deed -- but the whole long climb is made of small deeds, gathered one at a time.
