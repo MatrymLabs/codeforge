@@ -25,6 +25,7 @@ from parts.gmcp import (
     items_report,
     quest_report,
     room_report,
+    skills_report,
     target_report,
     vitals_report,
 )
@@ -157,6 +158,7 @@ class _GateHandler(socketserver.StreamRequestHandler):
         self._last_target: dict[str, object] = {}  # {} means "no foe"; clears the client's tracker
         self._last_quest: dict[str, str] = {}  # {} means "no active quest"
         self._last_items: dict[str, dict[str, object]] = {}  # {} = nothing worn; clears the panel
+        self._last_skills: list[dict[str, object]] = []  # [] = no calling; the wieldable kit
         with contextlib.suppress(OSError):
             self.wfile.write(_WILL_GMCP)
 
@@ -200,6 +202,12 @@ class _GateHandler(socketserver.StreamRequestHandler):
         if items != self._last_items:
             self._send_gmcp("Char.Items", items)
             self._last_items = items
+        # Char.Skills: the wieldable kit, so a client's co-pilot can recommend a specific move for a
+        # foe's weakness. Changes only when the calling/subjob changes, so it is pushed rarely.
+        skills = skills_report(session)
+        if skills != self._last_skills:
+            self._send_gmcp("Char.Skills", skills)
+            self._last_skills = skills
 
     def _send(self, text: str) -> None:
         self.wfile.write((_sanitize(text) + "\r\n").encode("utf-8"))

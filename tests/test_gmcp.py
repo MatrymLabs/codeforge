@@ -14,6 +14,7 @@ from parts.gmcp import (
     items_report,
     quest_report,
     room_report,
+    skills_report,
     target_report,
     vitals_report,
 )
@@ -142,6 +143,28 @@ def test_room_report_on_an_unknown_location_renders_honestly():
     session = Session(player_id="lost", location="void_that_is_not_seeded")
     report = room_report(session)
     assert report == {"num": "void_that_is_not_seeded", "name": "(nowhere)", "exits": {}}
+
+
+def test_skills_report_lists_the_wieldable_kit():
+    session = _hero()  # a vanguard: wields Power Strike in first-forge
+    kit = skills_report(session)
+    assert kit  # non-empty
+    ps = next(s for s in kit if s["name"] == "Power Strike")
+    assert ps["kind"] == "strike" and "mp_cost" in ps
+    assert "element" not in ps  # first-forge Power Strike is untyped: the key is omitted
+
+
+def test_skills_report_carries_an_abilitys_element(monkeypatch):
+    from parts.world.abilities import ABILITIES
+
+    session = _hero()
+    monkeypatch.setitem(ABILITIES["power_strike"], "element", "FIR")
+    ps = next(s for s in skills_report(session) if s["name"] == "Power Strike")
+    assert ps["element"] == "FIR"  # a typed move carries its element, so a client can match a foe
+
+
+def test_skills_report_is_empty_before_a_calling():
+    assert skills_report(Session(player_id="nobody")) == []  # no calling: an empty kit clears it
 
 
 def test_items_report_lists_the_equipped_loadout_with_mods_and_is_empty_when_bare():
