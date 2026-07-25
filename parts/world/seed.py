@@ -156,6 +156,10 @@ class Npc(TypedDict):
     # world-beat strikes (crowd control on an aggressive foe), decremented each beat by menace.
     # Cleared when the foe reassembles. Never seeded; combat sets and clears it.
     dazed: NotRequired[int]
+    # Runtime state: the number of its next blows a foe is WEAKENED for, applied by a `weaken`
+    # ability -- each softens (halves, floored 1) and decrements one. Cleared when the foe
+    # reassembles. Never seeded; combat sets and clears it.
+    weakened: NotRequired[int]
     # Optional: an ELEMENT its blows carry (a RESIST code -- FIR/ICE/LGT/...). When set, the
     # player's job resistance to that element scales the incoming blow (Weak amplifies, Resist
     # halves, Immune nullifies, Absorb heals). Absent = an untyped (physical) blow no resistance
@@ -236,9 +240,10 @@ class Ability(TypedDict):
     """
 
     name: str  # display name, e.g. "Power Strike"
-    # "strike" (damage) | "heal" (self) | "brand" (a burn DoT on a foe) | "daze" (skip its strikes)
+    # kinds: "strike" (damage) | "heal" (self) | "brand" (burn DoT) | "daze" (skip strikes) |
+    # "weaken" (soften its blows)
     kind: str
-    power: int  # flat base magnitude before the stat scale (for `daze`, the number of beats)
+    power: int  # flat base magnitude before the stat scale (for `daze`/`weaken`, a number of beats)
     scales: str  # the attribute it scales on (strength/magic/...), or "" for flat
     mp_cost: int  # MP spent to use it
     jobs: list[str]  # job labels that may use this ability
@@ -949,10 +954,10 @@ def load_abilities(path: Path) -> dict[str, Ability]:
                 ("jobs", list),
             ),
         )
-        if merged["kind"] not in ("strike", "heal", "brand", "daze"):
+        if merged["kind"] not in ("strike", "heal", "brand", "daze", "weaken"):
             raise SeedError(
-                f"ability '{label}': 'kind' must be 'strike', 'heal', 'brand', or 'daze', "
-                f"got {merged['kind']!r}."
+                f"ability '{label}': 'kind' must be 'strike', 'heal', 'brand', 'daze', or "
+                f"'weaken', got {merged['kind']!r}."
             )
         for num_field in ("power", "mp_cost"):
             value = merged[num_field]

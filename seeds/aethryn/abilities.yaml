@@ -94,6 +94,12 @@ longwatch:
   scales: stamina
   mp_cost: 5
   jobs: [sentinel]
+break_guard:
+  name: Break Guard
+  kind: weaken  # a sentinel reads the opening and softens the foe's next blows (no damage)
+  power: 3
+  mp_cost: 4
+  jobs: [sentinel]
 
 # Berserker -- escalate.
 frenzy_strike:

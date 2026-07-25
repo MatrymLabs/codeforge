@@ -122,6 +122,13 @@ def use_ability(session: Session, arg: str) -> str:
             session.location, f"{who} dazes {npc['name']} with {move}.", exclude=session.player_id
         )
         return f"You daze {npc['name']} with {move}; it reels for {beats} beats."
+    if ability["kind"] == "weaken":  # debuff: soften the foe's next blows, no damage
+        blows = _magnitude(session, ability)  # scales:"" -> just power = the number of blows
+        combat.apply_weaken(npc, blows)
+        announce(
+            session.location, f"{who} weakens {npc['name']} with {move}.", exclude=session.player_id
+        )
+        return f"You weaken {npc['name']} with {move}; its next {blows} blows land soft."
     if ability["kind"] == "brand":  # lay a burn DoT; it saps HP on each world beat
         per_tick, note = combat.typed_hit(npc, element, _magnitude(session, ability))
         announce(

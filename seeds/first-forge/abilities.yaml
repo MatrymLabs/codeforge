@@ -47,3 +47,10 @@ concuss:
   power: 2  # world beats it stays dazed (daze has no stat scale)
   mp_cost: 3
   jobs: [engineer]
+
+sunder_guard:
+  name: Sunder Guard
+  kind: weaken  # debuff: softens the foe's next blows (no damage)
+  power: 3  # the number of its blows that land soft
+  mp_cost: 3
+  jobs: [artificer]
