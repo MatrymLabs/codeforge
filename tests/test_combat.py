@@ -568,3 +568,22 @@ def test_a_deployed_barrier_turns_half_an_npc_blow():
     warded_loss = full - s.resources["hp"].current
     assert warded_loss == max(1, unwarded_loss // 2)  # the barrier really reduced the damage
     assert "barrier turns half" in line
+
+
+def test_an_analyzed_foe_takes_bonus_damage():
+    """Diagnostic Scan now matters: while 'analyzed' holds, a strike hits the revealed weak point
+    for +50%. It used to set a status combat never read."""
+    from parts.world.combat import attack, strike_power
+
+    s = _fighter()
+    base = strike_power(s)
+    npc = npcs.NPCS[_spawn_hostile("brute", atk=0, hp=500)]  # atk 0 so no counter muddies the hp
+
+    attack(s, "brute")  # unanalyzed
+    assert npc["hp"] - npc["hp_now"] == base
+
+    s.statuses["analyzed"] = 3
+    out = attack(s, "brute")  # analyzed: +50%
+    analyzed_loss = (npc["hp"] - npc["hp_now"]) - base
+    assert analyzed_loss == base + base // 2
+    assert "weak point" in out
