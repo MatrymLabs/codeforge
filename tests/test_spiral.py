@@ -111,6 +111,10 @@ def test_the_flagship_seed_reaches_the_summit_at_level_255():
     _rooms, npcs, first = generate_spiral(config, {"coil_third_landing": {"exits": {}}})
     assert any(n["level"] == 255 for n in npcs.values())  # the aethryn Spiral truly hits 255
     assert first == "coil_4_ascent"
+    # no dead band at the hand-authored/procedural seam: the lowest generated foe lands right above
+    # the last authored foe (the Stormlord, level 38), so the climb never runs out of content.
+    lowest = min(n["level"] for n in npcs.values())
+    assert 38 < lowest <= 40, f"a dead band opened at the Spiral seam (lowest generated {lowest})"
 
 
 def test_the_summit_uses_stable_labels_for_a_capstone_quest():
