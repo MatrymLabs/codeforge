@@ -220,18 +220,23 @@ def attack(session: Session, word: str) -> str:
     if npc["hp"] <= 0:
         return f"{sentence_case(npc['name'])} is not something you can fight."
     dmg = strike_power(session)
+    exposed = session.statuses.get("analyzed", 0) > 0
+    if exposed:  # a Diagnostic Scan revealed the foe's weak point: +50% damage while it holds
+        dmg += dmg // 2
+    weak = " (weak point!)" if exposed else ""
     announce(
         session.location,
         f"{display_name(session.player_id)} strikes {npc['name']} for {dmg}.",
         exclude=session.player_id,
     )
+    struck = f"You strike {npc['name']} for {dmg}.{weak}"
     defeated, tail = land_hit(session, npc, nid, dmg)
     if not defeated:
         # An aggressive NPC's blow arrives on the world beat (parts.world.aggression), never as a
         # counter, so it strikes exactly once per tick -- never both counter and open-strike.
         counter = "" if npc.get("aggressive") else _counter_attack(session, npc)
-        return f"You strike {npc['name']} for {dmg}. ({npc['hp_now']}/{npc['hp']}){counter}"
-    return f"You strike {npc['name']} for {dmg}. It collapses -- then reassembles itself.\n{tail}"
+        return f"{struck} ({npc['hp_now']}/{npc['hp']}){counter}"
+    return f"{struck} It collapses -- then reassembles itself.\n{tail}"
 
 
 def _spawn_loot(session: Session, prototype: str, level: int = 0) -> str:
