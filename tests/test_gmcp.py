@@ -157,6 +157,7 @@ def test_items_report_lists_the_equipped_loadout_with_mods_and_is_empty_when_bar
         assert set(report) == {"weapon"}  # the ghost is omitted
         assert report["weapon"]["name"] == "a modular forge wrench"
         assert report["weapon"]["mods"] == ITEMS[iid]["mods"]  # the stat modifiers it grants
+        assert report["weapon"]["rarity"] == "common"  # a base clone is common until a drop rolls
     finally:
         ITEMS.pop(iid, None)  # conftest clears SESSIONS, not ITEMS: do not leak this instance
 

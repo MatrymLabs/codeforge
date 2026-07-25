@@ -45,6 +45,7 @@ def _serialize_gear(session: Session) -> str:
                 "prototype": prototype_of(iid),
                 "name": item["name"],
                 "mods": item["mods"],
+                "rarity": item.get("rarity", "common"),
             }
     return json.dumps(gear, sort_keys=True) if gear else ""
 
@@ -74,6 +75,8 @@ def _restore_gear(session: Session, raw: str) -> None:
                 ITEMS[iid]["name"] = saved["name"]
             if isinstance(saved.get("mods"), dict):
                 ITEMS[iid]["mods"] = {k: v for k, v in saved["mods"].items() if isinstance(v, int)}
+            if isinstance(saved.get("rarity"), str):
+                ITEMS[iid]["rarity"] = saved["rarity"]
         session.equipped[slot] = iid
 
 

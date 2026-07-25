@@ -135,15 +135,19 @@ def quest_report(session: Session) -> dict[str, str] | None:
 
 
 def items_report(session: Session) -> dict[str, dict[str, object]]:
-    """A Char.Items payload: the player's equipped loadout as {slot: {name, mods}}, so a client can
-    show not just what is worn but what it does (the flat stat modifiers it grants). Empty when
-    nothing is worn (an empty frame clears the client's panel, like Char.Target). Read-only
-    projection of `session.equipped`; no number or name a client sees that the game would not."""
+    """A Char.Items payload: the equipped loadout as {slot: {name, mods, rarity}}, so a client can
+    show what is worn, what it grants (the flat stat modifiers), and its rarity tier (to colour it).
+    Empty when nothing is worn (an empty frame clears the client's panel, like Char.Target).
+    Read-only projection of `session.equipped`; no value a client sees that the game would not."""
     from parts.world.items import ITEMS
 
     worn: dict[str, dict[str, object]] = {}
     for slot, iid in session.equipped.items():
         item = ITEMS.get(iid)
         if item is not None:
-            worn[slot] = {"name": item["name"], "mods": dict(item["mods"])}
+            worn[slot] = {
+                "name": item["name"],
+                "mods": dict(item["mods"]),
+                "rarity": item.get("rarity", "common"),
+            }
     return worn

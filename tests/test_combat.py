@@ -524,3 +524,26 @@ def test_wallet_reports_the_purse_through_the_engine_tick():
     s = _fighter()
     s.coins = 250
     assert "250 coins" in handle_command(s, "wallet")
+
+
+def test_a_levelled_equippable_drop_rolls_and_stores_a_rarity():
+    """A levelled foe's gear drop runs the affix factory, which stamps a rarity tier onto the
+    instance so a client can colour it (and it survives logout)."""
+    from parts.world import combat, items
+
+    session = Session(player_id="ada", location="loot_rarity_test_room")
+    line = combat._spawn_loot(session, "forge_wrench", level=8)  # equippable + levelled -> rolls
+    assert line  # a drop line was announced
+    dropped = items.items_in("room:loot_rarity_test_room")  # clone() tags the room location
+    assert dropped
+    iid = dropped[0]
+    try:
+        assert items.ITEMS[iid]["rarity"] in {
+            "common",
+            "uncommon",
+            "rare",
+            "epic",
+            "legendary",
+        }
+    finally:
+        items.ITEMS.pop(iid, None)  # do not leak the instance (conftest clears SESSIONS, not ITEMS)
