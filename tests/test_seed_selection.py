@@ -84,6 +84,21 @@ def test_aethryn_capital_npcs_hold_real_conversations():
         assert all(lines and all(isinstance(x, str) for x in lines) for lines in who.values())
 
 
+def test_aethryn_side_quests_vary_beyond_kill_bounties():
+    """Side content has variety, not just the hunt-contracts on the bounty board: a GATHER quest
+    (advance by picking up wild ember) and a DISCOVERY quest (advance by reaching the deepest
+    floor), each a different verb from felling a foe."""
+    from parts.world.seed import load_quest
+
+    harvest = load_quest(AETHRYN / "quests" / "ember_harvest.yaml")
+    assert harvest is not None and harvest["steps"][0]["on_take"] == "ember_shard"  # gather
+    deep = load_quest(AETHRYN / "quests" / "sound_the_deep.yaml")
+    assert deep is not None and deep["steps"][0]["on_enter"] == "the_cinderheart"  # discovery
+    # neither side quest advances on a defeat -- they reward gathering and exploring
+    for spec in (harvest, deep):
+        assert not any(s.get("on_defeat") for s in spec["steps"])
+
+
 def test_aethryn_recipes_forge_real_items_from_real_materials():
     """The maker's loop is real content: the flagship ships recipes, and every recipe forges a real
     item from real materials (a cross-check, so a recipe can never make or need a phantom item)."""
