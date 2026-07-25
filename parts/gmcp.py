@@ -31,6 +31,7 @@ __all__ = [
     "enables_gmcp",
     "escape_iac",
     "gmcp_frame",
+    "items_report",
     "quest_report",
     "room_report",
     "target_report",
@@ -131,3 +132,18 @@ def quest_report(session: Session) -> dict[str, str] | None:
     from parts.world.quest import active_quest
 
     return active_quest(session)
+
+
+def items_report(session: Session) -> dict[str, str]:
+    """A Char.Items payload: the player's equipped loadout as {slot: item name}. Empty when nothing
+    is worn (an empty frame clears the client's panel, like Char.Target). Read-only projection of
+    `session.equipped`, resolving each instance's display name the same way the save path does -- no
+    number or name a client sees that the game itself would not."""
+    from parts.world.items import ITEMS
+
+    worn: dict[str, str] = {}
+    for slot, iid in session.equipped.items():
+        item = ITEMS.get(iid)
+        if item is not None:
+            worn[slot] = item["name"]
+    return worn

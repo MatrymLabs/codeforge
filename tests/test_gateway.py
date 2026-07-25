@@ -470,6 +470,32 @@ def test_a_gmcp_client_receives_room_and_vitals_frames_on_entry(server):
     sock.close()
 
 
+def test_a_gmcp_client_receives_char_items_for_equipped_gear(server):
+    """An equipped hero's loadout is pushed as Char.Items on entry, so the client can draw the
+    inventory panel from data - a frame we emit because we own the engine, not a MUD standard."""
+    from parts.world.items import clone
+    from parts.world.jobs import bind_calling
+
+    hero = Session(player_id="mira", location="courtyard", named=True, account="mlabs")
+    bind_calling(hero, "vanguard")
+    hero.equipped["weapon"] = clone("forge_wrench", "player")  # a real, restorable prototype
+    SESSIONS["mira"] = hero
+    save_character(hero)
+    SESSIONS.clear()
+    register_account("mlabs_seed", "mlabs", "swordfish")
+    adopt("mira", "mlabs")
+
+    sock = _connect(server)
+    sock.sendall(_DO_GMCP)
+    _read_until(sock, b"NEW: ")
+    _line(sock, "mira@mlabs")
+    _read_until_raw(sock, b"Password: " + bytes([255, 251, 1]))
+    _line(sock, "swordfish")
+    out = _read_until_raw(sock, b"> ")
+    assert b"Char.Items" in out and b"forge wrench" in out  # the loadout, as data
+    sock.close()
+
+
 def test_a_plain_client_never_receives_gmcp_frames(server):
     """A raw client that never answers the offer must not get a single GMCP subnegotiation
     frame -- only the offer byte (IAC WILL GMCP), never IAC SB GMCP binary in its text stream."""

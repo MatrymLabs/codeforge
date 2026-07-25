@@ -22,6 +22,7 @@ from parts.gmcp import (
     GMCP_OPT,
     enables_gmcp,
     gmcp_frame,
+    items_report,
     quest_report,
     room_report,
     target_report,
@@ -155,6 +156,7 @@ class _GateHandler(socketserver.StreamRequestHandler):
         self._last_room: dict[str, object] | None = None
         self._last_target: dict[str, object] = {}  # {} means "no foe"; clears the client's tracker
         self._last_quest: dict[str, str] = {}  # {} means "no active quest"
+        self._last_items: dict[str, str] = {}  # {} means "nothing worn"; clears the client's panel
         with contextlib.suppress(OSError):
             self.wfile.write(_WILL_GMCP)
 
@@ -194,6 +196,10 @@ class _GateHandler(socketserver.StreamRequestHandler):
         if quest != self._last_quest:
             self._send_gmcp("Char.Quest", quest)
             self._last_quest = quest
+        items = items_report(session)
+        if items != self._last_items:
+            self._send_gmcp("Char.Items", items)
+            self._last_items = items
 
     def _send(self, text: str) -> None:
         self.wfile.write((_sanitize(text) + "\r\n").encode("utf-8"))
