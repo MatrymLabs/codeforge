@@ -33,6 +33,7 @@ __all__ = [
     "gmcp_frame",
     "items_report",
     "quest_report",
+    "resists_report",
     "room_report",
     "skills_report",
     "target_report",
@@ -188,3 +189,19 @@ def skills_report(session: Session) -> list[dict[str, object]]:
             entry["element"] = element
         kit.append(entry)
     return kit
+
+
+def resists_report(session: Session) -> dict[str, str]:
+    """A Char.Resists payload: the player's OWN non-normal resistances {code: level}, the defensive
+    mirror of a foe's profile in Char.Target. So a client can warn when a foe's blows strike an
+    element you are Weak to (or reassure you it is one you shrug off). Empty before a calling, or
+    when the calling resists nothing out of the ordinary. Read-only projection of the job's grid."""
+    from parts.world.character_view import session_resistance
+    from parts.world.score_sheet_model import RESIST_ORDER
+
+    grid: dict[str, str] = {}
+    for code in RESIST_ORDER:
+        level = session_resistance(session, code)
+        if level != "Normal":  # only what deviates from Normal is worth a frame (and a warning)
+            grid[code] = level
+    return grid

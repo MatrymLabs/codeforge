@@ -525,6 +525,33 @@ def test_a_gmcp_client_receives_char_skills_for_the_wieldable_kit(server):
     sock.close()
 
 
+def test_a_gmcp_client_receives_char_resists_for_the_defensive_grid(server):
+    """An engineer's non-normal resistances are pushed as Char.Resists, so a client can warn when a
+    foe's element hits a weakness - the defensive mirror of the foe's profile in Char.Target."""
+    from parts.world.jobs import bind_calling
+
+    hero = Session(player_id="vess", location="courtyard", named=True, account="mlabs")
+    bind_calling(hero, "engineer")  # declares LGT: Weak, ERT: Resist
+    SESSIONS["vess"] = hero
+    save_character(hero)
+    SESSIONS.clear()
+    register_account("mlabs_seed3", "mlabs", "swordfish")
+    adopt("vess", "mlabs")
+
+    sock = _connect(server)
+    sock.sendall(_DO_GMCP)
+    _read_until(sock, b"NEW: ")
+    _line(sock, "vess@mlabs")
+    _read_until_raw(sock, b"Password: " + bytes([255, 251, 1]))
+    _line(sock, "swordfish")
+    out = _read_until_raw(sock, b"> ")
+    assert b"Char.Resists" in out and b"Weak" in out  # the defensive grid, as data
+    _line(sock, "look")
+    again = _read_until_raw(sock, b"> ")
+    assert b"Char.Resists" not in again  # unchanged grid: no redundant frame
+    sock.close()
+
+
 def test_a_plain_client_never_receives_gmcp_frames(server):
     """A raw client that never answers the offer must not get a single GMCP subnegotiation
     frame -- only the offer byte (IAC WILL GMCP), never IAC SB GMCP binary in its text stream."""
