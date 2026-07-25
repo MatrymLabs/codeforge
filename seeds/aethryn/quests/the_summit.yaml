@@ -17,11 +17,21 @@ terminal: [crowned]
 
 labels:
   climbing: "Somewhere far above, past Coil upon Coil, the Great Spiral ends. Climb to the summit, if you can reach it."
-  at_the_summit: "You stand at the summit of the Great Spiral. The Spiral Sovereign holds the last stair, at the very top of the climb. End it."
+  at_the_summit: |-
+    You stand at the summit of the Great Spiral, above the last cloud, where the air is only ember
+    and memory. Here the Seed's spine ends -- and here, at last, you see it: the First Seed itself,
+    dim and cracked, the pattern the whole world grew from, still holding the last of its light.
+    Around it coils the Spiral Sovereign, grey and vast, the guardian the Unforging left to keep the
+    broken Seed from ever being made whole again. It turns its cold crown toward you. Every ember you
+    relit on the long climb burns warm in your hands now. Put the guardian down, and end the sundering.
   crowned: |-
-    *** YOU HAVE REACHED THE TOP ***
-    The Spiral Sovereign falls, and the Great Spiral is climbed to its crown. Below you, Coil upon
-    Coil, the whole ascent lies conquered -- from the ember you woke beside on the Waking Shore to
-    the Forge that burns at the summit of the world. You washed ashore with nothing and no memory
-    of the craft. You leave the top of the Spiral a Forger who has climbed the whole of it.
-    The Kindlands are relit. The deep is sounded. The Spiral is crowned. Well forged, to the last.
+    *** THE SEED REMEMBERS ***
+    The Spiral Sovereign falls, and its grey light goes out. In the silence after, the embers you
+    carried -- from the first spark on the Waking Shore to the last stair of the Spiral -- rise from
+    your hands and settle, one by one, into the cracked First Seed. Each finds the place it was torn
+    from. The fracture that was the Unforging closes like a wound remembering how to be whole.
+    The Seed brightens -- not to a blaze, but to the steady, singing warmth of a pattern made one
+    again. Far below, Coil upon Coil, the whole world you climbed feels it: the Kindlands warm, the
+    Cinderdeep stirs, the cold roads thaw. The sundering is answered. The world is reforged.
+    You washed ashore with nothing and no memory of the craft. You leave the crown of the world the
+    Forger who gathered a broken world back into one. Well forged, from the first ember to the last.
