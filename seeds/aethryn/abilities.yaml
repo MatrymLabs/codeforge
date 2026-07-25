@@ -163,6 +163,7 @@ killing_dark:
   power: 15
   scales: luck
   mp_cost: 7
+  element: DRK
   jobs: [shadowblade]
 
 # Saboteur -- unmake.
@@ -172,6 +173,7 @@ toxin:
   power: 8
   scales: magic
   mp_cost: 3
+  element: PSN
   jobs: [saboteur]
 disable:
   name: Disable
@@ -206,6 +208,7 @@ firestorm:
   power: 13
   scales: magic
   mp_cost: 6
+  element: FIR
   jobs: [elementalist]
 frostbite:
   name: Frostbite
@@ -261,6 +264,7 @@ smite:
   power: 8
   scales: wisdom
   mp_cost: 4
+  element: HLY
   jobs: [cleric]
 heal:
   name: Heal
@@ -277,6 +281,7 @@ hex:
   power: 9
   scales: luck
   mp_cost: 4
+  element: CRS
   jobs: [oracle]
 foresight:
   name: Foresight
@@ -293,6 +298,7 @@ holy_strike:
   power: 9
   scales: wisdom
   mp_cost: 3
+  element: HLY
   jobs: [templar]
 consecrate:
   name: Consecrate
@@ -320,7 +326,7 @@ banish:
 
 # --- Batch 3 movesets (Engineering + Nature + cross-family). ---
 turret_fire:
-  {name: Turret Fire, kind: strike, power: 8, scales: magic, mp_cost: 3, jobs: [engineer]}
+  {name: Turret Fire, kind: strike, power: 8, scales: magic, mp_cost: 3, element: FIR, jobs: [engineer]}
 field_mend:
   {name: Field Mend, kind: heal, power: 9, scales: magic, mp_cost: 5, jobs: [engineer]}
 relic_burst:
@@ -344,11 +350,11 @@ maul:
 pack_bond:
   {name: Pack Bond, kind: heal, power: 8, scales: stamina, mp_cost: 4, jobs: [beastmaster]}
 chain_lightning:
-  {name: Chain Lightning, kind: strike, power: 13, scales: magic, mp_cost: 6, jobs: [stormcaller]}
+  {name: Chain Lightning, kind: strike, power: 13, scales: magic, mp_cost: 6, element: LGT, jobs: [stormcaller]}
 gale:
-  {name: Gale, kind: strike, power: 8, scales: magic, mp_cost: 3, jobs: [stormcaller]}
+  {name: Gale, kind: strike, power: 8, scales: magic, mp_cost: 3, element: WND, jobs: [stormcaller]}
 stonefall:
-  {name: Stonefall, kind: strike, power: 11, scales: stamina, mp_cost: 5, jobs: [geomancer]}
+  {name: Stonefall, kind: strike, power: 11, scales: stamina, mp_cost: 5, element: ERT, jobs: [geomancer]}
 terraheal:
   {name: Terraheal, kind: heal, power: 10, scales: wisdom, mp_cost: 5, jobs: [geomancer]}
 reap:
@@ -364,6 +370,6 @@ rune_blast:
 ward_rune:
   {name: Ward Rune, kind: heal, power: 9, scales: magic, mp_cost: 5, jobs: [runesmith]}
 word_of_ruin:
-  {name: Word of Ruin, kind: strike, power: 14, scales: wisdom, mp_cost: 7, jobs: [hierophant]}
+  {name: Word of Ruin, kind: strike, power: 14, scales: wisdom, mp_cost: 7, element: DRK, jobs: [hierophant]}
 benediction:
   {name: Benediction, kind: heal, power: 14, scales: wisdom, mp_cost: 7, jobs: [hierophant]}
