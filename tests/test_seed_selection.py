@@ -154,6 +154,26 @@ def test_aethryn_cinderdeep_descends_to_a_real_bottom():
     assert load_items(AETHRYN / "items.yaml")["drowned_seal"]["slot"] == "accessory_2"
 
 
+def test_aethryn_reachwood_is_a_real_lateral_region():
+    """The coast has horizontal exploration, not just the vertical spine: the Reachwood Edge opens
+    east into a forest region (a hollow, a warden's glade, a bramble warren) with level-banded foes,
+    a lore-keeping warden, and a mini-boss - an alternative early road to diving the cellar."""
+    rooms = load_rooms(AETHRYN / "rooms.yaml")
+    assert (
+        rooms["reachwood_edge"]["exits"].get("east") == "reachwood_hollow"
+    )  # no longer a dead-end
+    assert set(rooms["reachwood_hollow"]["exits"].values()) >= {
+        "wardens_glade",
+        "the_bramblewarren",
+    }
+    npcs = load_npcs(AETHRYN / "npcs.yaml")
+    assert npcs["thornback_boar"]["level"] == 5  # a step past the coast wolves
+    wight = npcs["bramble_wight"]
+    assert wight["level"] == 10 and wight["tier"] == "elite" and wight["attack_element"] == "ERT"
+    assert wight["drops"] == ["warden_charm"]  # a real reward off the main spine
+    assert "reachwood" in npcs["the_greenwarden"]["topics"]  # a lore-keeper makes it feel lived-in
+
+
 def test_aethryn_cinder_wight_boss_is_attackable_and_strikes_back():
     wight = load_npcs(AETHRYN / "npcs.yaml")["cinder_wight"]
     assert wight["hp"] == 50

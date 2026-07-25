@@ -170,3 +170,12 @@ stone_maul:
   location: nowhere
   slot: weapon
   mods: {ATK: 13, DEF: 3}
+
+# Drop-only: the Reachwood mini-boss reward -- a charm of woven ember-thorn (an evasion accessory,
+# an early-game alternative to the Concord's warden sigil).
+warden_charm:
+  name: a greenwarden's charm
+  keywords: [charm, greenwarden, thorn, token]
+  location: nowhere
+  slot: accessory_1
+  mods: {DEF: 4, EVA: 4}
