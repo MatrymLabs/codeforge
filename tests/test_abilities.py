@@ -17,7 +17,7 @@ import pytest
 import forge
 from parts.world import npcs
 from parts.world.abilities import abilities_for, render_abilities, use_ability
-from parts.world.seed import SeedError, load_abilities
+from parts.world.seed import Npc, SeedError, load_abilities
 from parts.world.session import Session
 
 
@@ -235,3 +235,85 @@ def test_a_brand_ability_burns_the_target_on_the_world_beat() -> None:
     beat = forge.handle_command(s, "look")  # the world beat ticks the burn
     assert "smoulders" in beat
     assert dummy["hp_now"] < dummy["hp"]  # the burn sapped HP
+
+
+# --- elemental abilities: the foe's resistance scales the player's typed hit --------------------
+
+
+def _durable_foe(resistances: dict[str, str] | None = None) -> Npc:
+    """A high-HP courtyard foe that survives a strike, so a damage delta is measurable."""
+    foe: Npc = {
+        "name": "the golem",
+        "keywords": ["golem"],
+        "location": "courtyard",
+        "dialogue": ["..."],
+        "next_line": 0,
+        "hp": 500,
+        "hp_now": 500,
+        "xp": 10,
+        "atk": 0,
+    }
+    if resistances is not None:
+        foe["resistances"] = resistances
+    npcs.NPCS["golem"] = foe
+    return foe
+
+
+def test_a_typed_strike_tears_into_a_weak_foe(monkeypatch) -> None:
+    """An ability's element meets the foe's resistance grid: a Weak foe takes +50% (freeze the fire
+    creature, don't burn it). This is the mirror of a foe's typed blow vs the player's grid."""
+    from parts.world.abilities import ABILITIES
+
+    s = _at_dummy("engineer")
+    foe = _durable_foe()
+    use_ability(s, "power strike on golem")  # untyped baseline
+    base = 500 - foe["hp_now"]
+    foe["hp_now"] = 500
+    monkeypatch.setitem(ABILITIES["power_strike"], "element", "FIR")
+    monkeypatch.setitem(foe, "resistances", {"FIR": "Weak"})
+    out = use_ability(s, "power strike on golem")
+    assert 500 - foe["hp_now"] == base + base // 2  # +50% into the weakness
+    assert "tears into it" in out
+
+
+def test_a_typed_strike_is_nullified_by_an_immune_foe(monkeypatch) -> None:
+    from parts.world.abilities import ABILITIES
+
+    s = _at_dummy("engineer")
+    foe = _durable_foe({"FIR": "Immune"})
+    monkeypatch.setitem(ABILITIES["power_strike"], "element", "FIR")
+    out = use_ability(s, "power strike on golem")
+    assert foe["hp_now"] == 500  # no damage landed
+    assert "immune to flame" in out
+
+
+def test_an_untyped_strike_ignores_a_foes_resistance() -> None:
+    """A move with no element deals physical damage a resistance never touches (backward-compat:
+    every existing untyped ability fights exactly as before)."""
+    s = _at_dummy("engineer")
+    foe = _durable_foe({"FIR": "Immune"})  # would nullify a FIR strike, but the move is untyped
+    out = use_ability(s, "power strike on golem")
+    assert 500 - foe["hp_now"] > 0  # the full blow landed: the element gate never fired
+    assert "immune" not in out
+
+
+def test_a_typed_brand_is_refused_by_an_immune_foe(monkeypatch) -> None:
+    from parts.world.abilities import ABILITIES
+
+    s = _at_dummy("scholar")  # the scholar wields Corrode (a brand)
+    foe = _durable_foe({"FIR": "Immune"})
+    monkeypatch.setitem(ABILITIES["corrode"], "element", "FIR")
+    out = use_ability(s, "corrode on golem")
+    assert "immune to flame" in out
+    assert "burn" not in foe  # no burn took hold on an immune foe
+
+
+def test_load_abilities_rejects_an_unknown_element(tmp_path: Path) -> None:
+    body = "bad:\n  kind: strike\n  element: PLASMA\n  jobs: [vanguard]\n"
+    with pytest.raises(SeedError, match="element"):
+        load_abilities(_abilities_file(tmp_path, body))
+
+
+def test_load_abilities_accepts_a_typed_ability(tmp_path: Path) -> None:
+    body = "zap:\n  name: Zap\n  kind: strike\n  element: LGT\n  jobs: [vanguard]\n"
+    assert load_abilities(_abilities_file(tmp_path, body))["zap"]["element"] == "LGT"

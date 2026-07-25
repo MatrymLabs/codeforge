@@ -678,6 +678,38 @@ def test_an_absorbed_element_heals_instead_of_harming(monkeypatch):
     assert "drink in the flame" in line
 
 
+@pytest.mark.parametrize(
+    "grid, element, expected",
+    [
+        (None, "FIR", 10),  # no grid: full damage
+        ({"FIR": "Weak"}, "FIR", 15),  # +50%
+        ({"FIR": "Resist"}, "FIR", 5),  # halved
+        ({"FIR": "Immune"}, "FIR", 0),  # nullified
+        ({"FIR": "Absorb"}, "FIR", 0),  # a player's blow can't heal a foe: Absorb reads as Immune
+        ({"ICE": "Weak"}, "FIR", 10),  # a mismatched element is unaffected
+        ({"FIR": "Immune"}, None, 10),  # an untyped move ignores the grid entirely
+    ],
+)
+def test_typed_hit_scales_outgoing_damage_by_the_foes_resistance(grid, element, expected):
+    from parts.world.combat import typed_hit
+
+    npc = npcs.NPCS[_spawn_hostile("golem", atk=0, hp=500)]
+    if grid is not None:
+        npc["resistances"] = grid
+    dmg, _note = typed_hit(npc, element, 10)
+    assert dmg == expected
+
+
+def test_foe_resistance_defaults_to_normal_without_a_grid():
+    from parts.world.combat import foe_resistance
+
+    npc = npcs.NPCS[_spawn_hostile("golem", atk=0, hp=10)]
+    assert foe_resistance(npc, "FIR") == "Normal"  # no grid at all
+    npc["resistances"] = {"ICE": "Weak"}
+    assert foe_resistance(npc, "FIR") == "Normal"  # a grid that omits the code
+    assert foe_resistance(npc, "ICE") == "Weak"
+
+
 def test_a_reassembling_foe_quenches_its_burn():
     from parts.world.combat import apply_burn, attack, strike_power
 

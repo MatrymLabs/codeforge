@@ -114,15 +114,23 @@ def use_ability(session: Session, arg: str) -> str:
     if npc["hp"] <= 0:
         return f"{sentence_case(npc['name'])} is not something you can fight."
     session.resources["mp"] = mp.damage(ability["mp_cost"])
+    element = ability.get("element")  # a typed move is scaled by the foe's resistance to it
     if ability["kind"] == "brand":  # lay a burn DoT; it saps HP on each world beat
-        per_tick = _magnitude(session, ability)
-        combat.apply_burn(npc, per_tick)
+        per_tick, note = combat.typed_hit(npc, element, _magnitude(session, ability))
         announce(
             session.location, f"{who} brands {npc['name']} with {move}.", exclude=session.player_id
         )
+        if per_tick <= 0:  # the foe nullifies the element: no burn takes hold
+            return f"You brand {npc['name']} with {move}, but{note.lower()}"
+        combat.apply_burn(npc, per_tick)
         bar = f"{npc['hp_now']}/{npc['hp']}"
-        return f"You brand {npc['name']} with {move}; it burns for {per_tick} a beat. ({bar})"
-    dmg = _magnitude(session, ability)
+        return f"You brand {npc['name']} with {move}; it burns for {per_tick} a beat.{note} ({bar})"
+    dmg, note = combat.typed_hit(npc, element, _magnitude(session, ability))
+    if dmg <= 0:  # the foe nullifies the element: the blow lands nothing
+        announce(
+            session.location, f"{who} unleashes {move} on {npc['name']}.", exclude=session.player_id
+        )
+        return f"You unleash {move} on {npc['name']}, but{note.lower()}"
     announce(
         session.location,
         f"{who} unleashes {move} on {npc['name']} for {dmg}.",
@@ -131,5 +139,5 @@ def use_ability(session: Session, arg: str) -> str:
     defeated, tail = combat.land_hit(session, npc, nid, dmg)
     if not defeated:
         bar = f"{npc['hp_now']}/{npc['hp']}"
-        return f"You unleash {move} on {npc['name']} for {dmg}. ({bar})"
+        return f"You unleash {move} on {npc['name']} for {dmg}.{note} ({bar})"
     return f"You unleash {move} on {npc['name']}; it collapses -- then reassembles itself.\n{tail}"

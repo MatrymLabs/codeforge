@@ -119,6 +119,39 @@ def test_an_unknown_attack_element_is_rejected(tmp_path):
         load_npcs(npcsf)
 
 
+def test_a_foe_resistance_grid_loads(tmp_path):
+    npcsf = tmp_path / "npcs.yaml"
+    npcsf.write_text("wight:\n  location: cell\n  hp: 20\n  resistances: {FIR: Immune, ICE: Weak}")
+    assert load_npcs(npcsf)["wight"]["resistances"] == {"FIR": "Immune", "ICE": "Weak"}
+
+
+def test_a_plain_foe_carries_no_resistances_key(tmp_path):
+    npcsf = tmp_path / "npcs.yaml"
+    npcsf.write_text("rat:\n  location: cell\n  hp: 5\n")
+    assert "resistances" not in load_npcs(npcsf)["rat"]  # opt-in: resists nothing unless declared
+
+
+def test_a_foe_resistance_with_a_bad_code_is_rejected(tmp_path):
+    npcsf = tmp_path / "npcs.yaml"
+    npcsf.write_text("wight:\n  location: cell\n  hp: 20\n  resistances: {XYZ: Weak}\n")
+    with pytest.raises(SeedError, match="resistance code"):
+        load_npcs(npcsf)
+
+
+def test_a_foe_resistance_with_a_bad_level_is_rejected(tmp_path):
+    npcsf = tmp_path / "npcs.yaml"
+    npcsf.write_text("wight:\n  location: cell\n  hp: 20\n  resistances: {FIR: Squishy}\n")
+    with pytest.raises(SeedError, match="resistance"):
+        load_npcs(npcsf)
+
+
+def test_a_non_mapping_resistances_is_rejected(tmp_path):
+    npcsf = tmp_path / "npcs.yaml"
+    npcsf.write_text("wight:\n  location: cell\n  hp: 20\n  resistances: fireproof\n")
+    with pytest.raises(SeedError, match="resistances"):
+        load_npcs(npcsf)
+
+
 def test_a_tier_without_a_level_is_rejected(tmp_path):
     npcsf = tmp_path / "npcs.yaml"
     npcsf.write_text("wolf:\n  location: cell\n  hp: 15\n  tier: boss\n")  # nothing to scale

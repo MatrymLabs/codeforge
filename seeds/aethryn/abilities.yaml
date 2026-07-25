@@ -42,6 +42,7 @@ ember_bolt:
   power: 5
   scales: magic
   mp_cost: 3
+  element: FIR  # flame: the Cinder-Wight drinks it in -- bring frost to that fight
   jobs: [emberwright]
 
 kindle:
@@ -206,6 +207,7 @@ frostbite:
   power: 8
   scales: magic
   mp_cost: 3
+  element: ICE  # frost: it shatters the Cinder-Wight (Weak to ICE) for half again the damage
   jobs: [elementalist]
 
 # Chronomancer -- steal time.

@@ -75,6 +75,30 @@ def _typed_blow(session: Session, npc: Npc, power: int) -> tuple[int, int, str]:
     return power, 0, ""  # Normal: unchanged
 
 
+def foe_resistance(npc: Npc, code: str) -> str:
+    """A foe's resistance level to an element/status `code`, from its optional grid. The mirror of
+    session_resistance -- a foe that declares nothing (or has no grid at all) reads Normal."""
+    return npc.get("resistances", {}).get(code, "Normal")
+
+
+def typed_hit(npc: Npc, element: str | None, dmg: int) -> tuple[int, str]:
+    """Scale OUTGOING player damage by the foe's resistance to the ability's `element`. Untyped (no
+    element) passes through unchanged. Weak +50%, Resist halves (floored 1), Immune/Absorb nullify
+    -- a player's blow can never heal a foe, so a foe's Absorb reads as full immunity. Returns
+    (damage, note): freeze the fire creature, don't burn it."""
+    if not element:
+        return dmg, ""
+    level = foe_resistance(npc, element)
+    tag = _ELEMENT_NAMES.get(element, element)
+    if level == "Weak":
+        return dmg + dmg // 2, f" The {tag} tears into it!"
+    if level == "Resist":
+        return max(1, dmg // 2), f" It shrugs off much of the {tag}."
+    if level in ("Immune", "Absorb"):
+        return 0, f" It is immune to {tag}."
+    return dmg, ""  # Normal: unchanged
+
+
 def _stat_bonus(session: Session, stat: str) -> int:
     """The total flat bonus to a derived stat from everything a character carries: equipped gear,
     the active job's perks, and the sworn Order. Combat reads the SAME composition as the score

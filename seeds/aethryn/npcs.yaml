@@ -69,6 +69,7 @@ cinder_wight:
   hp: 50
   atk: 7  # the tutorial dungeon boss; learn its pattern, or reforge it rather than break it
   attack_element: FIR  # a hammer of grey cinder: its blows burn (an emberwright shrugs off the flame)
+  resistances: {FIR: Immune, ICE: Weak}  # a creature of cinder: fire feeds it, frost shatters it
   level: 8  # a real gulf above the wolves: a boss-tier reward for closing it
   tier: boss  # x10 the level's base reward -- the climax of the Kindlands arc pays for the climb
   aggressive: true  # it never finished dying: strikes on the world beat (leash releases if you stop)
