@@ -114,10 +114,31 @@ composition. `tests/test_membership_store.py` runs the contract against both ada
 `adopt`/`account_has_owner`/`inspect_login` run over injected in-memory stores with no database. The
 28 `test_accounts.py` tests, plus the gateway and api suites, pass unchanged.
 
-**Deliberately left for a later batch (needs sign-off):** the core character persistence in
-`parts/world/characters.py` (`save_character`, `load_character`, `put_record`, `restore_character`).
-That is a central domain/persistence model - a keel-level change - so it stops for Josh, not an
-autonomous batch.
+## Batch 4: the character-persistence seam (the keel)
+
+The core character persistence in `parts/world/characters.py` (`load_character`, `put_record`,
+`save_character`, `set_rank`) is the central saved-state model - a keel-level change, done with Josh's
+explicit go-ahead. The port is `CharacterStore` (in `parts/world/character_store.py`); the adapter is
+`SqlCharacterStore` (in `parts/world/character_store_sql.py`, MOD-04.067), the only place the
+`characters` table is read or written for a hero's row. `characters.py` now builds a
+`CharacterRecord` from a Session or a casefile and reads it back - it touches no ORM.
+
+The security-critical detail is the **merge-save law** (architecture law #6). A hero's stored password
+must survive a gameplay save, so the port keeps **two upserts** rather than one:
+
+- `upsert_full` writes every column, including `auth_salt`/`auth_hash` (the full-casefile door,
+  `put_record`).
+- `upsert_gameplay` writes the gameplay columns and **never** the auth columns (`save_character`), so
+  saving position/level/gear can never blank a password.
+
+Collapsing the two would reintroduce the password-wipe bug the law exists to prevent, so the contract
+test pins it directly on both adapters (`test_upsert_gameplay_saves_state_but_never_blanks_the_password`),
+and again through the public doors. The `restore_character` door was already framework-free (it works
+on a casefile and a Session), so it is unchanged.
+
+With this, every domain module in `parts/world/` is framework-free; SQLAlchemy lives only in `db.py`,
+the `*_sql.py` adapters, and `schema_guard.py` (a schema diagnostic that is *about* the database and so
+legitimately holds it).
 
 ## The template for the next boundary
 

@@ -116,6 +116,64 @@
     "updated": "2026-07-24"
   },
   {
+    "designation": "MOD-04.066",
+    "name": "character_store",
+    "status": "active",
+    "function": "the persistence port for a named hero's saved row",
+    "label": "character_store",
+    "file": "parts/world/character_store.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "docs/persistence_ports.md",
+    "tests": "tests/test_character_store.py",
+    "depends_on": [],
+    "related": [
+      "MOD-04.067"
+    ],
+    "reuse": "the CharacterStore contract, framework-free; the merge-save law encoded as two upserts",
+    "tags": [
+      "module",
+      "port"
+    ],
+    "notes": "assimilation batch 4 (keel) - CharacterRecord + CharacterStore port + in-memory adapter",
+    "superseded_by": "",
+    "aliases": [
+      "MOD-UM04-S01-N001-066-R0"
+    ],
+    "created": "2026-07-25",
+    "updated": "2026-07-25"
+  },
+  {
+    "designation": "MOD-04.067",
+    "name": "character_store_sql",
+    "status": "active",
+    "function": "the SQLAlchemy adapter for the CharacterStore port",
+    "label": "character_store_sql",
+    "file": "parts/world/character_store_sql.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "docs/persistence_ports.md",
+    "tests": "tests/test_character_store.py",
+    "depends_on": [
+      "MOD-04.066"
+    ],
+    "related": [
+      "MOD-04.066"
+    ],
+    "reuse": "the persistence-port pattern: core character persistence behind a store, merge-save preserved",
+    "tags": [
+      "module",
+      "adapter"
+    ],
+    "notes": "assimilation batch 4 (keel) - seals the last CharacterRow access out of characters.py (now framework-free)",
+    "superseded_by": "",
+    "aliases": [
+      "MOD-UM04-S01-N001-067-R0"
+    ],
+    "created": "2026-07-25",
+    "updated": "2026-07-25"
+  },
+  {
     "designation": "MOD-04.002",
     "name": "api",
     "status": "active",
