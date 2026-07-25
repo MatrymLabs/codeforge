@@ -63,7 +63,7 @@ from parts.world.aggression import menace
 from parts.world.character_view import sheet_from_session
 from parts.world.characters import load_character, restore_character, save_character
 from parts.world.chime import chime
-from parts.world.combat import attack
+from parts.world.combat import attack, tick_burns
 from parts.world.consumables import quaff
 from parts.world.doors import reclose, unlock
 from parts.world.engineer import deploy_barrier, diagnostic_scan, field_repair
@@ -1743,7 +1743,7 @@ def handle_command(session: Session, signal: str) -> str:
     routed_signal = true_signal.lower()
 
     response = _route(session, true_signal, routed_signal)
-    beat = f"{menace(session)}{tick_zones(session)}{_sands_beat(session)}"
+    beat = f"{tick_burns(session)}{menace(session)}{tick_zones(session)}{_sands_beat(session)}"
     return f"{response}{beat}"
 
 

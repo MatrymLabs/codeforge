@@ -42,7 +42,7 @@ def _at_dummy(job: str) -> Session:
 
 
 def test_abilities_map_to_the_jobs_that_declare_them() -> None:
-    assert [a["name"] for _, a in abilities_for("scholar")] == ["Arcane Bolt", "Mend"]
+    assert [a["name"] for _, a in abilities_for("scholar")] == ["Arcane Bolt", "Corrode", "Mend"]
     assert [a["name"] for _, a in abilities_for("vanguard")] == ["Power Strike"]
     assert abilities_for("") == []  # no calling, no abilities
 
@@ -175,7 +175,7 @@ def test_using_an_ability_on_a_peaceful_npc_refuses() -> None:
 @pytest.mark.parametrize(
     "body, match",
     [
-        ("bad:\n  kind: explode\n  jobs: [vanguard]\n", "must be 'strike' or 'heal'"),
+        ("bad:\n  kind: explode\n  jobs: [vanguard]\n", "must be 'strike', 'heal', or 'brand'"),
         (
             "bad:\n  kind: strike\n  scales: charisma\n  jobs: [vanguard]\n",
             "'scales' must be an attribute",
@@ -222,3 +222,16 @@ def test_render_abilities_marks_the_subjob_moves() -> None:
     set_secondary(s, "scholar")
     out = render_abilities(s)
     assert "Arcane Bolt" in out and "(subjob)" in out  # the borrowed moves are flagged
+
+
+def test_a_brand_ability_burns_the_target_on_the_world_beat() -> None:
+    """A `brand` lays a burn (no immediate damage); the burn saps HP on each world beat, so a
+    following command shows the foe smoulder. Covers the brand path AND the beat wiring."""
+    s = _at_dummy("scholar")
+    dummy = npcs.NPCS["training_dummy"]
+    out = use_ability(s, "corrode on dummy")
+    assert "brand" in out.lower() and dummy.get("burn") is not None
+    assert dummy["hp_now"] == dummy["hp"]  # a brand does no immediate damage
+    beat = forge.handle_command(s, "look")  # the world beat ticks the burn
+    assert "smoulders" in beat
+    assert dummy["hp_now"] < dummy["hp"]  # the burn sapped HP

@@ -106,7 +106,7 @@ def use_ability(session: Session, arg: str) -> str:
         announce(session.location, f"{who} channels {move}.", exclude=session.player_id)
         return f"You channel {move} and recover {amount} HP. ({healed.current}/{healed.maximum})"
 
-    # a strike needs a target
+    # a strike or a brand needs a target
     nid = trace_npc(target_word.strip(), session.location) if target_word.strip() else None
     if nid is None:
         return f"Use {move} on whom? Try: use {move} on <target>"
@@ -114,6 +114,14 @@ def use_ability(session: Session, arg: str) -> str:
     if npc["hp"] <= 0:
         return f"{sentence_case(npc['name'])} is not something you can fight."
     session.resources["mp"] = mp.damage(ability["mp_cost"])
+    if ability["kind"] == "brand":  # lay a burn DoT; it saps HP on each world beat
+        per_tick = _magnitude(session, ability)
+        combat.apply_burn(npc, per_tick)
+        announce(
+            session.location, f"{who} brands {npc['name']} with {move}.", exclude=session.player_id
+        )
+        bar = f"{npc['hp_now']}/{npc['hp']}"
+        return f"You brand {npc['name']} with {move}; it burns for {per_tick} a beat. ({bar})"
     dmg = _magnitude(session, ability)
     announce(
         session.location,

@@ -26,7 +26,7 @@ from parts.world.encounter_log import witness
 from parts.world.engineer import emergency_repair
 from parts.world.events import announce, announce_frame
 from parts.world.frames import StrikeFrame
-from parts.world.npcs import NPCS, trace_npc
+from parts.world.npcs import NPCS, npcs_in, trace_npc
 from parts.world.progression_awards import award_jp, award_tp, award_xp
 from parts.world.seed import Npc
 from parts.world.session import Session, display_name, sentence_case
@@ -181,6 +181,7 @@ def land_hit(session: Session, npc: Npc, nid: str, dmg: int) -> tuple[bool, str]
     if npc["hp_now"] > 0:
         return (False, "")
     npc["hp_now"] = npc["hp"]  # the dummy reassembles at full health
+    npc.pop("burn", None)  # a reassembled foe is whole again -- any burn is quenched
     announce(
         session.location,
         f"{sentence_case(npc['name'])} collapses -- then reassembles itself.",
@@ -237,6 +238,35 @@ def attack(session: Session, word: str) -> str:
         counter = "" if npc.get("aggressive") else _counter_attack(session, npc)
         return f"{struck} ({npc['hp_now']}/{npc['hp']}){counter}"
     return f"{struck} It collapses -- then reassembles itself.\n{tail}"
+
+
+BURN_TICKS = 3  # how many world beats a `brand` burn lasts before it burns out
+
+
+def apply_burn(npc: Npc, damage: int, ticks: int = BURN_TICKS) -> None:
+    """Lay a burn damage-over-time on a foe (a `brand` ability). It saps `damage` HP each world beat
+    for `ticks` beats. A fresh brand refreshes the burn rather than stacking."""
+    npc["burn"] = {"damage": max(1, damage), "ticks": max(1, ticks)}
+
+
+def tick_burns(session: Session) -> str:
+    """On the world beat, sap HP from every burning foe in the room, age the burn, and drop it when
+    it burns out. A burn never fells a foe (floored at 1) -- it wears it down, but you land the
+    finishing blow. Returns the lines the player sees, or '' when nothing is burning. Mutates NPC
+    runtime state only (hp_now, burn), never the player's."""
+    lines = []
+    for nid in npcs_in(session.location):
+        npc = NPCS[nid]
+        burn = npc.get("burn")
+        if not burn or npc["hp_now"] <= 0:
+            continue
+        npc["hp_now"] = max(1, npc["hp_now"] - burn["damage"])
+        bar = f"{npc['hp_now']}/{npc['hp']}"
+        lines.append(f"{sentence_case(npc['name'])} smoulders for {burn['damage']}. ({bar})")
+        burn["ticks"] -= 1
+        if burn["ticks"] <= 0:
+            npc.pop("burn", None)
+    return ("\n".join(lines) + "\n") if lines else ""
 
 
 def _spawn_loot(session: Session, prototype: str, level: int = 0) -> str:
