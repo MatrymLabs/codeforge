@@ -10,6 +10,7 @@ from parts.world.seed import (
     load_doors,
     load_items,
     load_npcs,
+    load_recipes,
     load_rooms,
     load_splash,
 )
@@ -501,3 +502,35 @@ def test_npc_topics_with_an_empty_reply_list_are_rejected(tmp_path):
     npcsf.write_text("sage:\n  location: cell\n  topics:\n    lore: []\n")
     with pytest.raises(SeedError, match="topics"):
         load_npcs(npcsf)
+
+
+def test_load_recipes_returns_none_shape_when_absent(tmp_path):
+    assert load_recipes(tmp_path / "recipes.yaml") == {}  # a seed with no maker's loop
+
+
+def test_load_recipes_accepts_a_wellformed_recipe(tmp_path):
+    p = tmp_path / "recipes.yaml"
+    p.write_text("mend:\n  name: a draught\n  makes: healing_draught\n  inputs: {ember_shard: 2}\n")
+    recipe = load_recipes(p)["mend"]
+    assert recipe["makes"] == "healing_draught" and recipe["inputs"] == {"ember_shard": 2}
+
+
+def test_load_recipes_rejects_a_recipe_with_no_output(tmp_path):
+    p = tmp_path / "recipes.yaml"
+    p.write_text("bad:\n  inputs: {ember_shard: 2}\n")  # no 'makes'
+    with pytest.raises(SeedError, match="makes"):
+        load_recipes(p)
+
+
+def test_load_recipes_rejects_a_nonpositive_input_count(tmp_path):
+    p = tmp_path / "recipes.yaml"
+    p.write_text("bad:\n  makes: healing_draught\n  inputs: {ember_shard: 0}\n")
+    with pytest.raises(SeedError, match="inputs"):
+        load_recipes(p)
+
+
+def test_load_recipes_rejects_empty_inputs(tmp_path):
+    p = tmp_path / "recipes.yaml"
+    p.write_text("bad:\n  makes: healing_draught\n  inputs: {}\n")
+    with pytest.raises(SeedError, match="inputs"):
+        load_recipes(p)

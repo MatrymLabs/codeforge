@@ -1633,6 +1633,32 @@
     "updated": "2026-07-25"
   },
   {
+    "designation": "CMD-04.079",
+    "name": "craft",
+    "status": "active",
+    "function": "forge gathered materials into goods (craft <recipe>)",
+    "label": "craft",
+    "file": "forge.py",
+    "type": "CMD",
+    "domain": "04",
+    "docs": "docs/architecture.md",
+    "tests": "tests/test_crafting.py",
+    "depends_on": [],
+    "related": [
+      "quaff",
+      "shop"
+    ],
+    "reuse": "",
+    "tags": [
+      "command"
+    ],
+    "notes": "crafting.craft: consumes a seed recipe's material inputs from the inventory and mints its output (crafting.RECIPES from seed.load_recipes). Bare `craft` lists recipes. The maker's half of the economy (counterpart to shop/quaff); output minted before inputs spent, so a failed craft costs nothing.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-25",
+    "updated": "2026-07-25"
+  },
+  {
     "designation": "CMD-04.037",
     "name": "store",
     "status": "active",

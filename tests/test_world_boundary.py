@@ -56,6 +56,7 @@ _GAME_SEED = {
     "chime",
     "bounties",
     "consumables",
+    "crafting",
     "orders",
     "shop",
     "spiral",

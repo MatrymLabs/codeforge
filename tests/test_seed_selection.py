@@ -84,6 +84,20 @@ def test_aethryn_capital_npcs_hold_real_conversations():
         assert all(lines and all(isinstance(x, str) for x in lines) for lines in who.values())
 
 
+def test_aethryn_recipes_forge_real_items_from_real_materials():
+    """The maker's loop is real content: the flagship ships recipes, and every recipe forges a real
+    item from real materials (a cross-check, so a recipe can never make or need a phantom item)."""
+    from parts.world.seed import load_recipes
+
+    recipes = load_recipes(AETHRYN / "recipes.yaml")
+    assert recipes, "the flagship ships no crafting recipes -- the maker Jobs have nothing to forge"
+    item_labels = set(load_items(AETHRYN / "items.yaml"))
+    for label, recipe in recipes.items():
+        assert recipe["makes"] in item_labels, f"recipe {label} makes unknown {recipe['makes']}"
+        for material in recipe["inputs"]:
+            assert material in item_labels, f"recipe {label} needs unknown material {material}"
+
+
 def test_aethryn_cinderdeep_descends_to_a_real_bottom():
     """The coast's downward road no longer dead-ends: the maw opens down through the Drowned Way to
     the Cinderheart, where a frost-typed bottom-boss (bring fire) gives the deep a real climax."""

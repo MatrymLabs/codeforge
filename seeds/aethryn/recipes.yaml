@@ -1,0 +1,24 @@
+# SEED: aethryn -- recipes.yaml (the maker's loop: `craft <recipe>` forges materials into goods)
+# Ember-shards (gathered at the resettable node, or bought/looted) and drowned ingots (boss salvage)
+# become draughts and gear at the hearth -- so the maker Jobs and the drop economy have a real use.
+# Each recipe's inputs/outputs are cross-checked against the seed's items at boot.
+
+field_draught:
+  name: a healing draught
+  makes: healing_draught
+  inputs: {ember_shard: 2}
+
+focusing_draught:
+  name: a mana draught
+  makes: mana_draught
+  inputs: {ember_shard: 2}
+
+forge_a_hammer:
+  name: a cinder hammer
+  makes: cinder_hammer
+  inputs: {ember_shard: 3, hollow_ingot: 1}
+
+forge_plate:
+  name: cindershell plate
+  makes: cindershell_plate
+  inputs: {hollow_ingot: 2, ember_shard: 2}

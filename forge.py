@@ -65,6 +65,7 @@ from parts.world.characters import load_character, restore_character, save_chara
 from parts.world.chime import chime
 from parts.world.combat import attack, examine_foe, tick_burns
 from parts.world.consumables import quaff
+from parts.world.crafting import craft
 from parts.world.doors import reclose, unlock
 from parts.world.engineer import deploy_barrier, diagnostic_scan, field_repair
 from parts.world.equipment import equip, unequip
@@ -1349,6 +1350,15 @@ def _build_commands() -> CommandSet:
             "CMD-04.074",
             "drink a consumable (quaff <item>)",
             lambda s, arg: quaff(s, arg),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "craft",
+            "CMD-04.079",
+            "forge gathered materials into goods (craft <recipe>)",
+            lambda s, arg: craft(s, arg),
             namespace=CORE,
         )
     )

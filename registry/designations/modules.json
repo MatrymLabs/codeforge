@@ -4635,6 +4635,36 @@
     "updated": "2026-07-24"
   },
   {
+    "designation": "MOD-04.068",
+    "name": "crafting",
+    "status": "active",
+    "function": "forge gathered materials into goods at the hearth (craft <recipe>)",
+    "label": "crafting",
+    "file": "parts/world/crafting.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "docs/architecture.md",
+    "tests": "tests/test_crafting.py",
+    "depends_on": [
+      "items",
+      "seed",
+      "session"
+    ],
+    "related": [
+      "consumables",
+      "shop"
+    ],
+    "reuse": "the recipe pattern: a seed's recipes.yaml maps inputs (material prototype -> count) to an output prototype; `craft <recipe>` consumes what you hold and mints the output -- the maker's half of the loot/salvage economy, the counterpart to the shop (buy) and consumables (spend)",
+    "notes": "Gives the maker Jobs and the drop/salvage economy a use (ember_shard/hollow_ingot were consumed by nothing). Recipe TypedDict + seed.load_recipes (validated: makes non-empty, inputs proto->positive count); RECIPES loaded per-seed like abilities. `craft` (CMD-04.079); bare `craft` lists recipes. Output minted before inputs spent, so a failed craft costs nothing. Live in aethryn (recipes.yaml).",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-25",
+    "updated": "2026-07-25"
+  },
+  {
     "designation": "MOD-05.066",
     "name": "affixes",
     "status": "active",
