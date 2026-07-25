@@ -134,16 +134,16 @@ def quest_report(session: Session) -> dict[str, str] | None:
     return active_quest(session)
 
 
-def items_report(session: Session) -> dict[str, str]:
-    """A Char.Items payload: the player's equipped loadout as {slot: item name}. Empty when nothing
-    is worn (an empty frame clears the client's panel, like Char.Target). Read-only projection of
-    `session.equipped`, resolving each instance's display name the same way the save path does -- no
-    number or name a client sees that the game itself would not."""
+def items_report(session: Session) -> dict[str, dict[str, object]]:
+    """A Char.Items payload: the player's equipped loadout as {slot: {name, mods}}, so a client can
+    show not just what is worn but what it does (the flat stat modifiers it grants). Empty when
+    nothing is worn (an empty frame clears the client's panel, like Char.Target). Read-only
+    projection of `session.equipped`; no number or name a client sees that the game would not."""
     from parts.world.items import ITEMS
 
-    worn: dict[str, str] = {}
+    worn: dict[str, dict[str, object]] = {}
     for slot, iid in session.equipped.items():
         item = ITEMS.get(iid)
         if item is not None:
-            worn[slot] = item["name"]
+            worn[slot] = {"name": item["name"], "mods": dict(item["mods"])}
     return worn

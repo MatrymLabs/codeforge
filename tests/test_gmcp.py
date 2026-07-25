@@ -144,7 +144,7 @@ def test_room_report_on_an_unknown_location_renders_honestly():
     assert report == {"num": "void_that_is_not_seeded", "name": "(nowhere)", "exits": {}}
 
 
-def test_items_report_lists_the_equipped_loadout_and_is_empty_when_bare():
+def test_items_report_lists_the_equipped_loadout_with_mods_and_is_empty_when_bare():
     from parts.world.items import ITEMS, clone
 
     session = _hero()
@@ -153,7 +153,10 @@ def test_items_report_lists_the_equipped_loadout_and_is_empty_when_bare():
     session.equipped["weapon"] = iid
     session.equipped["ghost"] = "vanished_instance"  # an equipped id with no ITEMS entry is skipped
     try:
-        assert items_report(session) == {"weapon": "a modular forge wrench"}  # the ghost is omitted
+        report = items_report(session)
+        assert set(report) == {"weapon"}  # the ghost is omitted
+        assert report["weapon"]["name"] == "a modular forge wrench"
+        assert report["weapon"]["mods"] == ITEMS[iid]["mods"]  # the stat modifiers it grants
     finally:
         ITEMS.pop(iid, None)  # conftest clears SESSIONS, not ITEMS: do not leak this instance
 
