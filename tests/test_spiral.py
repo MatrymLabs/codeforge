@@ -58,6 +58,26 @@ def test_generation_is_deterministic():
     assert a == b  # no randomness: the world is reproducible
 
 
+def test_each_coil_takes_a_rotating_elemental_theme():
+    """The back half is a varied gauntlet, not one room 25 times: consecutive Coils carry different
+    elements, and a Gate-warden is an elemental puzzle (resists its element, weak to a counter)."""
+    _, npcs, _ = generate_spiral(_CONFIG, _ROOMS)
+    w4, w5 = npcs["spiral_gate_4"], npcs["spiral_gate_5"]
+    assert w4["attack_element"] == "FIR" and w5["attack_element"] == "ICE"  # varies coil to coil
+    assert w4["resistances"] == {"FIR": "Resist", "ICE": "Weak"}  # bring frost to a fire Coil
+    # a husk carries the element (typed blows) but no grid, so it stays farmable with any move
+    husk = npcs["spiral_husk_4"]
+    assert husk["attack_element"] == "FIR" and "resistances" not in husk
+
+
+def test_the_summit_sovereign_stays_an_untyped_final_test():
+    from parts.world.spiral import SUMMIT_BOSS
+
+    _, npcs, _ = generate_spiral(_CONFIG, _ROOMS)
+    sovereign = npcs[SUMMIT_BOSS]
+    assert "attack_element" not in sovereign and "resistances" not in sovereign
+
+
 def test_an_attach_room_that_does_not_exist_is_refused():
     with pytest.raises(SeedError, match="attach"):
         generate_spiral({**_CONFIG, "attach": "nowhere_real"}, _ROOMS)
