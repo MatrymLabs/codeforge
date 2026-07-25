@@ -1,27 +1,32 @@
-"""CARD: characters -- named heroes survive the restart (SQL-backed).
+"""CARD: characters -- named heroes survive the restart, over a storage PORT.
 
-Same doors as always -- load_character, save_character, put_record,
-set_rank -- now opening onto a SQLite table instead of a JSON file.
-Derive-don't-store is unchanged: a casefile is a handful of canonical
-facts; stats and resources recompute on restore.
+Same doors as always -- load_character, save_character, put_record, set_rank -- now opening onto the
+`CharacterStore` port (adapter character_store_sql) instead of an ORM row directly. This module
+builds a `CharacterRecord` from a Session or a casefile and reads it back; it touches no framework.
+Derive-don't-store is unchanged: a casefile is a handful of canonical facts; stats and resources
+recompute on restore. The merge-save law lives in the port: save_character calls upsert_gameplay
+(never rewrites the auth columns), put_record calls upsert_full. See docs/persistence_ports.md.
 """
 
 from __future__ import annotations
 
 import json
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
+from parts.world.character_store import CharacterRecord, CharacterStore
 from parts.world.job_progress import load_job_progress, save_job_progress
 from parts.world.jobs import BASE_HP, BASE_MP, JOBS, bind_calling
 from parts.world.progression import hp_gain_per_level, mp_gain_per_level
 from parts.world.resources import Resource
 from parts.world.session import Session
 
-# parts.world.db is imported lazily inside each function that touches persistence (below), so a
-# DB-free `import forge` never pays the ~400ms SQLAlchemy import (EXP-003). CharacterRow is
-# needed only for annotations here, so it stays under TYPE_CHECKING.
-if TYPE_CHECKING:
-    from parts.world.db import CharacterRow
+
+def _default_store() -> CharacterStore:
+    """The default backend: the SQL adapter, imported lazily so this module stays engine-free at
+    import time (EXP-003 -- a DB-free `import forge` never pays the ~400ms SQLAlchemy import)."""
+    from parts.world.character_store_sql import SqlCharacterStore
+
+    return SqlCharacterStore()
 
 
 def _serialize_gear(session: Session) -> str:
@@ -72,85 +77,77 @@ def _restore_gear(session: Session, raw: str) -> None:
         session.equipped[slot] = iid
 
 
-def _archive_row_to_casefile(archive_row: CharacterRow) -> dict[str, Any]:
+def _record_to_casefile(record: CharacterRecord) -> dict[str, Any]:
     casefile: dict[str, Any] = {
-        "job": archive_row.job,
-        "secondary_job": archive_row.secondary_job,
-        "level": archive_row.level,
-        "xp": archive_row.xp,
-        "location": archive_row.location,
-        "rank": archive_row.rank,
-        "account": archive_row.account,
-        "order": archive_row.order,
-        "equipped_gear": archive_row.equipped_gear,
-        "coins": archive_row.coins,
-        "quest_state": archive_row.quest_state,
+        "job": record.job,
+        "secondary_job": record.secondary_job,
+        "level": record.level,
+        "xp": record.xp,
+        "location": record.location,
+        "rank": record.rank,
+        "account": record.account,
+        "order": record.order,
+        "equipped_gear": record.equipped_gear,
+        "coins": record.coins,
+        "quest_state": record.quest_state,
     }
-    if archive_row.auth_salt and archive_row.auth_hash:
-        casefile["auth"] = {"salt": archive_row.auth_salt, "hash": archive_row.auth_hash}
+    if record.auth_salt and record.auth_hash:
+        casefile["auth"] = {"salt": record.auth_salt, "hash": record.auth_hash}
     return casefile
 
 
-def load_character(name: str) -> dict[str, Any] | None:
-    from parts.world.db import CharacterRow, open_archive_session
-
-    with open_archive_session() as db:
-        archive_row = db.get(CharacterRow, name)
-        return _archive_row_to_casefile(archive_row) if archive_row else None
+def load_character(name: str, store: CharacterStore | None = None) -> dict[str, Any] | None:
+    record = (store or _default_store()).find(name)
+    return _record_to_casefile(record) if record is not None else None
 
 
-def put_record(name: str, casefile: dict[str, Any]) -> None:
-    """Write one full casefile through the single storage door."""
-    from parts.world.db import CharacterRow, open_archive_session
+def put_record(name: str, casefile: dict[str, Any], store: CharacterStore | None = None) -> None:
+    """Write one full casefile through the single storage door (auth columns included)."""
     from parts.world.world import START_ROOM
 
     auth = casefile.get("auth") or {}
-    with open_archive_session() as db:
-        archive_row = db.get(CharacterRow, name) or CharacterRow(name=name)
-        archive_row.job = casefile.get("job", "")
-        archive_row.secondary_job = casefile.get("secondary_job", "")
-        archive_row.level = int(casefile.get("level", 1))
-        archive_row.xp = int(casefile.get("xp", 0))
-        archive_row.location = casefile.get("location", START_ROOM)
-        archive_row.rank = casefile.get("rank", "player")
-        archive_row.account = casefile.get("account", "")
-        archive_row.order = casefile.get("order", "")
-        archive_row.equipped_gear = casefile.get("equipped_gear", "")
-        archive_row.coins = int(casefile.get("coins", 0))
-        archive_row.quest_state = casefile.get("quest_state", "")
-        archive_row.auth_salt = auth.get("salt")
-        archive_row.auth_hash = auth.get("hash")
-        db.add(archive_row)
-        db.commit()
+    record = CharacterRecord(
+        name=name,
+        job=casefile.get("job", ""),
+        secondary_job=casefile.get("secondary_job", ""),
+        level=int(casefile.get("level", 1)),
+        xp=int(casefile.get("xp", 0)),
+        location=casefile.get("location", START_ROOM),
+        rank=casefile.get("rank", "player"),
+        account=casefile.get("account", ""),
+        order=casefile.get("order", ""),
+        equipped_gear=casefile.get("equipped_gear", ""),
+        coins=int(casefile.get("coins", 0)),
+        quest_state=casefile.get("quest_state", ""),
+        auth_salt=auth.get("salt"),
+        auth_hash=auth.get("hash"),
+    )
+    (store or _default_store()).upsert_full(record)
 
 
-def save_character(session: Session) -> None:
+def save_character(session: Session, store: CharacterStore | None = None) -> None:
     """Persist a named hero's gameplay state. Column-scoped update:
     auth fields belong to other cards and are never touched here --
-    the merge-save law, now enforced by the schema itself."""
+    the merge-save law, enforced by upsert_gameplay (never the auth columns)."""
     if not session.named:
         return
-    from parts.world.db import CharacterRow, open_archive_session
+    from parts.world.quest import save_state
 
-    with open_archive_session() as db:
-        archive_row = db.get(CharacterRow, session.player_id) or CharacterRow(
-            name=session.player_id
-        )
-        archive_row.job = session.job
-        archive_row.secondary_job = session.secondary_job
-        archive_row.level = session.level
-        archive_row.xp = session.xp
-        archive_row.location = session.location
-        archive_row.rank = session.rank
-        archive_row.account = session.account
-        archive_row.order = session.order
-        archive_row.equipped_gear = _serialize_gear(session)
-        archive_row.coins = session.coins
-        from parts.world.quest import save_state
-
-        archive_row.quest_state = save_state(session.player_id)
-        db.add(archive_row)
-        db.commit()
+    record = CharacterRecord(
+        name=session.player_id,
+        job=session.job,
+        secondary_job=session.secondary_job,
+        level=session.level,
+        xp=session.xp,
+        location=session.location,
+        rank=session.rank,
+        account=session.account,
+        order=session.order,
+        equipped_gear=_serialize_gear(session),
+        coins=session.coins,
+        quest_state=save_state(session.player_id),
+    )
+    (store or _default_store()).upsert_gameplay(record)
     # Persist per-job progress AFTER the character row exists (the foreign key needs it).
     if session.job_progress:
         save_job_progress(session.player_id, session.job_progress.values())
@@ -199,14 +196,8 @@ def restore_character(session: Session, casefile: dict[str, Any]) -> None:
     }
 
 
-def set_rank(name: str, rank: str) -> str:
+def set_rank(name: str, rank: str, store: CharacterStore | None = None) -> str:
     """Host-shell grant: the bootstrap authority."""
-    from parts.world.db import CharacterRow, open_archive_session
-
-    with open_archive_session() as db:
-        archive_row = db.get(CharacterRow, name)
-        if archive_row is None:
-            return f"No saved character named {name}."
-        archive_row.rank = rank
-        db.commit()
-    return f"{name} is now rank: {rank}."
+    if (store or _default_store()).set_rank(name, rank):
+        return f"{name} is now rank: {rank}."
+    return f"No saved character named {name}."
