@@ -42,9 +42,40 @@ reachwood_edge:
   name: The Reachwood Edge
   desc: |-
     Where the town gives way to wild forest. Ember grows strange and bright in
-    the undergrowth here, and not everything in the trees is friendly.
+    the undergrowth here, and not everything in the trees is friendly. A game-trail
+    runs east, deeper into the Reachwood.
   exits:
     west: cinderhearth_square
+    east: reachwood_hollow
+
+reachwood_hollow:
+  name: The Reachwood Hollow
+  desc: |-
+    Deeper into the wild wood, where the ember-light thickens and the trees lean close over an
+    ember-loam floor. A thornback boar roots through the mast. The wood opens east onto a still
+    glade and north into a bramble-choked warren; the town trail runs back west.
+  exits:
+    west: reachwood_edge
+    east: wardens_glade
+    north: the_bramblewarren
+
+wardens_glade:
+  name: The Warden's Glade
+  desc: |-
+    A still, green glade in the heart of the Reachwood, where the wild ember grows gentle instead
+    of hungry. An old forest warden keeps this place, watching the ember and the wood that drinks
+    it. The hollow lies back west.
+  exits:
+    west: reachwood_hollow
+
+the_bramblewarren:
+  name: The Bramblewarren
+  desc: |-
+    A hollow choked in ember-thorn, where the Reachwood grows angry and old. The Bramble-Wight
+    roots it -- a knot of wild ember and dead wood grown almost to a mind -- and it suffers no
+    Forger in its warren. The hollow lies back south.
+  exits:
+    south: reachwood_hollow
 
 the_far_reach:
   name: The Far Reach

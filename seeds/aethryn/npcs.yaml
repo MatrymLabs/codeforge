@@ -62,6 +62,50 @@ reach_wolf:
   level: 3  # a modest step above a fresh Forger: full reward now, worth nothing once you outclass it
   tier: normal
 
+# --- The Reachwood: a lateral forest region east of the coast (levels 5-10), an alternative to
+# --- diving the cold cellar. A boar, a lore-keeping warden, and a mini-boss in the warren north. ---
+
+thornback_boar:
+  name: a thornback boar
+  location: reachwood_hollow
+  keywords: [boar, thornback, beast]
+  dialogue:
+    - The boar lowers its ember-thorned back and charges.
+  hp: 26
+  atk: 5
+  level: 5
+  tier: normal  # the Reachwood's first threat, a step past the coast wolves
+
+the_greenwarden:
+  name: the Greenwarden
+  location: wardens_glade
+  keywords: [greenwarden, warden, forest, hermit]
+  dialogue:
+    - '"The wood drinks the wild ember and grows strange. I keep it from growing hungry."'
+    - '"Few come this deep into the Reachwood. Fewer come back out of the warren, north."'
+  topics:
+    reachwood:
+      - '"The Reachwood drank the Unforging''s spillage and never stopped growing. Green here, but wrong-green -- ember where the sap should be."'
+    warren:
+      - '"North of the hollow the wood turns angry: the Bramblewarren, and the Wight that roots it. Old wood, grown almost to a mind. Go armed, or do not go."'
+    ember:
+      - '"Wild ember is the world remembering itself in pieces. The wood remembers too much of it, and forgets it was ever only wood."'
+
+bramble_wight:
+  name: the Bramble-Wight
+  location: the_bramblewarren
+  keywords: [wight, bramble, wood, boss]
+  dialogue:
+    - '"THE WOOD... REMEMBERS..." The Bramble-Wight rises on roots of ember-thorn, reaching for you.'
+  hp: 64
+  atk: 9
+  aggressive: true
+  attack_element: ERT  # a thing of old wood and stone-root: its blows are earthen (bring wind)
+  level: 10
+  tier: elite  # a Reachwood mini-boss: a real off-spine challenge (x3 reward), not a lethal gate
+  drops: [warden_charm]
+  loot: {ember_shard: 2, nothing: 2}
+
 road_warden:
   name: the Road-Warden
   location: the_far_reach
