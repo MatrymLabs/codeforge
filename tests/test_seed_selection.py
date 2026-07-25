@@ -69,6 +69,21 @@ def test_aethryn_wren_keeps_a_coast_shop_so_act_one_has_an_economy():
     assert wren["shop"]["buys"].get("ember_shard")  # and coast salvage has a buyer
 
 
+def test_aethryn_capital_npcs_hold_real_conversations():
+    """The capital feels lived-in: its lore, order, and gate keepers answer `ask about <topic>`, so
+    a curious player learns the world and the Orders instead of reading cycling flavour barks."""
+    npcs = load_npcs(AETHRYN / "npcs.yaml")
+    ilya = npcs["grandforge_loremaster"]["topics"]
+    assert {"unforging", "seed", "spiral"} <= set(ilya)  # the lore keeper explains the world
+    recruiter = npcs["order_recruiter"]["topics"]
+    assert {"making", "warcraft", "knowing", "gathering"} <= set(recruiter)  # teaches the 4 Orders
+    keeper = npcs["warden_keeper"]["topics"]
+    assert "spiral" in keeper  # the gate keeper describes the climb ahead
+    # every topic is a non-empty list of reply lines (the loader gate, re-asserted for content)
+    for who in (ilya, recruiter, keeper):
+        assert all(lines and all(isinstance(x, str) for x in lines) for lines in who.values())
+
+
 def test_aethryn_cinder_wight_boss_is_attackable_and_strikes_back():
     wight = load_npcs(AETHRYN / "npcs.yaml")["cinder_wight"]
     assert wight["hp"] == 50
