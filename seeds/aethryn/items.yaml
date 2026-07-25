@@ -133,3 +133,40 @@ drowned_seal:
   location: nowhere
   slot: accessory_2
   mods: {DEF: 6, MAG DEF: 5}
+
+# Drop-only: the Great Spiral's themed Gate-warden weapons, one per elemental Coil (spiral.py drops
+# the matching one, then combat's affix factory rolls a rarity onto it -- varied endgame loot).
+ember_brand:
+  name: an ember brand
+  keywords: [brand, ember, sword, weapon]
+  location: nowhere
+  slot: weapon
+  mods: {ATK: 10, ACC: 4}
+
+rime_edge:
+  name: a rime edge
+  keywords: [rime, edge, blade, weapon]
+  location: nowhere
+  slot: weapon
+  mods: {ATK: 10, EVA: 4}
+
+storm_pike:
+  name: a storm pike
+  keywords: [storm, pike, spear, weapon]
+  location: nowhere
+  slot: weapon
+  mods: {ATK: 11, ACC: 5}
+
+shadow_fang:
+  name: a shadow fang
+  keywords: [shadow, fang, dagger, weapon]
+  location: nowhere
+  slot: weapon
+  mods: {ATK: 12, EVA: 3}
+
+stone_maul:
+  name: a stone maul
+  keywords: [stone, maul, hammer, weapon]
+  location: nowhere
+  slot: weapon
+  mods: {ATK: 13, DEF: 3}
