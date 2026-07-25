@@ -137,6 +137,17 @@ grandforge_loremaster:
     - '"Sela sent word of you from the coast. The First Flame remembers every Forger who relights it."'
     - '"The Great Archive holds what the world was. The Grand Forge makes what it will be. Study both."'
     - '"The Unforging sundered the First Seed. Every ember you carry is a piece of the answer."'
+  topics:
+    unforging:
+      - '"The Unforging was the day the First Seed broke. The world did not end -- it came apart into embers, and we have spent every age since regathering them."'
+      - '"Some say a maker reached too far. Others, that the Seed chose to scatter rather than be owned. The Archive keeps both accounts and judges neither."'
+    seed:
+      - '"The First Seed was the pattern the whole world grew from -- one design, whole and singing. Break it, and you get a thousand embers, each holding a fragment of the tune."'
+      - '"Relight enough embers in the right order, the old texts say, and the Seed remembers itself. That is the climb, Forger, whether you name it so or not."'
+    archive:
+      - '"The Great Archive is memory made stone: every Forger, every relighting, every road walked to the Spiral. You are in it now, whether you asked to be or not."'
+    spiral:
+      - '"The Great Spiral is the Seed''s spine, coiled up through the sky. Climb it and the world grows colder and older, nearer the first pattern. The Sovereign waits at the crown."'
 
 order_recruiter:
   name: a recruiter of the Orders
@@ -145,6 +156,18 @@ order_recruiter:
   dialogue:
     - '"Four Orders keep the Row: the Making, the Gathering, the Warcraft, the Knowing. Choose well."'
     - '"A Forger without an Order is a spark without a hearth. Train a craft; earn your place."'
+  topics:
+    orders:
+      - '"Four Orders, four crafts. The Making shapes gear and stone. The Gathering reads the wilds. The Warcraft holds the line. The Knowing keeps the truth."'
+      - '"Swear to one and you learn its edge -- and it learns to fight beside you. JOIN an order when you know your own hand."'
+    making:
+      - '"The Order of Making are smiths and shapers -- they harden what they wear, so a blow turns aside. If you would rather build a thing than break it, this is your hearth."'
+    warcraft:
+      - '"The Warcraft are the ones who stand when the line bends. Sworn to them, your blows land harder. The coast needs such spines; the Spiral more so."'
+    knowing:
+      - '"The Knowing guard the truth of things -- wards and lore, the mind over the blade. They read a foe before they strike it, and take less from what they understand."'
+    gathering:
+      - '"The Gathering walk the wilds and bring back what they find -- a little harder to fell, a little harder felled. Balance, they call it. Survival, I call it."'
 
 market_trader:
   name: a Market-Quarter trader
@@ -176,6 +199,13 @@ warden_keeper:
     - '"Beyond this arch: the Wardenmarch, the Coilfoot Range, and the first Coils of the Great Spiral."'
     - '"The Sentinel is the test, Forger. Put the grey guardian down and the ascent is yours to climb."'
     - '"Many come up from the coast sure of their spark. The Sentinel has cooled most of them. Prove it."'
+  topics:
+    sentinel:
+      - '"The Warden Sentinel is grey iron and old duty. It does not hate you; it simply will not let a soft spark past. Harden yourself, then come to it."'
+    spiral:
+      - '"Past the Sentinel: the Coilfoot, then the Coils, each colder and higher than the last. A Gate-boss guards every landing. Few living have seen the crown."'
+    wardenmarch:
+      - '"The Wardenmarch is the threshold between the settled coast and the wild climb. Cross it and the world stops being kind. Carry draughts."'
 
 # --- The Warden's Test and the First Coil (level-banded bosses: the ascent's real danger). ---
 # These run well above Emberreach. Bosses are lethal (fall and you wake in town, no failsafe) and
