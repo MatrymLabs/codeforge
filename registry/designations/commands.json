@@ -1607,6 +1607,32 @@
     "updated": "2026-07-25"
   },
   {
+    "designation": "CMD-04.078",
+    "name": "examine",
+    "status": "active",
+    "function": "size up a creature: HP + elemental nature (examine <target>)",
+    "label": "examine",
+    "file": "forge.py",
+    "type": "CMD",
+    "domain": "04",
+    "docs": "docs/architecture.md",
+    "tests": "tests/test_combat.py",
+    "depends_on": [],
+    "related": [
+      "scan",
+      "attack"
+    ],
+    "reuse": "",
+    "tags": [
+      "command"
+    ],
+    "notes": "combat.examine_foe: reveals a foe's attack_element + non-normal resistances (combat.elemental_profile), making the resistance system discoverable. Any calling; applies no status. The engineer's Diagnostic Scan reveals the same profile.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-25",
+    "updated": "2026-07-25"
+  },
+  {
     "designation": "CMD-04.037",
     "name": "store",
     "status": "active",

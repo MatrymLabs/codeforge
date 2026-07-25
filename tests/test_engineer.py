@@ -101,6 +101,18 @@ def test_diagnostic_scan_applies_analyzed_lengthened_by_the_inherent() -> None:
     assert "Analyzed applied" in out
 
 
+def test_diagnostic_scan_reveals_a_typed_foes_elemental_nature() -> None:
+    """The engineer's scan is a JRPG 'Libra': on a typed foe it names the element its blows carry
+    and its weaknesses, so the reveal isn't gated behind dying to find out."""
+    s = _engineer()
+    dummy = npcs.NPCS["training_dummy"]
+    dummy["attack_element"] = "FIR"
+    dummy["resistances"] = {"ICE": "Weak"}
+    out = diagnostic_scan(s, "dummy")
+    assert "strike with flame" in out and "Weak to frost" in out
+    assert "Analyzed applied" in out  # still applies the status
+
+
 def test_analyzed_expires_after_its_ticks() -> None:
     s = _engineer()
     diagnostic_scan(s, "dummy")

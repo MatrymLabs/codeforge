@@ -99,6 +99,45 @@ def typed_hit(npc: Npc, element: str | None, dmg: int) -> tuple[int, str]:
     return dmg, ""  # Normal: unchanged
 
 
+def elemental_profile(npc: Npc) -> str:
+    """A readable line on a foe's elemental nature: the element its blows carry and its non-normal
+    resistances (weaknesses, resistances, immunities, absorptions). '' when the foe is wholly
+    untyped -- nothing to learn. This is what makes the resistance system discoverable, not
+    guesswork: the player learns to freeze the fire creature instead of dying to find out."""
+    lines: list[str] = []
+    attack = npc.get("attack_element")
+    if attack:
+        lines.append(f"Its blows strike with {_ELEMENT_NAMES.get(attack, attack)}.")
+    by_level: dict[str, list[str]] = {}
+    for code, level in npc.get("resistances", {}).items():
+        if level != "Normal":
+            by_level.setdefault(level, []).append(_ELEMENT_NAMES.get(code, code))
+    labels = {"Weak": "Weak to", "Resist": "Resists", "Immune": "Immune to", "Absorb": "Absorbs"}
+    for level in ("Weak", "Resist", "Immune", "Absorb"):
+        elems = by_level.get(level)
+        if elems:
+            lines.append(f"{labels[level]} {', '.join(sorted(elems))}.")
+    return " ".join(lines)
+
+
+def examine_foe(session: Session, word: str) -> str:
+    """`examine <target>` -- read a creature's condition and elemental nature (the JRPG 'scan').
+    Any calling can do it and it applies no status. An unknown target and a peaceful NPC both
+    fail cleanly, so a curious player is never punished for looking."""
+    if not word.strip():
+        return "Examine whom? Try: examine <target>"
+    nid = trace_npc(word, session.location)
+    if nid is None:
+        return "There is no one like that here to examine."
+    npc = NPCS[nid]
+    name = sentence_case(npc["name"])
+    if npc["hp"] <= 0:
+        return f"{name} is no creature you can fight -- nothing to size up."
+    profile = elemental_profile(npc)
+    nature = f" {profile}" if profile else " You sense no elemental nature about it."
+    return f"{name}: {npc['hp_now']}/{npc['hp']} HP.{nature}"
+
+
 def _stat_bonus(session: Session, stat: str) -> int:
     """The total flat bonus to a derived stat from everything a character carries: equipped gear,
     the active job's perks, and the sworn Order. Combat reads the SAME composition as the score

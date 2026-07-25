@@ -710,6 +710,58 @@ def test_foe_resistance_defaults_to_normal_without_a_grid():
     assert foe_resistance(npc, "ICE") == "Weak"
 
 
+# --- examine: the elemental profile is learnable, not guesswork ---------------------------------
+
+
+def test_elemental_profile_reads_a_typed_foe():
+    from parts.world.combat import elemental_profile
+
+    npc = npcs.NPCS[_spawn_hostile("wight", atk=5, hp=50)]
+    npc["attack_element"] = "FIR"
+    npc["resistances"] = {"FIR": "Immune", "ICE": "Weak", "LGT": "Normal"}
+    profile = elemental_profile(npc)
+    assert "strike with flame" in profile
+    assert "Weak to frost" in profile
+    assert "Immune to flame" in profile
+    assert "lightning" not in profile  # a Normal entry is not a weakness or resistance: omitted
+
+
+def test_elemental_profile_is_empty_for_a_plain_foe():
+    from parts.world.combat import elemental_profile
+
+    npc = npcs.NPCS[_spawn_hostile("brute", atk=5, hp=50)]
+    assert elemental_profile(npc) == ""  # untyped and resists nothing: nothing to learn
+
+
+def test_examine_reveals_a_foes_nature_and_reaches_the_tick():
+    from forge import handle_command
+
+    s = _fighter()
+    npc = npcs.NPCS[_spawn_hostile("wight", atk=5, hp=50)]
+    npc["attack_element"] = "FIR"
+    npc["resistances"] = {"ICE": "Weak"}
+    out = handle_command(s, "examine wight")  # reachable through the engine tick
+    assert "50/50 HP" in out
+    assert "strike with flame" in out and "Weak to frost" in out
+
+
+def test_examine_a_plain_foe_notes_no_elemental_nature():
+    from parts.world.combat import examine_foe
+
+    s = _fighter()
+    npcs.NPCS[_spawn_hostile("brute", atk=5, hp=50)]
+    assert "no elemental nature" in examine_foe(s, "brute")
+
+
+def test_examine_refuses_a_missing_target_a_peaceful_npc_and_an_empty_word():
+    from parts.world.combat import examine_foe
+
+    s = _fighter(location="library")
+    assert "Examine whom" in examine_foe(s, "")
+    assert "no one like that here" in examine_foe(s, "phantom")
+    assert "nothing to size up" in examine_foe(s, "librarian")  # peaceful (hp 0)
+
+
 def test_a_reassembling_foe_quenches_its_burn():
     from parts.world.combat import apply_burn, attack, strike_power
 
