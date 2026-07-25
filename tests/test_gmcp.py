@@ -13,6 +13,7 @@ from parts.gmcp import (
     gmcp_frame,
     items_report,
     quest_report,
+    resists_report,
     room_report,
     skills_report,
     target_report,
@@ -165,6 +166,19 @@ def test_skills_report_carries_an_abilitys_element(monkeypatch):
 
 def test_skills_report_is_empty_before_a_calling():
     assert skills_report(Session(player_id="nobody")) == []  # no calling: an empty kit clears it
+
+
+def test_resists_report_lists_the_players_nonnormal_resistances():
+    session = Session(player_id="rae")
+    bind_calling(session, "engineer")  # first-forge engineer declares LGT: Weak, ERT: Resist
+    grid = resists_report(session)
+    assert grid.get("LGT") == "Weak"
+    assert grid.get("ERT") == "Resist"
+    assert "FIR" not in grid  # a Normal resistance is omitted (only deviations are worth a warning)
+
+
+def test_resists_report_is_empty_before_a_calling():
+    assert resists_report(Session(player_id="nobody")) == {}  # no calling: no grid to warn on
 
 
 def test_items_report_lists_the_equipped_loadout_with_mods_and_is_empty_when_bare():

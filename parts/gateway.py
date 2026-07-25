@@ -24,6 +24,7 @@ from parts.gmcp import (
     gmcp_frame,
     items_report,
     quest_report,
+    resists_report,
     room_report,
     skills_report,
     target_report,
@@ -159,6 +160,7 @@ class _GateHandler(socketserver.StreamRequestHandler):
         self._last_quest: dict[str, str] = {}  # {} means "no active quest"
         self._last_items: dict[str, dict[str, object]] = {}  # {} = nothing worn; clears the panel
         self._last_skills: list[dict[str, object]] = []  # [] = no calling; the wieldable kit
+        self._last_resists: dict[str, str] = {}  # {} = resists nothing unusual; the defensive grid
         with contextlib.suppress(OSError):
             self.wfile.write(_WILL_GMCP)
 
@@ -208,6 +210,12 @@ class _GateHandler(socketserver.StreamRequestHandler):
         if skills != self._last_skills:
             self._send_gmcp("Char.Skills", skills)
             self._last_skills = skills
+        # Char.Resists: the player's defensive grid, so a client can warn when a foe's element hits
+        # a weakness. Like Skills, it changes only on a calling switch, so it is pushed rarely.
+        resists = resists_report(session)
+        if resists != self._last_resists:
+            self._send_gmcp("Char.Resists", resists)
+            self._last_resists = resists
 
     def _send(self, text: str) -> None:
         self.wfile.write((_sanitize(text) + "\r\n").encode("utf-8"))
