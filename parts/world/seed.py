@@ -253,6 +253,18 @@ class Ability(TypedDict):
     element: NotRequired[str]
 
 
+class Recipe(TypedDict):
+    """A crafting recipe: consume `inputs` (material prototype -> count) to make one `makes` item.
+
+    Crafting turns gathered materials into goods at the forge (the `craft` verb), so the maker Jobs
+    and the drop/salvage economy have a use. The world is data: recipes are YAML, validated at load.
+    """
+
+    name: str  # display name of what it forges, e.g. "a healing draught"
+    makes: str  # the output item prototype label (cloned into the crafter's hands)
+    inputs: dict[str, int]  # material prototype label -> quantity consumed from the inventory
+
+
 class QuestStep(TypedDict):
     """One move in a quest: from `state`, event `event` advances to `to`; `effect` is optional.
 
@@ -990,6 +1002,41 @@ def load_abilities(path: Path) -> dict[str, Ability]:
             ability["element"] = str(element)
         abilities[label] = ability
     return abilities
+
+
+def load_recipes(path: Path) -> dict[str, Recipe]:
+    """Load a seed's optional crafting recipes. {} if the seed ships none; fails loud on a bad one.
+
+    Each recipe names what it `makes` (an output item prototype) and the `inputs` it consumes
+    (material prototype -> a positive count). The prototypes are cross-checked against the seed's
+    items at boot (like a shop's wares), so a recipe can never make or need an item that isn't real.
+    """
+    if not path.exists():
+        return {}
+    entries, template = _open_seed_bin(path, "recipe")
+    recipes: dict[str, Recipe] = {}
+    for label, fields in entries.items():
+        merged: dict[str, Any] = {"name": _phrase(label).title(), "makes": "", "inputs": {}}
+        merged.update(template)
+        merged.update(fields)
+        _inspect_required_types(label, merged, (("name", str), ("makes", str), ("inputs", dict)))
+        if not merged["makes"]:
+            raise SeedError(f"recipe '{label}': 'makes' must name the output item prototype.")
+        inputs = merged["inputs"]
+        if not inputs or not all(
+            isinstance(k, str) and isinstance(v, int) and not isinstance(v, bool) and v > 0
+            for k, v in inputs.items()
+        ):
+            raise SeedError(
+                f"recipe '{label}': 'inputs' must map a material prototype to a positive count "
+                "(at least one input)."
+            )
+        recipes[label] = Recipe(
+            name=str(merged["name"]),
+            makes=str(merged["makes"]),
+            inputs={str(k): int(v) for k, v in inputs.items()},
+        )
+    return recipes
 
 
 def load_zones(path: Path, known_rooms: set[str]) -> dict[str, Zone]:
