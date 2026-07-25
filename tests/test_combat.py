@@ -618,6 +618,66 @@ def test_a_burn_never_revives_a_downed_foe():
     assert npc["hp_now"] == 0  # and is not revived to the floor of 1
 
 
+def _fire_wight(atk: int = 10, hp: int = 100):
+    """A foe whose blows carry the FIR element, for testing the resistance scaling."""
+    npc = npcs.NPCS[_spawn_hostile("wight", atk=atk, hp=hp)]
+    npc["attack_element"] = "FIR"
+    return npc
+
+
+@pytest.mark.parametrize(
+    "level, expected_loss, note",
+    [
+        ("Weak", 15, "finds a weakness"),  # +50%
+        ("Normal", 10, ""),  # unchanged: an element the calling neither resists nor fears
+        ("Resist", 5, "shrug off"),  # halved
+        ("Immune", 0, "immune to flame"),  # nullified
+    ],
+)
+def test_a_typed_blow_is_scaled_by_the_players_resistance(monkeypatch, level, expected_loss, note):
+    """A foe's attack_element meets the player's job resistance: the displayed grid is real in a
+    fight. An ungeared vanguard takes atk 10 -> the resistance level scales it."""
+    from parts.world.combat import _resolve_npc_blow
+    from parts.world.jobs import JOBS
+
+    monkeypatch.setitem(JOBS["vanguard"]["resistances"], "FIR", level)
+    s = _fighter("vanguard")
+    npc = _fire_wight(atk=10)
+    full = s.resources["hp"].maximum
+    line = _resolve_npc_blow(s, npc, "hits")
+    assert full - s.resources["hp"].current == expected_loss
+    assert note in line
+
+
+def test_an_untyped_blow_ignores_resistance(monkeypatch):
+    """A foe with no attack_element deals physical damage no resistance touches (backward-compat:
+    every existing foe fights exactly as before)."""
+    from parts.world.combat import _resolve_npc_blow
+    from parts.world.jobs import JOBS
+
+    monkeypatch.setitem(JOBS["vanguard"]["resistances"], "FIR", "Immune")  # would nullify FIR
+    s = _fighter("vanguard")
+    npc = npcs.NPCS[_spawn_hostile("brute", atk=10, hp=100)]  # untyped: no attack_element
+    full = s.resources["hp"].maximum
+    _resolve_npc_blow(s, npc, "hits")
+    assert full - s.resources["hp"].current == 10  # the full blow: the element gate never fired
+
+
+def test_an_absorbed_element_heals_instead_of_harming(monkeypatch):
+    """Absorb is the deepest resistance: the element mends the player rather than wounding them."""
+    from parts.world.combat import _resolve_npc_blow
+    from parts.world.jobs import JOBS
+
+    monkeypatch.setitem(JOBS["vanguard"]["resistances"], "FIR", "Absorb")
+    s = _fighter("vanguard")
+    npc = _fire_wight(atk=10)
+    s.resources["hp"] = s.resources["hp"].damage(20)  # wounded, so a heal is visible
+    before = s.resources["hp"].current
+    line = _resolve_npc_blow(s, npc, "hits")
+    assert s.resources["hp"].current == before + 10  # the flame mended instead of harmed
+    assert "drink in the flame" in line
+
+
 def test_a_reassembling_foe_quenches_its_burn():
     from parts.world.combat import apply_burn, attack, strike_power
 

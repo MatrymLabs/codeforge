@@ -100,6 +100,25 @@ def test_an_unknown_tier_is_rejected(tmp_path):
         load_npcs(npcsf)
 
 
+def test_a_typed_foe_loads_its_attack_element(tmp_path):
+    npcsf = tmp_path / "npcs.yaml"
+    npcsf.write_text("wight:\n  location: cell\n  hp: 20\n  atk: 5\n  attack_element: FIR\n")
+    assert load_npcs(npcsf)["wight"]["attack_element"] == "FIR"
+
+
+def test_a_plain_foe_carries_no_attack_element_key(tmp_path):
+    npcsf = tmp_path / "npcs.yaml"
+    npcsf.write_text("rat:\n  location: cell\n  hp: 5\n")
+    assert "attack_element" not in load_npcs(npcsf)["rat"]  # opt-in: untyped unless declared
+
+
+def test_an_unknown_attack_element_is_rejected(tmp_path):
+    npcsf = tmp_path / "npcs.yaml"
+    npcsf.write_text("wight:\n  location: cell\n  hp: 20\n  atk: 5\n  attack_element: PLASMA\n")
+    with pytest.raises(SeedError, match="attack_element"):
+        load_npcs(npcsf)
+
+
 def test_a_tier_without_a_level_is_rejected(tmp_path):
     npcsf = tmp_path / "npcs.yaml"
     npcsf.write_text("wolf:\n  location: cell\n  hp: 15\n  tier: boss\n")  # nothing to scale

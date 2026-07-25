@@ -37,6 +37,43 @@ _LOOT_RNG = random.Random()  # nosec B311 -- game loot, not security; seeded for
 
 DAMAGE_BASE = 3  # damage dealt = DAMAGE_BASE + strength // 3
 
+# Readable names for the element/status codes a foe's blow may carry (seed RESIST_ORDER codes).
+_ELEMENT_NAMES = {
+    "FIR": "flame",
+    "ICE": "frost",
+    "LGT": "lightning",
+    "WND": "gale",
+    "ERT": "stone",
+    "WTR": "flood",
+    "HLY": "radiance",
+    "DRK": "shadow",
+    "PSN": "venom",
+    "CRS": "curse",
+}
+
+
+def _typed_blow(session: Session, npc: Npc, power: int) -> tuple[int, int, str]:
+    """Scale a blow of magnitude `power` by the player's resistance to the NPC's attack element.
+    Returns (damage_to_take, hp_to_heal, note). An untyped blow (no element) passes through
+    unchanged. Weak amplifies, Resist halves (floored 1), Immune nullifies, Absorb heals -- the
+    same resistance grid the score sheet renders, now real in a fight."""
+    element = npc.get("attack_element")
+    if not element:
+        return power, 0, ""
+    from parts.world.character_view import session_resistance
+
+    level = session_resistance(session, element)
+    tag = _ELEMENT_NAMES.get(element, element)
+    if level == "Weak":
+        return power + power // 2, 0, f" The {tag} finds a weakness!"
+    if level == "Resist":
+        return max(1, power // 2), 0, f" You shrug off much of the {tag}."
+    if level == "Immune":
+        return 0, 0, f" You are immune to {tag}."
+    if level == "Absorb":
+        return 0, power, f" You drink in the {tag} (+{power} HP)."
+    return power, 0, ""  # Normal: unchanged
+
 
 def _stat_bonus(session: Session, stat: str) -> int:
     """The total flat bonus to a derived stat from everything a character carries: equipped gear,
@@ -100,16 +137,25 @@ def _resolve_npc_blow(session: Session, npc: Npc, verb: str) -> str:
     warded = session.statuses.get("barrier", 0) > 0
     if warded:  # a deployed barrier (Engineer) turns half the blow while it holds
         power = max(1, power // 2)
+    # A typed blow (the foe's attack_element) is scaled by the player's resistance to that element.
+    power, healed, resist_note = _typed_blow(session, npc, power)
     session.resources["hp"] = session.resources["hp"].damage(power)
+    if healed:  # Absorb: the element mends instead of harming
+        session.resources["hp"] = session.resources["hp"].heal(healed)
     name = sentence_case(npc["name"])
-    announce_frame(
-        session.location,
-        StrikeFrame(attacker_name=name, verb=verb, target_id=session.player_id, amount=power),
-        exclude=session.player_id,
-    )
+    if power > 0:  # a nullified or absorbed blow lands nothing: no StrikeFrame to broadcast
+        announce_frame(
+            session.location,
+            StrikeFrame(attacker_name=name, verb=verb, target_id=session.player_id, amount=power),
+            exclude=session.player_id,
+        )
     hp = session.resources["hp"]
     ward = " Your barrier turns half of it." if warded else ""
-    line = f"{name} {verb} for {power}.{ward} (HP {hp.current}/{hp.maximum})"
+    if power > 0:
+        body = f"{name} {verb} for {power}.{ward}{resist_note}"
+    else:  # Immune or Absorb: the blow lands no damage, the note carries the outcome
+        body = f"{name} {verb}.{resist_note}"
+    line = f"{body} (HP {hp.current}/{hp.maximum})"
     # The Engineer's Emergency Repair reacts to a dangerous blow: it auto-heals once (then cools
     # down), and can pull the player back from a fall. Returns None for anyone else, or on cooldown.
     repair = emergency_repair(session)
