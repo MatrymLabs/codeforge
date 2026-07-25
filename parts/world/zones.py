@@ -25,12 +25,22 @@ from parts.world.session import Session
 from parts.world.spiral import load_spiral_config, spiral_zones
 from parts.world.world import WORLD
 
-ZONES: dict[str, Zone] = load_zones(SEED_DIR / "zones.yaml", set(WORLD))
-# The procedural Great Spiral names its own areas too, so the generated Coils render an area banner
-# like the rest of the world (parts.world.spiral.spiral_zones) -- no anonymous stretch up the climb.
-_spiral_config = load_spiral_config(SEED_DIR / "spiral.yaml")
-if _spiral_config is not None:
-    ZONES.update(spiral_zones(_spiral_config))
+
+def merged_zones(base: dict[str, Zone], spiral_cfg: dict | None) -> dict[str, Zone]:
+    """The seed's authored areas plus the procedural Spiral's generated ones. When the seed ships a
+    spiral.yaml, each generated Coil becomes its own named area (so the back half renders an area
+    banner like the rest of the world); with no spiral, `base` is returned unchanged. Pure, so the
+    merge is testable without booting a spiral seed."""
+    zones = dict(base)
+    if spiral_cfg is not None:
+        zones.update(spiral_zones(spiral_cfg))
+    return zones
+
+
+ZONES: dict[str, Zone] = merged_zones(
+    load_zones(SEED_DIR / "zones.yaml", set(WORLD)),
+    load_spiral_config(SEED_DIR / "spiral.yaml"),
+)
 
 # Per-area beat counter: world beats since this area last came due. Runtime state, never
 # persisted (derive, don't store) -- a fresh boot starts every area at zero.

@@ -218,3 +218,19 @@ def test_reset_only_touches_its_own_area(monkeypatch):
     )
     zones._perform_reset("z")
     assert _shards_home() == []
+
+
+def test_merged_zones_adds_the_spiral_areas_only_when_a_spiral_seed_opts_in():
+    """The generated Spiral's Coils become named areas alongside the seed's own -- but only when the
+    seed ships a spiral.yaml. With no spiral config, the authored areas are returned unchanged."""
+    from parts.world.spiral import load_spiral_config
+    from parts.world.zones import merged_zones
+
+    base = {"coast": {"name": "C", "rooms": ["shore"], "reset_mode": "never", "beats_between": 9}}
+    assert merged_zones(base, None) == base  # no spiral: unchanged
+
+    config = load_spiral_config(SEEDS_ROOT / "aethryn" / "spiral.yaml")
+    merged = merged_zones(base, config)
+    assert "coast" in merged  # the authored area survives
+    assert any(label.startswith("spiral_coil_") for label in merged)  # and the Coils are named
+    assert any(z["name"] == "The Spiral Summit" for z in merged.values())
