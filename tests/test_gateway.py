@@ -496,6 +496,35 @@ def test_a_gmcp_client_receives_char_items_for_equipped_gear(server):
     sock.close()
 
 
+def test_a_gmcp_client_receives_char_skills_for_the_wieldable_kit(server):
+    """A calling's kit is pushed as Char.Skills on entry, so a client's co-pilot can recommend a
+    specific move for a foe's weakness - a frame we emit because we own the engine."""
+    from parts.world.jobs import bind_calling
+
+    hero = Session(player_id="tovi", location="courtyard", named=True, account="mlabs")
+    bind_calling(hero, "vanguard")  # wields Power Strike
+    SESSIONS["tovi"] = hero
+    save_character(hero)
+    SESSIONS.clear()
+    register_account("mlabs_seed2", "mlabs", "swordfish")
+    adopt("tovi", "mlabs")
+
+    sock = _connect(server)
+    sock.sendall(_DO_GMCP)
+    _read_until(sock, b"NEW: ")
+    _line(sock, "tovi@mlabs")
+    _read_until_raw(sock, b"Password: " + bytes([255, 251, 1]))
+    _line(sock, "swordfish")
+    out = _read_until_raw(sock, b"> ")
+    assert b"Char.Skills" in out and b"Power Strike" in out  # the kit, as data
+    # A second command pushes state again with an unchanged kit: Char.Skills is NOT re-sent (the
+    # change-detection holds, like the other frames), so the client's panel never flickers.
+    _line(sock, "look")
+    again = _read_until_raw(sock, b"> ")
+    assert b"Char.Skills" not in again  # unchanged kit: no redundant frame
+    sock.close()
+
+
 def test_a_plain_client_never_receives_gmcp_frames(server):
     """A raw client that never answers the offer must not get a single GMCP subnegotiation
     frame -- only the offer byte (IAC WILL GMCP), never IAC SB GMCP binary in its text stream."""

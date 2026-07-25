@@ -34,6 +34,7 @@ __all__ = [
     "items_report",
     "quest_report",
     "room_report",
+    "skills_report",
     "target_report",
     "vitals_report",
 ]
@@ -165,3 +166,25 @@ def items_report(session: Session) -> dict[str, dict[str, object]]:
                 "rarity": item.get("rarity", "common"),
             }
     return worn
+
+
+def skills_report(session: Session) -> list[dict[str, object]]:
+    """A Char.Skills payload: the abilities the character can wield right now (their primary job's
+    kit plus a subjob's), each as {name, kind, mp_cost, element?}. So a client (its co-pilot) can
+    recommend a SPECIFIC move for a foe's weakness ("cast Frostbite"), not just name the weakness.
+    Empty when the character has no calling. Read-only projection of the ability data.
+    """
+    from parts.world.abilities import abilities_for_session
+
+    kit: list[dict[str, object]] = []
+    for _label, ability in abilities_for_session(session):
+        entry: dict[str, object] = {
+            "name": ability["name"],
+            "kind": ability["kind"],
+            "mp_cost": ability["mp_cost"],
+        }
+        element = ability.get("element")
+        if element:  # only a typed move can answer a foe's weakness; untyped moves omit the key
+            entry["element"] = element
+        kit.append(entry)
+    return kit
