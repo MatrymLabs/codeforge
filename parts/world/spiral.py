@@ -37,11 +37,29 @@ _ORDINALS = {4: "Fourth", 5: "Fifth", 6: "Sixth", 7: "Seventh", 8: "Eighth", 9: 
 # reproducible. `adj` flavours the rooms/foes; `element` is the foes' attack type; a boss resists
 # `element` and is weak to `weak`; `warden` names the Gate-boss.
 _THEMES = [
-    {"adj": "forge-storm", "element": "FIR", "weak": "ICE", "warden": "Emberwrought"},
-    {"adj": "frost-wracked", "element": "ICE", "weak": "FIR", "warden": "Rimebound"},
-    {"adj": "storm-wound", "element": "LGT", "weak": "ERT", "warden": "Stormshod"},
-    {"adj": "shadow-eaten", "element": "DRK", "weak": "HLY", "warden": "Nightclad"},
-    {"adj": "stonebound", "element": "ERT", "weak": "WND", "warden": "Stoneworn"},
+    {
+        "adj": "forge-storm",
+        "el": "FIR",
+        "weak": "ICE",
+        "warden": "Emberwrought",
+        "drop": "ember_brand",
+    },
+    {
+        "adj": "frost-wracked",
+        "el": "ICE",
+        "weak": "FIR",
+        "warden": "Rimebound",
+        "drop": "rime_edge",
+    },
+    {"adj": "storm-wound", "el": "LGT", "weak": "ERT", "warden": "Stormshod", "drop": "storm_pike"},
+    {
+        "adj": "shadow-eaten",
+        "el": "DRK",
+        "weak": "HLY",
+        "warden": "Nightclad",
+        "drop": "shadow_fang",
+    },
+    {"adj": "stonebound", "el": "ERT", "weak": "WND", "warden": "Stoneworn", "drop": "stone_maul"},
 ]
 
 
@@ -114,10 +132,12 @@ def _foe(
     boss: bool,
     element: str | None = None,
     resistances: dict[str, str] | None = None,
+    drop: str = "coil_keystone",
 ) -> Npc:
     """A generated Spiral foe: a husk (normal) or a lethal Gate-boss, with level/tier-scaled reward
     and hp/atk tuned to its level. An optional `element` types its blows and an optional
-    `resistances` grid makes a boss an elemental puzzle. Bosses drop a Coil keystone."""
+    `resistances` grid makes a boss an elemental puzzle. A boss drops `drop` (a levelled gear
+    prototype the combat affix factory then rolls a rarity onto -- varied endgame loot)."""
     hp = (90 if boss else 50) + level * (5 if boss else 3)
     atk = (14 if boss else 8) + level // 2
     npc = Npc(
@@ -140,7 +160,7 @@ def _foe(
         npc["resistances"] = resistances
     if boss:
         npc["lethal"] = True
-        npc["drops"] = ["coil_keystone"]
+        npc["drops"] = [drop]
     return npc
 
 
@@ -211,7 +231,7 @@ def generate_spiral(
             ascent_id,
             max(1, boss_level - 4),
             boss=False,
-            element=theme["element"],
+            element=theme["el"],
         )
         boss_id = SUMMIT_BOSS if summit else f"spiral_gate_{n}"
         if summit:
@@ -223,8 +243,9 @@ def generate_spiral(
                 landing_id,
                 boss_level,
                 boss=True,
-                element=theme["element"],
-                resistances={theme["element"]: "Resist", theme["weak"]: "Weak"},
+                element=theme["el"],
+                resistances={theme["el"]: "Resist", theme["weak"]: "Weak"},
+                drop=theme["drop"],
             )
 
     first_room = f"coil_{numbers[0]}_ascent" if numbers else attach

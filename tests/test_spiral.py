@@ -65,6 +65,9 @@ def test_each_coil_takes_a_rotating_elemental_theme():
     w4, w5 = npcs["spiral_gate_4"], npcs["spiral_gate_5"]
     assert w4["attack_element"] == "FIR" and w5["attack_element"] == "ICE"  # varies coil to coil
     assert w4["resistances"] == {"FIR": "Resist", "ICE": "Weak"}  # bring frost to a fire Coil
+    # each themed warden drops its own themed weapon (varied endgame loot, not one keystone x25);
+    # combat's affix factory then rolls a rarity onto the levelled drop
+    assert w4["drops"] == ["ember_brand"] and w5["drops"] == ["rime_edge"]
     # a husk carries the element (typed blows) but no grid, so it stays farmable with any move
     husk = npcs["spiral_husk_4"]
     assert husk["attack_element"] == "FIR" and "resistances" not in husk
