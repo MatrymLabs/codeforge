@@ -11,6 +11,7 @@ from parts.gmcp import (
     enables_gmcp,
     escape_iac,
     gmcp_frame,
+    items_report,
     quest_report,
     room_report,
     target_report,
@@ -141,6 +142,19 @@ def test_room_report_on_an_unknown_location_renders_honestly():
     session = Session(player_id="lost", location="void_that_is_not_seeded")
     report = room_report(session)
     assert report == {"num": "void_that_is_not_seeded", "name": "(nowhere)", "exits": {}}
+
+
+def test_items_report_lists_the_equipped_loadout_and_is_empty_when_bare():
+    from parts.world.items import ITEMS, clone
+
+    session = _hero()
+    assert items_report(session) == {}  # nothing worn: an empty frame clears the client panel
+    iid = clone("forge_wrench", "player")
+    session.equipped["weapon"] = iid
+    try:
+        assert items_report(session) == {"weapon": "a modular forge wrench"}
+    finally:
+        ITEMS.pop(iid, None)  # conftest clears SESSIONS, not ITEMS: do not leak this instance
 
 
 # --- Char.Target: the foe you are fighting ---------------------------------
