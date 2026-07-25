@@ -417,6 +417,12 @@ def test_aethryn_ships_the_summit_capstone_quest():
     assert SUMMIT_ROOM in triggers and SUMMIT_BOSS in triggers  # names the stable summit labels
     last = next(s for s in summit["steps"] if s["to"] == "crowned")
     assert last.get("on_defeat") == SUMMIT_BOSS and last.get("effect") == "award_xp"
+    # the finale pays off the world's framing mystery, not just "you win": the summit reveals the
+    # First Seed, and the crowned epilogue reforges it (the Unforging answered) - a real ending.
+    assert "First Seed" in summit["labels"]["at_the_summit"]
+    crowned = summit["labels"]["crowned"]
+    assert "SEED REMEMBERS" in crowned and "reforged" in crowned  # the sundering resolved
+    assert "Waking Shore" in crowned  # and the cradle-to-crown journey is honoured
 
 
 def test_aethryn_ships_the_martial_and_precision_job_families():
