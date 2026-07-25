@@ -35,3 +35,30 @@ next_cycle = """Reanalyze: should ADDIE become a read-only ARC dimension (contin
 reading this ledger the way ARC reads its other filed evidence? And should a MUD verb ('addie')
 surface the loop in the world, as 'arc' does? Both are deferred as honest next slices, not built
 speculatively now."""
+
+[cycle.addie_close_the_loop]
+subject = "Close the ADDIE loop: wire it into ARC + surface it in the world"
+scale = "major"
+analyze = """The ADDIE ledger existed but nothing read it into readiness and it was invisible in
+the world - the exact 'next cycle' the addie_loop cycle named. Gap: an ARC continuous-improvement
+dimension + an in-world verb. Constraints: ARC reads only (arch law 1), MISSING is never a pass, a
+dimension must cite its source; overrides no control. Success = ARC shows an honest improvement
+verdict from the ledger and `addie` is reachable through the engine tick."""
+design = """Smallest coherent solution: add an 'improvement' dimension to parts/arc.py that reads the
+ADDIE ledger via addie.audit_addie (READY all-looped / WATCHLIST any-flagged / MISSING no-ledger,
+malformed fails loud), and an `addie` verb in parts/addie.py mirroring the `arc` verb, wired on the
+command spine. No new part, no new dependency. Rollback: drop the dimension + verb + command."""
+develop = """arc.py: DIMENSIONS + _improvement_dim(root) reading addie_ledger.toml, composed in
+filed_review. addie.py: addie(arg) verb (status window, text is a projection). Reused the arc
+dimension + verb patterns rather than inventing new shapes."""
+implement = """forge.py command spine (CMD-04.077, imported + registered), filed in
+registry/designations/commands.json (the command-completeness gate requires it), ARC test helper
+_seed_evidence now files a clean ledger so baseline READY holds, docs/addie_loop.md deferrals flipped
+to done. Verified live: ARC renders [ready] improvement from the real ledger; `addie` reachable
+through handle_command."""
+evaluate = """make check green; new tests: the improvement dimension (MISSING/READY/WATCHLIST, cites
+its source) and an unlooped cycle holding ARC on WATCHLIST; the addie verb through the engine tick.
+ARC stays honest (improvement READY only when the ledger is clean); overrides no control."""
+next_cycle = """Reanalyze: the addie/arc verdicts are read-only and not filed on the inner loop
+(change/patch/release stay MISSING by design). A future slice could file continuous-improvement
+verdicts the way arc_ledger files release. Not built speculatively now."""

@@ -1584,6 +1584,29 @@
     "updated": "2026-07-16"
   },
   {
+    "designation": "CMD-04.077",
+    "name": "addie",
+    "status": "active",
+    "function": "the ADDIE continuous-improvement loop (addie status)",
+    "label": "addie",
+    "file": "forge.py",
+    "type": "CMD",
+    "domain": "04",
+    "docs": "docs/addie_loop.md",
+    "tests": "tests/test_addie.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "command"
+    ],
+    "notes": "Console/diagnostic verb; renders the ADDIE ledger audit in-world (sibling of arc). Reads only.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-25",
+    "updated": "2026-07-25"
+  },
+  {
     "designation": "CMD-04.037",
     "name": "store",
     "status": "active",

@@ -45,6 +45,10 @@ def _seed_evidence(root):
     (root / "security-evidence").mkdir()
     (root / "security-evidence" / "s.json").write_text("{}")
     (root / "dependency_ledger.toml").write_text("[deps]\n")
+    (root / "addie_ledger.toml").write_text(
+        '[cycle.seed]\nsubject = "x"\nscale = "major"\nanalyze = "a"\ndesign = "d"\n'
+        'develop = "v"\nimplement = "i"\nevaluate = "e"\nnext_cycle = "n"\n'
+    )
 
 
 def test_filed_review_reads_evidence_and_leaves_runtime_missing(tmp_path):
@@ -113,6 +117,29 @@ def test_runtime_missing_holds_the_verdict_on_watchlist(tmp_path):
     _seed_evidence(tmp_path)
     # Six dimensions READY, four runtime MISSING -> not READY overall.
     assert filed_review(tmp_path).verdict == WATCHLIST
+
+
+def test_improvement_reads_the_addie_ledger(tmp_path):
+    # no ledger -> MISSING (never a pass); a clean looped ledger -> READY
+    by_name = {d.name: d for d in filed_review(tmp_path).dimensions}
+    assert by_name["improvement"].status == MISSING
+    _seed_evidence(tmp_path)  # seeds a clean, looped addie_ledger.toml
+    ready = {d.name: d for d in filed_review(tmp_path).dimensions}["improvement"]
+    assert ready.status == READY
+    assert "addie_ledger.toml" in ready.source  # a status must cite its source
+
+
+def test_an_unlooped_addie_cycle_holds_improvement_on_watchlist(tmp_path):
+    _seed_evidence(tmp_path)
+    _file_all_runtime_ready(tmp_path)
+    assert filed_review(tmp_path).verdict == READY  # baseline: clean ledger -> READY
+    # a filed major cycle that skipped EVALUATE = "declared success without evaluation"
+    (tmp_path / "addie_ledger.toml").write_text(
+        '[cycle.half]\nsubject = "half"\nscale = "major"\nanalyze = "a"\n'
+    )
+    report = filed_review(tmp_path)
+    assert {d.name: d.status for d in report.dimensions}["improvement"] == WATCHLIST
+    assert report.verdict == WATCHLIST  # ADDIE now holds the readiness verdict
 
 
 def _file_all_runtime_ready(root):

@@ -59,7 +59,8 @@ ADDIE exists to stop CodeForge from:
 
 `parts/addie.py` encodes this: a major cycle that skips any phase, or leaves the loop open (no next
 cycle), is refused by `gaps()`. Major cycles are filed in `addie_ledger.toml`; `make addie` (and the
-test twin on `make check`) fails loud if a filed cycle did not close its loop.
+test twin on `make check`) fails loud if a filed cycle did not close its loop. The `addie` verb
+(`addie status`) surfaces the same audit in the world, the way `arc` surfaces the readiness verdict.
 
 ## It composes; it does not override
 
@@ -69,8 +70,10 @@ controls run inside:
 - **Blueprints** - a Blueprint is the DESIGN phase written down; the ADDIE Self-Check is its
   loop-shaped companion (analyze -> ... -> evaluate -> reanalyze).
 - **ARC / AURA** - ARC composes the readiness verdict; ADDIE's EVALUATE phase reads that verdict
-  rather than replacing it. The filed ADDIE ledger is a continuous-improvement store ARC could read
-  as a dimension in a later slice (honest MISSING until wired - never a faked pass).
+  rather than replacing it. ARC also reads the ADDIE ledger back as its **improvement** dimension:
+  READY when every filed major cycle closed its loop, WATCHLIST when one skipped a phase, MISSING
+  when no ledger is filed (never a faked pass). So a cycle that declared success without evaluation
+  shows up on the readiness roll-up.
 - **Ritual** - the RepoIntegrityRitual is EVALUATE run against the whole repo; ADDIE points to it,
   it does not duplicate it.
 - **Hardware Store + Hardware Cards** - DEVELOP reuses existing parts first; a new part earns its

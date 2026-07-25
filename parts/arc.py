@@ -10,14 +10,15 @@ The **Control** axis is read from the Chronicle (the ship's memory): an open hig
 or a regressed ai-eval holds the verdict at WATCHLIST. That makes the incident/ai-eval records
 load-bearing on readiness, not a store nothing reads (a tampered Chronicle fails loud on read).
 
-Nine dimensions read real FILED evidence. Six read the repo directly (ADRs, CI + tests, pattern
-docs, the dependency ledger, benchmarks, security evidence). Two runtime gates (release, evidence)
-file a dated verdict (release via parts/arc_ledger, evidence via the Chronicle) when
-`make arc-verdicts` runs their checks; ARC reads the latest, read-only. Control reads the Chronicle
-(incidents + ai-eval regressions). The last two (change, patch) have no persistent store yet, so
-they stay MISSING - honestly, never faked (a later slice adds the store). Absence of a filed verdict
-is always MISSING, never a pass. ARC reads only: it opens no gate and runs no check as a side effect
-(architecture law 1). The world is the interface; `arc` is the room's window.
+Ten dimensions read real FILED evidence. Seven read the repo directly (ADRs, CI + tests, pattern
+docs, the dependency ledger, benchmarks, security evidence, the ADDIE ledger). Two runtime gates
+(release, evidence) file a dated verdict (release via parts/arc_ledger, evidence via the Chronicle)
+when `make arc-verdicts` runs their checks; ARC reads the latest, read-only. Control reads the
+Chronicle (incidents + ai-eval regressions), and Improvement reads the ADDIE ledger (are the filed
+continuous-improvement cycles closed loops). The last two (change, patch) have no persistent store
+yet, so they stay MISSING - honestly, never faked (a later slice adds the store). Absence of a
+filed verdict is always MISSING, never a pass. ARC reads only: it opens no gate and runs no check as
+a side effect (architecture law 1). The world is the interface; `arc` is the room's window.
 """
 
 from __future__ import annotations
@@ -49,6 +50,7 @@ DIMENSIONS: tuple[tuple[str, str], ...] = (
     ("patch", "patch_tracker + make patch"),
     ("evidence", "test_evidence / EvidenceLedger"),
     ("release", "release_gate / make readiness"),
+    ("improvement", "addie loop: addie_ledger.toml"),
     ("control", "chronicle: open incidents + ai-eval regressions"),
 )
 
@@ -135,6 +137,7 @@ def filed_review(root: Path | None = None) -> ArcReport:
         Dimension("security", ready(security > 0), f"{security} security-evidence file(s)"),
     ]
     dimensions += [_runtime_dim(name, base) for name in _RUNTIME]
+    dimensions.append(_improvement_dim(base))
     dimensions.append(_control_dim(base))
     return compose(dimensions)
 
@@ -149,6 +152,33 @@ def _eval_regressions(evals: list[Record]) -> list[str]:
         for subject, series in by_subject.items()
         if len(series) > 1 and series[-1].payload["score"] < series[-2].payload["score"]
     ]
+
+
+def _improvement_dim(root: Path) -> Dimension:
+    """ARC's continuous-improvement axis, read from the ADDIE ledger: did the filed MAJOR cycles
+    close their loop? READY when every filed cycle looped, WATCHLIST when one skipped a phase (built
+    without understanding, declared success without evaluation), MISSING when no ledger is filed.
+
+    This makes the ADDIE ledger load-bearing on readiness rather than a store nothing reads: a filed
+    cycle that never evaluated shows up here. Reads only (architecture law 1); a malformed ledger
+    fails loud (AddieError), exactly as the other filed dimensions do - never a false pass.
+    """
+    from parts import addie
+
+    ledger = root / "addie_ledger.toml"
+    if not ledger.is_file():
+        return Dimension("improvement", MISSING, "no addie_ledger.toml filed")
+    audit = addie.audit_addie(ledger)
+    if audit.flagged:
+        return Dimension(
+            "improvement",
+            WATCHLIST,
+            f"{len(audit.flagged)} filed ADDIE cycle(s) left the loop open (addie_ledger.toml)",
+        )
+    major = sum(1 for c in audit.cycles if c.scale == "major")
+    return Dimension(
+        "improvement", READY, f"{major} major ADDIE cycle(s) filed, all looped (addie_ledger.toml)"
+    )
 
 
 def _control_dim(root: Path) -> Dimension:
