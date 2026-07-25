@@ -10,6 +10,17 @@ wren:
     - '"The old forge relit the day you washed ashore. Coincidence? In the Kindlands, nothing is."'
     - '"Blades, cloaks, a good wrench -- everything a new Forger needs. Ask and I will make it."'
     - '"That bridge north has been broken for years. Gather ember, and you could mend it yourself."'
+  shop:
+    # The coast's first till: a fresh Forger can heal up and arm up here before the wolves and the
+    # cold cellar, so Act 1 has a real loop (fell a wolf -> coins -> a draught or a blade -> survive).
+    sells:
+      healing_draught: 12
+      mana_draught: 12
+      cinder_hammer: 40  # a starter blade (ATK 5) for coin, if you'd rather buy than delve for one
+    # Wren takes coast salvage off your hands, so early ember and a spare blade are worth something.
+    buys:
+      ember_shard: 4
+      cinder_hammer: 15
 
 sela:
   name: Sela the Loremaster
