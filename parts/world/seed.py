@@ -157,6 +157,10 @@ class Npc(TypedDict):
     # halves, Immune nullifies, Absorb heals). Absent = an untyped (physical) blow no resistance
     # touches. This makes the score sheet's resistance grid matter. Validated against RESIST_ORDER.
     attack_element: NotRequired[str]
+    # Optional: this foe's OWN resistance grid (code -> level), the mirror of a job's. A player's
+    # elemental ability is scaled by it -- freeze the fire creature, don't burn it. Absent = a foe
+    # that resists nothing (every hit lands full). Validated vs RESIST_ORDER and RESIST_LEVELS.
+    resistances: NotRequired[dict[str, str]]
     # Item prototype labels this NPC drops when defeated: a fresh instance of each is spawned into
     # the room (parts.world.items.clone). Optional; a bare NPC drops nothing. Loot is real object
     # instancing -- the drop is a new instance, so it never collides with the seed original.
@@ -233,6 +237,10 @@ class Ability(TypedDict):
     scales: str  # the attribute it scales on (strength/magic/...), or "" for flat
     mp_cost: int  # MP spent to use it
     jobs: list[str]  # job labels that may use this ability
+    # Optional: the ELEMENT this move deals (a RESIST code -- FIR/ICE/...). When set, the target's
+    # resistance to it scales the damage (Weak amplifies, Resist halves, Immune nullifies).
+    # Absent = an untyped (physical) hit no resistance touches. Validated against RESIST_ORDER.
+    element: NotRequired[str]
 
 
 class QuestStep(TypedDict):
@@ -602,6 +610,26 @@ def load_npcs(path: Path) -> dict[str, Npc]:
                 f"NPC '{label}': 'attack_element' must be one of {list(RESIST_ORDER)}, "
                 f"got {element!r}."
             )
+        # Optional resistance grid (the mirror of a job's): scales a player's elemental ability.
+        # Codes must be canonical and levels valid, so a foe never carries a resistance the system
+        # can't read -- refuse a bad code or level loud rather than ship a dead defense.
+        resistances = merged.get("resistances")
+        if resistances is not None:
+            if not isinstance(resistances, dict):
+                raise SeedError(
+                    f"NPC '{label}': 'resistances' must map an element code to a level."
+                )
+            for code, resist_level in resistances.items():
+                if code not in RESIST_ORDER:
+                    raise SeedError(
+                        f"NPC '{label}': resistance code {code!r} must be one of "
+                        f"{list(RESIST_ORDER)}."
+                    )
+                if resist_level not in RESIST_LEVELS:
+                    raise SeedError(
+                        f"NPC '{label}': resistance {code!r} must be one of {RESIST_LEVELS}, "
+                        f"got {resist_level!r}."
+                    )
         # Optional shop: a merchant's `sells`/`buys` price tables. Prices are positive ints; the
         # prototypes are cross-checked against the seed's items at boot (inspect_world_links).
         shop = merged.get("shop")
@@ -647,6 +675,8 @@ def load_npcs(path: Path) -> dict[str, Npc]:
             npc["topics"] = {key: list(lines) for key, lines in topics.items()}
         if element is not None:
             npc["attack_element"] = element
+        if resistances:
+            npc["resistances"] = dict(resistances)
         npcs[label] = npc
     return npcs
 
@@ -930,7 +960,15 @@ def load_abilities(path: Path) -> dict[str, Ability]:
             raise SeedError(
                 f"ability '{label}': 'scales' must be an attribute or empty, got {scales!r}."
             )
-        abilities[label] = Ability(
+        # Optional element: a typed hit whose damage the target's resistance scales. Must be a
+        # canonical resistance code so a move can never deal a type no foe grid could answer.
+        element = merged.get("element")
+        if element is not None and element not in RESIST_ORDER:
+            raise SeedError(
+                f"ability '{label}': 'element' must be a RESIST code {list(RESIST_ORDER)}, "
+                f"got {element!r}."
+            )
+        ability = Ability(
             name=str(merged["name"]),
             kind=str(merged["kind"]),
             power=int(merged["power"]),
@@ -938,6 +976,9 @@ def load_abilities(path: Path) -> dict[str, Ability]:
             mp_cost=int(merged["mp_cost"]),
             jobs=[str(j) for j in merged["jobs"]],
         )
+        if element is not None:
+            ability["element"] = str(element)
+        abilities[label] = ability
     return abilities
 
 
