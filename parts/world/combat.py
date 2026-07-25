@@ -195,6 +195,13 @@ def _resolve_npc_blow(session: Session, npc: Npc, verb: str) -> str:
     raw = npc_strike_power(npc)
     if raw <= 0:
         return ""  # the training dummy and every peaceful NPC: no blow
+    # A weakened foe (a `weaken` ability) lands softer, and this blow spends one weaken charge.
+    sapped = npc.get("weakened", 0)
+    if sapped > 0:
+        raw = max(1, raw // 2)
+        npc["weakened"] = sapped - 1
+        if npc["weakened"] <= 0:
+            npc.pop("weakened", None)
     # Your DEF (from gear/perks/Order) turns the blow, but a landed hit always stings: floor at 1.
     power = max(1, raw - _stat_bonus(session, "DEF"))
     warded = session.statuses.get("barrier", 0) > 0
@@ -214,8 +221,9 @@ def _resolve_npc_blow(session: Session, npc: Npc, verb: str) -> str:
         )
     hp = session.resources["hp"]
     ward = " Your barrier turns half of it." if warded else ""
+    sap = " (weakened)" if sapped > 0 else ""
     if power > 0:
-        body = f"{name} {verb} for {power}.{ward}{resist_note}"
+        body = f"{name} {verb} for {power}.{sap}{ward}{resist_note}"
     else:  # Immune or Absorb: the blow lands no damage, the note carries the outcome
         body = f"{name} {verb}.{resist_note}"
     line = f"{body} (HP {hp.current}/{hp.maximum})"
@@ -292,6 +300,7 @@ def land_hit(session: Session, npc: Npc, nid: str, dmg: int) -> tuple[bool, str]
     npc["hp_now"] = npc["hp"]  # the dummy reassembles at full health
     npc.pop("burn", None)  # a reassembled foe is whole again -- any burn is quenched
     npc.pop("dazed", None)  # ...and shakes off any daze
+    npc.pop("weakened", None)  # ...and recovers its full strength
     announce(
         session.location,
         f"{sentence_case(npc['name'])} collapses -- then reassembles itself.",
@@ -363,6 +372,12 @@ def apply_daze(npc: Npc, beats: int) -> None:
     """Daze a foe for `beats` world beats (a `daze` ability): it skips that many of its own beat
     strikes (crowd control, decremented by menace). A fresh daze refreshes, it does not stack."""
     npc["dazed"] = max(1, beats)
+
+
+def apply_weaken(npc: Npc, blows: int) -> None:
+    """Weaken a foe's next `blows` strikes (a `weaken` ability): each lands for half (floored 1) and
+    decrements the counter in _resolve_npc_blow. A fresh weaken refreshes, it does not stack."""
+    npc["weakened"] = max(1, blows)
 
 
 def tick_burns(session: Session) -> str:

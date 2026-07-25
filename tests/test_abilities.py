@@ -175,7 +175,7 @@ def test_using_an_ability_on_a_peaceful_npc_refuses() -> None:
 @pytest.mark.parametrize(
     "body, match",
     [
-        ("bad:\n  kind: explode\n  jobs: [vanguard]\n", "'strike', 'heal', 'brand', or 'daze'"),
+        ("bad:\n  kind: explode\n  jobs: [vanguard]\n", "'strike', 'heal', 'brand', 'daze'"),
         (
             "bad:\n  kind: strike\n  scales: charisma\n  jobs: [vanguard]\n",
             "'scales' must be an attribute",
@@ -233,6 +233,17 @@ def test_a_daze_ability_dazes_a_foe_without_damage() -> None:
     out = use_ability(s, "concuss on dummy")
     assert "daze" in out.lower() and dummy.get("dazed") == 2  # power 2 -> 2 beats
     assert dummy["hp_now"] == hp_before  # a daze does no immediate damage
+
+
+def test_a_weaken_ability_softens_a_foe_without_damage() -> None:
+    """A `weaken` sets the foe's weaken counter (power = blows) and deals no damage. Covers the
+    weaken branch of use_ability."""
+    s = _at_dummy("artificer")  # the artificer wields Sunder Guard (weaken, power 3)
+    dummy = npcs.NPCS["training_dummy"]
+    hp_before = dummy["hp_now"]
+    out = use_ability(s, "sunder guard on dummy")
+    assert "weaken" in out.lower() and dummy.get("weakened") == 3  # power 3 -> 3 blows
+    assert dummy["hp_now"] == hp_before  # a weaken does no immediate damage
 
 
 def test_a_brand_ability_burns_the_target_on_the_world_beat() -> None:

@@ -780,3 +780,38 @@ def test_a_reassembling_foe_shakes_off_its_daze():
     apply_daze(npc, 3)
     attack(s, "brute")  # felled -> reassembles whole
     assert "dazed" not in npc  # the daze is shaken off on reassemble
+
+
+def test_a_weakened_foe_hits_softer_for_a_set_number_of_blows():
+    """A weakened foe's blows land for half (floored 1), one weaken charge spent per blow, until it
+    recovers its full strength."""
+    from parts.world.combat import _resolve_npc_blow, apply_weaken
+
+    s = _fighter()
+    npc = npcs.NPCS[_spawn_hostile("brute", atk=10, hp=50)]
+    full = s.resources["hp"].maximum
+
+    apply_weaken(npc, 2)
+    line = _resolve_npc_blow(s, npc, "hits")  # blow 1: softened
+    assert full - s.resources["hp"].current == 5  # 10 -> 5
+    assert "(weakened)" in line
+    assert npc["weakened"] == 1  # one charge spent
+
+    s.resources["hp"] = s.resources["hp"].heal(full)
+    _resolve_npc_blow(s, npc, "hits")  # blow 2: softened, last charge
+    assert full - s.resources["hp"].current == 5
+    assert "weakened" not in npc  # recovered
+
+    s.resources["hp"] = s.resources["hp"].heal(full)
+    _resolve_npc_blow(s, npc, "hits")  # blow 3: full strength again
+    assert full - s.resources["hp"].current == 10
+
+
+def test_a_reassembling_foe_recovers_its_full_strength():
+    from parts.world.combat import apply_weaken, attack, strike_power
+
+    s = _fighter()
+    npc = npcs.NPCS[_spawn_hostile("brute", atk=0, hp=strike_power(s))]  # dies to one strike
+    apply_weaken(npc, 3)
+    attack(s, "brute")  # felled -> reassembles whole
+    assert "weakened" not in npc  # the weaken clears on reassemble
