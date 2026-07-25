@@ -115,6 +115,13 @@ def use_ability(session: Session, arg: str) -> str:
         return f"{sentence_case(npc['name'])} is not something you can fight."
     session.resources["mp"] = mp.damage(ability["mp_cost"])
     element = ability.get("element")  # a typed move is scaled by the foe's resistance to it
+    if ability["kind"] == "daze":  # crowd control: the foe skips its next beats' strikes, no damage
+        beats = _magnitude(session, ability)  # scales:"" -> just power = the daze duration
+        combat.apply_daze(npc, beats)
+        announce(
+            session.location, f"{who} dazes {npc['name']} with {move}.", exclude=session.player_id
+        )
+        return f"You daze {npc['name']} with {move}; it reels for {beats} beats."
     if ability["kind"] == "brand":  # lay a burn DoT; it saps HP on each world beat
         per_tick, note = combat.typed_hit(npc, element, _magnitude(session, ability))
         announce(

@@ -40,3 +40,10 @@ corrode:
   scales: magic
   mp_cost: 4
   jobs: [scholar, artificer]
+
+concuss:
+  name: Concuss
+  kind: daze  # crowd control: the foe skips its next beats' strikes (no damage)
+  power: 2  # world beats it stays dazed (daze has no stat scale)
+  mp_cost: 3
+  jobs: [engineer]

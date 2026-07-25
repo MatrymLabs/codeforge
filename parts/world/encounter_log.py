@@ -27,7 +27,7 @@ from parts.world.session import sentence_case
 
 # The observed encounter beats. A kind outside this set is a wiring bug, not player input, so it
 # fails loud (the call sites use these constants; a typo turns a test red instead of logging junk).
-KINDS = ("open_strike", "leash_break", "fall", "defeat")
+KINDS = ("open_strike", "leash_break", "dazed", "fall", "defeat")
 
 CAP = 100  # the ring holds this many recent encounters; older ones roll off under load
 

@@ -225,6 +225,12 @@ rewind:
   scales: wisdom
   mp_cost: 6
   jobs: [chronomancer]
+stasis:
+  name: Stasis
+  kind: daze  # steal time: the foe skips its next beats' strikes (no damage)
+  power: 3
+  mp_cost: 4
+  jobs: [chronomancer]
 
 # Summoner -- fight through the spirit.
 spirit_lash:

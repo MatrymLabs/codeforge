@@ -770,3 +770,13 @@ def test_a_reassembling_foe_quenches_its_burn():
     apply_burn(npc, damage=4)
     attack(s, "brute")  # the strike fells it -> it reassembles
     assert "burn" not in npc  # the burn is quenched on reassemble
+
+
+def test_a_reassembling_foe_shakes_off_its_daze():
+    from parts.world.combat import apply_daze, attack, strike_power
+
+    s = _fighter()
+    npc = npcs.NPCS[_spawn_hostile("brute", atk=0, hp=strike_power(s))]  # dies to one strike
+    apply_daze(npc, 3)
+    attack(s, "brute")  # felled -> reassembles whole
+    assert "dazed" not in npc  # the daze is shaken off on reassemble

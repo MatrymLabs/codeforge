@@ -131,6 +131,43 @@ def test_answering_a_foe_re_engages_the_leash():
 # --- refusal / hostile -------------------------------------------------------------------------
 
 
+def test_a_dazed_foe_skips_its_strike_and_the_daze_wears_off():
+    """Crowd control: a dazed aggressive foe does not strike on the beat, the player takes no hit,
+    and the daze counts down and clears - then it resumes its assault."""
+    from parts.world.combat import apply_daze
+
+    s = _fighter()
+    foe = npcs.NPCS[_spawn_aggressor(atk=8, hp=50)]
+    apply_daze(foe, 2)
+    max_hp = s.resources["hp"].maximum
+
+    out = menace(s)  # beat 1: dazed, no strike
+    assert "too dazed to strike" in out
+    assert s.resources["hp"].current == max_hp  # took no damage
+    assert foe["dazed"] == 1  # counted down
+
+    menace(s)  # beat 2: still dazed, clears
+    assert "dazed" not in foe  # the daze wore off
+    assert s.resources["hp"].current == max_hp  # still unhit
+
+    out = menace(s)  # beat 3: recovered, it strikes again
+    assert "lunges for 8" in out
+    assert s.resources["hp"].current == max_hp - 8
+
+
+def test_a_dazed_foe_does_not_press_the_leash():
+    """While it reels, an aggressive foe does not advance its leash, so daze buys real respite, not
+    just a skipped beat that still counts toward breaking off."""
+    from parts.world.combat import apply_daze
+
+    s = _fighter()
+    label = _spawn_aggressor(atk=8, hp=50)
+    foe = npcs.NPCS[label]
+    apply_daze(foe, 3)
+    menace(s)
+    assert s.aggro_beats.get(label, 0) == 0  # the dazed beat did not press the assault
+
+
 def test_a_reactive_npc_never_opens():
     s = _fighter()
     _spawn_aggressor(atk=5, hp=50, aggressive=False)  # armed, but reactive-only

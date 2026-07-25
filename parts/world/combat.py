@@ -291,6 +291,7 @@ def land_hit(session: Session, npc: Npc, nid: str, dmg: int) -> tuple[bool, str]
         return (False, "")
     npc["hp_now"] = npc["hp"]  # the dummy reassembles at full health
     npc.pop("burn", None)  # a reassembled foe is whole again -- any burn is quenched
+    npc.pop("dazed", None)  # ...and shakes off any daze
     announce(
         session.location,
         f"{sentence_case(npc['name'])} collapses -- then reassembles itself.",
@@ -356,6 +357,12 @@ def apply_burn(npc: Npc, damage: int, ticks: int = BURN_TICKS) -> None:
     """Lay a burn damage-over-time on a foe (a `brand` ability). It saps `damage` HP each world beat
     for `ticks` beats. A fresh brand refreshes the burn rather than stacking."""
     npc["burn"] = {"damage": max(1, damage), "ticks": max(1, ticks)}
+
+
+def apply_daze(npc: Npc, beats: int) -> None:
+    """Daze a foe for `beats` world beats (a `daze` ability): it skips that many of its own beat
+    strikes (crowd control, decremented by menace). A fresh daze refreshes, it does not stack."""
+    npc["dazed"] = max(1, beats)
 
 
 def tick_burns(session: Session) -> str:
