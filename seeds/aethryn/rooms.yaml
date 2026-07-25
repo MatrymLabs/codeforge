@@ -303,8 +303,31 @@ the_cold_vein:
 cinderdeep_maw:
   name: The Cinderdeep Maw
   desc: |-
-    The deep bottoms out in a cold maw of ruined Forgework. Here the Hollow Smith keeps its
-    dead anvil -- a maker the Unforging emptied and never let stop. Below it the Cinderdeep
-    goes deeper still, into dark the coast has no map for. That way is not open yet.
+    The deep bottoms out in a cold maw of ruined Forgework. Here the Hollow Smith kept its
+    dead anvil -- a maker the Unforging emptied and never let stop. With the Smith stilled, the
+    cold below has thinned, and a drowned stair falls away DOWN into dark the coast has no map for.
   exits:
     up: sunken_forgeworks
+    down: the_drowned_way
+
+the_drowned_way:
+  name: The Drowned Way
+  desc: |-
+    Below the maw the stair drowns entirely, and you wade a black flood that was once a
+    making-canal, roofed in dead ember. Things that were makers, once, drift and turn in the
+    cold current -- a sunken revenant among them, still clutching a tool for a hand. The
+    forgeworks are back up the stair; ahead, the flood pours down into a deeper, older dark.
+  exits:
+    up: cinderdeep_maw
+    down: the_cinderheart
+
+the_cinderheart:
+  name: The Cinderheart
+  desc: |-
+    The deepest floor of the Cinderdeep, and its oldest wound: a vast drowned forge-heart where
+    the Unforging first tore the world, so far down the sundering never healed. A shard of the
+    First Seed sank here and went cold, and the Drowned Forgemaster has kept its black anvil
+    around it ever since -- the last maker, hammering a world that will not set. This is the
+    bottom. Sound it, and the deep is answered. The only way is back up, toward the light.
+  exits:
+    up: the_drowned_way

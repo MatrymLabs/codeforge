@@ -351,9 +351,43 @@ hollow_smith:
   aggressive: true
   lethal: true
   level: 15
-  tier: boss  # the Cinderdeep's floor-boss: the deep road's climax (x10 reward)
+  tier: boss  # the Cinderdeep's mid-boss: felling it thins the cold and opens the way deeper
   drops: [hollow_ingot, cindershell_plate]
   loot: {ember_shard: 3, nothing: 2}
+
+# --- The deep Cinderdeep (below the maw): the coast's downward road bottoms out at the Cinderheart,
+# --- the Unforging's oldest wound. Level-banded 18-24, a frost-typed pair (bring fire to the cold). ---
+
+sunken_revenant:
+  name: a sunken revenant of the Drowned Way
+  location: the_drowned_way
+  keywords: [revenant, sunken, maker, drowned]
+  dialogue:
+    - The revenant turns in the black current, a maker's tool fused to its hand, and reaches for you.
+  hp: 72
+  atk: 15
+  aggressive: true
+  attack_element: ICE  # the deep's cold: its touch bites of frost
+  level: 18
+  tier: elite  # a real threat between the Hollow Smith and the Forgemaster (x3 reward)
+  loot: {ember_shard: 2, hollow_ingot: 1, nothing: 2}
+
+drowned_forgemaster:
+  name: the Drowned Forgemaster
+  location: the_cinderheart
+  keywords: [forgemaster, drowned, maker, boss]
+  dialogue:
+    - '"IT WILL NOT SET... IT WILL NEVER SET..." The Drowned Forgemaster lifts a hammer of black ice.'
+  hp: 165
+  atk: 24
+  aggressive: true
+  lethal: true
+  attack_element: ICE  # a maker of black ice: bring fire to the frozen heart of the deep
+  resistances: {ICE: Resist, FIR: Weak}
+  level: 24
+  tier: boss  # the Cinderdeep's true bottom-boss: the deep road's real climax (x10 reward)
+  drops: [drowned_seal]
+  loot: {hollow_ingot: 2, ember_shard: 3, nothing: 2}
 
 # --- The Third Coil foes (the ascent climbs on: levels ~31-38, one Gate-boss). ---
 
