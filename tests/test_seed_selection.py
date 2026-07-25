@@ -84,6 +84,22 @@ def test_aethryn_capital_npcs_hold_real_conversations():
         assert all(lines and all(isinstance(x, str) for x in lines) for lines in who.values())
 
 
+def test_aethryn_cinderdeep_descends_to_a_real_bottom():
+    """The coast's downward road no longer dead-ends: the maw opens down through the Drowned Way to
+    the Cinderheart, where a frost-typed bottom-boss (bring fire) gives the deep a real climax."""
+    rooms = load_rooms(AETHRYN / "rooms.yaml")
+    assert rooms["cinderdeep_maw"]["exits"].get("down") == "the_drowned_way"  # no longer a dead-end
+    assert rooms["the_drowned_way"]["exits"]["down"] == "the_cinderheart"  # descends to the bottom
+    npcs = load_npcs(AETHRYN / "npcs.yaml")
+    boss = npcs["drowned_forgemaster"]
+    assert boss["level"] == 24 and boss["tier"] == "boss" and boss["lethal"] is True
+    # an elemental puzzle: a maker of black ice that resists frost and is weak to fire
+    assert boss["attack_element"] == "ICE"
+    assert boss["resistances"] == {"ICE": "Resist", "FIR": "Weak"}
+    assert boss["drops"] == ["drowned_seal"]  # the deep pays a real reward
+    assert load_items(AETHRYN / "items.yaml")["drowned_seal"]["slot"] == "accessory_2"
+
+
 def test_aethryn_cinder_wight_boss_is_attackable_and_strikes_back():
     wight = load_npcs(AETHRYN / "npcs.yaml")["cinder_wight"]
     assert wight["hp"] == 50

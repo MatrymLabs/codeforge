@@ -124,3 +124,12 @@ mana_draught:
   location: cinderhearth_square
   resettable: true
   consume: {mp: 15}
+
+# Drop-only: the Drowned Forgemaster's seal -- the Cinderdeep's bottom-boss reward, a warding relic
+# forged against the cold that never healed (an accessory_2, a defensive alternative to the keystone).
+drowned_seal:
+  name: the Drowned Forgemaster's seal
+  keywords: [seal, drowned, forgemaster, relic]
+  location: nowhere
+  slot: accessory_2
+  mods: {DEF: 6, MAG DEF: 5}
