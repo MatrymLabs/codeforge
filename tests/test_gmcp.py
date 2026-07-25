@@ -188,6 +188,32 @@ def test_target_report_reads_a_wounded_foe_even_without_aggression(monkeypatch):
     assert report == {"name": "The training dummy", "hp": 7, "maxhp": 20}
 
 
+def test_target_report_carries_a_typed_foes_elemental_profile(monkeypatch):
+    """The Char.Target frame names the foe's attack element and its non-normal resistances, so a
+    client's co-pilot can advise the right element. Both keys are additive: a Normal row is omitted
+    and an untyped foe carries neither."""
+    from parts.world.npcs import NPCS
+
+    session = _hero()
+    session.location = "courtyard"
+    session.aggro_beats["training_dummy"] = 1
+    monkeypatch.setitem(NPCS["training_dummy"], "attack_element", "FIR")
+    grid = {"FIR": "Immune", "ICE": "Weak", "LGT": "Normal"}
+    monkeypatch.setitem(NPCS["training_dummy"], "resistances", grid)
+    report = target_report(session)
+    assert report is not None
+    assert report["element"] == "FIR"
+    assert report["resists"] == {"FIR": "Immune", "ICE": "Weak"}  # the Normal row is dropped
+
+
+def test_target_report_omits_the_profile_for_an_untyped_foe():
+    session = _hero()
+    session.location = "courtyard"  # the training dummy: untyped, resists nothing
+    session.aggro_beats["training_dummy"] = 1
+    report = target_report(session)
+    assert report == {"name": "The training dummy", "hp": 20, "maxhp": 20}  # no profile keys
+
+
 def test_target_report_skips_a_non_combatant():
     session = _hero()
     session.location = "library"  # the librarian lives here: hp 0, never a target

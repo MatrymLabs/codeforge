@@ -122,7 +122,21 @@ def target_report(session: Session) -> dict[str, object] | None:
             continue
         hp_now = npc.get("hp_now", hp)
         if nid in session.aggro_beats or hp_now < hp:  # engaged: hounding us, or already bloodied
-            return {"name": sentence_case(npc["name"]), "hp": hp_now, "maxhp": hp}
+            report: dict[str, object] = {
+                "name": sentence_case(npc["name"]),
+                "hp": hp_now,
+                "maxhp": hp,
+            }
+            # The foe's elemental profile, so a client (its co-pilot) can advise on element choice
+            # without the player dying to learn it. Both keys are additive and optional: an untyped
+            # foe that resists nothing carries neither, and an old client ignores what it can't use.
+            attack = npc.get("attack_element")
+            if attack:
+                report["element"] = attack
+            resists = {c: lvl for c, lvl in npc.get("resistances", {}).items() if lvl != "Normal"}
+            if resists:
+                report["resists"] = resists
+            return report
     return None
 
 
