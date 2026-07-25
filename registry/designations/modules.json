@@ -4737,5 +4737,31 @@
     "aliases": [],
     "created": "2026-07-24",
     "updated": "2026-07-24"
+  },
+  {
+    "designation": "MOD-10.044",
+    "name": "addie",
+    "status": "active",
+    "function": "the ADDIE continuous-improvement loop: a systems-engineering self-check that refuses an unlooped major cycle",
+    "label": "addie",
+    "file": "parts/addie.py",
+    "type": "MOD",
+    "domain": "10",
+    "docs": "docs/addie_loop.md",
+    "tests": "tests/test_addie.py",
+    "depends_on": [],
+    "related": [
+      "intake",
+      "arc"
+    ],
+    "reuse": "the five-phase self-check + gaps validator, reusable on any feature/subsystem/change",
+    "tags": [
+      "module"
+    ],
+    "notes": "Reads addie_ledger.toml (stdlib tomllib); overrides no control, composes with ARC/Ritual/Blueprints. make addie.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-25",
+    "updated": "2026-07-25"
   }
 ]
