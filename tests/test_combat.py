@@ -587,3 +587,42 @@ def test_an_analyzed_foe_takes_bonus_damage():
     analyzed_loss = (npc["hp"] - npc["hp_now"]) - base
     assert analyzed_loss == base + base // 2
     assert "weak point" in out
+
+
+def test_a_brand_burns_a_foe_over_the_world_beats_but_never_kills():
+    """A burn saps HP each world beat, floored at 1 (it wears a foe down; you land the last blow),
+    and burns out after its ticks."""
+    from parts.world.combat import apply_burn, tick_burns
+
+    s = _fighter()
+    npc = npcs.NPCS[_spawn_hostile("brute", atk=0, hp=10)]
+    apply_burn(npc, damage=4, ticks=3)
+
+    assert "smoulders for 4" in tick_burns(s) and npc["hp_now"] == 6  # beat 1
+    tick_burns(s)  # beat 2 -> 2
+    tick_burns(s)  # beat 3 -> floored at 1, burn spent
+    assert npc["hp_now"] == 1  # a burn never fells a foe
+    assert "burn" not in npc  # burned out after its ticks
+    assert tick_burns(s) == ""  # nothing is burning now
+
+
+def test_a_burn_never_revives_a_downed_foe():
+    """A foe at 0 HP (mid-defeat) is skipped by the burn tick: no burning a corpse back to 1."""
+    from parts.world.combat import apply_burn, tick_burns
+
+    s = _fighter()
+    npc = npcs.NPCS[_spawn_hostile("husk", atk=0, hp=10)]
+    npc["hp_now"] = 0
+    apply_burn(npc, damage=4)
+    assert tick_burns(s) == ""  # a downed foe does not smoulder
+    assert npc["hp_now"] == 0  # and is not revived to the floor of 1
+
+
+def test_a_reassembling_foe_quenches_its_burn():
+    from parts.world.combat import apply_burn, attack, strike_power
+
+    s = _fighter()
+    npc = npcs.NPCS[_spawn_hostile("brute", atk=0, hp=strike_power(s))]  # dies to one strike
+    apply_burn(npc, damage=4)
+    attack(s, "brute")  # the strike fells it -> it reassembles
+    assert "burn" not in npc  # the burn is quenched on reassemble

@@ -52,6 +52,14 @@ kindle:
   mp_cost: 5
   jobs: [emberwright]
 
+cinder_brand:
+  name: Cinder Brand
+  kind: brand
+  power: 4  # HP the burn saps each world beat, plus a third of magic
+  scales: magic
+  mp_cost: 4
+  jobs: [emberwright]
+
 # --- Batch 1 movesets (Martial + Precision families). strike scales on the family's key stat. ---
 
 # Duelist -- read and punish.

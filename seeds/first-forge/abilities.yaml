@@ -32,3 +32,11 @@ mend:
   scales: wisdom
   mp_cost: 5
   jobs: [scholar]
+
+corrode:
+  name: Corrode
+  kind: brand  # lays a burn that saps the foe's HP on each world beat
+  power: 3
+  scales: magic
+  mp_cost: 4
+  jobs: [scholar, artificer]

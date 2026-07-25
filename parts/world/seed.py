@@ -147,6 +147,10 @@ class Npc(TypedDict):
     # WITHOUT a level keeps its flat `xp` award (the tutorial default). Validated at load.
     level: NotRequired[int]
     tier: NotRequired[str]
+    # Runtime state: a burn damage-over-time applied by a `brand` ability -- {damage, ticks}. It
+    # saps `damage` HP on each world beat until `ticks` runs out (never below 1: you land the
+    # finishing blow). Cleared when the foe reassembles. Never seeded; combat sets and clears it.
+    burn: NotRequired[dict[str, int]]
     # Item prototype labels this NPC drops when defeated: a fresh instance of each is spawned into
     # the room (parts.world.items.clone). Optional; a bare NPC drops nothing. Loot is real object
     # instancing -- the drop is a new instance, so it never collides with the seed original.
@@ -218,7 +222,7 @@ class Ability(TypedDict):
     """
 
     name: str  # display name, e.g. "Power Strike"
-    kind: str  # "strike" (damage a target) | "heal" (restore own HP)
+    kind: str  # "strike" (damage a target) | "heal" (restore HP) | "brand" (a burn DoT on a foe)
     power: int  # flat base magnitude before the stat scale
     scales: str  # the attribute it scales on (strength/magic/...), or "" for flat
     mp_cost: int  # MP spent to use it
@@ -893,9 +897,10 @@ def load_abilities(path: Path) -> dict[str, Ability]:
                 ("jobs", list),
             ),
         )
-        if merged["kind"] not in ("strike", "heal"):
+        if merged["kind"] not in ("strike", "heal", "brand"):
             raise SeedError(
-                f"ability '{label}': 'kind' must be 'strike' or 'heal', got {merged['kind']!r}."
+                f"ability '{label}': 'kind' must be 'strike', 'heal', or 'brand', "
+                f"got {merged['kind']!r}."
             )
         for num_field in ("power", "mp_cost"):
             value = merged[num_field]
