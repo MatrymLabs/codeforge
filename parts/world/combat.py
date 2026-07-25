@@ -97,6 +97,9 @@ def _resolve_npc_blow(session: Session, npc: Npc, verb: str) -> str:
         return ""  # the training dummy and every peaceful NPC: no blow
     # Your DEF (from gear/perks/Order) turns the blow, but a landed hit always stings: floor at 1.
     power = max(1, raw - _stat_bonus(session, "DEF"))
+    warded = session.statuses.get("barrier", 0) > 0
+    if warded:  # a deployed barrier (Engineer) turns half the blow while it holds
+        power = max(1, power // 2)
     session.resources["hp"] = session.resources["hp"].damage(power)
     name = sentence_case(npc["name"])
     announce_frame(
@@ -105,7 +108,8 @@ def _resolve_npc_blow(session: Session, npc: Npc, verb: str) -> str:
         exclude=session.player_id,
     )
     hp = session.resources["hp"]
-    line = f"{name} {verb} for {power}. (HP {hp.current}/{hp.maximum})"
+    ward = " Your barrier turns half of it." if warded else ""
+    line = f"{name} {verb} for {power}.{ward} (HP {hp.current}/{hp.maximum})"
     # The Engineer's Emergency Repair reacts to a dangerous blow: it auto-heals once (then cools
     # down), and can pull the player back from a fall. Returns None for anyone else, or on cooldown.
     repair = emergency_repair(session)

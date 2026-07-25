@@ -547,3 +547,24 @@ def test_a_levelled_equippable_drop_rolls_and_stores_a_rarity():
         }
     finally:
         items.ITEMS.pop(iid, None)  # do not leak the instance (conftest clears SESSIONS, not ITEMS)
+
+
+def test_a_deployed_barrier_turns_half_an_npc_blow():
+    """The Engineer's Deploy Barrier now actually defends: while it holds, an NPC blow lands for
+    half (floored at 1). It used to cost Power Cells and do nothing."""
+    from parts.world.combat import open_strike
+
+    s = _fighter()
+    npc = npcs.NPCS[_spawn_hostile("brute", atk=12)]
+    full = s.resources["hp"].maximum
+
+    open_strike(s, npc)  # unwarded: the full blow lands
+    unwarded_loss = full - s.resources["hp"].current
+    assert unwarded_loss > 1
+
+    s.resources["hp"] = s.resources["hp"].heal(full)  # top back up
+    s.statuses["barrier"] = 3
+    line = open_strike(s, npc)  # warded: half the blow
+    warded_loss = full - s.resources["hp"].current
+    assert warded_loss == max(1, unwarded_loss // 2)  # the barrier really reduced the damage
+    assert "barrier turns half" in line
