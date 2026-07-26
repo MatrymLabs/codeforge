@@ -538,6 +538,31 @@ def test_aethryn_verdance_is_a_living_wild_reach_off_the_crossroads():
     assert arc is not None and arc["steps"][-1]["on_defeat"] == "boughwarden"
 
 
+def test_aethryn_drowned_sunhold_is_a_real_delve_not_one_room():
+    """The sunken capital plays like a dungeon, not a single boss room: the salvage-stair delves
+    through the flooded halls and the drowned forge, each with its own foe, before the Warden's
+    court - a connected path with foe levels escalating toward the boss."""
+    rooms = load_rooms(AETHRYN / "rooms.yaml")
+    npcs = load_npcs(AETHRYN / "npcs.yaml")
+    delve = [
+        "drowned_sunhold_descent",
+        "the_drowned_halls",
+        "the_flooded_forge",
+        "the_drowned_sunhold",
+    ]
+    for here, below in zip(delve, delve[1:], strict=False):  # the rooms chain straight down
+        assert rooms[here]["exits"]["down"] == below, f"{here} does not delve to {below}"
+    levels = []
+    for room in delve:  # every room on the delve holds a foe, escalating toward the boss
+        foe = next(
+            v
+            for v in npcs.values()
+            if v.get("location", "").split(":")[-1] == room and "level" in v
+        )
+        levels.append(foe["level"])
+    assert len(levels) == 4 and levels == sorted(levels)  # a real escalating delve
+
+
 def test_aethryn_quenchmere_is_a_second_continent_reached_by_sea():
     """The first sea-crossing (Build Order Phase 2): Quench Harbor's ferry runs west to the
     Quenchmere -- a second Reach with the free-port Tidewharf (an Accord-Speaker, a Merewright shop,
