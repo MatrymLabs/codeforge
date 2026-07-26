@@ -242,3 +242,27 @@ anchor_stone:
   location: nowhere
   slot: accessory_2
   mods: {DEF: 7, EVA: 6}
+
+# --- The Emberhide set (Emberreach cradle armor, levels ~1-15). A slot-complete starter kit of hide
+# --- cured over coast-forge embers, dropped by the cradle's beasts so a fresh Forger can outfit
+# --- head/body/arm before leaving the coast. Drop-only prototypes; combat levels + rarity-rolls them.
+emberhide_hood:
+  name: an emberhide hood
+  keywords: [hood, emberhide, hide, cap]
+  location: nowhere
+  slot: head
+  mods: {DEF: 2, EVA: 3}
+
+emberhide_jerkin:
+  name: an emberhide jerkin
+  keywords: [jerkin, emberhide, hide, vest]
+  location: nowhere
+  slot: body
+  mods: {DEF: 4, EVA: 2}
+
+emberhide_wraps:
+  name: a set of emberhide wraps
+  keywords: [wraps, emberhide, hide, bracers]
+  location: nowhere
+  slot: arm
+  mods: {DEF: 3, ATK: 2}
