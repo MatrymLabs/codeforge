@@ -104,3 +104,9 @@ the_kollforge:
   rooms: [the_molten_passage, emberkoll, the_anvil_vents, the_vent_deep]
   reset_mode: empty_only
   beats_between: 12
+
+the_sundered_sky:
+  name: The Sundered Sky
+  rooms: [the_sky_lanes, highgate, the_drifting_reach, the_wandering_court]
+  reset_mode: empty_only
+  beats_between: 12

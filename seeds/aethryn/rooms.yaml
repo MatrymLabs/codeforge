@@ -148,6 +148,7 @@ the_deepwater_berth:
     south: tidewharf_plaza
     north: the_riming_passage
     west: the_molten_passage
+    up: the_sky_lanes
 
 # --- The Rimefall: the quenched north across the sea (Continental Atlas §II, Build Order Phase 4).
 # --- A continent flash-frozen in the Unforging, its Emberwright cities preserved whole under the ice;
@@ -672,3 +673,53 @@ the_vent_deep:
     reach. The vents lie back south.
   exits:
     south: the_anvil_vents
+
+# --- The Sundered Sky: the floating Reach (Continental Atlas §VII, Build Order Phase 5), the last
+# --- surface land and the gateway to the Great Spiral. Lands the Unforging tore loose that never
+# --- fell, hung on stubborn Forgework in the high air. Level-banded 60-72. Reached from the berth (up). ---
+
+the_sky_lanes:
+  name: The Sky-Lanes
+  desc: |-
+    The sky-ferry rises on the world's winds off Tidewharf's berth, up past the last clouds into the
+    Sundered Sky -- shards of the old supercontinent the Unforging tore loose that never fell, hung in
+    the high air on stubborn Forgework, drifting slowly on the winds. Stormkin ride the currents. The
+    berth lies back down.
+  exits:
+    down: the_deepwater_berth
+    up: highgate
+
+highgate:
+  name: Highgate
+  desc: |-
+    The sky-Warden capital, an anchor-hold on the greatest of the drifting shards at the foot of the
+    Coilfoot, where the Great Spiral rises out of the world toward the Forge. The Skyborn keep the
+    sky-Gates and the way up -- the last threshold before the vertical endgame, guarded hardest of
+    all. A sky-Warden holds the gate; an anchor-keeper keeps a stall. The lanes lie back down; a
+    drift-bridge runs out to the wandering shards; and UP, past the sky-Warden's test, the Coilfoot
+    climbs into the first Coils of the Spiral.
+  exits:
+    down: the_sky_lanes
+    east: the_drifting_reach
+    up: coilfoot_ascent
+
+the_drifting_reach:
+  name: The Drifting Reach
+  desc: |-
+    A span of loose shards trailing waterfalls into cloud, crossed on sky-bridges of surviving
+    Ember-road that sway on the wind. Fall-wights -- those the loose lands took when the world came
+    apart -- drift the raw edges, still falling in a way that never ends. Highgate lies back west; the
+    wandering Court drifts ahead, east.
+  exits:
+    west: highgate
+    east: the_wandering_court
+
+the_wandering_court:
+  name: The Wandering Court
+  desc: |-
+    A shard-city of the Emberwrights that came loose whole and never fell, drifting the high sky on
+    the winds -- the Drifting Court, a place that is never in the same sky twice. The Court-Warden
+    keeps it, a maker the Unforging set adrift and never let land. This is the highest a walking
+    Forger stands before the Spiral. The drifting reach lies back west.
+  exits:
+    west: the_drifting_reach

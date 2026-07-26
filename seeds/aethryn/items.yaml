@@ -233,3 +233,12 @@ vent_crown:
   location: nowhere
   slot: head
   mods: {ATK: 8, "MAG DEF": 8}
+
+# Drop-only: the Court-Warden's reward -- the Anchor-Stone, a Reach-Relic that never falls, cut from
+# the Forgework that holds the drifting shards aloft (an accessory; see the Legendary Item Catalog).
+anchor_stone:
+  name: the Anchor-Stone
+  keywords: [anchor, stone, sky, relic]
+  location: nowhere
+  slot: accessory_2
+  mods: {DEF: 7, EVA: 6}

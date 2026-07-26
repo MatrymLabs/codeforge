@@ -918,3 +918,88 @@ vent_lord:
   tier: boss  # the Kollforge's climax: the last guardian before the Forge (x10 reward)
   drops: [vent_crown]
   loot: {ember_shard: 6, hollow_ingot: 2, nothing: 2}
+
+# --- The Sundered Sky (Continental Atlas §VII): the floating Reach, the gateway to the Spiral. Stormkin
+# --- of the high air, fall-wights of the tearing, the Skyborn of Highgate, and the Court-Warden of the
+# --- Drifting Court. Levels 60-72. Bring radiance to the shadow (DRK foes, weak HLY). ---
+
+stormkin:
+  name: a stormkin
+  location: the_sky_lanes
+  keywords: [stormkin, storm, bird, beast]
+  dialogue:
+    - The stormkin banks out of a thunderhead, riding the wind, and stoops on the sky-ferry.
+  hp: 180
+  atk: 30
+  aggressive: true
+  attack_element: WND  # a rider of the high winds (bring stone, earth, to ground it)
+  resistances: {WND: Resist, ERT: Weak}
+  level: 60
+  tier: elite  # the sky's apex flyer (x3 reward)
+  loot: {ember_shard: 3, nothing: 2}
+
+sky_warden:
+  name: a sky-Warden of Highgate
+  location: highgate
+  keywords: [warden, sky, highgate, skyborn]
+  dialogue:
+    - '"You have crossed the whole world to reach me, Forger. Beyond this gate the surface ends and the Great Spiral climbs toward the Forge. Few pass. Fewer return."'
+    - '"We keep the last threshold, and we keep it hardest of all. The Wardens locked the craft to guard the world. Here, at the foot of the climb, is where that guarding matters most."'
+  topics:
+    sundered_sky:
+      - '"The Sundered Sky is the lands the Unforging tore loose that never fell -- shards of the old world hung in the high air on stubborn Forgework, drifting on the winds. The last surface Reach, and the loneliest. Beyond it, only the climb."'
+    highgate:
+      - '"Highgate is the sky-Wardens'' hold at the foot of the Coilfoot, the gate to the Great Spiral. We are the Concord''s most important and most isolated holding -- the door to the endgame, guarded by the few who can bear the sky."'
+    spiral:
+      - '"Up, past my test, the Coilfoot climbs into the first Coils of the Great Spiral -- the vertical endgame, Coil upon Coil toward the Forge and the Sovereign at the summit. You have seen the whole world. Now you climb it. Go, if you are ready. Nothing here is."'
+
+anchor_keeper:
+  name: a Skyborn anchor-keeper
+  location: highgate
+  keywords: [keeper, anchor, skyborn, merchant]
+  dialogue:
+    - '"Sky-craft and anchor-work, for a Forger bound higher. The winds take the unready. Buy what holds you down before you climb what pulls you up."'
+  shop:
+    sells:
+      healing_draught: 20
+      mana_draught: 20
+      stormlord_edge: 210
+      wraithlamp_circlet: 180
+    buys:
+      ember_shard: 10
+      hollow_ingot: 42
+  topics:
+    winds:
+      - '"East of Highgate the shards drift loose, crossed on sky-bridges that sway on the wind, and the fall-wights ride the raw edges. Out there the Drifting Court wanders, never in the same sky twice. Carry radiance, and carry a rope."'
+
+fall_wight:
+  name: a fall-wight
+  location: the_drifting_reach
+  keywords: [wight, fall, drifting, dead]
+  dialogue:
+    - A shape of the tearing rises off a sky-bridge's edge, one the loose lands took, still falling in a way that never ends, and reaches for you.
+  hp: 200
+  atk: 32
+  aggressive: true
+  attack_element: DRK  # a thing of the Unforging's tearing (bring radiance, holy fire)
+  resistances: {DRK: Resist, HLY: Weak}
+  level: 64
+  tier: elite  # the sky's horror (x3 reward), between the stormkin and the Court-Warden
+  loot: {ember_shard: 3, nothing: 2}
+
+court_warden:
+  name: the Court-Warden
+  location: the_wandering_court
+  keywords: [warden, court, emberwright, boss]
+  dialogue:
+    - '"..." The Court-Warden turns in the drifting hall of the Wandering Court, a maker the Unforging set adrift and never let land, and moves to keep the last shard.'
+  hp: 360
+  atk: 34
+  aggressive: true
+  lethal: true
+  attack_element: DRK  # a maker of the tearing sky: bring radiance (weak to holy)
+  resistances: {DRK: Resist, HLY: Weak}
+  level: 72
+  tier: boss  # the Sundered Sky's climax: the last surface boss before the Spiral (x10 reward)
+  drops: [anchor_stone]
+  loot: {ember_shard: 7, hollow_ingot: 2, nothing: 2}
