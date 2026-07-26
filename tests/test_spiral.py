@@ -1,6 +1,6 @@
-"""Test twin for parts.world.spiral: the procedural Great Spiral generator.
+"""Test twin for parts.world.spiral: the procedural Forgeward Road generator.
 
-Acceptance (a valid config generates a chained climb to the summit at the level cap) AND refusal
+Acceptance (a valid config generates a road east to the far end at the level cap) AND refusal
 (a malformed config, an attach room that does not exist) plus determinism (same config -> same
 world). The generator emits seed-shaped Room/Npc data, so the assertions check that shape.
 """
@@ -17,15 +17,15 @@ _CONFIG = {
     "levels_per_coil": 9,
     "top_level": 255,
 }
-_ROOMS = {"base": {"name": "Base", "desc": "", "exits": {"down": "below"}}}
+_ROOMS = {"base": {"name": "Base", "desc": "", "exits": {"west": "below"}}}
 
 
-def test_generation_chains_coils_from_attach_up_to_the_summit():
+def test_generation_chains_marches_from_attach_east_to_the_far_end():
     rooms, npcs, first = generate_spiral(_CONFIG, _ROOMS)
     assert first == "coil_4_ascent"
-    # the attach room's up should point at the first Coil (the caller wires it; we report it)
-    assert rooms["coil_4_ascent"]["exits"]["down"] == "base"
-    assert rooms["coil_4_ascent"]["exits"]["up"] == "coil_4_landing"
+    # the attach room's east should point at the first march (the caller wires it; we report it)
+    assert rooms["coil_4_ascent"]["exits"]["west"] == "base"
+    assert rooms["coil_4_ascent"]["exits"]["east"] == "coil_4_landing"
     # every generated exit resolves within the generated set (plus the attach room)
     known = set(rooms) | set(_ROOMS)
     for room in rooms.values():
@@ -37,12 +37,12 @@ def test_the_summit_boss_stands_at_the_level_cap():
     rooms, npcs, _ = generate_spiral(_CONFIG, _ROOMS)
     bosses = [n for n in npcs.values() if n.get("tier") == "boss"]
     top = max(b["level"] for b in bosses)
-    assert top == 255  # the summit Gate-boss reaches the configured cap
+    assert top == 255  # the far road-warden reaches the configured cap
     summit_boss = next(b for b in bosses if b["level"] == 255)
-    assert summit_boss.get("lethal") is True and summit_boss["name"] == "the Spiral Sovereign"
-    # the summit landing is a dead-end top (no `up`), every Coil below climbs on
-    summit_landing = next(r for r in rooms.values() if r["name"] == "The Spiral Summit")
-    assert "up" not in summit_landing["exits"]
+    assert summit_boss.get("lethal") is True and summit_boss["name"] == "the Sovereign"
+    # the far room is a dead-end (no `east`), every march before it runs on outward
+    summit_landing = next(r for r in rooms.values() if r["name"] == "The Forge's Edge")
+    assert "east" not in summit_landing["exits"]
 
 
 def test_each_coils_gate_boss_climbs_above_the_last():
@@ -52,6 +52,21 @@ def test_each_coils_gate_boss_climbs_above_the_last():
     assert levels[0] == 47 and levels[-1] == 255
 
 
+def test_extend_world_with_road_merges_and_wires_the_attach_exit():
+    """The world-wiring helper (what world.py calls) merges the generated marches into a seed's
+    world and grows the attach room's flat `east` exit onto the first march -- no climb, no `up`."""
+    from parts.world.spiral import extend_world_with_road
+
+    world = {"base": {"name": "Base", "desc": "", "exits": {"west": "below"}}}
+    npcs: dict = {}
+    first = extend_world_with_road(world, npcs, _CONFIG)
+    assert first == "coil_4_ascent"
+    assert world["base"]["exits"]["east"] == "coil_4_ascent"  # attach room wired east, not up
+    assert "coil_4_ascent" in world  # the generated rooms merged in
+    assert any(n.get("tier") == "boss" for n in npcs.values())  # and the road-wardens merged in
+    assert "up" not in world["base"]["exits"]  # the flat world never climbs
+
+
 def test_generation_is_deterministic():
     a = generate_spiral(_CONFIG, _ROOMS)
     b = generate_spiral(_CONFIG, _ROOMS)
@@ -59,12 +74,12 @@ def test_generation_is_deterministic():
 
 
 def test_each_coil_takes_a_rotating_elemental_theme():
-    """The back half is a varied gauntlet, not one room 25 times: consecutive Coils carry different
-    elements, and a Gate-warden is an elemental puzzle (resists its element, weak to a counter)."""
+    """The frontier is a varied gauntlet, not one room 50 times: consecutive marches carry different
+    elements, and a road-warden is an elemental puzzle (resists its element, weak to a counter)."""
     _, npcs, _ = generate_spiral(_CONFIG, _ROOMS)
     w4, w5 = npcs["spiral_gate_4"], npcs["spiral_gate_5"]
-    assert w4["attack_element"] == "FIR" and w5["attack_element"] == "ICE"  # varies coil to coil
-    assert w4["resistances"] == {"FIR": "Resist", "ICE": "Weak"}  # bring frost to a fire Coil
+    assert w4["attack_element"] == "FIR" and w5["attack_element"] == "ICE"  # varies march to march
+    assert w4["resistances"] == {"FIR": "Resist", "ICE": "Weak"}  # bring frost to a fire march
     # each themed warden drops its own themed weapon (varied endgame loot, not one keystone x25);
     # combat's affix factory then rolls a rarity onto the levelled drop
     assert w4["drops"] == ["ember_brand"] and w5["drops"] == ["rime_edge"]
@@ -113,17 +128,17 @@ def test_the_flagship_seed_reaches_the_summit_at_the_level_cap():
     config = load_spiral_config(SEEDS_ROOT / "aethryn" / "spiral.yaml")
     assert config is not None and config["top_level"] == 300 == LEVEL_MAX  # the true ceiling
     _rooms, npcs, first = generate_spiral(config, {"coil_third_landing": {"exits": {}}})
-    assert any(n["level"] == 300 for n in npcs.values())  # the aethryn Spiral climbs to the cap
+    assert any(n["level"] == 300 for n in npcs.values())  # the aethryn Road runs to the cap
     assert first == "coil_4_ascent"
     # no dead band at the hand-authored/procedural seam: the lowest generated foe lands right above
-    # the last authored foe (the Stormlord, level 38), so the climb never runs out of content.
+    # the last authored foe (the Stormlord, level 38), so the road never runs out of content.
     lowest = min(n["level"] for n in npcs.values())
     assert 38 < lowest <= 40, f"a dead band opened at the Spiral seam (lowest generated {lowest})"
 
 
 def test_spiral_zones_name_every_generated_coil():
-    """The generated Coils get area identity: every generated room lands in exactly one named zone
-    (so the back half renders an '[Area: The Nth Coil]' banner, not an anonymous stretch)."""
+    """The generated marches get area identity: every generated room lands in exactly one named zone
+    (so the frontier renders an '[Area: The Nth March]' banner, not an anonymous stretch)."""
     from parts.world.spiral import SUMMIT_ROOM, spiral_zones
 
     rooms, _, _ = generate_spiral(_CONFIG, _ROOMS)
@@ -132,12 +147,12 @@ def test_spiral_zones_name_every_generated_coil():
     assert set(zoned) == set(rooms)  # exact cover: no generated room is left anonymous
     assert len(zoned) == len(set(zoned))  # and none is in two zones
     summit_zone = next(z for z in zones.values() if SUMMIT_ROOM in z["rooms"])
-    assert summit_zone["name"] == "The Spiral Summit"  # the summit is its own named area
+    assert summit_zone["name"] == "The Forge's Edge"  # the far end is its own named area
 
 
 def test_the_summit_uses_stable_labels_for_a_capstone_quest():
-    """The summit room + Gate-boss carry fixed labels (not the Coil number), so a quest can name
-    them however tall the Spiral runs."""
+    """The far room + road-warden carry fixed labels (not the march number), so a quest can name
+    them however far the Road runs."""
     from parts.world.spiral import SUMMIT_BOSS, SUMMIT_ROOM
 
     rooms, npcs, _ = generate_spiral(_CONFIG, _ROOMS)

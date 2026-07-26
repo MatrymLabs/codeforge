@@ -68,7 +68,7 @@ warden_sigil:
   mods: {DEF: 5, MAG DEF: 5}  # the proven-Forger's ward: it turns a blow and a curse alike
 
 coil_keystone:
-  name: a keystone of the first Coil
+  name: a keystone of the Forgeward Road
   keywords: [keystone, coil, spiral, stone]
   location: nowhere
   slot: accessory_2

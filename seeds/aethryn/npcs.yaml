@@ -38,8 +38,8 @@ sela:
     forger:
       - '"A Forger holds ember and gives it lasting shape. Every calling on the Orders'' Row is one road into that gift."'
     spiral:
-      - '"The Great Spiral climbs out of the world past Emberreach, Coil upon Coil, toward the Forge at its summit."'
-      - '"They say the one who crowns it looks upon the Forge itself. None living has."'
+      - '"The Forgeward Road runs on past Emberreach, march upon march, toward the Forge at the world''s far heart."'
+      - '"They say the one who reaches its end looks upon the Forge itself. None living has."'
     cinderdeep:
       - '"Down, where the Unforging cut deepest, the making-works drowned. The Cinderdeep is the coast''s other road, and colder."'
 
@@ -112,7 +112,7 @@ road_warden:
   keywords: [warden, road, guard, marshal]
   dialogue:
     - '"So the coast is relit. Word travels fast on the Ember-road. Emberreach lies north, Forger."'
-    - '"The road climbs hard from here, and the strayfire dens run thick. Go proven, or go home."'
+    - '"The road runs hard from here, and the strayfire dens run thick. Go proven, or go home."'
     - '"At the capital you will choose your Order and your road. The Warden Gate tests the rest."'
 
 cinder_wight:
@@ -170,7 +170,7 @@ emberreach_warden:
   location: emberreach_gates
   keywords: [warden, gate, guard, concord]
   dialogue:
-    - '"Up from the coast, and still breathing. Welcome to Emberreach, City of the Relit Forge."'
+    - '"In from the coast, and still breathing. Welcome to Emberreach, City of the Relit Forge."'
     - '"The Grand Forge burns north. The Orders keep their Row to the west, the Market to the east."'
 
 grandforge_loremaster:
@@ -187,11 +187,11 @@ grandforge_loremaster:
       - '"Some say a maker reached too far. Others, that the Seed chose to scatter rather than be owned. The Archive keeps both accounts and judges neither."'
     seed:
       - '"The First Seed was the pattern the whole world grew from -- one design, whole and singing. Break it, and you get a thousand embers, each holding a fragment of the tune."'
-      - '"Relight enough embers in the right order, the old texts say, and the Seed remembers itself. That is the climb, Forger, whether you name it so or not."'
+      - '"Relight enough embers in the right order, the old texts say, and the Seed remembers itself. That is the road, Forger, whether you name it so or not."'
     archive:
-      - '"The Great Archive is memory made stone: every Forger, every relighting, every road walked to the Spiral. You are in it now, whether you asked to be or not."'
+      - '"The Great Archive is memory made stone: every Forger, every relighting, every road walked toward the Forge. You are in it now, whether you asked to be or not."'
     spiral:
-      - '"The Great Spiral is the Seed''s spine, coiled up through the sky. Climb it and the world grows colder and older, nearer the first pattern. The Sovereign waits at the crown."'
+      - '"The Forgeward Road is the Seed''s spine, run out across the world. Walk it east and the world grows colder and older, nearer the first pattern. The Sovereign waits at the Forge''s Edge."'
 
 order_recruiter:
   name: a recruiter of the Orders
@@ -207,7 +207,7 @@ order_recruiter:
     making:
       - '"The Order of Making are smiths and shapers -- they harden what they wear, so a blow turns aside. If you would rather build a thing than break it, this is your hearth."'
     warcraft:
-      - '"The Warcraft are the ones who stand when the line bends. Sworn to them, your blows land harder. The coast needs such spines; the Spiral more so."'
+      - '"The Warcraft are the ones who stand when the line bends. Sworn to them, your blows land harder. The coast needs such spines; the Road more so."'
     knowing:
       - '"The Knowing guard the truth of things -- wards and lore, the mind over the blade. They read a foe before they strike it, and take less from what they understand."'
     gathering:
@@ -218,8 +218,8 @@ market_trader:
   location: market_quarter
   keywords: [trader, merchant, market, shopkeeper]
   dialogue:
-    - '"Cooling-Sea goods, coast-craft, Spiral salvage -- if the Anvil makes it, it crosses my stall."'
-    - '"Ember-shards fetch a fair price up here. The road pays those who survive it, eh?"'
+    - '"Cooling-Sea goods, coast-craft, frontier salvage -- if the Anvil makes it, it crosses my stall."'
+    - '"Ember-shards fetch a fair price out here. The road pays those who survive it, eh?"'
   shop:
     # Coin sinks: the early gear ladder, so a coast Forger can outfit before the road/ascent.
     sells:
@@ -240,16 +240,16 @@ warden_keeper:
   location: warden_gate
   keywords: [keeper, warden, gate, wardenmarch]
   dialogue:
-    - '"Beyond this arch: the Wardenmarch, the Coilfoot Range, and the first Coils of the Great Spiral."'
-    - '"The Sentinel is the test, Forger. Put the grey guardian down and the ascent is yours to climb."'
-    - '"Many come up from the coast sure of their spark. The Sentinel has cooled most of them. Prove it."'
+    - '"Beyond this arch: the Wardenmarch, the Coilfoot Range, and the first marches of the Forgeward Road."'
+    - '"The Sentinel is the test, Forger. Put the grey guardian down and the road ahead is yours to walk."'
+    - '"Many come in from the coast sure of their spark. The Sentinel has cooled most of them. Prove it."'
   topics:
     sentinel:
       - '"The Warden Sentinel is grey iron and old duty. It does not hate you; it simply will not let a soft spark past. Harden yourself, then come to it."'
     spiral:
-      - '"Past the Sentinel: the Coilfoot, then the Coils, each colder and higher than the last. A Gate-boss guards every landing. Few living have seen the crown."'
+      - '"Past the Sentinel: the Coilfoot, then the marches, each colder and harder than the last. A road-warden holds every waystation. Few living have seen the Forge''s Edge."'
     wardenmarch:
-      - '"The Wardenmarch is the threshold between the settled coast and the wild climb. Cross it and the world stops being kind. Carry draughts."'
+      - '"The Wardenmarch is the threshold between the settled coast and the wild road. Cross it and the world stops being kind. Carry draughts."'
 
 # --- The Warden's Test and the First Coil (level-banded bosses: the ascent's real danger). ---
 # These run well above Emberreach. Bosses are lethal (fall and you wake in town, no failsafe) and
@@ -283,11 +283,11 @@ spiral_wisp:
   drops: [ember_shard]
 
 gate_forgewraith:
-  name: the Coil Forgewraith
+  name: the Wraith of the First Waystation
   location: coil_first_landing
   keywords: [forgewraith, wraith, coil, gate]
   dialogue:
-    - '"YOU CLIMB... INTO WHAT WAS UNMADE..." The Forgewraith rises in a column of grey fire.'
+    - '"YOU PRESS ON... INTO WHAT WAS UNMADE..." The Forgewraith rises in a column of grey fire.'
   hp: 120
   atk: 18
   aggressive: true
@@ -300,7 +300,7 @@ gate_forgewraith:
 # --- The Second Coil foes (the ascent climbs: levels ~25-28, one Gate-boss). ---
 
 coil_revenant:
-  name: a coil revenant
+  name: a road revenant
   location: coil_second_ascent
   keywords: [revenant, coil, climber, grey]
   dialogue:
@@ -327,7 +327,7 @@ ashen_sentinel:
   loot: {ember_shard: 2, nothing: 2}
 
 gate_ashlord:
-  name: the Coil Ashlord
+  name: the Ashlord of the Second Waystation
   location: coil_second_landing
   keywords: [ashlord, ash, lord, coil]
   dialogue:
@@ -449,7 +449,7 @@ stormbound_husk:
   drops: [ember_shard]
 
 coil_harrier:
-  name: the Coil Harrier
+  name: the Road Harrier
   location: coil_stormreach
   keywords: [harrier, coil, storm, rider]
   dialogue:
@@ -463,11 +463,11 @@ coil_harrier:
   loot: {ember_shard: 3, nothing: 2}
 
 gate_stormlord:
-  name: the Coil Stormlord
+  name: the Stormlord of the Third Waystation
   location: coil_third_landing
   keywords: [stormlord, storm, lord, coil]
   dialogue:
-    - '"THE SPIRAL DOES NOT SUFFER THE UNMADE TO CLIMB..." The Stormlord rises in a pillar of forge-lightning.'
+    - '"THE ROAD DOES NOT SUFFER THE UNMADE TO PASS..." The Stormlord rises in a pillar of forge-lightning.'
   hp: 220
   atk: 32
   aggressive: true
@@ -585,7 +585,7 @@ quench_fisher:
     sea:
       - '"Fish the shallows, not the reef. The reef is where the drowned things are. A fisher learns that young, or a fisher does not get old."'
     catch:
-      - '"Brine-ember lights a cold hearth; silver-fin fills a cold belly. The Cooling-Sea is hard, but she is honest -- more than the Spiral, they say."'
+      - '"Brine-ember lights a cold hearth; silver-fin fills a cold belly. The Cooling-Sea is hard, but she is honest -- more than the Road, they say."'
 
 dock_trader:
   name: a Quench dock-trader
@@ -866,7 +866,7 @@ ventforge_master:
     ventforges:
       - '"The Vent-Forges are part guild, part cult -- we compete to work the hottest, rawest ember, closest to the Forge. It kills the careless and crowns the bold. The Free Forges'' most radical wing lives here; the Wardens are barely tolerated."'
     forge:
-      - '"North, past the Anvil-Vents, the ground drops toward the Forge itself -- the source of all ember and shape. The Vent-Lord keeps the last vent before it. Reach it, and you stand where a walking Forger comes nearest to raw creation. Reach past it, and you climb the Spiral toward the Forge and the answer."'
+      - '"North, past the Anvil-Vents, the ground runs on toward the Forge itself -- the source of all ember and shape. The Vent-Lord keeps the last vent before it. Reach it, and you stand where a walking Forger comes nearest to raw creation. Reach past it, and you walk the last road toward the Forge and the answer."'
 
 kollkin_trader:
   name: a Kollkin shelf-trader
@@ -943,22 +943,22 @@ sky_warden:
   location: highgate
   keywords: [warden, sky, highgate, skyborn]
   dialogue:
-    - '"You have crossed the whole world to reach me, Forger. Beyond this gate the surface ends and the Great Spiral climbs toward the Forge. Few pass. Fewer return."'
-    - '"We keep the last threshold, and we keep it hardest of all. The Wardens locked the craft to guard the world. Here, at the foot of the climb, is where that guarding matters most."'
+    - '"You have crossed the whole world to reach me, Forger. Beyond this gate the known world ends and the Forgeward Road runs on toward the Forge. Few pass. Fewer return."'
+    - '"We keep the last threshold, and we keep it hardest of all. The Wardens locked the craft to guard the world. Here, at the edge of the last marches, is where that guarding matters most."'
   topics:
     sundered_sky:
-      - '"The Sundered Sky is the lands the Unforging tore loose that never fell -- shards of the old world hung in the high air on stubborn Forgework, drifting on the winds. The last surface Reach, and the loneliest. Beyond it, only the climb."'
+      - '"The Sundered Sky is the lands the Unforging tore loose that never fell -- shards of the old world hung in the high air on stubborn Forgework, drifting on the winds. The last Reach before the Forge, and the loneliest. Beyond it, only the Road."'
     highgate:
-      - '"Highgate is the sky-Wardens'' hold at the foot of the Coilfoot, the gate to the Great Spiral. We are the Concord''s most important and most isolated holding -- the door to the endgame, guarded by the few who can bear the sky."'
+      - '"Highgate is the sky-Wardens'' hold at the foot of the Coilfoot, the gate to the Forgeward Road. We are the Concord''s most important and most isolated holding -- the door to the endgame, guarded by the few who can bear the sky."'
     spiral:
-      - '"Up, past my test, the Coilfoot climbs into the first Coils of the Great Spiral -- the vertical endgame, Coil upon Coil toward the Forge and the Sovereign at the summit. You have seen the whole world. Now you climb it. Go, if you are ready. Nothing here is."'
+      - '"On, past my test, the Coilfoot runs into the first marches of the Forgeward Road -- the final frontier, march upon march toward the Forge and the Sovereign at the Forge''s Edge. You have seen the whole world. Now you walk its far heart. Go, if you are ready. Nothing here is."'
 
 anchor_keeper:
   name: a Skyborn anchor-keeper
   location: highgate
   keywords: [keeper, anchor, skyborn, merchant]
   dialogue:
-    - '"Sky-craft and anchor-work, for a Forger bound higher. The winds take the unready. Buy what holds you down before you climb what pulls you up."'
+    - '"Sky-craft and anchor-work, for a Forger bound onward. The winds take the unready. Buy what holds you steady before you cross what would tear you loose."'
   shop:
     sells:
       healing_draught: 20

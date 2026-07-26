@@ -6,7 +6,7 @@ touching every system. The world loads once per process from FORGE_SEED, so this
 aethryn seed in a SUBPROCESS (its own DB in tmp) and asserts a stranger can actually play it:
 create a hero, take a calling and a borrowed subjob kit, take a quest and swear an Order, fight
 with an ability, earn coins, gather and quaff a draught, hold a topic conversation, read the
-bounty board and the sheet -- and that the endgame (the level-255 summit) is really wired.
+bounty board and the sheet -- and that the endgame (the level-300 Forge's Edge) is really wired.
 """
 
 import os
@@ -58,17 +58,17 @@ assert s.level >= 1, "leveling engine ran"
 # 4. Back to town: quaff the draught (heal), and hold a real conversation.
 t("west")  # -> cinderhearth_square
 assert "quaff" in t("quaff draught").lower(), "spend a consumable"
-assert "Spiral" in t("ask sela about spiral"), "topic conversation"
+assert "Forgeward Road" in t("ask sela about spiral"), "topic conversation"
 
 # 5. The side-content board and the character sheet both render.
 assert "bounty board" in t("contracts").lower(), "the bounty board"
 assert "HP" in t("score") or "Vanguard" in t("score"), "the score sheet"
 
-# 6. The endgame is really wired: the level-255 summit room and the Sovereign's bounty exist.
+# 6. The endgame is really wired: the level-300 far-end room and the Sovereign's bounty exist.
 from parts.world.world import WORLD
 from parts.world import quest
-assert "the_spiral_summit" in WORLD, "the summit room exists"
-assert any(q == "bounty_spiral_sovereign" for q in quest._QUESTS), "the summit bounty exists"
+assert "the_spiral_summit" in WORLD, "the Forge's Edge room exists"
+assert any(q == "bounty_spiral_sovereign" for q in quest._QUESTS), "the far-end bounty exists"
 
 print("PLAYTHROUGH_OK")
 """

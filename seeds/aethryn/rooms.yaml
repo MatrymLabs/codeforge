@@ -455,111 +455,112 @@ warden_gate:
   name: The Warden Gate
   desc: |-
     The Concord's seat and the threshold of the Wardenmarch: beyond this gate the
-    Ember-road climbs to the Coilfoot Range and the first Coils of the Great Spiral.
+    Ember-road runs east to the Coilfoot Marches and the start of the Forgeward Road.
     A Warden Sentinel of grey Forgework bars the arch, and the gate-keeper watches
     to see if you are the Forger who can put it down. This is the Warden's test.
   exits:
     south: the_grand_forge
     north: the_wardenmarch
 
-# --- The Wardenmarch and the First Coil of the Great Spiral (world bible s.20, s.24). ---
-# Past the Warden's test the megadungeon ascent begins: an endless climb of Coils, one
-# Gate-boss per floor. The first Coil runs levels ~18-22 -- true above-Emberreach danger.
+# --- The Wardenmarch and the first marches of the Forgeward Road (world bible s.20, s.24). ---
+# Past the Warden's test the long frontier begins: a flat road running east into the deepening
+# wilds, one road-warden per march. The first march runs levels ~18-22 -- true above-Emberreach
+# danger. The world does not climb; it opens outward toward the Forge at the world's heart.
 
 the_wardenmarch:
   name: The Wardenmarch
   desc: |-
     Beyond the gate the Concord's own country: watch-cairns and old Forgework mark the
-    road to the Coilfoot Range, where the Great Spiral lifts out of the world. The air
-    thins and hums. Emberreach is behind you now. The ascent is ahead, and up.
+    road east to the Coilfoot Marches, where the Forgeward Road runs out across the world.
+    The air hums with old charge. Emberreach is behind you now. The frontier is ahead, east.
   exits:
     south: warden_gate
-    north: coilfoot_ascent
+    east: coilfoot_ascent
 
 coilfoot_ascent:
-  name: The Coilfoot Ascent
+  name: The Coilfoot March
   desc: |-
-    The base of the first Coil, where the Great Spiral's lowest stair winds up into cloud.
-    Loose ember-wisps drift off the old Forgework, half-alive and hostile to the living.
-    The stair climbs up; the Wardenmarch lies back to the south.
+    The start of the Forgeward Road, where the old highway runs east out of the settled land
+    into the wilds. Loose ember-wisps drift off the abandoned Forgework, half-alive and hostile
+    to the living. The road goes on east; the Wardenmarch lies back to the west.
   exits:
-    south: the_wardenmarch
-    up: coil_first_landing
+    west: the_wardenmarch
+    east: coil_first_landing
 
 coil_first_landing:
-  name: The First Coil Landing
+  name: The First Waystation
   desc: |-
-    A wide forged landing on the first Coil, ringed by cold ascent-lamps. At its center
-    a Forgewraith keeps the stair -- the first Gate-boss of the Spiral, made of the wrath
-    the Unforging left behind. Past it the stair climbs on, up into the Second Coil.
+    A wide forged waystation on the road, ringed by cold road-lamps. At its center a Forgewraith
+    keeps the way -- the first road-warden of the frontier, made of the wrath the Unforging left
+    behind. Past it the road runs on, east into the second march.
   exits:
-    down: coilfoot_ascent
-    up: coil_second_ascent
+    west: coilfoot_ascent
+    east: coil_second_ascent
 
-# --- The Second Coil of the Great Spiral (world bible s.24): the ascent climbs, levels ~24-28. ---
-# Higher than the first Coil, colder, and hungrier. Its Gate-boss, the Ashlord, keeps the stair.
+# --- The second march of the Forgeward Road (world bible s.24): the road deepens, levels ~24-28. ---
+# Further out than the first, colder, and hungrier. Its road-warden, the Ashlord, keeps the way.
 
 coil_second_ascent:
-  name: The Second Coil Ascent
+  name: The Second March
   desc: |-
-    The stair narrows as the Second Coil lifts higher into the Spiral's cold. Revenants of
-    fallen climbers walk the forged steps, grey and unfinished, mistaking the living for
-    the way home. The First Coil falls away below; the stair climbs on toward a bridgespan.
+    The road narrows as the second march runs deeper into the wilds' cold. Revenants of fallen
+    travellers walk the forged verge, grey and unfinished, mistaking the living for the way home.
+    The first waystation falls away behind; the road runs on east toward a bridgespan.
   exits:
-    down: coil_first_landing
-    up: coil_bridgespan
+    west: coil_first_landing
+    east: coil_bridgespan
 
 coil_bridgespan:
-  name: The Coil Bridgespan
+  name: The Roadbridge
   desc: |-
-    A slender Forgework bridge arcs between two turns of the Spiral, ascent-lamps guttering
-    along its rail above a fall with no bottom. An Ashen Sentinel walks the span, and there
-    is no room to go around. Beyond it the stair reaches the Second Coil's landing.
+    A slender Forgework bridge arcs across a chasm the Unforging tore, road-lamps guttering along
+    its rail above a fall with no bottom. An Ashen Sentinel walks the span, and there is no room
+    to go around. Beyond it the road reaches the second waystation.
   exits:
-    down: coil_second_ascent
-    up: coil_second_landing
+    west: coil_second_ascent
+    east: coil_second_landing
 
 coil_second_landing:
-  name: The Second Coil Landing
+  name: The Second Waystation
   desc: |-
-    A high forged landing where the Second Coil's cold burns blue. The Ashlord holds the
-    stair here -- a Gate-boss grown from a Forge-master the Unforging turned to ash and will.
-    Past it the stair climbs on, up into the storm-wracked Third Coil of the Spiral.
+    A forged waystation where the wilds' cold burns blue. The Ashlord holds the way here -- a
+    road-warden grown from a Forge-master the Unforging turned to ash and will. Past it the road
+    runs on, east into the storm-wracked third march.
   exits:
-    down: coil_bridgespan
-    up: coil_third_ascent
+    west: coil_bridgespan
+    east: coil_third_ascent
 
-# --- The Third Coil of the Great Spiral: higher, storm-wracked, levels ~31-38. Each Coil is a ---
-# harder wall than the last (world bible s.24 -- the megadungeon's endless ascent).
+# --- The third march of the Forgeward Road: deeper, storm-wracked, levels ~31-38. Each march is a ---
+# harder wall than the last (world bible s.24 -- the frontier's deepening danger).
 
 coil_third_ascent:
-  name: The Third Coil Ascent
+  name: The Third March
   desc: |-
-    The Spiral's third turn climbs into a standing storm of forge-lightning, the old Coilwork
-    humming with charge. Stormbound husks -- climbers the ascent burned hollow -- walk the steps.
-    The Second Coil falls away below; the stair climbs on toward a wind-scoured reach.
+    The road's third march runs into a standing storm of forge-lightning, the old Roadwork
+    humming with charge. Stormbound husks -- travellers the wilds burned hollow -- walk the verge.
+    The second waystation falls away behind; the road runs on east toward a wind-scoured reach.
   exits:
-    down: coil_second_landing
-    up: coil_stormreach
+    west: coil_second_landing
+    east: coil_stormreach
 
 coil_stormreach:
   name: The Stormreach
   desc: |-
-    A wind-scoured reach of the Third Coil where the forge-storm never breaks. A Coil Harrier
-    rides the gale, striking at what climbs. There is no shelter here but the stair, up, to the
-    landing above -- or back down, out of the wind.
+    A wind-scoured stretch of the third march where the forge-storm never breaks. A Road Harrier
+    rides the gale, striking at what passes. There is no shelter here but the road, east, to the
+    waystation ahead -- or back west, out of the wind.
   exits:
-    down: coil_third_ascent
-    up: coil_third_landing
+    west: coil_third_ascent
+    east: coil_third_landing
 
 coil_third_landing:
-  name: The Third Coil Landing
+  name: The Third Waystation
   desc: |-
-    The storm breaks open onto a vast forged landing crowned in lightning. The Stormlord keeps
-    the stair -- a Gate-boss of living forge-storm, the Third Coil's wall. The Spiral climbs on
-    above into cloud and dark, Coil beyond Coil, further than any map the Kindlands hold.
+    The storm breaks open onto a vast forged waystation crowned in lightning. The Stormlord keeps
+    the way -- a road-warden of living forge-storm, the third march's wall. The Forgeward Road runs
+    on east into the deepening wilds, march beyond march, further than any map the Kindlands hold.
   exits:
-    down: coil_stormreach
+    west: coil_stormreach
 
 # --- The Cinderdeep (world bible: the downward branch). The coast's OTHER road: down from the ---
 # cellar hearth instead of north up the Ember-road. A mid-band depths dungeon (levels ~10-15),
@@ -692,16 +693,16 @@ the_sky_lanes:
 highgate:
   name: Highgate
   desc: |-
-    The sky-Warden capital, an anchor-hold on the greatest of the drifting shards at the foot of the
-    Coilfoot, where the Great Spiral rises out of the world toward the Forge. The Skyborn keep the
-    sky-Gates and the way up -- the last threshold before the vertical endgame, guarded hardest of
-    all. A sky-Warden holds the gate; an anchor-keeper keeps a stall. The lanes lie back down; a
-    drift-bridge runs out to the wandering shards; and UP, past the sky-Warden's test, the Coilfoot
-    climbs into the first Coils of the Spiral.
+    The sky-Warden capital, an anchor-hold on the greatest of the drifting shards, moored by a great
+    anchor-chain to the Coilfoot far below, where the Forgeward Road runs out across the world toward
+    the Forge. The Skyborn keep the sky-Gates and the anchor-line -- a second way onto the frontier,
+    guarded hardest of all. A sky-Warden holds the gate; an anchor-keeper keeps a stall. The lanes lie
+    back down; a drift-bridge runs out east to the wandering shards; and NORTH, past the sky-Warden's
+    test, the anchor-line carries you down to the Coilfoot and the start of the Forgeward Road.
   exits:
     down: the_sky_lanes
     east: the_drifting_reach
-    up: coilfoot_ascent
+    north: coilfoot_ascent
 
 the_drifting_reach:
   name: The Drifting Reach
