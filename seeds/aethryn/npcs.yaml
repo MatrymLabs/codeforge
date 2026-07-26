@@ -61,6 +61,7 @@ reach_wolf:
   atk: 3  # a real fight; it strikes back (the training-ground failsafe still catches a fall)
   level: 3  # a modest step above a fresh Forger: full reward now, worth nothing once you outclass it
   tier: normal
+  drops: [emberhide_hood]  # coast hide for the head slot: the Emberhide set starts here
 
 # --- The Reachwood: a lateral forest region east of the coast (levels 5-10), an alternative to
 # --- diving the cold cellar. A boar, a lore-keeping warden, and a mini-boss in the warren north. ---
@@ -75,6 +76,7 @@ thornback_boar:
   atk: 5
   level: 5
   tier: normal  # the Reachwood's first threat, a step past the coast wolves
+  drops: [emberhide_jerkin]  # boar-hide for the body slot (the Emberhide set)
 
 the_greenwarden:
   name: the Greenwarden
@@ -558,6 +560,7 @@ tide_crawler:
   attack_element: WTR  # a thing of the cold sea: its touch is brine and flood
   level: 6
   tier: normal  # the strand's threat, a step past the coast
+  drops: [emberhide_wraps]  # shell-cured hide for the arm slot (the Emberhide set)
 
 harbormaster:
   name: the Harbormaster of Quench

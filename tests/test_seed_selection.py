@@ -138,6 +138,29 @@ def test_aethryn_recipes_forge_real_items_from_real_materials():
             assert material in item_labels, f"recipe {label} needs unknown material {material}"
 
 
+def test_aethryn_cradle_offers_a_slot_complete_armor_set():
+    """A world you can walk needs gear to wear: the Emberreach cradle ships the Emberhide set, a
+    slot-complete starter armor kit (head + body + arm) dropped by the coast beasts, so a fresh
+    Forger can outfit every armor slot before leaving the cradle (armor was the thin slot)."""
+    items = load_items(AETHRYN / "items.yaml")
+    emberhide = {"emberhide_hood": "head", "emberhide_jerkin": "body", "emberhide_wraps": "arm"}
+    for label, slot in emberhide.items():
+        assert label in items, f"the Emberhide set is missing {label}"
+        assert items[label]["slot"] == slot, f"{label} should fill the {slot} slot"
+        assert items[label]["mods"], f"{label} grants no stats"  # a real piece, not a flavour prop
+    # every piece is obtainable in the cradle: dropped by an early coast beast, not stranded
+    npcs = load_npcs(AETHRYN / "npcs.yaml")
+    assert "emberhide_hood" in npcs["reach_wolf"]["drops"]
+    assert "emberhide_jerkin" in npcs["thornback_boar"]["drops"]
+    assert "emberhide_wraps" in npcs["tide_crawler"]["drops"]
+    # the cradle now covers all three ARMOR slots between its own drops (the point of this set)
+    cradle_foes = ("reach_wolf", "thornback_boar", "tide_crawler")
+    cradle_slots = {
+        items[d]["slot"] for f in cradle_foes for d in npcs[f].get("drops", []) if items[d]["slot"]
+    }
+    assert {"head", "body", "arm"} <= cradle_slots
+
+
 def test_aethryn_cinderdeep_descends_to_a_real_bottom():
     """The coast's downward road no longer dead-ends: the maw opens down through the Drowned Way to
     the Cinderheart, where a frost-typed bottom-boss (bring fire) gives the deep a real climax."""
