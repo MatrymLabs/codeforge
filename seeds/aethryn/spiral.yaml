@@ -12,3 +12,4 @@ first_coil: 4                # marches 1-3 are hand-authored; generation continu
 base_level: 43               # the 4th march's warden (its husk lands at 39, right above Stormlord 38)
 levels_per_coil: 9           # each march further out raises the road-warden this many levels
 top_level: 300               # the road's far end: the Sovereign at the world's ceiling, the Forge itself
+summit_drop: sovereigns_regalia  # the legendary capstone: the final boss's reward, a cut above all gear

@@ -291,6 +291,28 @@ def test_aethryn_consumables_scale_across_the_journey():
     assert "grand_healing_draught" not in npcs["wren"]["shop"]["sells"]
 
 
+def test_aethryn_sovereign_drops_a_legendary_capstone():
+    """The final boss at the world's ceiling (L300) drops a named LEGENDARY, not the mid road
+    keystone: the Sovereign's Regalia, a cut above every regional relic - the one artifact that says
+    the whole 1-300 road is done. Wired through spiral.yaml's `summit_drop`."""
+    from parts.world.spiral import SUMMIT_BOSS, generate_spiral, load_spiral_config
+
+    items = load_items(AETHRYN / "items.yaml")
+    config = load_spiral_config(AETHRYN / "spiral.yaml")
+    assert config is not None and config.get("summit_drop") == "sovereigns_regalia"
+    _rooms, npcs, _first = generate_spiral(config, {"coil_third_landing": {"exits": {}}})
+    sovereign = npcs[SUMMIT_BOSS]
+    assert sovereign["level"] == 300 and sovereign["drops"] == ["sovereigns_regalia"]
+    regalia = items["sovereigns_regalia"]
+    assert regalia["slot"] and regalia["mods"]  # a real equippable artifact
+    # the capstone out-powers the best regional accessory (a legendary, not just another relic)
+    best_regional = max(
+        sum(items[i]["mods"].values())
+        for i in ("anchor_stone", "drowned_seal", "sunhold_sigil", "warden_sigil")
+    )
+    assert sum(regalia["mods"].values()) > best_regional
+
+
 def test_aethryn_exploration_rooms_hold_placed_treasures():
     """Reaching a deep or off-path terminal rewards a one-time treasure ON THE GROUND (not an RNG
     drop): unique relics placed in the ruin, the Cinderheart, the drowned capital, the heart-grove,
