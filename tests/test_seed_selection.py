@@ -612,6 +612,7 @@ def test_aethryn_dungeons_are_delves_not_single_boss_rooms():
         "Frozen Court": ["the_glass_gallery", "the_rime_vault", "the_frozen_court"],
         "Vent-Deep": ["the_anvil_vents", "the_vent_gallery", "the_vent_deep"],
         "Wandering Court": ["the_drifting_reach", "the_broken_span", "the_wandering_court"],
+        "Ashen Ruin": ["the_scoured_ruin", "the_ashen_vault", "the_glass_crater"],
     }
 
     def foe_level(room: str) -> int:

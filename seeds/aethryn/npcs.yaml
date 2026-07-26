@@ -1434,3 +1434,20 @@ cinderhearth_elder:
   topics:
     rumor:
       - '"Down the cellar under the square the Unforging left a made-hall half-real, its steps all out of order. The young Forgers go down to set it right. Some come up. Mind your footing and mind the cold-crawlers, and you will be one of the some."'
+
+# --- The Ashen Vault's keeper (Seed Scale Directive): the mini-boss gate on Emberreach's second
+# --- dungeon, between the salvage-wraith and the Ash-Colossus. ---
+ashvault_sentinel:
+  name: a sentinel of the ashen vault
+  location: the_ashen_vault
+  keywords: [sentinel, vault, ashen, ash]
+  dialogue:
+    - The grey wall of the vault peels away and stands: a sentinel of fused ash, grown to keep a door the makers scoured to glass, and it comes for the one thing warm in the dark.
+  hp: 88
+  atk: 13
+  aggressive: true
+  attack_element: DRK  # a thing of the buried unmaking: entropy and grey ash (bring radiance)
+  level: 22
+  tier: elite  # the vault's gate on the Ashwastes delve to the Ash-Colossus (x3 reward)
+  drops: [greater_healing_draught]
+  loot: {ember_shard: 4, hollow_ingot: 1, nothing: 2}

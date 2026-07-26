@@ -441,7 +441,7 @@ the_scoured_ruin:
     Unforging left. The crater lies east; the dunes, back west.
   exits:
     west: the_cinder_dunes
-    east: the_glass_crater
+    east: the_ashen_vault
 
 the_glass_crater:
   name: The Glass Crater
@@ -451,7 +451,7 @@ the_glass_crater:
     keeps it -- a giant of welded cinder the wastes grew around a scar. This is the bottom of the
     desert road. Still it, and the Ashwastes are answered. The ruin lies back west.
   exits:
-    west: the_scoured_ruin
+    west: the_ashen_vault
 
 warden_gate:
   name: The Warden Gate
@@ -871,3 +871,17 @@ the_forgotten_shrine:
     left as offering here still lies in the moss, untaken for an age. The deepwood lies back west.
   exits:
     west: the_deepwood
+
+# --- Deepening the Ashwastes ruin (Seed Scale Directive): the scoured ruin was a corridor to the
+# --- crater-boss; open the buried Ashen Vault between them, so Emberreach's second dungeon has an
+# --- interior encounter space, a hidden find, and a mini-boss gate before the Ash-Colossus. ---
+the_ashen_vault:
+  name: The Ashen Vault
+  desc: |-
+    A stair sunk in the ruin's floor drops into a vault the Unforging buried whole: a Forge-hold's
+    strongroom, its door long since scoured to glass, its air grey and unmoving. What the makers
+    sealed here was never meant to be opened, and a sentinel of fused ash still keeps it, grown out
+    of the vault's own walls. The ruin lies back west; the glass crater opens east, through the dark.
+  exits:
+    west: the_scoured_ruin
+    east: the_glass_crater
