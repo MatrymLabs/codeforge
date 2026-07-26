@@ -315,6 +315,34 @@ def test_aethryn_regional_sets_grant_bonuses_from_real_pieces():
     assert active_set_bonuses(set(storm["pieces"][:-1]), sets) == {}
 
 
+def test_aethryn_conquering_every_reach_forges_a_legendary():
+    """A completionist endgame loop: each of the five great Reaches' bosses drops a unique essence,
+    and a recipe forges the Reachlord's Signet (a legendary) from ALL FIVE - so the reward demands
+    besting every Reach across the sea and the sky, not grinding one. Cross-checked against real
+    items so the loop can never need or make a phantom."""
+    from parts.world.seed import load_recipes
+
+    npcs = load_npcs(AETHRYN / "npcs.yaml")
+    items = load_items(AETHRYN / "items.yaml")
+    boss_essence = {
+        "sunhold_warden": "brine_essence",
+        "boughwarden": "grove_essence",
+        "rime_king": "rime_essence",
+        "vent_lord": "molten_essence",
+        "court_warden": "storm_essence",
+    }
+    for boss, essence in boss_essence.items():
+        assert essence in npcs[boss]["drops"], f"{boss} does not drop {essence}"
+        assert essence in items  # a real material
+    recipe = load_recipes(AETHRYN / "recipes.yaml")["forge_reachlord_signet"]
+    assert recipe["makes"] == "reachlord_signet"
+    assert set(recipe["inputs"]) == set(boss_essence.values())  # needs one of EVERY Reach's essence
+    signet = items["reachlord_signet"]
+    assert signet["slot"] and signet["mods"]  # a real equippable legendary
+    # it out-powers a regional accessory (a legendary reward for clearing the world)
+    assert sum(signet["mods"].values()) > sum(items["anchor_stone"]["mods"].values())
+
+
 def test_aethryn_sovereign_drops_a_legendary_capstone():
     """The final boss at the world's ceiling (L300) drops a named LEGENDARY, not the mid road
     keystone: the Sovereign's Regalia, a cut above every regional relic - the one artifact that says

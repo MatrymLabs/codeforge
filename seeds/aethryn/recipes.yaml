@@ -71,3 +71,10 @@ forge_reaver_blade:
   name: a reaver's blade
   makes: reaver_blade
   inputs: {ember_shard: 4, hollow_ingot: 2}
+
+# The completionist endgame craft: one essence from every great Reach's boss forges the Reachlord's
+# Signet, a legendary that says you conquered the whole world across the sea and the sky.
+forge_reachlord_signet:
+  name: the Reachlord's Signet
+  makes: reachlord_signet
+  inputs: {brine_essence: 1, grove_essence: 1, rime_essence: 1, molten_essence: 1, storm_essence: 1}

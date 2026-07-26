@@ -550,3 +550,39 @@ skyborn_inscription:
     apart and we stayed. Whatever you have lost below, whatever cooled and cracked and sank -- up
     here the rule is only this: drive your anchor, and hold. The wind is old and it is patient, but
     so are the Skyborn.
+
+# --- The Reach essences + the Reachlord's Signet (Content Manufacturing Campaign: a completionist
+# --- endgame loop). Each of the five great Reaches' bosses drops a unique essence; collect all five
+# --- (you must best every Reach) and craft the Reachlord's Signet, a legendary that says you
+# --- conquered the whole world across the sea and the sky. Drop-only materials + a craftable relic. ---
+brine_essence:
+  name: an essence of the drowned deep
+  keywords: [essence, brine, drowned, quenchmere]
+  location: nowhere
+
+grove_essence:
+  name: an essence of the living wood
+  keywords: [essence, grove, verdant, verdance]
+  location: nowhere
+
+rime_essence:
+  name: an essence of unmelting ice
+  keywords: [essence, rime, frost, rimefall]
+  location: nowhere
+
+molten_essence:
+  name: an essence of the near Forge
+  keywords: [essence, molten, forge, kollforge]
+  location: nowhere
+
+storm_essence:
+  name: an essence of the tearing sky
+  keywords: [essence, storm, sky, sundered]
+  location: nowhere
+
+reachlord_signet:
+  name: the Reachlord's Signet
+  keywords: [signet, reachlord, ring, relic, legendary]
+  location: nowhere
+  slot: accessory_2
+  mods: {DEF: 8, "MAG DEF": 8, EVA: 5}
