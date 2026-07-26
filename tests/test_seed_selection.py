@@ -220,7 +220,26 @@ def test_aethryn_every_reach_offers_a_slot_complete_loadout():
         assert gear.complete, f"{reach} cannot outfit a full loadout: missing {gear.missing}"
 
 
-def test_aethryn_cinderdeep_descends_to_a_real_bottom():
+def test_aethryn_reach_merchants_stock_regional_gear():
+    """A Reach's shop sells that Reach's OWN gear, not one starter blade everywhere: each trader
+    stocks items its own foes drop, so a player has an economic path to regional gear (buy it, or
+    grind it), and a high-Reach shop no longer sells low-level castoffs. Also cross-checks that
+    every item on every shelf is a real prototype (a shop can never sell a phantom)."""
+    npcs = load_npcs(AETHRYN / "npcs.yaml")
+    items = load_items(AETHRYN / "items.yaml")
+    # a trader in each Reach, and the foes that drop that Reach's regionally-themed gear
+    trader_reach_foes = {
+        "merewright_captain": ["brine_wight", "sunken_revenant", "sunhold_warden"],
+        "canopy_trader": ["canopy_stalker", "mire_returned", "boughwarden"],
+        "kollkin_trader": ["forgeborn", "cinder_drake", "vent_lord"],
+        "anchor_keeper": ["stormkin", "fall_wight", "court_warden"],
+        "market_trader": ["reach_wolf", "thornback_boar", "tide_crawler"],
+    }
+    for trader, foes in trader_reach_foes.items():
+        sells = set(npcs[trader]["shop"]["sells"])
+        assert sells <= set(items), f"{trader} sells a phantom item: {sells - set(items)}"
+        regional_drops = {d for f in foes for d in npcs[f].get("drops", [])}
+        assert sells & regional_drops, f"{trader} stocks none of its own Reach's gear"
     """The coast's downward road no longer dead-ends: the maw opens down through the Drowned Way to
     the Cinderheart, where a frost-typed bottom-boss (bring fire) gives the deep a real climax."""
     rooms = load_rooms(AETHRYN / "rooms.yaml")

@@ -230,6 +230,9 @@ market_trader:
       cinder_hammer: 40      # a starter weapon (ATK 5, DEF 1)
       reaver_blade: 90       # the better blade (ATK 9, ACC 5)
       cindershell_plate: 140  # body armor (DEF 8, EVA 2)
+      emberhide_hood: 35     # the Emberhide set, buyable so early armor is not drop-only (DEF 2, EVA 3)
+      emberhide_jerkin: 55   # (DEF 4, EVA 2)
+      emberhide_wraps: 45    # (DEF 3, ATK 2)
     # Coin taps: the trader buys your salvage and spare gear, so loot has a use.
     buys:
       ember_shard: 4
@@ -669,12 +672,14 @@ merewright_captain:
     sells:
       healing_draught: 16
       mana_draught: 16
-      reaver_blade: 100
-      cindershell_plate: 155
+      brinescale_hood: 110     # the Quenchmere's own Brinescale set (buyable, not only dropped)
+      brinescale_coat: 165
+      tideglass_harpoon: 150   # the Reach's signature weapon
     buys:
       ember_shard: 7
       hollow_ingot: 35
       pilots_compass: 45
+      sunhold_sigil: 90        # buys back the Reach-relic accessory
   topics:
     lanes:
       - '"The Wreckways are the only roads across the Quenchmere -- reef-lanes marked by the masts of the drowned. Follow the masts, mind the brine-wights, and you cross. Lose the masts, and you join them."'
@@ -749,11 +754,13 @@ canopy_trader:
     sells:
       healing_draught: 17
       mana_draught: 17
-      reaver_blade: 105
-      cindershell_plate: 160
+      verdant_hood: 130        # the Verdance's own Verdant bark-set
+      verdant_mantle: 185
+      thornwood_glaive: 165    # the Reach's signature weapon
     buys:
       ember_shard: 8
       hollow_ingot: 38
+      boughward_totem: 95      # buys back the Reach-relic accessory
   topics:
     mire:
       - '"South of the landing the wood turns to breathing swamp, where Cinder seeps up and the dead half-return. The mire teaches hard lessons and rare cures. Carry radiance, or carry your grave."'
@@ -887,11 +894,13 @@ kollkin_trader:
     sells:
       healing_draught: 18
       mana_draught: 18
-      stormlord_edge: 200
-      ashlord_gauntlet: 180
+      emberforged_plate: 320   # the Kollforge's own Emberforged set (body + arm)
+      emberforged_gauntlets: 250
+      ventforge_maul: 300      # the Reach's signature weapon
     buys:
       ember_shard: 9
       hollow_ingot: 40
+      vent_crown: 160          # buys back the Reach-relic head-piece
   topics:
     heat:
       - '"Work close to the Forge and everything is hotter -- the ember, the gear, the tempers. We lose Forgers to the vents every season. We also make the finest work in the world. Choose your risk."'
@@ -974,11 +983,13 @@ anchor_keeper:
     sells:
       healing_draught: 20
       mana_draught: 20
-      stormlord_edge: 210
-      wraithlamp_circlet: 180
+      stormward_helm: 300      # the Sundered Sky's own Stormward set (head + body)
+      stormward_cuirass: 360
+      stormcaller_pike: 340    # the Reach's signature weapon
     buys:
       ember_shard: 10
       hollow_ingot: 42
+      anchor_stone: 175        # buys back the Reach-relic accessory
   topics:
     winds:
       - '"East of Highgate the shards drift loose, crossed on sky-bridges that sway on the wind, and the fall-wights ride the raw edges. Out there the Drifting Court wanders, never in the same sky twice. Carry radiance, and carry a rope."'
