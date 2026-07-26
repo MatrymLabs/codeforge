@@ -1,0 +1,39 @@
+# SEED: aethryn -- sets.yaml (gear SET bonuses: wear a whole regional set and earn a bonus on top of
+# the pieces' own mods, so collecting a full set beats three unrelated pieces of the same tier).
+# Each set lists its item-prototype `pieces` and the flat `bonus` when all are worn. Bonuses scale
+# with the Reach's band. Cross-checked against real items at boot. See parts/world/gearsets.py.
+
+emberhide:
+  name: the Emberhide set
+  pieces: [emberhide_hood, emberhide_jerkin, emberhide_wraps]
+  bonus: {EVA: 3}
+
+hollowiron:
+  name: the Hollowiron set
+  pieces: [hollowiron_mask, cindershell_plate, hollowiron_gauntlets]
+  bonus: {DEF: 4}
+
+brinescale:
+  name: the Brinescale set
+  pieces: [brinescale_hood, brinescale_coat, brinescale_bracers]
+  bonus: {DEF: 4, "MAG DEF": 3}
+
+verdant:
+  name: the Verdant set
+  pieces: [verdant_hood, verdant_mantle, verdant_vambraces]
+  bonus: {DEF: 4, EVA: 3}
+
+rimeplate:
+  name: the Rimeplate set
+  pieces: [rimeplate_helm, rimeplate_hauberk, rimeplate_gauntlets]
+  bonus: {DEF: 6, "MAG DEF": 4}
+
+emberforged:
+  name: the Emberforged set
+  pieces: [vent_crown, emberforged_plate, emberforged_gauntlets]
+  bonus: {ATK: 5, DEF: 5}
+
+stormward:
+  name: the Stormward set
+  pieces: [stormward_helm, stormward_cuirass, stormward_vambraces]
+  bonus: {DEF: 8, EVA: 5}

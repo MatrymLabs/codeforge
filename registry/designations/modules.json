@@ -1667,6 +1667,29 @@
     "updated": "2026-07-11"
   },
   {
+    "designation": "MOD-04.069",
+    "name": "gearsets",
+    "status": "active",
+    "function": "set bonuses: wearing a whole gear set grants a bonus beyond its pieces",
+    "label": "gearsets",
+    "file": "parts/world/gearsets.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "docs/character_system.md",
+    "tests": "tests/test_gearsets.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "module"
+    ],
+    "notes": "Set-bonus math over seed sets.yaml; composes with equipment.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-26",
+    "updated": "2026-07-26"
+  },
+  {
     "designation": "MOD-04.027",
     "name": "job_progress",
     "status": "active",
