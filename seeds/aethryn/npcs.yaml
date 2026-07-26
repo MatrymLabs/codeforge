@@ -1112,3 +1112,87 @@ marchwatch_husk:
   level: 17
   tier: normal  # the Wardenmarch's own threat, on the threshold road out to the Forgeward frontier
   loot: {ember_shard: 2, nothing: 2}
+
+# --- City population (Content Manufacturing Campaign): ambient citizens who make the capitals feel
+# --- lived-in, each carrying a `rumor` topic that points a Forger toward nearby content (a
+# --- side-quest, a placed treasure, a boss). Non-combat -- they populate and guide, they do not fight. ---
+
+wharf_dockhand:
+  name: a Tidewharf dockhand
+  location: tidewharf_plaza
+  keywords: [dockhand, worker, wharf, tidewharf]
+  dialogue:
+    - '"Mind the planks, Forger -- half of Tidewharf is drowned hull, and the sea wants the other half back."'
+  topics:
+    rumor:
+      - '"Down the salvage-stair a drowned-lung sentry still keeps its watch, and the divers won''t work past it. Still the thing, and they say a pearl waits in Sunhold below for whoever does."'
+
+coast_child:
+  name: a coast child
+  location: cinderhearth_square
+  keywords: [child, kid, coast, urchin]
+  dialogue:
+    - The child chases an ember-wisp across the square, laughing, too young yet to fear the cold.
+  topics:
+    rumor:
+      - '"My gran says out in the Ashwastes there''s a ruin all melted to glass, and a grey thing that drifts it wearing shapes. She says there''s treasure in it. She says don''t go."'
+
+forge_apprentice:
+  name: a Grand Forge apprentice
+  location: the_grand_forge
+  keywords: [apprentice, forge, worker, student]
+  dialogue:
+    - '"One day I''ll forge something that outlives me. The masters say that''s the whole point, and the whole danger."'
+  topics:
+    rumor:
+      - '"They bring salvage in from the Scoured Ruin sometimes -- ashglass, light as breath and hard as spite. The Forger who cleared the wraith off it wore a charm cut from the stuff. I''d like to see that."'
+
+city_guard:
+  name: an Emberreach guard
+  location: the_grand_forge
+  keywords: [guard, soldier, watch, concord]
+  dialogue:
+    - '"The Concord keeps this gate and every gate to the frontier. Cross the Wardenmarch and you leave our watch behind. Go proven."'
+  topics:
+    rumor:
+      - '"East past the Warden Gate the road stops being kind. The Wardenmarch has husks on it now, watchmen who never stood down. First taste of the frontier, that. Last warning, too."'
+
+grove_tender:
+  name: a Deeprooted grove-tender
+  location: highbough
+  keywords: [tender, grove, deeprooted, gardener]
+  dialogue:
+    - '"We do not cut the wood, Forger. We tend it. There is a difference, and the mire is where you learn it."'
+  topics:
+    rumor:
+      - '"A serpent has the green passage the ferries thread -- takes a ferryman a crossing. And deeper in, in the Heart-Grove itself, a seed still grows that the Boughwarden guards. Living armour, for one the wood spares."'
+
+vent_hand:
+  name: a Kollkin vent-hand
+  location: emberkoll
+  keywords: [hand, worker, vent, kollkin]
+  dialogue:
+    - '"Closer to the Forge, hotter the work. We lose a Forger to the vents most seasons, and make the finest steel in the world the same season. Fair trade, we tell ourselves."'
+  topics:
+    rumor:
+      - '"A Forgeborn''s taken a working vent in the Anvil-Vents -- a made thing that outlived its maker, and it won''t give the fire back. Break it loose and the Kollkin will owe you a pour."'
+
+sky_pilgrim:
+  name: a sky-pilgrim
+  location: highgate
+  keywords: [pilgrim, wanderer, sky, skyborn]
+  dialogue:
+    - '"I came up the sky-ferry to see the shards before I die. They drift, you know. Nothing up here holds still but the wanting to."'
+  topics:
+    rumor:
+      - '"East of Highgate the shards drift loose, crossed on bridges that sway. Few walk out. The Skyborn keep a name for those who do -- and out there, they say, a shard of the old sky waits for a hand bold enough to take it."'
+
+rime_watcher:
+  name: a Rimefall watcher
+  location: stillhearth
+  keywords: [watcher, rime, frozen, hearth]
+  dialogue:
+    - '"We keep the one warm hearth in the Rimefall, and we keep watch. The cold here is old, and it remembers being a fire."'
+  topics:
+    rumor:
+      - '"The Frozen Court holds the Rime-King, flash-quenched at the height of the golden age and reigning still over a dead one. Bring fire to thaw the reign. Bring more fire than you think you need."'

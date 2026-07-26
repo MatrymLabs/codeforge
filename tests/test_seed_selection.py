@@ -91,6 +91,33 @@ def test_aethryn_wren_keeps_a_coast_shop_so_act_one_has_an_economy():
     assert wren["shop"]["buys"].get("ember_shard")  # and coast salvage has a buyer
 
 
+def test_aethryn_cities_have_citizens_who_carry_rumors():
+    """The capitals feel lived-in, not just a trader and a lore-keeper: ambient citizens populate
+    the hubs, and each carries a `rumor` topic that points a Forger toward nearby content (a
+    side-quest, a treasure, a boss). Citizens are non-combat: they populate and guide, not fight."""
+    npcs = load_npcs(AETHRYN / "npcs.yaml")
+    rooms = set(load_rooms(AETHRYN / "rooms.yaml"))
+    citizens = [
+        "wharf_dockhand",
+        "coast_child",
+        "forge_apprentice",
+        "city_guard",
+        "grove_tender",
+        "vent_hand",
+        "sky_pilgrim",
+        "rime_watcher",
+    ]
+    for c in citizens:
+        npc = npcs[c]
+        assert "level" not in npc, f"{c} is a citizen, not a combatant"
+        assert npc["location"].split(":")[-1] in rooms, f"{c} stands nowhere"
+        rumor = npc.get("topics", {}).get("rumor")
+        assert rumor and all(isinstance(line, str) and line for line in rumor), f"{c} has no rumor"
+    # populated beyond the trader/keeper: at least four distinct hub rooms gain a citizen
+    hub_rooms = {npcs[c]["location"].split(":")[-1] for c in citizens}
+    assert len(hub_rooms) >= 4
+
+
 def test_aethryn_capital_npcs_hold_real_conversations():
     """The capital feels lived-in: its lore, order, and gate keepers answer `ask about <topic>`, so
     a curious player learns the world and the Orders instead of reading cycling flavour barks."""
