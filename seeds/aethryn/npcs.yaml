@@ -1340,3 +1340,46 @@ brine_hulk:
   tier: elite  # the tidecave's mini-boss, an early off-path prize (x3 reward)
   drops: [tidecave_pearl]
   loot: {ember_shard: 4, nothing: 2}
+
+# --- The Deep Reachwood's life (Seed Scale Directive): foes for the expanded forest sub-zone. ---
+ember_lynx:
+  name: an ember-lynx
+  location: the_deepwood
+  keywords: [lynx, ember, cat, wood]
+  dialogue:
+    - The lynx drops from the branches without a sound, ember-eyes fixed, already inside your reach.
+  hp: 40
+  atk: 7
+  aggressive: true
+  level: 8
+  tier: normal  # the deepwood's hunter, a step past the glade
+  loot: {ember_shard: 2, nothing: 2}
+
+mere_lurker:
+  name: a mere-lurker
+  location: the_thornmere
+  keywords: [lurker, mere, bog, reed]
+  dialogue:
+    - The reeds part and the mere-lurker rises streaming black water, jaws already wide.
+  hp: 52
+  atk: 9
+  aggressive: true
+  attack_element: WTR  # a thing of the black-water mere
+  level: 9
+  tier: normal  # the gatherer's-corner threat
+  loot: {ember_shard: 3, reachwood_sap: 1, nothing: 2}
+
+shrine_warden:
+  name: the warden of the forgotten shrine
+  location: the_forgotten_shrine
+  keywords: [warden, shrine, forgework, guardian]
+  dialogue:
+    - '"..." The Forgework of the old shrine gathers itself upright, a keeper still at a post whose purpose no one alive remembers, and moves to keep it from you.'
+  hp: 120
+  atk: 14
+  aggressive: true
+  attack_element: HLY  # a thing of the old makers' shrine: its light is sacred (bring dark)
+  level: 12
+  tier: elite  # the hidden shrine's keeper, an off-path prize in the deep wood (x3 reward)
+  drops: [shrine_ward]
+  loot: {ember_shard: 4, nothing: 2}
