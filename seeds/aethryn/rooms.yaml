@@ -1575,11 +1575,13 @@ the_ashline:
     stopped, and the land ends not in cliff or sea but in un-ness, a shimmer where the ground gives out
     into raw grey possibility that was never cooled into anything. To stand here is to see the world's
     hem. A line-warden of the Ashborn keeps the last safe ground. The dunes lie back north; the drowned
-    canals run east; and a scoured track edges west along the scar toward the half-Forged ruins.
+    canals run east; a scoured track edges west along the scar toward the half-Forged ruins; and where
+    the ground gives out into un-ness, it does not end so much as open, DOWN, into the Cinderdeep.
   exits:
     north: the_grey_dunes
     east: the_drowned_canals
     west: the_scoured_reach
+    down: the_unmaking_verge
 
 # --- The Scoured Reach: a half-Forged ruin-delve where walls end in mid-air (noun-keyed vault) ---
 the_scoured_reach:
@@ -1606,3 +1608,79 @@ the_unfinished_vault:
     is the richest unmade thing on the surface. The scoured rooms lie back east.
   exits:
     east: the_scoured_reach
+
+# ============================================================================================
+# THE CINDERDEEP - the Descending Frontier (Great Creation Campaign, Phase I). Continental Atlas: what
+# the Unforging UNMADE - caverns and half-real regions where shapes never re-cooled, home of the
+# Unforged (entropy made hostile), the dungeon-continent that grows DOWNWARD forever. Every Reach has a
+# mouth into it; this is the mouth below the Cinderwaste's Ashline, where the surface's un-ness opens
+# into the true deep. A descending network on the vertical spine (up/down) with lateral cavern branches.
+# Level-banded 40-52, escalating with depth (the deeper you sink, the more the world comes apart).
+# ============================================================================================
+
+the_unmaking_verge:
+  name: The Unmaking Verge
+  desc: |-
+    Below the Ashline the world does not stop, it THINS: a cavern where the rock is only mostly there,
+    edges gone soft, a floor that remembers being a floor. This is the verge of the Cinderdeep, the
+    first breath of the unmade under-continent, and already the made world's rules hold loose. An
+    un-thing drifts the soft dark. The Ashline light lies back up; the greydark opens down.
+  exits:
+    up: the_ashline
+    down: the_greydark
+
+the_greydark:
+  name: The Greydark
+  desc: |-
+    A cavern-network with no true walls, only grey half-real dark that the eye keeps trying to finish
+    and failing: the Greydark, the Cinderdeep's first great hollow, where the Unforged drift the spaces
+    that never re-cooled into stone. This is the hub of the near deep. The verge lies back up; a hollow
+    march runs southeast along a seam of the almost-real; and the deep drops on, down, toward the
+    Unforged Reach.
+  exits:
+    up: the_unmaking_verge
+    down: the_unforged_reach
+    southeast: the_hollow_march
+
+the_hollow_march:
+  name: The Hollow March
+  desc: |-
+    A seam of the almost-real running off the Greydark, where cinder-wells pool the raw unmade Ember
+    that the deep gives up: good gathering, if the hollow-kin that haunt the march let you keep it.
+    This is a lateral wander of the near deep, a place to be that is not the main descent. The Greydark
+    lies back northwest.
+  exits:
+    northwest: the_greydark
+
+the_unforged_reach:
+  name: The Unforged Reach
+  desc: |-
+    Deeper: a hall where shapes never re-cooled at all, and the Unforged are not drifting things but a
+    settled population of the unmade, entropy grown into something that hunts. The made world is a rumor
+    here. The Greydark lies back up; a drowned kiln-city the deep swallowed stands lower still, down.
+  exits:
+    up: the_greydark
+    down: the_sunken_kiln
+
+the_sunken_kiln:
+  name: The Sunken Kiln
+  desc: |-
+    A whole Forge-city the Cinderdeep took and never digested: a kiln-town of the age before the
+    Unforging, sunk entire into the deep and half-unmade, its streets ending in grey nothing, its cold
+    kilns still holding the shapes of a last firing. A kiln-echo of the town's last master-smith keeps
+    the dead furnace-square. The Unforged Reach lies back up; the deepest built dark, the Umbral Deep,
+    opens down.
+  exits:
+    up: the_unforged_reach
+    down: the_umbral_deep
+
+the_umbral_deep:
+  name: The Umbral Deep
+  desc: |-
+    The bottom of the built descent, though the Cinderdeep does not truly have a bottom: a lightless
+    hollow where the unmaking is oldest and nearest to complete, and the Hollow King holds court - an
+    Unforged grown vast on an age of eating the made, the deep's own answer to the Rime-King and the
+    Boughwarden, a maker's nightmare turned inside out. Below here the deep only deepens, unbuilt and
+    waiting. The sunken kiln lies back up.
+  exits:
+    up: the_sunken_kiln
