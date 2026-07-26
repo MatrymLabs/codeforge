@@ -984,3 +984,52 @@ falling_hold_manifest:
     a mile below where the first keeper stood, by a man who died certain he had never moved. Some things
     do not fall fast enough to notice. That does not mean they are not falling. Read your own manifest
     twice, Forger. Then go up, while a chain still holds.
+# --- The Cinderwaste content (Great Creation Campaign, Phase I): the waste's survival trade, its
+# --- cinderglass gather, the sealed vault's prize, and the readable lore of the world's hem. ---
+water_ration:
+  name: a water-ration
+  keywords: [water, ration, drink, flask]
+  location: nowhere
+  consume: {hp: 15}  # the Cinderwaste's dearest trade: water, sold at the Salt-Market, drunk against the dry
+
+cinderglass_shard:
+  name: a shard of cinderglass
+  keywords: [cinderglass, glass, shard, cinder]
+  location: the_glassways
+  resettable: true  # the glassways' gather: Unforging-fused glass, sold hot in the Glass Market, reforms on reset
+
+scoured_vault_seal:
+  name: the scoured vault's seal
+  keywords: [seal, vault, scoured, sigil]
+  location: nowhere
+  slot: accessory_1
+  mods: {"MAG DEF": 9, DEF: 5}  # the sigil the last maker died sealing the vault with; carried off the colossus
+
+ashline_marker:
+  name: the last Ashborn marker
+  keywords: [marker, ashline, stone, hem]
+  location: the_ashline
+  lore: |-
+    The last salvage-pole the Ashborn drive before the Ashline, a cross-stave hung with the tokens of
+    those who walked past it and did not come back: a child's spoon, a clan-ring, a Forger's cold spark.
+    Carved down the stave, re-cut each time the wind wears it faint: "THE WORLD ENDS HERE. Not in fire,
+    not in flood, but in un-ness -- the place the making stopped and never started again. Do not mistake
+    this for a border. A border has another side. This has only the near side, and us, and the pull. We
+    are the people who live at the hem of the made world and keep each other from stepping off it. That
+    is the whole of the Ashborn faith. There is nothing past the last stone worth the walk, because
+    there is no past the last stone. Step back. Live in the made part. It is enough. It has to be."
+
+vault_testament:
+  name: the sealed maker's testament
+  keywords: [testament, vault, maker, seal]
+  location: the_unfinished_vault
+  lore: |-
+    Scratched inside the vault door by a hand running out of time: the testament of the scoured hold's
+    last maker. "The Unforging took the east wing between one breath and the next -- I watched a wall
+    become the memory of a wall and then nothing. It is coming through the hold room by room and it does
+    not hurry, because to it there is no time, only the slow forgetting of things that were made. I
+    cannot stop it. I can only seal this one vault so well that the un-ness has to remember, hard, that
+    this room was MADE, and stumble on the remembering. Everything I could not save is a doorway to
+    nothing now. This -- this stays made, because I insisted, with the last making I had, that it must.
+    If you read this, the seal held. Take what is here. And know that the only wall against the unmaking
+    is a made thing that refuses, absolutely, to be unmade. Refuse. It is the only Forge that matters."

@@ -31,6 +31,11 @@ register_bounties(NPCS)
 # (first-forge -> "forge"; spiral-ascent -> "spiral_landing".)
 START_ROOM: str = next(iter(WORLD))
 
+# The compass a Forger can walk: four cardinals, four diagonals, and the vertical pair, each with a
+# one- or two-letter shorthand. A room's exit may also be keyed by a NOUN (`gate`, `market`, `in`,
+# `out`) -- those are not listed here; they are typed literally and resolved against the room's own
+# exits (see _go_cmd and the noun-exit fallback in forge._route). The metaphor: the compass is
+# fixed, but a threshold can be named for the place it opens onto.
 DIRECTIONS: dict[str, str] = {
     "north": "north",
     "n": "north",
@@ -40,6 +45,14 @@ DIRECTIONS: dict[str, str] = {
     "e": "east",
     "west": "west",
     "w": "west",
+    "northeast": "northeast",
+    "ne": "northeast",
+    "northwest": "northwest",
+    "nw": "northwest",
+    "southeast": "southeast",
+    "se": "southeast",
+    "southwest": "southwest",
+    "sw": "southwest",
     "up": "up",
     "u": "up",
     "down": "down",
