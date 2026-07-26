@@ -1227,3 +1227,19 @@ flooded_forge_revenant:
   level: 28
   tier: elite  # the last guardian before the Sunhold Warden: an elite gate on the delve (x3 reward)
   loot: {ember_shard: 4, hollow_ingot: 2, nothing: 2}
+
+# --- The Heart-Grove's deeper delve (Content Manufacturing Campaign): the rootways hold the grove's
+# --- own guardian, the last thing before the Boughwarden, so the Verdance's heart is a real dungeon. ---
+rootbound_guardian:
+  name: a rootbound guardian of the grove
+  location: the_rootways
+  keywords: [guardian, rootbound, grove, verdant]
+  dialogue:
+    - The rootways tighten, and a guardian of living ember-wood pulls itself free of the wall, grown for exactly this: to keep the heart.
+  hp: 150
+  atk: 18
+  aggressive: true
+  attack_element: ERT  # a thing of old wood and stone-root: earthen blows (bring wind)
+  level: 30
+  tier: elite  # the last gate before the Boughwarden: an elite guardian on the delve (x3 reward)
+  loot: {ember_shard: 4, nothing: 2}

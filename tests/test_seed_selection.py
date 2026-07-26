@@ -538,29 +538,34 @@ def test_aethryn_verdance_is_a_living_wild_reach_off_the_crossroads():
     assert arc is not None and arc["steps"][-1]["on_defeat"] == "boughwarden"
 
 
-def test_aethryn_drowned_sunhold_is_a_real_delve_not_one_room():
-    """The sunken capital plays like a dungeon, not a single boss room: the salvage-stair delves
-    through the flooded halls and the drowned forge, each with its own foe, before the Warden's
-    court - a connected path with foe levels escalating toward the boss."""
+def test_aethryn_dungeons_are_delves_not_single_boss_rooms():
+    """Deepened dungeons play like dungeons: an approach chains through interior rooms, each with
+    its own foe, escalating in level toward the boss - not a single boss room. Data-driven over each
+    deepened dungeon's room path, so a new deepening just adds a row here."""
     rooms = load_rooms(AETHRYN / "rooms.yaml")
     npcs = load_npcs(AETHRYN / "npcs.yaml")
-    delve = [
-        "drowned_sunhold_descent",
-        "the_drowned_halls",
-        "the_flooded_forge",
-        "the_drowned_sunhold",
-    ]
-    for here, below in zip(delve, delve[1:], strict=False):  # the rooms chain straight down
-        assert rooms[here]["exits"]["down"] == below, f"{here} does not delve to {below}"
-    levels = []
-    for room in delve:  # every room on the delve holds a foe, escalating toward the boss
-        foe = next(
-            v
+    delves = {
+        "Drowned Sunhold": [
+            "drowned_sunhold_descent",
+            "the_drowned_halls",
+            "the_flooded_forge",
+            "the_drowned_sunhold",
+        ],
+        "Heart-Grove": ["the_deeproot_mire", "the_rootways", "the_heart_grove"],
+    }
+
+    def foe_level(room: str) -> int:
+        return next(
+            v["level"]
             for v in npcs.values()
             if v.get("location", "").split(":")[-1] == room and "level" in v
         )
-        levels.append(foe["level"])
-    assert len(levels) == 4 and levels == sorted(levels)  # a real escalating delve
+
+    for name, path in delves.items():
+        for here, below in zip(path, path[1:], strict=False):  # each room leads to the next
+            assert below in rooms[here]["exits"].values(), f"{name}: {here} does not reach {below}"
+        levels = [foe_level(r) for r in path]
+        assert len(levels) >= 3 and levels == sorted(levels), f"{name} does not escalate: {levels}"
 
 
 def test_aethryn_quenchmere_is_a_second_continent_reached_by_sea():

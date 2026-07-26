@@ -114,7 +114,7 @@ the_deeproot_mire:
     landing lies back north; deeper in, the Heart-Grove beats. Go west, into the wet dark.
   exits:
     north: verdance_landing
-    west: the_heart_grove
+    west: the_rootways
 
 the_heart_grove:
   name: The Heart-Grove
@@ -122,9 +122,9 @@ the_heart_grove:
     The living center of the Verdance: a single vast organism grown around a wellspring of wild Ember,
     a grove that is one creature the size of a valley. The Boughwarden guards its heart -- the apex of
     the whole continent's web, a thing the Deeprooted half-worship and wholly fear. This is the deepest
-    green in the world. The mire lies back east.
+    green in the world. The rootways lie back east.
   exits:
-    east: the_deeproot_mire
+    east: the_rootways
 
 tidewharf_plaza:
   name: The Tidewharf Plaza
@@ -749,3 +749,17 @@ the_flooded_forge:
   exits:
     up: the_drowned_halls
     down: the_drowned_sunhold
+
+# --- Deepening the Heart-Grove (Content Manufacturing Campaign): the Verdance's heart was one boss
+# --- room; now the rootways wind between the mire and the grove, a living throat of the continent
+# --- with its own guardian, so the deepest green plays like a delve. ---
+the_rootways:
+  name: The Rootways
+  desc: |-
+    Between the mire and the heart the wood closes to a throat: roots the girth of towers arch
+    overhead, and the whole passage breathes, slow and wet, around you. The Verdance knows you are
+    here. A rootbound thing the grove grew to keep its heart stirs from the living wall and turns
+    toward the warmth of you. The mire lies back east; the Heart-Grove beats ahead, west.
+  exits:
+    east: the_deeproot_mire
+    west: the_heart_grove
