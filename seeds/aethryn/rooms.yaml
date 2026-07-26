@@ -722,12 +722,14 @@ highgate:
     anchor-chain to the Coilfoot far below, where the Forgeward Road runs out across the world toward
     the Forge. The Skyborn keep the sky-Gates and the anchor-line -- a second way onto the frontier,
     guarded hardest of all. A sky-Warden holds the gate; an anchor-keeper keeps a stall. The lanes lie
-    back down; a drift-bridge runs out east to the wandering shards; and NORTH, past the sky-Warden's
-    test, the anchor-line carries you down to the Coilfoot and the start of the Forgeward Road.
+    back down; a drift-bridge runs out east to the wandering shards; the anchor-quarter of the city
+    lies south; and NORTH, past the sky-Warden's test, the anchor-line carries you down to the Coilfoot
+    and the start of the Forgeward Road.
   exits:
     down: the_sky_lanes
     east: the_drifting_reach
     north: coilfoot_ascent
+    south: the_anchor_quarter
 
 the_drifting_reach:
   name: The Drifting Reach
@@ -1358,3 +1360,72 @@ the_cold_hearth:
     forge-square lies back east.
   exits:
     east: dead_ashkoll
+
+# ============================================================================================
+# THE SUNDERED SKY EXPANSION (Great Creation Campaign) - the floating Reach grows to zone density: the
+# anchor-quarter (Highgate lived-in + the Skyborn creed), the Drifting Shoals (a sky-wind wilderness
+# leveling ground), and the Falling Shard (a sky-isle that LOST its Forgework and falls forever - the
+# Skyborn's one dread, the world's fourth dead capital by a different death). Banded 60-66, below the
+# Court-Warden (72).
+# ============================================================================================
+
+# --- Highgate proper: the anchor-quarter, lived-in, and the Skyborn creed ---
+the_anchor_quarter:
+  name: The Anchor-Quarter
+  desc: |-
+    The working heart of Highgate, built around the great anchor-capstan where the chain to the Coilfoot
+    runs down through the shard and out of sight into cloud: the Skyborn live their whole lives aloft,
+    moored but never landed, and hold the anchor a sacred trust. An anchor-keeper minds the capstan; a
+    sky-child runs the drift-rails without a tether. The Skyborn creed is cut in the capstan-drum for
+    any who read. Highgate's gate lies back north; the drifting shoals open south off the shard's edge.
+  exits:
+    north: highgate
+    south: the_drifting_shoals
+
+# --- The Drifting Shoals: a sky-wind wilderness, a leveling ground among the loose shards ---
+the_drifting_shoals:
+  name: The Drifting Shoals
+  desc: |-
+    Off the anchor-quarter's edge a shoal of lesser shards drifts on the high wind, crossed on sway-
+    bridges and trailing their waterfalls into the cloud-deep below. Stormkin ride the updrafts and
+    sky-rays glide the shard-lee, hunting the warm. Stormglass grows where the lightning grounds on the
+    drifting rock, for a Forger with the nerve to gather in the open sky. The anchor-quarter lies back
+    north; a tilting span runs west toward a shard that is losing its hold on the air.
+  exits:
+    north: the_anchor_quarter
+    west: the_tilting_span
+
+# --- The Falling Shard: a sky-isle that lost its Forgework and falls forever (a dead-city delve) ---
+the_tilting_span:
+  name: The Tilting Span
+  desc: |-
+    A sky-bridge run out to a shard gone wrong: the span tilts underfoot, its far end lower than its
+    near, because the shard it reaches is slowly, endlessly falling, its Forgework failing a hair a
+    year. Fall-revenants keep the tilting way, those the slow fall took and never finished taking. The
+    shoals lie back east; the falling shard's dead hold drops away, down.
+  exits:
+    east: the_drifting_shoals
+    down: the_falling_hold
+
+the_falling_hold:
+  name: The Falling Hold
+  desc: |-
+    A shard-city that lost its Forgework and has been falling ever since, so slowly that its people
+    lived and died and never knew they fell: a hold hung in an endless drop, everything in it drifted a
+    hand off the floor and never landing, a whole city held in the long breath before an impact that
+    will not come for an age. A drift-echo of the last anchor-keeper keeps the tilting square. The
+    tilting span lies back up; the hold's dead capstan stands at its heart, down.
+  exits:
+    up: the_tilting_span
+    down: the_anchor_deep
+
+the_anchor_deep:
+  name: The Anchor-Deep
+  desc: |-
+    The dead heart of the falling shard: the great capstan whose anchor-chain snapped an age ago, its
+    broken links still drifting in the endless fall. The Broken Anchor-Warden keeps it - the hold's own
+    guardian, set to hold the shard aloft and failing at it forever, gone wrong in the long drop, hauling
+    still on a chain that leads nowhere. What the hold could not take down with it still drifts unclaimed
+    by the dead capstan. The falling square lies back up.
+  exits:
+    up: the_falling_hold

@@ -938,3 +938,49 @@ ashkoll_last_pour:
     the people up." "Cold in the high quarter now." And last, in a hand gone unsteady: "We spent it all
     keeping warm and now there is nothing left to burn. We were so afraid of the cold that we fed it
     everything we had. Tell Emberkoll: it is not the cold that kills a hold. It is the fear of it."
+
+# --- The Sundered Sky expansion content (Great Creation Campaign): the shoals' storm-gather, the
+# --- Broken Warden's chain, and the readable lore of the Skyborn and the falling hold. ---
+stormglass:
+  name: a shard of stormglass
+  keywords: [stormglass, storm, shard, shoals]
+  location: the_drifting_shoals
+  resettable: true  # the drifting-shoals' gather: stormglass where the lightning grounds, reforms on the reset
+
+anchor_warden_chain:
+  name: the Broken Warden's chain
+  keywords: [chain, anchor, warden, weapon]
+  location: nowhere
+  slot: weapon
+  mods: {ATK: 32, ACC: 7}  # a length of the snapped anchor-chain, still humming with the hold it can no longer keep
+
+skyborn_creed:
+  name: the Skyborn creed
+  keywords: [creed, skyborn, capstan, drum]
+  location: the_anchor_quarter
+  lore: |-
+    Cut in a ring around the capstan-drum, worn smooth by a thousand years of hands: "WE NEVER LANDED.
+    The world came apart and the ground fell away and we did not fall with it -- not because we were
+    spared, but because we kept the anchor and each other and did not let go. Let the drowned mourn
+    their sea and the frozen keep their ice and the burned tend their fire. We keep the chain. A home
+    is not a place you stand on. It is a thing you hold, together, in the open air, against the long
+    fall that takes everything that lets go. Mind the capstan. Hold the line. And when your grip fails,
+    as every grip fails, fall slowly, and let someone else take the chain." Of the four peoples' answers
+    to the same broken world, it is the only one that does not point at a corpse to prove itself. The
+    Skyborn simply kept holding on. So far, it has been enough.
+
+falling_hold_manifest:
+  name: the hold's last manifest
+  keywords: [manifest, hold, falling, log]
+  location: the_falling_hold
+  lore: |-
+    An anchor-keeper's manifest from the Falling Hold, its readings logged in a proud steady hand down
+    the generations, and every reading a lie the keepers did not know they told. "Altitude holding.
+    Chain sound. Moored fast, equal to Highgate." Year on year, the same: holding, sound, moored. And
+    only if you read every entry in a row, across the lifetimes, do you see it: the altitude number
+    dropping a hair each generation, so slowly no single keeper could catch it, the whole hold falling
+    at the speed of a life so that no one living ever felt the fall. The last entry is the same as the
+    first: "Altitude holding. Chain sound. Moored fast." It was written the year the floor was already
+    a mile below where the first keeper stood, by a man who died certain he had never moved. Some things
+    do not fall fast enough to notice. That does not mean they are not falling. Read your own manifest
+    twice, Forger. Then go up, while a chain still holds.
