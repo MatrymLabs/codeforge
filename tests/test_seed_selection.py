@@ -684,9 +684,12 @@ def test_aethryn_ashwastes_is_a_real_mid_game_region_with_an_arc():
     assert (
         rooms["market_quarter"]["exits"].get("east") == "ashwastes_road"
     )  # a road out of the city
-    # the region chains road -> dunes -> (camp / ruin -> crater)
+    # the region chains road -> dunes -> (camp / ruin -> ashen vault -> crater)
     assert rooms["the_cinder_dunes"]["exits"]["east"] == "the_scoured_ruin"
-    assert rooms["the_scoured_ruin"]["exits"]["east"] == "the_glass_crater"
+    assert (
+        rooms["the_scoured_ruin"]["exits"]["east"] == "the_ashen_vault"
+    )  # the ruin delve deepened
+    assert rooms["the_ashen_vault"]["exits"]["east"] == "the_glass_crater"
     npcs = load_npcs(AETHRYN / "npcs.yaml")
     assert npcs["ash_jackal"]["level"] == 15  # bands above the reachwood and the cellar
     colossus = npcs["ash_colossus"]
