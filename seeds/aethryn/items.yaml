@@ -658,3 +658,43 @@ shrine_offering:
     ring before the town, before the Concord, before the names we keep -- and left gifts here for a
     thing they did not write down, and trusted us to leave them be. You are the first in an age to
     stand here. Take the ember if you must; the forest kept it a long time, and will not miss it now.
+
+# --- The Old Firewatch's content (Seed Scale Doctrine): a lore log + a viewpoint keepsake, the
+# --- reward for climbing to the launch zone's one high place. Placed, findable, one-time. ---
+firewatch_log:
+  name: the last watcher's log
+  keywords: [log, watcher, firewatch, book]
+  location: the_old_firewatch
+  lore: |-
+    The last entries of the Old Firewatch's watch-log, the ink gone brown:
+    "Day 400. The coast is relit hearth to hearth, the road runs to the capital, the Wardenmarch holds.
+    From up here you can see it all catch, one fire at a time, the way you light a making from the
+    inside out. They are standing down the watch -- no enemy left to watch for, they say, only the cold.
+    Maybe. But I have kept this hill a long time, and I will tell you what a watcher learns: the world
+    is always larger than the part of it you have lit. Keep climbing. There is always more to see."
+
+firewatch_glass:
+  name: a watcher's far-glass
+  keywords: [glass, far-glass, spyglass, watcher]
+  location: the_old_firewatch
+  slot: accessory_2
+  mods: {ACC: 6, EVA: 3}  # the last watcher's kit: it sharpens the eye (a keepsake of the high hill)
+
+# --- The Thorn-Heart's content (Seed Scale Doctrine): the deep warren's reward + a placed cache. ---
+wildember_charm:
+  name: a charm of wild ember
+  keywords: [charm, wildember, ember, thorn]
+  location: nowhere
+  slot: accessory_1
+  mods: {ATK: 4, "MAG DEF": 4}  # cut from the warren's untaken ember-well, the deep warren's prize
+
+wildember_cache:
+  name: a well of untaken wild ember
+  keywords: [well, ember, cache, wild]
+  location: the_thorn_heart
+  lore: |-
+    A well of wild ember, welling up bright through the ember-thorn, untaken since before the town.
+    The foresters have a rule older than the Concord: you cut the deadfall, you do not gather the
+    living ember. What wells up wild belongs to the wood, and the wood keeps its debts. The Wight and
+    the horror are the wood collecting. Take from the well if you must, Forger -- but know that the
+    Reachwood remembers a hand that takes more than the wild gives, and the Reachwood is patient.

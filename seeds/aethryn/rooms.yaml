@@ -271,6 +271,7 @@ reachwood_hollow:
     west: reachwood_edge
     east: wardens_glade
     north: the_bramblewarren
+    south: the_woodcutters_camp
 
 wardens_glade:
   name: The Warden's Glade
@@ -287,9 +288,10 @@ the_bramblewarren:
   desc: |-
     A hollow choked in ember-thorn, where the Reachwood grows angry and old. The Bramble-Wight
     roots it -- a knot of wild ember and dead wood grown almost to a mind -- and it suffers no
-    Forger in its warren. The hollow lies back south.
+    Forger in its warren. The hollow lies back south; the thorns close deeper in, north.
   exits:
     south: reachwood_hollow
+    north: the_thorn_heart
 
 the_far_reach:
   name: The Far Reach
@@ -853,6 +855,7 @@ the_deepwood:
     west: wardens_glade
     north: the_thornmere
     east: the_forgotten_shrine
+    up: the_old_firewatch
 
 the_thornmere:
   name: The Thornmere
@@ -885,3 +888,55 @@ the_ashen_vault:
   exits:
     west: the_scoured_ruin
     east: the_glass_crater
+
+# --- The Woodcutters' Camp (Seed Scale Doctrine: settlements + player distribution). A second early
+# --- hub in the Reachwood, so low-level Forgers have somewhere to level, trade, gather, and take work
+# --- besides the coast town - the wood is a place people live, not just a place to fight through. ---
+the_woodcutters_camp:
+  name: The Woodcutters' Camp
+  desc: |-
+    A stockade of green logs and ember-lamps in a clearing of the Reachwood: the Woodcutters' Camp,
+    where the Concord's foresters cut the deadfall the wild ember leaves and haul it to the capital.
+    Smoke, sawdust, and the smell of resin; a camp-keeper minds a lean-to store, a forester rests a
+    saw, and a hound sleeps by the fire. The hollow trail runs back north; the logging stands lie east.
+  exits:
+    north: reachwood_hollow
+    east: the_logging_stands
+
+the_logging_stands:
+  name: The Logging Stands
+  desc: |-
+    Where the foresters work: ranks of felled ember-trunks and the raw stumps between, the loam thick
+    with sap and sawdust. The cutting has stirred something up - a bark-lurker, grown of deadfall and
+    old ember, that the foresters will not go near. Good resin beads on the cut stumps here. The camp
+    lies back west.
+  exits:
+    west: the_woodcutters_camp
+
+# --- The Old Firewatch (Seed Scale Doctrine: landmarks + scenic viewpoints + lore). A ruined watch-
+# --- tower on the one hill of the Reachwood, a place to climb to and see the whole launch zone laid
+# --- out - a reward for the curious, not a fight. ---
+the_old_firewatch:
+  name: The Old Firewatch
+  desc: |-
+    A climb through the deepwood brings you out atop the one bare hill for leagues, crowned by a
+    ruined watch-tower the Concord raised in the first years of the Rekindling and let go. From here
+    the whole launch of the world lies open: the grey Cooling-Sea and the smoke of Cinderhearth to the
+    west, the capital's Grand Forge glowing north, the Ashwastes' pale scar east, and far off the
+    Wardenmarch and the frontier beyond. A watch-keeper's kit still hangs where the last watcher left
+    it. This is the highest a Forger stands in Emberreach. The deepwood lies back down.
+  exits:
+    down: the_deepwood
+
+# --- The Thorn-Heart (Seed Scale Doctrine): the Bramblewarren was a dead-end boss room; open the
+# --- chamber it guards, where the wild ember the warren grew from pools untaken - a hidden find and
+# --- a rare threat past the Bramble-Wight, so the warren is a small dungeon, not one fight. ---
+the_thorn_heart:
+  name: The Thorn-Heart
+  desc: |-
+    Past the Bramble-Wight the thorns close into a chamber with a living heart: a well of wild ember
+    the warren grew itself around, welling up bright and untaken through a knot of ember-thorn older
+    than the town. A thorn-horror uncoils from the well, grown fat on the raw ember no one dares
+    gather. What pools here has drawn more than the Wight. The warren mouth lies back south.
+  exits:
+    south: the_bramblewarren

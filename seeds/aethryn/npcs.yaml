@@ -1451,3 +1451,81 @@ ashvault_sentinel:
   tier: elite  # the vault's gate on the Ashwastes delve to the Ash-Colossus (x3 reward)
   drops: [greater_healing_draught]
   loot: {ember_shard: 4, hollow_ingot: 1, nothing: 2}
+
+# --- The Woodcutters' Camp life (Seed Scale Doctrine): a settlement's keeper, workers, wildlife, and
+# --- the logging-stands threat, so the Reachwood hub feels like a working camp. ---
+camp_keeper:
+  name: the camp-keeper
+  location: the_woodcutters_camp
+  keywords: [keeper, camp, store, forester]
+  dialogue:
+    - '"Forger, is it? We cut wood here, not glory. But your coin spends. Draughts, a blade, whatever the road took off you -- the store is open."'
+  topics:
+    rumor:
+      - '"The stands east have gone bad since the last cut -- a bark-lurker, deadfall and old ember grown into something that swings back. Put it down and the foresters will cut easy again. And they''ll owe you a keg."'
+  shop:
+    sells:
+      healing_draught: 12
+      mana_draught: 12
+      cinder_hammer: 40
+      emberhide_jerkin: 55
+    buys:
+      ember_shard: 4
+      reachwood_sap: 8
+      cinder_hammer: 15
+
+camp_forester:
+  name: a Concord forester
+  location: the_woodcutters_camp
+  keywords: [forester, woodcutter, worker, concord]
+  dialogue:
+    - The forester sets down a saw and flexes a cramped hand. "Deadfall only. We never cut a living ember-tree. The wood remembers who takes more than the wild gives, and the wood collects."
+
+camp_hound:
+  name: a camp hound
+  location: the_woodcutters_camp
+  keywords: [hound, dog, camp, wildlife]
+  dialogue:
+    - The hound thumps its tail once at you from beside the fire, decides you are neither food nor threat, and goes back to sleep.
+
+bark_lurker:
+  name: a bark-lurker
+  location: the_logging_stands
+  keywords: [lurker, bark, deadfall, wood]
+  dialogue:
+    - A stack of felled trunks shudders and stands: a bark-lurker, deadfall and old ember grown together into a thing that swings back, and it comes down the stand at you.
+  hp: 44
+  atk: 7
+  aggressive: true
+  attack_element: ERT  # a thing of old wood: earthen blows (bring wind)
+  level: 7
+  tier: normal  # the logging stands' threat, a second early leveling ground in the wood
+  loot: {ember_shard: 2, reachwood_sap: 1, nothing: 2}
+
+# --- The Old Firewatch's keeper (Seed Scale Doctrine: life at the landmark). A hermit who never
+# --- stood down the watch, so the high hill has a voice, not just a view. Non-combat. ---
+firewatch_hermit:
+  name: the firewatch hermit
+  location: the_old_firewatch
+  keywords: [hermit, watcher, firewatch, keeper]
+  dialogue:
+    - '"They stood down the watch an age ago," the hermit says, not turning from the horizon. "I did not. Someone should still be looking outward. Sit. Look with me a while. You can see the whole beginning of the world from here."'
+  topics:
+    rumor:
+      - '"Everything you have walked is down there, and it is the smallest part. West the sea, and beyond it Reaches you have not named. East the Wastes, and past the Wardenmarch the frontier that runs to the Forge itself. I have watched it my whole life and seen a fraction. Keep climbing, Forger. The world is always larger than the part you have lit."'
+
+# --- The Thorn-Heart's guardian (Seed Scale Doctrine): the rare threat past the Bramble-Wight. ---
+thorn_horror:
+  name: a thorn-horror of the deep warren
+  location: the_thorn_heart
+  keywords: [horror, thorn, warren, bramble]
+  dialogue:
+    - The well of wild ember bulges and births a horror of living thorn, grown fat on the raw ember no forester dares cut, and it comes for the warmth of you.
+  hp: 96
+  atk: 13
+  aggressive: true
+  attack_element: ERT  # a thing of ember-thorn and old wood (bring wind)
+  level: 12
+  tier: elite  # the deep warren's prize, past the Bramble-Wight (x3 reward)
+  drops: [wildember_charm]
+  loot: {ember_shard: 5, reachwood_sap: 1, nothing: 2}
