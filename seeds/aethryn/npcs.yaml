@@ -1677,3 +1677,19 @@ downs_stalker:
   level: 12
   tier: normal  # the downs' predator, a second mid-level leveling ground off the road
   loot: {ember_shard: 3, nothing: 2}
+
+# --- The Sealed Vault's keeper (Seed Scale Doctrine: the Cinderdeep's hidden off-path elite). ---
+vault_horror:
+  name: a horror of the sealed vault
+  location: the_sealed_vault
+  keywords: [horror, vault, sealed, deep]
+  dialogue:
+    - The sealed dark of the vault gathers into a shape that has waited a thousand years for a door to open, and now that one has, it comes for the light you carry.
+  hp: 150
+  atk: 18
+  aggressive: true
+  attack_element: DRK  # a thing grown of the sealed unmaking (bring radiance)
+  level: 20
+  tier: elite  # the Cinderdeep's hidden off-path prize, off the main delve (x3 reward)
+  drops: [greater_healing_draught, sealed_ember]
+  loot: {ember_shard: 5, hollow_ingot: 2, nothing: 2}
