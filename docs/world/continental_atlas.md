@@ -4,8 +4,8 @@
 Sundering cracked it along the cooling-seas into seven **Reaches**, tore some lands loose into the
 sky, and dropped others into the Cinderdeep. Each Reach is designed to support its own RPG: a distinct
 biome, culture, government, threat, and level band, with its own capitals, wilds, ruins, and secrets.
-Two vertical planes complete the world — the **Great Spiral** above and the **Cinderdeep** below — so
-the map grows in three directions forever.*
+The **Forgeward Road** runs east from the surface toward the Forge, and the **Cinderdeep** falls
+below, so the map grows outward and down forever.*
 
 Consistency note: **Emberreach** is the starting Reach, and the flagship `aethryn` seed builds its
 Kindlands coast and edges. Emberreach carries a *taste* of every biome (a local Ashwaste, a
@@ -19,7 +19,7 @@ complete while leaving the world vast.
 
 ---
 
-## I. Emberreach — the Cradle (the starting Reach) · levels 1–30 + the Spiral above
+## I. Emberreach - the Cradle (the starting Reach) · levels 1-30 + the Forgeward Road east
 
 **Identity.** Temperate river-valleys where the first Gate reopened and the Rekindling was dated. The
 "everyman" continent: optimistic, green, walkable, the place a Forger is born. It is also the most
@@ -29,7 +29,7 @@ trade toward and the Wardens watch closest.
 **Geography.** The **Kindlands** (starting valleys, the tutorial coast), the **Wardenmarch** (fortified
 highlands where the Wardens hold the old Gates), a local **Ashwaste** and a **Cooling-Sea** shore
 (the Sundermere's edge), the **Reachwood** (a wild-Ember forest), and the **Coilfoot Range** where the
-Great Spiral begins. The **Ember-roads** thread it capital to capital.
+Forgeward Road begins its run east. The **Ember-roads** thread it capital to capital.
 
 **People & government.** The **Reachfolk** (open, hopeful, "anyone can learn to Forge") under a
 patchwork of **Kindled Crowns** and city-republics of the **Free Forges**, with the **Warden Concord**
@@ -48,10 +48,10 @@ the Kindled Crowns (the capital), the Emberwright Rememberers (the Grand Archive
 **Dangers & dungeons.** Reach wolves and thornback boars in the wilds; the **Cold Cellar** and the
 **Cinderdeep mouth** below; the **Cinderheart** at the bottom of the local deep; the **Bramblewarren**;
 the **Wreck Reef**; the **Glass Crater** of the local Ashwaste. The tutorial threat is gentle
-(training grounds catch a fall); the deep and the Spiral are not.
+(training grounds catch a fall); the deep and the Forgeward Road are not.
 
-**Hooks.** Wake with no memory, relight the coast, choose a road (up the Spiral, down the deep, out to
-the wilds or the sea), and follow the scattered craft toward the capital and the world beyond.
+**Hooks.** Wake with no memory, relight the coast, choose a road (east on the Forgeward Road, down the
+deep, out to the wilds or the sea), and follow the scattered craft toward the capital and the world beyond.
 
 ---
 
@@ -178,7 +178,7 @@ most contested salvage in the world.
 **Identity.** The surface land closest to the **Forge's** heat: a volcanic continent where the world is
 still visibly *being made*, its Forgework hot and active, its ground remade by every eruption. Home of
 the boldest and most dangerous Forgers, who work directly in living fire and count a cooled land as a
-dead one. The high-level surface Reach and the last stop before the vertical endgame.
+dead one. The high-level surface Reach and the last stop before the overland endgame.
 
 **Geography.** Rivers of Forgelight-lit lava; the **Anvil-Vents** where raw Ember still wells up from
 the Forge below; obsidian cities on cooling shelves; ash-storms that reshape the map between visits.
@@ -195,64 +195,65 @@ never cooled); the **Anvil-Vents** as a dungeon-frontier where the deeper you go
 creation and unmaking at once; ruins of Forgers who reached too hot.
 
 **Hooks.** The Kollforge is where a Forger stops *learning* the craft and starts *risking* it at the
-source's edge — the on-ramp to the Great Spiral and the Forge itself, and the Reach that makes the
+source's edge: the on-ramp to the Forgeward Road and the Forge itself, and the Reach that makes the
 endgame's temptation (to make a world) feel not theoretical but *close*.
 
 ---
 
 ## VII. The Sundered Sky — the Floating Reach · levels 50–70
 
-**Identity.** The lands the Unforging **tore loose** that never fell — shards of the old
+**Identity.** The lands the Unforging **tore loose** that never fell: shards of the old
 supercontinent hanging in the high air on stubborn Forgework, drifting slowly on the world's winds.
-The transition Reach: where the horizontal world ends and the vertical Spiral begins. Awe-inspiring,
-lonely, and the closest a walking Forger comes to the sky the Spiral climbs into.
+The threshold Reach: where the surface Reaches give onto the Forgeward Road. Awe-inspiring, lonely,
+and the last shard of the surface world before the Road runs east to the Forge.
 
 **Geography.** Floating isles trailing waterfalls into cloud; **sky-bridges** of surviving Ember-road
-hung between shards; wind-currents that are the only roads; the **Coilfoot** rising from the greatest
-shard into the first Coils of the Great Spiral.
+hung between shards; wind-currents that are the only roads; the **Coilfoot** anchor-line running from
+the greatest shard down to the marches of the Forgeward Road.
 
-**People & government.** The **Skyborn** — few, adapted, half-Warden and half-hermit, who keep the
-sky-Gates and the way up. The Warden Concord's most important and most isolated holding: the last
-threshold before the endgame, guarded hardest of all.
+**People & government.** The **Skyborn** - few, adapted, half-Warden and half-hermit, who keep the
+sky-Gates and the way onto the Forgeward Road. The Warden Concord's most important and most isolated
+holding: the last threshold before the endgame, guarded hardest of all.
 
-**Landmark settlements.** **Highgate** (the sky-Warden capital at the Coilfoot, the gate to the
-Spiral); drifting **anchor-holds** on the larger shards; the wreck-camps of Forgers who tried to fly
-and did not.
+**Landmark settlements.** **Highgate** (the sky-Warden capital at the Coilfoot, the door to the
+Forgeward Road); drifting **anchor-holds** on the larger shards; the wreck-camps of Forgers who tried
+to fly and did not.
 
 **Dangers & dungeons.** **Sky-leviathans**, **stormkin**, and **fall-wights** (those the loose lands
 took); the **Drifting Court** (a wandering Emberwright shard-city, a dungeon that is never in the same
-place twice); the long, lethal climb of the Coilfoot itself.
+place twice); the long, lethal traverse of the Coilfoot anchor-line itself.
 
-**Hooks.** The Sundered Sky is the last surface Reach and the door to the endgame — reach Highgate,
-pass the sky-Warden's test, and begin the ascent of the Great Spiral toward the Forge and the answer
+**Hooks.** The Sundered Sky is the last surface Reach and the door to the endgame: reach Highgate,
+pass the sky-Warden's test, and set out east on the Forgeward Road toward the Forge and the answer
 to why the first makers stopped.
 
 ---
 
-## The Vertical Planes
+## The Frontier and the Deep
 
-### The Great Spiral — the Ascending Endgame · levels 50–255 and beyond
-The world's forged heart: stacked **Coils** rising from the Coilfoot toward the **Forge**, each Coil a
-band of the world closer to the source, each threshold a **Gate** kept by a **Warden**. The vertical
-endgame and the setting's true summit — reaching the Forge, becoming a maker of worlds, and confronting
-the choice about the First Seed. (The flagship seed builds the first Coils and the procedural climb to
-the Spiral Sovereign at the level ceiling; see the [Build Order](build_order.md).) The higher you climb,
-the softer the world's laws and the closer the Kindling's raw dawn.
+### The Forgeward Road - the Overland Endgame · levels 43-300
+The long run to the world's far heart: **marches** running east from the Coilfoot toward the **Forge**,
+each march a band of the world nearer the source, each **waystation** a threshold kept by a
+**road-warden**. The overland endgame and the setting's true destination: reaching the Forge's Edge,
+becoming a maker of worlds, and confronting the choice about the First Seed. (The flagship seed builds
+the first marches and the procedural run east to the **Sovereign** at the Forge's Edge, the level-300
+cap; see the [Build Order](build_order.md).) The further east you go, the softer the world's laws and
+the closer the Kindling's raw dawn.
 
 ### The Cinderdeep — the Descending Frontier · levels 10 → the deepening cap
 What the Unforging **unmade**: caverns, drowned cities, and half-real regions where shapes never
 re-cooled, home of the **Unforged** (entropy made hostile). The dungeon-continent that grows *downward*
 forever — every Reach has a mouth into it, and the deeper you sink the more the world comes apart. The
-question the Cinderdeep asks is the mirror of the Spiral's: *is the deep the world's grave, or its
+question the Cinderdeep asks is the mirror of the Road's: *is the deep the world's grave, or its
 compost — can the Unforged be rekindled, or only contained?*
 
 ---
 
 ## The shape of the whole world
 
-Horizontal (the seven Reaches across the seas), vertical-up (the Great Spiral), vertical-down (the
-Cinderdeep). A Forger begins on the green cradle of Emberreach, crosses the Quenchmere's water to the
-frozen north, the living wild, the grey waste, and the molten edge, rises through the Sundered Sky to
-the Spiral, and sinks through every Reach's mouth into the deepening dark — and at the far end of both
-axes waits the same thing: the Forge, the First Seed, and the world as it was before it broke. The map
-does not end. That is the point.
+Horizontal (the seven Reaches across the seas, and the Forgeward Road running east to the Forge),
+vertical-down (the Cinderdeep). A Forger begins on the green cradle of Emberreach, crosses the
+Quenchmere's water to the frozen north, the living wild, the grey waste, and the molten edge, passes
+through the Sundered Sky onto the Forgeward Road, and sinks through every Reach's mouth into the
+deepening dark, and at the far end of both axes waits the same thing: the Forge, the First Seed, and
+the world as it was before it broke. The map does not end. That is the point.

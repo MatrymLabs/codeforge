@@ -50,7 +50,8 @@ world should be given the power to remake itself again.
 ## 2. World Timeline (major historical eras)
 
 1. **The Kindling.** The Forge burns; Ember pours; the first shapes cool into the **Anvil** (the
-   world's surface) and the **Great Spiral** (its ascending heart). No people yet, only made things.
+   world's surface) and the **Forgeward Road** (the frontier running east to the Forge at the
+   world's far heart). No people yet, only made things.
 2. **The Age of the Emberwrights (the First Forgers).** The Emberwrights walk the cooling world and
    Forge the first living kinds, the first cities, the first laws. Craft is open; anyone may learn.
    This is the golden age the world half-remembers as impossibly bright.
@@ -83,10 +84,11 @@ Aethryn is a layered work, not a sphere:
 - **The Anvil (the material plane).** The living world's surface: continents, oceans, kingdoms,
   weather, day and night. Where nearly all play happens. Solid, persistent, walkable. The classic
   MUD overworld.
-- **The Great Spiral (the ascending plane).** A vast forged structure of stacked **Coils** rising
-  from the Anvil's heart, each Coil a band of the world closer to the Forge, each threshold a
-  **Gate** kept by a **Warden**. Climbing the Spiral is the vertical endgame; the existing
-  `spiral-ascent` Seed is its first coils.
+- **The Forgeward Road (the overland frontier).** A long forged frontier of **marches** running
+  east across the deepening wilds toward the **Forge** at the world's far heart, each march a band
+  of the world nearer the source, each **waystation** a threshold kept by a **road-warden**. Running
+  the Road east is the overland endgame (east is onward, west is back). The standalone
+  `spiral-ascent` Seed keeps its own small vertical climb, a demo distinct from this flat frontier.
 - **The Cinderdeep (the lower plane).** What the Unforging unmade: caverns, drowned cities, and
   half-real regions where shapes never fully cooled. The underworld, dungeon frontier, and home of
   the **Unforged** (entropy made hostile).
@@ -110,16 +112,16 @@ outward for decades without a "the world ends here" wall. Named regions of the s
 - **The Ashwastes**: a desert of Cinder where a region was half-Unforged; salvage, danger, rare Ember.
 - **The Deeproot Reaches**: primeval forest and swamp where wild Ember grows into strange life.
 - **The Sundermere**: a drowned coast of ruins from the Unforging; ports, wrecks, and pirate-salvagers.
-- **The Coilfoot Range**: mountains at the base of the Great Spiral, where the ascent begins.
+- **The Coilfoot Range**: mountains at the road-head of the Forgeward Road, where the Road begins its run east.
 
 **Roads and travel.** The **Ember-roads** (old paved Forgework) connect capitals; between them lie
 wilderness, ruins, and hidden ways. Movement is room-to-room; roads are fast lanes, wilds are slow
 and dangerous.
 
-**Vertical and deep.** Above: the **Coils** of the Great Spiral (ascent zones). Below: the
-**Cinderdeep** (dungeon continent). This gives horizontal exploration (the Anvil), vertical
-progression (the Spiral), and a descending frontier (the Cinderdeep), so the map extends in three
-directions forever.
+**Frontier and deep.** Eastward: the **marches** of the Forgeward Road (the overland frontier).
+Below: the **Cinderdeep** (dungeon continent). This gives horizontal exploration (the Anvil and the
+Road running east) and a descending frontier (the Cinderdeep), so the map extends outward and down
+forever.
 
 **Features that must exist (classic MUD spread), and their lore hook:**
 mountains (Forgework skeleton of the world) · forests (wild Ember growth) · swamps (Cinder seeping
@@ -225,9 +227,10 @@ Religions are content: temples, blessings (buffs), pilgrimages (quests), holy da
 The living questions that drive the main story and never fully close:
 
 - **Why did the First Seed break?** Sabotage, flaw, or intent?
-- **Where did the Emberwrights go?** Dead, ascended into the Forge, or hidden in an unreached Coil?
-- **What is at the top of the Great Spiral?** The Forge itself, or another Anvil, worlds all the way
-  up?
+- **Where did the Emberwrights go?** Dead, ascended into the Forge, or hidden in an unreached march
+  of the Road?
+- **What is at the Forge's Edge, the world's far heart?** The Forge itself, or another Anvil, worlds
+  all the way out?
 - **Is the Cinderdeep the world's grave or its compost?** Can the Unforged be rekindled, or only
   contained?
 - **Should the craft be relearned at all?** The world already broke once under it.
@@ -267,9 +270,9 @@ engine's spatial model:
 - **Room** (the atom): one location, described in text, holding items/NPCs/players and exits.
 - **Area** (a hand-authored cluster of rooms: a town, a dungeon, a forest).
 - **Zone** (a themed group of areas sharing spawns, weather, and a Warden of the March).
-- **Region** (a continent-band: the Kindlands, a Coil, a Cinderdeep layer).
+- **Region** (a continent-band: the Kindlands, a march of the Road, a Cinderdeep layer).
 - **Exits**: normal, **secret** (found by exploration), **one-way** (falls, slides, Unforging
-  drops), **portals** (Gate-fixed fast travel), and **transport** (roads, ships, Coil-lifts).
+  drops), **portals** (Gate-fixed fast travel), and **transport** (roads, ships, road-caravans).
 - **Persistent world state**: rooms remember what was done to them (a broken bridge stays broken
   until reforged); NPCs, weather, and day/night persist; player housing and guild halls persist.
 - **Respawning**: mobs and resources respawn on Ember-tides; bosses on longer cycles; some things,
@@ -461,9 +464,9 @@ sundered Forgework, a Warden vault, or a wound in the Cinderdeep, and the design
   contained. Victory, defeat, escape, surrender, and scripted endings all apply (combat architecture).
 - **Hidden depth**: secret exits, optional wings, and lore rewards for the thorough.
 
-The **Great Spiral** is the megadungeon spine: an endless ascent of Coils and Gate-bosses (the
-Wardens), where each Gate is a threshold you must be *proven ready* to pass. The **Cinderdeep** is
-the descending frontier.
+The **Forgeward Road** is the megadungeon spine: an endless run east through marches and
+waystation-bosses (the road-wardens), where each waystation is a threshold you must be *proven ready*
+to pass. The **Cinderdeep** is the descending frontier.
 
 ---
 
@@ -520,8 +523,8 @@ Aethryn is built to grow for twenty years without rewrites, because every unit o
 
 - **New continents** ship as new Anvil-regions (Seed packs of areas); the supercontinent map has no
   edge-walls.
-- **New Coils** extend the Great Spiral upward (new ascent tiers); **new Cinderdeep layers** extend
-  it downward.
+- **New marches** extend the Forgeward Road eastward (new frontier tiers); **new Cinderdeep layers**
+  extend it downward.
 - **New races, jobs, professions, guilds** ship as Seeds of data + an Order hall + a questline; none
   require engine changes.
 - **New combat systems / mechanics** are new rule-parts behind the same tick seam; the engine can host
@@ -567,14 +570,14 @@ Rekindling. A large, safe, service-dense city that teaches the mid-game and host
   professions and jobs).
 - **The Great Archive** (the Chronicle made a place): librarians, research facilities, and the city's
   memory; where Research notes and lore are studied and Blueprints discovered.
-- **The Warden Gate**: the Concord's seat and the entrance to the Wardenmarch and the road to the
-  Great Spiral.
+- **The Warden Gate**: the Concord's seat and the entrance to the Wardenmarch and the way onto the
+  Forgeward Road.
 - **The Market Quarter and Cooling-Sea Docks**: markets, auction house, bank, mail, and ships to
   other regions.
 - **Player housing wards**: buy, build, and store; the first player-persistent property.
 
 Emberreach is where a player picks their factions, joins an Order, banks and trades, and chooses
-their road: outward on the Anvil, up the Spiral, or down into the Cinderdeep.
+their road: outward on the Anvil, east on the Forgeward Road, or down into the Cinderdeep.
 
 ---
 
@@ -611,7 +614,7 @@ It is short, complete, and a true microcosm: every system the game will ever use
 3. **The road to Emberreach.** Travel the Ember-road, meet the wider world, choose an Order and first
    factions.
 4. **The Warden's test.** At Emberreach's Warden Gate, the player must be *proven ready* to be trusted
-   with real Forging, the first gate, mirroring the engine's readiness gate. Pass, and the Spiral, the
+   with real Forging, the first gate, mirroring the engine's readiness gate. Pass, and the Road, the
    Anvil, and the Deep all open.
 5. **The hook.** A fragment of First-Forger craft surfaces, and with it the arc's closing question that
    launches the whole main story: *the craft that broke the world can be relearned. Should it be?*
@@ -659,7 +662,7 @@ concrete; each verb is one clear responsibility with validated targets.
 
 Seams left open on purpose, each a future Seed or product:
 
-- **The unreached Coils** of the Great Spiral: endless vertical endgame tiers, one raid per Gate.
+- **The unreached marches** of the Forgeward Road: endless overland endgame tiers, one raid per waystation.
 - **The Cinderdeep continent**: a whole descending underworld, its own factions (the Unforged) and
   economy (salvage).
 - **The other continents** of the Anvil: the map extends outward forever; each is an expansion.

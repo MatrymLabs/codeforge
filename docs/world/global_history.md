@@ -14,12 +14,12 @@ the greater the danger of learning what you find.
 ## The Kindling (AA, the unmeasured dawn)
 
 Before there were years there was only the **Forge** and its overflow. **Ember** poured out and
-cooled, and the first shapes that held were not made by anyone — the **Anvil** (the world's forged
-crust), the **Great Spiral** (the ascending heart, stacked Coils climbing back toward the source),
-and the **cooling-seas** that quenched the edges. This is the only age with no makers in it, and the
-only one no ruin survives from, because nothing here was *built* — it merely *set*. Forgers who climb
-high enough on the Spiral find the Kindling's residue: rooms of raw uncooled shape where the laws of
-the world are still soft. **(Raid tier. The world's origin, reachable only near the top.)**
+cooled, and the first shapes that held were not made by anyone: the **Anvil** (the world's forged
+crust), the **Forgeward Road** (the frontier running east to the source, its marches deepening toward
+the Forge), and the **cooling-seas** that quenched the edges. This is the only age with no makers in
+it, and the only one no ruin survives from, because nothing here was *built*, it merely *set*. Forgers
+who travel far enough east along the Road find the Kindling's residue: rooms of raw uncooled shape
+where the laws of the world are still soft. **(Raid tier. The world's origin, reachable only at the far end.)**
 
 ## The Age of the Emberwrights (AA → the First Forgers)
 
@@ -94,9 +94,9 @@ Crowns).
 
 The Rekindling is not a triumph. It is a wager. Every player who learns to Forge is a small,
 dangerous experiment in whether a broken world should be given the power to remake itself. The main
-story is the slow gathering of the scattered craft, the climb of the Great Spiral toward the answer,
-and the recurring, terrible question of the endgame: having relearned how to make a world — *should
-we make the First Seed again?*
+story is the slow gathering of the scattered craft, the run east along the Forgeward Road toward the
+answer, and the recurring, terrible question of the endgame: having relearned how to make a world,
+*should we make the First Seed again?*
 
 - **RY 0** — the first Gate opens in the Kindlands; the Rekindling is dated from it.
 - **RY 1–now** — the play era. Guilds re-form, capitals relight their forges, Wardens tighten and
@@ -108,9 +108,9 @@ we make the First Seed again?*
 ## The through-line, as a player lives it
 
 An adventurer wakes on a cold shore with no memory of the craft and one guttering ember (the flagship
-seed's opening). They learn, they climb, and the deeper they go — down the Cinderdeep, up the Spiral,
-back through the ruins of the Long Cinder toward the Emberwright works and the place the First Seed
-broke — the more they are not *conquering* the world but **remembering** it. The endgame is a
+seed's opening). They learn, they travel, and the deeper they go, down the Cinderdeep, east along the
+Forgeward Road, back through the ruins of the Long Cinder toward the Emberwright works and the place
+the First Seed broke, the more they are not *conquering* the world but **remembering** it. The endgame is a
 homecoming to a golden age that no living thing has seen, and a choice about whether to wake it.
 
 *Design note: no piece of this history is ever spoken as a lecture. It is a burned inscription, a

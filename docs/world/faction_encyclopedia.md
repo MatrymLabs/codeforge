@@ -23,15 +23,15 @@ Inner). Rising with one often costs standing with its rival — the world rememb
 - **Leadership & hierarchy.** The **High Warden** and the **Concord of Gates**; ranks from Gatewatch →
   Warden → Gatekeeper → Marshal → High Warden, each a real threshold of trust and access.
 - **Territory & resources.** The Wardenmarch (Emberreach), Highgate (the Sundered Sky), and a Warden
-  hold at every Gate and every Coil threshold — the most distributed power in the world, and the
-  keeper of the way up the Spiral.
+  hold at every Gate and every waystation of the Forgeward Road, the most distributed power in the
+  world, and the keeper of the way east along the Road.
 - **Military & economy.** Disciplined, elite, few; funded by the Crowns and by the toll of the Gates.
 - **Allies / enemies.** Uneasy ally of the Kindled Crowns; opposed by the Free Forges and the
   Gate-Breakers; hunts the Cinder Circle.
 - **Internal fault-line.** The oath to *guard* the craft is becoming the thing that *kills* it — a
   growing faction of young Wardens argue the Gates must open faster or the knowledge dies locked.
 - **Recruitment & rewards.** Earned through tested loyalty and gate-service; grants rank-gated access
-  to sealed Coils, Warden Forgework, and the only sanctioned path up the Great Spiral.
+  to sealed waystations, Warden Forgework, and the only sanctioned road east along the Forgeward Road.
 - **(Engine reading: the Wardens ARE the rank system and the quality gates. Their whole politics is
   `authorization before capability`.)**
 
