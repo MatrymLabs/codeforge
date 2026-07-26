@@ -220,6 +220,34 @@ def test_aethryn_every_reach_offers_a_slot_complete_loadout():
         assert gear.complete, f"{reach} cannot outfit a full loadout: missing {gear.missing}"
 
 
+def test_aethryn_reaches_have_side_quests_beyond_their_main_arc():
+    """Each sea/high Reach now has a self-completing SIDE-quest, not just its one main kill-line.
+    Each gives a previously-questless ecosystem foe or landmark narrative purpose. Every step fires
+    from a real world deed (no soft-lock), every target is real, and each ends on a told story."""
+    npcs = set(load_npcs(AETHRYN / "npcs.yaml"))
+    rooms = set(load_rooms(AETHRYN / "rooms.yaml"))
+    side_quests = {
+        "the_salvage_watch": "drowned_lung_sentry",  # Quenchmere: still the salvage-stair sentry
+        "the_channel_toll": "channel_serpent",  # Verdance: clear the crossing
+        "the_ruin_watch": "salvage_wraith",  # Ashwastes: lay the ruin's drifter
+        "the_anvil_watch": "forgeborn",  # Kollforge: free a working vent
+        "the_drifting_reach": "the_drifting_reach",  # Sundered Sky: a DISCOVERY, not a kill
+    }
+    for qid, target in side_quests.items():
+        spec = load_quest(AETHRYN / "quests" / f"{qid}.yaml")
+        assert spec is not None and spec["id"] == qid
+        assert spec.get("reward_xp", 0) > 0  # a real reward, not a stub
+        for step in spec["steps"]:  # every beat advances from a real deed, never a soft-lock
+            trigger = step.get("on_defeat") or step.get("on_enter") or step.get("on_take")
+            assert trigger, f"{qid} step {step} has no world-deed trigger"
+        assert target in npcs or target in rooms, f"{qid} targets a phantom {target}"
+        assert any(
+            s.get("on_defeat") == target or s.get("on_enter") == target for s in spec["steps"]
+        )
+        term = spec["terminal"][0]  # a narrative epilogue, not just a flag flip
+        assert len(spec["labels"][term]) > 80
+
+
 def test_aethryn_reach_merchants_stock_regional_gear():
     """A Reach's shop sells that Reach's OWN gear, not one starter blade everywhere: each trader
     stocks items its own foes drop, so a player has an economic path to regional gear (buy it, or
