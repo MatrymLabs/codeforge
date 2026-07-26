@@ -72,6 +72,13 @@ def _theme(config: dict[str, Any], n: int) -> dict[str, str]:
     return _THEMES[(n - config["first_coil"]) % len(_THEMES)]
 
 
+def _has_wayside(config: dict[str, Any], n: int) -> bool:
+    """Whether march `n` grows an exploration wayside off the road. Every OTHER march does (a rhythm
+    from the first march), so the flat frontier reads as a wide land with side-tracks to discover,
+    not a metronomic corridor with one on every stretch. Deterministic (by index, not chance)."""
+    return (n - config["first_coil"]) % 2 == 0
+
+
 def _ordinal(n: int) -> str:
     """A display ordinal for a march number (Fourth, Fifth, ... then plain '12th' past named)."""
     if n in _ORDINALS:
@@ -136,12 +143,13 @@ def _foe(
     boss: bool,
     element: str | None = None,
     resistances: dict[str, str] | None = None,
-    drop: str = "coil_keystone",
+    drops: list[str] | None = None,
 ) -> Npc:
-    """A generated Spiral foe: a husk (normal) or a lethal Gate-boss, with level/tier-scaled reward
-    and hp/atk tuned to its level. An optional `element` types its blows and an optional
-    `resistances` grid makes a boss an elemental puzzle. A boss drops `drop` (a levelled gear
-    prototype the combat affix factory then rolls a rarity onto -- varied endgame loot)."""
+    """A generated Forgeward Road foe: a husk (normal), an optional wayside guardian (normal but
+    carrying loot), or a lethal road-warden (boss), with level/tier-scaled reward and hp/atk tuned
+    to its level. An optional `element` types its blows; an optional `resistances` grid makes a
+    warden an elemental puzzle. `drops` are levelled gear prototypes the combat affix factory then
+    rolls a rarity onto (varied loot); a boss with no `drops` falls back to the road keystone."""
     hp = (90 if boss else 50) + level * (5 if boss else 3)
     atk = (14 if boss else 8) + level // 2
     npc = Npc(
@@ -164,7 +172,9 @@ def _foe(
         npc["resistances"] = resistances
     if boss:
         npc["lethal"] = True
-        npc["drops"] = [drop]
+        npc["drops"] = drops if drops is not None else ["coil_keystone"]
+    elif drops is not None:
+        npc["drops"] = drops
     return npc
 
 
@@ -253,7 +263,42 @@ def generate_spiral(
                 boss=True,
                 element=theme["el"],
                 resistances={theme["el"]: "Resist", theme["weak"]: "Weak"},
-                drop=theme["drop"],
+                drops=[theme["drop"]],
+            )
+
+        # Exploration off the main road: some marches fork to a WAYSIDE, a dead-end side-track with
+        # a hoard-guardian over relic-salvage. It is optional (a normal foe, not a lethal gate), so
+        # the flat frontier reads as a wide land to explore, not a single corridor. The branch
+        # alternates north/south by index so side-tracks do not all fall the same way. The summit
+        # has none: the far end is the finale, not a place to wander off.
+        if not summit and _has_wayside(config, n):
+            wayside_id = f"coil_{n}_wayside"
+            branch = "north" if index % 2 == 0 else "south"
+            back = "south" if branch == "north" else "north"
+            rooms[ascent_id]["exits"][branch] = wayside_id
+            rooms[wayside_id] = Room(
+                name=f"The {ord_name} Wayside",
+                desc=(
+                    f"A side-track off the {ord_name} march, where the old Roadwork forks {branch} "
+                    f"into a {theme['adj']} hollow. Relic-salvage from a caravan that never made "
+                    f"the waystation lies scattered here, and a guardian stands over it. The march "
+                    f"lies back {back}."
+                ),
+                exits={back: ascent_id},
+            )
+            # The wayside pays DIFFERENT loot from the main road: the road-wardens drop themed
+            # WEAPONS, so a guardian drops the road keystone (an accessory). That gives exploration
+            # its own reward type, and spreads the accessory across the frontier instead of gating
+            # it behind the far Sovereign at the cap -- a mid-road Forger can earn one by wandering.
+            guard_id = f"spiral_wayside_{n}"
+            npcs[guard_id] = _foe(
+                guard_id,
+                f"a {theme['adj']} hoard-guardian of the {ord_name} wayside",
+                wayside_id,
+                max(1, boss_level - 2),
+                boss=False,
+                element=theme["el"],
+                drops=["coil_keystone"],
             )
 
     first_room = f"coil_{numbers[0]}_ascent" if numbers else attach
@@ -287,9 +332,12 @@ def spiral_zones(config: dict[str, Any]) -> dict[str, Zone]:
         boss_level = _boss_level(config, n)
         summit = boss_level >= config["top_level"]
         landing = SUMMIT_ROOM if summit else f"coil_{n}_landing"
+        march_rooms = [f"coil_{n}_ascent", landing]
+        if not summit and _has_wayside(config, n):
+            march_rooms.append(f"coil_{n}_wayside")  # the side-track belongs to its march's area
         zones[f"spiral_coil_{n}"] = Zone(
             name="The Forge's Edge" if summit else f"The {_ordinal(n)} March",
-            rooms=[f"coil_{n}_ascent", landing],
+            rooms=march_rooms,
             reset_mode="never",
             beats_between=20,
         )
