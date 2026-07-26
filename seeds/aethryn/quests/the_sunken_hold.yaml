@@ -1,0 +1,20 @@
+# SEED: aethryn -- quests/the_sunken_hold.yaml (an Emberreach coast side-quest). Still the wreck-warden
+# in the drowned flagship's hold, so Quench Harbor's salvagers can plunder the lost cargo at last.
+
+id: the_sunken_hold
+name: The Sunken Hold
+start: warned
+reward_xp: 200
+
+steps:
+  - {state: warned, event: still, to: stilled, on_defeat: wreck_warden, effect: award_xp}
+
+terminal: [stilled]
+
+labels:
+  warned: "Below the Wreck Reef the flagship's hold sits whole and drowned, a coast's worth of lost cargo lashed in the dark -- and a wreck-warden still at its post, keeping it from the living. Still it, and the salvage is Quench Harbor's."
+  stilled: |-
+    *** THE HOLD IS OPEN ***
+    The wreck-warden lets go of the post it kept a lifetime under the sea and sinks back into the silt.
+    The salvagers of Quench Harbor will bring up the flagship's cargo now -- hearth-irons and seed-lamps
+    a hundred years lost, the fast way the coast was almost relit. Late, but not too late to be warm.
