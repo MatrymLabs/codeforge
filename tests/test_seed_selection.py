@@ -220,6 +220,26 @@ def test_aethryn_every_reach_offers_a_slot_complete_loadout():
         assert gear.complete, f"{reach} cannot outfit a full loadout: missing {gear.missing}"
 
 
+def test_aethryn_exploration_rooms_hold_placed_treasures():
+    """Reaching a deep or off-path terminal rewards a one-time treasure ON THE GROUND (not an RNG
+    drop): unique relics placed in the ruin, the Cinderheart, the drowned capital, the heart-grove,
+    and the drifting shards. Each resolves to its room, is equippable, and does not respawn."""
+    items = load_items(AETHRYN / "items.yaml")
+    rooms = set(load_rooms(AETHRYN / "rooms.yaml"))
+    treasures = {
+        "ashglass_charm": "the_scoured_ruin",
+        "cinderheart_relic": "the_cinderheart",
+        "drowned_pearl": "the_drowned_sunhold",
+        "heartwood_seed": "the_heart_grove",
+        "skyshard_relic": "the_drifting_reach",
+    }
+    for label, room in treasures.items():
+        it = items[label]
+        assert it["location"].split(":")[-1] == room and room in rooms, f"{label} floats nowhere"
+        assert it["slot"] and it["mods"]  # a real equippable relic, not a flavour prop
+        assert not it.get("resettable", False)  # a one-time find, not a farmable respawn
+
+
 def test_aethryn_reaches_have_side_quests_beyond_their_main_arc():
     """Each sea/high Reach now has a self-completing SIDE-quest, not just its one main kill-line.
     Each gives a previously-questless ecosystem foe or landmark narrative purpose. Every step fires

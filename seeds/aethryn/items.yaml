@@ -434,3 +434,42 @@ stormcaller_pike:
   location: nowhere
   slot: weapon
   mods: {ATK: 18, ACC: 6}
+
+# --- Exploration treasures (Content Manufacturing Campaign). Unique relics PLACED in the deep and
+# --- off-path terminals, not dropped -- reach the place and the treasure is yours (once; they do not
+# --- resettable-respawn). A cut above the regional accessories, to pay a thorough Forger for the
+# --- effort of getting there. `location: room:<label>` puts them on the ground, found on `look`. ---
+ashglass_charm:
+  name: an ashglass charm
+  keywords: [charm, ashglass, glass, ruin]
+  location: the_scoured_ruin
+  slot: accessory_1
+  mods: {EVA: 7, ACC: 5}
+
+cinderheart_relic:
+  name: the Cinderheart Relic
+  keywords: [relic, cinderheart, deep, ember]
+  location: the_cinderheart
+  slot: accessory_2
+  mods: {DEF: 8, "MAG DEF": 7}
+
+drowned_pearl:
+  name: a drowned pearl
+  keywords: [pearl, drowned, sunhold, deep]
+  location: the_drowned_sunhold
+  slot: accessory_1
+  mods: {"MAG DEF": 8, EVA: 5}
+
+heartwood_seed:
+  name: a heartwood seed
+  keywords: [seed, heartwood, grove, verdant]
+  location: the_heart_grove
+  slot: accessory_1
+  mods: {DEF: 6, "MAG DEF": 6, EVA: 3}
+
+skyshard_relic:
+  name: the Skyshard Relic
+  keywords: [relic, skyshard, drifting, sky]
+  location: the_drifting_reach
+  slot: accessory_2
+  mods: {EVA: 9, ACC: 6}
