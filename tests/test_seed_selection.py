@@ -177,14 +177,18 @@ def test_aethryn_every_reach_offers_a_slot_complete_armor_set():
         "Kollforge": ["forgeborn", "cinder_drake", "vent_lord"],
         "Sundered Sky": ["stormkin", "fall_wight", "court_warden"],
     }
+    # measured through the Hardware Store's `completeness` part (dogfooding the harvest)
+    from parts.shelf.completeness import coverage
+
     for reach, foes in reach_foes.items():
-        slots = {
+        slots = [
             items[d]["slot"]
             for f in foes
             for d in npcs[f].get("drops", [])
             if items.get(d, {}).get("slot")
-        }
-        assert {"head", "body", "arm"} <= slots, f"{reach} cannot outfit every armor slot: {slots}"
+        ]
+        armor = coverage(slots, required=("head", "body", "arm"))
+        assert armor.complete, f"{reach} cannot outfit every armor slot: missing {armor.missing}"
 
 
 def test_aethryn_cinderdeep_descends_to_a_real_bottom():
