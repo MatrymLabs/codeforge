@@ -791,3 +791,45 @@ manse_ledger:
     It stayed, and shored its doors, and kept its wealth, and drowned in its own halls counting it.
     The steward kept the doors then and keeps them now. Take the signet. Wealth you will not spend on
     a boat is only ballast. The salvagers of Saltmarsh learned that. The house never did.
+# --- The Verdance expansion content (Great Creation Campaign): the understory's gather, the ziggurat
+# --- god's relic, and the readable lore of the shrine and the forgotten people. ---
+glowcap:
+  name: a cluster of glowcap
+  keywords: [glowcap, cap, mushroom, understory]
+  location: the_understory
+  resettable: true  # the understory's gather: glowcap on the fallen giants, regrows on the reset
+
+rootpriest_censer:
+  name: the Rootpriest's censer
+  keywords: [censer, rootpriest, ziggurat, relic]
+  location: nowhere
+  slot: accessory_1
+  mods: {"MAG DEF": 8, DEF: 4}  # the undying god's reliquary-censer, torn from the Sunken Ziggurat's crown
+
+bark_testament:
+  name: the testament in the bark
+  keywords: [testament, bark, shrine, tree]
+  location: the_wildember_shrine
+  lore: |-
+    Not written but grown: the tree's own testament, carved by the slow press of the Deeprooted's
+    reading hands into the living bark of the wild-ember shrine, a warning kept green for an age.
+    Before the Deeprooted came a people of black stone who took the Verdance for a thing to be ruled.
+    They cut the roots to lay their causeways. They caged the wild flame in their ziggurat and called
+    it a god they owned. So the tree closed its hand. Not in a day: over lifetimes, root by root, until
+    the black-stone people were only a shape under the green and their god a thing that ate its own
+    priests to keep from dying. The Deeprooted took the lesson the black-stone people would not: you do
+    not own the flame. You keep it, or it keeps you.
+
+ziggurat_reliquary:
+  name: the choked reliquary
+  keywords: [reliquary, ziggurat, faith, box]
+  location: the_ziggurat_vault
+  lore: |-
+    A reliquary of black stone, its lid grown shut with the root that killed the hand that made it.
+    Inside, in a dead script the tree has nearly closed over: the last rite of the black-stone faith.
+    When the roots came for the city, the priests did not flee. They fed their god instead -- their
+    acolytes first, then each other, then the high priest last of all, each swallowed into the growing
+    thing at the ziggurat's crown so that some part of the faith would endure when the people did not.
+    It worked, after a fashion. The god endured. There was simply no longer anyone left to worship it,
+    and nothing left of it worth worshipping. Endurance is not the same as living. The tree knew that.
+    The priests learned it too late.
