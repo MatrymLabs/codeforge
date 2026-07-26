@@ -74,3 +74,9 @@ the_ashwastes:
   rooms: [ashwastes_road, the_cinder_dunes, the_ashborn_camp, the_scoured_ruin, the_glass_crater]
   reset_mode: empty_only
   beats_between: 12
+
+the_cooling_sea:
+  name: The Cooling-Sea
+  rooms: [the_saltstrand, quench_harbor, the_wreck_reef]
+  reset_mode: empty_only
+  beats_between: 12

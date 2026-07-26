@@ -1,0 +1,23 @@
+# SEED: aethryn -- quests/the_cooling_sea.yaml (a coastal arc: walk the strand, reach Quench Harbor,
+# and still the Drowned Pilot at the reef so the fishing lanes open again). Self-playing from deeds.
+
+id: the_cooling_sea
+name: The Cooling-Sea
+start: ashore
+reward_xp: 220
+
+steps:
+  - {state: ashore,   event: walk,  to: harborward, on_enter: quench_harbor}
+  - {state: harborward, event: still, to: opened,   on_defeat: drowned_pilot, effect: award_xp}
+
+terminal: [opened]
+
+labels:
+  ashore: "West of where you woke, the strand runs along the Cooling-Sea to Quench Harbor. Walk it, and see what the sea has left standing."
+  harborward: "Quench Harbor keeps its fisherfolk and its fear of the reef south, where the Drowned Pilot holds the drowned ships. Still it, and open the lanes."
+  opened: |-
+    *** THE LANES ARE OPEN ***
+    The Drowned Pilot lets go of its wheel at last, and the wreck slips under the grey water for good.
+    South of Quench the fishing lanes lie open again, and the harbor's boats will run them by morning.
+    You washed up on this coast with nothing. You leave it having given the sea back to the people who
+    live at her edge.

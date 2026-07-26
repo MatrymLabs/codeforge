@@ -154,6 +154,28 @@ def test_aethryn_cinderdeep_descends_to_a_real_bottom():
     assert load_items(AETHRYN / "items.yaml")["drowned_seal"]["slot"] == "accessory_2"
 
 
+def test_aethryn_cooling_sea_is_a_dialogue_rich_port_region():
+    """A coastal port region west of the waking shore (levels 6-14): the shore opens west along the
+    Cooling-Sea to Quench Harbor -- a lived-in fishing town (a harbormaster, a fisher, a dock shop),
+    with the Drowned Pilot at a wreck reef, tied together by a coastal questline."""
+    rooms = load_rooms(AETHRYN / "rooms.yaml")
+    assert (
+        rooms["the_waking_shore"]["exits"].get("west") == "the_saltstrand"
+    )  # a road off the spawn
+    assert rooms["the_saltstrand"]["exits"]["west"] == "quench_harbor"
+    npcs = load_npcs(AETHRYN / "npcs.yaml")
+    # the harbor is a real town: several NPCs, two of them conversational, one keeping a shop
+    assert (
+        "cooling_sea" in npcs["harbormaster"]["topics"] and "sea" in npcs["quench_fisher"]["topics"]
+    )
+    assert "shop" in npcs["dock_trader"]
+    pilot = npcs["drowned_pilot"]
+    assert pilot["level"] == 14 and pilot["tier"] == "boss" and pilot["lethal"] is True
+    assert pilot["resistances"] == {"WTR": "Resist", "LGT": "Weak"}  # bring lightning to the water
+    arc = load_quest(AETHRYN / "quests" / "the_cooling_sea.yaml")
+    assert arc is not None and arc["steps"][-1]["on_defeat"] == "drowned_pilot"
+
+
 def test_aethryn_ashwastes_is_a_real_mid_game_region_with_an_arc():
     """A whole new mid-game region east of the capital (levels 15-25): the Market Quarter opens onto
     a salt-road into the Ashwastes -- a desert with the Ashborn survivors (a shop + a lore scout), a

@@ -12,9 +12,42 @@ the_waking_shore:
   desc: |-
     You wake on cold sand with no memory of the craft. A single ember gutters
     at the tideline, nearly out. When your hand nears it, it flares and holds.
-    Something in you answers it. A path of packed cinder leads north into town.
+    Something in you answers it. A path of packed cinder leads north into town,
+    and the strand runs west along the Cooling-Sea toward a harbor.
   exits:
     north: cinderhearth_square
+    west: the_saltstrand
+
+the_saltstrand:
+  name: The Saltstrand
+  desc: |-
+    A strand of grey sand runs west along the Cooling-Sea, the first-quenched water that cooled the
+    world after the Unforging. Tide-crawlers scuttle the wrack line, and the salt-wind carries the
+    sound of a harbor ahead. The waking shore lies back east.
+  exits:
+    east: the_waking_shore
+    west: quench_harbor
+
+quench_harbor:
+  name: Quench Harbor
+  desc: |-
+    A weathered fishing port on the Cooling-Sea, its jetties crowded with cooling-iron boats and
+    salt-stiff nets. Fisherfolk mend and haul and argue prices; a harbormaster keeps the tally, and
+    a dock-trader keeps a stall. The strand runs back east; south, a jetty leads out to a drowned
+    reef where something older waits.
+  exits:
+    east: the_saltstrand
+    south: the_wreck_reef
+
+the_wreck_reef:
+  name: The Wreck Reef
+  desc: |-
+    Out past the harbor's last jetty, a reef of drowned Forge-hulls breaks the grey water -- ships
+    the Cooling-Sea took when it first rose. The Drowned Pilot still keeps the wheel of the largest
+    wreck, a thing of brine and dead ember that will not let the sea be crossed. The harbor lies
+    back north.
+  exits:
+    north: quench_harbor
 
 cinderhearth_square:
   name: Cinderhearth Square
