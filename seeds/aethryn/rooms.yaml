@@ -854,6 +854,7 @@ the_deepwood:
     west: wardens_glade
     north: the_thornmere
     east: the_forgotten_shrine
+    up: the_old_firewatch
 
 the_thornmere:
   name: The Thornmere
@@ -910,3 +911,18 @@ the_logging_stands:
     lies back west.
   exits:
     west: the_woodcutters_camp
+
+# --- The Old Firewatch (Seed Scale Doctrine: landmarks + scenic viewpoints + lore). A ruined watch-
+# --- tower on the one hill of the Reachwood, a place to climb to and see the whole launch zone laid
+# --- out - a reward for the curious, not a fight. ---
+the_old_firewatch:
+  name: The Old Firewatch
+  desc: |-
+    A climb through the deepwood brings you out atop the one bare hill for leagues, crowned by a
+    ruined watch-tower the Concord raised in the first years of the Rekindling and let go. From here
+    the whole launch of the world lies open: the grey Cooling-Sea and the smoke of Cinderhearth to the
+    west, the capital's Grand Forge glowing north, the Ashwastes' pale scar east, and far off the
+    Wardenmarch and the frontier beyond. A watch-keeper's kit still hangs where the last watcher left
+    it. This is the highest a Forger stands in Emberreach. The deepwood lies back down.
+  exits:
+    down: the_deepwood
