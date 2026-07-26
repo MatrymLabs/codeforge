@@ -227,6 +227,7 @@ market_trader:
     sells:
       healing_draught: 12
       mana_draught: 12
+      greater_healing_draught: 36   # the capital stocks the mid-tier heal for the road ahead
       cinder_hammer: 40      # a starter weapon (ATK 5, DEF 1)
       reaver_blade: 90       # the better blade (ATK 9, ACC 5)
       cindershell_plate: 140  # body armor (DEF 8, EVA 2)
@@ -672,6 +673,8 @@ merewright_captain:
     sells:
       healing_draught: 16
       mana_draught: 16
+      greater_healing_draught: 38   # mid-tier heal, for a Forger past the coast draughts
+      greater_mana_draught: 34
       brinescale_hood: 110     # the Quenchmere's own Brinescale set (buyable, not only dropped)
       brinescale_coat: 165
       tideglass_harpoon: 150   # the Reach's signature weapon
@@ -754,6 +757,8 @@ canopy_trader:
     sells:
       healing_draught: 17
       mana_draught: 17
+      greater_healing_draught: 40   # mid-tier heal for the jungle depths
+      greater_mana_draught: 36
       verdant_hood: 130        # the Verdance's own Verdant bark-set
       verdant_mantle: 185
       thornwood_glaive: 165    # the Reach's signature weapon
@@ -894,6 +899,9 @@ kollkin_trader:
     sells:
       healing_draught: 18
       mana_draught: 18
+      grand_healing_draught: 95     # high-tier heal for the molten depths
+      grand_mana_draught: 78
+      forgefire_elixir: 150         # restores both pools: the endgame restorative
       emberforged_plate: 320   # the Kollforge's own Emberforged set (body + arm)
       emberforged_gauntlets: 250
       ventforge_maul: 300      # the Reach's signature weapon
@@ -983,6 +991,9 @@ anchor_keeper:
     sells:
       healing_draught: 20
       mana_draught: 20
+      grand_healing_draught: 100    # high-tier heal for the last surface Reach
+      grand_mana_draught: 82
+      forgefire_elixir: 155         # restores both pools: the endgame restorative
       stormward_helm: 300      # the Sundered Sky's own Stormward set (head + body)
       stormward_cuirass: 360
       stormcaller_pike: 340    # the Reach's signature weapon
