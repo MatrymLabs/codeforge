@@ -380,10 +380,12 @@ emberreach_gates:
   desc: |-
     The great cinder-iron gates of Emberreach stand open under banners of the Relit
     Forge. A gate-warden of the Concord greets the road-weary. Beyond the arch the
-    capital hums with the work of the Rekindling: the Grand Forge burns to the north.
+    capital hums with the work of the Rekindling: the Grand Forge burns to the north. A stair climbs
+    the city WALLS to the gate-watch.
   exits:
     south: wayfarers_rest
     north: the_grand_forge
+    walls: the_city_walls
 
 the_grand_forge:
   name: The Grand Forge
@@ -391,12 +393,17 @@ the_grand_forge:
     The heart of Emberreach: the great relit Forge roars in the city center, and the
     Church of the First Flame keeps its light. The city's Loremaster works here, at the
     root of the world's memory. The Orders' Row lies west, the Market Quarter east, and
-    the Warden Gate stands to the north.
+    the Warden Gate stands to the north. The Church of the First Flame keeps the TEMPLE off the hall,
+    the Grand ARCHIVE holds the world's memory, and a stair drops to the UNDERCITY below the forge.
   exits:
     south: emberreach_gates
     west: orders_row
     east: market_quarter
     north: warden_gate
+    temple: the_first_flame_church
+    archive: the_grand_archive
+    down: the_undercity
+    undercity: the_undercity
 
 orders_row:
   name: The Orders' Row
@@ -404,10 +411,14 @@ orders_row:
     A colonnade of guild-halls: the Making, the Gathering, the Warcraft, and the Knowing
     Orders keep their doors here, where a Forger chooses a road and trains a craft. A
     recruiter watches the street for new talent come up from the coast. The Warcraft training
-    yard opens off the row to the west.
+    yard opens off the row to the west; the MAKING, KNOWING, and GATHERING Order halls keep their doors
+    along the colonnade.
   exits:
     east: the_grand_forge
     west: the_training_yard
+    making: the_making_hall
+    knowing: the_knowing_hall
+    gathering: the_gathering_hall
 
 market_quarter:
   name: The Market Quarter
@@ -416,10 +427,12 @@ market_quarter:
     trade up from the water. A trader calls her wares over the din. Everything the wider
     Anvil makes passes through here sooner or later. East, past the last stalls, a salt-road
     runs out of the city toward the Ashwastes. North, the makers' stalls give onto the Artisans'
-    Quarter.
+    Quarter. The Cinder Tankard keeps a TAVERN off the square, and the river DOCKS lie south.
   exits:
     west: the_grand_forge
     east: ashwastes_road
+    tavern: the_cinder_tankard
+    docks: the_river_docks
     north: the_artisans_quarter
 
 ashwastes_road:
@@ -1684,3 +1697,121 @@ the_umbral_deep:
     waiting. The sunken kiln lies back up.
   exits:
     up: the_sunken_kiln
+
+# ============================================================================================
+# EMBERREACH CITY INTERIORS (Great Creation Campaign, Phase I, Layer 4: every settlement explorable).
+# The first capital becomes a real city you can walk INTO: the First Flame church, the Grand Archive,
+# a tavern and inn, the three Order guild-halls off the Row, the river docks, the undercity beneath the
+# forge, and the gate-watch on the walls. Reached by NOUN exits (temple/archive/tavern/making/...), and
+# each building returns by the noun `out` - the wider compass, used as a city is used.
+# ============================================================================================
+
+the_first_flame_church:
+  name: The Church of the First Flame
+  desc: |-
+    Off the Grand Forge, the Church of the First Flame keeps a chapel around a shard of the relit
+    Forge-fire: the faith that holds the Rekindling a holy second chance, that the world was Made and
+    can be Made again by hands that keep the flame. A flamekeeper tends the altar. The creed of the
+    First Flame is graven over the hearth for any who read. Out returns to the Grand Forge.
+  exits:
+    out: the_grand_forge
+    forge: the_grand_forge
+
+the_grand_archive:
+  name: The Grand Archive
+  desc: |-
+    The root of the world's memory: the Grand Archive of the Emberwright Rememberers, tier on tier of
+    salvaged record climbing into the dark, where the Loremaster keeps what the Unforging did not take.
+    An archivist shelves a stack that never ends. Here a Forger can READ the world's own case-file, if
+    the Loremaster judges them ready. Out returns to the Grand Forge.
+  exits:
+    out: the_grand_forge
+
+the_cinder_tankard:
+  name: The Cinder Tankard
+  desc: |-
+    The Market Quarter's tavern, low-beamed and loud, where the whole Rekindling drinks: Forgers fresh
+    off the coast, salvage-crews up from the Ashwastes, Wardens off the march, all trading news over
+    cinder-ale. A barkeep keeps the taps and the peace. A rest-room, an INN, keeps beds up the back
+    stair. Out returns to the Market Quarter.
+  exits:
+    out: market_quarter
+    inn: the_wayhouse_inn
+
+the_wayhouse_inn:
+  name: The Wayhouse Inn
+  desc: |-
+    Up the tavern's back stair, the Wayhouse keeps clean beds and a banked hearth for the road-weary: a
+    safe room in a loud city, the one place in Emberreach a Forger is asked nothing and owed nothing but
+    rest. The innkeeper keeps the ledger. Out returns to the tavern below.
+  exits:
+    out: the_cinder_tankard
+
+the_making_hall:
+  name: The Making Order Hall
+  desc: |-
+    The guild-hall of the Making Orders off the Row: the smiths, wrights, and shapers who hold that to
+    Forge is the highest calling, their hall hung with masterworks submitted for rank. A Making-master
+    judges the work brought before her. Out returns to the Orders' Row.
+  exits:
+    out: orders_row
+
+the_knowing_hall:
+  name: The Knowing Order Hall
+  desc: |-
+    The guild-hall of the Knowing Orders: the loremasters, readers, and case-workers who hold that to
+    understand the world is to keep it, their hall a quieter archive of methods and marks. A Knowing-
+    master sets the questions that make a scholar. Out returns to the Orders' Row.
+  exits:
+    out: orders_row
+
+the_gathering_hall:
+  name: The Gathering Order Hall
+  desc: |-
+    The guild-hall of the Gathering Orders: the pathfinders, harvesters, and delvers who hold that the
+    world's raw Ember must be found before it is worked, their hall walled with maps of every Reach and
+    every mouth of the deep. A Gathering-master reads the far roads. Out returns to the Orders' Row.
+  exits:
+    out: orders_row
+
+the_river_docks:
+  name: The River Docks
+  desc: |-
+    South of the market the city meets its water: a river-quay where cooling-iron barges bring the
+    Cooling-Sea's trade up into Emberreach and carry the capital's work back down. A dockmaster tallies
+    the cargo and curses the tide. This is where the Quenchmere's ferries make their inland call. Out
+    returns to the Market Quarter.
+  exits:
+    out: market_quarter
+
+the_undercity:
+  name: The Undercity
+  desc: |-
+    Beneath the Grand Forge the old city runs on in the dark: cinder-drains, sealed cellars, and the
+    footings of a capital that has been rebuilt on its own bones since the Rekindling began. A drain-
+    lurker works the wet dark, and salvage the city forgot still lies in the sealed cellars. The forge-
+    stair climbs back up; the SEWERS run on deeper, west, under the market.
+  exits:
+    up: the_grand_forge
+    out: the_grand_forge
+    west: the_sewers
+
+the_sewers:
+  name: The Cinder-Drains
+  desc: |-
+    The capital's cinder-drains, brick-vaulted and ankle-deep, running the length of the city under the
+    stalls above: the undercity's working gut, where the drain-kin breed and the truly desperate hide.
+    A drain-warden of the watch patrols the near stretch, the only law down here. The undercity lies
+    back east.
+  exits:
+    east: the_undercity
+
+the_city_walls:
+  name: The City Walls
+  desc: |-
+    The cinder-iron walls of Emberreach, wide enough to march a column, where the Concord's gate-watch
+    keeps the capital's first line against the wilds and the road. A wall-captain reads the horizon out
+    over the Kindlands. From here the whole city spreads below: the Grand Forge's plume, the market's
+    smoke, the Wardenmarch beyond. Out returns to the gates below.
+  exits:
+    out: emberreach_gates

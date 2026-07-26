@@ -1079,3 +1079,41 @@ cinderdeep_reckoning:
     prove: that a made thing is not permanent, it is DEFENDED, and the day the makers stop defending it
     is the day it joins the grey. Go down if you must. Come up while you can. And when you are old,
     remember you were made on purpose, and defend something."
+
+# --- Emberreach City interiors content (Great Creation Campaign, Phase I, Layer 4): the tavern's ale
+# --- and the capital's two readable stones - the First Flame's creed and the world's own case-file. ---
+cinder_ale:
+  name: a tankard of cinder-ale
+  keywords: [ale, cinder, tankard, drink]
+  location: nowhere
+  consume: {hp: 8}  # the Cinder Tankard's brew: warm, cheap, a small mercy sold by the barkeep
+
+first_flame_creed:
+  name: the creed of the First Flame
+  keywords: [creed, flame, church, hearth]
+  location: the_first_flame_church
+  lore: |-
+    Graven over the church hearth, in a hand that meant it: "THE WORLD WAS MADE. That is the first
+    article and the last. Not born, not fallen from a god's hand, not eternal - MADE, by makers, out of
+    raw Ember and will, and what was made was unmade at the Unforging, and what was unmade can be Made
+    AGAIN. This is the whole of the First Flame: not that the fire is holy, but that the making is, and
+    the keeping of the fire is only the keeping of the will to make. Do not worship the flame. Tend it.
+    A god you beg. A fire you feed. We are not the children of the world. We are its smiths, and the
+    Rekindling is our second and final chance to prove we learned the first lesson: a made thing lives
+    only as long as someone keeps making it. Keep the flame. Make the world. Do not, this time, let go."
+
+world_casefile:
+  name: the world's own case-file
+  keywords: [casefile, case, file, archive]
+  location: the_grand_archive
+  lore: |-
+    The Grand Archive's founding record, the case-file the Emberwright Rememberers opened on the world
+    itself: "CASE: THE UNFORGING. STATUS: open, and will not close. Known: the world was one Forged
+    supercontinent; it came apart along the cooling-seas into the seven Reaches, tore lands into the
+    sky, dropped others into the Cinderdeep; the makers who did it, the Emberwrights, are gone, and left
+    no confession, only the wound. Unknown, and this is the Archive's whole purpose: WHY. Why the first
+    makers stopped. Why a craft that could build a world was set down, and by hands that knew exactly
+    what they were setting down. Every clue is a Reach. Every Reach is a page. The Forgeward Road runs
+    east to where the answer sank, and a Forger who reads far enough may close the case the makers left
+    open. We do not keep the memory to mourn it. We keep it to solve it. Read on. The next clue is out
+    there, and it is the size of a continent."

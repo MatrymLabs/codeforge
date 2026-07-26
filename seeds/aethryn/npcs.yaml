@@ -2486,3 +2486,102 @@ hollow_king:
   tier: boss  # the Cinderdeep's built-descent climax (x10 reward): the deep's answer to the surface kings
   drops: [hollow_crown, greater_healing_draught]
   loot: {ember_shard: 18, unmade_ember: 5, nothing: 1}
+
+# --- Emberreach City interiors life (Great Creation Campaign, Phase I, Layer 4): the capital's people,
+# --- so the flagship city feels lived-in. Mostly non-combat; the undercity keeps two low foes. ---
+
+flamekeeper:
+  name: a flamekeeper of the First Flame
+  location: the_first_flame_church
+  keywords: [flamekeeper, keeper, flame, priest]
+  dialogue:
+    - '"Warm yourself, Forger. The First Flame is not a god to beg, it is a fire to keep -- the faith that the world was Made, and unmade, and can be Made again by hands that will not let the light go out. You Forge? Then you already pray, whether you name it or not. Read the creed if you would name it."'
+
+grand_archivist:
+  name: the archivist of the Grand Archive
+  location: the_grand_archive
+  keywords: [archivist, archive, loremaster, scholar]
+  dialogue:
+    - '"Quiet, in the Archive. This is the world''s memory, salvaged a page at a time from what the Unforging tried to forget. The Loremaster keeps the deepest shelves; I keep the rest, and I will show you the world''s own case-file if you have the wit to read it. Everything begins as a record. Even you."'
+
+tankard_barkeep:
+  name: the barkeep of the Cinder Tankard
+  location: the_cinder_tankard
+  keywords: [barkeep, tankard, tavern, host]
+  dialogue:
+    - '"Cinder-ale or news, Forger, and the ale''s cheaper. Whole Rekindling drinks here -- coast-Forgers, salvage-crews, Wardens off the march. You want to know what''s happening in the world, you don''t read the Archive, you buy a round in the Tankard. Beds up the back if the ale wins."'
+  topics:
+    rumor:
+      - '"Everyone comes through here eventually. Word is the Ashwastes salvage is paying, if you don''t mind the glass-craters. Word is the Warden Gate''s turning back more folk than it lets north. And word is some fool opened a mouth of the Cinderdeep down past the Cinderwaste and something came up grey. Buy a round and you''ll hear worse."'
+  shop:
+    sells:
+      healing_draught: 12
+      cinder_ale: 4
+    buys:
+      ember_shard: 5
+
+wayhouse_innkeeper:
+  name: the Wayhouse innkeeper
+  location: the_wayhouse_inn
+  keywords: [innkeeper, wayhouse, inn, host]
+  dialogue:
+    - '"A bed, a banked fire, and nothing asked -- that''s the Wayhouse. You''re owed rest, Forger, whoever you are and whatever you did to get here. The city''s loud and the road''s long. Sleep. The Rekindling will still need making in the morning."'
+
+making_master:
+  name: the Making-master
+  location: the_making_hall
+  keywords: [making, master, guild, smith]
+  dialogue:
+    - '"So you would Make. Good. The Making Orders hold it the highest calling there is -- to take the world''s raw Ember and give it a shape that lasts. Bring me work worth a rank and I''ll judge it honestly, which is to say hard. A masterwork is not a thing you claim. It is a thing that survives me looking at it."'
+
+knowing_master:
+  name: the Knowing-master
+  location: the_knowing_hall
+  keywords: [knowing, master, guild, loremaster]
+  dialogue:
+    - '"The Making Orders shape the world; we understand it, and understanding is the older craft. To keep a thing you must first know what it is -- read the clue, trace the cause, close the case. The Knowing Orders make scholars the way the yard makes soldiers: by asking the question until it answers back."'
+
+gathering_master:
+  name: the Gathering-master
+  location: the_gathering_hall
+  keywords: [gathering, master, guild, pathfinder]
+  dialogue:
+    - '"Before a thing is made or known, it is FOUND. The Gathering Orders walk the far roads -- every Reach, every mouth of the deep -- and bring the raw world home. You want to see the map? Every wall in this hall is one. The Ashwastes, the Quenchmere, the new grey mouth below the Cinderwaste. The world''s bigger than the coast you came from, Forger. Come see how much."'
+  topics:
+    rumor:
+      - '"Seven Reaches across the seas, the Forgeward Road east to the Forge, the Cinderdeep growing down under all of it. A Gathering Forger could walk a lifetime and not see it twice. Start near -- the Reachwood, the Ashwastes, the coast. End far. Everyone does."'
+
+city_dockmaster:
+  name: the river dockmaster
+  location: the_river_docks
+  keywords: [dockmaster, docks, quay, river]
+  dialogue:
+    - '"Barges in, barges out, tide don''t care about your hurry. The Cooling-Sea trade comes up this river into the capital and the capital''s work goes back down -- salvage, steel, Forgergoods for the Quenchmere ferries. You want passage to the drowned Reach, this is where it starts. Mind the cargo-hooks."'
+
+undercity_drain_lurker:
+  name: a drain-lurker
+  location: the_undercity
+  keywords: [lurker, drain, undercity, dweller]
+  dialogue:
+    - Something that has lived too long in the dark under the forge unfolds from a sealed cellar-mouth, pale and quick and jealous of the salvage it hoards.
+  hp: 30
+  atk: 6
+  aggressive: true
+  attack_element: DRK
+  level: 6
+  tier: normal  # the capital's undercity: a low city-dungeon for fresh Forgers, under the Grand Forge
+  loot: {ember_shard: 2, nothing: 2}
+
+sewers_drain_warden:
+  name: a drain-warden of the watch
+  location: the_sewers
+  keywords: [warden, drain, sewers, watch]
+  dialogue:
+    - '"Watch keeps even the drains, Forger -- a city''s only as safe as its gut. Drain-kin breed down here, and worse hides from the light above. Mind yourself. And if you find a sealed cellar the city forgot, what''s in it is salvage, and salvage is the finder''s, so long as you don''t mind sharing the dark with what else wants it."'
+
+walls_captain:
+  name: the wall-captain of the gate-watch
+  location: the_city_walls
+  keywords: [captain, wall, watch, gate]
+  dialogue:
+    - The wall-captain does not lower the glass from the horizon. "First line of the capital, this wall. The Grand Forge is the heart, but a heart needs a rib-cage. Kindlands out there look green and mostly are -- but the road brings what the road brings, and the Wardenmarch beyond only holds because we hold here. Look your fill. Then go do something useful."
