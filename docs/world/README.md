@@ -24,15 +24,15 @@ cooling-seas; whole lands fell into the **Cinderdeep** below; the craft of makin
 the ages. Now, in the **Age of Rekindling**, ordinary people stumble back into fragments of the old
 craft and become **Forgers** — makers whose works *stay*. The world can be rebuilt, or Unforged
 again, and every player is both a hero and a small dangerous experiment in whether a broken world
-should be handed the power to remake itself. The endgame is not to kill a final enemy; it is to
-climb the **Great Spiral** toward the **Forge** itself and become a maker of worlds — and to learn
-why the first makers stopped.
+should be handed the power to remake itself. The endgame is not to kill a final enemy; it is to run
+the **Forgeward Road** east toward the **Forge** at the world's far heart and become a maker of
+worlds, and to learn why the first makers stopped.
 
 ## Scale of the design
 
-- **9 great regions of the world**: 7 continental **Reaches** on the Anvil's surface, plus 2
-  vertical planes — the **Great Spiral** (ascending endgame) and the **Cinderdeep** (descending
-  frontier). Each Reach is designed to support its own RPG. See the [Continental Atlas](continental_atlas.md).
+- **9 great regions of the world**: 7 continental **Reaches** on the Anvil's surface, plus the
+  **Forgeward Road** (the overland frontier endgame running east) and the **Cinderdeep** (the
+  descending dungeon frontier). Each Reach is designed to support its own RPG. See the [Continental Atlas](continental_atlas.md).
 - **Thousands of handcrafted rooms** as the target; hundreds per major region. Room standards and a
   prioritized zone-by-zone build order in the [Build Order & Room Standards](build_order.md).
 - **Dozens of factions**, **hundreds of creatures across believable ecosystems**, **dozens of jobs
@@ -80,4 +80,4 @@ The world is designed *first*; the seeds follow. Each authored region here becom
 build (rooms, npcs, items, zones, quests) per the [Build Order](build_order.md). The flagship seed
 **`aethryn`** is the first, playable slice of this universe — the Kindlands coast of Emberreach, the
 Ember-road to the capital, the Reachwood, the Cooling-Sea, the Ashwastes, the Cinderdeep, and the
-Great Spiral. This library is the map for the decade of content that grows from it.
+Forgeward Road. This library is the map for the decade of content that grows from it.

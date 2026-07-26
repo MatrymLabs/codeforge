@@ -97,11 +97,11 @@ the world remembers — a hunt worth an expansion.
   vertigo-touch (DRK/WND). Weakness: radiance, solid ground. Role: the sky's horror. Boss: the
   **Drifting Court**, a wandering Emberwright shard-city that is never in the same place twice.
 
-## The Vertical Planes
+## The Frontier and the Deep
 
-- **The Great Spiral** — themed **Gate-wardens** by Coil (fire, frost, storm, shadow, stone), each a
-  Forged guardian that resists its own element and fears a counter; the climb is an elemental gauntlet
-  toward the **Spiral Sovereign** at the summit. (Built by the flagship seed's procedural Spiral.)
+- **The Forgeward Road** - themed **road-wardens** by march (fire, frost, storm, shadow, stone), each a
+  Forged guardian that resists its own element and fears a counter; the run east is an elemental gauntlet
+  toward the **Sovereign** at the Forge's Edge. (Built by the flagship seed's procedural Road.)
 - **The Cinderdeep** — the **Unforged** at their purest, deepening without floor: drowned makers,
   hollow smiths, the things the world dropped. The deeper you sink, the less alive and the more hostile
   the web, until the creatures are barely creatures at all — just unmaking, hungry.
