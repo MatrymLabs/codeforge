@@ -659,10 +659,11 @@ the_molten_passage:
     The ferry runs a black-glass channel west into rising heat, the Cooling-Sea steaming where it
     laps the Kollforge's shore. Ahead the molten Reach glows: rivers of Forgelight-lit lava, obsidian
     cities on cooling shelves, the whole land still visibly being made. Cinder-drakes ride the thermals.
-    The berth lies back east.
+    The berth lies back east; the capital glows west, and a black shelf of obsidian flats spreads south.
   exits:
     east: the_deepwater_berth
     west: emberkoll
+    south: the_obsidian_flats
 
 emberkoll:
   name: Emberkoll
@@ -670,10 +671,13 @@ emberkoll:
     The molten capital: an obsidian city raised over a lightning-lit caldera, where the Kollkin work
     the hottest, rawest ember in the world and count a cooled land as a dead one. A Vent-Forge master
     keeps the great forge; a Kollkin trader keeps a shelf-stall. The passage lies back east; north, the
-    Anvil-Vents open toward the Forge below.
+    Anvil-Vents open toward the Forge below; the caldera-market glows west, and a cooling-shelf stair
+    drops down toward a Kollhold the fire forgot.
   exits:
     east: the_molten_passage
     north: the_anvil_vents
+    west: the_caldera_market
+    down: the_cooling_shelf
 
 the_anvil_vents:
   name: The Anvil-Vents
@@ -1282,3 +1286,75 @@ the_frozen_forge:
     lies back east.
   exits:
     east: frosthold
+# THE KOLLFORGE EXPANSION (Great Creation Campaign) - the molten Reach grows to zone density: the
+# caldera-market (Emberkoll lived-in + the Kollkin creed), the Obsidian Flats (a lava-shelf wilderness
+# leveling ground), and the Cooled Kollhold (a city that DIED cold - the Kollkin's deepest fear, mirror
+# to the drowned Sunhold and frozen Frosthold). Level-banded 50-56, below the Vent-Lord (62).
+# ============================================================================================
+
+# --- Emberkoll proper: the obsidian capital, lived-in, and the Kollkin creed ---
+the_caldera_market:
+  name: The Caldera-Market
+  desc: |-
+    A market ringed around the lip of a lightning-lit caldera, its stalls roofed in cooling-glass and
+    its floor warm underfoot: the Kollkin trade the hottest wares in the world here, and count heat
+    itself the truest wealth. A shelf-crier hawks the day's pours; a caldera-child dares the warm rail.
+    The Kollkin creed is struck in bronze at the caldera's lip for any who read. Emberkoll lies back east.
+  exits:
+    east: emberkoll
+
+# --- The Obsidian Flats: a lava-shelf wilderness, a leveling ground off the Reach's entry ---
+the_obsidian_flats:
+  name: The Obsidian Flats
+  desc: |-
+    South of the passage the shore cools to a black glass shelf, cracked with slow rivers of Forgelight-
+    lit lava and loud with the things that live in heat: ember-lynxes stalking the glass and slag-hulks
+    heaving up from the cooling flows. Emberglass sets in the cracks for anyone quick enough to gather
+    it before the next pulse. The passage lies back north; the flats break east into a cinder-vent gorge.
+  exits:
+    north: the_molten_passage
+    east: the_cinder_gorge
+
+the_cinder_gorge:
+  name: The Cinder-Vent Gorge
+  desc: |-
+    A gorge where the flats crack open on a working vent, the air a shimmer of heat and cinder-fall.
+    A cinder-drake nests on the far ledge, grown fat on the thermals, jealous of the gorge. This is the
+    edge of the wilds, as deep as a lone Forger should push the flats. The obsidian flats lie back west.
+  exits:
+    west: the_obsidian_flats
+
+# --- The Cooled Kollhold: a city that died COLD (the Kollkin's deepest fear; a dead-city delve) ---
+the_cooling_shelf:
+  name: The Cooling Shelf
+  desc: |-
+    A stair drops from Emberkoll onto a shelf where the Forgelight failed an age ago: the rock here is
+    grey and dead-cold, the one place in the Kollforge the fire forgot. Slag-wraiths, Kollkin who died
+    when their heat did, drift the cold rock. Emberkoll's glow lies back up; ahead, west, the dead city
+    itself: Ashkoll, that cooled.
+  exits:
+    up: emberkoll
+    west: dead_ashkoll
+
+dead_ashkoll:
+  name: Dead Ashkoll
+  desc: |-
+    A Kollhold that cooled and died: an obsidian city gone grey and silent when its caldera guttered
+    out, its people frozen not in ice but in cold stone, mid-work at forges that will never light again.
+    To the Kollkin this is the only true death, and no Kollkin will walk here. A slag-echo of the last
+    Vent-master keeps the dead forge-square. The cooling-shelf lies back east; the great cold hearth
+    stands at the city's dead heart, west.
+  exits:
+    east: the_cooling_shelf
+    west: the_cold_hearth
+
+the_cold_hearth:
+  name: The Cold Hearth
+  desc: |-
+    The dead heart of Ashkoll: the great forge that was the city's life, its caldera a pit of grey slag,
+    cold a thousand years. The Ashen Forgeborn keeps it - living Forgework that did not die when its
+    heat did but went cold and mad instead, tending a fire that will never light and hating anything
+    that still burns. What Ashkoll forged in its last hot age still lies unclaimed in the dead pit. The
+    forge-square lies back east.
+  exits:
+    east: dead_ashkoll
