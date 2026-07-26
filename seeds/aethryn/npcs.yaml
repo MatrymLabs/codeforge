@@ -783,3 +783,53 @@ boughwarden:
   tier: boss  # the Verdance's climax: the apex of the whole ecosystem (x10 reward), a lethal guardian
   drops: [boughward_totem]
   loot: {ember_shard: 5, nothing: 2}
+
+# --- The Rimefall (Continental Atlas §II): the quenched north. A glass-hound pack, the Silent Anvil
+# --- keeper, and the flash-frozen Rime-King in the Frozen Court. Levels 40-52. Bring fire to the ice. ---
+
+glass_hound:
+  name: a glass-hound
+  location: the_riming_passage
+  keywords: [hound, glass, ice, beast]
+  dialogue:
+    - The hound forms from the frozen wild ember of the floe, silent, drawn to the sound of you.
+  hp: 140
+  atk: 24
+  aggressive: true
+  attack_element: ICE  # precipitated from frozen ember: its bite is cold (bring flame)
+  resistances: {ICE: Resist, FIR: Weak}
+  level: 40
+  tier: elite  # the ice's apex pack-hunter (x3 reward)
+  loot: {ember_shard: 3, nothing: 2}
+
+stillhearth_keeper:
+  name: a keeper of the Silent Anvil
+  location: stillhearth
+  keywords: [keeper, silent, anvil, monk]
+  dialogue:
+    - '"Speak low, Forger, and touch nothing. In the Rimefall the past is not ruined -- it is paused, and a careless hand restarts what the ice stopped."'
+    - '"We are the Silent Anvil. We hold this whole Reach as a shrine to restraint. The greatest work, we teach, is the work you choose not to make."'
+  topics:
+    rimefall:
+      - '"The Rimefall was flash-quenched in the Unforging -- a continent caught mid-Forge and frozen in an instant. Its cities stand whole under the ice, mid-gesture, better-made than anything alive can make. It is a museum of the golden age, and a grave that has not finished dying."'
+    silent_anvil:
+      - '"We worship the potential in unshaped ember, and hold that the greatest act is to leave some ember unforged. We are the world''s conscience, and the Rimefall is our sermon: see how the last great making ended, and be humble."'
+    frozen_court:
+      - '"North stands the Frozen Court -- an Emberwright capital preserved entire, its makers frozen mid-gesture, the Rime-King on his throne. Wake him, and you restart an Unforging mid-freeze. We do not go there. Neither should you."'
+
+rime_king:
+  name: the Rime-King
+  location: the_frozen_court
+  keywords: [king, rime, emberwright, boss]
+  dialogue:
+    - '"..." The ice over the throne cracks, and the Rime-King wakes mid-reign, a first-age maker the Unforging froze and you have thawed.'
+  hp: 300
+  atk: 30
+  aggressive: true
+  lethal: true
+  attack_element: ICE  # a maker frozen mid-Forge: his craft is cold (bring fire to thaw the reign)
+  resistances: {ICE: Resist, FIR: Weak}
+  level: 52
+  tier: boss  # the Rimefall's climax: a flash-frozen Emberwright, the golden age turned lethal (x10)
+  drops: [stillheart]
+  loot: {ember_shard: 6, nothing: 2}

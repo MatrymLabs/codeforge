@@ -135,6 +135,55 @@ tidewharf_plaza:
   exits:
     south: tidewharf_docks
     west: the_accord_hall
+    north: the_deepwater_berth
+
+the_deepwater_berth:
+  name: The Deepwater Berth
+  desc: |-
+    Tidewharf's outbound berth, where the deep-water ferries make for the far Reaches across the
+    open Cooling-Sea. Ship-captains cry their crossings: north to the frozen Rimefall, west to the
+    molten Kollforge, up the sky-lanes to the Sundered Sky. The plaza lies back south. This is the
+    door to the wider world.
+  exits:
+    south: tidewharf_plaza
+    north: the_riming_passage
+
+# --- The Rimefall: the quenched north across the sea (Continental Atlas §II, Build Order Phase 4).
+# --- A continent flash-frozen in the Unforging, its Emberwright cities preserved whole under the ice;
+# --- the Silent Anvil keep it as a shrine to restraint. Level-banded 40-52. ---
+
+the_riming_passage:
+  name: The Riming Passage
+  desc: |-
+    The ferry breaks a lane through grinding floes into the Riming Sea, and the world goes white and
+    still. Ahead the Rimefall rises: a continent caught mid-Forge and frozen in an instant, its cities
+    standing complete under the ice, better-made than anything alive. Glass-hounds pace the floe-edge.
+    The berth lies back south.
+  exits:
+    south: the_deepwater_berth
+    north: stillhearth
+
+stillhearth:
+  name: Stillhearth
+  desc: |-
+    A monastery-port on the ice-edge, the one warm place in the Rimefall, kept by the Silent Anvil
+    who hold this whole Reach as a shrine. Here they trade only what the ice gives up and speak in low
+    voices, because in the frozen north the past is not ruined but paused. A keeper tends the one
+    hearth. The passage lies back south; the Frozen Court stands north across the ice.
+  exits:
+    south: the_riming_passage
+    north: the_frozen_court
+
+the_frozen_court:
+  name: The Frozen Court
+  desc: |-
+    An Emberwright capital preserved entire: a court of the golden age caught mid-gesture and frozen
+    in a single instant, its makers still at their benches under a skin of clear ice, every room a
+    perfect and lethal tableau. The Rime-King keeps the throne, flash-frozen mid-reign, and waking it
+    would restart an Unforging mid-freeze. This is the most beautiful and most haunted room in the
+    world. Stillhearth lies back south.
+  exits:
+    south: stillhearth
 
 the_accord_hall:
   name: The Accord Hall

@@ -154,6 +154,26 @@ def test_aethryn_cinderdeep_descends_to_a_real_bottom():
     assert load_items(AETHRYN / "items.yaml")["drowned_seal"]["slot"] == "accessory_2"
 
 
+def test_aethryn_rimefall_is_the_frozen_high_level_reach():
+    """The fourth Reach (Build Order Phase 4): a deepwater berth ferries north to the Rimefall -- a
+    continent flash-frozen in the Unforging, its golden-age cities whole under the ice, kept by the
+    Silent Anvil, climaxing in the flash-frozen Rime-King (a level-52 boss)."""
+    rooms = load_rooms(AETHRYN / "rooms.yaml")
+    assert (
+        rooms["tidewharf_plaza"]["exits"].get("north") == "the_deepwater_berth"
+    )  # the far-ferry hub
+    assert rooms["the_deepwater_berth"]["exits"].get("north") == "the_riming_passage"
+    npcs = load_npcs(AETHRYN / "npcs.yaml")
+    assert npcs["glass_hound"]["level"] == 40 and npcs["glass_hound"]["tier"] == "elite"
+    assert "silent_anvil" in npcs["stillhearth_keeper"]["topics"]  # the world's conscience speaks
+    king = npcs["rime_king"]
+    assert king["level"] == 52 and king["tier"] == "boss" and king["lethal"] is True
+    assert king["resistances"] == {"ICE": "Resist", "FIR": "Weak"}  # bring fire to thaw the reign
+    assert king["drops"] == ["stillheart"]  # a Reach-Relic of the golden age
+    arc = load_quest(AETHRYN / "quests" / "the_rimefall.yaml")
+    assert arc is not None and arc["steps"][-1]["on_defeat"] == "rime_king"
+
+
 def test_aethryn_verdance_is_a_living_wild_reach_off_the_crossroads():
     """The third Reach (Build Order Phase 3): Tidewharf ferries west to the Verdance -- a living
     jungle continent with the Deeprooted capital Highbough and the Heart-Grove (a boss that is the
