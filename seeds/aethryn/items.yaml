@@ -179,3 +179,12 @@ warden_charm:
   location: nowhere
   slot: accessory_1
   mods: {DEF: 4, EVA: 4}
+
+# Drop-only: the Ash-Colossus's reward -- a blade of the black glass the Unforging fused (a heavy
+# weapon salvaged from the crater's heart).
+cinderglass_edge:
+  name: a cinderglass edge
+  keywords: [cinderglass, edge, blade, weapon]
+  location: nowhere
+  slot: weapon
+  mods: {ATK: 12, ACC: 4}

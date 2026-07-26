@@ -68,3 +68,9 @@ the_reachwood:
   rooms: [reachwood_hollow, wardens_glade, the_bramblewarren]
   reset_mode: empty_only
   beats_between: 12
+
+the_ashwastes:
+  name: The Ashwastes
+  rooms: [ashwastes_road, the_cinder_dunes, the_ashborn_camp, the_scoured_ruin, the_glass_crater]
+  reset_mode: empty_only
+  beats_between: 12

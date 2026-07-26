@@ -1,0 +1,26 @@
+# SEED: aethryn -- quests/the_ashwastes.yaml (a regional arc: cross the wastes, meet the Ashborn,
+# and still the Ash-Colossus at the crater). A mid-game side-arc east of the capital, self-playing
+# from real deeds (enter the wastes, reach the camp, fell the Colossus), with the `quest` fallback.
+
+id: the_ashwastes
+name: The Ashwastes
+start: unsent
+reward_xp: 400
+
+steps:
+  - {state: unsent,    event: cross, to: crossing,   on_enter: ashwastes_road}
+  - {state: crossing,  event: reach, to: among_them, on_enter: the_ashborn_camp}
+  - {state: among_them, event: still, to: stilled,   on_defeat: ash_colossus, effect: award_xp}
+
+terminal: [stilled]
+
+labels:
+  unsent: "East of Emberreach, past the salt-road, lies the Ashwastes -- a land the Unforging half-unmade. Cross into it, if the wastes will have you."
+  crossing: "You walk the Ashwastes, grey to every horizon. The Ashborn keep a camp in the dunes; find them, and learn what keeps this land unhealed."
+  among_them: "The Ashborn have taken your measure. At the crater east, the Ash-Colossus keeps the deepest wound of the wastes. Still it, and the ash may cool at last."
+  stilled: |-
+    *** THE ASHWASTES ARE ANSWERED ***
+    The Ash-Colossus comes apart into the black glass it was welded from, and the crater at the heart
+    of the wastes goes quiet. The Ashborn will not thank you aloud -- they are not a thanking people --
+    but the grey cools a shade, and rare ember wells where the giant stood. You have crossed a land
+    the world forgot, and left it a little less unmade than you found it.

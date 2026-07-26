@@ -154,6 +154,30 @@ def test_aethryn_cinderdeep_descends_to_a_real_bottom():
     assert load_items(AETHRYN / "items.yaml")["drowned_seal"]["slot"] == "accessory_2"
 
 
+def test_aethryn_ashwastes_is_a_real_mid_game_region_with_an_arc():
+    """A whole new mid-game region east of the capital (levels 15-25): the Market Quarter opens onto
+    a salt-road into the Ashwastes -- a desert with the Ashborn survivors (a shop + a lore scout), a
+    ruin, and the Ash-Colossus at the crater, tied together by its own questline."""
+    rooms = load_rooms(AETHRYN / "rooms.yaml")
+    assert (
+        rooms["market_quarter"]["exits"].get("east") == "ashwastes_road"
+    )  # a road out of the city
+    # the region chains road -> dunes -> (camp / ruin -> crater)
+    assert rooms["the_cinder_dunes"]["exits"]["east"] == "the_scoured_ruin"
+    assert rooms["the_scoured_ruin"]["exits"]["east"] == "the_glass_crater"
+    npcs = load_npcs(AETHRYN / "npcs.yaml")
+    assert npcs["ash_jackal"]["level"] == 15  # bands above the reachwood and the cellar
+    colossus = npcs["ash_colossus"]
+    assert colossus["level"] == 25 and colossus["tier"] == "boss" and colossus["lethal"] is True
+    assert colossus["resistances"] == {"ERT": "Resist", "WND": "Weak"}  # an elemental puzzle
+    assert "shop" in npcs["ashborn_trader"]  # a third till, mid-game
+    assert "ashwastes" in npcs["ashborn_scout"]["topics"]  # lore makes it lived-in
+    # a real regional questline: cross the wastes -> meet the Ashborn -> still the Colossus
+    arc = load_quest(AETHRYN / "quests" / "the_ashwastes.yaml")
+    assert arc is not None and arc["terminal"] == ["stilled"]
+    assert arc["steps"][-1]["on_defeat"] == "ash_colossus"
+
+
 def test_aethryn_reachwood_is_a_real_lateral_region():
     """The coast has horizontal exploration, not just the vertical spine: the Reachwood Edge opens
     east into a forest region (a hollow, a warden's glade, a bramble warren) with level-banded foes,
