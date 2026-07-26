@@ -58,6 +58,27 @@ def test_aethryn_every_exit_and_placement_resolves():
         assert npc["location"].split(":")[-1] in rooms, f"npc {label} floats nowhere"
 
 
+def test_aethryn_no_room_is_meaninglessly_empty():
+    """Every room holds content -- a foe, an NPC, or a deliberate exception (the spawn, a rest-stop,
+    a transit hub, or a puzzle room whose content IS the puzzle). Guards against a wilderness or
+    dungeon room shipping empty of anything to find, now that the empty rooms are populated."""
+    rooms = load_rooms(AETHRYN / "rooms.yaml")
+    npcs = load_npcs(AETHRYN / "npcs.yaml")
+    occupied = {npc["location"].split(":")[-1] for npc in npcs.values()}
+    # rooms allowed to hold no foe or NPC, each for a stated reason
+    allowed_empty = {
+        "the_waking_shore",  # the spawn: a fresh Forger is not ambushed at birth
+        "wayfarers_rest",  # a rest-stop on the Ember-road: a safe haven by design
+        "old_reach_bridge",  # a mend-the-span puzzle room; its content is the repair
+        "cold_cellar",  # the jumbled-Forge puzzle room; its content is ordering the steps
+        "the_deepwater_berth",  # a far-ferry transit hub (its captains cry the crossings)
+    }
+    empty = {r for r in rooms if r not in occupied} - allowed_empty
+    assert not empty, f"wilderness/dungeon rooms shipped empty of content: {sorted(empty)}"
+    # the ruin's flavour names a salvage-wraith; it must actually exist there (no broken promise)
+    assert npcs["salvage_wraith"]["location"] == "the_scoured_ruin"
+
+
 def test_aethryn_wren_keeps_a_coast_shop_so_act_one_has_an_economy():
     """The starting coast now has a functional till: Wren sells heals and a starter blade, so a
     fresh Forger can spend the coins the wolves drop instead of reaching mid-game for a shop."""
