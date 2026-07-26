@@ -142,6 +142,23 @@ def drop(word: str, room_id: str) -> str:
     return f"You drop {ITEMS[iid]['name']}."
 
 
+def read_item(word: str, room_id: str) -> str:
+    """`read <item>`: show an item's readable lore. Looks in your hands first, then the room, so a
+    lore book you carry or an inscription in the room both read. Refuses loud on a miss, and says so
+    plainly when a thing carries no writing (a sword is not a story)."""
+    if not word.strip():
+        return "Read what?"
+    word = word.strip().lower()
+    iid = trace_item(word, "player") or trace_item(word, f"room:{room_id}")
+    if iid is None:
+        return "You don't see that to read."
+    item = ITEMS[iid]
+    lore = item.get("lore")
+    if not lore:
+        return f"There is nothing written on {item['name']}."
+    return f"You read {item['name']}:\n{lore}"
+
+
 def inventory_text() -> str:
     carried = items_in("player")
     if not carried:

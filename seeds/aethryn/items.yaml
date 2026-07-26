@@ -56,6 +56,12 @@ relighting_record:
   name: the Grand Forge's relighting record
   keywords: [record, relighting, ledger, archive]
   location: the_grand_forge
+  lore: |-
+    THE RELIGHTING OF THE KINDLANDS COAST, as kept by the Grand Forge.
+    When the Unforging cooled the coast to grey, the Concord did not rebuild. It RELIT -- hearth by
+    hearth, room by room, in the old order the makers left. The rule was written first and never
+    since amended: relight nothing you cannot keep warm. A fire you cannot tend is a second
+    unmaking, slower and crueller than the first. The coast you walk was warmed by that patience.
 
 # Drop-only prototypes for the ascent (location: nowhere = spawned by a boss's fall, not placed).
 # The gear ladder fills every slot as you climb: weapon (hammer/blade), body (cindershell), head
@@ -517,3 +523,30 @@ sovereigns_regalia:
   location: nowhere
   slot: accessory_1
   mods: {ATK: 9, DEF: 9, "MAG DEF": 6}
+
+# --- Readable lore (Content Manufacturing Campaign): books/records/inscriptions placed in rooms,
+# --- read with `read <item>`. Readable environmental storytelling for a Forger who slows down to
+# --- look. Placed (not drop-only), one per notable place; carried or read in place. ---
+drowned_makers_log:
+  name: a drowned maker's log
+  keywords: [log, book, maker, drowned]
+  location: the_drowned_sunhold
+  lore: |-
+    (waterlogged, the last entries barely legible)
+    ...the sea did not come for us in a day. It came in inches, over a life. We kept working. We told
+    ourselves the Forgework would hold, that a maker does not abandon a making half-done. The tide
+    took the low halls, then the forges, then the light. I write this in the dark, at a cold anvil,
+    still trying to finish a thing the water started. Do not weep for us. Learn the lesson we would
+    not: a work you cannot save is not worth drowning for. Save yourself. Finish something else.
+
+skyborn_inscription:
+  name: a Skyborn inscription
+  keywords: [inscription, stone, skyborn, tablet]
+  location: highgate
+  lore: |-
+    Cut into the anchor-stone of Highgate, in the plain hand of the first sky-Wardens:
+    WE DID NOT FALL. Remember it, you who come up the ferry frightened. The shards the Unforging tore
+    loose did not fall, and neither did we. We drove anchors into the wind and held. The world came
+    apart and we stayed. Whatever you have lost below, whatever cooled and cracked and sank -- up
+    here the rule is only this: drive your anchor, and hold. The wind is old and it is patient, but
+    so are the Skyborn.

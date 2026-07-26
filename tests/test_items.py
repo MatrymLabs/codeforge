@@ -5,7 +5,7 @@ import copy
 import pytest
 
 from parts.world import items
-from parts.world.items import drop, inventory_text, items_in, take
+from parts.world.items import drop, inventory_text, items_in, read_item, take
 
 
 @pytest.fixture(autouse=True)
@@ -38,6 +38,44 @@ def test_drop_returns_key_to_room():
     result = drop("key", "cellar")
     assert "drop" in result
     assert items.ITEMS["copper_key"]["location"] == "room:cellar"
+
+
+def test_read_shows_an_items_lore():
+    items.ITEMS["tome"] = {
+        "name": "a dusty tome",
+        "keywords": ["tome"],
+        "location": "room:library",
+        "slot": "",
+        "mods": {},
+        "lore": "Once, the world was warm.",
+    }
+    out = read_item("tome", "library")
+    assert "a dusty tome" in out and "Once, the world was warm." in out
+
+
+def test_read_prefers_a_carried_item_over_one_in_the_room():
+    items.ITEMS["note"] = {
+        "name": "a carried note",
+        "keywords": ["note"],
+        "location": "player",
+        "slot": "",
+        "mods": {},
+        "lore": "carry me",
+    }
+    assert "carry me" in read_item("note", "anywhere")  # reads from the hand, no room needed
+
+
+def test_read_a_thing_with_no_writing_says_so():
+    out = read_item("key", "library")  # the copper key carries no lore
+    assert "nothing written" in out
+
+
+def test_read_a_thing_not_present_is_refused():
+    assert read_item("dragon", "library") == "You don't see that to read."
+
+
+def test_read_nothing_asks_what():
+    assert read_item("  ", "library") == "Read what?"
 
 
 def test_inventory_empty_then_full():
