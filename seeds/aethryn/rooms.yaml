@@ -67,6 +67,64 @@ tidewharf_docks:
     east: the_quench_lanes
     north: tidewharf_plaza
     south: drowned_sunhold_descent
+    west: the_verdant_passage
+
+# --- The Verdance: the living wild across the Quenchmere's water (Continental Atlas §III, Build
+# --- Order Phase 3). A primeval jungle-swamp that is literally alive; the Deeprooted animists; a
+# --- believable ecosystem with a food chain. Level-banded 22-32. Reached by ferry from Tidewharf. ---
+
+the_verdant_passage:
+  name: The Verdant Passage
+  desc: |-
+    The ferry leaves the drowned Reach and threads a green channel where the Cooling-Sea gives way to
+    warm brown water and the air thickens to breathing. Ahead the Verdance rises: a jungle of trees
+    the size of mountains, a whole continent that is, in the most literal sense, alive. Tidewharf lies
+    back east.
+  exits:
+    east: tidewharf_docks
+    west: verdance_landing
+
+verdance_landing:
+  name: The Verdance Landing
+  desc: |-
+    A root-jetty where the ferry ties to a living tree that gripped it back. The understory glows with
+    ember-blooms; a canopy-stalker watches from the boughs above. A root-stair climbs west toward
+    Highbough, the canopy capital; a game-trail sinks south into the breathing mire. The channel runs
+    back east.
+  exits:
+    east: the_verdant_passage
+    west: highbough
+    south: the_deeproot_mire
+
+highbough:
+  name: Highbough
+  desc: |-
+    A city grown rather than built, in the crown of a tree so vast its boughs are avenues: Highbough,
+    capital of the Deeprooted, where the people treat wild Ember as sacred and Forging as a
+    conversation with a living world. A grove-elder reads the tree's moods; a canopy-trader keeps a
+    hollow-stall. The landing lies back east.
+  exits:
+    east: verdance_landing
+
+the_deeproot_mire:
+  name: The Deeproot Mire
+  desc: |-
+    A breathing swamp where Cinder seeps up through the roots and the dead half-return, drawn to
+    warmth. Ember-blooms light black water; something risen from the mire moves through the reeds. The
+    landing lies back north; deeper in, the Heart-Grove beats. Go west, into the wet dark.
+  exits:
+    north: verdance_landing
+    west: the_heart_grove
+
+the_heart_grove:
+  name: The Heart-Grove
+  desc: |-
+    The living center of the Verdance: a single vast organism grown around a wellspring of wild Ember,
+    a grove that is one creature the size of a valley. The Boughwarden guards its heart -- the apex of
+    the whole continent's web, a thing the Deeprooted half-worship and wholly fear. This is the deepest
+    green in the world. The mire lies back east.
+  exits:
+    east: the_deeproot_mire
 
 tidewharf_plaza:
   name: The Tidewharf Plaza

@@ -154,6 +154,28 @@ def test_aethryn_cinderdeep_descends_to_a_real_bottom():
     assert load_items(AETHRYN / "items.yaml")["drowned_seal"]["slot"] == "accessory_2"
 
 
+def test_aethryn_verdance_is_a_living_wild_reach_off_the_crossroads():
+    """The third Reach (Build Order Phase 3): Tidewharf ferries west to the Verdance -- a living
+    jungle continent with the Deeprooted capital Highbough and the Heart-Grove (a boss that is the
+    apex of a real food chain: canopy-stalker, mire-returned, then the Boughwarden)."""
+    rooms = load_rooms(AETHRYN / "rooms.yaml")
+    assert (
+        rooms["tidewharf_docks"]["exits"].get("west") == "the_verdant_passage"
+    )  # a Reach off the hub
+    npcs = load_npcs(AETHRYN / "npcs.yaml")
+    # a believable ecosystem: apex predator, scavenger, and the living heart, level-banded
+    assert npcs["canopy_stalker"]["level"] == 22 and npcs["mire_returned"]["level"] == 26
+    assert "verdance" in npcs["grove_elder"]["topics"] and "shop" in npcs["canopy_trader"]
+    warden = npcs["boughwarden"]
+    assert warden["level"] == 32 and warden["tier"] == "boss" and warden["lethal"] is True
+    assert warden["resistances"] == {
+        "ERT": "Resist",
+        "WND": "Weak",
+    }  # bring wind to the living wild
+    arc = load_quest(AETHRYN / "quests" / "the_verdance.yaml")
+    assert arc is not None and arc["steps"][-1]["on_defeat"] == "boughwarden"
+
+
 def test_aethryn_quenchmere_is_a_second_continent_reached_by_sea():
     """The first sea-crossing (Build Order Phase 2): Quench Harbor's ferry runs west to the
     Quenchmere -- a second Reach with the free-port Tidewharf (an Accord-Speaker, a Merewright shop,

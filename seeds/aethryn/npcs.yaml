@@ -700,3 +700,86 @@ sunhold_warden:
   tier: boss  # the Quenchmere's climax: a lethal boss-tier reward (x10) in the drowned capital
   drops: [sunhold_sigil]
   loot: {hollow_ingot: 2, ember_shard: 4, nothing: 2}
+
+# --- The Verdance (across the Quenchmere, Continental Atlas §III): the living wild. A canopy predator,
+# --- the mire's returned dead, the Deeprooted of Highbough, and the Boughwarden at the Heart-Grove.
+# --- Levels 22-32. A believable food chain: stalker (apex) / mire-returned (scavenger) / grove (all). ---
+
+canopy_stalker:
+  name: a canopy-stalker
+  location: verdance_landing
+  keywords: [stalker, canopy, cat, beast]
+  dialogue:
+    - The stalker drops from the boughs without a sound, ember-eyes bright, and is on you.
+  hp: 90
+  atk: 16
+  aggressive: true
+  level: 22
+  tier: elite  # the Verdance's apex canopy-hunter (x3 reward); high evasion, forced to ground to fell
+  loot: {ember_shard: 2, nothing: 2}
+
+grove_elder:
+  name: a Deeprooted grove-elder
+  location: highbough
+  keywords: [elder, grove, deeprooted, druid]
+  dialogue:
+    - '"You walk in a living thing, Forger. The Verdance is not a place with creatures in it -- it is one creature, and we live inside its patience."'
+    - '"We do not command the wild ember. We ask it. A Forger who forgets that is a Forger the Verdance forgets to spare."'
+  topics:
+    verdance:
+      - '"The Verdance is where wild ember was never gathered -- it simply grew, and grew, until the continent woke. This is the First Seed''s dream made real and dangerous: a world that Forges itself, with no maker''s hand to stop it."'
+    deeprooted:
+      - '"We are the Deeprooted. No crown, only grove-councils and reader-elders who broker between the people and the wild. We treat Forging as a conversation, because here the world can answer back."'
+    heartgrove:
+      - '"West through the mire beats the Heart-Grove -- the living center, one creature the size of a valley. The Boughwarden keeps it. We half-worship it and wholly fear it. Go, if the wild will have you, but go humble."'
+
+canopy_trader:
+  name: a Deeprooted canopy-trader
+  location: highbough
+  keywords: [trader, canopy, deeprooted, merchant]
+  dialogue:
+    - '"Grown goods, gathered ember, and cures the mire teaches. The wild provides, if you trade fair with it."'
+  shop:
+    sells:
+      healing_draught: 17
+      mana_draught: 17
+      reaver_blade: 105
+      cindershell_plate: 160
+    buys:
+      ember_shard: 8
+      hollow_ingot: 38
+  topics:
+    mire:
+      - '"South of the landing the wood turns to breathing swamp, where Cinder seeps up and the dead half-return. The mire teaches hard lessons and rare cures. Carry radiance, or carry your grave."'
+
+mire_returned:
+  name: a mire-returned
+  location: the_deeproot_mire
+  keywords: [returned, mire, dead, wight]
+  dialogue:
+    - A shape of root and grave-ember rises from the black water, half a maker the swamp gave back.
+  hp: 100
+  atk: 18
+  aggressive: true
+  attack_element: PSN  # the swamp's returned dead: their touch is rot (bring radiance, holy fire)
+  resistances: {PSN: Resist, HLY: Weak}
+  level: 26
+  tier: elite  # the mire's scavenger-threat (x3 reward), between the canopy and the Heart-Grove
+  loot: {ember_shard: 2, nothing: 2}
+
+boughwarden:
+  name: the Boughwarden
+  location: the_heart_grove
+  keywords: [boughwarden, warden, grove, boss]
+  dialogue:
+    - '"..." The Heart-Grove turns its whole vast attention on you at once, and the Boughwarden rises from its heart to answer the trespass.'
+  hp: 230
+  atk: 27
+  aggressive: true
+  lethal: true
+  attack_element: ERT  # the living wild made flesh: root and stone and bloom (bring gale, wind)
+  resistances: {ERT: Resist, WND: Weak}
+  level: 32
+  tier: boss  # the Verdance's climax: the apex of the whole ecosystem (x10 reward), a lethal guardian
+  drops: [boughward_totem]
+  loot: {ember_shard: 5, nothing: 2}
