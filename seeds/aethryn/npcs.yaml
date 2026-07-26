@@ -2395,3 +2395,94 @@ vault_cinder_colossus:
   tier: boss  # the Scoured Reach's climax (x10 reward): the waste's own guardian on the last sealed vault
   drops: [scoured_vault_seal, greater_healing_draught]
   loot: {ember_shard: 10, cinderglass_shard: 4, nothing: 1}
+
+# --- The Cinderdeep ambient life (Great Creation Campaign, Phase I): the Unforged - entropy made
+# --- hostile - escalating with depth, plus the sunken kiln's echo and the Hollow King. Banded 40-52.
+# --- The unmade is undone by the made: light (HLY) and fire (FIR) bite what unmaking cannot. ---
+
+verge_unthing:
+  name: an un-thing
+  location: the_unmaking_verge
+  keywords: [unthing, thing, verge, unmade]
+  dialogue:
+    - A shape the eye cannot hold drifts the soft dark, less a creature than a place where a creature is being slowly forgotten, and it drifts toward the stubborn made-ness of you.
+  hp: 200
+  atk: 28
+  aggressive: true
+  attack_element: DRK
+  resistances: {DRK: Resist, HLY: Weak}  # the unmade recoils from the made light
+  level: 40
+  tier: normal  # the Cinderdeep verge, the deep's near-mouth threat below the Cinderwaste
+  loot: {ember_shard: 8, nothing: 3}
+
+greydark_unforged:
+  name: an Unforged drifter
+  location: the_greydark
+  keywords: [unforged, drifter, greydark, grey]
+  dialogue:
+    - Out of the grey half-real an Unforged resolves just enough to reach you: entropy that learned to want, hungry for anything that still holds a shape.
+  hp: 220
+  atk: 30
+  aggressive: true
+  attack_element: CRS
+  resistances: {CRS: Resist, HLY: Weak, FIR: Weak}  # unmaking-curse made flesh; making's fire and light undo it
+  level: 42
+  tier: normal  # the Greydark hub, the near-deep leveling ground
+  loot: {ember_shard: 9, nothing: 3}
+
+hollow_kin:
+  name: a hollow-kin
+  location: the_hollow_march
+  keywords: [hollow, kin, march, unforged]
+  dialogue:
+    - A hollow-kin unfolds from a cinder-well, a thing all edge and appetite, jealous of the raw unmade Ember pooled in the seam.
+  hp: 240
+  atk: 32
+  aggressive: true
+  attack_element: CRS
+  resistances: {CRS: Resist, FIR: Weak}  # a well-guardian of the unmade; fire is its undoing
+  level: 44
+  tier: normal  # the hollow-march lateral wander and the cinder-well gather's guardian
+  loot: {ember_shard: 9, unmade_ember: 1, nothing: 2}
+
+unforged_reach_devourer:
+  name: an Unforged devourer
+  location: the_unforged_reach
+  keywords: [devourer, unforged, reach, unmade]
+  dialogue:
+    - Here the Unforged are settled and certain, and the devourer that turns toward you has eaten the made for so long it has grown a kind of terrible shape, all mouth and forgetting.
+  hp: 300
+  atk: 36
+  aggressive: true
+  attack_element: CRS
+  resistances: {CRS: Resist, DRK: Resist, HLY: Weak}  # deep unmaking; only the made light still bites
+  level: 46
+  tier: elite  # the Unforged Reach's apex (x3 reward), the gate to the sunken kiln
+  drops: [greater_healing_draught]
+  loot: {ember_shard: 12, unmade_ember: 2, nothing: 2}
+
+kiln_echo:
+  name: the kiln-echo of the master-smith
+  location: the_sunken_kiln
+  keywords: [echo, kiln, smith, master]
+  dialogue:
+    - A kiln-echo keeps the dead furnace-square, half-unmade, still working a cold forge. "Firing's due," it says, to no one, to you. "Kiln's cold. When did the kiln go cold? I made a thing to last. I made it so WELL. Why is it grey? Why is everything grey?" It cannot remember that the deep ate the answer along with the town.
+  topics:
+    rumor:
+      - '"Down past the square the Hollow King holds the Umbral Deep - the deepest thing that still holds a shape, and it holds one only to mock the making. It ate my town. It ate my last firing. If you go down, bring the made light and the making fire, for the King is everything the deep does to a maker who stays too long. And Forger - what I forged last is still in the kiln, unmade but unbroken. Take it up into a world that still sets. Let one thing of mine leave the grey."'
+
+hollow_king:
+  name: the Hollow King
+  location: the_umbral_deep
+  keywords: [king, hollow, umbral, unforged]
+  dialogue:
+    - The Umbral Deep gathers itself into a shape that rules it: the Hollow King, an Unforged grown vast on an age of eating the made, a maker's nightmare turned inside out. "I unmake," it says, in the voice of everything that was ever forgotten. "You made yourself all this way down. Let me finish you the other direction."
+  hp: 720
+  atk: 44
+  aggressive: true
+  attack_element: CRS
+  resistances: {CRS: Immune, DRK: Resist, HLY: Weak, FIR: Weak}  # the deep's crown of unmaking; only the made light and fire answer it
+  level: 52
+  tier: boss  # the Cinderdeep's built-descent climax (x10 reward): the deep's answer to the surface kings
+  drops: [hollow_crown, greater_healing_draught]
+  loot: {ember_shard: 18, unmade_ember: 5, nothing: 1}

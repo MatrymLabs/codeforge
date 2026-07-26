@@ -1033,3 +1033,49 @@ vault_testament:
     nothing now. This -- this stays made, because I insisted, with the last making I had, that it must.
     If you read this, the seal held. Take what is here. And know that the only wall against the unmaking
     is a made thing that refuses, absolutely, to be unmade. Refuse. It is the only Forge that matters."
+
+# --- The Cinderdeep content (Great Creation Campaign, Phase I): the deep's raw unmade gather, the
+# --- Hollow King's crown, the drowned smith's last work that outlasted the unmaking, and deep-lore. ---
+unmade_ember:
+  name: a bead of unmade Ember
+  keywords: [unmade, ember, bead, cinderdeep]
+  location: the_hollow_march
+  resettable: true  # the hollow-march gather: raw Ember the deep unmade, pooled in the cinder-wells, reforms on reset
+
+hollow_crown:
+  name: the Hollow Crown
+  keywords: [crown, hollow, king, umbral]
+  location: nowhere
+  slot: head
+  mods: {"MAG DEF": 14, DEF: 8}  # torn off the Hollow King; a circle of pure unmaking that wards the maker who dares wear it
+
+kiln_lastwork:
+  name: the drowned smith's last work
+  keywords: [lastwork, work, kiln, smith]
+  location: the_sunken_kiln
+  slot: body
+  mods: {DEF: 15, "MAG DEF": 12}  # a mail the master-smith forged so well the unmaking could not break it, only grey it
+  lore: |-
+    The last thing the master-smith of the sunken kiln ever made, cold in the dead furnace where the
+    deep swallowed the town: a coat of Forge-mail, greyed by the unmaking but whole - unmade and yet
+    unbroken, because it was made too well to forget. Where the town's walls thinned to nothing and its
+    people to echoes, this one thing held, for the only reason anything holds against the deep: it was
+    forged by a maker who meant it to last, and meaning, it turns out, is the one material the unmaking
+    cannot dissolve. Wear it down here and the deep will remember, against its will, that some things
+    are made on purpose. Carry it up and it is only good mail. The greyness fades in a world that sets.
+
+cinderdeep_reckoning:
+  name: a Warden's reckoning of the deep
+  keywords: [reckoning, warden, cinderdeep, record]
+  location: the_greydark
+  lore: |-
+    A Warden-Concord reckoning-stone, driven into the Greydark's soft floor by some earlier expedition
+    and half-forgotten since: "Let it be recorded, for the Forgers who come after, what the Cinderdeep
+    IS, against the lies the Cinder Mysteries tell of it. It is not the world's grave. It is not its
+    compost. It is the world still coming apart, slowly, at the seam the Unforging opened and no one
+    closed, and it grows downward because unmaking, unlike making, needs no maker - it only needs to be
+    left alone. Every Reach has a mouth into it. Every mouth widens. We do not seal the deep because we
+    cannot; we only mark it, and mark the dead, and teach the living the one truth the deep exists to
+    prove: that a made thing is not permanent, it is DEFENDED, and the day the makers stop defending it
+    is the day it joins the grey. Go down if you must. Come up while you can. And when you are old,
+    remember you were made on purpose, and defend something."
