@@ -1559,3 +1559,64 @@ wreck_warden:
   tier: elite  # the drowned flagship's mini-boss, a coastal off-path prize (x3 reward)
   drops: [greater_healing_draught, tideglass_pendant]
   loot: {ember_shard: 4, hollow_ingot: 1, nothing: 2}
+
+# --- Capital district life (Seed Scale Doctrine: a living city). Trainers, artisans, guards, and
+# --- ambient citizens who make Emberreach's capital feel inhabited and worth spending time in. ---
+weaponmaster:
+  name: the Warcraft weaponmaster
+  location: the_training_yard
+  keywords: [weaponmaster, master, warcraft, trainer]
+  dialogue:
+    - '"Steel is honest, Forger. It does exactly what your arm tells it, no more, no less. Most Forgers die learning that their arm was lying. Drill, and stop lying to yourself."'
+  topics:
+    rumor:
+      - '"You want to test what the drills taught you? The duelist keeps the sparring ring, and past the Warden Gate the frontier keeps a harder school. But learn the forms here first, where a mistake costs you pride and not your life."'
+
+drill_sergeant:
+  name: an Orders drill-sergeant
+  location: the_training_yard
+  keywords: [sergeant, drill, orders, soldier]
+  dialogue:
+    - '"LINE! Shields up, feet planted, eyes on the -- you. Not one of mine. Watch, then, and learn how the Concord keeps a coast: together, or not at all."'
+
+yard_duelist:
+  name: a yard duelist
+  location: the_training_yard
+  keywords: [duelist, sparring, ring, fighter]
+  dialogue:
+    - The duelist salutes with a practice-blade, loose and grinning. "The ring's open, if you like. Nothing to lose but a bruise and the story that you tried."
+
+master_artisan:
+  name: a master artisan
+  location: the_artisans_quarter
+  keywords: [artisan, master, maker, smith]
+  dialogue:
+    - '"The lowland Forgers chase the loud making -- a blade, a boss, a name. We keep the quiet ones: the hinge that holds, the binding that lasts. A world is more hinges than swords, Forger. Buy well."'
+  shop:
+    sells:
+      healing_draught: 12
+      greater_healing_draught: 36
+      cindershell_plate: 140
+      wraithlamp_circlet: 175
+      warden_sigil: 90
+    buys:
+      ember_shard: 5
+      hollow_ingot: 25
+      reachwood_sap: 8
+
+journeyman_smith:
+  name: a journeyman smith
+  location: the_artisans_quarter
+  keywords: [smith, journeyman, maker, forger]
+  dialogue:
+    - The smith does not look up from a commission, a hinge worked and reworked. "Master says a thing is not made until it is made right. I have made this eleven times. I begin to think Master is testing my patience, not my hinges. Perhaps both are the point."
+
+quarter_scholar:
+  name: a wandering scholar
+  location: the_artisans_quarter
+  keywords: [scholar, wanderer, student, knowing]
+  dialogue:
+    - '"The old marks on these walls predate the Concord, Forger. The makers who raised the first capital signed their work, and no one now can read the signatures. I am trying. Come back when I have. Or do not; I may be a while."'
+  topics:
+    rumor:
+      - '"There is a shrine in the deep Reachwood the marks here point to -- older than the town, its makers unnamed. And a firewatch on the hill above it. The old capital watched outward once, before it forgot to. If you climb up there, tell me what you see. I gather the world secondhand these days."'

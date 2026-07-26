@@ -391,9 +391,11 @@ orders_row:
   desc: |-
     A colonnade of guild-halls: the Making, the Gathering, the Warcraft, and the Knowing
     Orders keep their doors here, where a Forger chooses a road and trains a craft. A
-    recruiter watches the street for new talent come up from the coast.
+    recruiter watches the street for new talent come up from the coast. The Warcraft training
+    yard opens off the row to the west.
   exits:
     east: the_grand_forge
+    west: the_training_yard
 
 market_quarter:
   name: The Market Quarter
@@ -401,10 +403,12 @@ market_quarter:
     Stalls and shopfronts crowd the Market Quarter, and the Cooling-Sea docks send their
     trade up from the water. A trader calls her wares over the din. Everything the wider
     Anvil makes passes through here sooner or later. East, past the last stalls, a salt-road
-    runs out of the city toward the Ashwastes.
+    runs out of the city toward the Ashwastes. North, the makers' stalls give onto the Artisans'
+    Quarter.
   exits:
     west: the_grand_forge
     east: ashwastes_road
+    north: the_artisans_quarter
 
 ashwastes_road:
   name: The Salt-Road to the Ashwastes
@@ -964,3 +968,26 @@ the_sunken_hold:
     What the sea took and never gave back settles here. The flooded hulls lie back up.
   exits:
     up: the_flooded_hulls
+
+# --- Capital districts (Seed Scale Doctrine: every city should feel alive; avoid skeletal cities).
+# --- The training yard and the artisans' quarter give Emberreach's capital martial and maker life
+# --- beyond the three hub rooms, so the city bustles and offers trainers, shops, and things to do. ---
+the_training_yard:
+  name: The Warcraft Training Yard
+  desc: |-
+    Off the Orders' Row, a sanded yard ringed by racks of practice-steel where the Warcraft Orders
+    drill their own: the Vanguard's shield-wall, the Pathfinder's skirmish, the ring-work of the
+    duelists. A weaponmaster runs the forms, a drill-sergeant barks the line, and a duelist waits by
+    the sparring ring for anyone bold enough. The Orders' Row lies back east.
+  exits:
+    east: orders_row
+
+the_artisans_quarter:
+  name: The Artisans' Quarter
+  desc: |-
+    North of the market the makers keep their own quarter: forge-shops and glassworks and
+    binderies, the ring of a hundred small hammers, the smell of hot metal and resin. A master
+    artisan keeps a well-stocked shop, a journeyman smith works a commission, and a wandering
+    scholar sketches the old marks on the walls. The market lies back south.
+  exits:
+    south: market_quarter
