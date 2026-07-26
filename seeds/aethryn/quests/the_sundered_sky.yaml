@@ -1,0 +1,28 @@
+# SEED: aethryn -- quests/the_sundered_sky.yaml (the floating Reach, Build Order Phase 5): rise to the
+# sky-Warden capital Highgate, cross the drifting shards, and best the Court-Warden of the Wandering
+# Court -- the last surface boss before the Great Spiral and the vertical endgame.
+
+id: the_sundered_sky
+name: The Sundered Sky
+start: grounded
+reward_xp: 1400
+
+steps:
+  - {state: grounded, event: rise,  to: at_highgate, on_enter: highgate}
+  - {state: at_highgate, event: cross, to: at_the_court, on_enter: the_wandering_court}
+  - {state: at_the_court, event: best, to: skybound, on_defeat: court_warden, effect: award_xp}
+
+terminal: [skybound]
+
+labels:
+  grounded: "Up the sky-lanes from Tidewharf's berth rises the Sundered Sky -- the lands the Unforging tore loose that never fell, the last surface Reach and the gate to the Spiral. Rise into it."
+  at_highgate: "You stand in Highgate, the sky-Wardens' hold at the foot of the Coilfoot, where the Great Spiral climbs out of the world. East, the shards drift loose and the Wandering Court wanders them. Cross to it, and answer the last surface guardian before the climb."
+  at_the_court: "You stand in the Wandering Court, a shard-city that never lands, kept by the Court-Warden -- a maker the Unforging set adrift and never let rest. Best it, and the whole world lies conquered behind you. Only the Spiral remains."
+  skybound: |-
+    *** THE WHOLE WORLD LIES BEHIND YOU ***
+    The Court-Warden lets the Wandering Court drift free at last, and the last surface guardian of
+    Aethryn is stilled. You have crossed the whole world -- the cradle and the drowned Reach, the
+    living wild and the frozen north, the molten edge and the sundered sky. Every land the Unforging
+    left is walked and answered. Behind you: a world. Ahead, up the Coilfoot from Highgate: the Great
+    Spiral, Coil upon Coil toward the Forge, the First Seed, and the answer to why the first makers
+    stopped. The surface is done. Now you climb toward the end of everything.

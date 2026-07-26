@@ -154,6 +154,23 @@ def test_aethryn_cinderdeep_descends_to_a_real_bottom():
     assert load_items(AETHRYN / "items.yaml")["drowned_seal"]["slot"] == "accessory_2"
 
 
+def test_aethryn_sundered_sky_is_the_last_surface_reach_and_the_spiral_gate():
+    """The sixth Reach (Build Order Phase 5): the berth's sky-lanes rise to the Sundered Sky -- the
+    floating lands the Unforging tore loose, the last surface Reach, whose capital Highgate wires UP
+    into the Great Spiral, joining the whole surface world to the vertical endgame."""
+    rooms = load_rooms(AETHRYN / "rooms.yaml")
+    assert rooms["the_deepwater_berth"]["exits"].get("up") == "the_sky_lanes"
+    assert rooms["highgate"]["exits"].get("up") == "coilfoot_ascent"  # the surface joins the Spiral
+    npcs = load_npcs(AETHRYN / "npcs.yaml")
+    assert npcs["stormkin"]["level"] == 60 and npcs["fall_wight"]["level"] == 64
+    assert "spiral" in npcs["sky_warden"]["topics"] and "shop" in npcs["anchor_keeper"]
+    court = npcs["court_warden"]
+    assert court["level"] == 72 and court["tier"] == "boss" and court["lethal"] is True
+    assert court["resistances"] == {"DRK": "Resist", "HLY": "Weak"}  # bring radiance to the shadow
+    arc = load_quest(AETHRYN / "quests" / "the_sundered_sky.yaml")
+    assert arc is not None and arc["steps"][-1]["on_defeat"] == "court_warden"
+
+
 def test_aethryn_kollforge_is_the_molten_reach_before_the_spiral():
     """The fifth Reach (Build Order Phase 5): the berth ferries west to the Kollforge -- the molten
     surface land closest to the Forge, the Kollkin fire-Forgers of Emberkoll, and the Vent-Lord, the
