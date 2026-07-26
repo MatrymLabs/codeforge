@@ -1383,3 +1383,54 @@ shrine_warden:
   tier: elite  # the hidden shrine's keeper, an off-path prize in the deep wood (x3 reward)
   drops: [shrine_ward]
   loot: {ember_shard: 4, nothing: 2}
+
+# --- Emberreach ambient life (Seed Scale Directive: "the world should appear to function even when
+# --- the player is absent"). Non-combat civilians, wildlife, and travelers across the launch zone,
+# --- so the coast and wood feel inhabited, not staged. They populate and flavour; they do not fight. ---
+
+reachwood_hunter:
+  name: a Reachwood hunter
+  location: the_deepwood
+  keywords: [hunter, reachwood, tracker, forester]
+  dialogue:
+    - The hunter freezes, three fingers raised, then eases: not game, only a Forger. "Walk soft out here, and the wood walks soft back."
+  topics:
+    rumor:
+      - '"The lynx you can hear. The shrine-keeper you cannot -- it stands so still the moss grows on it, east past the mere, and it does not like being found. If you go, go loud. Surprising an old Forgework is how the wood gets its hunters back in pieces."'
+
+reachwood_doe:
+  name: a reachwood doe
+  location: the_thornmere
+  keywords: [doe, deer, reachwood, wildlife]
+  dialogue:
+    - A doe lifts her head from the mere's edge, ember-eyed and unafraid, having never learned that a Forger is a thing to fear.
+
+coast_fisher:
+  name: a Quench Harbor fisher
+  location: quench_harbor
+  keywords: [fisher, harbor, boat, quench]
+  dialogue:
+    - '"Grey water gives up grey fish, and we are grateful for them," the fisher says, not looking up from a net that is more mend than net.'
+  topics:
+    rumor:
+      - '"There is a cave below the strand, east, that we do not fish. Something grew big in the dark down there on everything the tide sent it. Put it down and the tidecave is ours again -- there is drowned ember in that grotto worth more than a season of fish."'
+
+ember_road_pilgrim:
+  name: a road pilgrim
+  location: wayfarers_rest
+  keywords: [pilgrim, traveller, road, wanderer]
+  dialogue:
+    - '"I walk the Ember-road to the Grand Forge, to see the relighting recorded and add my small name to it. Rest here a while, Forger. The road is kinder shared."'
+  topics:
+    rumor:
+      - '"They say the Warden Gate past the capital opens onto the frontier -- the Forgeward Road, that runs east to the Forge itself. A whole life could be spent on it. Mine will not; I go only as far as the capital. But you have the look of one the road is not done with."'
+
+cinderhearth_elder:
+  name: a Cinderhearth elder
+  location: cinderhearth_square
+  keywords: [elder, cinderhearth, old, villager]
+  dialogue:
+    - '"I was a child when the coast relit, Forger. I remember the cold, and I remember the first hearth catching. Do not let a fire go out on my account. We worked too hard for the warm."'
+  topics:
+    rumor:
+      - '"Down the cellar under the square the Unforging left a made-hall half-real, its steps all out of order. The young Forgers go down to set it right. Some come up. Mind your footing and mind the cold-crawlers, and you will be one of the some."'
