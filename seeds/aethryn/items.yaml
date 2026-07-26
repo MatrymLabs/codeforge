@@ -266,3 +266,133 @@ emberhide_wraps:
   location: nowhere
   slot: arm
   mods: {DEF: 3, ATK: 2}
+
+# ============================================================================================
+# REGIONAL ARMOR SETS (Content Manufacturing Campaign, the wide fill). One slot-complete themed
+# set per Reach (head/body/arm), dropped by that Reach's own foes so a Forger re-outfits as they
+# travel. Base mods rise band to band; combat levels + rarity-rolls each drop. Drop-only prototypes.
+# ============================================================================================
+
+# --- Brinescale set: the Quenchmere (drowned archipelago, L18-30). Salvaged plate scaled like a
+# --- tide-crawler's shell, worn by the Merewright wreck-divers against the cold sea. ---
+brinescale_hood:
+  name: a brinescale hood
+  keywords: [hood, brinescale, scale, drowned]
+  location: nowhere
+  slot: head
+  mods: {DEF: 5, "MAG DEF": 5}
+
+brinescale_coat:
+  name: a brinescale coat
+  keywords: [coat, brinescale, scale, drowned]
+  location: nowhere
+  slot: body
+  mods: {DEF: 8, EVA: 3}
+
+brinescale_bracers:
+  name: a pair of brinescale bracers
+  keywords: [bracers, brinescale, scale, drowned]
+  location: nowhere
+  slot: arm
+  mods: {DEF: 6, ACC: 3}
+
+# --- Verdant set: the Verdance (living jungle, L22-32). Living bark-mail the Deeprooted grow rather
+# --- than forge, still green, that closes its own cuts. ---
+verdant_hood:
+  name: a verdant bark-hood
+  keywords: [hood, verdant, bark, grove]
+  location: nowhere
+  slot: head
+  mods: {DEF: 6, EVA: 4}
+
+verdant_mantle:
+  name: a verdant bark-mantle
+  keywords: [mantle, verdant, bark, grove]
+  location: nowhere
+  slot: body
+  mods: {DEF: 9, "MAG DEF": 4}
+
+verdant_vambraces:
+  name: a pair of verdant bark-vambraces
+  keywords: [vambraces, verdant, bark, grove]
+  location: nowhere
+  slot: arm
+  mods: {DEF: 7, ACC: 4}
+
+# --- Rimeplate set: the Rimefall (frozen north, L40-52). Flash-quenched Emberwright plate, cold to
+# --- the touch and unbreaking, cut from the glass-ice of the Rime. ---
+rimeplate_helm:
+  name: a rimeplate helm
+  keywords: [helm, rimeplate, rime, frost]
+  location: nowhere
+  slot: head
+  mods: {DEF: 9, "MAG DEF": 6}
+
+rimeplate_hauberk:
+  name: a rimeplate hauberk
+  keywords: [hauberk, rimeplate, rime, frost]
+  location: nowhere
+  slot: body
+  mods: {DEF: 13, EVA: 4}
+
+rimeplate_gauntlets:
+  name: a pair of rimeplate gauntlets
+  keywords: [gauntlets, rimeplate, rime, frost]
+  location: nowhere
+  slot: arm
+  mods: {DEF: 11, ATK: 5}
+
+# --- Emberforged set: the Kollforge (molten, L50-62). Plate forged at the Anvil-Vents in living
+# --- fire; the Reach already yields the Vent-Crown (head), so this set fills body and arm. ---
+emberforged_plate:
+  name: a suit of emberforged plate
+  keywords: [plate, emberforged, forge, molten]
+  location: nowhere
+  slot: body
+  mods: {DEF: 14, "MAG DEF": 6}
+
+emberforged_gauntlets:
+  name: a pair of emberforged gauntlets
+  keywords: [gauntlets, emberforged, forge, molten]
+  location: nowhere
+  slot: arm
+  mods: {DEF: 11, ATK: 5}
+
+# --- Stormward set: the Sundered Sky (floating shards, L60-72). Sky-Warden plate anchored with the
+# --- same Forgework that holds the shards aloft, light enough to ride the wind. ---
+stormward_helm:
+  name: a stormward helm
+  keywords: [helm, stormward, sky, warden]
+  location: nowhere
+  slot: head
+  mods: {DEF: 12, EVA: 6}
+
+stormward_cuirass:
+  name: a stormward cuirass
+  keywords: [cuirass, stormward, sky, warden]
+  location: nowhere
+  slot: body
+  mods: {DEF: 16, "MAG DEF": 7}
+
+stormward_vambraces:
+  name: a pair of stormward vambraces
+  keywords: [vambraces, stormward, sky, warden]
+  location: nowhere
+  slot: arm
+  mods: {DEF: 13, ACC: 6}
+
+# --- Hollowiron set: the Cinderdeep (downward dungeon, L10-15). Black salvage-iron from the drowned
+# --- making-works; the deep already yields the Cindershell Plate (body), so this fills head and arm. ---
+hollowiron_mask:
+  name: a hollowiron mask
+  keywords: [mask, hollowiron, iron, deep]
+  location: nowhere
+  slot: head
+  mods: {DEF: 6, "MAG DEF": 4}
+
+hollowiron_gauntlets:
+  name: a pair of hollowiron gauntlets
+  keywords: [gauntlets, hollowiron, iron, deep]
+  location: nowhere
+  slot: arm
+  mods: {DEF: 5, ATK: 3}

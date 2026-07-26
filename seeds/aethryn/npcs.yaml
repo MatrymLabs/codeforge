@@ -370,7 +370,7 @@ drowned_maker:
   aggressive: true
   level: 12
   tier: normal
-  drops: [ember_shard]
+  drops: [ember_shard, hollowiron_gauntlets]  # Hollowiron set (arm) - the Cinderdeep's armor
 
 cold_vein_lurker:
   name: the Cold-Vein Lurker
@@ -383,7 +383,7 @@ cold_vein_lurker:
   aggressive: true
   level: 14
   tier: elite  # it hoards the vein's last warmth: an elite kill (x3) for the delving
-  drops: [ember_shard]
+  drops: [ember_shard, hollowiron_mask]  # Hollowiron set (head)
   loot: {ember_shard: 2, nothing: 2}
 
 hollow_smith:
@@ -406,6 +406,7 @@ hollow_smith:
 
 sunken_revenant:
   name: a sunken revenant of the Drowned Way
+  drops: [brinescale_coat]  # Brinescale set (body)
   location: the_drowned_way
   keywords: [revenant, sunken, maker, drowned]
   dialogue:
@@ -628,6 +629,7 @@ drowned_pilot:
 
 brine_wight:
   name: a brine-wight
+  drops: [brinescale_hood]  # Brinescale set (head) - the Quenchmere's armor
   location: the_quench_lanes
   keywords: [wight, brine, drowned]
   dialogue:
@@ -701,7 +703,7 @@ sunhold_warden:
   resistances: {WTR: Resist, LGT: Weak}
   level: 30
   tier: boss  # the Quenchmere's climax: a lethal boss-tier reward (x10) in the drowned capital
-  drops: [sunhold_sigil]
+  drops: [sunhold_sigil, brinescale_bracers]  # Reach-relic + Brinescale set (arm)
   loot: {hollow_ingot: 2, ember_shard: 4, nothing: 2}
 
 # --- The Verdance (across the Quenchmere, Continental Atlas §III): the living wild. A canopy predator,
@@ -710,6 +712,7 @@ sunhold_warden:
 
 canopy_stalker:
   name: a canopy-stalker
+  drops: [verdant_hood]  # Verdant set (head) - the Verdance's armor
   location: verdance_landing
   keywords: [stalker, canopy, cat, beast]
   dialogue:
@@ -757,6 +760,7 @@ canopy_trader:
 
 mire_returned:
   name: a mire-returned
+  drops: [verdant_mantle]  # Verdant set (body)
   location: the_deeproot_mire
   keywords: [returned, mire, dead, wight]
   dialogue:
@@ -784,7 +788,7 @@ boughwarden:
   resistances: {ERT: Resist, WND: Weak}
   level: 32
   tier: boss  # the Verdance's climax: the apex of the whole ecosystem (x10 reward), a lethal guardian
-  drops: [boughward_totem]
+  drops: [boughward_totem, verdant_vambraces]  # Reach-relic + Verdant set (arm)
   loot: {ember_shard: 5, nothing: 2}
 
 # --- The Rimefall (Continental Atlas §II): the quenched north. A glass-hound pack, the Silent Anvil
@@ -792,6 +796,7 @@ boughwarden:
 
 glass_hound:
   name: a glass-hound
+  drops: [rimeplate_helm, rimeplate_gauntlets]  # Rimeplate set (head + arm) - the Rimefall's armor
   location: the_riming_passage
   keywords: [hound, glass, ice, beast]
   dialogue:
@@ -834,7 +839,7 @@ rime_king:
   resistances: {ICE: Resist, FIR: Weak}
   level: 52
   tier: boss  # the Rimefall's climax: a flash-frozen Emberwright, the golden age turned lethal (x10)
-  drops: [stillheart]
+  drops: [stillheart, rimeplate_hauberk]  # Reach-relic weapon + Rimeplate set (body)
   loot: {ember_shard: 6, nothing: 2}
 
 # --- The Kollforge (Continental Atlas §VI): the molten Reach, closest to the Forge. Cinder-drakes and
@@ -843,6 +848,7 @@ rime_king:
 
 cinder_drake:
   name: a cinder-drake
+  drops: [emberforged_gauntlets]  # Emberforged set (arm)
   location: the_molten_passage
   keywords: [drake, cinder, dragon, beast]
   dialogue:
@@ -892,6 +898,7 @@ kollkin_trader:
 
 forgeborn:
   name: a Forgeborn
+  drops: [emberforged_plate]  # Emberforged set (body) - the Kollforge's armor
   location: the_anvil_vents
   keywords: [forgeborn, construct, guardian, beast]
   dialogue:
@@ -928,6 +935,7 @@ vent_lord:
 
 stormkin:
   name: a stormkin
+  drops: [stormward_helm]  # Stormward set (head) - the Sundered Sky's armor
   location: the_sky_lanes
   keywords: [stormkin, storm, bird, beast]
   dialogue:
@@ -977,6 +985,7 @@ anchor_keeper:
 
 fall_wight:
   name: a fall-wight
+  drops: [stormward_cuirass]  # Stormward set (body)
   location: the_drifting_reach
   keywords: [wight, fall, drifting, dead]
   dialogue:
@@ -1004,5 +1013,5 @@ court_warden:
   resistances: {DRK: Resist, HLY: Weak}
   level: 72
   tier: boss  # the Sundered Sky's climax: the last surface boss before the Spiral (x10 reward)
-  drops: [anchor_stone]
+  drops: [anchor_stone, stormward_vambraces]  # Reach-relic + Stormward set (arm)
   loot: {ember_shard: 7, hollow_ingot: 2, nothing: 2}
