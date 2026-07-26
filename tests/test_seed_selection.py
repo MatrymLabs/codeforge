@@ -612,6 +612,7 @@ def test_aethryn_dungeons_are_delves_not_single_boss_rooms():
         "Frozen Court": ["the_glass_gallery", "the_rime_vault", "the_frozen_court"],
         "Vent-Deep": ["the_anvil_vents", "the_vent_gallery", "the_vent_deep"],
         "Wandering Court": ["the_drifting_reach", "the_broken_span", "the_wandering_court"],
+        "Ashen Ruin": ["the_scoured_ruin", "the_ashen_vault", "the_glass_crater"],
     }
 
     def foe_level(room: str) -> int:
@@ -683,9 +684,12 @@ def test_aethryn_ashwastes_is_a_real_mid_game_region_with_an_arc():
     assert (
         rooms["market_quarter"]["exits"].get("east") == "ashwastes_road"
     )  # a road out of the city
-    # the region chains road -> dunes -> (camp / ruin -> crater)
+    # the region chains road -> dunes -> (camp / ruin -> ashen vault -> crater)
     assert rooms["the_cinder_dunes"]["exits"]["east"] == "the_scoured_ruin"
-    assert rooms["the_scoured_ruin"]["exits"]["east"] == "the_glass_crater"
+    assert (
+        rooms["the_scoured_ruin"]["exits"]["east"] == "the_ashen_vault"
+    )  # the ruin delve deepened
+    assert rooms["the_ashen_vault"]["exits"]["east"] == "the_glass_crater"
     npcs = load_npcs(AETHRYN / "npcs.yaml")
     assert npcs["ash_jackal"]["level"] == 15  # bands above the reachwood and the cellar
     colossus = npcs["ash_colossus"]
