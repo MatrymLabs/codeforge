@@ -73,6 +73,31 @@ def test_generation_is_deterministic():
     assert a == b  # no randomness: the world is reproducible
 
 
+def test_the_frontier_forks_to_exploration_waysides():
+    """The flat frontier is a wide land, not a single corridor: some marches fork off the road to a
+    WAYSIDE, a dead-end side-track with a themed hoard-guardian over loot. It is optional (a normal
+    foe, not a lethal gate), and only SOME marches have one (a rhythm, not one on every stretch)."""
+    rooms, npcs, _ = generate_spiral(_CONFIG, _ROOMS)
+    # march 4 (the first) forks to a wayside; march 5 does not (every-other rhythm)
+    assert "coil_4_wayside" in rooms and "coil_5_wayside" not in rooms
+    # the road room grows a side exit onto the wayside, and the wayside dead-ends back to the march
+    ascent = rooms["coil_4_ascent"]["exits"]
+    branch = next(d for d, dest in ascent.items() if dest == "coil_4_wayside")
+    assert branch in ("north", "south")  # a side-track off the east/west road
+    back = rooms["coil_4_wayside"]["exits"]
+    assert list(back.values()) == ["coil_4_ascent"]  # a dead-end back to the road, no dangling exit
+    # the guardian is a NORMAL foe (not a road-warden boss) but still carries loot to reward the
+    # detour, and it out-levels the march's husk (a real optional fight, not a farm mob)
+    guard = npcs["spiral_wayside_4"]
+    assert guard["tier"] == "normal" and "lethal" not in guard
+    assert guard["attack_element"] == "FIR"
+    assert guard["level"] > npcs["spiral_husk_4"]["level"]
+    # exploration pays DIFFERENT loot from the road: wardens drop weapons, a wayside drops the
+    # keystone ACCESSORY -- so a mid-road Forger can earn one instead of it gating behind the cap
+    assert guard["drops"] == ["coil_keystone"]
+    assert npcs["spiral_gate_4"]["drops"] == ["ember_brand"]  # the road-warden still drops a weapon
+
+
 def test_each_coil_takes_a_rotating_elemental_theme():
     """The frontier is a varied gauntlet, not one room 50 times: consecutive marches carry different
     elements, and a road-warden is an elemental puzzle (resists its element, weak to a counter)."""
