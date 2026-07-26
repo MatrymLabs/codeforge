@@ -1620,3 +1620,60 @@ quarter_scholar:
   topics:
     rumor:
       - '"There is a shrine in the deep Reachwood the marks here point to -- older than the town, its makers unnamed. And a firewatch on the hill above it. The old capital watched outward once, before it forgot to. If you climb up there, tell me what you see. I gather the world secondhand these days."'
+
+# --- The Emberpost + Windward Downs life (Seed Scale Doctrine): a caravan settlement's traders and
+# --- guards, and the downs' herds and hunter. ---
+caravan_master:
+  name: the caravan-master
+  location: the_emberpost
+  keywords: [master, caravan, trader, post]
+  dialogue:
+    - '"Coast to capital and back, twice a season, thirty years. The road tells you everything if you listen: where the strays gather, which stones stay warm, who to trust. Provision here, Forger. The road is long and the Wardenmarch is longer."'
+  topics:
+    rumor:
+      - '"The downs north are quiet ground for leveling, if you can mind the stalker that works the elk. And the old cairns up there mark the first road -- before the Ember-road was paved, the Concord walked the downs. Some say the cairns still point at something worth the walk."'
+  shop:
+    sells:
+      healing_draught: 12
+      mana_draught: 12
+      greater_healing_draught: 38
+      reaver_blade: 92
+      emberhide_wraps: 45
+    buys:
+      ember_shard: 4
+      hollow_ingot: 25
+      reaver_blade: 30
+
+road_guard:
+  name: a Concord road-guard
+  location: the_emberpost
+  keywords: [guard, road, concord, spear]
+  dialogue:
+    - '"The road is the Concord''s, coast to capital, and we keep it so a fresh Forger can walk it and live. Past the Wardenmarch it stops being ours. Enjoy the paving while you have it."'
+
+emberpost_peddler:
+  name: a road peddler
+  location: the_emberpost
+  keywords: [peddler, cart, oddments, trader]
+  dialogue:
+    - '"Charms, cures, and curiosities, Forger! Half of it works and I will not tell you which half -- that is what makes it an adventure. Copper apiece, and no refunds on the mysteries."'
+
+ember_elk:
+  name: an ember-elk
+  location: the_windward_downs
+  keywords: [elk, ember, herd, wildlife]
+  dialogue:
+    - An ember-elk lifts its head from the gold grass, antlers run through with a slow wild light, watches you a long moment, and drifts back to the herd.
+
+downs_stalker:
+  name: a downs-stalker
+  location: the_windward_downs
+  keywords: [stalker, downs, hunter, beast]
+  dialogue:
+    - Low in the gold grass the downs-stalker has been pacing you a while; it decides now, and comes fast and silent through the ember-light.
+  hp: 60
+  atk: 10
+  aggressive: true
+  level: 12
+  tier: normal  # the downs' predator, a second mid-level leveling ground off the road
+  loot: {ember_shard: 3, nothing: 2}

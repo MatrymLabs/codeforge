@@ -334,11 +334,13 @@ emberroad_climb:
     The paved Forgework of the Ember-road climbs north out of the Kindlands, its
     old cinder-stones still warm underfoot. Wild ember has gone feral in the ditches,
     and stray things move where the light of Cinderhearth no longer reaches. A hollow
-    opens to the east; the road runs on north toward a wayfarer's rest.
+    opens to the east; the road runs on north toward a wayfarer's rest, and a cart-track branches
+    west to a caravan post.
   exits:
     south: the_far_reach
     north: wayfarers_rest
     east: strayfire_hollow
+    west: the_emberpost
 
 strayfire_hollow:
   name: Strayfire Hollow
@@ -991,3 +993,28 @@ the_artisans_quarter:
     scholar sketches the old marks on the walls. The market lies back south.
   exits:
     south: market_quarter
+
+# --- The Emberpost + the Windward Downs (Seed Scale Doctrine: roads connect meaningful destinations;
+# --- a mid-road settlement + a wilderness so the corridor is a place, not a passage). ---
+the_emberpost:
+  name: The Emberpost
+  desc: |-
+    A caravan waystation on a cart-track off the Ember-road: a walled yard of wagons, draft-beasts,
+    and travellers between the coast and the capital, where the Concord's caravans re-provision and
+    the road's traffic pools. A caravan-master keeps a well-found store, a road-guard leans on a
+    spear, and a peddler cries oddments from the back of a cart. The road lies back east; the downs
+    roll north.
+  exits:
+    east: emberroad_climb
+    north: the_windward_downs
+
+the_windward_downs:
+  name: The Windward Downs
+  desc: |-
+    North of the post the Kindlands roll open into grassy downs under a wide warm sky, the wild
+    ember running gold through the grass like a slow fire that never burns. Herds of ember-elk drift
+    the ridgelines, and a downs-stalker works the edge of the herd. Cairns of the first Rekindling
+    stand on the high points, marking a road the Concord walked before it paved the Ember-road. The
+    post lies back south.
+  exits:
+    south: the_emberpost
