@@ -737,3 +737,30 @@ vault_seal_record:
     relit, and you are a Forger of an age we did not live to see. Take the ember. It was always meant
     to be a beginning, not a grave. We only kept it safe until someone came who could carry it forward.
     That is you. It was always going to be you. Go and make something. That is the whole of the craft."
+
+# --- The Deep Wreckways content (Seed Scale Doctrine): a salvage gather node, the chapel's relic,
+# --- and the drowned chapel's lore. ---
+wreckways_salvage:
+  name: a bundle of wreckways salvage
+  keywords: [salvage, wreckways, bundle, material]
+  location: the_deep_wreckways
+  resettable: true  # a salvage node in the deep wrecks: take it, and the sea gives up more on the reset
+
+chapel_relic:
+  name: a drowned chapel-relic
+  keywords: [relic, chapel, drowned, ward]
+  location: nowhere
+  slot: accessory_1
+  mods: {"MAG DEF": 6, DEF: 3}  # the Merewrights' altar-ward, salvaged from the drowned chapel
+
+chapel_offering:
+  name: the drowned chapel's last offering
+  keywords: [offering, chapel, altar, cache]
+  location: the_drowned_chapel
+  lore: |-
+    Left on the altar of the drowned chapel, wrapped in oilcloth against a sea that came anyway:
+    the Merewrights of Sunhold prayed here to the making itself, and when the Cooling-Sea rose over
+    the Reach they did not flee - they stayed, and lit the altar-lamp, and asked the craft to hold the
+    water back one more hour, and one more. It did not. But the lamp is still lit, behind the altar,
+    on a seam of ember the sea could not drown. They asked the wrong thing of the making. The making
+    does not hold back the sea. It gives you the hands to build a boat. Take the lamp. Build something.
