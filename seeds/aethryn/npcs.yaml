@@ -1196,3 +1196,34 @@ rime_watcher:
   topics:
     rumor:
       - '"The Frozen Court holds the Rime-King, flash-quenched at the height of the golden age and reigning still over a dead one. Bring fire to thaw the reign. Bring more fire than you think you need."'
+
+# --- The Drowned Sunhold's deeper delve (Content Manufacturing Campaign): the flooded halls and the
+# --- drowned forge now hold their own foes, so the sunken capital is a real dungeon, not one boss. ---
+
+sunhold_drifter:
+  name: a drifter of the drowned halls
+  location: the_drowned_halls
+  keywords: [drifter, drowned, halls, citizen]
+  dialogue:
+    - A drifter turns between the green-lit pillars, a Merewright the sea kept, still walking a hall that has been under water for an age.
+  hp: 88
+  atk: 13
+  aggressive: true
+  attack_element: WTR  # a drowned citizen of the sunken capital: its touch is brine and cold
+  level: 27
+  tier: normal  # the halls' threat on the delve down to the Warden (past the stair-sentry)
+  loot: {ember_shard: 3, hollow_ingot: 1, nothing: 2}
+
+flooded_forge_revenant:
+  name: the revenant of the flooded forge
+  location: the_flooded_forge
+  keywords: [revenant, forge, master, drowned]
+  dialogue:
+    - '"...NOT... FINISHED..." The forge-master''s revenant rises from the blue-burning hearths, still gripping a hammer, and will not let you past its work.'
+  hp: 128
+  atk: 16
+  aggressive: true
+  attack_element: WTR  # the drowned forge-master: brine and banked ember
+  level: 28
+  tier: elite  # the last guardian before the Sunhold Warden: an elite gate on the delve (x3 reward)
+  loot: {ember_shard: 4, hollow_ingot: 2, nothing: 2}

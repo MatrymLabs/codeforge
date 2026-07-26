@@ -205,7 +205,7 @@ drowned_sunhold_descent:
     capital opens below.
   exits:
     up: tidewharf_docks
-    down: the_drowned_sunhold
+    down: the_drowned_halls
 
 the_drowned_sunhold:
   name: The Drowned Sunhold
@@ -216,7 +216,7 @@ the_drowned_sunhold:
     bottom of the salvage-stair, the richest unbroken Forgework in the Quenchmere. The stair lies
     back up.
   exits:
-    up: drowned_sunhold_descent
+    up: the_flooded_forge
 
 the_wreck_reef:
   name: The Wreck Reef
@@ -724,3 +724,28 @@ the_wandering_court:
     Forger stands before the Spiral. The drifting reach lies back west.
   exits:
     west: the_drifting_reach
+
+# --- Deepening the Drowned Sunhold (Content Manufacturing Campaign): the sunken capital was one
+# --- boss room; now the salvage-stair delves through the flooded halls and the drowned forge before
+# --- the Warden's court, so the richest wreck in the Quenchmere plays like a real dungeon. ---
+the_drowned_halls:
+  name: The Drowned Halls
+  desc: |-
+    Below the stair the water closes over you and the drowned-lung Forgework takes the cold back a
+    hand at a time. These were the Sunhold's high halls once: colonnades of green-lit stone where the
+    Merewright walked dry. Drifters move between the pillars, citizens the sea kept. The stair climbs
+    back up; the forge-halls open deeper down.
+  exits:
+    up: drowned_sunhold_descent
+    down: the_flooded_forge
+
+the_flooded_forge:
+  name: The Flooded Forge
+  desc: |-
+    The Sunhold's own forge, drowned but not dead: its ember-hearths still burn blue under the water,
+    banked against the cold that never came for them. A revenant of the last forge-master keeps the
+    fires, working a making the sea interrupted an age ago and will not let it finish. Past the forge
+    lies the Warden's court; the halls lie back up.
+  exits:
+    up: the_drowned_halls
+    down: the_drowned_sunhold
