@@ -288,9 +288,10 @@ the_bramblewarren:
   desc: |-
     A hollow choked in ember-thorn, where the Reachwood grows angry and old. The Bramble-Wight
     roots it -- a knot of wild ember and dead wood grown almost to a mind -- and it suffers no
-    Forger in its warren. The hollow lies back south.
+    Forger in its warren. The hollow lies back south; the thorns close deeper in, north.
   exits:
     south: reachwood_hollow
+    north: the_thorn_heart
 
 the_far_reach:
   name: The Far Reach
@@ -926,3 +927,16 @@ the_old_firewatch:
     it. This is the highest a Forger stands in Emberreach. The deepwood lies back down.
   exits:
     down: the_deepwood
+
+# --- The Thorn-Heart (Seed Scale Doctrine): the Bramblewarren was a dead-end boss room; open the
+# --- chamber it guards, where the wild ember the warren grew from pools untaken - a hidden find and
+# --- a rare threat past the Bramble-Wight, so the warren is a small dungeon, not one fight. ---
+the_thorn_heart:
+  name: The Thorn-Heart
+  desc: |-
+    Past the Bramble-Wight the thorns close into a chamber with a living heart: a well of wild ember
+    the warren grew itself around, welling up bright and untaken through a knot of ember-thorn older
+    than the town. A thorn-horror uncoils from the well, grown fat on the raw ember no one dares
+    gather. What pools here has drawn more than the Wight. The warren mouth lies back south.
+  exits:
+    south: the_bramblewarren

@@ -679,3 +679,22 @@ firewatch_glass:
   location: the_old_firewatch
   slot: accessory_2
   mods: {ACC: 6, EVA: 3}  # the last watcher's kit: it sharpens the eye (a keepsake of the high hill)
+
+# --- The Thorn-Heart's content (Seed Scale Doctrine): the deep warren's reward + a placed cache. ---
+wildember_charm:
+  name: a charm of wild ember
+  keywords: [charm, wildember, ember, thorn]
+  location: nowhere
+  slot: accessory_1
+  mods: {ATK: 4, "MAG DEF": 4}  # cut from the warren's untaken ember-well, the deep warren's prize
+
+wildember_cache:
+  name: a well of untaken wild ember
+  keywords: [well, ember, cache, wild]
+  location: the_thorn_heart
+  lore: |-
+    A well of wild ember, welling up bright through the ember-thorn, untaken since before the town.
+    The foresters have a rule older than the Concord: you cut the deadfall, you do not gather the
+    living ember. What wells up wild belongs to the wood, and the wood keeps its debts. The Wight and
+    the horror are the wood collecting. Take from the well if you must, Forger -- but know that the
+    Reachwood remembers a hand that takes more than the wild gives, and the Reachwood is patient.
