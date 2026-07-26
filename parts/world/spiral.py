@@ -260,6 +260,20 @@ def generate_spiral(
     return rooms, npcs, first_room
 
 
+def extend_world_with_road(
+    world: dict[str, Room], npcs: dict[str, Npc], config: dict[str, Any]
+) -> str:
+    """Merge the procedural Forgeward Road into a seed's world IN PLACE: generate the marches, add
+    their rooms and foes, and grow the attach room's `east` exit onto the first march (flat, no
+    climb). Returns the first march's label. The merge happens BEFORE the loader's link check, so
+    the generated data is validated by the same gates as the hand-authored world."""
+    rooms, road_npcs, first_room = generate_spiral(config, world)
+    world.update(rooms)
+    npcs.update(road_npcs)
+    world[config["attach"]]["exits"]["east"] = first_room
+    return first_room
+
+
 def spiral_zones(config: dict[str, Any]) -> dict[str, Zone]:
     """One AREA per generated march (its road + waystation rooms), so the procedural Forgeward Road
     is not a stretch of anonymous rooms: each march renders its own '[Area: The Nth March]' banner,

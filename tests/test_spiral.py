@@ -52,6 +52,21 @@ def test_each_coils_gate_boss_climbs_above_the_last():
     assert levels[0] == 47 and levels[-1] == 255
 
 
+def test_extend_world_with_road_merges_and_wires_the_attach_exit():
+    """The world-wiring helper (what world.py calls) merges the generated marches into a seed's
+    world and grows the attach room's flat `east` exit onto the first march -- no climb, no `up`."""
+    from parts.world.spiral import extend_world_with_road
+
+    world = {"base": {"name": "Base", "desc": "", "exits": {"west": "below"}}}
+    npcs: dict = {}
+    first = extend_world_with_road(world, npcs, _CONFIG)
+    assert first == "coil_4_ascent"
+    assert world["base"]["exits"]["east"] == "coil_4_ascent"  # attach room wired east, not up
+    assert "coil_4_ascent" in world  # the generated rooms merged in
+    assert any(n.get("tier") == "boss" for n in npcs.values())  # and the road-wardens merged in
+    assert "up" not in world["base"]["exits"]  # the flat world never climbs
+
+
 def test_generation_is_deterministic():
     a = generate_spiral(_CONFIG, _ROOMS)
     b = generate_spiral(_CONFIG, _ROOMS)

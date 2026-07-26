@@ -8,20 +8,17 @@ from parts.world.doors import DOORS, barred_door_for
 from parts.world.items import ITEMS
 from parts.world.npcs import NPCS
 from parts.world.seed import SEED_DIR, Room, inspect_world_links, load_rooms
-from parts.world.spiral import generate_spiral, load_spiral_config
+from parts.world.spiral import extend_world_with_road, load_spiral_config
 
 SEED_PATH = SEED_DIR / "rooms.yaml"
 
 WORLD: dict[str, Room] = load_rooms(SEED_PATH)
 # Procedurally extend the Forgeward Road outward across the wilds if the seed opts in (spiral.yaml).
 # The generated marches are seed-shaped data, merged BEFORE validation so the same loader gates
-# check them, and the seed's attach room grows an `east` exit onto the first generated march (flat).
+# check them, and the seed's attach room grows an `east` exit onto the first march (flat, no climb).
 _spiral_config = load_spiral_config(SEED_DIR / "spiral.yaml")
 if _spiral_config is not None:
-    _spiral_rooms, _spiral_npcs, _spiral_first = generate_spiral(_spiral_config, WORLD)
-    WORLD.update(_spiral_rooms)
-    NPCS.update(_spiral_npcs)
-    WORLD[_spiral_config["attach"]]["exits"]["east"] = _spiral_first
+    extend_world_with_road(WORLD, NPCS, _spiral_config)
 inspect_world_links(WORLD, ITEMS, NPCS)
 
 # With the full foe set assembled (seed + the procedural Spiral), generate a hunt-contract for
