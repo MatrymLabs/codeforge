@@ -112,6 +112,8 @@ def load_spiral_config(path: Path) -> dict[str, Any] | None:
             f"spiral.yaml needs base_level <= top_level <= {LEVEL_MAX} "
             f"(got base {raw['base_level']}, top {raw['top_level']})."
         )
+    if "summit_drop" in raw and not isinstance(raw["summit_drop"], str):
+        raise SeedError("spiral.yaml 'summit_drop' must be an item label (string).")
     return raw
 
 
@@ -253,7 +255,17 @@ def generate_spiral(
         )
         boss_id = SUMMIT_BOSS if summit else f"spiral_gate_{n}"
         if summit:
-            npcs[boss_id] = _foe(boss_id, "the Sovereign", landing_id, boss_level, boss=True)
+            # The far Sovereign's capstone reward: a seed may name a legendary via `summit_drop`
+            # (the L-cap boss deserves better than the road keystone); default keeps it if unset.
+            summit_drop = config.get("summit_drop")
+            npcs[boss_id] = _foe(
+                boss_id,
+                "the Sovereign",
+                landing_id,
+                boss_level,
+                boss=True,
+                drops=[summit_drop] if summit_drop else None,
+            )
         else:
             npcs[boss_id] = _foe(
                 boss_id,

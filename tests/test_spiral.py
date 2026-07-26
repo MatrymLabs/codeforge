@@ -121,6 +121,27 @@ def test_the_summit_sovereign_stays_an_untyped_final_test():
     assert "attack_element" not in sovereign and "resistances" not in sovereign
 
 
+def test_the_summit_boss_drops_the_configured_legendary_or_a_default():
+    """The final boss deserves a capstone: a seed may name a legendary via `summit_drop`, and the
+    Sovereign drops it. With no `summit_drop`, it falls back to the road keystone (not nothing)."""
+    from parts.world.spiral import SUMMIT_BOSS
+
+    _, npcs, _ = generate_spiral(_CONFIG, _ROOMS)  # _CONFIG ships no summit_drop
+    assert npcs[SUMMIT_BOSS]["drops"] == ["coil_keystone"]  # the honest default
+    _, npcs2, _ = generate_spiral({**_CONFIG, "summit_drop": "a_legendary"}, _ROOMS)
+    assert npcs2[SUMMIT_BOSS]["drops"] == ["a_legendary"]  # the seed's named capstone
+
+
+def test_load_spiral_config_rejects_a_non_string_summit_drop(tmp_path):
+    path = tmp_path / "spiral.yaml"
+    path.write_text(
+        "attach: a\nfirst_coil: 4\nbase_level: 47\nlevels_per_coil: 9\ntop_level: 255\n"
+        "summit_drop: 7\n"  # a number, not an item label
+    )
+    with pytest.raises(SeedError, match="summit_drop"):
+        load_spiral_config(path)
+
+
 def test_an_attach_room_that_does_not_exist_is_refused():
     with pytest.raises(SeedError, match="attach"):
         generate_spiral({**_CONFIG, "attach": "nowhere_real"}, _ROOMS)

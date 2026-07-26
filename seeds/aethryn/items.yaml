@@ -507,3 +507,13 @@ forgefire_elixir:
   keywords: [elixir, forgefire, potion, restorative]
   location: nowhere
   consume: {hp: 120, mp: 60}
+
+# --- The legendary capstone (Content Manufacturing Campaign). The Sovereign's Regalia: the reward
+# --- for felling the final boss at the world's ceiling (L300), dropped via spiral.yaml's summit_drop.
+# --- A clear cut above every regional relic -- the one artifact that says the whole road is done. ---
+sovereigns_regalia:
+  name: the Sovereign's Regalia
+  keywords: [regalia, sovereign, crown, relic, legendary]
+  location: nowhere
+  slot: accessory_1
+  mods: {ATK: 9, DEF: 9, "MAG DEF": 6}
