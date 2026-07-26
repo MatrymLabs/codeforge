@@ -2585,3 +2585,93 @@ walls_captain:
   keywords: [captain, wall, watch, gate]
   dialogue:
     - The wall-captain does not lower the glass from the horizon. "First line of the capital, this wall. The Grand Forge is the heart, but a heart needs a rib-cage. Kindlands out there look green and mostly are -- but the road brings what the road brings, and the Wardenmarch beyond only holds because we hold here. Look your fill. Then go do something useful."
+# --- Tidewharf City interiors life (Great Creation Campaign, Phase I, Layer 4): the free-port's people.
+# --- Mostly non-combat; the bilge and underhull keep the city's low threats. Banded 12-18. ---
+
+exchange_broker:
+  name: an exchange-broker
+  location: the_salvage_exchange
+  keywords: [broker, exchange, salvage, trader]
+  dialogue:
+    - '"Buying or selling, Forger? The Exchange moves the whole drowned Reach by the crate. Salvage up from the wrecks, wreck-rights on paper, deep-lung Forgework no other port can lift. A thing off the bottom of the Quenchmere is worth more dry than it ever was afloat. Name your side."'
+  shop:
+    sells:
+      healing_draught: 13
+      greater_healing_draught: 34
+    buys:
+      ember_shard: 6
+      brine_pearl: 9
+
+bell_keeper:
+  name: the bell-keeper of the Drowned Bell
+  location: the_drowned_bell
+  keywords: [bellkeeper, keeper, bell, barkeep]
+  dialogue:
+    - '"Welcome to the Bell, Forger. Salvage-crews to port, honest pirates to starboard, and nobody asks which you are so long as your coin''s dry. Whole Quenchmere''s news comes through on the tide. Hammocks up top if the drink wins the argument."'
+  topics:
+    rumor:
+      - '"Guild wants the drowned cities opened; the pirate-clans want the lanes free; the Accord wants everyone to keep drinking and stop shooting. Word is the salvage off the deep Wreckways is cursed, or paying, or both. Word is the bilge is breeding again. And word is a Forger with a strong stomach can make a fortune under the planking. Or feed it."'
+  shop:
+    sells:
+      healing_draught: 13
+      water_ration: 7
+    buys:
+      ember_shard: 5
+
+loft_keeper:
+  name: the loft-keeper
+  location: the_hull_lofts
+  keywords: [loftkeeper, keeper, loft, host]
+  dialogue:
+    - '"Copper a night, warm and dry above the tide, and I don''t care what you did to earn the copper. The Bell''s loud below but the hull holds the noise down. Sleep, Forger. The free-port keeps the same hours as the sea, which is to say all of them."'
+
+tide_keeper:
+  name: a tide-keeper of the drowned
+  location: the_tide_shrine
+  keywords: [tidekeeper, keeper, shrine, merewright]
+  dialogue:
+    - '"Light a drowned-lamp if you''ve lost someone to the water, Forger. The First Flame in the capital says the world was made and can be made again. We Merewrights say something quieter: the sea took the old world and KEEPS it, whole and cold and lamp-lit below, and the drowned are not gone, only deep. Read the rail if you''d know the whole of it."'
+
+guild_factor:
+  name: a Salvage Guild factor
+  location: the_salvage_guildhall
+  keywords: [factor, guild, salvage, contract]
+  dialogue:
+    - '"The Guild has work, Forger, always. Wreck to open, hold to clear, a drowned city that won''t stay drowned. The pay is real and so is the cost -- read the writ before you mark it. We built this hall on a treasure-hull and we do not say how. That should tell you both what the Guild pays and what it takes."'
+
+wharf_master:
+  name: the wharf-master
+  location: the_captains_wharf
+  keywords: [wharfmaster, master, wharf, berth]
+  dialogue:
+    - '"Berth to the Rimefall, the Kollforge, the Sundered Sky, the Verdance -- every crossing in the world cries off this wharf, and every one wants crew. Coin buys a berth; a strong back earns one. The whole Reach-wide map runs through Tidewharf, Forger. This plank is the crossroads of the world, and it smells like it."'
+
+bilge_crawler:
+  name: a bilge-crawler
+  location: the_bilge
+  keywords: [crawler, bilge, hull, dweller]
+  dialogue:
+    - Something bred in the free-port's flooded gut hauls itself out of the black water between the keels, pale and swollen, jealous of the salvage in the drowned holds.
+  hp: 66
+  atk: 12
+  aggressive: true
+  attack_element: WTR
+  level: 14
+  tier: normal  # Tidewharf's bilge: a low city-dungeon under the planking, a place for fresh Quenchmere Forgers
+  loot: {ember_shard: 3, nothing: 2}
+
+hull_wight:
+  name: the hull-wight of the underhull
+  location: the_underhull
+  keywords: [wight, hull, underhull, drowned]
+  dialogue:
+    - A hull-wight rises from a treasure-hold no salvage-crew has dared, one of the free-port's own drowned dead, crusted with a fortune it will not let the living lift.
+  hp: 130
+  atk: 18
+  aggressive: true
+  attack_element: WTR
+  resistances: {WTR: Resist, LGT: Weak}  # a thing of the drowned dark; lightning off the storm-Reaches bites it
+  level: 18
+  tier: elite  # the underhull's prize (x3 reward): the deepest planked salvage, a drowned-hoard guardian
+  drops: [hull_hoard_ring, greater_healing_draught]
+  loot: {ember_shard: 6, brine_pearl: 2, nothing: 2}

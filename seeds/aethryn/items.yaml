@@ -1117,3 +1117,42 @@ world_casefile:
     east to where the answer sank, and a Forger who reads far enough may close the case the makers left
     open. We do not keep the memory to mourn it. We keep it to solve it. Read on. The next clue is out
     there, and it is the size of a continent."
+# --- Tidewharf City interiors content (Great Creation Campaign, Phase I, Layer 4): the underhull's
+# --- drowned-hoard, and the free-port's two readable rails - the Merewright creed and a Guild writ. ---
+hull_hoard_ring:
+  name: the hull-wight's hoard-ring
+  keywords: [ring, hoard, hull, wight]
+  location: nowhere
+  slot: accessory_2
+  mods: {DEF: 4, EVA: 5}  # a fortune's worth of drowned salvage fused to one ring, lifted from the underhull
+
+merewright_creed:
+  name: the Merewright creed
+  keywords: [creed, merewright, rail, drowned]
+  location: the_tide_shrine
+  lore: |-
+    Scrimshawed down the whale-bone rail of the tide-shrine, in a sailor's close hand: "THE SEA KEEPS.
+    That is our whole faith, and it is kinder than it sounds. When the cooling-seas rose over the
+    Quenchmere they did not destroy the old world, they DROWNED it - and a drowned thing is not a burned
+    thing or an unmade thing. It is kept. Cold, and deep, and lamp-lit, the old Forge-cities stand whole
+    below our keels, and our drowned stand with them, not lost, only deep, waiting in the kept dark. The
+    First Flame folk fear the losing and hold that all must be made again. We do not fear it. We dive to
+    it. Light a lamp for your drowned and know they are down there still, kept perfect by the water that
+    took them, and that the difference between a graveyard and a treasury is only whether you have the
+    nerve to go down and look. We are Merewrights. We always go down and look."
+
+salvage_writ:
+  name: a Salvage Guild writ
+  keywords: [writ, guild, salvage, contract]
+  location: the_salvage_guildhall
+  lore: |-
+    A standard Salvage Guild work-writ, left on the factor's table for any Forger to read before they
+    mark it: "BE IT KNOWN the bearer contracts to open, clear, or lift salvage on the Guild's account,
+    for the Guild's share, at the bearer's risk. The Guild warrants NOTHING of what lies below - not the
+    depth, not the dark, not the drowned that keep it. The Guild notes, without warranting it either,
+    that the drowned Reach holds the largest unbroken Forgework in the world outside the frozen north,
+    and that every fortune in Tidewharf was lifted by someone who read a writ exactly like this one and
+    marked it anyway. The Guild built its hall on a treasure-hull. The Guild does not say how. The Guild
+    suggests the bearer not ask, mark the writ, and go down. The tide waits for no contract." Below, a
+    line for a name, and a great many names already on it, and beside a great many of those, a small
+    inked anchor: the Guild's mark for a Forger who did not come back up.

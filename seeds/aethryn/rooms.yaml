@@ -67,12 +67,16 @@ tidewharf_docks:
     The ferry ties off at Tidewharf, the great free-port of the Quenchmere, a city built across a
     hundred drowned hulls lashed and planked into one floating sprawl. Cranes haul salvage from the
     deeps; captains of every Reach cry cargo and crew. The lanes run back east; the city proper rises
-    north, and a salvage-stair drops south toward the drowned capital below the keels.
+    north, and a salvage-stair drops south toward the drowned capital below the keels. The captains'
+    WHARF musters crews alongside, and the flooded BILGE of the old hulls lies down under the planking.
   exits:
     east: the_quench_lanes
     north: tidewharf_plaza
     south: drowned_sunhold_descent
     west: the_verdant_passage
+    wharf: the_captains_wharf
+    bilge: the_bilge
+    down: the_bilge
 
 # --- The Verdance: the living wild across the Quenchmere's water (Continental Atlas §III, Build
 # --- Order Phase 3). A primeval jungle-swamp that is literally alive; the Deeprooted animists; a
@@ -138,12 +142,19 @@ tidewharf_plaza:
   desc: |-
     The heart of the free-port: a plaza planked across the largest of the drowned hulls, loud with
     the Port-Accord's business and the whole world's trade. The Accord Hall stands to the west; a
-    Merewright captain and a Salvage-Guild agent keep their stalls here. The docks lie back south.
+    Merewright captain and a Salvage-Guild agent keep their stalls here. The docks lie back south. The
+    salvage EXCHANGE, the Drowned Bell TAVERN, the tide-SHRINE, and the Salvage GUILDHALL open off the
+    planked square.
   exits:
     south: tidewharf_docks
     west: the_accord_hall
     north: the_deepwater_berth
     east: the_outer_lanes
+    market: the_salvage_exchange
+    exchange: the_salvage_exchange
+    tavern: the_drowned_bell
+    shrine: the_tide_shrine
+    guildhall: the_salvage_guildhall
 
 the_deepwater_berth:
   name: The Deepwater Berth
@@ -1815,3 +1826,89 @@ the_city_walls:
     smoke, the Wardenmarch beyond. Out returns to the gates below.
   exits:
     out: emberreach_gates
+# TIDEWHARF CITY INTERIORS (Great Creation Campaign, Phase I, Layer 4). The Quenchmere's floating free-
+# port, built across a hundred drowned hulls, becomes explorable: the salvage exchange, the Drowned Bell
+# tavern + hull-loft inn, the tide-shrine of the Merewright drowned-faith, the Salvage Guildhall, the
+# captains' wharf, and the flooded bilge under the planking. Noun exits (market/tavern/wharf/bilge...),
+# each building left by `out`. Level-banded 12-18 (city + shallow underhull).
+# ============================================================================================
+
+the_salvage_exchange:
+  name: The Salvage Exchange
+  desc: |-
+    Off the plaza, the Salvage Exchange never closes: a planked bourse where the Quenchmere's whole
+    drowned inheritance is bought and sold by the crate, the hull, and the rumor - raw salvage, charted
+    wreck-rights, and the deep-lung Forgework only Tidewharf can lift. An exchange-broker cries the
+    board. Out returns to the plaza.
+  exits:
+    out: tidewharf_plaza
+
+the_drowned_bell:
+  name: The Drowned Bell
+  desc: |-
+    A tavern in the belly of an upturned hull, its sign a ship's bell green with the deep: the Drowned
+    Bell, where salvage-crews, ferry-captains, and the honest sort of pirate drink the Quenchmere's news.
+    A bell-keeper works the taps. Hammocks for hire swing in the hull-lofts above, an INN of sorts. Out
+    returns to the plaza.
+  exits:
+    out: tidewharf_plaza
+    inn: the_hull_lofts
+
+the_hull_lofts:
+  name: The Hull-Lofts
+  desc: |-
+    Up in the ribs of the old hull, the Drowned Bell hangs its beds: hammocks and cots slung in the
+    curve of a ship that will never sail, warm and dry above the tide, the free-port's cheapest safe
+    sleep. A loft-keeper minds the ladder. Out returns to the tavern below.
+  exits:
+    out: the_drowned_bell
+
+the_tide_shrine:
+  name: The Tide-Shrine
+  desc: |-
+    A shrine planked over open water where the Merewrights keep faith with the drowned: not a church of
+    the First Flame but the sea's own creed, that the Quenchmere took the old world and holds it still,
+    and the dead are not lost but kept, below, in the cold and the lamp-light. A tide-keeper tends the
+    drowned-lamps. The Merewright creed is scrimshawed on the whale-bone rail. Out returns to the plaza.
+  exits:
+    out: tidewharf_plaza
+
+the_salvage_guildhall:
+  name: The Salvage Guildhall
+  desc: |-
+    The Salvage Guild's hall, raised on the deck of a treasure-hull the Guild will not say how it came
+    by: the power behind the Port-Accord's polite face, wanting every drowned city opened and every
+    wreck-right theirs. A Guild-factor books the contracts. This is where a Forger takes salvage-work,
+    and reads what it costs. Out returns to the plaza.
+  exits:
+    out: tidewharf_plaza
+
+the_captains_wharf:
+  name: The Captains' Wharf
+  desc: |-
+    Alongside the docks, the wharf where the ferry-captains of every Reach muster their crews and cry
+    their crossings: the loud, salt-stiff labor-market of the free-port, where a berth is bought with
+    coin or a strong back. A wharf-master calls the manifests. Out returns to the docks.
+  exits:
+    out: tidewharf_docks
+
+the_bilge:
+  name: The Bilge
+  desc: |-
+    Down under the planking, the flooded bilge of the old hulls the city is built on: waist-deep black
+    water, the groan of a hundred lashed keels, and the things that breed where the free-port pours its
+    dark. A bilge-crawler works the flooded runs. Salvage the city planked over still lies in the drowned
+    holds. The docks lie back up; the underhull runs on deeper, down.
+  exits:
+    up: tidewharf_docks
+    out: tidewharf_docks
+    down: the_underhull
+
+the_underhull:
+  name: The Underhull
+  desc: |-
+    The deepest planked-over deck a Forger can reach without a diving-bell: the underhull, where the
+    free-port's oldest hulls settle into the drowned capital's reach, and the salvage is richest and the
+    dark is worst. A hull-wight keeps a treasure-hold no salvage-crew has dared. The bilge lies back up.
+  exits:
+    up: the_bilge
