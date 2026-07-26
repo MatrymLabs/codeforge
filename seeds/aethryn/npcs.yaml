@@ -1734,3 +1734,93 @@ tidewharf_diver:
   topics:
     rumor:
       - '"There is a chapel out in the deep Wreckways, the tallest wreck of them all, its spire still above the water. The Merewrights drowned praying in it. Whatever they left on that altar is still there -- and so is the one who kept it. Bring radiance to a drowned holy thing."'
+
+# --- The Outer Reefs life (Great Creation Campaign): the reef-lane serpent, the landing's salvager
+# --- folk, the flats' hunter, the lighthouse keeper, and the sunken manse's steward. ---
+reef_serpent:
+  name: a reef-serpent
+  location: the_outer_lanes
+  keywords: [serpent, reef, lane, brine]
+  dialogue:
+    - A serpent banded like the reef itself rises from the channel between the isles, unhurried, certain of its water.
+  hp: 62
+  atk: 10
+  aggressive: true
+  attack_element: WTR
+  level: 19
+  tier: normal  # the outer-lane threat, an Outer Reefs leveling ground
+  loot: {ember_shard: 3, nothing: 2}
+
+salvage_master:
+  name: the salvage-master of Saltmarsh
+  location: saltmarsh_landing
+  keywords: [master, salvage, saltmarsh, trader]
+  dialogue:
+    - '"Guild works the near wrecks and takes its cut. Out here we work the far reefs and keep what we pull. Harder, and honester. Provision here, Forger, and mind the tides -- the flats will drown you if you dawdle over the pearls."'
+  topics:
+    rumor:
+      - '"The manse below the landing was a Merewright house too proud to drown gracefully. Its steward still keeps the doors. Best it and the flooded solar is yours -- a house''s worth of pride, cast in salvage-gold. And bring radiance; the old houses warded holy."'
+  shop:
+    sells:
+      healing_draught: 15
+      greater_healing_draught: 38
+      brinescale_hood: 110
+      pilots_compass: 55
+    buys:
+      ember_shard: 6
+      brine_pearl: 10
+      hollow_ingot: 30
+
+reef_fisher:
+  name: a reef-fisher
+  location: saltmarsh_landing
+  keywords: [fisher, reef, saltmarsh, weir]
+  dialogue:
+    - '"Weir-fishing, reef-diving, tide-picking -- the reef gives three ways if you know it, and takes you one way if you do not. The child there knows the tides better than I do. Learn from her, not me."'
+
+marsh_child:
+  name: a marsh-child
+  location: saltmarsh_landing
+  keywords: [child, marsh, saltmarsh, kid]
+  dialogue:
+    - The marsh-child grins, gap-toothed, mud to the elbows. "Tide's going out! Pearls in the flats north, if you're quick and you're brave and you don't mind the skitters. I'm quick. Are you?"
+
+reef_mudskitter:
+  name: a reef mudskitter
+  location: the_reef_flats
+  keywords: [mudskitter, skitter, flats, crab]
+  dialogue:
+    - A mudskitter the size of a hound bursts from a tidal pool in a spray of brine, claws first.
+  hp: 58
+  atk: 11
+  aggressive: true
+  attack_element: WTR
+  level: 20
+  tier: normal  # the flats' threat, a gathering-ground guardian
+  loot: {ember_shard: 3, brine_pearl: 1, nothing: 2}
+
+lighthouse_keeper:
+  name: the lighthouse keeper
+  location: the_old_lighthouse
+  keywords: [keeper, lighthouse, lamp, outer]
+  dialogue:
+    - '"My people have kept this lamp since before the sea rose, Forger, and we will keep it after it falls. A light that marks the reef has saved more lives than any blade. That is a making too, though the Grand Forge would not call it one."'
+  topics:
+    rumor:
+      - '"From up here you see the whole drowned Reach: the deep Wreckways and their chapel, the manse below the landing, and far south the masts over Sunhold itself. A Forger with the nerve could spend a season out here and not see the same wreck twice. Start with the flats. End with the manse."'
+
+manse_warden:
+  name: the warden of the sunken manse
+  location: the_sunken_manse
+  keywords: [warden, manse, steward, drowned]
+  dialogue:
+    - '"The house does not receive salvagers." A Forged steward rises from the flooded solar, immaculate and drowned, and moves to keep the doors of a house a lifetime under the sea.'
+  hp: 150
+  atk: 16
+  aggressive: true
+  attack_element: WTR
+  resistances: {WTR: Resist, HLY: Weak}  # an old Merewright house warded holy: bring radiance
+  level: 26
+  tier: elite  # the Sunken Manse's mini-boss, an Outer Reefs off-path prize (x3 reward)
+  drops: [greater_healing_draught, manse_signet]
+  loot: {ember_shard: 5, hollow_ingot: 2, nothing: 2}
