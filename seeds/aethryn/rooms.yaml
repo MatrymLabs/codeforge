@@ -271,6 +271,7 @@ reachwood_hollow:
     west: reachwood_edge
     east: wardens_glade
     north: the_bramblewarren
+    south: the_woodcutters_camp
 
 wardens_glade:
   name: The Warden's Glade
@@ -885,3 +886,27 @@ the_ashen_vault:
   exits:
     west: the_scoured_ruin
     east: the_glass_crater
+
+# --- The Woodcutters' Camp (Seed Scale Doctrine: settlements + player distribution). A second early
+# --- hub in the Reachwood, so low-level Forgers have somewhere to level, trade, gather, and take work
+# --- besides the coast town - the wood is a place people live, not just a place to fight through. ---
+the_woodcutters_camp:
+  name: The Woodcutters' Camp
+  desc: |-
+    A stockade of green logs and ember-lamps in a clearing of the Reachwood: the Woodcutters' Camp,
+    where the Concord's foresters cut the deadfall the wild ember leaves and haul it to the capital.
+    Smoke, sawdust, and the smell of resin; a camp-keeper minds a lean-to store, a forester rests a
+    saw, and a hound sleeps by the fire. The hollow trail runs back north; the logging stands lie east.
+  exits:
+    north: reachwood_hollow
+    east: the_logging_stands
+
+the_logging_stands:
+  name: The Logging Stands
+  desc: |-
+    Where the foresters work: ranks of felled ember-trunks and the raw stumps between, the loam thick
+    with sap and sawdust. The cutting has stirred something up - a bark-lurker, grown of deadfall and
+    old ember, that the foresters will not go near. Good resin beads on the cut stumps here. The camp
+    lies back west.
+  exits:
+    west: the_woodcutters_camp
