@@ -698,3 +698,22 @@ wildember_cache:
     living ember. What wells up wild belongs to the wood, and the wood keeps its debts. The Wight and
     the horror are the wood collecting. Take from the well if you must, Forger -- but know that the
     Reachwood remembers a hand that takes more than the wild gives, and the Reachwood is patient.
+
+# --- The Sunken Hold's content (Seed Scale Doctrine): the drowned flagship's cargo + a lost manifest. ---
+tideglass_pendant:
+  name: a tideglass pendant
+  keywords: [pendant, tideglass, hold, relic]
+  location: nowhere
+  slot: accessory_2
+  mods: {"MAG DEF": 5, EVA: 4}  # the flagship's captain's own ward, salvaged from the sunken hold
+
+flagship_manifest:
+  name: the flagship's lost manifest
+  keywords: [manifest, ledger, flagship, book]
+  location: the_sunken_hold
+  lore: |-
+    The cargo manifest of the flagship of the first Rekindling, ink run but legible in the drowned
+    dark: hearth-irons, seed-lamps, and the relit ember meant to carry warmth up the whole coast at
+    once. She went down the day the Cooling-Sea rose, the manifest unmarked as delivered. All of it is
+    still here, lashed and lost, a coast's worth of warmth that never arrived. They relit the Kindlands
+    the slow way instead, hearth by hearth, and never knew how close the fast way came to reaching them.

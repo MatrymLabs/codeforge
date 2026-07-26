@@ -225,9 +225,10 @@ the_wreck_reef:
     Out past the harbor's last jetty, a reef of drowned Forge-hulls breaks the grey water -- ships
     the Cooling-Sea took when it first rose. The Drowned Pilot still keeps the wheel of the largest
     wreck, a thing of brine and dead ember that will not let the sea be crossed. The harbor lies
-    back north.
+    back north; a hatch in the flagship's deck drops down into the flooded hulls.
   exits:
     north: quench_harbor
+    down: the_flooded_hulls
 
 cinderhearth_square:
   name: Cinderhearth Square
@@ -940,3 +941,26 @@ the_thorn_heart:
     gather. What pools here has drawn more than the Wight. The warren mouth lies back south.
   exits:
     south: the_bramblewarren
+
+# --- The drowned flagship (Seed Scale Doctrine: coastal dungeon past the Wreck Reef). The reef was
+# --- a dead-end boss room; open the flooded hulls below, so the coast has an optional early dungeon
+# --- with a hold to plunder - a second reason to work the reef beyond the Drowned Pilot. ---
+the_flooded_hulls:
+  name: The Flooded Hulls
+  desc: |-
+    Below the reef's deck the drowned Forge-hulls lock together into a flooded maze, green light
+    slanting through split planking, the water thick with silt and old salvage. A reef-drifter hunts
+    the passages between the wrecks. The reef deck lies back up; the flagship's hold sinks deeper down.
+  exits:
+    up: the_wreck_reef
+    down: the_sunken_hold
+
+the_sunken_hold:
+  name: The Sunken Hold
+  desc: |-
+    The flagship's hold, whole and drowned: a cargo of the first Rekindling still lashed in the dark,
+    Forgework the coast shipped and lost when the sea rose. A wreck-warden - the ship's own Forged
+    keeper, still at its post on the bottom - rises from the silt to hold the cargo it was set to guard.
+    What the sea took and never gave back settles here. The flooded hulls lie back up.
+  exits:
+    up: the_flooded_hulls
