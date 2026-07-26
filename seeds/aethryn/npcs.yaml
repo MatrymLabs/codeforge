@@ -711,7 +711,7 @@ sunhold_warden:
   resistances: {WTR: Resist, LGT: Weak}
   level: 30
   tier: boss  # the Quenchmere's climax: a lethal boss-tier reward (x10) in the drowned capital
-  drops: [sunhold_sigil, brinescale_bracers, tideglass_harpoon]  # relic + Brinescale arm + weapon
+  drops: [sunhold_sigil, brinescale_bracers, tideglass_harpoon, brine_essence]  # + Reach essence
   loot: {hollow_ingot: 2, ember_shard: 4, nothing: 2}
 
 # --- The Verdance (across the Quenchmere, Continental Atlas §III): the living wild. A canopy predator,
@@ -800,7 +800,7 @@ boughwarden:
   resistances: {ERT: Resist, WND: Weak}
   level: 32
   tier: boss  # the Verdance's climax: the apex of the whole ecosystem (x10 reward), a lethal guardian
-  drops: [boughward_totem, verdant_vambraces, thornwood_glaive]  # relic + Verdant arm + weapon
+  drops: [boughward_totem, verdant_vambraces, thornwood_glaive, grove_essence]  # + Reach essence
   loot: {ember_shard: 5, nothing: 2}
 
 # --- The Rimefall (Continental Atlas §II): the quenched north. A glass-hound pack, the Silent Anvil
@@ -851,7 +851,7 @@ rime_king:
   resistances: {ICE: Resist, FIR: Weak}
   level: 52
   tier: boss  # the Rimefall's climax: a flash-frozen Emberwright, the golden age turned lethal (x10)
-  drops: [stillheart, rimeplate_hauberk]  # Reach-relic weapon + Rimeplate set (body)
+  drops: [stillheart, rimeplate_hauberk, rime_essence]  # Reach-relic + Rimeplate body + essence
   loot: {ember_shard: 6, nothing: 2}
 
 # --- The Kollforge (Continental Atlas §VI): the molten Reach, closest to the Forge. Cinder-drakes and
@@ -943,7 +943,7 @@ vent_lord:
   resistances: {FIR: Resist, WTR: Weak}
   level: 62
   tier: boss  # the Kollforge's climax: the last guardian before the Forge (x10 reward)
-  drops: [vent_crown, ventforge_maul]  # Vent-Crown (head) + Kollforge signature weapon
+  drops: [vent_crown, ventforge_maul, molten_essence]  # Vent-Crown + weapon + Reach essence
   loot: {ember_shard: 6, hollow_ingot: 2, nothing: 2}
 
 # --- The Sundered Sky (Continental Atlas §VII): the floating Reach, the gateway to the Spiral. Stormkin
@@ -1035,7 +1035,7 @@ court_warden:
   resistances: {DRK: Resist, HLY: Weak}
   level: 72
   tier: boss  # the Sundered Sky's climax: the last surface boss before the Spiral (x10 reward)
-  drops: [anchor_stone, stormward_vambraces, stormcaller_pike]  # relic + Stormward arm + weapon
+  drops: [anchor_stone, stormward_vambraces, stormcaller_pike, storm_essence]  # + Reach essence
   loot: {ember_shard: 7, hollow_ingot: 2, nothing: 2}
 
 # --- Ecosystem enrichment (Content Manufacturing Campaign): monsters for the wilderness, dungeon,
