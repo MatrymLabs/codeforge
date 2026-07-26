@@ -156,11 +156,13 @@ def test_aethryn_cinderdeep_descends_to_a_real_bottom():
 
 def test_aethryn_sundered_sky_is_the_last_surface_reach_and_the_spiral_gate():
     """The sixth Reach (Build Order Phase 5): the berth's sky-lanes rise to the Sundered Sky -- the
-    floating lands the Unforging tore loose, the last surface Reach, whose capital Highgate wires UP
-    into the Great Spiral, joining the whole surface world to the vertical endgame."""
+    floating lands the Unforging tore loose, the last surface Reach, whose capital Highgate wires
+    NORTH (by anchor-line) onto the Forgeward Road, a second way onto the flat endgame frontier."""
     rooms = load_rooms(AETHRYN / "rooms.yaml")
     assert rooms["the_deepwater_berth"]["exits"].get("up") == "the_sky_lanes"
-    assert rooms["highgate"]["exits"].get("up") == "coilfoot_ascent"  # the surface joins the Spiral
+    assert (
+        rooms["highgate"]["exits"].get("north") == "coilfoot_ascent"
+    )  # the surface joins the Road
     npcs = load_npcs(AETHRYN / "npcs.yaml")
     assert npcs["stormkin"]["level"] == 60 and npcs["fall_wight"]["level"] == 64
     assert "spiral" in npcs["sky_warden"]["topics"] and "shop" in npcs["anchor_keeper"]
@@ -367,22 +369,22 @@ def test_aethryn_road_reward_pays_for_the_climb():
 
 
 def test_aethryn_wardens_test_opens_the_ascent_to_the_first_coil():
-    """Past Emberreach the Warden Gate opens north onto the Wardenmarch, then the Great Spiral's
-    first Coil - the megadungeon ascent begins."""
+    """Past Emberreach the Warden Gate opens north onto the Wardenmarch, then east onto the
+    Forgeward Road's first march - the long flat frontier begins."""
     rooms = load_rooms(AETHRYN / "rooms.yaml")
     assert rooms["warden_gate"]["exits"]["north"] == "the_wardenmarch"
-    assert rooms["the_wardenmarch"]["exits"]["north"] == "coilfoot_ascent"
-    assert rooms["coilfoot_ascent"]["exits"]["up"] == "coil_first_landing"
+    assert rooms["the_wardenmarch"]["exits"]["east"] == "coilfoot_ascent"
+    assert rooms["coilfoot_ascent"]["exits"]["east"] == "coil_first_landing"
 
 
 def test_aethryn_ascent_bosses_are_lethal_and_boss_tier():
-    """The Warden Sentinel (the test) and the Coil Forgewraith (the first Gate-boss) are lethal
-    boss-tier foes well above Emberreach - real ascent stakes."""
+    """The Warden Sentinel (the test) and the first road-warden are lethal boss-tier foes well above
+    Emberreach - real frontier stakes."""
     npcs = load_npcs(AETHRYN / "npcs.yaml")
     sentinel, wraith = npcs["warden_sentinel"], npcs["gate_forgewraith"]
     assert sentinel["level"] == 17 and sentinel["tier"] == "boss" and sentinel.get("lethal") is True
     assert wraith["level"] == 22 and wraith["tier"] == "boss" and wraith.get("lethal") is True
-    assert wraith["level"] > sentinel["level"]  # the Coil climbs above the gate test
+    assert wraith["level"] > sentinel["level"]  # the first march climbs above the gate test
 
 
 def test_aethryn_ships_the_descent_the_downward_counterpart_quest():
@@ -399,30 +401,30 @@ def test_aethryn_ships_the_descent_the_downward_counterpart_quest():
 
 
 def test_aethryn_second_coil_climbs_above_the_first():
-    """The Spiral keeps ascending: the First Coil Landing opens up into the Second Coil, which
-    climbs through a bridgespan to its own Gate-boss, the Ashlord (higher than the first)."""
+    """The Road keeps running east: the first waystation opens east into the second march, which
+    runs through a roadbridge to its own road-warden, the Ashlord (higher than the first)."""
     rooms = load_rooms(AETHRYN / "rooms.yaml")
-    assert rooms["coil_first_landing"]["exits"]["up"] == "coil_second_ascent"
-    assert rooms["coil_second_ascent"]["exits"]["up"] == "coil_bridgespan"
-    assert rooms["coil_bridgespan"]["exits"]["up"] == "coil_second_landing"
+    assert rooms["coil_first_landing"]["exits"]["east"] == "coil_second_ascent"
+    assert rooms["coil_second_ascent"]["exits"]["east"] == "coil_bridgespan"
+    assert rooms["coil_bridgespan"]["exits"]["east"] == "coil_second_landing"
     npcs = load_npcs(AETHRYN / "npcs.yaml")
     ashlord, wraith = npcs["gate_ashlord"], npcs["gate_forgewraith"]
     assert ashlord["level"] == 28 and ashlord["tier"] == "boss" and ashlord.get("lethal") is True
-    assert ashlord["level"] > wraith["level"]  # each Coil's Gate-boss climbs above the last
+    assert ashlord["level"] > wraith["level"]  # each march's road-warden climbs above the last
 
 
 def test_aethryn_third_coil_climbs_the_spiral_higher():
-    """The Spiral ascends past the Ashlord: the Second Coil Landing opens up into the storm-wracked
-    Third Coil, whose Gate-boss (the Stormlord) out-levels every wall before it and drops a weapon
-    a tier above the road's blade."""
+    """The Road runs on past the Ashlord: the second waystation opens east into the storm-wracked
+    third march, whose road-warden (the Stormlord) out-levels every wall before it and drops a
+    weapon a tier above the road's blade."""
     rooms = load_rooms(AETHRYN / "rooms.yaml")
-    assert rooms["coil_second_landing"]["exits"]["up"] == "coil_third_ascent"
-    assert rooms["coil_third_ascent"]["exits"]["up"] == "coil_stormreach"
-    assert rooms["coil_stormreach"]["exits"]["up"] == "coil_third_landing"
+    assert rooms["coil_second_landing"]["exits"]["east"] == "coil_third_ascent"
+    assert rooms["coil_third_ascent"]["exits"]["east"] == "coil_stormreach"
+    assert rooms["coil_stormreach"]["exits"]["east"] == "coil_third_landing"
     npcs = load_npcs(AETHRYN / "npcs.yaml")
     stormlord, ashlord = npcs["gate_stormlord"], npcs["gate_ashlord"]
     assert stormlord["level"] == 38 and stormlord["tier"] == "boss"
-    assert stormlord["level"] > ashlord["level"]  # each Coil climbs above the last
+    assert stormlord["level"] > ashlord["level"]  # each march climbs above the last
     assert "stormlord_edge" in stormlord["drops"]
     edge = load_items(AETHRYN / "items.yaml")["stormlord_edge"]
     assert edge["slot"] == "weapon" and edge["mods"]["ATK"] > 9  # above the reaver blade
@@ -642,19 +644,19 @@ def test_aethryn_ships_a_second_quest_the_ascent():
 
 
 def test_aethryn_ships_the_summit_capstone_quest():
-    """The endgame arc names the procedural summit by its stable labels and ends on felling the
-    Spiral Sovereign at the top of the 1-255 climb."""
+    """The endgame arc names the procedural far end by its stable labels and ends on felling the
+    Sovereign at the far end of the 1-300 Forgeward Road."""
     from parts.world.spiral import SUMMIT_BOSS, SUMMIT_ROOM
 
     summit = load_quest(AETHRYN / "quests" / "the_summit.yaml")
-    assert summit is not None and summit["name"] == "The Summit"
+    assert summit is not None and summit["name"] == "The Forge's Edge"
     assert summit["terminal"] == ["crowned"]
     triggers = {(s.get("on_enter") or s.get("on_defeat")) for s in summit["steps"]}
-    assert SUMMIT_ROOM in triggers and SUMMIT_BOSS in triggers  # names the stable summit labels
+    assert SUMMIT_ROOM in triggers and SUMMIT_BOSS in triggers  # names the stable far-end labels
     last = next(s for s in summit["steps"] if s["to"] == "crowned")
     assert last.get("on_defeat") == SUMMIT_BOSS and last.get("effect") == "award_xp"
-    # the finale pays off the world's framing mystery, not just "you win": the summit reveals the
-    # First Seed, and the crowned epilogue reforges it (the Unforging answered) - a real ending.
+    # the finale pays off the world's framing mystery, not just "you win": the Forge's Edge reveals
+    # the First Seed, and the crowned epilogue reforges it (the Unforging answered) - a real ending.
     assert "First Seed" in summit["labels"]["at_the_summit"]
     crowned = summit["labels"]["crowned"]
     assert "SEED REMEMBERS" in crowned and "reforged" in crowned  # the sundering resolved
