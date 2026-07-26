@@ -663,7 +663,7 @@ the_anvil_vents:
     the Vent-Lord and the raw edge of creation.
   exits:
     south: emberkoll
-    north: the_vent_deep
+    north: the_vent_gallery
 
 the_vent_deep:
   name: The Vent Deep
@@ -671,9 +671,9 @@ the_vent_deep:
     The bottom of the Anvil-Vents, where the Forge's heat is close enough to feel the world being
     made and unmade at once. The Vent-Lord keeps it -- a Forgeborn grown vast on a millennium of raw
     fire, the last guardian before the Forge itself. This is the hottest place a walking Forger can
-    reach. The vents lie back south.
+    reach. The vent-gallery lies back south.
   exits:
-    south: the_anvil_vents
+    south: the_vent_gallery
 
 # --- The Sundered Sky: the floating Reach (Continental Atlas §VII, Build Order Phase 5), the last
 # --- surface land and the gateway to the Great Spiral. Lands the Unforging tore loose that never
@@ -713,7 +713,7 @@ the_drifting_reach:
     wandering Court drifts ahead, east.
   exits:
     west: highgate
-    east: the_wandering_court
+    east: the_broken_span
 
 the_wandering_court:
   name: The Wandering Court
@@ -721,9 +721,9 @@ the_wandering_court:
     A shard-city of the Emberwrights that came loose whole and never fell, drifting the high sky on
     the winds -- the Drifting Court, a place that is never in the same sky twice. The Court-Warden
     keeps it, a maker the Unforging set adrift and never let land. This is the highest a walking
-    Forger stands before the Spiral. The drifting reach lies back west.
+    Forger stands before the Spiral. The broken span lies back west.
   exits:
-    west: the_drifting_reach
+    west: the_broken_span
 
 # --- Deepening the Drowned Sunhold (Content Manufacturing Campaign): the sunken capital was one
 # --- boss room; now the salvage-stair delves through the flooded halls and the drowned forge before
@@ -788,3 +788,29 @@ the_rime_vault:
   exits:
     south: the_glass_gallery
     north: the_frozen_court
+
+# --- Deepening the Vent-Deep (Content Manufacturing Campaign): the Kollforge's bottom was one boss
+# --- room; now the vent-gallery burns between the working vents and the Vent-Lord's deep. ---
+the_vent_gallery:
+  name: The Vent Gallery
+  desc: |-
+    Deeper than the working vents, where the rock runs to slag and the Forge's heat comes up through
+    the floor in sheets. A magma revenant works a vent here, a Kollkin the fire took and would not let
+    go, still pouring a make that has no shape left. The Anvil-Vents lie back south; the Vent Deep
+    opens north, hotter still.
+  exits:
+    south: the_anvil_vents
+    north: the_vent_deep
+
+# --- Deepening the Wandering Court (Content Manufacturing Campaign): the last surface boss stood in
+# --- one room; now a broken span of drift-shards crosses to the Court-Warden's drifting city. ---
+the_broken_span:
+  name: The Broken Span
+  desc: |-
+    The last sky-bridge to the Wandering Court is broken mid-air, its Ember-road ending in cloud and
+    beginning again a leap away, and the whole span sways. A fall-wraith rides the gap -- one the loose
+    lands took, grown from an endless fall into something that pulls others after it. The drifting
+    reach lies back west; the Court drifts ahead, east.
+  exits:
+    west: the_drifting_reach
+    east: the_wandering_court
