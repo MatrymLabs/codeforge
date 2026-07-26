@@ -161,15 +161,23 @@ def test_aethryn_cradle_offers_a_slot_complete_armor_set():
     assert {"head", "body", "arm"} <= cradle_slots
 
 
-def test_aethryn_every_reach_offers_a_slot_complete_armor_set():
-    """The wide gear pass: EVERY Reach drops a slot-complete armor set (head + body + arm) from its
-    own foes, so a Forger can re-outfit their armor at every stage of the 1-300 journey. Armor was
-    the thin slot (the world had 4 pieces total); this pins that the hole is closed everywhere."""
+def test_aethryn_every_reach_offers_a_slot_complete_loadout():
+    """The wide gear pass: EVERY Reach drops a slot-complete GEAR loadout (weapon + head + body +
+    arm) from its own foes, so a Forger can re-outfit their whole kit at every stage of the 1-300
+    journey. Armor was the thin slot (the world had 4 pieces total) and five Reaches had no weapon;
+    this pins both holes closed everywhere, measured through the `completeness` shelf part."""
     npcs = load_npcs(AETHRYN / "npcs.yaml")
     items = load_items(AETHRYN / "items.yaml")
-    # each Reach, named by the foes whose drops should cover its armor between them
+    # each Reach, named by the foes whose drops should cover a full loadout between them
     reach_foes = {
-        "Emberreach cradle": ["reach_wolf", "thornback_boar", "tide_crawler"],
+        "Emberreach cradle": [
+            "reach_wolf",
+            "thornback_boar",
+            "tide_crawler",
+            "cinder_wight",
+            "road_reaver",
+            "ash_colossus",
+        ],
         "Cinderdeep": ["cold_vein_lurker", "drowned_maker", "hollow_smith"],
         "Quenchmere": ["brine_wight", "sunken_revenant", "sunhold_warden"],
         "Verdance": ["canopy_stalker", "mire_returned", "boughwarden"],
@@ -187,8 +195,8 @@ def test_aethryn_every_reach_offers_a_slot_complete_armor_set():
             for d in npcs[f].get("drops", [])
             if items.get(d, {}).get("slot")
         ]
-        armor = coverage(slots, required=("head", "body", "arm"))
-        assert armor.complete, f"{reach} cannot outfit every armor slot: missing {armor.missing}"
+        gear = coverage(slots, required=("weapon", "head", "body", "arm"))
+        assert gear.complete, f"{reach} cannot outfit a full loadout: missing {gear.missing}"
 
 
 def test_aethryn_cinderdeep_descends_to_a_real_bottom():

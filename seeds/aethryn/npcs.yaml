@@ -398,7 +398,7 @@ hollow_smith:
   lethal: true
   level: 15
   tier: boss  # the Cinderdeep's mid-boss: felling it thins the cold and opens the way deeper
-  drops: [hollow_ingot, cindershell_plate]
+  drops: [hollow_ingot, cindershell_plate, hollowiron_cleaver]  # + Cinderdeep signature weapon
   loot: {ember_shard: 3, nothing: 2}
 
 # --- The deep Cinderdeep (below the maw): the coast's downward road bottoms out at the Cinderheart,
@@ -703,7 +703,7 @@ sunhold_warden:
   resistances: {WTR: Resist, LGT: Weak}
   level: 30
   tier: boss  # the Quenchmere's climax: a lethal boss-tier reward (x10) in the drowned capital
-  drops: [sunhold_sigil, brinescale_bracers]  # Reach-relic + Brinescale set (arm)
+  drops: [sunhold_sigil, brinescale_bracers, tideglass_harpoon]  # relic + Brinescale arm + weapon
   loot: {hollow_ingot: 2, ember_shard: 4, nothing: 2}
 
 # --- The Verdance (across the Quenchmere, Continental Atlas §III): the living wild. A canopy predator,
@@ -788,7 +788,7 @@ boughwarden:
   resistances: {ERT: Resist, WND: Weak}
   level: 32
   tier: boss  # the Verdance's climax: the apex of the whole ecosystem (x10 reward), a lethal guardian
-  drops: [boughward_totem, verdant_vambraces]  # Reach-relic + Verdant set (arm)
+  drops: [boughward_totem, verdant_vambraces, thornwood_glaive]  # relic + Verdant arm + weapon
   loot: {ember_shard: 5, nothing: 2}
 
 # --- The Rimefall (Continental Atlas §II): the quenched north. A glass-hound pack, the Silent Anvil
@@ -926,7 +926,7 @@ vent_lord:
   resistances: {FIR: Resist, WTR: Weak}
   level: 62
   tier: boss  # the Kollforge's climax: the last guardian before the Forge (x10 reward)
-  drops: [vent_crown]
+  drops: [vent_crown, ventforge_maul]  # Vent-Crown (head) + Kollforge signature weapon
   loot: {ember_shard: 6, hollow_ingot: 2, nothing: 2}
 
 # --- The Sundered Sky (Continental Atlas §VII): the floating Reach, the gateway to the Spiral. Stormkin
@@ -1013,5 +1013,5 @@ court_warden:
   resistances: {DRK: Resist, HLY: Weak}
   level: 72
   tier: boss  # the Sundered Sky's climax: the last surface boss before the Spiral (x10 reward)
-  drops: [anchor_stone, stormward_vambraces]  # Reach-relic + Stormward set (arm)
+  drops: [anchor_stone, stormward_vambraces, stormcaller_pike]  # relic + Stormward arm + weapon
   loot: {ember_shard: 7, hollow_ingot: 2, nothing: 2}

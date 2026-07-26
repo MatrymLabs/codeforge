@@ -396,3 +396,41 @@ hollowiron_gauntlets:
   location: nowhere
   slot: arm
   mods: {DEF: 5, ATK: 3}
+
+# --- Signature Reach weapons (Content Manufacturing Campaign). Each weaponless Reach gets a boss-
+# --- dropped showcase weapon scaled to its band, so a Forger can upgrade their blade as they travel
+# --- (Emberreach and Rimefall already ship weapons). Drop-only prototypes; combat levels + rolls. ---
+hollowiron_cleaver:
+  name: a hollowiron cleaver
+  keywords: [cleaver, hollowiron, iron, deep]
+  location: nowhere
+  slot: weapon
+  mods: {ATK: 8, DEF: 2}
+
+tideglass_harpoon:
+  name: a tideglass harpoon
+  keywords: [harpoon, tideglass, brine, drowned]
+  location: nowhere
+  slot: weapon
+  mods: {ATK: 11, ACC: 5}
+
+thornwood_glaive:
+  name: a thornwood glaive
+  keywords: [glaive, thornwood, bough, grove]
+  location: nowhere
+  slot: weapon
+  mods: {ATK: 12, EVA: 4}
+
+ventforge_maul:
+  name: a ventforge maul
+  keywords: [maul, ventforge, forge, molten]
+  location: nowhere
+  slot: weapon
+  mods: {ATK: 16, DEF: 3}
+
+stormcaller_pike:
+  name: a stormcaller pike
+  keywords: [pike, stormcaller, sky, storm]
+  location: nowhere
+  slot: weapon
+  mods: {ATK: 18, ACC: 6}
