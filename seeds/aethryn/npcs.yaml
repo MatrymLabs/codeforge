@@ -2141,3 +2141,95 @@ ashen_forgeborn:
   tier: boss  # the Cooled Kollhold's climax (x10 reward): a Forgeborn that went cold and mad, below the Vent-Lord (62)
   drops: [ashkoll_masterbrand, greater_healing_draught]
   loot: {ember_shard: 14, emberglass: 4, nothing: 1}
+
+# --- The Sundered Sky expansion life (Great Creation Campaign): the anchor-quarter's Skyborn, the
+# --- drifting-shoals' wind-hunters, and the falling shard's drift-wraiths. Banded 60-66. ---
+
+# The Anchor-Quarter (non-combat: the Skyborn creed, the fourth of the four peoples' answers)
+capstan_keeper:
+  name: a capstan-keeper of the Anchor-Quarter
+  location: the_anchor_quarter
+  keywords: [capstan, keeper, quarter, skyborn]
+  dialogue:
+    - '"Mind the capstan, Forger. This chain is the only thing between Highgate and the long fall, and we have kept it taut for a thousand years. The frozen north froze, the molten west cooled, the drowned Reach sank -- and we? We never landed at all. That is the Skyborn way. You do not have to touch the ground to have a home. You only have to keep the anchor."'
+  topics:
+    rumor:
+      - '"West off the shoals hangs a shard that lost its Forgework: the Falling Hold, dropping so slow its people never knew. Its anchor snapped an age ago and its Warden hauls on the broken chain still, gone wrong in the long drop. Cut what drifts free by its dead capstan and bring it up, if the Warden lets you. And do not pity the fall. Every shard falls. The trick is only to fall slowly enough to live a life on the way down."'
+
+sky_child:
+  name: a sky-child
+  location: the_anchor_quarter
+  keywords: [child, sky, skyborn, kid]
+  dialogue:
+    - The sky-child runs the drift-rail over a mile of open cloud without a tether, laughing. "You hold on so TIGHT! The wind holds you if you let it. Grandfather says the ground-born never learn that. Are you ground-born? You hold on like one."
+
+# The Drifting Shoals (sky-wind wilderness leveling 60-62, dispersal off the Court chain)
+shoals_stormkin:
+  name: a stormkin
+  location: the_drifting_shoals
+  keywords: [stormkin, storm, shoals, wind]
+  dialogue:
+    - A stormkin rides an updraft off a drifting shard, a knot of living weather and old Forgelight, and turns down the wind at your warmth.
+  hp: 340
+  atk: 40
+  aggressive: true
+  attack_element: LGT
+  level: 60
+  tier: normal  # the drifting-shoals leveling ground, an alternative to the drifting-reach chain
+  loot: {ember_shard: 10, stormglass: 1, nothing: 2}
+
+shoals_sky_ray:
+  name: a sky-ray
+  location: the_drifting_shoals
+  keywords: [ray, sky, shoals, glide]
+  dialogue:
+    - A sky-ray slides out of the shard-lee on a still wing, wide as a sail, and banks to take you off the sway-bridge.
+  hp: 360
+  atk: 42
+  aggressive: true
+  attack_element: WND
+  resistances: {WND: Resist, ERT: Weak}  # a thing of the open air: the weight of stone drags it down
+  level: 62
+  tier: normal  # the shoals' harder tier; the stormglass guardian
+  loot: {ember_shard: 11, stormglass: 1, nothing: 2}
+
+# The Falling Shard (a dead-city delve, 64 -> 66)
+span_fall_revenant:
+  name: a fall-revenant
+  location: the_tilting_span
+  keywords: [revenant, fall, span, tilting]
+  dialogue:
+    - A fall-revenant keeps the tilting way, one of those the slow drop took and never finished taking, still falling behind its own eyes, and it reaches for the warmth that stands where it cannot.
+  hp: 380
+  atk: 44
+  aggressive: true
+  attack_element: WND
+  level: 64
+  tier: normal  # the falling-shard approach, the delve's outer tier
+  loot: {ember_shard: 12, stormglass: 2, nothing: 2}
+
+falling_hold_echo:
+  name: the drift-echo of the anchor-keeper
+  location: the_falling_hold
+  keywords: [echo, drift, keeper, hold]
+  dialogue:
+    - A drift-echo keeps the tilting square, everything about it a hand off the ground and never landing. "The chain holds," it says, certain, an age too late. "We are moored. We are not falling. My father kept the anchor and his father before, and we do not fall. We are Highgate's equal, we are... why is the floor so far? When did the floor get so far?"
+  topics:
+    rumor:
+      - '"The Warden below still hauls on the broken chain. It does not know the anchor is gone. It does not know we fell. It will not let you near the capstan, because near the capstan is where the chain was, and the chain is all it has left. What drifts there was the hold''s best. Take it up where a chain still holds. Let something of us land, even if we never will."'
+
+broken_anchor_warden:
+  name: the Broken Anchor-Warden
+  location: the_anchor_deep
+  keywords: [warden, anchor, broken, capstan]
+  dialogue:
+    - The Broken Anchor-Warden hauls on a chain that ends in the open air, and has for an age. "The shard is moored," it grinds, straining at nothing. "I hold it aloft. I HOLD IT." It turns on you the strength it has spent a thousand years spending on a broken chain, and it is still terribly strong.
+  hp: 640
+  atk: 46
+  aggressive: true
+  attack_element: LGT
+  resistances: {LGT: Resist, ERT: Weak}  # a thing of the anchored air: grounded weight breaks its hold
+  level: 66
+  tier: boss  # the Falling Hold's climax (x10 reward): a guardian holding a shard aloft on a chain that broke long ago, below the Court-Warden (72)
+  drops: [anchor_warden_chain, greater_healing_draught]
+  loot: {ember_shard: 16, stormglass: 4, nothing: 1}
