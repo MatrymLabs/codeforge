@@ -43,6 +43,7 @@ _GAME_SEED = {
     "character_view",
     "zones",
     "equipment",
+    "gearsets",
     "derived",
     "score_sheet",
     "aggression",

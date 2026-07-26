@@ -291,6 +291,30 @@ def test_aethryn_consumables_scale_across_the_journey():
     assert "grand_healing_draught" not in npcs["wren"]["shop"]["sells"]
 
 
+def test_aethryn_regional_sets_grant_bonuses_from_real_pieces():
+    """Collecting a whole regional set pays off: aethryn ships a gear SET per Reach, each granting a
+    flat bonus when all its pieces are worn. Every piece is a real item and every bonus stat is a
+    real equip stat (a cross-check, so a set can never bonus off a phantom), and the bonus fires
+    only on a COMPLETE set (measured through the gearsets bonus fold)."""
+    from parts.world.gearsets import active_set_bonuses
+    from parts.world.seed import load_sets
+
+    sets = load_sets(AETHRYN / "sets.yaml")
+    assert sets, "the flagship ships no gear sets -- the wide gear pass has no payoff"
+    items = set(load_items(AETHRYN / "items.yaml"))
+    valid_stats = {"ATK", "DEF", "ACC", "EVA", "MAG DEF"}
+    for label, gear_set in sets.items():
+        assert len(gear_set["pieces"]) >= 2
+        for piece in gear_set["pieces"]:
+            assert piece in items, f"set {label} names a phantom piece {piece}"
+        for stat in gear_set["bonus"]:
+            assert stat in valid_stats, f"set {label} bonuses an unknown stat {stat}"
+    # a full set grants its bonus; one piece short grants nothing (all-or-nothing)
+    storm = sets["stormward"]
+    assert active_set_bonuses(set(storm["pieces"]), sets) == storm["bonus"]
+    assert active_set_bonuses(set(storm["pieces"][:-1]), sets) == {}
+
+
 def test_aethryn_sovereign_drops_a_legendary_capstone():
     """The final boss at the world's ceiling (L300) drops a named LEGENDARY, not the mid road
     keystone: the Sovereign's Regalia, a cut above every regional relic - the one artifact that says

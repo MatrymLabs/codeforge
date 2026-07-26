@@ -265,6 +265,17 @@ class Recipe(TypedDict):
     inputs: dict[str, int]  # material prototype label -> quantity consumed from the inventory
 
 
+class GearSet(TypedDict):
+    """A gear SET: wear every one of its `pieces` at once and earn a flat `bonus` on top of the
+    pieces' own mods, so collecting a whole regional set beats three unrelated pieces. The world is
+    data: sets are YAML, validated at load; the bonus math lives in parts.world.gearsets.
+    """
+
+    name: str  # display name of the set, e.g. "the Stormward set"
+    pieces: list[str]  # the item prototype labels that must ALL be worn for the bonus
+    bonus: dict[str, int]  # flat stat -> amount granted when the set is complete
+
+
 class QuestStep(TypedDict):
     """One move in a quest: from `state`, event `event` advances to `to`; `effect` is optional.
 
@@ -1037,6 +1048,39 @@ def load_recipes(path: Path) -> dict[str, Recipe]:
             inputs={str(k): int(v) for k, v in inputs.items()},
         )
     return recipes
+
+
+def load_sets(path: Path) -> dict[str, "GearSet"]:
+    """Load a seed's optional gear SETS. {} if the seed ships none; fails loud on a bad one.
+
+    Each set lists its `pieces` (at least two item prototype labels) and the flat `bonus` (stat ->
+    a positive amount) earned when all pieces are worn together. Shape is validated here; that the
+    pieces and stats are real is cross-checked against the seed's items at boot (like a recipe).
+    """
+    if not path.exists():
+        return {}
+    entries, template = _open_seed_bin(path, "set")
+    sets: dict[str, GearSet] = {}
+    for label, fields in entries.items():
+        merged: dict[str, Any] = {"name": _phrase(label).title(), "pieces": [], "bonus": {}}
+        merged.update(template)
+        merged.update(fields)
+        _inspect_required_types(label, merged, (("name", str), ("pieces", list), ("bonus", dict)))
+        pieces = merged["pieces"]
+        if len(pieces) < 2 or not all(isinstance(p, str) for p in pieces):
+            raise SeedError(f"set '{label}': 'pieces' must list at least two item prototypes.")
+        bonus = merged["bonus"]
+        if not bonus or not all(
+            isinstance(k, str) and isinstance(v, int) and not isinstance(v, bool) and v > 0
+            for k, v in bonus.items()
+        ):
+            raise SeedError(f"set '{label}': 'bonus' must map a stat to a positive amount.")
+        sets[label] = GearSet(
+            name=str(merged["name"]),
+            pieces=[str(p) for p in pieces],
+            bonus={str(k): int(v) for k, v in bonus.items()},
+        )
+    return sets
 
 
 def load_zones(path: Path, known_rooms: set[str]) -> dict[str, Zone]:

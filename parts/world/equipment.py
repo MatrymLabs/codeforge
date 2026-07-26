@@ -10,7 +10,9 @@ modifier math; the score sheet only projects the result.
 from __future__ import annotations
 
 from parts.shelf.stats import ModifierStack, Stat, StatModifier
-from parts.world import items  # import the MODULE, not its globals: tests swap items.ITEMS
+
+# import the MODULES, not their globals: tests swap items.ITEMS / gearsets.SETS
+from parts.world import gearsets, items
 from parts.world.score_sheet_model import EquipmentLoadout
 from parts.world.session import Session, sentence_case
 
@@ -42,11 +44,17 @@ def unequip(session: Session, slot: str) -> str:
 
 
 def equipped_modifiers(session: Session) -> dict[str, list[StatModifier]]:
-    """Gather every equipped item's modifiers, grouped by the stat they target."""
+    """Gather every equipped item's modifiers, grouped by the stat they target, PLUS any set bonus
+    earned by wearing a whole gear set at once (parts.world.gearsets). Set bonuses stack on top of
+    the pieces' own mods, so a full regional set beats three unrelated pieces of the same tier."""
     by_target: dict[str, list[StatModifier]] = {}
+    worn_prototypes: set[str] = set()
     for slot, iid in session.equipped.items():
+        worn_prototypes.add(items.prototype_of(iid))
         for target, amount in items.ITEMS[iid]["mods"].items():
             by_target.setdefault(target, []).append(StatModifier(source=slot, flat=amount))
+    for target, amount in gearsets.active_set_bonuses(worn_prototypes).items():
+        by_target.setdefault(target, []).append(StatModifier(source="set-bonus", flat=amount))
     return by_target
 
 
