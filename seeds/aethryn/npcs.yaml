@@ -1529,3 +1529,33 @@ thorn_horror:
   tier: elite  # the deep warren's prize, past the Bramble-Wight (x3 reward)
   drops: [wildember_charm]
   loot: {ember_shard: 5, reachwood_sap: 1, nothing: 2}
+
+# --- The drowned flagship's foes (Seed Scale Doctrine): the coastal dungeon past the Wreck Reef. ---
+reef_drifter:
+  name: a reef-drifter
+  location: the_flooded_hulls
+  keywords: [drifter, reef, wreck, brine]
+  dialogue:
+    - A shape unfolds from a split hull and drifts toward you through the green water, brine-logged and patient.
+  hp: 56
+  atk: 9
+  aggressive: true
+  attack_element: WTR  # a thing of the drowned hulls: brine and cold
+  level: 13
+  tier: normal  # the flooded hulls' threat, an early coastal delve
+  loot: {ember_shard: 3, nothing: 2}
+
+wreck_warden:
+  name: the warden of the sunken hold
+  location: the_sunken_hold
+  keywords: [warden, wreck, hold, keeper]
+  dialogue:
+    - '"..." A Forged keeper rises from the silt of the flagship''s hold, still at the post it was set to a lifetime under the sea ago, and moves to hold the cargo from you.'
+  hp: 110
+  atk: 14
+  aggressive: true
+  attack_element: WTR  # the ship's drowned keeper: brine and crushing dark
+  level: 16
+  tier: elite  # the drowned flagship's mini-boss, a coastal off-path prize (x3 reward)
+  drops: [greater_healing_draught, tideglass_pendant]
+  loot: {ember_shard: 4, hollow_ingot: 1, nothing: 2}
