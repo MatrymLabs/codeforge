@@ -177,10 +177,13 @@ stillhearth:
     A monastery-port on the ice-edge, the one warm place in the Rimefall, kept by the Silent Anvil
     who hold this whole Reach as a shrine. Here they trade only what the ice gives up and speak in low
     voices, because in the frozen north the past is not ruined but paused. A keeper tends the one
-    hearth. The passage lies back south; the Frozen Court stands north across the ice.
+    hearth. The passage lies back south; the deep ice stands north across the glass-gallery, a silent
+    cloister opens down beneath the port, and the riming fields run west along the floe.
   exits:
     south: the_riming_passage
     north: the_glass_gallery
+    down: the_silent_cloister
+    west: the_riming_fields
 
 the_frozen_court:
   name: The Frozen Court
@@ -1201,3 +1204,81 @@ the_ziggurat_vault:
     What it kept for its dead god still lies in the choked reliquary. The steps lie back down.
   exits:
     down: the_ziggurat_steps
+
+# ============================================================================================
+# THE RIMEFALL EXPANSION (Great Creation Campaign) - the frozen north grows to zone density: the
+# Silent Anvil's cloister (Stillhearth lived-in + the Reach's doctrine of restraint), the Riming Fields
+# (an ice-floe wilderness leveling ground), and Frosthold (a SECOND Emberwright city preserved whole
+# under the ice - explorable, then a frozen-forge delve). Level-banded 40-48, below the Rime-King (52).
+# ============================================================================================
+
+# --- The Silent Anvil's cloister: Stillhearth's warm heart, the doctrine of the Reach ---
+the_silent_cloister:
+  name: The Silent Cloister
+  desc: |-
+    Beneath the port the Silent Anvil keep their cloister, warm and low and quiet as held breath: an
+    order that guards the whole frozen Reach as a shrine and Forges nothing, believing the golden age
+    froze because it made too much, too fast, too proud. A cloister-master keeps the rule; a novice
+    sweeps rime that will not stop falling. Their creed is graven on the warm stone for any who read.
+    Stillhearth lies back up.
+  exits:
+    up: stillhearth
+
+# --- The Riming Fields: the ice-floe wilderness, a leveling ground on the Rimefall's edge ---
+the_riming_fields:
+  name: The Riming Fields
+  desc: |-
+    West of the port the floe opens into a field of standing ice, pressure-ridges and frozen wells
+    where the Riming Sea heaved and set in a single instant. Rime-wolves course the ridges and ice-
+    wights rise from the frozen wells, drawn to any warmth. Rime-crystal grows in the cold seams for
+    anyone who can gather it before the cold takes their hands. Stillhearth lies back east; a beacon
+    stands north on the highest ridge, and a glassway runs west toward a second frozen city.
+  exits:
+    east: stillhearth
+    north: the_kingsroad_beacon
+    west: the_glassway
+
+the_kingsroad_beacon:
+  name: The Kingsroad Beacon
+  desc: |-
+    A signal-tower of the golden age stands on the highest pressure-ridge, its ember-beacon long cold,
+    its stair climbable still. From the top the whole Rimefall spreads white to the horizon: Stillhearth's
+    one plume of smoke, the buried avenues of Frosthold, and far north under the deep ice the golden
+    glint of the Frozen Court itself. The fields lie back south.
+  exits:
+    south: the_riming_fields
+
+# --- Frosthold: a SECOND Emberwright city preserved whole under the ice (explorable + a delve) ---
+the_glassway:
+  name: The Glassway
+  desc: |-
+    An avenue of the golden age runs west under a roof of clear ice, its lamps and shop-signs and
+    the frost-caught banners of a festival-day all preserved mid-flutter, the whole street stopped
+    between one breath and the next. Frost-revenants walk it, the city's own people, still keeping to
+    their errands in the ice that killed them. The fields lie back east; the city square opens west.
+  exits:
+    east: the_riming_fields
+    west: frosthold
+
+frosthold:
+  name: Frosthold
+  desc: |-
+    A whole Emberwright city preserved entire under the deep ice, lesser than the Frozen Court and no
+    less haunted: a market-square caught mid-day, its makers frozen at their benches and their bargains,
+    a city that simply stopped. A frost-echo of the last market-master keeps the square, neither living
+    nor wholly gone. The glassway lies back east; the city's great forge stands frozen at the square's
+    heart, west.
+  exits:
+    east: the_glassway
+    west: the_frozen_forge
+
+the_frozen_forge:
+  name: The Frozen Forge
+  desc: |-
+    The heart of Frosthold: a master-forge of the golden age caught mid-pour, a ribbon of Ember frozen
+    in the very act of falling, bright and motionless as struck glass. The Frostbound Smith stands over
+    it still, flash-frozen mid-strike and woken by warmth to finish a work an age overdue, and it will
+    forge you into the piece if you let it. What the golden age made here is worth the cold. The square
+    lies back east.
+  exits:
+    east: frosthold

@@ -1930,3 +1930,107 @@ ziggurat_rootpriest:
   tier: boss  # the Sunken Ziggurat's climax (x10 reward): the forgotten people's undying god
   drops: [rootpriest_censer, greater_healing_draught]
   loot: {ember_shard: 8, glowcap: 3, nothing: 1}
+
+# --- The Rimefall expansion life (Great Creation Campaign): the Silent Anvil's cloister, the riming-
+# --- fields' cold hunters, Frosthold's frozen echoes, and the Frostbound Smith. Banded 40-48. ---
+
+# The Silent Cloister (non-combat: the doctrine of restraint)
+cloister_master:
+  name: the cloister-master of the Silent Anvil
+  location: the_silent_cloister
+  keywords: [master, cloister, anvil, monk]
+  dialogue:
+    - '"You come warm into a frozen shrine, Forger, and I will not stop you. But learn why we keep it. The golden age Forged everything it could and froze in the doing of it -- pride is a heat, and heat has a price the ice is still paying. We Forge nothing here. We keep. There is a making in restraint your Grand Forge has forgotten."'
+  topics:
+    rumor:
+      - '"West on the floe stands Frosthold, a second city the ice took whole. Its people still walk their last market-day, and its great forge still holds the Frostbound Smith mid-strike. Wake it and it will finish its work on you. If you must go, go warm and go armed, and do not wake the Frozen Court beyond -- the Rime-King is one waking the world would not survive."'
+
+cloister_novice:
+  name: a novice of the Silent Anvil
+  location: the_silent_cloister
+  keywords: [novice, cloister, anvil, sweeper]
+  dialogue:
+    - The novice sweeps a rime that keeps falling, patient as stone. "The master says the sweeping is the lesson. The ice always comes back. So do we. That is the whole of the order, if you want it in one broom-stroke."
+
+# The Riming Fields (ice-floe wilderness leveling 40-42, dispersal off the main chain)
+rime_wolf:
+  name: a rime-wolf
+  location: the_riming_fields
+  keywords: [wolf, rime, fields, pack]
+  dialogue:
+    - A rime-wolf, its coat grown through with frost-glass, courses down a pressure-ridge with the pack close behind.
+  hp: 140
+  atk: 24
+  aggressive: true
+  attack_element: ICE
+  level: 40
+  tier: normal  # the riming-fields leveling ground, an alternative to the glass-gallery chain
+  loot: {ember_shard: 5, rime_crystal: 1, nothing: 2}
+
+field_ice_wight:
+  name: an ice-wight
+  location: the_riming_fields
+  keywords: [wight, ice, fields, frozen]
+  dialogue:
+    - Something rises from a frozen well on the floe, a shape of standing ice with a cold light where its heart should be, and turns toward your warmth.
+  hp: 155
+  atk: 26
+  aggressive: true
+  attack_element: ICE
+  resistances: {ICE: Resist, FIR: Weak}  # a thing of ice: fire unmakes it
+  level: 42
+  tier: normal  # the riming-fields' harder tier; the rime-crystal guardian
+  loot: {ember_shard: 6, rime_crystal: 1, nothing: 2}
+
+# The Glassway + Frosthold (a second preserved city, a delve)
+glassway_revenant:
+  name: a frost-revenant
+  location: the_glassway
+  keywords: [revenant, frost, glassway, dead]
+  dialogue:
+    - A frost-revenant keeps its errand down the frozen avenue, a citizen of the golden age still walking to a shop that closed an age ago, and it does not like the warmth you bring.
+  hp: 172
+  atk: 28
+  aggressive: true
+  attack_element: ICE
+  level: 43
+  tier: normal  # the approach to Frosthold, the delve's outer tier
+  loot: {ember_shard: 6, rime_crystal: 2, nothing: 2}
+
+frosthold_echo:
+  name: the frost-echo of the market-master
+  location: frosthold
+  keywords: [echo, market, master, frosthold]
+  dialogue:
+    - Neither living nor wholly gone, the frost-echo keeps the frozen square. "Market's open," it says, to no one, to you. "Best glass in the north, before the... before the..." It forgets, the way the frozen do, and begins again. "Market's open."
+  topics:
+    rumor:
+      - '"The forge at the square''s heart still holds a work half-poured. The Smith stands over it, waiting for a warmth to finish by. Do not be that warmth unless you can take the heat it will give back. What it forged, though... the golden age never made better. It is in there still, if you can leave with it."'
+
+frostbound_smith:
+  name: the Frostbound Smith
+  location: the_frozen_forge
+  keywords: [smith, frostbound, forge, frosthold]
+  dialogue:
+    - The Frostbound Smith turns from a pour frozen an age mid-fall, its hammer lifting, its eyes two cold sparks waking to the warmth you brought. "You will do," it says, without malice, and swings to finish a work long overdue: you into the piece.
+  hp: 520
+  atk: 34
+  aggressive: true
+  attack_element: ICE
+  resistances: {ICE: Immune, FIR: Weak}  # a golden-age master frozen mid-strike: ice cannot touch it, only fire truly bites
+  level: 48
+  tier: boss  # Frosthold's climax (x10 reward): a preserved master-smith, below the Rime-King (52)
+  drops: [frostbound_hammer, greater_healing_draught]
+  loot: {ember_shard: 12, rime_crystal: 4, nothing: 1}
+
+# --- The Kingsroad Beacon's watcher (Great Creation Campaign): a lone Silent Anvil pilgrim keeping a
+# --- dead beacon's watch, so the viewpoint is lived-in, not empty. ---
+beacon_pilgrim:
+  name: a pilgrim of the Silent Anvil
+  location: the_kingsroad_beacon
+  keywords: [pilgrim, beacon, anvil, watcher]
+  dialogue:
+    - The pilgrim keeps the cold beacon-watch, wrapped against a wind that never warms. "I light it each dusk, though no beacon north answers anymore. Someone should keep the road, even a road no one walks. Especially that road. Read the plaque, Forger. Nine beacons. I keep the fourth. The rest keep themselves, under the ice."
+  topics:
+    rumor:
+      - '"From here you see the whole white Reach. Frosthold west, where the Smith still stands at his pour. The Court far north, where the King sleeps and had better keep sleeping. And between them, five drowned beacons the deep ice took. A patient Forger could find them. A wise one lets the road sleep with the King."'

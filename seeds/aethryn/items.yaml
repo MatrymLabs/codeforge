@@ -833,3 +833,59 @@ ziggurat_reliquary:
     It worked, after a fashion. The god endured. There was simply no longer anyone left to worship it,
     and nothing left of it worth worshipping. Endurance is not the same as living. The tree knew that.
     The priests learned it too late.
+
+# --- The Rimefall expansion content (Great Creation Campaign): the fields' ice-gather, the Frostbound
+# --- Smith's masterwork, and the readable lore of the Silent Anvil and frozen Frosthold. ---
+rime_crystal:
+  name: a shard of rime-crystal
+  keywords: [rime, crystal, shard, fields]
+  location: the_riming_fields
+  resettable: true  # the riming-fields' gather: rime-crystal in the cold seams, reforms on the reset
+
+frostbound_hammer:
+  name: the Frostbound Smith's hammer
+  keywords: [hammer, frostbound, smith, weapon]
+  location: nowhere
+  slot: weapon
+  mods: {ATK: 22, ACC: 6}  # a golden-age masterwork, torn from the Frozen Forge mid-strike; the best steel in the north
+
+anvil_creed:
+  name: the creed of the Silent Anvil
+  keywords: [creed, anvil, cloister, stone]
+  location: the_silent_cloister
+  lore: |-
+    Graven small in the warm stone of the cloister, in a plain hand, the whole rule of the Silent Anvil:
+    "The golden age did not fall. It froze, mid-boast, in the very act of making one thing too many. We
+    do not mourn it. We keep it, so the world can walk through its pride and learn. We Forge nothing.
+    Not because making is wrong, but because knowing when to stop is the harder making, and the age
+    that could not learn it is under the ice for anyone to see. Sweep the rime. It comes back. So do we.
+    Keep the shrine. Do not wake the King. Restraint is the last Forge, and the coldest, and the only one
+    that never has to be undone."
+
+frosthold_daybook:
+  name: the market-master's daybook
+  keywords: [daybook, market, frosthold, ledger]
+  location: frosthold
+  lore: |-
+    A market-master's daybook, frozen open to its last page, the ink stopped mid-word. The entries run
+    ordinary to the very end: glass sold, a festival-day's takings, a note to mend the forge-bellows, a
+    daughter's name and a birthday coming. And then, in the same steady hand, the last line: "Sky went
+    white at noon. The Smith says the pour is good, the best he has ever set. He will not leave it to
+    cool. He says one more strike. He says --" and there the ink stops, and Frosthold with it, a whole
+    city caught between a father's errand and a smith's last blow, kept perfect and kept forever in the
+    one instant it should have stepped back from the heat. The Silent Anvil read this page to their
+    novices. It is the whole of their creed, written by a man who did not know he was writing it.
+
+# --- The Kingsroad Beacon's plaque (Great Creation Campaign): the viewpoint's reward for the climb. ---
+beacon_plaque:
+  name: the beacon's cold plaque
+  keywords: [plaque, beacon, kingsroad, brass]
+  location: the_kingsroad_beacon
+  lore: |-
+    A brass plaque at the beacon's foot, green with an age of frost: "KINGSROAD BEACON -- Fourth of the
+    Nine. Lit each dusk, answered north by Frosthold's, answered north again by the Court's, so that on
+    a clear night the whole Kingsroad burned from the sea to the throne, and no traveller in the
+    Rimefall was ever more than a beacon from a warm door." Nine beacons. This is the fourth, and the
+    last that still stands clear of the ice. The other five are somewhere north, under the deep white,
+    lit for a road no one has walked since the sky went white at noon. From here you can see where two
+    of them should be. Neither burns.
