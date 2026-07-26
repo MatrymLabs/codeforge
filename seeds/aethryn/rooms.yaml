@@ -183,9 +183,61 @@ market_quarter:
   desc: |-
     Stalls and shopfronts crowd the Market Quarter, and the Cooling-Sea docks send their
     trade up from the water. A trader calls her wares over the din. Everything the wider
-    Anvil makes passes through here sooner or later.
+    Anvil makes passes through here sooner or later. East, past the last stalls, a salt-road
+    runs out of the city toward the Ashwastes.
   exits:
     west: the_grand_forge
+    east: ashwastes_road
+
+ashwastes_road:
+  name: The Salt-Road to the Ashwastes
+  desc: |-
+    The last road out of Emberreach runs east into a land the Unforging half-unmade: the Ashwastes,
+    a desert of grey cinder under a bleached sky. Ash-jackals hunt the salt-road's edge. The city
+    lies back west; ahead, the dunes.
+  exits:
+    west: market_quarter
+    east: the_cinder_dunes
+
+the_cinder_dunes:
+  name: The Cinder Dunes
+  desc: |-
+    Dunes of cold ash roll to every horizon, and rare ember glints in the grey where the world
+    was scoured. An Ashborn scout reads the sand here. A camp of the survivors lies north; the
+    ruins and the crater beyond lie east. The salt-road runs back west.
+  exits:
+    west: ashwastes_road
+    north: the_ashborn_camp
+    east: the_scoured_ruin
+
+the_ashborn_camp:
+  name: The Ashborn Camp
+  desc: |-
+    A ring of salvaged tents and cooling-iron in the lee of a dune, where the Ashborn who survived
+    the Unforging of this land make their stand: fatalistic, resourceful, trading salvage for what
+    the wastes cannot give. A trader keeps a stall; a keeper tends the fire. The dunes lie south.
+  exits:
+    south: the_cinder_dunes
+
+the_scoured_ruin:
+  name: The Scoured Ruin
+  desc: |-
+    Half a Forge-hold stands here, scoured to glass on the day the Ashwastes were unmade -- walls
+    that end in mid-air, a stair to nowhere. A salvage-wraith drifts the ruin, made of what the
+    Unforging left. The crater lies east; the dunes, back west.
+  exits:
+    west: the_cinder_dunes
+    east: the_glass_crater
+
+the_glass_crater:
+  name: The Glass Crater
+  desc: |-
+    The wound at the heart of the Ashwastes: a vast crater of black glass where the Unforging first
+    struck this land, still and cold and singing faintly with the ember it fused. The Ash-Colossus
+    keeps it -- a giant of welded cinder the wastes grew around a scar. This is the bottom of the
+    desert road. Still it, and the Ashwastes are answered. The ruin lies back west.
+  exits:
+    west: the_scoured_ruin
 
 warden_gate:
   name: The Warden Gate

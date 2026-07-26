@@ -476,3 +476,70 @@ gate_stormlord:
   tier: boss  # the Third Coil's Gate-boss: the highest wall yet (x10 reward)
   drops: [coil_keystone, stormlord_edge]
   loot: {ember_shard: 4, nothing: 2}
+
+# --- The Ashwastes: a mid-game desert region east of the capital (levels 15-25), where a land was
+# --- half-Unforged. The Ashborn survivors, a salvage-wraith in the ruins, an Ash-Colossus at the crater. ---
+
+ash_jackal:
+  name: an ash-jackal
+  location: ashwastes_road
+  keywords: [jackal, ash, beast]
+  dialogue:
+    - The jackal slinks from the grey dunes, ribs and ember showing through its ashen hide.
+  hp: 44
+  atk: 8
+  level: 15
+  tier: normal  # the wastes' road-threat, a step past the coast and reachwood
+
+ashborn_scout:
+  name: an Ashborn scout
+  location: the_cinder_dunes
+  keywords: [scout, ashborn, survivor]
+  dialogue:
+    - '"You are far from the relit forges, Forger. The Ashwastes keep nothing warm for long."'
+    - '"Rare ember hides in the grey, but so do the jackals. Read the sand, or be read by it."'
+  topics:
+    ashwastes:
+      - '"This was a land once, before the Unforging cut it half-away. Now it is a desert of cinder -- salvage, danger, and the rare ember the scouring left behind."'
+    ashborn:
+      - '"We are the Ashborn: what was left when this land was unmade. We do not mourn it. We salvage it, and we endure. The camp keeps its fire north."'
+    colossus:
+      - '"At the crater east, the Ash-Colossus keeps the deepest wound -- a giant the wastes grew around a scar. Still it, and the ash might cool at last. Or it kills you. Both are common."'
+
+ashborn_trader:
+  name: an Ashborn salvage-trader
+  location: the_ashborn_camp
+  keywords: [trader, salvage, ashborn, merchant]
+  dialogue:
+    - '"Salvage in, supplies out. The wastes give hard, but they give. What do you carry, Forger?"'
+  shop:
+    # A third till, mid-game: the wastes trade heals and salvaged gear for coins and materials.
+    sells:
+      healing_draught: 15
+      mana_draught: 15
+      reaver_blade: 95
+      cindershell_plate: 150
+    buys:
+      ember_shard: 6
+      hollow_ingot: 30
+      warden_charm: 40
+  topics:
+    salvage:
+      - '"Everything in the Ashwastes was something else first. A blade was a hinge; a charm was a lock. We sell the world back to itself, piece by piece."'
+
+ash_colossus:
+  name: the Ash-Colossus
+  location: the_glass_crater
+  keywords: [colossus, ash, giant, boss]
+  dialogue:
+    - '"..." The Ash-Colossus turns its glass-and-cinder head toward you, and the crater groans as it rises.'
+  hp: 150
+  atk: 22
+  aggressive: true
+  lethal: true
+  attack_element: ERT  # a giant of welded stone and cinder: its blows are earthen (bring wind)
+  resistances: {ERT: Resist, WND: Weak}
+  level: 25
+  tier: boss  # the Ashwastes' climax: a lethal boss-tier reward (x10) at the crater's bottom
+  drops: [cinderglass_edge]
+  loot: {ember_shard: 4, hollow_ingot: 1, nothing: 2}
