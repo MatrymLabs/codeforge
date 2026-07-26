@@ -92,3 +92,9 @@ the_verdance:
   rooms: [the_verdant_passage, verdance_landing, highbough, the_deeproot_mire, the_heart_grove]
   reset_mode: empty_only
   beats_between: 12
+
+the_rimefall:
+  name: The Rimefall
+  rooms: [the_deepwater_berth, the_riming_passage, stillhearth, the_frozen_court]
+  reset_mode: empty_only
+  beats_between: 12

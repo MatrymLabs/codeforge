@@ -215,3 +215,12 @@ boughward_totem:
   location: nowhere
   slot: accessory_1
   mods: {DEF: 5, EVA: 5}
+
+# Drop-only: the Rime-King's reward -- the Stillheart, an Emberwright relic of unmelting ice that
+# never cooled (a weapon of the frozen golden age; see the Legendary Item Catalog, the Reach-Relics).
+stillheart:
+  name: the Stillheart
+  keywords: [stillheart, ice, blade, relic]
+  location: nowhere
+  slot: weapon
+  mods: {ATK: 15, "MAG DEF": 6}

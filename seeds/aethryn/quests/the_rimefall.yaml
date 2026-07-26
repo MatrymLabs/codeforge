@@ -1,0 +1,27 @@
+# SEED: aethryn -- quests/the_rimefall.yaml (the quenched north, Build Order Phase 4): cross to the
+# frozen Rimefall, keep counsel at Stillhearth, and wake the Frozen Court's Rime-King -- a flash-frozen
+# Emberwright, the golden age turned lethal. The Silent Anvil warn against it; the craft demands it.
+
+id: the_rimefall
+name: The Rimefall
+start: unfrozen
+reward_xp: 900
+
+steps:
+  - {state: unfrozen, event: shelter, to: at_stillhearth, on_enter: stillhearth}
+  - {state: at_stillhearth, event: enter, to: at_the_court, on_enter: the_frozen_court}
+  - {state: at_the_court, event: wake, to: thawed, on_defeat: rime_king, effect: award_xp}
+
+terminal: [thawed]
+
+labels:
+  unfrozen: "North of Tidewharf's berth, the deep-water ferry breaks the floes to the Rimefall -- a continent flash-frozen in the Unforging, its golden-age cities standing whole under the ice. Cross into the cold, and see what the world was."
+  at_stillhearth: "You keep counsel at Stillhearth, where the Silent Anvil warn: touch nothing, wake nothing. North stands the Frozen Court, a capital preserved entire. To learn the old craft you must walk it -- and waking its King restarts an Unforging mid-freeze."
+  at_the_court: "You stand in the Frozen Court, its makers frozen mid-gesture around you. The Rime-King sleeps on his throne, a first-age Emberwright the Unforging caught mid-reign. Wake him, or leave him -- but the craft you seek is locked in his frozen hands."
+  thawed: |-
+    *** THE FROZEN REIGN IS THAWED ***
+    The Rime-King falls, and the Unforging he half-carried does not spread -- you stopped it at the
+    throne. The Silent Anvil will not forgive you for waking him, and will not deny you learned what
+    only he still knew: a fragment of the first-age craft, taken from a maker frozen an age ago. You
+    have walked the golden age and carried a piece of it out of the ice. Whether that was wisdom or
+    the next Unforging waiting, only the climb will tell.
