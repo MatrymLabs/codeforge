@@ -220,6 +220,25 @@ def test_aethryn_every_reach_offers_a_slot_complete_loadout():
         assert gear.complete, f"{reach} cannot outfit a full loadout: missing {gear.missing}"
 
 
+def test_aethryn_consumables_scale_across_the_journey():
+    """Two draughts (hp 30 / mp 15) cannot carry a Forger through a 1-300 game. The consumable
+    ladder adds greater and grand tiers plus a both-pools elixir, each a valid hp/mp restore that
+    strictly out-heals the tier below, and the grand tier is stocked only by the high Reaches."""
+    items = load_items(AETHRYN / "items.yaml")
+    npcs = load_npcs(AETHRYN / "npcs.yaml")
+    heal_ladder = ["healing_draught", "greater_healing_draught", "grand_healing_draught"]
+    mana_ladder = ["mana_draught", "greater_mana_draught", "grand_mana_draught"]
+    for ladder, pool in ((heal_ladder, "hp"), (mana_ladder, "mp")):
+        restores = [items[c]["consume"][pool] for c in ladder]
+        assert all(r > 0 for r in restores)  # valid restores
+        assert restores == sorted(restores) and len(set(restores)) == 3  # strictly increasing tiers
+    elixir = items["forgefire_elixir"]["consume"]  # the endgame both-pools restorative
+    assert elixir["hp"] > 0 and elixir["mp"] > 0
+    # the grand tier is a HIGH-Reach good, not sold on the starting coast
+    assert "grand_healing_draught" in npcs["anchor_keeper"]["shop"]["sells"]
+    assert "grand_healing_draught" not in npcs["wren"]["shop"]["sells"]
+
+
 def test_aethryn_exploration_rooms_hold_placed_treasures():
     """Reaching a deep or off-path terminal rewards a one-time treasure ON THE GROUND (not an RNG
     drop): unique relics placed in the ruin, the Cinderheart, the drowned capital, the heart-grove,

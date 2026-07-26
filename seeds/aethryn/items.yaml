@@ -473,3 +473,37 @@ skyshard_relic:
   location: the_drifting_reach
   slot: accessory_2
   mods: {EVA: 9, ACC: 6}
+
+# --- The consumable ladder (Content Manufacturing Campaign). The coast draughts (hp 30 / mp 15)
+# --- do not carry a Forger through a 1-300 game; add greater and grand tiers plus a both-pools
+# --- elixir, stocked by Reach tier so healing scales with the journey. Drop-only prototypes (shops
+# --- place instances); `quaff <item>` spends one for its restore. ---
+greater_healing_draught:
+  name: a greater healing draught
+  keywords: [draught, greater, healing, potion]
+  location: nowhere
+  consume: {hp: 70}
+
+grand_healing_draught:
+  name: a grand healing draught
+  keywords: [draught, grand, healing, potion]
+  location: nowhere
+  consume: {hp: 150}
+
+greater_mana_draught:
+  name: a greater mana draught
+  keywords: [draught, greater, mana, potion]
+  location: nowhere
+  consume: {mp: 35}
+
+grand_mana_draught:
+  name: a grand mana draught
+  keywords: [draught, grand, mana, potion]
+  location: nowhere
+  consume: {mp: 70}
+
+forgefire_elixir:
+  name: a forgefire elixir
+  keywords: [elixir, forgefire, potion, restorative]
+  location: nowhere
+  consume: {hp: 120, mp: 60}
