@@ -89,7 +89,7 @@ from parts.world.score_sheet import render_score_sheet
 from parts.world.seed import load_splash
 from parts.world.session import SESSIONS, Session, display_name, roster
 from parts.world.shop import buy, render_shop, sell
-from parts.world.world import DIRECTIONS, dynamic_capability, render_room, resolve_move
+from parts.world.world import DIRECTIONS, WORLD, dynamic_capability, render_room, resolve_move
 from parts.world.zones import area_line, tick_zones
 from parts.world_cert import certify
 
@@ -1064,7 +1064,7 @@ def _build_commands() -> CommandSet:
         Command(
             "go",
             "CMD-04.035",
-            "move in a direction (go <dir>, or n/s/e/w/u/d)",
+            "move a way (a dir n/s/e/w, ne/nw/se/sw, u/d; or a named exit: go gate)",
             _go_cmd,
             namespace=CORE,
         )
@@ -1612,12 +1612,17 @@ def _resolve_move(session: Session, direction: str) -> str:
 
 
 def _go_cmd(session: Session, arg: str) -> str:
-    """`go <direction>`: move one room, or a clear refusal for a non-direction (or bare `go`).
+    """`go <way>`: move one room, or a clear refusal for a non-way (or bare `go`).
 
-    A direction is a label, so it routes case-insensitively (the legacy ladder lowered it too)."""
+    A way is a compass direction (`go north`, `go ne`) OR the noun a threshold is named for
+    (`go gate`, `go market`, `go in`). Directions canonicalize through DIRECTIONS; a noun that is
+    not a direction is resolved against the current room's own exits. Routes case-insensitively
+    (the legacy ladder lowered it too)."""
     word = arg.strip().lower()
     if word in DIRECTIONS:
         return _resolve_move(session, DIRECTIONS[word])
+    if word and word in WORLD[session.location]["exits"]:
+        return _resolve_move(session, word)
     return "You can't go that way."
 
 
@@ -1761,6 +1766,12 @@ def _route(session: Session, true_signal: str, routed_signal: str) -> str:
         return wizard_command(session, routed_signal, COMMANDS.admin_verbs())
     if routed_signal == "":
         return ""
+    # Noun exits ("nouns as rooms"): a lone unrecognized word that names a threshold out of this
+    # room walks the player through it -- `market`, `gate`, `tavern`, `in`, `out`. Compass words
+    # ("ne", "northwest") are already movement verbs; this catches the named thresholds a seed
+    # keys by their destination. Real verbs win (the spine ran first), so an exit never shadows one.
+    if " " not in routed_signal and routed_signal in WORLD[session.location]["exits"]:
+        return _resolve_move(session, routed_signal)
     return "Huh? Type HELP for commands."
 
 

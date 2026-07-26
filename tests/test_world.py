@@ -18,6 +18,15 @@ def test_direction_aliases_resolve_to_canonical_forms():
     assert DIRECTIONS["d"] == "down"
 
 
+def test_compound_direction_aliases_resolve_to_canonical_forms():
+    # The compass gained its four diagonals, each with a two-letter shorthand.
+    assert DIRECTIONS["ne"] == "northeast"
+    assert DIRECTIONS["northeast"] == "northeast"
+    assert DIRECTIONS["nw"] == "northwest"
+    assert DIRECTIONS["se"] == "southeast"
+    assert DIRECTIONS["sw"] == "southwest"
+
+
 def test_move_through_valid_exit_changes_location():
     arrived, message = resolve_move("forge", "north")
     assert arrived == "courtyard"

@@ -22,6 +22,7 @@ from parts.commands import (
 )
 from parts.registry import load_collective
 from parts.world.session import SESSIONS, Session
+from parts.world.world import WORLD
 
 
 def _echo(session: Session, arg: str) -> str:
@@ -199,6 +200,51 @@ def test_bare_go_refuses() -> None:
     # where the legacy ladder let bare `go` fall through to "Huh?".
     session = _walker("forge")
     assert handle_command(session, "go") == "You can't go that way."
+    assert session.location == "forge"
+
+
+# --- compound directions (ne/nw/se/sw) + noun exits ("nouns as rooms") -------
+# The compass gained its diagonals and a threshold may be keyed by the noun it opens onto. Proven
+# by hanging a `ne` and a `market` exit off a real room, then restoring it (mutates only the
+# exits map, a dict[str, str]).
+
+
+@pytest.fixture
+def _named_exits() -> Iterator[None]:
+    exits = WORLD["forge"]["exits"]
+    saved = dict(exits)
+    exits["northeast"] = "courtyard"  # a diagonal, keyed canonically (like "north", not "n")
+    exits["market"] = "courtyard"  # a threshold named for its destination
+    try:
+        yield
+    finally:
+        exits.clear()
+        exits.update(saved)
+
+
+def test_bare_compound_direction_moves(_named_exits: None) -> None:
+    session = _walker("forge")
+    handle_command(session, "ne")  # a bare diagonal, registered off DIRECTIONS
+    assert session.location == "courtyard"
+
+
+def test_bare_noun_exit_moves(_named_exits: None) -> None:
+    session = _walker("forge")
+    handle_command(session, "market")  # a lone noun that names an exit walks through it
+    assert session.location == "courtyard"
+
+
+def test_go_forwards_a_noun_exit(_named_exits: None) -> None:
+    session = _walker("forge")
+    handle_command(session, "go market")
+    assert session.location == "courtyard"
+
+
+def test_unknown_word_naming_no_exit_still_huhs(_named_exits: None) -> None:
+    # A lone word that is neither a verb nor an exit of this room is still refused, unmoved --
+    # the noun-exit fallback must not swallow genuine nonsense.
+    session = _walker("forge")
+    assert "Huh?" in handle_command(session, "banana")
     assert session.location == "forge"
 
 
