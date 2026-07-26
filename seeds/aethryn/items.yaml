@@ -764,3 +764,30 @@ chapel_offering:
     water back one more hour, and one more. It did not. But the lamp is still lit, behind the altar,
     on a seam of ember the sea could not drown. They asked the wrong thing of the making. The making
     does not hold back the sea. It gives you the hands to build a boat. Take the lamp. Build something.
+
+# --- The Outer Reefs content (Great Creation Campaign): the flats' pearl-gather, the manse's prize,
+# --- and the drowned house's lore. ---
+brine_pearl:
+  name: a brine-pearl
+  keywords: [pearl, brine, flats, material]
+  location: the_reef_flats
+  resettable: true  # a tidal gather in the flats: take it, and the tide leaves another on the reset
+
+manse_signet:
+  name: the drowned house's signet
+  keywords: [signet, manse, house, ring]
+  location: nowhere
+  slot: accessory_2
+  mods: {DEF: 5, "MAG DEF": 6}  # the sunken manse's steward-ring, a house's pride cast in salvage-gold
+
+manse_ledger:
+  name: the drowned house's ledger
+  keywords: [ledger, manse, house, book]
+  location: the_sunken_manse
+  lore: |-
+    The last ledger of the Merewright house that kept the Sunken Manse, its columns of salvage and
+    salt and coin ruled to the final page: the house was rich, and the house was proud, and when the
+    Cooling-Sea rose over the Quenchmere the house did not flee to the free-port with the common folk.
+    It stayed, and shored its doors, and kept its wealth, and drowned in its own halls counting it.
+    The steward kept the doors then and keeps them now. Take the signet. Wealth you will not spend on
+    a boat is only ballast. The salvagers of Saltmarsh learned that. The house never did.

@@ -139,6 +139,7 @@ tidewharf_plaza:
     south: tidewharf_docks
     west: the_accord_hall
     north: the_deepwater_berth
+    east: the_outer_lanes
 
 the_deepwater_berth:
   name: The Deepwater Berth
@@ -1060,3 +1061,65 @@ the_drowned_chapel:
     offering the faithful left when the sea came. The Wreckways lie back south.
   exits:
     south: the_deep_wreckways
+
+# ============================================================================================
+# THE OUTER REEFS (Great Creation Campaign) - a Quenchmere archipelago sub-region east of Tidewharf:
+# a reef-lane out to Saltmarsh Landing (a salvager's outpost), the reef flats (wilderness + gathering),
+# the Old Lighthouse (a landmark), and the Sunken Manse (a wreck-dungeon). Level-banded 18-30.
+# ============================================================================================
+the_outer_lanes:
+  name: The Outer Lanes
+  desc: |-
+    East of Tidewharf the marked ferry-lanes give out and the Outer Reefs begin: a scatter of low
+    reef-isles the risen sea left just above the water, strung on salvage-ropes and drift-bridges the
+    outer folk keep. A reef-serpent works the channel between the isles. Tidewharf lies back west;
+    Saltmarsh Landing sits on the first isle, east.
+  exits:
+    west: tidewharf_plaza
+    east: saltmarsh_landing
+
+saltmarsh_landing:
+  name: Saltmarsh Landing
+  desc: |-
+    A salvager's outpost on the first of the Outer Reefs: stilt-houses over a tidal marsh, drying
+    racks of salvage and salt-fish, and the small independent folk who work the reefs beyond the
+    Guild's reach. A salvage-master keeps a well-stocked shack, a reef-fisher mends a weir, and a
+    marsh-child races the tide. The reef-lanes run back west; the reef flats spread north, a lighthouse
+    stands east, and a salvage-stair drops down to a sunken manse.
+  exits:
+    west: the_outer_lanes
+    north: the_reef_flats
+    east: the_old_lighthouse
+    down: the_sunken_manse
+
+the_reef_flats:
+  name: The Reef Flats
+  desc: |-
+    North of the landing the reef bares at low tide into a mile of flats: tidal pools bright with
+    brine-ember, wading-birds, and the shells and salvage the sea leaves twice a day. Mudskitters the
+    size of hounds hunt the pools, and the flats are thick with brine-pearl for anyone quick between
+    the tides. The landing lies back south.
+  exits:
+    south: saltmarsh_landing
+
+the_old_lighthouse:
+  name: The Old Lighthouse
+  desc: |-
+    A lighthouse of the age before the sea rose, its foot now awash, its lamp-room still above the
+    tide: the outer folk keep the ember-lamp lit to mark the reef for the ferries, as their forebears
+    did before the Quenchmere drowned. From the lamp-room the whole Outer Reefs spread below, and on
+    a clear day the masts of the deep Wreckways and the spire of Tidewharf. A keeper tends the lamp.
+    The landing lies back west.
+  exits:
+    west: saltmarsh_landing
+
+the_sunken_manse:
+  name: The Sunken Manse
+  desc: |-
+    Below the landing a salvage-stair drops into a drowned manse - the seat of a Merewright house the
+    sea took whole, its halls flooded and lit by the brine-ember in its own drowned hearth. The house
+    kept its wealth and its pride to the last; a manse-warden, the house's own Forged steward, still
+    keeps both against the salvagers. What the house would not let go still lies in the flooded solar.
+    The landing lies back up.
+  exits:
+    up: saltmarsh_landing
