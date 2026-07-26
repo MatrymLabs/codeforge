@@ -541,6 +541,26 @@ def test_aethryn_verdance_is_a_living_wild_reach_off_the_crossroads():
     assert arc is not None and arc["steps"][-1]["on_defeat"] == "boughwarden"
 
 
+def test_aethryn_delve_mini_bosses_drop_a_supply_before_the_boss():
+    """The elite mini-boss guarding each delve drops a tier-appropriate healing draught - a supply
+    cache earned right before the Reach boss, so the harder delve fight pays for the fight ahead."""
+    npcs = load_npcs(AETHRYN / "npcs.yaml")
+    items = load_items(AETHRYN / "items.yaml")
+    supply = {
+        "drowned_lung_sentry": "greater_healing_draught",
+        "flooded_forge_revenant": "greater_healing_draught",
+        "rootbound_guardian": "greater_healing_draught",
+        "rimebound_sentinel": "grand_healing_draught",
+        "rime_vault_keeper": "grand_healing_draught",
+        "magma_revenant": "grand_healing_draught",
+        "fall_wraith": "grand_healing_draught",
+    }
+    for foe, draught in supply.items():
+        assert npcs[foe]["tier"] == "elite"  # a delve gate, not a trash mob
+        assert draught in npcs[foe].get("drops", []), f"{foe} drops no supply"
+        assert items[draught].get("consume"), f"{draught} is not a real consumable"
+
+
 def test_aethryn_dungeons_are_delves_not_single_boss_rooms():
     """Deepened dungeons play like dungeons: an approach chains through interior rooms, each with
     its own foe, escalating in level toward the boss - not a single boss room. Data-driven over each

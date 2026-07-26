@@ -1070,6 +1070,7 @@ drowned_lung_sentry:
   attack_element: WTR  # a warden of the drowned capital: its blows are brine and pressure
   level: 26
   tier: elite  # the guard on the stair down to Sunhold: an elite gate on the descent (x3 reward)
+  drops: [greater_healing_draught]  # a supply cache earned before the boss
   loot: {ember_shard: 3, hollow_ingot: 1, nothing: 2}
 
 channel_serpent:
@@ -1226,6 +1227,7 @@ flooded_forge_revenant:
   attack_element: WTR  # the drowned forge-master: brine and banked ember
   level: 28
   tier: elite  # the last guardian before the Sunhold Warden: an elite gate on the delve (x3 reward)
+  drops: [greater_healing_draught]  # a supply cache earned before the boss
   loot: {ember_shard: 4, hollow_ingot: 2, nothing: 2}
 
 # --- The Heart-Grove's deeper delve (Content Manufacturing Campaign): the rootways hold the grove's
@@ -1242,6 +1244,7 @@ rootbound_guardian:
   attack_element: ERT  # a thing of old wood and stone-root: earthen blows (bring wind)
   level: 30
   tier: elite  # the last gate before the Boughwarden: an elite guardian on the delve (x3 reward)
+  drops: [greater_healing_draught]  # a supply cache earned before the boss
   loot: {ember_shard: 4, nothing: 2}
 
 # --- The Frozen Court's deeper delve (Content Manufacturing Campaign): the glass gallery and the
@@ -1258,6 +1261,7 @@ rimebound_sentinel:
   attack_element: ICE  # a guardian of the flash-frozen court: its blows are killing cold (bring fire)
   level: 48
   tier: elite  # the gallery's gate on the delve to the Rime-King (x3 reward)
+  drops: [grand_healing_draught]  # a supply cache earned before the boss
   loot: {ember_shard: 5, hollow_ingot: 1, nothing: 2}
 
 rime_vault_keeper:
@@ -1272,6 +1276,7 @@ rime_vault_keeper:
   attack_element: ICE  # the vault's frozen keeper: unmelting cold (bring fire)
   level: 50
   tier: elite  # the last gate before the Rime-King's throne (x3 reward)
+  drops: [grand_healing_draught]  # a supply cache earned before the boss
   loot: {ember_shard: 6, hollow_ingot: 2, nothing: 2}
 
 # --- The Vent-Deep and Wandering-Court delves (Content Manufacturing Campaign): each dungeon's
@@ -1288,6 +1293,7 @@ magma_revenant:
   attack_element: FIR  # a thing of the near Forge: its blows are living fire (bring flood)
   level: 58
   tier: elite  # the vent-gallery's gate on the delve to the Vent-Lord (x3 reward)
+  drops: [grand_healing_draught]  # a supply cache earned before the boss
   loot: {ember_shard: 6, hollow_ingot: 2, nothing: 2}
 
 fall_wraith:
@@ -1302,4 +1308,5 @@ fall_wraith:
   attack_element: DRK  # a thing of the tearing sky: bring radiance (weak to holy)
   level: 68
   tier: elite  # the broken span's gate before the Court-Warden (x3 reward)
+  drops: [grand_healing_draught]  # a supply cache earned before the boss
   loot: {ember_shard: 7, hollow_ingot: 2, nothing: 2}
