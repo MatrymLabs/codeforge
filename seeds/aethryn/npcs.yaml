@@ -2233,3 +2233,165 @@ broken_anchor_warden:
   tier: boss  # the Falling Hold's climax (x10 reward): a guardian holding a shard aloft on a chain that broke long ago, below the Court-Warden (72)
   drops: [anchor_warden_chain, greater_healing_draught]
   loot: {ember_shard: 16, stormglass: 4, nothing: 1}
+# --- The Cinderwaste ambient life (Great Creation Campaign, Phase I: geography-first). One presence
+# --- per room to meet the world's no-empty-room law; dense population is a later campaign. The Ashborn
+# --- keep the settled rooms; the waste keeps the rest. Level-banded 15-40. ---
+
+grey_ferryman:
+  name: a grey-water ferryman
+  location: the_ashen_crossing
+  keywords: [ferryman, grey, crossing, boatman]
+  dialogue:
+    - '"Last charted water, this. Past here the sea gives up and the land ain''t much better. The Cinderwaste don''t hate you, Forger -- it just don''t notice you, which out here is worse. Saltring''s your only door. Walk to it before dark."'
+
+grey_ash_crab:
+  name: a grey ash-crab
+  location: the_grey_shore
+  keywords: [crab, ash, shore, grey]
+  dialogue:
+    - An ash-crab the colour of cold cinder sidles up the dead tideline, claws wide, defending a shore the tide abandoned.
+  hp: 44
+  atk: 9
+  aggressive: true
+  attack_element: ERT
+  level: 15
+  tier: normal  # the Cinderwaste's shore, the Grey Reach's low-end leveling ground
+  loot: {ember_shard: 3, nothing: 2}
+
+ring_warden:
+  name: the ring-warden of Saltring
+  location: saltring
+  keywords: [warden, ring, saltring, gate]
+  dialogue:
+    - '"Saltring keeps three laws, Forger: pay the water-price, keep the road-code, and don''t open what the waste sealed. Break the first two and the clans settle it. Break the third and the waste settles it, and the waste don''t leave enough to bury. Market''s through the ring; the clan-quarter''s south. Spend, and go careful."'
+  topics:
+    rumor:
+      - '"West and south the dunes give out at the Ashline, where the world just... stops. Past the glass-market a scoured hold stands half-unmade, and its one whole vault the last maker died sealing. Every salvage-clan wants it open. Every one that opened it is a colossus''s trophy now. The Glass Market buys what you drag out. IF you drag out."'
+
+salt_factor:
+  name: a salt-factor of the Salt-Market
+  location: the_salt_market
+  keywords: [factor, salt, market, trader]
+  dialogue:
+    - '"Water, salvage, or raw Ember -- I scale all three, and out here water''s dearest of the three, so drink before you haggle. A thing Unforged fetches more than a thing made; the waste inverts every price you knew."'
+  shop:
+    sells:
+      healing_draught: 14
+      greater_healing_draught: 36
+      water_ration: 8
+    buys:
+      ember_shard: 6
+      cinderglass_shard: 12
+
+clan_elder:
+  name: a salvage-clan elder
+  location: the_ring_quarter
+  keywords: [elder, clan, quarter, salvage]
+  dialogue:
+    - '"The road-code''s simple: leave the waymoot cache fuller than you found it, and never leave a clansman to the waste. We don''t make things out here, Forger. We don''t need to. The old world made enough for a hundred lifetimes before it broke, and we''re the ones patient enough to pick it up."'
+
+glass_broker:
+  name: a glass-broker
+  location: the_glass_market
+  keywords: [broker, glass, market, dealer]
+  dialogue:
+    - '"No questions in the Glass Market, Forger, and no refunds. Anything Unforged, I''ll buy or sell -- relics that shouldn''t exist, Ember still raw, salvage off the scoured hold. The tunnels west go deeper than the market. Don''t follow the glow past the last stall unless you like the dark biting back."'
+  shop:
+    sells:
+      greater_healing_draught: 36
+      cinderglass_shard: 20
+    buys:
+      cinderglass_shard: 14
+      ember_shard: 7
+
+glassways_lurker:
+  name: a glass-lurker
+  location: the_glassways
+  keywords: [lurker, glass, glassways, dark]
+  dialogue:
+    - Something slides along a glass bend, catching the trapped Ember-glow in a hundred facets, and turns its cold weight toward your warmth.
+  hp: 96
+  atk: 16
+  aggressive: true
+  attack_element: DRK
+  level: 24
+  tier: normal  # the glassways, the crater delve's threat and the cinderglass guardian
+  loot: {ember_shard: 5, cinderglass_shard: 1, nothing: 2}
+
+dunes_ash_jackal:
+  name: an ash-jackal
+  location: the_grey_dunes
+  keywords: [jackal, ash, dunes, pack]
+  dialogue:
+    - An ash-jackal lifts from a dune-trough, grey on grey, and the pack lifts with it, cutting your walking-line off from the poles.
+  hp: 62
+  atk: 12
+  aggressive: true
+  attack_element: ERT
+  level: 18
+  tier: normal  # the open-dune wilderness, a dispersal leveling ground
+  loot: {ember_shard: 4, nothing: 2}
+
+waymoot_keeper:
+  name: the waymoot-keeper
+  location: the_ashborn_waymoot
+  keywords: [keeper, waymoot, cache, ashborn]
+  dialogue:
+    - The waymoot-keeper ladles you water without being asked, road-code before greeting. "Drink. Rest. The waste will still be there. Leave the cache fuller than you found it if you can, and if you can''t, leave it anyway and remember you owe the road. Everyone out here is owed to, and owes. That''s the only law that keeps us alive."
+  topics:
+    rumor:
+      - '"South of here the Ashline runs the whole horizon. Stand at it and you''ll see the world''s hem, where the making just... stopped. Some fools try to walk into the un-ness. The line-warden turns back the ones she can. The waste keeps the ones she can''t. Go look. Don''t go in."'
+
+canals_salt_wraith:
+  name: a salt-wraith
+  location: the_drowned_canals
+  keywords: [wraith, salt, canals, drowned]
+  dialogue:
+    - A salt-wraith rises from a brine-trench, one of the old canal-farmers the drought drowned in reverse, crusted white and reaching for the warmth of the living.
+  hp: 78
+  atk: 14
+  aggressive: true
+  attack_element: WTR
+  level: 20
+  tier: normal  # the drowned-canal flats, the Grey Reach's mid leveling ground
+  loot: {ember_shard: 4, nothing: 2}
+
+line_warden:
+  name: the line-warden of the Ashline
+  location: the_ashline
+  keywords: [warden, line, ashline, ashborn]
+  dialogue:
+    - The line-warden does not look away from the shimmer where the world ends. "Stand as long as you like, Forger. Look all you want. But if you feel it pulling -- and you will -- you step back. The un-ness isn''t death. Death is a thing that happened. The un-ness is a thing that never got finished happening. I''ve seen what walks out of it. Step back."
+  topics:
+    rumor:
+      - '"West along the scar stands the scoured hold, half-taken, its walls ending in open air. A cinder-colossus keeps the one sealed vault. The waste welded that thing out of the hold''s own broken Forgework, grew it around the scar like the world scabbing over a wound. What''s in the vault is worth a clan''s fortune. Getting it is worth a clan''s funeral."'
+
+scoured_cinder_husk:
+  name: a cinder-husk
+  location: the_scoured_reach
+  keywords: [husk, cinder, scoured, hold]
+  dialogue:
+    - A cinder-husk turns in a doorway that opens on nothing, one of the hold's own people left half-Forged when the Unforging passed, still keeping a room in a house that ends in mid-air.
+  hp: 130
+  atk: 20
+  aggressive: true
+  attack_element: ERT
+  level: 30
+  tier: normal  # the scoured-hold ruin, the delve's outer tier
+  loot: {ember_shard: 6, cinderglass_shard: 1, nothing: 2}
+
+vault_cinder_colossus:
+  name: the cinder-colossus of the sealed vault
+  location: the_unfinished_vault
+  keywords: [colossus, cinder, vault, scoured]
+  dialogue:
+    - The waste itself stands guard: a colossus welded from the scoured hold's own broken Forgework, grown around the vault-scar like iron scar-tissue. It was never made. It accreted. And it turns on you the weight of a whole half-unmade hold.
+  hp: 460
+  atk: 30
+  aggressive: true
+  attack_element: ERT
+  resistances: {ERT: Resist, CRS: Weak}  # welded from unmade Forgework: the unmaking-curse is what still bites it
+  level: 40
+  tier: boss  # the Scoured Reach's climax (x10 reward): the waste's own guardian on the last sealed vault
+  drops: [scoured_vault_seal, greater_healing_draught]
+  loot: {ember_shard: 10, cinderglass_shard: 4, nothing: 1}

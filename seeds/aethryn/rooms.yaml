@@ -53,11 +53,13 @@ the_quench_lanes:
     but by the masts of drowned ships, ten thousand of them breaking the grey water where the sea
     rose over a Reach. Brine-wights drift the shallows between the hulls. Ahead, the hundred-hulled
     silhouette of Tidewharf; back east, the coast you sailed from. North, a lane of masts leads off
-    the mapped route into the deep Wreckways.
+    the mapped route into the deep Wreckways. South, a grey-water lane runs off the charts toward the
+    Cinderwaste, the half-unmade Reach where the sea gives out into dead salt.
   exits:
     east: quench_harbor
     west: tidewharf_docks
     north: the_deep_wreckways
+    south: the_ashen_crossing
 
 tidewharf_docks:
   name: The Tidewharf Docks
@@ -1429,3 +1431,178 @@ the_anchor_deep:
     by the dead capstan. The falling square lies back up.
   exits:
     up: the_falling_hold
+# THE CINDERWASTE - the Grey Reach (Great Creation Campaign, Phase I: geography-first). Continental
+# Atlas SIV: a continent HALF-UNFORGED, scoured to grey Cinder and glass, walked under an open bleached
+# sky. The surface's answer to the Cinderdeep. Reached south across the Quenchmere's grey water. The
+# fourth Reach's PHYSICAL map laid down at breadth, and the first zone built for the WIDER COMPASS:
+# open-waste diagonals (ne/nw/se/sw) and thresholds keyed by the noun they open onto (market, quarter,
+# waymoot, crater, vault). Level-banded 15-40. Ambient life only; dense population is a later pass.
+# ============================================================================================
+
+the_ashen_crossing:
+  name: The Ashen Crossing
+  desc: |-
+    The ferry leaves the last charted lane and runs south into grey water: the Cooling-Sea here is
+    silting to a dead salt slack, the swell dying under a rind of floating ash. Ahead the Cinderwaste
+    lifts over the horizon, not a coast but an ending, a land the Unforging scoured half to nothing and
+    then left. The wind smells of struck flint. The Quench lanes lie back north; the grey shore waits
+    south.
+  exits:
+    north: the_quench_lanes
+    south: the_grey_shore
+
+the_grey_shore:
+  name: The Grey Shore
+  desc: |-
+    Landfall on the Cinderwaste: a strand not of sand but of cold grey cinder, the sea behind giving
+    out into salt-flat before it reaches true water, the land ahead a bleached waste under a sky gone
+    white and enormous. Ash-crabs pick the tideline of a tide that no longer comes. A salvage-road,
+    marked by the ribs of grounded ships, runs inland west to Saltring; the open dunes roll away to the
+    southwest; the drowned canals crust the coast to the southeast. The crossing lies back north.
+  exits:
+    north: the_ashen_crossing
+    west: saltring
+    southwest: the_grey_dunes
+    southeast: the_drowned_canals
+
+# --- Saltring: the salvage-city capital, ringing a dry sea (noun-keyed districts) ---
+saltring:
+  name: Saltring
+  desc: |-
+    The one city of the Cinderwaste, a salvage-town built in a great ring around the basin of a sea
+    that dried in an afternoon when the Unforging drank it: its houses are hulls and its walls are
+    salvage, and the Ashborn who live here do not mourn the world and do not make it, they sell it back
+    to itself piece by piece. A ring-warden keeps the gate. The salvage-MARKET rings the basin; the
+    salvage-clan QUARTER warrens off south; the grey shore road runs back east; and a salvage-track
+    climbs west onto the ash dunes toward the deep waste.
+  exits:
+    east: the_grey_shore
+    west: the_grey_dunes
+    north: the_salt_market
+    market: the_salt_market
+    south: the_ring_quarter
+    quarter: the_ring_quarter
+
+the_salt_market:
+  name: The Salt-Market
+  desc: |-
+    Saltring's market, ringing the dry sea-basin on salvage-scaffold: here the Ashborn trade water and
+    salvage and the rare raw Ember the waste gives up, and a thing Unforged fetches more than a thing
+    made. A salt-factor keeps the scale. Below the scaffold the dry basin glares white to its far rim,
+    and a crater-track drops off its floor toward the Glass Market. Saltring's ring lies back south.
+  exits:
+    south: saltring
+    down: the_glass_market
+    crater: the_glass_market
+
+the_ring_quarter:
+  name: The Ring-Quarter
+  desc: |-
+    The salvage-clan quarter of Saltring, a warren of hull-houses where the road-clans keep their hard
+    code and their harder bargains. A clan-elder keeps the quarter's peace. This is as settled as the
+    Cinderwaste gets; past the last hull the waste begins and does not forgive. Saltring's ring lies
+    back north.
+  exits:
+    north: saltring
+
+# --- The Glass Market: a black-market bazaar in an Unforging crater ---
+the_glass_market:
+  name: The Glass Market
+  desc: |-
+    In a crater where the Unforging struck and left the sand fused to black glass, a bazaar keeps to
+    the shade of the crater-wall: the Glass Market, where anything Unforged can be bought and no
+    question is asked twice. A glass-broker works the dark stalls, selling relics that should not exist.
+    The rim-track climbs back up toward the Salt-Market; a glass-tunnel runs deeper under the crater
+    wall, west, toward the older, worse markets no one names.
+  exits:
+    up: the_salt_market
+    west: the_glassways
+
+the_glassways:
+  name: The Glassways
+  desc: |-
+    Under the crater wall the Unforging fused a warren of glass tunnels, smooth as poured night, lit
+    only by the raw Ember still trapped glowing in the walls. Glass-lurkers hunt the dark bends, drawn
+    to warmth. This is the edge of the buyable world; deeper in, the glass gives onto the Scoured
+    Reach and the half-Forged ruins. The Glass Market lies back east; the scoured ground opens west.
+  exits:
+    east: the_glass_market
+    west: the_scoured_reach
+
+# --- The ash-dune wilderness (diagonals off the open waste) ---
+the_grey_dunes:
+  name: The Grey Dunes
+  desc: |-
+    A rolling waste of cold ash-dunes under the white sky, the Cinderwaste's open middle, trackless
+    but for the salvage-poles the Ashborn set to walk it by. Ash-jackals course the dune-troughs and
+    the wind erases your steps behind you. The grey shore lies back northeast and Saltring east; south
+    the dunes give out at a horizon-long scar; and a WAYMOOT fire burns west, the one landmark in a
+    land that eats landmarks.
+  exits:
+    northeast: the_grey_shore
+    east: saltring
+    south: the_ashline
+    west: the_ashborn_waymoot
+    waymoot: the_ashborn_waymoot
+
+the_ashborn_waymoot:
+  name: The Ashborn Waymoot
+  desc: |-
+    A wandering camp that is a fixed idea if not a fixed place: the Ashborn waymoot, a ring of salvage-
+    fires and a water-cache the road-clans keep by unbreakable custom for any traveller the waste has
+    not yet killed. A waymoot-keeper tends the cache. It is the only mercy in the Cinderwaste, and it
+    is a real one. The dunes roll back east.
+  exits:
+    east: the_grey_dunes
+
+# --- The drowned canals: salt-flats over sunken waterways ---
+the_drowned_canals:
+  name: The Drowned Canals
+  desc: |-
+    East of the shore the salt-flat crazes over a grid of drowned canals: an irrigation-work of the age
+    before the waste, its channels now brine-crusted trenches under a skin of salt that gives way
+    without warning. Salt-wraiths, the drowned of the old canal-farms, drift the sunken grid. The grey
+    shore lies back northwest; the flats run on south toward the Ashline scar.
+  exits:
+    northwest: the_grey_shore
+    south: the_ashline
+
+# --- The Ashline: the frontier scar where the world stops being finished ---
+the_ashline:
+  name: The Ashline
+  desc: |-
+    The edge of the made world: a scar running the whole southern horizon where the Unforging simply
+    stopped, and the land ends not in cliff or sea but in un-ness, a shimmer where the ground gives out
+    into raw grey possibility that was never cooled into anything. To stand here is to see the world's
+    hem. A line-warden of the Ashborn keeps the last safe ground. The dunes lie back north; the drowned
+    canals run east; and a scoured track edges west along the scar toward the half-Forged ruins.
+  exits:
+    north: the_grey_dunes
+    east: the_drowned_canals
+    west: the_scoured_reach
+
+# --- The Scoured Reach: a half-Forged ruin-delve where walls end in mid-air (noun-keyed vault) ---
+the_scoured_reach:
+  name: The Scoured Reach
+  desc: |-
+    Along the Ashline the ground is scoured to the bones of a Forge-hold the Unforging half-took: walls
+    that end in mid-air, stairs to nothing, doorways opening on the raw grey un-ness, a building caught
+    between made and unmade. Cinder-husks, the hold's own people left half-Forged, keep the standing
+    rooms. The Ashline lies back east; the glassways run north to the market; and the hold's one intact
+    VAULT stands deeper in, west.
+  exits:
+    east: the_ashline
+    north: the_glassways
+    west: the_unfinished_vault
+    vault: the_unfinished_vault
+
+the_unfinished_vault:
+  name: The Unfinished Vault
+  desc: |-
+    The one room the Unforging did not reach: a sealed Forge-vault at the heart of the scoured hold,
+    whole where all around it is half-unmade, holding whatever the hold's last maker died sealing
+    against the grey. A cinder-colossus, welded together by the waste from the hold's own scattered
+    Forgework, keeps the vault door, grown around the scar like a scab of iron. Whatever is sealed here
+    is the richest unmade thing on the surface. The scoured rooms lie back east.
+  exits:
+    east: the_scoured_reach
