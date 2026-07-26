@@ -197,3 +197,12 @@ pilots_compass:
   location: nowhere
   slot: accessory_1
   mods: {ACC: 6, EVA: 3}
+
+# Drop-only: the Sunhold Warden's reward -- the sigil of the drowned capital, cold-iron Forgework
+# that never stopped burning (an accessory that wards mind and body against the deep).
+sunhold_sigil:
+  name: the drowned Sunhold's sigil
+  keywords: [sigil, sunhold, drowned, token]
+  location: nowhere
+  slot: accessory_2
+  mods: {DEF: 5, "MAG DEF": 6}

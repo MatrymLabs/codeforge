@@ -80,3 +80,9 @@ the_cooling_sea:
   rooms: [the_saltstrand, quench_harbor, the_wreck_reef]
   reset_mode: empty_only
   beats_between: 12
+
+the_quenchmere:
+  name: The Quenchmere
+  rooms: [the_quench_lanes, tidewharf_docks, tidewharf_plaza, the_accord_hall, drowned_sunhold_descent, the_drowned_sunhold]
+  reset_mode: empty_only
+  beats_between: 12

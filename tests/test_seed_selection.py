@@ -154,6 +154,31 @@ def test_aethryn_cinderdeep_descends_to_a_real_bottom():
     assert load_items(AETHRYN / "items.yaml")["drowned_seal"]["slot"] == "accessory_2"
 
 
+def test_aethryn_quenchmere_is_a_second_continent_reached_by_sea():
+    """The first sea-crossing (Build Order Phase 2): Quench Harbor's ferry runs west to the
+    Quenchmere -- a second Reach with the free-port Tidewharf (an Accord-Speaker, a Merewright shop,
+    a Salvage agent) and the drowned Sunhold dungeon below it."""
+    rooms = load_rooms(AETHRYN / "rooms.yaml")
+    # the world grows across the sea: the harbor opens onto the lanes, which reach the free-port
+    assert rooms["quench_harbor"]["exits"].get("west") == "the_quench_lanes"
+    assert rooms["the_quench_lanes"]["exits"]["west"] == "tidewharf_docks"
+    assert (
+        rooms["tidewharf_docks"]["exits"]["south"] == "drowned_sunhold_descent"
+    )  # down to the deep
+    npcs = load_npcs(AETHRYN / "npcs.yaml")
+    assert npcs["brine_wight"]["level"] == 18 and npcs["brine_wight"]["tier"] == "elite"
+    # the free-port is a real capital: government, trade, and salvage all have a voice
+    assert "quenchmere" in npcs["accord_speaker"]["topics"] and "shop" in npcs["merewright_captain"]
+    warden = npcs["sunhold_warden"]
+    assert warden["level"] == 30 and warden["tier"] == "boss" and warden["lethal"] is True
+    assert warden["resistances"] == {
+        "WTR": "Resist",
+        "LGT": "Weak",
+    }  # bring lightning to the drowned
+    arc = load_quest(AETHRYN / "quests" / "the_quenchmere.yaml")
+    assert arc is not None and arc["steps"][-1]["on_defeat"] == "sunhold_warden"
+
+
 def test_aethryn_cooling_sea_is_a_dialogue_rich_port_region():
     """A coastal port region west of the waking shore (levels 6-14): the shore opens west along the
     Cooling-Sea to Quench Harbor -- a lived-in fishing town (a harbormaster, a fisher, a dock shop),
