@@ -174,7 +174,7 @@ stillhearth:
     hearth. The passage lies back south; the Frozen Court stands north across the ice.
   exits:
     south: the_riming_passage
-    north: the_frozen_court
+    north: the_glass_gallery
 
 the_frozen_court:
   name: The Frozen Court
@@ -183,9 +183,9 @@ the_frozen_court:
     in a single instant, its makers still at their benches under a skin of clear ice, every room a
     perfect and lethal tableau. The Rime-King keeps the throne, flash-frozen mid-reign, and waking it
     would restart an Unforging mid-freeze. This is the most beautiful and most haunted room in the
-    world. Stillhearth lies back south.
+    world. The rime-vault lies back south.
   exits:
-    south: stillhearth
+    south: the_rime_vault
 
 the_accord_hall:
   name: The Accord Hall
@@ -763,3 +763,28 @@ the_rootways:
   exits:
     east: the_deeproot_mire
     west: the_heart_grove
+
+# --- Deepening the Frozen Court (Content Manufacturing Campaign): the Rimefall's capital was one
+# --- boss room; now the delve crosses the glass gallery and the rime-vault, each with a frozen
+# --- guardian, before the Rime-King's throne, so the most haunted room in the world earns its dread. ---
+the_glass_gallery:
+  name: The Glass Gallery
+  desc: |-
+    North of Stillhearth the ice takes the world whole: a gallery of the golden age under a skin of
+    clear rime, its makers frozen at their benches mid-gesture, perfect and lethal. One of them is
+    not as frozen as the rest -- a sentinel the Rime-King set, still keeping a watch three ages cold,
+    that turns its glass face toward your warmth. Stillhearth lies back south; the vault opens north.
+  exits:
+    south: stillhearth
+    north: the_rime_vault
+
+the_rime_vault:
+  name: The Rime-Vault
+  desc: |-
+    The court's treasury, or its tomb: a vault where the Emberwrights sealed the making they feared
+    most, flash-frozen with everything else when the Unforging caught the Reach. The cold here is
+    older than the rest, and it moves -- a wraith of unmelting ice that was a vault-keeper once, and
+    keeps it still. The gallery lies back south; the throne-court stands north.
+  exits:
+    south: the_glass_gallery
+    north: the_frozen_court

@@ -552,6 +552,7 @@ def test_aethryn_dungeons_are_delves_not_single_boss_rooms():
             "the_drowned_sunhold",
         ],
         "Heart-Grove": ["the_deeproot_mire", "the_rootways", "the_heart_grove"],
+        "Frozen Court": ["the_glass_gallery", "the_rime_vault", "the_frozen_court"],
     }
 
     def foe_level(room: str) -> int:
