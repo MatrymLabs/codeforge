@@ -1,0 +1,14 @@
+{
+  "spawn": "the_waking_shore",
+  "rooms_total": 238,
+  "rooms_reachable_from_spawn": 238,
+  "orphans": [],
+  "orphan_count": 0,
+  "exits_total": 494,
+  "unresolved_exits": [],
+  "unresolved_exit_count": 0,
+  "compound_direction_exits": 6,
+  "noun_exits": 49,
+  "dead_end_rooms": 75,
+  "fully_connected": true
+}
