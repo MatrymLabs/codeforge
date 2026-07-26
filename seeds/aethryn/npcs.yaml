@@ -1273,3 +1273,33 @@ rime_vault_keeper:
   level: 50
   tier: elite  # the last gate before the Rime-King's throne (x3 reward)
   loot: {ember_shard: 6, hollow_ingot: 2, nothing: 2}
+
+# --- The Vent-Deep and Wandering-Court delves (Content Manufacturing Campaign): each dungeon's
+# --- approach now holds a mini-boss gate before the Reach boss. ---
+magma_revenant:
+  name: a magma revenant
+  location: the_vent_gallery
+  keywords: [revenant, magma, vent, kollkin]
+  dialogue:
+    - The slag heaves and stands: a Kollkin the fire took, still pouring a make with no shape left, and it turns the pour toward you.
+  hp: 280
+  atk: 30
+  aggressive: true
+  attack_element: FIR  # a thing of the near Forge: its blows are living fire (bring flood)
+  level: 58
+  tier: elite  # the vent-gallery's gate on the delve to the Vent-Lord (x3 reward)
+  loot: {ember_shard: 6, hollow_ingot: 2, nothing: 2}
+
+fall_wraith:
+  name: a fall-wraith of the broken span
+  location: the_broken_span
+  keywords: [wraith, fall, span, sky]
+  dialogue:
+    - Something rides the gap in the broken bridge: a fall-wraith, grown from an endless fall, that reaches to pull you after it into the cloud.
+  hp: 340
+  atk: 34
+  aggressive: true
+  attack_element: DRK  # a thing of the tearing sky: bring radiance (weak to holy)
+  level: 68
+  tier: elite  # the broken span's gate before the Court-Warden (x3 reward)
+  loot: {ember_shard: 7, hollow_ingot: 2, nothing: 2}
