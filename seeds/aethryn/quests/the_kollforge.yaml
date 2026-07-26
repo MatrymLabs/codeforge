@@ -1,0 +1,27 @@
+# SEED: aethryn -- quests/the_kollforge.yaml (the molten Reach, Build Order Phase 5): cross to the
+# Kollforge, reach the obsidian capital Emberkoll, and best the Vent-Lord at the deepest vent -- the
+# last guardian before the Forge itself, and the on-ramp to the Spiral endgame.
+
+id: the_kollforge
+name: The Kollforge
+start: unlit
+reward_xp: 1100
+
+steps:
+  - {state: unlit,   event: land,  to: at_emberkoll, on_enter: emberkoll}
+  - {state: at_emberkoll, event: descend, to: at_the_vent, on_enter: the_vent_deep}
+  - {state: at_the_vent, event: best, to: forged, on_defeat: vent_lord, effect: award_xp}
+
+terminal: [forged]
+
+labels:
+  unlit: "West of the berth, the ferry runs a black-glass channel into rising heat -- the Kollforge, the surface land closest to the Forge, where the world is still being made. Cross into the fire."
+  at_emberkoll: "You stand in Emberkoll, the molten capital, the Kollkin working raw ember in living fire. North, past the Anvil-Vents, the Vent-Lord keeps the last vent before the Forge. Descend to it, if the heat will let you."
+  at_the_vent: "You stand at the Vent Deep, the Forge's heat close enough to feel the world made and unmade at once. The Vent-Lord holds the last vent, a Forgeborn grown vast on a millennium of fire. Best it, and stand where a walking Forger comes nearest to the source."
+  forged: |-
+    *** THE LAST VENT IS HELD ***
+    The Vent-Lord comes apart into the raw fire it was grown from, and for a moment the vent burns
+    clear all the way down toward the Forge itself. You have reached the hottest place a walking
+    Forger can stand, and held it. Beyond here the surface ends: the Sundered Sky rises to the
+    Coilfoot, and the Great Spiral climbs from there toward the Forge and the answer to why the first
+    makers stopped. You have crossed the whole world. Now you climb.

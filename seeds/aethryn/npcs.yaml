@@ -833,3 +833,88 @@ rime_king:
   tier: boss  # the Rimefall's climax: a flash-frozen Emberwright, the golden age turned lethal (x10)
   drops: [stillheart]
   loot: {ember_shard: 6, nothing: 2}
+
+# --- The Kollforge (Continental Atlas §VI): the molten Reach, closest to the Forge. Cinder-drakes and
+# --- Forgeborn (Forged, still hot), the Kollkin fire-Forgers, and the Vent-Lord. Levels 50-62.
+# --- Bring frost or flood to the fire (FIR foes, weak ICE/WTR). ---
+
+cinder_drake:
+  name: a cinder-drake
+  location: the_molten_passage
+  keywords: [drake, cinder, dragon, beast]
+  dialogue:
+    - The drake wheels off a lava-shelf, wings of Forgelight, and dives on the ferry breathing fire.
+  hp: 170
+  atk: 28
+  aggressive: true
+  attack_element: FIR  # a thing of the vents: its breath is flame (bring frost)
+  resistances: {FIR: Resist, ICE: Weak}
+  level: 50
+  tier: elite  # the molten shelf's apex flyer (x3 reward)
+  loot: {ember_shard: 3, nothing: 2}
+
+ventforge_master:
+  name: a Vent-Forge master
+  location: emberkoll
+  keywords: [master, ventforge, kollkin, smith]
+  dialogue:
+    - '"You feel the heat, Forger? That is the Forge itself, close beneath us. Here we work the raw ember, before it cools, before it lies. A cooled land is a dead land."'
+    - '"The Wardens call us reckless. Let them. They guard a craft they are afraid to use. We use it, at the source, and we do not apologize."'
+  topics:
+    kollforge:
+      - '"The Kollforge is the surface land closest to the Forge''s heat -- the one place the world is still visibly being made. Every eruption remakes the map; every vent wells raw ember up from the source. We are the boldest and the most dangerous Forgers alive, and we would not trade it."'
+    ventforges:
+      - '"The Vent-Forges are part guild, part cult -- we compete to work the hottest, rawest ember, closest to the Forge. It kills the careless and crowns the bold. The Free Forges'' most radical wing lives here; the Wardens are barely tolerated."'
+    forge:
+      - '"North, past the Anvil-Vents, the ground drops toward the Forge itself -- the source of all ember and shape. The Vent-Lord keeps the last vent before it. Reach it, and you stand where a walking Forger comes nearest to raw creation. Reach past it, and you climb the Spiral toward the Forge and the answer."'
+
+kollkin_trader:
+  name: a Kollkin shelf-trader
+  location: emberkoll
+  keywords: [trader, kollkin, shelf, merchant]
+  dialogue:
+    - '"Vent-forged gear and heat-craft, fair for coin or raw ember. The wares are made in living fire -- there is nothing better this side of the Forge."'
+  shop:
+    sells:
+      healing_draught: 18
+      mana_draught: 18
+      stormlord_edge: 200
+      ashlord_gauntlet: 180
+    buys:
+      ember_shard: 9
+      hollow_ingot: 40
+  topics:
+    heat:
+      - '"Work close to the Forge and everything is hotter -- the ember, the gear, the tempers. We lose Forgers to the vents every season. We also make the finest work in the world. Choose your risk."'
+
+forgeborn:
+  name: a Forgeborn
+  location: the_anvil_vents
+  keywords: [forgeborn, construct, guardian, beast]
+  dialogue:
+    - The Forgeborn turns from the vent it has guarded for an age, living Forgework that never cooled, and moves to keep its charge.
+  hp: 180
+  atk: 30
+  aggressive: true
+  attack_element: FIR  # living Forgework of raw fire (bring frost)
+  resistances: {FIR: Resist, ICE: Weak}
+  level: 54
+  tier: elite  # the vent's tireless guardian (x3 reward), between the drake and the Vent-Lord
+  loot: {ember_shard: 3, hollow_ingot: 1, nothing: 2}
+
+vent_lord:
+  name: the Vent-Lord
+  location: the_vent_deep
+  keywords: [lord, vent, forgeborn, boss]
+  dialogue:
+    - '"..." The Vent-Lord rises from the deepest vent, a Forgeborn grown vast on a millennium of raw fire, the last guardian before the Forge.'
+  hp: 340
+  atk: 33
+  aggressive: true
+  lethal: true
+  attack_element: FIR  # a giant of living fire: bring the flood (weak to water) or the frost
+  resistances: {FIR: Resist, WTR: Weak}
+  level: 62
+  tier: boss  # the Kollforge's climax: the last guardian before the Forge (x10 reward)
+  drops: [vent_crown]
+  loot: {ember_shard: 6, hollow_ingot: 2, nothing: 2}

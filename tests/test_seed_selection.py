@@ -154,6 +154,22 @@ def test_aethryn_cinderdeep_descends_to_a_real_bottom():
     assert load_items(AETHRYN / "items.yaml")["drowned_seal"]["slot"] == "accessory_2"
 
 
+def test_aethryn_kollforge_is_the_molten_reach_before_the_spiral():
+    """The fifth Reach (Build Order Phase 5): the berth ferries west to the Kollforge -- the molten
+    surface land closest to the Forge, the Kollkin fire-Forgers of Emberkoll, and the Vent-Lord, the
+    last guardian before the Spiral endgame (a level-62 boss)."""
+    rooms = load_rooms(AETHRYN / "rooms.yaml")
+    assert rooms["the_deepwater_berth"]["exits"].get("west") == "the_molten_passage"
+    npcs = load_npcs(AETHRYN / "npcs.yaml")
+    assert npcs["cinder_drake"]["level"] == 50 and npcs["forgeborn"]["level"] == 54
+    assert "kollforge" in npcs["ventforge_master"]["topics"] and "shop" in npcs["kollkin_trader"]
+    lord = npcs["vent_lord"]
+    assert lord["level"] == 62 and lord["tier"] == "boss" and lord["lethal"] is True
+    assert lord["resistances"] == {"FIR": "Resist", "WTR": "Weak"}  # bring flood to the fire
+    arc = load_quest(AETHRYN / "quests" / "the_kollforge.yaml")
+    assert arc is not None and arc["steps"][-1]["on_defeat"] == "vent_lord"
+
+
 def test_aethryn_rimefall_is_the_frozen_high_level_reach():
     """The fourth Reach (Build Order Phase 4): a deepwater berth ferries north to the Rimefall -- a
     continent flash-frozen in the Unforging, its golden-age cities whole under the ice, kept by the
