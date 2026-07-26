@@ -541,6 +541,21 @@ def test_aethryn_verdance_is_a_living_wild_reach_off_the_crossroads():
     assert arc is not None and arc["steps"][-1]["on_defeat"] == "boughwarden"
 
 
+def test_aethryn_tidecaves_are_an_optional_early_sea_cave_delve():
+    """The starting coast rewards a curious Forger with an off-path dungeon: a sea-cave gapes down
+    off the Saltstrand into the Tidecaves, an optional early delve (cave-crawler L4 -> the L10
+    Brine-Hulk mini-boss) that drops a pearl - exploring off the main road pays from the coast."""
+    rooms = load_rooms(AETHRYN / "rooms.yaml")
+    npcs = load_npcs(AETHRYN / "npcs.yaml")
+    items = load_items(AETHRYN / "items.yaml")
+    assert rooms["the_saltstrand"]["exits"].get("down") == "the_tidecave_mouth"  # findable off-path
+    assert rooms["the_tidecave_mouth"]["exits"]["down"] == "the_sunken_grotto"  # a real delve
+    assert npcs["cave_crawler"]["level"] < npcs["brine_hulk"]["level"]  # escalates to the mini-boss
+    hulk = npcs["brine_hulk"]
+    assert hulk["tier"] == "elite" and "tidecave_pearl" in hulk["drops"]  # an off-path prize
+    assert items["tidecave_pearl"]["slot"] and items["tidecave_pearl"]["mods"]  # a real reward
+
+
 def test_aethryn_delve_mini_bosses_drop_a_supply_before_the_boss():
     """The elite mini-boss guarding each delve drops a tier-appropriate healing draught - a supply
     cache earned right before the Reach boss, so the harder delve fight pays for the fight ahead."""

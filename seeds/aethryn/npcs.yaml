@@ -1310,3 +1310,33 @@ fall_wraith:
   tier: elite  # the broken span's gate before the Court-Warden (x3 reward)
   drops: [grand_healing_draught]  # a supply cache earned before the boss
   loot: {ember_shard: 7, hollow_ingot: 2, nothing: 2}
+
+# --- The Tidecaves' foes (Content Manufacturing Campaign): an early optional delve off the coast. ---
+cave_crawler:
+  name: a cave-crawler
+  location: the_tidecave_mouth
+  keywords: [crawler, cave, tide, crab]
+  dialogue:
+    - A crawler bigger than the strand's clatters out of the dark over the old bones, claws wide.
+  hp: 24
+  atk: 5
+  aggressive: true
+  attack_element: WTR  # a thing of the drowned cave: brine and cold
+  level: 4
+  tier: normal  # the cave-mouth's threat, a step past the strand crawlers
+  loot: {ember_shard: 2, nothing: 2}
+
+brine_hulk:
+  name: the Brine-Hulk
+  location: the_sunken_grotto
+  keywords: [hulk, brine, grotto, tide]
+  dialogue:
+    - '"..." The brine-hulk heaves out of the still pool, vast and barnacled, grown huge on everything the tide ever brought down here.'
+  hp: 90
+  atk: 11
+  aggressive: true
+  attack_element: WTR  # the grotto's glutton-king: brine and crushing weight
+  level: 10
+  tier: elite  # the tidecave's mini-boss, an early off-path prize (x3 reward)
+  drops: [tidecave_pearl]
+  loot: {ember_shard: 4, nothing: 2}

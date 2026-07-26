@@ -23,10 +23,11 @@ the_saltstrand:
   desc: |-
     A strand of grey sand runs west along the Cooling-Sea, the first-quenched water that cooled the
     world after the Unforging. Tide-crawlers scuttle the wrack line, and the salt-wind carries the
-    sound of a harbor ahead. The waking shore lies back east.
+    sound of a harbor ahead. The waking shore lies back east; a sea-cave gapes in the low cliff, down.
   exits:
     east: the_waking_shore
     west: quench_harbor
+    down: the_tidecave_mouth
 
 quench_harbor:
   name: Quench Harbor
@@ -814,3 +815,25 @@ the_broken_span:
   exits:
     west: the_drifting_reach
     east: the_wandering_court
+
+# --- The Tidecaves (Content Manufacturing Campaign): an optional early sea-cave delve off the
+# --- Saltstrand, so the starting coast rewards a curious Forger with an off-path dungeon (L4-10). ---
+the_tidecave_mouth:
+  name: The Tidecave Mouth
+  desc: |-
+    A sea-cave gapes in the low cliff below the strand, half-drowned at high tide and dripping cold
+    brine. Cave-crawlers clack in the dark over old wrack and older bones. The strand lies back up;
+    the cave sinks deeper, down, toward a green glow.
+  exits:
+    up: the_saltstrand
+    down: the_sunken_grotto
+
+the_sunken_grotto:
+  name: The Sunken Grotto
+  desc: |-
+    The cave opens into a grotto lit green by a seam of drowned ember in the far wall, its water still
+    as glass. A brine-hulk rises from the pool, grown huge on a life of eating what the tide brings
+    down, and turns toward the warmth of you. Whatever the sea washed into this cave over the ages
+    settles in the shallows here. The cave-mouth lies back up.
+  exits:
+    up: the_tidecave_mouth
