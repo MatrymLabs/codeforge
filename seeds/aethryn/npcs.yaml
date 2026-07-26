@@ -1015,3 +1015,78 @@ court_warden:
   tier: boss  # the Sundered Sky's climax: the last surface boss before the Spiral (x10 reward)
   drops: [anchor_stone, stormward_vambraces, stormcaller_pike]  # relic + Stormward arm + weapon
   loot: {ember_shard: 7, hollow_ingot: 2, nothing: 2}
+
+# --- Ecosystem enrichment (Content Manufacturing Campaign): monsters for the wilderness, dungeon,
+# --- and threshold rooms that stood empty, so exploration always finds something. The safe rooms
+# --- (the spawn, the rest-stop) and the puzzle rooms (the mend-the-bridge span, the jumbled cellar)
+# --- stay foe-free by design. Level-banded to their Reach; materials/XP, not more gear (the Reaches
+# --- are already loadout-complete). ---
+
+salvage_wraith:
+  name: a salvage-wraith
+  location: the_scoured_ruin
+  keywords: [wraith, salvage, ruin, unforged]
+  dialogue:
+    - The salvage-wraith rises out of the scoured glass, made of everything the Unforging left half-finished, and reaches for a shape to wear.
+  hp: 74
+  atk: 12
+  aggressive: true
+  attack_element: DRK  # a thing of the unmaking: entropy given a grasping hand (bring radiance)
+  level: 20
+  tier: elite  # the ruin's own drifter, promised by its stones: an off-spine kill (x3 reward)
+  loot: {ember_shard: 3, hollow_ingot: 1, nothing: 2}
+
+drowned_lung_sentry:
+  name: a drowned-lung sentry
+  location: drowned_sunhold_descent
+  keywords: [sentry, drowned, sunhold, shade]
+  dialogue:
+    - A sentry of drowned-lung Forgework detaches from the salvage-stair, still keeping a watch the sea ended an age ago.
+  hp: 88
+  atk: 13
+  aggressive: true
+  attack_element: WTR  # a warden of the drowned capital: its blows are brine and pressure
+  level: 26
+  tier: elite  # the guard on the stair down to Sunhold: an elite gate on the descent (x3 reward)
+  loot: {ember_shard: 3, hollow_ingot: 1, nothing: 2}
+
+channel_serpent:
+  name: a channel-serpent
+  location: the_verdant_passage
+  keywords: [serpent, channel, verdant, water]
+  dialogue:
+    - A serpent long as the ferry uncoils from the warm brown water of the channel and tastes the air for warmth.
+  hp: 52
+  atk: 10
+  aggressive: true
+  attack_element: WTR  # a thing of the drowning channel between the Reaches
+  level: 22
+  tier: normal  # the passage's threat, where the Cooling-Sea gives way to the Verdance
+  loot: {ember_shard: 2, nothing: 2}
+
+wharf_lurker:
+  name: a wharf-lurker
+  location: tidewharf_docks
+  keywords: [lurker, wharf, tide, dock]
+  dialogue:
+    - Something long-armed and pale hauls itself up between two lashed hulls, drawn by the warmth on the planks.
+  hp: 50
+  atk: 9
+  aggressive: true
+  attack_element: WTR  # it lives in the drowned hulls the free-port is built across
+  level: 20
+  tier: normal  # the hazard beneath the busy docks: the deeps of Tidewharf are never truly safe
+  loot: {ember_shard: 2, nothing: 2}
+
+marchwatch_husk:
+  name: a marchwatch husk
+  location: the_wardenmarch
+  keywords: [husk, marchwatch, warden, forgework]
+  dialogue:
+    - A husk in the grey Forgework of a Concord watchman stands from a cairn, still walking a post the war left behind.
+  hp: 46
+  atk: 8
+  aggressive: true
+  level: 17
+  tier: normal  # the Wardenmarch's own threat, on the threshold road out to the Forgeward frontier
+  loot: {ember_shard: 2, nothing: 2}
