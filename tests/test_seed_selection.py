@@ -161,6 +161,32 @@ def test_aethryn_cradle_offers_a_slot_complete_armor_set():
     assert {"head", "body", "arm"} <= cradle_slots
 
 
+def test_aethryn_every_reach_offers_a_slot_complete_armor_set():
+    """The wide gear pass: EVERY Reach drops a slot-complete armor set (head + body + arm) from its
+    own foes, so a Forger can re-outfit their armor at every stage of the 1-300 journey. Armor was
+    the thin slot (the world had 4 pieces total); this pins that the hole is closed everywhere."""
+    npcs = load_npcs(AETHRYN / "npcs.yaml")
+    items = load_items(AETHRYN / "items.yaml")
+    # each Reach, named by the foes whose drops should cover its armor between them
+    reach_foes = {
+        "Emberreach cradle": ["reach_wolf", "thornback_boar", "tide_crawler"],
+        "Cinderdeep": ["cold_vein_lurker", "drowned_maker", "hollow_smith"],
+        "Quenchmere": ["brine_wight", "sunken_revenant", "sunhold_warden"],
+        "Verdance": ["canopy_stalker", "mire_returned", "boughwarden"],
+        "Rimefall": ["glass_hound", "rime_king"],
+        "Kollforge": ["forgeborn", "cinder_drake", "vent_lord"],
+        "Sundered Sky": ["stormkin", "fall_wight", "court_warden"],
+    }
+    for reach, foes in reach_foes.items():
+        slots = {
+            items[d]["slot"]
+            for f in foes
+            for d in npcs[f].get("drops", [])
+            if items.get(d, {}).get("slot")
+        }
+        assert {"head", "body", "arm"} <= slots, f"{reach} cannot outfit every armor slot: {slots}"
+
+
 def test_aethryn_cinderdeep_descends_to_a_real_bottom():
     """The coast's downward road no longer dead-ends: the maw opens down through the Drowned Way to
     the Cinderheart, where a frost-typed bottom-boss (bring fire) gives the deep a real climax."""
@@ -227,7 +253,7 @@ def test_aethryn_rimefall_is_the_frozen_high_level_reach():
     king = npcs["rime_king"]
     assert king["level"] == 52 and king["tier"] == "boss" and king["lethal"] is True
     assert king["resistances"] == {"ICE": "Resist", "FIR": "Weak"}  # bring fire to thaw the reign
-    assert king["drops"] == ["stillheart"]  # a Reach-Relic of the golden age
+    assert "stillheart" in king["drops"]  # a Reach-Relic of the golden age (+ the Rimeplate set)
     arc = load_quest(AETHRYN / "quests" / "the_rimefall.yaml")
     assert arc is not None and arc["steps"][-1]["on_defeat"] == "rime_king"
 
