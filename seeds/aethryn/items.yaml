@@ -623,3 +623,12 @@ deeprooted_growth_song:
     making; we grow ours, slow, a conversation across seasons, and what we grow keeps growing after
     we let go. They think this weakness. Let them. When their forged things cool and crack and are
     salvage, ours will still be reaching for the light. The patient making is the one that lasts.
+
+# Drop-only: the Brine-Hulk's prize -- a pearl of drowned ember from the Tidecave grotto, an early
+# accessory for a Forger who braved the optional sea-cave (a coast alternative to the warden sigil).
+tidecave_pearl:
+  name: a tidecave pearl
+  keywords: [pearl, tidecave, brine, grotto]
+  location: nowhere
+  slot: accessory_1
+  mods: {DEF: 3, "MAG DEF": 3}
