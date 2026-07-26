@@ -1,0 +1,20 @@
+# SEED: aethryn -- quests/the_tidecave.yaml (an Emberreach coast side-quest). Clear the Brine-Hulk from
+# the sunken grotto, so Quench Harbor's fishers can work the sea-cave for what the tide brings down.
+
+id: the_tidecave
+name: The Tidecave
+start: warned
+reward_xp: 120
+
+steps:
+  - {state: warned, event: clear, to: cleared, on_defeat: brine_hulk, effect: award_xp}
+
+terminal: [cleared]
+
+labels:
+  warned: "A sea-cave gapes below the Saltstrand, and Quench Harbor's fishers won't work it: a brine-hulk has grown huge in the grotto below on everything the tide brings down. Clear it, and the cave is theirs."
+  cleared: |-
+    *** THE GROTTO IS QUIET ***
+    The brine-hulk sinks back into the still pool it rose from, and stops being the biggest thing in
+    the dark. The harbor's fishers will work the tidecave now, cutting the drowned-ember seam and
+    hauling up what a hundred tides carried in. A small deed, and the coast is a little richer for it.
