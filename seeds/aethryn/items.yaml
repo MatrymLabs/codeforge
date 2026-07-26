@@ -206,3 +206,12 @@ sunhold_sigil:
   location: nowhere
   slot: accessory_2
   mods: {DEF: 5, "MAG DEF": 6}
+
+# Drop-only: the Boughwarden's reward -- a living totem of the Heart-Grove, ember-wood that still
+# grows (an accessory that mends and shields, the Verdance's gift to one it spared).
+boughward_totem:
+  name: a boughward totem
+  keywords: [totem, boughward, grove, relic]
+  location: nowhere
+  slot: accessory_1
+  mods: {DEF: 5, EVA: 5}
