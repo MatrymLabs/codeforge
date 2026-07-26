@@ -2034,3 +2034,110 @@ beacon_pilgrim:
   topics:
     rumor:
       - '"From here you see the whole white Reach. Frosthold west, where the Smith still stands at his pour. The Court far north, where the King sleeps and had better keep sleeping. And between them, five drowned beacons the deep ice took. A patient Forger could find them. A wise one lets the road sleep with the King."'
+# --- The Kollforge expansion life (Great Creation Campaign): the caldera-market's Kollkin, the
+# --- obsidian flats' fire-hunters, and the cooled Kollhold's slag-wraiths. Banded 50-56. ---
+
+# The Caldera-Market (non-combat: the Kollkin creed, opposite of the Silent Anvil's)
+shelf_crier:
+  name: a shelf-crier of the Caldera-Market
+  location: the_caldera_market
+  keywords: [crier, shelf, market, kollkin]
+  dialogue:
+    - '"Hot wares, Forger, the hottest in the world! The frozen north keeps its dead cities and calls it wisdom. We keep ours BURNING and call it living. A cooled land is a corpse -- ask Ashkoll, below, that let its fire gutter. We will not make that mistake. Buy hot, spend hot, live hot."'
+  topics:
+    rumor:
+      - '"Down the cooling-shelf lies Ashkoll, a Kollhold that let its caldera die. To us there is no worse grave. Its Vent-master still keeps the dead square, a slag-echo of a fool who would not tend his fire, and its Forgeborn went cold and MAD in the dark. What Ashkoll forged in its last hot age is still down there. Bring it up into the light. Better it burns in a living hand than lies cold in a dead one."'
+
+caldera_child:
+  name: a caldera-child
+  location: the_caldera_market
+  keywords: [child, caldera, kid, kollkin]
+  dialogue:
+    - The caldera-child leans over the warm rail, unafraid of the glow below. "The rock is warm because the world is still being made under it! Grandmother says a cold floor means a dead house. Ours is never cold. Feel it!"
+
+# The Obsidian Flats (lava-shelf wilderness leveling 50-52, dispersal off the entry)
+flats_ember_lynx:
+  name: an ember-lynx
+  location: the_obsidian_flats
+  keywords: [lynx, ember, flats, cat]
+  dialogue:
+    - An ember-lynx pads across the black glass, its coat run through with living Forgelight, and fixes you with two coal-bright eyes.
+  hp: 210
+  atk: 30
+  aggressive: true
+  attack_element: FIR
+  level: 50
+  tier: normal  # the obsidian-flats leveling ground, an alternative to the anvil-vents chain
+  loot: {ember_shard: 8, emberglass: 1, nothing: 2}
+
+flats_slag_hulk:
+  name: a slag-hulk
+  location: the_obsidian_flats
+  keywords: [hulk, slag, flats, molten]
+  dialogue:
+    - A slag-hulk heaves up out of a cooling flow, a thing of half-set stone and trapped fire, and grinds toward your warmth.
+  hp: 240
+  atk: 33
+  aggressive: true
+  attack_element: FIR
+  resistances: {FIR: Resist, WTR: Weak}  # a thing of molten slag: water cracks it
+  level: 52
+  tier: normal  # the flats' harder tier; the emberglass guardian
+  loot: {ember_shard: 9, emberglass: 1, nothing: 2}
+
+gorge_cinder_drake:
+  name: a nesting cinder-drake
+  location: the_cinder_gorge
+  keywords: [drake, cinder, gorge, dragon]
+  dialogue:
+    - The cinder-drake rises off its ledge in a downdraft of ash, wings spread across the gorge, and screams a challenge that shakes cinder from the walls.
+  hp: 320
+  atk: 36
+  aggressive: true
+  attack_element: FIR
+  resistances: {FIR: Immune, WTR: Weak}  # a drake of living fire: fire cannot touch it, water bites deep
+  level: 54
+  tier: elite  # the flats' apex (x3 reward): the cinder-gorge's jealous nesting drake
+  drops: [greater_healing_draught, drakescale_mantle]
+  loot: {ember_shard: 12, emberglass: 3, nothing: 2}
+
+# The Cooled Kollhold (a dead-city delve, 52 -> 56)
+shelf_slag_wraith:
+  name: a slag-wraith
+  location: the_cooling_shelf
+  keywords: [wraith, slag, shelf, kollkin]
+  dialogue:
+    - A slag-wraith drifts up off the cold grey rock -- a Kollkin who died the moment its heat did, still cold, still reaching for a warmth to steal.
+  hp: 260
+  atk: 34
+  aggressive: true
+  attack_element: FIR
+  level: 52
+  tier: normal  # the dead-city approach, the delve's outer tier
+  loot: {ember_shard: 9, nothing: 3}
+
+ashkoll_echo:
+  name: the slag-echo of the Vent-master
+  location: dead_ashkoll
+  keywords: [echo, vent, master, ashkoll]
+  dialogue:
+    - A slag-echo keeps the dead forge-square, cold as the stone. "The pour is late," it says, to no one. "The caldera runs low. Bank the fire, someone. Bank the... it's so cold. When did it get so cold?" It does not remember that the answer is: an age ago, and forever.
+  topics:
+    rumor:
+      - '"The Forgeborn at the cold hearth did not die when Ashkoll did. It went on tending a fire that would not light, and the tending drove it mad. It hates anything that still burns. You burn, Forger. It will know. But the master-work in the dead pit is worth the walk into a mad thing''s hate. Ashkoll''s best, forged before the cold. Take it up to Emberkoll. Let it burn again."'
+
+ashen_forgeborn:
+  name: the Ashen Forgeborn
+  location: the_cold_hearth
+  keywords: [forgeborn, ashen, hearth, cold]
+  dialogue:
+    - Living Forgework gone cold and mad, the Ashen Forgeborn turns from a dead pit it has tended a thousand years. "You burn," it grinds, in a voice of settling slag. "The hearth is cold and YOU BURN. Give it here. Give the fire back." It comes to take your warmth for a fire that will never light.
+  hp: 560
+  atk: 38
+  aggressive: true
+  attack_element: FIR
+  resistances: {FIR: Weak, WTR: Resist}  # cold dead Forgework, starved of heat: fire overloads what it craves
+  level: 56
+  tier: boss  # the Cooled Kollhold's climax (x10 reward): a Forgeborn that went cold and mad, below the Vent-Lord (62)
+  drops: [ashkoll_masterbrand, greater_healing_draught]
+  loot: {ember_shard: 14, emberglass: 4, nothing: 1}

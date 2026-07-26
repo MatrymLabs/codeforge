@@ -889,3 +889,52 @@ beacon_plaque:
     last that still stands clear of the ice. The other five are somewhere north, under the deep white,
     lit for a road no one has walked since the sky went white at noon. From here you can see where two
     of them should be. Neither burns.
+# --- The Kollforge expansion content (Great Creation Campaign): the flats' fire-gather, the drake's
+# --- mantle and Ashkoll's masterbrand, and the readable lore of the Kollkin and the cooled dead. ---
+emberglass:
+  name: a shard of emberglass
+  keywords: [emberglass, glass, shard, flats]
+  location: the_obsidian_flats
+  resettable: true  # the obsidian-flats' gather: emberglass sets in the cracks, reforms on the reset
+
+drakescale_mantle:
+  name: a mantle of cinder-drake scale
+  keywords: [mantle, drake, scale, cinder]
+  location: nowhere
+  slot: body
+  mods: {DEF: 16, "MAG DEF": 10}  # shed scale of the cinder-gorge drake, fire-proof and forge-warm
+
+ashkoll_masterbrand:
+  name: the Ashkoll masterbrand
+  keywords: [masterbrand, ashkoll, brand, weapon]
+  location: nowhere
+  slot: weapon
+  mods: {ATK: 28, ACC: 5}  # Ashkoll's last and best, forged before the cold; carried up into the light again
+
+kollkin_creed:
+  name: the Kollkin creed
+  keywords: [creed, kollkin, bronze, caldera]
+  location: the_caldera_market
+  lore: |-
+    Struck in bronze at the caldera's lip, in a bold deep hand: "HEAT IS LIFE. A cold land is a corpse,
+    a cold house a grave, a cold hearth a confession. The frozen north keeps its dead and calls it
+    wisdom; the drowned Reaches count their losses and call it peace. We are Kollkin. We keep the fire.
+    We would rather burn out than gutter cold, and rather pour one strike too many than let the caldera
+    fail. Look below at Ashkoll, that let its fire die, and know there is no worse death than the cold.
+    Spend hot. Live hot. When you go, go bright." It is the exact opposite of the Silent Anvil's creed
+    in the frozen north, and both peoples are certain, and both point at each other's dead cities as
+    proof, and neither has noticed that the drowned, the frozen, and the cooled are all just dead.
+
+ashkoll_last_pour:
+  name: the record of the last pour
+  keywords: [record, pour, ashkoll, tablet]
+  location: dead_ashkoll
+  lore: |-
+    A work-tablet from Ashkoll's dead forge-square, its cold-scratched tally stopped mid-count. The
+    Vent-master's hand runs steady and proud down the years: caldera strong, pours good, the hottest
+    hold in the Kollforge, a city that would never let its fire fail as the soft southern holds did. And
+    then the entries thin. "Caldera low this season, but it will rise." "Low again. We banked harder."
+    "We pour less to save the heat, but the saving cools it faster." "Cold in the low quarter. We moved
+    the people up." "Cold in the high quarter now." And last, in a hand gone unsteady: "We spent it all
+    keeping warm and now there is nothing left to burn. We were so afraid of the cold that we fed it
+    everything we had. Tell Emberkoll: it is not the cold that kills a hold. It is the fear of it."
