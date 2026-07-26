@@ -619,3 +619,84 @@ drowned_pilot:
   tier: boss  # the Cooling-Sea's climax: a lethal boss-tier reward (x10) at the reef
   drops: [pilots_compass]
   loot: {ember_shard: 3, nothing: 2}
+
+# --- The Quenchmere (across the sea, Continental Atlas §V): the free-port Tidewharf and the drowned
+# --- Sunhold. Levels 18-30. A brine-wight in the lanes, townsfolk in the port, a boss in the deep. ---
+
+brine_wight:
+  name: a brine-wight
+  location: the_quench_lanes
+  keywords: [wight, brine, drowned]
+  dialogue:
+    - A shape of brine and dead ember rises from between the drowned masts and reaches for the ferry.
+  hp: 78
+  atk: 14
+  aggressive: true
+  attack_element: WTR  # a drowned thing of the cold sea: bring lightning to the water
+  resistances: {WTR: Resist, LGT: Weak}
+  level: 18
+  tier: elite  # the Wreckways' threat between the coast and the free-port (x3 reward)
+  loot: {ember_shard: 2, nothing: 2}
+
+accord_speaker:
+  name: the Accord-Speaker of Tidewharf
+  location: the_accord_hall
+  keywords: [speaker, accord, official, port]
+  dialogue:
+    - '"Welcome to the Quenchmere, Forger. Ten thousand islands, a hundred republics, and one rule: the lanes stay open."'
+    - '"We do not have a crown. We have an Accord, and it holds because everyone needs the trade more than they need to win."'
+  topics:
+    quenchmere:
+      - '"The Quenchmere is the Reach the Cooling-Sea rose over -- a whole land drowned when the seas came up after the Unforging. What is left is islands, wrecks, and the drowned cities below the keels."'
+    accord:
+      - '"The Port-Accord is not a government so much as a long argument that has agreed to keep arguing. The harbor-republics, the Merewrights, the Salvage Guilds -- all here, all rivals, all needing the lanes open."'
+    sunhold:
+      - '"Below the docks lies Sunhold, our capital before the sea took it. A Forged Warden still keeps it, holding halls no living thing has walked in an age. The Salvage Guilds would open it. I would not be the one to wake its keeper."'
+
+merewright_captain:
+  name: a Merewright captain
+  location: tidewharf_plaza
+  keywords: [captain, merewright, sailor, merchant]
+  dialogue:
+    - '"Cargo for any Reach, crew for any lane. The Merewrights sail where the Ember-roads cannot reach -- which is to say, everywhere that matters."'
+  shop:
+    # The Quenchmere till: mid-game gear and heals, and it buys salvage from the drowned cities.
+    sells:
+      healing_draught: 16
+      mana_draught: 16
+      reaver_blade: 100
+      cindershell_plate: 155
+    buys:
+      ember_shard: 7
+      hollow_ingot: 35
+      pilots_compass: 45
+  topics:
+    lanes:
+      - '"The Wreckways are the only roads across the Quenchmere -- reef-lanes marked by the masts of the drowned. Follow the masts, mind the brine-wights, and you cross. Lose the masts, and you join them."'
+
+salvage_agent:
+  name: a Salvage-Guild agent
+  location: tidewharf_plaza
+  keywords: [agent, salvage, guild, diver]
+  dialogue:
+    - '"Everything the sea took is still down there, Forger, lit and cold and waiting. The Guild pays well for a diver who comes back up."'
+  topics:
+    salvage:
+      - '"The drowned cities of the Quenchmere hold the largest unbroken Forgework outside the frozen north. Sunhold below us is the richest of all -- if you can get past what keeps it. The Guild would fund a Forger bold enough to try."'
+
+sunhold_warden:
+  name: the Sunhold Warden
+  location: the_drowned_sunhold
+  keywords: [warden, sunhold, guardian, boss]
+  dialogue:
+    - '"THE CAPITAL... STANDS..." The Sunhold Warden turns in the green dark, drowned ember burning in its Forged frame, and moves to hold the hall.'
+  hp: 200
+  atk: 26
+  aggressive: true
+  lethal: true
+  attack_element: WTR  # a drowned Forged guardian: resists the flood, fears the storm (bring lightning)
+  resistances: {WTR: Resist, LGT: Weak}
+  level: 30
+  tier: boss  # the Quenchmere's climax: a lethal boss-tier reward (x10) in the drowned capital
+  drops: [sunhold_sigil]
+  loot: {hollow_ingot: 2, ember_shard: 4, nothing: 2}
