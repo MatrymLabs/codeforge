@@ -22,3 +22,52 @@ forge_plate:
   name: cindershell plate
   makes: cindershell_plate
   inputs: {hollow_ingot: 2, ember_shard: 2}
+
+# --- The maker's loop reaches the new content (Content Manufacturing Campaign). Gather ember and
+# --- salvage ingots, and forge the consumable ladder + the Emberhide starter set. The greater tiers
+# --- cost more ember; the grand tiers and the elixir are gated behind boss-salvage (hollow_ingot),
+# --- so crafting progresses with the journey, not ahead of it. ---
+brew_greater_healing:
+  name: a greater healing draught
+  makes: greater_healing_draught
+  inputs: {ember_shard: 5}
+
+brew_grand_healing:
+  name: a grand healing draught
+  makes: grand_healing_draught
+  inputs: {ember_shard: 10, hollow_ingot: 1}
+
+brew_greater_mana:
+  name: a greater mana draught
+  makes: greater_mana_draught
+  inputs: {ember_shard: 5}
+
+brew_grand_mana:
+  name: a grand mana draught
+  makes: grand_mana_draught
+  inputs: {ember_shard: 10, hollow_ingot: 1}
+
+brew_forgefire_elixir:
+  name: a forgefire elixir
+  makes: forgefire_elixir
+  inputs: {ember_shard: 12, hollow_ingot: 3}
+
+stitch_emberhide_hood:
+  name: an emberhide hood
+  makes: emberhide_hood
+  inputs: {ember_shard: 3}
+
+stitch_emberhide_jerkin:
+  name: an emberhide jerkin
+  makes: emberhide_jerkin
+  inputs: {ember_shard: 4}
+
+stitch_emberhide_wraps:
+  name: a set of emberhide wraps
+  makes: emberhide_wraps
+  inputs: {ember_shard: 3}
+
+forge_reaver_blade:
+  name: a reaver's blade
+  makes: reaver_blade
+  inputs: {ember_shard: 4, hollow_ingot: 2}

@@ -220,6 +220,31 @@ def test_aethryn_every_reach_offers_a_slot_complete_loadout():
         assert gear.complete, f"{reach} cannot outfit a full loadout: missing {gear.missing}"
 
 
+def test_aethryn_the_makers_loop_reaches_the_new_content():
+    """The maker Jobs can forge the new content, not just the four starter goods: the consumable
+    ladder and the Emberhide set are craftable, the grand tiers and the elixir are gated behind
+    boss-salvage (hollow_ingot) so crafting progresses with the journey, not ahead of it."""
+    from parts.world.seed import load_recipes
+
+    recipes = load_recipes(AETHRYN / "recipes.yaml")
+    by_make = {r["makes"]: r for r in recipes.values()}
+    # the ladder + starter set are craftable
+    for target in (
+        "greater_healing_draught",
+        "grand_healing_draught",
+        "forgefire_elixir",
+        "emberhide_hood",
+        "emberhide_jerkin",
+        "emberhide_wraps",
+    ):
+        assert target in by_make, f"no recipe forges {target}"
+    # the grand tiers + elixir need boss-salvage, not just gathered ember (a progression gate)
+    for gated in ("grand_healing_draught", "grand_mana_draught", "forgefire_elixir"):
+        assert "hollow_ingot" in by_make[gated]["inputs"], f"{gated} should cost boss-salvage"
+    # the greater tiers are cheaper (ember only) -- an accessible mid-game craft
+    assert "hollow_ingot" not in by_make["greater_healing_draught"]["inputs"]
+
+
 def test_aethryn_consumables_scale_across_the_journey():
     """Two draughts (hp 30 / mp 15) cannot carry a Forger through a 1-300 game. The consumable
     ladder adds greater and grand tiers plus a both-pools elixir, each a valid hp/mp restore that
