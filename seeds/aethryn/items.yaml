@@ -188,3 +188,12 @@ cinderglass_edge:
   location: nowhere
   slot: weapon
   mods: {ATK: 12, ACC: 4}
+
+# Drop-only: the Drowned Pilot's reward -- a compass of cooling-iron that still points true through
+# brine and dark (an accessory that steadies hand and eye).
+pilots_compass:
+  name: a drowned pilot's compass
+  keywords: [compass, pilot, drowned, token]
+  location: nowhere
+  slot: accessory_1
+  mods: {ACC: 6, EVA: 3}

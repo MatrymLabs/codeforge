@@ -543,3 +543,79 @@ ash_colossus:
   tier: boss  # the Ashwastes' climax: a lethal boss-tier reward (x10) at the crater's bottom
   drops: [cinderglass_edge]
   loot: {ember_shard: 4, hollow_ingot: 1, nothing: 2}
+
+# --- The Cooling-Sea: a coastal port region west of the waking shore (levels 6-14). A dialogue-rich
+# --- fishing town (Quench Harbor) on the first-quenched water, and the Drowned Pilot at the reef. ---
+
+tide_crawler:
+  name: a tide-crawler
+  location: the_saltstrand
+  keywords: [crawler, tide, crab, beast]
+  dialogue:
+    - The crawler rears from the wrack, brine-ember dripping from its shell, and clacks its claws.
+  hp: 30
+  atk: 6
+  attack_element: WTR  # a thing of the cold sea: its touch is brine and flood
+  level: 6
+  tier: normal  # the strand's threat, a step past the coast
+
+harbormaster:
+  name: the Harbormaster of Quench
+  location: quench_harbor
+  keywords: [harbormaster, master, harbor, official]
+  dialogue:
+    - '"Quench Harbor, Forger. We fish the Cooling-Sea and mend what she breaks. Mind the reef south."'
+    - '"The sea rose the day the world was Unforged and never fully went back down. We live at her edge."'
+  topics:
+    cooling_sea:
+      - '"The Cooling-Sea is the first-quenched water -- what cooled the world after the Forge cracked. Older than the coast, colder than the deep. She gives fish and takes ships in the same tide."'
+    harbor:
+      - '"Quench has stood since the Relighting reached the water. Fisherfolk, menders, a trader or two. Not much, but it is ours, and it is warm."'
+    wreck:
+      - '"South, past the last jetty, the drowned reef -- ships the sea took when she rose. The Drowned Pilot keeps the largest of them. Fell it, and the fishing lanes open again. None of mine will try."'
+
+quench_fisher:
+  name: a Quench fisher
+  location: quench_harbor
+  keywords: [fisher, fisherman, netter]
+  dialogue:
+    - '"Good haul today, brine-ember and a silver-fin. Bad haul yesterday. That is the sea for you."'
+    - '"You have the look of one who washed up. Half of Quench did. The Cooling-Sea gives, and she takes."'
+  topics:
+    sea:
+      - '"Fish the shallows, not the reef. The reef is where the drowned things are. A fisher learns that young, or a fisher does not get old."'
+    catch:
+      - '"Brine-ember lights a cold hearth; silver-fin fills a cold belly. The Cooling-Sea is hard, but she is honest -- more than the Spiral, they say."'
+
+dock_trader:
+  name: a Quench dock-trader
+  location: quench_harbor
+  keywords: [trader, dock, merchant, quench]
+  dialogue:
+    - '"Coast-craft and cooling-sea salvage, fair prices. A harbor runs on trade, not on hymns."'
+  shop:
+    # A fourth till, early-mid: coastal goods traded on the water.
+    sells:
+      healing_draught: 13
+      mana_draught: 13
+      cinder_hammer: 42
+    buys:
+      ember_shard: 5
+      cinder_hammer: 16
+
+drowned_pilot:
+  name: the Drowned Pilot
+  location: the_wreck_reef
+  keywords: [pilot, drowned, wreck, boss]
+  dialogue:
+    - '"COME... ABOARD..." The Drowned Pilot turns at the wheel, brine and dead ember streaming from it.'
+  hp: 90
+  atk: 12
+  aggressive: true
+  lethal: true
+  attack_element: WTR  # a drowned thing of the cold sea: bring lightning to the water
+  resistances: {WTR: Resist, LGT: Weak}
+  level: 14
+  tier: boss  # the Cooling-Sea's climax: a lethal boss-tier reward (x10) at the reef
+  drops: [pilots_compass]
+  loot: {ember_shard: 3, nothing: 2}
