@@ -410,6 +410,9 @@ def test_aethryn_reaches_have_side_quests_beyond_their_main_arc():
         "the_ruin_watch": "salvage_wraith",  # Ashwastes: lay the ruin's drifter
         "the_anvil_watch": "forgeborn",  # Kollforge: free a working vent
         "the_drifting_reach": "the_drifting_reach",  # Sundered Sky: a DISCOVERY, not a kill
+        "the_flooded_forge": "flooded_forge_revenant",  # Quenchmere delve: still the forge revenant
+        "the_glass_gallery": "rimebound_sentinel",  # Rimefall delve: end the frozen watch
+        "the_broken_span": "fall_wraith",  # Sundered Sky delve: clear the broken bridge
     }
     for qid, target in side_quests.items():
         spec = load_quest(AETHRYN / "quests" / f"{qid}.yaml")
