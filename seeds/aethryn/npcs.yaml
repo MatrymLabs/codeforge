@@ -2675,3 +2675,96 @@ hull_wight:
   tier: elite  # the underhull's prize (x3 reward): the deepest planked salvage, a drowned-hoard guardian
   drops: [hull_hoard_ring, greater_healing_draught]
   loot: {ember_shard: 6, brine_pearl: 2, nothing: 2}
+
+# --- Mirefast life (Great Creation Campaign, Phase I): the Verdance's trade-town folk + the stiltways
+# --- swamp foes + the under-stilt devourer. Banded 22-26. ---
+stilt_reeve:
+  name: the stilt-reeve of Mirefast
+  location: mirefast
+  keywords: [reeve, stilt, mirefast, warden]
+  dialogue:
+    - '"Welcome to Mirefast, Forger -- the one place in the Verdance an outsider''s coin is as good as a Deeprooted''s word. Highbough won''t let your kind up the tree; we''ll take your trade down here and both sides pretend that''s not a slight. Market''s along the planking, tavern''s over the water, and mind the boards after dark -- the swamp comes up through the stilts when it''s hungry."'
+  topics:
+    rumor:
+      - '"Under the town, below the market, something''s grown fat on what the boardwalk drops. We don''t go down the ladder. A Forger who did, and came back up, would have the town''s thanks and whatever the swamp swallowed over the years -- coin, cargo, the odd trader who leaned too far. East on the stiltways the hunting''s good if the mire-serpents don''t hunt you."'
+
+stilt_trader:
+  name: a stilt-trader
+  location: the_stilt_market
+  keywords: [trader, stilt, market, merchant]
+  dialogue:
+    - '"Ember-bloom, swamp-resin, living-wood -- the Verdance gives what no forge can grow, and I''ll swap it for your steel and salt and news of the dry world. Best stall on the raft, Forger, and the only one that won''t cheat you, which out here I''ll admit is a low bar."'
+  shop:
+    sells:
+      healing_draught: 14
+      greater_healing_draught: 36
+      mana_draught: 14
+    buys:
+      ember_shard: 6
+      emberbloom: 8
+
+mire_host:
+  name: the host of the Mireside
+  location: the_mireside_tavern
+  keywords: [host, mireside, tavern, barkeep]
+  dialogue:
+    - '"Sit where the floor sways least, Forger, and drink what the swamp ferments -- you''ll not love it, but you''ll trust it, and out here that''s the same thing. Trader and Deeprooted both drink under my lamps and neither''s knifed the other yet. That''s Mirefast''s whole miracle. Lofts above if the swamp-brew wins."'
+
+boardwalk_loft_host:
+  name: a boardwalk loft-host
+  location: the_boardwalk_lofts
+  keywords: [host, loft, boardwalk, keeper]
+  dialogue:
+    - '"Screened, dry, and above the biting dark -- best sleep at the Verdance''s edge, Forger. The water rocks you and the canopy sings a mile up. Just don''t lean on the outer rail. The swamp takes one or two a season who forget the swamp is always there, and always awake."'
+
+grove_warden:
+  name: a grove-warden of Mirefast
+  location: the_grove_shrine
+  keywords: [warden, grove, shrine, deeprooted]
+  dialogue:
+    - '"You may learn the living faith here, Forger, though not in sacred Highbough -- this shrine is for the trade-town''s guests. The Deeprooted do not command wild Ember; we converse with it. The swamp is not scenery. It reads you as you read it. Read the bark, and learn to answer when the living world asks who you are."'
+
+stiltways_serpent:
+  name: a mire-serpent
+  location: the_stiltways
+  keywords: [serpent, mire, stiltways, snake]
+  dialogue:
+    - A mire-serpent pours out of a stilt-channel, banded like ember-bloom shadow, and rises level with the boardwalk rail.
+  hp: 84
+  atk: 15
+  aggressive: true
+  attack_element: PSN
+  level: 22
+  tier: normal  # the stiltways swamp-approach, a Verdance leveling ground + the emberbloom gather guardian
+  loot: {ember_shard: 4, emberbloom: 1, nothing: 2}
+
+stiltways_swarmkin:
+  name: a swarm-kin
+  location: the_stiltways
+  keywords: [swarmkin, swarm, stiltways, reeds]
+  dialogue:
+    - The reeds along the boardwalk erupt: swarm-kin, a hundred small hungers moving as one appetite, boiling up the stilts toward your warmth.
+  hp: 76
+  atk: 17
+  aggressive: true
+  attack_element: PSN
+  resistances: {PSN: Resist, FIR: Weak}  # a swarm of the mire; fire scatters what one blade cannot
+  level: 24
+  tier: normal  # the stiltways' harder tier
+  loot: {ember_shard: 4, emberbloom: 1, nothing: 2}
+
+stilt_mire_devourer:
+  name: the mire-devourer of the under-stilts
+  location: the_stilt_deeps
+  keywords: [devourer, mire, understilt, deeps]
+  dialogue:
+    - It has grown huge on a generation of what the boardwalk let fall: the mire-devourer, a swamp-thing swollen in the dark under the market, rising through the drowned stilt-roots to take the warmth that came down the ladder.
+  hp: 168
+  atk: 22
+  aggressive: true
+  attack_element: PSN
+  resistances: {PSN: Resist, FIR: Weak}  # the swamp's glutton; fire is the mire's one fear
+  level: 26
+  tier: elite  # Mirefast's under-stilt prize (x3 reward): what the town feeds and will not face
+  drops: [mirefast_lost_purse, greater_healing_draught]
+  loot: {ember_shard: 6, emberbloom: 2, nothing: 2}
