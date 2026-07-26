@@ -122,10 +122,12 @@ the_deeproot_mire:
   desc: |-
     A breathing swamp where Cinder seeps up through the roots and the dead half-return, drawn to
     warmth. Ember-blooms light black water; something risen from the mire moves through the reeds. The
-    landing lies back north; deeper in, the Heart-Grove beats. Go west, into the wet dark.
+    landing lies back north; deeper in, the Heart-Grove beats. Go west, into the wet dark; a boardwalk
+    runs east to the stilt-town of Mirefast.
   exits:
     north: verdance_landing
     west: the_rootways
+    east: mirefast
 
 the_heart_grove:
   name: The Heart-Grove
@@ -1912,3 +1914,88 @@ the_underhull:
     dark is worst. A hull-wight keeps a treasure-hold no salvage-crew has dared. The bilge lies back up.
   exits:
     up: the_bilge
+
+# ============================================================================================
+# MIREFAST - the Verdance's swamp-edge trade-stilt town (Great Creation Campaign, Phase I; Continental
+# Atlas III names it, unbuilt until now). The Verdance's SECOND hub: where the decentralized Deeprooted
+# trade with the outside world, a mercantile stilt-town on the breathing swamp's edge. A settlement +
+# its interiors (market/tavern/inn/shrine) + a stiltways swamp-approach + the under-stilt deeps. Gives
+# the living Reach a place to be that is not Highbough or a delve. Level-banded 22-26. Noun exits.
+# ============================================================================================
+
+mirefast:
+  name: Mirefast
+  desc: |-
+    A whole town on stilts at the Verdance's swamp-edge, where the boardwalks of the Deeprooted meet the
+    keels of the outside world: Mirefast, the living Reach's one real market, loud with traders who
+    would never be let up into sacred Highbough but are welcome here to swap steel for wild-Ember and
+    swamp-craft. A stilt-reeve keeps the boardwalk peace. The mire lies back west; the trade-MARKET, the
+    Mireside TAVERN, and a grove-SHRINE open along the planking, a swamp boardwalk runs out east, and a
+    ladder drops to the under-stilts, down.
+  exits:
+    west: the_deeproot_mire
+    east: the_stiltways
+    down: the_stilt_deeps
+    market: the_stilt_market
+    tavern: the_mireside_tavern
+    shrine: the_grove_shrine
+
+the_stilt_market:
+  name: The Stilt-Market
+  desc: |-
+    Mirefast's trade-market, a raft of joined platforms where the Verdance's wild bounty is swapped for
+    the outside world's making: ember-bloom and swamp-resin and living-wood for steel, salt, and news. A
+    stilt-trader keeps the busiest stall in the living Reach. Out returns to Mirefast.
+  exits:
+    out: mirefast
+
+the_mireside_tavern:
+  name: The Mireside Tavern
+  desc: |-
+    A tavern slung between three great stilts over the black water, its lamps ember-bloom, its floor a
+    gentle sway: the Mireside, where trader and Deeprooted drink the one thing they both trust, and the
+    swamp's news travels faster than any road. A mire-host works the taps. Boardwalk-lofts hang above,
+    an INN over the water. Out returns to Mirefast.
+  exits:
+    out: mirefast
+    inn: the_boardwalk_lofts
+
+the_boardwalk_lofts:
+  name: The Boardwalk-Lofts
+  desc: |-
+    Above the Mireside, sleeping-lofts hang on the boardwalk stilts, screened against the swamp's
+    biting dark: the safest dry sleep at the Verdance's edge, rocked by the water and the wind in the
+    canopy far above. A loft-host keeps the lamps lit against the mire. Out returns to the tavern below.
+  exits:
+    out: the_mireside_tavern
+
+the_grove_shrine:
+  name: The Grove-Shrine of Mirefast
+  desc: |-
+    A small shrine of living wood grown at the town's edge, where the Deeprooted keep their wild-Ember
+    faith in a form an outsider is allowed to see: not sacred Highbough's inner grove, but a teaching-
+    shrine that shows the trade-town's guests how the living Reach reads the world. A grove-warden reads
+    the swamp's mood. The Deeprooted creed is grown into the shrine's living bark. Out returns to Mirefast.
+  exits:
+    out: mirefast
+
+the_stiltways:
+  name: The Stiltways
+  desc: |-
+    East of the town the boardwalks run out over open swamp on a forest of stilts, a mile of planked
+    ways above black water thick with ember-bloom and the things that hunt it: mire-serpents in the
+    channels and swarm-kin in the reeds. Ember-bloom clusters the stilt-feet for anyone quick to gather
+    it. Mirefast lies back west; the boardwalk ends where the deep swamp begins.
+  exits:
+    west: mirefast
+
+the_stilt_deeps:
+  name: The Stilt-Deeps
+  desc: |-
+    Under Mirefast's planking, where the stilts sink into the swamp's black root: the under-stilts, a
+    drowned understory the town would rather not think about, where what the boardwalk drops feeds
+    something that has grown large in the dark below the market. A mire-devourer keeps the drowned
+    stilt-roots. What the town has lost over the water lies here, if you can take it back. Mirefast lies
+    back up.
+  exits:
+    up: mirefast

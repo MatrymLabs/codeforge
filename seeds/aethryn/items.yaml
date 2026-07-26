@@ -1156,3 +1156,34 @@ salvage_writ:
     suggests the bearer not ask, mark the writ, and go down. The tide waits for no contract." Below, a
     line for a name, and a great many names already on it, and beside a great many of those, a small
     inked anchor: the Guild's mark for a Forger who did not come back up.
+
+# --- Mirefast content (Great Creation Campaign, Phase I): the stiltways ember-bloom gather, the
+# --- under-stilt lost hoard, and the Deeprooted teaching-creed grown in the shrine bark. ---
+emberbloom:
+  name: a cluster of ember-bloom
+  keywords: [emberbloom, bloom, ember, stiltways]
+  location: the_stiltways
+  resettable: true  # the stiltways gather: wild ember-bloom on the stilt-feet, regrows on the reset
+
+mirefast_lost_purse:
+  name: the town's lost purse
+  keywords: [purse, lost, mirefast, hoard]
+  location: nowhere
+  slot: accessory_1
+  mods: {EVA: 6, ACC: 4}  # a generation of what the boardwalk dropped, fused in the devourer's gut and won back
+
+deeprooted_creed:
+  name: the Deeprooted teaching-creed
+  keywords: [creed, deeprooted, shrine, bark]
+  location: the_grove_shrine
+  lore: |-
+    Grown, not carved, into the living bark of Mirefast's teaching-shrine, in the shaped-branch script
+    the Deeprooted let outsiders learn: "THE WORLD IS ALIVE, and you are not its master. The dry Reaches
+    Forge the world - they take dead Ember and force it to a shape, and call the forcing mastery. We do
+    not. We ask. Wild Ember grows where it wills; the swamp chooses its own channels; the canopy
+    remembers who has cut it. To live in the Verdance is to hold a conversation with a thing far older
+    and larger than you, and the first rule of that conversation is the one the dry world forgets: you
+    are a guest. The First Flame folk say the world was made and can be made again. The frozen north
+    says the making should stop. We say a thing you can only make by killing what was already living
+    was never yours to make. Trade with us, guest. Learn the living faith. And when the swamp asks who
+    you are - and it will - answer honestly, because it can always tell, and it is always listening."
