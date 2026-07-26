@@ -963,6 +963,29 @@
     security: "neutralize log-injection newlines and control chars before logging"
     general: "normalize any user input before validation, storage, or display"
 
+- id: completeness
+  name: Completeness Coverage
+  source: parts/shelf/completeness.py
+  category: content-schema
+  tags: [coverage, completeness, audit, gaps, content-qa]
+  maturity: shipped
+  source_status: original
+  license: MIT
+  influence: "set-coverage / gap analysis (independently implemented) - the 'do we have one of each required category' check"
+  experimental: >-
+    quantitative coverage (require N per category, not just presence) and weighted gaps, for
+    'every Reach needs two weapons and a full armor set'. Traded away (v1): counting, keeping the
+    smallest honest presence-and-gap report.
+  risk: low
+  purpose: >
+    Given a collection whose members carry a category tag and the set of categories that MUST be
+    present, report which are covered, which are missing, and which are extra - the honest gap list
+    that drives build-and-measure. Pure and stdlib-only; the caller extracts the tags.
+  reuse:
+    game: "does each Reach drop every equip slot; does a class cover every spell school; does a dungeon span every planned encounter type"
+    general: "any at-least-one-per-required-category completeness check with an honest gap list (feature-flag audits, translation-key coverage, capability matrices)"
+    government: "does a system security plan address every required control family; which families are unaddressed"
+
 - id: change-ledger
   name: Change Ledger
   source: parts/change_ledger.py

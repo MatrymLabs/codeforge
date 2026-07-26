@@ -3175,6 +3175,29 @@
     "updated": "2026-07-12"
   },
   {
+    "designation": "MOD-05.010",
+    "name": "completeness",
+    "status": "active",
+    "function": "report which required categories a tagged collection covers, and the gaps",
+    "label": "completeness",
+    "file": "parts/shelf/completeness.py",
+    "type": "MOD",
+    "domain": "05",
+    "docs": "docs/hardware_store/patterns/validation.md",
+    "tests": "tests/test_completeness.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "content-QA gap report; gear-slot coverage (game) + control-family coverage (records)",
+    "tags": [
+      "module"
+    ],
+    "notes": "Hardware Store part completeness; catalog/parts.yaml id completeness.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-26",
+    "updated": "2026-07-26"
+  },
+  {
     "designation": "MOD-05.052",
     "name": "field_sanitizer",
     "status": "active",
