@@ -541,6 +541,25 @@ def test_aethryn_verdance_is_a_living_wild_reach_off_the_crossroads():
     assert arc is not None and arc["steps"][-1]["on_defeat"] == "boughwarden"
 
 
+def test_aethryn_deep_reachwood_is_a_wilderness_sub_zone():
+    """MMO scale: the Reachwood expands past the Warden's Glade into a wilderness sub-zone - a
+    second early leveling ground (ember-lynx, mere-lurker), a GATHERING node (resettable reachwood
+    sap), and a hidden shrine with an elite keeper, a treasure, and readable lore. Rewards spreading
+    into the forest instead of one coast path."""
+    rooms = load_rooms(AETHRYN / "rooms.yaml")
+    npcs = load_npcs(AETHRYN / "npcs.yaml")
+    items = load_items(AETHRYN / "items.yaml")
+    assert rooms["wardens_glade"]["exits"].get("east") == "the_deepwood"  # the wood opens up
+    assert rooms["the_deepwood"]["exits"].keys() >= {"north", "east"}  # branches (fen + shrine)
+    # a gathering node that repops on area reset (a resource spot, not a one-off)
+    sap = items["reachwood_sap"]
+    assert sap["location"].split(":")[-1] == "the_thornmere" and sap.get("resettable") is True
+    # the hidden shrine: an elite keeper, a placed treasure, and readable lore
+    assert npcs["shrine_warden"]["tier"] == "elite"
+    offering = items["shrine_offering"]
+    assert offering["location"].split(":")[-1] == "the_forgotten_shrine" and offering.get("lore")
+
+
 def test_aethryn_tidecaves_are_an_optional_early_sea_cave_delve():
     """The starting coast rewards a curious Forger with an off-path dungeon: a sea-cave gapes down
     off the Saltstrand into the Tidecaves, an optional early delve (cave-crawler L4 -> the L10

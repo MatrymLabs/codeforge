@@ -277,9 +277,10 @@ wardens_glade:
   desc: |-
     A still, green glade in the heart of the Reachwood, where the wild ember grows gentle instead
     of hungry. An old forest warden keeps this place, watching the ember and the wood that drinks
-    it. The hollow lies back west.
+    it. The hollow lies back west; a deer-path slips east, deeper into the old wood.
   exits:
     west: reachwood_hollow
+    east: the_deepwood
 
 the_bramblewarren:
   name: The Bramblewarren
@@ -837,3 +838,36 @@ the_sunken_grotto:
     settles in the shallows here. The cave-mouth lies back up.
   exits:
     up: the_tidecave_mouth
+
+# --- The Deep Reachwood (Seed Scale Directive): the wood was a short stub; expand it into a real
+# --- wilderness sub-zone past the Warden's Glade - a second early leveling ground, gathering groves,
+# --- and a hidden shrine, so low-level Forgers spread into the forest instead of one coast path. ---
+the_deepwood:
+  name: The Deep Reachwood
+  desc: |-
+    Past the glade the wood turns old: trunks too wide to reach around, a canopy that keeps the light
+    to a green dusk, and wild ember pooling in the roots where no one gathers it. An ember-lynx pads
+    the branches overhead, patient. The glade lies back west; a fen glimmers north, and the deer-path
+    runs on east toward a shape of old stone.
+  exits:
+    west: wardens_glade
+    north: the_thornmere
+    east: the_forgotten_shrine
+
+the_thornmere:
+  name: The Thornmere
+  desc: |-
+    A boggy grove where the Reachwood drinks from a black-water mere, thick with ember-blooms and the
+    reed-beds the coast's fishers used to cut. A mere-lurker hunts the shallows. This is a gatherer's
+    corner of the wood, quiet and far from any road; the deepwood lies back south.
+  exits:
+    south: the_deepwood
+
+the_forgotten_shrine:
+  name: The Forgotten Shrine
+  desc: |-
+    The deer-path ends at a shrine the Reachwood has half-swallowed: a ring of standing Forgework the
+    Emberwrights raised before the town, its purpose lost, its keeper still at its post. Whatever was
+    left as offering here still lies in the moss, untaken for an age. The deepwood lies back west.
+  exits:
+    west: the_deepwood

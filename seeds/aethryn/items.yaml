@@ -632,3 +632,29 @@ tidecave_pearl:
   location: nowhere
   slot: accessory_1
   mods: {DEF: 3, "MAG DEF": 3}
+
+# --- The Deep Reachwood's content (Seed Scale Directive): a gathering node, a hidden treasure + lore,
+# --- and the shrine-keeper's drop, so the expanded forest rewards gathering, exploring, and delving. ---
+reachwood_sap:
+  name: a bead of reachwood sap
+  keywords: [sap, reachwood, bead, material]
+  location: the_thornmere
+  resettable: true  # a gathering node in the mere: take it, and the wood regrows one on the area reset
+
+shrine_ward:
+  name: an old shrine-ward
+  keywords: [ward, shrine, charm, relic]
+  location: nowhere
+  slot: accessory_1
+  mods: {DEF: 3, "MAG DEF": 4}  # the forgotten shrine's blessing, the deep wood's off-path prize
+
+shrine_offering:
+  name: a shrine-offering of old ember
+  keywords: [offering, shrine, ember, cache]
+  location: the_forgotten_shrine
+  lore: |-
+    Left in the moss of the Forgotten Shrine, on a stone worn smooth by hands that are all dust now:
+    an offering of old ember, still faintly warm. No mark says to whom. The Emberwrights raised this
+    ring before the town, before the Concord, before the names we keep -- and left gifts here for a
+    thing they did not write down, and trusted us to leave them be. You are the first in an age to
+    stand here. Take the ember if you must; the forest kept it a long time, and will not miss it now.
