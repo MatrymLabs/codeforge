@@ -1,0 +1,21 @@
+# SEED: aethryn -- quests/the_ruin_watch.yaml (an Ashwastes side-quest). Lay the salvage-wraith the
+# scoured ruin's own stones remember, so a Forger can pick the ruin without being worn for a shape.
+
+id: the_ruin_watch
+name: The Ruin Watch
+start: haunted
+reward_xp: 300
+
+steps:
+  - {state: haunted, event: lay, to: laid, on_defeat: salvage_wraith, effect: award_xp}
+
+terminal: [laid]
+
+labels:
+  haunted: "A salvage-wraith drifts the Scoured Ruin, made of everything the Unforging left half-finished, and it reaches for the living to borrow a shape. Lay it, and the ruin is safe to pick."
+  laid: |-
+    *** THE RUIN IS STILL ***
+    The wraith lets go of the half-made shapes it wore and scatters back into the scoured glass it
+    rose from. What the Unforging left unfinished stays unfinished now, and quiet. The salvagers will
+    work the ruin by daylight, and leave it before the cold comes back down. Some things only need
+    finishing.
