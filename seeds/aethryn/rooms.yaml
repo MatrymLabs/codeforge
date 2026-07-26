@@ -92,12 +92,13 @@ verdance_landing:
   desc: |-
     A root-jetty where the ferry ties to a living tree that gripped it back. The understory glows with
     ember-blooms; a canopy-stalker watches from the boughs above. A root-stair climbs west toward
-    Highbough, the canopy capital; a game-trail sinks south into the breathing mire. The channel runs
-    back east.
+    Highbough, the canopy capital; a game-trail sinks south into the breathing mire, and a hunters'
+    path runs north along the forest floor into the understory. The channel runs back east.
   exits:
     east: the_verdant_passage
     west: highbough
     south: the_deeproot_mire
+    north: the_understory
 
 highbough:
   name: Highbough
@@ -105,9 +106,10 @@ highbough:
     A city grown rather than built, in the crown of a tree so vast its boughs are avenues: Highbough,
     capital of the Deeprooted, where the people treat wild Ember as sacred and Forging as a
     conversation with a living world. A grove-elder reads the tree's moods; a canopy-trader keeps a
-    hollow-stall. The landing lies back east.
+    hollow-stall. The landing lies back east; the bough-avenues of the city proper run west.
   exits:
     east: verdance_landing
+    west: the_bough_avenues
 
 the_deeproot_mire:
   name: The Deeproot Mire
@@ -1123,3 +1125,79 @@ the_sunken_manse:
     The landing lies back up.
   exits:
     up: saltmarsh_landing
+# THE VERDANCE EXPANSION (Great Creation Campaign) - the living continent grows to zone density:
+# Highbough's bough-avenues + wild-ember shrine (the capital lived-in), the Understory (a forest-floor
+# wilderness leveling ground), and the Sunken Ziggurat (a forgotten civilization the jungle ate whole,
+# a ruin-delve). Level-banded 22-30, filling the gap between the landing and the mire.
+# ============================================================================================
+
+# --- Highbough proper: the canopy capital, more than one bough ---
+the_bough_avenues:
+  name: The Bough-Avenues
+  desc: |-
+    The city proper spreads along boughs wide as roads, houses grown into the living wood and lit by
+    ember-blooms coaxed rather than kindled. Deeprooted folk go about a life the drowned Reaches never
+    knew: unhurried, green, certain the tree will hold. A bough-warden of the city watch keeps the
+    ways, and a canopy-child dares the high rails. Highbough's heart lies back east; a wild-ember
+    shrine stands west, and a rope-and-root descent drops south to the forest floor.
+  exits:
+    east: highbough
+    west: the_wildember_shrine
+    south: the_understory
+
+the_wildember_shrine:
+  name: The Wild-Ember Shrine
+  desc: |-
+    Where the Deeprooted keep what the drowned Reaches spend: a shrine grown around a wellspring of
+    wild Ember left to burn untouched, tended and never Forged. A grove-keeper reads the flame the way
+    a smith reads a heat, and will not let a stranger take from it. The tree's own testament is carved
+    in the living bark for any who can read the green. The avenues lie back east.
+  exits:
+    east: the_bough_avenues
+
+# --- The Understory: the forest-floor wilderness, a leveling ground between the landing and the mire ---
+the_understory:
+  name: The Understory
+  desc: |-
+    Below the canopy the forest floor is a green dusk of buttress-roots and ember-bloom, loud with
+    the calls of things that hunt the half-light. Root-boars root the leaf-mould and thornwolves work
+    in packs; glowcap clusters the fallen giants for anyone with the nerve to gather the dark. The
+    landing lies north, the bough-avenues climb up, and an old overgrown causeway runs west toward
+    something the jungle swallowed long ago.
+  exits:
+    north: verdance_landing
+    up: the_bough_avenues
+    west: the_overgrown_causeway
+
+# --- The Sunken Ziggurat: a forgotten civilization the Verdance ate (a ruin-delve) ---
+the_overgrown_causeway:
+  name: The Overgrown Causeway
+  desc: |-
+    A road of cut stone runs west under the roots, older than the Deeprooted and not of their making:
+    a causeway of a people the jungle took whole, their glyphs still legible where the green has not
+    yet closed. Root-stranglers guard the way, grown thick where the old power still hums. The
+    understory lies back east; the causeway climbs the steps of a ziggurat, west.
+  exits:
+    east: the_understory
+    west: the_ziggurat_steps
+
+the_ziggurat_steps:
+  name: The Ziggurat Steps
+  desc: |-
+    A stepped pyramid of black stone breaks the canopy, half-swallowed by the tree that grew through
+    its crown: the seat of the forgotten people, their terraces hung with strangling root. A vine-
+    wraith, the last warden of a dead faith, keeps the stair against all comers. The causeway lies
+    back east; the ziggurat's sealed vault opens above, at the crown.
+  exits:
+    east: the_overgrown_causeway
+    up: the_ziggurat_vault
+
+the_ziggurat_vault:
+  name: The Ziggurat Vault
+  desc: |-
+    The crown-vault of the sunken ziggurat, roofless now, the tree's heartwood grown down through it
+    like a hand around a coal. Here the forgotten people kept their god: the Rootpriest-that-Endured,
+    a thing half-corpse and half-tree that swallowed its own priesthood to outlast its age, and has.
+    What it kept for its dead god still lies in the choked reliquary. The steps lie back down.
+  exits:
+    down: the_ziggurat_steps

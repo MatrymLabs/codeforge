@@ -1824,3 +1824,109 @@ manse_warden:
   tier: elite  # the Sunken Manse's mini-boss, an Outer Reefs off-path prize (x3 reward)
   drops: [greater_healing_draught, manse_signet]
   loot: {ember_shard: 5, hollow_ingot: 2, nothing: 2}
+# --- The Verdance expansion life (Great Creation Campaign): Highbough's city folk, the understory's
+# --- forest-floor hunters, and the Sunken Ziggurat's dead-faith wardens. Banded 22-30. ---
+
+# Highbough proper (non-combat life)
+highbough_warden:
+  name: a bough-warden of the watch
+  location: the_bough_avenues
+  keywords: [warden, watch, bough, guard]
+  dialogue:
+    - '"Welcome to Highbough, Forger, and mind the rails -- the tree is kind but the fall is not. We keep the peace the green way: slow, and sure, and rooted. You will find no cells here. The tree remembers a wrong longer than any gaol."'
+  topics:
+    rumor:
+      - '"West of the shrine the forest floor drops into the understory -- good hunting, if the thornwolves do not hunt you first. Go far enough west and you strike the old causeway. A people lived here before us and the tree ate them whole. Their ziggurat still stands, and something in its crown still keeps their god. We do not go up the steps."'
+
+canopy_child:
+  name: a canopy-child
+  location: the_bough_avenues
+  keywords: [child, canopy, kid, highbough]
+  dialogue:
+    - The canopy-child runs the high rail without a hand for balance, grinning down. "You walk like the ground might leave! It won't. The tree holds. Everyone flat-born walks like that at first."
+
+grove_keeper:
+  name: the grove-keeper
+  location: the_wildember_shrine
+  keywords: [keeper, grove, shrine, priest]
+  dialogue:
+    - '"You may look on the wild flame, Forger, not take from it. The drowned Reaches Forge their Ember and call it mastery. We let ours burn and call it kin. Neither is wrong. But this flame is not yours." The grove-keeper does not move from the wellspring.'
+  topics:
+    rumor:
+      - '"Read the testament in the bark if you can read the green. The tree keeps a longer memory than any archive: it remembers the people before us, and how the jungle came for them. A warning, if you have the wit to take it."'
+
+# The Understory (forest-floor wilderness, dispersal leveling 22-24)
+understory_boar:
+  name: a root-boar
+  location: the_understory
+  keywords: [boar, root, understory, pig]
+  dialogue:
+    - A root-boar the size of a pony heaves up from the leaf-mould, tusks hung with torn root, and squares to charge.
+  hp: 68
+  atk: 12
+  aggressive: true
+  attack_element: ERT
+  level: 22
+  tier: normal  # the understory's leveling ground, an alternative to the mire for fresh Verdance climbers
+  loot: {ember_shard: 3, glowcap: 1, nothing: 2}
+
+understory_thornwolf:
+  name: a thornwolf
+  location: the_understory
+  keywords: [thornwolf, wolf, understory, pack]
+  dialogue:
+    - A thornwolf slips from the buttress-roots, then another at your flank -- they hunt in a pack, and they have your scent.
+  hp: 60
+  atk: 14
+  aggressive: true
+  attack_element: WND
+  level: 23
+  tier: normal  # the understory's pack-threat; the glowcap guardian
+  loot: {ember_shard: 3, glowcap: 1, nothing: 2}
+
+# The Sunken Ziggurat ruin-delve (a forgotten civilization, 25 -> 28 -> 30)
+causeway_strangler:
+  name: a root-strangler
+  location: the_overgrown_causeway
+  keywords: [strangler, root, causeway, vine]
+  dialogue:
+    - A knot of strangling root pulls loose from the old glyph-stones, blind and questing, and reaches for the warmth of you.
+  hp: 78
+  atk: 15
+  aggressive: true
+  attack_element: ERT
+  level: 25
+  tier: normal  # the ruin approach, the delve's first tier
+  loot: {ember_shard: 4, glowcap: 1, nothing: 2}
+
+ziggurat_vinewraith:
+  name: a vine-wraith
+  location: the_ziggurat_steps
+  keywords: [wraith, vine, ziggurat, warden]
+  dialogue:
+    - '"Turn back," the vine-wraith rasps through a throat of dead root -- the last warden of a dead faith, bound to the stair. "The god is kept. The god is not for you." It does not turn back either.'
+  hp: 118
+  atk: 18
+  aggressive: true
+  attack_element: DRK
+  resistances: {DRK: Resist, HLY: Weak}  # a dead faith's warden: radiance unbinds it
+  level: 28
+  tier: elite  # the ziggurat's mini-boss gate (x3 reward), guarding the vault stair
+  drops: [greater_healing_draught]
+  loot: {ember_shard: 5, glowcap: 2, nothing: 2}
+
+ziggurat_rootpriest:
+  name: the Rootpriest-that-Endured
+  location: the_ziggurat_vault
+  keywords: [rootpriest, priest, ziggurat, god, endured]
+  dialogue:
+    - Half-corpse and half-tree, the Rootpriest unfolds from the choked reliquary -- the thing that swallowed its own priesthood to outlast its age, and did. "I endured," it breathes, in a hundred swallowed voices. "You will not."
+  hp: 240
+  atk: 22
+  aggressive: true
+  attack_element: ERT
+  resistances: {ERT: Resist, PSN: Resist, FIR: Weak}  # a thing of dead wood: fire is its undoing
+  level: 30
+  tier: boss  # the Sunken Ziggurat's climax (x10 reward): the forgotten people's undying god
+  drops: [rootpriest_censer, greater_healing_draught]
+  loot: {ember_shard: 8, glowcap: 3, nothing: 1}
