@@ -1,0 +1,20 @@
+# SEED: aethryn -- quests/the_reachwood_harvest.yaml (a Deep Reachwood GATHER/profession task). Cut a
+# bead of reachwood sap from the Thornmere, so the town's makers have the wood's rarest binding.
+
+id: the_reachwood_harvest
+name: The Reachwood Harvest
+start: unasked
+reward_xp: 90
+
+steps:
+  - {state: unasked, event: gather, to: gathered, on_take: reachwood_sap, effect: award_xp}
+
+terminal: [gathered]
+
+labels:
+  unasked: "The Thornmere, deep in the old wood, is the one place reachwood sap still beads on the ember-blooms -- the makers' rarest binding. Cut a bead, if you can reach the mere past the lurker."
+  gathered: |-
+    *** SAP GATHERED ***
+    You draw a bead of reachwood sap from a bloom at the mere's edge, warm and slow and gold. The
+    town's makers pay well for it and ask no questions about the lurker in the reeds. A gatherer's
+    deed -- the quiet trade that keeps a town in bindings while the Forgers chase the loud one.
