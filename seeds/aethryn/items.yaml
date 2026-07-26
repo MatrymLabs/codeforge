@@ -586,3 +586,40 @@ reachlord_signet:
   location: nowhere
   slot: accessory_2
   mods: {DEF: 8, "MAG DEF": 8, EVA: 5}
+
+# --- More readable lore (Content Manufacturing Campaign): a record placed in each major Reach that
+# --- still lacked one, read with `read <item>`. The world's memory, one place at a time. ---
+kollkin_ledger:
+  name: a Kollkin vent-ledger
+  keywords: [ledger, kollkin, vent, book]
+  location: emberkoll
+  lore: |-
+    THE VENT-LEDGER OF EMBERKOLL, names struck through in order.
+    We do not carve headstones in the Kollforge -- the heat would crack them. We keep the ledger.
+    Every name here worked a vent and did not come back up, and beside each, in the same hand, the
+    make they were pouring when the fire took them. Read it and you will see: not one line is blank.
+    Every Forger who died here died mid-making. We tell the apprentices that is not a warning. It is
+    the only honest thing the Kollforge has to promise you: you will not die idle.
+
+silent_anvil_creed:
+  name: the Silent Anvil's creed-stone
+  keywords: [creed, stone, anvil, tablet]
+  location: stillhearth
+  lore: |-
+    Cut small into the one warm hearth of Stillhearth, where the Silent Anvil keep their vigil:
+    THE RIMEFALL IS NOT A RUIN. It is a lesson held at the exact moment before it was learned. The
+    golden age froze here mid-gesture, its makers a hand's breadth from a making that would have
+    unmade them, and the ice kept them there so we could stand where they stood and choose the other
+    way. We do not thaw the Rime-King. We keep him. A mistake preserved is a mistake that teaches.
+    A mistake undone is only a mistake waiting to be made again.
+
+deeprooted_growth_song:
+  name: a Deeprooted growth-song
+  keywords: [song, growth, deeprooted, bark]
+  location: highbough
+  lore: |-
+    Not written but grown, the words raised in living bark on a bough of Highbough, read by touch:
+    WE DO NOT FORGE THE WOOD. WE ASK IT. The lowland makers strike ember into shape and call it
+    making; we grow ours, slow, a conversation across seasons, and what we grow keeps growing after
+    we let go. They think this weakness. Let them. When their forged things cool and crack and are
+    salvage, ours will still be reaching for the light. The patient making is the one that lasts.
