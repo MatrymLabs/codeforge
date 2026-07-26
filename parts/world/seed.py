@@ -124,6 +124,9 @@ class Item(TypedDict):
     # legendary. Set when combat rolls affixes onto an instance; absent (read as "common") on a
     # base seed item. A client colours the loadout by it; readers use `.get("rarity", "common")`.
     rarity: NotRequired[str]
+    # Readable lore: the text `read <item>` shows. A lore book, a record, an inscription -- readable
+    # environmental storytelling you can carry. Optional -- a bare item has nothing written on it.
+    lore: NotRequired[str]
 
 
 class Npc(TypedDict):
@@ -499,6 +502,9 @@ def load_items(path: Path) -> dict[str, Item]:
             raise SeedError(
                 f"Item '{label}': 'consume' must map hp/mp to a positive integer restore."
             )
+        lore = merged.get("lore")
+        if lore is not None and (not isinstance(lore, str) or not lore.strip()):
+            raise SeedError(f"Item '{label}': 'lore' must be non-empty readable text.")
         item = Item(
             name=merged["name"],
             keywords=merged["keywords"],
@@ -511,6 +517,8 @@ def load_items(path: Path) -> dict[str, Item]:
             item["resettable"] = True  # opt-in: repopulates on an area reset
         if consume:
             item["consume"] = dict(consume)
+        if lore:
+            item["lore"] = str(lore)  # readable text: `read <item>` shows it
         items[label] = item
     return items
 

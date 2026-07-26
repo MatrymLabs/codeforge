@@ -337,6 +337,19 @@ def test_aethryn_sovereign_drops_a_legendary_capstone():
     assert sum(regalia["mods"].values()) > best_regional
 
 
+def test_aethryn_ships_readable_lore_placed_in_the_world():
+    """Environmental storytelling you can read: aethryn places lore items (a record, a drowned log,
+    a sky inscription) in rooms, read with `read <item>`. Each resolves to a real room and carries
+    real prose (not a stub), so a Forger who slows down to look finds the world's memory."""
+    items = load_items(AETHRYN / "items.yaml")
+    rooms = set(load_rooms(AETHRYN / "rooms.yaml"))
+    lore_items = {label: it for label, it in items.items() if it.get("lore")}
+    assert len(lore_items) >= 3, "the world offers almost nothing to read"
+    for label, it in lore_items.items():
+        assert it["location"].split(":")[-1] in rooms, f"lore item {label} is placed nowhere"
+        assert len(it["lore"]) > 40, f"lore item {label} has only a stub, not a story"
+
+
 def test_aethryn_exploration_rooms_hold_placed_treasures():
     """Reaching a deep or off-path terminal rewards a one-time treasure ON THE GROUND (not an RNG
     drop): unique relics placed in the ruin, the Cinderheart, the drowned capital, the heart-grove,

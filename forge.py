@@ -71,7 +71,15 @@ from parts.world.engineer import deploy_barrier, diagnostic_scan, field_repair
 from parts.world.equipment import equip, unequip
 from parts.world.events import announce, announce_frame, bind_echo, rename_echo, unbind_echo
 from parts.world.frames import SpeechFrame
-from parts.world.items import drop, inventory_text, prototype_of, room_items_text, take, trace_item
+from parts.world.items import (
+    drop,
+    inventory_text,
+    prototype_of,
+    read_item,
+    room_items_text,
+    take,
+    trace_item,
+)
 from parts.world.jobs import JOBS, bind_calling, calling_index, set_secondary
 from parts.world.npcs import ask, room_npcs_text, talk, trace_npc
 from parts.world.orders import swear_order
@@ -1413,6 +1421,15 @@ def _build_commands() -> CommandSet:
             "CMD-04.055",
             "drop a carried item (drop <item>)",
             _drop_cmd,
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "read",
+            "CMD-04.080",
+            "read an item's lore (read <item>)",
+            lambda s, a: read_item(a, s.location),
             namespace=CORE,
         )
     )

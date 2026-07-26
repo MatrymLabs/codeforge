@@ -2107,6 +2107,31 @@
     "updated": "2026-07-16"
   },
   {
+    "designation": "CMD-04.080",
+    "name": "read",
+    "status": "active",
+    "function": "read an item's lore (read <item>)",
+    "label": "read",
+    "file": "forge.py",
+    "type": "CMD",
+    "domain": "04",
+    "docs": "docs/architecture.md",
+    "tests": "tests/test_items.py",
+    "depends_on": [],
+    "related": [
+      "look"
+    ],
+    "reuse": "",
+    "tags": [
+      "command"
+    ],
+    "notes": "parts/world/items.read_item: show a lore item's readable text (inventory or room).",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-26",
+    "updated": "2026-07-26"
+  },
+  {
     "designation": "CMD-04.056",
     "name": "talk",
     "status": "active",
