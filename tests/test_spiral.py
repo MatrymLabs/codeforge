@@ -106,13 +106,14 @@ def test_load_spiral_config_rejects_a_top_above_the_curve_cap(tmp_path):
         load_spiral_config(path)
 
 
-def test_the_flagship_seed_reaches_the_summit_at_level_255():
+def test_the_flagship_seed_reaches_the_summit_at_the_level_cap():
+    from parts.shelf.reward_curve import LEVEL_MAX
     from parts.world.seed import SEEDS_ROOT
 
     config = load_spiral_config(SEEDS_ROOT / "aethryn" / "spiral.yaml")
-    assert config is not None and config["top_level"] == 255
+    assert config is not None and config["top_level"] == 300 == LEVEL_MAX  # the true ceiling
     _rooms, npcs, first = generate_spiral(config, {"coil_third_landing": {"exits": {}}})
-    assert any(n["level"] == 255 for n in npcs.values())  # the aethryn Spiral truly hits 255
+    assert any(n["level"] == 300 for n in npcs.values())  # the aethryn Spiral climbs to the cap
     assert first == "coil_4_ascent"
     # no dead band at the hand-authored/procedural seam: the lowest generated foe lands right above
     # the last authored foe (the Stormlord, level 38), so the climb never runs out of content.
