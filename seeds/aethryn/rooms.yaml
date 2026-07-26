@@ -623,10 +623,12 @@ the_drowned_way:
     Below the maw the stair drowns entirely, and you wade a black flood that was once a
     making-canal, roofed in dead ember. Things that were makers, once, drift and turn in the
     cold current -- a sunken revenant among them, still clutching a tool for a hand. The
-    forgeworks are back up the stair; ahead, the flood pours down into a deeper, older dark.
+    forgeworks are back up the stair; ahead, the flood pours down into a deeper, older dark. A
+    sealed hatch stands in the canal wall to the east, its Forgework lock long rusted.
   exits:
     up: cinderdeep_maw
     down: the_cinderheart
+    east: the_sealed_vault
 
 the_cinderheart:
   name: The Cinderheart
@@ -1018,3 +1020,17 @@ the_windward_downs:
     post lies back south.
   exits:
     south: the_emberpost
+
+# --- The Sealed Vault (Seed Scale Doctrine: hidden discoveries / off-path prize). A sealed chamber
+# --- off the Drowned Way that the Cinderdeep's flood never breached, so the deep dungeon rewards the
+# --- Forger who tries the rusted hatch instead of pressing straight down to the Cinderheart. ---
+the_sealed_vault:
+  name: The Sealed Vault
+  desc: |-
+    Behind the rusted hatch, a chamber the flood never reached: a dry, sealed vault the makers shut
+    against the Unforging and never reopened, its air a thousand years stale. What they sealed here
+    they meant to keep from the unmaking - and something has kept it, all this time, a vault-horror
+    grown from the sealed dark, that turns toward the first light in an age. The drowned way lies back
+    west.
+  exits:
+    west: the_drowned_way

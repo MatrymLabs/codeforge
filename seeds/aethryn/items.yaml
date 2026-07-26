@@ -717,3 +717,23 @@ flagship_manifest:
     once. She went down the day the Cooling-Sea rose, the manifest unmarked as delivered. All of it is
     still here, lashed and lost, a coast's worth of warmth that never arrived. They relit the Kindlands
     the slow way instead, hearth by hearth, and never knew how close the fast way came to reaching them.
+
+# --- The Sealed Vault's content (Seed Scale Doctrine): what the makers sealed away, and why. ---
+sealed_ember:
+  name: a shard of sealed ember
+  keywords: [ember, sealed, shard, relic]
+  location: nowhere
+  slot: accessory_2
+  mods: {ATK: 5, DEF: 5}  # ember the makers sealed against the unmaking, worn for its stubborn heat
+
+vault_seal_record:
+  name: the vault-sealer's record
+  keywords: [record, seal, vault, book]
+  location: the_sealed_vault
+  lore: |-
+    Scratched into the vault door from the inside, in a maker's last steady hand:
+    "We seal what we could not let the Unforging have: a shard of the first ember, from before the
+    First Seed broke, still warm. If you have opened this, then the Rekindling came, and the world was
+    relit, and you are a Forger of an age we did not live to see. Take the ember. It was always meant
+    to be a beginning, not a grave. We only kept it safe until someone came who could carry it forward.
+    That is you. It was always going to be you. Go and make something. That is the whole of the craft."
