@@ -1693,3 +1693,44 @@ vault_horror:
   tier: elite  # the Cinderdeep's hidden off-path prize, off the main delve (x3 reward)
   drops: [greater_healing_draught, sealed_ember]
   loot: {ember_shard: 5, hollow_ingot: 2, nothing: 2}
+
+# --- The Deep Wreckways life (Seed Scale Doctrine: the Quenchmere's second leveling ground + a
+# --- hidden-dungeon mini-boss, plus more life in the free-port). ---
+wreck_scavenger:
+  name: a wreck-scavenger
+  location: the_deep_wreckways
+  keywords: [scavenger, wreck, diver, brine]
+  dialogue:
+    - A shape that was a diver once kicks up from a flooded hold, brine-logged and grasping, and does not let go of what the sea gave it.
+  hp: 66
+  atk: 10
+  aggressive: true
+  attack_element: WTR  # a thing of the drowned wrecks: brine and cold
+  level: 20
+  tier: normal  # the deep Wreckways' threat, a Quenchmere leveling ground off the marked lane
+  loot: {ember_shard: 3, wreckways_salvage: 1, nothing: 2}
+
+chapel_warden:
+  name: the warden of the drowned chapel
+  location: the_drowned_chapel
+  keywords: [warden, chapel, keeper, drowned]
+  dialogue:
+    - '"..." A drowned keeper rises from the flooded pews of the chapel, still tending an altar the sea took an age ago, and moves to keep the offering from you.'
+  hp: 140
+  atk: 15
+  aggressive: true
+  attack_element: WTR  # the chapel's drowned keeper (brine and cold; the Merewrights warded with holy)
+  level: 24
+  tier: elite  # the drowned chapel's mini-boss, a Quenchmere off-path prize (x3 reward)
+  drops: [greater_healing_draught, chapel_relic]
+  loot: {ember_shard: 4, hollow_ingot: 1, nothing: 2}
+
+tidewharf_diver:
+  name: a Salvage-Guild diver
+  location: tidewharf_docks
+  keywords: [diver, salvage, guild, wharf]
+  dialogue:
+    - '"Everything the sea took is still down there, Forger, and the Guild pays by the pound. The deep Wreckways north are thick with it -- and thick with what guards it. I dive the shallow lanes. Braver souls dive the deep."'
+  topics:
+    rumor:
+      - '"There is a chapel out in the deep Wreckways, the tallest wreck of them all, its spire still above the water. The Merewrights drowned praying in it. Whatever they left on that altar is still there -- and so is the one who kept it. Bring radiance to a drowned holy thing."'

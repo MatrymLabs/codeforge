@@ -52,10 +52,12 @@ the_quench_lanes:
     The ferry runs the open Cooling-Sea, threading the Wreckways -- reef-lanes marked not by buoys
     but by the masts of drowned ships, ten thousand of them breaking the grey water where the sea
     rose over a Reach. Brine-wights drift the shallows between the hulls. Ahead, the hundred-hulled
-    silhouette of Tidewharf; back east, the coast you sailed from.
+    silhouette of Tidewharf; back east, the coast you sailed from. North, a lane of masts leads off
+    the mapped route into the deep Wreckways.
   exits:
     east: quench_harbor
     west: tidewharf_docks
+    north: the_deep_wreckways
 
 tidewharf_docks:
   name: The Tidewharf Docks
@@ -1034,3 +1036,27 @@ the_sealed_vault:
     west.
   exits:
     west: the_drowned_way
+
+# --- The Deep Wreckways + the Drowned Chapel (Seed Scale Doctrine: expand the Quenchmere to MMO
+# --- density - a second leveling ground, a salvage-gathering maze, and a hidden sunken dungeon off
+# --- the mapped ferry route, so the drowned Reach disperses players like Emberreach does). ---
+the_deep_wreckways:
+  name: The Deep Wreckways
+  desc: |-
+    Off the ferry's marked lane, the Wreckways deepen into a maze of drowned hulls no chart covers:
+    ten thousand ships the risen sea took, locked mast to mast, their holds spilling a Reach's worth
+    of salvage into the green water. Wreck-scavengers work the hulls, and so do worse things. Good
+    salvage beads on every broken deck. The marked lane lies back south; a temple-mast rises north.
+  exits:
+    south: the_quench_lanes
+    north: the_drowned_chapel
+
+the_drowned_chapel:
+  name: The Drowned Chapel
+  desc: |-
+    The tallest wreck in the deep Wreckways is no ship: a drowned chapel of the old Merewrights, its
+    spire the mast that marks it, its nave flooded and lit by a seam of drowned ember behind the
+    altar. A chapel-warden - the last keeper, drowned at its post - rises from the pews to hold the
+    offering the faithful left when the sea came. The Wreckways lie back south.
+  exits:
+    south: the_deep_wreckways
