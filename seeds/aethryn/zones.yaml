@@ -98,3 +98,9 @@ the_rimefall:
   rooms: [the_deepwater_berth, the_riming_passage, stillhearth, the_frozen_court]
   reset_mode: empty_only
   beats_between: 12
+
+the_kollforge:
+  name: The Kollforge
+  rooms: [the_molten_passage, emberkoll, the_anvil_vents, the_vent_deep]
+  reset_mode: empty_only
+  beats_between: 12

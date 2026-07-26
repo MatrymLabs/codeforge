@@ -147,6 +147,7 @@ the_deepwater_berth:
   exits:
     south: tidewharf_plaza
     north: the_riming_passage
+    west: the_molten_passage
 
 # --- The Rimefall: the quenched north across the sea (Continental Atlas §II, Build Order Phase 4).
 # --- A continent flash-frozen in the Unforging, its Emberwright cities preserved whole under the ice;
@@ -624,3 +625,50 @@ the_cinderheart:
     bottom. Sound it, and the deep is answered. The only way is back up, toward the light.
   exits:
     up: the_drowned_way
+
+# --- The Kollforge: the molten Reach across the sea (Continental Atlas §VI, Build Order Phase 5). The
+# --- surface land closest to the Forge's heat, where the world is still visibly being made; home of
+# --- the Kollkin fire-Forgers and the Vent-Forges. Level-banded 50-62. Reached from the berth (west). ---
+
+the_molten_passage:
+  name: The Molten Passage
+  desc: |-
+    The ferry runs a black-glass channel west into rising heat, the Cooling-Sea steaming where it
+    laps the Kollforge's shore. Ahead the molten Reach glows: rivers of Forgelight-lit lava, obsidian
+    cities on cooling shelves, the whole land still visibly being made. Cinder-drakes ride the thermals.
+    The berth lies back east.
+  exits:
+    east: the_deepwater_berth
+    west: emberkoll
+
+emberkoll:
+  name: Emberkoll
+  desc: |-
+    The molten capital: an obsidian city raised over a lightning-lit caldera, where the Kollkin work
+    the hottest, rawest ember in the world and count a cooled land as a dead one. A Vent-Forge master
+    keeps the great forge; a Kollkin trader keeps a shelf-stall. The passage lies back east; north, the
+    Anvil-Vents open toward the Forge below.
+  exits:
+    east: the_molten_passage
+    north: the_anvil_vents
+
+the_anvil_vents:
+  name: The Anvil-Vents
+  desc: |-
+    Where raw ember still wells up from the Forge below through vents in the world's floor, the ground
+    remade with every pulse. A Forgeborn -- living Forgework that never cooled -- guards the deepest
+    vent, running a purpose no one remembers. Emberkoll lies back south; north, the vent drops toward
+    the Vent-Lord and the raw edge of creation.
+  exits:
+    south: emberkoll
+    north: the_vent_deep
+
+the_vent_deep:
+  name: The Vent Deep
+  desc: |-
+    The bottom of the Anvil-Vents, where the Forge's heat is close enough to feel the world being
+    made and unmade at once. The Vent-Lord keeps it -- a Forgeborn grown vast on a millennium of raw
+    fire, the last guardian before the Forge itself. This is the hottest place a walking Forger can
+    reach. The vents lie back south.
+  exits:
+    south: the_anvil_vents

@@ -224,3 +224,12 @@ stillheart:
   location: nowhere
   slot: weapon
   mods: {ATK: 15, "MAG DEF": 6}
+
+# Drop-only: the Vent-Lord's reward -- the Vent-Crown, a Reach-Relic of raw Forgework worn straight
+# from the vents (a head-piece of living fire; see the Legendary Item Catalog, the Reach-Relics).
+vent_crown:
+  name: the Vent-Crown
+  keywords: [crown, vent, forge, relic]
+  location: nowhere
+  slot: head
+  mods: {ATK: 8, "MAG DEF": 8}
