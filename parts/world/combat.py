@@ -21,6 +21,7 @@ from parts.shelf import affixes
 from parts.shelf.reward_curve import jp_for_kill, xp_for_kill
 from parts.shelf.weighted_table import WeightedTable
 from parts.world import items
+from parts.world.boss_phases import boss_phase
 from parts.world.coinage import purse
 from parts.world.combat_clock import advance as advance_clock
 from parts.world.encounter_log import witness
@@ -196,6 +197,9 @@ def _resolve_npc_blow(session: Session, npc: Npc, verb: str) -> str:
     raw = npc_strike_power(npc)
     if raw <= 0:
         return ""  # the training dummy and every peaceful NPC: no blow
+    # A wounded BOSS enrages (parts.world.boss_phases): below its threshold its blows redouble, and
+    # the room hears it announced once. A non-boss, or a boss above the line, is untouched.
+    raw, phase_line = boss_phase(npc, raw)
     # A weakened foe (a `weaken` ability) lands softer, and this blow spends one weaken charge.
     sapped = npc.get("weakened", 0)
     if sapped > 0:
@@ -228,6 +232,8 @@ def _resolve_npc_blow(session: Session, npc: Npc, verb: str) -> str:
     else:  # Immune or Absorb: the blow lands no damage, the note carries the outcome
         body = f"{name} {verb}.{resist_note}"
     line = f"{body} (HP {hp.current}/{hp.maximum})"
+    if phase_line:  # a fresh enrage announces before the blow it empowers
+        line = f"{phase_line}\n{line}"
     # The Engineer's Emergency Repair reacts to a dangerous blow: it auto-heals once (then cools
     # down), and can pull the player back from a fall. Returns None for anyone else, or on cooldown.
     repair = emergency_repair(session)
