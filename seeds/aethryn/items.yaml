@@ -1225,3 +1225,47 @@ ventforge_creed:
     when the brave are proven right. Work the vent. Do not flinch. And when they tell you the world is
     too dangerous to keep making -- and they will, in the north and the halls and the cold -- remember
     that everything they are afraid of losing, someone reckless made first, at an edge exactly this hot."
+# --- The Wardenmarch content (Great Creation Campaign, Phase I): the keep's march-steel (shop), the
+# --- cairn-hills charge-crystal gather, the Sentinel's core, and the Old Gate's readable marks. ---
+march_steel_blade:
+  name: a march-steel blade
+  keywords: [blade, march, steel, weapon]
+  location: nowhere
+  slot: weapon
+  mods: {ATK: 10, ACC: 3}  # Concord frontier make: plain, sturdy, and cheap enough that no Forger dies unarmed
+
+march_steel_guard:
+  name: a march-steel guard
+  keywords: [guard, march, steel, armor]
+  location: nowhere
+  slot: body
+  mods: {DEF: 9, EVA: 2}  # the keep's overstock body-armor, plain grey Concord Forgework
+
+charge_crystal:
+  name: a charge-crystal
+  keywords: [charge, crystal, cairn, material]
+  location: the_cairn_hills
+  resettable: true  # the cairn-hills gather: old Forgework-charge grounded to crystal, reforms on the reset
+
+charged_warden_core:
+  name: the fallen Sentinel's core
+  keywords: [core, sentinel, warden, charged]
+  location: nowhere
+  slot: accessory_1
+  mods: {"MAG DEF": 7, DEF: 3}  # the charged heart of a Warden Sentinel that would not abandon its post
+
+old_gate_marks:
+  name: the marks of the Old Gate
+  keywords: [marks, gate, ring, glyphs]
+  location: the_old_gate
+  lore: |-
+    The marks graven around the Old Gate's ring, in the Emberwright hand the Concord can no longer fully
+    read - but a Forger who has walked far enough begins to make them out: "GATE THE SECOND OF THE NINE.
+    Set here by the makers before the Unforging, to open where a Gate answers a Gate. What lies through
+    is not another place but another WHEN - the Gates did not cross the world, they crossed the making
+    of it, so that a maker could step back to the hour a thing was Forged and mend it at the root." Below,
+    in a later, cruder hand - a Warden's, not a maker's: "We do not open it. We do not know how, and we
+    are glad we do not. A door to the hour of making is a door to the hour of UNmaking, and the last
+    people who could open these Gates used them to break the world. We keep the Gate shut. That is the
+    Concord's whole purpose, and it is enough: not to make, not to unmake, but to KEEP - to hold the old
+    doors closed until someone wiser than the makers comes to say which ought to be opened. No one has."

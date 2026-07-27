@@ -2869,3 +2869,93 @@ vent_crucible_warden:
   tier: boss  # Venthold's proving-vent climax (x10 reward): earn the fortress's mark by right, not rank
   drops: [venthold_mark, greater_healing_draught]
   loot: {ember_shard: 16, emberglass: 5, nothing: 1}
+# --- The Wardenmarch expansion life (Great Creation Campaign, Phase I): the Concord's frontier folk +
+# --- the highland wilds' foes + the sundered redoubt's dead watch. Banded 17-22. ---
+march_commander:
+  name: the march-commander
+  location: the_wardens_keep
+  keywords: [commander, march, keep, warden]
+  dialogue:
+    - '"You are on the Concord''s frontier now, Forger. Beyond the keep the road runs to the Coilfoot and the Forgeward Road; north the watchtowers watch what the wilds send; west the cairn-hills hold our dead and the old Forgework they died guarding. We keep the old Gates because someone must, and we have forgotten why, and we keep them anyway. That is the whole discipline of the Concord: hold the line whether or not you remember the reason."'
+  topics:
+    rumor:
+      - '"West past the cairn-hills a redoubt of ours went half to un-ness when the Unforging breathed on it -- wall scoured to nothing, the watch caught inside. A Sentinel still holds the deep magazine, alone, half-unmade, keeping a perimeter that isn''t all there. What''s charged down there is past any surface make. Put the Sentinel down and it''s yours. It was a Warden once. Give it that much thought before you strike."'
+
+march_drill_sergeant:
+  name: a march drill-sergeant
+  location: the_march_barracks
+  keywords: [sergeant, drill, barracks, warden]
+  dialogue:
+    - '"Frontier''s no place for a soft Forger. The Concord drills hard because the wilds test harder. March-steel''s plain but it holds -- I''ll sell you the keep''s overstock, and cheap, because a Forger who dies on our frontier for want of a blade is a mark against my drilling."'
+  shop:
+    sells:
+      healing_draught: 12
+      march_steel_blade: 60
+      march_steel_guard: 66
+    buys:
+      ember_shard: 5
+
+march_gate_warden:
+  name: the gate-warden of the Old Gate
+  location: the_old_gate
+  keywords: [warden, gate, ring, keeper]
+  dialogue:
+    - '"Stand clear of the ring, Forger, and mind the charge. This is one of the old Gates -- Emberwright work, older than the Concord, raised for a purpose no record we keep remembers. The Wardens hold it because a Gate unwatched is a door left open, and we have learned, hard, not to leave the old doors open. Read the marks if you can. I cannot. I only keep it."'
+
+watchtower_march_wolf:
+  name: a march-wolf
+  location: the_watchtower_line
+  keywords: [wolf, march, watchtower, pack]
+  dialogue:
+    - A march-wolf lopes out of a cairn-shadow along the tower line, lean and grey and unafraid, the pack fanning wide behind it.
+  hp: 48
+  atk: 10
+  aggressive: true
+  attack_element: WND
+  level: 18
+  tier: normal  # the watchtower line: an Emberreach mid highland leveling ground
+  loot: {ember_shard: 3, nothing: 2}
+
+cairn_march_husk:
+  name: a march-husk
+  location: the_cairn_hills
+  keywords: [husk, march, cairn, dead]
+  dialogue:
+    - A march-husk drags itself up out of a Warden's cairn, drawn by the old charge, a dead guardian still trying to keep a post it no longer understands.
+  hp: 56
+  atk: 12
+  aggressive: true
+  attack_element: LGT
+  level: 19
+  tier: normal  # the cairn-hills highland wilderness + the charge-crystal gather guardian
+  loot: {ember_shard: 3, charge_crystal: 1, nothing: 2}
+
+redoubt_husk:
+  name: a redoubt-husk
+  location: the_sundered_redoubt
+  keywords: [husk, redoubt, warden, sundered]
+  dialogue:
+    - A redoubt-husk keeps a doorway where a wall used to be, one of the Wardens the Unforging caught here, still holding a perimeter that is half made of nothing.
+  hp: 70
+  atk: 14
+  aggressive: true
+  attack_element: LGT
+  level: 20
+  tier: normal  # the sundered redoubt ruin, the march dungeon's outer tier
+  loot: {ember_shard: 4, charge_crystal: 1, nothing: 2}
+
+redoubt_sentinel:
+  name: the fallen Warden Sentinel
+  location: the_redoubt_deep
+  keywords: [sentinel, warden, redoubt, magazine]
+  dialogue:
+    - It was a Warden Sentinel once, set to keep this magazine, and it failed its watch when the wall fell and has held this one room ever since, half-unmade and lethal with grown charge. It turns on you the whole weight of a duty it could not perform and will not abandon.
+  hp: 150
+  atk: 20
+  aggressive: true
+  attack_element: LGT
+  resistances: {LGT: Resist, WTR: Weak}  # a charged Forgework guardian; water grounds it
+  level: 22
+  tier: elite  # the sundered redoubt's climax (x3 reward): a fallen Sentinel keeping a broken perimeter
+  drops: [charged_warden_core, greater_healing_draught]
+  loot: {ember_shard: 6, charge_crystal: 2, nothing: 2}
