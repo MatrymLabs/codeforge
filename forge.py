@@ -49,6 +49,7 @@ from parts.telegraph import telegraph
 from parts.titles import title
 from parts.vitals import vitals
 from parts.world import allocate, artifact, creator_workshop, gather, quest
+from parts.world import feats as feats_mod
 from parts.world import travel as travel_net
 from parts.world.abilities import render_abilities, use_ability
 from parts.world.accounts import (
@@ -1589,6 +1590,15 @@ def _build_commands() -> CommandSet:
             "CMD-04.090",
             "the Waystone network: pay to cross the world (travel [where])",
             lambda s, a: travel_net.travel(s, a, WAYSTONES),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "feats",
+            "CMD-04.091",
+            "your deed ledger: the feats you have earned",
+            lambda s, _a: feats_mod.feats(s),
             namespace=CORE,
         )
     )

@@ -2907,5 +2907,28 @@
     "aliases": [],
     "created": "2026-07-27",
     "updated": "2026-07-27"
+  },
+  {
+    "designation": "CMD-04.091",
+    "name": "feats",
+    "status": "active",
+    "function": "your deed ledger: the feats you have earned",
+    "label": "feats",
+    "file": "forge.py",
+    "type": "CMD",
+    "domain": "04",
+    "docs": "",
+    "tests": "tests/test_feats.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "command"
+    ],
+    "notes": "The achievements/deeds panel: earned vs locked feats derived live from the character's persisted state; long-term goals + a next-deed nudge.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-27",
+    "updated": "2026-07-27"
   }
 ]
