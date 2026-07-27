@@ -221,3 +221,66 @@ the_lost_vale:
   level_min: 6
   level_max: 14
   biome: "hidden-vale"
+
+# --- Zone-coverage pass (Phase I): fold the built Emberreach rooms into metadata areas, so the launch
+# --- zone's geography is complete (the audit's rooms_without_zone worklist shrinks honestly). ---
+
+emberreach_interiors:
+  name: Emberreach - the City Interiors
+  rooms: [the_first_flame_church, the_grand_archive, the_cinder_tankard, the_wayhouse_inn, the_making_hall, the_knowing_hall, the_gathering_hall, the_river_docks, the_undercity, the_sewers, the_city_walls, the_artisans_quarter, the_training_yard]
+  reset_mode: empty_only  # the undercity's drain-lurker and drain-warden reform once quiet; the halls hold no repop
+  beats_between: 16
+  region: "Emberreach"
+  level_min: 6
+  level_max: 20
+  biome: "city"
+
+cinderhearth_interiors:
+  name: Cinderhearth - the Coast Town
+  rooms: [the_relit_forge, the_saltrest_tavern, the_saltrest_loft, the_coast_shrine, the_fishers_row, the_hearthway]
+  reset_mode: never  # a safe starter town: its folk persist, nothing repops
+  beats_between: 20
+  region: "Emberreach"
+  level_min: 1
+  level_max: 6
+  biome: "temperate-coast"
+
+quench_harbor_interiors:
+  name: Quench Harbor - the Port Interiors
+  rooms: [the_fish_market, the_dogwatch_tavern, the_dogwatch_loft, the_salt_warehouse, the_ferry_house]
+  reset_mode: never  # a safe port: working folk persist
+  beats_between: 20
+  region: "Emberreach"
+  level_min: 3
+  level_max: 10
+  biome: "coast-sea"
+
+the_wardenmarch_frontier:
+  name: The Wardenmarch - the Frontier
+  rooms: [the_wardens_keep, the_march_barracks, the_old_gate, the_watchtower_line, the_cairn_hills, the_sundered_redoubt, the_redoubt_deep]
+  reset_mode: empty_only  # the march-wolves, husks, and the fallen Sentinel reform once the frontier is quiet
+  beats_between: 12
+  region: "Emberreach"
+  level_min: 17
+  level_max: 22
+  biome: "highland-frontier"
+
+the_reachwood_deep:
+  name: The Reachwood - the Deep Wood
+  rooms: [the_deepwood, the_thornmere, the_forgotten_shrine, the_old_firewatch, the_woodcutters_camp, the_logging_stands, the_thorn_heart]
+  reset_mode: empty_only  # the wood's ember-lynx, fen-kin, and thorn-horror reform once quiet
+  beats_between: 12
+  region: "Emberreach"
+  level_min: 5
+  level_max: 14
+  biome: "wild-forest"
+
+the_tidecaves:
+  name: The Tidecaves
+  rooms: [the_tidecave_mouth, the_sunken_grotto]
+  reset_mode: empty_only  # the sea-cave's crawlers and brine-hulk reform once the delve is quiet
+  beats_between: 12
+  region: "Emberreach"
+  level_min: 3
+  level_max: 8
+  biome: "sea-cave"
