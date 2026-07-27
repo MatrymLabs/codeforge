@@ -144,6 +144,7 @@ def make_beast(biome: str, level: int, idx: int, room: str) -> Npc:
         tier=tier,
         attack_element=element,
         loot={"ember_shard": 3, "nothing": 2},
+        ambient=True,  # mass wilderness life: no per-foe bounty (see register_bounties)
     )
 
 

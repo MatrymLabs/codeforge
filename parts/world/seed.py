@@ -180,6 +180,11 @@ class Npc(TypedDict):
     # key `nothing` for a no-drop weight. One outcome is picked proportional to weight and spawned.
     # `drops` (above) is guaranteed; `loot` is the chance roll. Optional.
     loot: NotRequired[dict[str, int]]
+    # AMBIENT wildlife: a mass-generated wilderness creature (parts.world.bestiary), not a notable
+    # foe. Excluded from hunt-contract bounties (a world of a million ambient hares must not mint a
+    # million bounty quests -- that is both absurd content and the boot-time hot spot at scale).
+    # Default absent (read as False), so every hand-authored and Spiral foe keeps its bounty.
+    ambient: NotRequired[bool]
     # A SHOP this NPC keeps (a merchant). `sells` maps an item prototype to its coin price (buy one
     # and a fresh instance is cloned into your hands); `buys` maps a prototype to the coins it pays
     # for one. Both optional within the shop. Prices are positive ints; prototypes are cross-checked
