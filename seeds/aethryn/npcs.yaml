@@ -3051,3 +3051,67 @@ ferry_master:
   keywords: [ferrymaster, master, ferry, house]
   dialogue:
     - '"Booking the crossing? The lanes run west to Tidewharf, the great free-port, and from there the whole drowned Reach -- the Wreckways, the Outer Reefs, Sunhold under the keels. I know what waits on the far water, Forger, and I''ll not sugar it: the Quenchmere drowned a whole Reach and kept it, and the crossing is where the wide world starts to get its teeth. Ring the bell when you''re ready. The ferry comes."'
+
+# --- The Warmcamp life (Great Creation Campaign, Phase I): the Ashborn salvagers of the Rimefall ice +
+# --- the salvage-dig's frozen guardians. The faction conflict made flesh. Banded 42-48. ---
+warmcamp_boss:
+  name: the camp-boss of the Warmcamp
+  location: the_warmcamp
+  keywords: [boss, camp, warmcamp, ashborn]
+  dialogue:
+    - '"You''re not Rimekin, so you''re welcome by our fire, Forger. The Silent Anvil call this whole Reach a shrine and forbid a soul to touch it -- a thousand years of the finest making in the world, standing under the ice, and their answer is to sit on their hands and call it holy. We call it a bank. We dig, we thaw, we sell, and if the frozen dead don''t like it they can wake up and say so. Down the dig if you want to earn. Mind the frost-guard. And mind the sentinel at the bottom -- the ice fights back."'
+  topics:
+    rumor:
+      - '"Bottom of the dig, past the frost-guard, a Rimekin sentinel keeps a reliquary the golden age sealed whole -- richest untouched make in the north, and a flash-frozen guardian woken to keep it. The Silent Anvil would say leave it. We say a treasure guarded by the dead is still a treasure. Best the sentinel and it''s yours. Bring fire; the ice hates fire, which is exactly why we love it."'
+
+fire_tent_keeper:
+  name: a fire-keeper of the Warmcamp
+  location: the_fire_tent
+  keywords: [firekeeper, keeper, fire, tent]
+  dialogue:
+    - '"Thaw your hands, Forger, and don''t start the old argument -- graveyard or bank, we''ve had it a thousand times over this fire and it never settles. The truth is both, and the Ashborn have always lived where both is the only honest answer. The Rimekin get to be pure because they''re not hungry. Out here we dig the dead because the living need to eat. Judge us when you''ve wintered on the floe."'
+
+salvage_trade_tent:
+  name: an Ashborn salvage-trader
+  location: the_trade_tent
+  keywords: [trader, salvage, trade, tent]
+  dialogue:
+    - '"Golden-age make, Forger, dug fresh from the ice and sold for what the cold left me able to charge -- which is cheap, because a relic won''t feed a camp and steel will. Better-made than anything the living forge, and yours for coin the Rimekin would faint to see change hands over their sacred dead. Buy. The dead don''t need it. You do."'
+  shop:
+    sells:
+      greater_healing_draught: 34
+      goldenage_relic_blade: 150
+    buys:
+      ember_shard: 7
+      rime_crystal: 12
+
+dig_frost_guardian:
+  name: a frost-guardian
+  location: the_salvage_dig
+  keywords: [guardian, frost, dig, shaft]
+  dialogue:
+    - The cold itself precipitates a guardian in the shaft: a figure of clear dig-frost, grown to keep the diggers from what the ice preserves, reaching for the warmth that woke it.
+  hp: 175
+  atk: 26
+  aggressive: true
+  attack_element: ICE
+  resistances: {ICE: Resist, FIR: Weak}  # frost made warden; fire is the digger's friend and its undoing
+  level: 44
+  tier: normal  # the salvage-dig, the Warmcamp delve's outer tier + the golden-age gate
+  loot: {ember_shard: 6, rime_crystal: 1, nothing: 2}
+
+reliquary_ice_sentinel:
+  name: the Rimekin sentinel-of-the-ice
+  location: the_buried_reliquary
+  keywords: [sentinel, rimekin, reliquary, ice]
+  dialogue:
+    - Flash-frozen mid-guard and woken by the diggers' warmth, the sentinel-of-the-ice turns to finish a duty an age overdue. "The past is paused," it says, in a voice of cracking floe. "Not ruined. Not yours. TOUCH NOTHING." It moves to keep the golden age's wealth the only way the frozen north knows: forever.
+  hp: 340
+  atk: 34
+  aggressive: true
+  attack_element: ICE
+  resistances: {ICE: Immune, FIR: Weak}  # a warden of the paused past; only the living fire the Ashborn wield can end it
+  level: 48
+  tier: boss  # the Warmcamp's climax (x10 reward): the ice's own answer to the salvagers who will not leave it be
+  drops: [ice_sealed_regalia, greater_healing_draught]
+  loot: {ember_shard: 12, rime_crystal: 4, nothing: 1}
