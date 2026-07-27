@@ -3203,3 +3203,81 @@ salvagers_rest_keeper:
   keywords: [keeper, rest, salvagers, ashborn]
   dialogue:
     - '"Dry and defended, Forger, and by road-code you owe nothing for it but to leave it as you found it and help the next clansman the waste half-killed. Not warm. Nothing''s warm in the Cinderwaste. But the dust stays out and the door holds, and out here that is the whole of what a roof is for. Rest. The waste will still be grey in the morning."'
+# --- The Rootdeep life (Great Creation Campaign, Phase I): the Cinderdeep below the Verdance, where
+# --- unmaking and living root tangle. Grave-kin, rot-kin, unmade-kin, and the Rotheart-Warden. 28-36. ---
+rootdeep_husk:
+  name: a mire-drawn husk
+  location: the_rootdeep_mouth
+  keywords: [husk, mire, rootdeep, drawn]
+  dialogue:
+    - A husk the mire half-returned works the root-tangle at the deep's mouth, drawn down by the Cinder-seep, neither risen nor gone, and it turns its half-face toward your warmth.
+  hp: 118
+  atk: 19
+  aggressive: true
+  attack_element: PSN
+  resistances: {PSN: Resist, FIR: Weak, HLY: Weak}  # a half-unmade dead of the mire; fire and light both bite
+  level: 28
+  tier: normal  # the Rootdeep mouth, the Verdance's Cinderdeep access
+  loot: {ember_shard: 5, nothing: 3}
+
+grave_root_kin:
+  name: a grave-kin
+  location: the_grave_roots
+  keywords: [gravekin, grave, roots, kin]
+  dialogue:
+    - A grave-kin pulls free of the root-mesh where the dead hang caught, grown from a corpse the mire and the deep are still fighting over, and reaches for the living warmth it half-remembers.
+  hp: 130
+  atk: 21
+  aggressive: true
+  attack_element: PSN
+  resistances: {PSN: Resist, HLY: Weak}  # the caught dead; radiance frees what the deep holds
+  level: 30
+  tier: normal  # the grave-roots, the Rootdeep leveling ground + the grave-sap gather
+  loot: {ember_shard: 5, grave_sap: 1, nothing: 2}
+
+rot_hollow_kin:
+  name: a rot-kin
+  location: the_rot_hollow
+  keywords: [rotkin, rot, hollow, kin]
+  dialogue:
+    - The soft breathing dark of the rot-hollow births a rot-kin, a thing that feeds on what the deep and the Verdance leave between them, and it comes for you slow and certain.
+  hp: 138
+  atk: 22
+  aggressive: true
+  attack_element: PSN
+  resistances: {PSN: Resist, FIR: Weak}  # a thing of rot; fire is the mire's answer here too
+  level: 32
+  tier: normal  # the rot-hollow lateral wander
+  loot: {ember_shard: 6, grave_sap: 1, nothing: 2}
+
+unmade_grove_kin:
+  name: an unmade-kin
+  location: the_unmade_grove
+  keywords: [unmadekin, unmade, grove, kin]
+  dialogue:
+    - The Verdance's own life turned inside out steps from the wrong wood: an unmade-kin, half-tree and half-hollow, the living Reach unmade in the growing, and it does not know whether it wants to grow over you or unmake you, so it tries both.
+  hp: 165
+  atk: 26
+  aggressive: true
+  attack_element: CRS
+  resistances: {CRS: Resist, PSN: Resist, FIR: Weak, HLY: Weak}  # living Reach + unmaking fused; fire and light both undo it
+  level: 34
+  tier: elite  # the unmade grove's apex (x3 reward), the gate to the Rotheart
+  drops: [greater_healing_draught]
+  loot: {ember_shard: 8, grave_sap: 2, nothing: 2}
+
+rotheart_warden:
+  name: the Rotheart-Warden
+  location: the_rotheart
+  keywords: [warden, rotheart, rootdeep, boss]
+  dialogue:
+    - Half-Boughwarden and half-Unforged, the Rotheart-Warden unfolds from the drowned roots - the living Reach and the unmaking grown into one guardian that hates both halves of itself. "Grown," it says, in the Boughwarden's voice. "UNMADE," it answers, in the deep's. It turns the whole of that war on you.
+  hp: 400
+  atk: 30
+  aggressive: true
+  attack_element: CRS
+  resistances: {CRS: Resist, PSN: Resist, FIR: Weak, HLY: Weak}  # the war of grow-and-unmake made flesh; fire and light end it
+  level: 36
+  tier: boss  # the Rootdeep's climax (x10 reward): the Verdance's deep, a rotting mirror of the Heart-Grove
+  drops: [rotheart_seed, greater_healing_draught]
+  loot: {ember_shard: 12, grave_sap: 4, nothing: 1}
