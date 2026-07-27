@@ -4868,5 +4868,34 @@
     "aliases": [],
     "created": "2026-07-27",
     "updated": "2026-07-27"
+  },
+  {
+    "designation": "MOD-04.071",
+    "name": "bestiary",
+    "status": "active",
+    "function": "a procedural creature factory: classes of beasts x biome x size -> varied life",
+    "label": "bestiary",
+    "file": "parts/world/bestiary.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "docs/architecture.md",
+    "tests": "tests/test_bestiary.py",
+    "depends_on": [
+      "seed"
+    ],
+    "related": [
+      "wildlands",
+      "combat",
+      "affixes"
+    ],
+    "reuse": "the generation lever pointed at CREATURES (compare wildlands for rooms, affixes for loot, quest.bounties for side-quests): make_beast composes each foe from a body-CLASS x biome adjective x level-driven SIZE x elemental affinity, so 50k wilderness rooms draw varied, coherent, level-scaled life from a compact inspectable schema instead of a handful of hardcoded foes. Deterministic by index.",
+    "notes": "10 body-classes (canid/felid/ursine/boar/reptile/avian/insectoid/elemental/undead/colossus) x 8 biomes (each naming its resident classes, ambient element, adjectives) x 6 size tiers (lesser..dread, skewing larger with level) yields ~1500+ distinct creatures over a level-1-300 sweep. Most take their biome's element; reptile/insectoid keep venom (PSN), undead keep DRK. hp/atk scale off the level base x class x size; elite every ~11th. parts.world.wildlands._ambient calls it for every generated room. No randomness.",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-27",
+    "updated": "2026-07-27"
   }
 ]
