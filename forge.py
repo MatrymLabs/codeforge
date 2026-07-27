@@ -49,6 +49,7 @@ from parts.telegraph import telegraph
 from parts.titles import title
 from parts.vitals import vitals
 from parts.world import allocate, artifact, creator_workshop, gather, quest
+from parts.world import travel as travel_net
 from parts.world.abilities import render_abilities, use_ability
 from parts.world.accounts import (
     has_password,
@@ -90,7 +91,14 @@ from parts.world.score_sheet import render_score_sheet
 from parts.world.seed import load_splash
 from parts.world.session import SESSIONS, Session, display_name, roster
 from parts.world.shop import buy, render_shop, sell
-from parts.world.world import DIRECTIONS, WORLD, dynamic_capability, render_room, resolve_move
+from parts.world.world import (
+    DIRECTIONS,
+    WAYSTONES,
+    WORLD,
+    dynamic_capability,
+    render_room,
+    resolve_move,
+)
 from parts.world.zones import area_line, tick_zones
 from parts.world_cert import certify
 
@@ -1572,6 +1580,15 @@ def _build_commands() -> CommandSet:
             "CMD-04.089",
             "harvest this room's crafting-material node",
             lambda s, _a: gather.gather(s),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "travel",
+            "CMD-04.090",
+            "the Waystone network: pay to cross the world (travel [where])",
+            lambda s, a: travel_net.travel(s, a, WAYSTONES),
             namespace=CORE,
         )
     )

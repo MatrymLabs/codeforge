@@ -5182,5 +5182,35 @@
     "aliases": [],
     "created": "2026-07-27",
     "updated": "2026-07-27"
+  },
+  {
+    "designation": "MOD-04.081",
+    "name": "travel",
+    "status": "active",
+    "function": "the Waystone network: pay to cross the world (the economy's great coin sink)",
+    "label": "travel",
+    "file": "parts/world/travel.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "docs/design/economy.md",
+    "tests": "tests/test_travel.py",
+    "depends_on": [
+      "coinage",
+      "session",
+      "seed"
+    ],
+    "related": [
+      "world",
+      "townsfolk"
+    ],
+    "reuse": "the economy's largest coin SINK + fast-travel: load_waystones reads seeds/<world>/waystones.yaml (the 14 zone hubs, emitted); travel(session,arg,stones) at a hub lists the network + fares (bare) or pays a fare (fare(level)=20+2*level cinders) and moves. Danger not cost gates the far zones. WAYSTONES loaded in world.py; wired to the travel verb (CMD-04.090).",
+    "notes": "Data-driven; a seed with no waystones.yaml has no network ({} for first-forge/spiral-ascent). Fare scales with the DESTINATION level so a deep hop is a fortune; refuses off-hub, unknown hub, empty purse. Persists the move+purse.",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-27",
+    "updated": "2026-07-27"
   }
 ]

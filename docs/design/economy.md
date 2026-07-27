@@ -18,10 +18,13 @@ real and roughly balanced.
   (`combat._coin_reward`), and selling gathered/looted goods to a merchant pays out. A harder foe,
   fought up, pays more (`parts/shelf/reward_curve`); a gray foe pays nothing, so grinding trivial
   kills is not a wealth strategy.
-- **Wealth is destroyed** by spending: merchants sell consumables and (later) repairs, travel,
-  storage, and taxes drain coin back out. Today the live sink is the **settlement merchant**
-  (`parts/world/townsfolk`), one per town, stocking level-banded draughts. The buy-back price is
-  always below the sell price, so churning goods through a merchant loses coin, not gains it.
+- **Wealth is destroyed** by spending. Two live sinks today: the **settlement merchant**
+  (`parts/world/townsfolk`, one per town, level-banded draughts, buy-back always below sell) and the
+  **Waystone network** (`parts/world/travel`) — the largest sink by design. Fast-travel between the
+  14 zone hubs costs a fare that scales with the *destination's* level band (`fare(level)`), so every
+  time a traveller skips the road, coin drains back out; a hop to the starter valley is a handful of
+  cinders, a leap to the endgame a small fortune. Danger, not cost, gates the far zones. Repairs,
+  storage, and taxes are further sinks staged behind these.
 - **Inflation is controlled** by the sinks, not by the denomination. As players earn more, the goods
   and services they must keep buying (consumables now; repairs, travel, taxes next) remove coin at a
   rate that scales with their level band. The currency's tiers only change how a balance *reads*;

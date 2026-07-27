@@ -36,6 +36,7 @@ _GAME_SEED = {
     "coinage",
     "delve",
     "gather",
+    "travel",
     "townsfolk",
     "rooms",
     "items",
