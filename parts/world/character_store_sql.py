@@ -44,6 +44,7 @@ class SqlCharacterStore:
                 equipped_gear=row.equipped_gear,
                 coins=row.coins,
                 quest_state=row.quest_state,
+                allocated=row.allocated,
                 auth_salt=row.auth_salt,
                 auth_hash=row.auth_hash,
             )
@@ -94,3 +95,4 @@ def _apply_gameplay(row: CharacterRow, record: CharacterRecord) -> None:
     row.equipped_gear = record.equipped_gear
     row.coins = record.coins
     row.quest_state = record.quest_state
+    row.allocated = record.allocated

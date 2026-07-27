@@ -13,6 +13,7 @@ from __future__ import annotations
 import json
 from typing import Any
 
+from parts.world import allocate
 from parts.world.character_store import CharacterRecord, CharacterStore
 from parts.world.job_progress import load_job_progress, save_job_progress
 from parts.world.jobs import BASE_HP, BASE_MP, JOBS, bind_calling
@@ -93,6 +94,7 @@ def _record_to_casefile(record: CharacterRecord) -> dict[str, Any]:
         "equipped_gear": record.equipped_gear,
         "coins": record.coins,
         "quest_state": record.quest_state,
+        "allocated": record.allocated,
     }
     if record.auth_salt and record.auth_hash:
         casefile["auth"] = {"salt": record.auth_salt, "hash": record.auth_hash}
@@ -122,6 +124,7 @@ def put_record(name: str, casefile: dict[str, Any], store: CharacterStore | None
         equipped_gear=casefile.get("equipped_gear", ""),
         coins=int(casefile.get("coins", 0)),
         quest_state=casefile.get("quest_state", ""),
+        allocated=casefile.get("allocated", ""),
         auth_salt=auth.get("salt"),
         auth_hash=auth.get("hash"),
     )
@@ -149,6 +152,7 @@ def save_character(session: Session, store: CharacterStore | None = None) -> Non
         equipped_gear=_serialize_gear(session),
         coins=session.coins,
         quest_state=save_state(session.player_id),
+        allocated=allocate.serialize(session),
     )
     (store or _default_store()).upsert_gameplay(record)
     # Persist per-job progress AFTER the character row exists (the foreign key needs it).
@@ -179,6 +183,9 @@ def restore_character(session: Session, casefile: dict[str, Any]) -> None:
     from parts.world.quest import restore_state
 
     restore_state(session.player_id, str(casefile.get("quest_state", "")))
+    # Load allocated attribute points BEFORE building stats, so bind_calling folds them into the
+    # StatBlock (and the HP/MP recompute below includes the allocated stamina/magic).
+    allocate.restore(session, str(casefile.get("allocated", "")))
     job = str(casefile["job"])
     if not job or job not in JOBS:
         # No calling, or the calling vanished from THIS seed (seeds are games -- a character saved

@@ -5096,5 +5096,34 @@
     "aliases": [],
     "created": "2026-07-27",
     "updated": "2026-07-27"
+  },
+  {
+    "designation": "MOD-04.078",
+    "name": "allocate",
+    "status": "active",
+    "function": "spend the attribute points a level-up grants (build your hero)",
+    "label": "allocate",
+    "file": "parts/world/allocate.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "",
+    "tests": "tests/test_allocate.py",
+    "depends_on": [
+      "progression",
+      "session"
+    ],
+    "related": [
+      "jobs",
+      "characters"
+    ],
+    "reuse": "the build-agency verb: earned()/spent()/unspent() derive the point pool from level; allocate() spends into an attribute (per_stat_cap gates it); jobs.build_stats folds the allocation onto the job base so it applies across job changes; serialize()/restore() persist it (characters.allocated JSON column + Alembic c9f2e4a71d38).",
+    "notes": "Derive-don't-store: unspent is earned minus spent, never a stored balance. Stamina/magic points grow the HP/MP pool immediately (_apply) and fully on restore (HP/MP recompute from the allocated stats). Loaded before bind_calling on restore.",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-27",
+    "updated": "2026-07-27"
   }
 ]
