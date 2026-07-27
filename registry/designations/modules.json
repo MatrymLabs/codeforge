@@ -4902,7 +4902,7 @@
     "designation": "MOD-04.072",
     "name": "job_ladder",
     "status": "active",
-    "function": "the 30-job FFT-style progression backbone (tiers, roles, unlocks, 21-slot schedule)",
+    "function": "the playable job roster and each calling's ability kit (the one job system)",
     "label": "job_ladder",
     "file": "parts/world/job_ladder.py",
     "type": "MOD",
@@ -4918,8 +4918,8 @@
       "job_progress",
       "progression"
     ],
-    "reuse": "the structural spine of the 30-job modular combat system (Job System campaign, stage 1): 30 jobs across 3 tiers (12/12/6) with primary/secondary ROLES, data-driven acyclic UNLOCK chains (is_unlocked/missing_requirements for a player-facing progress display), and the universal 21-feature progression schedule (which feature type unlocks at each Job Level 1-30). The named abilities that fill each (job, level, slot) are the later stages; this is what they hang on and what the tests gate.",
-    "notes": "Kept as validated Python constants (JOBS, UNIVERSAL_PROGRESSION, ROLES) -- the job SYSTEM's shape, not player-editable seed content. validate() runs at import: tier counts, role vocabulary, unlock prerequisites resolving to real jobs at 1-30, a DFS cycle check (_assert_acyclic -- same-tier prereqs allowed, e.g. Hexblade needs Warlock, only cycles forbidden), and a 21-slot schedule (1 core trait, 10 actives, 3 passives, 2 reactions, 2 supports, 2 movements, 1 signature). Extends the existing jobs.py/abilities.py; does not replace them.",
+    "reuse": "the authoritative view of the active seed's playable job roster: every job is a real calling (jobs.yaml) carrying its real kit (abilities.yaml). roster()/kit()/is_calling()/is_armed(); MAX_JOB_LEVEL is the single source of the per-job cap (progression reads it). validate() at import enforces the one invariant: no calling ships unarmed.",
+    "notes": "Reconciled (finish-aethryn, Josh's call 'ladder becomes the callings, flat'): the earlier FFT tier/unlock ladder over a different 30-job roster was never wired and contradicted the playable callings, so it was reconciled away. Freely pickable jobs, no unlock gating. A tier/unlock progression is a future design layer, not shipped.",
     "tags": [
       "module"
     ],
