@@ -305,7 +305,9 @@ class QuestStep(TypedDict):
       `on_take`   -- an item label whose pickup fires it;
       `on_enter`  -- a room label whose entry fires it;
       `on_cull`   -- a creature TYPE (a keyword like 'canid'/'wolf') whose defeat fires it, so a
-                     'cull N of a kind' quest can chain N identical steps, one per kill.
+                     'cull N of a kind' quest can chain N identical steps, one per kill;
+      `on_forage` -- a (zone-scoped) material whose gather fires it, so a 'forage N' quest chains N
+                     identical steps, one per harvest.
     """
 
     state: str
@@ -316,6 +318,7 @@ class QuestStep(TypedDict):
     on_take: NotRequired[str]
     on_enter: NotRequired[str]
     on_cull: NotRequired[str]
+    on_forage: NotRequired[str]
 
 
 class QuestSpec(TypedDict):
@@ -896,7 +899,7 @@ def load_quest(path: Path) -> QuestSpec | None:
         }
         if raw.get("effect"):
             step["effect"] = str(raw["effect"])
-        for trigger in ("on_defeat", "on_take", "on_enter", "on_cull"):
+        for trigger in ("on_defeat", "on_take", "on_enter", "on_cull", "on_forage"):
             if raw.get(trigger):
                 step[trigger] = str(raw[trigger])
         clean_steps.append(step)

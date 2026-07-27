@@ -38,7 +38,19 @@ def gather(session: Session) -> str:
     except items.ItemError:
         return "There is nothing to gather here."  # a node naming an unknown material: fail soft
     session.gather_cooldowns[session.location] = GATHER_COOLDOWN
-    return f"You gather {items.ITEMS[iid]['name']}."
+    line = f"You gather {items.ITEMS[iid]['name']}."
+    # A forage contract ('gather N of a material HERE') advances on the harvest, scoped to this zone
+    # -- the non-combat twin of a cull (parts.world.forage). Cheap: an unrouted key is a dict miss.
+    from parts.world import quest
+    from parts.world.cull import scope_key
+    from parts.world.zones import zone_of
+
+    zone = zone_of(session.location)
+    if zone:
+        forage_line = quest.on_event(session, "forage", scope_key(zone, str(node)))
+        if forage_line:
+            line = f"{line}\n{forage_line}"
+    return line
 
 
 def gather_hint(location: str) -> str:

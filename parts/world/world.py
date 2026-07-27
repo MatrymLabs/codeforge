@@ -104,6 +104,7 @@ from parts.world.quest import (  # noqa: E402 -- after NPCS ready
     register_bounties,
     register_culls,
     register_errands,
+    register_forages,
     register_spine,
     register_storylines,
 )
@@ -164,6 +165,11 @@ _cull_zones: list[dict[str, object]] = [
     for lbl, z in _all_zones.items()
 ]
 register_culls(_cull_zones)
+
+# Forage contracts: 'gather N of a material HERE' at volume (parts.world.forage) -- the non-combat
+# twin of the cull board, one per zone x material its biome yields x count-tier, reusing the same
+# zone-scoped keys the gather action fires.
+register_forages(_cull_zones)
 
 # Zone landmarks: a readable monument in each zone's hub naming the region, its level band, and any
 # dungeon within (parts.world.landmarks) -- surface storytelling, the twin of the depths' lore.
