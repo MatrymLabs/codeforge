@@ -66,10 +66,22 @@ stable contract; the barrier does not need the rank *router*.
 | Does every world have it? | Yes, `install_workshop` runs in assembly for every seed. |
 | Is it testable without a GUI? | Yes, entirely through the engine tick (`handle_command`). |
 
+## The Workshop is a place, not a menu
+
+The Workshop is not one room but a small hub: a central hall ringed with **station rooms**, one per
+CodeForge subsystem, that the owner *walks* (`go npc`, `go quests`, `go difficulty`). Each station
+(`STATIONS` in `creator_workshop.py`) is data, a hall-noun, a room label, and a plain-language
+description of what a creator shapes there, and `install_workshop` builds every station room and
+wires the hall's exits from that table. The whole hub lives behind the barrier: every station room is
+in `WORKSHOP_ROOMS`, so teleport refuses non-owners into any of them, not just the entry.
+
+Today each station room honestly **describes** its purpose in plain language; it does not yet claim a
+command it lacks. The create-tools are fitted into these rooms next.
+
 ## Roadmap (staged behind this foundation)
 
-The Workshop is the room the **creation stations** will hang on, each a subsystem surfaced as a
-welcoming space rather than a developer menu:
+Each station is a subsystem surfaced as a welcoming space rather than a developer menu. The tools to
+fit into the rooms that now exist:
 
 - **NPC Studio / Creature Forge / Item Forge** wrapping the existing `@sg`, seed, and bestiary
   systems as plain-language create/edit flows.

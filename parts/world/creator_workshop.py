@@ -26,6 +26,8 @@ import cycle -- `ranks` may guard teleport by importing THIS module instead.
 
 from __future__ import annotations
 
+from typing import NamedTuple
+
 from parts.world.seed import Room
 from parts.world.session import Session
 
@@ -41,9 +43,91 @@ _BARRIER_REFUSAL = "The barrier does not acknowledge your presence."
 # it. "door" is safe here because door_destination only fires while standing in the Grand Library.
 _DOOR_WORDS = frozenset({"door"})
 
-# The rooms that live behind the barrier. Membership is what teleport and any future reveal-vector
-# must refuse for non-owners.
-WORKSHOP_ROOMS = frozenset({CREATOR_WORKSHOP})
+
+# --- The creation stations -----------------------------------------------------------------------
+# The Workshop is a welcoming creative space, not a developer menu: each subsystem of CodeForge is a
+# room the owner can WALK into, off the central hall. A station is data (a hall-noun, a room label,
+# name, and a plain-language description of what a creator shapes there); install_workshop builds
+# the rooms and wires the hall's exits from this table. The create-TOOLS (Create NPC, Build Quest,
+# adjust difficulty) are fitted into these rooms in later stages; today each room honestly describes
+# its purpose without claiming a command it does not yet carry.
+class Station(NamedTuple):
+    noun: str  # the hall exit that leads here (e.g. `npc`), and the way back is always `hall`/`out`
+    label: str  # the room's frozen lowercase_snake_case label
+    name: str  # the display name
+    desc: str  # a welcoming, plain-language description of what a creator does here
+
+
+STATIONS: tuple[Station, ...] = (
+    Station(
+        "planning",
+        "planning_table",
+        "The Planning Table",
+        "A broad oak table strewn with maps, notes, and a design journal. Stand here to see your "
+        "world whole: what exists, what is planned, what still needs a maker's hand.",
+    ),
+    Station(
+        "npc",
+        "npc_studio",
+        "The NPC Studio",
+        "Portrait frames and character sheets line the walls, each waiting for a face and a voice. "
+        "This is where the people of your world are made: who they are, what they say, where they "
+        "stand.",
+    ),
+    Station(
+        "quests",
+        "quest_archive",
+        "The Quest Archive",
+        "A tall cabinet of story-threads, each a task a hero might take up. Here you weave the "
+        "quests that give your world its purpose, step by step, reward and all.",
+    ),
+    Station(
+        "items",
+        "item_forge",
+        "The Item Forge",
+        "An anvil and a wall of labelled drawers: blades, charms, potions, keys. Here you shape "
+        "the things a hero finds, wears, and wields.",
+    ),
+    Station(
+        "creatures",
+        "creature_forge",
+        "The Creature Forge",
+        "Cages of light hold half-formed beasts, from field-mice to world-eaters. Here you breed "
+        "the monsters and bosses that will test everyone who plays.",
+    ),
+    Station(
+        "difficulty",
+        "difficulty_desk",
+        "The Difficulty Desk",
+        "A console of gentle dials, each labelled in plain words: how hard the foes hit, how often "
+        "they come, how generous the loot. Turn a dial to make your world kinder or crueller.",
+    ),
+    Station(
+        "blueprints",
+        "blueprint_repository",
+        "The Blueprint Repository",
+        "Flat drawers of rolled schematics, every system in the engine drawn out. For makers who "
+        "want to read the deeper plans and draft their own.",
+    ),
+    Station(
+        "stats",
+        "statistics_wall",
+        "The Statistics Wall",
+        "A living wall of charts: who is playing, where they go, what they struggle with. The "
+        "honest mirror of how your world is actually being played.",
+    ),
+    Station(
+        "publish",
+        "publishing_portal",
+        "The Publishing Portal",
+        "A shimmering archway where a change becomes real. Preview what you have made, and when it "
+        "is ready, publish it to the living world, or roll it back if it went wrong.",
+    ),
+)
+
+# The rooms that live behind the barrier: the Workshop hall and every station. Membership is what
+# teleport and any future reveal-vector must refuse for non-owners (the whole dimension is sealed).
+WORKSHOP_ROOMS = frozenset({CREATOR_WORKSHOP, *(s.label for s in STATIONS)})
 
 
 def is_workshop_room(room_id: str) -> bool:
@@ -99,15 +183,26 @@ def install_workshop(world: dict[str, Room]) -> None:
         ),
         exits={"library": spawn, "out": spawn},
     )
+    # The central hall opens onto every station (a listed noun exit each) and back to the Library.
+    hall_exits = {station.noun: station.label for station in STATIONS}
+    hall_exits["out"] = GRAND_LIBRARY
     world[CREATOR_WORKSHOP] = Room(
         name="The Creator's Workshop",
         desc=(
-            "A wide, bright workshop that answers to no map. Drafting tables, a world atlas under "
-            "glass, a forge banked and waiting, shelves of blueprints and ideas. This is "
-            "where the world is shaped. The Grand Library lies back through the door (`out`)."
+            "A wide, bright hall that answers to no map, ringed with doorways. Each leads to a "
+            "station where a part of your world is shaped: the people, the quests, the creatures, "
+            "the difficulty, and more. Step through any doorway to begin. The Grand Library lies "
+            "back through the door (`out`)."
         ),
-        exits={"out": GRAND_LIBRARY},
+        exits=hall_exits,
     )
+    # Each station is a room off the hall; `hall`/`out` both return to the central Workshop.
+    for station in STATIONS:
+        world[station.label] = Room(
+            name=station.name,
+            desc=station.desc,
+            exits={"hall": CREATOR_WORKSHOP, "out": CREATOR_WORKSHOP},
+        )
     # Make the Library discoverable from spawn (a plain, listed noun exit both ways).
     world[spawn]["exits"].setdefault("library", GRAND_LIBRARY)
 

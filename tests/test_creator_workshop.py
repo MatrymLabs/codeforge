@@ -38,16 +38,32 @@ def test_install_places_the_library_and_workshop_and_links_the_spawn():
     assert cw.GRAND_LIBRARY in world and cw.CREATOR_WORKSHOP in world
     # The Library is discoverable from the spawn...
     assert world["spawn"]["exits"]["library"] == cw.GRAND_LIBRARY
-    # ...and leads back out, while the Workshop's only tie is the plain `out` to the Library.
+    # ...and leads back out; the Workshop hall opens onto the Library via `out`.
     assert world[cw.GRAND_LIBRARY]["exits"]["out"] == "spawn"
-    assert world[cw.CREATOR_WORKSHOP]["exits"] == {"out": cw.GRAND_LIBRARY}
+    assert world[cw.CREATOR_WORKSHOP]["exits"]["out"] == cw.GRAND_LIBRARY
+
+
+def test_install_builds_every_station_room_off_the_hall():
+    world = {"spawn": {"name": "Spawn", "desc": "start", "exits": {}}}
+    cw.install_workshop(world)
+    hall = world[cw.CREATOR_WORKSHOP]["exits"]
+    for station in cw.STATIONS:
+        assert station.label in world, f"missing station room {station.label}"
+        assert hall[station.noun] == station.label  # the hall opens onto it by its noun
+        # Every station returns to the hall (both `hall` and `out`), and lives behind the barrier.
+        assert world[station.label]["exits"] == {
+            "hall": cw.CREATOR_WORKSHOP,
+            "out": cw.CREATOR_WORKSHOP,
+        }
+        assert cw.is_workshop_room(station.label)
 
 
 def test_install_is_idempotent():
     world = {"spawn": {"name": "Spawn", "desc": "start", "exits": {}}}
     cw.install_workshop(world)
+    before = dict(world[cw.CREATOR_WORKSHOP]["exits"])
     cw.install_workshop(world)  # a second call must not double-place or raise
-    assert list(world[cw.CREATOR_WORKSHOP]["exits"]) == ["out"]
+    assert world[cw.CREATOR_WORKSHOP]["exits"] == before
 
 
 def test_install_refuses_an_empty_world():
@@ -116,3 +132,20 @@ def test_the_owner_can_walk_back_out_to_the_library():
     owner = _seat("root", "owner", location=cw.CREATOR_WORKSHOP)
     handle_command(owner, "go out")
     assert owner.location == cw.GRAND_LIBRARY
+
+
+def test_the_owner_can_walk_the_stations_and_return_to_the_hall():
+    owner = _seat("root", "owner", location=cw.CREATOR_WORKSHOP)
+    npc = next(s for s in cw.STATIONS if s.label == "npc_studio")
+    out = handle_command(owner, f"go {npc.noun}")
+    assert owner.location == "npc_studio" and "NPC Studio" in out
+    handle_command(owner, "go hall")
+    assert owner.location == cw.CREATOR_WORKSHOP
+
+
+def test_a_wizard_cannot_teleport_into_a_station_either():
+    start = "veridia" if "veridia" in WORLD else next(iter(WORLD))
+    wiz = _seat("mage", "wizard", location=start)
+    out = handle_command(wiz, "@teleport npc_studio")
+    assert cw.barrier_refusal() in out
+    assert wiz.location != "npc_studio"
