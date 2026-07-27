@@ -95,6 +95,43 @@ Two read-only tools are live so far:
 
 Both are read-only, so neither mutates world state (Architecture Law 1).
 
+## The change buffer: preview → publish → rollback (live-only)
+
+The first *mutating* tool arrives with the LIVE PREVIEW loop the prompt asks for, in its safest
+honest form. The owner **stages** an edit into a per-session draft, **previews** it, then, at the
+Publishing Portal, **publishes** it to the live world or **rolls it back**.
+
+- **Live-only, by design.** Publish writes the in-memory world only, never the seed files. A change
+  is reversible and simply vanishes on restart. Persistence to the seed (surviving a restart) is a
+  deliberately separate, later decision, it touches the seed contract, the loader gates, and backups.
+- **Law 1 stays intact.** A staged change is inert data. The single validated apply-path
+  (`_apply`) is the only thing that mutates canonical state, and only at the owner's explicit
+  `publish`. Adding a new editable thing means adding a `kind` to `_apply`, not a new mutation site.
+- **First kind: `create_npc`** (the NPC Studio). `create npc <name> at <room>` validates the room
+  exists, then stages a peaceful townsperson (hp 0, atk 0, never a hidden weapon). `publish` clones
+  it into the live NPC set and re-indexes the room so it appears at once.
+- **Station-gated flow.** Create at the NPC Studio, preview anywhere in the Workshop, publish and
+  rollback at the Publishing Portal, so each station earns its place.
+
+### Human Keel Record: live-only world mutation
+
+- **Intent / problem.** The Creator Experience needs the owner to edit a running world (create an
+  NPC, publish it) without files or a terminal, but Architecture Law 1 forbids ad-hoc mutation of
+  canonical state.
+- **Decision (Josh).** Ship a **session-scoped, live-only change buffer**: stage → preview →
+  publish to the in-memory world → rollback. No seed-file writes yet.
+- **Alternatives considered.** (a) Persist changes to `seeds/aethryn/*.yaml` on publish, more
+  powerful, but a much larger surface (seed contract, loader gates, backups) and harder to reverse;
+  (b) keep building read-only tools and defer mutation entirely.
+- **Why this one.** It delivers the headline "create → publish" loop while keeping every change
+  reversible and Law 1 intact (one validated apply-path). Persistence becomes its own considered
+  slice rather than being smuggled in under a feature.
+- **Evidence.** `tests/test_creator_workshop.py` proves the full loop through the tick (create →
+  preview shows it while the world is still untouched → publish makes it live → rollback discards),
+  plus the gating and validation refusals. `make check` green.
+- **Review point.** Before any tool writes to the seed files, or mutates anything beyond adding a
+  peaceful NPC, revisit this record and the persistence question with Josh.
+
 ## Roadmap (staged behind this foundation)
 
 Each station is a subsystem surfaced as a welcoming space rather than a developer menu. The tools to

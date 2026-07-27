@@ -880,6 +880,42 @@ def _build_commands() -> CommandSet:
     )
     cs.add(
         Command(
+            "create",
+            "CMD-04.083",
+            "the NPC Studio: stage a new NPC (owner, in the Creator's Workshop)",
+            lambda s, a: creator_workshop.create_npc(s, a),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "preview",
+            "CMD-04.084",
+            "preview staged Creator Workshop changes (owner)",
+            lambda s, _a: creator_workshop.preview_changes(s),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "publish",
+            "CMD-04.085",
+            "publish staged changes to the live world (owner, at the Publishing Portal)",
+            lambda s, _a: creator_workshop.publish_changes(s),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "rollback",
+            "CMD-04.086",
+            "discard staged Creator Workshop changes (owner, at the Publishing Portal)",
+            lambda s, _a: creator_workshop.rollback_changes(s),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
             "catalog",
             "CMD-04.018",
             "the Hardware Store catalog",

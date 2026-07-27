@@ -12,6 +12,7 @@ import pytest
 from forge import handle_command
 from parts.world import creator_workshop as cw
 from parts.world import events
+from parts.world.npcs import NPCS, npcs_in, reindex_npcs
 from parts.world.session import SESSIONS, Session
 from parts.world.world import WORLD, render_room
 
@@ -20,7 +21,13 @@ from parts.world.world import WORLD, render_room
 def fresh_sessions():
     SESSIONS.clear()
     events.SHUTDOWN["hook"] = None
+    cw._DRAFTS.clear()
+    npc_snapshot = set(NPCS)  # any NPC a publish adds is removed after, so the world stays clean
     yield
+    for label in set(NPCS) - npc_snapshot:
+        del NPCS[label]
+    reindex_npcs()
+    cw._DRAFTS.clear()
     SESSIONS.clear()
     events.SHUTDOWN["hook"] = None
 
@@ -191,3 +198,80 @@ def test_activity_shows_nothing_to_a_non_owner_or_away_from_the_wall():
     assert "shows you nothing" in handle_command(owner_away, "activity")
     player = _seat("nosy", "player", location=cw.STATISTICS_WALL)
     assert "shows you nothing" in handle_command(player, "activity")
+
+
+# --- the change buffer + NPC Studio (first mutating tool) ---------------------------------------
+def _real_room() -> str:
+    return next(iter(WORLD))
+
+
+def test_create_stages_an_npc_and_preview_shows_it_but_the_world_is_untouched():
+    room = _real_room()
+    owner = _seat("root", "owner", location=cw.NPC_STUDIO)
+    out = handle_command(owner, f"create npc Old Marta at {room}")
+    assert "Staged" in out and "Old Marta" in out
+    # It is only STAGED: nothing is live in the room yet.
+    assert not any(NPCS[n]["name"] == "Old Marta" for n in npcs_in(room))
+    preview = handle_command(owner, "preview")
+    assert "Old Marta" in preview and "not yet live" in preview
+
+
+def test_publish_at_the_portal_makes_the_staged_npc_live():
+    room = _real_room()
+    owner = _seat("root", "owner", location=cw.NPC_STUDIO)
+    handle_command(owner, f"create npc Old Marta at {room}")
+    owner.location = cw.PUBLISHING_PORTAL  # walk to the portal
+    out = handle_command(owner, "publish")
+    assert "Published" in out
+    # Now she really stands in the room, and the draft is empty.
+    assert any(NPCS[n]["name"] == "Old Marta" for n in npcs_in(room))
+    assert "Nothing is staged" in handle_command(owner, "preview")
+
+
+def test_create_refuses_an_unreal_room_and_stages_nothing():
+    owner = _seat("root", "owner", location=cw.NPC_STUDIO)
+    out = handle_command(owner, "create npc Ghost at nowhere_at_all")
+    assert "no room labelled" in out
+    assert "Nothing is staged" in handle_command(owner, "preview")
+
+
+def test_create_is_owner_and_studio_gated():
+    room = _real_room()
+    # A player in the studio cannot create...
+    player = _seat("nosy", "player", location=cw.NPC_STUDIO)
+    assert "cannot shape a person" in handle_command(player, f"create npc X at {room}")
+    # ...and the owner cannot create from the wrong station.
+    owner = _seat("root", "owner", location=cw.CREATOR_WORKSHOP)
+    assert "at the NPC Studio" in handle_command(owner, f"create npc X at {room}")
+
+
+def test_publish_only_works_at_the_publishing_portal():
+    room = _real_room()
+    owner = _seat("root", "owner", location=cw.NPC_STUDIO)
+    handle_command(owner, f"create npc Senna at {room}")
+    # Standing in the studio, publish sends the owner to the portal instead of firing.
+    assert "Publishing Portal" in handle_command(owner, "publish")
+    assert not any(NPCS[n]["name"] == "Senna" for n in npcs_in(room))
+
+
+def test_rollback_discards_the_draft_without_publishing():
+    room = _real_room()
+    owner = _seat("root", "owner", location=cw.NPC_STUDIO)
+    handle_command(owner, f"create npc Doomed at {room}")
+    owner.location = cw.PUBLISHING_PORTAL
+    out = handle_command(owner, "rollback")
+    assert "Rolled back" in out
+    assert not any(NPCS[n]["name"] == "Doomed" for n in npcs_in(room))
+    assert "Nothing is staged" in handle_command(owner, "preview")
+
+
+def test_the_full_create_loop_through_the_tick():
+    # The whole beginner journey: walk into the world's spawn, into the studio, create, publish.
+    room = _real_room()
+    owner = _seat("root", "owner", location=cw.NPC_STUDIO)
+    handle_command(owner, f"create npc Torvald the Smith at {room}")
+    handle_command(owner, "go hall")
+    handle_command(owner, "go publish")  # the Publishing Portal
+    assert owner.location == cw.PUBLISHING_PORTAL
+    handle_command(owner, "publish")
+    assert any(NPCS[n]["name"] == "Torvald the Smith" for n in npcs_in(room))
