@@ -63,6 +63,7 @@ from parts.world.aggression import menace
 from parts.world.character_view import sheet_from_session
 from parts.world.characters import load_character, restore_character, save_character
 from parts.world.chime import chime
+from parts.world.coinage import purse
 from parts.world.combat import attack, examine_foe, tick_burns
 from parts.world.consumables import quaff
 from parts.world.crafting import craft
@@ -1393,7 +1394,9 @@ def _build_commands() -> CommandSet:
             "wallet",
             "CMD-04.070",
             "check your purse",
-            lambda s, _a: f"Your purse holds {s.coins} coins.",
+            lambda s, _a: (
+                "Your purse is empty." if not s.coins else f"Your purse holds {purse(s.coins)}."
+            ),
             namespace=CORE,
         )
     )

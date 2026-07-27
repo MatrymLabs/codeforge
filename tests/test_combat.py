@@ -517,7 +517,7 @@ def test_a_kill_fills_the_purse():
         out = attack(s, "dummy")
         if "collapses" in out:
             break
-    assert "coins" in out  # the reward line shows the purse
+    assert "purse:" in out  # the reward line shows the (denominated) purse
     assert s.coins > before  # a kill fills the purse
 
 
@@ -526,7 +526,7 @@ def test_wallet_reports_the_purse_through_the_engine_tick():
 
     s = _fighter()
     s.coins = 250
-    assert "250 coins" in handle_command(s, "wallet")
+    assert "2 sparks, 50 cinders" in handle_command(s, "wallet")  # 250 base coins, denominated
 
 
 def test_a_levelled_equippable_drop_rolls_and_stores_a_rarity():

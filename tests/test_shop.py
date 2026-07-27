@@ -66,7 +66,8 @@ def _shopper(coins: int = 100, location: str = "courtyard") -> Session:
 
 def test_render_shop_lists_wares_and_the_purse():
     out = render_shop(_shopper(coins=77))
-    assert "a test trinket" in out and "30 coins" in out and "77 coins" in out
+    # prices show in compact coinage (30c), the purse in full (77 cinders)
+    assert "a test trinket" in out and "30c" in out and "77 cinders" in out
 
 
 def test_no_shop_here_is_refused():
