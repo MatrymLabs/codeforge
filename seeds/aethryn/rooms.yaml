@@ -204,6 +204,8 @@ stillhearth:
     north: the_glass_gallery
     down: the_silent_cloister
     west: the_riming_fields
+    market: the_ice_market
+    inn: the_thawhouse
 
 the_frozen_court:
   name: The Frozen Court
@@ -774,6 +776,9 @@ highgate:
     east: the_drifting_reach
     north: coilfoot_ascent
     south: the_anchor_quarter
+    market: the_sky_market
+    inn: the_skyward_rest
+    watch: the_gate_watch
 
 the_drifting_reach:
   name: The Drifting Reach
@@ -1529,6 +1534,7 @@ saltring:
     market: the_salt_market
     south: the_ring_quarter
     quarter: the_ring_quarter
+    inn: the_salvagers_rest
 
 the_salt_market:
   name: The Salt-Market
@@ -2422,3 +2428,68 @@ the_rest_hollow:
     and green and a mile above the swamp. A hollow-keeper tends the guests. Out returns to the avenues.
   exits:
     out: the_bough_avenues
+
+# ============================================================================================
+# REMAINING CAPITAL INTERIORS (Great Creation Campaign, Phase I, Layer 4): lodging + trade for the
+# three capitals still without indoor places - Stillhearth (Rimefall), Highgate (Sundered Sky), and
+# Saltring (Cinderwaste). Every settlement now has a market and an inn. Non-combat. Noun exits, `out`.
+# ============================================================================================
+
+# --- Stillhearth (the Rimefall monastery-port) ---
+the_ice_market:
+  name: The Ice-Market
+  desc: |-
+    Stillhearth's spare market, where the Silent Anvil trade only what the ice gives up and nothing they
+    would have to make: salvaged Forgework, rime-preserved stores, the cold north's thin bounty. An
+    ice-trader keeps a quiet stall, because in the Rimefall even commerce is kept low. Out returns to
+    Stillhearth.
+  exits:
+    out: stillhearth
+
+the_thawhouse:
+  name: The Thawhouse
+  desc: |-
+    The one warm room the Silent Anvil permit a guest: a thawhouse of banked stone-heat where a Forger
+    off the ice can stop shivering and sleep, the frozen Reach held at bay by a single careful fire. A
+    thaw-keeper tends it, and reminds you the warmth is a mercy, not a right. Out returns to Stillhearth.
+  exits:
+    out: stillhearth
+
+# --- Highgate (the Sundered Sky Warden capital) ---
+the_sky_market:
+  name: The Sky-Market
+  desc: |-
+    Highgate's market, strung between anchor-stays over a mile of open cloud: the sky-Warden capital's
+    trade, where the drifting shards' salvage and the last supplies before the Forgeward Road change
+    hands. A sky-trader keeps a swaying stall and never looks down. Out returns to Highgate.
+  exits:
+    out: highgate
+
+the_skyward_rest:
+  name: The Skyward Rest
+  desc: |-
+    A rest-hold anchored to Highgate's greatest stay, its beds slung in the lee of the wind: the last
+    safe sleep before a Forger passes the sky-Warden's test and sets out on the Forgeward Road. A rest-
+    keeper minds the anchor-line. Out returns to Highgate.
+  exits:
+    out: highgate
+
+the_gate_watch:
+  name: The Gate-Watch
+  desc: |-
+    The sky-Warden's watch-post over the anchor-line, where the Concord keeps its most important and
+    most isolated holding: the threshold onto the Forgeward Road and the endgame beyond. A watch-Warden
+    reads the far road, and judges who is ready to walk it. The threshold's charge is graven on the
+    watch-stone. Out returns to Highgate.
+  exits:
+    out: highgate
+
+# --- Saltring (the Cinderwaste salvage-city) ---
+the_salvagers_rest:
+  name: The Salvagers' Rest
+  desc: |-
+    Saltring's one lodging, a hull-house of slung hammocks kept by road-code for any clansman or
+    traveller the waste has not yet killed: not warm, not soft, but dry and defended, which in the
+    Cinderwaste is luxury. A rest-keeper holds the door against the dust. Out returns to Saltring.
+  exits:
+    out: saltring

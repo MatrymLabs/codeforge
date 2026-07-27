@@ -3145,3 +3145,61 @@ rest_hollow_keeper:
   keywords: [keeper, hollow, rest, host]
   dialogue:
     - '"Rest easy, guest -- Highbough lets few outsiders up the tree, and none it does not trust, so you are welcome by the fact of being here. The bed is moss, the lamp is bloom, the swamp is a mile down and cannot reach you. Sleep high. In the morning the whole living Reach is under your feet, and it will be glad you came, in the slow way the tree is glad of things."'
+
+# --- Remaining capital interiors life (Great Creation Campaign, Phase I, Layer 4): lodging + trade
+# --- keepers for Stillhearth, Highgate, and Saltring. All non-combat. ---
+ice_trader:
+  name: an ice-trader of Stillhearth
+  location: the_ice_market
+  keywords: [trader, ice, market, rimekin]
+  dialogue:
+    - '"Quietly, Forger -- we trade low in the Rimefall, as we do everything. Only what the ice gives up: salvage, rime-stores, the cold''s thin bounty. We make nothing here, and buy nothing we would have to. The Silent Anvil hold that even wanting is a kind of heat. So want quietly, and buy what you need, and move on before the cold notices you stopped."'
+  shop:
+    sells:
+      healing_draught: 15
+      greater_healing_draught: 38
+    buys:
+      ember_shard: 7
+      rime_crystal: 11
+
+thaw_keeper:
+  name: a thaw-keeper
+  location: the_thawhouse
+  keywords: [keeper, thaw, thawhouse, host]
+  dialogue:
+    - '"Warm yourself, Forger, but know the warmth is a mercy the Anvil permit, not a right you hold. One fire, banked careful, against a whole frozen Reach. Sleep while it lasts. And when you go back out on the ice, remember what the Rimefall teaches better than anywhere: heat is borrowed, always, and the cold is only ever waiting for the loan to come due."'
+
+sky_trader:
+  name: a sky-trader of Highgate
+  location: the_sky_market
+  keywords: [trader, sky, market, skyborn]
+  dialogue:
+    - '"Mind the sway and don''t look down, Forger -- the stall''s held a thousand years, it''ll hold your custom. Drifting-shard salvage, storm-glass, the last supplies before the Road. Everything a Forger needs to walk east off the edge of the settled world, sold on a plank over a mile of cloud. Buy well. There are no shops on the Forgeward Road."'
+  shop:
+    sells:
+      greater_healing_draught: 38
+      water_ration: 9
+    buys:
+      ember_shard: 8
+      stormglass: 13
+
+skyward_rest_keeper:
+  name: a rest-keeper of the Skyward Rest
+  location: the_skyward_rest
+  keywords: [keeper, rest, skyward, host]
+  dialogue:
+    - '"Last safe sleep before the Road, Forger. Past the watch and the sky-Warden''s test there''s no bed but the bare march and no roof but the deepening sky. Sleep here while a stay still holds you. Most who go east do not come back to argue whether the bed was worth it -- but the ones who do always say it was."'
+
+gate_watch_warden:
+  name: a watch-Warden of the Gate-Watch
+  location: the_gate_watch
+  keywords: [warden, watch, gate, skyborn]
+  dialogue:
+    - '"So you would walk the Forgeward Road. Everyone thinks they are ready, Forger. The watch is where the Concord finds out. Beyond this post the road runs east to the Forge itself, each march deeper and worse, to the Sovereign at the world''s far heart. We do not stop you -- the Concord keeps doors, it does not lock them. But read the watch-stone before you go, and be certain. The Road does not send many back to reconsider."'
+
+salvagers_rest_keeper:
+  name: a rest-keeper of the Salvagers' Rest
+  location: the_salvagers_rest
+  keywords: [keeper, rest, salvagers, ashborn]
+  dialogue:
+    - '"Dry and defended, Forger, and by road-code you owe nothing for it but to leave it as you found it and help the next clansman the waste half-killed. Not warm. Nothing''s warm in the Cinderwaste. But the dust stays out and the door holds, and out here that is the whole of what a roof is for. Rest. The waste will still be grey in the morning."'
