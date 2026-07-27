@@ -18,6 +18,7 @@ from dataclasses import dataclass
 from parts.world.bounties import is_bounty
 from parts.world.cull import is_cull
 from parts.world.delivery import is_delivery
+from parts.world.dungeon_crawl import is_dungeon_crawl
 from parts.world.errands import is_errand
 from parts.world.forage import is_forage
 from parts.world.spine import is_spine
@@ -72,6 +73,18 @@ CATALOG: tuple[Archetype, ...] = (
         replay="One-shot per zone.",
         scope="each zone that pairs a town with a dungeon",
         member=is_storyline,
+    ),
+    Archetype(
+        key="dungeon_crawl",
+        name="Dungeon Descent",
+        purpose="Reward braving a dungeon to its depths -- exploration and nerve, not the kill.",
+        narrative_role="The delve is deep and few return; reaching its heart is its own feat.",
+        loop="Cross the dungeon mouth and press down to the deep boss's chamber.",
+        success="Stand in the deepest chamber of the delve.",
+        rewards="A large XP payout scaled to the dungeon's level.",
+        replay="One-shot per dungeon.",
+        scope="each dungeon (its mouth and its deepest chamber)",
+        member=is_dungeon_crawl,
     ),
     Archetype(
         key="bounty",

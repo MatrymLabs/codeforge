@@ -49,6 +49,7 @@ _GAME_SEED = {
     "cull",
     "forage",
     "delivery",
+    "dungeon_crawl",
     "quest_archetypes",
     "storylines",
     "townsfolk",
