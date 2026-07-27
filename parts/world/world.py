@@ -11,6 +11,7 @@ from parts.world.items import ITEMS, register_prototypes
 from parts.world.npcs import NPCS
 from parts.world.seed import SEED_DIR, Room, inspect_world_links, load_rooms
 from parts.world.spiral import extend_world_with_road, load_spiral_config
+from parts.world.townsfolk import load_settlements, populate_settlements
 from parts.world.wildlands import (
     generate_wildlands,
     load_wildlands_config,
@@ -43,6 +44,13 @@ if _wildlands_configs is not None:
     # Registered as prototypes (not just appended to ITEMS) before the link audit, so a guardian's
     # drop can be cloned and passes the same gate as authored gear.
     register_prototypes(arm_guardians(_wild_npcs))
+
+# Populate the map's settlements (seeds/<world>/settlements.yaml) with townsfolk and a merchant at
+# each town's level band (parts.world.townsfolk) -- the economy sink and the towns' life. Merged
+# before the link audit, so each merchant's shop wares are cross-checked like an authored shop.
+_settlements = load_settlements(SEED_DIR / "settlements.yaml")
+if _settlements is not None:
+    NPCS.update(populate_settlements(_settlements))
 
 # Every generated world carries the Creator's Workshop: a Grand Library linked to the spawn, and a
 # concealed Creator's Door onto an isolated administrative instance only the Seed Owner may cross

@@ -5012,5 +5012,34 @@
     "aliases": [],
     "created": "2026-07-27",
     "updated": "2026-07-27"
+  },
+  {
+    "designation": "MOD-04.075",
+    "name": "townsfolk",
+    "status": "active",
+    "function": "populate the map's settlements with residents and a merchant (the economy sink)",
+    "label": "townsfolk",
+    "file": "parts/world/townsfolk.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "",
+    "tests": "tests/test_townsfolk.py",
+    "depends_on": [
+      "seed"
+    ],
+    "related": [
+      "shop",
+      "npcs",
+      "zones"
+    ],
+    "reuse": "the world-generation lever pointed at TOWN LIFE (sibling of wildlands/bestiary/armory): load_settlements reads seeds/<world>/settlements.yaml (a manifest emitted by tools/emit_map_world.py: one row per town/landmark with name/zone/level); populate_settlements grows each settlement into _FOLK_PER_TOWN peaceful residents (a trade + an ask-topic each) plus one MERCHANT with a level-banded shop of the seed's own draughts. Closes the economy: kills pay coins, the merchant is the sink.",
+    "notes": "Deterministic/pure, merged into NPCS in world.py before inspect_world_links so each merchant's shop wares (real seed consumables) pass the same boot cross-check as an authored shop. Merchants sell _WARE_BANDS by settlement level; buy back at half price. Dungeons are excluded (they get guardians, not folk).",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-27",
+    "updated": "2026-07-27"
   }
 ]
