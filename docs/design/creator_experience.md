@@ -85,11 +85,15 @@ standing in the matching station room, and returns a plain "nothing here" to any
 station leaks nothing about the workshop. Tools are added read-only first (safe, no persistence), and
 mutating tools follow behind a change buffer with preview/publish/rollback.
 
-The first live tool is the **Planning Table's `survey`** (`creator_workshop.plan_survey`). It
-composes both Creator campaigns: it measures the *live* world (rooms, zones, inhabitants, wild
-creatures) and reads its scale against the **Seed Package** deployment tiers (nearest tier by room
-count), giving the owner an honest, plain-language overview. It is read-only, so it never mutates
-world state (Architecture Law 1).
+Two read-only tools are live so far:
+
+- **Planning Table `survey`** (`plan_survey`) reads the world's *shape*: it measures the live world
+  (rooms, zones, inhabitants, wild creatures) and reads its scale against the **Seed Package**
+  deployment tiers (nearest tier by room count), composing both Creator campaigns.
+- **Statistics Wall `activity`** (`wall_activity`) reads the world's *life*: the live session roster,
+  players online and the room/zone each stands in.
+
+Both are read-only, so neither mutates world state (Architecture Law 1).
 
 ## Roadmap (staged behind this foundation)
 

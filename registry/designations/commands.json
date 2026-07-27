@@ -2687,5 +2687,30 @@
     "aliases": [],
     "created": "2026-07-27",
     "updated": "2026-07-27"
+  },
+  {
+    "designation": "CMD-04.082",
+    "name": "activity",
+    "status": "active",
+    "function": "the Statistics Wall's live-play view (owner, in the Creator's Workshop)",
+    "label": "activity",
+    "file": "forge.py",
+    "type": "CMD",
+    "domain": "04",
+    "docs": "docs/design/creator_experience.md",
+    "tests": "tests/test_creator_workshop.py",
+    "depends_on": [],
+    "related": [
+      "CMD-04.081"
+    ],
+    "reuse": "",
+    "tags": [
+      "command"
+    ],
+    "notes": "Second read-only Creator Workshop station tool (Statistics Wall): owner-gated AND station-gated. Reflects the live session roster (players online + room/zone) without touching world state. survey reads the world's SHAPE; activity reads its LIFE.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-27",
+    "updated": "2026-07-27"
   }
 ]
