@@ -48,7 +48,7 @@ from parts.store_index import store
 from parts.telegraph import telegraph
 from parts.titles import title
 from parts.vitals import vitals
-from parts.world import quest
+from parts.world import creator_workshop, quest
 from parts.world.abilities import render_abilities, use_ability
 from parts.world.accounts import (
     has_password,
@@ -1611,6 +1611,23 @@ def _resolve_move(session: Session, direction: str) -> str:
     return message
 
 
+def _cross_workshop_barrier(session: Session, word: str) -> str | None:
+    """The Creator's Door: if `word` names the concealed door out of this room, resolve the barrier;
+    None if it names no door, so ordinary movement handles the word.
+
+    Only the authenticated Seed Owner crosses; everyone else (including a player who guesses the
+    door) meets the exact barrier refusal. The crossing is UNOBSERVABLE -- no leave/arrive is
+    announced to the Library -- so players can never see the owner slip through
+    (parts.world.workshop)."""
+    dest = creator_workshop.door_destination(session.location, word)
+    if dest is None:
+        return None
+    if not creator_workshop.is_seed_owner(session):
+        return creator_workshop.barrier_refusal()
+    session.location = dest  # silent crossing: the barrier lets no one witness it
+    return render_scene(dest, viewer=session.player_id)
+
+
 def _go_cmd(session: Session, arg: str) -> str:
     """`go <way>`: move one room, or a clear refusal for a non-way (or bare `go`).
 
@@ -1619,6 +1636,9 @@ def _go_cmd(session: Session, arg: str) -> str:
     not a direction is resolved against the current room's own exits. Routes case-insensitively
     (the legacy ladder lowered it too)."""
     word = arg.strip().lower()
+    crossed = _cross_workshop_barrier(session, word)
+    if crossed is not None:
+        return crossed
     if word in DIRECTIONS:
         return _resolve_move(session, DIRECTIONS[word])
     if word and word in WORLD[session.location]["exits"]:
@@ -1770,8 +1790,14 @@ def _route(session: Session, true_signal: str, routed_signal: str) -> str:
     # room walks the player through it -- `market`, `gate`, `tavern`, `in`, `out`. Compass words
     # ("ne", "northwest") are already movement verbs; this catches the named thresholds a seed
     # keys by their destination. Real verbs win (the spine ran first), so an exit never shadows one.
-    if " " not in routed_signal and routed_signal in WORLD[session.location]["exits"]:
-        return _resolve_move(session, routed_signal)
+    if " " not in routed_signal:
+        # The concealed Creator's Door is named, never listed (parts.world.workshop): try it before
+        # the visible exits, so a bare `door` in the Grand Library meets the barrier or crosses it.
+        crossed = _cross_workshop_barrier(session, routed_signal)
+        if crossed is not None:
+            return crossed
+        if routed_signal in WORLD[session.location]["exits"]:
+            return _resolve_move(session, routed_signal)
     return "Huh? Type HELP for commands."
 
 

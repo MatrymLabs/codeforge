@@ -4954,5 +4954,34 @@
     ],
     "created": "2026-07-27",
     "updated": "2026-07-27"
+  },
+  {
+    "designation": "MOD-04.073",
+    "name": "creator_workshop",
+    "status": "active",
+    "function": "the Creator's Workshop: a protected admin dimension only the Seed Owner may enter",
+    "label": "creator_workshop",
+    "file": "parts/world/creator_workshop.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "docs/design/creator_experience.md",
+    "tests": "tests/test_creator_workshop.py",
+    "depends_on": [
+      "seed",
+      "session"
+    ],
+    "related": [
+      "world",
+      "ranks"
+    ],
+    "reuse": "the in-game half of the Creator Experience: every generated world is given a discoverable Grand Library and a CONCEALED Creator's Door onto an isolated Workshop instance. install_workshop places the canonical rooms; the barrier lets ONLY the authenticated Seed Owner (owner crown) cross, refusing everyone else (including a teleporting wizard) with the exact message 'The barrier does not acknowledge your presence.' Foundation for the workshop's creation stations (NPC Studio, Quest Archive, difficulty controls) that later stages hang on.",
+    "notes": "State is data, text is a projection (Law 1): the module assembles rooms and answers the barrier question; the tick performs the crossing (forge._cross_workshop_barrier) with no observable leave/arrive. The door is named ('go door') not listed, so players cannot discover/observe/reveal it. Reads session.rank directly to avoid an import cycle with ranks (which guards teleport by importing this module).",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-27",
+    "updated": "2026-07-27"
   }
 ]
