@@ -1,45 +1,146 @@
-# SEED: aethryn -- wildlands.yaml
-# Compact configs the wildlands generator (parts/world/wildlands.py) expands into connected,
-# biome-varied wilderness regions at boot: each is a branching trail off an existing `attach` room,
-# every generated room carrying ambient life and belonging to a metadata area. Deterministic -- the
-# same configs regenerate the identical world. This is how Aethryn reaches world-generation scale.
+# SEED: aethryn -- wildlands.yaml (see parts/world/wildlands.py). Deterministic wilderness
+# regions expanded at boot: seed anchors + regions CHAINING deeper off each anchor's trail.
 
-emberreach_kindland_wild:
-  name: The Kindland Wilds
-  region: Emberreach
+kindland_wild:
+  name: Kindland Wild
+  region: 'Emberreach'
   biome: temperate-meadow
   attach: the_far_reach
   attach_dir: east
   level_min: 4
   level_max: 12
-  trail_length: 20
+  trail_length: 240
+  branch_every: 4
+  branch_length: 3
 
-reachwood_fen_wild:
-  name: The Fenwood
-  region: Emberreach
+fenwood_wild:
+  name: Fenwood Wild
+  region: 'Emberreach'
   biome: wild-forest
   attach: the_thornmere
   attach_dir: north
   level_min: 6
   level_max: 14
-  trail_length: 18
+  trail_length: 240
+  branch_every: 4
+  branch_length: 3
 
-quenchmere_reef_wild:
-  name: The Outer Strand
-  region: The Quenchmere
+downs_wild:
+  name: Downs Wild
+  region: 'Emberreach'
+  biome: highland-moor
+  attach: the_windward_downs
+  attach_dir: east
+  level_min: 8
+  level_max: 15
+  trail_length: 240
+  branch_every: 4
+  branch_length: 3
+
+strand_wild:
+  name: Strand Wild
+  region: 'The Quenchmere'
   biome: coastal-strand
   attach: the_reef_flats
   attach_dir: north
   level_min: 19
   level_max: 26
-  trail_length: 18
+  trail_length: 240
+  branch_every: 4
+  branch_length: 3
 
-kollforge_flats_wild:
-  name: The Cinder Barrens
-  region: The Kollforge
+barrens_wild:
+  name: Barrens Wild
+  region: 'The Kollforge'
   biome: volcanic-flats
   attach: the_obsidian_flats
   attach_dir: south
   level_min: 50
   level_max: 58
-  trail_length: 18
+  trail_length: 240
+  branch_every: 4
+  branch_length: 3
+
+greenwild:
+  name: Greenwild
+  region: 'The Verdance'
+  biome: living-jungle
+  attach: the_understory
+  attach_dir: south
+  level_min: 22
+  level_max: 32
+  trail_length: 240
+  branch_every: 4
+  branch_length: 3
+
+kindland_wild_deep:
+  name: Kindland Wild Deep
+  region: 'Emberreach'
+  biome: temperate-meadow
+  attach: kindland_wild_t120
+  attach_dir: north
+  level_min: 12
+  level_max: 32
+  trail_length: 240
+  branch_every: 4
+  branch_length: 3
+
+fenwood_wild_deep:
+  name: Fenwood Wild Deep
+  region: 'Emberreach'
+  biome: wild-forest
+  attach: fenwood_wild_t120
+  attach_dir: north
+  level_min: 14
+  level_max: 34
+  trail_length: 240
+  branch_every: 4
+  branch_length: 3
+
+downs_wild_deep:
+  name: Downs Wild Deep
+  region: 'Emberreach'
+  biome: highland-moor
+  attach: downs_wild_t120
+  attach_dir: north
+  level_min: 15
+  level_max: 35
+  trail_length: 240
+  branch_every: 4
+  branch_length: 3
+
+strand_wild_deep:
+  name: Strand Wild Deep
+  region: 'The Quenchmere'
+  biome: coastal-strand
+  attach: strand_wild_t120
+  attach_dir: north
+  level_min: 26
+  level_max: 46
+  trail_length: 240
+  branch_every: 4
+  branch_length: 3
+
+barrens_wild_deep:
+  name: Barrens Wild Deep
+  region: 'The Kollforge'
+  biome: volcanic-flats
+  attach: barrens_wild_t120
+  attach_dir: north
+  level_min: 58
+  level_max: 78
+  trail_length: 240
+  branch_every: 4
+  branch_length: 3
+
+greenwild_deep:
+  name: Greenwild Deep
+  region: 'The Verdance'
+  biome: living-jungle
+  attach: greenwild_t120
+  attach_dir: north
+  level_min: 32
+  level_max: 52
+  trail_length: 240
+  branch_every: 4
+  branch_length: 3
