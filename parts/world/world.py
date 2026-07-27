@@ -14,6 +14,7 @@ from parts.world.doors import DOORS, barred_door_for
 from parts.world.gearsets import register_sets
 from parts.world.inscriptions import carve_inscriptions
 from parts.world.items import ITEMS, register_prototypes
+from parts.world.landmarks import raise_landmarks
 from parts.world.npcs import NPCS
 from parts.world.relics import arm_deep_bosses
 from parts.world.rumors import seed_rumors
@@ -138,6 +139,11 @@ from parts.world.seed import load_zones  # noqa: E402 -- WORLD must exist for th
 _story_zones = [dict(z) for z in load_zones(SEED_DIR / "zones.yaml", set(WORLD)).values()]
 if _settlements and _dungeons:
     register_storylines(_story_zones, _settlements, _dungeons)
+
+# Zone landmarks: a readable monument in each zone's hub naming the region, its level band, and any
+# dungeon within (parts.world.landmarks) -- surface storytelling, the twin of the depths' lore.
+if _dungeons is not None:
+    ITEMS.update(raise_landmarks(_story_zones, _dungeons))
 
 # The world spine: one main-road campaign quest (the Forgeward Road) that guides a player through
 # the zones in level order, giving the sprawling world a through-line (parts.world.spine). It lives
