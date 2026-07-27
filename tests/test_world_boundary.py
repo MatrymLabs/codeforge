@@ -36,6 +36,7 @@ _GAME_SEED = {
     "coinage",
     "delve",
     "relics",
+    "rumors",
     "gather",
     "travel",
     "feats",
