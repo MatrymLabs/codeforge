@@ -127,7 +127,23 @@ def register_bounties(npcs: dict[str, Npc]) -> None:
     # hares must not mint a million bounty quests. Notable foes -- every hand-authored and Spiral
     # foe, which carry no `ambient` flag -- keep theirs. This is the boot-time hot spot at scale.
     notable = {label: npc for label, npc in npcs.items() if not npc.get("ambient")}
-    for spec in generate_bounties(notable):
+    _fold_in(generate_bounties(notable))
+
+
+def register_errands(
+    settlements: list[dict[str, object]], destinations: list[dict[str, object]]
+) -> None:
+    """Generate travel-errands from the settlements + the map's destinations and fold them into the
+    engine (parts.world.errands). Called by world.py after the world is assembled. Idempotent."""
+    from parts.world.errands import generate_errands
+
+    _fold_in(generate_errands(settlements, destinations))
+
+
+def _fold_in(specs: list[QuestSpec]) -> None:
+    """Register generated QuestSpecs into the engine (skipping any already known) and route their
+    triggers. The shared tail of register_bounties/register_errands."""
+    for spec in specs:
         if spec["id"] in _QUESTS:
             continue  # never double-register
         workflow, name, xp = _from_seed(spec)
@@ -193,23 +209,39 @@ def _list_all(session: Session) -> str:
 
 
 def contracts_view(session: Session) -> str:
-    """The `contracts` verb: the bounty board -- every generated hunt-contract and its status."""
+    """The `contracts` verb: the notice board -- every generated side-quest (hunt-contract or
+    travel-errand) and its status, grouped so the board reads clearly."""
     from parts.world.bounties import is_bounty
+    from parts.world.errands import is_errand
 
-    open_lines: list[str] = []
-    done_lines: list[str] = []
-    for qid, quest in _QUESTS.items():
-        if not is_bounty(qid):
-            continue
-        run = _run(session.player_id, qid)
-        label = quest.workflow.labels.get(run.state, run.state)
-        (done_lines if quest.engine.is_done(run) else open_lines).append(f"  {label}")
-    if not open_lines and not done_lines:
-        return "There are no hunt-contracts on the board."
-    parts = ["The bounty board:"]
-    parts.extend(open_lines)
-    if done_lines:
-        parts.append(f"Collected: {len(done_lines)}.")
+    def _board(match) -> tuple[list[str], int]:
+        openq: list[str] = []
+        done = 0
+        for qid, quest in _QUESTS.items():
+            if not match(qid):
+                continue
+            run = _run(session.player_id, qid)
+            if quest.engine.is_done(run):
+                done += 1
+            else:
+                openq.append(f"  {quest.workflow.labels.get(run.state, run.state)}")
+        return openq, done
+
+    hunts, hunts_done = _board(is_bounty)
+    errands, errands_done = _board(is_errand)
+    if not (hunts or errands or hunts_done or errands_done):
+        return "There is nothing posted on the notice board."
+    parts = ["The notice board:"]
+    if hunts or hunts_done:
+        parts.append("Hunt-contracts:")
+        parts.extend(hunts)
+        if hunts_done:
+            parts.append(f"  (collected: {hunts_done})")
+    if errands or errands_done:
+        parts.append("Errands:")
+        parts.extend(errands)
+        if errands_done:
+            parts.append(f"  (done: {errands_done})")
     return "\n".join(parts)
 
 

@@ -4,6 +4,8 @@ The world is data -- and now it lives in a seed file, not in Python.
 resolve_move is the only function that changes a player's location.
 """
 
+from itertools import zip_longest
+
 from parts.world.armory import arm_guardians
 from parts.world.creator_workshop import install_workshop
 from parts.world.delve import generate_delves, load_dungeons, wire_delve_mouths
@@ -75,13 +77,33 @@ inspect_world_links(WORLD, ITEMS, NPCS)
 
 # With the full foe set assembled (seed + the procedural Spiral), generate a hunt-contract for
 # every combatant foe -- side-content at volume, folded into the quest engine (parts.world.quest).
-from parts.world.quest import register_bounties  # noqa: E402 -- after NPCS is complete
+from parts.world.quest import register_bounties, register_errands  # noqa: E402 -- after NPCS ready
 
 register_bounties(NPCS)
 
 # The Waystone travel network: the seed's zone hubs a player may pay to cross between
 # (parts.world.travel). {} when the seed ships no network (first-forge/spiral-ascent).
 WAYSTONES = load_waystones(SEED_DIR / "waystones.yaml") or {}
+
+
+# Travel-errands: one per settlement, each sending a player to a distinct destination on the map --
+# a town, a dungeon, or a waystone hub -- so the notice board carries exploration content, not only
+# kills (parts.world.errands). The three kinds are INTERLEAVED so a board of errands reads varied,
+# not one repeated kind.
+def _interleave(*lists: list[dict[str, object]]) -> list[dict[str, object]]:
+    out: list[dict[str, object]] = []
+    for row in zip_longest(*lists):
+        out.extend(item for item in row if item is not None)
+    return out
+
+
+_errand_destinations = _interleave(
+    [{"room": c["room"], "name": c["name"], "kind": "dungeon"} for c in (_dungeons or [])],
+    [{"room": room, "name": cfg["name"], "kind": "hub"} for room, cfg in WAYSTONES.items()],
+    [{"room": c["room"], "name": c["name"], "kind": "town"} for c in (_settlements or [])],
+)
+if _settlements:
+    register_errands(_settlements, _errand_destinations)
 
 # The spawn point is seed-defined, not hardcoded: the FIRST room in rooms.yaml.
 # (first-forge -> "forge"; spiral-ascent -> "spiral_landing".)

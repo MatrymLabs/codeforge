@@ -57,7 +57,7 @@ for i in range(14):
 assert s.level >= 1, "leveling engine ran"
 
 # 5. The side-content board and the character sheet both render.
-assert "bounty board" in t("contracts").lower(), "the bounty board"
+assert "notice board" in t("contracts").lower(), "the notice board"
 assert "HP" in t("score") or "Vanguard" in t("score"), "the score sheet"
 
 # 6. The endgame is really wired: the map's level 250-300 Voidscar and Netharion's Throne exist.
