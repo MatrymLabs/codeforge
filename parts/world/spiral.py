@@ -347,10 +347,18 @@ def spiral_zones(config: dict[str, Any]) -> dict[str, Zone]:
         march_rooms = [f"coil_{n}_ascent", landing]
         if not summit and _has_wayside(config, n):
             march_rooms.append(f"coil_{n}_wayside")  # the side-track belongs to its march's area
+        # Layer-2 metadata the audit reads: each march is a band of the Forgeward Road, deepening
+        # from its predecessor to its road-warden's level, so the generated frontier carries the
+        # same region/level-band/biome geography the authored zones do (closing the L43-300 gap).
+        lo = max(int(config["base_level"]), boss_level - int(config["levels_per_coil"]) + 1)
         zones[f"spiral_coil_{n}"] = Zone(
             name="The Forge's Edge" if summit else f"The {_ordinal(n)} March",
             rooms=march_rooms,
             reset_mode="never",
             beats_between=20,
+            region="The Forgeward Road",
+            level_min=lo,
+            level_max=boss_level,
+            biome="forgeward-marches",
         )
     return zones

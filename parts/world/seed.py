@@ -333,6 +333,14 @@ class Zone(TypedDict):
     rooms: list[str]  # member room labels
     reset_mode: str  # one of RESET_MODES
     beats_between: int  # world beats between reset opportunities (> 0)
+    # Layer-2 geographic metadata (all OPTIONAL, backward-compatible): a zone that omits them loads
+    # exactly as before. When present they give an area its place in the world -- its parent Reach,
+    # its recommended level band, and its primary biome -- so tooling (scripts/world_audit.py) can
+    # report region and Level 1-300 coverage. Data, not behavior: the reset scheduler ignores them.
+    region: NotRequired[str]  # the parent Reach / continent (e.g. "Emberreach", "The Cinderdeep")
+    level_min: NotRequired[int]  # recommended minimum level (>= 1)
+    level_max: NotRequired[int]  # recommended maximum level (>= level_min, <= 300)
+    biome: NotRequired[str]  # primary biome (e.g. "temperate-coast", "glacier", "volcanic")
 
 
 class SeedError(Exception):
@@ -1145,10 +1153,44 @@ def load_zones(path: Path, known_rooms: set[str]) -> dict[str, Zone]:
                 )
             claimed[room] = label
             members.append(room)
-        zones[label] = Zone(
+        zone = Zone(
             name=str(merged["name"]),
             rooms=members,
             reset_mode=str(merged["reset_mode"]),
             beats_between=int(merged["beats_between"]),
         )
+        _attach_zone_metadata(label, merged, zone)
+        zones[label] = zone
     return zones
+
+
+def _attach_zone_metadata(label: str, merged: dict[str, Any], zone: Zone) -> None:
+    """Fold in the optional Layer-2 geographic metadata (region / level band / biome), validating
+    each field only if the zone declares it. Absent fields stay absent -- a zone without metadata
+    is untouched, so the change is backward-compatible. A malformed field fails loud, as every gate.
+    """
+    region = merged.get("region")
+    if region is not None:
+        if not isinstance(region, str) or not region.strip():
+            raise SeedError(f"zone '{label}': 'region' must be a non-empty string.")
+        zone["region"] = region
+    lo = merged.get("level_min")
+    hi = merged.get("level_max")
+    for name, value in (("level_min", lo), ("level_max", hi)):
+        if value is not None and (isinstance(value, bool) or not isinstance(value, int)):
+            raise SeedError(f"zone '{label}': '{name}' must be an integer.")
+    if lo is not None:
+        if lo < 1 or lo > 300:
+            raise SeedError(f"zone '{label}': 'level_min' must be within 1-300, got {lo}.")
+        zone["level_min"] = lo
+    if hi is not None:
+        if hi < 1 or hi > 300:
+            raise SeedError(f"zone '{label}': 'level_max' must be within 1-300, got {hi}.")
+        zone["level_max"] = hi
+    if lo is not None and hi is not None and hi < lo:
+        raise SeedError(f"zone '{label}': 'level_max' ({hi}) must be >= 'level_min' ({lo}).")
+    biome = merged.get("biome")
+    if biome is not None:
+        if not isinstance(biome, str) or not biome.strip():
+            raise SeedError(f"zone '{label}': 'biome' must be a non-empty string.")
+        zone["biome"] = biome

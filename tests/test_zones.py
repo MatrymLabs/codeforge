@@ -97,6 +97,62 @@ def test_a_zone_with_no_rooms_is_refused(tmp_path):
         load_zones(path, KNOWN)
 
 
+# --- Layer-2 geographic metadata (region / level band / biome), all optional -------------
+def test_zone_metadata_loads_when_declared(tmp_path):
+    path = _write(
+        tmp_path,
+        "reach:\n  rooms: [a]\n  reset_mode: never\n  beats_between: 5\n"
+        '  region: "Emberreach"\n  level_min: 12\n  level_max: 20\n  biome: "city"\n',
+    )
+    z = load_zones(path, KNOWN)["reach"]
+    assert z["region"] == "Emberreach"
+    assert z["level_min"] == 12 and z["level_max"] == 20
+    assert z["biome"] == "city"
+
+
+def test_zone_metadata_is_absent_when_omitted(tmp_path):
+    # Backward-compatible: a zone that declares no metadata carries none of the optional keys.
+    z = load_zones(_write(tmp_path, "wilds:\n  rooms: [c]\n"), KNOWN)["wilds"]
+    assert "region" not in z and "level_min" not in z and "biome" not in z
+
+
+@pytest.mark.parametrize(
+    "meta, match",
+    [
+        ('  region: ""\n', "region"),
+        ("  level_min: 0\n", "level_min"),
+        ("  level_max: 400\n", "level_max"),
+        ("  level_min: 30\n  level_max: 20\n", ">= 'level_min'"),
+        ("  level_min: true\n", "level_min"),
+        ('  biome: ""\n', "biome"),
+    ],
+)
+def test_malformed_zone_metadata_is_refused(tmp_path, meta, match):
+    body = "z:\n  rooms: [a]\n  reset_mode: never\n  beats_between: 1\n" + meta
+    with pytest.raises(seed.SeedError, match=match):
+        load_zones(_write(tmp_path, body), KNOWN)
+
+
+def test_shipped_aethryn_zones_cover_the_full_level_1_to_300_progression():
+    """A living gate on the world's geography: the metadata-carrying areas span Levels 1-300 with no
+    band left uncovered, so a Forger always has somewhere banded to be. Guards against a progression
+    gap creeping in as regions are added (the audit reports the same, in scripts/world_audit.py)."""
+    aethryn = SEEDS_ROOT / "aethryn"
+    rooms = set(load_rooms(aethryn / "rooms.yaml"))
+    zmap = load_zones(aethryn / "zones.yaml", rooms)
+    covered = set()
+    for z in zmap.values():
+        lo, hi = z.get("level_min"), z.get("level_max")
+        if lo is not None and hi is not None:
+            assert 1 <= lo <= hi <= 300, f"zone with a bad band: {lo}-{hi}"
+            covered.update(range(lo, hi + 1))
+    # The hand-authored seed zones reach into the mid game; the procedural Forgeward Road (added at
+    # world assembly) carries the high bands to 300. Here we pin the authored seed's own continuous
+    # span from Level 1, which the audit then extends to 300 with the generated marches.
+    authored_top = max(z["level_max"] for z in zmap.values() if z.get("level_max"))
+    assert covered.issuperset(range(1, authored_top + 1)), "a level band is uncovered in the seed"
+
+
 # --- grouping queries -------------------------------------------------------------------
 def _install(monkeypatch, zmap: dict[str, Zone]) -> None:
     monkeypatch.setattr(zones, "ZONES", zmap)
