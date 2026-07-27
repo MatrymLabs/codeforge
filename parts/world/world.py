@@ -91,6 +91,7 @@ inspect_world_links(WORLD, ITEMS, NPCS)
 from parts.world.quest import (  # noqa: E402 -- after NPCS ready
     register_bounties,
     register_errands,
+    register_spine,
     register_storylines,
 )
 
@@ -130,6 +131,11 @@ from parts.world.seed import load_zones  # noqa: E402 -- WORLD must exist for th
 _story_zones = [dict(z) for z in load_zones(SEED_DIR / "zones.yaml", set(WORLD)).values()]
 if _settlements and _dungeons:
     register_storylines(_story_zones, _settlements, _dungeons)
+
+# The world spine: one main-road campaign quest (the Forgeward Road) that guides a player through
+# the zones in level order, giving the sprawling world a through-line (parts.world.spine). It lives
+# in the `quest` log, not the notice board -- the spine the side-content hangs on.
+register_spine(_story_zones)
 
 # Living rumours: give each town resident gossip that NAMES the zone's dungeon and the relic it
 # guards (parts.world.rumors), so the plaza becomes a signpost toward content, not just flavour. The

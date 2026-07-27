@@ -5392,5 +5392,34 @@
     "aliases": [],
     "created": "2026-07-27",
     "updated": "2026-07-27"
+  },
+  {
+    "designation": "MOD-04.088",
+    "name": "spine",
+    "status": "active",
+    "function": "forge the world's main-road quest: one guided journey through the zones in level order",
+    "label": "spine",
+    "file": "parts/world/spine.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "",
+    "tests": "tests/test_spine.py",
+    "depends_on": [
+      "seed"
+    ],
+    "related": [
+      "quest",
+      "storylines",
+      "zones"
+    ],
+    "reuse": "the AAA-content-density THROUGH-LINE lever: forge_spine(zones) lays one campaign quest (the Forgeward Road) whose beats are entering each zone's hub (first room) in level order -- the main quest that orients a new player and pulls them across the map from the starting band to the endgame. Lives in the `quest` log, not the notice board (the spine the side-content hangs on). Folded into the engine via register_spine.",
+    "notes": "Systemic, not hand-crafted: the same world always lays the same road (deterministic, ordered by level_min then level_max). SPINE_ID = 'spine_forgeward_road' (one per world); is_spine() checks it. Reward scales with the last zone's level_max, granted on reaching the final zone. Returns None for a world with < 2 zones. aethryn: a 14-zone road, Veridia (1-30) to The Voidscar (250-300).",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-27",
+    "updated": "2026-07-27"
   }
 ]

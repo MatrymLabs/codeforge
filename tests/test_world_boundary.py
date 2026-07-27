@@ -37,6 +37,7 @@ _GAME_SEED = {
     "delve",
     "relics",
     "inscriptions",
+    "spine",
     "rumors",
     "gather",
     "travel",
