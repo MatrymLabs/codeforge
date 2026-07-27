@@ -146,3 +146,54 @@ def test_regions_can_chain_off_earlier_generated_rooms():
     # the chain's attach exit and the trail-head's back exit are reciprocal
     head_back = [d for d, dst in rooms["wb_t1"]["exits"].items() if dst == "wa_t5"]
     assert head_back, "chained trail-head has no exit back to its attach room"
+
+
+# --- named guardians: MMO-density hunt content seeded by the generator -------------------------
+
+
+def test_notable_guardians_seed_nonambient_bounty_targets_when_configured():
+    cfg = dict(_CFG, id="guard_wild", trail_length=60, notable_every=20)
+    _, rooms, npcs = _world_with(cfg)
+    lords = {k: v for k, v in npcs.items() if "_lord_" in k}
+    assert lords, "a configured region seeded no named guardian"
+    for v in lords.values():
+        assert not v.get("ambient"), (
+            "a guardian must be non-ambient (so register_bounties names it)"
+        )
+        assert v["hp"] > 0 and v["tier"] in ("elite", "boss")
+        assert v["location"] in rooms  # it stands in a generated room
+    # a guardian REPLACES its room's ambient life, so there is still exactly one creature per room
+    occupied = [npc["location"] for npc in npcs.values()]
+    assert len(occupied) == len(set(occupied)) == len(rooms)
+
+
+def test_notables_are_off_by_default_in_a_hand_built_config():
+    _, _, npcs = _world_with(_CFG)  # _CFG declares no notable_every
+    assert not any("_lord_" in k for k in npcs), "a quiet config seeded a guardian anyway"
+
+
+def test_the_guardian_count_is_capped_for_a_huge_region():
+    from parts.world.wildlands import _NOTABLE_CAP
+
+    cfg = dict(_CFG, id="huge_wild", trail_length=_NOTABLE_CAP * 40, notable_every=1)
+    _, _, npcs = _world_with(cfg)
+    assert len([k for k in npcs if "_lord_" in k]) == _NOTABLE_CAP  # bounded, however large
+
+
+def test_notable_every_defaults_on_and_refuses_a_negative():
+    import tempfile
+    from pathlib import Path
+
+    import yaml
+
+    from parts.world.wildlands import load_wildlands_config
+
+    good = {k: v for k, v in _CFG.items() if k != "id"}
+    with tempfile.TemporaryDirectory() as d:
+        p = Path(d) / "wildlands.yaml"
+        p.write_text(yaml.safe_dump({"probe_wild": good}))
+        cfg = load_wildlands_config(p)[0]
+        assert cfg["notable_every"] > 0  # the loader turns hunt content on by default
+        p.write_text(yaml.safe_dump({"probe_wild": {**good, "notable_every": -1}}))
+        with pytest.raises(SeedError, match="notable_every"):
+            load_wildlands_config(p)
