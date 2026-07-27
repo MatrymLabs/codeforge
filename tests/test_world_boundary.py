@@ -32,6 +32,7 @@ _GAME_SEED = {
     "world",
     "armory",
     "coinage",
+    "delve",
     "townsfolk",
     "rooms",
     "items",
