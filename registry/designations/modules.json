@@ -5603,5 +5603,38 @@
     "aliases": [],
     "created": "2026-07-27",
     "updated": "2026-07-27"
+  },
+  {
+    "designation": "MOD-04.095",
+    "name": "quest_archetypes",
+    "status": "active",
+    "function": "the data-driven catalog of quest archetypes the world generates",
+    "label": "quest_archetypes",
+    "file": "parts/world/quest_archetypes.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "docs/quest_archetypes.md",
+    "tests": "tests/test_quest_archetypes.py",
+    "depends_on": [
+      "seed"
+    ],
+    "related": [
+      "quest",
+      "bounties",
+      "cull",
+      "forage",
+      "errands",
+      "storylines",
+      "spine"
+    ],
+    "reuse": "the FRAMEWORK for the content-generation campaign (slice 1 of the /home/josh/Projects/prompt brief): the Quest Archetype Library. One frozen Archetype record per shipped generator (spine/storyline/bounty/cull/forage/errand) naming purpose, narrative role, gameplay loop, success, rewards, replay, and scope, beside the generator's is_<x> predicate. classify(quest_id) maps any live quest to its archetype key (or AUTHORED). Turns ad-hoc generators into a legible, extensible catalog; a new archetype is a new record. Design doc: docs/quest_archetypes.md (with the roadmap of the ~40 further archetypes from the prompt).",
+    "notes": "Data, not behavior -- the generators stay where they live; this names/organises them. The completeness test proves every quest a booted world posts partitions into exactly one archetype (or authored), so no archetype ships uncatalogued. CATALOG is ordered specific-before-broad (classify = first match). AUTHORED is the fallback (hand-written quest.yaml + the built-in contract), not a catalog entry.",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-27",
+    "updated": "2026-07-27"
   }
 ]
