@@ -3115,3 +3115,33 @@ reliquary_ice_sentinel:
   tier: boss  # the Warmcamp's climax (x10 reward): the ice's own answer to the salvagers who will not leave it be
   drops: [ice_sealed_regalia, greater_healing_draught]
   loot: {ember_shard: 12, rime_crystal: 4, nothing: 1}
+# --- Highbough interiors life (Great Creation Campaign, Phase I, Layer 4): the canopy capital's
+# --- grown-place folk, all non-combat. ---
+canopy_monger:
+  name: a canopy-monger
+  location: the_canopy_market
+  keywords: [monger, canopy, market, trader]
+  dialogue:
+    - '"Slow down, Forger -- we haggle the green way up here, which is to say we take our time, because the tree does. Coaxed ember-bloom, shaped living-wood, swamp-craft up from Mirefast. Nothing here was cut or killed to make; the Deeprooted don''t trade in death. Costs more and takes longer. Worth both."'
+  shop:
+    sells:
+      healing_draught: 14
+      greater_healing_draught: 36
+      mana_draught: 14
+    buys:
+      emberbloom: 8
+      glowcap: 6
+
+council_reader:
+  name: a grove-council reader
+  location: the_grove_council
+  keywords: [reader, council, grove, elder]
+  dialogue:
+    - '"You stand in the seat of our government, Forger, and I know it does not look like one -- no throne, no crown, no law but the moot. The Deeprooted hold that a living world cannot be ruled, only heard, and so we do not rule the Verdance, we listen to it, and broker between its moods and our needs. The drowned Reaches call it weakness. We have kept a living continent alive for an age. Read the covenant. Then say which of us is weak."'
+
+rest_hollow_keeper:
+  name: a rest-hollow keeper
+  location: the_rest_hollow
+  keywords: [keeper, hollow, rest, host]
+  dialogue:
+    - '"Rest easy, guest -- Highbough lets few outsiders up the tree, and none it does not trust, so you are welcome by the fact of being here. The bed is moss, the lamp is bloom, the swamp is a mile down and cannot reach you. Sleep high. In the morning the whole living Reach is under your feet, and it will be glad you came, in the slow way the tree is glad of things."'

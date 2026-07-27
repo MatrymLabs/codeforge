@@ -1331,3 +1331,22 @@ warmcamp_tally:
     living are worth more than the paused dead, and if that is heresy to the Silent Anvil, let them come
     warm their pure cold hands at our fire and say it to our faces. They never do. They're never hungry
     enough to have to mean it." It is the whole quarrel of the frozen north, kept on a nail by a fire.
+# --- Highbough interiors content (Great Creation Campaign, Phase I, Layer 4): the Deeprooted covenant
+# --- grown into the grove-council's heartwood - the living Reach's law, which is not a law. ---
+deeprooted_covenant:
+  name: the Deeprooted covenant
+  keywords: [covenant, deeprooted, council, heartwood]
+  location: the_grove_council
+  lore: |-
+    Grown into the heartwood of the grove-council hollow, read by running a hand along the living grain:
+    "WE DO NOT RULE. This is the whole covenant of the Deeprooted, and it is harder to keep than any
+    crown's law. A living world cannot be ruled, only heard; a forest remembers the axe longer than the
+    axeman lives; wild Ember grows where it wills and dies in the hand that grips it. So we do not
+    command the Verdance and we do not command each other. We listen -- to the tree, to the swamp, to
+    the moot, to the guest -- and we broker, and we go slow, because the living go slow and the dead go
+    fast and we have chosen the side of the living. The drowned Reaches Forge, the frozen north freezes,
+    the molten Reach burns, and each of them calls us weak for growing instead. Let them. When their
+    made things have drowned and frozen and burned, the tree that grew this hollow will still be growing,
+    and the covenant will still be true: you cannot own what is alive. You can only be worthy of it, and
+    listen, and be a good guest in a house far older than your making. That is not weakness. That is the
+    only strength that has ever lasted."
