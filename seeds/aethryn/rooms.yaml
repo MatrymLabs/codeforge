@@ -258,12 +258,18 @@ cinderhearth_square:
   desc: |-
     The heart of Cinderhearth-on-Reach. The town forge, cold for a generation,
     has just taken flame again, and folk gather to watch it burn. A training
-    dummy stands ready in the yard, and a cellar door yawns beneath the forge.
+    dummy stands ready in the yard, and a cellar door yawns beneath the forge. The relit FORGE, the
+    Saltrest TAVERN, a coast SHRINE, the fishers' HARBOR, and the hearth-way HOMES open off the square.
   exits:
     south: the_waking_shore
     north: old_reach_bridge
     east: reachwood_edge
     down: cold_cellar
+    forge: the_relit_forge
+    tavern: the_saltrest_tavern
+    shrine: the_coast_shrine
+    harbor: the_fishers_row
+    homes: the_hearthway
 
 old_reach_bridge:
   name: The Old Reach Bridge
@@ -2186,3 +2192,70 @@ the_redoubt_deep:
     since. What the Concord sealed here is charged past any surface make. The redoubt lies back up.
   exits:
     up: the_sundered_redoubt
+
+# ============================================================================================
+# CINDERHEARTH INTERIORS (Great Creation Campaign, Phase I, Layer 4). The starter coast town - the
+# first place every Forger sees - becomes explorable: the just-relit forge, the Saltrest tavern + loft,
+# a coast First-Flame shrine, the fishers' harbor, and a residential hearth-way. Small and welcoming, as
+# a starter town should be (no dungeon: the cold cellar below the square already is the local delve).
+# All safe, non-combat life. Noun exits (forge/tavern/shrine/harbor/homes), each left by `out`.
+# ============================================================================================
+
+the_relit_forge:
+  name: The Relit Forge
+  desc: |-
+    Cinderhearth's own forge, cold for a generation and burning again: the fire whose relighting dated
+    the whole Rekindling on this coast, small and bright and holy to the townsfolk who gather to watch
+    it work. A forge-hand keeps the flame and will show a new Forger the first strike. Out returns to
+    the square.
+  exits:
+    out: cinderhearth_square
+
+the_saltrest_tavern:
+  name: The Saltrest
+  desc: |-
+    The coast town's one tavern, warm and salt-worn, where Cinderhearth's fisherfolk and the Forgers
+    washed up on the Waking Shore share a hearth and the day's small news. A host keeps the taps and a
+    kind word for the newly-woken. Beds up the loft stair, an INN for the road-starting. Out returns to
+    the square.
+  exits:
+    out: cinderhearth_square
+    inn: the_saltrest_loft
+
+the_saltrest_loft:
+  name: The Saltrest Loft
+  desc: |-
+    A sleeping-loft over the Saltrest, low and clean, its window on the Cooling-Sea: the first safe bed
+    a fresh Forger finds, and a kinder one than most that follow. A loft-keeper banks the little hearth.
+    Out returns to the tavern below.
+  exits:
+    out: the_saltrest_tavern
+
+the_coast_shrine:
+  name: The Coast Shrine
+  desc: |-
+    A roadside shrine of the First Flame at the town's edge, a niche of relit ember above the strand:
+    the faith in its plainest form, kept not by a church but by whoever tends it, that the world was
+    Made and can be Made again. A shrine-tender feeds the little flame. The First Flame's simplest words
+    are cut in the shrine-stone for any who read. Out returns to the square.
+  exits:
+    out: cinderhearth_square
+
+the_fishers_row:
+  name: The Fishers' Row
+  desc: |-
+    Cinderhearth's working waterfront: a row of jetties and drying-racks on the Cooling-Sea, where the
+    town's cooling-iron boats land the catch that fed it through the long cold years before the forge
+    relit. A net-mender works the row and knows every current on the coast. Out returns to the square.
+  exits:
+    out: cinderhearth_square
+
+the_hearthway:
+  name: The Hearth-Way
+  desc: |-
+    A lane of hearth-warm homes behind the square, where Cinderhearth's families have kept the coast
+    through the dark generation and now keep it through the bright one: ordinary doors, ordinary lives,
+    the quiet the whole Rekindling is being fought to protect. A hearth-mother minds a doorstep and a
+    pot. Out returns to the square.
+  exits:
+    out: cinderhearth_square
