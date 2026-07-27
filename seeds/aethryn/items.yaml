@@ -1370,3 +1370,34 @@ gate_watch_stone:
     true, and a Forger who reaches the Sovereign with an empty reason becomes another thing the Road
     kept. The watch cannot stop you. It can only ask, one last time, the question the whole world hangs
     on: not CAN you make a world -- but SHOULD you, and do you know the difference. Go, then. We watched."
+# --- The Rootdeep content (Great Creation Campaign, Phase I): the grave-sap gather, the Rotheart's
+# --- unmade seed, and the lore of the deep that argues with the living Reach over the same dead. ---
+grave_sap:
+  name: a draught of grave-sap
+  keywords: [grave, sap, roots, material]
+  location: the_grave_roots
+  resettable: true  # the grave-roots gather: sap where living root meets unmaking, reforms on the reset
+
+rotheart_seed:
+  name: the Rotheart's seed
+  keywords: [seed, rotheart, unmade, relic]
+  location: nowhere
+  slot: accessory_1
+  mods: {"MAG DEF": 8, DEF: 5}  # a seed of the unmade grove, half-alive and half-unmade, taken off the Rotheart-Warden
+
+rootdeep_witness:
+  name: a Deeprooted witness-stone
+  keywords: [witness, stone, rootdeep, deeprooted]
+  location: the_rootdeep_mouth
+  lore: |-
+    A witness-stone the Deeprooted set at the Rootdeep's mouth, grown-script on living bark gone grey
+    at the edges where the deep has begun to eat it: "THE DEEP TAKES OUR DEAD. This is the grief the
+    Verdance does not speak of above, in green Highbough: that our roots run down into the Cinderdeep,
+    and the unmaking drinks from them, and the mire's half-returned dead are caught in the mesh between
+    a Reach that will not let them go and a deep that will not let them rest. We grow. The deep unmakes.
+    And down here, root by root, the two are the same argument, and our dead are the ground it is fought
+    on. We set this stone to witness what Highbough will not look at: that a living world and an unmade
+    one share a border, and the border runs through the grave. Do not pity the grave-kin. Free them, if
+    your fire and your light can. The Boughwarden guards the living heart above. Something guards the
+    rotting one below, and it wears half our face. Go down and see what the Verdance becomes when the
+    deep gets its roots. Then go back up and love the green a little harder, knowing what holds it up."

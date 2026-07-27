@@ -202,3 +202,13 @@ the_cinderdeep_frontier:
   level_min: 40
   level_max: 52
   biome: "subterranean-unmade"
+
+the_rootdeep:
+  name: The Rootdeep - the Verdance's Deep
+  rooms: [the_rootdeep_mouth, the_grave_roots, the_rot_hollow, the_unmade_grove, the_rotheart]
+  reset_mode: empty_only  # the Rootdeep's grave-kin and Rotheart-Warden reform once the deep is quiet
+  beats_between: 12
+  region: "The Cinderdeep"
+  level_min: 28
+  level_max: 36
+  biome: "subterranean-rootdark"

@@ -133,6 +133,7 @@ the_deeproot_mire:
     north: verdance_landing
     west: the_rootways
     east: mirefast
+    down: the_rootdeep_mouth
 
 the_heart_grove:
   name: The Heart-Grove
@@ -2493,3 +2494,65 @@ the_salvagers_rest:
     Cinderwaste is luxury. A rest-keeper holds the door against the dust. Out returns to Saltring.
   exits:
     out: saltring
+# THE ROOTDEEP - a Cinderdeep mouth below the Verdance (Great Creation Campaign, Phase I). The atlas
+# says every Reach has a mouth into the Cinderdeep; the breathing mire, where Cinder seeps up and the
+# dead half-return, is the Verdance's. A descending root-dark stratum of the deep, distinct from the
+# grey Greydark below the Cinderwaste: here the unmaking is tangled with living root, and the deep and
+# the Verdance argue over the same dead. Level-banded 28-36. Vertical spine + one lateral.
+# ============================================================================================
+
+the_rootdeep_mouth:
+  name: The Rootdeep Mouth
+  desc: |-
+    Where the Deeproot Mire's roots run down past where roots should reach, into the dark under the
+    living Reach: the mouth of the Rootdeep, the Verdance's own door into the Cinderdeep. Here the
+    unmaking and the growing tangle, Cinder seeping up through root and the half-returned dead caught
+    between the two. A mire-drawn husk works the tangle. The mire lies back up; the grave-roots go
+    deeper, down.
+  exits:
+    up: the_deeproot_mire
+    down: the_grave_roots
+
+the_grave_roots:
+  name: The Grave-Roots
+  desc: |-
+    A cavern where the Verdance's greatest roots drink from the Cinderdeep's unmaking and the dead the
+    mire half-returned hang caught in the root-mesh, neither risen nor gone: the deep and the living
+    Reach fighting over the same corpses, root by root. Grave-kin work the mesh, and grave-sap pools
+    where root meets unmaking, for anyone who dares gather in the dark. The mouth lies back up; a rot-
+    hollow branches west, and the deep drops on, down.
+  exits:
+    up: the_rootdeep_mouth
+    west: the_rot_hollow
+    down: the_unmade_grove
+
+the_rot_hollow:
+  name: The Rot-Hollow
+  desc: |-
+    A lateral hollow off the grave-roots where the root-dark has rotted to a soft, breathing dark of
+    its own: a wander of the near Rootdeep, thick with rot-kin that feed on what the deep and the
+    Verdance leave between them. The grave-roots lie back east.
+  exits:
+    east: the_grave_roots
+
+the_unmade_grove:
+  name: The Unmade Grove
+  desc: |-
+    Deeper: a grove that grew in the Cinderdeep's dark and was unmade in the growing, a mockery of the
+    Heart-Grove above - living wood and unmaking fused into one wrong thing, half-tree and half-hollow.
+    Unmade-kin keep it, the Verdance's own life turned inside out by the deep. The grave-roots lie back
+    up; the Rootdeep's heart beats deeper, down.
+  exits:
+    up: the_grave_roots
+    down: the_rotheart
+
+the_rotheart:
+  name: The Rotheart
+  desc: |-
+    The heart of the Rootdeep: where the Cinderdeep's unmaking has grown a heart of its own out of the
+    Verdance's drowned roots, a vast rotting mirror of the living Heart-Grove above. The Rotheart-Warden
+    keeps it - a thing half-Boughwarden and half-Unforged, the living Reach and the unmaking grown into
+    one guardian that hates both halves of itself. This is the bottom of the Verdance's deep. The grove
+    lies back up.
+  exits:
+    up: the_unmade_grove
