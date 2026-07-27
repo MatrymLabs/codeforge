@@ -65,7 +65,7 @@ def test_contracts_view_lists_a_bounty_and_a_defeat_collects_it(monkeypatch):
     s = Session(player_id="hunter", location="courtyard")
     bind_calling(s, "vanguard")
     assert "brawler" in quest.contracts_view(s)  # on the board
-    assert "hunt-contracts on the board" in quest._list_all(s)  # counted in the story view
+    assert "contracts on the board" in quest._list_all(s)  # counted in the story view
     line = quest.on_event(s, "defeat", "brawler")
     assert line is not None and "Bounty collected" in line  # felling it collects the contract
 

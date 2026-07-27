@@ -5541,5 +5541,36 @@
     "aliases": [],
     "created": "2026-07-27",
     "updated": "2026-07-27"
+  },
+  {
+    "designation": "MOD-04.093",
+    "name": "cull",
+    "status": "active",
+    "function": "generate zone-scoped 'fell N of a kind' contracts at volume (the MMO's staple quest)",
+    "label": "cull",
+    "file": "parts/world/cull.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "",
+    "tests": "tests/test_cull.py",
+    "depends_on": [
+      "seed"
+    ],
+    "related": [
+      "quest",
+      "bounties",
+      "bestiary",
+      "zones",
+      "combat"
+    ],
+    "reuse": "the QUEST-VOLUME lever (archetype 1 of the 'WoW amounts of quests' campaign): generate_culls(zones) posts one 'cull N of a kind' per zone x each creature TYPE of its biome x count-tier (6/12/20). Modeled as an N-step chain (one step per kill) so it needs NO counter engine -- the state is the tally, persisted like any quest. Uses a NEW `on_cull` quest trigger (seed.QuestStep) fired by combat per keyword, SCOPED to the kill's zone via cull.scope_key(zone,kind) so kills only count where they happen (honest distinctness, not one quest cloned per place). Summarised on the `contracts` board (too many to itemise), counted (not listed) in the `quest` log.",
+    "notes": "is_cull() = 'cull_' prefix; id = cull_<zone_label>_<kind>_<count>. Combat fires on_event('cull', scope_key(zone_of(location), kw)) per keyword on defeat. Bestiary.classes_for_biome() made public for the cullable types. aethryn: 336 culls (28 zones x 4 types x 3 tiers), total quests 205 -> 541. Next archetypes: forage (gather N), delivery (carry A->B).",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-27",
+    "updated": "2026-07-27"
   }
 ]
