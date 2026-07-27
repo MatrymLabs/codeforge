@@ -123,7 +123,11 @@ def register_bounties(npcs: dict[str, Npc]) -> None:
     exists for EVERY combatant foe (seed + generated), not only authored ones. Idempotent."""
     from parts.world.bounties import generate_bounties
 
-    for spec in generate_bounties(npcs):
+    # Ambient wilderness life (the mass-generated bestiary) gets no hunt-contract: a million meadow-
+    # hares must not mint a million bounty quests. Notable foes -- every hand-authored and Spiral
+    # foe, which carry no `ambient` flag -- keep theirs. This is the boot-time hot spot at scale.
+    notable = {label: npc for label, npc in npcs.items() if not npc.get("ambient")}
+    for spec in generate_bounties(notable):
         if spec["id"] in _QUESTS:
             continue  # never double-register
         workflow, name, xp = _from_seed(spec)
