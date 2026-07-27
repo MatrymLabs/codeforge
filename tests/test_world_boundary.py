@@ -31,6 +31,7 @@ _WORLD = _ROOT / "parts" / "world"
 _GAME_SEED = {
     "world",
     "armory",
+    "townsfolk",
     "rooms",
     "items",
     "npcs",
