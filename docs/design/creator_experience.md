@@ -75,8 +75,21 @@ description of what a creator shapes there, and `install_workshop` builds every 
 wires the hall's exits from that table. The whole hub lives behind the barrier: every station room is
 in `WORKSHOP_ROOMS`, so teleport refuses non-owners into any of them, not just the entry.
 
-Today each station room honestly **describes** its purpose in plain language; it does not yet claim a
-command it lacks. The create-tools are fitted into these rooms next.
+Each station room honestly **describes** its purpose in plain language and does not claim a command
+it lacks. The create-tools are fitted into these rooms one at a time.
+
+## Station tools: gating and the first one
+
+A station tool is a verb that is **owner-gated AND station-gated**: it works only for the Seed Owner
+standing in the matching station room, and returns a plain "nothing here" to anyone else, so a
+station leaks nothing about the workshop. Tools are added read-only first (safe, no persistence), and
+mutating tools follow behind a change buffer with preview/publish/rollback.
+
+The first live tool is the **Planning Table's `survey`** (`creator_workshop.plan_survey`). It
+composes both Creator campaigns: it measures the *live* world (rooms, zones, inhabitants, wild
+creatures) and reads its scale against the **Seed Package** deployment tiers (nearest tier by room
+count), giving the owner an honest, plain-language overview. It is read-only, so it never mutates
+world state (Architecture Law 1).
 
 ## Roadmap (staged behind this foundation)
 

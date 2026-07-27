@@ -64,7 +64,7 @@ STATIONS: tuple[Station, ...] = (
         "planning_table",
         "The Planning Table",
         "A broad oak table strewn with maps, notes, and a design journal. Stand here to see your "
-        "world whole: what exists, what is planned, what still needs a maker's hand.",
+        "world whole. Type `survey` to read it: rooms, zones, inhabitants, and its scale.",
     ),
     Station(
         "npc",
@@ -209,3 +209,54 @@ def install_workshop(world: dict[str, Room]) -> None:
 
 class WorkshopError(ValueError):
     """The Creator's Workshop could not be installed (e.g. into an empty world). Fails loud."""
+
+
+# --- Station tools -------------------------------------------------------------------------------
+# The first LIVE station tool. Each tool is owner-gated AND station-gated: it works only for the
+# Seed Owner standing in the right station room, and returns a plain "nothing here" to anyone else,
+# so a station leaks nothing about the workshop. The Planning Table is read-only (no mutation, no
+# persistence), the safest first tool; the mutating tools (NPC Studio, Difficulty Desk) come next.
+PLANNING_TABLE = "planning_table"
+
+
+def plan_survey(session: Session) -> str:
+    """The Planning Table's live tool: the owner's honest, plain-language overview of their world.
+
+    Composes the two Creator campaigns: it measures the LIVE world (rooms, zones, inhabitants, wild
+    creatures) and reads its scale against the Seed Package deployment tiers (the nearest tier by
+    room count). Only the Seed Owner standing at the Planning Table sees it; everyone else is told
+    there is nothing to survey. Read-only: it never mutates world state (Architecture Law 1)."""
+    if session.location != PLANNING_TABLE or not is_seed_owner(session):
+        return "You see nothing here to survey."
+
+    # Lazy imports: this module is loaded during world assembly, so it must not import the world,
+    # NPC, or Seed Package modules at import time (a cycle / premature read). At call time they are
+    # fully built.
+    from parts import seed_package as sp
+    from parts.world.npcs import NPCS
+    from parts.world.world import WORLD
+    from parts.world.zones import ZONES
+
+    rooms = len(WORLD)
+    zones = len(ZONES)
+    wild = sum(1 for npc in NPCS.values() if npc.get("ambient"))
+    inhabitants = len(NPCS) - wild
+    scale = _nearest_tier_name(rooms, sp)
+
+    return (
+        "== The Planning Table ==\n"
+        "Your world at a glance:\n"
+        f"  Rooms:        {rooms:,}\n"
+        f"  Zones:        {zones:,}\n"
+        f"  Inhabitants:  {inhabitants:,}   (the people who populate it)\n"
+        f"  Wild things:  {wild:,}   (creatures roaming the wilds)\n"
+        f"This is roughly a {scale} world (measured by its room count)."
+    )
+
+
+def _nearest_tier_name(rooms: int, sp: object) -> str:
+    """The deployment tier whose derived room count sits closest to `rooms`, named for a human.
+    `sp` is the seed_package module (passed in to keep this helper import-free)."""
+    tiers = sp.DEPLOYMENT_TIERS  # type: ignore[attr-defined]
+    nearest = min(tiers, key=lambda t: abs(sp.derive_sizing(t).rooms - rooms))  # type: ignore[attr-defined]
+    return f"{nearest.name} ({nearest.summary})"

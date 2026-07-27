@@ -862,6 +862,15 @@ def _build_commands() -> CommandSet:
     )
     cs.add(
         Command(
+            "survey",
+            "CMD-04.081",
+            "the Planning Table's world survey (owner, in the Creator's Workshop)",
+            lambda s, _a: creator_workshop.plan_survey(s),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
             "catalog",
             "CMD-04.018",
             "the Hardware Store catalog",

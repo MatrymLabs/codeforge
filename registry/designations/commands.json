@@ -2664,5 +2664,28 @@
     "aliases": [],
     "created": "2026-07-24",
     "updated": "2026-07-24"
+  },
+  {
+    "designation": "CMD-04.081",
+    "name": "survey",
+    "status": "active",
+    "function": "the Planning Table's world survey (owner, in the Creator's Workshop)",
+    "label": "survey",
+    "file": "forge.py",
+    "type": "CMD",
+    "domain": "04",
+    "docs": "docs/design/creator_experience.md",
+    "tests": "tests/test_creator_workshop.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "command"
+    ],
+    "notes": "First live Creator Workshop station tool: owner-gated AND station-gated (Planning Table). Read-only; composes the live world (rooms/zones/NPCs) with the Seed Package deployment tiers to read the world's scale.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-27",
+    "updated": "2026-07-27"
   }
 ]
