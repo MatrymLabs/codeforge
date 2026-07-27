@@ -13,6 +13,25 @@ original phase order) and the World Bible / Continental Atlas (the canon).
 
 ---
 
+## World scale (one seed, demo to MMO)
+
+Aethryn scales from a laptop/demo world to a **million-room MMO world** by a single env var, without
+re-authoring the map. `CODEFORGE_WILD_SCALE` (default `1`) multiplies every wildlands region's
+`trail_length` at load (`parts/world/wildlands.py`).
+
+- **Shipped size (scale 1):** ~53,500 rooms, ~0.9 s boot, ~100 MB. Safe for CI and the free-tier
+  demo, which stay at this size.
+- **MMO scale (scale 19):** **~1,016,000 rooms**, ~22 s boot, **~1.9 GB** resident. Proven on the Pi
+  (15 GB). Boot it with `make serve-mmo` (or `make serve-mmo SCALE=10` for a smaller MMO world).
+
+Why env-gated, not baked into the seed: the always-on demo runs on a 512 MB host and CI fans the
+suite across cores, so a 1.9 GB default would OOM both. The floor is the seed's authored size (scale
+`< 1` is refused), so scaling only ever *grows* the world. Content **density** is separate from
+scale: named guardians are capped per region (`_NOTABLE_CAP`), so a bigger world means more *land* to
+populate, not a flooded bounty board. Populating that land to MMO density is the next campaign.
+
+---
+
 ## Working method (every session, every increment)
 
 - **Data-driven.** Content lives in `seeds/aethryn/*.yaml` (rooms/npcs/items/abilities/recipes/

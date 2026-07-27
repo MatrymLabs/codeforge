@@ -197,3 +197,35 @@ def test_notable_every_defaults_on_and_refuses_a_negative():
         p.write_text(yaml.safe_dump({"probe_wild": {**good, "notable_every": -1}}))
         with pytest.raises(SeedError, match="notable_every"):
             load_wildlands_config(p)
+
+
+# --- CODEFORGE_WILD_SCALE: one seed, demo-to-MMO scale by env -----------------------------------
+
+
+def _write_cfg(tmp_path):
+    import yaml
+
+    p = tmp_path / "wildlands.yaml"
+    p.write_text(yaml.safe_dump({"probe_wild": {k: v for k, v in _CFG.items() if k != "id"}}))
+    return p
+
+
+def test_wild_scale_multiplies_every_region_trail(monkeypatch, tmp_path):
+    from parts.world.wildlands import load_wildlands_config
+
+    p = _write_cfg(tmp_path)
+    monkeypatch.delenv("CODEFORGE_WILD_SCALE", raising=False)
+    base = load_wildlands_config(p)[0]["trail_length"]
+    assert base == _CFG["trail_length"]  # default = the seed's shipped size
+    monkeypatch.setenv("CODEFORGE_WILD_SCALE", "10")
+    assert load_wildlands_config(p)[0]["trail_length"] == base * 10  # env grows the world
+
+
+@pytest.mark.parametrize("bad", ["abc", "0", "0.5", "-3"])
+def test_wild_scale_refuses_a_bad_or_shrinking_value(monkeypatch, tmp_path, bad):
+    from parts.world.wildlands import load_wildlands_config
+
+    p = _write_cfg(tmp_path)
+    monkeypatch.setenv("CODEFORGE_WILD_SCALE", bad)
+    with pytest.raises(SeedError, match="CODEFORGE_WILD_SCALE"):
+        load_wildlands_config(p)

@@ -21,6 +21,7 @@ returns the matching metadata areas. Both are pure, so the expansion is testable
 
 from __future__ import annotations
 
+import os
 from pathlib import Path
 from typing import Any
 
@@ -28,6 +29,13 @@ import yaml
 
 from parts.world.bestiary import make_beast, make_notable
 from parts.world.seed import Npc, Room, SeedError, Zone
+
+# CODEFORGE_WILD_SCALE multiplies every region's trail_length at load, so ONE seed scales from a
+# laptop/demo world to an MMO world without re-authoring the config. Default 1 (the seed's shipped
+# size, safe for CI and the free-tier demo); set it higher on capable hardware -- aethryn reaches
+# ~1,000,000 rooms at scale 19 (~1.9 GB / ~22 s boot). Populate density is separate (guardians are
+# capped per region), so scaling adds land, not bounty-board flood.
+_WILD_SCALE_ENV = "CODEFORGE_WILD_SCALE"
 
 # The compass a trail can run and its reverse, so every generated exit is reciprocal.
 _OPPOSITE = {
@@ -208,12 +216,31 @@ def _biome(name: str) -> dict[str, Any]:
     return _BIOMES[name]
 
 
+def _wild_scale() -> float:
+    """The world-scale multiplier from CODEFORGE_WILD_SCALE (default 1). Fails loud on a bad value;
+    must be >= 1 (a seed's shipped size is its floor -- scaling only ever grows the world)."""
+    raw = os.getenv(_WILD_SCALE_ENV, "1")
+    try:
+        scale = float(raw)
+    except ValueError:
+        raise SeedError(f"{_WILD_SCALE_ENV} must be a number, got {raw!r}.") from None
+    if scale < 1:
+        raise SeedError(
+            f"{_WILD_SCALE_ENV} must be >= 1 (scaling only grows the world), got {raw!r}."
+        )
+    return scale
+
+
 def load_wildlands_config(path: Path) -> list[dict[str, Any]] | None:
     """Read a seed's optional wildlands.yaml (a mapping of region-id -> config). Returns None when
     the seed ships none. Fails loud on a malformed region: required fields, a real biome,
-    a sane level band (1..300, min<=max), positive sizes, and a known trail direction."""
+    a sane level band (1..300, min<=max), positive sizes, and a known trail direction.
+
+    Every region's trail_length is multiplied by CODEFORGE_WILD_SCALE (default 1), so the same seed
+    scales from a demo world to an MMO world by env alone (see `_wild_scale`)."""
     if not path.exists():
         return None
+    scale = _wild_scale()
     raw = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
     if not isinstance(raw, dict):
         raise SeedError("wildlands.yaml must be a mapping of region-id to config.")
@@ -259,6 +286,9 @@ def load_wildlands_config(path: Path) -> list[dict[str, Any]] | None:
                 f"wildlands region {rid!r}: 'notable_every' must be a non-negative int (0 = off), "
                 f"got {ne!r}."
             )
+        # Scale the region AFTER validating its authored size, so a bad base fails clearly and the
+        # env only ever multiplies a known-good value (floored at 1 room).
+        merged["trail_length"] = max(1, round(merged["trail_length"] * scale))
         configs.append(merged)
     return configs
 
