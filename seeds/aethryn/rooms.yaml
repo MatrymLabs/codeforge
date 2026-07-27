@@ -36,11 +36,16 @@ quench_harbor:
     salt-stiff nets. Fisherfolk mend and haul and argue prices; a harbormaster keeps the tally, and
     a dock-trader keeps a stall. The strand runs back east; south, a jetty leads out to a drowned
     reef where something older waits. West, a Merewright ferry runs the open lanes to the Quenchmere,
-    the drowned Reach across the sea.
+    the drowned Reach across the sea. The fish-MARKET, the Dogwatch TAVERN, the salt WAREHOUSE, and the
+    Merewright FERRY-house line the quay.
   exits:
     east: the_saltstrand
     south: the_wreck_reef
     west: the_quench_lanes
+    market: the_fish_market
+    tavern: the_dogwatch_tavern
+    warehouse: the_salt_warehouse
+    ferry: the_ferry_house
 
 # --- The Quenchmere: the drowned archipelago across the Cooling-Sea (Continental Atlas §V). The
 # --- first sea-crossing (Build Order Phase 2). A free-port capital, the Wreckways, and a drowned
@@ -2259,3 +2264,58 @@ the_hearthway:
     pot. Out returns to the square.
   exits:
     out: cinderhearth_square
+# QUENCH HARBOR INTERIORS (Great Creation Campaign, Phase I, Layer 4). Emberreach's Cooling-Sea port
+# and the coast gateway to the drowned Quenchmere becomes explorable: the fish-market, the Dogwatch
+# tavern + loft, the salt-warehouse, and the Merewright ferry-house where the sea-crossing boards.
+# Small port scale, safe coast life. Noun exits (market/tavern/warehouse/ferry), each left by `out`.
+# ============================================================================================
+
+the_fish_market:
+  name: The Fish-Market
+  desc: |-
+    The quayside fish-market, loud from the first boat in: cooling-iron trays of the Cooling-Sea's
+    catch, salt-fish strung to dry, and the haggling that is the coast's true native tongue. A
+    fishmonger cries the morning's landing and will sell a Forger provisions for the road. Out returns
+    to the harbor.
+  exits:
+    out: quench_harbor
+
+the_dogwatch_tavern:
+  name: The Dogwatch
+  desc: |-
+    A portside tavern named for the sailor's worst watch, warm against the sea-damp: the Dogwatch,
+    where Quench Harbor's fisherfolk and the ferry-crews off the Quenchmere run drink and argue tides.
+    A host keeps the taps and every rumor that comes off the water. A loft lets beds up the stair, an
+    INN for those waiting on a ferry. Out returns to the harbor.
+  exits:
+    out: quench_harbor
+    inn: the_dogwatch_loft
+
+the_dogwatch_loft:
+  name: The Dogwatch Loft
+  desc: |-
+    Beds over the Dogwatch, salt-damp but dry enough, for the Forger waiting on a Merewright ferry or
+    just off a long strand: the last coast bed before the sea-crossing to the drowned Reach. A loft-
+    keeper minds the stair. Out returns to the tavern below.
+  exits:
+    out: the_dogwatch_tavern
+
+the_salt_warehouse:
+  name: The Salt-Warehouse
+  desc: |-
+    The harbor's salt-warehouse, cavern-cool and stacked to the beams with the salt-fish and cooling-
+    iron cargo that is the coast's wealth: the working store that fed Emberreach's trade through the
+    cold years. A warehouse-keeper tallies the stock and hires the odd strong back. Out returns to the
+    harbor.
+  exits:
+    out: quench_harbor
+
+the_ferry_house:
+  name: The Ferry-House
+  desc: |-
+    The Merewright ferry-house on the last jetty, where the open-lane crossing to the drowned Quenchmere
+    boards: charts of the Wreckways on the wall, a bell to call the ferry in, and the salt-smell of the
+    wider sea. A ferry-master books the crossing and knows what waits on the far water. Out returns to
+    the harbor.
+  exits:
+    out: quench_harbor

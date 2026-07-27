@@ -3006,3 +3006,48 @@ hearthway_mother:
   keywords: [mother, hearth, way, townsfolk]
   dialogue:
     - '"You''re one of the newly-woken, aren''t you. Come off the shore with that look. Well -- there''s a pot on if you''re hungry, and no, I won''t hear thanks for it. This lane kept the coast''s families warm through the dark years, Forger, and we didn''t do it to stop now that things are looking up. Go and do your great Forging. But eat first. The world''s not so urgent it can''t wait for you to eat."'
+# --- Quench Harbor interiors life (Great Creation Campaign, Phase I, Layer 4): the coast port's
+# --- working folk, safe and salt-worn - the last faces before the sea-crossing. ---
+harbor_fishmonger:
+  name: a fishmonger
+  location: the_fish_market
+  keywords: [fishmonger, monger, market, fish]
+  dialogue:
+    - '"Fresh off the first boat, Forger, and cheap if you buy before the ferry-crews do. Provision here before you take the strand or the sea -- a Forger who walks the coast on an empty belly is a Forger the coast keeps. Salt-fish travels; take some."'
+  shop:
+    sells:
+      healing_draught: 11
+      water_ration: 6
+    buys:
+      ember_shard: 5
+
+dogwatch_host:
+  name: the host of the Dogwatch
+  location: the_dogwatch_tavern
+  keywords: [host, dogwatch, tavern, barkeep]
+  dialogue:
+    - '"Warm up, Forger, the sea-damp gets in the bones. Fisherfolk to one side, ferry-crews to the other, and everyone with a tide-tale taller than the last. You bound for the Quenchmere? The drowned Reach across the water -- ferry boards at the house on the last jetty. Have a drink first. The far water keeps; it''s been keeping a thousand years."'
+  topics:
+    rumor:
+      - '"South off the last jetty the Wreck Reef breaks the water, and the Drowned Pilot keeps the wheel of the biggest hull -- old, and angry, and worth a look if you''re bold. West the ferry runs the open lanes to Tidewharf and the whole drowned Reach beyond. Fortunes out there on the wrecks, Forger. Graves too. Same water holds both."'
+
+dogwatch_loft_keeper:
+  name: the Dogwatch loft-keeper
+  location: the_dogwatch_loft
+  keywords: [keeper, loft, dogwatch, host]
+  dialogue:
+    - '"Last coast bed before the crossing, Forger. Sleep while the ground''s still still under you -- the ferry sways all the way to the drowned Reach and the beds out there float on hulls. The sea-damp''s in the walls but the blankets are dry, and that''s the best the coast offers. Take it."'
+
+salt_warehouse_keeper:
+  name: a warehouse-keeper
+  location: the_salt_warehouse
+  keywords: [keeper, warehouse, salt, tally]
+  dialogue:
+    - '"Mind the stacks, Forger, salt-fish to the beams. This store is the coast''s real treasury -- not the relit forge up the road, whatever the capital says, but the plain fish and iron that fed Emberreach when the forge was cold. I hire strong backs by the tide if you''re short of coin and long on muscle. Honest work. The coast runs on it."'
+
+ferry_master:
+  name: the Merewright ferry-master
+  location: the_ferry_house
+  keywords: [ferrymaster, master, ferry, house]
+  dialogue:
+    - '"Booking the crossing? The lanes run west to Tidewharf, the great free-port, and from there the whole drowned Reach -- the Wreckways, the Outer Reefs, Sunhold under the keels. I know what waits on the far water, Forger, and I''ll not sugar it: the Quenchmere drowned a whole Reach and kept it, and the crossing is where the wide world starts to get its teeth. Ring the bell when you''re ready. The ferry comes."'
