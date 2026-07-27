@@ -55,6 +55,10 @@ class Session:
     job_progress: dict[str, JobProgress] = field(default_factory=dict)
     # Equipped gear, keyed by slot (weapon/body/head/...). Values are item ids. Runtime state.
     equipped: dict[str, str] = field(default_factory=dict)
+    # Allocated attribute points: attribute -> points spent (build agency). A level-up grants points
+    # (parts.world.allocate); `allocate` spends them into an attribute, capped per level. Persisted,
+    # and folded onto the job's base stats when the StatBlock is built (jobs.bind_calling).
+    allocated: dict[str, int] = field(default_factory=dict)
 
 
 # The registry of connected sessions. Gateways and game_loop register

@@ -15,6 +15,7 @@ from dataclasses import replace
 from parts.world.events import announce
 from parts.world.jobs import JOBS
 from parts.world.progression import (
+    STAT_POINTS_PER_LEVEL,
     get_next_job_level_threshold,
     get_next_level_threshold,
     hp_gain_per_level,
@@ -46,7 +47,10 @@ def award_xp(session: Session, amount: int) -> str:
             break
         session.level += 1
         _ascend_resources(session)
-        lines.append(f"*** LEVEL UP! You are now level {session.level}. ***")
+        lines.append(
+            f"*** LEVEL UP! You are now level {session.level}. "
+            f"(+{STAT_POINTS_PER_LEVEL} points -- type ALLOCATE to spend them.) ***"
+        )
         from parts.world.characters import save_character
 
         save_character(session)

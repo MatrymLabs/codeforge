@@ -40,6 +40,7 @@ class CharacterRecord:
     equipped_gear: str = ""
     coins: int = 0
     quest_state: str = ""
+    allocated: str = ""  # JSON: attribute -> allocated points (build customization)
     auth_salt: str | None = None
     auth_hash: str | None = None
 

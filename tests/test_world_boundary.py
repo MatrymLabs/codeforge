@@ -30,6 +30,7 @@ _WORLD = _ROOT / "parts" / "world"
 # the directory must equal that closure, or a new game module would escape the boundary check.
 _GAME_SEED = {
     "world",
+    "allocate",
     "armory",
     "coinage",
     "delve",

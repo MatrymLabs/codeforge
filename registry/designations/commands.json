@@ -2812,5 +2812,28 @@
     "aliases": [],
     "created": "2026-07-27",
     "updated": "2026-07-27"
+  },
+  {
+    "designation": "CMD-04.087",
+    "name": "allocate",
+    "status": "active",
+    "function": "spend attribute points (allocate <stat> [n])",
+    "label": "allocate",
+    "file": "forge.py",
+    "type": "CMD",
+    "domain": "04",
+    "docs": "",
+    "tests": "tests/test_allocate.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "command"
+    ],
+    "notes": "Build agency: spend the STAT_POINTS_PER_LEVEL points a level-up grants into one of the six attributes, capped per level. Points are derived (earned-spent); the allocation folds into the StatBlock via jobs.build_stats and persists.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-27",
+    "updated": "2026-07-27"
   }
 ]

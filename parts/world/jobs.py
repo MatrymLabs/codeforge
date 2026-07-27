@@ -31,6 +31,16 @@ def calling_index() -> str:
     return "\n".join(lines)
 
 
+def build_stats(job_label: str, allocated: dict[str, int]) -> StatBlock:
+    """A job's StatBlock with the character's ALLOCATED attribute points folded onto the base. The
+    allocation is character-level, so it applies whatever job is worn; an empty allocation gives the
+    job's plain base stats (chargen). The one place stats are built, so bind and restore agree."""
+    base = JOBS[job_label]["stats"]
+    return StatBlock(
+        stats=tuple(Stat(name=n, base=v + allocated.get(n, 0)) for n, v in sorted(base.items()))
+    )
+
+
 def bind_calling(session: Session, word: str) -> str:
     """Stamp a calling onto a session: stats and resources are born here."""
     label = word.strip().lower()
@@ -38,9 +48,7 @@ def bind_calling(session: Session, word: str) -> str:
         return f"There is no calling named '{word}'. Type JOBS to see the paths."
     job = JOBS[label]
     session.job = label
-    session.stats = StatBlock(
-        stats=tuple(Stat(name=n, base=v) for n, v in sorted(job["stats"].items()))
-    )
+    session.stats = build_stats(label, session.allocated)
     max_hp = BASE_HP + job["stats"]["stamina"]
     max_mp = BASE_MP + job["stats"]["magic"]
     session.resources = {

@@ -54,6 +54,7 @@ def test_save_and_load_roundtrip():
         "equipped_gear": "",
         "coins": 0,
         "quest_state": "",
+        "allocated": "",
     }
     assert load_character("stranger") is None
 
