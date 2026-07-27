@@ -38,6 +38,7 @@ _GAME_SEED = {
     "delve_sets",
     "relics",
     "inscriptions",
+    "landmarks",
     "spine",
     "rumors",
     "gather",

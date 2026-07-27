@@ -5451,5 +5451,35 @@
     "aliases": [],
     "created": "2026-07-27",
     "updated": "2026-07-27"
+  },
+  {
+    "designation": "MOD-04.090",
+    "name": "landmarks",
+    "status": "active",
+    "function": "raise a readable monument in every zone's hub (surface storytelling)",
+    "label": "landmarks",
+    "file": "parts/world/landmarks.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "",
+    "tests": "tests/test_landmarks.py",
+    "depends_on": [
+      "seed"
+    ],
+    "related": [
+      "zones",
+      "inscriptions",
+      "delve",
+      "items"
+    ],
+    "reuse": "the AAA-content-density SURFACE-STORYTELLING lever (the twin of inscriptions' depths lore): raise_landmarks(zones, dungeons) places one readable, unequippable monument item in each zone's hub (its first room), its words naming the region, its recommended level band, and any dungeon within. So arriving in a region reads as an arrival, and the monument points a player onward. `read <monument>` shows it.",
+    "notes": "Systemic, not hand-crafted: the same zone always raises the same monument (deterministic). is_landmark() = 'landmark_' prefix; label is landmark_<hub_room>. Merged into ITEMS after the world is assembled (load_zones already proved the hubs exist, so no link-audit needed). A hubless zone is skipped; two zones sharing a hub keep one monument. aethryn: 14 monuments (one per zone).",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-27",
+    "updated": "2026-07-27"
   }
 ]
