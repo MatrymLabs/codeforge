@@ -174,3 +174,20 @@ def test_survey_shows_nothing_to_a_non_owner_or_away_from_the_table():
     # ...and a mere player never sees the world's shape, wherever they stand.
     player = _seat("nosy", "player", location=cw.PLANNING_TABLE)
     assert "nothing here to survey" in handle_command(player, "survey")
+
+
+# --- the Statistics Wall live-activity tool -----------------------------------------------------
+def test_the_owner_reads_live_activity_at_the_statistics_wall():
+    owner = _seat("root", "owner", location=cw.STATISTICS_WALL)
+    _seat("hero", "player", location=next(iter(WORLD)))
+    out = handle_command(owner, "activity")
+    assert "The Statistics Wall" in out
+    assert "Players online:" in out
+    assert "Hero" in out  # the live roster, by display name
+
+
+def test_activity_shows_nothing_to_a_non_owner_or_away_from_the_wall():
+    owner_away = _seat("root", "owner", location=cw.CREATOR_WORKSHOP)
+    assert "shows you nothing" in handle_command(owner_away, "activity")
+    player = _seat("nosy", "player", location=cw.STATISTICS_WALL)
+    assert "shows you nothing" in handle_command(player, "activity")

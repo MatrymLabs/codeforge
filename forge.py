@@ -871,6 +871,15 @@ def _build_commands() -> CommandSet:
     )
     cs.add(
         Command(
+            "activity",
+            "CMD-04.082",
+            "the Statistics Wall's live-play view (owner, in the Creator's Workshop)",
+            lambda s, _a: creator_workshop.wall_activity(s),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
             "catalog",
             "CMD-04.018",
             "the Hardware Store catalog",

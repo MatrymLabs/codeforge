@@ -113,8 +113,8 @@ STATIONS: tuple[Station, ...] = (
         "stats",
         "statistics_wall",
         "The Statistics Wall",
-        "A living wall of charts: who is playing, where they go, what they struggle with. The "
-        "honest mirror of how your world is actually being played.",
+        "A living wall of charts: who is playing and where they roam, an honest mirror of how your "
+        "world is really being played. Type `activity` to read it.",
     ),
     Station(
         "publish",
@@ -260,3 +260,34 @@ def _nearest_tier_name(rooms: int, sp: object) -> str:
     tiers = sp.DEPLOYMENT_TIERS  # type: ignore[attr-defined]
     nearest = min(tiers, key=lambda t: abs(sp.derive_sizing(t).rooms - rooms))  # type: ignore[attr-defined]
     return f"{nearest.name} ({nearest.summary})"
+
+
+STATISTICS_WALL = "statistics_wall"
+
+
+def wall_activity(session: Session) -> str:
+    """The Statistics Wall's live tool: who is playing the owner's world, and where.
+
+    Owner-gated AND station-gated like every station tool. Read-only: it reflects the live session
+    roster (players online and the room/zone each stands in) without touching world state. This is
+    the operational mirror the Planning Table's `survey` is not: `survey` reads the world's SHAPE,
+    `activity` reads its LIFE."""
+    if session.location != STATISTICS_WALL or not is_seed_owner(session):
+        return "The wall shows you nothing here."
+
+    from parts.world.session import SESSIONS, display_name, roster
+    from parts.world.world import WORLD
+    from parts.world.zones import zone_of
+
+    online = roster()
+    lines = ["== The Statistics Wall ==", f"Players online: {len(online)}"]
+    for name in online:
+        seat = SESSIONS[name]
+        room_data = WORLD.get(seat.location)
+        room = room_data["name"] if room_data else seat.location
+        zone = zone_of(seat.location)
+        where = f"{room}, {zone}" if zone else room
+        lines.append(f"  {display_name(name)} -- {where}")
+    if not online:
+        lines.append("  (no one is exploring your world right now)")
+    return "\n".join(lines)
