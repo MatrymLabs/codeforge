@@ -459,21 +459,57 @@ def _place_word(cfg: dict[str, Any], idx: int) -> str:
     return _PLACE_WORDS[idx % len(_PLACE_WORDS)]
 
 
+# The order the auto-picker tries directions when a region CHAINS onto an already-generated room and
+# its configured attach_dir is taken. Cardinals first (cleanest), then diagonals, then vertical.
+_DIR_PREFERENCE = (
+    "north",
+    "south",
+    "east",
+    "west",
+    "northeast",
+    "northwest",
+    "southeast",
+    "southwest",
+    "up",
+    "down",
+)
+
+
 def generate_wildlands(
     configs: list[dict[str, Any]], existing_rooms: set[str]
 ) -> tuple[dict[str, Room], dict[str, Npc]]:
-    """Expand every region config into rooms + ambient npcs, and wire each region's trail-head onto
-    its `attach` room (growing one exit there). All labels are checked against the world and
-    each other, so a bad config fails loud rather than orphaning or colliding. Deterministic."""
+    """Expand every region config into rooms + ambient npcs. A region may `attach` to a SEED room OR
+    to a room an earlier region generated (chaining lets a few seed anchors grow a vast connected
+    sprawl). When chaining onto a generated room whose configured attach_dir is taken, a free
+    direction is auto-picked and the config's attach_dir is updated so the trail-head's reciprocal
+    exit stays consistent. All labels are checked against the world and each other, so a bad config
+    fails loud rather than orphaning or colliding. Deterministic given the config order."""
     all_rooms: dict[str, Room] = {}
     all_npcs: dict[str, Npc] = {}
     claimed = set(existing_rooms)
     for cfg in configs:
-        if cfg["attach"] not in existing_rooms:
+        attach = cfg["attach"]
+        if attach not in claimed:
             raise SeedError(
-                f"wildlands region {cfg['id']!r} attaches to {cfg['attach']!r}, not a real room."
+                f"wildlands region {cfg['id']!r} attaches to {attach!r}, not a real room "
+                "(a seed room, or one an earlier region generated)."
             )
+        # Chaining onto a generated room: pick a direction that is actually free on it, so the exit
+        # can be wired without clobbering its spine. Seed attach rooms trust the config's dir.
+        if attach in all_rooms:
+            taken = set(all_rooms[attach]["exits"])
+            wanted = [cfg["attach_dir"]] + [d for d in _DIR_PREFERENCE if d != cfg["attach_dir"]]
+            free = next((d for d in wanted if d not in taken), None)
+            if free is None:
+                raise SeedError(
+                    f"wildlands region {cfg['id']!r} cannot attach to {attach!r}: no free dir."
+                )
+            cfg["attach_dir"] = free
         rooms, npcs = _region(cfg, claimed)
+        # Wire a generated attach room's exit here and now (we hold its dict); seed attach rooms are
+        # wired later against the merged world by wire_attach_exits.
+        if attach in all_rooms:
+            all_rooms[attach]["exits"][cfg["attach_dir"]] = f"{cfg['id']}_t1"
         all_rooms.update(rooms)
         all_npcs.update(npcs)
         claimed.update(rooms)
@@ -481,8 +517,9 @@ def generate_wildlands(
 
 
 def wire_attach_exits(world: dict[str, Room], configs: list[dict[str, Any]]) -> None:
-    """Grow the one exit on each region's attach room that leads onto its trail-head. Done on the
-    merged world so the attach room (hand-authored) gains its `attach_dir` exit into the land."""
+    """Grow the one exit on each SEED attach room that leads onto its region's trail-head (chained
+    regions already wired their generated attach rooms in generate_wildlands). Done on the merged
+    world so a hand-authored attach room gains its `attach_dir` exit into the generated land."""
     for cfg in configs:
         head = f"{cfg['id']}_t1"
         if head in world:

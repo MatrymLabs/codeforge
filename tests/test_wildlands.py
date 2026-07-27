@@ -124,3 +124,25 @@ def test_a_malformed_region_fails_loud(bad, match):
 def test_a_config_attaching_to_a_missing_room_is_refused():
     with pytest.raises(SeedError, match="not a real room"):
         generate_wildlands([_CFG], set())  # 'anchor' does not exist
+
+
+def test_regions_can_chain_off_earlier_generated_rooms():
+    """A region may attach to a room an EARLIER region generated (so a few anchors grow a sprawl).
+    The chained region is fully reachable and its attach exit is reciprocal with the trail-head."""
+    a = dict(_CFG, id="wa", attach="anchor", attach_dir="east", trail_length=10)
+    b = dict(_CFG, id="wb", attach="wa_t5", attach_dir="north", trail_length=10)
+    rooms, npcs = generate_wildlands([a, b], {"anchor"})
+    world = {"anchor": {"name": "A", "desc": "d", "exits": {}}}
+    world.update(rooms)
+    wire_attach_exits(world, [a, b])
+    # every room reachable from the anchor, including the chained region
+    seen, q = {"anchor"}, deque(["anchor"])
+    while q:
+        for dest in world[q.popleft()]["exits"].values():
+            if dest not in seen:
+                seen.add(dest)
+                q.append(dest)
+    assert "wb_t1" in seen and "wb_t10" in seen, "the chained region is unreachable"
+    # the chain's attach exit and the trail-head's back exit are reciprocal
+    head_back = [d for d, dst in rooms["wb_t1"]["exits"].items() if dst == "wa_t5"]
+    assert head_back, "chained trail-head has no exit back to its attach room"
