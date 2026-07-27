@@ -75,3 +75,27 @@ def test_article_agrees_with_the_following_word():
                 head = name.split(" ", 1)[1]
                 article = "an" if head[0].lower() in "aeiou" else "a"
                 assert name.startswith(article + " "), f"bad article: {name!r}"
+
+
+# --- named guardians: an ennobled, non-ambient creature that mints a hunt bounty ---------------
+
+
+def test_make_notable_is_a_named_nonambient_guardian():
+    from parts.world.bestiary import make_beast, make_notable
+
+    base = make_beast("volcanic-flats", 40, 3, "lair")
+    lord = make_notable("volcanic-flats", 40, 3, "lair", 0)
+    assert not lord.get("ambient"), "a guardian must be non-ambient so it mints a bounty"
+    assert lord["tier"] in ("elite", "boss")
+    assert lord["hp"] > base["hp"] and lord["atk"] > base["atk"]  # outranks the ambient life
+    assert lord["location"] == "lair" and lord["level"] == 40
+    # a proper NAME (no leading article), targetable by its fore-name keyword
+    assert not lord["name"].lower().startswith(("a ", "an "))
+    assert lord["name"].split()[0].lower() in lord["keywords"]
+
+
+def test_roughly_one_in_six_guardians_is_a_boss():
+    from parts.world.bestiary import make_notable
+
+    tiers = [make_notable("wild-forest", 30, 1, "r", seq)["tier"] for seq in range(6)]
+    assert tiers[5] == "boss" and tiers.count("boss") == 1  # seq 5 pays the boss curve

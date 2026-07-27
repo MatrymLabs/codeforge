@@ -26,7 +26,7 @@ from typing import Any
 
 import yaml
 
-from parts.world.bestiary import make_beast
+from parts.world.bestiary import make_beast, make_notable
 from parts.world.seed import Npc, Room, SeedError, Zone
 
 # The compass a trail can run and its reverse, so every generated exit is reciprocal.
@@ -44,6 +44,10 @@ _OPPOSITE = {
 }
 # Branches leave the trail on alternating flanks, so a region reads as a wide land, not a corridor.
 _FLANKS = ("east", "west", "northeast", "northwest", "southeast", "southwest")
+
+# The most named guardians one region may seed, however large. Each mints a hunt bounty, so this
+# bounds the board (and boot cost) even if a zone's trail runs to thousands of rooms.
+_NOTABLE_CAP = 16
 
 # Per-biome ROOM vocabulary: a lead sentence, terrain FEATURES (composed by index so adjacent rooms
 # differ but relate), and LANDMARKS (a branch-end payoff). The ambient CREATURES come from the
@@ -217,7 +221,9 @@ def load_wildlands_config(path: Path) -> list[dict[str, Any]] | None:
     for rid, cfg in raw.items():
         if not isinstance(cfg, dict):
             raise SeedError(f"wildlands region {rid!r} must be a mapping of config keys.")
-        merged = {"branch_every": 3, "branch_length": 3, **cfg, "id": rid}
+        # notable_every: a NAMED guardian foe every N generated rooms (a hunt target that mints a
+        # bounty), 0 = none. Default on, so every wildlands zone carries MMO-density hunt content.
+        merged = {"branch_every": 3, "branch_length": 3, "notable_every": 220, **cfg, "id": rid}
         required = (
             "name",
             "region",
@@ -246,6 +252,12 @@ def load_wildlands_config(path: Path) -> list[dict[str, Any]] | None:
             raise SeedError(
                 f"wildlands region {rid!r}: need level_min <= level_max <= 300 "
                 f"(got {merged['level_min']}-{merged['level_max']})."
+            )
+        ne = merged["notable_every"]
+        if not isinstance(ne, int) or isinstance(ne, bool) or ne < 0:
+            raise SeedError(
+                f"wildlands region {rid!r}: 'notable_every' must be a non-negative int (0 = off), "
+                f"got {ne!r}."
             )
         configs.append(merged)
     return configs
@@ -298,17 +310,28 @@ def _region(cfg: dict[str, Any], claimed: set[str]) -> tuple[dict[str, Room], di
     rooms: dict[str, Room] = {}
     npcs: dict[str, Npc] = {}
     idx = 0  # a global index across the region, driving level gradient + description variation
+    seq = 0  # count of named guardians placed so far, for their titles and the boss cadence
 
     # Total trail-equivalent span for the level gradient (trail + its branches).
     span = L + (L // every) * blen
+    # A named guardian every `notable_every` rooms, bounded so a huge region cannot flood the bounty
+    # board (each guardian mints a hunt contract). 0/absent = off (ambient-only). The loader turns
+    # it on by default, so a hand-built config (a test) stays quiet unless it opts in.
+    notable_every = cfg.get("notable_every", 0)
+    max_notables = min(L // notable_every, _NOTABLE_CAP) if notable_every else 0
 
     def add(label: str, name: str, desc: str, exits: dict[str, str]) -> None:
-        nonlocal idx
+        nonlocal idx, seq
         if label in claimed or label in rooms:
             raise SeedError(f"wildlands region {rid!r} would collide on room label {label!r}.")
         rooms[label] = Room(name=name, desc=desc, exits=exits)
-        beast_label, beast = _ambient(cfg, label, idx, _band_level(cfg, idx, span))
-        npcs[beast_label] = beast
+        level = _band_level(cfg, idx, span)
+        if notable_every and idx and idx % notable_every == 0 and seq < max_notables:
+            npcs[f"{rid}_lord_{seq}"] = make_notable(cfg["biome"], level, idx, label, seq)
+            seq += 1
+        else:
+            beast_label, beast = _ambient(cfg, label, idx, level)
+            npcs[beast_label] = beast
         idx += 1
 
     trail = [f"{rid}_t{i}" for i in range(1, L + 1)]

@@ -148,6 +148,71 @@ def make_beast(biome: str, level: int, idx: int, room: str) -> Npc:
     )
 
 
+# A named guardian's proper name (a fore-name + a biome-marked epithet), deterministic by index. The
+# wilds' ambient life is nameless; a NOTABLE is an individual with a title, a hunt target the bounty
+# board names and the player seeks out.
+_NAME_HEAD = (
+    "Grath",
+    "Vor",
+    "Thane",
+    "Mor",
+    "Skarn",
+    "Ur",
+    "Bala",
+    "Kael",
+    "Draum",
+    "Vex",
+    "Hroth",
+)
+_NAME_TAIL = ("ok", "ar", "une", "ix", "oth", "ka", "en", "ur", "aya", "orn")
+_EPITHETS = (
+    "Warden",
+    "Maw",
+    "Sovereign",
+    "Stalker",
+    "Bane",
+    "Matron",
+    "Herald",
+    "Tyrant",
+    "Scourge",
+)
+
+
+def _forge_name(idx: int) -> str:
+    """A stable proper name from the syllable pools, e.g. 'Grathok', 'Vorune'."""
+    head = _NAME_HEAD[idx % len(_NAME_HEAD)]
+    tail = _NAME_TAIL[(idx // len(_NAME_HEAD)) % len(_NAME_TAIL)]
+    return f"{head}{tail}"
+
+
+def make_notable(biome: str, level: int, idx: int, room: str, seq: int) -> Npc:
+    """A NAMED guardian: a bestiary creature ennobled into a titled individual (elite, or every
+    sixth a boss), non-ambient so it mints a hunt bounty (parts.world.quest.register_bounties),
+    stronger and better-paying than the ambient life around it. Deterministic by (biome, level,
+    idx, seq)."""
+    beast = make_beast(biome, level, idx, room)
+    life = _BIOME_LIFE.get(biome, _BIOME_LIFE["temperate-meadow"])
+    adjs: tuple = life["adj"]  # type: ignore[assignment]
+    mark = str(_pick(adjs, idx // 2))  # the biome word its title carries
+    name = _forge_name(idx + seq * 5)  # seq varies the fore-name so a region's guardians all differ
+    role = _EPITHETS[(idx + seq) % len(_EPITHETS)]
+    display = f"{name} the {mark.capitalize()} {role}"
+
+    is_boss = seq % 6 == 5  # roughly one in six guardians is a boss-tier payout (10x reward curve)
+    hp = int(beast["hp"] * (2.4 if is_boss else 1.5))
+    beast["name"] = display
+    beast["keywords"] = list(dict.fromkeys([name.lower(), role.lower(), *beast["keywords"]]))
+    beast["hp"] = hp
+    beast["hp_now"] = hp
+    beast["atk"] = int(beast["atk"] * (1.4 if is_boss else 1.2))
+    beast["tier"] = "boss" if is_boss else "elite"
+    beast["aggressive"] = False  # a hunt TARGET the player seeks, not a roadside ambush
+    beast["dialogue"] = [f"{display} {_telegraph(display, idx)}."]
+    beast["loot"] = {"ember_shard": 5, "nothing": 1}  # a richer haul than ambient life
+    beast.pop("ambient", None)  # NOT ambient: the bounty board names it, the hunt is on
+    return beast
+
+
 _TELEGRAPHS = (
     "watches from cover, unblinking",
     "rises to meet you",
