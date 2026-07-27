@@ -1350,3 +1350,23 @@ deeprooted_covenant:
     and the covenant will still be true: you cannot own what is alive. You can only be worthy of it, and
     listen, and be a good guest in a house far older than your making. That is not weakness. That is the
     only strength that has ever lasted."
+
+# --- Remaining capital interiors content (Great Creation Campaign, Phase I, Layer 4): the Gate-Watch
+# --- stone, the Skyborn's charge over the last threshold before the Forgeward Road and the endgame. ---
+gate_watch_stone:
+  name: the Gate-Watch stone
+  keywords: [stone, watch, gate, threshold]
+  location: the_gate_watch
+  lore: |-
+    Graven deep in the watch-stone at the threshold of the Forgeward Road, re-cut by every generation
+    of sky-Wardens who have kept this post: "BEYOND HERE THE ROAD. East it runs, march on march, each
+    deeper and worse than the last, to the Forge at the world's far heart and the Sovereign that keeps
+    it. This is the last threshold of the settled world. The Concord keeps it, and keeps it OPEN,
+    because we have learned that a locked door only teaches people to break doors -- but we keep it
+    WATCHED, so that no Forger walks east unwarned. Know before you go: the Road does not test your
+    strength, it tests whether you know why you are walking it. The Forge at the end can make a world.
+    The last people to reach it unmade one. Walk east if you must, Forger. Reach the Forge's Edge if you
+    can. But carry a reason worth the walking, because the Road strips away every reason that is not
+    true, and a Forger who reaches the Sovereign with an empty reason becomes another thing the Road
+    kept. The watch cannot stop you. It can only ask, one last time, the question the whole world hangs
+    on: not CAN you make a world -- but SHOULD you, and do you know the difference. Go, then. We watched."
