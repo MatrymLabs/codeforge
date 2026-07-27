@@ -5240,5 +5240,35 @@
     "aliases": [],
     "created": "2026-07-27",
     "updated": "2026-07-27"
+  },
+  {
+    "designation": "MOD-04.083",
+    "name": "errands",
+    "status": "active",
+    "function": "generate travel side-quests across the map (side-content variety, at volume)",
+    "label": "errands",
+    "file": "parts/world/errands.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "",
+    "tests": "tests/test_errands.py",
+    "depends_on": [
+      "seed"
+    ],
+    "related": [
+      "quest",
+      "bounties",
+      "townsfolk",
+      "travel"
+    ],
+    "reuse": "the AAA-content-density quest lever, non-combat half (sibling of bounties for kills): generate_errands(settlements, destinations) posts one travel-errand per settlement, each sending the player to a DISTINCT destination (town/dungeon/hub) completed by on_enter arrival - collision-free (unique dest rooms, unlike a shared item). Flavour varies by destination kind. Folded into the quest engine via register_errands; shown on the `contracts` notice board beside bounties.",
+    "notes": "Systemic, not hand-crafted: reaches quest VOLUME + a new TYPE (exploration/courier) the way bounties reach kill-volume. Reward scales with the poster's level band. is_errand() = 'errand_' prefix. aethryn: 45 errands (interleaved 16 dungeon / 14 hub / 15 town).",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-27",
+    "updated": "2026-07-27"
   }
 ]
