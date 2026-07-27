@@ -2861,5 +2861,28 @@
     "aliases": [],
     "created": "2026-07-27",
     "updated": "2026-07-27"
+  },
+  {
+    "designation": "CMD-04.089",
+    "name": "gather",
+    "status": "active",
+    "function": "harvest this room's crafting-material node",
+    "label": "gather",
+    "file": "forge.py",
+    "type": "CMD",
+    "domain": "04",
+    "docs": "",
+    "tests": "tests/test_gather.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "command"
+    ],
+    "notes": "The gather verb: harvest the current room's node (a crafting material) with a per-player renewal cooldown; the non-combat source of the gather->craft loop.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-27",
+    "updated": "2026-07-27"
   }
 ]

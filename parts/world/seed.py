@@ -94,6 +94,10 @@ class Room(TypedDict):
     # Optional: a live capability this room surfaces on `look` (e.g. "arc" -> the ARC verdict).
     # The world stays data; the engine renders a declared capability, never a hard-coded room.
     dynamic: NotRequired[str]
+    # Optional: a GATHER node -- the item prototype a Forger harvests here with `gather`
+    # (a crafting material). The node renews after a short cooldown (parts.world.gather). Absent = a
+    # room with nothing to gather.
+    node: NotRequired[str]
 
 
 class Item(TypedDict):

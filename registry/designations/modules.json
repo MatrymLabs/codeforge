@@ -5153,5 +5153,34 @@
     "aliases": [],
     "created": "2026-07-27",
     "updated": "2026-07-27"
+  },
+  {
+    "designation": "MOD-04.080",
+    "name": "gather",
+    "status": "active",
+    "function": "harvest crafting materials from the wilds (the maker's non-combat source)",
+    "label": "gather",
+    "file": "parts/world/gather.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "",
+    "tests": "tests/test_gather.py",
+    "depends_on": [
+      "session"
+    ],
+    "related": [
+      "crafting",
+      "wildlands",
+      "items"
+    ],
+    "reuse": "the crafting loop's missing SOURCE: a room may carry a `node` (Room.node, a material prototype); `gather` mints one into the player's hands, then the node renews after GATHER_COOLDOWN beats (per-player, tracked on session.gather_cooldowns, ticked by tick_gather on the world beat). gather_hint shows a node on look. The wildlands generator seeds nodes (~1 in 5 rooms; ember_shard, ore biomes yield hollow_ingot) - both real crafting inputs, so gather->craft->equip closes.",
+    "notes": "Nodes are a Room field, not NPCs/items, so scaling adds negligible cost (10,691 nodes at scale 1). Per-player cooldown = an MMO node is not contested. Fails soft on an unknown material.",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-27",
+    "updated": "2026-07-27"
   }
 ]

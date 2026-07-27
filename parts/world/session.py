@@ -59,6 +59,9 @@ class Session:
     # (parts.world.allocate); `allocate` spends them into an attribute, capped per level. Persisted,
     # and folded onto the job's base stats when the StatBlock is built (jobs.bind_calling).
     allocated: dict[str, int] = field(default_factory=dict)
+    # Gather-node cooldowns: room -> world-beats until this player may `gather` there again. A node
+    # renews per player (an MMO node is not contested). Transient combat/world state, not persisted.
+    gather_cooldowns: dict[str, int] = field(default_factory=dict)
 
 
 # The registry of connected sessions. Gateways and game_loop register

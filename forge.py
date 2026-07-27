@@ -48,7 +48,7 @@ from parts.store_index import store
 from parts.telegraph import telegraph
 from parts.titles import title
 from parts.vitals import vitals
-from parts.world import allocate, artifact, creator_workshop, quest
+from parts.world import allocate, artifact, creator_workshop, gather, quest
 from parts.world.abilities import render_abilities, use_ability
 from parts.world.accounts import (
     has_password,
@@ -1568,6 +1568,15 @@ def _build_commands() -> CommandSet:
     )
     cs.add(
         Command(
+            "gather",
+            "CMD-04.089",
+            "harvest this room's crafting-material node",
+            lambda s, _a: gather.gather(s),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
             "lesson",
             "CMD-04.061",
             "the classroom menu (lesson list | lesson start <subject>)",
@@ -1664,6 +1673,9 @@ def render_scene(location: str, viewer: str = "") -> str:
     extra = room_items_text(location)
     if extra:
         scene.append(extra)
+    node = gather.gather_hint(location)
+    if node:
+        scene.append(node)
     company = room_npcs_text(location)
     if company:
         scene.append(company)
@@ -1891,7 +1903,10 @@ def handle_command(session: Session, signal: str) -> str:
     routed_signal = true_signal.lower()
 
     response = _route(session, true_signal, routed_signal)
-    beat = f"{tick_burns(session)}{menace(session)}{tick_zones(session)}{_sands_beat(session)}"
+    beat = (
+        f"{tick_burns(session)}{menace(session)}{tick_zones(session)}"
+        f"{gather.tick_gather(session)}{_sands_beat(session)}"
+    )
     return f"{response}{beat}"
 
 
