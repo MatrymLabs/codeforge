@@ -36,6 +36,7 @@ and the test twin proves **every** quest a booted world posts classifies to exac
 | `cull` | Cull Contract | Fell N of a creature type in a zone | zone x type x count-tier | repeatable-feeling |
 | `forage` | Forage Contract | Gather N of a material in a zone | zone x material x count-tier | repeatable-feeling |
 | `errand` | Travel Errand | Travel to a destination | each settlement | one-shot per settlement |
+| `delivery` | Courier Delivery | Take a parcel in town A, hand it over in town B | each settlement → partner | one-shot per settlement |
 
 Each record in the code carries **purpose, narrative role, gameplay loop, success condition,
 rewards, replay value, and scope** -- read `CATALOG` in the module for the full text.
@@ -46,8 +47,9 @@ Grouped by the machinery they need. Each becomes a new generator + a catalog rec
 existing systems (never replacing canonical content).
 
 **Reuse today's machinery (kill / gather / travel / on_enter chains):**
-- Cull-by-kin (fell N of a specific kin -- wolves vs jackals -- for far more distinct targets)
-- Collection (bring N of a dropped item), Delivery (carry an item town A -> B), Trade
+- Cull-by-kin -- SHIPPED (culls name each class AND its kin; see the cull row's scope)
+- Delivery -- SHIPPED (the `delivery` row above)
+- Collection (bring N of a dropped item), Trade
 - Elite Hunt (a tougher named target), Dungeon Crawl (clear a delve end to end)
 - Treasure Hunt / Treasure Mapping (a placed cache at one of several sites)
 

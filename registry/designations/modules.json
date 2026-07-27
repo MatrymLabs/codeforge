@@ -5636,5 +5636,36 @@
     "aliases": [],
     "created": "2026-07-27",
     "updated": "2026-07-27"
+  },
+  {
+    "designation": "MOD-04.096",
+    "name": "delivery",
+    "status": "active",
+    "function": "generate 'carry a parcel from town A to town B' contracts (a courier archetype)",
+    "label": "delivery",
+    "file": "parts/world/delivery.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "docs/quest_archetypes.md",
+    "tests": "tests/test_delivery.py",
+    "depends_on": [
+      "seed"
+    ],
+    "related": [
+      "quest",
+      "quest_archetypes",
+      "errands",
+      "townsfolk",
+      "items"
+    ],
+    "reuse": "a new quest ARCHETYPE (content campaign slice 1, for variety alongside the volume): generate_deliveries(settlements) returns (quest specs, parcel items). Each town consigns a parcel to its level-adjacent trade-partner; the quest is a two-beat arc -- take the parcel (on_take matches the parcel's prototype, since a placed seed item is its own prototype) then arrive at the destination (on_enter, award_xp). world.py places the parcels at their source towns and folds the specs via the new generic quest.register_specs(). Cataloged in quest_archetypes.",
+    "notes": "is_delivery() = 'delivery_' prefix; parcels are 'parcel_<source_room>'. _routes pairs settlements sorted by level, each to the next (wrapping), so every town gets one delivery to a distinct neighbour. aethryn: 45 deliveries + 45 parcels, total quests 1565 -> 1610. Added quest.register_specs() (public _fold_in) for archetypes whose generator also mints world-placed artifacts.",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-27",
+    "updated": "2026-07-27"
   }
 ]
