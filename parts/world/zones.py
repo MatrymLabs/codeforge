@@ -23,6 +23,7 @@ from parts.world import items
 from parts.world.seed import SEED_DIR, Zone, load_zones
 from parts.world.session import Session
 from parts.world.spiral import load_spiral_config, spiral_zones
+from parts.world.wildlands import load_wildlands_config, wildlands_zones
 from parts.world.world import WORLD
 
 
@@ -41,6 +42,11 @@ ZONES: dict[str, Zone] = merged_zones(
     load_zones(SEED_DIR / "zones.yaml", set(WORLD)),
     load_spiral_config(SEED_DIR / "spiral.yaml"),
 )
+# The procedural wilderness regions carry their own metadata areas too (one per region), so every
+# generated room belongs to geography exactly like the hand-authored and Spiral rooms.
+_wildlands_cfg = load_wildlands_config(SEED_DIR / "wildlands.yaml")
+if _wildlands_cfg is not None:
+    ZONES.update(wildlands_zones(_wildlands_cfg))
 
 # Per-area beat counter: world beats since this area last came due. Runtime state, never
 # persisted (derive, don't store) -- a fresh boot starts every area at zero.

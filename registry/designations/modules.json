@@ -4839,5 +4839,34 @@
     "aliases": [],
     "created": "2026-07-25",
     "updated": "2026-07-25"
+  },
+  {
+    "designation": "MOD-04.070",
+    "name": "wildlands",
+    "status": "active",
+    "function": "procedurally grow coherent wilderness REGIONS to world-generation scale",
+    "label": "wildlands",
+    "file": "parts/world/wildlands.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "docs/architecture.md",
+    "tests": "tests/test_wildlands.py",
+    "depends_on": [
+      "seed"
+    ],
+    "related": [
+      "spiral",
+      "world",
+      "zones"
+    ],
+    "reuse": "the validated-generator pattern pointed at WILDERNESS (compare spiral for the road): a seed's wildlands.yaml drives a DETERMINISTIC factory that expands each compact region config into a connected, biome-varied trail-network -- every generated room carrying ambient life and belonging to a region/level-band/biome area -- merged into the world before the same loader gates validate it. The world stays data; the generator is only its factory.",
+    "notes": "Reaches tens-of-thousands-of-rooms scale without hand-authoring every wilderness room. load_wildlands_config reads seeds/<seed>/wildlands.yaml (per region: name/region/biome/attach/attach_dir/level band/trail_length + optional branch_every/length, all validated); generate_wildlands builds a main trail off the attach room with perpendicular flank-branches ending in landmark pockets (never a flat grid, branches never overwrite the spine). wildlands_zones emits one metadata area per region. world.py merges rooms+npcs + wires attach exits before inspect_world_links; zones.py folds in the areas. No randomness (reproducible).",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-27",
+    "updated": "2026-07-27"
   }
 ]

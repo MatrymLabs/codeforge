@@ -9,6 +9,11 @@ from parts.world.items import ITEMS
 from parts.world.npcs import NPCS
 from parts.world.seed import SEED_DIR, Room, inspect_world_links, load_rooms
 from parts.world.spiral import extend_world_with_road, load_spiral_config
+from parts.world.wildlands import (
+    generate_wildlands,
+    load_wildlands_config,
+    wire_attach_exits,
+)
 
 SEED_PATH = SEED_DIR / "rooms.yaml"
 
@@ -19,6 +24,19 @@ WORLD: dict[str, Room] = load_rooms(SEED_PATH)
 _spiral_config = load_spiral_config(SEED_DIR / "spiral.yaml")
 if _spiral_config is not None:
     extend_world_with_road(WORLD, NPCS, _spiral_config)
+
+# Procedurally grow wilderness REGIONS if the seed opts in (wildlands.yaml): a compact config per
+# region expands into a connected, biome-varied trail-network with ambient life, through the
+# loader gates. This is how the world reaches world-generation scale without hand-authoring every
+# room (parts.world.wildlands, a sibling of the Spiral). Merged BEFORE validation, so a bad config
+# fails loud; each region's attach room grows one exit onto its trail-head.
+_wildlands_configs = load_wildlands_config(SEED_DIR / "wildlands.yaml")
+if _wildlands_configs is not None:
+    _wild_rooms, _wild_npcs = generate_wildlands(_wildlands_configs, set(WORLD))
+    WORLD.update(_wild_rooms)
+    NPCS.update(_wild_npcs)
+    wire_attach_exits(WORLD, _wildlands_configs)
+
 inspect_world_links(WORLD, ITEMS, NPCS)
 
 # With the full foe set assembled (seed + the procedural Spiral), generate a hunt-contract for
