@@ -1,0 +1,45 @@
+# SEED: aethryn -- wildlands.yaml
+# Compact configs the wildlands generator (parts/world/wildlands.py) expands into connected,
+# biome-varied wilderness regions at boot: each is a branching trail off an existing `attach` room,
+# every generated room carrying ambient life and belonging to a metadata area. Deterministic -- the
+# same configs regenerate the identical world. This is how Aethryn reaches world-generation scale.
+
+emberreach_kindland_wild:
+  name: The Kindland Wilds
+  region: Emberreach
+  biome: temperate-meadow
+  attach: the_far_reach
+  attach_dir: east
+  level_min: 4
+  level_max: 12
+  trail_length: 20
+
+reachwood_fen_wild:
+  name: The Fenwood
+  region: Emberreach
+  biome: wild-forest
+  attach: the_thornmere
+  attach_dir: north
+  level_min: 6
+  level_max: 14
+  trail_length: 18
+
+quenchmere_reef_wild:
+  name: The Outer Strand
+  region: The Quenchmere
+  biome: coastal-strand
+  attach: the_reef_flats
+  attach_dir: north
+  level_min: 19
+  level_max: 26
+  trail_length: 18
+
+kollforge_flats_wild:
+  name: The Cinder Barrens
+  region: The Kollforge
+  biome: volcanic-flats
+  attach: the_obsidian_flats
+  attach_dir: south
+  level_min: 50
+  level_max: 58
+  trail_length: 18
