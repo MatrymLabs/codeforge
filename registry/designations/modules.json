@@ -4927,5 +4927,32 @@
     "aliases": [],
     "created": "2026-07-27",
     "updated": "2026-07-27"
+  },
+  {
+    "designation": "MOD-10.045",
+    "name": "seed_package",
+    "status": "active",
+    "function": "the Seed Package: intent (a deployment tier) in, a computed world-sizing build manifest out",
+    "label": "seed_package",
+    "file": "parts/seed_package.py",
+    "type": "MOD",
+    "domain": "10",
+    "docs": "",
+    "tests": "tests/test_seed_package.py",
+    "depends_on": [],
+    "related": [
+      "MOD-10.015"
+    ],
+    "reuse": "",
+    "tags": [
+      "module"
+    ],
+    "notes": "Stage 1 of the Seed Package campaign: data-driven deployment tiers + a scaling model calibrated to the real aethryn build derive rooms/zones/npcs/dungeons/quests; honest hardware read; fail-loud on impossible config.",
+    "superseded_by": "",
+    "aliases": [
+      "MOD-UM10-S01-N001-045-R0"
+    ],
+    "created": "2026-07-27",
+    "updated": "2026-07-27"
   }
 ]
