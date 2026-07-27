@@ -16,7 +16,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from parts.world.bestiary import classes_for_biome
+from parts.world.bestiary import cullable_types
 from parts.world.seed import QuestSpec, QuestStep
 
 CULL_PREFIX = "cull_"
@@ -71,7 +71,7 @@ def generate_culls(zones: list[dict[str, Any]]) -> list[QuestSpec]:
         if not biome or not label:
             continue
         level = int(zone.get("level_max") or zone.get("level_min") or 1)
-        for kind in classes_for_biome(biome):
+        for kind in cullable_types(biome):  # each class AND each of its kin: many distinct targets
             for count in _COUNT_TIERS:
                 quests.append(_cull(label, name, kind, count, level))
     return quests
