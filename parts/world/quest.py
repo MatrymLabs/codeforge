@@ -152,6 +152,15 @@ def register_storylines(
     _fold_in(generate_storylines(zones, settlements, dungeons))
 
 
+def register_spine(zones: list[dict[str, object]]) -> None:
+    """Lay the world's main-road spine (the Forgeward Road) and fold it into the engine
+    (parts.world.spine). Called by world.py after the world is assembled. Idempotent."""
+    from parts.world.spine import forge_spine
+
+    spec = forge_spine(zones)
+    _fold_in([spec] if spec is not None else [])
+
+
 def _fold_in(specs: list[QuestSpec]) -> None:
     """Register generated QuestSpecs into the engine (skipping any already known) and route their
     triggers. The shared tail of register_bounties/register_errands."""
