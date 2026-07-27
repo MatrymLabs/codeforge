@@ -293,3 +293,176 @@ the_emberdeep:
   level_min: 54
   level_max: 62
   biome: "subterranean-molten"
+
+# --- Zone-coverage pass 2 (Phase I): fold the built far-Reach rooms into metadata areas, region by
+# --- region, so the worklist shrinks toward zero. Bands per each Reach's known range. ---
+
+highbough_interiors:
+  name: Highbough - the Canopy Capital
+  rooms: [the_bough_avenues, the_canopy_market, the_grove_council, the_rest_hollow, the_wildember_shrine]
+  reset_mode: never  # a living capital: its canopy folk persist
+  beats_between: 20
+  region: "The Verdance"
+  level_min: 22
+  level_max: 32
+  biome: "living-jungle"
+
+the_verdance_wilds:
+  name: The Verdance - Understory and the Sunken Ziggurat
+  rooms: [the_understory, the_overgrown_causeway, the_ziggurat_steps, the_ziggurat_vault, the_rootways]
+  reset_mode: empty_only  # the understory's beasts and the Rootpriest reform once quiet
+  beats_between: 12
+  region: "The Verdance"
+  level_min: 22
+  level_max: 36
+  biome: "living-jungle"
+
+mirefast_zone:
+  name: Mirefast - the Stilt-Town
+  rooms: [mirefast, the_stilt_market, the_mireside_tavern, the_boardwalk_lofts, the_grove_shrine, the_stiltways, the_stilt_deeps]
+  reset_mode: empty_only  # the stiltways swamp-foes and the mire-devourer reform once quiet
+  beats_between: 12
+  region: "The Verdance"
+  level_min: 22
+  level_max: 26
+  biome: "swamp"
+
+the_rimefall_expanse:
+  name: The Rimefall - Stillhearth, the Fields, and Frosthold
+  rooms: [the_silent_cloister, the_riming_fields, the_kingsroad_beacon, the_glassway, frosthold, the_frozen_forge, the_glass_gallery, the_rime_vault, the_ice_market, the_thawhouse]
+  reset_mode: empty_only  # the fields' rime-wolves and Frosthold's Smith reform once quiet
+  beats_between: 12
+  region: "The Rimefall"
+  level_min: 40
+  level_max: 52
+  biome: "glacier"
+
+the_warmcamp_zone:
+  name: The Warmcamp - the Ashborn Salvage-Dig
+  rooms: [the_warmcamp, the_fire_tent, the_trade_tent, the_salvage_dig, the_buried_reliquary]
+  reset_mode: empty_only  # the dig's frost-guardian and the ice-sentinel reform once quiet
+  beats_between: 12
+  region: "The Rimefall"
+  level_min: 42
+  level_max: 48
+  biome: "glacier"
+
+the_kollforge_expanse:
+  name: The Kollforge - the Flats and the Cooled Kollhold
+  rooms: [the_caldera_market, the_obsidian_flats, the_cinder_gorge, the_cooling_shelf, dead_ashkoll, the_cold_hearth, the_vent_gallery]
+  reset_mode: empty_only  # the flats' fire-beasts and the Ashen Forgeborn reform once quiet
+  beats_between: 12
+  region: "The Kollforge"
+  level_min: 50
+  level_max: 58
+  biome: "volcanic"
+
+venthold_zone:
+  name: Venthold - the Vent-Forge Fortress
+  rooms: [venthold, the_proving_floor, the_vent_forges, the_vent_armory, the_guildmaster_hall, the_magma_moat, the_proving_vent, the_vent_crucible]
+  reset_mode: empty_only  # the moat's magma-kin and the Crucible-Warden reform once quiet
+  beats_between: 12
+  region: "The Kollforge"
+  level_min: 52
+  level_max: 58
+  biome: "volcanic"
+
+the_sundered_sky_expanse:
+  name: The Sundered Sky - the Shoals and the Falling Hold
+  rooms: [the_anchor_quarter, the_drifting_shoals, the_tilting_span, the_falling_hold, the_anchor_deep, the_sky_market, the_skyward_rest, the_gate_watch, the_broken_span]
+  reset_mode: empty_only  # the shoals' stormkin and the Broken Anchor-Warden reform once quiet
+  beats_between: 12
+  region: "The Sundered Sky"
+  level_min: 60
+  level_max: 72
+  biome: "floating-shards"
+
+the_outer_reefs:
+  name: The Outer Reefs
+  rooms: [the_outer_lanes, saltmarsh_landing, the_reef_flats, the_old_lighthouse, the_sunken_manse]
+  reset_mode: empty_only  # the reefs' serpents and the manse-warden reform once quiet
+  beats_between: 12
+  region: "The Quenchmere"
+  level_min: 19
+  level_max: 26
+  biome: "drowned-archipelago"
+
+the_deep_wreckways:
+  name: The Deep Wreckways
+  rooms: [the_deep_wreckways, the_drowned_chapel]
+  reset_mode: empty_only  # the deep lanes' wights and the chapel-warden reform once quiet
+  beats_between: 12
+  region: "The Quenchmere"
+  level_min: 20
+  level_max: 26
+  biome: "drowned-archipelago"
+
+the_drowned_sunhold_delve:
+  name: The Drowned Sunhold - the Delve
+  rooms: [the_drowned_halls, the_flooded_forge]
+  reset_mode: empty_only  # the drowned capital's dead reform once the delve is quiet
+  beats_between: 12
+  region: "The Quenchmere"
+  level_min: 18
+  level_max: 26
+  biome: "drowned-archipelago"
+
+tidewharf_interiors:
+  name: Tidewharf - the Free-Port Interiors
+  rooms: [the_salvage_exchange, the_drowned_bell, the_hull_lofts, the_tide_shrine, the_salvage_guildhall, the_captains_wharf, the_bilge, the_underhull]
+  reset_mode: empty_only  # the bilge-crawler and hull-wight reform; the free-port halls hold no repop
+  beats_between: 16
+  region: "The Quenchmere"
+  level_min: 12
+  level_max: 18
+  biome: "drowned-archipelago"
+
+the_windward_downs_zone:
+  name: The Windward Downs
+  rooms: [the_emberpost, the_windward_downs]
+  reset_mode: empty_only  # the downs' wildlife reforms once quiet
+  beats_between: 12
+  region: "Emberreach"
+  level_min: 8
+  level_max: 15
+  biome: "grassland-downs"
+
+the_wreck_hold:
+  name: The Wreck-Hold
+  rooms: [the_flooded_hulls, the_sunken_hold]
+  reset_mode: empty_only  # the wreck's drowned reform once the delve is quiet
+  beats_between: 12
+  region: "Emberreach"
+  level_min: 8
+  level_max: 16
+  biome: "drowned-wreck"
+
+the_ashen_vault_zone:
+  name: The Ashen Vault
+  rooms: [the_ashen_vault]
+  reset_mode: empty_only  # the vault's ashvault-sentinel reforms once quiet
+  beats_between: 12
+  region: "Emberreach"
+  level_min: 20
+  level_max: 25
+  biome: "ash-waste"
+
+the_cinderheart_deep:
+  name: The Cinderheart - the Deep's Oldest Wound
+  rooms: [the_cinderheart, the_drowned_way, the_sealed_vault]
+  reset_mode: empty_only  # the drowned deep's crawlers and the Drowned Forgemaster reform once quiet
+  beats_between: 12
+  region: "The Cinderdeep"
+  level_min: 18
+  level_max: 24
+  biome: "subterranean-unmade"
+
+saltring_interiors:
+  name: Saltring - the Salvagers' Rest
+  rooms: [the_salvagers_rest]
+  reset_mode: never  # a rest by road-code: the keeper persists
+  beats_between: 20
+  region: "The Cinderwaste"
+  level_min: 15
+  level_max: 20
+  biome: "salt-desert"
