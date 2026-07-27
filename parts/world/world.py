@@ -13,6 +13,7 @@ from parts.world.npcs import NPCS
 from parts.world.seed import SEED_DIR, Room, inspect_world_links, load_rooms
 from parts.world.spiral import extend_world_with_road, load_spiral_config
 from parts.world.townsfolk import load_settlements, populate_settlements
+from parts.world.travel import load_waystones
 from parts.world.wildlands import (
     generate_wildlands,
     load_wildlands_config,
@@ -77,6 +78,10 @@ inspect_world_links(WORLD, ITEMS, NPCS)
 from parts.world.quest import register_bounties  # noqa: E402 -- after NPCS is complete
 
 register_bounties(NPCS)
+
+# The Waystone travel network: the seed's zone hubs a player may pay to cross between
+# (parts.world.travel). {} when the seed ships no network (first-forge/spiral-ascent).
+WAYSTONES = load_waystones(SEED_DIR / "waystones.yaml") or {}
 
 # The spawn point is seed-defined, not hardcoded: the FIRST room in rooms.yaml.
 # (first-forge -> "forge"; spiral-ascent -> "spiral_landing".)

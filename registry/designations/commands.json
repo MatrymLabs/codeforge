@@ -2884,5 +2884,28 @@
     "aliases": [],
     "created": "2026-07-27",
     "updated": "2026-07-27"
+  },
+  {
+    "designation": "CMD-04.090",
+    "name": "travel",
+    "status": "active",
+    "function": "the Waystone network: pay to cross the world (travel [where])",
+    "label": "travel",
+    "file": "forge.py",
+    "type": "CMD",
+    "domain": "04",
+    "docs": "docs/design/economy.md",
+    "tests": "tests/test_travel.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "command"
+    ],
+    "notes": "The coin sink + fast-travel verb: at a zone waystone, pay a level-scaled fare to travel to any other hub.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-27",
+    "updated": "2026-07-27"
   }
 ]
