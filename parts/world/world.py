@@ -6,6 +6,7 @@ resolve_move is the only function that changes a player's location.
 
 from parts.world.armory import arm_guardians
 from parts.world.creator_workshop import install_workshop
+from parts.world.delve import generate_delves, load_dungeons, wire_delve_mouths
 from parts.world.doors import DOORS, barred_door_for
 from parts.world.items import ITEMS, register_prototypes
 from parts.world.npcs import NPCS
@@ -44,6 +45,17 @@ if _wildlands_configs is not None:
     # Registered as prototypes (not just appended to ITEMS) before the link audit, so a guardian's
     # drop can be cloned and passes the same gate as authored gear.
     register_prototypes(arm_guardians(_wild_npcs))
+
+# Sink a multi-room delve below every dungeon mouth (seeds/<world>/dungeons.yaml): a descent of
+# escalating foes ending in a named deep boss (parts.world.delve). The bosses are armed with gear
+# like the wildlands guardians. Merged before the link audit so the new rooms/drops pass its gate.
+_dungeons = load_dungeons(SEED_DIR / "dungeons.yaml")
+if _dungeons is not None:
+    _delve_rooms, _delve_npcs = generate_delves(_dungeons)
+    WORLD.update(_delve_rooms)
+    NPCS.update(_delve_npcs)
+    wire_delve_mouths(WORLD, _dungeons)
+    register_prototypes(arm_guardians(_delve_npcs))
 
 # Populate the map's settlements (seeds/<world>/settlements.yaml) with townsfolk and a merchant at
 # each town's level band (parts.world.townsfolk) -- the economy sink and the towns' life. Merged

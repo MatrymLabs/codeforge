@@ -5067,5 +5067,34 @@
     "aliases": [],
     "created": "2026-07-27",
     "updated": "2026-07-27"
+  },
+  {
+    "designation": "MOD-04.077",
+    "name": "delve",
+    "status": "active",
+    "function": "expand the map's dungeon mouths into multi-room delves with a boss ladder",
+    "label": "delve",
+    "file": "parts/world/delve.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "",
+    "tests": "tests/test_delve.py",
+    "depends_on": [
+      "seed"
+    ],
+    "related": [
+      "bestiary",
+      "armory",
+      "world"
+    ],
+    "reuse": "the world-generation lever pointed at DUNGEONS (sibling of wildlands/bestiary/armory): load_dungeons reads seeds/<world>/dungeons.yaml (emitted by tools/emit_map_world.py: one row per dungeon mouth); generate_delves sinks a _DEPTH-chamber descent below each mouth with foes escalating in level (make_beast, ambient trash) to a named deep BOSS (make_notable, boss-tier + lethal, out-levelling the mouth by _BOSS_BUMP); wire_delve_mouths opens each mouth `down`. The boss is armed with armory gear in world.py. Turns 16 single-room dungeons into real delves.",
+    "notes": "Deterministic/pure. Merged in world.py before inspect_world_links so the new rooms + boss drops pass the same gate. Trash foes stay ambient (no bounty flood); only the deep boss mints a bounty. wire_delve_mouths skips a missing mouth room rather than failing the boot.",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-27",
+    "updated": "2026-07-27"
   }
 ]
