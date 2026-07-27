@@ -45,9 +45,11 @@ def fresh_world():
     SESSIONS.clear()
     items.PROTOTYPES["trinket"] = copy.deepcopy(_WARE)
     npcs.NPCS["test_merchant"] = copy.deepcopy(_MERCHANT)
+    npcs.reindex_npcs()
     yield
     npcs.NPCS.clear()
     npcs.NPCS.update(npcs_snap)
+    npcs.reindex_npcs()
     items.ITEMS.clear()
     items.ITEMS.update(items_snap)
     items.PROTOTYPES.pop("trinket", None)
