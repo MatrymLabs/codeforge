@@ -74,6 +74,45 @@ def test_unlock_checks_gate_and_report_progress():
     ]
 
 
+def _ladder_of(jobs):
+    """Rebuild the module's (_JOBS, JOBS) pair from a job list, for monkeypatching a defect in."""
+    return list(jobs), {j.id: j for j in jobs}
+
+
+@pytest.mark.parametrize(
+    "defect, match",
+    [
+        # A job in the wrong tier breaks the 12/12/6 shape.
+        (lambda js: [js[0]._replace(tier=2), *js[1:]], "12 / 12 / 6"),
+        # A duplicate id collapses the JOBS dict below 30 while the tier shape still holds.
+        (lambda js: [js[0], js[0], *js[2:]], "expected 30 jobs"),
+        # An unknown role is not in the vocabulary.
+        (lambda js: [js[0]._replace(primary=("Necromancer",)), *js[1:]], "unknown role"),
+        # A job with no primary role.
+        (lambda js: [js[0]._replace(primary=()), *js[1:]], "at least one primary"),
+        # An unlock naming a job that does not exist.
+        (lambda js: [*js[:12], js[12]._replace(unlock=(("ghost", 5),)), *js[13:]], "unknown job"),
+        # A job requiring itself.
+        (lambda js: [js[0]._replace(unlock=((js[0].id, 5),)), *js[1:]], "cannot require itself"),
+        # An unlock level outside 1..30.
+        (lambda js: [*js[:12], js[12]._replace(unlock=(("rogue", 0),)), *js[13:]], "out of 1-30"),
+    ],
+)
+def test_validate_refuses_each_malformed_ladder(monkeypatch, defect, match):
+    broken = defect(list(jl._JOBS))
+    _jobs, _dict = _ladder_of(broken)
+    monkeypatch.setattr(jl, "_JOBS", _jobs)
+    monkeypatch.setattr(jl, "JOBS", _dict)
+    with pytest.raises(SeedError, match=match):
+        jl.validate()
+
+
+def test_validate_refuses_a_schedule_that_is_not_twenty_one_slots(monkeypatch):
+    monkeypatch.setattr(jl, "UNIVERSAL_PROGRESSION", [(1, ("core_trait",))])
+    with pytest.raises(SeedError, match="feature slots"):
+        jl.validate()
+
+
 def test_a_circular_ladder_is_refused():
     # Monkeypatch a cycle into the graph and confirm the acyclic check catches it.
     import parts.world.job_ladder as mod
