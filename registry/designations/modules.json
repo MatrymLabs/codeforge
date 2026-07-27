@@ -4983,5 +4983,34 @@
     "aliases": [],
     "created": "2026-07-27",
     "updated": "2026-07-27"
+  },
+  {
+    "designation": "MOD-04.074",
+    "name": "armory",
+    "status": "active",
+    "function": "a procedural gear factory: slot x element-flavour x level -> equippable loot",
+    "label": "armory",
+    "file": "parts/world/armory.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "",
+    "tests": "tests/test_armory.py",
+    "depends_on": [
+      "seed"
+    ],
+    "related": [
+      "bestiary",
+      "affixes",
+      "combat"
+    ],
+    "reuse": "the world-generation lever pointed at GEAR (sibling of bestiary for creatures, affixes for rarity): forge_gear composes a base equippable from equip-slot x element-flavour x level (level-scaled mods, deduped prototype); arm_guardians gives every generated non-ambient guardian a themed gear drop and returns the prototypes to merge into ITEMS. The base is the floor; combat's affix factory rolls rarity + named affixes on top at defeat. Deterministic/pure.",
+    "notes": "Merged into ITEMS in world.py after the wildlands merge, before inspect_world_links, so generated drop prototypes pass the same boot gate as authored gear. Ambient wildlife and already-dropping foes are left untouched. Mod targets are the seed's own (ATK/DEF/ACC/EVA).",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-27",
+    "updated": "2026-07-27"
   }
 ]

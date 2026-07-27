@@ -4,9 +4,10 @@ The world is data -- and now it lives in a seed file, not in Python.
 resolve_move is the only function that changes a player's location.
 """
 
+from parts.world.armory import arm_guardians
 from parts.world.creator_workshop import install_workshop
 from parts.world.doors import DOORS, barred_door_for
-from parts.world.items import ITEMS
+from parts.world.items import ITEMS, register_prototypes
 from parts.world.npcs import NPCS
 from parts.world.seed import SEED_DIR, Room, inspect_world_links, load_rooms
 from parts.world.spiral import extend_world_with_road, load_spiral_config
@@ -37,6 +38,11 @@ if _wildlands_configs is not None:
     WORLD.update(_wild_rooms)
     NPCS.update(_wild_npcs)
     wire_attach_exits(WORLD, _wildlands_configs)
+    # Forge a themed gear drop for every generated guardian (parts.world.armory), so felling a named
+    # hunt target can drop something to wear; the affix factory rolls rarity on top at defeat.
+    # Registered as prototypes (not just appended to ITEMS) before the link audit, so a guardian's
+    # drop can be cloned and passes the same gate as authored gear.
+    register_prototypes(arm_guardians(_wild_npcs))
 
 # Every generated world carries the Creator's Workshop: a Grand Library linked to the spawn, and a
 # concealed Creator's Door onto an isolated administrative instance only the Seed Owner may cross

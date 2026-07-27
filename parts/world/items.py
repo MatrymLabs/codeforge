@@ -31,6 +31,16 @@ class ItemError(ValueError):
     """A bad item operation (e.g. cloning an unknown prototype): fail loud."""
 
 
+def register_prototypes(new: dict[str, Item]) -> None:
+    """Register GENERATED item prototypes into the live table AND the prototype registry, so a foe's
+    drop can be cloned from them. PROTOTYPES is snapshotted at this module's import; a generator
+    forges gear during world assembly (parts.world.armory) runs later, so its prototypes must be
+    registered here rather than only appended to ITEMS -- otherwise clone() cannot find them."""
+    for label, item in new.items():
+        ITEMS[label] = item
+        PROTOTYPES[label] = copy.deepcopy(item)
+
+
 def prototype_of(iid: str) -> str:
     """The prototype label an item is an instance of (its own id if it declares none). Callers
     match items by prototype -- a door's key, a quest's pickup -- so a clone counts as the real
