@@ -29,7 +29,7 @@ from __future__ import annotations
 import re
 from typing import NamedTuple
 
-from parts.world.seed import Npc, Room
+from parts.world.seed import Item, Npc, Room
 from parts.world.session import Session
 
 # --- Canonical labels (frozen identity strings; never restyle -- persisted contract) ------------
@@ -87,7 +87,7 @@ STATIONS: tuple[Station, ...] = (
         "item_forge",
         "The Item Forge",
         "An anvil and a wall of labelled drawers: blades, charms, potions, keys. Here you shape "
-        "the things a hero finds, wears, and wields.",
+        "the things a hero finds. Type `create item <name> at <room>` to make one.",
     ),
     Station(
         "creatures",
@@ -301,8 +301,9 @@ def wall_activity(session: Session) -> str:
 # is reversible and vanishes on restart (persistence to the seed is a separate, later decision).
 # This keeps Architecture Law 1 intact: a staged change is inert data; the ONE validated apply-path
 # (`_apply`) is the only thing that mutates canonical state, and only at the owner's explicit
-# `publish`. The first change kind is create_npc (the NPC Studio); more kinds slot into `_apply`.
+# `publish`. Each editable KIND (create_npc, create_item, ...) is one station tool + one apply-path.
 NPC_STUDIO = "npc_studio"
+ITEM_FORGE = "item_forge"
 PUBLISHING_PORTAL = "publishing_portal"
 
 
@@ -335,53 +336,90 @@ def _owner_in_workshop(session: Session) -> bool:
     return is_seed_owner(session) and session.location in WORKSHOP_ROOMS
 
 
-def _npc_label(name: str, taken: set[str]) -> str:
-    """A unique lowercase_snake_case label for a new NPC, from its display name (never collides)."""
-    base = "_".join(re.findall(r"[a-z0-9]+", name.lower())) or "npc"
+def _unique_label(name: str, taken: set[str], fallback: str) -> str:
+    """A unique lowercase_snake_case label from a display name (never collides with `taken`)."""
+    base = "_".join(re.findall(r"[a-z0-9]+", name.lower())) or fallback
     label, n = base, 2
     while label in taken:
         label, n = f"{base}_{n}", n + 1
     return label
 
 
-def create_npc(session: Session, arg: str) -> str:
-    """The NPC Studio's tool: stage a new NPC. `create npc <name> at <room>`.
+# One placeable KIND the owner can create: its subject word, its station, and the plain noun used in
+# messages. Both create_npc and create_item are the same staging move (name a thing, name a room),
+# so they share `_stage`; only the apply-path (`_apply`) differs.
+class _Creatable(NamedTuple):
+    subject: str  # the word after `create` (npc / item)
+    kind: str  # the StagedChange kind
+    station: str  # the station room where it may be created
+    station_name: str  # the display name of that station
+    thing: str  # the plain noun for messages (person / thing)
 
-    Owner-gated AND station-gated to the NPC Studio. Validates that the room is real BEFORE staging
-    (fail loud, early); the NPC is not made live here, only added to the draft. `preview`/`publish`
-    finish the loop."""
-    if not _owner_at(session, NPC_STUDIO):
-        return "You cannot shape a person here. Do it at the NPC Studio."
-    kind, _, rest = arg.strip().partition(" ")
-    if kind.lower() != "npc" or not rest.strip():
-        return "To make someone, type: create npc <name> at <room>"
+
+_CREATABLES: dict[str, _Creatable] = {
+    "npc": _Creatable("npc", "create_npc", NPC_STUDIO, "NPC Studio", "person"),
+    "item": _Creatable("item", "create_item", ITEM_FORGE, "Item Forge", "thing"),
+}
+
+
+def create(session: Session, arg: str) -> str:
+    """The `create` verb: route `create <npc|item> <name> at <room>` to the right station tool.
+
+    Owner-gated AND station-gated (each kind to its own station). The thing is not made live here,
+    only staged into the draft after the room is validated; `preview`/`publish` finish the loop."""
+    subject, _, rest = arg.strip().partition(" ")
+    spec = _CREATABLES.get(subject.lower())
+    if spec is None:
+        return "You can create an npc or an item. Try: create npc <name> at <room>"
+    return _stage(session, rest, spec)
+
+
+def _stage(session: Session, rest: str, spec: _Creatable) -> str:
+    """Validate and stage a `<name> at <room>` creation for one creatable kind. Fails loud early on
+    a bad station, a missing name/room, or an unreal room; nothing is staged unless it is valid."""
+    if not _owner_at(session, spec.station):
+        return f"You cannot make a {spec.thing} here. Do it at the {spec.station_name}."
+    rest = rest.strip()
+    usage = f"create {spec.subject} <name> at <room>"
+    if not rest:
+        return f"To make one, type: {usage}"
     if " at " not in rest:
-        return "Say where they stand: create npc <name> at <room>"
+        return f"Say where it goes: {usage}"
     name, _, room = rest.rpartition(" at ")
     name, room = name.strip(), room.strip().lower()
     if not name:
-        return "Give them a name: create npc <name> at <room>"
+        return f"Give it a name: {usage}"
 
     from parts.world.world import WORLD
 
     if room not in WORLD:
-        return f"There is no room labelled '{room}'. Name a real room to place them in."
+        return f"There is no room labelled '{room}'. Name a real room to place it in."
 
-    from parts.world.npcs import NPCS
-
-    taken = set(NPCS) | {c.payload["label"] for c in _draft(session) if c.kind == "create_npc"}
-    label = _npc_label(name, taken)
-    change = StagedChange(
-        "create_npc",
-        f"create the NPC '{name}' in {WORLD[room]['name']}",
-        {"label": label, "name": name, "room": room},
+    live = _live_labels(spec.kind)
+    taken = live | {c.payload["label"] for c in _draft(session) if c.kind == spec.kind}
+    label = _unique_label(name, taken, fallback=spec.subject)
+    summary = f"create the {spec.thing} '{name}' in {WORLD[room]['name']}"
+    _draft(session).append(
+        StagedChange(spec.kind, summary, {"label": label, "name": name, "room": room})
     )
-    _draft(session).append(change)
     return (
-        f"Staged: {change.summary}.\n"
+        f"Staged: {summary}.\n"
         f"{len(_draft(session))} change(s) waiting. Type `preview` to review, then bring them to "
         f"the Publishing Portal to `publish` (or `rollback` to discard)."
     )
+
+
+def _live_labels(kind: str) -> set[str]:
+    """The labels already taken in the live world for a creatable kind (so a new one is unique)."""
+    if kind == "create_npc":
+        from parts.world.npcs import NPCS
+
+        return set(NPCS)
+    if kind == "create_item":
+        from parts.world.items import ITEMS
+
+        return set(ITEMS)
+    return set()
 
 
 def preview_changes(session: Session) -> str:
@@ -435,7 +473,26 @@ def _apply(change: StagedChange) -> str:
     an unknown kind (a staged change the buffer never should have held)."""
     if change.kind == "create_npc":
         return _apply_create_npc(change.payload)
+    if change.kind == "create_item":
+        return _apply_create_item(change.payload)
     raise WorkshopError(f"unknown staged change kind: {change.kind!r}")
+
+
+def _apply_create_item(payload: dict[str, str]) -> str:
+    """Add a fresh, plain item to the live world, lying in its room. It is its own prototype (no
+    equipment slot, no modifiers): a created object a hero can find and pick up."""
+    from parts.world.items import ITEMS
+
+    name, room, label = payload["name"], payload["room"], payload["label"]
+    keywords = list(dict.fromkeys([*re.findall(r"[a-z0-9]+", name.lower()), label]))
+    ITEMS[label] = Item(
+        name=name,
+        keywords=keywords,
+        location=f"room:{room}",
+        slot="",
+        mods={},
+    )
+    return f"'{name}' now lies in {room}"
 
 
 def _apply_create_npc(payload: dict[str, str]) -> str:

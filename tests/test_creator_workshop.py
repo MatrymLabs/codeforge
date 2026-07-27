@@ -12,6 +12,7 @@ import pytest
 from forge import handle_command
 from parts.world import creator_workshop as cw
 from parts.world import events
+from parts.world.items import ITEMS, items_in
 from parts.world.npcs import NPCS, npcs_in, reindex_npcs
 from parts.world.session import SESSIONS, Session
 from parts.world.world import WORLD, render_room
@@ -22,10 +23,13 @@ def fresh_sessions():
     SESSIONS.clear()
     events.SHUTDOWN["hook"] = None
     cw._DRAFTS.clear()
-    npc_snapshot = set(NPCS)  # any NPC a publish adds is removed after, so the world stays clean
+    # Any NPC/item a publish adds is removed after, so the shared world stays clean.
+    npc_snapshot, item_snapshot = set(NPCS), set(ITEMS)
     yield
     for label in set(NPCS) - npc_snapshot:
         del NPCS[label]
+    for label in set(ITEMS) - item_snapshot:
+        del ITEMS[label]
     reindex_npcs()
     cw._DRAFTS.clear()
     SESSIONS.clear()
@@ -239,7 +243,7 @@ def test_create_is_owner_and_studio_gated():
     room = _real_room()
     # A player in the studio cannot create...
     player = _seat("nosy", "player", location=cw.NPC_STUDIO)
-    assert "cannot shape a person" in handle_command(player, f"create npc X at {room}")
+    assert "cannot make a person" in handle_command(player, f"create npc X at {room}")
     # ...and the owner cannot create from the wrong station.
     owner = _seat("root", "owner", location=cw.CREATOR_WORKSHOP)
     assert "at the NPC Studio" in handle_command(owner, f"create npc X at {room}")
@@ -275,3 +279,25 @@ def test_the_full_create_loop_through_the_tick():
     assert owner.location == cw.PUBLISHING_PORTAL
     handle_command(owner, "publish")
     assert any(NPCS[n]["name"] == "Torvald the Smith" for n in npcs_in(room))
+
+
+def test_the_item_forge_creates_and_publishes_an_item():
+    room = _real_room()
+    owner = _seat("root", "owner", location=cw.ITEM_FORGE)
+    out = handle_command(owner, f"create item Rusty Lantern at {room}")
+    assert "Staged" in out and "Rusty Lantern" in out
+    assert not any(ITEMS[i]["name"] == "Rusty Lantern" for i in items_in(f"room:{room}"))
+    owner.location = cw.PUBLISHING_PORTAL
+    handle_command(owner, "publish")
+    assert any(ITEMS[i]["name"] == "Rusty Lantern" for i in items_in(f"room:{room}"))
+
+
+def test_creating_an_item_is_gated_to_the_item_forge():
+    room = _real_room()
+    owner = _seat("root", "owner", location=cw.NPC_STUDIO)  # wrong station for an item
+    assert "at the Item Forge" in handle_command(owner, f"create item Torch at {room}")
+
+
+def test_create_rejects_an_unknown_kind():
+    owner = _seat("root", "owner", location=cw.NPC_STUDIO)
+    assert "npc or an item" in handle_command(owner, "create dragon Smaug at nowhere")

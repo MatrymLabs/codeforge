@@ -107,11 +107,13 @@ Publishing Portal, **publishes** it to the live world or **rolls it back**.
 - **Law 1 stays intact.** A staged change is inert data. The single validated apply-path
   (`_apply`) is the only thing that mutates canonical state, and only at the owner's explicit
   `publish`. Adding a new editable thing means adding a `kind` to `_apply`, not a new mutation site.
-- **First kind: `create_npc`** (the NPC Studio). `create npc <name> at <room>` validates the room
-  exists, then stages a peaceful townsperson (hp 0, atk 0, never a hidden weapon). `publish` clones
-  it into the live NPC set and re-indexes the room so it appears at once.
-- **Station-gated flow.** Create at the NPC Studio, preview anywhere in the Workshop, publish and
-  rollback at the Publishing Portal, so each station earns its place.
+- **Two kinds so far**, both the same staging move (name a thing, name a room), differing only in
+  the apply-path: `create npc <name> at <room>` (NPC Studio, a peaceful townsperson, hp 0/atk 0) and
+  `create item <name> at <room>` (Item Forge, a plain object a hero can find). Adding a kind is one
+  row in `_CREATABLES` plus one `_apply_*` function; the parse, validation, preview, publish, and
+  rollback are shared.
+- **Station-gated flow.** Create at the matching station (NPC Studio / Item Forge), preview anywhere
+  in the Workshop, publish and rollback at the Publishing Portal, so each station earns its place.
 
 ### Human Keel Record: live-only world mutation
 

@@ -882,8 +882,8 @@ def _build_commands() -> CommandSet:
         Command(
             "create",
             "CMD-04.083",
-            "the NPC Studio: stage a new NPC (owner, in the Creator's Workshop)",
-            lambda s, a: creator_workshop.create_npc(s, a),
+            "the Workshop create tool: stage a new npc or item (owner, in the Creator's Workshop)",
+            lambda s, a: creator_workshop.create(s, a),
             namespace=CORE,
         )
     )
