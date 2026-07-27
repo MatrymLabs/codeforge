@@ -1192,11 +1192,15 @@ the_bough_avenues:
     ember-blooms coaxed rather than kindled. Deeprooted folk go about a life the drowned Reaches never
     knew: unhurried, green, certain the tree will hold. A bough-warden of the city watch keeps the
     ways, and a canopy-child dares the high rails. Highbough's heart lies back east; a wild-ember
-    shrine stands west, and a rope-and-root descent drops south to the forest floor.
+    shrine stands west, and a rope-and-root descent drops south to the forest floor. The canopy MARKET,
+    the grove-COUNCIL hollow, and a rest-hollow INN are grown into the boughs nearby.
   exits:
     east: highbough
     west: the_wildember_shrine
     south: the_understory
+    market: the_canopy_market
+    council: the_grove_council
+    inn: the_rest_hollow
 
 the_wildember_shrine:
   name: The Wild-Ember Shrine
@@ -2384,3 +2388,37 @@ the_buried_reliquary:
     richest untouched make in the north. The dig lies back up.
   exits:
     up: the_salvage_dig
+# HIGHBOUGH INTERIORS (Great Creation Campaign, Phase I, Layer 4). The Verdance's canopy capital,
+# grown rather than built, gets its explorable grown-places: the canopy market, the grove-council
+# hollow (the Deeprooted's decentralized seat), and a rest-hollow for guests. Small capital set, all
+# non-combat canopy life. Noun exits (market/council/inn), each left by `out`.
+# ============================================================================================
+
+the_canopy_market:
+  name: The Canopy-Market
+  desc: |-
+    A market grown into a bough-crook, its stalls living hollows and its wares the Verdance's own:
+    coaxed ember-blooms, shaped living-wood, swamp-craft traded up from Mirefast far below. A canopy-
+    monger keeps a hollow-stall and haggles the green way, slowly. Out returns to the avenues.
+  exits:
+    out: the_bough_avenues
+
+the_grove_council:
+  name: The Grove-Council Hollow
+  desc: |-
+    The seat of the Deeprooted's government, which is barely a government at all: a great grown hollow
+    where the grove-council meets, reader-elders who broker between the people and the living wilds and
+    command no one, because the Deeprooted hold that a living world cannot be ruled, only heard. A
+    council-reader keeps the hollow between moots. The Deeprooted's covenant is grown into the hollow's
+    heartwood. Out returns to the avenues.
+  exits:
+    out: the_bough_avenues
+
+the_rest_hollow:
+  name: The Rest-Hollow
+  desc: |-
+    A guest-hollow grown high in the canopy, screened in living leaf, its beds soft moss and its lamps
+    ember-bloom: the Deeprooted's welcome to the rare outsider they let up into sacred Highbough, safe
+    and green and a mile above the swamp. A hollow-keeper tends the guests. Out returns to the avenues.
+  exits:
+    out: the_bough_avenues
