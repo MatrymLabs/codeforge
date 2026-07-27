@@ -135,6 +135,17 @@ _errand_destinations = _interleave(
 if _settlements:
     register_errands(_settlements, _errand_destinations)
 
+# Delivery contracts: carry a parcel from one town to its trade-partner (parts.world.delivery) -- a
+# two-beat courier archetype (take the parcel, arrive at the destination). The generator also mints
+# the parcel items, placed here at their source towns before the notice board reads them.
+from parts.world.delivery import generate_deliveries  # noqa: E402
+from parts.world.quest import register_specs  # noqa: E402
+
+if _settlements:
+    _delivery_specs, _parcels = generate_deliveries(_settlements)
+    ITEMS.update(_parcels)
+    register_specs(_delivery_specs)
+
 # Zone storylines: a three-beat narrative chain per zone that pairs a town with a dungeon -- reach
 # the dungeon, slay its deep boss, bear word home -- woven from the world's own geography
 # (parts.world.storylines). This is the DEPTH counterpart to the errands' VOLUME. The zone metadata

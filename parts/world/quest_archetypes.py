@@ -17,6 +17,7 @@ from dataclasses import dataclass
 
 from parts.world.bounties import is_bounty
 from parts.world.cull import is_cull
+from parts.world.delivery import is_delivery
 from parts.world.errands import is_errand
 from parts.world.forage import is_forage
 from parts.world.spine import is_spine
@@ -119,6 +120,18 @@ CATALOG: tuple[Archetype, ...] = (
         replay="One-shot per settlement.",
         scope="each settlement, to a distinct destination",
         member=is_errand,
+    ),
+    Archetype(
+        key="delivery",
+        name="Courier Delivery",
+        purpose="The two-beat courier staple: carry a consignment between neighbouring towns.",
+        narrative_role="Trade binds the settlements; goods and word move along the roads.",
+        loop="Take the parcel up in the source town, carry it, and hand it over at the target.",
+        success="Arrive at the destination town carrying the parcel.",
+        rewards="XP scaled to the source town's level.",
+        replay="One-shot per settlement (to its trade-partner).",
+        scope="each settlement, to its level-adjacent trade-partner",
+        member=is_delivery,
     ),
 )
 

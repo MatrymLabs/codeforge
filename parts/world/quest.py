@@ -184,6 +184,13 @@ def register_spine(zones: list[dict[str, object]]) -> None:
     _fold_in([spec] if spec is not None else [])
 
 
+def register_specs(specs: list[QuestSpec]) -> None:
+    """Fold a pre-built list of generated QuestSpecs into the engine. For archetypes whose generator
+    also produces side-artifacts world.py must place (e.g. delivery's parcel items), so world.py
+    builds once, places the artifacts, and folds the specs here. Idempotent."""
+    _fold_in(specs)
+
+
 def _fold_in(specs: list[QuestSpec]) -> None:
     """Register generated QuestSpecs into the engine (skipping any already known) and route their
     triggers. The shared tail of register_bounties/register_errands."""

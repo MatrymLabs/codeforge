@@ -48,6 +48,7 @@ _GAME_SEED = {
     "errands",
     "cull",
     "forage",
+    "delivery",
     "quest_archetypes",
     "storylines",
     "townsfolk",
