@@ -1436,3 +1436,30 @@ heartwood_bark:
     before the question. It will be growing after. Sit in its shade, Forger, and be, for a moment, a
     thing that grew instead of a thing that was made. The Reachwood folded a valley closed to keep this.
     Now you know why.
+
+# --- The Emberdeep content (Great Creation Campaign, Phase I): the Unmade Smith's hammer and the lore
+# --- of the deep where the Forge's fire and the unmaking war instead of cancelling. ---
+unmade_hammer:
+  name: the Unmade Smith's hammer
+  keywords: [hammer, unmade, smith, weapon]
+  location: nowhere
+  slot: weapon
+  mods: {ATK: 30, ACC: 6}  # a hammer that forges and unmakes in the same blow, torn from the Emberdeep's heart
+
+emberdeep_warning:
+  name: a Kollkin warning-brand
+  keywords: [warning, brand, emberdeep, kollkin]
+  location: the_emberdeep_mouth
+  lore: |-
+    A warning struck in iron at the Emberdeep's mouth, in the blunt Kollkin hand, the one place the
+    fire-Forgers admit fear: "DO NOT GO DOWN. We are the Kollkin. We fear nothing that burns, because
+    burning is life and we are its smiths. But this is the one deep even we will not work, because down
+    there the Forge's fire and the Cinderdeep's unmaking do not cancel each other as they should -- they
+    WAR, and the war makes things that are neither alive nor dead, that forge and unmake in the same
+    breath, that cannot tell making from unmaking anymore. That is the one horror a Kollkin understands
+    in the gut: not a cold death, not a drowned one, but a fire that forgot what it was for. The Unmade
+    Smith at the bottom was one of us once -- a Forgeborn, living fire, the proudest thing the Vent-Forges
+    ever made. The deep took it and now it hammers nothing, forever, and calls the nothing a masterwork.
+    Go down if you must, Forger. Take its hammer. But know what you are looking at: not the deep's evil,
+    but ours -- the making that would not stop, that burned past every reason, until it could not tell
+    the difference between forging a world and unmaking one. We struck this brand to remember. Remember."

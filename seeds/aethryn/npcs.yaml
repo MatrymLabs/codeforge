@@ -3334,3 +3334,67 @@ hundred_captain:
   tier: elite  # the Lost Vale's climax (x3 reward): a last-stand captain who never stood down
   drops: [hundred_standard, greater_healing_draught]
   loot: {ember_shard: 5, nothing: 2}
+
+# --- The Emberdeep life (Great Creation Campaign, Phase I): the Kollforge's Cinderdeep, where fire and
+# --- unmaking war. Ashen-things, slag-wraiths, a vein-warden, and the Unmade Smith. Banded 54-62. ---
+emberdeep_ashen_thing:
+  name: an ashen-thing
+  location: the_emberdeep_mouth
+  keywords: [ashenthing, ashen, emberdeep, thing]
+  dialogue:
+    - The ugly child of fire and unmaking works the molten dark: an ashen-thing, neither Forgeborn nor Unforged but both at war in one body, and it turns that war outward at your warmth.
+  hp: 300
+  atk: 36
+  aggressive: true
+  attack_element: FIR
+  resistances: {FIR: Resist, CRS: Resist, WTR: Weak, HLY: Weak}  # fire and unmaking braided; water and light each bite one half
+  level: 54
+  tier: normal  # the Emberdeep mouth, the Kollforge's Cinderdeep access
+  loot: {ember_shard: 10, nothing: 3}
+
+slagfalls_wraith:
+  name: a slag-wraith of the falls
+  location: the_slagfalls
+  keywords: [wraith, slag, slagfalls, deep]
+  dialogue:
+    - A slag-wraith rises through the falling fire-becoming-nothing, a thing of the warring deep, reaching for the heat you still hold whole.
+  hp: 320
+  atk: 38
+  aggressive: true
+  attack_element: FIR
+  resistances: {FIR: Resist, CRS: Resist, WTR: Weak}  # the deep's warring make; water cracks the slag
+  level: 56
+  tier: normal  # the slagfalls, the Emberdeep leveling ground + the unmade-ember gather
+  loot: {ember_shard: 11, unmade_ember: 1, nothing: 2}
+
+fire_vein_warden:
+  name: the vein-warden
+  location: the_fire_vein
+  keywords: [warden, vein, fire, ashen]
+  dialogue:
+    - Ashen Forgework grown to keep the braided current turns on you: the vein-warden, a guardian the warring deep made of fire and unmaking together, and it burns and unmakes in the same blow.
+  hp: 380
+  atk: 42
+  aggressive: true
+  attack_element: FIR
+  resistances: {FIR: Resist, CRS: Resist, WTR: Weak, HLY: Weak}  # the current made warden; water and light each undo a half
+  level: 58
+  tier: elite  # the fire-vein's apex (x3 reward), the gate to the Unmade Forge
+  drops: [greater_healing_draught]
+  loot: {ember_shard: 13, unmade_ember: 2, nothing: 2}
+
+unmade_smith:
+  name: the Unmade Smith
+  location: the_unmade_forge
+  keywords: [smith, unmade, forge, emberdeep]
+  dialogue:
+    - The deep forged it out of a Forgeborn and then unforged it in the forging: the Unmade Smith, hammering a cold anvil over a fire that burns without heat, making nothing, forever. "I forge," it says, in a voice of fire and ash. "I unmake. I FORGE." It cannot tell the difference anymore, and it will not let you keep yours.
+  hp: 620
+  atk: 44
+  aggressive: true
+  attack_element: FIR
+  resistances: {FIR: Immune, CRS: Resist, WTR: Weak, HLY: Weak}  # fire cannot touch it; only water and the made light answer the warring deep
+  level: 62
+  tier: boss  # the Emberdeep's climax (x10 reward): a Forgeborn the deep forged and unforged, a mockery of Venthold's vent
+  drops: [unmade_hammer, greater_healing_draught]
+  loot: {ember_shard: 18, unmade_ember: 5, nothing: 1}

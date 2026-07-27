@@ -284,3 +284,12 @@ the_tidecaves:
   level_min: 3
   level_max: 8
   biome: "sea-cave"
+the_emberdeep:
+  name: The Emberdeep - the Kollforge's Deep
+  rooms: [the_emberdeep_mouth, the_slagfalls, the_fire_vein, the_unmade_forge]
+  reset_mode: empty_only  # the Emberdeep's ashen-things and the Unmade Smith reform once the deep is quiet
+  beats_between: 12
+  region: "The Cinderdeep"
+  level_min: 54
+  level_max: 62
+  biome: "subterranean-molten"

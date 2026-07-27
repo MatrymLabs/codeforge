@@ -1378,9 +1378,11 @@ the_cinder_gorge:
   desc: |-
     A gorge where the flats crack open on a working vent, the air a shimmer of heat and cinder-fall.
     A cinder-drake nests on the far ledge, grown fat on the thermals, jealous of the gorge. This is the
-    edge of the wilds, as deep as a lone Forger should push the flats. The obsidian flats lie back west.
+    edge of the wilds, as deep as a lone Forger should push the flats. The obsidian flats lie back
+    west; the vent-floor cracks open on a drop into the molten deep, down.
   exits:
     west: the_obsidian_flats
+    down: the_emberdeep_mouth
 
 # --- The Cooled Kollhold: a city that died COLD (the Kollkin's deepest fear; a dead-city delve) ---
 the_cooling_shelf:
@@ -2606,3 +2608,54 @@ the_hundred_cairn:
     past an age ago. What the company died guarding is cairned here with them. The field lies back west.
   exits:
     west: the_stillfield
+
+# ============================================================================================
+# THE EMBERDEEP - the Kollforge's Cinderdeep mouth (Great Creation Campaign, Phase I). Every Reach has
+# a mouth into the deep; the Kollforge's is where the Forge's living heat meets the unmaking, and the
+# two do not cancel but WAR - fire that unmakes, unmaking that burns. A molten stratum of the Cinderdeep,
+# distinct from the grey Greydark and the Verdance's Rootdeep. Level-banded 54-62. Vertical spine.
+# ============================================================================================
+
+the_emberdeep_mouth:
+  name: The Emberdeep Mouth
+  desc: |-
+    Below the cinder-gorge the vent-floor gives onto a drop the Kollkin do not speak of: where the
+    Forge's rising heat meets the Cinderdeep's unmaking and the two war instead of cancelling, fire that
+    unmakes and unmaking that burns. An ashen-thing works the molten dark, neither Forgeborn nor Unforged
+    but the ugly child of both. The gorge lies back up; the fire-flooded deep drops on, down.
+  exits:
+    up: the_cinder_gorge
+    down: the_slagfalls
+
+the_slagfalls:
+  name: The Slagfalls
+  desc: |-
+    A cavern of falling slag, where molten rock pours from cracks in the world's floor and cools to grey
+    unmaking before it lands, a waterfall of fire becoming nothing: the near Emberdeep. Slag-wraiths of
+    the warring deep work the falls, and unmade-ember pools where the fire dies for the gathering. The
+    mouth lies back up; the fire-vein runs deeper, down.
+  exits:
+    up: the_emberdeep_mouth
+    down: the_fire_vein
+
+the_fire_vein:
+  name: The Fire-Vein
+  desc: |-
+    A vein of the Forge's own fire running through the Cinderdeep's dark, the deepest a Kollkin Forger
+    dares before the heat and the unmaking together become too much: living fire and dead unmaking braided
+    into one lethal current. A vein-warden of ashen Forgework keeps the current. The slagfalls lie back
+    up; the Emberdeep's heart burns deeper, down.
+  exits:
+    up: the_slagfalls
+    down: the_unmade_forge
+
+the_unmade_forge:
+  name: The Unmade Forge
+  desc: |-
+    The heart of the Emberdeep: a forge the Cinderdeep grew out of the Kollforge's own fire and then
+    unmade in the growing, a mockery of Venthold's proving-vent far above - an anvil of cold slag over a
+    fire that burns without heat, making nothing, forever. The Unmade Smith keeps it, a thing the deep
+    forged out of a Forgeborn and then unforged, hammering a work that will never be. Best it, and what
+    the deep could not finish unmaking is yours. The fire-vein lies back up.
+  exits:
+    up: the_fire_vein
