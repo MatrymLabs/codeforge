@@ -13,7 +13,8 @@ from parts.world.doors import DOORS, barred_door_for
 from parts.world.items import ITEMS, register_prototypes
 from parts.world.npcs import NPCS
 from parts.world.relics import arm_deep_bosses
-from parts.world.seed import SEED_DIR, Room, inspect_world_links, load_rooms
+from parts.world.rumors import seed_rumors
+from parts.world.seed import SEED_DIR, Npc, Room, inspect_world_links, load_rooms
 from parts.world.spiral import extend_world_with_road, load_spiral_config
 from parts.world.townsfolk import load_settlements, populate_settlements
 from parts.world.travel import load_waystones
@@ -68,8 +69,10 @@ if _dungeons is not None:
 # each town's level band (parts.world.townsfolk) -- the economy sink and the towns' life. Merged
 # before the link audit, so each merchant's shop wares are cross-checked like an authored shop.
 _settlements = load_settlements(SEED_DIR / "settlements.yaml")
+_town_npcs: dict[str, Npc] = {}
 if _settlements is not None:
-    NPCS.update(populate_settlements(_settlements))
+    _town_npcs = populate_settlements(_settlements)
+    NPCS.update(_town_npcs)
 
 # Every generated world carries the Creator's Workshop: a Grand Library linked to the spawn, and a
 # concealed Creator's Door onto an isolated administrative instance only the Seed Owner may cross
@@ -123,6 +126,12 @@ from parts.world.seed import load_zones  # noqa: E402 -- WORLD must exist for th
 _story_zones = [dict(z) for z in load_zones(SEED_DIR / "zones.yaml", set(WORLD)).values()]
 if _settlements and _dungeons:
     register_storylines(_story_zones, _settlements, _dungeons)
+
+# Living rumours: give each town resident gossip that NAMES the zone's dungeon and the relic it
+# guards (parts.world.rumors), so the plaza becomes a signpost toward content, not just flavour. The
+# NPCs are already in NPCS (same objects), so mutating them here after the link audit is safe.
+if _town_npcs and _dungeons:
+    seed_rumors(_town_npcs, _story_zones, _dungeons)
 
 # The spawn point is seed-defined, not hardcoded: the FIRST room in rooms.yaml.
 # (first-forge -> "forge"; spiral-ascent -> "spiral_landing".)

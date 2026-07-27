@@ -5331,5 +5331,36 @@
     "aliases": [],
     "created": "2026-07-27",
     "updated": "2026-07-27"
+  },
+  {
+    "designation": "MOD-04.086",
+    "name": "rumors",
+    "status": "active",
+    "function": "seed town residents with gossip that points at the real nearby content (discovery)",
+    "label": "rumors",
+    "file": "parts/world/rumors.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "",
+    "tests": "tests/test_rumors.py",
+    "depends_on": [
+      "seed"
+    ],
+    "related": [
+      "townsfolk",
+      "relics",
+      "delve",
+      "zones",
+      "storylines"
+    ],
+    "reuse": "the AAA-content-density DISCOVERY lever (townsfolk gave town life, this makes it point somewhere): seed_rumors(town_npcs, zones, dungeons) mutates each resident of a dungeon-bearing zone to add a `rumor` topic (and a woven greeting) that NAMES that dungeon and the signature relic it guards (the same name parts.world.relics forges), so `ask <folk> about rumor` guides a player onward. Weaves the world's own geography + loot into NPC talk.",
+    "notes": "Systemic, not hand-crafted: the same town always tells the same tale (deterministic; the relic name is recomputed via forge_relic with the matching dungeon index). Merchants keep to their wares (skipped). Rumour lines vary by resident index. A town in a dungeonless zone keeps its plain small talk (honest silence). aethryn: every settlement in a dungeon zone points at its dungeon + relic.",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-27",
+    "updated": "2026-07-27"
   }
 ]
