@@ -5667,5 +5667,35 @@
     "aliases": [],
     "created": "2026-07-27",
     "updated": "2026-07-27"
+  },
+  {
+    "designation": "MOD-04.097",
+    "name": "dungeon_crawl",
+    "status": "active",
+    "function": "generate 'descend to the heart of a dungeon' contracts (an exploration archetype)",
+    "label": "dungeon_crawl",
+    "file": "parts/world/dungeon_crawl.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "docs/quest_archetypes.md",
+    "tests": "tests/test_dungeon_crawl.py",
+    "depends_on": [
+      "seed"
+    ],
+    "related": [
+      "quest",
+      "quest_archetypes",
+      "delve",
+      "storylines"
+    ],
+    "reuse": "a new quest ARCHETYPE (content campaign slice 1, exploration): generate_crawls(dungeons) posts one two-beat descent per dungeon -- cross the mouth (on_enter the mouth room) then reach the deep boss's chamber (on_enter delve.boss_chamber(mouth), award_xp). Rewards DEPTH itself; the boss's fall and relic are a separate prize. Reuses the delve geography + on_enter, no new machinery. Cataloged in quest_archetypes.",
+    "notes": "is_dungeon_crawl() = 'crawl_' prefix; id = crawl_<mouth>. Distinct from storyline (which slays the boss + returns home): the crawl pays for reaching the depths at all. aethryn: 16 crawls, total quests 1610 -> 1626.",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-27",
+    "updated": "2026-07-27"
   }
 ]

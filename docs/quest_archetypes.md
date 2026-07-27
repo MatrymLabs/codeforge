@@ -32,6 +32,7 @@ and the test twin proves **every** quest a booted world posts classifies to exac
 | --- | --- | --- | --- | --- |
 | `spine` | The Main Road | Arrive in each zone in level order | the whole zone set | campaign, once |
 | `storyline` | Zone Tale | Reach the dungeon, slay its warden, bear word home | each town+dungeon zone | one-shot per zone |
+| `dungeon_crawl` | Dungeon Descent | Cross the mouth, reach the deepest chamber | each dungeon | one-shot per dungeon |
 | `bounty` | Hunt Contract | Fell a named foe | every named foe | one-shot per foe |
 | `cull` | Cull Contract | Fell N of a creature type in a zone | zone x type x count-tier | repeatable-feeling |
 | `forage` | Forage Contract | Gather N of a material in a zone | zone x material x count-tier | repeatable-feeling |
@@ -49,8 +50,9 @@ existing systems (never replacing canonical content).
 **Reuse today's machinery (kill / gather / travel / on_enter chains):**
 - Cull-by-kin -- SHIPPED (culls name each class AND its kin; see the cull row's scope)
 - Delivery -- SHIPPED (the `delivery` row above)
+- Dungeon Crawl -- SHIPPED (the `dungeon_crawl` row above)
 - Collection (bring N of a dropped item), Trade
-- Elite Hunt (a tougher named target), Dungeon Crawl (clear a delve end to end)
+- Elite Hunt (a tougher named target)
 - Treasure Hunt / Treasure Mapping (a placed cache at one of several sites)
 
 **Need new triggers or light systems:**

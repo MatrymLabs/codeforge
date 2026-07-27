@@ -102,6 +102,7 @@ inspect_world_links(WORLD, ITEMS, NPCS)
 # every combatant foe -- side-content at volume, folded into the quest engine (parts.world.quest).
 from parts.world.quest import (  # noqa: E402 -- after NPCS ready
     register_bounties,
+    register_crawls,
     register_culls,
     register_errands,
     register_forages,
@@ -156,6 +157,11 @@ from parts.world.seed import load_zones  # noqa: E402 -- WORLD must exist for th
 _story_zones = [dict(z) for z in load_zones(SEED_DIR / "zones.yaml", set(WORLD)).values()]
 if _settlements and _dungeons:
     register_storylines(_story_zones, _settlements, _dungeons)
+
+# Dungeon-crawl contracts: one descent per dungeon, rewarding reaching the deep boss's chamber
+# (parts.world.dungeon_crawl) -- an exploration archetype over the delve geography.
+if _dungeons:
+    register_crawls(_dungeons)
 
 # Cull contracts: 'fell N of a kind HERE' at volume, the MMO's most common quest (parts.world.cull)
 # -- one per ZONE x each creature type of its biome x count-tier, each SCOPED to its zone so kills

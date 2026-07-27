@@ -175,6 +175,14 @@ def register_forages(zones: list[dict[str, object]]) -> None:
     _fold_in(generate_forages(zones))
 
 
+def register_crawls(dungeons: list[dict[str, object]]) -> None:
+    """Generate one 'descend to the heart of a dungeon' contract per dungeon and fold them into the
+    engine (parts.world.dungeon_crawl). Called by world.py once assembled. Idempotent."""
+    from parts.world.dungeon_crawl import generate_crawls
+
+    _fold_in(generate_crawls(dungeons))
+
+
 def register_spine(zones: list[dict[str, object]]) -> None:
     """Lay the world's main-road spine (the Forgeward Road) and fold it into the engine
     (parts.world.spine). Called by world.py after the world is assembled. Idempotent."""
