@@ -5212,5 +5212,33 @@
     "aliases": [],
     "created": "2026-07-27",
     "updated": "2026-07-27"
+  },
+  {
+    "designation": "MOD-04.082",
+    "name": "feats",
+    "status": "active",
+    "function": "the deeds a hero has earned, derived from what they have already become",
+    "label": "feats",
+    "file": "parts/world/feats.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "",
+    "tests": "tests/test_feats.py",
+    "depends_on": [
+      "session"
+    ],
+    "related": [
+      "titles",
+      "progression"
+    ],
+    "reuse": "the achievements/long-term-goals panel, built DERIVE-DON'T-STORE: a feat is a truth read live off the character's already-persisted state (level/job/subjob/order/coins/rank), never a stored flag. FEATS is a data table of (name, blurb, predicate); earned_feats/feats render earned vs locked with a next-deed nudge. No new persistence, no migration.",
+    "notes": "Named `feats` to avoid the classroom `achievements` verb. Feats needing a NEW counter (foes felled, rooms walked) are a later slice; every feat here rides an existing persisted fact.",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-27",
+    "updated": "2026-07-27"
   }
 ]
