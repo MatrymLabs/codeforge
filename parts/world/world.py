@@ -9,7 +9,9 @@ from itertools import zip_longest
 from parts.world.armory import arm_guardians
 from parts.world.creator_workshop import install_workshop
 from parts.world.delve import generate_delves, load_dungeons, wire_delve_mouths
+from parts.world.delve_sets import forge_delve_sets
 from parts.world.doors import DOORS, barred_door_for
+from parts.world.gearsets import register_sets
 from parts.world.inscriptions import carve_inscriptions
 from parts.world.items import ITEMS, register_prototypes
 from parts.world.npcs import NPCS
@@ -68,6 +70,11 @@ if _dungeons is not None:
     # Carve a readable lore inscription into each dungeon's boss chamber (parts.world.inscriptions):
     # environmental storytelling naming the dungeon + relic, closing the rumour->depths loop.
     ITEMS.update(carve_inscriptions(_dungeons))
+    # Forge a matched three-piece gear SET per dungeon, one piece on each delve trash foe, so
+    # clearing the whole descent earns a set bonus (parts.world.delve_sets): a collect-it loot goal.
+    _set_items, _delve_sets = forge_delve_sets(_dungeons, _delve_npcs)
+    register_prototypes(_set_items)
+    register_sets(_delve_sets)
 
 # Populate the map's settlements (seeds/<world>/settlements.yaml) with townsfolk and a merchant at
 # each town's level band (parts.world.townsfolk) -- the economy sink and the towns' life. Merged

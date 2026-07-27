@@ -5421,5 +5421,35 @@
     "aliases": [],
     "created": "2026-07-27",
     "updated": "2026-07-27"
+  },
+  {
+    "designation": "MOD-04.089",
+    "name": "delve_sets",
+    "status": "active",
+    "function": "forge a matched gear set per dungeon, dropped across its delve (collect-by-clearing)",
+    "label": "delve_sets",
+    "file": "parts/world/delve_sets.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "",
+    "tests": "tests/test_delve_sets.py",
+    "depends_on": [
+      "seed"
+    ],
+    "related": [
+      "delve",
+      "relics",
+      "gearsets",
+      "armory"
+    ],
+    "reuse": "the AAA-content-density ITEMIZATION-SET lever: forge_delve_sets(dungeons, npcs) forges three themed armour pieces per dungeon (head/body/arm, distinct slots), hangs one on each of the delve's three trash foes as a guaranteed drop, and declares a GearSet whose bonus fires when all three are worn -- so clearing the whole descent earns a set (the boss relic is a separate prize). Reuses the existing set-bonus engine via new gearsets.register_sets. Named for the dungeon (relics.iconic_word).",
+    "notes": "Systemic, not hand-crafted: the same dungeon always yields the same set (deterministic). is_delve_set_piece() = 'delveset_' prefix; set label is delveset_<dungeon_room>. Pieces are epic-rarity; bonus (DEF/EVA) scales with the dungeon level. A shallow delve (< 2 trash foes) forms no set. Made relics._iconic_word public (iconic_word) so the set name matches the relic. aethryn: 16 dungeon sets.",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-27",
+    "updated": "2026-07-27"
   }
 ]

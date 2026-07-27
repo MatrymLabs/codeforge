@@ -15,6 +15,14 @@ from parts.world.seed import SEED_DIR, GearSet, load_sets
 SETS: dict[str, GearSet] = load_sets(SEED_DIR / "sets.yaml")
 
 
+def register_sets(new: dict[str, GearSet]) -> None:
+    """Fold GENERATED gear sets into the live registry (like items.register_prototypes for loot). A
+    generator (parts.world.delve_sets) forges sets from the assembled world after this module's
+    import-time load; this makes their bonuses count. Later labels win on a clash, but generated set
+    labels are namespaced so they never collide with the seed's authored sets."""
+    SETS.update(new)
+
+
 def active_set_bonuses(
     worn_prototypes: set[str], sets: dict[str, GearSet] | None = None
 ) -> dict[str, int]:

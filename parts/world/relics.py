@@ -46,7 +46,7 @@ def is_relic(item_label: str) -> bool:
     return item_label.startswith(RELIC_PREFIX)
 
 
-def _iconic_word(dungeon_room: str) -> str:
+def iconic_word(dungeon_room: str) -> str:
     """The evocative word a relic borrows from its dungeon (its label's first non-article word)."""
     words = [w for w in dungeon_room.split("_") if w and w not in _ARTICLES]
     return (words[0] if words else dungeon_room).capitalize()
@@ -57,7 +57,7 @@ def forge_relic(dungeon_room: str, dungeon_name: str, level: int, idx: int) -> t
     index, a legendary floor, and a lore line. Returns (label, item). Deterministic."""
     slot, primary, secondary, nouns = _SLOTS[idx % len(_SLOTS)]
     noun = nouns[(idx // len(_SLOTS)) % len(nouns)]
-    core = _iconic_word(dungeon_room)
+    core = iconic_word(dungeon_room)
     big = max(
         4, level // 2
     )  # a legendary floor: well above the generic gear the affix factory rolls
