@@ -7,6 +7,7 @@ so a kill in one zone never advances another zone's board. Refusal: a biome-less
 
 from __future__ import annotations
 
+from parts.world.bestiary import cullable_types
 from parts.world.cull import (
     CULL_PREFIX,
     generate_culls,
@@ -29,10 +30,12 @@ _ZONES = [
 def test_each_zone_posts_a_cull_per_type_per_tier():
     culls = generate_culls(_ZONES)
     assert all(is_cull(q["id"]) for q in culls)
-    # temperate-meadow has 4 types, glacier-waste 4 types, 3 tiers each; the biome-less zone: none
-    assert len(culls) == (4 + 4) * 3
+    # each type is a class AND its kin (canid, wolf, hound, jackal, ...); 3 tiers each; void: none
+    expected = (len(cullable_types("temperate-meadow")) + len(cullable_types("glacier-waste"))) * 3
+    assert len(culls) == expected
     ids = {q["id"] for q in culls}
-    assert f"{CULL_PREFIX}veridia_wild_canid_6" in ids
+    assert f"{CULL_PREFIX}veridia_wild_canid_6" in ids, "the class is a target"
+    assert f"{CULL_PREFIX}veridia_wild_wolf_6" in ids, "and so is each kin -- a distinct quest"
 
 
 def test_a_cull_is_an_n_step_chain_that_counts_up():
