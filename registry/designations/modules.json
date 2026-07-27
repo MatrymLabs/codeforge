@@ -5041,5 +5041,31 @@
     "aliases": [],
     "created": "2026-07-27",
     "updated": "2026-07-27"
+  },
+  {
+    "designation": "MOD-04.076",
+    "name": "coinage",
+    "status": "active",
+    "function": "denominate the purse into a readable, tiered currency (Aethryn's ember-coin)",
+    "label": "coinage",
+    "file": "parts/world/coinage.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "docs/design/economy.md",
+    "tests": "tests/test_coinage.py",
+    "depends_on": [],
+    "related": [
+      "shop",
+      "combat"
+    ],
+    "reuse": "the Economy campaign's currency system (PART II): an original ember-struck coinage (Cinder->Spark->Ember->Forgemark, x100 steps) that DENOMINATES the existing persisted `coins` scalar for display without changing wealth. Coinage is a data-driven tier table (a seed can define its own coin); AETHRYN_COINAGE is the default; format()/purse() are pure. Wired into wallet, shop (render/buy/sell), and combat's kill reward.",
+    "notes": "Reuse-not-replace per the campaign PRIMARY RULE: the atomic coins int stays canonical/persisted; this only formats it. Inflation control is the sinks (shops/repairs/taxes), a separate concern. Validates the tier table (base per==1, ascending, unique names/symbols).",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-27",
+    "updated": "2026-07-27"
   }
 ]

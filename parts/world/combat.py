@@ -21,6 +21,7 @@ from parts.shelf import affixes
 from parts.shelf.reward_curve import jp_for_kill, xp_for_kill
 from parts.shelf.weighted_table import WeightedTable
 from parts.world import items
+from parts.world.coinage import purse
 from parts.world.combat_clock import advance as advance_clock
 from parts.world.encounter_log import witness
 from parts.world.engineer import emergency_repair
@@ -314,7 +315,7 @@ def land_hit(session: Session, npc: Npc, nid: str, dmg: int) -> tuple[bool, str]
             rewards = f"{rewards}\n{extra}"
     coins = _coin_reward(npc)
     session.coins += coins
-    rewards = f"{rewards}\nYou find {coins} coins. (purse: {session.coins})"
+    rewards = f"{rewards}\nYou find {purse(coins)}. (purse: {purse(session.coins)})"
     # guaranteed drops, then one weighted loot roll -- both spawn fresh instances on the floor
     haul = "\n".join(
         part for part in (_spawn_drops(session, npc), _roll_loot(session, npc)) if part

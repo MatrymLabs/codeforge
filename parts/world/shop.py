@@ -12,8 +12,14 @@ Refuses loud and early: no shop here, an item not for sale, an empty purse, a th
 from __future__ import annotations
 
 from parts.world import items
+from parts.world.coinage import AETHRYN_COINAGE, purse
 from parts.world.npcs import NPCS, npcs_in
 from parts.world.session import Session, sentence_case
+
+
+def _price(coins: int) -> str:
+    """A ware's price in compact coinage (e.g. '12c', '1s 60c')."""
+    return AETHRYN_COINAGE.format(coins, compact=True)
 
 
 def _shopkeeper(room_id: str) -> str | None:
@@ -31,17 +37,17 @@ def render_shop(session: Session) -> str:
         return "There is no one selling anything here."
     npc = NPCS[nid]
     shop = npc["shop"]
-    lines = [f"{sentence_case(npc['name'])}'s wares (your purse: {session.coins} coins):"]
+    lines = [f"{sentence_case(npc['name'])}'s wares (your purse: {purse(session.coins)}):"]
     sells = shop.get("sells", {})
     if sells:
         lines.append("  For sale (buy <item>):")
         for proto, price in sells.items():
-            lines.append(f"    {items.PROTOTYPES[proto]['name']} -- {price} coins")
+            lines.append(f"    {items.PROTOTYPES[proto]['name']} -- {_price(price)}")
     buys = shop.get("buys", {})
     if buys:
         lines.append("  Buying (sell <item>):")
         for proto, price in buys.items():
-            lines.append(f"    {items.PROTOTYPES[proto]['name']} -- {price} coins")
+            lines.append(f"    {items.PROTOTYPES[proto]['name']} -- {_price(price)}")
     return "\n".join(lines)
 
 
@@ -66,12 +72,12 @@ def buy(session: Session, word: str) -> str:
         return "That is not for sale here. Try SHOP to see the wares."
     price = sells[proto]
     if session.coins < price:
-        return f"You cannot afford that ({price} coins; your purse holds {session.coins})."
+        return f"You cannot afford that ({_price(price)}; your purse holds {purse(session.coins)})."
     session.coins -= price
     items.clone(proto, "player")
     _save(session)
     name = items.PROTOTYPES[proto]["name"]
-    return f"You buy {name} for {price} coins. (purse: {session.coins})"
+    return f"You buy {name} for {_price(price)}. (purse: {purse(session.coins)})"
 
 
 def sell(session: Session, word: str) -> str:
@@ -96,7 +102,7 @@ def sell(session: Session, word: str) -> str:
             del session.equipped[slot]  # sold from a slot: unequip it too
     session.coins += price
     _save(session)
-    return f"You sell {name} for {price} coins. (purse: {session.coins})"
+    return f"You sell {name} for {_price(price)}. (purse: {purse(session.coins)})"
 
 
 def _save(session: Session) -> None:
