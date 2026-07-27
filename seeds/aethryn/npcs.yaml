@@ -2768,3 +2768,104 @@ stilt_mire_devourer:
   tier: elite  # Mirefast's under-stilt prize (x3 reward): what the town feeds and will not face
   drops: [mirefast_lost_purse, greater_healing_draught]
   loot: {ember_shard: 6, emberbloom: 2, nothing: 2}
+
+# --- Venthold life (Great Creation Campaign, Phase I): the Vent-Forge fortress-guild. Non-combat
+# --- fortress folk + the magma-moat and proving-vent foes. Banded 52-58. ---
+gate_marshal:
+  name: the gate-marshal of Venthold
+  location: venthold
+  keywords: [marshal, gate, venthold, warden]
+  dialogue:
+    - '"State your business at the muster-gate, Forger. Venthold does not care where you were born or what rank the capital gave you -- we care whether you flinch. Prove on the floor, work the vent-forges, and if you would wear our mark, take it the only way we grant it: down the proving-vent, alone, in the fire. The Wardens call us reckless. We call them cold."'
+  topics:
+    rumor:
+      - '"The Crucible-Warden holds the bottom of the proving-vent -- a Forgeborn we set there to prove our own and never recalled, grown vast on the hottest Ember in the world. Best it and Venthold''s mark is yours by right, not our leave. Fail it and the vent keeps you. Most who go down come up humbler. Some do not come up. That is the point."'
+
+proving_master:
+  name: the proving-master
+  location: the_proving_floor
+  keywords: [master, proving, floor, mentor]
+  dialogue:
+    - '"Work the live Ember and do not flinch when the vent breathes -- that is the whole of the proving-floor, and it is harder than it sounds, because the flinch is not in your hand, it is in your nerve. The capital teaches Forgers to be careful. We teach them to be certain. There is a difference, and the vent knows it even when you do not."'
+
+vent_forge_master:
+  name: a Vent-Forge master
+  location: the_vent_forges
+  keywords: [master, forge, vent, smith]
+  dialogue:
+    - '"Feel that heat, Forger? That is Ember as it comes from the Forge itself, not a cooled scrap the capital calls raw. We work it glowing and waste none. Buy vent-forged if you can afford it -- it holds an edge the cold forges only dream of, and takes a temper only living fire can give."'
+  shop:
+    sells:
+      greater_healing_draught: 36
+      vent_forged_blade: 180
+      emberglass: 22
+    buys:
+      ember_shard: 7
+      emberglass: 14
+
+vent_quartermaster:
+  name: the Vent-Armory quartermaster
+  location: the_vent_armory
+  keywords: [quartermaster, armory, venthold, smith]
+  dialogue:
+    - '"Fortress make, Forger, and the fortress makes the best in the Kollforge. Vent-forged steel, tempered in living fire, racked and ready. I fit our proven first, but overstock goes to any who pays in coin or courage. Out here courage is the harder currency, so mostly I take coin."'
+  shop:
+    sells:
+      greater_healing_draught: 36
+      vent_forged_plate: 200
+    buys:
+      ember_shard: 7
+      emberglass: 14
+
+vent_guildmaster:
+  name: the Vent-Forge guildmaster
+  location: the_guildmaster_hall
+  keywords: [guildmaster, master, hall, ventforge]
+  dialogue:
+    - '"So the capital sent another careful Forger to see the reckless ones. Sit in the heat, then, and hear it plain: the Wardens hold the craft should be feared. We hold that fear is just cowardice that learned to dress well. The only true making is making at the source''s edge, where the world is still hot enough to change. Read the creed on the wall. Then go prove you mean it."'
+
+magma_moat_kin:
+  name: a magma-kin
+  location: the_magma_moat
+  keywords: [magmakin, magma, moat, molten]
+  dialogue:
+    - A magma-kin hauls itself up the moat's stone lip, welded from the running fire, jealous of the emberglass cooling at the edge.
+  hp: 250
+  atk: 33
+  aggressive: true
+  attack_element: FIR
+  resistances: {FIR: Resist, WTR: Weak}  # a thing of the moat's fire; water cracks it
+  level: 52
+  tier: normal  # Venthold's magma-moat: a fortress-perimeter leveling ground + the emberglass gather
+  loot: {ember_shard: 9, emberglass: 1, nothing: 2}
+
+vent_forgeling:
+  name: a vent-forgeling
+  location: the_proving_vent
+  keywords: [forgeling, vent, proving, forgeborn]
+  dialogue:
+    - Living Forgework grown in the vent's throat blocks the descent: a vent-forgeling, lesser kin of the deep Forgeborn, set here by the fortress to turn back the unready.
+  hp: 300
+  atk: 36
+  aggressive: true
+  attack_element: FIR
+  resistances: {FIR: Immune, WTR: Weak}  # vent-grown Forgework; only water bites the living fire
+  level: 54
+  tier: normal  # the proving-vent descent, the fortress dungeon's outer tier
+  loot: {ember_shard: 10, emberglass: 2, nothing: 2}
+
+vent_crucible_warden:
+  name: the Crucible-Warden
+  location: the_vent_crucible
+  keywords: [warden, crucible, vent, forgeborn]
+  dialogue:
+    - The crucible-fire gathers itself into a guardian: the Crucible-Warden, a Forgeborn the Vent-Forges set at the bottom of the proving-vent an age ago and never recalled, grown vast on the hottest Ember in the world. "Prove it," it says, in a voice of pouring fire, "or feed it."
+  hp: 560
+  atk: 40
+  aggressive: true
+  attack_element: FIR
+  resistances: {FIR: Immune, WTR: Weak}  # the crucible's own fire made warden; water is its one answer
+  level: 58
+  tier: boss  # Venthold's proving-vent climax (x10 reward): earn the fortress's mark by right, not rank
+  drops: [venthold_mark, greater_healing_draught]
+  loot: {ember_shard: 16, emberglass: 5, nothing: 1}

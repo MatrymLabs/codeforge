@@ -706,6 +706,7 @@ emberkoll:
     north: the_anvil_vents
     west: the_caldera_market
     down: the_cooling_shelf
+    south: venthold
 
 the_anvil_vents:
   name: The Anvil-Vents
@@ -1999,3 +2000,103 @@ the_stilt_deeps:
     back up.
   exits:
     up: mirefast
+
+# ============================================================================================
+# VENTHOLD - the Vent-Forge fortress-guild (Great Creation Campaign, Phase I; Continental Atlas VI
+# names it, unbuilt until now). The Kollforge's second settlement and the Free Forges' most radical
+# wing: a fortress built over a working vent, part guild and part cult, where Kollkin PROVE themselves
+# in living fire. A fortress footprint (muster-gate, proving-floor, vent-forges, armory, magma-moat,
+# guildmaster's hall) + a proving-vent dungeon. Noun exits (proving/forge/hall/armory/moat). Banded 52-58.
+# ============================================================================================
+
+venthold:
+  name: Venthold
+  desc: |-
+    South of Emberkoll a fortress straddles a working vent: Venthold, seat of the Vent-Forges, part
+    guild and part cult, where the boldest Kollkin come to work the rawest Ember in the world and count
+    a cooled hand a dead one. Its muster-gate never closes; its watch-fires are the vent itself. A gate-
+    marshal takes your measure. Emberkoll lies back north; the PROVING-floor, the vent-FORGES, the
+    ARMORY, and the guildmaster's HALL open off the muster-yard, a magma-MOAT rings the walls east, and
+    the proving-vent drops down.
+  exits:
+    north: emberkoll
+    east: the_magma_moat
+    moat: the_magma_moat
+    down: the_proving_vent
+    proving: the_proving_floor
+    forge: the_vent_forges
+    forges: the_vent_forges
+    armory: the_vent_armory
+    hall: the_guildmaster_hall
+
+the_proving_floor:
+  name: The Proving-Floor
+  desc: |-
+    A floor of black glass over the vent's own heat, where a Kollkin earns Vent-Forge rank the only way
+    Venthold recognizes: by working live Ember on the proving-floor while the vent breathes under the
+    glass, and not flinching. A proving-master watches every strike for the flinch. Out returns to the
+    muster-yard.
+  exits:
+    out: venthold
+
+the_vent_forges:
+  name: The Vent-Forges
+  desc: |-
+    The working heart of the fortress: forge-stalls set directly over the vent-mouths, where the raw
+    Ember wells up too hot for any surface smithy and the Vent-Forgers work it glowing, wasting nothing,
+    fearing nothing. A forge-master keeps the hottest stall and sells what the vent gives up. Out returns
+    to the muster-yard.
+  exits:
+    out: venthold
+
+the_vent_armory:
+  name: The Vent-Armory
+  desc: |-
+    Venthold's armory, racked with the fortress's own make: vent-forged steel that holds an edge no
+    cooled forge can match, and takes a temper only living fire can give. A quartermaster fits the
+    fortress's Forgers and sells the overstock to any who can pay in coin or courage. Out returns to the
+    muster-yard.
+  exits:
+    out: venthold
+
+the_guildmaster_hall:
+  name: The Guildmaster's Hall
+  desc: |-
+    The hall of the Vent-Forge guildmaster, raised over the vent's brightest throat, hung with the
+    masterworks of a hundred proven Forgers: the seat of the Free Forges' most radical wing, who hold
+    that the Wardens' caution is cowardice and the only true making is making at the source's edge. The
+    guildmaster holds court in the heat. The Vent-Forge creed is struck in living metal on the wall. Out
+    returns to the muster-yard.
+  exits:
+    out: venthold
+
+the_magma_moat:
+  name: The Magma-Moat
+  desc: |-
+    Venthold's defense is not a wall of stone but a moat of running lava, crossed on a single retractable
+    span and patrolled on the fortress side by the things that live in the heat: magma-kin welded from
+    the moat's own fire. Raw vent-Ember cools to emberglass along the moat's stone lip for anyone bold
+    enough to gather at the fire's edge. The muster-yard lies back west.
+  exits:
+    west: venthold
+
+the_proving_vent:
+  name: The Proving-Vent
+  desc: |-
+    Below the fortress the proving-vent drops into the Kollforge's living throat: the deep test, where a
+    Forger who would wear Venthold's mark descends alone into rising heat to face what the vent has
+    made. A vent-forgeling, living Forgework grown in the throat, keeps the upper vent. The muster-yard
+    lies back up; the vent's crucible burns deeper, down.
+  exits:
+    up: venthold
+    down: the_vent_crucible
+
+the_vent_crucible:
+  name: The Vent-Crucible
+  desc: |-
+    The bottom of the proving-vent, a crucible-chamber where the Kollforge's raw fire pools and the air
+    itself is a forge: the final proving, kept by the Crucible-Warden, a Forgeborn the Vent-Forges set
+    here and never recalled, grown vast on a lifetime of the hottest Ember in the world. Best it and
+    Venthold's mark is yours by right, not rank. The proving-vent lies back up.
+  exits:
+    up: the_proving_vent

@@ -1187,3 +1187,41 @@ deeprooted_creed:
     says the making should stop. We say a thing you can only make by killing what was already living
     was never yours to make. Trade with us, guest. Learn the living faith. And when the swamp asks who
     you are - and it will - answer honestly, because it can always tell, and it is always listening."
+
+# --- Venthold content (Great Creation Campaign, Phase I): the fortress's vent-forged make (shop), the
+# --- proven Forger's mark (boss), and the Vent-Forge creed struck in living metal. ---
+vent_forged_blade:
+  name: a vent-forged blade
+  keywords: [blade, ventforged, vent, weapon]
+  location: nowhere
+  slot: weapon
+  mods: {ATK: 24, ACC: 5}  # Venthold make: raw vent-Ember worked glowing, an edge the cold forges only dream of
+
+vent_forged_plate:
+  name: vent-forged plate
+  keywords: [plate, ventforged, vent, armor]
+  location: nowhere
+  slot: body
+  mods: {DEF: 20, "MAG DEF": 8}  # fortress steel tempered in living fire; the best body-make in the Kollforge
+
+venthold_mark:
+  name: the mark of Venthold
+  keywords: [mark, venthold, sigil, proven]
+  location: nowhere
+  slot: accessory_2
+  mods: {ATK: 8, ACC: 6}  # the Vent-Forge fortress mark, taken by right off the Crucible-Warden, not granted by rank
+
+ventforge_creed:
+  name: the Vent-Forge creed
+  keywords: [creed, ventforge, hall, metal]
+  location: the_guildmaster_hall
+  lore: |-
+    Struck in living metal on the guildmaster's wall, still warm to the touch: "FEAR IS COWARDICE THAT
+    LEARNED TO DRESS WELL. The Wardens hold the craft should be feared, the Silent Anvil hold it should
+    be stopped, the frozen north keeps its dead as proof. We are the Vent-Forges, and we hold the
+    opposite of all of them: that the only true making is making at the source's edge, where the world
+    is still hot enough to change, and that a Forger who will not work in living fire is not careful, he
+    is finished. The capital calls us reckless. Let them. Reckless is what the cautious call the brave
+    when the brave are proven right. Work the vent. Do not flinch. And when they tell you the world is
+    too dangerous to keep making -- and they will, in the north and the halls and the cold -- remember
+    that everything they are afraid of losing, someone reckless made first, at an edge exactly this hot."
