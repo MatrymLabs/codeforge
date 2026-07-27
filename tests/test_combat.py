@@ -416,8 +416,8 @@ def test_load_npcs_refuses_a_lethal_peaceful_foe(tmp_path):
 def test_the_aethryn_boss_is_lethal():
     seeds = Path(__file__).resolve().parent.parent / "seeds"
     aethryn_npcs = load_npcs(seeds / "aethryn" / "npcs.yaml")
-    assert aethryn_npcs["cinder_wight"].get("lethal") is True  # a real boss
-    assert aethryn_npcs["reach_wolf"].get("lethal") is not True  # the road foe stays forgiving
+    assert aethryn_npcs["netharions_throne_guardian"].get("lethal") is True  # a real boss
+    assert aethryn_npcs["veridia_warden"].get("lethal") is not True  # a townsfolk is not lethal
 
 
 def test_reward_amounts_are_flat_for_a_levelless_foe():

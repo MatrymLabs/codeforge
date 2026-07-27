@@ -17,6 +17,7 @@ from parts.world.seed import (
     load_npcs,
     load_quest,
     load_rooms,
+    load_zones,
 )
 
 FIRST_FORGE = SEEDS_ROOT / "first-forge"
@@ -34,17 +35,6 @@ def test_flagship_aethryn_is_installed():
     assert "aethryn" in available_seeds()
 
 
-def test_aethryn_passes_every_loader_gate_and_spawns_on_the_shore():
-    rooms = load_rooms(AETHRYN / "rooms.yaml")
-    # The world bible's Kindlands Coast: the first room is the spawn, no hardcoded start.
-    assert next(iter(rooms)) == "the_waking_shore"
-    assert rooms["cinderhearth_square"]["exits"]["down"] == "cold_cellar"
-    load_items(AETHRYN / "items.yaml")  # gates: valid labels, present location
-    load_npcs(AETHRYN / "npcs.yaml")
-    jobs = load_jobs(AETHRYN / "jobs.yaml")
-    assert "emberwright" in jobs and jobs["pathfinder"]["stats"]["speed"] == 14
-
-
 def test_aethryn_every_exit_and_placement_resolves():
     rooms = load_rooms(AETHRYN / "rooms.yaml")
     for label, room in rooms.items():
@@ -56,81 +46,6 @@ def test_aethryn_every_exit_and_placement_resolves():
         assert item["location"].split(":")[-1] in rooms, f"item {label} floats nowhere"
     for label, npc in load_npcs(AETHRYN / "npcs.yaml").items():
         assert npc["location"].split(":")[-1] in rooms, f"npc {label} floats nowhere"
-
-
-def test_aethryn_no_room_is_meaninglessly_empty():
-    """Every room holds content -- a foe, an NPC, or a deliberate exception (the spawn, a rest-stop,
-    a transit hub, or a puzzle room whose content IS the puzzle). Guards against a wilderness or
-    dungeon room shipping empty of anything to find, now that the empty rooms are populated."""
-    rooms = load_rooms(AETHRYN / "rooms.yaml")
-    npcs = load_npcs(AETHRYN / "npcs.yaml")
-    occupied = {npc["location"].split(":")[-1] for npc in npcs.values()}
-    # rooms allowed to hold no foe or NPC, each for a stated reason
-    allowed_empty = {
-        "the_waking_shore",  # the spawn: a fresh Forger is not ambushed at birth
-        "wayfarers_rest",  # a rest-stop on the Ember-road: a safe haven by design
-        "old_reach_bridge",  # a mend-the-span puzzle room; its content is the repair
-        "cold_cellar",  # the jumbled-Forge puzzle room; its content is ordering the steps
-        "the_deepwater_berth",  # a far-ferry transit hub (its captains cry the crossings)
-    }
-    empty = {r for r in rooms if r not in occupied} - allowed_empty
-    assert not empty, f"wilderness/dungeon rooms shipped empty of content: {sorted(empty)}"
-    # the ruin's flavour names a salvage-wraith; it must actually exist there (no broken promise)
-    assert npcs["salvage_wraith"]["location"] == "the_scoured_ruin"
-
-
-def test_aethryn_wren_keeps_a_coast_shop_so_act_one_has_an_economy():
-    """The starting coast now has a functional till: Wren sells heals and a starter blade, so a
-    fresh Forger can spend the coins the wolves drop instead of reaching mid-game for a shop."""
-    npcs = load_npcs(AETHRYN / "npcs.yaml")
-    wren = npcs["wren"]
-    assert "shop" in wren, "the coast town smith keeps no shop -- Act 1 has no economy"
-    sells = wren["shop"]["sells"]
-    assert sells.get("healing_draught") and sells.get("mana_draught")  # heals on the coast
-    assert "cinder_hammer" in sells  # a starter weapon you can buy, not only delve for
-    assert wren["shop"]["buys"].get("ember_shard")  # and coast salvage has a buyer
-
-
-def test_aethryn_cities_have_citizens_who_carry_rumors():
-    """The capitals feel lived-in, not just a trader and a lore-keeper: ambient citizens populate
-    the hubs, and each carries a `rumor` topic that points a Forger toward nearby content (a
-    side-quest, a treasure, a boss). Citizens are non-combat: they populate and guide, not fight."""
-    npcs = load_npcs(AETHRYN / "npcs.yaml")
-    rooms = set(load_rooms(AETHRYN / "rooms.yaml"))
-    citizens = [
-        "wharf_dockhand",
-        "coast_child",
-        "forge_apprentice",
-        "city_guard",
-        "grove_tender",
-        "vent_hand",
-        "sky_pilgrim",
-        "rime_watcher",
-    ]
-    for c in citizens:
-        npc = npcs[c]
-        assert "level" not in npc, f"{c} is a citizen, not a combatant"
-        assert npc["location"].split(":")[-1] in rooms, f"{c} stands nowhere"
-        rumor = npc.get("topics", {}).get("rumor")
-        assert rumor and all(isinstance(line, str) and line for line in rumor), f"{c} has no rumor"
-    # populated beyond the trader/keeper: at least four distinct hub rooms gain a citizen
-    hub_rooms = {npcs[c]["location"].split(":")[-1] for c in citizens}
-    assert len(hub_rooms) >= 4
-
-
-def test_aethryn_capital_npcs_hold_real_conversations():
-    """The capital feels lived-in: its lore, order, and gate keepers answer `ask about <topic>`, so
-    a curious player learns the world and the Orders instead of reading cycling flavour barks."""
-    npcs = load_npcs(AETHRYN / "npcs.yaml")
-    ilya = npcs["grandforge_loremaster"]["topics"]
-    assert {"unforging", "seed", "spiral"} <= set(ilya)  # the lore keeper explains the world
-    recruiter = npcs["order_recruiter"]["topics"]
-    assert {"making", "warcraft", "knowing", "gathering"} <= set(recruiter)  # teaches the 4 Orders
-    keeper = npcs["warden_keeper"]["topics"]
-    assert "spiral" in keeper  # the gate keeper describes the climb ahead
-    # every topic is a non-empty list of reply lines (the loader gate, re-asserted for content)
-    for who in (ilya, recruiter, keeper):
-        assert all(lines and all(isinstance(x, str) for x in lines) for lines in who.values())
 
 
 def test_aethryn_elemental_abilities_carry_their_element():
@@ -157,21 +72,6 @@ def test_aethryn_elemental_abilities_carry_their_element():
         assert ab[label].get("element") == element, f"{label} should strike with {element}"
 
 
-def test_aethryn_side_quests_vary_beyond_kill_bounties():
-    """Side content has variety, not just the hunt-contracts on the bounty board: a GATHER quest
-    (advance by picking up wild ember) and a DISCOVERY quest (advance by reaching the deepest
-    floor), each a different verb from felling a foe."""
-    from parts.world.seed import load_quest
-
-    harvest = load_quest(AETHRYN / "quests" / "ember_harvest.yaml")
-    assert harvest is not None and harvest["steps"][0]["on_take"] == "ember_shard"  # gather
-    deep = load_quest(AETHRYN / "quests" / "sound_the_deep.yaml")
-    assert deep is not None and deep["steps"][0]["on_enter"] == "the_cinderheart"  # discovery
-    # neither side quest advances on a defeat -- they reward gathering and exploring
-    for spec in (harvest, deep):
-        assert not any(s.get("on_defeat") for s in spec["steps"])
-
-
 def test_aethryn_recipes_forge_real_items_from_real_materials():
     """The maker's loop is real content: the flagship ships recipes, and every recipe forges a real
     item from real materials (a cross-check, so a recipe can never make or need a phantom item)."""
@@ -184,67 +84,6 @@ def test_aethryn_recipes_forge_real_items_from_real_materials():
         assert recipe["makes"] in item_labels, f"recipe {label} makes unknown {recipe['makes']}"
         for material in recipe["inputs"]:
             assert material in item_labels, f"recipe {label} needs unknown material {material}"
-
-
-def test_aethryn_cradle_offers_a_slot_complete_armor_set():
-    """A world you can walk needs gear to wear: the Emberreach cradle ships the Emberhide set, a
-    slot-complete starter armor kit (head + body + arm) dropped by the coast beasts, so a fresh
-    Forger can outfit every armor slot before leaving the cradle (armor was the thin slot)."""
-    items = load_items(AETHRYN / "items.yaml")
-    emberhide = {"emberhide_hood": "head", "emberhide_jerkin": "body", "emberhide_wraps": "arm"}
-    for label, slot in emberhide.items():
-        assert label in items, f"the Emberhide set is missing {label}"
-        assert items[label]["slot"] == slot, f"{label} should fill the {slot} slot"
-        assert items[label]["mods"], f"{label} grants no stats"  # a real piece, not a flavour prop
-    # every piece is obtainable in the cradle: dropped by an early coast beast, not stranded
-    npcs = load_npcs(AETHRYN / "npcs.yaml")
-    assert "emberhide_hood" in npcs["reach_wolf"]["drops"]
-    assert "emberhide_jerkin" in npcs["thornback_boar"]["drops"]
-    assert "emberhide_wraps" in npcs["tide_crawler"]["drops"]
-    # the cradle now covers all three ARMOR slots between its own drops (the point of this set)
-    cradle_foes = ("reach_wolf", "thornback_boar", "tide_crawler")
-    cradle_slots = {
-        items[d]["slot"] for f in cradle_foes for d in npcs[f].get("drops", []) if items[d]["slot"]
-    }
-    assert {"head", "body", "arm"} <= cradle_slots
-
-
-def test_aethryn_every_reach_offers_a_slot_complete_loadout():
-    """The wide gear pass: EVERY Reach drops a slot-complete GEAR loadout (weapon + head + body +
-    arm) from its own foes, so a Forger can re-outfit their whole kit at every stage of the 1-300
-    journey. Armor was the thin slot (the world had 4 pieces total) and five Reaches had no weapon;
-    this pins both holes closed everywhere, measured through the `completeness` shelf part."""
-    npcs = load_npcs(AETHRYN / "npcs.yaml")
-    items = load_items(AETHRYN / "items.yaml")
-    # each Reach, named by the foes whose drops should cover a full loadout between them
-    reach_foes = {
-        "Emberreach cradle": [
-            "reach_wolf",
-            "thornback_boar",
-            "tide_crawler",
-            "cinder_wight",
-            "road_reaver",
-            "ash_colossus",
-        ],
-        "Cinderdeep": ["cold_vein_lurker", "drowned_maker", "hollow_smith"],
-        "Quenchmere": ["brine_wight", "sunken_revenant", "sunhold_warden"],
-        "Verdance": ["canopy_stalker", "mire_returned", "boughwarden"],
-        "Rimefall": ["glass_hound", "rime_king"],
-        "Kollforge": ["forgeborn", "cinder_drake", "vent_lord"],
-        "Sundered Sky": ["stormkin", "fall_wight", "court_warden"],
-    }
-    # measured through the Hardware Store's `completeness` part (dogfooding the harvest)
-    from parts.shelf.completeness import coverage
-
-    for reach, foes in reach_foes.items():
-        slots = [
-            items[d]["slot"]
-            for f in foes
-            for d in npcs[f].get("drops", [])
-            if items.get(d, {}).get("slot")
-        ]
-        gear = coverage(slots, required=("weapon", "head", "body", "arm"))
-        assert gear.complete, f"{reach} cannot outfit a full loadout: missing {gear.missing}"
 
 
 def test_aethryn_the_makers_loop_reaches_the_new_content():
@@ -272,25 +111,6 @@ def test_aethryn_the_makers_loop_reaches_the_new_content():
     assert "hollow_ingot" not in by_make["greater_healing_draught"]["inputs"]
 
 
-def test_aethryn_consumables_scale_across_the_journey():
-    """Two draughts (hp 30 / mp 15) cannot carry a Forger through a 1-300 game. The consumable
-    ladder adds greater and grand tiers plus a both-pools elixir, each a valid hp/mp restore that
-    strictly out-heals the tier below, and the grand tier is stocked only by the high Reaches."""
-    items = load_items(AETHRYN / "items.yaml")
-    npcs = load_npcs(AETHRYN / "npcs.yaml")
-    heal_ladder = ["healing_draught", "greater_healing_draught", "grand_healing_draught"]
-    mana_ladder = ["mana_draught", "greater_mana_draught", "grand_mana_draught"]
-    for ladder, pool in ((heal_ladder, "hp"), (mana_ladder, "mp")):
-        restores = [items[c]["consume"][pool] for c in ladder]
-        assert all(r > 0 for r in restores)  # valid restores
-        assert restores == sorted(restores) and len(set(restores)) == 3  # strictly increasing tiers
-    elixir = items["forgefire_elixir"]["consume"]  # the endgame both-pools restorative
-    assert elixir["hp"] > 0 and elixir["mp"] > 0
-    # the grand tier is a HIGH-Reach good, not sold on the starting coast
-    assert "grand_healing_draught" in npcs["anchor_keeper"]["shop"]["sells"]
-    assert "grand_healing_draught" not in npcs["wren"]["shop"]["sells"]
-
-
 def test_aethryn_regional_sets_grant_bonuses_from_real_pieces():
     """Collecting a whole regional set pays off: aethryn ships a gear SET per Reach, each granting a
     flat bonus when all its pieces are worn. Every piece is a real item and every bonus stat is a
@@ -313,536 +133,6 @@ def test_aethryn_regional_sets_grant_bonuses_from_real_pieces():
     storm = sets["stormward"]
     assert active_set_bonuses(set(storm["pieces"]), sets) == storm["bonus"]
     assert active_set_bonuses(set(storm["pieces"][:-1]), sets) == {}
-
-
-def test_aethryn_conquering_every_reach_forges_a_legendary():
-    """A completionist endgame loop: each of the five great Reaches' bosses drops a unique essence,
-    and a recipe forges the Reachlord's Signet (a legendary) from ALL FIVE - so the reward demands
-    besting every Reach across the sea and the sky, not grinding one. Cross-checked against real
-    items so the loop can never need or make a phantom."""
-    from parts.world.seed import load_recipes
-
-    npcs = load_npcs(AETHRYN / "npcs.yaml")
-    items = load_items(AETHRYN / "items.yaml")
-    boss_essence = {
-        "sunhold_warden": "brine_essence",
-        "boughwarden": "grove_essence",
-        "rime_king": "rime_essence",
-        "vent_lord": "molten_essence",
-        "court_warden": "storm_essence",
-    }
-    for boss, essence in boss_essence.items():
-        assert essence in npcs[boss]["drops"], f"{boss} does not drop {essence}"
-        assert essence in items  # a real material
-    recipe = load_recipes(AETHRYN / "recipes.yaml")["forge_reachlord_signet"]
-    assert recipe["makes"] == "reachlord_signet"
-    assert set(recipe["inputs"]) == set(boss_essence.values())  # needs one of EVERY Reach's essence
-    signet = items["reachlord_signet"]
-    assert signet["slot"] and signet["mods"]  # a real equippable legendary
-    # it out-powers a regional accessory (a legendary reward for clearing the world)
-    assert sum(signet["mods"].values()) > sum(items["anchor_stone"]["mods"].values())
-
-
-def test_aethryn_sovereign_drops_a_legendary_capstone():
-    """The final boss at the world's ceiling (L300) drops a named LEGENDARY, not the mid road
-    keystone: the Sovereign's Regalia, a cut above every regional relic - the one artifact that says
-    the whole 1-300 road is done. Wired through spiral.yaml's `summit_drop`."""
-    from parts.world.spiral import SUMMIT_BOSS, generate_spiral, load_spiral_config
-
-    items = load_items(AETHRYN / "items.yaml")
-    config = load_spiral_config(AETHRYN / "spiral.yaml")
-    assert config is not None and config.get("summit_drop") == "sovereigns_regalia"
-    _rooms, npcs, _first = generate_spiral(config, {"coil_third_landing": {"exits": {}}})
-    sovereign = npcs[SUMMIT_BOSS]
-    assert sovereign["level"] == 300 and sovereign["drops"] == ["sovereigns_regalia"]
-    regalia = items["sovereigns_regalia"]
-    assert regalia["slot"] and regalia["mods"]  # a real equippable artifact
-    # the capstone out-powers the best regional accessory (a legendary, not just another relic)
-    best_regional = max(
-        sum(items[i]["mods"].values())
-        for i in ("anchor_stone", "drowned_seal", "sunhold_sigil", "warden_sigil")
-    )
-    assert sum(regalia["mods"].values()) > best_regional
-
-
-def test_aethryn_ships_readable_lore_placed_in_the_world():
-    """Environmental storytelling you can read: aethryn places lore items (a record, a drowned log,
-    a sky inscription) in rooms, read with `read <item>`. Each resolves to a real room and carries
-    real prose (not a stub), so a Forger who slows down to look finds the world's memory."""
-    items = load_items(AETHRYN / "items.yaml")
-    rooms = set(load_rooms(AETHRYN / "rooms.yaml"))
-    lore_items = {label: it for label, it in items.items() if it.get("lore")}
-    assert len(lore_items) >= 3, "the world offers almost nothing to read"
-    for label, it in lore_items.items():
-        assert it["location"].split(":")[-1] in rooms, f"lore item {label} is placed nowhere"
-        assert len(it["lore"]) > 40, f"lore item {label} has only a stub, not a story"
-
-
-def test_aethryn_exploration_rooms_hold_placed_treasures():
-    """Reaching a deep or off-path terminal rewards a one-time treasure ON THE GROUND (not an RNG
-    drop): unique relics placed in the ruin, the Cinderheart, the drowned capital, the heart-grove,
-    and the drifting shards. Each resolves to its room, is equippable, and does not respawn."""
-    items = load_items(AETHRYN / "items.yaml")
-    rooms = set(load_rooms(AETHRYN / "rooms.yaml"))
-    treasures = {
-        "ashglass_charm": "the_scoured_ruin",
-        "cinderheart_relic": "the_cinderheart",
-        "drowned_pearl": "the_drowned_sunhold",
-        "heartwood_seed": "the_heart_grove",
-        "skyshard_relic": "the_drifting_reach",
-    }
-    for label, room in treasures.items():
-        it = items[label]
-        assert it["location"].split(":")[-1] == room and room in rooms, f"{label} floats nowhere"
-        assert it["slot"] and it["mods"]  # a real equippable relic, not a flavour prop
-        assert not it.get("resettable", False)  # a one-time find, not a farmable respawn
-
-
-def test_aethryn_reaches_have_side_quests_beyond_their_main_arc():
-    """Each sea/high Reach now has a self-completing SIDE-quest, not just its one main kill-line.
-    Each gives a previously-questless ecosystem foe or landmark narrative purpose. Every step fires
-    from a real world deed (no soft-lock), every target is real, and each ends on a told story."""
-    npcs = set(load_npcs(AETHRYN / "npcs.yaml"))
-    rooms = set(load_rooms(AETHRYN / "rooms.yaml"))
-    side_quests = {
-        "the_salvage_watch": "drowned_lung_sentry",  # Quenchmere: still the salvage-stair sentry
-        "the_channel_toll": "channel_serpent",  # Verdance: clear the crossing
-        "the_ruin_watch": "salvage_wraith",  # Ashwastes: lay the ruin's drifter
-        "the_anvil_watch": "forgeborn",  # Kollforge: free a working vent
-        "the_drifting_reach": "the_drifting_reach",  # Sundered Sky: a DISCOVERY, not a kill
-        "the_flooded_forge": "flooded_forge_revenant",  # Quenchmere delve: still the forge revenant
-        "the_glass_gallery": "rimebound_sentinel",  # Rimefall delve: end the frozen watch
-        "the_broken_span": "fall_wraith",  # Sundered Sky delve: clear the broken bridge
-    }
-    for qid, target in side_quests.items():
-        spec = load_quest(AETHRYN / "quests" / f"{qid}.yaml")
-        assert spec is not None and spec["id"] == qid
-        assert spec.get("reward_xp", 0) > 0  # a real reward, not a stub
-        for step in spec["steps"]:  # every beat advances from a real deed, never a soft-lock
-            trigger = step.get("on_defeat") or step.get("on_enter") or step.get("on_take")
-            assert trigger, f"{qid} step {step} has no world-deed trigger"
-        assert target in npcs or target in rooms, f"{qid} targets a phantom {target}"
-        assert any(
-            s.get("on_defeat") == target or s.get("on_enter") == target for s in spec["steps"]
-        )
-        term = spec["terminal"][0]  # a narrative epilogue, not just a flag flip
-        assert len(spec["labels"][term]) > 80
-
-
-def test_aethryn_reach_merchants_stock_regional_gear():
-    """A Reach's shop sells that Reach's OWN gear, not one starter blade everywhere: each trader
-    stocks items its own foes drop, so a player has an economic path to regional gear (buy it, or
-    grind it), and a high-Reach shop no longer sells low-level castoffs. Also cross-checks that
-    every item on every shelf is a real prototype (a shop can never sell a phantom)."""
-    npcs = load_npcs(AETHRYN / "npcs.yaml")
-    items = load_items(AETHRYN / "items.yaml")
-    # a trader in each Reach, and the foes that drop that Reach's regionally-themed gear
-    trader_reach_foes = {
-        "merewright_captain": ["brine_wight", "sunken_revenant", "sunhold_warden"],
-        "canopy_trader": ["canopy_stalker", "mire_returned", "boughwarden"],
-        "kollkin_trader": ["forgeborn", "cinder_drake", "vent_lord"],
-        "anchor_keeper": ["stormkin", "fall_wight", "court_warden"],
-        "market_trader": ["reach_wolf", "thornback_boar", "tide_crawler"],
-    }
-    for trader, foes in trader_reach_foes.items():
-        sells = set(npcs[trader]["shop"]["sells"])
-        assert sells <= set(items), f"{trader} sells a phantom item: {sells - set(items)}"
-        regional_drops = {d for f in foes for d in npcs[f].get("drops", [])}
-        assert sells & regional_drops, f"{trader} stocks none of its own Reach's gear"
-    """The coast's downward road no longer dead-ends: the maw opens down through the Drowned Way to
-    the Cinderheart, where a frost-typed bottom-boss (bring fire) gives the deep a real climax."""
-    rooms = load_rooms(AETHRYN / "rooms.yaml")
-    assert rooms["cinderdeep_maw"]["exits"].get("down") == "the_drowned_way"  # no longer a dead-end
-    assert rooms["the_drowned_way"]["exits"]["down"] == "the_cinderheart"  # descends to the bottom
-    npcs = load_npcs(AETHRYN / "npcs.yaml")
-    boss = npcs["drowned_forgemaster"]
-    assert boss["level"] == 24 and boss["tier"] == "boss" and boss["lethal"] is True
-    # an elemental puzzle: a maker of black ice that resists frost and is weak to fire
-    assert boss["attack_element"] == "ICE"
-    assert boss["resistances"] == {"ICE": "Resist", "FIR": "Weak"}
-    assert boss["drops"] == ["drowned_seal"]  # the deep pays a real reward
-    assert load_items(AETHRYN / "items.yaml")["drowned_seal"]["slot"] == "accessory_2"
-
-
-def test_aethryn_sundered_sky_is_the_last_surface_reach_and_the_spiral_gate():
-    """The sixth Reach (Build Order Phase 5): the berth's sky-lanes rise to the Sundered Sky -- the
-    floating lands the Unforging tore loose, the last surface Reach, whose capital Highgate wires
-    NORTH (by anchor-line) onto the Forgeward Road, a second way onto the flat endgame frontier."""
-    rooms = load_rooms(AETHRYN / "rooms.yaml")
-    assert rooms["the_deepwater_berth"]["exits"].get("up") == "the_sky_lanes"
-    assert (
-        rooms["highgate"]["exits"].get("north") == "coilfoot_ascent"
-    )  # the surface joins the Road
-    npcs = load_npcs(AETHRYN / "npcs.yaml")
-    assert npcs["stormkin"]["level"] == 60 and npcs["fall_wight"]["level"] == 64
-    assert "spiral" in npcs["sky_warden"]["topics"] and "shop" in npcs["anchor_keeper"]
-    court = npcs["court_warden"]
-    assert court["level"] == 72 and court["tier"] == "boss" and court["lethal"] is True
-    assert court["resistances"] == {"DRK": "Resist", "HLY": "Weak"}  # bring radiance to the shadow
-    arc = load_quest(AETHRYN / "quests" / "the_sundered_sky.yaml")
-    assert arc is not None and arc["steps"][-1]["on_defeat"] == "court_warden"
-
-
-def test_aethryn_kollforge_is_the_molten_reach_before_the_spiral():
-    """The fifth Reach (Build Order Phase 5): the berth ferries west to the Kollforge -- the molten
-    surface land closest to the Forge, the Kollkin fire-Forgers of Emberkoll, and the Vent-Lord, the
-    last guardian before the Spiral endgame (a level-62 boss)."""
-    rooms = load_rooms(AETHRYN / "rooms.yaml")
-    assert rooms["the_deepwater_berth"]["exits"].get("west") == "the_molten_passage"
-    npcs = load_npcs(AETHRYN / "npcs.yaml")
-    assert npcs["cinder_drake"]["level"] == 50 and npcs["forgeborn"]["level"] == 54
-    assert "kollforge" in npcs["ventforge_master"]["topics"] and "shop" in npcs["kollkin_trader"]
-    lord = npcs["vent_lord"]
-    assert lord["level"] == 62 and lord["tier"] == "boss" and lord["lethal"] is True
-    assert lord["resistances"] == {"FIR": "Resist", "WTR": "Weak"}  # bring flood to the fire
-    arc = load_quest(AETHRYN / "quests" / "the_kollforge.yaml")
-    assert arc is not None and arc["steps"][-1]["on_defeat"] == "vent_lord"
-
-
-def test_aethryn_rimefall_is_the_frozen_high_level_reach():
-    """The fourth Reach (Build Order Phase 4): a deepwater berth ferries north to the Rimefall -- a
-    continent flash-frozen in the Unforging, its golden-age cities whole under the ice, kept by the
-    Silent Anvil, climaxing in the flash-frozen Rime-King (a level-52 boss)."""
-    rooms = load_rooms(AETHRYN / "rooms.yaml")
-    assert (
-        rooms["tidewharf_plaza"]["exits"].get("north") == "the_deepwater_berth"
-    )  # the far-ferry hub
-    assert rooms["the_deepwater_berth"]["exits"].get("north") == "the_riming_passage"
-    npcs = load_npcs(AETHRYN / "npcs.yaml")
-    assert npcs["glass_hound"]["level"] == 40 and npcs["glass_hound"]["tier"] == "elite"
-    assert "silent_anvil" in npcs["stillhearth_keeper"]["topics"]  # the world's conscience speaks
-    king = npcs["rime_king"]
-    assert king["level"] == 52 and king["tier"] == "boss" and king["lethal"] is True
-    assert king["resistances"] == {"ICE": "Resist", "FIR": "Weak"}  # bring fire to thaw the reign
-    assert "stillheart" in king["drops"]  # a Reach-Relic of the golden age (+ the Rimeplate set)
-    arc = load_quest(AETHRYN / "quests" / "the_rimefall.yaml")
-    assert arc is not None and arc["steps"][-1]["on_defeat"] == "rime_king"
-
-
-def test_aethryn_verdance_is_a_living_wild_reach_off_the_crossroads():
-    """The third Reach (Build Order Phase 3): Tidewharf ferries west to the Verdance -- a living
-    jungle continent with the Deeprooted capital Highbough and the Heart-Grove (a boss that is the
-    apex of a real food chain: canopy-stalker, mire-returned, then the Boughwarden)."""
-    rooms = load_rooms(AETHRYN / "rooms.yaml")
-    assert (
-        rooms["tidewharf_docks"]["exits"].get("west") == "the_verdant_passage"
-    )  # a Reach off the hub
-    npcs = load_npcs(AETHRYN / "npcs.yaml")
-    # a believable ecosystem: apex predator, scavenger, and the living heart, level-banded
-    assert npcs["canopy_stalker"]["level"] == 22 and npcs["mire_returned"]["level"] == 26
-    assert "verdance" in npcs["grove_elder"]["topics"] and "shop" in npcs["canopy_trader"]
-    warden = npcs["boughwarden"]
-    assert warden["level"] == 32 and warden["tier"] == "boss" and warden["lethal"] is True
-    assert warden["resistances"] == {
-        "ERT": "Resist",
-        "WND": "Weak",
-    }  # bring wind to the living wild
-    arc = load_quest(AETHRYN / "quests" / "the_verdance.yaml")
-    assert arc is not None and arc["steps"][-1]["on_defeat"] == "boughwarden"
-
-
-def test_aethryn_deep_reachwood_is_a_wilderness_sub_zone():
-    """MMO scale: the Reachwood expands past the Warden's Glade into a wilderness sub-zone - a
-    second early leveling ground (ember-lynx, mere-lurker), a GATHERING node (resettable reachwood
-    sap), and a hidden shrine with an elite keeper, a treasure, and readable lore. Rewards spreading
-    into the forest instead of one coast path."""
-    rooms = load_rooms(AETHRYN / "rooms.yaml")
-    npcs = load_npcs(AETHRYN / "npcs.yaml")
-    items = load_items(AETHRYN / "items.yaml")
-    assert rooms["wardens_glade"]["exits"].get("east") == "the_deepwood"  # the wood opens up
-    assert rooms["the_deepwood"]["exits"].keys() >= {"north", "east"}  # branches (fen + shrine)
-    # a gathering node that repops on area reset (a resource spot, not a one-off)
-    sap = items["reachwood_sap"]
-    assert sap["location"].split(":")[-1] == "the_thornmere" and sap.get("resettable") is True
-    # the hidden shrine: an elite keeper, a placed treasure, and readable lore
-    assert npcs["shrine_warden"]["tier"] == "elite"
-    offering = items["shrine_offering"]
-    assert offering["location"].split(":")[-1] == "the_forgotten_shrine" and offering.get("lore")
-
-
-def test_aethryn_tidecaves_are_an_optional_early_sea_cave_delve():
-    """The starting coast rewards a curious Forger with an off-path dungeon: a sea-cave gapes down
-    off the Saltstrand into the Tidecaves, an optional early delve (cave-crawler L4 -> the L10
-    Brine-Hulk mini-boss) that drops a pearl - exploring off the main road pays from the coast."""
-    rooms = load_rooms(AETHRYN / "rooms.yaml")
-    npcs = load_npcs(AETHRYN / "npcs.yaml")
-    items = load_items(AETHRYN / "items.yaml")
-    assert rooms["the_saltstrand"]["exits"].get("down") == "the_tidecave_mouth"  # findable off-path
-    assert rooms["the_tidecave_mouth"]["exits"]["down"] == "the_sunken_grotto"  # a real delve
-    assert npcs["cave_crawler"]["level"] < npcs["brine_hulk"]["level"]  # escalates to the mini-boss
-    hulk = npcs["brine_hulk"]
-    assert hulk["tier"] == "elite" and "tidecave_pearl" in hulk["drops"]  # an off-path prize
-    assert items["tidecave_pearl"]["slot"] and items["tidecave_pearl"]["mods"]  # a real reward
-
-
-def test_aethryn_delve_mini_bosses_drop_a_supply_before_the_boss():
-    """The elite mini-boss guarding each delve drops a tier-appropriate healing draught - a supply
-    cache earned right before the Reach boss, so the harder delve fight pays for the fight ahead."""
-    npcs = load_npcs(AETHRYN / "npcs.yaml")
-    items = load_items(AETHRYN / "items.yaml")
-    supply = {
-        "drowned_lung_sentry": "greater_healing_draught",
-        "flooded_forge_revenant": "greater_healing_draught",
-        "rootbound_guardian": "greater_healing_draught",
-        "rimebound_sentinel": "grand_healing_draught",
-        "rime_vault_keeper": "grand_healing_draught",
-        "magma_revenant": "grand_healing_draught",
-        "fall_wraith": "grand_healing_draught",
-    }
-    for foe, draught in supply.items():
-        assert npcs[foe]["tier"] == "elite"  # a delve gate, not a trash mob
-        assert draught in npcs[foe].get("drops", []), f"{foe} drops no supply"
-        assert items[draught].get("consume"), f"{draught} is not a real consumable"
-
-
-def test_aethryn_dungeons_are_delves_not_single_boss_rooms():
-    """Deepened dungeons play like dungeons: an approach chains through interior rooms, each with
-    its own foe, escalating in level toward the boss - not a single boss room. Data-driven over each
-    deepened dungeon's room path, so a new deepening just adds a row here."""
-    rooms = load_rooms(AETHRYN / "rooms.yaml")
-    npcs = load_npcs(AETHRYN / "npcs.yaml")
-    delves = {
-        "Drowned Sunhold": [
-            "drowned_sunhold_descent",
-            "the_drowned_halls",
-            "the_flooded_forge",
-            "the_drowned_sunhold",
-        ],
-        "Heart-Grove": ["the_deeproot_mire", "the_rootways", "the_heart_grove"],
-        "Frozen Court": ["the_glass_gallery", "the_rime_vault", "the_frozen_court"],
-        "Vent-Deep": ["the_anvil_vents", "the_vent_gallery", "the_vent_deep"],
-        "Wandering Court": ["the_drifting_reach", "the_broken_span", "the_wandering_court"],
-        "Ashen Ruin": ["the_scoured_ruin", "the_ashen_vault", "the_glass_crater"],
-    }
-
-    def foe_level(room: str) -> int:
-        return next(
-            v["level"]
-            for v in npcs.values()
-            if v.get("location", "").split(":")[-1] == room and "level" in v
-        )
-
-    for name, path in delves.items():
-        for here, below in zip(path, path[1:], strict=False):  # each room leads to the next
-            assert below in rooms[here]["exits"].values(), f"{name}: {here} does not reach {below}"
-        levels = [foe_level(r) for r in path]
-        assert len(levels) >= 3 and levels == sorted(levels), f"{name} does not escalate: {levels}"
-
-
-def test_aethryn_quenchmere_is_a_second_continent_reached_by_sea():
-    """The first sea-crossing (Build Order Phase 2): Quench Harbor's ferry runs west to the
-    Quenchmere -- a second Reach with the free-port Tidewharf (an Accord-Speaker, a Merewright shop,
-    a Salvage agent) and the drowned Sunhold dungeon below it."""
-    rooms = load_rooms(AETHRYN / "rooms.yaml")
-    # the world grows across the sea: the harbor opens onto the lanes, which reach the free-port
-    assert rooms["quench_harbor"]["exits"].get("west") == "the_quench_lanes"
-    assert rooms["the_quench_lanes"]["exits"]["west"] == "tidewharf_docks"
-    assert (
-        rooms["tidewharf_docks"]["exits"]["south"] == "drowned_sunhold_descent"
-    )  # down to the deep
-    npcs = load_npcs(AETHRYN / "npcs.yaml")
-    assert npcs["brine_wight"]["level"] == 18 and npcs["brine_wight"]["tier"] == "elite"
-    # the free-port is a real capital: government, trade, and salvage all have a voice
-    assert "quenchmere" in npcs["accord_speaker"]["topics"] and "shop" in npcs["merewright_captain"]
-    warden = npcs["sunhold_warden"]
-    assert warden["level"] == 30 and warden["tier"] == "boss" and warden["lethal"] is True
-    assert warden["resistances"] == {
-        "WTR": "Resist",
-        "LGT": "Weak",
-    }  # bring lightning to the drowned
-    arc = load_quest(AETHRYN / "quests" / "the_quenchmere.yaml")
-    assert arc is not None and arc["steps"][-1]["on_defeat"] == "sunhold_warden"
-
-
-def test_aethryn_cooling_sea_is_a_dialogue_rich_port_region():
-    """A coastal port region west of the waking shore (levels 6-14): the shore opens west along the
-    Cooling-Sea to Quench Harbor -- a lived-in fishing town (a harbormaster, a fisher, a dock shop),
-    with the Drowned Pilot at a wreck reef, tied together by a coastal questline."""
-    rooms = load_rooms(AETHRYN / "rooms.yaml")
-    assert (
-        rooms["the_waking_shore"]["exits"].get("west") == "the_saltstrand"
-    )  # a road off the spawn
-    assert rooms["the_saltstrand"]["exits"]["west"] == "quench_harbor"
-    npcs = load_npcs(AETHRYN / "npcs.yaml")
-    # the harbor is a real town: several NPCs, two of them conversational, one keeping a shop
-    assert (
-        "cooling_sea" in npcs["harbormaster"]["topics"] and "sea" in npcs["quench_fisher"]["topics"]
-    )
-    assert "shop" in npcs["dock_trader"]
-    pilot = npcs["drowned_pilot"]
-    assert pilot["level"] == 14 and pilot["tier"] == "boss" and pilot["lethal"] is True
-    assert pilot["resistances"] == {"WTR": "Resist", "LGT": "Weak"}  # bring lightning to the water
-    arc = load_quest(AETHRYN / "quests" / "the_cooling_sea.yaml")
-    assert arc is not None and arc["steps"][-1]["on_defeat"] == "drowned_pilot"
-
-
-def test_aethryn_ashwastes_is_a_real_mid_game_region_with_an_arc():
-    """A whole new mid-game region east of the capital (levels 15-25): the Market Quarter opens onto
-    a salt-road into the Ashwastes -- a desert with the Ashborn survivors (a shop + a lore scout), a
-    ruin, and the Ash-Colossus at the crater, tied together by its own questline."""
-    rooms = load_rooms(AETHRYN / "rooms.yaml")
-    assert (
-        rooms["market_quarter"]["exits"].get("east") == "ashwastes_road"
-    )  # a road out of the city
-    # the region chains road -> dunes -> (camp / ruin -> ashen vault -> crater)
-    assert rooms["the_cinder_dunes"]["exits"]["east"] == "the_scoured_ruin"
-    assert (
-        rooms["the_scoured_ruin"]["exits"]["east"] == "the_ashen_vault"
-    )  # the ruin delve deepened
-    assert rooms["the_ashen_vault"]["exits"]["east"] == "the_glass_crater"
-    npcs = load_npcs(AETHRYN / "npcs.yaml")
-    assert npcs["ash_jackal"]["level"] == 15  # bands above the reachwood and the cellar
-    colossus = npcs["ash_colossus"]
-    assert colossus["level"] == 25 and colossus["tier"] == "boss" and colossus["lethal"] is True
-    assert colossus["resistances"] == {"ERT": "Resist", "WND": "Weak"}  # an elemental puzzle
-    assert "shop" in npcs["ashborn_trader"]  # a third till, mid-game
-    assert "ashwastes" in npcs["ashborn_scout"]["topics"]  # lore makes it lived-in
-    # a real regional questline: cross the wastes -> meet the Ashborn -> still the Colossus
-    arc = load_quest(AETHRYN / "quests" / "the_ashwastes.yaml")
-    assert arc is not None and arc["terminal"] == ["stilled"]
-    assert arc["steps"][-1]["on_defeat"] == "ash_colossus"
-
-
-def test_aethryn_reachwood_is_a_real_lateral_region():
-    """The coast has horizontal exploration, not just the vertical spine: the Reachwood Edge opens
-    east into a forest region (a hollow, a warden's glade, a bramble warren) with level-banded foes,
-    a lore-keeping warden, and a mini-boss - an alternative early road to diving the cellar."""
-    rooms = load_rooms(AETHRYN / "rooms.yaml")
-    assert (
-        rooms["reachwood_edge"]["exits"].get("east") == "reachwood_hollow"
-    )  # no longer a dead-end
-    assert set(rooms["reachwood_hollow"]["exits"].values()) >= {
-        "wardens_glade",
-        "the_bramblewarren",
-    }
-    npcs = load_npcs(AETHRYN / "npcs.yaml")
-    assert npcs["thornback_boar"]["level"] == 5  # a step past the coast wolves
-    wight = npcs["bramble_wight"]
-    assert wight["level"] == 10 and wight["tier"] == "elite" and wight["attack_element"] == "ERT"
-    assert wight["drops"] == ["warden_charm"]  # a real reward off the main spine
-    assert "reachwood" in npcs["the_greenwarden"]["topics"]  # a lore-keeper makes it feel lived-in
-
-
-def test_aethryn_cinder_wight_boss_is_attackable_and_strikes_back():
-    wight = load_npcs(AETHRYN / "npcs.yaml")["cinder_wight"]
-    assert wight["hp"] == 50
-    assert wight["atk"] == 7  # the Cold Cellar boss hits back
-    assert wight["level"] == 8 and wight["tier"] == "boss"  # a boss-tier, curve-scaled reward
-
-
-def test_aethryn_ember_road_climbs_from_the_coast_to_emberreach():
-    """The pour past the Kindlands: the Far Reach now opens north onto the Ember-road, which
-    climbs through the road and the waystation to the gates of the capital."""
-    rooms = load_rooms(AETHRYN / "rooms.yaml")
-    assert rooms["the_far_reach"]["exits"]["north"] == "emberroad_climb"
-    assert rooms["emberroad_climb"]["exits"]["north"] == "wayfarers_rest"
-    assert rooms["wayfarers_rest"]["exits"]["north"] == "emberreach_gates"
-    assert rooms["emberreach_gates"]["exits"]["north"] == "the_grand_forge"
-    # the capital is a hub: the Grand Forge reaches the Orders' Row, the Market, and the Warden Gate
-    forge_exits = rooms["the_grand_forge"]["exits"]
-    assert {"orders_row", "market_quarter", "warden_gate"} <= set(forge_exits.values())
-
-
-def test_aethryn_road_foes_are_level_banded_above_the_coast():
-    """The Ember-road foes carry levels/tiers well above the coast, so fighting up pays; the city
-    stays safe (its service NPCs are peaceful, hp 0)."""
-    npcs = load_npcs(AETHRYN / "npcs.yaml")
-    stray, reaver = npcs["cinder_stray"], npcs["road_reaver"]
-    assert stray["level"] == 10 and stray["tier"] == "normal"
-    assert reaver["level"] == 13 and reaver["tier"] == "elite"  # a road threat pays elite (x3)
-    assert stray["hp"] > 0 and reaver["hp"] > 0  # combatable
-    for keeper in ("emberreach_warden", "grandforge_loremaster", "market_trader", "warden_keeper"):
-        assert npcs[keeper]["hp"] == 0, f"{keeper} should be a peaceful city NPC"
-
-
-def test_aethryn_road_reward_pays_for_the_climb():
-    """A coast-fresh Forger fighting the level-13 elite reaver earns far more than a coast wolf: the
-    scaled economy rewards closing the gap (fighting up), not farming grays."""
-    from parts.world.combat import _reward_amounts
-    from parts.world.session import Session
-
-    npcs = load_npcs(AETHRYN / "npcs.yaml")
-    session = Session(player_id="climber", location="strayfire_hollow")
-    session.level = 6
-    reaver_xp = _reward_amounts(session, npcs["road_reaver"])[0]
-    wolf_xp = _reward_amounts(session, npcs["reach_wolf"])[0]
-    assert reaver_xp > wolf_xp * 5  # the road's elite dwarfs a coast kill
-
-
-def test_aethryn_wardens_test_opens_the_ascent_to_the_first_coil():
-    """Past Emberreach the Warden Gate opens north onto the Wardenmarch, then east onto the
-    Forgeward Road's first march - the long flat frontier begins."""
-    rooms = load_rooms(AETHRYN / "rooms.yaml")
-    assert rooms["warden_gate"]["exits"]["north"] == "the_wardenmarch"
-    assert rooms["the_wardenmarch"]["exits"]["east"] == "coilfoot_ascent"
-    assert rooms["coilfoot_ascent"]["exits"]["east"] == "coil_first_landing"
-
-
-def test_aethryn_ascent_bosses_are_lethal_and_boss_tier():
-    """The Warden Sentinel (the test) and the first road-warden are lethal boss-tier foes well above
-    Emberreach - real frontier stakes."""
-    npcs = load_npcs(AETHRYN / "npcs.yaml")
-    sentinel, wraith = npcs["warden_sentinel"], npcs["gate_forgewraith"]
-    assert sentinel["level"] == 17 and sentinel["tier"] == "boss" and sentinel.get("lethal") is True
-    assert wraith["level"] == 22 and wraith["tier"] == "boss" and wraith.get("lethal") is True
-    assert wraith["level"] > sentinel["level"]  # the first march climbs above the gate test
-
-
-def test_aethryn_ships_the_descent_the_downward_counterpart_quest():
-    """Both roads carry a story: The Descent frames the Cinderdeep as The Ascent frames the Spiral.
-    It self-completes from real deeds and ends on stilling the Hollow Smith at the maw."""
-    descent = load_quest(AETHRYN / "quests" / "the_descent.yaml")
-    assert descent is not None
-    assert descent["id"] == "the_descent" and descent["name"] == "The Descent"
-    assert descent["terminal"] == ["descended"]
-    for step in descent["steps"]:  # every beat fires from a real world deed, never a soft-lock
-        assert step.get("on_defeat") or step.get("on_enter") or step.get("on_take")
-    last = next(s for s in descent["steps"] if s["to"] == "descended")
-    assert last.get("on_defeat") == "hollow_smith" and last.get("effect") == "award_xp"
-
-
-def test_aethryn_second_coil_climbs_above_the_first():
-    """The Road keeps running east: the first waystation opens east into the second march, which
-    runs through a roadbridge to its own road-warden, the Ashlord (higher than the first)."""
-    rooms = load_rooms(AETHRYN / "rooms.yaml")
-    assert rooms["coil_first_landing"]["exits"]["east"] == "coil_second_ascent"
-    assert rooms["coil_second_ascent"]["exits"]["east"] == "coil_bridgespan"
-    assert rooms["coil_bridgespan"]["exits"]["east"] == "coil_second_landing"
-    npcs = load_npcs(AETHRYN / "npcs.yaml")
-    ashlord, wraith = npcs["gate_ashlord"], npcs["gate_forgewraith"]
-    assert ashlord["level"] == 28 and ashlord["tier"] == "boss" and ashlord.get("lethal") is True
-    assert ashlord["level"] > wraith["level"]  # each march's road-warden climbs above the last
-
-
-def test_aethryn_third_coil_climbs_the_spiral_higher():
-    """The Road runs on past the Ashlord: the second waystation opens east into the storm-wracked
-    third march, whose road-warden (the Stormlord) out-levels every wall before it and drops a
-    weapon a tier above the road's blade."""
-    rooms = load_rooms(AETHRYN / "rooms.yaml")
-    assert rooms["coil_second_landing"]["exits"]["east"] == "coil_third_ascent"
-    assert rooms["coil_third_ascent"]["exits"]["east"] == "coil_stormreach"
-    assert rooms["coil_stormreach"]["exits"]["east"] == "coil_third_landing"
-    npcs = load_npcs(AETHRYN / "npcs.yaml")
-    stormlord, ashlord = npcs["gate_stormlord"], npcs["gate_ashlord"]
-    assert stormlord["level"] == 38 and stormlord["tier"] == "boss"
-    assert stormlord["level"] > ashlord["level"]  # each march climbs above the last
-    assert "stormlord_edge" in stormlord["drops"]
-    edge = load_items(AETHRYN / "items.yaml")["stormlord_edge"]
-    assert edge["slot"] == "weapon" and edge["mods"]["ATK"] > 9  # above the reaver blade
-
-
-def test_aethryn_cinderdeep_is_the_downward_road_from_the_cellar():
-    """The coast's OTHER road: down from the cellar hearth into the Cinderdeep, a mid-band depths
-    line parallel to the early Ember-road, floored by the Hollow Smith."""
-    rooms = load_rooms(AETHRYN / "rooms.yaml")
-    assert rooms["cellar_hearth"]["exits"]["down"] == "cinderdeep_descent"
-    assert rooms["cinderdeep_descent"]["exits"]["down"] == "sunken_forgeworks"
-    assert rooms["sunken_forgeworks"]["exits"]["down"] == "cinderdeep_maw"
-    npcs = load_npcs(AETHRYN / "npcs.yaml")
-    smith = npcs["hollow_smith"]
-    assert smith["level"] == 15 and smith["tier"] == "boss" and smith.get("lethal") is True
-    # the deep is a mid-band alternative: its foes sit near the early road, not the Spiral's Coils
-    assert npcs["deep_crawler"]["level"] == 10 and npcs["cold_vein_lurker"]["tier"] == "elite"
 
 
 def test_aethryn_boss_drops_are_real_gear_across_every_slot():
@@ -871,48 +161,9 @@ def test_aethryn_boss_drops_are_real_gear_across_every_slot():
     assert covered == set(SLOTS)  # every equipment slot has a drop on the ladder
 
 
-def test_aethryn_gate_bosses_drop_their_gear():
-    """The Coil Gate-bosses drop their signature gear, not only a charm."""
-    npcs = load_npcs(AETHRYN / "npcs.yaml")
-    assert "wraithlamp_circlet" in npcs["gate_forgewraith"]["drops"]
-    assert "ashlord_gauntlet" in npcs["gate_ashlord"]["drops"]
-    assert "cindershell_plate" in npcs["hollow_smith"]["drops"]
-
-
-def test_aethryn_ships_the_relighting_quest_as_data():
-    """The flagship's story arc is a seed-shipped workflow, not hardcoded in Python."""
-    quest = load_quest(AETHRYN / "quest.yaml")
-    assert quest is not None
-    assert quest["id"] == "the_relighting" and quest["name"] == "The Relighting"
-    assert quest["reward_xp"] == 120
-    assert quest["start"] == "offered" and quest["terminal"] == ["done"]
-    assert quest["steps"][-1]["effect"] == "award_xp"  # finishing the arc awards XP
-    assert quest["steps"][-1]["on_defeat"] == "cinder_wight"  # felling the boss completes it
-    triggers = {(k, s[k]) for s in quest["steps"] for k in ("on_take", "on_enter") if k in s}
-    assert ("on_enter", "old_reach_bridge") in triggers  # walking onto the bridge reforges it
-    assert ("on_enter", "cold_cellar") in triggers  # entering the cellar delves it
-    # It is a valid workflow graph (start -> ... -> a terminal state), not just a list.
-    from parts.shelf.workflow import Step, build_workflow
-
-    steps = [Step(s["state"], s["event"], s["to"], effect=s.get("effect")) for s in quest["steps"]]
-    workflow = build_workflow(
-        quest["id"], start=quest["start"], steps=steps, terminal=quest["terminal"]
-    )
-    assert "done" in workflow.terminal
-
-
 def test_a_seed_without_a_quest_file_returns_none():
     """A seed that ships no quest.yaml (spiral-ascent) has no arc; the game uses its default."""
     assert load_quest(SPIRAL / "quest.yaml") is None
-
-
-def test_aethryn_ships_the_broken_bridge_as_a_seed_door():
-    """The Old Reach Bridge is a locked, keyless barrier -- reforged by the quest, not a key."""
-    doors = load_doors(AETHRYN / "doors.yaml")
-    bridge = doors["reach_bridge"]
-    assert bridge["blocks"] == ("old_reach_bridge", "north")
-    assert bridge["locked"] is True
-    assert bridge["key_id"] == ""  # opened by the reforge quest effect, never a key
 
 
 def test_first_forge_door_is_now_seed_data_not_hardcoded():
@@ -1028,42 +279,6 @@ def test_seeds_root_honors_env_override(tmp_path, monkeypatch):
         importlib.reload(parts.world.seed)  # restore the default root for other tests
 
 
-def test_aethryn_ships_a_second_quest_the_ascent():
-    """The flagship now ships TWO arcs: the Relighting (quest.yaml) and the Ascent (quests/)."""
-
-    ascent = load_quest(AETHRYN / "quests" / "the_ascent.yaml")
-    assert ascent is not None
-    assert ascent["id"] == "the_ascent" and ascent["name"] == "The Ascent"
-    assert ascent["terminal"] == ["ascended"]
-    # every beat past the start fires from a real world deed (a natural trigger), never a soft-lock
-    for step in ascent["steps"]:
-        assert step.get("on_defeat") or step.get("on_enter") or step.get("on_take")
-    # the arc spans BOTH built Coils and ends on felling the Second Coil's Ashlord with a reward
-    assert {"gate_forgewraith", "gate_ashlord"} <= {s.get("on_defeat") for s in ascent["steps"]}
-    last = next(s for s in ascent["steps"] if s["to"] == "ascended")
-    assert last.get("on_defeat") == "gate_ashlord" and last.get("effect") == "award_xp"
-
-
-def test_aethryn_ships_the_summit_capstone_quest():
-    """The endgame arc names the procedural far end by its stable labels and ends on felling the
-    Sovereign at the far end of the 1-300 Forgeward Road."""
-    from parts.world.spiral import SUMMIT_BOSS, SUMMIT_ROOM
-
-    summit = load_quest(AETHRYN / "quests" / "the_summit.yaml")
-    assert summit is not None and summit["name"] == "The Forge's Edge"
-    assert summit["terminal"] == ["crowned"]
-    triggers = {(s.get("on_enter") or s.get("on_defeat")) for s in summit["steps"]}
-    assert SUMMIT_ROOM in triggers and SUMMIT_BOSS in triggers  # names the stable far-end labels
-    last = next(s for s in summit["steps"] if s["to"] == "crowned")
-    assert last.get("on_defeat") == SUMMIT_BOSS and last.get("effect") == "award_xp"
-    # the finale pays off the world's framing mystery, not just "you win": the Forge's Edge reveals
-    # the First Seed, and the crowned epilogue reforges it (the Unforging answered) - a real ending.
-    assert "First Seed" in summit["labels"]["at_the_summit"]
-    crowned = summit["labels"]["crowned"]
-    assert "SEED REMEMBERS" in crowned and "reforged" in crowned  # the sundering resolved
-    assert "Waking Shore" in crowned  # and the cradle-to-crown journey is honoured
-
-
 def test_aethryn_ships_the_martial_and_precision_job_families():
     """Batch 1 of the 30 switchable callings: the Martial (Duelist/Sentinel/Berserker) and
     Precision (Ranger/Scout/Shadowblade/Saboteur) families, each a distinct stat spread."""
@@ -1110,3 +325,104 @@ def test_aethryn_ships_the_full_thirty_switchable_callings():
 
     per_job = Counter(job for a in abilities.values() for job in a["jobs"])
     assert all(count >= 2 for count in per_job.values()), "a calling has fewer than 2 abilities"
+
+
+# --- The canonical map world (Pictures/Map.png): 14 zones, spawn in Veridia -------------------
+_MAP_ZONES = {
+    "veridia": (1, 30),
+    "duskwood_vale": (20, 50),
+    "caeloria": (30, 60),
+    "eldryn_forest": (50, 80),
+    "frostspire_peaks": (60, 90),
+    "zhaar_desert": (80, 130),
+    "xilnath_jungle": (90, 150),
+    "thalorin": (100, 140),
+    "ashen_wastes": (120, 170),
+    "korvash_highlands": (150, 200),
+    "shattered_isles": (180, 230),
+    "skyward_spires": (200, 250),
+    "the_deepreach": (100, 250),
+    "the_voidscar": (250, 300),
+}
+
+
+def test_aethryn_spawns_in_veridia_the_starter_zone():
+    """The map's starter region is the spawn: the first room in rooms.yaml is Veridia."""
+    rooms = load_rooms(AETHRYN / "rooms.yaml")
+    assert next(iter(rooms)) == "veridia"
+    assert rooms["veridia"]["name"] == "Veridia"
+
+
+def test_aethryn_all_fourteen_map_zones_exist_as_rooms():
+    """Every named zone on the canonical map is an implemented hub room."""
+    rooms = load_rooms(AETHRYN / "rooms.yaml")
+    missing = [z for z in _MAP_ZONES if z not in rooms]
+    assert not missing, f"map zones not implemented as rooms: {missing}"
+
+
+def test_aethryn_zones_carry_the_maps_level_bands():
+    """Each zone's metadata area carries exactly the level band the map prints for it."""
+    rooms = set(load_rooms(AETHRYN / "rooms.yaml"))
+    zones = load_zones(AETHRYN / "zones.yaml", rooms)
+    for zid, (lo, hi) in _MAP_ZONES.items():
+        z = zones[f"{zid}_zone"]
+        assert (z["level_min"], z["level_max"]) == (lo, hi), f"{zid} band wrong"
+
+
+def test_aethryn_map_world_is_fully_connected_from_veridia():
+    """A player can begin in Veridia and physically reach every hand-authored place on the map."""
+    from collections import deque
+
+    rooms = load_rooms(AETHRYN / "rooms.yaml")
+    seen, q = {"veridia"}, deque(["veridia"])
+    while q:
+        for dest in rooms[q.popleft()]["exits"].values():
+            if dest in rooms and dest not in seen:
+                seen.add(dest)
+                q.append(dest)
+    assert set(rooms) <= seen, f"unreachable map rooms: {sorted(set(rooms) - seen)[:8]}"
+
+
+def test_aethryn_no_map_room_ships_empty():
+    """Every hand-authored map room has a resident or a guardian -- no empty places."""
+    rooms = load_rooms(AETHRYN / "rooms.yaml")
+    npcs = load_npcs(AETHRYN / "npcs.yaml")
+    occupied = {n["location"] for n in npcs.values()}
+    empty = set(rooms) - occupied
+    assert not empty, f"map rooms with no NPC: {sorted(empty)[:8]}"
+
+
+def test_aethryn_key_settlements_and_dungeons_are_implemented():
+    """A sampling of the map's named settlements and dungeons exist as explorable rooms."""
+    rooms = load_rooms(AETHRYN / "rooms.yaml")
+    for place in (
+        "greenhold",
+        "caeloria_city",
+        "sunscar_city",
+        "moltenhold",
+        "aurelian_city",
+        "deepforge_city",
+        "the_black_hollow",
+        "the_obsidian_pit",
+        "netharions_throne",
+        "the_crystal_labyrinth",
+        "the_great_tree",
+        "the_maelstrom_rise",
+    ):
+        assert place in rooms, f"map place not implemented: {place}"
+
+
+def test_aethryn_dungeons_are_guarded_by_a_boss():
+    """Each dungeon room on the map holds a boss-tier guardian foe."""
+    npcs = load_npcs(AETHRYN / "npcs.yaml")
+    for dungeon in ("the_black_hollow", "the_obsidian_pit", "netharions_throne"):
+        guards = [n for n in npcs.values() if n["location"] == dungeon]
+        assert guards and any(n.get("tier") == "boss" for n in guards), f"{dungeon} has no boss"
+
+
+def test_aethryn_map_zones_span_levels_1_to_300():
+    """The map's zones cover the whole 1-300 progression with no band left uncovered."""
+    covered = set()
+    for lo, hi in _MAP_ZONES.values():
+        covered.update(range(lo, hi + 1))
+    assert covered.issuperset(range(1, 301)), "a level band is uncovered by the map's zones"

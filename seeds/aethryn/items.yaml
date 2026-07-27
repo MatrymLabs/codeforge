@@ -4,33 +4,33 @@
 first_ember:
   name: the first ember
   keywords: [ember, first, spark, flame]
-  location: the_waking_shore
+  location: nowhere
 
 forge_wrench:
   name: a modular forge wrench
   keywords: [wrench, tool, forge, modular]
-  location: cinderhearth_square
+  location: nowhere
 
 warm_cloak:
   name: a warm traveller's cloak
   keywords: [cloak, warm, travel]
-  location: cinderhearth_square
+  location: nowhere
 
 ember_shard:
   name: a shard of wild ember
   keywords: [shard, ember, wild, material]
-  location: reachwood_edge
-  resettable: true  # a wild-ember node: take it, and the coast regrows one once the area is quiet
+  location: nowhere
+  resettable: false
 
 cellar_key:
   name: a cold iron key
   keywords: [key, iron, cellar, cold]
-  location: cold_cellar
+  location: nowhere
 
 cinder_relic:
   name: the smith's cinder relic
   keywords: [relic, cinder, smith, forgework]
-  location: cellar_hearth
+  location: nowhere
 
 # Drop-only prototype: the Cinder-Wight's own weapon, never placed on the floor -- it exists only
 # to be dropped when the wight falls (location: nowhere = a template spawned by loot, not seeded).
@@ -55,7 +55,7 @@ reaver_blade:
 relighting_record:
   name: the Grand Forge's relighting record
   keywords: [record, relighting, ledger, archive]
-  location: the_grand_forge
+  location: nowhere
   lore: |-
     THE RELIGHTING OF THE KINDLANDS COAST, as kept by the Grand Forge.
     When the Unforging cooled the coast to grey, the Concord did not rebuild. It RELIT -- hearth by
@@ -120,15 +120,15 @@ stormlord_edge:
 healing_draught:
   name: a healing draught
   keywords: [draught, healing, potion, heal]
-  location: cinderhearth_square
-  resettable: true
+  location: nowhere
+  resettable: false
   consume: {hp: 30}
 
 mana_draught:
   name: a mana draught
   keywords: [draught, mana, potion]
-  location: cinderhearth_square
-  resettable: true
+  location: nowhere
+  resettable: false
   consume: {mp: 15}
 
 # Drop-only: the Drowned Forgemaster's seal -- the Cinderdeep's bottom-boss reward, a warding relic
@@ -448,35 +448,35 @@ stormcaller_pike:
 ashglass_charm:
   name: an ashglass charm
   keywords: [charm, ashglass, glass, ruin]
-  location: the_scoured_ruin
+  location: nowhere
   slot: accessory_1
   mods: {EVA: 7, ACC: 5}
 
 cinderheart_relic:
   name: the Cinderheart Relic
   keywords: [relic, cinderheart, deep, ember]
-  location: the_cinderheart
+  location: nowhere
   slot: accessory_2
   mods: {DEF: 8, "MAG DEF": 7}
 
 drowned_pearl:
   name: a drowned pearl
   keywords: [pearl, drowned, sunhold, deep]
-  location: the_drowned_sunhold
+  location: nowhere
   slot: accessory_1
   mods: {"MAG DEF": 8, EVA: 5}
 
 heartwood_seed:
   name: a heartwood seed
   keywords: [seed, heartwood, grove, verdant]
-  location: the_heart_grove
+  location: nowhere
   slot: accessory_1
   mods: {DEF: 6, "MAG DEF": 6, EVA: 3}
 
 skyshard_relic:
   name: the Skyshard Relic
   keywords: [relic, skyshard, drifting, sky]
-  location: the_drifting_reach
+  location: nowhere
   slot: accessory_2
   mods: {EVA: 9, ACC: 6}
 
@@ -530,7 +530,7 @@ sovereigns_regalia:
 drowned_makers_log:
   name: a drowned maker's log
   keywords: [log, book, maker, drowned]
-  location: the_drowned_sunhold
+  location: nowhere
   lore: |-
     (waterlogged, the last entries barely legible)
     ...the sea did not come for us in a day. It came in inches, over a life. We kept working. We told
@@ -542,7 +542,7 @@ drowned_makers_log:
 skyborn_inscription:
   name: a Skyborn inscription
   keywords: [inscription, stone, skyborn, tablet]
-  location: highgate
+  location: nowhere
   lore: |-
     Cut into the anchor-stone of Highgate, in the plain hand of the first sky-Wardens:
     WE DID NOT FALL. Remember it, you who come up the ferry frightened. The shards the Unforging tore
@@ -592,7 +592,7 @@ reachlord_signet:
 kollkin_ledger:
   name: a Kollkin vent-ledger
   keywords: [ledger, kollkin, vent, book]
-  location: emberkoll
+  location: nowhere
   lore: |-
     THE VENT-LEDGER OF EMBERKOLL, names struck through in order.
     We do not carve headstones in the Kollforge -- the heat would crack them. We keep the ledger.
@@ -604,7 +604,7 @@ kollkin_ledger:
 silent_anvil_creed:
   name: the Silent Anvil's creed-stone
   keywords: [creed, stone, anvil, tablet]
-  location: stillhearth
+  location: nowhere
   lore: |-
     Cut small into the one warm hearth of Stillhearth, where the Silent Anvil keep their vigil:
     THE RIMEFALL IS NOT A RUIN. It is a lesson held at the exact moment before it was learned. The
@@ -616,7 +616,7 @@ silent_anvil_creed:
 deeprooted_growth_song:
   name: a Deeprooted growth-song
   keywords: [song, growth, deeprooted, bark]
-  location: highbough
+  location: nowhere
   lore: |-
     Not written but grown, the words raised in living bark on a bough of Highbough, read by touch:
     WE DO NOT FORGE THE WOOD. WE ASK IT. The lowland makers strike ember into shape and call it
@@ -638,8 +638,8 @@ tidecave_pearl:
 reachwood_sap:
   name: a bead of reachwood sap
   keywords: [sap, reachwood, bead, material]
-  location: the_thornmere
-  resettable: true  # a gathering node in the mere: take it, and the wood regrows one on the area reset
+  location: nowhere
+  resettable: false
 
 shrine_ward:
   name: an old shrine-ward
@@ -651,7 +651,7 @@ shrine_ward:
 shrine_offering:
   name: a shrine-offering of old ember
   keywords: [offering, shrine, ember, cache]
-  location: the_forgotten_shrine
+  location: nowhere
   lore: |-
     Left in the moss of the Forgotten Shrine, on a stone worn smooth by hands that are all dust now:
     an offering of old ember, still faintly warm. No mark says to whom. The Emberwrights raised this
@@ -664,7 +664,7 @@ shrine_offering:
 firewatch_log:
   name: the last watcher's log
   keywords: [log, watcher, firewatch, book]
-  location: the_old_firewatch
+  location: nowhere
   lore: |-
     The last entries of the Old Firewatch's watch-log, the ink gone brown:
     "Day 400. The coast is relit hearth to hearth, the road runs to the capital, the Wardenmarch holds.
@@ -676,7 +676,7 @@ firewatch_log:
 firewatch_glass:
   name: a watcher's far-glass
   keywords: [glass, far-glass, spyglass, watcher]
-  location: the_old_firewatch
+  location: nowhere
   slot: accessory_2
   mods: {ACC: 6, EVA: 3}  # the last watcher's kit: it sharpens the eye (a keepsake of the high hill)
 
@@ -691,7 +691,7 @@ wildember_charm:
 wildember_cache:
   name: a well of untaken wild ember
   keywords: [well, ember, cache, wild]
-  location: the_thorn_heart
+  location: nowhere
   lore: |-
     A well of wild ember, welling up bright through the ember-thorn, untaken since before the town.
     The foresters have a rule older than the Concord: you cut the deadfall, you do not gather the
@@ -710,7 +710,7 @@ tideglass_pendant:
 flagship_manifest:
   name: the flagship's lost manifest
   keywords: [manifest, ledger, flagship, book]
-  location: the_sunken_hold
+  location: nowhere
   lore: |-
     The cargo manifest of the flagship of the first Rekindling, ink run but legible in the drowned
     dark: hearth-irons, seed-lamps, and the relit ember meant to carry warmth up the whole coast at
@@ -729,7 +729,7 @@ sealed_ember:
 vault_seal_record:
   name: the vault-sealer's record
   keywords: [record, seal, vault, book]
-  location: the_sealed_vault
+  location: nowhere
   lore: |-
     Scratched into the vault door from the inside, in a maker's last steady hand:
     "We seal what we could not let the Unforging have: a shard of the first ember, from before the
@@ -743,8 +743,8 @@ vault_seal_record:
 wreckways_salvage:
   name: a bundle of wreckways salvage
   keywords: [salvage, wreckways, bundle, material]
-  location: the_deep_wreckways
-  resettable: true  # a salvage node in the deep wrecks: take it, and the sea gives up more on the reset
+  location: nowhere
+  resettable: false
 
 chapel_relic:
   name: a drowned chapel-relic
@@ -756,7 +756,7 @@ chapel_relic:
 chapel_offering:
   name: the drowned chapel's last offering
   keywords: [offering, chapel, altar, cache]
-  location: the_drowned_chapel
+  location: nowhere
   lore: |-
     Left on the altar of the drowned chapel, wrapped in oilcloth against a sea that came anyway:
     the Merewrights of Sunhold prayed here to the making itself, and when the Cooling-Sea rose over
@@ -770,8 +770,8 @@ chapel_offering:
 brine_pearl:
   name: a brine-pearl
   keywords: [pearl, brine, flats, material]
-  location: the_reef_flats
-  resettable: true  # a tidal gather in the flats: take it, and the tide leaves another on the reset
+  location: nowhere
+  resettable: false
 
 manse_signet:
   name: the drowned house's signet
@@ -783,7 +783,7 @@ manse_signet:
 manse_ledger:
   name: the drowned house's ledger
   keywords: [ledger, manse, house, book]
-  location: the_sunken_manse
+  location: nowhere
   lore: |-
     The last ledger of the Merewright house that kept the Sunken Manse, its columns of salvage and
     salt and coin ruled to the final page: the house was rich, and the house was proud, and when the
@@ -796,8 +796,8 @@ manse_ledger:
 glowcap:
   name: a cluster of glowcap
   keywords: [glowcap, cap, mushroom, understory]
-  location: the_understory
-  resettable: true  # the understory's gather: glowcap on the fallen giants, regrows on the reset
+  location: nowhere
+  resettable: false
 
 rootpriest_censer:
   name: the Rootpriest's censer
@@ -809,7 +809,7 @@ rootpriest_censer:
 bark_testament:
   name: the testament in the bark
   keywords: [testament, bark, shrine, tree]
-  location: the_wildember_shrine
+  location: nowhere
   lore: |-
     Not written but grown: the tree's own testament, carved by the slow press of the Deeprooted's
     reading hands into the living bark of the wild-ember shrine, a warning kept green for an age.
@@ -823,7 +823,7 @@ bark_testament:
 ziggurat_reliquary:
   name: the choked reliquary
   keywords: [reliquary, ziggurat, faith, box]
-  location: the_ziggurat_vault
+  location: nowhere
   lore: |-
     A reliquary of black stone, its lid grown shut with the root that killed the hand that made it.
     Inside, in a dead script the tree has nearly closed over: the last rite of the black-stone faith.
@@ -839,8 +839,8 @@ ziggurat_reliquary:
 rime_crystal:
   name: a shard of rime-crystal
   keywords: [rime, crystal, shard, fields]
-  location: the_riming_fields
-  resettable: true  # the riming-fields' gather: rime-crystal in the cold seams, reforms on the reset
+  location: nowhere
+  resettable: false
 
 frostbound_hammer:
   name: the Frostbound Smith's hammer
@@ -852,7 +852,7 @@ frostbound_hammer:
 anvil_creed:
   name: the creed of the Silent Anvil
   keywords: [creed, anvil, cloister, stone]
-  location: the_silent_cloister
+  location: nowhere
   lore: |-
     Graven small in the warm stone of the cloister, in a plain hand, the whole rule of the Silent Anvil:
     "The golden age did not fall. It froze, mid-boast, in the very act of making one thing too many. We
@@ -865,7 +865,7 @@ anvil_creed:
 frosthold_daybook:
   name: the market-master's daybook
   keywords: [daybook, market, frosthold, ledger]
-  location: frosthold
+  location: nowhere
   lore: |-
     A market-master's daybook, frozen open to its last page, the ink stopped mid-word. The entries run
     ordinary to the very end: glass sold, a festival-day's takings, a note to mend the forge-bellows, a
@@ -880,7 +880,7 @@ frosthold_daybook:
 beacon_plaque:
   name: the beacon's cold plaque
   keywords: [plaque, beacon, kingsroad, brass]
-  location: the_kingsroad_beacon
+  location: nowhere
   lore: |-
     A brass plaque at the beacon's foot, green with an age of frost: "KINGSROAD BEACON -- Fourth of the
     Nine. Lit each dusk, answered north by Frosthold's, answered north again by the Court's, so that on
@@ -894,8 +894,8 @@ beacon_plaque:
 emberglass:
   name: a shard of emberglass
   keywords: [emberglass, glass, shard, flats]
-  location: the_obsidian_flats
-  resettable: true  # the obsidian-flats' gather: emberglass sets in the cracks, reforms on the reset
+  location: nowhere
+  resettable: false
 
 drakescale_mantle:
   name: a mantle of cinder-drake scale
@@ -914,7 +914,7 @@ ashkoll_masterbrand:
 kollkin_creed:
   name: the Kollkin creed
   keywords: [creed, kollkin, bronze, caldera]
-  location: the_caldera_market
+  location: nowhere
   lore: |-
     Struck in bronze at the caldera's lip, in a bold deep hand: "HEAT IS LIFE. A cold land is a corpse,
     a cold house a grave, a cold hearth a confession. The frozen north keeps its dead and calls it
@@ -928,7 +928,7 @@ kollkin_creed:
 ashkoll_last_pour:
   name: the record of the last pour
   keywords: [record, pour, ashkoll, tablet]
-  location: dead_ashkoll
+  location: nowhere
   lore: |-
     A work-tablet from Ashkoll's dead forge-square, its cold-scratched tally stopped mid-count. The
     Vent-master's hand runs steady and proud down the years: caldera strong, pours good, the hottest
@@ -944,8 +944,8 @@ ashkoll_last_pour:
 stormglass:
   name: a shard of stormglass
   keywords: [stormglass, storm, shard, shoals]
-  location: the_drifting_shoals
-  resettable: true  # the drifting-shoals' gather: stormglass where the lightning grounds, reforms on the reset
+  location: nowhere
+  resettable: false
 
 anchor_warden_chain:
   name: the Broken Warden's chain
@@ -957,7 +957,7 @@ anchor_warden_chain:
 skyborn_creed:
   name: the Skyborn creed
   keywords: [creed, skyborn, capstan, drum]
-  location: the_anchor_quarter
+  location: nowhere
   lore: |-
     Cut in a ring around the capstan-drum, worn smooth by a thousand years of hands: "WE NEVER LANDED.
     The world came apart and the ground fell away and we did not fall with it -- not because we were
@@ -972,7 +972,7 @@ skyborn_creed:
 falling_hold_manifest:
   name: the hold's last manifest
   keywords: [manifest, hold, falling, log]
-  location: the_falling_hold
+  location: nowhere
   lore: |-
     An anchor-keeper's manifest from the Falling Hold, its readings logged in a proud steady hand down
     the generations, and every reading a lie the keepers did not know they told. "Altitude holding.
@@ -995,8 +995,8 @@ water_ration:
 cinderglass_shard:
   name: a shard of cinderglass
   keywords: [cinderglass, glass, shard, cinder]
-  location: the_glassways
-  resettable: true  # the glassways' gather: Unforging-fused glass, sold hot in the Glass Market, reforms on reset
+  location: nowhere
+  resettable: false
 
 scoured_vault_seal:
   name: the scoured vault's seal
@@ -1008,7 +1008,7 @@ scoured_vault_seal:
 ashline_marker:
   name: the last Ashborn marker
   keywords: [marker, ashline, stone, hem]
-  location: the_ashline
+  location: nowhere
   lore: |-
     The last salvage-pole the Ashborn drive before the Ashline, a cross-stave hung with the tokens of
     those who walked past it and did not come back: a child's spoon, a clan-ring, a Forger's cold spark.
@@ -1022,7 +1022,7 @@ ashline_marker:
 vault_testament:
   name: the sealed maker's testament
   keywords: [testament, vault, maker, seal]
-  location: the_unfinished_vault
+  location: nowhere
   lore: |-
     Scratched inside the vault door by a hand running out of time: the testament of the scoured hold's
     last maker. "The Unforging took the east wing between one breath and the next -- I watched a wall
@@ -1039,8 +1039,8 @@ vault_testament:
 unmade_ember:
   name: a bead of unmade Ember
   keywords: [unmade, ember, bead, cinderdeep]
-  location: the_hollow_march
-  resettable: true  # the hollow-march gather: raw Ember the deep unmade, pooled in the cinder-wells, reforms on reset
+  location: nowhere
+  resettable: false
 
 hollow_crown:
   name: the Hollow Crown
@@ -1052,7 +1052,7 @@ hollow_crown:
 kiln_lastwork:
   name: the drowned smith's last work
   keywords: [lastwork, work, kiln, smith]
-  location: the_sunken_kiln
+  location: nowhere
   slot: body
   mods: {DEF: 15, "MAG DEF": 12}  # a mail the master-smith forged so well the unmaking could not break it, only grey it
   lore: |-
@@ -1067,7 +1067,7 @@ kiln_lastwork:
 cinderdeep_reckoning:
   name: a Warden's reckoning of the deep
   keywords: [reckoning, warden, cinderdeep, record]
-  location: the_greydark
+  location: nowhere
   lore: |-
     A Warden-Concord reckoning-stone, driven into the Greydark's soft floor by some earlier expedition
     and half-forgotten since: "Let it be recorded, for the Forgers who come after, what the Cinderdeep
@@ -1091,7 +1091,7 @@ cinder_ale:
 first_flame_creed:
   name: the creed of the First Flame
   keywords: [creed, flame, church, hearth]
-  location: the_first_flame_church
+  location: nowhere
   lore: |-
     Graven over the church hearth, in a hand that meant it: "THE WORLD WAS MADE. That is the first
     article and the last. Not born, not fallen from a god's hand, not eternal - MADE, by makers, out of
@@ -1105,7 +1105,7 @@ first_flame_creed:
 world_casefile:
   name: the world's own case-file
   keywords: [casefile, case, file, archive]
-  location: the_grand_archive
+  location: nowhere
   lore: |-
     The Grand Archive's founding record, the case-file the Emberwright Rememberers opened on the world
     itself: "CASE: THE UNFORGING. STATUS: open, and will not close. Known: the world was one Forged
@@ -1129,7 +1129,7 @@ hull_hoard_ring:
 merewright_creed:
   name: the Merewright creed
   keywords: [creed, merewright, rail, drowned]
-  location: the_tide_shrine
+  location: nowhere
   lore: |-
     Scrimshawed down the whale-bone rail of the tide-shrine, in a sailor's close hand: "THE SEA KEEPS.
     That is our whole faith, and it is kinder than it sounds. When the cooling-seas rose over the
@@ -1144,7 +1144,7 @@ merewright_creed:
 salvage_writ:
   name: a Salvage Guild writ
   keywords: [writ, guild, salvage, contract]
-  location: the_salvage_guildhall
+  location: nowhere
   lore: |-
     A standard Salvage Guild work-writ, left on the factor's table for any Forger to read before they
     mark it: "BE IT KNOWN the bearer contracts to open, clear, or lift salvage on the Guild's account,
@@ -1162,8 +1162,8 @@ salvage_writ:
 emberbloom:
   name: a cluster of ember-bloom
   keywords: [emberbloom, bloom, ember, stiltways]
-  location: the_stiltways
-  resettable: true  # the stiltways gather: wild ember-bloom on the stilt-feet, regrows on the reset
+  location: nowhere
+  resettable: false
 
 mirefast_lost_purse:
   name: the town's lost purse
@@ -1175,7 +1175,7 @@ mirefast_lost_purse:
 deeprooted_creed:
   name: the Deeprooted teaching-creed
   keywords: [creed, deeprooted, shrine, bark]
-  location: the_grove_shrine
+  location: nowhere
   lore: |-
     Grown, not carved, into the living bark of Mirefast's teaching-shrine, in the shaped-branch script
     the Deeprooted let outsiders learn: "THE WORLD IS ALIVE, and you are not its master. The dry Reaches
@@ -1214,7 +1214,7 @@ venthold_mark:
 ventforge_creed:
   name: the Vent-Forge creed
   keywords: [creed, ventforge, hall, metal]
-  location: the_guildmaster_hall
+  location: nowhere
   lore: |-
     Struck in living metal on the guildmaster's wall, still warm to the touch: "FEAR IS COWARDICE THAT
     LEARNED TO DRESS WELL. The Wardens hold the craft should be feared, the Silent Anvil hold it should
@@ -1244,8 +1244,8 @@ march_steel_guard:
 charge_crystal:
   name: a charge-crystal
   keywords: [charge, crystal, cairn, material]
-  location: the_cairn_hills
-  resettable: true  # the cairn-hills gather: old Forgework-charge grounded to crystal, reforms on the reset
+  location: nowhere
+  resettable: false
 
 charged_warden_core:
   name: the fallen Sentinel's core
@@ -1257,7 +1257,7 @@ charged_warden_core:
 old_gate_marks:
   name: the marks of the Old Gate
   keywords: [marks, gate, ring, glyphs]
-  location: the_old_gate
+  location: nowhere
   lore: |-
     The marks graven around the Old Gate's ring, in the Emberwright hand the Concord can no longer fully
     read - but a Forger who has walked far enough begins to make them out: "GATE THE SECOND OF THE NINE.
@@ -1275,7 +1275,7 @@ old_gate_marks:
 coast_shrine_words:
   name: the words on the shrine-stone
   keywords: [words, shrine, stone, coast]
-  location: the_coast_shrine
+  location: nowhere
   lore: |-
     Cut small in the coast shrine-stone, in a plain hand, the First Flame faith in the four lines the
     fisherfolk teach their children: "The world was Made. / The world was unmade. / The world can be
@@ -1289,7 +1289,7 @@ coast_shrine_words:
 ferry_crossing_chart:
   name: the Wreckways crossing-chart
   keywords: [chart, wreckways, ferry, crossing]
-  location: the_ferry_house
+  location: nowhere
   lore: |-
     The Merewright ferry-house's master-chart of the open crossing, inked and re-inked over generations:
     the lanes west to Tidewharf drawn not between buoys but between the masts of drowned ships, ten
@@ -1320,7 +1320,7 @@ ice_sealed_regalia:
 warmcamp_tally:
   name: the Warmcamp's dig-tally
   keywords: [tally, warmcamp, dig, ledger]
-  location: the_fire_tent
+  location: nowhere
   lore: |-
     A dig-tally hung by the fire, the Warmcamp's running argument written down: one column the diggers
     keep, of relics thawed and coin earned and mouths fed; another column someone else keeps, unlabeled,
@@ -1336,7 +1336,7 @@ warmcamp_tally:
 deeprooted_covenant:
   name: the Deeprooted covenant
   keywords: [covenant, deeprooted, council, heartwood]
-  location: the_grove_council
+  location: nowhere
   lore: |-
     Grown into the heartwood of the grove-council hollow, read by running a hand along the living grain:
     "WE DO NOT RULE. This is the whole covenant of the Deeprooted, and it is harder to keep than any
@@ -1356,7 +1356,7 @@ deeprooted_covenant:
 gate_watch_stone:
   name: the Gate-Watch stone
   keywords: [stone, watch, gate, threshold]
-  location: the_gate_watch
+  location: nowhere
   lore: |-
     Graven deep in the watch-stone at the threshold of the Forgeward Road, re-cut by every generation
     of sky-Wardens who have kept this post: "BEYOND HERE THE ROAD. East it runs, march on march, each
@@ -1375,8 +1375,8 @@ gate_watch_stone:
 grave_sap:
   name: a draught of grave-sap
   keywords: [grave, sap, roots, material]
-  location: the_grave_roots
-  resettable: true  # the grave-roots gather: sap where living root meets unmaking, reforms on the reset
+  location: nowhere
+  resettable: false
 
 rotheart_seed:
   name: the Rotheart's seed
@@ -1388,7 +1388,7 @@ rotheart_seed:
 rootdeep_witness:
   name: a Deeprooted witness-stone
   keywords: [witness, stone, rootdeep, deeprooted]
-  location: the_rootdeep_mouth
+  location: nowhere
   lore: |-
     A witness-stone the Deeprooted set at the Rootdeep's mouth, grown-script on living bark gone grey
     at the edges where the deep has begun to eat it: "THE DEEP TAKES OUR DEAD. This is the grief the
@@ -1407,8 +1407,8 @@ rootdeep_witness:
 ember_mast:
   name: a fall of ember-mast
   keywords: [mast, ember, heartwood, vale]
-  location: the_lost_vale
-  resettable: true  # the Lost Vale gather: mast fallen from the Heartwood, regrows on the reset
+  location: nowhere
+  resettable: false
 
 hundred_standard:
   name: the standard of the Hundred
@@ -1420,7 +1420,7 @@ hundred_standard:
 heartwood_bark:
   name: the Heartwood's bark
   keywords: [bark, heartwood, tree, vale]
-  location: the_lost_vale
+  location: nowhere
   lore: |-
     You lay a hand on the Heartwood and the reading comes slow, in growth-rings older than reading: this
     tree stood before the Emberwrights raised a single Forge-city, before the making of the world was a
@@ -1449,7 +1449,7 @@ unmade_hammer:
 emberdeep_warning:
   name: a Kollkin warning-brand
   keywords: [warning, brand, emberdeep, kollkin]
-  location: the_emberdeep_mouth
+  location: nowhere
   lore: |-
     A warning struck in iron at the Emberdeep's mouth, in the blunt Kollkin hand, the one place the
     fire-Forgers admit fear: "DO NOT GO DOWN. We are the Kollkin. We fear nothing that burns, because

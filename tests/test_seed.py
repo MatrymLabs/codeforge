@@ -43,8 +43,8 @@ def test_aethryn_boss_drops_a_valid_unplaced_prototype():
     items = load_items(root / "items.yaml")
     npcs = load_npcs(root / "npcs.yaml")
     inspect_world_links(rooms, items, npcs)  # the whole flagship seed still links cleanly
-    assert npcs["cinder_wight"]["drops"] == ["cinder_hammer"]
-    assert items["cinder_hammer"]["location"] == "nowhere"  # drop-only, never on the cellar floor
+    assert npcs["netharions_throne_guardian"]["drops"] == ["greater_healing_draught"]
+    assert items["greater_healing_draught"]["location"] == "nowhere"  # drop-only prototype
 
 
 def test_an_npc_drops_list_loads(tmp_path):

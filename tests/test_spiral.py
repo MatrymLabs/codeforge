@@ -167,21 +167,6 @@ def test_load_spiral_config_rejects_a_top_above_the_curve_cap(tmp_path):
         load_spiral_config(path)
 
 
-def test_the_flagship_seed_reaches_the_summit_at_the_level_cap():
-    from parts.shelf.reward_curve import LEVEL_MAX
-    from parts.world.seed import SEEDS_ROOT
-
-    config = load_spiral_config(SEEDS_ROOT / "aethryn" / "spiral.yaml")
-    assert config is not None and config["top_level"] == 300 == LEVEL_MAX  # the true ceiling
-    _rooms, npcs, first = generate_spiral(config, {"coil_third_landing": {"exits": {}}})
-    assert any(n["level"] == 300 for n in npcs.values())  # the aethryn Road runs to the cap
-    assert first == "coil_4_ascent"
-    # no dead band at the hand-authored/procedural seam: the lowest generated foe lands right above
-    # the last authored foe (the Stormlord, level 38), so the road never runs out of content.
-    lowest = min(n["level"] for n in npcs.values())
-    assert 38 < lowest <= 40, f"a dead band opened at the Spiral seam (lowest generated {lowest})"
-
-
 def test_spiral_zones_name_every_generated_coil():
     """The generated marches get area identity: every generated room lands in exactly one named zone
     (so the frontier renders an '[Area: The Nth March]' banner, not an anonymous stretch)."""
