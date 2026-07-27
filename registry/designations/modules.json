@@ -4897,5 +4897,35 @@
     "aliases": [],
     "created": "2026-07-27",
     "updated": "2026-07-27"
+  },
+  {
+    "designation": "MOD-04.072",
+    "name": "job_ladder",
+    "status": "active",
+    "function": "the 30-job FFT-style progression backbone (tiers, roles, unlocks, 21-slot schedule)",
+    "label": "job_ladder",
+    "file": "parts/world/job_ladder.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "docs/design/combat_design_bible.md",
+    "tests": "tests/test_job_ladder.py",
+    "depends_on": [
+      "seed"
+    ],
+    "related": [
+      "jobs",
+      "abilities",
+      "job_progress",
+      "progression"
+    ],
+    "reuse": "the structural spine of the 30-job modular combat system (Job System campaign, stage 1): 30 jobs across 3 tiers (12/12/6) with primary/secondary ROLES, data-driven acyclic UNLOCK chains (is_unlocked/missing_requirements for a player-facing progress display), and the universal 21-feature progression schedule (which feature type unlocks at each Job Level 1-30). The named abilities that fill each (job, level, slot) are the later stages; this is what they hang on and what the tests gate.",
+    "notes": "Kept as validated Python constants (JOBS, UNIVERSAL_PROGRESSION, ROLES) -- the job SYSTEM's shape, not player-editable seed content. validate() runs at import: tier counts, role vocabulary, unlock prerequisites resolving to real jobs at 1-30, a DFS cycle check (_assert_acyclic -- same-tier prereqs allowed, e.g. Hexblade needs Warlock, only cycles forbidden), and a 21-slot schedule (1 core trait, 10 actives, 3 passives, 2 reactions, 2 supports, 2 movements, 1 signature). Extends the existing jobs.py/abilities.py; does not replace them.",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-27",
+    "updated": "2026-07-27"
   }
 ]
