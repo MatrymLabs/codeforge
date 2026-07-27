@@ -77,7 +77,11 @@ inspect_world_links(WORLD, ITEMS, NPCS)
 
 # With the full foe set assembled (seed + the procedural Spiral), generate a hunt-contract for
 # every combatant foe -- side-content at volume, folded into the quest engine (parts.world.quest).
-from parts.world.quest import register_bounties, register_errands  # noqa: E402 -- after NPCS ready
+from parts.world.quest import (  # noqa: E402 -- after NPCS ready
+    register_bounties,
+    register_errands,
+    register_storylines,
+)
 
 register_bounties(NPCS)
 
@@ -104,6 +108,17 @@ _errand_destinations = _interleave(
 )
 if _settlements:
     register_errands(_settlements, _errand_destinations)
+
+# Zone storylines: a three-beat narrative chain per zone that pairs a town with a dungeon -- reach
+# the dungeon, slay its deep boss, bear word home -- woven from the world's own geography
+# (parts.world.storylines). This is the DEPTH counterpart to the errands' VOLUME. The zone metadata
+# is loaded straight from the seed here (zones.py owns the live scheduler; we only need the room
+# grouping), so the story arcs thread the same rooms the reset areas do.
+from parts.world.seed import load_zones  # noqa: E402 -- WORLD must exist for the room gate
+
+_story_zones = [dict(z) for z in load_zones(SEED_DIR / "zones.yaml", set(WORLD)).values()]
+if _settlements and _dungeons:
+    register_storylines(_story_zones, _settlements, _dungeons)
 
 # The spawn point is seed-defined, not hardcoded: the FIRST room in rooms.yaml.
 # (first-forge -> "forge"; spiral-ascent -> "spiral_landing".)

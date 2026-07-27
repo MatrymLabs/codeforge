@@ -5270,5 +5270,36 @@
     "aliases": [],
     "created": "2026-07-27",
     "updated": "2026-07-27"
+  },
+  {
+    "designation": "MOD-04.084",
+    "name": "storylines",
+    "status": "active",
+    "function": "weave a multi-beat narrative quest chain through every zone that pairs a town with a dungeon",
+    "label": "storylines",
+    "file": "parts/world/storylines.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "",
+    "tests": "tests/test_storylines.py",
+    "depends_on": [
+      "seed"
+    ],
+    "related": [
+      "quest",
+      "errands",
+      "bounties",
+      "delve",
+      "zones"
+    ],
+    "reuse": "the AAA-content-density DEPTH lever (bounties/errands gave VOLUME, this gives narrative): generate_storylines(zones, settlements, dungeons) forges one three-beat chain per zone that has both a town and a dungeon - reach the dungeon (on_enter), slay its deep boss (on_defeat=<room>_deep_boss), bear word home to the town (on_enter, award_xp). Woven from the world's own geography, folded into the quest engine via register_storylines; shown on the `contracts` notice board under a `Tales:` group. Starts already afoot so it advertises its hook.",
+    "notes": "Systemic, not hand-crafted (not WoW prose, but a genuine zone arc): each beat fires from a real world action. is_storyline() = 'story_' prefix; id is story_<town_room>. Reward scales with the zone's level_max (a capstone). A zone missing a town or a dungeon simply gets no tale (honest coverage).",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-27",
+    "updated": "2026-07-27"
   }
 ]
