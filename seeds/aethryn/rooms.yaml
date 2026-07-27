@@ -519,10 +519,14 @@ the_wardenmarch:
   desc: |-
     Beyond the gate the Concord's own country: watch-cairns and old Forgework mark the
     road east to the Coilfoot Marches, where the Forgeward Road runs out across the world.
-    The air hums with old charge. Emberreach is behind you now. The frontier is ahead, east.
+    The air hums with old charge. Emberreach is behind you now. The frontier is ahead, east. The
+    Wardens' KEEP holds the road north-along; the watchtower line runs north; the cairn-hills roll west.
   exits:
     south: warden_gate
     east: coilfoot_ascent
+    north: the_watchtower_line
+    west: the_cairn_hills
+    keep: the_wardens_keep
 
 coilfoot_ascent:
   name: The Coilfoot March
@@ -2100,3 +2104,85 @@ the_vent_crucible:
     Venthold's mark is yours by right, not rank. The proving-vent lies back up.
   exits:
     up: the_proving_vent
+# THE WARDENMARCH (expanded) - Emberreach's fortified highlands (Great Creation Campaign, Phase I;
+# Continental Atlas I: the Wardenmarch, where the Wardens hold the old Gates). A one-room threshold
+# becomes a real frontier region: the Wardens' keep + barracks (Layer 3/4 military), a watchtower line
+# and cairn-hills highland wilderness (biome + leveling), one of the old GATES (Layer 5: an ancient
+# gateway), and a half-Unforged redoubt ruin. Level-banded 17-22. Noun exits.
+# ============================================================================================
+
+the_wardens_keep:
+  name: The Wardens' Keep
+  desc: |-
+    A keep of grey Concord Forgework holding the frontier road: the Wardenmarch's strong point, from
+    which the Warden Concord watches the wilds, the Coilfoot, and the old Gates it is sworn to keep. A
+    march-commander reads the frontier from the wall. The BARRACKS drill off the yard; one of the old
+    GATES stands under the keep's guard. The march lies back south.
+  exits:
+    south: the_wardenmarch
+    barracks: the_march_barracks
+    gate: the_old_gate
+
+the_march_barracks:
+  name: The March Barracks
+  desc: |-
+    The keep's barracks, where the Concord drills the Wardens who hold the frontier: racks of grey
+    march-steel, a sanded yard, and the hard quiet of soldiers between watches. A drill-sergeant runs
+    the newcomers ragged and sells the keep's overstock to Forgers riding the frontier. Out returns to
+    the keep.
+  exits:
+    out: the_wardens_keep
+
+the_old_gate:
+  name: The Old Gate
+  desc: |-
+    One of the old Gates the Wardens are sworn to keep: a ring of standing Forgework older than the
+    Concord, humming with a charge that never cooled, that the Emberwrights raised for a purpose the
+    Concord has forgotten and guards anyway. A gate-warden keeps the ring. The Gate's marks are legible
+    to any who can read the old charge. The keep's guard lies back through the ring.
+  exits:
+    keep: the_wardens_keep
+    out: the_wardens_keep
+
+the_watchtower_line:
+  name: The Watchtower Line
+  desc: |-
+    North of the march road a line of watch-cairns and half-ruined towers runs the frontier's edge,
+    the Concord's early-warning against what comes off the wilds: high, wind-scoured highland where
+    march-wolves course the cairn-shadows and a Warden's glass could once see to the Coilfoot. The
+    march lies back south.
+  exits:
+    south: the_wardenmarch
+
+the_cairn_hills:
+  name: The Cairn-Hills
+  desc: |-
+    West of the road the Wardenmarch rolls up into cairn-hills: bare highland studded with the burial-
+    cairns of Wardens a thousand seasons dead and the old Forgework they were set to guard, the air
+    thick with charge that draws the march-husks up out of the ground. Charge-crystal grows where the
+    old power grounds, for anyone who dares gather in the hum. The march lies back east; a sundered
+    redoubt stands ruined deeper west.
+  exits:
+    east: the_wardenmarch
+    west: the_sundered_redoubt
+
+the_sundered_redoubt:
+  name: The Sundered Redoubt
+  desc: |-
+    A Concord redoubt the Unforging half-took: a frontier fort of grey Forgework with its west wall
+    scoured to un-ness, its watch-Forgework still trying to keep a perimeter that is no longer all
+    there. Redoubt-husks, the Wardens caught here when the wall went, keep the standing rooms. The
+    cairn-hills lie back east; the redoubt's deep magazine holds, down.
+  exits:
+    east: the_cairn_hills
+    down: the_redoubt_deep
+
+the_redoubt_deep:
+  name: The Redoubt Magazine
+  desc: |-
+    The deep magazine of the sundered redoubt, where the Concord stored the charged Forgework it dared
+    not leave above: a vault gone wrong, its charge grown lethal in the dark, kept by a Warden Sentinel
+    that failed its watch when the wall fell and has held this one room, alone and half-unmade, ever
+    since. What the Concord sealed here is charged past any surface make. The redoubt lies back up.
+  exits:
+    up: the_sundered_redoubt
