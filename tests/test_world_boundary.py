@@ -35,6 +35,7 @@ _GAME_SEED = {
     "armory",
     "coinage",
     "delve",
+    "delve_sets",
     "relics",
     "inscriptions",
     "spine",
