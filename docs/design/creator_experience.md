@@ -134,6 +134,23 @@ Publishing Portal, **publishes** it to the live world or **rolls it back**.
 - **Review point.** Before any tool writes to the seed files, or mutates anything beyond adding a
   peaceful NPC, revisit this record and the persistence question with Josh.
 
+## The Creator Artifact: the Maker's Signet
+
+The Workshop gathers the maker's tools into one *place*; the **Maker's Signet** (`parts/world/artifact.py`)
+carries a window to them *anywhere*. It is the Creator Artifact (Player Experience campaign, Part
+III): a legendary ring the Seed Owner bears, which opens the **Creator Interface** from any room
+(`signet`) and channels the Workshop's read-only tools remotely (`signet survey`, `signet activity`).
+
+**Modeled as a bond, not an object.** The campaign's absolutes — the artifact cannot be traded,
+stolen, copied, destroyed, or dropped on death, and only the Seed Owner may equip it — are satisfied
+*by construction*: the Signet is not a takeable inventory item at all, it is the owner's authority
+made legendary (`bears_signet == is_seed_owner`). There is nothing to take.
+
+**Read-only, for now.** The Signet channels the *lens* tools (`world_survey`, `live_activity`, whose
+report content was split from the station-location gate so the station and the Signet share it). The
+mutating tools (`create`, `publish`) stay station-bound to the Workshop itself; a remote-publish power
+is a later, deliberate extension.
+
 ## Roadmap (staged behind this foundation)
 
 Each station is a subsystem surfaced as a welcoming space rather than a developer menu. The tools to

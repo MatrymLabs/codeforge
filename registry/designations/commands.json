@@ -2835,5 +2835,31 @@
     "aliases": [],
     "created": "2026-07-27",
     "updated": "2026-07-27"
+  },
+  {
+    "designation": "CMD-04.088",
+    "name": "signet",
+    "status": "active",
+    "function": "the Maker's Signet: the Creator Interface, borne anywhere (owner)",
+    "label": "signet",
+    "file": "forge.py",
+    "type": "CMD",
+    "domain": "04",
+    "docs": "docs/design/creator_experience.md",
+    "tests": "tests/test_artifact.py",
+    "depends_on": [],
+    "related": [
+      "CMD-04.081",
+      "CMD-04.082"
+    ],
+    "reuse": "",
+    "tags": [
+      "command"
+    ],
+    "notes": "The Creator Artifact's verb: owner-only; bare opens the Creator Interface remotely, signet <function> channels a workshop read-only tool (survey/activity) from anywhere.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-27",
+    "updated": "2026-07-27"
   }
 ]

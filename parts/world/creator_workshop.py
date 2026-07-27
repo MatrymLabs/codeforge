@@ -221,13 +221,18 @@ PLANNING_TABLE = "planning_table"
 
 
 def plan_survey(session: Session) -> str:
-    """The Planning Table's live tool: the owner's honest, plain-language overview of their world.
-
-    Composes the two Creator campaigns: it measures the LIVE world (rooms, zones, inhabitants, wild
-    creatures) and reads its scale against the Seed Package deployment tiers (the nearest tier by
-    room count). Only the Seed Owner standing at the Planning Table sees it; everyone else is told
-    there is nothing to survey. Read-only: it never mutates world state (Architecture Law 1)."""
+    """The Planning Table's live tool: the owner's overview of their world (station-gated). The
+    report is `world_survey`, so the Creator Artifact can channel the same view remotely."""
     if session.location != PLANNING_TABLE or not is_seed_owner(session):
+        return "You see nothing here to survey."
+    return world_survey(session)
+
+
+def world_survey(session: Session) -> str:
+    """The world-shape report: the LIVE world (rooms, zones, inhabitants, wild creatures) read
+    against the Seed Package deployment tiers. Owner-only; read-only (Architecture Law 1). The
+    Planning Table shows it in place; the Creator Artifact channels it from anywhere."""
+    if not is_seed_owner(session):
         return "You see nothing here to survey."
 
     # Lazy imports: this module is loaded during world assembly, so it must not import the world,
@@ -267,13 +272,17 @@ STATISTICS_WALL = "statistics_wall"
 
 
 def wall_activity(session: Session) -> str:
-    """The Statistics Wall's live tool: who is playing the owner's world, and where.
-
-    Owner-gated AND station-gated like every station tool. Read-only: it reflects the live session
-    roster (players online and the room/zone each stands in) without touching world state. This is
-    the operational mirror the Planning Table's `survey` is not: `survey` reads the world's SHAPE,
-    `activity` reads its LIFE."""
+    """The Statistics Wall's live tool (station-gated). The report is `live_activity`, so the
+    Creator Artifact can channel the same live-play view remotely."""
     if session.location != STATISTICS_WALL or not is_seed_owner(session):
+        return "The wall shows you nothing here."
+    return live_activity(session)
+
+
+def live_activity(session: Session) -> str:
+    """The live-play report itself: who is playing the owner's world and where (room/zone each
+    stands in). Owner-only; read-only. `survey` reads the SHAPE, `activity` reads the LIFE."""
+    if not is_seed_owner(session):
         return "The wall shows you nothing here."
 
     from parts.world.session import SESSIONS, display_name, roster

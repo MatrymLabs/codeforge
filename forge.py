@@ -48,7 +48,7 @@ from parts.store_index import store
 from parts.telegraph import telegraph
 from parts.titles import title
 from parts.vitals import vitals
-from parts.world import allocate, creator_workshop, quest
+from parts.world import allocate, artifact, creator_workshop, quest
 from parts.world.abilities import render_abilities, use_ability
 from parts.world.accounts import (
     has_password,
@@ -1554,6 +1554,15 @@ def _build_commands() -> CommandSet:
             "CMD-04.087",
             "spend attribute points (allocate <stat> [n])",
             lambda s, a: allocate.allocate(s, a),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "signet",
+            "CMD-04.088",
+            "the Maker's Signet: the Creator Interface, borne anywhere (owner)",
+            lambda s, a: artifact.signet(s, a),
             namespace=CORE,
         )
     )
