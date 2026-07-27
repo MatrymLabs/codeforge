@@ -1300,3 +1300,34 @@ ferry_crossing_chart:
     it, and the whole world opens. Fear it, and stay on the coast and mend nets, and there is no shame
     in that either - the nets fed us longer than the forge has. But if you would see the world the
     makers broke, it starts here, at this bell, on this water. Ring it when you mean it."
+
+# --- The Warmcamp content (Great Creation Campaign, Phase I): the golden age dug from the ice - the
+# --- trader's relic-blade, the sentinel's sealed regalia, and the argument the whole camp is built on. ---
+goldenage_relic_blade:
+  name: a golden-age relic-blade
+  keywords: [blade, relic, goldenage, weapon]
+  location: nowhere
+  slot: weapon
+  mods: {ATK: 20, ACC: 6}  # dug whole from the Rimefall ice: a thousand-year-old make better than any living forge
+
+ice_sealed_regalia:
+  name: the ice-sealed regalia
+  keywords: [regalia, sealed, reliquary, armor]
+  location: nowhere
+  slot: body
+  mods: {DEF: 18, "MAG DEF": 12}  # the golden age's own, kept perfect under the floe and taken off its frozen sentinel
+
+warmcamp_tally:
+  name: the Warmcamp's dig-tally
+  keywords: [tally, warmcamp, dig, ledger]
+  location: the_fire_tent
+  lore: |-
+    A dig-tally hung by the fire, the Warmcamp's running argument written down: one column the diggers
+    keep, of relics thawed and coin earned and mouths fed; another column someone else keeps, unlabeled,
+    of the diggers the ice took -- the shaft-falls, the frost-guards, the ones who woke a sentinel and
+    did not come up. The two columns run about even. Beneath them, in the camp-boss's blunt hand: "The
+    Rimekin say we rob a graveyard. Maybe. But a graveyard that pays its robbers in gold and its
+    faithful in nothing is a graveyard that has picked a side, and it isn't theirs. We dig because the
+    living are worth more than the paused dead, and if that is heresy to the Silent Anvil, let them come
+    warm their pure cold hands at our fire and say it to our faces. They never do. They're never hungry
+    enough to have to mean it." It is the whole quarrel of the frozen north, kept on a nail by a fire.

@@ -1287,6 +1287,7 @@ the_riming_fields:
     east: stillhearth
     north: the_kingsroad_beacon
     west: the_glassway
+    south: the_warmcamp
 
 the_kingsroad_beacon:
   name: The Kingsroad Beacon
@@ -2319,3 +2320,67 @@ the_ferry_house:
     the harbor.
   exits:
     out: quench_harbor
+
+# ============================================================================================
+# THE WARMCAMP - an Ashborn salvage-camp on the Rimefall ice (Great Creation Campaign, Phase I;
+# Continental Atlas II names the warm-camps of Ashborn salvagers who defy the Rimekin to loot the ice).
+# A faction-conflict settlement: the Ashborn hold that a frozen city is a treasury, the Silent Anvil
+# hold it a shrine to touch nothing, and the Warmcamp is where that argument is dug up by the crate. A
+# social hub (fire-tent, trade-tent) + a short salvage-dig delve. Level-banded 42-48. Noun exits.
+# ============================================================================================
+
+the_warmcamp:
+  name: The Warmcamp
+  desc: |-
+    A camp of banked salvage-fires huddled on the Rimefall floe, defying the cold and the Rimekin both:
+    the Warmcamp, where the Ashborn who will not leave the frozen cities alone dig the ice for the
+    golden age's wealth, and count the Silent Anvil's shrine-law a coward's excuse to sit on a fortune.
+    A camp-boss keeps the diggers in line. The riming fields lie back north; the FIRE-tent and the
+    TRADE-tent keep the camp warm, and a salvage-dig drops into the ice, down.
+  exits:
+    north: the_riming_fields
+    down: the_salvage_dig
+    fire: the_fire_tent
+    trade: the_trade_tent
+
+the_fire_tent:
+  name: The Fire-Tent
+  desc: |-
+    The Warmcamp's one real warmth: a great hide tent over a salvage-fire that never dies, where the
+    diggers thaw their hands and their grudges and argue whether the ice is a graveyard to be honored
+    or a bank to be robbed. A fire-keeper feeds the flame and settles the arguments. Out returns to the
+    camp.
+  exits:
+    out: the_warmcamp
+
+the_trade_tent:
+  name: The Trade-Tent
+  desc: |-
+    The camp's trade-tent, hung with the golden age's leavings dug from the ice: preserved Forgework a
+    thousand years better-made than anything alive, sold cheap because the Ashborn cannot eat a relic
+    and the cold does not care how fine your loot is. A salvage-trader deals the thaw's take. Out
+    returns to the camp.
+  exits:
+    out: the_warmcamp
+
+the_salvage_dig:
+  name: The Salvage-Dig
+  desc: |-
+    A shaft the Ashborn have cut down into the floe toward a frozen hold the Rimekin forbid them to
+    touch: walls of clear ice with the golden age standing whole behind them, mid-gesture, and the dig-
+    frost the cold precipitates to guard what the diggers disturb. A frost-guardian works the shaft. The
+    camp lies back up; the buried hold opens deeper, down.
+  exits:
+    up: the_warmcamp
+    down: the_buried_reliquary
+
+the_buried_reliquary:
+  name: The Buried Reliquary
+  desc: |-
+    The frozen hold the Warmcamp digs toward: an Emberwright reliquary preserved entire under the floe,
+    its treasures standing where their keepers set them the instant the world froze. A Rimekin sentinel-
+    of-the-ice keeps it still, flash-frozen mid-guard and woken by the diggers' warmth to finish a duty
+    an age overdue: to let no hand disturb the paused past. What the golden age sealed here is the
+    richest untouched make in the north. The dig lies back up.
+  exits:
+    up: the_salvage_dig
