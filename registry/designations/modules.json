@@ -5481,5 +5481,36 @@
     "aliases": [],
     "created": "2026-07-27",
     "updated": "2026-07-27"
+  },
+  {
+    "designation": "MOD-04.091",
+    "name": "wardens",
+    "status": "active",
+    "function": "name each dungeon's deep boss for its dungeon so the whole content web names one foe",
+    "label": "wardens",
+    "file": "parts/world/wardens.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "",
+    "tests": "tests/test_wardens.py",
+    "depends_on": [
+      "seed"
+    ],
+    "related": [
+      "delve",
+      "relics",
+      "inscriptions",
+      "rumors",
+      "bestiary"
+    ],
+    "reuse": "the AAA-content-density COHERENCE lever: name_wardens(dungeons, npcs) renames each `<room>_deep_boss` from a random forge-name to a titled warden of its own dungeon ('the Warden of The Black Hollow') and re-keys its keywords (title / dungeon word / warden / boss), so the rumour's 'terror', the inscription's 'keeper', the relic 'torn from' the dungeon, the bounty, and the foe itself all name one individual. Stats/tier unchanged: identity only. Wired BEFORE register_bounties so the bounty reads the new name.",
+    "notes": "Systemic, not hand-crafted: the same dungeon always crowns the same warden (deterministic; title by dungeon index over Warden/Keeper/Devourer/Sentinel/Herald/Scourge). Uses relics.iconic_word for the keyword. A dungeon whose deep boss is absent is skipped. aethryn: 16 named wardens.",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-27",
+    "updated": "2026-07-27"
   }
 ]

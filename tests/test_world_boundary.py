@@ -36,6 +36,7 @@ _GAME_SEED = {
     "coinage",
     "delve",
     "delve_sets",
+    "wardens",
     "relics",
     "inscriptions",
     "landmarks",

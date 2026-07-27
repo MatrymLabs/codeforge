@@ -22,6 +22,7 @@ from parts.world.seed import SEED_DIR, Npc, Room, inspect_world_links, load_room
 from parts.world.spiral import extend_world_with_road, load_spiral_config
 from parts.world.townsfolk import load_settlements, populate_settlements
 from parts.world.travel import load_waystones
+from parts.world.wardens import name_wardens
 from parts.world.wildlands import (
     generate_wildlands,
     load_wildlands_config,
@@ -64,6 +65,9 @@ if _dungeons is not None:
     WORLD.update(_delve_rooms)
     NPCS.update(_delve_npcs)
     wire_delve_mouths(WORLD, _dungeons)
+    # Name each deep boss for its dungeon (parts.world.wardens), BEFORE the bounty board reads the
+    # foe set -- so rumour, inscription, relic, bounty, and the foe itself all name the one keeper.
+    name_wardens(_dungeons, _delve_npcs)
     register_prototypes(arm_guardians(_delve_npcs))
     # Give every deep boss a SIGNATURE legendary relic (a named, readable payoff on top of its
     # generic gear), so felling one is a memorable event, not just a drop (parts.world.relics).
