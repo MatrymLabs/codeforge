@@ -3281,3 +3281,56 @@ rotheart_warden:
   tier: boss  # the Rootdeep's climax (x10 reward): the Verdance's deep, a rotting mirror of the Heart-Grove
   drops: [rotheart_seed, greater_healing_draught]
   loot: {ember_shard: 12, grave_sap: 4, nothing: 1}
+
+# --- The Lost Vale life (Great Creation Campaign, Phase I, Layer 5): the hidden valley's hermit and
+# --- the battlefield's fallen. A curiosity-reward cluster off the Reachwood. Banded 6-14. ---
+vale_bramble_cat:
+  name: a bramble-cat
+  location: the_hidden_trail
+  keywords: [cat, bramble, trail, beast]
+  dialogue:
+    - A bramble-cat drops from the narrows, unused to being found and unwilling to be, all claws and green-eyed indignation.
+  hp: 40
+  atk: 9
+  aggressive: true
+  attack_element: WND
+  level: 6
+  tier: normal  # the hidden trail's guardian, the way into the Lost Vale
+  loot: {ember_shard: 2, nothing: 2}
+
+vale_hermit:
+  name: the vale-hermit
+  location: the_lost_vale
+  keywords: [hermit, vale, heartwood, keeper]
+  dialogue:
+    - '"You found the way. Few do. Sit under the Heartwood, then, Forger, and be quiet a while -- this tree is older than the Unforging, older than the Forge-cities, older than the makers'' first mistake. The world broke and remade itself around it and never dared touch it. I keep its quiet, which is to say I do nothing, which is harder than it sounds. Read its bark if it lets you. Some things the world forgot are worth the finding."'
+
+stillfield_battle_husk:
+  name: a battle-husk
+  location: the_stillfield
+  keywords: [husk, battle, stillfield, warden]
+  dialogue:
+    - A battle-husk rises from the green over grey bone: a Warden of the last stand who never got the order to stand down, still holding a field the war left behind.
+  hp: 60
+  atk: 12
+  aggressive: true
+  attack_element: LGT
+  level: 10
+  tier: normal  # the Stillfield battlefield, a Reachwood curiosity-reward leveling ground
+  loot: {ember_shard: 3, nothing: 2}
+
+hundred_captain:
+  name: the Hundredth
+  location: the_hundred_cairn
+  keywords: [hundredth, captain, cairn, warden]
+  dialogue:
+    - The company's captain still stands his post over the cairn of his hundred, grey Forgework holding a line the war moved past an age ago. "The vale holds," he says, to soldiers a thousand seasons dead. "The Reachwood behind us holds. Stand the line." He does not know the war is over. He only knows the order.
+  hp: 130
+  atk: 18
+  aggressive: true
+  attack_element: LGT
+  resistances: {LGT: Resist, WTR: Weak}  # a charged Warden-guardian holding a dead line; water grounds him
+  level: 14
+  tier: elite  # the Lost Vale's climax (x3 reward): a last-stand captain who never stood down
+  drops: [hundred_standard, greater_healing_draught]
+  loot: {ember_shard: 5, nothing: 2}

@@ -212,3 +212,12 @@ the_rootdeep:
   level_min: 28
   level_max: 36
   biome: "subterranean-rootdark"
+the_lost_vale:
+  name: The Lost Vale
+  rooms: [the_hidden_trail, the_lost_vale, the_stillfield, the_hundred_cairn]
+  reset_mode: empty_only  # the vale's bramble-cats, battle-husks, and the Hundredth reform once quiet
+  beats_between: 12
+  region: "Emberreach"
+  level_min: 6
+  level_max: 14
+  biome: "hidden-vale"

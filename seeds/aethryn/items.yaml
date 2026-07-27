@@ -1401,3 +1401,38 @@ rootdeep_witness:
     your fire and your light can. The Boughwarden guards the living heart above. Something guards the
     rotting one below, and it wears half our face. Go down and see what the Verdance becomes when the
     deep gets its roots. Then go back up and love the green a little harder, knowing what holds it up."
+
+# --- The Lost Vale content (Great Creation Campaign, Phase I, Layer 5): the ember-mast gather, the
+# --- last-stand standard, and the Heartwood's bark - the world before the makers' first mistake. ---
+ember_mast:
+  name: a fall of ember-mast
+  keywords: [mast, ember, heartwood, vale]
+  location: the_lost_vale
+  resettable: true  # the Lost Vale gather: mast fallen from the Heartwood, regrows on the reset
+
+hundred_standard:
+  name: the standard of the Hundred
+  keywords: [standard, hundred, cairn, banner]
+  location: nowhere
+  slot: accessory_2
+  mods: {DEF: 5, ACC: 4}  # the last-stand company's banner, kept a thousand seasons past the war it was raised in
+
+heartwood_bark:
+  name: the Heartwood's bark
+  keywords: [bark, heartwood, tree, vale]
+  location: the_lost_vale
+  lore: |-
+    You lay a hand on the Heartwood and the reading comes slow, in growth-rings older than reading: this
+    tree stood before the Emberwrights raised a single Forge-city, before the making of the world was a
+    craft anyone thought to name. It was here for the golden age and did not bow to it. It was here for
+    the Unforging and was not unmade. It is not Forged and cannot be reforged, because it was never made
+    at all - it simply GREW, the one thing in all the Kindlands the makers did not make and the unmaking
+    could not touch. The First Flame folk say the world was Made and can be Made again. The Heartwood is
+    the quiet question under that faith, the one no creed answers: what about the things that were never
+    made, that grew on their own before the first maker lifted the first hammer, and outlasted every
+    made thing since? Maybe the world was not only Made. Maybe some of it was always just growing, and
+    the makers only ever added to a thing already alive, and forgot, in their pride, that they had come
+    late to a world that did not need them. The Heartwood does not say. It only grows. It was growing
+    before the question. It will be growing after. Sit in its shade, Forger, and be, for a moment, a
+    thing that grew instead of a thing that was made. The Reachwood folded a valley closed to keep this.
+    Now you know why.
