@@ -929,6 +929,7 @@ the_deepwood:
     north: the_thornmere
     east: the_forgotten_shrine
     up: the_old_firewatch
+    south: the_hidden_trail
 
 the_thornmere:
   name: The Thornmere
@@ -2556,3 +2557,52 @@ the_rotheart:
     lies back up.
   exits:
     up: the_unmade_grove
+
+# ============================================================================================
+# THE LOST VALE (Great Creation Campaign, Phase I, Layer 5: exploration sites). A hidden valley behind
+# a concealed trail off the Reachwood's deepwood, rewarding the curious: a natural wonder (the Heartwood,
+# a tree older than the Unforging), an Unforging battlefield where a Warden company made a last stand,
+# and the cairn that keeps them. Curiosity-reward, environmental storytelling. Level-banded 6-14.
+# ============================================================================================
+
+the_hidden_trail:
+  name: The Hidden Trail
+  desc: |-
+    A deer-track that is not on any Warden's map, slipping down through a bramble-gap the deepwood keeps
+    to itself: the way into a fold of the Reachwood the wider world forgot. Bramble-cats den in the
+    narrows, unused to being found. The deepwood lies back up; the trail opens into a hidden vale, south.
+  exits:
+    up: the_deepwood
+    south: the_lost_vale
+
+the_lost_vale:
+  name: The Lost Vale
+  desc: |-
+    A valley the Reachwood folded closed around a wonder: the Heartwood, a single tree older than the
+    Unforging, so vast the vale is only its shade, its wild ember burning gentle in a bark like a cliff.
+    The world broke and remade around this tree and never touched it. A vale-hermit keeps its long
+    quiet. Ember-mast falls thick for the gathering. The trail lies back up; a still field opens east.
+  exits:
+    up: the_hidden_trail
+    east: the_stillfield
+
+the_stillfield:
+  name: The Stillfield
+  desc: |-
+    An old battlefield the vale kept: a meadow where a Warden company made a last stand in the Unforging
+    and the grass grew back over grey Forgework and greyer bone, still and green and terrible. Battle-
+    husks keep the field, the fallen who never got the order to stand down. The vale lies back west; the
+    cairn that keeps the hundred stands east.
+  exits:
+    west: the_lost_vale
+    east: the_hundred_cairn
+
+the_hundred_cairn:
+  name: The Cairn of the Hundred
+  desc: |-
+    At the field's far edge, a cairn of a hundred Warden-marks over a hundred Wardens who held the vale
+    so the Reachwood behind them would not fall: the last stand's grave, and its keeper - the Hundredth,
+    the company's captain, still standing his post in grey Forgework, still holding a line the war moved
+    past an age ago. What the company died guarding is cairned here with them. The field lies back west.
+  exits:
+    west: the_stillfield

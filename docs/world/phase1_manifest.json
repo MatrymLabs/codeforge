@@ -1,21 +1,21 @@
 {
   "spawn": "the_waking_shore",
-  "rooms_total": 283,
-  "rooms_reachable_from_spawn": 283,
+  "rooms_total": 287,
+  "rooms_reachable_from_spawn": 287,
   "orphans": [],
   "orphan_count": 0,
-  "exits_total": 587,
+  "exits_total": 595,
   "unresolved_exits": [],
   "unresolved_exit_count": 0,
   "compound_direction_exits": 6,
   "noun_exits": 109,
-  "dead_end_rooms": 107,
+  "dead_end_rooms": 108,
   "fully_connected": true,
   "geography": {
-    "zones_total": 51,
-    "zones_with_metadata": 51,
+    "zones_total": 52,
+    "zones_with_metadata": 52,
     "regions": {
-      "Emberreach": 27,
+      "Emberreach": 31,
       "The Cinderdeep": 15,
       "The Cinderwaste": 13,
       "The Forgeward Road": 83,
@@ -25,7 +25,7 @@
       "The Sundered Sky": 4,
       "The Verdance": 5
     },
-    "rooms_in_a_zone": 161,
+    "rooms_in_a_zone": 165,
     "rooms_without_zone": 122,
     "unzoned_rooms": [
       "dead_ashkoll",
