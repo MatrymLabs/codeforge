@@ -1284,3 +1284,19 @@ coast_shrine_words:
     in the capital because it is the only one a cold, frightened, newly-woken Forger actually needs. The
     grand Church of the First Flame in Emberreach City has a hearth-creed a hundred lines long. This is
     the same faith, worn down by the sea to the part that floats. Begin, it says. That is all. Begin.
+# --- Quench Harbor interiors content (Great Creation Campaign, Phase I, Layer 4): the ferry-house
+# --- crossing-chart, environmental storytelling for the coast gateway to the drowned Reach. ---
+ferry_crossing_chart:
+  name: the Wreckways crossing-chart
+  keywords: [chart, wreckways, ferry, crossing]
+  location: the_ferry_house
+  lore: |-
+    The Merewright ferry-house's master-chart of the open crossing, inked and re-inked over generations:
+    the lanes west to Tidewharf drawn not between buoys but between the masts of drowned ships, ten
+    thousand of them marked where the Cooling-Sea rose over the Quenchmere and kept it. A margin-note in
+    the ferry-master's hand: "The crossing is where a coast Forger stops being a coast Forger. East of
+    here the world is Emberreach - warm, relit, watched, forgiving. West of here it is the wide Anvil,
+    and the wide Anvil does not forgive, it only pays. Every Reach is reached across this water. Learn
+    it, and the whole world opens. Fear it, and stay on the coast and mend nets, and there is no shame
+    in that either - the nets fed us longer than the forge has. But if you would see the world the
+    makers broke, it starts here, at this bell, on this water. Ring it when you mean it."
