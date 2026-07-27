@@ -8,105 +8,197 @@ kindlands_coast:
   rooms: [the_waking_shore, reachwood_edge, the_far_reach]
   reset_mode: empty_only
   beats_between: 12
+  region: "Emberreach"
+  level_min: 1
+  level_max: 8
+  biome: "temperate-coast"
 
 cinderhearth:
   name: Cinderhearth
   rooms: [cinderhearth_square, old_reach_bridge]
   reset_mode: never
   beats_between: 20
+  region: "Emberreach"
+  level_min: 1
+  level_max: 6
+  biome: "temperate-coast"
 
 cold_cellar:
   name: The Cold Cellar
   rooms: [cold_cellar, cellar_hearth]
   reset_mode: always
   beats_between: 8
+  region: "Emberreach"
+  level_min: 3
+  level_max: 8
+  biome: "sundered-undercroft"
 
 ember_road:
   name: The Ember-road
   rooms: [emberroad_climb, strayfire_hollow, wayfarers_rest]
   reset_mode: empty_only  # the road's strayfire and reavers repopulate once the stretch is quiet
   beats_between: 10
+  region: "Emberreach"
+  level_min: 8
+  level_max: 15
+  biome: "temperate-road"
 
 emberreach:
   name: Emberreach, City of the Relit Forge
   rooms: [emberreach_gates, the_grand_forge, orders_row, market_quarter, warden_gate]
   reset_mode: never  # a living capital, not a repop field: its NPCs and shops persist
   beats_between: 20
+  region: "Emberreach"
+  level_min: 12
+  level_max: 20
+  biome: "city"
 
 wardenmarch:
   name: The Wardenmarch
   rooms: [the_wardenmarch]
   reset_mode: never  # Concord country: a threshold, not a repop field
   beats_between: 20
+  region: "Emberreach"
+  level_min: 17
+  level_max: 22
+  biome: "highland-frontier"
 
 great_spiral_coil_1:
   name: The Great Spiral - First Coil
   rooms: [coilfoot_ascent, coil_first_landing]
   reset_mode: empty_only  # the ascent's wisps and Gate-boss reform once the Coil is quiet
   beats_between: 14
+  region: "The Forgeward Road"
+  level_min: 43
+  level_max: 70
+  biome: "forgeward-marches"
 
 great_spiral_coil_2:
   name: The Great Spiral - Second Coil
   rooms: [coil_second_ascent, coil_bridgespan, coil_second_landing]
   reset_mode: empty_only  # the Coil's revenants and Gate-boss reform once the stair is quiet
   beats_between: 14
+  region: "The Forgeward Road"
+  level_min: 70
+  level_max: 110
+  biome: "forgeward-marches"
 
 cinderdeep:
   name: The Cinderdeep
   rooms: [cinderdeep_descent, sunken_forgeworks, the_cold_vein, cinderdeep_maw]
   reset_mode: empty_only  # the deep's crawlers and its Hollow Smith reform once the delve is quiet
   beats_between: 12
+  region: "The Cinderdeep"
+  level_min: 10
+  level_max: 24
+  biome: "subterranean-unmade"
 
 great_spiral_coil_3:
   name: The Great Spiral - Third Coil
   rooms: [coil_third_ascent, coil_stormreach, coil_third_landing]
   reset_mode: empty_only  # the storm's husks and its Stormlord reform once the Coil is quiet
   beats_between: 16
+  region: "The Forgeward Road"
+  level_min: 110
+  level_max: 160
+  biome: "forgeward-marches"
 
 the_reachwood:
   name: The Reachwood
   rooms: [reachwood_hollow, wardens_glade, the_bramblewarren]
   reset_mode: empty_only
   beats_between: 12
+  region: "Emberreach"
+  level_min: 3
+  level_max: 12
+  biome: "wild-forest"
 
 the_ashwastes:
   name: The Ashwastes
   rooms: [ashwastes_road, the_cinder_dunes, the_ashborn_camp, the_scoured_ruin, the_glass_crater]
   reset_mode: empty_only
   beats_between: 12
+  region: "Emberreach"
+  level_min: 15
+  level_max: 25
+  biome: "ash-waste"
 
 the_cooling_sea:
   name: The Cooling-Sea
   rooms: [the_saltstrand, quench_harbor, the_wreck_reef]
   reset_mode: empty_only
   beats_between: 12
+  region: "Emberreach"
+  level_min: 3
+  level_max: 10
+  biome: "coast-sea"
 
 the_quenchmere:
   name: The Quenchmere
   rooms: [the_quench_lanes, tidewharf_docks, tidewharf_plaza, the_accord_hall, drowned_sunhold_descent, the_drowned_sunhold]
   reset_mode: empty_only
   beats_between: 12
+  region: "The Quenchmere"
+  level_min: 10
+  level_max: 30
+  biome: "drowned-archipelago"
 
 the_verdance:
   name: The Verdance
   rooms: [the_verdant_passage, verdance_landing, highbough, the_deeproot_mire, the_heart_grove]
   reset_mode: empty_only
   beats_between: 12
+  region: "The Verdance"
+  level_min: 20
+  level_max: 32
+  biome: "living-jungle"
 
 the_rimefall:
   name: The Rimefall
   rooms: [the_deepwater_berth, the_riming_passage, stillhearth, the_frozen_court]
   reset_mode: empty_only
   beats_between: 12
+  region: "The Rimefall"
+  level_min: 40
+  level_max: 52
+  biome: "glacier"
 
 the_kollforge:
   name: The Kollforge
   rooms: [the_molten_passage, emberkoll, the_anvil_vents, the_vent_deep]
   reset_mode: empty_only
   beats_between: 12
+  region: "The Kollforge"
+  level_min: 50
+  level_max: 62
+  biome: "volcanic"
 
 the_sundered_sky:
   name: The Sundered Sky
   rooms: [the_sky_lanes, highgate, the_drifting_reach, the_wandering_court]
   reset_mode: empty_only
   beats_between: 12
+  region: "The Sundered Sky"
+  level_min: 50
+  level_max: 72
+  biome: "floating-shards"
+
+the_cinderwaste:
+  name: The Cinderwaste
+  rooms: [the_ashen_crossing, the_grey_shore, saltring, the_salt_market, the_ring_quarter, the_glass_market, the_glassways, the_grey_dunes, the_ashborn_waymoot, the_drowned_canals, the_ashline, the_scoured_reach, the_unfinished_vault]
+  reset_mode: empty_only  # the waste's jackals, wraiths, and the vault colossus reform once the grey is quiet
+  beats_between: 12
+  region: "The Cinderwaste"
+  level_min: 15
+  level_max: 40
+  biome: "salt-desert"
+
+the_cinderdeep_frontier:
+  name: The Cinderdeep - the Unforged Frontier
+  rooms: [the_unmaking_verge, the_greydark, the_hollow_march, the_unforged_reach, the_sunken_kiln, the_umbral_deep]
+  reset_mode: empty_only  # the deep's Unforged and its Hollow King reform once the descent is quiet
+  beats_between: 12
+  region: "The Cinderdeep"
+  level_min: 40
+  level_max: 52
+  biome: "subterranean-unmade"

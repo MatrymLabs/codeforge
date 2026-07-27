@@ -25,9 +25,47 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
 from parts.world.world import DIRECTIONS, START_ROOM, WORLD  # noqa: E402
+from parts.world.zones import ZONES  # noqa: E402
 
 CARDINAL = {"north", "south", "east", "west", "up", "down"}
 COMPOUND = {"northeast", "northwest", "southeast", "southwest"}
+
+
+def _zone_coverage(rooms: dict) -> dict:
+    """Layer-2 geography coverage: which rooms belong to an area, which Reaches are represented,
+    and which of the Level 1-300 bands the metadata zones cover (with any gaps named honestly)."""
+    zoned: set[str] = set()
+    regions: dict[str, int] = {}
+    covered = [False] * 301  # index by level; 1..300 meaningful
+    for zone in ZONES.values():
+        zoned.update(zone["rooms"])
+        region = zone.get("region")
+        if region:
+            regions[region] = regions.get(region, 0) + len(zone["rooms"])
+        lo, hi = zone.get("level_min"), zone.get("level_max")
+        if lo is not None and hi is not None:
+            for lvl in range(lo, hi + 1):
+                covered[lvl] = True
+    unzoned = sorted(set(rooms) - zoned)
+    gaps: list[str] = []
+    lvl = 1
+    while lvl <= 300:
+        if not covered[lvl]:
+            start = lvl
+            while lvl <= 300 and not covered[lvl]:
+                lvl += 1
+            gaps.append(f"{start}-{lvl - 1}")
+        else:
+            lvl += 1
+    return {
+        "zones_total": len(ZONES),
+        "zones_with_metadata": sum(1 for z in ZONES.values() if z.get("region")),
+        "regions": dict(sorted(regions.items())),
+        "rooms_in_a_zone": len(zoned),
+        "rooms_without_zone": len(unzoned),
+        "unzoned_rooms": unzoned,
+        "level_band_gaps": gaps,
+    }
 
 
 def audit() -> dict:
@@ -77,6 +115,7 @@ def audit() -> dict:
         "noun_exits": noun_exits,
         "dead_end_rooms": len(dead_ends),
         "fully_connected": len(orphans) == 0 and len(unresolved) == 0,
+        "geography": _zone_coverage(rooms),
     }
 
 
@@ -98,6 +137,14 @@ def main() -> int:
         "fully_connected",
     ):
         print(f"{key}: {report[key]}")
+    geo = report["geography"]
+    print(f"zones_total: {geo['zones_total']} (with metadata: {geo['zones_with_metadata']})")
+    print(f"regions: {', '.join(geo['regions'])}")
+    print(
+        f"rooms_in_a_zone: {geo['rooms_in_a_zone']}  "
+        f"rooms_without_zone: {geo['rooms_without_zone']}"
+    )
+    print(f"level_band_gaps (1-300): {geo['level_band_gaps'] or 'none'}")
     print(f"manifest written: {out}")
     return 0 if report["fully_connected"] else 1
 
