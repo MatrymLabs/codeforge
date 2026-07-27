@@ -219,14 +219,14 @@ def test_aethryn_relighting_arc_self_completes_from_natural_play():
 
     seeds = Path(__file__).resolve().parent.parent / "seeds"
     spec = load_quest(seeds / "aethryn" / "quest.yaml")
-    assert spec is not None and spec["name"] == "The Relighting"
+    assert spec is not None and spec["name"] == "The Endless Journey"
     for step in spec["steps"]:
         if step["event"] == "accept":
             continue
         natural = step.get("on_take") or step.get("on_enter") or step.get("on_defeat")
         assert natural, f"step '{step['event']}' has no natural trigger -- the arc would soft-lock"
     face = next(s for s in spec["steps"] if s["to"] == "done")
-    assert face.get("on_defeat") == "cinder_wight" and face.get("effect") == "award_xp"
+    assert face.get("on_enter") == "greenhold" and face.get("effect") == "award_xp"
     assert "done" in spec["terminal"]
 
 

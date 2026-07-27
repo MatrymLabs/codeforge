@@ -1,12 +1,9 @@
-=========================================================
-          A E T H R Y N :  T H E  R E K I N D L I N G
-                 ~ The Kindlands Coast ~
-=========================================================
- A world that was Forged from ember, and Unforged once.
- You wash ashore a Forger: you can hold ember and give
- it lasting shape. The town forge has just relit. The
- road north runs to Emberreach, the Warden Gate, and the
- Great Spiral beyond. What was made can be remade.
+                    A E T H R Y N
+              The World of Endless Journey
 
- Relight the first ember. Then prove yourself.
-=========================================================
+   From the green valleys of Veridia to the frozen Frostspire
+   Peaks, the scorched Ashen Wastes, the floating Skyward Spires,
+   and the unravelling Voidscar -- a whole world waits, one road
+   at a time. Fourteen lands. Every step yours to take.
+
+              Type HELP for commands.

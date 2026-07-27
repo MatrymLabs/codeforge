@@ -1,2661 +1,620 @@
-# SEED: aethryn -- rooms.yaml
-# The flagship world (docs/world_bible.md): the Kindlands Coast, where the Age of
-# Rekindling begins. Everything here was Forged and can be reforged.
-# Same gates as any seed: lowercase_snake_case labels, exits must resolve.
-# The FIRST room is the spawn (START_ROOM), by convention -- no hardcoded start.
+# SEED: aethryn -- rooms.yaml  (GENERATED from the world map by tools/emit_map_world.py)
+# The canonical map of Aethryn: 14 zones, their settlements, dungeons, and landmarks,
+# connected by the map's roads and sea-routes. The FIRST room is the spawn (Veridia).
 
-template:
-  desc: The Kindlands lie under a low, warm sky, the light of a world that was made.
-
-the_waking_shore:
-  name: The Waking Shore
-  desc: |-
-    You wake on cold sand with no memory of the craft. A single ember gutters
-    at the tideline, nearly out. When your hand nears it, it flares and holds.
-    Something in you answers it. A path of packed cinder leads north into town,
-    and the strand runs west along the Cooling-Sea toward a harbor.
-  exits:
-    north: cinderhearth_square
-    west: the_saltstrand
-
-the_saltstrand:
-  name: The Saltstrand
-  desc: |-
-    A strand of grey sand runs west along the Cooling-Sea, the first-quenched water that cooled the
-    world after the Unforging. Tide-crawlers scuttle the wrack line, and the salt-wind carries the
-    sound of a harbor ahead. The waking shore lies back east; a sea-cave gapes in the low cliff, down.
-  exits:
-    east: the_waking_shore
-    west: quench_harbor
-    down: the_tidecave_mouth
-
-quench_harbor:
-  name: Quench Harbor
-  desc: |-
-    A weathered fishing port on the Cooling-Sea, its jetties crowded with cooling-iron boats and
-    salt-stiff nets. Fisherfolk mend and haul and argue prices; a harbormaster keeps the tally, and
-    a dock-trader keeps a stall. The strand runs back east; south, a jetty leads out to a drowned
-    reef where something older waits. West, a Merewright ferry runs the open lanes to the Quenchmere,
-    the drowned Reach across the sea. The fish-MARKET, the Dogwatch TAVERN, the salt WAREHOUSE, and the
-    Merewright FERRY-house line the quay.
-  exits:
-    east: the_saltstrand
-    south: the_wreck_reef
-    west: the_quench_lanes
-    market: the_fish_market
-    tavern: the_dogwatch_tavern
-    warehouse: the_salt_warehouse
-    ferry: the_ferry_house
-
-# --- The Quenchmere: the drowned archipelago across the Cooling-Sea (Continental Atlas §V). The
-# --- first sea-crossing (Build Order Phase 2). A free-port capital, the Wreckways, and a drowned
-# --- capital dungeon below the keels. Level-banded 18-30. ---
-
-the_quench_lanes:
-  name: The Quench Lanes
-  desc: |-
-    The ferry runs the open Cooling-Sea, threading the Wreckways -- reef-lanes marked not by buoys
-    but by the masts of drowned ships, ten thousand of them breaking the grey water where the sea
-    rose over a Reach. Brine-wights drift the shallows between the hulls. Ahead, the hundred-hulled
-    silhouette of Tidewharf; back east, the coast you sailed from. North, a lane of masts leads off
-    the mapped route into the deep Wreckways. South, a grey-water lane runs off the charts toward the
-    Cinderwaste, the half-unmade Reach where the sea gives out into dead salt.
-  exits:
-    east: quench_harbor
-    west: tidewharf_docks
-    north: the_deep_wreckways
-    south: the_ashen_crossing
-
-tidewharf_docks:
-  name: The Tidewharf Docks
-  desc: |-
-    The ferry ties off at Tidewharf, the great free-port of the Quenchmere, a city built across a
-    hundred drowned hulls lashed and planked into one floating sprawl. Cranes haul salvage from the
-    deeps; captains of every Reach cry cargo and crew. The lanes run back east; the city proper rises
-    north, and a salvage-stair drops south toward the drowned capital below the keels. The captains'
-    WHARF musters crews alongside, and the flooded BILGE of the old hulls lies down under the planking.
-  exits:
-    east: the_quench_lanes
-    north: tidewharf_plaza
-    south: drowned_sunhold_descent
-    west: the_verdant_passage
-    wharf: the_captains_wharf
-    bilge: the_bilge
-    down: the_bilge
-
-# --- The Verdance: the living wild across the Quenchmere's water (Continental Atlas §III, Build
-# --- Order Phase 3). A primeval jungle-swamp that is literally alive; the Deeprooted animists; a
-# --- believable ecosystem with a food chain. Level-banded 22-32. Reached by ferry from Tidewharf. ---
-
-the_verdant_passage:
-  name: The Verdant Passage
-  desc: |-
-    The ferry leaves the drowned Reach and threads a green channel where the Cooling-Sea gives way to
-    warm brown water and the air thickens to breathing. Ahead the Verdance rises: a jungle of trees
-    the size of mountains, a whole continent that is, in the most literal sense, alive. Tidewharf lies
-    back east.
-  exits:
-    east: tidewharf_docks
-    west: verdance_landing
-
-verdance_landing:
-  name: The Verdance Landing
-  desc: |-
-    A root-jetty where the ferry ties to a living tree that gripped it back. The understory glows with
-    ember-blooms; a canopy-stalker watches from the boughs above. A root-stair climbs west toward
-    Highbough, the canopy capital; a game-trail sinks south into the breathing mire, and a hunters'
-    path runs north along the forest floor into the understory. The channel runs back east.
-  exits:
-    east: the_verdant_passage
-    west: highbough
-    south: the_deeproot_mire
-    north: the_understory
-
-highbough:
-  name: Highbough
-  desc: |-
-    A city grown rather than built, in the crown of a tree so vast its boughs are avenues: Highbough,
-    capital of the Deeprooted, where the people treat wild Ember as sacred and Forging as a
-    conversation with a living world. A grove-elder reads the tree's moods; a canopy-trader keeps a
-    hollow-stall. The landing lies back east; the bough-avenues of the city proper run west.
-  exits:
-    east: verdance_landing
-    west: the_bough_avenues
-
-the_deeproot_mire:
-  name: The Deeproot Mire
-  desc: |-
-    A breathing swamp where Cinder seeps up through the roots and the dead half-return, drawn to
-    warmth. Ember-blooms light black water; something risen from the mire moves through the reeds. The
-    landing lies back north; deeper in, the Heart-Grove beats. Go west, into the wet dark; a boardwalk
-    runs east to the stilt-town of Mirefast.
-  exits:
-    north: verdance_landing
-    west: the_rootways
-    east: mirefast
-    down: the_rootdeep_mouth
-
-the_heart_grove:
-  name: The Heart-Grove
-  desc: |-
-    The living center of the Verdance: a single vast organism grown around a wellspring of wild Ember,
-    a grove that is one creature the size of a valley. The Boughwarden guards its heart -- the apex of
-    the whole continent's web, a thing the Deeprooted half-worship and wholly fear. This is the deepest
-    green in the world. The rootways lie back east.
-  exits:
-    east: the_rootways
-
-tidewharf_plaza:
-  name: The Tidewharf Plaza
-  desc: |-
-    The heart of the free-port: a plaza planked across the largest of the drowned hulls, loud with
-    the Port-Accord's business and the whole world's trade. The Accord Hall stands to the west; a
-    Merewright captain and a Salvage-Guild agent keep their stalls here. The docks lie back south. The
-    salvage EXCHANGE, the Drowned Bell TAVERN, the tide-SHRINE, and the Salvage GUILDHALL open off the
-    planked square.
-  exits:
-    south: tidewharf_docks
-    west: the_accord_hall
-    north: the_deepwater_berth
-    east: the_outer_lanes
-    market: the_salvage_exchange
-    exchange: the_salvage_exchange
-    tavern: the_drowned_bell
-    shrine: the_tide_shrine
-    guildhall: the_salvage_guildhall
-
-the_deepwater_berth:
-  name: The Deepwater Berth
-  desc: |-
-    Tidewharf's outbound berth, where the deep-water ferries make for the far Reaches across the
-    open Cooling-Sea. Ship-captains cry their crossings: north to the frozen Rimefall, west to the
-    molten Kollforge, up the sky-lanes to the Sundered Sky. The plaza lies back south. This is the
-    door to the wider world.
-  exits:
-    south: tidewharf_plaza
-    north: the_riming_passage
-    west: the_molten_passage
-    up: the_sky_lanes
-
-# --- The Rimefall: the quenched north across the sea (Continental Atlas §II, Build Order Phase 4).
-# --- A continent flash-frozen in the Unforging, its Emberwright cities preserved whole under the ice;
-# --- the Silent Anvil keep it as a shrine to restraint. Level-banded 40-52. ---
-
-the_riming_passage:
-  name: The Riming Passage
-  desc: |-
-    The ferry breaks a lane through grinding floes into the Riming Sea, and the world goes white and
-    still. Ahead the Rimefall rises: a continent caught mid-Forge and frozen in an instant, its cities
-    standing complete under the ice, better-made than anything alive. Glass-hounds pace the floe-edge.
-    The berth lies back south.
-  exits:
-    south: the_deepwater_berth
-    north: stillhearth
-
-stillhearth:
-  name: Stillhearth
-  desc: |-
-    A monastery-port on the ice-edge, the one warm place in the Rimefall, kept by the Silent Anvil
-    who hold this whole Reach as a shrine. Here they trade only what the ice gives up and speak in low
-    voices, because in the frozen north the past is not ruined but paused. A keeper tends the one
-    hearth. The passage lies back south; the deep ice stands north across the glass-gallery, a silent
-    cloister opens down beneath the port, and the riming fields run west along the floe.
-  exits:
-    south: the_riming_passage
-    north: the_glass_gallery
-    down: the_silent_cloister
-    west: the_riming_fields
-    market: the_ice_market
-    inn: the_thawhouse
-
-the_frozen_court:
-  name: The Frozen Court
-  desc: |-
-    An Emberwright capital preserved entire: a court of the golden age caught mid-gesture and frozen
-    in a single instant, its makers still at their benches under a skin of clear ice, every room a
-    perfect and lethal tableau. The Rime-King keeps the throne, flash-frozen mid-reign, and waking it
-    would restart an Unforging mid-freeze. This is the most beautiful and most haunted room in the
-    world. The rime-vault lies back south.
-  exits:
-    south: the_rime_vault
-
-the_accord_hall:
-  name: The Accord Hall
-  desc: |-
-    A council-hall raised on the deck of a drowned flagship, where the harbor-republics of the
-    Port-Accord keep their fractious peace and the Quenchmere is, as much as it is anywhere, governed.
-    The Accord-Speaker holds court here. The plaza lies back east.
-  exits:
-    east: tidewharf_plaza
-
-drowned_sunhold_descent:
-  name: The Salvage-Stair
-  desc: |-
-    A stair of lashed ladders and diving-bells drops from the Tidewharf docks down through the grey
-    water toward Sunhold -- the Quenchmere's capital before the sea rose, walked now in drowned-lung
-    Forgework that holds the cold water back a room at a time. The docks lie back up; the drowned
-    capital opens below.
-  exits:
-    up: tidewharf_docks
-    down: the_drowned_halls
-
-the_drowned_sunhold:
-  name: The Drowned Sunhold
-  desc: |-
-    The sunken capital, lit and cold below the keels: a Forge-city the Cooling-Sea took whole when it
-    rose, its halls still burning a drowned ember-light through the green dark. The Sunhold Warden
-    keeps it -- a Forged guardian set to hold the capital and never told the war was lost. This is the
-    bottom of the salvage-stair, the richest unbroken Forgework in the Quenchmere. The stair lies
-    back up.
-  exits:
-    up: the_flooded_forge
-
-the_wreck_reef:
-  name: The Wreck Reef
-  desc: |-
-    Out past the harbor's last jetty, a reef of drowned Forge-hulls breaks the grey water -- ships
-    the Cooling-Sea took when it first rose. The Drowned Pilot still keeps the wheel of the largest
-    wreck, a thing of brine and dead ember that will not let the sea be crossed. The harbor lies
-    back north; a hatch in the flagship's deck drops down into the flooded hulls.
-  exits:
-    north: quench_harbor
-    down: the_flooded_hulls
-
-cinderhearth_square:
-  name: Cinderhearth Square
-  desc: |-
-    The heart of Cinderhearth-on-Reach. The town forge, cold for a generation,
-    has just taken flame again, and folk gather to watch it burn. A training
-    dummy stands ready in the yard, and a cellar door yawns beneath the forge. The relit FORGE, the
-    Saltrest TAVERN, a coast SHRINE, the fishers' HARBOR, and the hearth-way HOMES open off the square.
-  exits:
-    south: the_waking_shore
-    north: old_reach_bridge
-    east: reachwood_edge
-    down: cold_cellar
-    forge: the_relit_forge
-    tavern: the_saltrest_tavern
-    shrine: the_coast_shrine
-    harbor: the_fishers_row
-    homes: the_hearthway
-
-old_reach_bridge:
-  name: The Old Reach Bridge
-  desc: |-
-    A stone bridge over the Reach, its center plank long rotted through. Reforge
-    it and the road north opens; the world remembers what you mend. Beyond lies
-    the Ember-road, and somewhere down it, the capital.
-  exits:
-    south: cinderhearth_square
-    north: the_far_reach
-
-reachwood_edge:
-  name: The Reachwood Edge
-  desc: |-
-    Where the town gives way to wild forest. Ember grows strange and bright in
-    the undergrowth here, and not everything in the trees is friendly. A game-trail
-    runs east, deeper into the Reachwood.
-  exits:
-    west: cinderhearth_square
-    east: reachwood_hollow
-
-reachwood_hollow:
-  name: The Reachwood Hollow
-  desc: |-
-    Deeper into the wild wood, where the ember-light thickens and the trees lean close over an
-    ember-loam floor. A thornback boar roots through the mast. The wood opens east onto a still
-    glade and north into a bramble-choked warren; the town trail runs back west.
-  exits:
-    west: reachwood_edge
-    east: wardens_glade
-    north: the_bramblewarren
-    south: the_woodcutters_camp
-
-wardens_glade:
-  name: The Warden's Glade
-  desc: |-
-    A still, green glade in the heart of the Reachwood, where the wild ember grows gentle instead
-    of hungry. An old forest warden keeps this place, watching the ember and the wood that drinks
-    it. The hollow lies back west; a deer-path slips east, deeper into the old wood.
-  exits:
-    west: reachwood_hollow
-    east: the_deepwood
-
-the_bramblewarren:
-  name: The Bramblewarren
-  desc: |-
-    A hollow choked in ember-thorn, where the Reachwood grows angry and old. The Bramble-Wight
-    roots it -- a knot of wild ember and dead wood grown almost to a mind -- and it suffers no
-    Forger in its warren. The hollow lies back south; the thorns close deeper in, north.
-  exits:
-    south: reachwood_hollow
-    north: the_thorn_heart
-
-the_far_reach:
-  name: The Far Reach
-  desc: |-
-    The Ember-road runs on toward Emberreach, City of the Relit Forge, and the
-    Warden Gate that guards the way to the Great Spiral. A road-warden waits at
-    the marker, watching who comes. The road climbs north, and it is not gentle.
-  exits:
-    south: old_reach_bridge
-    north: emberroad_climb
-
-cold_cellar:
-  name: The Cold Cellar
-  desc: |-
-    Beneath the forge, a sundered making-hall the Unforging left half-real. Its
-    rooms hold the steps of a simple Forge, jumbled out of their proper order.
-    Cold air breathes up from a stair descending into the dark.
-  exits:
-    up: cinderhearth_square
-    down: cellar_hearth
-
-cellar_hearth:
-  name: The Cellar Hearth
-  desc: |-
-    A ruined forge-hall around a dead central hearth. At the anvil stands the
-    Cinder-Wight, an old smith the Unforging never let finish dying. A crack in
-    the far wall breathes colder still, downward, toward the Cinderdeep.
-  exits:
-    up: cold_cellar
-    down: cinderdeep_descent
-
-# --- The Ember-road: the climb from the Kindlands Coast up to Emberreach. ---
-# The old paved Forgework connecting capitals (world bible s.22). The Kindlands are behind
-# you; the road foes here run levels ~10-13, a real step up from the coast. Fight up, or fall.
-
-emberroad_climb:
-  name: The Ember-road
-  desc: |-
-    The paved Forgework of the Ember-road climbs north out of the Kindlands, its
-    old cinder-stones still warm underfoot. Wild ember has gone feral in the ditches,
-    and stray things move where the light of Cinderhearth no longer reaches. A hollow
-    opens to the east; the road runs on north toward a wayfarer's rest, and a cart-track branches
-    west to a caravan post.
-  exits:
-    south: the_far_reach
-    north: wayfarers_rest
-    east: strayfire_hollow
-    west: the_emberpost
-
-strayfire_hollow:
-  name: Strayfire Hollow
-  desc: |-
-    A blind dell off the road where feral ember pools and burns without a maker.
-    Reavers of the road den here, drawn to the wild fire. It is no place to linger
-    unproven, but the bold have taken good steel off the dead.
-  exits:
-    west: emberroad_climb
-
-wayfarers_rest:
-  name: A Wayfarer's Rest
-  desc: |-
-    A walled waystation on the Ember-road, its brazier kept lit for travellers by
-    old Concord custom. The walls hold the strayfire back; here you can breathe.
-    The road climbs the last stretch north to the gates of Emberreach.
-  exits:
-    south: emberroad_climb
-    north: emberreach_gates
-
-# --- Emberreach, City of the Relit Forge (world bible s.25): large, safe, service-dense. ---
-# No foes inside the walls -- this is the mid-game hub: the Grand Forge, the Orders' Row,
-# the Market Quarter, and the Warden Gate that teases the road up the Great Spiral.
-
-emberreach_gates:
-  name: The Gates of Emberreach
-  desc: |-
-    The great cinder-iron gates of Emberreach stand open under banners of the Relit
-    Forge. A gate-warden of the Concord greets the road-weary. Beyond the arch the
-    capital hums with the work of the Rekindling: the Grand Forge burns to the north. A stair climbs
-    the city WALLS to the gate-watch.
-  exits:
-    south: wayfarers_rest
-    north: the_grand_forge
-    walls: the_city_walls
-
-the_grand_forge:
-  name: The Grand Forge
-  desc: |-
-    The heart of Emberreach: the great relit Forge roars in the city center, and the
-    Church of the First Flame keeps its light. The city's Loremaster works here, at the
-    root of the world's memory. The Orders' Row lies west, the Market Quarter east, and
-    the Warden Gate stands to the north. The Church of the First Flame keeps the TEMPLE off the hall,
-    the Grand ARCHIVE holds the world's memory, and a stair drops to the UNDERCITY below the forge.
-  exits:
-    south: emberreach_gates
-    west: orders_row
-    east: market_quarter
-    north: warden_gate
-    temple: the_first_flame_church
-    archive: the_grand_archive
-    down: the_undercity
-    undercity: the_undercity
-
-orders_row:
-  name: The Orders' Row
-  desc: |-
-    A colonnade of guild-halls: the Making, the Gathering, the Warcraft, and the Knowing
-    Orders keep their doors here, where a Forger chooses a road and trains a craft. A
-    recruiter watches the street for new talent come up from the coast. The Warcraft training
-    yard opens off the row to the west; the MAKING, KNOWING, and GATHERING Order halls keep their doors
-    along the colonnade.
-  exits:
-    east: the_grand_forge
-    west: the_training_yard
-    making: the_making_hall
-    knowing: the_knowing_hall
-    gathering: the_gathering_hall
-
-market_quarter:
-  name: The Market Quarter
-  desc: |-
-    Stalls and shopfronts crowd the Market Quarter, and the Cooling-Sea docks send their
-    trade up from the water. A trader calls her wares over the din. Everything the wider
-    Anvil makes passes through here sooner or later. East, past the last stalls, a salt-road
-    runs out of the city toward the Ashwastes. North, the makers' stalls give onto the Artisans'
-    Quarter. The Cinder Tankard keeps a TAVERN off the square, and the river DOCKS lie south.
-  exits:
-    west: the_grand_forge
-    east: ashwastes_road
-    tavern: the_cinder_tankard
-    docks: the_river_docks
-    north: the_artisans_quarter
-
-ashwastes_road:
-  name: The Salt-Road to the Ashwastes
-  desc: |-
-    The last road out of Emberreach runs east into a land the Unforging half-unmade: the Ashwastes,
-    a desert of grey cinder under a bleached sky. Ash-jackals hunt the salt-road's edge. The city
-    lies back west; ahead, the dunes.
-  exits:
-    west: market_quarter
-    east: the_cinder_dunes
-
-the_cinder_dunes:
-  name: The Cinder Dunes
-  desc: |-
-    Dunes of cold ash roll to every horizon, and rare ember glints in the grey where the world
-    was scoured. An Ashborn scout reads the sand here. A camp of the survivors lies north; the
-    ruins and the crater beyond lie east. The salt-road runs back west.
-  exits:
-    west: ashwastes_road
-    north: the_ashborn_camp
-    east: the_scoured_ruin
-
-the_ashborn_camp:
-  name: The Ashborn Camp
-  desc: |-
-    A ring of salvaged tents and cooling-iron in the lee of a dune, where the Ashborn who survived
-    the Unforging of this land make their stand: fatalistic, resourceful, trading salvage for what
-    the wastes cannot give. A trader keeps a stall; a keeper tends the fire. The dunes lie south.
-  exits:
-    south: the_cinder_dunes
-
-the_scoured_ruin:
-  name: The Scoured Ruin
-  desc: |-
-    Half a Forge-hold stands here, scoured to glass on the day the Ashwastes were unmade -- walls
-    that end in mid-air, a stair to nowhere. A salvage-wraith drifts the ruin, made of what the
-    Unforging left. The crater lies east; the dunes, back west.
-  exits:
-    west: the_cinder_dunes
-    east: the_ashen_vault
-
-the_glass_crater:
-  name: The Glass Crater
-  desc: |-
-    The wound at the heart of the Ashwastes: a vast crater of black glass where the Unforging first
-    struck this land, still and cold and singing faintly with the ember it fused. The Ash-Colossus
-    keeps it -- a giant of welded cinder the wastes grew around a scar. This is the bottom of the
-    desert road. Still it, and the Ashwastes are answered. The ruin lies back west.
-  exits:
-    west: the_ashen_vault
-
-warden_gate:
-  name: The Warden Gate
-  desc: |-
-    The Concord's seat and the threshold of the Wardenmarch: beyond this gate the
-    Ember-road runs east to the Coilfoot Marches and the start of the Forgeward Road.
-    A Warden Sentinel of grey Forgework bars the arch, and the gate-keeper watches
-    to see if you are the Forger who can put it down. This is the Warden's test.
-  exits:
-    south: the_grand_forge
-    north: the_wardenmarch
-
-# --- The Wardenmarch and the first marches of the Forgeward Road (world bible s.20, s.24). ---
-# Past the Warden's test the long frontier begins: a flat road running east into the deepening
-# wilds, one road-warden per march. The first march runs levels ~18-22 -- true above-Emberreach
-# danger. The world does not climb; it opens outward toward the Forge at the world's heart.
-
-the_wardenmarch:
-  name: The Wardenmarch
-  desc: |-
-    Beyond the gate the Concord's own country: watch-cairns and old Forgework mark the
-    road east to the Coilfoot Marches, where the Forgeward Road runs out across the world.
-    The air hums with old charge. Emberreach is behind you now. The frontier is ahead, east. The
-    Wardens' KEEP holds the road north-along; the watchtower line runs north; the cairn-hills roll west.
-  exits:
-    south: warden_gate
-    east: coilfoot_ascent
-    north: the_watchtower_line
-    west: the_cairn_hills
-    keep: the_wardens_keep
-
-coilfoot_ascent:
-  name: The Coilfoot March
-  desc: |-
-    The start of the Forgeward Road, where the old highway runs east out of the settled land
-    into the wilds. Loose ember-wisps drift off the abandoned Forgework, half-alive and hostile
-    to the living. The road goes on east; the Wardenmarch lies back to the west.
-  exits:
-    west: the_wardenmarch
-    east: coil_first_landing
-
-coil_first_landing:
-  name: The First Waystation
-  desc: |-
-    A wide forged waystation on the road, ringed by cold road-lamps. At its center a Forgewraith
-    keeps the way -- the first road-warden of the frontier, made of the wrath the Unforging left
-    behind. Past it the road runs on, east into the second march.
-  exits:
-    west: coilfoot_ascent
-    east: coil_second_ascent
-
-# --- The second march of the Forgeward Road (world bible s.24): the road deepens, levels ~24-28. ---
-# Further out than the first, colder, and hungrier. Its road-warden, the Ashlord, keeps the way.
-
-coil_second_ascent:
-  name: The Second March
-  desc: |-
-    The road narrows as the second march runs deeper into the wilds' cold. Revenants of fallen
-    travellers walk the forged verge, grey and unfinished, mistaking the living for the way home.
-    The first waystation falls away behind; the road runs on east toward a bridgespan.
-  exits:
-    west: coil_first_landing
-    east: coil_bridgespan
-
-coil_bridgespan:
-  name: The Roadbridge
-  desc: |-
-    A slender Forgework bridge arcs across a chasm the Unforging tore, road-lamps guttering along
-    its rail above a fall with no bottom. An Ashen Sentinel walks the span, and there is no room
-    to go around. Beyond it the road reaches the second waystation.
-  exits:
-    west: coil_second_ascent
-    east: coil_second_landing
-
-coil_second_landing:
-  name: The Second Waystation
-  desc: |-
-    A forged waystation where the wilds' cold burns blue. The Ashlord holds the way here -- a
-    road-warden grown from a Forge-master the Unforging turned to ash and will. Past it the road
-    runs on, east into the storm-wracked third march.
-  exits:
-    west: coil_bridgespan
-    east: coil_third_ascent
-
-# --- The third march of the Forgeward Road: deeper, storm-wracked, levels ~31-38. Each march is a ---
-# harder wall than the last (world bible s.24 -- the frontier's deepening danger).
-
-coil_third_ascent:
-  name: The Third March
-  desc: |-
-    The road's third march runs into a standing storm of forge-lightning, the old Roadwork
-    humming with charge. Stormbound husks -- travellers the wilds burned hollow -- walk the verge.
-    The second waystation falls away behind; the road runs on east toward a wind-scoured reach.
-  exits:
-    west: coil_second_landing
-    east: coil_stormreach
-
-coil_stormreach:
-  name: The Stormreach
-  desc: |-
-    A wind-scoured stretch of the third march where the forge-storm never breaks. A Road Harrier
-    rides the gale, striking at what passes. There is no shelter here but the road, east, to the
-    waystation ahead -- or back west, out of the wind.
-  exits:
-    west: coil_third_ascent
-    east: coil_third_landing
-
-coil_third_landing:
-  name: The Third Waystation
-  desc: |-
-    The storm breaks open onto a vast forged waystation crowned in lightning. The Stormlord keeps
-    the way -- a road-warden of living forge-storm, the third march's wall. The Forgeward Road runs
-    on east into the deepening wilds, march beyond march, further than any map the Kindlands hold.
-  exits:
-    west: coil_stormreach
-
-# --- The Cinderdeep (world bible: the downward branch). The coast's OTHER road: down from the ---
-# cellar hearth instead of north up the Ember-road. A mid-band depths dungeon (levels ~10-15),
-# a parallel to the early road -- a Forger chooses to climb the Spiral or delve the deep.
-
-cinderdeep_descent:
-  name: The Cinderdeep Descent
-  desc: |-
-    The crack in the hearth-wall opens into a throat of cold stone winding down below the
-    coast. This is the Cinderdeep: where the Unforging's damage ran deepest and the old
-    making-works drowned. Deep-crawlers ward the dark. The hearth is back up the way you came.
-  exits:
-    up: cellar_hearth
-    down: sunken_forgeworks
-
-sunken_forgeworks:
-  name: The Sunken Forgeworks
-  desc: |-
-    A drowned making-hall, its anvils under black water and its lamps long cold. Drowned
-    makers still move at their benches, hammering work that will never set. A vein of dead
-    ember runs off to the east; the descent goes on, down, into deeper cold.
-  exits:
-    up: cinderdeep_descent
-    east: the_cold_vein
-    down: cinderdeep_maw
-
-the_cold_vein:
-  name: The Cold Vein
-  desc: |-
-    A seam of dead ember threads the rock here, grey and starless, and something has made
-    a lair of it. A lurker of the vein feeds on what warmth strays this deep. The only way
-    on is back west to the forgeworks.
-  exits:
-    west: sunken_forgeworks
-
-cinderdeep_maw:
-  name: The Cinderdeep Maw
-  desc: |-
-    The deep bottoms out in a cold maw of ruined Forgework. Here the Hollow Smith kept its
-    dead anvil -- a maker the Unforging emptied and never let stop. With the Smith stilled, the
-    cold below has thinned, and a drowned stair falls away DOWN into dark the coast has no map for.
-  exits:
-    up: sunken_forgeworks
-    down: the_drowned_way
-
-the_drowned_way:
-  name: The Drowned Way
-  desc: |-
-    Below the maw the stair drowns entirely, and you wade a black flood that was once a
-    making-canal, roofed in dead ember. Things that were makers, once, drift and turn in the
-    cold current -- a sunken revenant among them, still clutching a tool for a hand. The
-    forgeworks are back up the stair; ahead, the flood pours down into a deeper, older dark. A
-    sealed hatch stands in the canal wall to the east, its Forgework lock long rusted.
-  exits:
-    up: cinderdeep_maw
-    down: the_cinderheart
-    east: the_sealed_vault
-
-the_cinderheart:
-  name: The Cinderheart
-  desc: |-
-    The deepest floor of the Cinderdeep, and its oldest wound: a vast drowned forge-heart where
-    the Unforging first tore the world, so far down the sundering never healed. A shard of the
-    First Seed sank here and went cold, and the Drowned Forgemaster has kept its black anvil
-    around it ever since -- the last maker, hammering a world that will not set. This is the
-    bottom. Sound it, and the deep is answered. The only way is back up, toward the light.
-  exits:
-    up: the_drowned_way
-
-# --- The Kollforge: the molten Reach across the sea (Continental Atlas §VI, Build Order Phase 5). The
-# --- surface land closest to the Forge's heat, where the world is still visibly being made; home of
-# --- the Kollkin fire-Forgers and the Vent-Forges. Level-banded 50-62. Reached from the berth (west). ---
-
-the_molten_passage:
-  name: The Molten Passage
-  desc: |-
-    The ferry runs a black-glass channel west into rising heat, the Cooling-Sea steaming where it
-    laps the Kollforge's shore. Ahead the molten Reach glows: rivers of Forgelight-lit lava, obsidian
-    cities on cooling shelves, the whole land still visibly being made. Cinder-drakes ride the thermals.
-    The berth lies back east; the capital glows west, and a black shelf of obsidian flats spreads south.
-  exits:
-    east: the_deepwater_berth
-    west: emberkoll
-    south: the_obsidian_flats
-
-emberkoll:
-  name: Emberkoll
-  desc: |-
-    The molten capital: an obsidian city raised over a lightning-lit caldera, where the Kollkin work
-    the hottest, rawest ember in the world and count a cooled land as a dead one. A Vent-Forge master
-    keeps the great forge; a Kollkin trader keeps a shelf-stall. The passage lies back east; north, the
-    Anvil-Vents open toward the Forge below; the caldera-market glows west, and a cooling-shelf stair
-    drops down toward a Kollhold the fire forgot.
-  exits:
-    east: the_molten_passage
-    north: the_anvil_vents
-    west: the_caldera_market
-    down: the_cooling_shelf
-    south: venthold
-
-the_anvil_vents:
-  name: The Anvil-Vents
-  desc: |-
-    Where raw ember still wells up from the Forge below through vents in the world's floor, the ground
-    remade with every pulse. A Forgeborn -- living Forgework that never cooled -- guards the deepest
-    vent, running a purpose no one remembers. Emberkoll lies back south; north, the vent drops toward
-    the Vent-Lord and the raw edge of creation.
-  exits:
-    south: emberkoll
-    north: the_vent_gallery
-
-the_vent_deep:
-  name: The Vent Deep
-  desc: |-
-    The bottom of the Anvil-Vents, where the Forge's heat is close enough to feel the world being
-    made and unmade at once. The Vent-Lord keeps it -- a Forgeborn grown vast on a millennium of raw
-    fire, the last guardian before the Forge itself. This is the hottest place a walking Forger can
-    reach. The vent-gallery lies back south.
-  exits:
-    south: the_vent_gallery
-
-# --- The Sundered Sky: the floating Reach (Continental Atlas §VII, Build Order Phase 5), the last
-# --- surface land and the gateway to the Great Spiral. Lands the Unforging tore loose that never
-# --- fell, hung on stubborn Forgework in the high air. Level-banded 60-72. Reached from the berth (up). ---
-
-the_sky_lanes:
-  name: The Sky-Lanes
-  desc: |-
-    The sky-ferry rises on the world's winds off Tidewharf's berth, up past the last clouds into the
-    Sundered Sky -- shards of the old supercontinent the Unforging tore loose that never fell, hung in
-    the high air on stubborn Forgework, drifting slowly on the winds. Stormkin ride the currents. The
-    berth lies back down.
-  exits:
-    down: the_deepwater_berth
-    up: highgate
-
-highgate:
-  name: Highgate
-  desc: |-
-    The sky-Warden capital, an anchor-hold on the greatest of the drifting shards, moored by a great
-    anchor-chain to the Coilfoot far below, where the Forgeward Road runs out across the world toward
-    the Forge. The Skyborn keep the sky-Gates and the anchor-line -- a second way onto the frontier,
-    guarded hardest of all. A sky-Warden holds the gate; an anchor-keeper keeps a stall. The lanes lie
-    back down; a drift-bridge runs out east to the wandering shards; the anchor-quarter of the city
-    lies south; and NORTH, past the sky-Warden's test, the anchor-line carries you down to the Coilfoot
-    and the start of the Forgeward Road.
-  exits:
-    down: the_sky_lanes
-    east: the_drifting_reach
-    north: coilfoot_ascent
-    south: the_anchor_quarter
-    market: the_sky_market
-    inn: the_skyward_rest
-    watch: the_gate_watch
-
-the_drifting_reach:
-  name: The Drifting Reach
-  desc: |-
-    A span of loose shards trailing waterfalls into cloud, crossed on sky-bridges of surviving
-    Ember-road that sway on the wind. Fall-wights -- those the loose lands took when the world came
-    apart -- drift the raw edges, still falling in a way that never ends. Highgate lies back west; the
-    wandering Court drifts ahead, east.
-  exits:
-    west: highgate
-    east: the_broken_span
-
-the_wandering_court:
-  name: The Wandering Court
-  desc: |-
-    A shard-city of the Emberwrights that came loose whole and never fell, drifting the high sky on
-    the winds -- the Drifting Court, a place that is never in the same sky twice. The Court-Warden
-    keeps it, a maker the Unforging set adrift and never let land. This is the highest a walking
-    Forger stands before the Spiral. The broken span lies back west.
-  exits:
-    west: the_broken_span
-
-# --- Deepening the Drowned Sunhold (Content Manufacturing Campaign): the sunken capital was one
-# --- boss room; now the salvage-stair delves through the flooded halls and the drowned forge before
-# --- the Warden's court, so the richest wreck in the Quenchmere plays like a real dungeon. ---
-the_drowned_halls:
-  name: The Drowned Halls
-  desc: |-
-    Below the stair the water closes over you and the drowned-lung Forgework takes the cold back a
-    hand at a time. These were the Sunhold's high halls once: colonnades of green-lit stone where the
-    Merewright walked dry. Drifters move between the pillars, citizens the sea kept. The stair climbs
-    back up; the forge-halls open deeper down.
-  exits:
-    up: drowned_sunhold_descent
-    down: the_flooded_forge
-
-the_flooded_forge:
-  name: The Flooded Forge
-  desc: |-
-    The Sunhold's own forge, drowned but not dead: its ember-hearths still burn blue under the water,
-    banked against the cold that never came for them. A revenant of the last forge-master keeps the
-    fires, working a making the sea interrupted an age ago and will not let it finish. Past the forge
-    lies the Warden's court; the halls lie back up.
-  exits:
-    up: the_drowned_halls
-    down: the_drowned_sunhold
-
-# --- Deepening the Heart-Grove (Content Manufacturing Campaign): the Verdance's heart was one boss
-# --- room; now the rootways wind between the mire and the grove, a living throat of the continent
-# --- with its own guardian, so the deepest green plays like a delve. ---
-the_rootways:
-  name: The Rootways
-  desc: |-
-    Between the mire and the heart the wood closes to a throat: roots the girth of towers arch
-    overhead, and the whole passage breathes, slow and wet, around you. The Verdance knows you are
-    here. A rootbound thing the grove grew to keep its heart stirs from the living wall and turns
-    toward the warmth of you. The mire lies back east; the Heart-Grove beats ahead, west.
-  exits:
-    east: the_deeproot_mire
-    west: the_heart_grove
-
-# --- Deepening the Frozen Court (Content Manufacturing Campaign): the Rimefall's capital was one
-# --- boss room; now the delve crosses the glass gallery and the rime-vault, each with a frozen
-# --- guardian, before the Rime-King's throne, so the most haunted room in the world earns its dread. ---
-the_glass_gallery:
-  name: The Glass Gallery
-  desc: |-
-    North of Stillhearth the ice takes the world whole: a gallery of the golden age under a skin of
-    clear rime, its makers frozen at their benches mid-gesture, perfect and lethal. One of them is
-    not as frozen as the rest -- a sentinel the Rime-King set, still keeping a watch three ages cold,
-    that turns its glass face toward your warmth. Stillhearth lies back south; the vault opens north.
-  exits:
-    south: stillhearth
-    north: the_rime_vault
-
-the_rime_vault:
-  name: The Rime-Vault
-  desc: |-
-    The court's treasury, or its tomb: a vault where the Emberwrights sealed the making they feared
-    most, flash-frozen with everything else when the Unforging caught the Reach. The cold here is
-    older than the rest, and it moves -- a wraith of unmelting ice that was a vault-keeper once, and
-    keeps it still. The gallery lies back south; the throne-court stands north.
-  exits:
-    south: the_glass_gallery
-    north: the_frozen_court
-
-# --- Deepening the Vent-Deep (Content Manufacturing Campaign): the Kollforge's bottom was one boss
-# --- room; now the vent-gallery burns between the working vents and the Vent-Lord's deep. ---
-the_vent_gallery:
-  name: The Vent Gallery
-  desc: |-
-    Deeper than the working vents, where the rock runs to slag and the Forge's heat comes up through
-    the floor in sheets. A magma revenant works a vent here, a Kollkin the fire took and would not let
-    go, still pouring a make that has no shape left. The Anvil-Vents lie back south; the Vent Deep
-    opens north, hotter still.
-  exits:
-    south: the_anvil_vents
-    north: the_vent_deep
-
-# --- Deepening the Wandering Court (Content Manufacturing Campaign): the last surface boss stood in
-# --- one room; now a broken span of drift-shards crosses to the Court-Warden's drifting city. ---
-the_broken_span:
-  name: The Broken Span
-  desc: |-
-    The last sky-bridge to the Wandering Court is broken mid-air, its Ember-road ending in cloud and
-    beginning again a leap away, and the whole span sways. A fall-wraith rides the gap -- one the loose
-    lands took, grown from an endless fall into something that pulls others after it. The drifting
-    reach lies back west; the Court drifts ahead, east.
-  exits:
-    west: the_drifting_reach
-    east: the_wandering_court
-
-# --- The Tidecaves (Content Manufacturing Campaign): an optional early sea-cave delve off the
-# --- Saltstrand, so the starting coast rewards a curious Forger with an off-path dungeon (L4-10). ---
-the_tidecave_mouth:
-  name: The Tidecave Mouth
-  desc: |-
-    A sea-cave gapes in the low cliff below the strand, half-drowned at high tide and dripping cold
-    brine. Cave-crawlers clack in the dark over old wrack and older bones. The strand lies back up;
-    the cave sinks deeper, down, toward a green glow.
-  exits:
-    up: the_saltstrand
-    down: the_sunken_grotto
-
-the_sunken_grotto:
-  name: The Sunken Grotto
-  desc: |-
-    The cave opens into a grotto lit green by a seam of drowned ember in the far wall, its water still
-    as glass. A brine-hulk rises from the pool, grown huge on a life of eating what the tide brings
-    down, and turns toward the warmth of you. Whatever the sea washed into this cave over the ages
-    settles in the shallows here. The cave-mouth lies back up.
-  exits:
-    up: the_tidecave_mouth
-
-# --- The Deep Reachwood (Seed Scale Directive): the wood was a short stub; expand it into a real
-# --- wilderness sub-zone past the Warden's Glade - a second early leveling ground, gathering groves,
-# --- and a hidden shrine, so low-level Forgers spread into the forest instead of one coast path. ---
-the_deepwood:
-  name: The Deep Reachwood
-  desc: |-
-    Past the glade the wood turns old: trunks too wide to reach around, a canopy that keeps the light
-    to a green dusk, and wild ember pooling in the roots where no one gathers it. An ember-lynx pads
-    the branches overhead, patient. The glade lies back west; a fen glimmers north, and the deer-path
-    runs on east toward a shape of old stone.
-  exits:
-    west: wardens_glade
-    north: the_thornmere
-    east: the_forgotten_shrine
-    up: the_old_firewatch
-    south: the_hidden_trail
-
-the_thornmere:
-  name: The Thornmere
-  desc: |-
-    A boggy grove where the Reachwood drinks from a black-water mere, thick with ember-blooms and the
-    reed-beds the coast's fishers used to cut. A mere-lurker hunts the shallows. This is a gatherer's
-    corner of the wood, quiet and far from any road; the deepwood lies back south.
-  exits:
-    south: the_deepwood
-
-the_forgotten_shrine:
-  name: The Forgotten Shrine
-  desc: |-
-    The deer-path ends at a shrine the Reachwood has half-swallowed: a ring of standing Forgework the
-    Emberwrights raised before the town, its purpose lost, its keeper still at its post. Whatever was
-    left as offering here still lies in the moss, untaken for an age. The deepwood lies back west.
-  exits:
-    west: the_deepwood
-
-# --- Deepening the Ashwastes ruin (Seed Scale Directive): the scoured ruin was a corridor to the
-# --- crater-boss; open the buried Ashen Vault between them, so Emberreach's second dungeon has an
-# --- interior encounter space, a hidden find, and a mini-boss gate before the Ash-Colossus. ---
-the_ashen_vault:
-  name: The Ashen Vault
-  desc: |-
-    A stair sunk in the ruin's floor drops into a vault the Unforging buried whole: a Forge-hold's
-    strongroom, its door long since scoured to glass, its air grey and unmoving. What the makers
-    sealed here was never meant to be opened, and a sentinel of fused ash still keeps it, grown out
-    of the vault's own walls. The ruin lies back west; the glass crater opens east, through the dark.
-  exits:
-    west: the_scoured_ruin
-    east: the_glass_crater
-
-# --- The Woodcutters' Camp (Seed Scale Doctrine: settlements + player distribution). A second early
-# --- hub in the Reachwood, so low-level Forgers have somewhere to level, trade, gather, and take work
-# --- besides the coast town - the wood is a place people live, not just a place to fight through. ---
-the_woodcutters_camp:
-  name: The Woodcutters' Camp
-  desc: |-
-    A stockade of green logs and ember-lamps in a clearing of the Reachwood: the Woodcutters' Camp,
-    where the Concord's foresters cut the deadfall the wild ember leaves and haul it to the capital.
-    Smoke, sawdust, and the smell of resin; a camp-keeper minds a lean-to store, a forester rests a
-    saw, and a hound sleeps by the fire. The hollow trail runs back north; the logging stands lie east.
-  exits:
-    north: reachwood_hollow
-    east: the_logging_stands
-
-the_logging_stands:
-  name: The Logging Stands
-  desc: |-
-    Where the foresters work: ranks of felled ember-trunks and the raw stumps between, the loam thick
-    with sap and sawdust. The cutting has stirred something up - a bark-lurker, grown of deadfall and
-    old ember, that the foresters will not go near. Good resin beads on the cut stumps here. The camp
-    lies back west.
-  exits:
-    west: the_woodcutters_camp
-
-# --- The Old Firewatch (Seed Scale Doctrine: landmarks + scenic viewpoints + lore). A ruined watch-
-# --- tower on the one hill of the Reachwood, a place to climb to and see the whole launch zone laid
-# --- out - a reward for the curious, not a fight. ---
-the_old_firewatch:
-  name: The Old Firewatch
-  desc: |-
-    A climb through the deepwood brings you out atop the one bare hill for leagues, crowned by a
-    ruined watch-tower the Concord raised in the first years of the Rekindling and let go. From here
-    the whole launch of the world lies open: the grey Cooling-Sea and the smoke of Cinderhearth to the
-    west, the capital's Grand Forge glowing north, the Ashwastes' pale scar east, and far off the
-    Wardenmarch and the frontier beyond. A watch-keeper's kit still hangs where the last watcher left
-    it. This is the highest a Forger stands in Emberreach. The deepwood lies back down.
-  exits:
-    down: the_deepwood
-
-# --- The Thorn-Heart (Seed Scale Doctrine): the Bramblewarren was a dead-end boss room; open the
-# --- chamber it guards, where the wild ember the warren grew from pools untaken - a hidden find and
-# --- a rare threat past the Bramble-Wight, so the warren is a small dungeon, not one fight. ---
-the_thorn_heart:
-  name: The Thorn-Heart
-  desc: |-
-    Past the Bramble-Wight the thorns close into a chamber with a living heart: a well of wild ember
-    the warren grew itself around, welling up bright and untaken through a knot of ember-thorn older
-    than the town. A thorn-horror uncoils from the well, grown fat on the raw ember no one dares
-    gather. What pools here has drawn more than the Wight. The warren mouth lies back south.
-  exits:
-    south: the_bramblewarren
-
-# --- The drowned flagship (Seed Scale Doctrine: coastal dungeon past the Wreck Reef). The reef was
-# --- a dead-end boss room; open the flooded hulls below, so the coast has an optional early dungeon
-# --- with a hold to plunder - a second reason to work the reef beyond the Drowned Pilot. ---
-the_flooded_hulls:
-  name: The Flooded Hulls
-  desc: |-
-    Below the reef's deck the drowned Forge-hulls lock together into a flooded maze, green light
-    slanting through split planking, the water thick with silt and old salvage. A reef-drifter hunts
-    the passages between the wrecks. The reef deck lies back up; the flagship's hold sinks deeper down.
-  exits:
-    up: the_wreck_reef
-    down: the_sunken_hold
-
-the_sunken_hold:
-  name: The Sunken Hold
-  desc: |-
-    The flagship's hold, whole and drowned: a cargo of the first Rekindling still lashed in the dark,
-    Forgework the coast shipped and lost when the sea rose. A wreck-warden - the ship's own Forged
-    keeper, still at its post on the bottom - rises from the silt to hold the cargo it was set to guard.
-    What the sea took and never gave back settles here. The flooded hulls lie back up.
-  exits:
-    up: the_flooded_hulls
-
-# --- Capital districts (Seed Scale Doctrine: every city should feel alive; avoid skeletal cities).
-# --- The training yard and the artisans' quarter give Emberreach's capital martial and maker life
-# --- beyond the three hub rooms, so the city bustles and offers trainers, shops, and things to do. ---
-the_training_yard:
-  name: The Warcraft Training Yard
+veridia:
+  name: Veridia
   desc: |-
-    Off the Orders' Row, a sanded yard ringed by racks of practice-steel where the Warcraft Orders
-    drill their own: the Vanguard's shield-wall, the Pathfinder's skirmish, the ring-work of the
-    duelists. A weaponmaster runs the forms, a drill-sergeant barks the line, and a duelist waits by
-    the sparring ring for anyone bold enough. The Orders' Row lies back east.
+    The Veridia zone (levels 1-30): green starter valleys of rivers and open road, where every journey begins. Within its bounds lie Greenhold, Elderwatch, Riverbend, Sunmeadow. Roads and routes run on to the neighbouring lands.
   exits:
-    east: orders_row
+    east: caeloria
+    south: duskwood_vale
+    north: frostspire_peaks
+    greenhold: greenhold
+    elderwatch: elderwatch
+    riverbend: riverbend
+    sunmeadow: sunmeadow
 
-the_artisans_quarter:
-  name: The Artisans' Quarter
+greenhold:
+  name: Greenhold
   desc: |-
-    North of the market the makers keep their own quarter: forge-shops and glassworks and
-    binderies, the ring of a hundred small hammers, the smell of hot metal and resin. A master
-    artisan keeps a well-stocked shop, a journeyman smith works a commission, and a wandering
-    scholar sketches the old marks on the walls. The market lies back south.
+    A walled market-town of green fields, the first stop of every new traveller. It lies within Veridia (levels 1-30); the zone road runs back out to the wider land.
   exits:
-    south: market_quarter
+    out: veridia
 
-# --- The Emberpost + the Windward Downs (Seed Scale Doctrine: roads connect meaningful destinations;
-# --- a mid-road settlement + a wilderness so the corridor is a place, not a passage). ---
-the_emberpost:
-  name: The Emberpost
+elderwatch:
+  name: Elderwatch
   desc: |-
-    A caravan waystation on a cart-track off the Ember-road: a walled yard of wagons, draft-beasts,
-    and travellers between the coast and the capital, where the Concord's caravans re-provision and
-    the road's traffic pools. A caravan-master keeps a well-found store, a road-guard leans on a
-    spear, and a peddler cries oddments from the back of a cart. The road lies back east; the downs
-    roll north.
+    An old watch-town on the veridia road, its tower long unmanned. It lies within Veridia (levels 1-30); the zone road runs back out to the wider land.
   exits:
-    east: emberroad_climb
-    north: the_windward_downs
+    out: veridia
 
-the_windward_downs:
-  name: The Windward Downs
+riverbend:
+  name: Riverbend
   desc: |-
-    North of the post the Kindlands roll open into grassy downs under a wide warm sky, the wild
-    ember running gold through the grass like a slow fire that never burns. Herds of ember-elk drift
-    the ridgelines, and a downs-stalker works the edge of the herd. Cairns of the first Rekindling
-    stand on the high points, marking a road the Concord walked before it paved the Ember-road. The
-    post lies back south.
+    A fishing town where the river folds back on itself under willow. It lies within Veridia (levels 1-30); the zone road runs back out to the wider land.
   exits:
-    south: the_emberpost
+    out: veridia
 
-# --- The Sealed Vault (Seed Scale Doctrine: hidden discoveries / off-path prize). A sealed chamber
-# --- off the Drowned Way that the Cinderdeep's flood never breached, so the deep dungeon rewards the
-# --- Forger who tries the rusted hatch instead of pressing straight down to the Cinderheart. ---
-the_sealed_vault:
-  name: The Sealed Vault
+sunmeadow:
+  name: Sunmeadow
   desc: |-
-    Behind the rusted hatch, a chamber the flood never reached: a dry, sealed vault the makers shut
-    against the Unforging and never reopened, its air a thousand years stale. What they sealed here
-    they meant to keep from the unmaking - and something has kept it, all this time, a vault-horror
-    grown from the sealed dark, that turns toward the first light in an age. The drowned way lies back
-    west.
+    A hamlet of hayfields and beehives on the sunniest downs in veridia. It lies within Veridia (levels 1-30); the zone road runs back out to the wider land.
   exits:
-    west: the_drowned_way
+    out: veridia
 
-# --- The Deep Wreckways + the Drowned Chapel (Seed Scale Doctrine: expand the Quenchmere to MMO
-# --- density - a second leveling ground, a salvage-gathering maze, and a hidden sunken dungeon off
-# --- the mapped ferry route, so the drowned Reach disperses players like Emberreach does). ---
-the_deep_wreckways:
-  name: The Deep Wreckways
+duskwood_vale:
+  name: Duskwood Vale
   desc: |-
-    Off the ferry's marked lane, the Wreckways deepen into a maze of drowned hulls no chart covers:
-    ten thousand ships the risen sea took, locked mast to mast, their holds spilling a Reach's worth
-    of salvage into the green water. Wreck-scavengers work the hulls, and so do worse things. Good
-    salvage beads on every broken deck. The marked lane lies back south; a temple-mast rises north.
+    The Duskwood Vale zone (levels 20-50): a shadowed forest-vale of old growth and older secrets. Within its bounds lie Ravenwatch, Moonshade, Twilight Grove, The Black Hollow. Roads and routes run on to the neighbouring lands.
   exits:
-    south: the_quench_lanes
-    north: the_drowned_chapel
+    north: veridia
+    east: eldryn_forest
+    south: zhaar_desert
+    ravenwatch: ravenwatch
+    moonshade: moonshade
+    twilight: twilight_grove
+    the: the_black_hollow
 
-the_drowned_chapel:
-  name: The Drowned Chapel
+ravenwatch:
+  name: Ravenwatch
   desc: |-
-    The tallest wreck in the deep Wreckways is no ship: a drowned chapel of the old Merewrights, its
-    spire the mast that marks it, its nave flooded and lit by a seam of drowned ember behind the
-    altar. A chapel-warden - the last keeper, drowned at its post - rises from the pews to hold the
-    offering the faithful left when the sea came. The Wreckways lie back south.
+    A timber town under the eaves, its roofs black with roosting ravens. It lies within Duskwood Vale (levels 20-50); the zone road runs back out to the wider land.
   exits:
-    south: the_deep_wreckways
+    out: duskwood_vale
 
-# ============================================================================================
-# THE OUTER REEFS (Great Creation Campaign) - a Quenchmere archipelago sub-region east of Tidewharf:
-# a reef-lane out to Saltmarsh Landing (a salvager's outpost), the reef flats (wilderness + gathering),
-# the Old Lighthouse (a landmark), and the Sunken Manse (a wreck-dungeon). Level-banded 18-30.
-# ============================================================================================
-the_outer_lanes:
-  name: The Outer Lanes
+moonshade:
+  name: Moonshade
   desc: |-
-    East of Tidewharf the marked ferry-lanes give out and the Outer Reefs begin: a scatter of low
-    reef-isles the risen sea left just above the water, strung on salvage-ropes and drift-bridges the
-    outer folk keep. A reef-serpent works the channel between the isles. Tidewharf lies back west;
-    Saltmarsh Landing sits on the first isle, east.
+    A moonlit glade-town where the duskwood folk trade by lantern. It lies within Duskwood Vale (levels 20-50); the zone road runs back out to the wider land.
   exits:
-    west: tidewharf_plaza
-    east: saltmarsh_landing
+    out: duskwood_vale
 
-saltmarsh_landing:
-  name: Saltmarsh Landing
+twilight_grove:
+  name: Twilight Grove
   desc: |-
-    A salvager's outpost on the first of the Outer Reefs: stilt-houses over a tidal marsh, drying
-    racks of salvage and salt-fish, and the small independent folk who work the reefs beyond the
-    Guild's reach. A salvage-master keeps a well-stocked shack, a reef-fisher mends a weir, and a
-    marsh-child races the tide. The reef-lanes run back west; the reef flats spread north, a lighthouse
-    stands east, and a salvage-stair drops down to a sunken manse.
+    A hidden grove-village where the dusk never quite lifts. It lies within Duskwood Vale (levels 20-50); the zone road runs back out to the wider land.
   exits:
-    west: the_outer_lanes
-    north: the_reef_flats
-    east: the_old_lighthouse
-    down: the_sunken_manse
+    out: duskwood_vale
 
-the_reef_flats:
-  name: The Reef Flats
+the_black_hollow:
+  name: The Black Hollow
   desc: |-
-    North of the landing the reef bares at low tide into a mile of flats: tidal pools bright with
-    brine-ember, wading-birds, and the shells and salvage the sea leaves twice a day. Mudskitters the
-    size of hounds hunt the pools, and the flats are thick with brine-pearl for anyone quick between
-    the tides. The landing lies back south.
+    A lightless hollow beneath a split oak, mouth of a dungeon of the deep wood. It lies within Duskwood Vale (levels 20-50); the zone road runs back out to the wider land.
   exits:
-    south: saltmarsh_landing
+    out: duskwood_vale
 
-the_old_lighthouse:
-  name: The Old Lighthouse
+caeloria:
+  name: Caeloria
   desc: |-
-    A lighthouse of the age before the sea rose, its foot now awash, its lamp-room still above the
-    tide: the outer folk keep the ember-lamp lit to mark the reef for the ferries, as their forebears
-    did before the Quenchmere drowned. From the lamp-room the whole Outer Reefs spread below, and on
-    a clear day the masts of the deep Wreckways and the spire of Tidewharf. A keeper tends the lamp.
-    The landing lies back west.
+    The Caeloria zone (levels 30-60): the heartland kingdom of golden plains and the high road. Within its bounds lie Caeloria City, Brightwater, Silverwatch, Westgate, Starfall Temple. Roads and routes run on to the neighbouring lands.
   exits:
-    west: saltmarsh_landing
+    west: veridia
+    south: eldryn_forest
+    northeast: frostspire_peaks
+    east: ashen_wastes
+    caeloria: caeloria_city
+    brightwater: brightwater
+    silverwatch: silverwatch
+    westgate: westgate
+    starfall: starfall_temple
 
-the_sunken_manse:
-  name: The Sunken Manse
+caeloria_city:
+  name: Caeloria City
   desc: |-
-    Below the landing a salvage-stair drops into a drowned manse - the seat of a Merewright house the
-    sea took whole, its halls flooded and lit by the brine-ember in its own drowned hearth. The house
-    kept its wealth and its pride to the last; a manse-warden, the house's own Forged steward, still
-    keeps both against the salvagers. What the house would not let go still lies in the flooded solar.
-    The landing lies back up.
+    The capital of the heartland, its gold-crowned towers ruling the central plains. It lies within Caeloria (levels 30-60); the zone road runs back out to the wider land.
   exits:
-    up: saltmarsh_landing
-# THE VERDANCE EXPANSION (Great Creation Campaign) - the living continent grows to zone density:
-# Highbough's bough-avenues + wild-ember shrine (the capital lived-in), the Understory (a forest-floor
-# wilderness leveling ground), and the Sunken Ziggurat (a forgotten civilization the jungle ate whole,
-# a ruin-delve). Level-banded 22-30, filling the gap between the landing and the mire.
-# ============================================================================================
+    out: caeloria
 
-# --- Highbough proper: the canopy capital, more than one bough ---
-the_bough_avenues:
-  name: The Bough-Avenues
+brightwater:
+  name: Brightwater
   desc: |-
-    The city proper spreads along boughs wide as roads, houses grown into the living wood and lit by
-    ember-blooms coaxed rather than kindled. Deeprooted folk go about a life the drowned Reaches never
-    knew: unhurried, green, certain the tree will hold. A bough-warden of the city watch keeps the
-    ways, and a canopy-child dares the high rails. Highbough's heart lies back east; a wild-ember
-    shrine stands west, and a rope-and-root descent drops south to the forest floor. The canopy MARKET,
-    the grove-COUNCIL hollow, and a rest-hollow INN are grown into the boughs nearby.
+    A river-city of mills and bright weirs east of the capital. It lies within Caeloria (levels 30-60); the zone road runs back out to the wider land.
   exits:
-    east: highbough
-    west: the_wildember_shrine
-    south: the_understory
-    market: the_canopy_market
-    council: the_grove_council
-    inn: the_rest_hollow
+    out: caeloria
 
-the_wildember_shrine:
-  name: The Wild-Ember Shrine
+silverwatch:
+  name: Silverwatch
   desc: |-
-    Where the Deeprooted keep what the drowned Reaches spend: a shrine grown around a wellspring of
-    wild Ember left to burn untouched, tended and never Forged. A grove-keeper reads the flame the way
-    a smith reads a heat, and will not let a stranger take from it. The tree's own testament is carved
-    in the living bark for any who can read the green. The avenues lie back east.
+    A silver-mining town on the plains' southern edge. It lies within Caeloria (levels 30-60); the zone road runs back out to the wider land.
   exits:
-    east: the_bough_avenues
+    out: caeloria
 
-# --- The Understory: the forest-floor wilderness, a leveling ground between the landing and the mire ---
-the_understory:
-  name: The Understory
+westgate:
+  name: Westgate
   desc: |-
-    Below the canopy the forest floor is a green dusk of buttress-roots and ember-bloom, loud with
-    the calls of things that hunt the half-light. Root-boars root the leaf-mould and thornwolves work
-    in packs; glowcap clusters the fallen giants for anyone with the nerve to gather the dark. The
-    landing lies north, the bough-avenues climb up, and an old overgrown causeway runs west toward
-    something the jungle swallowed long ago.
+    The western gate-town where veridia's road meets the heartland. It lies within Caeloria (levels 30-60); the zone road runs back out to the wider land.
   exits:
-    north: verdance_landing
-    up: the_bough_avenues
-    west: the_overgrown_causeway
+    out: caeloria
 
-# --- The Sunken Ziggurat: a forgotten civilization the Verdance ate (a ruin-delve) ---
-the_overgrown_causeway:
-  name: The Overgrown Causeway
+starfall_temple:
+  name: Starfall Temple
   desc: |-
-    A road of cut stone runs west under the roots, older than the Deeprooted and not of their making:
-    a causeway of a people the jungle took whole, their glyphs still legible where the green has not
-    yet closed. Root-stranglers guard the way, grown thick where the old power still hums. The
-    understory lies back east; the causeway climbs the steps of a ziggurat, west.
+    A fallen-star temple on the plains, its crater a dungeon of light and dust. It lies within Caeloria (levels 30-60); the zone road runs back out to the wider land.
   exits:
-    east: the_understory
-    west: the_ziggurat_steps
+    out: caeloria
 
-the_ziggurat_steps:
-  name: The Ziggurat Steps
+eldryn_forest:
+  name: Eldryn Forest
   desc: |-
-    A stepped pyramid of black stone breaks the canopy, half-swallowed by the tree that grew through
-    its crown: the seat of the forgotten people, their terraces hung with strangling root. A vine-
-    wraith, the last warden of a dead faith, keeps the stair against all comers. The causeway lies
-    back east; the ziggurat's sealed vault opens above, at the crown.
+    The Eldryn Forest zone (levels 50-80): an ancient forest kingdom grown around a tree older than any crown. Within its bounds lie Eldryn City, Wildgrowth, Greenmist, The Great Tree. Roads and routes run on to the neighbouring lands.
   exits:
-    east: the_overgrown_causeway
-    up: the_ziggurat_vault
+    north: caeloria
+    west: zhaar_desert
+    east: ashen_wastes
+    south: korvash_highlands
+    eldryn: eldryn_city
+    wildgrowth: wildgrowth
+    greenmist: greenmist
+    the: the_great_tree
 
-the_ziggurat_vault:
-  name: The Ziggurat Vault
+eldryn_city:
+  name: Eldryn City
   desc: |-
-    The crown-vault of the sunken ziggurat, roofless now, the tree's heartwood grown down through it
-    like a hand around a coal. Here the forgotten people kept their god: the Rootpriest-that-Endured,
-    a thing half-corpse and half-tree that swallowed its own priesthood to outlast its age, and has.
-    What it kept for its dead god still lies in the choked reliquary. The steps lie back down.
+    The forest capital, its halls grown into living trunks the size of towers. It lies within Eldryn Forest (levels 50-80); the zone road runs back out to the wider land.
   exits:
-    down: the_ziggurat_steps
-
-# ============================================================================================
-# THE RIMEFALL EXPANSION (Great Creation Campaign) - the frozen north grows to zone density: the
-# Silent Anvil's cloister (Stillhearth lived-in + the Reach's doctrine of restraint), the Riming Fields
-# (an ice-floe wilderness leveling ground), and Frosthold (a SECOND Emberwright city preserved whole
-# under the ice - explorable, then a frozen-forge delve). Level-banded 40-48, below the Rime-King (52).
-# ============================================================================================
+    out: eldryn_forest
 
-# --- The Silent Anvil's cloister: Stillhearth's warm heart, the doctrine of the Reach ---
-the_silent_cloister:
-  name: The Silent Cloister
+wildgrowth:
+  name: Wildgrowth
   desc: |-
-    Beneath the port the Silent Anvil keep their cloister, warm and low and quiet as held breath: an
-    order that guards the whole frozen Reach as a shrine and Forges nothing, believing the golden age
-    froze because it made too much, too fast, too proud. A cloister-master keeps the rule; a novice
-    sweeps rime that will not stop falling. Their creed is graven on the warm stone for any who read.
-    Stillhearth lies back up.
+    A frontier town where the forest is always trying to take the road back. It lies within Eldryn Forest (levels 50-80); the zone road runs back out to the wider land.
   exits:
-    up: stillhearth
+    out: eldryn_forest
 
-# --- The Riming Fields: the ice-floe wilderness, a leveling ground on the Rimefall's edge ---
-the_riming_fields:
-  name: The Riming Fields
+greenmist:
+  name: Greenmist
   desc: |-
-    West of the port the floe opens into a field of standing ice, pressure-ridges and frozen wells
-    where the Riming Sea heaved and set in a single instant. Rime-wolves course the ridges and ice-
-    wights rise from the frozen wells, drawn to any warmth. Rime-crystal grows in the cold seams for
-    anyone who can gather it before the cold takes their hands. Stillhearth lies back east; a beacon
-    stands north on the highest ridge, and a glassway runs west toward a second frozen city.
+    A town of the eastern eaves, wrapped in a green mist that never burns off. It lies within Eldryn Forest (levels 50-80); the zone road runs back out to the wider land.
   exits:
-    east: stillhearth
-    north: the_kingsroad_beacon
-    west: the_glassway
-    south: the_warmcamp
+    out: eldryn_forest
 
-the_kingsroad_beacon:
-  name: The Kingsroad Beacon
+the_great_tree:
+  name: The Great Tree
   desc: |-
-    A signal-tower of the golden age stands on the highest pressure-ridge, its ember-beacon long cold,
-    its stair climbable still. From the top the whole Rimefall spreads white to the horizon: Stillhearth's
-    one plume of smoke, the buried avenues of Frosthold, and far north under the deep ice the golden
-    glint of the Frozen Court itself. The fields lie back south.
+    The heart of eldryn forest, a tree said to be older than the oldest kingdom. It lies within Eldryn Forest (levels 50-80); the zone road runs back out to the wider land.
   exits:
-    south: the_riming_fields
+    out: eldryn_forest
 
-# --- Frosthold: a SECOND Emberwright city preserved whole under the ice (explorable + a delve) ---
-the_glassway:
-  name: The Glassway
+frostspire_peaks:
+  name: Frostspire Peaks
   desc: |-
-    An avenue of the golden age runs west under a roof of clear ice, its lamps and shop-signs and
-    the frost-caught banners of a festival-day all preserved mid-flutter, the whole street stopped
-    between one breath and the next. Frost-revenants walk it, the city's own people, still keeping to
-    their errands in the ice that killed them. The fields lie back east; the city square opens west.
+    The Frostspire Peaks zone (levels 60-90): the frozen north of glacier-crowned peaks and howling passes. Within its bounds lie Frosthold, Winter's Grasp, Ironwall Pass, Glacial Bastion. Roads and routes run on to the neighbouring lands.
   exits:
-    east: the_riming_fields
-    west: frosthold
+    south: veridia
+    southwest: caeloria
+    east: thalorin
+    frosthold: frosthold
+    winters: winters_grasp
+    ironwall: ironwall_pass
+    glacial: glacial_bastion
 
 frosthold:
   name: Frosthold
   desc: |-
-    A whole Emberwright city preserved entire under the deep ice, lesser than the Frozen Court and no
-    less haunted: a market-square caught mid-day, its makers frozen at their benches and their bargains,
-    a city that simply stopped. A frost-echo of the last market-master keeps the square, neither living
-    nor wholly gone. The glassway lies back east; the city's great forge stands frozen at the square's
-    heart, west.
-  exits:
-    east: the_glassway
-    west: the_frozen_forge
-
-the_frozen_forge:
-  name: The Frozen Forge
-  desc: |-
-    The heart of Frosthold: a master-forge of the golden age caught mid-pour, a ribbon of Ember frozen
-    in the very act of falling, bright and motionless as struck glass. The Frostbound Smith stands over
-    it still, flash-frozen mid-strike and woken by warmth to finish a work an age overdue, and it will
-    forge you into the piece if you let it. What the golden age made here is worth the cold. The square
-    lies back east.
-  exits:
-    east: frosthold
-# THE KOLLFORGE EXPANSION (Great Creation Campaign) - the molten Reach grows to zone density: the
-# caldera-market (Emberkoll lived-in + the Kollkin creed), the Obsidian Flats (a lava-shelf wilderness
-# leveling ground), and the Cooled Kollhold (a city that DIED cold - the Kollkin's deepest fear, mirror
-# to the drowned Sunhold and frozen Frosthold). Level-banded 50-56, below the Vent-Lord (62).
-# ============================================================================================
-
-# --- Emberkoll proper: the obsidian capital, lived-in, and the Kollkin creed ---
-the_caldera_market:
-  name: The Caldera-Market
-  desc: |-
-    A market ringed around the lip of a lightning-lit caldera, its stalls roofed in cooling-glass and
-    its floor warm underfoot: the Kollkin trade the hottest wares in the world here, and count heat
-    itself the truest wealth. A shelf-crier hawks the day's pours; a caldera-child dares the warm rail.
-    The Kollkin creed is struck in bronze at the caldera's lip for any who read. Emberkoll lies back east.
-  exits:
-    east: emberkoll
-
-# --- The Obsidian Flats: a lava-shelf wilderness, a leveling ground off the Reach's entry ---
-the_obsidian_flats:
-  name: The Obsidian Flats
-  desc: |-
-    South of the passage the shore cools to a black glass shelf, cracked with slow rivers of Forgelight-
-    lit lava and loud with the things that live in heat: ember-lynxes stalking the glass and slag-hulks
-    heaving up from the cooling flows. Emberglass sets in the cracks for anyone quick enough to gather
-    it before the next pulse. The passage lies back north; the flats break east into a cinder-vent gorge.
-  exits:
-    north: the_molten_passage
-    east: the_cinder_gorge
-
-the_cinder_gorge:
-  name: The Cinder-Vent Gorge
-  desc: |-
-    A gorge where the flats crack open on a working vent, the air a shimmer of heat and cinder-fall.
-    A cinder-drake nests on the far ledge, grown fat on the thermals, jealous of the gorge. This is the
-    edge of the wilds, as deep as a lone Forger should push the flats. The obsidian flats lie back
-    west; the vent-floor cracks open on a drop into the molten deep, down.
-  exits:
-    west: the_obsidian_flats
-    down: the_emberdeep_mouth
-
-# --- The Cooled Kollhold: a city that died COLD (the Kollkin's deepest fear; a dead-city delve) ---
-the_cooling_shelf:
-  name: The Cooling Shelf
-  desc: |-
-    A stair drops from Emberkoll onto a shelf where the Forgelight failed an age ago: the rock here is
-    grey and dead-cold, the one place in the Kollforge the fire forgot. Slag-wraiths, Kollkin who died
-    when their heat did, drift the cold rock. Emberkoll's glow lies back up; ahead, west, the dead city
-    itself: Ashkoll, that cooled.
-  exits:
-    up: emberkoll
-    west: dead_ashkoll
-
-dead_ashkoll:
-  name: Dead Ashkoll
-  desc: |-
-    A Kollhold that cooled and died: an obsidian city gone grey and silent when its caldera guttered
-    out, its people frozen not in ice but in cold stone, mid-work at forges that will never light again.
-    To the Kollkin this is the only true death, and no Kollkin will walk here. A slag-echo of the last
-    Vent-master keeps the dead forge-square. The cooling-shelf lies back east; the great cold hearth
-    stands at the city's dead heart, west.
-  exits:
-    east: the_cooling_shelf
-    west: the_cold_hearth
-
-the_cold_hearth:
-  name: The Cold Hearth
-  desc: |-
-    The dead heart of Ashkoll: the great forge that was the city's life, its caldera a pit of grey slag,
-    cold a thousand years. The Ashen Forgeborn keeps it - living Forgework that did not die when its
-    heat did but went cold and mad instead, tending a fire that will never light and hating anything
-    that still burns. What Ashkoll forged in its last hot age still lies unclaimed in the dead pit. The
-    forge-square lies back east.
-  exits:
-    east: dead_ashkoll
-
-# ============================================================================================
-# THE SUNDERED SKY EXPANSION (Great Creation Campaign) - the floating Reach grows to zone density: the
-# anchor-quarter (Highgate lived-in + the Skyborn creed), the Drifting Shoals (a sky-wind wilderness
-# leveling ground), and the Falling Shard (a sky-isle that LOST its Forgework and falls forever - the
-# Skyborn's one dread, the world's fourth dead capital by a different death). Banded 60-66, below the
-# Court-Warden (72).
-# ============================================================================================
-
-# --- Highgate proper: the anchor-quarter, lived-in, and the Skyborn creed ---
-the_anchor_quarter:
-  name: The Anchor-Quarter
-  desc: |-
-    The working heart of Highgate, built around the great anchor-capstan where the chain to the Coilfoot
-    runs down through the shard and out of sight into cloud: the Skyborn live their whole lives aloft,
-    moored but never landed, and hold the anchor a sacred trust. An anchor-keeper minds the capstan; a
-    sky-child runs the drift-rails without a tether. The Skyborn creed is cut in the capstan-drum for
-    any who read. Highgate's gate lies back north; the drifting shoals open south off the shard's edge.
-  exits:
-    north: highgate
-    south: the_drifting_shoals
-
-# --- The Drifting Shoals: a sky-wind wilderness, a leveling ground among the loose shards ---
-the_drifting_shoals:
-  name: The Drifting Shoals
-  desc: |-
-    Off the anchor-quarter's edge a shoal of lesser shards drifts on the high wind, crossed on sway-
-    bridges and trailing their waterfalls into the cloud-deep below. Stormkin ride the updrafts and
-    sky-rays glide the shard-lee, hunting the warm. Stormglass grows where the lightning grounds on the
-    drifting rock, for a Forger with the nerve to gather in the open sky. The anchor-quarter lies back
-    north; a tilting span runs west toward a shard that is losing its hold on the air.
-  exits:
-    north: the_anchor_quarter
-    west: the_tilting_span
-
-# --- The Falling Shard: a sky-isle that lost its Forgework and falls forever (a dead-city delve) ---
-the_tilting_span:
-  name: The Tilting Span
-  desc: |-
-    A sky-bridge run out to a shard gone wrong: the span tilts underfoot, its far end lower than its
-    near, because the shard it reaches is slowly, endlessly falling, its Forgework failing a hair a
-    year. Fall-revenants keep the tilting way, those the slow fall took and never finished taking. The
-    shoals lie back east; the falling shard's dead hold drops away, down.
-  exits:
-    east: the_drifting_shoals
-    down: the_falling_hold
-
-the_falling_hold:
-  name: The Falling Hold
-  desc: |-
-    A shard-city that lost its Forgework and has been falling ever since, so slowly that its people
-    lived and died and never knew they fell: a hold hung in an endless drop, everything in it drifted a
-    hand off the floor and never landing, a whole city held in the long breath before an impact that
-    will not come for an age. A drift-echo of the last anchor-keeper keeps the tilting square. The
-    tilting span lies back up; the hold's dead capstan stands at its heart, down.
-  exits:
-    up: the_tilting_span
-    down: the_anchor_deep
-
-the_anchor_deep:
-  name: The Anchor-Deep
-  desc: |-
-    The dead heart of the falling shard: the great capstan whose anchor-chain snapped an age ago, its
-    broken links still drifting in the endless fall. The Broken Anchor-Warden keeps it - the hold's own
-    guardian, set to hold the shard aloft and failing at it forever, gone wrong in the long drop, hauling
-    still on a chain that leads nowhere. What the hold could not take down with it still drifts unclaimed
-    by the dead capstan. The falling square lies back up.
-  exits:
-    up: the_falling_hold
-# THE CINDERWASTE - the Grey Reach (Great Creation Campaign, Phase I: geography-first). Continental
-# Atlas SIV: a continent HALF-UNFORGED, scoured to grey Cinder and glass, walked under an open bleached
-# sky. The surface's answer to the Cinderdeep. Reached south across the Quenchmere's grey water. The
-# fourth Reach's PHYSICAL map laid down at breadth, and the first zone built for the WIDER COMPASS:
-# open-waste diagonals (ne/nw/se/sw) and thresholds keyed by the noun they open onto (market, quarter,
-# waymoot, crater, vault). Level-banded 15-40. Ambient life only; dense population is a later pass.
-# ============================================================================================
-
-the_ashen_crossing:
-  name: The Ashen Crossing
-  desc: |-
-    The ferry leaves the last charted lane and runs south into grey water: the Cooling-Sea here is
-    silting to a dead salt slack, the swell dying under a rind of floating ash. Ahead the Cinderwaste
-    lifts over the horizon, not a coast but an ending, a land the Unforging scoured half to nothing and
-    then left. The wind smells of struck flint. The Quench lanes lie back north; the grey shore waits
-    south.
-  exits:
-    north: the_quench_lanes
-    south: the_grey_shore
-
-the_grey_shore:
-  name: The Grey Shore
-  desc: |-
-    Landfall on the Cinderwaste: a strand not of sand but of cold grey cinder, the sea behind giving
-    out into salt-flat before it reaches true water, the land ahead a bleached waste under a sky gone
-    white and enormous. Ash-crabs pick the tideline of a tide that no longer comes. A salvage-road,
-    marked by the ribs of grounded ships, runs inland west to Saltring; the open dunes roll away to the
-    southwest; the drowned canals crust the coast to the southeast. The crossing lies back north.
-  exits:
-    north: the_ashen_crossing
-    west: saltring
-    southwest: the_grey_dunes
-    southeast: the_drowned_canals
-
-# --- Saltring: the salvage-city capital, ringing a dry sea (noun-keyed districts) ---
-saltring:
-  name: Saltring
-  desc: |-
-    The one city of the Cinderwaste, a salvage-town built in a great ring around the basin of a sea
-    that dried in an afternoon when the Unforging drank it: its houses are hulls and its walls are
-    salvage, and the Ashborn who live here do not mourn the world and do not make it, they sell it back
-    to itself piece by piece. A ring-warden keeps the gate. The salvage-MARKET rings the basin; the
-    salvage-clan QUARTER warrens off south; the grey shore road runs back east; and a salvage-track
-    climbs west onto the ash dunes toward the deep waste.
-  exits:
-    east: the_grey_shore
-    west: the_grey_dunes
-    north: the_salt_market
-    market: the_salt_market
-    south: the_ring_quarter
-    quarter: the_ring_quarter
-    inn: the_salvagers_rest
-
-the_salt_market:
-  name: The Salt-Market
-  desc: |-
-    Saltring's market, ringing the dry sea-basin on salvage-scaffold: here the Ashborn trade water and
-    salvage and the rare raw Ember the waste gives up, and a thing Unforged fetches more than a thing
-    made. A salt-factor keeps the scale. Below the scaffold the dry basin glares white to its far rim,
-    and a crater-track drops off its floor toward the Glass Market. Saltring's ring lies back south.
-  exits:
-    south: saltring
-    down: the_glass_market
-    crater: the_glass_market
-
-the_ring_quarter:
-  name: The Ring-Quarter
-  desc: |-
-    The salvage-clan quarter of Saltring, a warren of hull-houses where the road-clans keep their hard
-    code and their harder bargains. A clan-elder keeps the quarter's peace. This is as settled as the
-    Cinderwaste gets; past the last hull the waste begins and does not forgive. Saltring's ring lies
-    back north.
-  exits:
-    north: saltring
-
-# --- The Glass Market: a black-market bazaar in an Unforging crater ---
-the_glass_market:
-  name: The Glass Market
-  desc: |-
-    In a crater where the Unforging struck and left the sand fused to black glass, a bazaar keeps to
-    the shade of the crater-wall: the Glass Market, where anything Unforged can be bought and no
-    question is asked twice. A glass-broker works the dark stalls, selling relics that should not exist.
-    The rim-track climbs back up toward the Salt-Market; a glass-tunnel runs deeper under the crater
-    wall, west, toward the older, worse markets no one names.
-  exits:
-    up: the_salt_market
-    west: the_glassways
-
-the_glassways:
-  name: The Glassways
-  desc: |-
-    Under the crater wall the Unforging fused a warren of glass tunnels, smooth as poured night, lit
-    only by the raw Ember still trapped glowing in the walls. Glass-lurkers hunt the dark bends, drawn
-    to warmth. This is the edge of the buyable world; deeper in, the glass gives onto the Scoured
-    Reach and the half-Forged ruins. The Glass Market lies back east; the scoured ground opens west.
-  exits:
-    east: the_glass_market
-    west: the_scoured_reach
-
-# --- The ash-dune wilderness (diagonals off the open waste) ---
-the_grey_dunes:
-  name: The Grey Dunes
-  desc: |-
-    A rolling waste of cold ash-dunes under the white sky, the Cinderwaste's open middle, trackless
-    but for the salvage-poles the Ashborn set to walk it by. Ash-jackals course the dune-troughs and
-    the wind erases your steps behind you. The grey shore lies back northeast and Saltring east; south
-    the dunes give out at a horizon-long scar; and a WAYMOOT fire burns west, the one landmark in a
-    land that eats landmarks.
-  exits:
-    northeast: the_grey_shore
-    east: saltring
-    south: the_ashline
-    west: the_ashborn_waymoot
-    waymoot: the_ashborn_waymoot
-
-the_ashborn_waymoot:
-  name: The Ashborn Waymoot
-  desc: |-
-    A wandering camp that is a fixed idea if not a fixed place: the Ashborn waymoot, a ring of salvage-
-    fires and a water-cache the road-clans keep by unbreakable custom for any traveller the waste has
-    not yet killed. A waymoot-keeper tends the cache. It is the only mercy in the Cinderwaste, and it
-    is a real one. The dunes roll back east.
-  exits:
-    east: the_grey_dunes
-
-# --- The drowned canals: salt-flats over sunken waterways ---
-the_drowned_canals:
-  name: The Drowned Canals
-  desc: |-
-    East of the shore the salt-flat crazes over a grid of drowned canals: an irrigation-work of the age
-    before the waste, its channels now brine-crusted trenches under a skin of salt that gives way
-    without warning. Salt-wraiths, the drowned of the old canal-farms, drift the sunken grid. The grey
-    shore lies back northwest; the flats run on south toward the Ashline scar.
-  exits:
-    northwest: the_grey_shore
-    south: the_ashline
-
-# --- The Ashline: the frontier scar where the world stops being finished ---
-the_ashline:
-  name: The Ashline
-  desc: |-
-    The edge of the made world: a scar running the whole southern horizon where the Unforging simply
-    stopped, and the land ends not in cliff or sea but in un-ness, a shimmer where the ground gives out
-    into raw grey possibility that was never cooled into anything. To stand here is to see the world's
-    hem. A line-warden of the Ashborn keeps the last safe ground. The dunes lie back north; the drowned
-    canals run east; a scoured track edges west along the scar toward the half-Forged ruins; and where
-    the ground gives out into un-ness, it does not end so much as open, DOWN, into the Cinderdeep.
-  exits:
-    north: the_grey_dunes
-    east: the_drowned_canals
-    west: the_scoured_reach
-    down: the_unmaking_verge
-
-# --- The Scoured Reach: a half-Forged ruin-delve where walls end in mid-air (noun-keyed vault) ---
-the_scoured_reach:
-  name: The Scoured Reach
-  desc: |-
-    Along the Ashline the ground is scoured to the bones of a Forge-hold the Unforging half-took: walls
-    that end in mid-air, stairs to nothing, doorways opening on the raw grey un-ness, a building caught
-    between made and unmade. Cinder-husks, the hold's own people left half-Forged, keep the standing
-    rooms. The Ashline lies back east; the glassways run north to the market; and the hold's one intact
-    VAULT stands deeper in, west.
-  exits:
-    east: the_ashline
-    north: the_glassways
-    west: the_unfinished_vault
-    vault: the_unfinished_vault
-
-the_unfinished_vault:
-  name: The Unfinished Vault
-  desc: |-
-    The one room the Unforging did not reach: a sealed Forge-vault at the heart of the scoured hold,
-    whole where all around it is half-unmade, holding whatever the hold's last maker died sealing
-    against the grey. A cinder-colossus, welded together by the waste from the hold's own scattered
-    Forgework, keeps the vault door, grown around the scar like a scab of iron. Whatever is sealed here
-    is the richest unmade thing on the surface. The scoured rooms lie back east.
-  exits:
-    east: the_scoured_reach
-
-# ============================================================================================
-# THE CINDERDEEP - the Descending Frontier (Great Creation Campaign, Phase I). Continental Atlas: what
-# the Unforging UNMADE - caverns and half-real regions where shapes never re-cooled, home of the
-# Unforged (entropy made hostile), the dungeon-continent that grows DOWNWARD forever. Every Reach has a
-# mouth into it; this is the mouth below the Cinderwaste's Ashline, where the surface's un-ness opens
-# into the true deep. A descending network on the vertical spine (up/down) with lateral cavern branches.
-# Level-banded 40-52, escalating with depth (the deeper you sink, the more the world comes apart).
-# ============================================================================================
-
-the_unmaking_verge:
-  name: The Unmaking Verge
-  desc: |-
-    Below the Ashline the world does not stop, it THINS: a cavern where the rock is only mostly there,
-    edges gone soft, a floor that remembers being a floor. This is the verge of the Cinderdeep, the
-    first breath of the unmade under-continent, and already the made world's rules hold loose. An
-    un-thing drifts the soft dark. The Ashline light lies back up; the greydark opens down.
-  exits:
-    up: the_ashline
-    down: the_greydark
-
-the_greydark:
-  name: The Greydark
-  desc: |-
-    A cavern-network with no true walls, only grey half-real dark that the eye keeps trying to finish
-    and failing: the Greydark, the Cinderdeep's first great hollow, where the Unforged drift the spaces
-    that never re-cooled into stone. This is the hub of the near deep. The verge lies back up; a hollow
-    march runs southeast along a seam of the almost-real; and the deep drops on, down, toward the
-    Unforged Reach.
-  exits:
-    up: the_unmaking_verge
-    down: the_unforged_reach
-    southeast: the_hollow_march
-
-the_hollow_march:
-  name: The Hollow March
-  desc: |-
-    A seam of the almost-real running off the Greydark, where cinder-wells pool the raw unmade Ember
-    that the deep gives up: good gathering, if the hollow-kin that haunt the march let you keep it.
-    This is a lateral wander of the near deep, a place to be that is not the main descent. The Greydark
-    lies back northwest.
-  exits:
-    northwest: the_greydark
-
-the_unforged_reach:
-  name: The Unforged Reach
-  desc: |-
-    Deeper: a hall where shapes never re-cooled at all, and the Unforged are not drifting things but a
-    settled population of the unmade, entropy grown into something that hunts. The made world is a rumor
-    here. The Greydark lies back up; a drowned kiln-city the deep swallowed stands lower still, down.
-  exits:
-    up: the_greydark
-    down: the_sunken_kiln
-
-the_sunken_kiln:
-  name: The Sunken Kiln
-  desc: |-
-    A whole Forge-city the Cinderdeep took and never digested: a kiln-town of the age before the
-    Unforging, sunk entire into the deep and half-unmade, its streets ending in grey nothing, its cold
-    kilns still holding the shapes of a last firing. A kiln-echo of the town's last master-smith keeps
-    the dead furnace-square. The Unforged Reach lies back up; the deepest built dark, the Umbral Deep,
-    opens down.
-  exits:
-    up: the_unforged_reach
-    down: the_umbral_deep
-
-the_umbral_deep:
-  name: The Umbral Deep
-  desc: |-
-    The bottom of the built descent, though the Cinderdeep does not truly have a bottom: a lightless
-    hollow where the unmaking is oldest and nearest to complete, and the Hollow King holds court - an
-    Unforged grown vast on an age of eating the made, the deep's own answer to the Rime-King and the
-    Boughwarden, a maker's nightmare turned inside out. Below here the deep only deepens, unbuilt and
-    waiting. The sunken kiln lies back up.
-  exits:
-    up: the_sunken_kiln
-
-# ============================================================================================
-# EMBERREACH CITY INTERIORS (Great Creation Campaign, Phase I, Layer 4: every settlement explorable).
-# The first capital becomes a real city you can walk INTO: the First Flame church, the Grand Archive,
-# a tavern and inn, the three Order guild-halls off the Row, the river docks, the undercity beneath the
-# forge, and the gate-watch on the walls. Reached by NOUN exits (temple/archive/tavern/making/...), and
-# each building returns by the noun `out` - the wider compass, used as a city is used.
-# ============================================================================================
-
-the_first_flame_church:
-  name: The Church of the First Flame
-  desc: |-
-    Off the Grand Forge, the Church of the First Flame keeps a chapel around a shard of the relit
-    Forge-fire: the faith that holds the Rekindling a holy second chance, that the world was Made and
-    can be Made again by hands that keep the flame. A flamekeeper tends the altar. The creed of the
-    First Flame is graven over the hearth for any who read. Out returns to the Grand Forge.
-  exits:
-    out: the_grand_forge
-    forge: the_grand_forge
-
-the_grand_archive:
-  name: The Grand Archive
-  desc: |-
-    The root of the world's memory: the Grand Archive of the Emberwright Rememberers, tier on tier of
-    salvaged record climbing into the dark, where the Loremaster keeps what the Unforging did not take.
-    An archivist shelves a stack that never ends. Here a Forger can READ the world's own case-file, if
-    the Loremaster judges them ready. Out returns to the Grand Forge.
-  exits:
-    out: the_grand_forge
-
-the_cinder_tankard:
-  name: The Cinder Tankard
-  desc: |-
-    The Market Quarter's tavern, low-beamed and loud, where the whole Rekindling drinks: Forgers fresh
-    off the coast, salvage-crews up from the Ashwastes, Wardens off the march, all trading news over
-    cinder-ale. A barkeep keeps the taps and the peace. A rest-room, an INN, keeps beds up the back
-    stair. Out returns to the Market Quarter.
-  exits:
-    out: market_quarter
-    inn: the_wayhouse_inn
-
-the_wayhouse_inn:
-  name: The Wayhouse Inn
-  desc: |-
-    Up the tavern's back stair, the Wayhouse keeps clean beds and a banked hearth for the road-weary: a
-    safe room in a loud city, the one place in Emberreach a Forger is asked nothing and owed nothing but
-    rest. The innkeeper keeps the ledger. Out returns to the tavern below.
-  exits:
-    out: the_cinder_tankard
-
-the_making_hall:
-  name: The Making Order Hall
-  desc: |-
-    The guild-hall of the Making Orders off the Row: the smiths, wrights, and shapers who hold that to
-    Forge is the highest calling, their hall hung with masterworks submitted for rank. A Making-master
-    judges the work brought before her. Out returns to the Orders' Row.
-  exits:
-    out: orders_row
-
-the_knowing_hall:
-  name: The Knowing Order Hall
-  desc: |-
-    The guild-hall of the Knowing Orders: the loremasters, readers, and case-workers who hold that to
-    understand the world is to keep it, their hall a quieter archive of methods and marks. A Knowing-
-    master sets the questions that make a scholar. Out returns to the Orders' Row.
-  exits:
-    out: orders_row
-
-the_gathering_hall:
-  name: The Gathering Order Hall
-  desc: |-
-    The guild-hall of the Gathering Orders: the pathfinders, harvesters, and delvers who hold that the
-    world's raw Ember must be found before it is worked, their hall walled with maps of every Reach and
-    every mouth of the deep. A Gathering-master reads the far roads. Out returns to the Orders' Row.
-  exits:
-    out: orders_row
-
-the_river_docks:
-  name: The River Docks
-  desc: |-
-    South of the market the city meets its water: a river-quay where cooling-iron barges bring the
-    Cooling-Sea's trade up into Emberreach and carry the capital's work back down. A dockmaster tallies
-    the cargo and curses the tide. This is where the Quenchmere's ferries make their inland call. Out
-    returns to the Market Quarter.
-  exits:
-    out: market_quarter
-
-the_undercity:
-  name: The Undercity
-  desc: |-
-    Beneath the Grand Forge the old city runs on in the dark: cinder-drains, sealed cellars, and the
-    footings of a capital that has been rebuilt on its own bones since the Rekindling began. A drain-
-    lurker works the wet dark, and salvage the city forgot still lies in the sealed cellars. The forge-
-    stair climbs back up; the SEWERS run on deeper, west, under the market.
-  exits:
-    up: the_grand_forge
-    out: the_grand_forge
-    west: the_sewers
-
-the_sewers:
-  name: The Cinder-Drains
-  desc: |-
-    The capital's cinder-drains, brick-vaulted and ankle-deep, running the length of the city under the
-    stalls above: the undercity's working gut, where the drain-kin breed and the truly desperate hide.
-    A drain-warden of the watch patrols the near stretch, the only law down here. The undercity lies
-    back east.
-  exits:
-    east: the_undercity
-
-the_city_walls:
-  name: The City Walls
-  desc: |-
-    The cinder-iron walls of Emberreach, wide enough to march a column, where the Concord's gate-watch
-    keeps the capital's first line against the wilds and the road. A wall-captain reads the horizon out
-    over the Kindlands. From here the whole city spreads below: the Grand Forge's plume, the market's
-    smoke, the Wardenmarch beyond. Out returns to the gates below.
-  exits:
-    out: emberreach_gates
-# TIDEWHARF CITY INTERIORS (Great Creation Campaign, Phase I, Layer 4). The Quenchmere's floating free-
-# port, built across a hundred drowned hulls, becomes explorable: the salvage exchange, the Drowned Bell
-# tavern + hull-loft inn, the tide-shrine of the Merewright drowned-faith, the Salvage Guildhall, the
-# captains' wharf, and the flooded bilge under the planking. Noun exits (market/tavern/wharf/bilge...),
-# each building left by `out`. Level-banded 12-18 (city + shallow underhull).
-# ============================================================================================
-
-the_salvage_exchange:
-  name: The Salvage Exchange
-  desc: |-
-    Off the plaza, the Salvage Exchange never closes: a planked bourse where the Quenchmere's whole
-    drowned inheritance is bought and sold by the crate, the hull, and the rumor - raw salvage, charted
-    wreck-rights, and the deep-lung Forgework only Tidewharf can lift. An exchange-broker cries the
-    board. Out returns to the plaza.
-  exits:
-    out: tidewharf_plaza
-
-the_drowned_bell:
-  name: The Drowned Bell
-  desc: |-
-    A tavern in the belly of an upturned hull, its sign a ship's bell green with the deep: the Drowned
-    Bell, where salvage-crews, ferry-captains, and the honest sort of pirate drink the Quenchmere's news.
-    A bell-keeper works the taps. Hammocks for hire swing in the hull-lofts above, an INN of sorts. Out
-    returns to the plaza.
-  exits:
-    out: tidewharf_plaza
-    inn: the_hull_lofts
-
-the_hull_lofts:
-  name: The Hull-Lofts
-  desc: |-
-    Up in the ribs of the old hull, the Drowned Bell hangs its beds: hammocks and cots slung in the
-    curve of a ship that will never sail, warm and dry above the tide, the free-port's cheapest safe
-    sleep. A loft-keeper minds the ladder. Out returns to the tavern below.
-  exits:
-    out: the_drowned_bell
-
-the_tide_shrine:
-  name: The Tide-Shrine
-  desc: |-
-    A shrine planked over open water where the Merewrights keep faith with the drowned: not a church of
-    the First Flame but the sea's own creed, that the Quenchmere took the old world and holds it still,
-    and the dead are not lost but kept, below, in the cold and the lamp-light. A tide-keeper tends the
-    drowned-lamps. The Merewright creed is scrimshawed on the whale-bone rail. Out returns to the plaza.
-  exits:
-    out: tidewharf_plaza
-
-the_salvage_guildhall:
-  name: The Salvage Guildhall
-  desc: |-
-    The Salvage Guild's hall, raised on the deck of a treasure-hull the Guild will not say how it came
-    by: the power behind the Port-Accord's polite face, wanting every drowned city opened and every
-    wreck-right theirs. A Guild-factor books the contracts. This is where a Forger takes salvage-work,
-    and reads what it costs. Out returns to the plaza.
-  exits:
-    out: tidewharf_plaza
-
-the_captains_wharf:
-  name: The Captains' Wharf
-  desc: |-
-    Alongside the docks, the wharf where the ferry-captains of every Reach muster their crews and cry
-    their crossings: the loud, salt-stiff labor-market of the free-port, where a berth is bought with
-    coin or a strong back. A wharf-master calls the manifests. Out returns to the docks.
-  exits:
-    out: tidewharf_docks
-
-the_bilge:
-  name: The Bilge
-  desc: |-
-    Down under the planking, the flooded bilge of the old hulls the city is built on: waist-deep black
-    water, the groan of a hundred lashed keels, and the things that breed where the free-port pours its
-    dark. A bilge-crawler works the flooded runs. Salvage the city planked over still lies in the drowned
-    holds. The docks lie back up; the underhull runs on deeper, down.
-  exits:
-    up: tidewharf_docks
-    out: tidewharf_docks
-    down: the_underhull
-
-the_underhull:
-  name: The Underhull
-  desc: |-
-    The deepest planked-over deck a Forger can reach without a diving-bell: the underhull, where the
-    free-port's oldest hulls settle into the drowned capital's reach, and the salvage is richest and the
-    dark is worst. A hull-wight keeps a treasure-hold no salvage-crew has dared. The bilge lies back up.
-  exits:
-    up: the_bilge
-
-# ============================================================================================
-# MIREFAST - the Verdance's swamp-edge trade-stilt town (Great Creation Campaign, Phase I; Continental
-# Atlas III names it, unbuilt until now). The Verdance's SECOND hub: where the decentralized Deeprooted
-# trade with the outside world, a mercantile stilt-town on the breathing swamp's edge. A settlement +
-# its interiors (market/tavern/inn/shrine) + a stiltways swamp-approach + the under-stilt deeps. Gives
-# the living Reach a place to be that is not Highbough or a delve. Level-banded 22-26. Noun exits.
-# ============================================================================================
-
-mirefast:
-  name: Mirefast
-  desc: |-
-    A whole town on stilts at the Verdance's swamp-edge, where the boardwalks of the Deeprooted meet the
-    keels of the outside world: Mirefast, the living Reach's one real market, loud with traders who
-    would never be let up into sacred Highbough but are welcome here to swap steel for wild-Ember and
-    swamp-craft. A stilt-reeve keeps the boardwalk peace. The mire lies back west; the trade-MARKET, the
-    Mireside TAVERN, and a grove-SHRINE open along the planking, a swamp boardwalk runs out east, and a
-    ladder drops to the under-stilts, down.
-  exits:
-    west: the_deeproot_mire
-    east: the_stiltways
-    down: the_stilt_deeps
-    market: the_stilt_market
-    tavern: the_mireside_tavern
-    shrine: the_grove_shrine
-
-the_stilt_market:
-  name: The Stilt-Market
-  desc: |-
-    Mirefast's trade-market, a raft of joined platforms where the Verdance's wild bounty is swapped for
-    the outside world's making: ember-bloom and swamp-resin and living-wood for steel, salt, and news. A
-    stilt-trader keeps the busiest stall in the living Reach. Out returns to Mirefast.
-  exits:
-    out: mirefast
-
-the_mireside_tavern:
-  name: The Mireside Tavern
-  desc: |-
-    A tavern slung between three great stilts over the black water, its lamps ember-bloom, its floor a
-    gentle sway: the Mireside, where trader and Deeprooted drink the one thing they both trust, and the
-    swamp's news travels faster than any road. A mire-host works the taps. Boardwalk-lofts hang above,
-    an INN over the water. Out returns to Mirefast.
-  exits:
-    out: mirefast
-    inn: the_boardwalk_lofts
-
-the_boardwalk_lofts:
-  name: The Boardwalk-Lofts
-  desc: |-
-    Above the Mireside, sleeping-lofts hang on the boardwalk stilts, screened against the swamp's
-    biting dark: the safest dry sleep at the Verdance's edge, rocked by the water and the wind in the
-    canopy far above. A loft-host keeps the lamps lit against the mire. Out returns to the tavern below.
-  exits:
-    out: the_mireside_tavern
-
-the_grove_shrine:
-  name: The Grove-Shrine of Mirefast
-  desc: |-
-    A small shrine of living wood grown at the town's edge, where the Deeprooted keep their wild-Ember
-    faith in a form an outsider is allowed to see: not sacred Highbough's inner grove, but a teaching-
-    shrine that shows the trade-town's guests how the living Reach reads the world. A grove-warden reads
-    the swamp's mood. The Deeprooted creed is grown into the shrine's living bark. Out returns to Mirefast.
-  exits:
-    out: mirefast
-
-the_stiltways:
-  name: The Stiltways
-  desc: |-
-    East of the town the boardwalks run out over open swamp on a forest of stilts, a mile of planked
-    ways above black water thick with ember-bloom and the things that hunt it: mire-serpents in the
-    channels and swarm-kin in the reeds. Ember-bloom clusters the stilt-feet for anyone quick to gather
-    it. Mirefast lies back west; the boardwalk ends where the deep swamp begins.
-  exits:
-    west: mirefast
-
-the_stilt_deeps:
-  name: The Stilt-Deeps
-  desc: |-
-    Under Mirefast's planking, where the stilts sink into the swamp's black root: the under-stilts, a
-    drowned understory the town would rather not think about, where what the boardwalk drops feeds
-    something that has grown large in the dark below the market. A mire-devourer keeps the drowned
-    stilt-roots. What the town has lost over the water lies here, if you can take it back. Mirefast lies
-    back up.
+    A fortress-city carved into the ice at the roof of the world. It lies within Frostspire Peaks (levels 60-90); the zone road runs back out to the wider land.
   exits:
-    up: mirefast
+    out: frostspire_peaks
 
-# ============================================================================================
-# VENTHOLD - the Vent-Forge fortress-guild (Great Creation Campaign, Phase I; Continental Atlas VI
-# names it, unbuilt until now). The Kollforge's second settlement and the Free Forges' most radical
-# wing: a fortress built over a working vent, part guild and part cult, where Kollkin PROVE themselves
-# in living fire. A fortress footprint (muster-gate, proving-floor, vent-forges, armory, magma-moat,
-# guildmaster's hall) + a proving-vent dungeon. Noun exits (proving/forge/hall/armory/moat). Banded 52-58.
-# ============================================================================================
-
-venthold:
-  name: Venthold
+winters_grasp:
+  name: Winter's Grasp
   desc: |-
-    South of Emberkoll a fortress straddles a working vent: Venthold, seat of the Vent-Forges, part
-    guild and part cult, where the boldest Kollkin come to work the rawest Ember in the world and count
-    a cooled hand a dead one. Its muster-gate never closes; its watch-fires are the vent itself. A gate-
-    marshal takes your measure. Emberkoll lies back north; the PROVING-floor, the vent-FORGES, the
-    ARMORY, and the guildmaster's HALL open off the muster-yard, a magma-MOAT rings the walls east, and
-    the proving-vent drops down.
+    A high town on the glacier's edge, where the cold has a grip and a will. It lies within Frostspire Peaks (levels 60-90); the zone road runs back out to the wider land.
   exits:
-    north: emberkoll
-    east: the_magma_moat
-    moat: the_magma_moat
-    down: the_proving_vent
-    proving: the_proving_floor
-    forge: the_vent_forges
-    forges: the_vent_forges
-    armory: the_vent_armory
-    hall: the_guildmaster_hall
+    out: frostspire_peaks
 
-the_proving_floor:
-  name: The Proving-Floor
+ironwall_pass:
+  name: Ironwall Pass
   desc: |-
-    A floor of black glass over the vent's own heat, where a Kollkin earns Vent-Forge rank the only way
-    Venthold recognizes: by working live Ember on the proving-floor while the vent breathes under the
-    glass, and not flinching. A proving-master watches every strike for the flinch. Out returns to the
-    muster-yard.
+    The gate-town of the great pass, the only road through the peaks. It lies within Frostspire Peaks (levels 60-90); the zone road runs back out to the wider land.
   exits:
-    out: venthold
+    out: frostspire_peaks
 
-the_vent_forges:
-  name: The Vent-Forges
+glacial_bastion:
+  name: Glacial Bastion
   desc: |-
-    The working heart of the fortress: forge-stalls set directly over the vent-mouths, where the raw
-    Ember wells up too hot for any surface smithy and the Vent-Forgers work it glowing, wasting nothing,
-    fearing nothing. A forge-master keeps the hottest stall and sells what the vent gives up. Out returns
-    to the muster-yard.
+    An ice-locked bastion on the northern crags, a dungeon of the frozen dead. It lies within Frostspire Peaks (levels 60-90); the zone road runs back out to the wider land.
   exits:
-    out: venthold
+    out: frostspire_peaks
 
-the_vent_armory:
-  name: The Vent-Armory
+zhaar_desert:
+  name: Zhaar Desert
   desc: |-
-    Venthold's armory, racked with the fortress's own make: vent-forged steel that holds an edge no
-    cooled forge can match, and takes a temper only living fire can give. A quartermaster fits the
-    fortress's Forgers and sells the overstock to any who can pay in coin or courage. Out returns to the
-    muster-yard.
+    The Zhaar Desert zone (levels 80-130): a vast scorched desert of dunes, ruins, and buried fire. Within its bounds lie Sunscar City, Red Dunes, Sandspire Ruins, The Obsidian Pit, Scorchstone Keep. Roads and routes run on to the neighbouring lands.
   exits:
-    out: venthold
+    north: duskwood_vale
+    east: eldryn_forest
+    southeast: korvash_highlands
+    sunscar: sunscar_city
+    red: red_dunes
+    sandspire: sandspire_ruins
+    the: the_obsidian_pit
+    scorchstone: scorchstone_keep
 
-the_guildmaster_hall:
-  name: The Guildmaster's Hall
+sunscar_city:
+  name: Sunscar City
   desc: |-
-    The hall of the Vent-Forge guildmaster, raised over the vent's brightest throat, hung with the
-    masterworks of a hundred proven Forgers: the seat of the Free Forges' most radical wing, who hold
-    that the Wardens' caution is cowardice and the only true making is making at the source's edge. The
-    guildmaster holds court in the heat. The Vent-Forge creed is struck in living metal on the wall. Out
-    returns to the muster-yard.
+    The desert capital, a sandstone city ringing the only sweet well for a hundred miles. It lies within Zhaar Desert (levels 80-130); the zone road runs back out to the wider land.
   exits:
-    out: venthold
+    out: zhaar_desert
 
-the_magma_moat:
-  name: The Magma-Moat
+red_dunes:
+  name: Red Dunes
   desc: |-
-    Venthold's defense is not a wall of stone but a moat of running lava, crossed on a single retractable
-    span and patrolled on the fortress side by the things that live in the heat: magma-kin welded from
-    the moat's own fire. Raw vent-Ember cools to emberglass along the moat's stone lip for anyone bold
-    enough to gather at the fire's edge. The muster-yard lies back west.
+    A caravan-outpost among the great red dunes of the deep desert. It lies within Zhaar Desert (levels 80-130); the zone road runs back out to the wider land.
   exits:
-    west: venthold
+    out: zhaar_desert
 
-the_proving_vent:
-  name: The Proving-Vent
+sandspire_ruins:
+  name: Sandspire Ruins
   desc: |-
-    Below the fortress the proving-vent drops into the Kollforge's living throat: the deep test, where a
-    Forger who would wear Venthold's mark descends alone into rising heat to face what the vent has
-    made. A vent-forgeling, living Forgework grown in the throat, keeps the upper vent. The muster-yard
-    lies back up; the vent's crucible burns deeper, down.
+    The half-buried spires of a civilisation the desert swallowed. It lies within Zhaar Desert (levels 80-130); the zone road runs back out to the wider land.
   exits:
-    up: venthold
-    down: the_vent_crucible
+    out: zhaar_desert
 
-the_vent_crucible:
-  name: The Vent-Crucible
+the_obsidian_pit:
+  name: The Obsidian Pit
   desc: |-
-    The bottom of the proving-vent, a crucible-chamber where the Kollforge's raw fire pools and the air
-    itself is a forge: the final proving, kept by the Crucible-Warden, a Forgeborn the Vent-Forges set
-    here and never recalled, grown vast on a lifetime of the hottest Ember in the world. Best it and
-    Venthold's mark is yours by right, not rank. The proving-vent lies back up.
+    A black glass pit where the desert cracks open onto the fire below. It lies within Zhaar Desert (levels 80-130); the zone road runs back out to the wider land.
   exits:
-    up: the_proving_vent
-# THE WARDENMARCH (expanded) - Emberreach's fortified highlands (Great Creation Campaign, Phase I;
-# Continental Atlas I: the Wardenmarch, where the Wardens hold the old Gates). A one-room threshold
-# becomes a real frontier region: the Wardens' keep + barracks (Layer 3/4 military), a watchtower line
-# and cairn-hills highland wilderness (biome + leveling), one of the old GATES (Layer 5: an ancient
-# gateway), and a half-Unforged redoubt ruin. Level-banded 17-22. Noun exits.
-# ============================================================================================
+    out: zhaar_desert
 
-the_wardens_keep:
-  name: The Wardens' Keep
+scorchstone_keep:
+  name: Scorchstone Keep
   desc: |-
-    A keep of grey Concord Forgework holding the frontier road: the Wardenmarch's strong point, from
-    which the Warden Concord watches the wilds, the Coilfoot, and the old Gates it is sworn to keep. A
-    march-commander reads the frontier from the wall. The BARRACKS drill off the yard; one of the old
-    GATES stands under the keep's guard. The march lies back south.
+    A heat-blasted keep on a scorchstone mesa, held by things that do not burn. It lies within Zhaar Desert (levels 80-130); the zone road runs back out to the wider land.
   exits:
-    south: the_wardenmarch
-    barracks: the_march_barracks
-    gate: the_old_gate
+    out: zhaar_desert
 
-the_march_barracks:
-  name: The March Barracks
+xilnath_jungle:
+  name: Xil'nath Jungle
   desc: |-
-    The keep's barracks, where the Concord drills the Wardens who hold the frontier: racks of grey
-    march-steel, a sanded yard, and the hard quiet of soldiers between watches. A drill-sergeant runs
-    the newcomers ragged and sells the keep's overstock to Forgers riding the frontier. Out returns to
-    the keep.
+    The Xil'nath Jungle zone (levels 90-150): a vast living jungle that shifts its own canopy and swallows the unwary. Within its bounds lie Zul'karak, Mistvale, Shifting Canopy, Heart of Xil'nath. Roads and routes run on to the neighbouring lands.
   exits:
-    out: the_wardens_keep
+    west: ashen_wastes
+    north: shattered_isles
+    east: skyward_spires
+    zulkarak: zulkarak
+    mistvale: mistvale
+    shifting: shifting_canopy
+    heart: heart_of_xilnath
 
-the_old_gate:
-  name: The Old Gate
+zulkarak:
+  name: Zul'karak
   desc: |-
-    One of the old Gates the Wardens are sworn to keep: a ring of standing Forgework older than the
-    Concord, humming with a charge that never cooled, that the Emberwrights raised for a purpose the
-    Concord has forgotten and guards anyway. A gate-warden keeps the ring. The Gate's marks are legible
-    to any who can read the old charge. The keep's guard lies back through the ring.
+    A ziggurat-city of a jungle people, half-reclaimed by the green. It lies within Xil'nath Jungle (levels 90-150); the zone road runs back out to the wider land.
   exits:
-    keep: the_wardens_keep
-    out: the_wardens_keep
+    out: xilnath_jungle
 
-the_watchtower_line:
-  name: The Watchtower Line
+mistvale:
+  name: Mistvale
   desc: |-
-    North of the march road a line of watch-cairns and half-ruined towers runs the frontier's edge,
-    the Concord's early-warning against what comes off the wilds: high, wind-scoured highland where
-    march-wolves course the cairn-shadows and a Warden's glass could once see to the Coilfoot. The
-    march lies back south.
+    A stilt-town in a jungle vale that is never out of the mist. It lies within Xil'nath Jungle (levels 90-150); the zone road runs back out to the wider land.
   exits:
-    south: the_wardenmarch
+    out: xilnath_jungle
 
-the_cairn_hills:
-  name: The Cairn-Hills
+shifting_canopy:
+  name: Shifting Canopy
   desc: |-
-    West of the road the Wardenmarch rolls up into cairn-hills: bare highland studded with the burial-
-    cairns of Wardens a thousand seasons dead and the old Forgework they were set to guard, the air
-    thick with charge that draws the march-husks up out of the ground. Charge-crystal grows where the
-    old power grounds, for anyone who dares gather in the hum. The march lies back east; a sundered
-    redoubt stands ruined deeper west.
+    A stretch of jungle whose canopy is never the same path twice. It lies within Xil'nath Jungle (levels 90-150); the zone road runs back out to the wider land.
   exits:
-    east: the_wardenmarch
-    west: the_sundered_redoubt
+    out: xilnath_jungle
 
-the_sundered_redoubt:
-  name: The Sundered Redoubt
+heart_of_xilnath:
+  name: Heart of Xil'nath
   desc: |-
-    A Concord redoubt the Unforging half-took: a frontier fort of grey Forgework with its west wall
-    scoured to un-ness, its watch-Forgework still trying to keep a perimeter that is no longer all
-    there. Redoubt-husks, the Wardens caught here when the wall went, keep the standing rooms. The
-    cairn-hills lie back east; the redoubt's deep magazine holds, down.
+    The beating green heart of the jungle, a dungeon that is one living thing. It lies within Xil'nath Jungle (levels 90-150); the zone road runs back out to the wider land.
   exits:
-    east: the_cairn_hills
-    down: the_redoubt_deep
+    out: xilnath_jungle
 
-the_redoubt_deep:
-  name: The Redoubt Magazine
+thalorin:
+  name: Thalorin
   desc: |-
-    The deep magazine of the sundered redoubt, where the Concord stored the charged Forgework it dared
-    not leave above: a vault gone wrong, its charge grown lethal in the dark, kept by a Warden Sentinel
-    that failed its watch when the wall fell and has held this one room, alone and half-unmade, ever
-    since. What the Concord sealed here is charged past any surface make. The redoubt lies back up.
+    The Thalorin zone (levels 100-140): a harsh mountain realm of iron keeps and deep mines. Within its bounds lie Stonefang Keep, Boulderfall, Khazgor Peaks, Dreadmaw Hold, Irondeep Mines. Roads and routes run on to the neighbouring lands.
   exits:
-    up: the_sundered_redoubt
-
-# ============================================================================================
-# CINDERHEARTH INTERIORS (Great Creation Campaign, Phase I, Layer 4). The starter coast town - the
-# first place every Forger sees - becomes explorable: the just-relit forge, the Saltrest tavern + loft,
-# a coast First-Flame shrine, the fishers' harbor, and a residential hearth-way. Small and welcoming, as
-# a starter town should be (no dungeon: the cold cellar below the square already is the local delve).
-# All safe, non-combat life. Noun exits (forge/tavern/shrine/harbor/homes), each left by `out`.
-# ============================================================================================
+    west: frostspire_peaks
+    south: ashen_wastes
+    east: shattered_isles
+    stonefang: stonefang_keep
+    boulderfall: boulderfall
+    khazgor: khazgor_peaks
+    dreadmaw: dreadmaw_hold
+    irondeep: irondeep_mines
 
-the_relit_forge:
-  name: The Relit Forge
+stonefang_keep:
+  name: Stonefang Keep
   desc: |-
-    Cinderhearth's own forge, cold for a generation and burning again: the fire whose relighting dated
-    the whole Rekindling on this coast, small and bright and holy to the townsfolk who gather to watch
-    it work. A forge-hand keeps the flame and will show a new Forger the first strike. Out returns to
-    the square.
+    A fanged mountain keep guarding the thalorin heights. It lies within Thalorin (levels 100-140); the zone road runs back out to the wider land.
   exits:
-    out: cinderhearth_square
+    out: thalorin
 
-the_saltrest_tavern:
-  name: The Saltrest
+boulderfall:
+  name: Boulderfall
   desc: |-
-    The coast town's one tavern, warm and salt-worn, where Cinderhearth's fisherfolk and the Forgers
-    washed up on the Waking Shore share a hearth and the day's small news. A host keeps the taps and a
-    kind word for the newly-woken. Beds up the loft stair, an INN for the road-starting. Out returns to
-    the square.
+    A town built in the rubble of an ancient rockslide, and used to it. It lies within Thalorin (levels 100-140); the zone road runs back out to the wider land.
   exits:
-    out: cinderhearth_square
-    inn: the_saltrest_loft
+    out: thalorin
 
-the_saltrest_loft:
-  name: The Saltrest Loft
+khazgor_peaks:
+  name: Khazgor Peaks
   desc: |-
-    A sleeping-loft over the Saltrest, low and clean, its window on the Cooling-Sea: the first safe bed
-    a fresh Forger finds, and a kinder one than most that follow. A loft-keeper banks the little hearth.
-    Out returns to the tavern below.
+    The iron-grey peaks that give thalorin its spine. It lies within Thalorin (levels 100-140); the zone road runs back out to the wider land.
   exits:
-    out: the_saltrest_tavern
+    out: thalorin
 
-the_coast_shrine:
-  name: The Coast Shrine
+dreadmaw_hold:
+  name: Dreadmaw Hold
   desc: |-
-    A roadside shrine of the First Flame at the town's edge, a niche of relit ember above the strand:
-    the faith in its plainest form, kept not by a church but by whoever tends it, that the world was
-    Made and can be Made again. A shrine-tender feeds the little flame. The First Flame's simplest words
-    are cut in the shrine-stone for any who read. Out returns to the square.
+    A hold in the northern crags named for what waits in its lowest hall. It lies within Thalorin (levels 100-140); the zone road runs back out to the wider land.
   exits:
-    out: cinderhearth_square
+    out: thalorin
 
-the_fishers_row:
-  name: The Fishers' Row
+irondeep_mines:
+  name: Irondeep Mines
   desc: |-
-    Cinderhearth's working waterfront: a row of jetties and drying-racks on the Cooling-Sea, where the
-    town's cooling-iron boats land the catch that fed it through the long cold years before the forge
-    relit. A net-mender works the row and knows every current on the coast. Out returns to the square.
+    The deepest iron mines in the world, dug too far and abandoned in a hurry. It lies within Thalorin (levels 100-140); the zone road runs back out to the wider land.
   exits:
-    out: cinderhearth_square
+    out: thalorin
 
-the_hearthway:
-  name: The Hearth-Way
+ashen_wastes:
+  name: Ashen Wastes
   desc: |-
-    A lane of hearth-warm homes behind the square, where Cinderhearth's families have kept the coast
-    through the dark generation and now keep it through the bright one: ordinary doors, ordinary lives,
-    the quiet the whole Rekindling is being fought to protect. A hearth-mother minds a doorstep and a
-    pot. Out returns to the square.
+    The Ashen Wastes zone (levels 120-170): a scorched volcanic waste of lava-fields and standing fire. Within its bounds lie Moltenhold, Cragfire, Ashen Monoliths, The Flamewrought Forge, The Scorched Gate. Roads and routes run on to the neighbouring lands.
   exits:
-    out: cinderhearth_square
-# QUENCH HARBOR INTERIORS (Great Creation Campaign, Phase I, Layer 4). Emberreach's Cooling-Sea port
-# and the coast gateway to the drowned Quenchmere becomes explorable: the fish-market, the Dogwatch
-# tavern + loft, the salt-warehouse, and the Merewright ferry-house where the sea-crossing boards.
-# Small port scale, safe coast life. Noun exits (market/tavern/warehouse/ferry), each left by `out`.
-# ============================================================================================
+    west: eldryn_forest
+    north: thalorin
+    east: xilnath_jungle
+    south: korvash_highlands
+    moltenhold: moltenhold
+    cragfire: cragfire
+    ashen: ashen_monoliths
+    the: the_flamewrought_forge
+    the_scorched_gate: the_scorched_gate
 
-the_fish_market:
-  name: The Fish-Market
+moltenhold:
+  name: Moltenhold
   desc: |-
-    The quayside fish-market, loud from the first boat in: cooling-iron trays of the Cooling-Sea's
-    catch, salt-fish strung to dry, and the haggling that is the coast's true native tongue. A
-    fishmonger cries the morning's landing and will sell a Forger provisions for the road. Out returns
-    to the harbor.
+    The molten capital, an obsidian city over a lake of living fire. It lies within Ashen Wastes (levels 120-170); the zone road runs back out to the wider land.
   exits:
-    out: quench_harbor
+    out: ashen_wastes
 
-the_dogwatch_tavern:
-  name: The Dogwatch
+cragfire:
+  name: Cragfire
   desc: |-
-    A portside tavern named for the sailor's worst watch, warm against the sea-damp: the Dogwatch,
-    where Quench Harbor's fisherfolk and the ferry-crews off the Quenchmere run drink and argue tides.
-    A host keeps the taps and every rumor that comes off the water. A loft lets beds up the stair, an
-    INN for those waiting on a ferry. Out returns to the harbor.
+    A town on a cooling crag, its forges never cold and never safe. It lies within Ashen Wastes (levels 120-170); the zone road runs back out to the wider land.
   exits:
-    out: quench_harbor
-    inn: the_dogwatch_loft
+    out: ashen_wastes
 
-the_dogwatch_loft:
-  name: The Dogwatch Loft
+ashen_monoliths:
+  name: Ashen Monoliths
   desc: |-
-    Beds over the Dogwatch, salt-damp but dry enough, for the Forger waiting on a Merewright ferry or
-    just off a long strand: the last coast bed before the sea-crossing to the drowned Reach. A loft-
-    keeper minds the stair. Out returns to the tavern below.
+    Black monoliths standing in the ash, older than the fire that scoured them. It lies within Ashen Wastes (levels 120-170); the zone road runs back out to the wider land.
   exits:
-    out: the_dogwatch_tavern
+    out: ashen_wastes
 
-the_salt_warehouse:
-  name: The Salt-Warehouse
+the_flamewrought_forge:
+  name: The Flamewrought Forge
   desc: |-
-    The harbor's salt-warehouse, cavern-cool and stacked to the beams with the salt-fish and cooling-
-    iron cargo that is the coast's wealth: the working store that fed Emberreach's trade through the
-    cold years. A warehouse-keeper tallies the stock and hires the odd strong back. Out returns to the
-    harbor.
+    A forge-dungeon wrought in living flame at the heart of the wastes. It lies within Ashen Wastes (levels 120-170); the zone road runs back out to the wider land.
   exits:
-    out: quench_harbor
+    out: ashen_wastes
 
-the_ferry_house:
-  name: The Ferry-House
+the_scorched_gate:
+  name: The Scorched Gate
   desc: |-
-    The Merewright ferry-house on the last jetty, where the open-lane crossing to the drowned Quenchmere
-    boards: charts of the Wreckways on the wall, a bell to call the ferry in, and the salt-smell of the
-    wider sea. A ferry-master books the crossing and knows what waits on the far water. Out returns to
-    the harbor.
+    A gate of black iron over a stair into the burning deep. It lies within Ashen Wastes (levels 120-170); the zone road runs back out to the wider land.
   exits:
-    out: quench_harbor
+    out: ashen_wastes
 
-# ============================================================================================
-# THE WARMCAMP - an Ashborn salvage-camp on the Rimefall ice (Great Creation Campaign, Phase I;
-# Continental Atlas II names the warm-camps of Ashborn salvagers who defy the Rimekin to loot the ice).
-# A faction-conflict settlement: the Ashborn hold that a frozen city is a treasury, the Silent Anvil
-# hold it a shrine to touch nothing, and the Warmcamp is where that argument is dug up by the crate. A
-# social hub (fire-tent, trade-tent) + a short salvage-dig delve. Level-banded 42-48. Noun exits.
-# ============================================================================================
-
-the_warmcamp:
-  name: The Warmcamp
+korvash_highlands:
+  name: Korvash Highlands
   desc: |-
-    A camp of banked salvage-fires huddled on the Rimefall floe, defying the cold and the Rimekin both:
-    the Warmcamp, where the Ashborn who will not leave the frozen cities alone dig the ice for the
-    golden age's wealth, and count the Silent Anvil's shrine-law a coward's excuse to sit on a fortune.
-    A camp-boss keeps the diggers in line. The riming fields lie back north; the FIRE-tent and the
-    TRADE-tent keep the camp warm, and a salvage-dig drops into the ice, down.
+    The Korvash Highlands zone (levels 150-200): storm-wracked highlands of crag-forts and a crater that should not be. Within its bounds lie Stonehelm, Highreach, Thunderhold, Shunderhold, Ancient Overlook, Korvash Crater. Roads and routes run on to the neighbouring lands.
   exits:
-    north: the_riming_fields
-    down: the_salvage_dig
-    fire: the_fire_tent
-    trade: the_trade_tent
+    north: ashen_wastes
+    northwest: zhaar_desert
+    down: the_deepreach
+    southeast: the_voidscar
+    stonehelm: stonehelm
+    highreach: highreach
+    thunderhold: thunderhold
+    shunderhold: shunderhold
+    ancient: ancient_overlook
+    korvash: korvash_crater
 
-the_fire_tent:
-  name: The Fire-Tent
+stonehelm:
+  name: Stonehelm
   desc: |-
-    The Warmcamp's one real warmth: a great hide tent over a salvage-fire that never dies, where the
-    diggers thaw their hands and their grudges and argue whether the ice is a graveyard to be honored
-    or a bank to be robbed. A fire-keeper feeds the flame and settles the arguments. Out returns to the
-    camp.
+    A helm of grey stone crowning the highest holdable crag in korvash. It lies within Korvash Highlands (levels 150-200); the zone road runs back out to the wider land.
   exits:
-    out: the_warmcamp
+    out: korvash_highlands
 
-the_trade_tent:
-  name: The Trade-Tent
+highreach:
+  name: Highreach
   desc: |-
-    The camp's trade-tent, hung with the golden age's leavings dug from the ice: preserved Forgework a
-    thousand years better-made than anything alive, sold cheap because the Ashborn cannot eat a relic
-    and the cold does not care how fine your loot is. A salvage-trader deals the thaw's take. Out
-    returns to the camp.
+    The highest town a road reaches before the crags give out. It lies within Korvash Highlands (levels 150-200); the zone road runs back out to the wider land.
   exits:
-    out: the_warmcamp
+    out: korvash_highlands
 
-the_salvage_dig:
-  name: The Salvage-Dig
+thunderhold:
+  name: Thunderhold
   desc: |-
-    A shaft the Ashborn have cut down into the floe toward a frozen hold the Rimekin forbid them to
-    touch: walls of clear ice with the golden age standing whole behind them, mid-gesture, and the dig-
-    frost the cold precipitates to guard what the diggers disturb. A frost-guardian works the shaft. The
-    camp lies back up; the buried hold opens deeper, down.
+    A hold where the storms break first and hardest. It lies within Korvash Highlands (levels 150-200); the zone road runs back out to the wider land.
   exits:
-    up: the_warmcamp
-    down: the_buried_reliquary
+    out: korvash_highlands
 
-the_buried_reliquary:
-  name: The Buried Reliquary
+shunderhold:
+  name: Shunderhold
   desc: |-
-    The frozen hold the Warmcamp digs toward: an Emberwright reliquary preserved entire under the floe,
-    its treasures standing where their keepers set them the instant the world froze. A Rimekin sentinel-
-    of-the-ice keeps it still, flash-frozen mid-guard and woken by the diggers' warmth to finish a duty
-    an age overdue: to let no hand disturb the paused past. What the golden age sealed here is the
-    richest untouched make in the north. The dig lies back up.
+    A shattered sister-hold to thunderhold, half its walls down the mountain. It lies within Korvash Highlands (levels 150-200); the zone road runs back out to the wider land.
   exits:
-    up: the_salvage_dig
-# HIGHBOUGH INTERIORS (Great Creation Campaign, Phase I, Layer 4). The Verdance's canopy capital,
-# grown rather than built, gets its explorable grown-places: the canopy market, the grove-council
-# hollow (the Deeprooted's decentralized seat), and a rest-hollow for guests. Small capital set, all
-# non-combat canopy life. Noun exits (market/council/inn), each left by `out`.
-# ============================================================================================
+    out: korvash_highlands
 
-the_canopy_market:
-  name: The Canopy-Market
+ancient_overlook:
+  name: Ancient Overlook
   desc: |-
-    A market grown into a bough-crook, its stalls living hollows and its wares the Verdance's own:
-    coaxed ember-blooms, shaped living-wood, swamp-craft traded up from Mirefast far below. A canopy-
-    monger keeps a hollow-stall and haggles the green way, slowly. Out returns to the avenues.
+    An overlook of old stone with all the southern world laid out below. It lies within Korvash Highlands (levels 150-200); the zone road runs back out to the wider land.
   exits:
-    out: the_bough_avenues
+    out: korvash_highlands
 
-the_grove_council:
-  name: The Grove-Council Hollow
+korvash_crater:
+  name: Korvash Crater
   desc: |-
-    The seat of the Deeprooted's government, which is barely a government at all: a great grown hollow
-    where the grove-council meets, reader-elders who broker between the people and the living wilds and
-    command no one, because the Deeprooted hold that a living world cannot be ruled, only heard. A
-    council-reader keeps the hollow between moots. The Deeprooted's covenant is grown into the hollow's
-    heartwood. Out returns to the avenues.
+    A crater the highlands grew around, a dungeon down into the wound. It lies within Korvash Highlands (levels 150-200); the zone road runs back out to the wider land.
   exits:
-    out: the_bough_avenues
+    out: korvash_highlands
 
-the_rest_hollow:
-  name: The Rest-Hollow
+shattered_isles:
+  name: The Shattered Isles
   desc: |-
-    A guest-hollow grown high in the canopy, screened in living leaf, its beds soft moss and its lamps
-    ember-bloom: the Deeprooted's welcome to the rare outsider they let up into sacred Highbough, safe
-    and green and a mile above the swamp. A hollow-keeper tends the guests. Out returns to the avenues.
+    The The Shattered Isles zone (levels 180-230): a broken archipelago of citadels and a maelstrom that eats the sea. Within its bounds lie Stormreach, Saltwind Harbor, Blackreef Citadel, The Maelstrom Rise. Roads and routes run on to the neighbouring lands.
   exits:
-    out: the_bough_avenues
-
-# ============================================================================================
-# REMAINING CAPITAL INTERIORS (Great Creation Campaign, Phase I, Layer 4): lodging + trade for the
-# three capitals still without indoor places - Stillhearth (Rimefall), Highgate (Sundered Sky), and
-# Saltring (Cinderwaste). Every settlement now has a market and an inn. Non-combat. Noun exits, `out`.
-# ============================================================================================
+    west: thalorin
+    south: xilnath_jungle
+    east: skyward_spires
+    stormreach: stormreach
+    saltwind: saltwind_harbor
+    blackreef: blackreef_citadel
+    the: the_maelstrom_rise
 
-# --- Stillhearth (the Rimefall monastery-port) ---
-the_ice_market:
-  name: The Ice-Market
+stormreach:
+  name: Stormreach
   desc: |-
-    Stillhearth's spare market, where the Silent Anvil trade only what the ice gives up and nothing they
-    would have to make: salvaged Forgework, rime-preserved stores, the cold north's thin bounty. An
-    ice-trader keeps a quiet stall, because in the Rimefall even commerce is kept low. Out returns to
-    Stillhearth.
+    A storm-lashed island city, the last safe harbour of the broken sea. It lies within The Shattered Isles (levels 180-230); the zone road runs back out to the wider land.
   exits:
-    out: stillhearth
+    out: shattered_isles
 
-the_thawhouse:
-  name: The Thawhouse
+saltwind_harbor:
+  name: Saltwind Harbor
   desc: |-
-    The one warm room the Silent Anvil permit a guest: a thawhouse of banked stone-heat where a Forger
-    off the ice can stop shivering and sleep, the frozen Reach held at bay by a single careful fire. A
-    thaw-keeper tends it, and reminds you the warmth is a mercy, not a right. Out returns to Stillhearth.
+    A wind-scoured harbour where every ship for the isles takes on crew. It lies within The Shattered Isles (levels 180-230); the zone road runs back out to the wider land.
   exits:
-    out: stillhearth
+    out: shattered_isles
 
-# --- Highgate (the Sundered Sky Warden capital) ---
-the_sky_market:
-  name: The Sky-Market
+blackreef_citadel:
+  name: Blackreef Citadel
   desc: |-
-    Highgate's market, strung between anchor-stays over a mile of open cloud: the sky-Warden capital's
-    trade, where the drifting shards' salvage and the last supplies before the Forgeward Road change
-    hands. A sky-trader keeps a swaying stall and never looks down. Out returns to Highgate.
+    A citadel on a black reef, a dungeon the tide half-drowns each night. It lies within The Shattered Isles (levels 180-230); the zone road runs back out to the wider land.
   exits:
-    out: highgate
+    out: shattered_isles
 
-the_skyward_rest:
-  name: The Skyward Rest
+the_maelstrom_rise:
+  name: The Maelstrom Rise
   desc: |-
-    A rest-hold anchored to Highgate's greatest stay, its beds slung in the lee of the wind: the last
-    safe sleep before a Forger passes the sky-Warden's test and sets out on the Forgeward Road. A rest-
-    keeper minds the anchor-line. Out returns to Highgate.
+    A violent maelstrom said to fall away to unknown depths. It lies within The Shattered Isles (levels 180-230); the zone road runs back out to the wider land.
   exits:
-    out: highgate
+    out: shattered_isles
 
-the_gate_watch:
-  name: The Gate-Watch
+skyward_spires:
+  name: Skyward Spires
   desc: |-
-    The sky-Warden's watch-post over the anchor-line, where the Concord keeps its most important and
-    most isolated holding: the threshold onto the Forgeward Road and the endgame beyond. A watch-Warden
-    reads the far road, and judges who is ready to walk it. The threshold's charge is graven on the
-    watch-stone. Out returns to Highgate.
+    The Skyward Spires zone (levels 200-250): floating spires of arcane stone drifting the high eastern air. Within its bounds lie Aurelian City, Celestial Observatory, The Spire Nexus. Roads and routes run on to the neighbouring lands.
   exits:
-    out: highgate
+    west: shattered_isles
+    south: the_voidscar
+    aurelian: aurelian_city
+    celestial: celestial_observatory
+    the: the_spire_nexus
 
-# --- Saltring (the Cinderwaste salvage-city) ---
-the_salvagers_rest:
-  name: The Salvagers' Rest
+aurelian_city:
+  name: Aurelian City
   desc: |-
-    Saltring's one lodging, a hull-house of slung hammocks kept by road-code for any clansman or
-    traveller the waste has not yet killed: not warm, not soft, but dry and defended, which in the
-    Cinderwaste is luxury. A rest-keeper holds the door against the dust. Out returns to Saltring.
+    A golden city on the greatest floating spire, capital of the sky. It lies within Skyward Spires (levels 200-250); the zone road runs back out to the wider land.
   exits:
-    out: saltring
-# THE ROOTDEEP - a Cinderdeep mouth below the Verdance (Great Creation Campaign, Phase I). The atlas
-# says every Reach has a mouth into the Cinderdeep; the breathing mire, where Cinder seeps up and the
-# dead half-return, is the Verdance's. A descending root-dark stratum of the deep, distinct from the
-# grey Greydark below the Cinderwaste: here the unmaking is tangled with living root, and the deep and
-# the Verdance argue over the same dead. Level-banded 28-36. Vertical spine + one lateral.
-# ============================================================================================
+    out: skyward_spires
 
-the_rootdeep_mouth:
-  name: The Rootdeep Mouth
+celestial_observatory:
+  name: Celestial Observatory
   desc: |-
-    Where the Deeproot Mire's roots run down past where roots should reach, into the dark under the
-    living Reach: the mouth of the Rootdeep, the Verdance's own door into the Cinderdeep. Here the
-    unmaking and the growing tangle, Cinder seeping up through root and the half-returned dead caught
-    between the two. A mire-drawn husk works the tangle. The mire lies back up; the grave-roots go
-    deeper, down.
+    An observatory on a lone spire, reading a sky no one else can reach. It lies within Skyward Spires (levels 200-250); the zone road runs back out to the wider land.
   exits:
-    up: the_deeproot_mire
-    down: the_grave_roots
+    out: skyward_spires
 
-the_grave_roots:
-  name: The Grave-Roots
+the_spire_nexus:
+  name: The Spire Nexus
   desc: |-
-    A cavern where the Verdance's greatest roots drink from the Cinderdeep's unmaking and the dead the
-    mire half-returned hang caught in the root-mesh, neither risen nor gone: the deep and the living
-    Reach fighting over the same corpses, root by root. Grave-kin work the mesh, and grave-sap pools
-    where root meets unmaking, for anyone who dares gather in the dark. The mouth lies back up; a rot-
-    hollow branches west, and the deep drops on, down.
+    A floating convergence of arcane energies, a dungeon of raw sky-power. It lies within Skyward Spires (levels 200-250); the zone road runs back out to the wider land.
   exits:
-    up: the_rootdeep_mouth
-    west: the_rot_hollow
-    down: the_unmade_grove
+    out: skyward_spires
 
-the_rot_hollow:
-  name: The Rot-Hollow
+the_deepreach:
+  name: The Deepreach
   desc: |-
-    A lateral hollow off the grave-roots where the root-dark has rotted to a soft, breathing dark of
-    its own: a wander of the near Rootdeep, thick with rot-kin that feed on what the deep and the
-    Verdance leave between them. The grave-roots lie back east.
+    The The Deepreach zone (levels 100-250): a vast underground realm of forge-cities and living crystal beneath the world. Within its bounds lie Deepforge City, Lumengrotto, Shadowfissure, The Crystal Labyrinth. Roads and routes run on to the neighbouring lands.
   exits:
-    east: the_grave_roots
+    up: korvash_highlands
+    east: the_voidscar
+    deepforge: deepforge_city
+    lumengrotto: lumengrotto
+    shadowfissure: shadowfissure
+    the: the_crystal_labyrinth
 
-the_unmade_grove:
-  name: The Unmade Grove
+deepforge_city:
+  name: Deepforge City
   desc: |-
-    Deeper: a grove that grew in the Cinderdeep's dark and was unmade in the growing, a mockery of the
-    Heart-Grove above - living wood and unmaking fused into one wrong thing, half-tree and half-hollow.
-    Unmade-kin keep it, the Verdance's own life turned inside out by the deep. The grave-roots lie back
-    up; the Rootdeep's heart beats deeper, down.
+    The great underground forge-capital, lit by the fire it never lets go out. It lies within The Deepreach (levels 100-250); the zone road runs back out to the wider land.
   exits:
-    up: the_grave_roots
-    down: the_rotheart
+    out: the_deepreach
 
-the_rotheart:
-  name: The Rotheart
+lumengrotto:
+  name: Lumengrotto
   desc: |-
-    The heart of the Rootdeep: where the Cinderdeep's unmaking has grown a heart of its own out of the
-    Verdance's drowned roots, a vast rotting mirror of the living Heart-Grove above. The Rotheart-Warden
-    keeps it - a thing half-Boughwarden and half-Unforged, the living Reach and the unmaking grown into
-    one guardian that hates both halves of itself. This is the bottom of the Verdance's deep. The grove
-    lies back up.
+    A grotto-town lit by luminous crystal, deep under the western reach. It lies within The Deepreach (levels 100-250); the zone road runs back out to the wider land.
   exits:
-    up: the_unmade_grove
+    out: the_deepreach
 
-# ============================================================================================
-# THE LOST VALE (Great Creation Campaign, Phase I, Layer 5: exploration sites). A hidden valley behind
-# a concealed trail off the Reachwood's deepwood, rewarding the curious: a natural wonder (the Heartwood,
-# a tree older than the Unforging), an Unforging battlefield where a Warden company made a last stand,
-# and the cairn that keeps them. Curiosity-reward, environmental storytelling. Level-banded 6-14.
-# ============================================================================================
-
-the_hidden_trail:
-  name: The Hidden Trail
+shadowfissure:
+  name: Shadowfissure
   desc: |-
-    A deer-track that is not on any Warden's map, slipping down through a bramble-gap the deepwood keeps
-    to itself: the way into a fold of the Reachwood the wider world forgot. Bramble-cats den in the
-    narrows, unused to being found. The deepwood lies back up; the trail opens into a hidden vale, south.
+    A town clinging to the walls of a fissure that drops past the light. It lies within The Deepreach (levels 100-250); the zone road runs back out to the wider land.
   exits:
-    up: the_deepwood
-    south: the_lost_vale
+    out: the_deepreach
 
-the_lost_vale:
-  name: The Lost Vale
+the_crystal_labyrinth:
+  name: The Crystal Labyrinth
   desc: |-
-    A valley the Reachwood folded closed around a wonder: the Heartwood, a single tree older than the
-    Unforging, so vast the vale is only its shade, its wild ember burning gentle in a bark like a cliff.
-    The world broke and remade around this tree and never touched it. A vale-hermit keeps its long
-    quiet. Ember-mast falls thick for the gathering. The trail lies back up; a still field opens east.
+    A labyrinth of living crystal that grows new walls behind you. It lies within The Deepreach (levels 100-250); the zone road runs back out to the wider land.
   exits:
-    up: the_hidden_trail
-    east: the_stillfield
+    out: the_deepreach
 
-the_stillfield:
-  name: The Stillfield
+the_voidscar:
+  name: The Voidscar
   desc: |-
-    An old battlefield the vale kept: a meadow where a Warden company made a last stand in the Unforging
-    and the grass grew back over grey Forgework and greyer bone, still and green and terrible. Battle-
-    husks keep the field, the fallen who never got the order to stand down. The vale lies back west; the
-    cairn that keeps the hundred stands east.
+    The The Voidscar zone (levels 250-300): a wound in the world where reality unravels and the oldest evil waits. Within its bounds lie Voidspire, Dark Expanse, Netharion's Throne, The Rifted Abyss. Roads and routes run on to the neighbouring lands.
   exits:
-    west: the_lost_vale
-    east: the_hundred_cairn
+    northwest: korvash_highlands
+    north: skyward_spires
+    west: the_deepreach
+    voidspire: voidspire
+    dark: dark_expanse
+    netharions: netharions_throne
+    the: the_rifted_abyss
 
-the_hundred_cairn:
-  name: The Cairn of the Hundred
+voidspire:
+  name: Voidspire
   desc: |-
-    At the field's far edge, a cairn of a hundred Warden-marks over a hundred Wardens who held the vale
-    so the Reachwood behind them would not fall: the last stand's grave, and its keeper - the Hundredth,
-    the company's captain, still standing his post in grey Forgework, still holding a line the war moved
-    past an age ago. What the company died guarding is cairned here with them. The field lies back west.
+    A spire of un-stone at the wound's edge, the last hold before the end. It lies within The Voidscar (levels 250-300); the zone road runs back out to the wider land.
   exits:
-    west: the_stillfield
-
-# ============================================================================================
-# THE EMBERDEEP - the Kollforge's Cinderdeep mouth (Great Creation Campaign, Phase I). Every Reach has
-# a mouth into the deep; the Kollforge's is where the Forge's living heat meets the unmaking, and the
-# two do not cancel but WAR - fire that unmakes, unmaking that burns. A molten stratum of the Cinderdeep,
-# distinct from the grey Greydark and the Verdance's Rootdeep. Level-banded 54-62. Vertical spine.
-# ============================================================================================
+    out: the_voidscar
 
-the_emberdeep_mouth:
-  name: The Emberdeep Mouth
+dark_expanse:
+  name: Dark Expanse
   desc: |-
-    Below the cinder-gorge the vent-floor gives onto a drop the Kollkin do not speak of: where the
-    Forge's rising heat meets the Cinderdeep's unmaking and the two war instead of cancelling, fire that
-    unmakes and unmaking that burns. An ashen-thing works the molten dark, neither Forgeborn nor Unforged
-    but the ugly child of both. The gorge lies back up; the fire-flooded deep drops on, down.
+    An expanse of dark where the ground gives out into unravelling. It lies within The Voidscar (levels 250-300); the zone road runs back out to the wider land.
   exits:
-    up: the_cinder_gorge
-    down: the_slagfalls
+    out: the_voidscar
 
-the_slagfalls:
-  name: The Slagfalls
+netharions_throne:
+  name: Netharion's Throne
   desc: |-
-    A cavern of falling slag, where molten rock pours from cracks in the world's floor and cools to grey
-    unmaking before it lands, a waterfall of fire becoming nothing: the near Emberdeep. Slag-wraiths of
-    the warring deep work the falls, and unmade-ember pools where the fire dies for the gathering. The
-    mouth lies back up; the fire-vein runs deeper, down.
+    The seat of the oldest evil beneath the surface, the world's last dungeon. It lies within The Voidscar (levels 250-300); the zone road runs back out to the wider land.
   exits:
-    up: the_emberdeep_mouth
-    down: the_fire_vein
+    out: the_voidscar
 
-the_fire_vein:
-  name: The Fire-Vein
+the_rifted_abyss:
+  name: The Rifted Abyss
   desc: |-
-    A vein of the Forge's own fire running through the Cinderdeep's dark, the deepest a Kollkin Forger
-    dares before the heat and the unmaking together become too much: living fire and dead unmaking braided
-    into one lethal current. A vein-warden of ashen Forgework keeps the current. The slagfalls lie back
-    up; the Emberdeep's heart burns deeper, down.
+    A rift into the abyss below the world, where reality comes apart. It lies within The Voidscar (levels 250-300); the zone road runs back out to the wider land.
   exits:
-    up: the_slagfalls
-    down: the_unmade_forge
+    out: the_voidscar
 
-the_unmade_forge:
-  name: The Unmade Forge
-  desc: |-
-    The heart of the Emberdeep: a forge the Cinderdeep grew out of the Kollforge's own fire and then
-    unmade in the growing, a mockery of Venthold's proving-vent far above - an anvil of cold slag over a
-    fire that burns without heat, making nothing, forever. The Unmade Smith keeps it, a thing the deep
-    forged out of a Forgeborn and then unforged, hammering a work that will never be. Best it, and what
-    the deep could not finish unmaking is yours. The fire-vein lies back up.
-  exits:
-    up: the_fire_vein

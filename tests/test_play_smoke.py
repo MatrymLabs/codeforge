@@ -16,7 +16,7 @@ import pytest
 from parts.world import npcs
 from parts.world.aggression import LEASH
 from parts.world.jobs import bind_calling
-from parts.world.seed import SEEDS_ROOT, load_npcs
+from parts.world.seed import Npc
 from parts.world.session import SESSIONS, Session
 
 
@@ -38,12 +38,23 @@ def _fighter_at(location: str) -> Session:
 
 
 def _place_the_real_boss(location: str) -> None:
-    """Load the aethryn Cinder-Wight from its seed (proving the seed's aggressive flag) and
-    stand it in a room the default world can render."""
-    boss = load_npcs(SEEDS_ROOT / "aethryn" / "npcs.yaml")["cinder_wight"]
-    assert boss["aggressive"] is True  # the seed change is live, not just the engine
-    boss["location"] = location
+    """Stand a lethal, aggressive boss (the Cinder-Wight) in a renderable room -- a self-contained
+    foe, so the proactive-combat smoke test does not depend on any one seed's roster."""
+    boss: Npc = {
+        "name": "the Cinder-Wight",
+        "keywords": ["wight", "cinder"],
+        "location": location,
+        "dialogue": ["The Cinder-Wight looks hostile."],
+        "next_line": 0,
+        "hp": 60,
+        "hp_now": 60,
+        "xp": 40,
+        "atk": 7,
+        "aggressive": True,
+        "lethal": True,
+    }
     npcs.NPCS["cinder_wight"] = boss
+    npcs.reindex_npcs()
 
 
 def test_a_stranger_can_play_the_proactive_combat_loop():

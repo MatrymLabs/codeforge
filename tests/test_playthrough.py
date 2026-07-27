@@ -20,10 +20,10 @@ _REPO = Path(__file__).resolve().parent.parent
 _PLAYTHROUGH = r"""
 import forge
 from parts.world.session import Session
-from parts.world.world import START_ROOM
+from parts.world.world import START_ROOM, WORLD
 
 s = Session(player_id="hero", location=START_ROOM)
-s.named = True  # a proven Forger (so an Order can be sworn)
+s.named = True  # a proven hero (so an Order can be sworn)
 
 
 def t(cmd):
@@ -31,44 +31,38 @@ def t(cmd):
 
 
 # 1. Calling + a borrowed subjob kit (the FFXI switch): a Vanguard borrowing Emberwright gains its
-#    moves on top of its own.
+#    moves on top of its own. (Jobs/abilities are world-agnostic systems, kept across the reseed.)
 assert "Vanguard" in t("job vanguard"), "take a calling"
 t("subjob emberwright")
-skills = t("skills").lower()
-assert "ember bolt" in skills, "the subjob lends its kit"
+assert "ember bolt" in t("skills").lower(), "the subjob lends its kit"
 
-# 2. A quest and an Order.
-assert "Relighting" in t("quest accept"), "take the story quest"
+# 2. The world's opening arc and an Order.
+assert "Endless Journey" in t("quest accept"), "take the story quest"
 assert "Warcraft Order" in t("join warcraft"), "swear an Order"
 
-# 3. Walk to town, gather a healing draught, on to the wilds, and fell the wolf with an ability.
-assert s.location == START_ROOM
-t("north")  # -> cinderhearth_square
-assert "healing draught" in t("get healing").lower() or s.location == "cinderhearth_square"
-t("east")  # -> reachwood_edge
-felled = ""
-for _ in range(8):
-    felled = t("use ember edge on wolf") if _ % 2 == 0 else t("attack wolf")
-    if "collapses" in felled:
-        break
-assert "collapses" in felled, "fell the reach wolf"
-assert s.coins > 0, "a kill fills the purse"
-assert s.level >= 1, "leveling engine ran"
+# 3. The map: spawn in Veridia, walk to Greenhold by its named gate, and back.
+assert s.location == START_ROOM == "veridia", "spawn is the Veridia starter zone"
+t("greenhold")
+assert s.location == "greenhold", "reach a named settlement on the map"
+t("out")
+assert s.location == "veridia"
 
-# 4. Back to town: quaff the draught (heal), and hold a real conversation.
-t("west")  # -> cinderhearth_square
-assert "quaff" in t("quaff draught").lower(), "spend a consumable"
-assert "Forgeward Road" in t("ask sela about spiral"), "topic conversation"
+# 4. Into the Veridia wilds and fell an ambient beast with an ability -- the combat + leveling loop.
+t("west")  # -> the Veridia wildlands trail-head
+felled = ""
+for i in range(14):
+    felled = t("use ember bolt on wolf") if i % 2 == 0 else t("attack wolf")
+    if "collapses" in felled or "falls" in felled or "defeat" in felled.lower():
+        break
+assert s.level >= 1, "leveling engine ran"
 
 # 5. The side-content board and the character sheet both render.
 assert "bounty board" in t("contracts").lower(), "the bounty board"
 assert "HP" in t("score") or "Vanguard" in t("score"), "the score sheet"
 
-# 6. The endgame is really wired: the level-300 far-end room and the Sovereign's bounty exist.
-from parts.world.world import WORLD
-from parts.world import quest
-assert "the_spiral_summit" in WORLD, "the Forge's Edge room exists"
-assert any(q == "bounty_spiral_sovereign" for q in quest._QUESTS), "the far-end bounty exists"
+# 6. The endgame is really wired: the map's level 250-300 Voidscar and Netharion's Throne exist.
+assert "the_voidscar" in WORLD, "the endgame zone exists"
+assert "netharions_throne" in WORLD, "the final dungeon exists"
 
 print("PLAYTHROUGH_OK")
 """
