@@ -259,6 +259,11 @@ class Ability(TypedDict):
     # resistance to it scales the damage (Weak amplifies, Resist halves, Immune nullifies).
     # Absent = an untyped (physical) hit no resistance touches. Validated against RESIST_ORDER.
     element: NotRequired[str]
+    # Optional: the COOLDOWN in combat beats. After a successful channel the move is locked out for
+    # this many beats; a landed strike advances the combat clock and thaws it (parts.world.combat_
+    # clock). Absent or 0 = no cooldown (spam-limited only by MP). This is the cadence knob that
+    # turns "spam the strongest button" into a rotation. Validated as a non-negative int.
+    cooldown: NotRequired[int]
 
 
 class Recipe(TypedDict):
@@ -982,6 +987,7 @@ def load_abilities(path: Path) -> dict[str, Ability]:
             "power": 0,
             "scales": "",
             "mp_cost": 0,
+            "cooldown": 0,
             "jobs": [],
         }
         merged.update(template)
@@ -995,6 +1001,7 @@ def load_abilities(path: Path) -> dict[str, Ability]:
                 ("power", int),
                 ("scales", str),
                 ("mp_cost", int),
+                ("cooldown", int),
                 ("jobs", list),
             ),
         )
@@ -1003,7 +1010,7 @@ def load_abilities(path: Path) -> dict[str, Ability]:
                 f"ability '{label}': 'kind' must be 'strike', 'heal', 'brand', 'daze', or "
                 f"'weaken', got {merged['kind']!r}."
             )
-        for num_field in ("power", "mp_cost"):
+        for num_field in ("power", "mp_cost", "cooldown"):
             value = merged[num_field]
             if isinstance(value, bool) or value < 0:
                 raise SeedError(
@@ -1032,6 +1039,8 @@ def load_abilities(path: Path) -> dict[str, Ability]:
         )
         if element is not None:
             ability["element"] = str(element)
+        if merged["cooldown"]:  # only a real cooldown is stamped; a bare ability stays uncapped
+            ability["cooldown"] = int(merged["cooldown"])
         abilities[label] = ability
     return abilities
 

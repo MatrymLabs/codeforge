@@ -16,6 +16,7 @@ ward:
   power: 7
   scales: stamina
   mp_cost: 5
+  cooldown: 3
   jobs: [vanguard]
 
 # Pathfinder -- reads the wilds, strikes from the flank; speed over brute force.
@@ -33,6 +34,7 @@ hunters_mark:
   power: 9
   scales: speed
   mp_cost: 5
+  cooldown: 2
   jobs: [pathfinder]
 
 # Emberwright -- a maker who bends raw ember; patient hands, deep magic.
@@ -51,6 +53,7 @@ kindle:
   power: 8
   scales: magic
   mp_cost: 5
+  cooldown: 3
   jobs: [emberwright]
 
 cinder_brand:
@@ -59,6 +62,7 @@ cinder_brand:
   power: 4  # HP the burn saps each world beat, plus a third of magic
   scales: magic
   mp_cost: 4
+  cooldown: 3
   jobs: [emberwright]
 
 # --- Batch 1 movesets (Martial + Precision families). strike scales on the family's key stat. ---
@@ -77,6 +81,7 @@ closing_sentence:
   power: 11
   scales: strength
   mp_cost: 6
+  cooldown: 2
   jobs: [duelist]
 
 # Sentinel -- guard and turn.
@@ -93,12 +98,14 @@ longwatch:
   power: 9
   scales: stamina
   mp_cost: 5
+  cooldown: 3
   jobs: [sentinel]
 break_guard:
   name: Break Guard
   kind: weaken  # a sentinel reads the opening and softens the foe's next blows (no damage)
   power: 3
   mp_cost: 4
+  cooldown: 3
   jobs: [sentinel]
 
 # Berserker -- escalate.
@@ -108,6 +115,7 @@ frenzy_strike:
   power: 9
   scales: strength
   mp_cost: 3
+  cooldown: 2
   jobs: [berserker]
 bloodrush:
   name: Bloodrush
@@ -115,6 +123,7 @@ bloodrush:
   power: 14
   scales: strength
   mp_cost: 7
+  cooldown: 2
   jobs: [berserker]
 
 # Ranger -- aim.
@@ -131,6 +140,7 @@ snipe:
   power: 12
   scales: luck
   mp_cost: 6
+  cooldown: 2
   jobs: [ranger]
 
 # Scout -- evade and jab.
@@ -147,6 +157,7 @@ second_wind:
   power: 7
   scales: speed
   mp_cost: 4
+  cooldown: 3
   jobs: [scout]
 
 # Shadowblade -- open from the dark.
@@ -156,6 +167,7 @@ backstab:
   power: 10
   scales: speed
   mp_cost: 4
+  cooldown: 2
   jobs: [shadowblade]
 killing_dark:
   name: Killing Dark
@@ -163,6 +175,7 @@ killing_dark:
   power: 15
   scales: luck
   mp_cost: 7
+  cooldown: 2
   element: DRK
   jobs: [shadowblade]
 
@@ -173,6 +186,7 @@ toxin:
   power: 8
   scales: magic
   mp_cost: 3
+  cooldown: 2
   element: PSN
   jobs: [saboteur]
 disable:
@@ -181,6 +195,7 @@ disable:
   power: 10
   scales: wisdom
   mp_cost: 5
+  cooldown: 2
   jobs: [saboteur]
 
 # --- Batch 2 movesets (Arcane + Divine families). ---
@@ -192,6 +207,7 @@ arcane_bolt_a:
   power: 9
   scales: magic
   mp_cost: 3
+  cooldown: 2
   jobs: [arcanist]
 mana_ward:
   name: Mana Ward
@@ -199,6 +215,7 @@ mana_ward:
   power: 9
   scales: wisdom
   mp_cost: 5
+  cooldown: 3
   jobs: [arcanist]
 
 # Elementalist -- let it run.
@@ -208,6 +225,7 @@ firestorm:
   power: 13
   scales: magic
   mp_cost: 6
+  cooldown: 2
   element: FIR
   jobs: [elementalist]
 frostbite:
@@ -216,6 +234,7 @@ frostbite:
   power: 8
   scales: magic
   mp_cost: 3
+  cooldown: 2
   element: ICE  # frost: it shatters the Cinder-Wight (Weak to ICE) for half again the damage
   jobs: [elementalist]
 
@@ -226,6 +245,7 @@ haste_strike:
   power: 8
   scales: wisdom
   mp_cost: 3
+  cooldown: 2
   jobs: [chronomancer]
 rewind:
   name: Rewind
@@ -233,12 +253,14 @@ rewind:
   power: 12
   scales: wisdom
   mp_cost: 6
+  cooldown: 3
   jobs: [chronomancer]
 stasis:
   name: Stasis
   kind: daze  # steal time: the foe skips its next beats' strikes (no damage)
   power: 3
   mp_cost: 4
+  cooldown: 3
   jobs: [chronomancer]
 
 # Summoner -- fight through the spirit.
@@ -248,6 +270,7 @@ spirit_lash:
   power: 10
   scales: magic
   mp_cost: 4
+  cooldown: 2
   jobs: [summoner]
 emberkin:
   name: Emberkin's Mending
@@ -255,6 +278,7 @@ emberkin:
   power: 10
   scales: magic
   mp_cost: 5
+  cooldown: 3
   jobs: [summoner]
 
 # Cleric -- mend and smite.
@@ -264,6 +288,7 @@ smite:
   power: 8
   scales: wisdom
   mp_cost: 4
+  cooldown: 2
   element: HLY
   jobs: [cleric]
 heal:
@@ -272,6 +297,7 @@ heal:
   power: 13
   scales: wisdom
   mp_cost: 6
+  cooldown: 3
   jobs: [cleric]
 
 # Oracle -- bend the odds.
@@ -281,6 +307,7 @@ hex:
   power: 9
   scales: luck
   mp_cost: 4
+  cooldown: 2
   element: CRS
   jobs: [oracle]
 foresight:
@@ -289,6 +316,7 @@ foresight:
   power: 9
   scales: luck
   mp_cost: 5
+  cooldown: 3
   jobs: [oracle]
 
 # Templar -- faith made armor.
@@ -298,6 +326,7 @@ holy_strike:
   power: 9
   scales: wisdom
   mp_cost: 3
+  cooldown: 2
   element: HLY
   jobs: [templar]
 consecrate:
@@ -306,6 +335,7 @@ consecrate:
   power: 8
   scales: stamina
   mp_cost: 5
+  cooldown: 3
   jobs: [templar]
 
 # Warden -- keep the line whole.
@@ -315,6 +345,7 @@ ward_line:
   power: 10
   scales: stamina
   mp_cost: 5
+  cooldown: 3
   jobs: [warden]
 banish:
   name: Banish
@@ -322,6 +353,7 @@ banish:
   power: 8
   scales: wisdom
   mp_cost: 4
+  cooldown: 2
   jobs: [warden]
 
 # --- Batch 3 movesets (Engineering + Nature + cross-family). ---
