@@ -14,6 +14,7 @@ those checkpoints forever: if the numbers drift, the build goes red.
 
 from dataclasses import dataclass
 
+from parts.world.job_ladder import MAX_JOB_LEVEL
 from parts.world.seed import SEED_DIR
 from parts.world.world_manifest import world_block
 
@@ -114,7 +115,10 @@ JP_TIERS = [
 ]
 
 
-JP_TRACK = (JP_BASE, JP_TIERS, 30)
+# The per-job cap is the ladder's MAX_JOB_LEVEL -- the 30-job backbone (job_ladder)
+# is the single source of truth for how deep a job progresses; the locked JP curve
+# below still resolves Job Lvl 30 = 51,200 JP (pinned by the test twin).
+JP_TRACK = (JP_BASE, JP_TIERS, MAX_JOB_LEVEL)
 
 
 def get_jp_tier_multiplier(level):
