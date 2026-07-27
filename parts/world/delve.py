@@ -63,6 +63,12 @@ def load_dungeons(path: Path) -> list[dict[str, Any]] | None:
     return configs
 
 
+def boss_chamber(mouth: str) -> str:
+    """The label of a dungeon's deepest chamber -- where its deep boss waits (and where the delve's
+    lore inscription is carved). Public so other generators can name it without knowing `_DEPTH`."""
+    return f"{mouth}_delve_{_DEPTH}"
+
+
 def _chamber(name: str, idx: int) -> Room:
     """One chamber of a delve: themed by the dungeon and how deep the chamber sits."""
     mood = _MOODS[idx % len(_MOODS)]

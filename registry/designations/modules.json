@@ -5362,5 +5362,35 @@
     "aliases": [],
     "created": "2026-07-27",
     "updated": "2026-07-27"
+  },
+  {
+    "designation": "MOD-04.087",
+    "name": "inscriptions",
+    "status": "active",
+    "function": "carve a readable lore inscription into every dungeon's deepest chamber (environmental storytelling)",
+    "label": "inscriptions",
+    "file": "parts/world/inscriptions.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "",
+    "tests": "tests/test_inscriptions.py",
+    "depends_on": [
+      "seed"
+    ],
+    "related": [
+      "delve",
+      "relics",
+      "rumors",
+      "items"
+    ],
+    "reuse": "the AAA-content-density ENVIRONMENTAL-STORYTELLING lever: carve_inscriptions(dungeons) places one readable, unequippable lore item in each dungeon's boss chamber (via delve.boss_chamber), its words naming the dungeon AND the relic it guards (the same name relics.forge_relic makes). Closes the discovery loop: a town rumour points here, the inscription confirms the prize, felling the boss claims it. `read <inscription>` shows the lore.",
+    "notes": "Systemic, not hand-crafted: the same dungeon always bears the same words (deterministic; relic name recomputed with the matching dungeon index). is_inscription() = 'inscription_' prefix; label is inscription_<dungeon_room>. Merged into ITEMS before the link audit (rooms are the delve chambers). aethryn: 16 inscriptions (one per dungeon). Exposed delve.boss_chamber() so the label isn't hardcoded.",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-27",
+    "updated": "2026-07-27"
   }
 ]

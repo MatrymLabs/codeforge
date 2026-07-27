@@ -10,6 +10,7 @@ from parts.world.armory import arm_guardians
 from parts.world.creator_workshop import install_workshop
 from parts.world.delve import generate_delves, load_dungeons, wire_delve_mouths
 from parts.world.doors import DOORS, barred_door_for
+from parts.world.inscriptions import carve_inscriptions
 from parts.world.items import ITEMS, register_prototypes
 from parts.world.npcs import NPCS
 from parts.world.relics import arm_deep_bosses
@@ -64,6 +65,9 @@ if _dungeons is not None:
     # Give every deep boss a SIGNATURE legendary relic (a named, readable payoff on top of its
     # generic gear), so felling one is a memorable event, not just a drop (parts.world.relics).
     register_prototypes(arm_deep_bosses(_dungeons, _delve_npcs))
+    # Carve a readable lore inscription into each dungeon's boss chamber (parts.world.inscriptions):
+    # environmental storytelling naming the dungeon + relic, closing the rumour->depths loop.
+    ITEMS.update(carve_inscriptions(_dungeons))
 
 # Populate the map's settlements (seeds/<world>/settlements.yaml) with townsfolk and a merchant at
 # each town's level band (parts.world.townsfolk) -- the economy sink and the towns' life. Merged
