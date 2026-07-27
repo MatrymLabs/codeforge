@@ -1,146 +1,1323 @@
-# SEED: aethryn -- wildlands.yaml (see parts/world/wildlands.py). Deterministic wilderness
-# regions expanded at boot: seed anchors + regions CHAINING deeper off each anchor's trail.
+# SEED: aethryn -- wildlands.yaml (parts/world/wildlands.py). Deterministic wilderness at
+# world scale: 6 seed anchors + chained regions forming a connected sprawl, all 8 biomes,
+# Level 1-300 as a gradient (deeper = higher band). Generated + committed; regenerable.
 
-kindland_wild:
-  name: Kindland Wild
+r000:
+  name: The Wilds 000
   region: 'Emberreach'
   biome: temperate-meadow
   attach: the_far_reach
   attach_dir: east
-  level_min: 4
-  level_max: 12
-  trail_length: 240
+  level_min: 1
+  level_max: 16
+  trail_length: 260
   branch_every: 4
   branch_length: 3
 
-fenwood_wild:
-  name: Fenwood Wild
+r001:
+  name: The Wilds 001
   region: 'Emberreach'
   biome: wild-forest
   attach: the_thornmere
   attach_dir: north
-  level_min: 6
-  level_max: 14
-  trail_length: 240
+  level_min: 3
+  level_max: 18
+  trail_length: 260
   branch_every: 4
   branch_length: 3
 
-downs_wild:
-  name: Downs Wild
+r002:
+  name: The Wilds 002
   region: 'Emberreach'
   biome: highland-moor
   attach: the_windward_downs
   attach_dir: east
-  level_min: 8
-  level_max: 15
-  trail_length: 240
+  level_min: 6
+  level_max: 21
+  trail_length: 260
   branch_every: 4
   branch_length: 3
 
-strand_wild:
-  name: Strand Wild
+r003:
+  name: The Wilds 003
   region: 'The Quenchmere'
   biome: coastal-strand
   attach: the_reef_flats
   attach_dir: north
-  level_min: 19
-  level_max: 26
-  trail_length: 240
+  level_min: 8
+  level_max: 23
+  trail_length: 260
   branch_every: 4
   branch_length: 3
 
-barrens_wild:
-  name: Barrens Wild
-  region: 'The Kollforge'
-  biome: volcanic-flats
+r004:
+  name: The Wilds 004
+  region: 'The Rimefall'
+  biome: glacier-waste
   attach: the_obsidian_flats
   attach_dir: south
-  level_min: 50
-  level_max: 58
-  trail_length: 240
+  level_min: 11
+  level_max: 26
+  trail_length: 260
   branch_every: 4
   branch_length: 3
 
-greenwild:
-  name: Greenwild
-  region: 'The Verdance'
-  biome: living-jungle
-  attach: the_understory
-  attach_dir: south
-  level_min: 22
-  level_max: 32
-  trail_length: 240
-  branch_every: 4
-  branch_length: 3
-
-kindland_wild_deep:
-  name: Kindland Wild Deep
-  region: 'Emberreach'
-  biome: temperate-meadow
-  attach: kindland_wild_t120
-  attach_dir: north
-  level_min: 12
-  level_max: 32
-  trail_length: 240
-  branch_every: 4
-  branch_length: 3
-
-fenwood_wild_deep:
-  name: Fenwood Wild Deep
-  region: 'Emberreach'
-  biome: wild-forest
-  attach: fenwood_wild_t120
-  attach_dir: north
-  level_min: 14
-  level_max: 34
-  trail_length: 240
-  branch_every: 4
-  branch_length: 3
-
-downs_wild_deep:
-  name: Downs Wild Deep
-  region: 'Emberreach'
-  biome: highland-moor
-  attach: downs_wild_t120
-  attach_dir: north
-  level_min: 15
-  level_max: 35
-  trail_length: 240
-  branch_every: 4
-  branch_length: 3
-
-strand_wild_deep:
-  name: Strand Wild Deep
-  region: 'The Quenchmere'
-  biome: coastal-strand
-  attach: strand_wild_t120
-  attach_dir: north
-  level_min: 26
-  level_max: 46
-  trail_length: 240
-  branch_every: 4
-  branch_length: 3
-
-barrens_wild_deep:
-  name: Barrens Wild Deep
+r005:
+  name: The Wilds 005
   region: 'The Kollforge'
   biome: volcanic-flats
-  attach: barrens_wild_t120
-  attach_dir: north
-  level_min: 58
-  level_max: 78
-  trail_length: 240
+  attach: the_understory
+  attach_dir: south
+  level_min: 13
+  level_max: 28
+  trail_length: 260
   branch_every: 4
   branch_length: 3
 
-greenwild_deep:
-  name: Greenwild Deep
+r006:
+  name: The Wilds 006
   region: 'The Verdance'
   biome: living-jungle
-  attach: greenwild_t120
+  attach: r002_t130
+  attach_dir: north
+  level_min: 16
+  level_max: 31
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r007:
+  name: The Wilds 007
+  region: 'The Cinderwaste'
+  biome: salt-desert
+  attach: r002_t130
+  attach_dir: north
+  level_min: 19
+  level_max: 34
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r008:
+  name: The Wilds 008
+  region: 'Emberreach'
+  biome: temperate-meadow
+  attach: r002_t130
+  attach_dir: north
+  level_min: 21
+  level_max: 36
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r009:
+  name: The Wilds 009
+  region: 'Emberreach'
+  biome: wild-forest
+  attach: r003_t130
+  attach_dir: north
+  level_min: 24
+  level_max: 39
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r010:
+  name: The Wilds 010
+  region: 'Emberreach'
+  biome: highland-moor
+  attach: r003_t130
+  attach_dir: north
+  level_min: 26
+  level_max: 41
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r011:
+  name: The Wilds 011
+  region: 'The Quenchmere'
+  biome: coastal-strand
+  attach: r003_t130
+  attach_dir: north
+  level_min: 29
+  level_max: 44
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r012:
+  name: The Wilds 012
+  region: 'The Rimefall'
+  biome: glacier-waste
+  attach: r004_t130
   attach_dir: north
   level_min: 32
+  level_max: 47
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r013:
+  name: The Wilds 013
+  region: 'The Kollforge'
+  biome: volcanic-flats
+  attach: r004_t130
+  attach_dir: north
+  level_min: 34
+  level_max: 49
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r014:
+  name: The Wilds 014
+  region: 'The Verdance'
+  biome: living-jungle
+  attach: r004_t130
+  attach_dir: north
+  level_min: 37
   level_max: 52
-  trail_length: 240
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r015:
+  name: The Wilds 015
+  region: 'The Cinderwaste'
+  biome: salt-desert
+  attach: r005_t130
+  attach_dir: north
+  level_min: 39
+  level_max: 54
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r016:
+  name: The Wilds 016
+  region: 'Emberreach'
+  biome: temperate-meadow
+  attach: r005_t130
+  attach_dir: north
+  level_min: 42
+  level_max: 57
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r017:
+  name: The Wilds 017
+  region: 'Emberreach'
+  biome: wild-forest
+  attach: r005_t130
+  attach_dir: north
+  level_min: 45
+  level_max: 60
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r018:
+  name: The Wilds 018
+  region: 'Emberreach'
+  biome: highland-moor
+  attach: r006_t130
+  attach_dir: north
+  level_min: 47
+  level_max: 62
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r019:
+  name: The Wilds 019
+  region: 'The Quenchmere'
+  biome: coastal-strand
+  attach: r006_t130
+  attach_dir: north
+  level_min: 50
+  level_max: 65
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r020:
+  name: The Wilds 020
+  region: 'The Rimefall'
+  biome: glacier-waste
+  attach: r006_t130
+  attach_dir: north
+  level_min: 52
+  level_max: 67
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r021:
+  name: The Wilds 021
+  region: 'The Kollforge'
+  biome: volcanic-flats
+  attach: r007_t130
+  attach_dir: north
+  level_min: 55
+  level_max: 70
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r022:
+  name: The Wilds 022
+  region: 'The Verdance'
+  biome: living-jungle
+  attach: r007_t130
+  attach_dir: north
+  level_min: 58
+  level_max: 73
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r023:
+  name: The Wilds 023
+  region: 'The Cinderwaste'
+  biome: salt-desert
+  attach: r007_t130
+  attach_dir: north
+  level_min: 60
+  level_max: 75
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r024:
+  name: The Wilds 024
+  region: 'Emberreach'
+  biome: temperate-meadow
+  attach: r008_t130
+  attach_dir: north
+  level_min: 63
+  level_max: 78
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r025:
+  name: The Wilds 025
+  region: 'Emberreach'
+  biome: wild-forest
+  attach: r008_t130
+  attach_dir: north
+  level_min: 65
+  level_max: 80
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r026:
+  name: The Wilds 026
+  region: 'Emberreach'
+  biome: highland-moor
+  attach: r008_t130
+  attach_dir: north
+  level_min: 68
+  level_max: 83
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r027:
+  name: The Wilds 027
+  region: 'The Quenchmere'
+  biome: coastal-strand
+  attach: r009_t130
+  attach_dir: north
+  level_min: 70
+  level_max: 85
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r028:
+  name: The Wilds 028
+  region: 'The Rimefall'
+  biome: glacier-waste
+  attach: r009_t130
+  attach_dir: north
+  level_min: 73
+  level_max: 88
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r029:
+  name: The Wilds 029
+  region: 'The Kollforge'
+  biome: volcanic-flats
+  attach: r009_t130
+  attach_dir: north
+  level_min: 76
+  level_max: 91
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r030:
+  name: The Wilds 030
+  region: 'The Verdance'
+  biome: living-jungle
+  attach: r010_t130
+  attach_dir: north
+  level_min: 78
+  level_max: 93
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r031:
+  name: The Wilds 031
+  region: 'The Cinderwaste'
+  biome: salt-desert
+  attach: r010_t130
+  attach_dir: north
+  level_min: 81
+  level_max: 96
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r032:
+  name: The Wilds 032
+  region: 'Emberreach'
+  biome: temperate-meadow
+  attach: r010_t130
+  attach_dir: north
+  level_min: 83
+  level_max: 98
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r033:
+  name: The Wilds 033
+  region: 'Emberreach'
+  biome: wild-forest
+  attach: r011_t130
+  attach_dir: north
+  level_min: 86
+  level_max: 101
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r034:
+  name: The Wilds 034
+  region: 'Emberreach'
+  biome: highland-moor
+  attach: r011_t130
+  attach_dir: north
+  level_min: 89
+  level_max: 104
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r035:
+  name: The Wilds 035
+  region: 'The Quenchmere'
+  biome: coastal-strand
+  attach: r011_t130
+  attach_dir: north
+  level_min: 91
+  level_max: 106
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r036:
+  name: The Wilds 036
+  region: 'The Rimefall'
+  biome: glacier-waste
+  attach: r012_t130
+  attach_dir: north
+  level_min: 94
+  level_max: 109
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r037:
+  name: The Wilds 037
+  region: 'The Kollforge'
+  biome: volcanic-flats
+  attach: r012_t130
+  attach_dir: north
+  level_min: 96
+  level_max: 111
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r038:
+  name: The Wilds 038
+  region: 'The Verdance'
+  biome: living-jungle
+  attach: r012_t130
+  attach_dir: north
+  level_min: 99
+  level_max: 114
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r039:
+  name: The Wilds 039
+  region: 'The Cinderwaste'
+  biome: salt-desert
+  attach: r013_t130
+  attach_dir: north
+  level_min: 102
+  level_max: 117
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r040:
+  name: The Wilds 040
+  region: 'Emberreach'
+  biome: temperate-meadow
+  attach: r013_t130
+  attach_dir: north
+  level_min: 104
+  level_max: 119
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r041:
+  name: The Wilds 041
+  region: 'Emberreach'
+  biome: wild-forest
+  attach: r013_t130
+  attach_dir: north
+  level_min: 107
+  level_max: 122
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r042:
+  name: The Wilds 042
+  region: 'Emberreach'
+  biome: highland-moor
+  attach: r014_t130
+  attach_dir: north
+  level_min: 109
+  level_max: 124
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r043:
+  name: The Wilds 043
+  region: 'The Quenchmere'
+  biome: coastal-strand
+  attach: r014_t130
+  attach_dir: north
+  level_min: 112
+  level_max: 127
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r044:
+  name: The Wilds 044
+  region: 'The Rimefall'
+  biome: glacier-waste
+  attach: r014_t130
+  attach_dir: north
+  level_min: 115
+  level_max: 130
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r045:
+  name: The Wilds 045
+  region: 'The Kollforge'
+  biome: volcanic-flats
+  attach: r015_t130
+  attach_dir: north
+  level_min: 117
+  level_max: 132
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r046:
+  name: The Wilds 046
+  region: 'The Verdance'
+  biome: living-jungle
+  attach: r015_t130
+  attach_dir: north
+  level_min: 120
+  level_max: 135
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r047:
+  name: The Wilds 047
+  region: 'The Cinderwaste'
+  biome: salt-desert
+  attach: r015_t130
+  attach_dir: north
+  level_min: 122
+  level_max: 137
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r048:
+  name: The Wilds 048
+  region: 'Emberreach'
+  biome: temperate-meadow
+  attach: r016_t130
+  attach_dir: north
+  level_min: 125
+  level_max: 140
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r049:
+  name: The Wilds 049
+  region: 'Emberreach'
+  biome: wild-forest
+  attach: r016_t130
+  attach_dir: north
+  level_min: 127
+  level_max: 142
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r050:
+  name: The Wilds 050
+  region: 'Emberreach'
+  biome: highland-moor
+  attach: r016_t130
+  attach_dir: north
+  level_min: 130
+  level_max: 145
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r051:
+  name: The Wilds 051
+  region: 'The Quenchmere'
+  biome: coastal-strand
+  attach: r017_t130
+  attach_dir: north
+  level_min: 133
+  level_max: 148
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r052:
+  name: The Wilds 052
+  region: 'The Rimefall'
+  biome: glacier-waste
+  attach: r017_t130
+  attach_dir: north
+  level_min: 135
+  level_max: 150
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r053:
+  name: The Wilds 053
+  region: 'The Kollforge'
+  biome: volcanic-flats
+  attach: r017_t130
+  attach_dir: north
+  level_min: 138
+  level_max: 153
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r054:
+  name: The Wilds 054
+  region: 'The Verdance'
+  biome: living-jungle
+  attach: r018_t130
+  attach_dir: north
+  level_min: 140
+  level_max: 155
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r055:
+  name: The Wilds 055
+  region: 'The Cinderwaste'
+  biome: salt-desert
+  attach: r018_t130
+  attach_dir: north
+  level_min: 143
+  level_max: 158
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r056:
+  name: The Wilds 056
+  region: 'Emberreach'
+  biome: temperate-meadow
+  attach: r018_t130
+  attach_dir: north
+  level_min: 146
+  level_max: 161
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r057:
+  name: The Wilds 057
+  region: 'Emberreach'
+  biome: wild-forest
+  attach: r019_t130
+  attach_dir: north
+  level_min: 148
+  level_max: 163
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r058:
+  name: The Wilds 058
+  region: 'Emberreach'
+  biome: highland-moor
+  attach: r019_t130
+  attach_dir: north
+  level_min: 151
+  level_max: 166
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r059:
+  name: The Wilds 059
+  region: 'The Quenchmere'
+  biome: coastal-strand
+  attach: r019_t130
+  attach_dir: north
+  level_min: 153
+  level_max: 168
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r060:
+  name: The Wilds 060
+  region: 'The Rimefall'
+  biome: glacier-waste
+  attach: r020_t130
+  attach_dir: north
+  level_min: 156
+  level_max: 171
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r061:
+  name: The Wilds 061
+  region: 'The Kollforge'
+  biome: volcanic-flats
+  attach: r020_t130
+  attach_dir: north
+  level_min: 159
+  level_max: 174
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r062:
+  name: The Wilds 062
+  region: 'The Verdance'
+  biome: living-jungle
+  attach: r020_t130
+  attach_dir: north
+  level_min: 161
+  level_max: 176
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r063:
+  name: The Wilds 063
+  region: 'The Cinderwaste'
+  biome: salt-desert
+  attach: r021_t130
+  attach_dir: north
+  level_min: 164
+  level_max: 179
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r064:
+  name: The Wilds 064
+  region: 'Emberreach'
+  biome: temperate-meadow
+  attach: r021_t130
+  attach_dir: north
+  level_min: 166
+  level_max: 181
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r065:
+  name: The Wilds 065
+  region: 'Emberreach'
+  biome: wild-forest
+  attach: r021_t130
+  attach_dir: north
+  level_min: 169
+  level_max: 184
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r066:
+  name: The Wilds 066
+  region: 'Emberreach'
+  biome: highland-moor
+  attach: r022_t130
+  attach_dir: north
+  level_min: 172
+  level_max: 187
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r067:
+  name: The Wilds 067
+  region: 'The Quenchmere'
+  biome: coastal-strand
+  attach: r022_t130
+  attach_dir: north
+  level_min: 174
+  level_max: 189
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r068:
+  name: The Wilds 068
+  region: 'The Rimefall'
+  biome: glacier-waste
+  attach: r022_t130
+  attach_dir: north
+  level_min: 177
+  level_max: 192
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r069:
+  name: The Wilds 069
+  region: 'The Kollforge'
+  biome: volcanic-flats
+  attach: r023_t130
+  attach_dir: north
+  level_min: 179
+  level_max: 194
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r070:
+  name: The Wilds 070
+  region: 'The Verdance'
+  biome: living-jungle
+  attach: r023_t130
+  attach_dir: north
+  level_min: 182
+  level_max: 197
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r071:
+  name: The Wilds 071
+  region: 'The Cinderwaste'
+  biome: salt-desert
+  attach: r023_t130
+  attach_dir: north
+  level_min: 184
+  level_max: 199
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r072:
+  name: The Wilds 072
+  region: 'Emberreach'
+  biome: temperate-meadow
+  attach: r024_t130
+  attach_dir: north
+  level_min: 187
+  level_max: 202
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r073:
+  name: The Wilds 073
+  region: 'Emberreach'
+  biome: wild-forest
+  attach: r024_t130
+  attach_dir: north
+  level_min: 190
+  level_max: 205
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r074:
+  name: The Wilds 074
+  region: 'Emberreach'
+  biome: highland-moor
+  attach: r024_t130
+  attach_dir: north
+  level_min: 192
+  level_max: 207
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r075:
+  name: The Wilds 075
+  region: 'The Quenchmere'
+  biome: coastal-strand
+  attach: r025_t130
+  attach_dir: north
+  level_min: 195
+  level_max: 210
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r076:
+  name: The Wilds 076
+  region: 'The Rimefall'
+  biome: glacier-waste
+  attach: r025_t130
+  attach_dir: north
+  level_min: 197
+  level_max: 212
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r077:
+  name: The Wilds 077
+  region: 'The Kollforge'
+  biome: volcanic-flats
+  attach: r025_t130
+  attach_dir: north
+  level_min: 200
+  level_max: 215
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r078:
+  name: The Wilds 078
+  region: 'The Verdance'
+  biome: living-jungle
+  attach: r026_t130
+  attach_dir: north
+  level_min: 203
+  level_max: 218
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r079:
+  name: The Wilds 079
+  region: 'The Cinderwaste'
+  biome: salt-desert
+  attach: r026_t130
+  attach_dir: north
+  level_min: 205
+  level_max: 220
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r080:
+  name: The Wilds 080
+  region: 'Emberreach'
+  biome: temperate-meadow
+  attach: r026_t130
+  attach_dir: north
+  level_min: 208
+  level_max: 223
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r081:
+  name: The Wilds 081
+  region: 'Emberreach'
+  biome: wild-forest
+  attach: r027_t130
+  attach_dir: north
+  level_min: 210
+  level_max: 225
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r082:
+  name: The Wilds 082
+  region: 'Emberreach'
+  biome: highland-moor
+  attach: r027_t130
+  attach_dir: north
+  level_min: 213
+  level_max: 228
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r083:
+  name: The Wilds 083
+  region: 'The Quenchmere'
+  biome: coastal-strand
+  attach: r027_t130
+  attach_dir: north
+  level_min: 216
+  level_max: 231
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r084:
+  name: The Wilds 084
+  region: 'The Rimefall'
+  biome: glacier-waste
+  attach: r028_t130
+  attach_dir: north
+  level_min: 218
+  level_max: 233
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r085:
+  name: The Wilds 085
+  region: 'The Kollforge'
+  biome: volcanic-flats
+  attach: r028_t130
+  attach_dir: north
+  level_min: 221
+  level_max: 236
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r086:
+  name: The Wilds 086
+  region: 'The Verdance'
+  biome: living-jungle
+  attach: r028_t130
+  attach_dir: north
+  level_min: 223
+  level_max: 238
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r087:
+  name: The Wilds 087
+  region: 'The Cinderwaste'
+  biome: salt-desert
+  attach: r029_t130
+  attach_dir: north
+  level_min: 226
+  level_max: 241
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r088:
+  name: The Wilds 088
+  region: 'Emberreach'
+  biome: temperate-meadow
+  attach: r029_t130
+  attach_dir: north
+  level_min: 229
+  level_max: 244
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r089:
+  name: The Wilds 089
+  region: 'Emberreach'
+  biome: wild-forest
+  attach: r029_t130
+  attach_dir: north
+  level_min: 231
+  level_max: 246
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r090:
+  name: The Wilds 090
+  region: 'Emberreach'
+  biome: highland-moor
+  attach: r030_t130
+  attach_dir: north
+  level_min: 234
+  level_max: 249
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r091:
+  name: The Wilds 091
+  region: 'The Quenchmere'
+  biome: coastal-strand
+  attach: r030_t130
+  attach_dir: north
+  level_min: 236
+  level_max: 251
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r092:
+  name: The Wilds 092
+  region: 'The Rimefall'
+  biome: glacier-waste
+  attach: r030_t130
+  attach_dir: north
+  level_min: 239
+  level_max: 254
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r093:
+  name: The Wilds 093
+  region: 'The Kollforge'
+  biome: volcanic-flats
+  attach: r031_t130
+  attach_dir: north
+  level_min: 241
+  level_max: 256
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r094:
+  name: The Wilds 094
+  region: 'The Verdance'
+  biome: living-jungle
+  attach: r031_t130
+  attach_dir: north
+  level_min: 244
+  level_max: 259
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r095:
+  name: The Wilds 095
+  region: 'The Cinderwaste'
+  biome: salt-desert
+  attach: r031_t130
+  attach_dir: north
+  level_min: 247
+  level_max: 262
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r096:
+  name: The Wilds 096
+  region: 'Emberreach'
+  biome: temperate-meadow
+  attach: r032_t130
+  attach_dir: north
+  level_min: 249
+  level_max: 264
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r097:
+  name: The Wilds 097
+  region: 'Emberreach'
+  biome: wild-forest
+  attach: r032_t130
+  attach_dir: north
+  level_min: 252
+  level_max: 267
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r098:
+  name: The Wilds 098
+  region: 'Emberreach'
+  biome: highland-moor
+  attach: r032_t130
+  attach_dir: north
+  level_min: 254
+  level_max: 269
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r099:
+  name: The Wilds 099
+  region: 'The Quenchmere'
+  biome: coastal-strand
+  attach: r033_t130
+  attach_dir: north
+  level_min: 257
+  level_max: 272
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r100:
+  name: The Wilds 100
+  region: 'The Rimefall'
+  biome: glacier-waste
+  attach: r033_t130
+  attach_dir: north
+  level_min: 260
+  level_max: 275
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r101:
+  name: The Wilds 101
+  region: 'The Kollforge'
+  biome: volcanic-flats
+  attach: r033_t130
+  attach_dir: north
+  level_min: 262
+  level_max: 277
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r102:
+  name: The Wilds 102
+  region: 'The Verdance'
+  biome: living-jungle
+  attach: r034_t130
+  attach_dir: north
+  level_min: 265
+  level_max: 280
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r103:
+  name: The Wilds 103
+  region: 'The Cinderwaste'
+  biome: salt-desert
+  attach: r034_t130
+  attach_dir: north
+  level_min: 267
+  level_max: 282
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r104:
+  name: The Wilds 104
+  region: 'Emberreach'
+  biome: temperate-meadow
+  attach: r034_t130
+  attach_dir: north
+  level_min: 270
+  level_max: 285
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r105:
+  name: The Wilds 105
+  region: 'Emberreach'
+  biome: wild-forest
+  attach: r035_t130
+  attach_dir: north
+  level_min: 273
+  level_max: 288
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r106:
+  name: The Wilds 106
+  region: 'Emberreach'
+  biome: highland-moor
+  attach: r035_t130
+  attach_dir: north
+  level_min: 275
+  level_max: 290
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r107:
+  name: The Wilds 107
+  region: 'The Quenchmere'
+  biome: coastal-strand
+  attach: r035_t130
+  attach_dir: north
+  level_min: 278
+  level_max: 293
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r108:
+  name: The Wilds 108
+  region: 'The Rimefall'
+  biome: glacier-waste
+  attach: r036_t130
+  attach_dir: north
+  level_min: 280
+  level_max: 295
+  trail_length: 260
+  branch_every: 4
+  branch_length: 3
+
+r109:
+  name: The Wilds 109
+  region: 'The Kollforge'
+  biome: volcanic-flats
+  attach: r036_t130
+  attach_dir: north
+  level_min: 283
+  level_max: 298
+  trail_length: 260
   branch_every: 4
   branch_length: 3
