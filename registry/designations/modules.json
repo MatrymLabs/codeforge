@@ -5512,5 +5512,34 @@
     "aliases": [],
     "created": "2026-07-27",
     "updated": "2026-07-27"
+  },
+  {
+    "designation": "MOD-04.092",
+    "name": "boss_phases",
+    "status": "active",
+    "function": "give boss fights a second gear: a wounded boss enrages and hits harder",
+    "label": "boss_phases",
+    "file": "parts/world/boss_phases.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "",
+    "tests": "tests/test_boss_phases.py",
+    "depends_on": [
+      "seed"
+    ],
+    "related": [
+      "combat",
+      "wardens",
+      "delve"
+    ],
+    "reuse": "the AAA-content ENCOUNTER-MECHANIC lever (the first meatier system past the bounded generators): boss_phase(npc, raw) is combat's phase hook -- when a boss-tier foe drops to ENRAGE_AT (30% HP) its outgoing blow scales by ENRAGE_MULT (1.5x) and the room hears an enrage line ONCE. Deterministic (a HP threshold, not a die) and self-healing (the flag clears above the line, so a rematch re-announces). Additive: a non-boss or a healthy boss strikes exactly as before, so normal combat is byte-identical.",
+    "notes": "Wired into combat._resolve_npc_blow right after npc_strike_power, before the weaken fold. is_boss() = tier=='boss'; is_enraged() reads the runtime 'enraged' flag. Keyed on tier=='boss' so the training dummy, elites, and every existing combat test (non-boss foes) are untouched. This is the smallest real boss mechanic; phase 3 / special attacks are a later pass.",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-27",
+    "updated": "2026-07-27"
   }
 ]

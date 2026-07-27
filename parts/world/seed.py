@@ -167,6 +167,9 @@ class Npc(TypedDict):
     # ability -- each softens (halves, floored 1) and decrements one. Cleared when the foe
     # reassembles. Never seeded; combat sets and clears it.
     weakened: NotRequired[int]
+    # Runtime state: True once a BOSS has crossed its enrage threshold (parts.world.boss_phases), so
+    # the enrage announces once. Self-clears when the boss recovers above the line. Never seeded.
+    enraged: NotRequired[bool]
     # Optional: an ELEMENT its blows carry (a RESIST code -- FIR/ICE/LGT/...). When set, the
     # player's job resistance to that element scales the incoming blow (Weak amplifies, Resist
     # halves, Immune nullifies, Absorb heals). Absent = an untyped (physical) blow no resistance
