@@ -4,6 +4,7 @@ The world is data -- and now it lives in a seed file, not in Python.
 resolve_move is the only function that changes a player's location.
 """
 
+from parts.world.creator_workshop import install_workshop
 from parts.world.doors import DOORS, barred_door_for
 from parts.world.items import ITEMS
 from parts.world.npcs import NPCS
@@ -36,6 +37,12 @@ if _wildlands_configs is not None:
     WORLD.update(_wild_rooms)
     NPCS.update(_wild_npcs)
     wire_attach_exits(WORLD, _wildlands_configs)
+
+# Every generated world carries the Creator's Workshop: a Grand Library linked to the spawn, and a
+# concealed Creator's Door onto an isolated administrative instance only the Seed Owner may cross
+# (parts.world.workshop). Installed after the seed and generators, before the link audit, so the
+# canonical rooms pass the same gates as authored ones.
+install_workshop(WORLD)
 
 inspect_world_links(WORLD, ITEMS, NPCS)
 

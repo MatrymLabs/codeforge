@@ -12,6 +12,7 @@ to the machine is the one authority the engine cannot outrank.
 
 from collections.abc import Sequence
 
+from parts.world import creator_workshop
 from parts.world.characters import save_character
 from parts.world.events import SHUTDOWN, announce, broadcast
 from parts.world.session import SESSIONS, Session, display_name
@@ -34,6 +35,11 @@ def teleport(session: Session, word: str) -> str:
     room = word.strip().lower()
     if room not in WORLD:
         return f"There is no room labeled '{room}'."
+    # The Creator's Workshop is sealed even to wizards: only the Seed Owner crosses its barrier, so
+    # a rank-gated teleport cannot slip a non-owner into the administrative instance
+    # (parts.world.workshop). Players cannot teleport at all; a wizard is turned back here.
+    if creator_workshop.is_workshop_room(room) and not creator_workshop.is_seed_owner(session):
+        return creator_workshop.barrier_refusal()
     me = display_name(session.player_id)
     announce(session.location, f"{me} vanishes.", exclude=session.player_id)
     session.location = room
