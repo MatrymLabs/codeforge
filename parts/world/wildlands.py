@@ -26,6 +26,7 @@ from typing import Any
 
 import yaml
 
+from parts.world.bestiary import make_beast
 from parts.world.seed import Npc, Room, SeedError, Zone
 
 # The compass a trail can run and its reverse, so every generated exit is reciprocal.
@@ -44,10 +45,11 @@ _OPPOSITE = {
 # Branches leave the trail on alternating flanks, so a region reads as a wide land, not a corridor.
 _FLANKS = ("east", "west", "northeast", "northwest", "southeast", "southwest")
 
-# Per-biome vocabulary. Each biome gives: a lead sentence, terrain FEATURES (composed by index so
-# adjacent rooms differ but relate), LANDMARKS (a branch-end payoff), and CREATURES (ambient life,
-# name + attack element) drawn to level-band the region. Kept compact but varied: the combinatorial
-# space of lead x feature x landmark x direction is large enough to avoid near-identical rooms.
+# Per-biome ROOM vocabulary: a lead sentence, terrain FEATURES (composed by index so adjacent rooms
+# differ but relate), and LANDMARKS (a branch-end payoff). The ambient CREATURES come from the
+# procedural bestiary (parts.world.bestiary), keyed by the same biome name -- kept separate so life
+# and land each vary on their own axis. The lead x feature x landmark x direction space is large
+# enough to avoid near-identical rooms.
 _BIOMES: dict[str, dict[str, Any]] = {
     "temperate-meadow": {
         "lead": "Open meadowland rolls under a wide, kind sky",
@@ -65,12 +67,6 @@ _BIOMES: dict[str, dict[str, Any]] = {
             "a mossy standing-stone leans here, a wayfarer's mark from the old kingdom",
             "a ring of ember-mushrooms glows faint in a grass hollow",
             "a broken plough rusts where a farm once was, the field gone to meadow",
-        ],
-        "creatures": [
-            ("a meadow-hare", "WND"),
-            ("a grass-adder", "PSN"),
-            ("a forge-lark", "WND"),
-            ("a horned meadow-ram", "ERT"),
         ],
     },
     "wild-forest": {
@@ -90,12 +86,6 @@ _BIOMES: dict[str, dict[str, Any]] = {
             "a spring wells up cold and clear beneath a mossed rock-face",
             "a shrine-post to the wood-warden leans, its offerings gone to seed",
         ],
-        "creatures": [
-            ("a reach-wolf", "WND"),
-            ("a thornback boar", "ERT"),
-            ("a wood-lynx", "WND"),
-            ("a bramble-spider", "PSN"),
-        ],
     },
     "highland-moor": {
         "lead": "Bare high moor rolls away under a scoured grey sky",
@@ -113,12 +103,6 @@ _BIOMES: dict[str, dict[str, Any]] = {
             "a ring of standing stones keeps its silence on the hill's crown",
             "a ruined bothy offers cold shelter, its hearth long dead",
             "a boundary-cairn of the old marches stands taller than a man",
-        ],
-        "creatures": [
-            ("a moor-wolf", "WND"),
-            ("a hill-husk", "LGT"),
-            ("a crag-eagle", "WND"),
-            ("a peat-lurker", "ERT"),
         ],
     },
     "coastal-strand": {
@@ -138,12 +122,6 @@ _BIOMES: dict[str, dict[str, Any]] = {
             "a fisher's upturned hull rots above the tideline, a shelter of sorts",
             "a shrine to the drowned keeps a guttering lamp against the sea",
         ],
-        "creatures": [
-            ("a shore-crab", "WTR"),
-            ("a strand-wight", "WTR"),
-            ("a gull-of-the-wrack", "WND"),
-            ("a tide-adder", "PSN"),
-        ],
     },
     "glacier-waste": {
         "lead": "A white waste of old ice stretches flat and blinding",
@@ -161,12 +139,6 @@ _BIOMES: dict[str, dict[str, Any]] = {
             "a cairn of frost-marks keeps a dead beacon on the highest ridge",
             "a Silent Anvil shrine-post forbids the touching of what the ice keeps",
             "a warm-camp's dead fire-ring marks where salvagers wintered and left",
-        ],
-        "creatures": [
-            ("a rime-wolf", "ICE"),
-            ("an ice-wight", "ICE"),
-            ("a glass-hound", "ICE"),
-            ("a frost-drake whelp", "ICE"),
         ],
     },
     "volcanic-flats": {
@@ -186,12 +158,6 @@ _BIOMES: dict[str, dict[str, Any]] = {
             "a slagged ruin of a Forger who reached too hot stands half-melted",
             "a Vent-Forge waymark points the safe line across the burning ground",
         ],
-        "creatures": [
-            ("an ember-lynx", "FIR"),
-            ("a slag-hulk", "FIR"),
-            ("a cinder-drake whelp", "FIR"),
-            ("a magma-kin", "FIR"),
-        ],
     },
     "living-jungle": {
         "lead": "The living wild presses in, green and warm and awake",
@@ -210,12 +176,6 @@ _BIOMES: dict[str, dict[str, Any]] = {
             "a poacher's ruin lies where someone tried to harvest the wild and was eaten",
             "a hidden grove-shrine breathes a green quiet older than the Reaches",
         ],
-        "creatures": [
-            ("a canopy-stalker", "PSN"),
-            ("a mire-serpent", "PSN"),
-            ("a swarm-kin", "PSN"),
-            ("a root-boar", "ERT"),
-        ],
     },
     "salt-desert": {
         "lead": "A bleached salt-waste glares white under an enormous sky",
@@ -233,12 +193,6 @@ _BIOMES: dict[str, dict[str, Any]] = {
             "an Ashborn waymoot keeps a water-cache by unbreakable road-code",
             "a salvage-clan marker leans over a dig gone down into the salt",
             "the last Ashborn stone stands before the un-ness, hung with tokens",
-        ],
-        "creatures": [
-            ("an ash-jackal", "ERT"),
-            ("a salt-wraith", "WTR"),
-            ("a glass-lurker", "DRK"),
-            ("a dune-scuttler", "ERT"),
         ],
     },
 }
@@ -307,29 +261,11 @@ def _band_level(cfg: dict[str, Any], step: int, span: int) -> int:
 
 
 def _ambient(cfg: dict[str, Any], room: str, idx: int, level: int) -> tuple[str, Npc]:
-    """One ambient creature for a generated room -- biome wildlife, level-banded -- so no room ships
-    empty (the no-empty-room law). Passive-but-present by default; deterministic by index."""
-    biome = _biome(cfg["biome"])
-    name, element = biome["creatures"][idx % len(biome["creatures"])]
+    """One ambient creature for a generated room, from the procedural BESTIARY (classes of beasts
+    x biome x size x element -- thousands of distinct, level-scaled foes) so no room ships empty and
+    the wilds never feel like the same handful of animals. Deterministic by index."""
     label = f"{cfg['id']}_beast_{idx}"
-    hp = 20 + level * 4
-    npc = Npc(
-        name=name,
-        keywords=[w for w in name.replace("-", " ").split() if w not in ("a", "an", "of", "the")],
-        location=room,
-        dialogue=[f"{name.capitalize()} watches from the {cfg['biome'].split('-')[-1]}."],
-        next_line=0,
-        hp=hp,
-        hp_now=hp,
-        xp=0,
-        atk=6 + level // 2,
-        aggressive=(idx % 3 == 0),  # some stretches hunt; most just live there
-        level=level,
-        tier="normal",
-        attack_element=element,
-        loot={"ember_shard": 3, "nothing": 2},
-    )
-    return label, npc
+    return label, make_beast(cfg["biome"], level, idx, room)
 
 
 def _describe(
