@@ -46,6 +46,7 @@ _GAME_SEED = {
     "travel",
     "feats",
     "errands",
+    "cull",
     "storylines",
     "townsfolk",
     "rooms",

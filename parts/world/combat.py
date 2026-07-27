@@ -333,6 +333,19 @@ def land_hit(session: Session, npc: Npc, nid: str, dmg: int) -> tuple[bool, str]
     quest_line = quest.on_event(session, "defeat", nid)  # a boss's fall may complete a story beat
     if quest_line:
         rewards = f"{rewards}\n{quest_line}"
+    # A cull quest ('fell N of a kind HERE') advances on the foe's TYPE, scoped to the KILL's zone:
+    # fire a cull event per keyword under this zone's key, so felling a grey-hound in Veridia counts
+    # toward 'cull the canids in Veridia', never another region's board. Cheap: an unrouted key is a
+    # single dict miss, and the mass wildlife kills flow through here.
+    from parts.world.cull import scope_key
+    from parts.world.zones import zone_of
+
+    zone = zone_of(session.location)
+    if zone:
+        for kind in npc.get("keywords", []):
+            cull_line = quest.on_event(session, "cull", scope_key(zone, kind))
+            if cull_line:
+                rewards = f"{rewards}\n{cull_line}"
     return (True, rewards)
 
 

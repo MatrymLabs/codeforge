@@ -103,6 +103,14 @@ def _size_tier(level: int, idx: int) -> int:
     return max(0, min(5, base + 1 + wobble))
 
 
+def classes_for_biome(biome: str) -> tuple[str, ...]:
+    """The creature body-classes (canid, felid, ...) that live in a biome -- the cullable TYPES a
+    region offers. Falls back to the temperate meadow's set for an unknown biome, never empty."""
+    life = _BIOME_LIFE.get(biome, _BIOME_LIFE["temperate-meadow"])
+    classes: tuple = life["classes"]  # type: ignore[assignment]
+    return tuple(str(c) for c in classes)
+
+
 def make_beast(biome: str, level: int, idx: int, room: str) -> Npc:
     """Compose one creature for a room: a biome-appropriate body-class, marked by a biome adjective,
     at a level-driven size, level-scaled and typed. Deterministic by (biome, level, idx)."""

@@ -92,7 +92,12 @@ class _Quest:
 
 # step trigger key -> world-event kind. defeat = an npc falls, take = an item is picked up,
 # enter = a room is entered.
-_TRIGGER_KEYS = {"on_defeat": "defeat", "on_take": "take", "on_enter": "enter"}
+_TRIGGER_KEYS = {
+    "on_defeat": "defeat",
+    "on_take": "take",
+    "on_enter": "enter",
+    "on_cull": "cull",  # a creature TYPE felled (by keyword), not one specific foe: cull-N quests
+}
 
 
 def _load_quests() -> dict[str, _Quest]:
@@ -152,6 +157,14 @@ def register_storylines(
     _fold_in(generate_storylines(zones, settlements, dungeons))
 
 
+def register_culls(zones: list[dict[str, object]]) -> None:
+    """Generate zone-scoped 'cull N of a kind' contracts at volume and fold them into the engine
+    (parts.world.cull). Called by world.py after the world is assembled. Idempotent."""
+    from parts.world.cull import generate_culls
+
+    _fold_in(generate_culls(zones))
+
+
 def register_spine(zones: list[dict[str, object]]) -> None:
     """Lay the world's main-road spine (the Forgeward Road) and fold it into the engine
     (parts.world.spine). Called by world.py after the world is assembled. Idempotent."""
@@ -207,15 +220,17 @@ def active_quest(session: Session) -> dict[str, str] | None:
 
 
 def _list_all(session: Session) -> str:
-    """The STORY quests (hand-authored arcs), with the player's state and moves. Generated bounties
-    are counted, not listed here -- they live under the `contracts` verb, never flooding this."""
+    """The STORY quests (hand-authored arcs), with the player's state and moves. The generated
+    VOLUME (bounties, culls) is counted, not listed -- it lives under `contracts`, never flooding
+    this."""
     from parts.world.bounties import is_bounty
+    from parts.world.cull import is_cull
 
     blocks = []
-    bounty_count = 0
+    board_count = 0
     for qid, quest in _QUESTS.items():
-        if is_bounty(qid):
-            bounty_count += 1
+        if is_bounty(qid) or is_cull(qid):  # the high-volume generated contracts: count, don't list
+            board_count += 1
             continue
         run = _run(session.player_id, qid)
         line = _line(quest, run)
@@ -225,7 +240,7 @@ def _list_all(session: Session) -> str:
             actions = quest.engine.actions(run)
             hint = f"  ({qid}: {', '.join(actions)})" if actions else ""
             blocks.append(line + hint)
-    tail = f"\n{bounty_count} hunt-contracts on the board (type CONTRACTS)." if bounty_count else ""
+    tail = f"\n{board_count} contracts on the board (type CONTRACTS)." if board_count else ""
     return "Your quests:\n" + "\n".join(blocks) + tail
 
 
@@ -252,7 +267,8 @@ def contracts_view(session: Session) -> str:
     tales, tales_done = _board(is_storyline)
     hunts, hunts_done = _board(is_bounty)
     errands, errands_done = _board(is_errand)
-    if not (tales or hunts or errands or tales_done or hunts_done or errands_done):
+    cull_total, cull_active, cull_done = _cull_tally(session)
+    if not (tales or hunts or errands or tales_done or hunts_done or errands_done or cull_total):
         return "There is nothing posted on the notice board."
     parts = ["The notice board:"]
     if tales or tales_done:
@@ -270,7 +286,31 @@ def contracts_view(session: Session) -> str:
         parts.extend(errands)
         if errands_done:
             parts.append(f"  (done: {errands_done})")
+    if cull_total:  # too many to list one by one, like a real board: summarised, not itemised
+        progress = (
+            f" ({cull_active} in progress, {cull_done} cleared)" if cull_active or cull_done else ""
+        )
+        parts.append(
+            f"Cull-contracts: {cull_total} posted{progress}. Fell any beast to answer one."
+        )
     return "\n".join(parts)
+
+
+def _cull_tally(session: Session) -> tuple[int, int, int]:
+    """(posted, in-progress, cleared) cull contracts for a player, WITHOUT opening a run per cull --
+    the board summarises the volume instead of listing it. Only runs the player already touched are
+    inspected; the total is a cheap key scan."""
+    from parts.world.cull import is_cull
+
+    total = sum(1 for qid in _QUESTS if is_cull(qid))
+    active = done = 0
+    for qid, run in _RUNS.get(session.player_id, {}).items():
+        if is_cull(qid):
+            if _QUESTS[qid].engine.is_done(run):
+                done += 1
+            else:
+                active += 1
+    return total, active, done
 
 
 def _advance(session: Session, quest_id: str, event: str) -> str:

@@ -303,7 +303,9 @@ class QuestStep(TypedDict):
     verb (which always stays a fallback, so a trigger can never dead-end the arc):
       `on_defeat` -- an NPC label whose defeat in combat fires this step;
       `on_take`   -- an item label whose pickup fires it;
-      `on_enter`  -- a room label whose entry fires it.
+      `on_enter`  -- a room label whose entry fires it;
+      `on_cull`   -- a creature TYPE (a keyword like 'canid'/'wolf') whose defeat fires it, so a
+                     'cull N of a kind' quest can chain N identical steps, one per kill.
     """
 
     state: str
@@ -313,6 +315,7 @@ class QuestStep(TypedDict):
     on_defeat: NotRequired[str]
     on_take: NotRequired[str]
     on_enter: NotRequired[str]
+    on_cull: NotRequired[str]
 
 
 class QuestSpec(TypedDict):
@@ -893,7 +896,7 @@ def load_quest(path: Path) -> QuestSpec | None:
         }
         if raw.get("effect"):
             step["effect"] = str(raw["effect"])
-        for trigger in ("on_defeat", "on_take", "on_enter"):
+        for trigger in ("on_defeat", "on_take", "on_enter", "on_cull"):
             if raw.get(trigger):
                 step[trigger] = str(raw[trigger])
         clean_steps.append(step)

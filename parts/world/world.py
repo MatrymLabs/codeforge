@@ -102,6 +102,7 @@ inspect_world_links(WORLD, ITEMS, NPCS)
 # every combatant foe -- side-content at volume, folded into the quest engine (parts.world.quest).
 from parts.world.quest import (  # noqa: E402 -- after NPCS ready
     register_bounties,
+    register_culls,
     register_errands,
     register_spine,
     register_storylines,
@@ -143,6 +144,26 @@ from parts.world.seed import load_zones  # noqa: E402 -- WORLD must exist for th
 _story_zones = [dict(z) for z in load_zones(SEED_DIR / "zones.yaml", set(WORLD)).values()]
 if _settlements and _dungeons:
     register_storylines(_story_zones, _settlements, _dungeons)
+
+# Cull contracts: 'fell N of a kind HERE' at volume, the MMO's most common quest (parts.world.cull)
+# -- one per ZONE x each creature type of its biome x count-tier, each SCOPED to its zone so kills
+# only count where they happen (honest volume, not one quest cloned per place). We rebuild the full
+# zone set (authored + Spiral + wilderness regions, where the creatures live) from the SAME pure
+# builders parts.world.zones uses, so the scope labels match zone_of -- without importing zones.py
+# (which imports WORLD, a cycle).
+from parts.world.spiral import spiral_zones  # noqa: E402 -- same builder zones.py uses
+from parts.world.wildlands import wildlands_zones  # noqa: E402 -- same builder zones.py uses
+
+_all_zones = dict(load_zones(SEED_DIR / "zones.yaml", set(WORLD)))
+if _spiral_config is not None:
+    _all_zones.update(spiral_zones(_spiral_config))
+if _wildlands_configs is not None:
+    _all_zones.update(wildlands_zones(_wildlands_configs))
+_cull_zones: list[dict[str, object]] = [
+    {"label": lbl, "name": z["name"], "biome": z.get("biome", ""), "level_max": z.get("level_max")}
+    for lbl, z in _all_zones.items()
+]
+register_culls(_cull_zones)
 
 # Zone landmarks: a readable monument in each zone's hub naming the region, its level band, and any
 # dungeon within (parts.world.landmarks) -- surface storytelling, the twin of the depths' lore.
