@@ -12,6 +12,7 @@ from parts.world.delve import generate_delves, load_dungeons, wire_delve_mouths
 from parts.world.doors import DOORS, barred_door_for
 from parts.world.items import ITEMS, register_prototypes
 from parts.world.npcs import NPCS
+from parts.world.relics import arm_deep_bosses
 from parts.world.seed import SEED_DIR, Room, inspect_world_links, load_rooms
 from parts.world.spiral import extend_world_with_road, load_spiral_config
 from parts.world.townsfolk import load_settlements, populate_settlements
@@ -59,6 +60,9 @@ if _dungeons is not None:
     NPCS.update(_delve_npcs)
     wire_delve_mouths(WORLD, _dungeons)
     register_prototypes(arm_guardians(_delve_npcs))
+    # Give every deep boss a SIGNATURE legendary relic (a named, readable payoff on top of its
+    # generic gear), so felling one is a memorable event, not just a drop (parts.world.relics).
+    register_prototypes(arm_deep_bosses(_dungeons, _delve_npcs))
 
 # Populate the map's settlements (seeds/<world>/settlements.yaml) with townsfolk and a merchant at
 # each town's level band (parts.world.townsfolk) -- the economy sink and the towns' life. Merged

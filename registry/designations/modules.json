@@ -5301,5 +5301,35 @@
     "aliases": [],
     "created": "2026-07-27",
     "updated": "2026-07-27"
+  },
+  {
+    "designation": "MOD-04.085",
+    "name": "relics",
+    "status": "active",
+    "function": "forge one signature legendary drop for every dungeon's deep boss (loot payoff)",
+    "label": "relics",
+    "file": "parts/world/relics.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "",
+    "tests": "tests/test_relics.py",
+    "depends_on": [
+      "seed"
+    ],
+    "related": [
+      "armory",
+      "delve",
+      "combat",
+      "items"
+    ],
+    "reuse": "the AAA-content-density LOOT-PAYOFF lever (the armory gave generic gear VOLUME, this gives the memorable reward): forge_relic() builds one named legendary equippable per dungeon (iconic name drawn from the dungeon, legendary stat floor not an affix gamble, a readable `lore` line); arm_deep_bosses(dungeons, npcs) attaches each to its `<room>_deep_boss` as a GUARANTEED drop on top of the generic gear. Prototypes merge into ITEMS before the link audit.",
+    "notes": "Systemic, not hand-crafted: the same dungeon always yields the same relic (deterministic, reproducible). is_relic() = 'relic_' prefix; label is relic_<dungeon_room>. Slot/stats spread by dungeon index so a region's relics vary across weapons/armour/trinkets. aethryn: 16 signature relics (one per deep boss).",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-27",
+    "updated": "2026-07-27"
   }
 ]
