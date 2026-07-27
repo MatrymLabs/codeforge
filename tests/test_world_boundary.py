@@ -47,6 +47,7 @@ _GAME_SEED = {
     "feats",
     "errands",
     "cull",
+    "forage",
     "storylines",
     "townsfolk",
     "rooms",

@@ -14,6 +14,7 @@ whichever quest declares that trigger; the `quest` verb is always the fallback.
 from __future__ import annotations
 
 import json
+from collections.abc import Callable
 
 from parts.shelf.statemachine import Fired
 from parts.shelf.workflow import Instance, Step, Workflow, WorkflowEngine, build_workflow
@@ -97,6 +98,7 @@ _TRIGGER_KEYS = {
     "on_take": "take",
     "on_enter": "enter",
     "on_cull": "cull",  # a creature TYPE felled (by keyword), not one specific foe: cull-N quests
+    "on_forage": "forage",  # a (zone-scoped) material harvested: forage-N quests
 }
 
 
@@ -165,6 +167,14 @@ def register_culls(zones: list[dict[str, object]]) -> None:
     _fold_in(generate_culls(zones))
 
 
+def register_forages(zones: list[dict[str, object]]) -> None:
+    """Generate zone-scoped 'gather N of a material' contracts and fold them into the engine
+    (parts.world.forage). Called by world.py after the world is assembled. Idempotent."""
+    from parts.world.forage import generate_forages
+
+    _fold_in(generate_forages(zones))
+
+
 def register_spine(zones: list[dict[str, object]]) -> None:
     """Lay the world's main-road spine (the Forgeward Road) and fold it into the engine
     (parts.world.spine). Called by world.py after the world is assembled. Idempotent."""
@@ -225,11 +235,14 @@ def _list_all(session: Session) -> str:
     this."""
     from parts.world.bounties import is_bounty
     from parts.world.cull import is_cull
+    from parts.world.forage import is_forage
 
     blocks = []
     board_count = 0
     for qid, quest in _QUESTS.items():
-        if is_bounty(qid) or is_cull(qid):  # the high-volume generated contracts: count, don't list
+        if (
+            is_bounty(qid) or is_cull(qid) or is_forage(qid)
+        ):  # high-volume contracts: count, not list
             board_count += 1
             continue
         run = _run(session.player_id, qid)
@@ -264,11 +277,24 @@ def contracts_view(session: Session) -> str:
                 openq.append(f"  {quest.workflow.labels.get(run.state, run.state)}")
         return openq, done
 
+    from parts.world.cull import is_cull
+    from parts.world.forage import is_forage
+
     tales, tales_done = _board(is_storyline)
     hunts, hunts_done = _board(is_bounty)
     errands, errands_done = _board(is_errand)
-    cull_total, cull_active, cull_done = _cull_tally(session)
-    if not (tales or hunts or errands or tales_done or hunts_done or errands_done or cull_total):
+    cull_total, cull_active, cull_done = _tally(session, is_cull)
+    forage_total, forage_active, forage_done = _tally(session, is_forage)
+    if not (
+        tales
+        or hunts
+        or errands
+        or tales_done
+        or hunts_done
+        or errands_done
+        or cull_total
+        or forage_total
+    ):
         return "There is nothing posted on the notice board."
     parts = ["The notice board:"]
     if tales or tales_done:
@@ -287,25 +313,28 @@ def contracts_view(session: Session) -> str:
         if errands_done:
             parts.append(f"  (done: {errands_done})")
     if cull_total:  # too many to list one by one, like a real board: summarised, not itemised
-        progress = (
+        prog = (
             f" ({cull_active} in progress, {cull_done} cleared)" if cull_active or cull_done else ""
         )
-        parts.append(
-            f"Cull-contracts: {cull_total} posted{progress}. Fell any beast to answer one."
+        parts.append(f"Cull-contracts: {cull_total} posted{prog}. Fell any beast to answer one.")
+    if forage_total:
+        fp = (
+            f" ({forage_active} in progress, {forage_done} done)"
+            if forage_active or forage_done
+            else ""
         )
+        parts.append(f"Forage-contracts: {forage_total} posted{fp}. Work any node to answer one.")
     return "\n".join(parts)
 
 
-def _cull_tally(session: Session) -> tuple[int, int, int]:
-    """(posted, in-progress, cleared) cull contracts for a player, WITHOUT opening a run per cull --
-    the board summarises the volume instead of listing it. Only runs the player already touched are
-    inspected; the total is a cheap key scan."""
-    from parts.world.cull import is_cull
-
-    total = sum(1 for qid in _QUESTS if is_cull(qid))
+def _tally(session: Session, match: Callable[[str], bool]) -> tuple[int, int, int]:
+    """(posted, in-progress, done) contracts of a kind for a player, WITHOUT opening a run per quest
+    -- the board summarises the high-volume archetypes instead of listing them. Only runs the player
+    already touched are inspected; the total is a cheap key scan."""
+    total = sum(1 for qid in _QUESTS if match(qid))
     active = done = 0
     for qid, run in _RUNS.get(session.player_id, {}).items():
-        if is_cull(qid):
+        if match(qid):
             if _QUESTS[qid].engine.is_done(run):
                 done += 1
             else:

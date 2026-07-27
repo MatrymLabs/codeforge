@@ -73,6 +73,14 @@ def _gather_node(biome: str, idx: int) -> str | None:
     return "ember_shard"
 
 
+def gatherable_materials(biome: str) -> tuple[str, ...]:
+    """The material prototypes a biome's gather nodes can yield -- the forageable inputs a region
+    offers (parts.world.forage builds contracts from these). Mirrors `_gather_node`'s choices."""
+    if biome in _ORE_BIOMES:
+        return ("ember_shard", "hollow_ingot")
+    return ("ember_shard",)
+
+
 # Per-biome ROOM vocabulary: a lead sentence, terrain FEATURES (composed by index so adjacent rooms
 # differ but relate), and LANDMARKS (a branch-end payoff). The ambient CREATURES come from the
 # procedural bestiary (parts.world.bestiary), keyed by the same biome name -- kept separate so life

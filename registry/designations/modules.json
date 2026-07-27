@@ -5572,5 +5572,36 @@
     "aliases": [],
     "created": "2026-07-27",
     "updated": "2026-07-27"
+  },
+  {
+    "designation": "MOD-04.094",
+    "name": "forage",
+    "status": "active",
+    "function": "generate zone-scoped 'gather N of a material' contracts (the non-combat volume archetype)",
+    "label": "forage",
+    "file": "parts/world/forage.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "",
+    "tests": "tests/test_forage.py",
+    "depends_on": [
+      "seed"
+    ],
+    "related": [
+      "quest",
+      "cull",
+      "gather",
+      "wildlands",
+      "zones"
+    ],
+    "reuse": "the QUEST-VOLUME lever (archetype 2, the non-combat twin of cull): generate_forages(zones) posts one 'gather N of a material' per zone x material its biome yields x count-tier (5/10). Same N-step-chain (no counter) and same cull.scope_key zone-scoping; the gather action fires on_event('forage', scope_key(zone_of(location), material)) on a successful harvest. New `on_forage` quest trigger (seed.QuestStep). wildlands.gatherable_materials() made public. Summarised on the `contracts` board via the shared quest._tally; counted (not listed) in the `quest` log.",
+    "notes": "is_forage() = 'forage_' prefix; id = forage_<zone_label>_<material>_<count>. Materials today: ember_shard (all biomes) + hollow_ingot (ore biomes) -- modest volume until more materials land. aethryn: 88 forages, total quests 541 -> 629. Next: delivery (carry A->B), then crank kins/materials/tiers toward thousands.",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-27",
+    "updated": "2026-07-27"
   }
 ]
