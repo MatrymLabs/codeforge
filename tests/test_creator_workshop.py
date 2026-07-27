@@ -149,3 +149,28 @@ def test_a_wizard_cannot_teleport_into_a_station_either():
     out = handle_command(wiz, "@teleport npc_studio")
     assert cw.barrier_refusal() in out
     assert wiz.location != "npc_studio"
+
+
+# --- the Planning Table survey (first live station tool) ----------------------------------------
+def test_the_owner_surveys_the_world_at_the_planning_table():
+    owner = _seat("root", "owner", location=cw.PLANNING_TABLE)
+    out = handle_command(owner, "survey")
+    assert "The Planning Table" in out
+    assert "Rooms:" in out and "Zones:" in out
+    # It reads the world's scale against a Seed Package deployment tier (the two campaigns compose).
+    assert "roughly a" in out
+
+
+def test_survey_reports_the_real_live_room_count():
+    owner = _seat("root", "owner", location=cw.PLANNING_TABLE)
+    out = handle_command(owner, "survey")
+    assert f"{len(WORLD):,}" in out  # the honest live count, not a canned number
+
+
+def test_survey_shows_nothing_to_a_non_owner_or_away_from_the_table():
+    # An owner standing elsewhere sees nothing to survey (the tool is station-gated)...
+    owner_away = _seat("root", "owner", location=cw.CREATOR_WORKSHOP)
+    assert "nothing here to survey" in handle_command(owner_away, "survey")
+    # ...and a mere player never sees the world's shape, wherever they stand.
+    player = _seat("nosy", "player", location=cw.PLANNING_TABLE)
+    assert "nothing here to survey" in handle_command(player, "survey")
