@@ -57,6 +57,22 @@ _FLANKS = ("east", "west", "northeast", "northwest", "southeast", "southwest")
 # bounds the board (and boot cost) even if a zone's trail runs to thousands of rooms.
 _NOTABLE_CAP = 16
 
+# Gather nodes: roughly one room in `_GATHER_EVERY` carries a harvestable material (parts.world.
+# gather), so a forager always has somewhere to work. Ore biomes occasionally yield a drowned INGOT
+# (the rarer crafting input); everywhere else yields the common EMBER-SHARD. Both feed real recipes.
+_GATHER_EVERY = 5
+_ORE_BIOMES = frozenset({"volcanic-flats", "glacier-waste", "highland-moor", "salt-desert"})
+
+
+def _gather_node(biome: str, idx: int) -> str | None:
+    """The material a room offers to gather, or None (most rooms). Deterministic by index."""
+    if idx % _GATHER_EVERY != 0:
+        return None
+    if biome in _ORE_BIOMES and idx % (_GATHER_EVERY * 3) == 0:
+        return "hollow_ingot"
+    return "ember_shard"
+
+
 # Per-biome ROOM vocabulary: a lead sentence, terrain FEATURES (composed by index so adjacent rooms
 # differ but relate), and LANDMARKS (a branch-end payoff). The ambient CREATURES come from the
 # procedural bestiary (parts.world.bestiary), keyed by the same biome name -- kept separate so life
@@ -354,7 +370,11 @@ def _region(cfg: dict[str, Any], claimed: set[str]) -> tuple[dict[str, Room], di
         nonlocal idx, seq
         if label in claimed or label in rooms:
             raise SeedError(f"wildlands region {rid!r} would collide on room label {label!r}.")
-        rooms[label] = Room(name=name, desc=desc, exits=exits)
+        room = Room(name=name, desc=desc, exits=exits)
+        material = _gather_node(cfg["biome"], idx)  # some rooms carry a harvestable node
+        if material:
+            room["node"] = material
+        rooms[label] = room
         level = _band_level(cfg, idx, span)
         if notable_every and idx and idx % notable_every == 0 and seq < max_notables:
             npcs[f"{rid}_lord_{seq}"] = make_notable(cfg["biome"], level, idx, label, seq)
