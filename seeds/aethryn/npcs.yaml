@@ -2959,3 +2959,50 @@ redoubt_sentinel:
   tier: elite  # the sundered redoubt's climax (x3 reward): a fallen Sentinel keeping a broken perimeter
   drops: [charged_warden_core, greater_healing_draught]
   loot: {ember_shard: 6, charge_crystal: 2, nothing: 2}
+
+# --- Cinderhearth interiors life (Great Creation Campaign, Phase I, Layer 4): the starter town's
+# --- people, all safe and welcoming - the first faces a fresh Forger meets indoors. ---
+forge_hand:
+  name: a forge-hand of Cinderhearth
+  location: the_relit_forge
+  keywords: [forgehand, hand, forge, smith]
+  dialogue:
+    - '"Come to see the fire? Everyone does. This forge was cold before I was born, Forger, and now it burns, and the whole coast dates itself from the day it relit. Watch the first strike -- heat, then hammer, then hold. That is the whole of Forging, and the whole of everything else too, if you think on it long enough. Welcome to the craft."'
+
+saltrest_host:
+  name: the host of the Saltrest
+  location: the_saltrest_tavern
+  keywords: [host, saltrest, tavern, barkeep]
+  dialogue:
+    - '"Sit and warm up, Forger -- you''ve the look of the newly-woken, half the coast does these days. The Waking Shore gives us a Forger a week now, blinking and cold, and we feed them and point them north to the capital and the wide world. Loft''s up the stair if you need a bed before the road. Cinderhearth looks after its own, and everyone who washes up here is ours for a night."'
+  topics:
+    rumor:
+      - '"North over the mended bridge the Ember-road runs to Emberreach City and everything after. East the Reachwood grows wild and hungry. And down the cellar under the square, the forge''s own roots run into something the Unforging half-took -- good for a first blooding if you''re bold, but mind the cold. Most Forgers cut their teeth down there before they ever leave the coast."'
+
+saltrest_loft_keeper:
+  name: the Saltrest loft-keeper
+  location: the_saltrest_loft
+  keywords: [keeper, loft, saltrest, host]
+  dialogue:
+    - '"First safe bed of your new life, most like. Sleep well, Forger -- the road that starts on the Waking Shore runs a long way, and you''ll not always sleep so soft. The window''s on the sea. The old folk say the Cooling-Sea sings the newly-woken to sleep. I''ve never heard it. But I''ve watched a hundred tired Forgers stop crying and start snoring, so maybe they''re right."'
+
+coast_shrine_tender:
+  name: a shrine-tender
+  location: the_coast_shrine
+  keywords: [tender, shrine, coast, keeper]
+  dialogue:
+    - '"Feed the flame if you like, Forger -- a pinch of cinder, a moment''s quiet. No church here, no priest, just the little fire and whoever stops to keep it. The First Flame is simplest on the coast, where the Rekindling started: the world was Made, it can be Made again, and you woke on that shore with a fire in your hand for a reason. Read the stone. It''s the whole faith in four lines."'
+
+fishers_net_mender:
+  name: a net-mender
+  location: the_fishers_row
+  keywords: [mender, net, fisher, row]
+  dialogue:
+    - '"Mind the drying-racks, Forger. This row fed Cinderhearth through the whole cold generation, when the forge was dead and the Rekindling was just a word the old folk half-believed. The sea kept us fed while we waited for the fire. Don''t let the forge-folk tell you the Rekindling started at the anvil. It started here, at the nets, with people stubborn enough to keep eating until the world came back."'
+
+hearthway_mother:
+  name: a hearth-mother
+  location: the_hearthway
+  keywords: [mother, hearth, way, townsfolk]
+  dialogue:
+    - '"You''re one of the newly-woken, aren''t you. Come off the shore with that look. Well -- there''s a pot on if you''re hungry, and no, I won''t hear thanks for it. This lane kept the coast''s families warm through the dark years, Forger, and we didn''t do it to stop now that things are looking up. Go and do your great Forging. But eat first. The world''s not so urgent it can''t wait for you to eat."'

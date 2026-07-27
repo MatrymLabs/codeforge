@@ -1269,3 +1269,18 @@ old_gate_marks:
     people who could open these Gates used them to break the world. We keep the Gate shut. That is the
     Concord's whole purpose, and it is enough: not to make, not to unmake, but to KEEP - to hold the old
     doors closed until someone wiser than the makers comes to say which ought to be opened. No one has."
+
+# --- Cinderhearth interiors content (Great Creation Campaign, Phase I, Layer 4): the coast shrine's
+# --- plain-spoken First Flame words, the faith at its simplest, where the Rekindling began. ---
+coast_shrine_words:
+  name: the words on the shrine-stone
+  keywords: [words, shrine, stone, coast]
+  location: the_coast_shrine
+  lore: |-
+    Cut small in the coast shrine-stone, in a plain hand, the First Flame faith in the four lines the
+    fisherfolk teach their children: "The world was Made. / The world was unmade. / The world can be
+    Made again. / You woke with a fire in your hand -- so begin." No church wrote this, no order approved
+    it; a Cinderhearth fisher cut it the year the forge relit, and it has outlasted every grander creed
+    in the capital because it is the only one a cold, frightened, newly-woken Forger actually needs. The
+    grand Church of the First Flame in Emberreach City has a hearth-creed a hundred lines long. This is
+    the same faith, worn down by the sea to the part that floats. Begin, it says. That is all. Begin.
