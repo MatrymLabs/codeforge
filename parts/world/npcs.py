@@ -10,10 +10,47 @@ from parts.world.session import sentence_case
 
 NPCS: dict[str, Npc] = load_npcs(SEED_DIR / "npcs.yaml")
 
+# Room index: room label -> the npc labels standing in it. Presence is queried on EVERY world beat
+# (aggression.menace and render both call npcs_in), so a full scan of NPCS per call is O(npcs) per
+# command -- fine at hundreds of NPCs, fatal at tens of thousands (the world-generation scale). NPCs
+# never relocate after creation (only their runtime fields -- hp_now, burn -- change; felled foes
+# reassemble in place), so the ONLY event that can stale this index is a change in NPC MEMBERSHIP:
+# the procedural road adding foes at boot, or a test adding one. We detect that by the size of NPCS
+# and rebuild only then; every steady-state lookup is a dict hit. Rebuilding is O(npcs), but happens
+# on a membership change, not per command. (Location is never mutated, so len is a sufficient key.)
+_by_room: dict[str, list[str]] = {}
+_indexed_len: int = -1
+
+
+def _ensure_room_index() -> None:
+    global _indexed_len
+    if _indexed_len == len(NPCS):
+        return
+    _rebuild_room_index()
+
+
+def _rebuild_room_index() -> None:
+    global _indexed_len
+    _by_room.clear()
+    for nid, npc in NPCS.items():
+        _by_room.setdefault(npc["location"], []).append(nid)
+    _indexed_len = len(NPCS)
+
+
+def reindex_npcs() -> None:
+    """Force the room index to rebuild on the next lookup. Production builds NPCS once at boot and
+    never changes membership, so it never needs this; call it only after mutating NPCS *in place*
+    (adding, removing, or REPLACING an npc at an existing label) -- e.g. in a test -- because a
+    same-size replacement is invisible to the automatic size check in _ensure_room_index."""
+    global _indexed_len
+    _indexed_len = -1
+
 
 def npcs_in(room_id: str) -> list[str]:
-    """All npc labels currently in a room. Presence is a query."""
-    return [nid for nid, npc in NPCS.items() if npc["location"] == room_id]
+    """All npc labels currently in a room. Presence is a query -- O(1) via a room index rebuilt only
+    when NPC membership changes (see _ensure_room_index), not a scan of every NPC on every call."""
+    _ensure_room_index()
+    return list(_by_room.get(room_id, []))
 
 
 def trace_npc(word: str, room_id: str) -> str | None:

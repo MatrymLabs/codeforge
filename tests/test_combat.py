@@ -21,6 +21,7 @@ def fresh_world():
     yield
     npcs.NPCS.clear()
     npcs.NPCS.update(npcs_snap)
+    npcs.reindex_npcs()
     SESSIONS.clear()
 
 
@@ -132,6 +133,7 @@ def _spawn_hostile(
     if lethal:
         hostile["lethal"] = True
     npcs.NPCS[label] = hostile  # combat.py's NPCS alias sees this (same object, no rebinds)
+    npcs.reindex_npcs()
     return label
 
 
@@ -226,6 +228,7 @@ def test_the_seeded_gate_boss_is_a_real_fight():
 
     boss = load_npcs(SEEDS_ROOT / "spiral-ascent" / "npcs.yaml")["coilwarden"]
     npcs.NPCS["coilwarden"] = boss  # its seed location is gate_chamber
+    npcs.reindex_npcs()
     s = _fighter(location="gate_chamber")
     max_hp = s.resources["hp"].maximum
     out = attack(s, "coilwarden")

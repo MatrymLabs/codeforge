@@ -15,6 +15,7 @@ def fresh_world():
     yield
     npcs.NPCS.clear()
     npcs.NPCS.update(snapshot)
+    npcs.reindex_npcs()
 
 
 def test_librarian_lives_in_the_library():
@@ -118,3 +119,26 @@ def test_ask_flows_through_the_engine_tick():
     SESSIONS["reader"] = s
     assert "every case we have filed" in forge.handle_command(s, "ask librarian about archive")
     SESSIONS.clear()
+
+
+def test_room_index_rebuilds_when_an_npc_is_added_then_removed():
+    """The room index (npcs_in) must reflect NPC membership changes -- a foe added at runtime shows
+    up in its room, and once removed it is gone -- so the O(1) index never lies about presence."""
+    from parts.world.seed import Npc
+
+    room = "index_probe_room"
+    assert npcs_in(room) == []  # nothing here yet
+    npcs.NPCS["probe_foe"] = Npc(
+        name="a probe foe",
+        keywords=["probe"],
+        location=room,
+        dialogue=['"..."'],
+        next_line=0,
+        hp=10,
+        hp_now=10,
+        xp=0,
+        atk=0,
+    )
+    assert npcs_in(room) == ["probe_foe"]  # index rebuilt on the membership change
+    del npcs.NPCS["probe_foe"]
+    assert npcs_in(room) == []  # rebuilt again once it is gone

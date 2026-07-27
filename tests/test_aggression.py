@@ -28,6 +28,7 @@ def fresh_world():
     yield
     npcs.NPCS.clear()
     npcs.NPCS.update(npcs_snap)
+    npcs.reindex_npcs()
     SESSIONS.clear()
 
 
@@ -59,6 +60,7 @@ def _spawn_aggressor(
         "aggressive": aggressive,
     }
     npcs.NPCS[label] = foe
+    npcs.reindex_npcs()  # keep the room index honest after an in-place membership change
     return label
 
 

@@ -25,6 +25,7 @@ def fresh_world():
     yield
     npcs.NPCS.clear()
     npcs.NPCS.update(npcs_snap)
+    npcs.reindex_npcs()
     SESSIONS.clear()
 
 
