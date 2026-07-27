@@ -10,7 +10,7 @@ veridia_wild:
   attach_dir: west
   level_min: 1
   level_max: 30
-  trail_length: 18
+  trail_length: 800
 
 duskwood_vale_wild:
   name: The Duskwood Vale Wilds
@@ -20,7 +20,7 @@ duskwood_vale_wild:
   attach_dir: west
   level_min: 20
   level_max: 50
-  trail_length: 18
+  trail_length: 1714
 
 caeloria_wild:
   name: The Caeloria Wilds
@@ -30,7 +30,7 @@ caeloria_wild:
   attach_dir: north
   level_min: 30
   level_max: 60
-  trail_length: 18
+  trail_length: 1371
 
 eldryn_forest_wild:
   name: The Eldryn Forest Wilds
@@ -40,7 +40,7 @@ eldryn_forest_wild:
   attach_dir: up
   level_min: 50
   level_max: 80
-  trail_length: 18
+  trail_length: 2285
 
 frostspire_peaks_wild:
   name: The Frostspire Peaks Wilds
@@ -50,7 +50,7 @@ frostspire_peaks_wild:
   attach_dir: north
   level_min: 60
   level_max: 90
-  trail_length: 18
+  trail_length: 2285
 
 zhaar_desert_wild:
   name: The Zhaar Desert Wilds
@@ -60,7 +60,7 @@ zhaar_desert_wild:
   attach_dir: south
   level_min: 80
   level_max: 130
-  trail_length: 18
+  trail_length: 2285
 
 xilnath_jungle_wild:
   name: The Xil'nath Jungle Wilds
@@ -70,7 +70,7 @@ xilnath_jungle_wild:
   attach_dir: south
   level_min: 90
   level_max: 150
-  trail_length: 18
+  trail_length: 2285
 
 thalorin_wild:
   name: The Thalorin Wilds
@@ -80,7 +80,7 @@ thalorin_wild:
   attach_dir: north
   level_min: 100
   level_max: 140
-  trail_length: 18
+  trail_length: 2285
 
 ashen_wastes_wild:
   name: The Ashen Wastes Wilds
@@ -90,7 +90,7 @@ ashen_wastes_wild:
   attach_dir: up
   level_min: 120
   level_max: 170
-  trail_length: 18
+  trail_length: 1714
 
 korvash_highlands_wild:
   name: The Korvash Highlands Wilds
@@ -100,7 +100,7 @@ korvash_highlands_wild:
   attach_dir: south
   level_min: 150
   level_max: 200
-  trail_length: 18
+  trail_length: 2285
 
 shattered_isles_wild:
   name: The The Shattered Isles Wilds
@@ -110,7 +110,7 @@ shattered_isles_wild:
   attach_dir: north
   level_min: 180
   level_max: 230
-  trail_length: 18
+  trail_length: 1714
 
 skyward_spires_wild:
   name: The Skyward Spires Wilds
@@ -120,7 +120,7 @@ skyward_spires_wild:
   attach_dir: north
   level_min: 200
   level_max: 250
-  trail_length: 18
+  trail_length: 1142
 
 the_deepreach_wild:
   name: The The Deepreach Wilds
@@ -130,7 +130,7 @@ the_deepreach_wild:
   attach_dir: north
   level_min: 100
   level_max: 250
-  trail_length: 18
+  trail_length: 2857
 
 the_voidscar_wild:
   name: The The Voidscar Wilds
@@ -140,5 +140,5 @@ the_voidscar_wild:
   attach_dir: south
   level_min: 250
   level_max: 300
-  trail_length: 18
+  trail_length: 1714
 

@@ -691,7 +691,7 @@ def emit() -> None:
         wild.append(f"{SP}attach_dir: {_wild_dir(zid, hub_exits, places)}")
         wild.append(f"{SP}level_min: {lo}")
         wild.append(f"{SP}level_max: {hi}")
-        wild.append(f"{SP}trail_length: 18")
+        wild.append(f"{SP}trail_length: {_fill_trail(zid)}")
         wild.append("")
 
     root = Path(__file__).resolve().parent.parent / "seeds" / "aethryn"
@@ -752,6 +752,33 @@ def _foe(out: list[str], nid: str, name: str, room: str, level: int, biome: str)
     out.append(f"{SP}drops: [greater_healing_draught]")
     out.append(f"{SP}loot: {{ember_shard: 5, nothing: 2}}")
     out.append("")
+
+
+# Wilderness-fill target rooms per zone, sized to the prompt's scaling guidance by region type
+# (forest/mountain/desert/underground get the largest fills; the sky and starter get less). The
+# wildlands generator turns each target into a connected, biome-varied trail-network; a single
+# region's rooms ~= trail_length x 1.75 (branch_every 4, branch_length 3).
+_ZONE_FILL = {
+    "veridia": 1400,  # starter: walkable, not overwhelming
+    "duskwood_vale": 3000,  # forest
+    "caeloria": 2400,  # heartland plains
+    "eldryn_forest": 4000,  # ancient forest
+    "frostspire_peaks": 4000,  # mountain range
+    "zhaar_desert": 4000,  # desert
+    "xilnath_jungle": 4000,  # jungle
+    "thalorin": 4000,  # mountains + mines
+    "ashen_wastes": 3000,  # volcanic
+    "korvash_highlands": 4000,  # highlands
+    "shattered_isles": 3000,  # island chain
+    "skyward_spires": 2000,  # floating isles (sparser)
+    "the_deepreach": 5000,  # underground kingdom (largest)
+    "the_voidscar": 3000,  # endgame
+}
+
+
+def _fill_trail(zid: str) -> int:
+    """Trail length for a zone's wilderness fill, from its target room count (min 18)."""
+    return max(18, int(_ZONE_FILL.get(zid, 1400) / 1.75))
 
 
 def _wild_dir(zid: str, hub_exits: dict, places) -> str:
