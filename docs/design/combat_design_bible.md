@@ -59,6 +59,14 @@ strike; `tick_zones`, `tick_burns`). That IS a round. The gap is **bundling**: t
 *stack*. Recommendation: a `strike`/`engage` verb that, on each tick, resolves auto-attack swings
 **plus** the player's equipped weaponskill if its resource/cooldown allows, printing one clean block.
 
+> **Implemented (2026-07-27).** The first cadence piece is live: abilities now carry a `cooldown`
+> (combat beats). A used ability locks out until the combat clock thaws it, and a landed strike (the
+> basic `attack`, or a strike ability) advances that clock. So the fight is already a rotation:
+> open with a cooldown move, weave `attack` as filler, rotate skills back as they thaw. The aethryn
+> seed arms its powerful moves with cooldowns and leaves light strikes as spammable filler. Still
+> aspirational below: bundled auto-attack swings (1-8/round), an explicit round-clock/GCD number,
+> and the single bundled `strike` verb.
+
 ---
 
 ## 3. Cadence Timeline (estimates)

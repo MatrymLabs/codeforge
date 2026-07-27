@@ -8,6 +8,12 @@ hardcoding. `use <ability> [on <target>]` fires one; `skills` lists what your ca
 
 Strikes reuse combat.land_hit, so an ability shares the exact defeat/award/loot/quest machinery the
 basic attack uses -- a foe felled by a skill still drops loot and advances a quest.
+
+CADENCE: an ability may declare a `cooldown` (combat beats). After a successful channel it is locked
+out until the combat clock thaws it -- and a landed strike (the basic `attack`, or a strike ability)
+advances that clock (parts.world.combat_clock). So a fight is no longer "spam the strongest button":
+you open with a cooldown move, weave basic attacks as filler, and rotate skills back as they thaw.
+A move with no cooldown stays MP-limited only.
 """
 
 from __future__ import annotations
@@ -15,7 +21,7 @@ from __future__ import annotations
 from parts.world import combat
 from parts.world.events import announce
 from parts.world.npcs import NPCS, trace_npc
-from parts.world.seed import SEED_DIR, Ability, load_abilities
+from parts.world.seed import SEED_DIR, Ability, Npc, load_abilities
 from parts.world.session import Session, display_name, sentence_case
 
 # The world is data: a seed's abilities live in its own abilities.yaml (empty if it ships none).
@@ -74,8 +80,17 @@ def render_abilities(session: Session) -> str:
         target = "self" if a["kind"] == "heal" else "a target"
         scale = f" +{a['scales']}/3" if a["scales"] else ""
         via = "  (subjob)" if label in subjob_only else ""
+        cd = a.get("cooldown", 0)
+        recovering = session.cooldowns.get(label, 0)
+        if recovering > 0:  # live state: how many beats until it can be channelled again
+            cadence = f", recovering {recovering}b"
+        elif cd:
+            cadence = f", {cd}b cooldown"
+        else:
+            cadence = ""
         lines.append(
-            f"  {a['name']} ({a['kind']} {target}, {a['mp_cost']} MP): {a['power']}{scale}{via}"
+            f"  {a['name']} ({a['kind']} {target}, {a['mp_cost']} MP{cadence}):"
+            f" {a['power']}{scale}{via}"
         )
     lines.append("Use one with:  use <ability> [on <target>]")
     return "\n".join(lines)
@@ -95,6 +110,14 @@ def use_ability(session: Session, arg: str) -> str:
     mp = session.resources["mp"]
     if mp.current < ability["mp_cost"]:
         return f"Not enough MP for {ability['name']} ({mp.current}/{ability['mp_cost']})."
+    # The cadence gate: a move on cooldown is refused until the combat clock thaws it (a landed
+    # strike advances the clock -- parts.world.combat_clock). This is what turns "spam the strongest
+    # button" into a rotation. A move with no cooldown is never here.
+    ready = session.cooldowns.get(label, 0)
+    if ready > 0:
+        return (
+            f"{ability['name']} is still recovering ({ready} more beat{'s' if ready != 1 else ''})."
+        )
 
     who = display_name(session.player_id)
     move = ability["name"]
@@ -104,6 +127,7 @@ def use_ability(session: Session, arg: str) -> str:
         session.resources["hp"] = session.resources["hp"].heal(amount)
         healed = session.resources["hp"]
         announce(session.location, f"{who} channels {move}.", exclude=session.player_id)
+        _arm_cooldown(session, label, ability)
         return f"You channel {move} and recover {amount} HP. ({healed.current}/{healed.maximum})"
 
     # a strike or a brand needs a target
@@ -114,6 +138,26 @@ def use_ability(session: Session, arg: str) -> str:
     if npc["hp"] <= 0:
         return f"{sentence_case(npc['name'])} is not something you can fight."
     session.resources["mp"] = mp.damage(ability["mp_cost"])
+    # The offense resolves (a landed strike advances the clock); the cooldown is armed AFTER, so it
+    # is set to its full duration and not thawed by this same action's own clock advance.
+    result = _channel_offense(session, ability, npc, nid, who, move)
+    _arm_cooldown(session, label, ability)
+    return result
+
+
+def _arm_cooldown(session: Session, label: str, ability: Ability) -> None:
+    """Start a used ability's cooldown, if it has one. Called only on a successful channel, and only
+    AFTER the effect (so a strike's own clock advance never thaws the cooldown it just set)."""
+    cooldown = ability.get("cooldown", 0)
+    if cooldown > 0:
+        session.cooldowns[label] = cooldown
+
+
+def _channel_offense(
+    session: Session, ability: Ability, npc: Npc, nid: str, who: str, move: str
+) -> str:
+    """Resolve a target-facing ability (daze / weaken / brand / strike) and return its message. MP
+    is already spent by the caller; this only applies the effect."""
     element = ability.get("element")  # a typed move is scaled by the foe's resistance to it
     if ability["kind"] == "daze":  # crowd control: the foe skips its next beats' strikes, no damage
         beats = _magnitude(session, ability)  # scales:"" -> just power = the daze duration

@@ -151,10 +151,14 @@ def test_load_abilities_accepts_a_wellformed_file(tmp_path: Path) -> None:
     p = _abilities_file(
         tmp_path,
         "jab:\n  name: Jab\n  kind: strike\n  power: 4\n"
-        "  scales: strength\n  mp_cost: 2\n  jobs: [vanguard]\n",
+        "  scales: strength\n  mp_cost: 2\n  cooldown: 2\n  jobs: [vanguard]\n",
     )
     loaded = load_abilities(p)
     assert loaded["jab"]["name"] == "Jab" and loaded["jab"]["scales"] == "strength"
+    assert loaded["jab"]["cooldown"] == 2  # the cadence knob loads
+    # a bare ability (no cooldown declared) stays uncapped -- the key is simply absent
+    bare = load_abilities(_abilities_file(tmp_path, "poke:\n  kind: strike\n  jobs: [vanguard]\n"))
+    assert "cooldown" not in bare["poke"]
 
 
 def test_skills_for_a_calling_with_no_abilities() -> None:
@@ -183,6 +187,10 @@ def test_using_an_ability_on_a_peaceful_npc_refuses() -> None:
         (
             "bad:\n  kind: strike\n  power: -3\n  jobs: [vanguard]\n",
             "'power' must be a non-negative",
+        ),
+        (
+            "bad:\n  kind: strike\n  power: 4\n  cooldown: -1\n  jobs: [vanguard]\n",
+            "'cooldown' must be a non-negative",
         ),
     ],
 )
@@ -339,3 +347,56 @@ def test_load_abilities_rejects_an_unknown_element(tmp_path: Path) -> None:
 def test_load_abilities_accepts_a_typed_ability(tmp_path: Path) -> None:
     body = "zap:\n  name: Zap\n  kind: strike\n  element: LGT\n  jobs: [vanguard]\n"
     assert load_abilities(_abilities_file(tmp_path, body))["zap"]["element"] == "LGT"
+
+
+# --- ability cooldowns: cadence turns spam into a rotation ---------------------------------------
+
+
+def test_a_cooldown_locks_the_ability_until_a_landed_strike_thaws_it(monkeypatch) -> None:
+    """The cadence gate: a cooldown'd ability locks after use, is refused while recovering, and
+    thaws as the combat clock advances (a landed strike -- basic attack -- ages every cooldown)."""
+    from parts.world.abilities import ABILITIES
+    from parts.world.combat import attack
+
+    s = _at_dummy("engineer")  # the engineer wields Power Strike (a strike)
+    monkeypatch.setitem(ABILITIES["power_strike"], "cooldown", 2)
+
+    first = use_ability(s, "power strike on dummy")
+    assert "Power Strike" in first
+    assert s.cooldowns.get("power_strike") == 2  # armed to full AFTER its own clock advance
+
+    locked = use_ability(s, "power strike on dummy")
+    assert "still recovering" in locked  # refused while on cooldown
+    assert s.resources["mp"].current  # (sanity: a refusal spends nothing it shouldn't)
+
+    attack(s, "dummy")  # a landed strike advances the clock: cooldown 2 -> 1
+    assert s.cooldowns.get("power_strike") == 1
+    attack(s, "dummy")  # 1 -> 0, and the expired cooldown drops off
+    assert "power_strike" not in s.cooldowns
+    assert "Power Strike" in use_ability(s, "power strike on dummy")  # ready again
+
+
+def test_a_no_cooldown_ability_never_locks() -> None:
+    # first-forge's abilities ship no cooldowns (a gentle tutorial), so using one arms nothing.
+    s = _at_dummy("scholar")
+    use_ability(s, "arcane bolt on dummy")
+    assert "arcane_bolt" not in s.cooldowns
+
+
+def test_skills_shows_a_cooldown_and_its_live_recovery(monkeypatch) -> None:
+    from parts.world.abilities import ABILITIES
+
+    s = _at_dummy("engineer")
+    monkeypatch.setitem(ABILITIES["power_strike"], "cooldown", 3)
+    assert "3b cooldown" in render_abilities(s)  # advertised cadence
+    use_ability(s, "power strike on dummy")
+    assert "recovering 3b" in render_abilities(s)  # live recovery state
+
+
+def test_the_aethryn_seed_arms_a_rotation() -> None:
+    # aethryn (the flagship) gives powerful moves real cooldowns while light strikes stay filler.
+    ab = load_abilities(
+        Path(__file__).resolve().parent.parent / "seeds" / "aethryn" / "abilities.yaml"
+    )
+    assert any(a.get("cooldown", 0) > 0 for a in ab.values())  # a rotation exists
+    assert any(a.get("cooldown", 0) == 0 for a in ab.values())  # spammable filler remains
