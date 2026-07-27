@@ -2712,5 +2712,105 @@
     "aliases": [],
     "created": "2026-07-27",
     "updated": "2026-07-27"
+  },
+  {
+    "designation": "CMD-04.083",
+    "name": "create",
+    "status": "active",
+    "function": "the NPC Studio: stage a new NPC (owner, in the Creator's Workshop)",
+    "label": "create",
+    "file": "forge.py",
+    "type": "CMD",
+    "domain": "04",
+    "docs": "docs/design/creator_experience.md",
+    "tests": "tests/test_creator_workshop.py",
+    "depends_on": [],
+    "related": [
+      "CMD-04.081"
+    ],
+    "reuse": "",
+    "tags": [
+      "command"
+    ],
+    "notes": "First mutating Creator Workshop tool: stages a new NPC into the owner's session draft (create npc <name> at <room>); owner + NPC Studio gated; validates the room exists before staging.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-27",
+    "updated": "2026-07-27"
+  },
+  {
+    "designation": "CMD-04.084",
+    "name": "preview",
+    "status": "active",
+    "function": "preview staged Creator Workshop changes (owner)",
+    "label": "preview",
+    "file": "forge.py",
+    "type": "CMD",
+    "domain": "04",
+    "docs": "docs/design/creator_experience.md",
+    "tests": "tests/test_creator_workshop.py",
+    "depends_on": [],
+    "related": [
+      "CMD-04.081"
+    ],
+    "reuse": "",
+    "tags": [
+      "command"
+    ],
+    "notes": "Lists the owner's staged, not-yet-live changes; available anywhere in the Workshop.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-27",
+    "updated": "2026-07-27"
+  },
+  {
+    "designation": "CMD-04.085",
+    "name": "publish",
+    "status": "active",
+    "function": "publish staged changes to the live world (owner, at the Publishing Portal)",
+    "label": "publish",
+    "file": "forge.py",
+    "type": "CMD",
+    "domain": "04",
+    "docs": "docs/design/creator_experience.md",
+    "tests": "tests/test_creator_workshop.py",
+    "depends_on": [],
+    "related": [
+      "CMD-04.081"
+    ],
+    "reuse": "",
+    "tags": [
+      "command"
+    ],
+    "notes": "The single sanctioned mutation point: applies each staged change through the one validated apply-path to the LIVE in-memory world (never the seed files). Owner + Publishing Portal gated.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-27",
+    "updated": "2026-07-27"
+  },
+  {
+    "designation": "CMD-04.086",
+    "name": "rollback",
+    "status": "active",
+    "function": "discard staged Creator Workshop changes (owner, at the Publishing Portal)",
+    "label": "rollback",
+    "file": "forge.py",
+    "type": "CMD",
+    "domain": "04",
+    "docs": "docs/design/creator_experience.md",
+    "tests": "tests/test_creator_workshop.py",
+    "depends_on": [],
+    "related": [
+      "CMD-04.081"
+    ],
+    "reuse": "",
+    "tags": [
+      "command"
+    ],
+    "notes": "Discards the owner's staged changes without publishing. Owner + Publishing Portal gated.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-27",
+    "updated": "2026-07-27"
   }
 ]

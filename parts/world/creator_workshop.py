@@ -26,9 +26,10 @@ import cycle -- `ranks` may guard teleport by importing THIS module instead.
 
 from __future__ import annotations
 
+import re
 from typing import NamedTuple
 
-from parts.world.seed import Room
+from parts.world.seed import Npc, Room
 from parts.world.session import Session
 
 # --- Canonical labels (frozen identity strings; never restyle -- persisted contract) ------------
@@ -71,8 +72,8 @@ STATIONS: tuple[Station, ...] = (
         "npc_studio",
         "The NPC Studio",
         "Portrait frames and character sheets line the walls, each waiting for a face and a voice. "
-        "This is where the people of your world are made: who they are, what they say, where they "
-        "stand.",
+        "This is where the people of your world are made. Type `create npc <name> at <room>` to "
+        "make one.",
     ),
     Station(
         "quests",
@@ -120,8 +121,8 @@ STATIONS: tuple[Station, ...] = (
         "publish",
         "publishing_portal",
         "The Publishing Portal",
-        "A shimmering archway where a change becomes real. Preview what you have made, and when it "
-        "is ready, publish it to the living world, or roll it back if it went wrong.",
+        "A shimmering archway where a change becomes real. Type `preview` to review what you have "
+        "made, `publish` to send it to the living world, or `rollback` to discard it.",
     ),
 )
 
@@ -291,3 +292,169 @@ def wall_activity(session: Session) -> str:
     if not online:
         lines.append("  (no one is exploring your world right now)")
     return "\n".join(lines)
+
+
+# --- The change buffer + the first MUTATING tool -------------------------------------------------
+# The Creator Experience's LIVE PREVIEW loop, live-only by design (Josh's keel call): the owner
+# STAGES edits into a per-session buffer, PREVIEWS them, then PUBLISHES them to the LIVE world, or
+# ROLLS them back. Publish writes to the in-memory world only, never to the seed files, so a change
+# is reversible and vanishes on restart (persistence to the seed is a separate, later decision).
+# This keeps Architecture Law 1 intact: a staged change is inert data; the ONE validated apply-path
+# (`_apply`) is the only thing that mutates canonical state, and only at the owner's explicit
+# `publish`. The first change kind is create_npc (the NPC Studio); more kinds slot into `_apply`.
+NPC_STUDIO = "npc_studio"
+PUBLISHING_PORTAL = "publishing_portal"
+
+
+class StagedChange(NamedTuple):
+    """One inert, previewable edit waiting in a draft. `kind` selects the apply-path; `summary` is
+    the plain-language line the owner reads in a preview; `payload` carries the apply data."""
+
+    kind: str
+    summary: str
+    payload: dict[str, str]
+
+
+# Per-session drafts, keyed by player_id. Ephemeral (never persisted): a draft is the owner's
+# unpublished work, cleared on publish or rollback.
+_DRAFTS: dict[str, list[StagedChange]] = {}
+
+
+def _draft(session: Session) -> list[StagedChange]:
+    """The owner's current draft (created empty on first use)."""
+    return _DRAFTS.setdefault(session.player_id, [])
+
+
+def _owner_at(session: Session, room: str) -> bool:
+    """Whether the Seed Owner is standing at a specific station."""
+    return is_seed_owner(session) and session.location == room
+
+
+def _owner_in_workshop(session: Session) -> bool:
+    """Whether the Seed Owner is anywhere inside the Workshop (hall or any station)."""
+    return is_seed_owner(session) and session.location in WORKSHOP_ROOMS
+
+
+def _npc_label(name: str, taken: set[str]) -> str:
+    """A unique lowercase_snake_case label for a new NPC, from its display name (never collides)."""
+    base = "_".join(re.findall(r"[a-z0-9]+", name.lower())) or "npc"
+    label, n = base, 2
+    while label in taken:
+        label, n = f"{base}_{n}", n + 1
+    return label
+
+
+def create_npc(session: Session, arg: str) -> str:
+    """The NPC Studio's tool: stage a new NPC. `create npc <name> at <room>`.
+
+    Owner-gated AND station-gated to the NPC Studio. Validates that the room is real BEFORE staging
+    (fail loud, early); the NPC is not made live here, only added to the draft. `preview`/`publish`
+    finish the loop."""
+    if not _owner_at(session, NPC_STUDIO):
+        return "You cannot shape a person here. Do it at the NPC Studio."
+    kind, _, rest = arg.strip().partition(" ")
+    if kind.lower() != "npc" or not rest.strip():
+        return "To make someone, type: create npc <name> at <room>"
+    if " at " not in rest:
+        return "Say where they stand: create npc <name> at <room>"
+    name, _, room = rest.rpartition(" at ")
+    name, room = name.strip(), room.strip().lower()
+    if not name:
+        return "Give them a name: create npc <name> at <room>"
+
+    from parts.world.world import WORLD
+
+    if room not in WORLD:
+        return f"There is no room labelled '{room}'. Name a real room to place them in."
+
+    from parts.world.npcs import NPCS
+
+    taken = set(NPCS) | {c.payload["label"] for c in _draft(session) if c.kind == "create_npc"}
+    label = _npc_label(name, taken)
+    change = StagedChange(
+        "create_npc",
+        f"create the NPC '{name}' in {WORLD[room]['name']}",
+        {"label": label, "name": name, "room": room},
+    )
+    _draft(session).append(change)
+    return (
+        f"Staged: {change.summary}.\n"
+        f"{len(_draft(session))} change(s) waiting. Type `preview` to review, then bring them to "
+        f"the Publishing Portal to `publish` (or `rollback` to discard)."
+    )
+
+
+def preview_changes(session: Session) -> str:
+    """List the owner's staged, not-yet-live changes. Available anywhere in the Workshop."""
+    if not _owner_in_workshop(session):
+        return "There is nothing to preview here."
+    draft = _draft(session)
+    if not draft:
+        return "Nothing is staged. Your world is unchanged."
+    lines = ["== Pending changes (preview, not yet live) =="]
+    lines += [f"  {i}. {change.summary}" for i, change in enumerate(draft, 1)]
+    lines.append(
+        "At the Publishing Portal: `publish` to make these live, or `rollback` to discard."
+    )
+    return "\n".join(lines)
+
+
+def publish_changes(session: Session) -> str:
+    """Apply every staged change to the LIVE world, then clear the draft. Publishing Portal only.
+
+    This is the single sanctioned mutation point: each staged change flows through `_apply`, the one
+    validated apply-path, so canonical state changes only here and only at the owner's word. Writes
+    the in-memory world only (live-only); nothing touches the seed files."""
+    if not is_seed_owner(session):
+        return "There is nothing to publish here."
+    if session.location != PUBLISHING_PORTAL:
+        return "Bring your changes to the Publishing Portal to publish them."
+    draft = _draft(session)
+    if not draft:
+        return "Nothing is staged to publish."
+    applied = [_apply(change) for change in draft]
+    _DRAFTS[session.player_id] = []
+    return "Published to the living world:\n" + "\n".join(f"  - {line}" for line in applied)
+
+
+def rollback_changes(session: Session) -> str:
+    """Discard the owner's staged changes without publishing. The Publishing Portal only."""
+    if not is_seed_owner(session):
+        return "There is nothing to roll back here."
+    if session.location != PUBLISHING_PORTAL:
+        return "Bring your changes to the Publishing Portal to roll them back."
+    count = len(_draft(session))
+    _DRAFTS[session.player_id] = []
+    if not count:
+        return "Nothing was staged. Your world is unchanged."
+    return f"Rolled back {count} staged change(s). Nothing was published; your world is unchanged."
+
+
+def _apply(change: StagedChange) -> str:
+    """The one validated apply-path: turn a staged change into a live world mutation. Fails loud on
+    an unknown kind (a staged change the buffer never should have held)."""
+    if change.kind == "create_npc":
+        return _apply_create_npc(change.payload)
+    raise WorkshopError(f"unknown staged change kind: {change.kind!r}")
+
+
+def _apply_create_npc(payload: dict[str, str]) -> str:
+    """Add a fresh, peaceful NPC to the live world and re-index its room so it appears at once. The
+    NPC is peaceful (hp 0, atk 0): a created townsperson, never a hidden weapon."""
+    from parts.world.npcs import NPCS, reindex_npcs
+
+    name, room, label = payload["name"], payload["room"], payload["label"]
+    keywords = list(dict.fromkeys([*re.findall(r"[a-z0-9]+", name.lower()), label]))
+    NPCS[label] = Npc(
+        name=name,
+        keywords=keywords,
+        location=room,
+        dialogue=[f"{name} nods to you."],
+        next_line=0,
+        hp=0,
+        hp_now=0,
+        xp=0,
+        atk=0,
+    )
+    reindex_npcs()
+    return f"'{name}' now stands in {room}"
