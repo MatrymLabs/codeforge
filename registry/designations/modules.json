@@ -5125,5 +5125,33 @@
     "aliases": [],
     "created": "2026-07-27",
     "updated": "2026-07-27"
+  },
+  {
+    "designation": "MOD-04.079",
+    "name": "artifact",
+    "status": "active",
+    "function": "the Maker's Signet: the Seed Owner's legendary bond, the Creator Interface borne anywhere",
+    "label": "artifact",
+    "file": "parts/world/artifact.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "docs/design/creator_experience.md",
+    "tests": "tests/test_artifact.py",
+    "depends_on": [
+      "creator_workshop",
+      "session"
+    ],
+    "related": [
+      "creator_workshop"
+    ],
+    "reuse": "Part III of the Player Experience campaign (the Creator Artifact): a legendary owner-bound relic that opens the Creator Interface ANYWHERE and channels the Creator Workshop's read-only tools remotely (signet survey / signet activity). Modeled as the owner's inherent bond, not a takeable item, so it satisfies every can't-be-X rule (trade/steal/copy/destroy/drop) by construction. Composes with creator_workshop (the survey/activity report content was split from the station gate so both the station and the signet share it).",
+    "notes": "bears_signet == is_seed_owner. Read-only functions only for now (world_survey/live_activity); mutating create/publish stay station-bound to the Workshop. A non-owner is refused ('does not know your hand').",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-27",
+    "updated": "2026-07-27"
   }
 ]
