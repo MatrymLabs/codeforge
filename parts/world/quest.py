@@ -140,6 +140,18 @@ def register_errands(
     _fold_in(generate_errands(settlements, destinations))
 
 
+def register_storylines(
+    zones: list[dict[str, object]],
+    settlements: list[dict[str, object]],
+    dungeons: list[dict[str, object]],
+) -> None:
+    """Generate one narrative chain per zone that pairs a town with a dungeon, and fold them into
+    the engine (parts.world.storylines). Called by world.py once assembled. Idempotent."""
+    from parts.world.storylines import generate_storylines
+
+    _fold_in(generate_storylines(zones, settlements, dungeons))
+
+
 def _fold_in(specs: list[QuestSpec]) -> None:
     """Register generated QuestSpecs into the engine (skipping any already known) and route their
     triggers. The shared tail of register_bounties/register_errands."""
@@ -213,6 +225,7 @@ def contracts_view(session: Session) -> str:
     travel-errand) and its status, grouped so the board reads clearly."""
     from parts.world.bounties import is_bounty
     from parts.world.errands import is_errand
+    from parts.world.storylines import is_storyline
 
     def _board(match) -> tuple[list[str], int]:
         openq: list[str] = []
@@ -227,11 +240,17 @@ def contracts_view(session: Session) -> str:
                 openq.append(f"  {quest.workflow.labels.get(run.state, run.state)}")
         return openq, done
 
+    tales, tales_done = _board(is_storyline)
     hunts, hunts_done = _board(is_bounty)
     errands, errands_done = _board(is_errand)
-    if not (hunts or errands or hunts_done or errands_done):
+    if not (tales or hunts or errands or tales_done or hunts_done or errands_done):
         return "There is nothing posted on the notice board."
     parts = ["The notice board:"]
+    if tales or tales_done:
+        parts.append("Tales:")
+        parts.extend(tales)
+        if tales_done:
+            parts.append(f"  (told: {tales_done})")
     if hunts or hunts_done:
         parts.append("Hunt-contracts:")
         parts.extend(hunts)
