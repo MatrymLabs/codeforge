@@ -35,6 +35,15 @@ _CHAINS = {
         ("distil_meadowfoil_reagent", "herbal_reagent"),
         ("brew_restorative_tonic", "restorative_tonic"),
     ],
+    # Slice 1c: the monster-material chains, rooted in bestiary drops (raw_hide / chitin_scale).
+    "hide": [
+        ("tan_leather", "cured_leather"),
+        ("stitch_hide_jerkin", "hide_jerkin"),
+    ],
+    "scale": [
+        ("harden_scale", "hardened_scale"),
+        ("forge_scale_bracer", "scale_bracer"),
+    ],
 }
 
 

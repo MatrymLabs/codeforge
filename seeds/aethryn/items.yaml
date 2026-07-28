@@ -1556,3 +1556,40 @@ restorative_tonic:
   location: nowhere
   resettable: false
   consume: {hp: 50}
+
+# --- Monster materials (Crafting Campaign, slice 1c: the hide -> leather chain, sourced from the
+# --- bestiary). Furred and feathered creatures drop a raw hide; scaled and shelled ones drop a
+# --- chitin scale (parts.world.bestiary loot). Leatherworking refines each into wearable gear, so
+# --- felling the wilds' life feeds the tannery, not just the coin purse. ---
+raw_hide:
+  name: a raw hide
+  keywords: [hide, pelt, raw, material]
+  location: nowhere
+  resettable: false
+cured_leather:
+  name: a bolt of cured leather
+  keywords: [leather, cured, bolt, refined, material]
+  location: nowhere
+  resettable: false
+hide_jerkin:
+  name: a hide jerkin
+  keywords: [jerkin, hide, leather, vest]
+  location: nowhere
+  slot: body
+  mods: {DEF: 4, EVA: 2}
+chitin_scale:
+  name: a chitin scale
+  keywords: [scale, chitin, shell, material]
+  location: nowhere
+  resettable: false
+hardened_scale:
+  name: a hardened scale plate
+  keywords: [scale, hardened, plate, refined, material]
+  location: nowhere
+  resettable: false
+scale_bracer:
+  name: a scaled bracer
+  keywords: [bracer, scale, chitin, guard]
+  location: nowhere
+  slot: arm
+  mods: {DEF: 2, EVA: 3}

@@ -172,3 +172,22 @@ brew_restorative_tonic:
   name: a restorative tonic (brewed)
   makes: restorative_tonic
   inputs: {herbal_reagent: 2, ember_shard: 1}
+
+# MONSTER-MATERIAL CHAINS (Crafting Campaign, slice 1c): the raw hides and scales the bestiary drops
+# refined by leatherworking into wearable gear. RAW -> REFINED -> PRODUCT, sourced from combat loot.
+tan_leather:
+  name: cured leather (tanned)
+  makes: cured_leather
+  inputs: {raw_hide: 3}
+stitch_hide_jerkin:
+  name: a hide jerkin (stitched)
+  makes: hide_jerkin
+  inputs: {cured_leather: 2, ember_shard: 1}
+harden_scale:
+  name: a hardened scale plate
+  makes: hardened_scale
+  inputs: {chitin_scale: 3}
+forge_scale_bracer:
+  name: a scaled bracer (assembled)
+  makes: scale_bracer
+  inputs: {hardened_scale: 2, ember_shard: 1}
