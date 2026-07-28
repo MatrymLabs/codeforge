@@ -6,27 +6,41 @@
     "source": "codeforge parts/dashboard.py + parts/api.py",
     "adr": "MatrymLabs/ship docs/adr/0003-fleet-core.md"
   },
+  "title": "ReadinessContract",
+  "description": "The fleet's readiness API payloads served by codeforge (GET /api/status -> status, GET /api/blueprints -> blueprints). Fleet Core contract; see ship ADR 0003.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "status": {
+      "$ref": "#/$defs/StatusPayload"
+    },
+    "blueprints": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/BlueprintSummary"
+      }
+    }
+  },
+  "required": [
+    "status",
+    "blueprints"
+  ],
   "$defs": {
     "BlueprintSummary": {
       "properties": {
         "blueprint_id": {
-          "title": "Blueprint Id",
           "type": "string"
         },
         "title": {
-          "title": "Title",
           "type": "string"
         },
         "intent": {
-          "title": "Intent",
           "type": "string"
         },
         "status": {
-          "title": "Status",
           "type": "string"
         },
         "requirement_count": {
-          "title": "Requirement Count",
           "type": "integer"
         }
       },
@@ -37,37 +51,31 @@
         "status",
         "requirement_count"
       ],
-      "title": "BlueprintSummary",
-      "type": "object"
+      "type": "object",
+      "additionalProperties": false
     },
     "StatusCard": {
       "description": "One evidence card in the JSON status contract.",
       "properties": {
         "key": {
-          "title": "Key",
           "type": "string"
         },
         "title": {
-          "title": "Title",
           "type": "string"
         },
         "status": {
-          "title": "Status",
           "type": "string"
         },
         "headline": {
-          "title": "Headline",
           "type": "string"
         },
         "detail": {
-          "title": "Detail",
           "type": "string"
         },
         "rows": {
           "additionalProperties": {
             "type": "string"
           },
-          "title": "Rows",
           "type": "object"
         }
       },
@@ -79,21 +87,19 @@
         "detail",
         "rows"
       ],
-      "title": "StatusCard",
-      "type": "object"
+      "type": "object",
+      "additionalProperties": false
     },
     "StatusPayload": {
       "description": "The read-only status contract served at GET /api/status.",
       "properties": {
         "engine": {
-          "title": "Engine",
           "type": "string"
         },
         "cards": {
           "items": {
             "$ref": "#/$defs/StatusCard"
           },
-          "title": "Cards",
           "type": "array"
         }
       },
@@ -101,10 +107,8 @@
         "engine",
         "cards"
       ],
-      "title": "StatusPayload",
-      "type": "object"
+      "type": "object",
+      "additionalProperties": false
     }
-  },
-  "title": "CodeForge Readiness Contract",
-  "description": "The fleet's readiness API payloads served by codeforge (GET /api/status, GET /api/blueprints). Fleet Core contract; see ship ADR 0003."
+  }
 }
