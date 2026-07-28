@@ -107,12 +107,12 @@ class PyNavGraph:
 
 
 NavGraph: type[NavGraphLike]
-try:  # the native Rust accelerator, when built (native/codeforge_nav via maturin)
-    from codeforge_nav import NavGraph as _RustNavGraph
+try:  # pragma: no cover -- the branch taken depends on whether the native kernel is installed
+    from codeforge_nav import NavGraph as _RustNavGraph  # native/codeforge_nav via maturin
 
     NavGraph = _RustNavGraph
     BACKEND = "rust"
-except ImportError:  # pure-Python fallback: identical interface, always available
+except ImportError:  # pragma: no cover -- fallback branch (taken only when the kernel is absent)
     NavGraph = PyNavGraph
     BACKEND = "python"
 

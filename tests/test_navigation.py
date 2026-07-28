@@ -113,3 +113,47 @@ def test_route_finds_a_path_between_two_real_rooms():
     dest = WORLD[start]["exits"][next(iter(WORLD[start]["exits"]))]  # a direct neighbour
     out = forge.handle_command(Session(player_id="walker", location=start), f"route {dest}")
     assert f"Route to {dest}" in out and "1 steps" in out
+
+
+# --- route command edge cases (over a small monkeypatched world) --------------------------------
+def _mini_world(monkeypatch):
+    import parts.world.world as world_mod
+
+    world = {
+        "a": {"name": "A", "desc": "", "exits": {"north": "b"}},
+        "b": {"name": "B", "desc": "", "exits": {}},  # a sink: no path back to a
+    }
+    monkeypatch.setattr(world_mod, "WORLD", world)
+
+
+def test_route_refuses_an_unknown_target(monkeypatch):
+    from parts.world.session import Session
+    from parts.world.travel import route
+
+    _mini_world(monkeypatch)
+    assert "no room called 'zzz'" in route(Session(player_id="w", location="a"), "zzz")
+
+
+def test_route_notices_you_are_already_there(monkeypatch):
+    from parts.world.session import Session
+    from parts.world.travel import route
+
+    _mini_world(monkeypatch)
+    assert "already there" in route(Session(player_id="w", location="a"), "a")
+
+
+def test_route_reports_no_path_on_foot(monkeypatch):
+    from parts.world.session import Session
+    from parts.world.travel import route
+
+    _mini_world(monkeypatch)
+    # b -> a has no directed path (a->b only)
+    assert "no route on foot" in route(Session(player_id="w", location="b"), "a")
+
+
+def test_route_needs_a_destination(monkeypatch):
+    from parts.world.session import Session
+    from parts.world.travel import route
+
+    _mini_world(monkeypatch)
+    assert "Route to where" in route(Session(player_id="w", location="a"), "")
