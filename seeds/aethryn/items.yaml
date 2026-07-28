@@ -1612,3 +1612,15 @@ foragers_flask:
   consume: {mp: 20}
   spawn_pool: [wildgrowth, greenmist, the_great_tree]
   spawn_chance: 3
+
+# A seasonal wandering find (seasonal-gated spawns): the rimeberry only fruits in the deep cold, so
+# this draught appears in the Frostspire wilds in WINTER alone -- a reason to brave the peaks in the
+# right season (parts.world.climate gates it; parts.world.zones spawns it).
+rimeberry_draught:
+  name: a rimeberry draught
+  keywords: [draught, rimeberry, winter, heal]
+  location: nowhere
+  consume: {hp: 45}
+  spawn_pool: [frosthold, winters_grasp, glacial_bastion]
+  spawn_chance: 2
+  seasons: [winter]

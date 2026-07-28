@@ -139,6 +139,10 @@ class Item(TypedDict):
     # Rarity for a wandering spawn: appear on only 1-in-N eligible resets. Absent/1 = every eligible
     # reset. Combined with spawn_pool this gives a rare pickup that also moves. Positive int.
     spawn_chance: NotRequired[int]
+    # Seasonal gate for a wandering spawn: the seasons (spring/summer/autumn/winter) this pickup may
+    # appear in. Absent = every season. Read against the world's climate at reset time
+    # (parts.world.zones._spawn_wanderers), so a spring bloom or winter relic only shows in season.
+    seasons: NotRequired[list[str]]
 
 
 class Npc(TypedDict):
@@ -587,6 +591,20 @@ def load_items(path: Path) -> dict[str, Item]:
             )
         if spawn_chance is not None and spawn_pool is None:
             raise SeedError(f"Item '{label}': 'spawn_chance' only applies to a 'spawn_pool' item.")
+        seasons = merged.get("seasons")
+        if seasons is not None:
+            from parts.world.climate import SEASONS
+
+            if (
+                not isinstance(seasons, list)
+                or not seasons
+                or not all(s in SEASONS for s in seasons)
+            ):
+                raise SeedError(
+                    f"Item '{label}': 'seasons' must be a non-empty list drawn from {SEASONS}."
+                )
+            if spawn_pool is None:
+                raise SeedError(f"Item '{label}': 'seasons' only applies to a 'spawn_pool' item.")
         item = Item(
             name=merged["name"],
             keywords=merged["keywords"],
@@ -607,6 +625,8 @@ def load_items(path: Path) -> dict[str, Item]:
             ]  # a wandering pickup's candidate rooms
         if spawn_chance:
             item["spawn_chance"] = int(spawn_chance)  # rarity for the wanderer
+        if seasons:
+            item["seasons"] = [str(s) for s in seasons]  # the seasons the wanderer appears in
         items[label] = item
     return items
 
