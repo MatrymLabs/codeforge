@@ -5941,5 +5941,30 @@
     "aliases": [],
     "created": "2026-07-28",
     "updated": "2026-07-28"
+  },
+  {
+    "designation": "MOD-04.107",
+    "name": "edge",
+    "status": "active",
+    "function": "a transparent TCP edge proxy in front of the gateway, Go-accelerated (goroutines)",
+    "label": "edge",
+    "file": "parts/edge.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "docs/adr/0011-service-organs.md",
+    "tests": "tests/test_edge.py",
+    "depends_on": [],
+    "related": [
+      "gateway"
+    ],
+    "reuse": "a byte-transparent connection front door; raise the thread-per-connection ceiling for any line-based TCP service",
+    "notes": "Python-first EdgeProxy with an identical-behaviour Go fallback (native/edge, goroutine-per-connection); parity-pinned. First service organ (out-of-process, ADR-0011).",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-28",
+    "updated": "2026-07-28"
   }
 ]

@@ -45,3 +45,6 @@ build/
 # Rust native extensions (build artifacts; keep Cargo.lock for reproducibility)
 native/*/target/
 **/*.rs.bk
+
+# Go service organs (the compiled edge binary; keep go.mod for reproducibility)
+native/edge/codeforge-edge
