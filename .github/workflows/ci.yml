@@ -110,8 +110,8 @@ jobs:
         run: uv pip install --system -e ".[dev,postgres]"
       - name: Build the schema with Alembic (upgrade head)
         run: alembic upgrade head
-      - name: Prove the ORM round-trips on PostgreSQL
-        run: pytest tests/test_postgres_integration.py -v
+      - name: Prove the ORM round-trips + the SQL analytics run on PostgreSQL
+        run: pytest tests/test_postgres_integration.py tests/test_analytics.py -v
 
   # Drives the live HTMX dashboard with a real Chromium browser (isolated in e2e/, never in
   # `make check`). A focused front-to-back proof, so it is intentionally NOT a required check.
