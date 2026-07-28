@@ -408,11 +408,18 @@ def quest_view(session: Session, arg: str = "") -> str:
 
 
 def _apply_effect(quest: _Quest, effect: str | None, session: Session) -> str:
-    """Apply a quest step's named effect to the world. The workflow only NAMES effects (it never
-    mutates); the game applies them here. `award_xp` grants the quest's reward; `open_door:<id>`
-    reforges a barrier (e.g. the broken bridge). Returns any extra line to append to the reply."""
+    """Apply a quest step's named effect(s) to the world. The workflow only NAMES effects (it never
+    mutates); the game applies them here. Several effects may be chained with ';' (e.g.
+    `award_xp;grant_rep:making:50`), each applied in order. Returns the extra lines to append."""
     if not effect:
         return ""
+    parts = [one.strip() for one in effect.split(";") if one.strip()]
+    return "".join(_apply_one(quest, one, session) for one in parts)
+
+
+def _apply_one(quest: _Quest, effect: str, session: Session) -> str:
+    """Apply ONE named effect. `award_xp` grants the quest's reward; `open_door:<id>` reforges a
+    barrier; `grant_rep:<order>:<amount>` earns standing with an Order. Returns any extra line."""
     if effect == "award_xp" and session.stats is not None:
         from parts.world.progression_awards import award_xp
 
@@ -421,6 +428,14 @@ def _apply_effect(quest: _Quest, effect: str | None, session: Session) -> str:
         from parts.world import doors
 
         doors.open_gate(effect.split(":", 1)[1])  # the label already narrates the opening
+    if effect.startswith("grant_rep:"):
+        # `grant_rep:<order>:<amount>` -- a quest's deed earns standing with an Order (and spills
+        # over its allies/rivals). The reputation web is how faction-gated content is unlocked.
+        from parts.world.reputation import grant
+
+        _, order, amount = effect.split(":", 2)
+        rose = grant(session, order, int(amount))
+        return f"\n{rose}" if rose else ""
     return ""
 
 

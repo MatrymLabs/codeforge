@@ -226,7 +226,7 @@ def test_aethryn_relighting_arc_self_completes_from_natural_play():
         natural = step.get("on_take") or step.get("on_enter") or step.get("on_defeat")
         assert natural, f"step '{step['event']}' has no natural trigger -- the arc would soft-lock"
     face = next(s for s in spec["steps"] if s["to"] == "done")
-    assert face.get("on_enter") == "greenhold" and face.get("effect") == "award_xp"
+    assert face.get("on_enter") == "greenhold" and "award_xp" in face.get("effect", "")
     assert "done" in spec["terminal"]
 
 
@@ -273,3 +273,22 @@ def test_restore_state_ignores_an_unknown_quest_or_state():
     restore_state("hero", '{"ghost_quest": "somewhere"}')  # unknown quest id
     restore_state("hero", "not_a_real_state")  # unknown bare state
     assert save_state("hero") == ""  # nothing seeded -- a clean fresh run
+
+
+def test_grant_rep_effect_earns_standing_with_an_order():
+    """A quest step's grant_rep effect earns reputation with an Order (roadmap #2: the faction web
+    that gates content). Chained effects (';'-joined) all apply, in order."""
+    from parts.world.quest import _QUESTS, _apply_effect
+    from parts.world.reputation import standing_of
+
+    quest = next(iter(_QUESTS.values()))
+    s = _player()
+    extra = _apply_effect(quest, "grant_rep:making:100", s)  # 0 -> 100 == Friendly with Making
+    assert standing_of(s, "making") == 100
+    assert "Friendly" in extra and "Making" in extra  # the tier change is reported
+
+    # chaining: award_xp AND grant_rep both fire from one step
+    s2 = _player()
+    xp_before = s2.xp
+    _apply_effect(quest, "award_xp;grant_rep:making:40", s2)
+    assert s2.xp > xp_before and standing_of(s2, "making") == 40

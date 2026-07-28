@@ -43,9 +43,21 @@ Friendly) with the new Order, spilling over its allies and rivals, so allegiance
 together from the first oath. The `standing` verb shows a hero their reputation and tier with every
 Order, their own marked.
 
+## Earn sources and gated content (shipped)
+
+Beyond swearing an Order, **quests earn standing**: a quest step's effect
+`grant_rep:<order>:<amount>` calls `grant` on completion (effects chain with `;`, e.g.
+`award_xp;grant_rep:making:40`), so a deed for an Order raises your standing with it (and spills over
+its allies/rivals). Aethryn's opening journey earns a little Making standing.
+
+**Rep-tier-gated content** extends 1d's binary Order gate to a numeric one: a recipe's
+`requires: {order: making, standing: 300}` needs you sworn to Making AND *Honored* (300) with it.
+`crafting.locked_reason` derives this from `standing_of`, so the same reputation a quest earned is
+what unlocks the master craft. Aethryn's Reachlord's Signet now demands Honored standing.
+
 ## What #2 deliberately leaves for later
 
-More earn sources (quest-completion effects, felling a rival Order's champions) and **rep-tier-gated
-content** (a recipe or a door that needs "Honored with the Making Order," extending 1d's binary
-Order gate to a numeric one) are follow-ons that call this same `grant`/`standing_of` surface. #2 is
-the substrate: the standing model, its faction spillover, persistence, and the display.
+More earn sources (felling a rival Order's champions, faction-specific quest chains) and gating
+beyond recipes (doors, vendors, areas) are follow-ons that call this same `grant`/`standing_of`
+surface. The substrate -- standing, faction spillover, persistence, quest earn, and recipe gate --
+is in place.

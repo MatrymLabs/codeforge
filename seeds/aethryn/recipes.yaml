@@ -82,9 +82,9 @@ forge_reachlord_signet:
   name: the Reachlord's Signet
   makes: reachlord_signet
   inputs: {brine_essence: 1, grove_essence: 1, rime_essence: 1, molten_essence: 1, storm_essence: 1}
-  # The legendary capstone: only a master smith sworn to the Making Order may forge it (slice 1d
-  # profession + Order gate together -- the recipe is earned by BOTH skill and allegiance).
-  requires: {profession: smithing, level: 8, order: making}
+  # The legendary capstone: only a master smith HONORED within the Making Order may forge it -- a
+  # profession + Order + reputation-STANDING gate together, earned by skill, allegiance, AND standing.
+  requires: {profession: smithing, level: 8, order: making, standing: 300}
 
 # Herbal salves: each biome's gather-herb (items.yaml) worked into a healing salve, so every
 # forageable material feeds a real recipe (the maker's loop reaches the wilds' herbs, not just ore).

@@ -217,3 +217,64 @@ def test_load_recipes_accepts_an_order_only_gate(tmp_path):
         "r:\n  makes: x\n  inputs: {y: 1}\n  requires: {order: making}\n", encoding="utf-8"
     )
     assert load_recipes(p)["r"]["requires"] == {"order": "making"}
+
+
+# --- reputation-standing gate on a recipe (roadmap #2: faction-gated content) ------------------
+_STANDING_GATED = {
+    "guildwork": {
+        "name": "a guild relic",
+        "makes": "healing_draught",
+        "inputs": {"forge_wrench": 1},
+        "requires": {"order": "making", "standing": 300},
+    },
+}
+
+
+def test_a_standing_gate_needs_the_sworn_order_first(monkeypatch):
+    monkeypatch.setattr(crafting, "RECIPES", _STANDING_GATED)
+    unsworn = _player()  # order == ""
+    assert "needs the" in crafting.locked_reason(unsworn, _STANDING_GATED["guildwork"])
+
+
+def test_a_standing_gate_needs_the_reputation_tier(monkeypatch):
+    monkeypatch.setattr(crafting, "RECIPES", _STANDING_GATED)
+    s = _player()
+    s.order = "making"  # sworn, but standing 0 (< 300)
+    locked = crafting.locked_reason(s, _STANDING_GATED["guildwork"])
+    assert locked is not None and "standing" in locked.lower() and "Honored" in locked
+    s.reputation["making"] = 300  # now Honored
+    assert crafting.locked_reason(s, _STANDING_GATED["guildwork"]) is None
+
+
+def test_load_recipes_accepts_a_standing_gate(tmp_path):
+    from parts.world.seed import load_recipes
+
+    p = tmp_path / "recipes.yaml"
+    p.write_text(
+        "r:\n  makes: x\n  inputs: {y: 1}\n  requires: {order: making, standing: 300}\n",
+        encoding="utf-8",
+    )
+    assert load_recipes(p)["r"]["requires"] == {"order": "making", "standing": 300}
+
+
+def test_load_recipes_rejects_a_standing_without_an_order(tmp_path):
+    from parts.world.seed import SeedError, load_recipes
+
+    p = tmp_path / "recipes.yaml"
+    p.write_text(
+        "r:\n  makes: x\n  inputs: {y: 1}\n  requires: {standing: 300}\n", encoding="utf-8"
+    )
+    with pytest.raises(SeedError, match="standing"):
+        load_recipes(p)
+
+
+def test_load_recipes_rejects_a_non_positive_standing(tmp_path):
+    from parts.world.seed import SeedError, load_recipes
+
+    p = tmp_path / "recipes.yaml"
+    p.write_text(
+        "r:\n  makes: x\n  inputs: {y: 1}\n  requires: {order: making, standing: 0}\n",
+        encoding="utf-8",
+    )
+    with pytest.raises(SeedError, match="standing"):
+        load_recipes(p)
