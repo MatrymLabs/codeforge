@@ -131,6 +131,8 @@ def _spawn_wanderers(rooms: set[str]) -> None:
     for a live instance keeps a wanderer single across the map (one loose copy at a time). A
     prototype at its instance ceiling is skipped, never a crash. Only engine logic mutates state;
     the beat fires this, respawn.pick_room chooses where."""
+    from parts.world.climate import now, season_of
+
     for prototype, template in items.PROTOTYPES.items():
         pool = template.get("spawn_pool")
         if not pool:
@@ -138,6 +140,9 @@ def _spawn_wanderers(rooms: set[str]) -> None:
         sites = [room for room in pool if room in rooms]
         if not sites:
             continue  # this area holds none of the wanderer's candidate rooms
+        seasons = template.get("seasons")
+        if seasons and season_of(now()) not in seasons:
+            continue  # out of its season: a winter relic does not appear in summer
         if any(
             items.prototype_of(iid) == prototype
             for room in pool

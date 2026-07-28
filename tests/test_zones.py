@@ -439,3 +439,53 @@ def test_a_wanderer_at_its_instance_ceiling_is_skipped_not_a_crash(monkeypatch):
     monkeypatch.setattr(items, "clone", _ceiling)
     zones._perform_reset("z")  # the ceiling is swallowed: no crash, nothing spawned
     assert _loose_in("a") == [] and _loose_in("b") == []
+
+
+# --- seasonal-gated wandering spawns (roadmap #5): climate gates whether a wanderer appears -----
+def _seasonal_wanderer(seasons: list[str]) -> Item:
+    item = _wanderer()
+    item["prototype"] = "tonic"
+    item["seasons"] = seasons
+    return item
+
+
+def test_a_seasonal_wanderer_spawns_only_in_its_season(monkeypatch):
+    import parts.world.climate as climate
+
+    _wander_world(monkeypatch, _seasonal_wanderer(["winter"]))
+    monkeypatch.setattr(climate, "_beat", 0)  # beat 0 -> spring (not winter)
+    zones._perform_reset("z")
+    assert _loose_in("a") == [] and _loose_in("b") == []  # out of season: nothing
+
+    # advance the world clock into winter (season index 3 -> beat 3 * season length)
+    monkeypatch.setattr(climate, "_beat", climate._SEASON_LENGTH * 3)
+    assert climate.season_of(climate.now()) == "winter"
+    zones._perform_reset("z")
+    assert len(_loose_in("a")) == 1  # in season: it appears
+
+
+def test_a_seasonless_wanderer_spawns_in_any_season(monkeypatch):
+    import parts.world.climate as climate
+
+    _wander_world(monkeypatch, _wanderer())  # no seasons -> unconditional
+    monkeypatch.setattr(climate, "_beat", climate._SEASON_LENGTH)  # summer
+    zones._perform_reset("z")
+    assert len(_loose_in("a")) == 1
+
+
+def test_seasons_must_be_valid_and_need_a_pool(tmp_path):
+    from parts.world.climate import SEASONS
+
+    assert "winter" in SEASONS
+    bad_value = "t:\n  location: nowhere\n  spawn_pool: [a]\n  seasons: [monsoon]\n"
+    with pytest.raises(seed.SeedError, match="seasons"):
+        seed.load_items(_items_yaml(tmp_path, bad_value))
+    no_pool = "t:\n  location: nowhere\n  seasons: [winter]\n"
+    with pytest.raises(seed.SeedError, match="seasons"):
+        seed.load_items(_items_yaml(tmp_path, no_pool))
+
+
+def test_a_valid_seasonal_wanderer_loads(tmp_path):
+    body = "t:\n  location: nowhere\n  spawn_pool: [a, b]\n  seasons: [autumn, winter]\n"
+    loaded = seed.load_items(_items_yaml(tmp_path, body))["t"]
+    assert loaded["seasons"] == ["autumn", "winter"]
