@@ -3034,5 +3034,32 @@
     "aliases": [],
     "created": "2026-07-27",
     "updated": "2026-07-27"
+  },
+  {
+    "designation": "CMD-04.096",
+    "name": "standing",
+    "status": "active",
+    "function": "your reputation and tier with each Order (Hostile .. Revered)",
+    "label": "standing",
+    "file": "forge.py",
+    "type": "CMD",
+    "domain": "04",
+    "docs": "",
+    "tests": "tests/test_reputation.py",
+    "depends_on": [],
+    "related": [
+      "reputation",
+      "factions",
+      "orders"
+    ],
+    "reuse": "",
+    "tags": [
+      "command"
+    ],
+    "notes": "reputation.render_standing: the standing sheet. Roadmap #2.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-28",
+    "updated": "2026-07-28"
   }
 ]

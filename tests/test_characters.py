@@ -56,6 +56,7 @@ def test_save_and_load_roundtrip():
         "quest_state": "",
         "allocated": "",
         "professions": "",
+        "reputation": "",
     }
     assert load_character("stranger") is None
 
@@ -76,6 +77,17 @@ def test_profession_practice_survives_a_save_and_restore(monkeypatch):
     fresh = Session(player_id="matrym", location="courtyard")
     restore_character(fresh, load_character("matrym"))
     assert fresh.professions == {"mining": 5}
+
+
+def test_order_standing_survives_a_save_and_restore():
+    """Reputation with the Orders is a persisted character fact: it must ride save -> restore.
+    (Orders are code, not seed data, so 'making' is valid under any seed.)"""
+    s = _hero()
+    s.reputation = {"making": 300, "knowing": -50}
+    save_character(s)
+    fresh = Session(player_id="matrym", location="courtyard")
+    restore_character(fresh, load_character("matrym"))
+    assert fresh.reputation == {"making": 300, "knowing": -50}
 
 
 def test_restore_rebuilds_the_full_sheet():

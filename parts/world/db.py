@@ -76,6 +76,9 @@ class CharacterRow(ArchiveBase):
     # The maker's trades as 'trade:practice' pairs, comma-joined, or "". Profession skill the
     # `gather`/`craft` verbs earn; level recomputes from practice on restore (derive-don't-store).
     professions: Mapped[str] = mapped_column(default="")
+    # Standing with each Order as 'order:standing' pairs, comma-joined, or "". The named tier
+    # recomputes from the number on restore (derive-don't-store).
+    reputation: Mapped[str] = mapped_column(default="")
     auth_salt: Mapped[str | None] = mapped_column(default=None)  # legacy v1 char passwords
     auth_hash: Mapped[str | None] = mapped_column(default=None)
 

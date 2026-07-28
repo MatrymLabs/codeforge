@@ -65,6 +65,9 @@ class Session:
     # Maker's trades: profession id -> units of practice earned by gathering/crafting what the trade
     # governs. Level derives from practice (parts.world.professions.level_for); persisted per hero.
     professions: dict[str, int] = field(default_factory=dict)
+    # Standing with each Order: order id -> reputation, earned through deeds. The named tier derives
+    # from the number (parts.world.reputation). Persisted per hero.
+    reputation: dict[str, int] = field(default_factory=dict)
 
 
 # The registry of connected sessions. Gateways and game_loop register

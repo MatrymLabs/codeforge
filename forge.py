@@ -91,6 +91,7 @@ from parts.world.orders import swear_order
 from parts.world.professions import render_professions
 from parts.world.quest import contracts_view, quest_view
 from parts.world.ranks import wizard_command
+from parts.world.reputation import render_standing
 from parts.world.score_sheet import render_score_sheet
 from parts.world.seed import load_splash
 from parts.world.session import SESSIONS, Session, display_name, roster
@@ -113,7 +114,7 @@ HELP_TEXT = (
     "Commands: look, go <direction> (or n/s/e/w/u/d), "
     "take, drop, inventory, talk <npc>, ask <npc> about <topic>, say <msg>, name <yourname>, who, "
     "jobs, job <calling>, subjob <calling>, join <order>, wallet, quaff <item>, contracts, region, "
-    "weather, factions, professions, score, "
+    "weather, factions, professions, standing, score, "
     "equip <item>, unequip <slot>, "
     "attack <target>, skills, use <ability> [on <foe>], repair, scan <target>, deploy, calibrate, "
     "channel, journal [text], vitals, "
@@ -1474,6 +1475,15 @@ def _build_commands() -> CommandSet:
             "CMD-04.095",
             "your maker's trades and their levels (gathering and crafting skills)",
             lambda s, _a: render_professions(s),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "standing",
+            "CMD-04.096",
+            "your reputation and tier with each Order (Hostile .. Revered)",
+            lambda s, _a: render_standing(s),
             namespace=CORE,
         )
     )
