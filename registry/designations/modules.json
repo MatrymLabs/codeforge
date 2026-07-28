@@ -6039,5 +6039,28 @@
     "aliases": [],
     "created": "2026-07-28",
     "updated": "2026-07-28"
+  },
+  {
+    "designation": "MOD-10.046",
+    "name": "scripting",
+    "status": "active",
+    "function": "a sandboxed Lua interpreter for safe user/creator scripts",
+    "label": "scripting",
+    "file": "parts/scripting.py",
+    "type": "MOD",
+    "domain": "10",
+    "docs": "docs/adr/0014-embedded-scripting.md",
+    "tests": "tests/test_scripting.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "embed a safe scripting language: a deny-by-default whitelist env + a bounded-execution hook, for any host that wants user extensibility",
+    "notes": "Embeds real Lua (via lupa) behind a deny-by-default sandbox (no os/io/require/load/debug; a debug-hook instruction budget bounds loops). OPTIONAL: absent -> scripting_available() False, game untouched. Evidence is the safety suite, not a benchmark. WIRED as the owner-only @script console (CMD-10.025). Embedded scripting organ (ADR-0014).",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-28",
+    "updated": "2026-07-28"
   }
 ]

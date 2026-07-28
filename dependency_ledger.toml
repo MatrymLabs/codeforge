@@ -55,6 +55,11 @@ why = "Optional (extra 'ai'): the Claude-backed Architect brain, behind the Advi
 stdlib_alternative = "None; there is no stdlib LLM client, and the wire protocol is a vendor API. The seam (Advisor protocol) keeps it swappable and testable with a fake."
 removable = "Yes; it is an optional extra. The local rule-based Architect is the default and needs no dependency, so codeforge core runs without anthropic."
 
+[runtime.lupa]
+why = "Optional (extra 'lua'): embeds the Lua runtime so parts/scripting.py can run sandboxed user/creator scripts (the owner @script console). Not installed by default; it bundles Lua, so nothing else is needed."
+stdlib_alternative = "None; there is no stdlib scripting-language sandbox, and a hand-rolled interpreter would be a worse, less-safe reimplementation of a proven embedded language."
+removable = "Yes; it is an optional extra. Absent, scripting_available() is False and the game runs untouched; delete parts/scripting.py + the @script command to remove it entirely (ADR-0014)."
+
 # ----- dev dependencies (quality gates, never shipped) --------------------------------
 
 [dev.ruff]

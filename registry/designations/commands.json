@@ -3087,5 +3087,32 @@
     "aliases": [],
     "created": "2026-07-28",
     "updated": "2026-07-28"
+  },
+  {
+    "designation": "CMD-10.025",
+    "name": "`@script`",
+    "status": "active",
+    "function": "run a sandboxed Lua snippet from in-game (owner): a deny-by-default scripting console.",
+    "label": "@script",
+    "file": "parts/scripting.py",
+    "type": "CMD",
+    "domain": "10",
+    "docs": "docs/adr/0014-embedded-scripting.md",
+    "tests": "tests/test_commands.py",
+    "depends_on": [],
+    "related": [
+      "scripting"
+    ],
+    "reuse": "",
+    "tags": [
+      "command",
+      "admin",
+      "polyglot"
+    ],
+    "notes": "ADMIN verb, min_rank owner. Runs Lua in parts.scripting.LuaSandbox (no os/io/require; loops bounded). Needs the [lua] extra; says so cleanly when absent. Polyglot organ 7 (embedded scripting, ADR-0014).",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-28",
+    "updated": "2026-07-28"
   }
 ]

@@ -321,3 +321,22 @@ jobs:
 
       - name: Benchmark evidence (non-fatal)
         run: python -u benchmarks/bench_textmatch.py 20000 || true
+
+  # Polyglot embedded scripting (sandboxed Lua via lupa): install the [lua] extra and run the SAFETY
+  # suite -- every dangerous capability denied, runaway loops bounded. Evidence for a scripting organ
+  # is safety, not a benchmark. NOT a required check -- the base gate runs on the "scripting
+  # unavailable" fallback, so a Lua-runtime hiccup never blocks a merge (ADR-0014).
+  lua:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7
+
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1  # v6
+        with:
+          python-version: "3.13"
+
+      - name: Install with the Lua extra
+        run: pip install -e ".[dev,lua]"
+
+      - name: The sandbox safety suite (capabilities denied, loops bounded)
+        run: python -m pytest tests/test_scripting.py "tests/test_commands.py::test_owner_runs_a_sandboxed_script_through_the_tick" "tests/test_commands.py::test_a_sandbox_violation_returns_a_script_error_not_a_crash" -q
