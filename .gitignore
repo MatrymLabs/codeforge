@@ -54,3 +54,8 @@ proto/telemetry_pb2.py
 proto/*_pb2.pyi
 native/spine/telemetrypb/
 native/spine/xcheck/xcheck
+
+# C text kernel (build artifacts; keep the source in native/textkernel/src)
+native/textkernel/build/
+native/textkernel/*.so
+native/textkernel/*.egg-info/

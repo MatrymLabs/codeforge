@@ -77,6 +77,13 @@ ignore_missing_imports = true
 module = "codeforge_nav"
 ignore_missing_imports = true
 
+# codeforge_textkernel is the OPTIONAL hand-written C accelerator (native/textkernel, raw CPython
+# API), imported opportunistically behind a pure-Python fallback (ADR-0010). Absent in the dev/CI
+# venv and a compiled module with no stubs, so don't require them -- built or not.
+[[tool.mypy.overrides]]
+module = "codeforge_textkernel"
+ignore_missing_imports = true
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 # Fail loud on typos, not silently: an unregistered marker or an unknown config
