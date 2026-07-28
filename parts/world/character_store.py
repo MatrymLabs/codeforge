@@ -42,6 +42,7 @@ class CharacterRecord:
     quest_state: str = ""
     allocated: str = ""  # JSON: attribute -> allocated points (build customization)
     professions: str = ""  # 'trade:practice' pairs, comma-joined (the maker's trade skills)
+    reputation: str = ""  # 'order:standing' pairs, comma-joined (standing with the Orders)
     auth_salt: str | None = None
     auth_hash: str | None = None
 

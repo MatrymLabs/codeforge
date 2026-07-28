@@ -5836,5 +5836,31 @@
     "aliases": [],
     "created": "2026-07-27",
     "updated": "2026-07-27"
+  },
+  {
+    "designation": "MOD-04.103",
+    "name": "reputation",
+    "status": "active",
+    "function": "a hero's numeric standing with each Order, banded into tiers, over the faction model",
+    "label": "reputation",
+    "file": "parts/world/reputation.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "",
+    "tests": "tests/test_reputation.py",
+    "depends_on": [],
+    "related": [
+      "factions",
+      "orders"
+    ],
+    "reuse": "",
+    "notes": "reputation.grant: the single earn door (deeds raise/lower standing, spilling over allies/rivals). Roadmap #2.",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-28",
+    "updated": "2026-07-28"
   }
 ]

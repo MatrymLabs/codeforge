@@ -84,6 +84,11 @@ def swear_order(session: Session, arg: str) -> str:
     if session.order == choice:
         return f"You are already sworn to {order_name(choice)}."
     session.order = choice
+    # Swearing earns a starting standing with the new Order (and spills over its allies/rivals),
+    # so allegiance and reputation move together (parts.world.reputation).
+    from parts.world.reputation import SWEAR_STANDING, grant
+
+    grant(session, choice, SWEAR_STANDING)
     from parts.world.characters import save_character
 
     save_character(session)
