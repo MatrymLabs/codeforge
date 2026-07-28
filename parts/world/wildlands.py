@@ -64,21 +64,45 @@ _GATHER_EVERY = 5
 _ORE_BIOMES = frozenset({"volcanic-flats", "glacier-waste", "highland-moor", "salt-desert"})
 
 
+# A biome-specific HERB every region yields, on top of the common ember-shard (and the ore-biome
+# ingot). Each herb is a seed item (aethryn/items.yaml) that feeds a real recipe (recipes.yaml), so
+# a gather node can clone it like ember_shard and the forage board + crafting bench gain variety.
+_BIOME_HERB: dict[str, str] = {
+    "temperate-meadow": "meadowfoil",
+    "wild-forest": "fernshade",
+    "highland-moor": "moorbell",
+    "coastal-strand": "saltkelp",
+    "glacier-waste": "frostmoss",
+    "volcanic-flats": "cinderroot",
+    "living-jungle": "vinesilk",
+    "salt-desert": "dustbloom",
+}
+
+
 def _gather_node(biome: str, idx: int) -> str | None:
-    """The material a room offers to gather, or None (most rooms). Deterministic by index."""
+    """The material a room offers to gather, or None (most rooms). Deterministic by index. A node
+    yields the ore-biome ingot, then the biome's herb, else the common ember-shard."""
     if idx % _GATHER_EVERY != 0:
         return None
     if biome in _ORE_BIOMES and idx % (_GATHER_EVERY * 3) == 0:
         return "hollow_ingot"
+    herb = _BIOME_HERB.get(biome)
+    if herb and idx % (_GATHER_EVERY * 2) == 0:
+        return herb
     return "ember_shard"
 
 
 def gatherable_materials(biome: str) -> tuple[str, ...]:
     """The material prototypes a biome's gather nodes can yield -- the forageable inputs a region
-    offers (parts.world.forage builds contracts from these). Mirrors `_gather_node`'s choices."""
+    offers (parts.world.forage builds contracts from these). Mirrors `_gather_node`'s choices: the
+    common ember-shard, the ore-biome ingot, and the biome's own herb."""
+    mats = ["ember_shard"]
     if biome in _ORE_BIOMES:
-        return ("ember_shard", "hollow_ingot")
-    return ("ember_shard",)
+        mats.append("hollow_ingot")
+    herb = _BIOME_HERB.get(biome)
+    if herb:
+        mats.append(herb)
+    return tuple(mats)
 
 
 # Per-biome ROOM vocabulary: a lead sentence, terrain FEATURES (composed by index so adjacent rooms

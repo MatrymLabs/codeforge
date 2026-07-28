@@ -24,10 +24,15 @@ _ZONES = [
 
 
 def test_each_zone_posts_a_forage_per_material_per_tier():
+    from parts.world.wildlands import gatherable_materials
+
     forages = generate_forages(_ZONES)
     assert all(is_forage(q["id"]) for q in forages)
-    # meadow: 1 material x 2 tiers = 2; glacier (ore): 2 materials x 2 tiers = 4; void: 0
-    assert len(forages) == 2 + 4
+    # one forage per (material its biome yields) x 2 tiers, for the two biome zones (void: none)
+    expected = (
+        len(gatherable_materials("temperate-meadow")) + len(gatherable_materials("glacier-waste"))
+    ) * 2
+    assert len(forages) == expected
     ids = {q["id"] for q in forages}
     assert f"{FORAGE_PREFIX}frost_wild_hollow_ingot_5" in ids, "an ore zone forages the ingot too"
 
