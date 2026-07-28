@@ -1,5 +1,10 @@
 # CodeForge Program Synchronization (2026-07-27)
 
+> **SUPERSEDED (2026-07-28).** This first synchronization has been refreshed after a nine-PR build
+> wave: see `program_synchronization_2026-07-28.md` for the current audit and roadmap. Its roadmap
+> below is largely executed (the Crafting Campaign is complete; live spawning, faction reputation,
+> player statuses, and telegraphed boss specials all shipped). Kept for the record.
+
 This document is the strategic synchronization the **Program Vision Reset** prompt asks for: audit,
 summarize completed and active campaigns, identify architectural gaps and duplicate work, rank the
 remaining work, and produce a roadmap. Per that prompt's own instruction -- *"Do not immediately
