@@ -1,0 +1,20 @@
+[build-system]
+requires = ["maturin>=1.7,<2.0"]
+build-backend = "maturin"
+
+[project]
+name = "codeforge-nav"
+version = "0.1.0"
+description = "CodeForge native navigation kernel (Rust/PyO3): fast room pathfinding + reachability"
+requires-python = ">=3.13"
+license = { text = "MIT" }
+classifiers = [
+    "Programming Language :: Rust",
+    "Programming Language :: Python :: Implementation :: CPython",
+]
+
+[tool.maturin]
+# Builds the Rust cdylib into an importable Python extension module `codeforge_nav`.
+# CodeForge imports it opportunistically (parts.world.navigation) and falls back to a pure-Python
+# implementation when the compiled wheel is absent, so the game never hard-depends on the native build.
+strip = true

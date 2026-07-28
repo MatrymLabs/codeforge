@@ -104,3 +104,30 @@ def _network(session: Session, stones: dict[str, dict[str, Any]]) -> str:
         lines.append(f"  {cfg['name']:<18} (levels {cfg['level']}+)  {purse(fare(cfg['level']))}")
     lines.append("Travel with: travel <where>")
     return "\n".join(lines)
+
+
+def route(session: Session, arg: str) -> str:
+    """`route <room>` -- the shortest ON-FOOT path from here to a named room, as directions.
+
+    The waystones are fast-travel between hubs; this is turn-by-turn walking for everywhere else.
+    The world is a directed graph (rooms, exits); the shortest path is computed by the navigation
+    kernel (parts.world.navigation), which uses the native Rust accelerator `codeforge_nav` when
+    built and a pure-Python fallback otherwise. Fails cleanly on an unknown room or no route."""
+    from parts.world.navigation import world_navgraph
+    from parts.world.world import WORLD
+
+    target = arg.strip().lower()
+    if not target:
+        return "Route to where?  (route <room label>)"
+    if target not in WORLD:
+        return f"There is no room called '{target}' to route to."
+    if target == session.location:
+        return "You are already there."
+    path = world_navgraph().path(session.location, target)
+    if not path:
+        return f"You can find no route on foot from here to {target}."
+    steps: list[str] = []
+    for here, nxt in zip(path, path[1:], strict=False):
+        exits = WORLD[here]["exits"]  # every path node is a real room (built from the world graph)
+        steps.append(next((direction for direction, dest in exits.items() if dest == nxt), "?"))
+    return f"Route to {target} ({len(steps)} steps): " + ", ".join(steps)

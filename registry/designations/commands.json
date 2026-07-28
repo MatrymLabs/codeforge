@@ -3061,5 +3061,31 @@
     "aliases": [],
     "created": "2026-07-28",
     "updated": "2026-07-28"
+  },
+  {
+    "designation": "CMD-04.097",
+    "name": "route",
+    "status": "active",
+    "function": "the shortest on-foot path to a room, as directions (route <room>)",
+    "label": "route",
+    "file": "forge.py",
+    "type": "CMD",
+    "domain": "04",
+    "docs": "",
+    "tests": "tests/test_navigation.py",
+    "depends_on": [],
+    "related": [
+      "navigation",
+      "travel"
+    ],
+    "reuse": "",
+    "tags": [
+      "command"
+    ],
+    "notes": "travel.route -> navigation kernel (native Rust when built). Roadmap: polyglot slice 1.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-28",
+    "updated": "2026-07-28"
   }
 ]

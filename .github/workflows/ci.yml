@@ -182,3 +182,37 @@ jobs:
         run: |
           terraform init -backend=false
           terraform validate
+
+  # Polyglot native extension (Rust / PyO3): build the codeforge_nav navigation kernel and prove it
+  # matches the pure-Python fallback byte-for-byte (the parity test). NOT a required check -- the
+  # main `check` gate runs on the fallback, so a Rust-toolchain hiccup never blocks a merge
+  # (ADR-0010: Python-first, native-optional).
+  native:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7
+
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1  # v6
+        with:
+          python-version: "3.13"
+
+      - name: Install the Rust toolchain (rustup, minimal)
+        run: |
+          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --profile minimal
+          echo "$HOME/.cargo/bin" >> "$GITHUB_PATH"
+
+      - name: Install build + test dependencies
+        run: |
+          pip install maturin
+          pip install -e ".[dev]"
+
+      - name: Build + install the native navigation kernel
+        run: |
+          maturin build --release -m native/codeforge_nav/Cargo.toml --out dist
+          pip install --no-index --find-links dist codeforge-nav
+
+      - name: Parity + navigation tests (native backend present)
+        run: python -m pytest tests/test_navigation.py -q
+
+      - name: Benchmark evidence (non-fatal)
+        run: python -u benchmarks/bench_nav.py 30000 || true

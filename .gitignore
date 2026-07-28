@@ -41,3 +41,7 @@ build/
 
 # cosmic-ray mutation-testing session db (on-demand `make mutation`; reproducible from cosmic-ray.toml)
 .cosmic-ray-session.sqlite
+
+# Rust native extensions (build artifacts; keep Cargo.lock for reproducibility)
+native/*/target/
+**/*.rs.bk

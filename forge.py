@@ -115,7 +115,7 @@ HELP_TEXT = (
     "Commands: look, go <direction> (or n/s/e/w/u/d), "
     "take, drop, inventory, talk <npc>, ask <npc> about <topic>, say <msg>, name <yourname>, who, "
     "jobs, job <calling>, subjob <calling>, join <order>, wallet, quaff <item>, contracts, region, "
-    "weather, factions, professions, standing, score, "
+    "weather, factions, professions, standing, route <room>, score, "
     "equip <item>, unequip <slot>, "
     "attack <target>, skills, use <ability> [on <foe>], repair, scan <target>, deploy, calibrate, "
     "channel, journal [text], vitals, "
@@ -1642,6 +1642,15 @@ def _build_commands() -> CommandSet:
             "CMD-04.090",
             "the Waystone network: pay to cross the world (travel [where])",
             lambda s, a: travel_net.travel(s, a, WAYSTONES),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "route",
+            "CMD-04.097",
+            "the shortest on-foot path to a room, as directions (route <room>)",
+            lambda s, a: travel_net.route(s, a),
             namespace=CORE,
         )
     )
