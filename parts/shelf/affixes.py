@@ -5,7 +5,7 @@ instance -- a rarity tier that scales the base mods, plus prefix/suffix affixes 
 "a notched blade" can fall as "a Cruel notched blade of the Bear [rare]". It is the item-side of the
 generation lever (compare parts.world.spiral for the world side): one base yields a spread of gear.
 
-Pure and deterministic given an injected `random.Random` (like parts.shelf.weighted_table), so loot
+Pure + deterministic given an injected `random.Random` (like parts.shelf.weighted_table); loot
 is reproducible in tests. It knows nothing about the game -- inputs are a name, a mods map, a level,
 and an rng; output is a rolled (name, mods, rarity). The caller applies it to a cloned instance.
 """

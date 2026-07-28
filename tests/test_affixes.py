@@ -1,4 +1,4 @@
-"""Test twin for parts.shelf.affixes: the deterministic loot-variety factory (rarity + affixes)."""
+"""Test twin for parts.shelf.affixes: the deterministic loot factory (rarity + affixes)."""
 
 from random import Random
 

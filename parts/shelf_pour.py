@@ -17,6 +17,7 @@ import ast
 import re
 import subprocess  # nosec B404 -- fixed argv, no shell; imports the poured package to prove it loads
 import sys
+import tempfile
 from collections.abc import Collection
 from dataclasses import dataclass
 from pathlib import Path
@@ -90,7 +91,15 @@ def _third_party(files: list[Path], *, exclude: Collection[str] = frozenset()) -
             elif isinstance(node, ast.ImportFrom) and node.level == 0 and node.module:
                 names = [node.module.split(".")[0]]
             for name in names:
-                if name and name not in stdlib and name != "parts" and name not in exclude:
+                # `codeforge_*` are in-tree optional native accelerators (e.g. codeforge_textkernel)
+                # imported behind a try/except fallback -- not PyPI packages, so never a poured dep.
+                if (
+                    name
+                    and name not in stdlib
+                    and name != "parts"
+                    and not name.startswith("codeforge_")
+                    and name not in exclude
+                ):
                     deps.add(name)
     return sorted(deps)
 
@@ -195,7 +204,7 @@ def _pyproject(deps: list[str], test_deps: list[str]) -> str:
         'build-backend = "setuptools.build_meta"\n\n'
         "[project]\n"
         'name = "codeforge-shelf"\n'
-        'version = "0.1.0"\n'
+        'version = "0.2.0"\n'
         'description = "The CodeForge Hardware Store: reusable, engine-agnostic Python cores."\n'
         'readme = "README.md"\n'
         'requires-python = ">=3.12"\n'
@@ -293,6 +302,12 @@ _CHANGELOG = """\
 
 All notable changes to `codeforge-shelf`. This package is generated (poured) from CodeForge; the
 version tracks the pour, not hand edits.
+
+## 0.2.0
+
+- Five more cores poured as the engine's Hardware Store grew (27 -> 32): `affixes`, `completeness`,
+  `conditions`, `reward_curve`, and `textmatch` (fuzzy match / Levenshtein). Kept the pour in step
+  with the engine; a drift-detection gate now prevents the two from silently diverging again.
 
 ## 0.1.0
 
@@ -460,10 +475,47 @@ def _build_main(argv: list[str]) -> int:
     return 0 if ok else 1
 
 
+def pour_drift(shelf_repo: Path, *, shelf_dir: Path | None = None) -> list[str]:
+    """Files where a fresh pour differs from `shelf_repo`: missing there, or content-mismatched.
+
+    Empty list = in sync. One-directional: it checks every file the pour WRITES against the repo, so
+    repo-only files (a hand-added .gitignore, local caches) are not drift -- only a stale or
+    hand-edited *poured* file is. This is the invariant the drift gate enforces so codeforge and
+    codeforge-shelf cannot silently diverge again."""
+    tmp = Path(tempfile.mkdtemp(prefix="pour_drift_"))
+    pour_shelf(tmp, shelf_dir=shelf_dir)
+    drift: list[str] = []
+    for poured in sorted(tmp.rglob("*")):
+        if not poured.is_file() or "__pycache__" in poured.parts:
+            continue
+        rel = poured.relative_to(tmp)
+        mirror = shelf_repo / rel
+        if not mirror.is_file():
+            drift.append(f"missing in shelf: {rel}")
+        elif poured.read_bytes() != mirror.read_bytes():
+            drift.append(f"content drift: {rel}")
+    return drift
+
+
+def _drift_main(argv: list[str]) -> int:
+    """`python3 -m parts.shelf_pour --drift <codeforge-shelf>`: fail if the repo is out of sync."""
+    drift = pour_drift(Path(argv[2]))
+    if drift:
+        print(f"POUR DRIFT: codeforge-shelf is out of sync with the engine ({len(drift)} file(s)):")
+        for item in drift:
+            print(f"  - {item}")
+        print("Fix: re-pour (`python -m parts.shelf_pour <codeforge-shelf>`), verify, and push.")
+        return 1
+    print("pour in sync: codeforge-shelf matches a fresh pour of the engine's Hardware Store")
+    return 0
+
+
 def _main(argv: list[str]) -> int:
-    """`python3 -m parts.shelf_pour [build] <dest>`: pour + prove imports/tests (or build)."""
+    """`python3 -m parts.shelf_pour [build|--drift] <dest>`: pour + prove imports/tests."""
     if len(argv) > 1 and argv[1] == "build":
         return _build_main(argv)
+    if len(argv) > 2 and argv[1] == "--drift":
+        return _drift_main(argv)
     dest = Path(argv[1]) if len(argv) > 1 else _ROOT / "workspace" / "shelf-pour"
     poured = pour_shelf(dest)
     imports_ok, imports_detail = verify_pour(dest)
