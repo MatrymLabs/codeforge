@@ -70,9 +70,11 @@ salve: every forageable herb feeds the refined tier, so no herb is a dead end.
 
 ## What 1a deliberately does not do (the next tiers)
 
-- **Hide -> leather** and other monster materials are **slice 1c**: hides, scales, bone, and essence
-  come off the bestiary (`parts.world.armory`/`relics` drop plumbing), so that chain is built when
-  monster materials are wired, not before, to keep every material sourced.
+- **Hide -> leather** and monster materials shipped as **slice 1c**: furred and feathered creatures
+  drop `raw_hide`, scaled and shelled ones drop `chitin_scale` (the `parts.world.bestiary` loot
+  tables, by body-class), and Leatherworking refines each into gear (hide -> cured leather -> a hide
+  jerkin; chitin -> a hardened plate -> a scaled bracer). The unbodied (elemental/undead/colossus)
+  drop no such material -- there is no pelt to take.
 - **Professions** (mining, herbalism, smithing, alchemy, ...) shipped as **slice 1b**: a data-driven
   skill track over these same chains, composing with the existing calling ladder. See
   [professions.md](professions.md).

@@ -4,7 +4,13 @@ Acceptance: make_beast composes a valid, level-scaled, biome-coherent Npc, and t
 wide variety. Determinism: the same (biome, level, idx) always grows the same creature.
 """
 
-from parts.world.bestiary import _BIOME_LIFE, make_beast
+from parts.world.bestiary import (
+    _BIOME_LIFE,
+    _CLASSES,
+    make_beast,
+    make_notable,
+    material_for_class,
+)
 from parts.world.score_sheet_model import RESIST_ORDER
 
 
@@ -99,3 +105,35 @@ def test_roughly_one_in_six_guardians_is_a_boss():
 
     tiers = [make_notable("wild-forest", 30, 1, "r", seq)["tier"] for seq in range(6)]
     assert tiers[5] == "boss" and tiers.count("boss") == 1  # seq 5 pays the boss curve
+
+
+def test_monster_materials_map_only_furred_and_scaled_classes():
+    # Furred/feathered classes drop hide; scaled/shelled drop chitin; the unbodied drop neither
+    # (there is no pelt on a wisp). Crafting slice 1c.
+    assert material_for_class("canid") == "raw_hide"
+    assert material_for_class("avian") == "raw_hide"
+    assert material_for_class("reptile") == "chitin_scale"
+    assert material_for_class("insectoid") == "chitin_scale"
+    for unbodied in ("elemental", "undead", "colossus"):
+        assert material_for_class(unbodied) is None
+    # every mapped class is a real body-class, and every material is a raw one
+    assert set(_CLASSES) >= {"canid", "reptile", "elemental"}
+
+
+def test_a_furred_beast_drops_its_hide_on_the_loot_table():
+    # temperate-meadow idx 0 is a canid (furred): its loot must include raw_hide beside the ember.
+    beast = make_beast("temperate-meadow", 20, 0, "r")
+    assert "raw_hide" in beast["loot"] and "ember_shard" in beast["loot"]
+
+
+def test_a_notable_carries_a_heavier_material_haul():
+    lord = make_notable("wild-forest", 30, 0, "lair", 0)  # felid: furred
+    material = material_for_class(lord["keywords"][-1])
+    assert material == "raw_hide" and lord["loot"][material] == 3  # richer than ambient life
+
+
+def test_an_unbodied_notable_drops_no_monster_material():
+    # volcanic-flats idx 0 is an elemental: a notable of it weights only ember, no hide/scale.
+    lord = make_notable("volcanic-flats", 40, 0, "lair", 0)
+    assert material_for_class(lord["keywords"][-1]) is None
+    assert "raw_hide" not in lord["loot"] and "chitin_scale" not in lord["loot"]

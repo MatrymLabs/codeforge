@@ -43,6 +43,10 @@ leatherworking:
     - stitch_emberhide_hood
     - stitch_emberhide_jerkin
     - stitch_emberhide_wraps
+    - tan_leather
+    - stitch_hide_jerkin
+    - harden_scale
+    - forge_scale_bracer
 alchemy:
   name: Alchemy
   kind: craft

@@ -36,6 +36,27 @@ _CLASSES: dict[str, dict[str, object]] = {
     "colossus": {"kin": ("hulk", "golem", "colossus"), "hp": 1.9, "atk": 1.25, "el": None},
 }
 
+# Monster materials (Crafting slice 1c): the raw crafting material a body-class drops on its loot
+# table, so felling the wilds' life feeds the tannery, not just the coin purse. Furred and feathered
+# beasts give a hide; scaled and shelled ones give chitin. The unbodied (elemental/undead/colossus)
+# yield no such material -- there is no pelt to take. Leatherworking refines these into gear.
+_CLASS_MATERIAL: dict[str, str] = {
+    "canid": "raw_hide",
+    "felid": "raw_hide",
+    "ursine": "raw_hide",
+    "boar": "raw_hide",
+    "avian": "raw_hide",
+    "reptile": "chitin_scale",
+    "insectoid": "chitin_scale",
+}
+
+
+def material_for_class(cls_name: str) -> str | None:
+    """The raw monster material a body-class drops (raw_hide / chitin_scale), or None for a class
+    with no pelt or shell to take (elemental, undead, colossus)."""
+    return _CLASS_MATERIAL.get(cls_name)
+
+
 # Each biome: which classes live there, its ambient element, and adjectives that mark its creatures.
 _BIOME_LIFE: dict[str, dict[str, object]] = {
     "temperate-meadow": {
@@ -164,9 +185,19 @@ def make_beast(biome: str, level: int, idx: int, room: str) -> Npc:
         level=level,
         tier=tier,
         attack_element=element,
-        loot={"ember_shard": 3, "nothing": 2},
+        loot=_ambient_loot(cls_name),
         ambient=True,  # mass wilderness life: no per-foe bounty (see register_bounties)
     )
+
+
+def _ambient_loot(cls_name: str) -> dict[str, int]:
+    """A common creature's weighted loot: ember-shards, its class's monster material (if any), and
+    a chance of nothing (parts.shelf.weighted_table)."""
+    loot = {"ember_shard": 3, "nothing": 2}
+    material = _CLASS_MATERIAL.get(cls_name)
+    if material:
+        loot[material] = 2
+    return loot
 
 
 # A named guardian's proper name (a fore-name + a biome-marked epithet), deterministic by index. The
@@ -229,7 +260,11 @@ def make_notable(biome: str, level: int, idx: int, room: str, seq: int) -> Npc:
     beast["tier"] = "boss" if is_boss else "elite"
     beast["aggressive"] = False  # a hunt TARGET the player seeks, not a roadside ambush
     beast["dialogue"] = [f"{display} {_telegraph(display, idx)}."]
-    beast["loot"] = {"ember_shard": 5, "nothing": 1}  # a richer haul than ambient life
+    # A richer haul than ambient life: more ember, and a heavier chance of its monster material.
+    beast["loot"] = {"ember_shard": 5, "nothing": 1}
+    material = material_for_class(beast["keywords"][-1])
+    if material:
+        beast["loot"][material] = 3
     beast.pop("ambient", None)  # NOT ambient: the bounty board names it, the hunt is on
     return beast
 
