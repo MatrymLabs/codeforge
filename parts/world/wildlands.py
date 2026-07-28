@@ -89,16 +89,20 @@ def _gather_node(biome: str, idx: int) -> str | None:
     herb = _BIOME_HERB.get(biome)
     if herb and idx % (_GATHER_EVERY * 2) == 0:
         return herb
+    # Ore biomes also quarry RAW ORE (the smithing refinement chain's raw tier), on the half of
+    # their common nodes ember-shard does not claim -- so ore, ingot, herb and shard all coexist.
+    if biome in _ORE_BIOMES and idx % (_GATHER_EVERY * 6) == _GATHER_EVERY * 5:
+        return "raw_ore"
     return "ember_shard"
 
 
 def gatherable_materials(biome: str) -> tuple[str, ...]:
     """The material prototypes a biome's gather nodes can yield -- the forageable inputs a region
     offers (parts.world.forage builds contracts from these). Mirrors `_gather_node`'s choices: the
-    common ember-shard, the ore-biome ingot, and the biome's own herb."""
+    common ember-shard, the ore-biome ingot and raw ore, and the biome's own herb."""
     mats = ["ember_shard"]
     if biome in _ORE_BIOMES:
-        mats.append("hollow_ingot")
+        mats.extend(("hollow_ingot", "raw_ore"))
     herb = _BIOME_HERB.get(biome)
     if herb:
         mats.append(herb)

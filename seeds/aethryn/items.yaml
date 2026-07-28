@@ -1512,3 +1512,47 @@ herbal_salve:
   location: nowhere
   resettable: false
   consume: {hp: 20}
+
+# --- Refinement chains (Crafting Campaign, slice 1a: the material library as data). The world had
+# --- only a raw tier that crafted straight into goods; these add the missing middle: RAW -> REFINED
+# --- -> COMPONENT -> PRODUCT. Two exemplar chains, each rooted in a material that already has a
+# --- source, so nothing here is dead weight. See docs/world/crafting_materials.md for the model. ---
+
+# METAL CHAIN (Smithing): raw ore, quarried from the four ore-biomes (parts.world.wildlands), is
+# smelted to a wrought ingot, forged to an iron fitting, then assembled into a traveller's buckler.
+raw_ore:
+  name: a chunk of raw ore
+  keywords: [ore, chunk, rock, raw, material]
+  location: nowhere
+  resettable: false
+wrought_ingot:
+  name: a wrought ingot
+  keywords: [ingot, wrought, metal, refined, material]
+  location: nowhere
+  resettable: false
+iron_fitting:
+  name: an iron fitting
+  keywords: [fitting, iron, bracket, component, material]
+  location: nowhere
+  resettable: false
+travelers_buckler:
+  name: a traveller's buckler
+  keywords: [buckler, shield, traveller, guard]
+  location: nowhere
+  slot: arm
+  mods: {DEF: 3, EVA: 1}
+
+# ALCHEMY CHAIN: any biome's gather-herb distills to a shared herbal reagent, brewed with wild
+# ember into a restorative tonic (a mid heal, above the direct herb -> salve, below the greater
+# draught) -- the refinement step earns the better potion.
+herbal_reagent:
+  name: a vial of herbal reagent
+  keywords: [reagent, vial, distillate, herbal, refined, material]
+  location: nowhere
+  resettable: false
+restorative_tonic:
+  name: a restorative tonic
+  keywords: [tonic, restorative, potion, heal]
+  location: nowhere
+  resettable: false
+  consume: {hp: 50}

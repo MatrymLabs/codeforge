@@ -113,3 +113,62 @@ dustbloom_salve:
   name: a herbal salve (dustbloom)
   makes: herbal_salve
   inputs: {dustbloom: 2}
+
+# --- Refinement chains (Crafting Campaign, slice 1a). The refinement tiers as data: each step
+# --- takes a lower tier and mints the next, so a maker climbs RAW -> REFINED -> COMPONENT ->
+# --- PRODUCT rather than crafting raw materials straight into gear. See
+# --- docs/world/crafting_materials.md. Every input/output is cross-checked against items.yaml at
+# --- boot (parts.world.seed.load_recipes), so a chain can never reference a material that isn't real.
+
+# METAL CHAIN: raw ore -> wrought ingot -> iron fitting -> a traveller's buckler.
+smelt_wrought_ingot:
+  name: a wrought ingot (smelted)
+  makes: wrought_ingot
+  inputs: {raw_ore: 3}
+forge_iron_fitting:
+  name: an iron fitting (forged)
+  makes: iron_fitting
+  inputs: {wrought_ingot: 2}
+assemble_travelers_buckler:
+  name: a traveller's buckler (assembled)
+  makes: travelers_buckler
+  inputs: {iron_fitting: 2, ember_shard: 2}
+
+# ALCHEMY CHAIN: each gather-herb -> a shared herbal reagent -> a restorative tonic. One distil
+# recipe per herb (mirrors the eight salves), all converging on the same refined reagent.
+distil_meadowfoil_reagent:
+  name: herbal reagent (meadowfoil)
+  makes: herbal_reagent
+  inputs: {meadowfoil: 3}
+distil_fernshade_reagent:
+  name: herbal reagent (fernshade)
+  makes: herbal_reagent
+  inputs: {fernshade: 3}
+distil_moorbell_reagent:
+  name: herbal reagent (moorbell)
+  makes: herbal_reagent
+  inputs: {moorbell: 3}
+distil_saltkelp_reagent:
+  name: herbal reagent (saltkelp)
+  makes: herbal_reagent
+  inputs: {saltkelp: 3}
+distil_frostmoss_reagent:
+  name: herbal reagent (frostmoss)
+  makes: herbal_reagent
+  inputs: {frostmoss: 3}
+distil_cinderroot_reagent:
+  name: herbal reagent (cinderroot)
+  makes: herbal_reagent
+  inputs: {cinderroot: 3}
+distil_vinesilk_reagent:
+  name: herbal reagent (vinesilk)
+  makes: herbal_reagent
+  inputs: {vinesilk: 3}
+distil_dustbloom_reagent:
+  name: herbal reagent (dustbloom)
+  makes: herbal_reagent
+  inputs: {dustbloom: 3}
+brew_restorative_tonic:
+  name: a restorative tonic (brewed)
+  makes: restorative_tonic
+  inputs: {herbal_reagent: 2, ember_shard: 1}
