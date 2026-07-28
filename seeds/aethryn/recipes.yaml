@@ -78,3 +78,38 @@ forge_reachlord_signet:
   name: the Reachlord's Signet
   makes: reachlord_signet
   inputs: {brine_essence: 1, grove_essence: 1, rime_essence: 1, molten_essence: 1, storm_essence: 1}
+
+# Herbal salves: each biome's gather-herb (items.yaml) worked into a healing salve, so every
+# forageable material feeds a real recipe (the maker's loop reaches the wilds' herbs, not just ore).
+meadowfoil_salve:
+  name: a herbal salve (meadowfoil)
+  makes: herbal_salve
+  inputs: {meadowfoil: 2}
+fernshade_salve:
+  name: a herbal salve (fernshade)
+  makes: herbal_salve
+  inputs: {fernshade: 2}
+moorbell_salve:
+  name: a herbal salve (moorbell)
+  makes: herbal_salve
+  inputs: {moorbell: 2}
+saltkelp_salve:
+  name: a herbal salve (saltkelp)
+  makes: herbal_salve
+  inputs: {saltkelp: 2}
+frostmoss_salve:
+  name: a herbal salve (frostmoss)
+  makes: herbal_salve
+  inputs: {frostmoss: 2}
+cinderroot_salve:
+  name: a herbal salve (cinderroot)
+  makes: herbal_salve
+  inputs: {cinderroot: 2}
+vinesilk_salve:
+  name: a herbal salve (vinesilk)
+  makes: herbal_salve
+  inputs: {vinesilk: 2}
+dustbloom_salve:
+  name: a herbal salve (dustbloom)
+  makes: herbal_salve
+  inputs: {dustbloom: 2}

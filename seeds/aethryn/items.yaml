@@ -1463,3 +1463,52 @@ emberdeep_warning:
     Go down if you must, Forger. Take its hammer. But know what you are looking at: not the deep's evil,
     but ours -- the making that would not stop, that burned past every reason, until it could not tell
     the difference between forging a world and unmaking one. We struck this brand to remember. Remember."
+
+# Biome gather-herbs (MOD-04 wildlands): one crafting material per biome, gathered at wilderness
+# nodes (parts/world/wildlands._BIOME_HERB) and worked into a herbal salve at the bench (recipes.yaml).
+meadowfoil:
+  name: a sprig of meadowfoil
+  keywords: [meadowfoil, herb, material]
+  location: nowhere
+  resettable: false
+fernshade:
+  name: a frond of fernshade
+  keywords: [fernshade, herb, material]
+  location: nowhere
+  resettable: false
+moorbell:
+  name: a stem of moorbell
+  keywords: [moorbell, herb, material]
+  location: nowhere
+  resettable: false
+saltkelp:
+  name: a strand of saltkelp
+  keywords: [saltkelp, herb, material]
+  location: nowhere
+  resettable: false
+frostmoss:
+  name: a clump of frostmoss
+  keywords: [frostmoss, herb, material]
+  location: nowhere
+  resettable: false
+cinderroot:
+  name: a knot of cinderroot
+  keywords: [cinderroot, herb, material]
+  location: nowhere
+  resettable: false
+vinesilk:
+  name: a coil of vinesilk
+  keywords: [vinesilk, herb, material]
+  location: nowhere
+  resettable: false
+dustbloom:
+  name: a dustbloom flower
+  keywords: [dustbloom, herb, material]
+  location: nowhere
+  resettable: false
+herbal_salve:
+  name: a herbal salve
+  keywords: [salve, poultice, herbal, heal]
+  location: nowhere
+  resettable: false
+  consume: {hp: 20}

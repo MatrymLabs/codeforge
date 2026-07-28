@@ -11,6 +11,8 @@ import pytest
 
 from parts.world.seed import SeedError
 from parts.world.wildlands import (
+    _BIOME_HERB,
+    gatherable_materials,
     generate_wildlands,
     wildlands_zones,
     wire_attach_exits,
@@ -229,3 +231,12 @@ def test_wild_scale_refuses_a_bad_or_shrinking_value(monkeypatch, tmp_path, bad)
     monkeypatch.setenv("CODEFORGE_WILD_SCALE", bad)
     with pytest.raises(SeedError, match="CODEFORGE_WILD_SCALE"):
         load_wildlands_config(p)
+
+
+def test_gatherable_materials_offers_the_shard_the_herb_and_ore_where_it_lies():
+    meadow = gatherable_materials("temperate-meadow")  # not an ore biome
+    assert meadow == ("ember_shard", _BIOME_HERB["temperate-meadow"])
+    glacier = gatherable_materials("glacier-waste")  # an ore biome
+    assert glacier == ("ember_shard", "hollow_ingot", _BIOME_HERB["glacier-waste"])
+    # an unknown biome still yields the common shard, never empty
+    assert gatherable_materials("no-such-biome") == ("ember_shard",)
