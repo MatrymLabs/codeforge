@@ -1233,14 +1233,20 @@ def load_recipes(path: Path) -> dict[str, Recipe]:
 
 
 def _inspect_recipe_gate(label: str, requires: object) -> dict[str, object]:
-    """Validate a recipe's optional acquisition gate (slice 1d). Returns the cleaned dict, or {} if
-    absent. `profession` (str) demands a `level` (positive int); `order` (str) is standalone. Fails
-    loud on any other key or a malformed value, so a typo'd gate never silently opens a recipe."""
+    """Validate a recipe's optional acquisition gate. Returns the cleaned dict, or {} if absent.
+    `profession` (str) demands a `level` (positive int); `order` (str) is standalone; `standing` (a
+    positive int reputation) rides an `order`. Fails loud on any other key or a malformed value, so
+    a typo'd gate never silently opens a recipe."""
     if requires is None:
         return {}
-    if not isinstance(requires, dict) or set(requires) - {"profession", "level", "order"}:
+    if not isinstance(requires, dict) or set(requires) - {
+        "profession",
+        "level",
+        "order",
+        "standing",
+    }:
         raise SeedError(
-            f"recipe '{label}': 'requires' allows only 'profession'/'level'/'order' keys."
+            f"recipe '{label}': 'requires' allows only profession/level/order/standing keys."
         )
     gate: dict[str, object] = {}
     if "profession" in requires or "level" in requires:
@@ -1255,6 +1261,13 @@ def _inspect_recipe_gate(label: str, requires: object) -> dict[str, object]:
         if not isinstance(order, str) or not order:
             raise SeedError(f"recipe '{label}': 'requires.order' must name an Order.")
         gate["order"] = order
+    standing = requires.get("standing")
+    if standing is not None:
+        if not isinstance(standing, int) or isinstance(standing, bool) or standing < 1:
+            raise SeedError(f"recipe '{label}': 'requires.standing' must be a positive integer.")
+        if order is None:
+            raise SeedError(f"recipe '{label}': 'requires.standing' needs an 'order' to stand with")
+        gate["standing"] = standing
     return gate
 
 

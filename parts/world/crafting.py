@@ -26,10 +26,10 @@ def _held(prototype: str) -> list[str]:
 
 
 def locked_reason(session: Session, recipe: Mapping[str, object]) -> str | None:
-    """Why this recipe is beyond the crafter, or None if they may forge it (slice 1d). A gated
-    recipe demands a profession LEVEL (earned by practising the trade) and/or a sworn ORDER;
-    knowledge derives from the player's professions + allegiance, never a stored flag. An ungated
-    recipe is always open."""
+    """Why this recipe is beyond the crafter, or None if they may forge it. A gated recipe demands a
+    profession LEVEL (slice 1d), a sworn ORDER, and/or a reputation STANDING with that Order; the
+    check derives from the player's professions, allegiance, and standing, never a stored flag. An
+    ungated recipe is always open."""
     gate = recipe.get("requires")
     if not isinstance(gate, dict):
         return None
@@ -43,10 +43,17 @@ def locked_reason(session: Session, recipe: Mapping[str, object]) -> str | None:
             name = PROFESSIONS[prof]["name"] if prof in PROFESSIONS else prof
             return f"needs {name} level {need}"
     order = gate.get("order")
-    if isinstance(order, str) and getattr(session, "order", "") != order:
+    if isinstance(order, str):
         from parts.world.orders import order_name
 
-        return f"needs the {order_name(order)}"
+        if getattr(session, "order", "") != order:
+            return f"needs {order_name(order)}"  # order_name already carries 'the'
+        standing = gate.get("standing")
+        if isinstance(standing, int):
+            from parts.world.reputation import standing_of, tier_for
+
+            if standing_of(session, order) < standing:
+                return f"needs standing {tier_for(standing)} with {order_name(order)}"
     return None
 
 

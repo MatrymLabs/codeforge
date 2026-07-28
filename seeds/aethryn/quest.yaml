@@ -6,7 +6,9 @@ reward_xp: 60
 
 steps:
   - {state: offered,  event: accept, to: accepted}
-  - {state: accepted, event: enter,  to: done, on_enter: greenhold, effect: award_xp}
+  # Completing the first road earns XP and a little standing with the Making Order (the makers who
+  # keep the roads) -- the reputation web that faction-gated content is unlocked through.
+  - {state: accepted, event: enter,  to: done, on_enter: greenhold, effect: "award_xp;grant_rep:making:40"}
 
 terminal: [done]
 
