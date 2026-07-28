@@ -73,8 +73,9 @@ salve: every forageable herb feeds the refined tier, so no herb is a dead end.
 - **Hide -> leather** and other monster materials are **slice 1c**: hides, scales, bone, and essence
   come off the bestiary (`parts.world.armory`/`relics` drop plumbing), so that chain is built when
   monster materials are wired, not before, to keep every material sourced.
-- **Professions** (mining, logging, herbalism, skinning, smithing, alchemy) are **slice 1b**: a
-  data-driven track over these same chains, composing with the existing calling ladder.
+- **Professions** (mining, herbalism, smithing, alchemy, ...) shipped as **slice 1b**: a data-driven
+  skill track over these same chains, composing with the existing calling ladder. See
+  [professions.md](professions.md).
 - **Recipe acquisition** (train / discover / quest / faction-gated) is **slice 1d**, over
   `parts.world.factions`.
 

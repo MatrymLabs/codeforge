@@ -41,6 +41,7 @@ class CharacterRecord:
     coins: int = 0
     quest_state: str = ""
     allocated: str = ""  # JSON: attribute -> allocated points (build customization)
+    professions: str = ""  # 'trade:practice' pairs, comma-joined (the maker's trade skills)
     auth_salt: str | None = None
     auth_hash: str | None = None
 

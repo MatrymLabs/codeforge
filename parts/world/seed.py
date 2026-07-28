@@ -285,6 +285,20 @@ class Recipe(TypedDict):
     inputs: dict[str, int]  # material prototype label -> quantity consumed from the inventory
 
 
+class Profession(TypedDict):
+    """A maker's TRADE: a data-driven skill track leveled by DOING (parts.world.professions).
+
+    `kind` is 'gather' or 'craft'. A gather trade lists the material prototype labels it `works`; a
+    craft trade lists the recipe labels it `makes`. Skill is earned by gathering/crafting what the
+    trade governs; persists per character. The world is data: trades are YAML, validated at boot.
+    """
+
+    name: str  # display name, e.g. "Smithing"
+    kind: str  # 'gather' | 'craft'
+    works: list[str]  # gather trade: material prototype labels (empty for a craft trade)
+    makes: list[str]  # craft trade: recipe labels (empty for a gather trade)
+
+
 class GearSet(TypedDict):
     """A gear SET: wear every one of its `pieces` at once and earn a flat `bonus` on top of the
     pieces' own mods, so collecting a whole regional set beats three unrelated pieces. The world is
@@ -1091,6 +1105,52 @@ def load_recipes(path: Path) -> dict[str, Recipe]:
             inputs={str(k): int(v) for k, v in inputs.items()},
         )
     return recipes
+
+
+def load_professions(path: Path) -> dict[str, Profession]:
+    """Load a seed's optional maker TRADES. {} if the seed ships none; fails loud on a bad one.
+
+    Each trade names its `kind` ('gather' or 'craft') and what it governs: a gather trade lists the
+    material prototypes it `works`; a craft trade lists the recipe labels it `makes`. The references
+    are cross-checked against the seed's items and recipes by the professions conformance test, so a
+    trade can never govern a material or recipe that isn't real.
+    """
+    if not path.exists():
+        return {}
+    entries, template = _open_seed_bin(path, "profession")
+    professions: dict[str, Profession] = {}
+    for label, fields in entries.items():
+        merged: dict[str, Any] = {
+            "name": _phrase(label).title(),
+            "kind": "",
+            "works": [],
+            "makes": [],
+        }
+        merged.update(template)
+        merged.update(fields)
+        _inspect_required_types(
+            label,
+            merged,
+            (("name", str), ("kind", str), ("works", list), ("makes", list)),
+        )
+        kind = merged["kind"]
+        if kind not in ("gather", "craft"):
+            raise SeedError(
+                f"profession '{label}': 'kind' must be 'gather' or 'craft', got {kind!r}."
+            )
+        key = "works" if kind == "gather" else "makes"
+        governed = merged[key]
+        if not governed or not all(isinstance(x, str) and x for x in governed):
+            raise SeedError(
+                f"profession '{label}': a {kind} trade needs a non-empty '{key}' list of labels."
+            )
+        professions[label] = Profession(
+            name=str(merged["name"]),
+            kind=str(kind),
+            works=[str(x) for x in merged["works"]],
+            makes=[str(x) for x in merged["makes"]],
+        )
+    return professions
 
 
 def load_sets(path: Path) -> dict[str, "GearSet"]:

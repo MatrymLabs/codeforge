@@ -73,6 +73,9 @@ class CharacterRow(ArchiveBase):
     # `allocate` verb spends; folded onto the job's base stats on restore. Derive-don't-store holds:
     # the points spent are canonical, the resulting stats recompute.
     allocated: Mapped[str] = mapped_column(default="")
+    # The maker's trades as 'trade:practice' pairs, comma-joined, or "". Profession skill the
+    # `gather`/`craft` verbs earn; level recomputes from practice on restore (derive-don't-store).
+    professions: Mapped[str] = mapped_column(default="")
     auth_salt: Mapped[str | None] = mapped_column(default=None)  # legacy v1 char passwords
     auth_hash: Mapped[str | None] = mapped_column(default=None)
 

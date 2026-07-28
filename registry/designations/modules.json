@@ -5810,5 +5810,31 @@
     "aliases": [],
     "created": "2026-07-27",
     "updated": "2026-07-27"
+  },
+  {
+    "designation": "MOD-04.102",
+    "name": "professions",
+    "status": "active",
+    "function": "the maker's trades: skill tracks leveled by gathering and crafting (persisted per hero)",
+    "label": "professions",
+    "file": "parts/world/professions.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "",
+    "tests": "tests/test_professions.py",
+    "depends_on": [],
+    "related": [
+      "crafting",
+      "gather"
+    ],
+    "reuse": "",
+    "notes": "professions.advance: gather/craft what a trade governs to earn practice; level derives from it. Slice 1b of the Crafting Campaign.",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-27",
+    "updated": "2026-07-27"
   }
 ]
