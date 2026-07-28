@@ -5697,5 +5697,39 @@
     "aliases": [],
     "created": "2026-07-27",
     "updated": "2026-07-27"
+  },
+  {
+    "designation": "MOD-04.098",
+    "name": "zone_story",
+    "status": "active",
+    "function": "assemble a zone's scattered content into one story dossier (the Zone Story Framework)",
+    "label": "zone_story",
+    "file": "parts/world/zone_story.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "docs/quest_archetypes.md",
+    "tests": "tests/test_zone_story.py",
+    "depends_on": [
+      "seed"
+    ],
+    "related": [
+      "zones",
+      "quest",
+      "storylines",
+      "wardens",
+      "inscriptions",
+      "landmarks",
+      "cull",
+      "forage"
+    ],
+    "reuse": "the ZONE STORY FRAMEWORK (content campaign slice 2, Part II): every zone already carries its pieces across six generators (tale/dungeon+warden/monument/inscription/cull+forage board); assemble(zone_label) gathers them from the LIVE world into one ZoneStory (read-only, derived, invents nothing), and region_view(session) renders the dossier of the zone the player stands in -- its history, dangers, and opportunities at a glance (the `region` verb, CMD-04.092). Added quest.all_ids()/hook_of() so it surveys the board without touching the private registry.",
+    "notes": "Composes, never replaces: a zone's story is exactly the sum of its filed content. Finds the dungeon by the room whose <room>_deep_boss exists; the settlement by its _merchant; lore from the landmark/inscription items; cull/forage counts by the zone-scoped id prefix. The completeness test pins that a dungeon-bearing zone reports its full depths (warden -> inscription).",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-27",
+    "updated": "2026-07-27"
   }
 ]

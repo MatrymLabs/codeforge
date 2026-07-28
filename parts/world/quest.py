@@ -192,6 +192,21 @@ def register_spine(zones: list[dict[str, object]]) -> None:
     _fold_in([spec] if spec is not None else [])
 
 
+def all_ids() -> list[str]:
+    """Every registered quest id (read-only). Lets other modules survey the board without reaching
+    into the private registry -- e.g. zone_story counting a zone's culls, or analytics."""
+    return list(_QUESTS)
+
+
+def hook_of(quest_id: str) -> str | None:
+    """A quest's START-state label -- its player-independent 'hook' (what the board first says), or
+    None for an unknown id. Used to show a quest in a dossier without opening a per-player run."""
+    quest = _QUESTS.get(quest_id)
+    if quest is None:
+        return None
+    return quest.workflow.labels.get(quest.workflow.machine.start)
+
+
 def register_specs(specs: list[QuestSpec]) -> None:
     """Fold a pre-built list of generated QuestSpecs into the engine. For archetypes whose generator
     also produces side-artifacts world.py must place (e.g. delivery's parcel items), so world.py
