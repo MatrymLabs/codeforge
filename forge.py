@@ -74,6 +74,7 @@ from parts.world.doors import reclose, unlock
 from parts.world.engineer import deploy_barrier, diagnostic_scan, field_repair
 from parts.world.equipment import equip, unequip
 from parts.world.events import announce, announce_frame, bind_echo, rename_echo, unbind_echo
+from parts.world.factions import render_factions
 from parts.world.frames import SpeechFrame
 from parts.world.items import (
     drop,
@@ -111,7 +112,7 @@ HELP_TEXT = (
     "Commands: look, go <direction> (or n/s/e/w/u/d), "
     "take, drop, inventory, talk <npc>, ask <npc> about <topic>, say <msg>, name <yourname>, who, "
     "jobs, job <calling>, subjob <calling>, join <order>, wallet, quaff <item>, contracts, region, "
-    "weather, score, "
+    "weather, factions, score, "
     "equip <item>, unequip <slot>, "
     "attack <target>, skills, use <ability> [on <foe>], repair, scan <target>, deploy, calibrate, "
     "channel, journal [text], vitals, "
@@ -1436,6 +1437,15 @@ def _build_commands() -> CommandSet:
             "CMD-04.093",
             "the season and sky over the world right now",
             lambda s, _a: weather_view(s),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "factions",
+            "CMD-04.094",
+            "the standing between the Orders: who is allied, who is rival",
+            lambda s, _a: render_factions(getattr(s, "order", "") or ""),
             namespace=CORE,
         )
     )

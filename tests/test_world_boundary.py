@@ -54,6 +54,7 @@ _GAME_SEED = {
     "zone_story",
     "respawn",
     "climate",
+    "factions",
     "storylines",
     "townsfolk",
     "rooms",
