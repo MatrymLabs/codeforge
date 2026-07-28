@@ -48,3 +48,9 @@ native/*/target/
 
 # Go service organs (the compiled edge binary; keep go.mod for reproducibility)
 native/edge/codeforge-edge
+
+# Protocol spine: generated bindings (rebuilt via `make proto`; keep the .proto source + go.sum)
+proto/telemetry_pb2.py
+proto/*_pb2.pyi
+native/spine/telemetrypb/
+native/spine/xcheck/xcheck

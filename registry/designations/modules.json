@@ -5966,5 +5966,30 @@
     "aliases": [],
     "created": "2026-07-28",
     "updated": "2026-07-28"
+  },
+  {
+    "designation": "MOD-04.108",
+    "name": "telemetry",
+    "status": "active",
+    "function": "the protocol spine: one typed frame contract, json + protobuf codecs",
+    "label": "telemetry",
+    "file": "parts/telemetry.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "docs/adr/0012-protocol-spine.md",
+    "tests": "tests/test_telemetry.py",
+    "depends_on": [],
+    "related": [
+      "gmcp"
+    ],
+    "reuse": "a language-neutral typed wire contract (proto/telemetry.proto) for any cross-language service; the keystone the polyglot organs share",
+    "notes": "JSON reference codec (always) + optional protobuf codec from one .proto compiled to Python + Go; cross-language byte-parity pinned by tests/test_telemetry.py via native/spine/xcheck. The protocol spine (ADR-0012).",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-28",
+    "updated": "2026-07-28"
   }
 ]
