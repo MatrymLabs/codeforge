@@ -196,6 +196,12 @@ class Npc(TypedDict):
     # is a damage-over-time of that name (`damage` per beat for `ticks`). `chance` is 1-in-N (def.
     # 1 = always). The substrate a telegraphed boss special needs. Validated at load.
     inflicts: NotRequired[dict[str, object]]
+    # Optional (boss-tier): a TELEGRAPHED SPECIAL (parts.world.boss_specials). {telegraph, mult?,
+    # cadence?} -- once enraged, the boss winds up (announcing `telegraph`, no blow that beat) then
+    # unleashes a `mult`x blow with a guaranteed affliction, at most 1-in-`cadence` of its beats.
+    # `charging` is the runtime wind-up flag (never seeded). Validated at load.
+    special: NotRequired[dict[str, object]]
+    charging: NotRequired[bool]
     # Item prototype labels this NPC drops when defeated: a fresh instance of each is spawned into
     # the room (parts.world.items.clone). Optional; a bare NPC drops nothing. Loot is real object
     # instancing -- the drop is a new instance, so it never collides with the seed original.
@@ -807,6 +813,21 @@ def load_npcs(path: Path) -> dict[str, Npc]:
                     not isinstance(value, int) or isinstance(value, bool) or value < 1
                 ):
                     raise SeedError(f"NPC '{label}': 'inflicts.{key}' must be a positive integer.")
+        special = merged.get("special")
+        if special is not None:
+            if not isinstance(special, dict) or set(special) - {"telegraph", "mult", "cadence"}:
+                raise SeedError(
+                    f"NPC '{label}': 'special' allows only telegraph/mult/cadence keys."
+                )
+            tele = special.get("telegraph")
+            if tele is not None and (not isinstance(tele, str) or not tele.strip()):
+                raise SeedError(f"NPC '{label}': 'special.telegraph' must be non-empty text.")
+            for key in ("mult", "cadence"):
+                value = special.get(key)
+                if value is not None and (
+                    not isinstance(value, int) or isinstance(value, bool) or value < 1
+                ):
+                    raise SeedError(f"NPC '{label}': 'special.{key}' must be a positive integer.")
         # Optional shop: a merchant's `sells`/`buys` price tables. Prices are positive ints; the
         # prototypes are cross-checked against the seed's items at boot (inspect_world_links).
         shop = merged.get("shop")
@@ -856,6 +877,8 @@ def load_npcs(path: Path) -> dict[str, Npc]:
             npc["resistances"] = dict(resistances)
         if inflicts:
             npc["inflicts"] = dict(inflicts)
+        if special:
+            npc["special"] = dict(special)
         npcs[label] = npc
     return npcs
 

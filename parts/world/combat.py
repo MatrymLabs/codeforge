@@ -197,6 +197,20 @@ def _resolve_npc_blow(session: Session, npc: Npc, verb: str) -> str:
     raw = npc_strike_power(npc)
     if raw <= 0:
         return ""  # the training dummy and every peaceful NPC: no blow
+    # A telegraphed boss SPECIAL (parts.world.boss_specials): an enraged boss may spend this beat
+    # WINDING UP (it announces and lands no blow, a free beat for the hero), then UNLEASH next --
+    # a heavier hit whose affliction is guaranteed. A non-boss or an un-special boss is untouched.
+    from parts.world.boss_specials import is_charging, maybe_begin_charge, unleash
+
+    special_line, guaranteed = "", False
+    if is_charging(npc):
+        raw, special_line = unleash(npc, raw)
+        guaranteed = True
+    else:
+        telegraph = maybe_begin_charge(npc)
+        if telegraph:
+            announce(session.location, telegraph, exclude=session.player_id)
+            return telegraph  # the wind-up: no blow this beat, only the read
     # A wounded BOSS enrages (parts.world.boss_phases): below its threshold its blows redouble, and
     # the room hears it announced once. A non-boss, or a boss above the line, is untouched.
     raw, phase_line = boss_phase(npc, raw)
@@ -232,16 +246,23 @@ def _resolve_npc_blow(session: Session, npc: Npc, verb: str) -> str:
     else:  # Immune or Absorb: the blow lands no damage, the note carries the outcome
         body = f"{name} {verb}.{resist_note}"
     line = f"{body} (HP {hp.current}/{hp.maximum})"
-    # A boss's venomous or stunning blow may lay an affliction on the player (afflictions.py),
-    # rolled from the NPC's opt-in `inflicts` spec. Only a blow that landed damage can afflict.
+    # A boss's venomous or stunning blow may lay an affliction on the player (afflictions.py), from
+    # the NPC's `inflicts` spec -- but an UNLEASHED special's affliction is GUARANTEED (it was
+    # telegraphed; it connects). Only a blow that landed damage can afflict.
     if power > 0:
-        from parts.world.afflictions import maybe_inflict
+        from parts.world.afflictions import inflict, maybe_inflict
 
-        afflicted = maybe_inflict(session, npc.get("inflicts"))
+        spec = npc.get("inflicts")
+        if guaranteed and spec:
+            afflicted: str | None = inflict(session, spec)
+        else:
+            afflicted = maybe_inflict(session, spec)
         if afflicted:
             line = f"{line}\n{afflicted}"
     if phase_line:  # a fresh enrage announces before the blow it empowers
         line = f"{phase_line}\n{line}"
+    if special_line:  # an unleashed special announces before its heavy blow
+        line = f"{special_line}\n{line}"
     # The Engineer's Emergency Repair reacts to a dangerous blow: it auto-heals once (then cools
     # down), and can pull the player back from a fall. Returns None for anyone else, or on cooldown.
     repair = emergency_repair(session)
@@ -315,6 +336,7 @@ def land_hit(session: Session, npc: Npc, nid: str, dmg: int) -> tuple[bool, str]
     npc["hp_now"] = npc["hp"]  # the dummy reassembles at full health
     npc.pop("burn", None)  # a reassembled foe is whole again -- any burn is quenched
     npc.pop("dazed", None)  # ...and shakes off any daze
+    npc.pop("charging", None)  # ...and abandons any wind-up (a boss special resets on recovery)
     npc.pop("weakened", None)  # ...and recovers its full strength
     announce(
         session.location,

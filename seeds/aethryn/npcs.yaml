@@ -81,6 +81,7 @@ the_black_hollow_guardian:
   drops: [greater_healing_draught]
   loot: {ember_shard: 5, nothing: 2}
   inflicts: {status: daze, chance: 3, beats: 1}  # a dark, reeling blow costs the hero an action
+  special: {telegraph: "The guardian draws the hollow's dark in around its fists", mult: 2, cadence: 3}
 
 caeloria_warden:
   name: a warden of Caeloria
@@ -316,6 +317,7 @@ heart_of_xilnath_guardian:
   drops: [greater_healing_draught]
   loot: {ember_shard: 5, nothing: 2}
   inflicts: {status: venom, chance: 2, damage: 12, ticks: 4}  # its bite leaves a venom that saps you
+  special: {telegraph: "The guardian rears, venom beading along its fangs", mult: 2, cadence: 3}
 
 thalorin_warden:
   name: a warden of Thalorin
