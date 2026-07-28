@@ -296,3 +296,28 @@ jobs:
 
       - name: Benchmark evidence (non-fatal)
         run: python -u benchmarks/bench_telemetry.py 20000 || true
+
+  # Polyglot in-process kernel (hand-written C, raw CPython API): build the extension and prove it
+  # matches the pure-Python fallback (parity + a hypothesis property test). NOT a required check --
+  # the main `check` gate runs on the fallback, so a C-toolchain hiccup never blocks a merge
+  # (ADR-0010: Python-first, native-optional).
+  c-kernel:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7
+
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1  # v6
+        with:
+          python-version: "3.13"
+
+      - name: Build + install the C text kernel (system cc)
+        run: pip install ./native/textkernel
+
+      - name: Install the Python test deps
+        run: pip install -e ".[dev]"
+
+      - name: Parity test (C kernel present, matched to the Python reference)
+        run: python -m pytest tests/test_textmatch.py -q
+
+      - name: Benchmark evidence (non-fatal)
+        run: python -u benchmarks/bench_textmatch.py 20000 || true

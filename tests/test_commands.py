@@ -248,6 +248,26 @@ def test_unknown_word_naming_no_exit_still_huhs(_named_exits: None) -> None:
     assert session.location == "forge"
 
 
+def test_a_near_miss_command_suggests_the_nearest_spine_verb() -> None:
+    # The "did you mean ...?" nudge, reachable through the tick (parts.shelf.textmatch).
+    session = _walker("forge")
+    verbs = {c.verb.split(" ", 1)[0].lower() for c in COMMANDS.available_to(session)}
+    target = next(v for v in sorted(verbs, key=len, reverse=True) if len(v) >= 5)
+    out = handle_command(
+        session, target[:-1]
+    )  # drop the last char: edit distance 1 from a real verb
+    assert "Huh?" in out
+    assert "Did you mean `" in out
+
+
+def test_pure_nonsense_gets_no_suggestion() -> None:
+    # The max-distance guard: gibberish far from every verb gets a plain refusal, not a wild guess.
+    session = _walker("forge")
+    out = handle_command(session, "qwertyzxcv")
+    assert "Huh?" in out
+    assert "Did you mean" not in out
+
+
 # --- stage 2 slice E: console/diagnostic verbs, now on the spine -------------
 
 

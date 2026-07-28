@@ -6016,5 +6016,28 @@
     "aliases": [],
     "created": "2026-07-28",
     "updated": "2026-07-28"
+  },
+  {
+    "designation": "MOD-05.067",
+    "name": "textmatch",
+    "status": "active",
+    "function": "fuzzy string matching: Levenshtein edit distance + the nearest candidate",
+    "label": "textmatch",
+    "file": "parts/shelf/textmatch.py",
+    "type": "MOD",
+    "domain": "05",
+    "docs": "docs/adr/0010-polyglot-native-extensions.md",
+    "tests": "tests/test_textmatch.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "any 'did you mean ...?' / typo-tolerant lookup: nearest command, item, exit, or label by edit distance",
+    "notes": "Hardware Store part; pure-Python levenshtein_py reference + an identical-interface hand-written C accelerator (native/textkernel, raw CPython API, ~53x); parity + hypothesis-pinned. WIRED as the engine tick's 'did you mean' nudge (forge._did_you_mean). In-process kernel under ADR-0010.",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-28",
+    "updated": "2026-07-28"
   }
 ]

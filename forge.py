@@ -1949,6 +1949,21 @@ def _quit_cmd(session: Session, _arg: str) -> str:
 COMMANDS = _build_commands()
 
 
+def _did_you_mean(session: Session, routed_signal: str) -> str:
+    """A gentle nudge on an unknown command: the nearest reachable spine verb, but only on a genuine
+    near-miss (edit distance <= 2), so a real typo gets help and pure nonsense just gets 'Huh?'.
+
+    Uses the textmatch shelf part (parts.shelf.textmatch), C-accelerated when built (ADR-0010)."""
+    from parts.shelf.textmatch import closest
+
+    typed = routed_signal.split(" ", 1)[0]
+    if not typed:
+        return ""
+    verbs = {c.verb.split(" ", 1)[0].lower() for c in COMMANDS.available_to(session)}
+    hit = closest(typed, verbs, max_distance=2)
+    return f" Did you mean `{hit}`?" if hit else ""
+
+
 def _route(session: Session, true_signal: str, routed_signal: str) -> str:
     """Resolve one player command to its response, before the world takes its beat."""
     # The command spine is tried first; it returns None for anything it doesn't own,
@@ -1973,7 +1988,7 @@ def _route(session: Session, true_signal: str, routed_signal: str) -> str:
             return crossed
         if routed_signal in WORLD[session.location]["exits"]:
             return _resolve_move(session, routed_signal)
-    return "Huh? Type HELP for commands."
+    return "Huh? Type HELP for commands." + _did_you_mean(session, routed_signal)
 
 
 def handle_command(session: Session, signal: str) -> str:
