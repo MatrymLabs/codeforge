@@ -249,3 +249,50 @@ jobs:
 
       - name: Benchmark evidence (non-fatal)
         run: python -u benchmarks/bench_edge.py 400 || true
+
+  # Polyglot protocol spine (Protocol Buffers): compile the ONE .proto to Python + Go and prove a
+  # telemetry frame crosses languages byte-for-byte. NOT a required check -- the main `check` gate
+  # runs on the JSON fallback, so a protobuf-toolchain hiccup never blocks a merge (ADR-0012).
+  spine:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7
+
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1  # v6
+        with:
+          python-version: "3.13"
+
+      - uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff  # v5
+        with:
+          go-version: "1.24"
+
+      - name: Install protoc + protoc-gen-go (pinned)
+        run: |
+          PROTOC_VER=27.3
+          curl -sSLo /tmp/protoc.zip \
+            "https://github.com/protocolbuffers/protobuf/releases/download/v${PROTOC_VER}/protoc-${PROTOC_VER}-linux-x86_64.zip"
+          sudo unzip -q -o /tmp/protoc.zip -d /usr/local bin/protoc 'include/*'
+          protoc --version
+          go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.34.2
+          echo "$(go env GOPATH)/bin" >> "$GITHUB_PATH"
+
+      - name: Install the Python deps (dev + the optional protobuf runtime)
+        run: |
+          pip install -e ".[dev]"
+          pip install "protobuf==5.27.3"
+
+      - name: Generate the spine bindings (Python + Go) from the one .proto
+        run: make proto
+
+      - name: Vet, race-test + build the Go spine (binding + xcheck)
+        run: |
+          cd native/spine
+          go vet ./...
+          go test -race -count=1 ./...
+          go build -o xcheck/xcheck ./xcheck
+
+      - name: Cross-language parity (Go <-> Python, one contract)
+        run: python -m pytest tests/test_telemetry.py -q
+
+      - name: Benchmark evidence (non-fatal)
+        run: python -u benchmarks/bench_telemetry.py 20000 || true
