@@ -78,11 +78,13 @@ class JsonCodec:
 
 # --- the protobuf codec: the optional cross-language accelerator -------------------------------
 
-# The generated binding is Any-typed (mypy override, follow_imports=skip), so these converters read
-# protobuf messages dynamically: present or absent, the type surface stays consistent.
+# The generated binding is loaded dynamically and typed Any: a string import mypy cannot resolve to
+# a partial `proto` package (which would be attr-defined when the submodule is absent), so the type
+# surface stays consistent whether or not `make proto` has been run.
 try:  # pragma: no cover - presence depends on whether `make proto` has been run
-    from proto import telemetry_pb2 as _pb
+    import importlib
 
+    _pb: Any = importlib.import_module("proto.telemetry_pb2")
     _HAS_PROTOBUF = True
 except ImportError:  # pragma: no cover - the fallback path (no protobuf toolchain / not generated)
     _pb = None

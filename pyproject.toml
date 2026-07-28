@@ -77,15 +77,6 @@ ignore_missing_imports = true
 module = "codeforge_nav"
 ignore_missing_imports = true
 
-# proto.telemetry_pb2 is the OPTIONAL generated protocol-spine binding (proto/, rebuilt via
-# `make proto`), imported opportunistically behind a JSON fallback (ADR-0012). It is git-ignored, so
-# absent in the dev/CI venv; follow_imports=skip keeps the type surface identical (Any) whether or
-# not it has been generated locally, so mypy never diverges from CI.
-[[tool.mypy.overrides]]
-module = "proto.telemetry_pb2"
-ignore_missing_imports = true
-follow_imports = "skip"
-
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 # Fail loud on typos, not silently: an unregistered marker or an unknown config
