@@ -10,6 +10,9 @@ dependencies = ["pyyaml", "sqlalchemy", "fastapi", "uvicorn", "websockets", "pyd
 # every non-dev extra into the runtime set, so `anthropic` is justified in the ledger.
 ai = ["anthropic>=0.118.0"]
 postgres = ["psycopg[binary]>=3.3.4"]
+# Embedded Lua scripting (the sandboxed @script console; parts.scripting). Optional: absent -> the
+# feature reports itself unavailable and the game is untouched (ADR-0014). lupa bundles the runtime.
+lua = ["lupa>=2.0"]
 dev = [
     # Pinned: `ruff format --check` is a hard gate, so it must be reproducible. Unpinned, CI installs
     # the latest ruff and local lags -- a minor bump (0.15 -> 0.16) reformatted and reddened CI once.
@@ -75,6 +78,20 @@ ignore_missing_imports = true
 # carries no type stubs, so don't require them -- whether or not the compiled kernel is built.
 [[tool.mypy.overrides]]
 module = "codeforge_nav"
+ignore_missing_imports = true
+
+# codeforge_textkernel is the OPTIONAL hand-written C accelerator (native/textkernel, raw CPython
+# API), imported opportunistically behind a pure-Python fallback (ADR-0010). Absent in the dev/CI
+# venv and a compiled module with no stubs, so don't require them -- built or not.
+[[tool.mypy.overrides]]
+module = "codeforge_textkernel"
+ignore_missing_imports = true
+
+# lupa is the OPTIONAL Lua runtime (the [lua] extra), imported opportunistically behind a
+# scripting_available() guard (ADR-0014). It ships no type stubs and is absent from the base dev/CI
+# venv, so don't require them -- installed or not.
+[[tool.mypy.overrides]]
+module = "lupa"
 ignore_missing_imports = true
 
 [tool.pytest.ini_options]

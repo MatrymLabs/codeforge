@@ -26,10 +26,12 @@ labels, YAML seed keys, DB columns, JSON record keys, catalog ids, and CARD docs
 plain and permanent. The metaphor lives in the code and the world; never in the thing another system
 persists, loads, or tests against.
 
-Reach for the signature vocabulary when naming new surfaces: **Forge, Spark, Core, Kiln, Seed,
+Reach for the signature vocabulary when naming new surfaces: **Forge, Spark, Core, Seed,
 Spiral, Gate, Echo, Signal, Trace, CaseFile, Archive, Floor, Skill, Quest, Lens, Keystone, Relic**;
 verbs **ignite, forge, trace, deduce, unlock, ascend, attune, calibrate, resolve, harvest**. A
-diagnostics reader is a `Lens`; a validated installer is a `Gate`.
+diagnostics reader is a `Lens`; a validated installer is a `Gate`. Reserved-but-unbuilt words -
+`Kiln`, and `AURA` (Rule 7) - are **not** current vocabulary: do not present them as existing until
+code exists (see the ship [Engineering Identity](https://github.com/MatrymLabs/ship/blob/main/ENGINEERING_IDENTITY.md) §3b).
 
 ## Rule 3 - Clarity outranks poetry
 

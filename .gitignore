@@ -45,3 +45,17 @@ build/
 # Rust native extensions (build artifacts; keep Cargo.lock for reproducibility)
 native/*/target/
 **/*.rs.bk
+
+# Go service organs (the compiled edge binary; keep go.mod for reproducibility)
+native/edge/codeforge-edge
+
+# Protocol spine: generated bindings (rebuilt via `make proto`; keep the .proto source + go.sum)
+proto/telemetry_pb2.py
+proto/*_pb2.pyi
+native/spine/telemetrypb/
+native/spine/xcheck/xcheck
+
+# C text kernel (build artifacts; keep the source in native/textkernel/src)
+native/textkernel/build/
+native/textkernel/*.so
+native/textkernel/*.egg-info/

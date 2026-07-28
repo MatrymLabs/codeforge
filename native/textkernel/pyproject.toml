@@ -1,0 +1,6 @@
+# The C text kernel is built with plain setuptools (see setup.py) -- no build-time helper libraries,
+# because the point of this organ is the raw CPython API. Isolated here so the main package never
+# depends on a C toolchain; ADR-0010 (Python-first, native-optional).
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"

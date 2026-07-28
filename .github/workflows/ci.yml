@@ -110,8 +110,8 @@ jobs:
         run: uv pip install --system -e ".[dev,postgres]"
       - name: Build the schema with Alembic (upgrade head)
         run: alembic upgrade head
-      - name: Prove the ORM round-trips on PostgreSQL
-        run: pytest tests/test_postgres_integration.py -v
+      - name: Prove the ORM round-trips + the SQL analytics run on PostgreSQL
+        run: pytest tests/test_postgres_integration.py tests/test_analytics.py -v
 
   # Drives the live HTMX dashboard with a real Chromium browser (isolated in e2e/, never in
   # `make check`). A focused front-to-back proof, so it is intentionally NOT a required check.
@@ -216,3 +216,149 @@ jobs:
 
       - name: Benchmark evidence (non-fatal)
         run: python -u benchmarks/bench_nav.py 30000 || true
+
+  # Polyglot service organ (Go): build + test the codeforge-edge gateway and prove it byte-matches
+  # the pure-Python reference proxy (the parity test). NOT a required check -- the main `check` gate
+  # runs on the fallback, so a Go-toolchain hiccup never blocks a merge (ADR-0011: Python-first,
+  # native-optional, the swap chosen at launch).
+  go-edge:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7
+
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1  # v6
+        with:
+          python-version: "3.13"
+
+      - uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff  # v5
+        with:
+          go-version: "1.24"
+
+      - name: Vet, race-test + build the Go edge
+        run: |
+          cd native/edge
+          go vet ./...
+          go test -race -count=1 ./...
+          go build -o codeforge-edge .
+
+      - name: Install the Python test deps
+        run: pip install -e ".[dev]"
+
+      - name: Parity test (Go edge present, byte-matched to the Python reference)
+        run: python -m pytest tests/test_edge.py -q
+
+      - name: Benchmark evidence (non-fatal)
+        run: python -u benchmarks/bench_edge.py 400 || true
+
+  # Polyglot protocol spine (Protocol Buffers): compile the ONE .proto to Python + Go and prove a
+  # telemetry frame crosses languages byte-for-byte. NOT a required check -- the main `check` gate
+  # runs on the JSON fallback, so a protobuf-toolchain hiccup never blocks a merge (ADR-0012).
+  spine:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7
+
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1  # v6
+        with:
+          python-version: "3.13"
+
+      - uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff  # v5
+        with:
+          go-version: "1.24"
+
+      - name: Install protoc + protoc-gen-go (pinned)
+        run: |
+          PROTOC_VER=27.3
+          curl -sSLo /tmp/protoc.zip \
+            "https://github.com/protocolbuffers/protobuf/releases/download/v${PROTOC_VER}/protoc-${PROTOC_VER}-linux-x86_64.zip"
+          sudo unzip -q -o /tmp/protoc.zip -d /usr/local bin/protoc 'include/*'
+          protoc --version
+          go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.34.2
+          echo "$(go env GOPATH)/bin" >> "$GITHUB_PATH"
+
+      - name: Install the Python deps (dev + the optional protobuf runtime)
+        run: |
+          pip install -e ".[dev]"
+          pip install "protobuf==5.27.3"
+
+      - name: Generate the spine bindings (Python + Go) from the one .proto
+        run: make proto
+
+      - name: Vet, race-test + build the Go spine (binding + xcheck)
+        run: |
+          cd native/spine
+          go vet ./...
+          go test -race -count=1 ./...
+          go build -o xcheck/xcheck ./xcheck
+
+      - name: Cross-language parity (Go <-> Python, one contract)
+        run: python -m pytest tests/test_telemetry.py -q
+
+      - name: Benchmark evidence (non-fatal)
+        run: python -u benchmarks/bench_telemetry.py 20000 || true
+
+  # Polyglot in-process kernel (hand-written C, raw CPython API): build the extension and prove it
+  # matches the pure-Python fallback (parity + a hypothesis property test). NOT a required check --
+  # the main `check` gate runs on the fallback, so a C-toolchain hiccup never blocks a merge
+  # (ADR-0010: Python-first, native-optional).
+  c-kernel:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7
+
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1  # v6
+        with:
+          python-version: "3.13"
+
+      - name: Build + install the C text kernel (system cc)
+        run: pip install ./native/textkernel
+
+      - name: Install the Python test deps
+        run: pip install -e ".[dev]"
+
+      - name: Parity test (C kernel present, matched to the Python reference)
+        run: python -m pytest tests/test_textmatch.py -q
+
+      - name: Benchmark evidence (non-fatal)
+        run: python -u benchmarks/bench_textmatch.py 20000 || true
+
+  # Polyglot embedded scripting (sandboxed Lua via lupa): install the [lua] extra and run the SAFETY
+  # suite -- every dangerous capability denied, runaway loops bounded. Evidence for a scripting organ
+  # is safety, not a benchmark. NOT a required check -- the base gate runs on the "scripting
+  # unavailable" fallback, so a Lua-runtime hiccup never blocks a merge (ADR-0014).
+  lua:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7
+
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1  # v6
+        with:
+          python-version: "3.13"
+
+      - name: Install with the Lua extra
+        run: pip install -e ".[dev,lua]"
+
+      - name: The sandbox safety suite (capabilities denied, loops bounded)
+        run: python -m pytest tests/test_scripting.py "tests/test_commands.py::test_owner_runs_a_sandboxed_script_through_the_tick" "tests/test_commands.py::test_a_sandbox_violation_returns_a_script_error_not_a_crash" -q
+
+  # Pour drift gate (ship audit 2026-07-28, debt #2): codeforge-shelf is generated from
+  # parts/shelf via parts.shelf_pour. This clones the published shelf and asserts a fresh pour
+  # matches it, so the engine's Hardware Store and the published package can never silently
+  # diverge again. NOT required -- it depends on an external clone; a hiccup should not block a merge.
+  shelf-drift:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7
+
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1  # v6
+        with:
+          python-version: "3.13"
+
+      - name: Install codeforge (so parts.shelf_pour imports)
+        run: pip install -e ".[dev]"
+
+      - name: Clone the published Hardware Store
+        run: git clone --depth 1 https://github.com/MatrymLabs/codeforge-shelf.git /tmp/codeforge-shelf
+
+      - name: Assert the pour is in sync (no drift)
+        run: python -m parts.shelf_pour --drift /tmp/codeforge-shelf

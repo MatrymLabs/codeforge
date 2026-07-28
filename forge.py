@@ -491,6 +491,28 @@ def _say_cmd(session: Session, message: str) -> str:
 PLUGIN_LOAD: PluginLoad | None = None
 
 
+def _script_command(session: Session, arg: str) -> str:
+    """Owner-only sandboxed Lua console: run a snippet, show its emit() output + return value.
+
+    The safety boundary is parts.scripting.LuaSandbox (no os/io/require; loops bounded), so even the
+    owner's console cannot reach the host. When the [lua] extra is absent, it says so cleanly."""
+    from parts.scripting import LuaSandbox, ScriptError, scripting_available
+
+    code = arg.strip()
+    if not code:
+        return "Usage: @script <lua>. Runs sandboxed (no os/io/require; loops are bounded)."
+    if not scripting_available():
+        return "Lua scripting is not installed. Enable it with: pip install '.[lua]'"
+    try:
+        result = LuaSandbox().run(code)
+    except ScriptError as exc:
+        return f"[script error] {exc}"
+    lines = list(result.output)
+    if result.value is not None:
+        lines.append(f"=> {result.value}")
+    return "\n".join(lines) if lines else "(no output)"
+
+
 def _build_commands() -> CommandSet:
     """The registry command family, filed as CMD-* designations. First family on the
     command spine; the legacy tick still handles everything else via fall-through."""
@@ -576,6 +598,16 @@ def _build_commands() -> CommandSet:
             "CMD-10.024",
             "flush the after-action tallies into the Chronicle as metrics (owner)",
             lambda _s, arg: flush_encounters(arg),
+            namespace=ADMIN,
+            min_rank="owner",
+        )
+    )
+    cs.add(
+        Command(
+            "@script",
+            "CMD-10.025",
+            "run a sandboxed Lua snippet (owner; no os/io/require, bounded loops)",
+            _script_command,
             namespace=ADMIN,
             min_rank="owner",
         )
@@ -1949,6 +1981,21 @@ def _quit_cmd(session: Session, _arg: str) -> str:
 COMMANDS = _build_commands()
 
 
+def _did_you_mean(session: Session, routed_signal: str) -> str:
+    """A gentle nudge on an unknown command: the nearest reachable spine verb, but only on a genuine
+    near-miss (edit distance <= 2), so a real typo gets help and pure nonsense just gets 'Huh?'.
+
+    Uses the textmatch shelf part (parts.shelf.textmatch), C-accelerated when built (ADR-0010)."""
+    from parts.shelf.textmatch import closest
+
+    typed = routed_signal.split(" ", 1)[0]
+    if not typed:
+        return ""
+    verbs = {c.verb.split(" ", 1)[0].lower() for c in COMMANDS.available_to(session)}
+    hit = closest(typed, verbs, max_distance=2)
+    return f" Did you mean `{hit}`?" if hit else ""
+
+
 def _route(session: Session, true_signal: str, routed_signal: str) -> str:
     """Resolve one player command to its response, before the world takes its beat."""
     # The command spine is tried first; it returns None for anything it doesn't own,
@@ -1973,7 +2020,7 @@ def _route(session: Session, true_signal: str, routed_signal: str) -> str:
             return crossed
         if routed_signal in WORLD[session.location]["exits"]:
             return _resolve_move(session, routed_signal)
-    return "Huh? Type HELP for commands."
+    return "Huh? Type HELP for commands." + _did_you_mean(session, routed_signal)
 
 
 def handle_command(session: Session, signal: str) -> str:

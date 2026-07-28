@@ -5941,5 +5941,126 @@
     "aliases": [],
     "created": "2026-07-28",
     "updated": "2026-07-28"
+  },
+  {
+    "designation": "MOD-04.107",
+    "name": "edge",
+    "status": "active",
+    "function": "a transparent TCP edge proxy in front of the gateway, Go-accelerated (goroutines)",
+    "label": "edge",
+    "file": "parts/edge.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "docs/adr/0011-service-organs.md",
+    "tests": "tests/test_edge.py",
+    "depends_on": [],
+    "related": [
+      "gateway"
+    ],
+    "reuse": "a byte-transparent connection front door; raise the thread-per-connection ceiling for any line-based TCP service",
+    "notes": "Python-first EdgeProxy with an identical-behaviour Go fallback (native/edge, goroutine-per-connection); parity-pinned. First service organ (out-of-process, ADR-0011).",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-28",
+    "updated": "2026-07-28"
+  },
+  {
+    "designation": "MOD-04.108",
+    "name": "telemetry",
+    "status": "active",
+    "function": "the protocol spine: one typed frame contract, json + protobuf codecs",
+    "label": "telemetry",
+    "file": "parts/telemetry.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "docs/adr/0012-protocol-spine.md",
+    "tests": "tests/test_telemetry.py",
+    "depends_on": [],
+    "related": [
+      "gmcp"
+    ],
+    "reuse": "a language-neutral typed wire contract (proto/telemetry.proto) for any cross-language service; the keystone the polyglot organs share",
+    "notes": "JSON reference codec (always) + optional protobuf codec from one .proto compiled to Python + Go; cross-language byte-parity pinned by tests/test_telemetry.py via native/spine/xcheck. The protocol spine (ADR-0012).",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-28",
+    "updated": "2026-07-28"
+  },
+  {
+    "designation": "MOD-04.109",
+    "name": "analytics",
+    "status": "active",
+    "function": "SQL analytics over the character archive (leaderboard, spread, wealth)",
+    "label": "analytics",
+    "file": "parts/analytics.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "docs/adr/0013-sql-analytics.md",
+    "tests": "tests/test_analytics.py",
+    "depends_on": [],
+    "related": [
+      "db"
+    ],
+    "reuse": "set-shaped reports (rank / group / aggregate) as portable SQL over any archive; a template for pushing analytics into the database engine",
+    "notes": "Python reference + identical-result SQL query (window functions/GROUP BY/aggregates) per report; parity pinned by tests/test_analytics.py; portable SQLite + PostgreSQL (Postgres-gated test). Adds no dependency (stdlib sqlite3 + approved SQLAlchemy/psycopg). The SQL analytics organ (ADR-0013).",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-28",
+    "updated": "2026-07-28"
+  },
+  {
+    "designation": "MOD-05.067",
+    "name": "textmatch",
+    "status": "active",
+    "function": "fuzzy string matching: Levenshtein edit distance + the nearest candidate",
+    "label": "textmatch",
+    "file": "parts/shelf/textmatch.py",
+    "type": "MOD",
+    "domain": "05",
+    "docs": "docs/adr/0010-polyglot-native-extensions.md",
+    "tests": "tests/test_textmatch.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "any 'did you mean ...?' / typo-tolerant lookup: nearest command, item, exit, or label by edit distance",
+    "notes": "Hardware Store part; pure-Python levenshtein_py reference + an identical-interface hand-written C accelerator (native/textkernel, raw CPython API, ~53x); parity + hypothesis-pinned. WIRED as the engine tick's 'did you mean' nudge (forge._did_you_mean). In-process kernel under ADR-0010.",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-28",
+    "updated": "2026-07-28"
+  },
+  {
+    "designation": "MOD-10.046",
+    "name": "scripting",
+    "status": "active",
+    "function": "a sandboxed Lua interpreter for safe user/creator scripts",
+    "label": "scripting",
+    "file": "parts/scripting.py",
+    "type": "MOD",
+    "domain": "10",
+    "docs": "docs/adr/0014-embedded-scripting.md",
+    "tests": "tests/test_scripting.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "embed a safe scripting language: a deny-by-default whitelist env + a bounded-execution hook, for any host that wants user extensibility",
+    "notes": "Embeds real Lua (via lupa) behind a deny-by-default sandbox (no os/io/require/load/debug; a debug-hook instruction budget bounds loops). OPTIONAL: absent -> scripting_available() False, game untouched. Evidence is the safety suite, not a benchmark. WIRED as the owner-only @script console (CMD-10.025). Embedded scripting organ (ADR-0014).",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-28",
+    "updated": "2026-07-28"
   }
 ]

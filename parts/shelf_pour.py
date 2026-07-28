@@ -1,6 +1,6 @@
 """CARD: shelf_pour -- pour the Hardware Store shelf as a standalone installable package.
 
-`cast` pours a GAME; this pours the LIBRARY. It vendors the 27 shelf cores under a FRESH top-level
+`cast` pours a GAME; this pours the LIBRARY. It vendors the shelf parts under a FRESH top-level
 package (`codeforge_shelf`, no `parts` engine anywhere), auto-detects the third-party deps they
 actually import, and writes a `pyproject.toml` that declares them. The result is the vision's second
 output made concrete: a Software Hardware Store you can pip-install and import with zero CodeForge
@@ -17,6 +17,7 @@ import ast
 import re
 import subprocess  # nosec B404 -- fixed argv, no shell; imports the poured package to prove it loads
 import sys
+import tempfile
 from collections.abc import Collection
 from dataclasses import dataclass
 from pathlib import Path
@@ -90,7 +91,15 @@ def _third_party(files: list[Path], *, exclude: Collection[str] = frozenset()) -
             elif isinstance(node, ast.ImportFrom) and node.level == 0 and node.module:
                 names = [node.module.split(".")[0]]
             for name in names:
-                if name and name not in stdlib and name != "parts" and name not in exclude:
+                # `codeforge_*` are in-tree optional native accelerators (e.g. codeforge_textkernel)
+                # imported behind a try/except fallback -- not PyPI packages, so never a poured dep.
+                if (
+                    name
+                    and name not in stdlib
+                    and name != "parts"
+                    and not name.startswith("codeforge_")
+                    and name not in exclude
+                ):
                     deps.add(name)
     return sorted(deps)
 
@@ -151,6 +160,7 @@ jobs:
       - run: python -m pip install .[test,dev]
       - run: ruff format --check .
       - run: ruff check .
+      - run: mypy
       - run: pytest -q
 """
 
@@ -177,10 +187,30 @@ jobs:
       - uses: pypa/gh-action-pypi-publish@release/v1
 """
 
+# The fleet control panel (env - fix - lint - typecheck - test - check), so a codeforge-shelf
+# contributor drives the same buttons as every other vessel. Recipe lines are tab-indented.
+_MAKEFILE = (
+    "# codeforge-shelf control panel (fleet standard). Poured; re-poured, never hand-edited.\n"
+    ".PHONY: env fix lint typecheck test check\n"
+    "env:  ## venv + editable install with the test/dev extras\n"
+    '\tpython3 -m venv .venv && .venv/bin/pip install -e ".[test,dev]"\n'
+    "fix:  ## auto-format + lint-fix (mutates)\n"
+    "\truff format . && ruff check --fix .\n"
+    "lint:  ## format check + lint (report only)\n"
+    "\truff format --check . && ruff check .\n"
+    "typecheck:  ## mypy over the package\n"
+    "\tmypy\n"
+    "test:  ## the poured test twins (engine-free)\n"
+    "\tpytest -q\n"
+    "check: lint typecheck test  ## the full gate\n"
+)
+
 
 def _pyproject(deps: list[str], test_deps: list[str]) -> str:
-    dep_lines = "".join(f'    "{d}",\n' for d in deps)
-    test_lines = "".join(f'    "{d}",\n' for d in test_deps)
+    # Heavy runtime deps (from the config + observability parts) are opt-in extras, so the base
+    # install is pure stdlib. Tests import every part, so the test group carries the extras too.
+    extras_lines = "".join(f'    "{d}",\n' for d in deps)
+    test_lines = "".join(f'    "{d}",\n' for d in sorted(set(test_deps) | set(deps)))
     # No "License ::" classifier: PEP 639 supersedes it with the SPDX `license` expression below,
     # and modern setuptools errors if both are present.
     classifiers = (
@@ -195,8 +225,8 @@ def _pyproject(deps: list[str], test_deps: list[str]) -> str:
         'build-backend = "setuptools.build_meta"\n\n'
         "[project]\n"
         'name = "codeforge-shelf"\n'
-        'version = "0.1.0"\n'
-        'description = "The CodeForge Hardware Store: reusable, engine-agnostic Python cores."\n'
+        'version = "0.3.0"\n'
+        'description = "The CodeForge Hardware Store: reusable, engine-agnostic Python parts."\n'
         'readme = "README.md"\n'
         'requires-python = ">=3.12"\n'
         'license = "MIT"\n'
@@ -206,14 +236,18 @@ def _pyproject(deps: list[str], test_deps: list[str]) -> str:
         "classifiers = [\n"
         f"{classifiers}"
         "]\n"
-        "dependencies = [\n"
-        f"{dep_lines}"
-        "]\n\n"
+        # The base install is pure stdlib. The few parts that need a framework (config -> pydantic,
+        # observability -> structlog/fastapi) declare it in the optional `extras` group, so a
+        # consumer who only wants the stdlib parts carries no heavy dependency footprint.
+        "dependencies = []\n\n"
         "[project.optional-dependencies]\n"
+        "extras = [\n"
+        f"{extras_lines}"
+        "]\n"
         "test = [\n"
         f"{test_lines}"
         "]\n"
-        'dev = ["ruff"]\n\n'
+        'dev = ["ruff", "mypy"]\n\n'
         "[project.urls]\n"
         f'Homepage = "{_HOMEPAGE}"\n'
         f'Source = "{_HOMEPAGE}"\n\n'
@@ -223,8 +257,15 @@ def _pyproject(deps: list[str], test_deps: list[str]) -> str:
         f'{PACKAGE} = ["py.typed"]\n\n'  # ship the PEP 561 marker so consumers get the types
         "[tool.pytest.ini_options]\n"
         'markers = ["property: hypothesis-driven property tests"]\n\n'
-        # The cores are already lint-clean in CodeForge; ship the same config so a codeforge-shelf
-        # contributor lints identically. Target 3.12 -- the cores use PEP 695 type-parameter syntax
+        # The parts are annotated (PEP 561) and type-clean in CodeForge; ship a mypy config so a
+        # codeforge-shelf contributor type-checks identically. Framework stubs vary across versions,
+        # so don't gate on third-party stubs (the parts' own types are what matter).
+        "[tool.mypy]\n"
+        'python_version = "3.12"\n'
+        f'files = ["{PACKAGE}"]\n'
+        "ignore_missing_imports = true\n\n"
+        # The parts are already lint-clean in CodeForge; ship the same config so a codeforge-shelf
+        # contributor lints identically. Target 3.12 -- the parts use PEP 695 type-parameter syntax
         # (`class Foo[T]`, 3.12+), which is also the package's true requires-python floor.
         "[tool.ruff]\n"
         "line-length = 100\n"
@@ -236,7 +277,13 @@ def _pyproject(deps: list[str], test_deps: list[str]) -> str:
 
 def _readme(cores: list[str], deps: list[str], n_tests: int, held: list[str]) -> str:
     listing = "\n".join(f"- `{PACKAGE}.{c}`" for c in cores)
-    dep_note = ", ".join(deps) if deps else "none (pure stdlib)"
+    dep_note = (
+        "The base install is **pure stdlib** (no third-party runtime deps). The `config` and "
+        f"`observability` parts need the optional extras: `pip install codeforge-shelf[extras]` "
+        f"(pulls {', '.join(deps)})."
+        if deps
+        else "The package is **pure stdlib**: no third-party runtime dependencies."
+    )
     held_note = (
         f"\n{len(held)} core(s) keep their tests in the CodeForge repo -- those tests exercise "
         f"the core against the live engine (integration): {', '.join(held)}.\n"
@@ -265,17 +312,17 @@ def _readme(cores: list[str], deps: list[str], n_tests: int, held: list[str]) ->
     return (
         "# CodeForge Hardware Store\n\n"
         f"{badges}\n"
-        "Reusable, engine-agnostic Python cores, proven in the CodeForge MUD and poured here as a\n"
+        "Reusable, engine-agnostic Python parts, proven in the CodeForge MUD and poured here as a\n"
         "standalone package. No game engine is required to use them. Fully typed (PEP 561).\n\n"
         "## Install\n\n"
         "```sh\n"
         "pip install codeforge-shelf\n"
         f"# or from source: pip install git+{_HOMEPAGE}-shelf\n"
         "```\n\n"
-        f"Third-party dependencies: {dep_note}.\n\n"
+        f"{dep_note}\n\n"
         "## Usage\n\n"
         f"{usage}\n"
-        f"## Cores ({len(cores)})\n\n"
+        f"## Parts ({len(cores)})\n\n"
         f"{listing}\n\n"
         "## Tests\n\n"
         f"{n_tests} test twins ship with the package and pass with no engine present "
@@ -283,7 +330,7 @@ def _readme(cores: list[str], deps: list[str], n_tests: int, held: list[str]) ->
         f"{held_note}\n"
         "## Provenance\n\n"
         f"Generated from [CodeForge]({_HOMEPAGE}) by its `parts/shelf_pour.py`, which vendors the\n"
-        "engine-agnostic cores of `parts/shelf/` under a fresh package name and proves they\n"
+        "engine-agnostic parts of `parts/shelf/` under a fresh package name and proves they\n"
         "import and test standalone. Re-poured, never hand-edited.\n"
     )
 
@@ -293,6 +340,22 @@ _CHANGELOG = """\
 
 All notable changes to `codeforge-shelf`. This package is generated (poured) from CodeForge; the
 version tracks the pour, not hand edits.
+
+## 0.3.0
+
+- Renamed the units from "cores" to **Parts** (the fleet's canonical term for a Hardware Store unit;
+  see the ship Engineering Identity). Docs/display only -- no import or API change.
+- Moved the heavy runtime dependencies (fastapi, pydantic, structlog) to an optional `extras` group,
+  so the **base install is now pure stdlib**. The `config` and `observability` parts need
+  `pip install codeforge-shelf[extras]`. Corrects the earlier "stdlib-only" copy (inaccurate).
+- Added a Makefile control panel (env/fix/lint/typecheck/test/check) and a mypy typecheck gate to
+  CI, bringing the package to fleet-standard parity.
+
+## 0.2.0
+
+- Five more cores poured as the engine's Hardware Store grew (27 -> 32): `affixes`, `completeness`,
+  `conditions`, `reward_curve`, and `textmatch` (fuzzy match / Levenshtein). Kept the pour in step
+  with the engine; a drift-detection gate now prevents the two from silently diverging again.
 
 ## 0.1.0
 
@@ -341,6 +404,7 @@ def pour_shelf(dest: Path, *, shelf_dir: Path | None = None) -> PouredShelf:
     (dest / "pyproject.toml").write_text(_pyproject(deps, test_deps), encoding="utf-8")
     (dest / "README.md").write_text(_readme(names, deps, len(poured_tests), held), encoding="utf-8")
     (dest / "CHANGELOG.md").write_text(_CHANGELOG, encoding="utf-8")
+    (dest / "Makefile").write_text(_MAKEFILE, encoding="utf-8")
     license_src = src.parent.parent / "LICENSE"  # the repo's MIT license travels with the package
     if license_src.is_file():
         (dest / "LICENSE").write_text(license_src.read_text(encoding="utf-8"), encoding="utf-8")
@@ -460,10 +524,47 @@ def _build_main(argv: list[str]) -> int:
     return 0 if ok else 1
 
 
+def pour_drift(shelf_repo: Path, *, shelf_dir: Path | None = None) -> list[str]:
+    """Files where a fresh pour differs from `shelf_repo`: missing there, or content-mismatched.
+
+    Empty list = in sync. One-directional: it checks every file the pour WRITES against the repo, so
+    repo-only files (a hand-added .gitignore, local caches) are not drift -- only a stale or
+    hand-edited *poured* file is. This is the invariant the drift gate enforces so codeforge and
+    codeforge-shelf cannot silently diverge again."""
+    tmp = Path(tempfile.mkdtemp(prefix="pour_drift_"))
+    pour_shelf(tmp, shelf_dir=shelf_dir)
+    drift: list[str] = []
+    for poured in sorted(tmp.rglob("*")):
+        if not poured.is_file() or "__pycache__" in poured.parts:
+            continue
+        rel = poured.relative_to(tmp)
+        mirror = shelf_repo / rel
+        if not mirror.is_file():
+            drift.append(f"missing in shelf: {rel}")
+        elif poured.read_bytes() != mirror.read_bytes():
+            drift.append(f"content drift: {rel}")
+    return drift
+
+
+def _drift_main(argv: list[str]) -> int:
+    """`python3 -m parts.shelf_pour --drift <codeforge-shelf>`: fail if the repo is out of sync."""
+    drift = pour_drift(Path(argv[2]))
+    if drift:
+        print(f"POUR DRIFT: codeforge-shelf is out of sync with the engine ({len(drift)} file(s)):")
+        for item in drift:
+            print(f"  - {item}")
+        print("Fix: re-pour (`python -m parts.shelf_pour <codeforge-shelf>`), verify, and push.")
+        return 1
+    print("pour in sync: codeforge-shelf matches a fresh pour of the engine's Hardware Store")
+    return 0
+
+
 def _main(argv: list[str]) -> int:
-    """`python3 -m parts.shelf_pour [build] <dest>`: pour + prove imports/tests (or build)."""
+    """`python3 -m parts.shelf_pour [build|--drift] <dest>`: pour + prove imports/tests."""
     if len(argv) > 1 and argv[1] == "build":
         return _build_main(argv)
+    if len(argv) > 2 and argv[1] == "--drift":
+        return _drift_main(argv)
     dest = Path(argv[1]) if len(argv) > 1 else _ROOT / "workspace" / "shelf-pour"
     poured = pour_shelf(dest)
     imports_ok, imports_detail = verify_pour(dest)

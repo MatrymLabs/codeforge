@@ -166,8 +166,11 @@ def test_pour_ships_a_ruff_config_and_the_correct_python_floor(tmp_path: Path) -
     pour_shelf(tmp_path)
     pyproject = (tmp_path / "pyproject.toml").read_text(encoding="utf-8")
     assert "[tool.ruff]" in pyproject and "[tool.ruff.lint]" in pyproject
-    assert 'dev = ["ruff"]' in pyproject
-    # the cores use PEP 695 type params (`class Foo[T]`, 3.12+), so the floor + ruff target are 3.12
+    assert 'dev = ["ruff", "mypy"]' in pyproject and "[tool.mypy]" in pyproject
+    # heavy deps are opt-in extras so the base install is stdlib-only; version tracks the pour
+    assert "dependencies = []" in pyproject and "extras = [" in pyproject
+    assert 'version = "0.3.0"' in pyproject
+    # the parts use PEP 695 type params (`class Foo[T]`, 3.12+), so the floor + ruff target are 3.12
     assert 'requires-python = ">=3.12"' in pyproject
     assert 'target-version = "py312"' in pyproject
 
@@ -306,3 +309,33 @@ def test_main_pours_verifies_and_runs_tests(
     out = capsys.readouterr().out
     assert "imports: PASS" in out and "tests:   PASS" in out
     assert "held" in out  # the honest report of engine-coupled twins
+
+
+# --- drift detection: codeforge and codeforge-shelf can no longer silently diverge ---
+
+
+def test_pour_drift_is_empty_for_a_fresh_pour(tmp_path: Path) -> None:
+    from parts.shelf_pour import pour_drift, pour_shelf
+
+    dest = tmp_path / "shelf"
+    pour_shelf(dest)
+    assert pour_drift(dest) == []  # a fresh pour matches itself, byte for byte
+
+
+def test_pour_drift_flags_a_stale_or_edited_core(tmp_path: Path) -> None:
+    from parts.shelf_pour import pour_drift, pour_shelf
+
+    dest = tmp_path / "shelf"
+    poured = pour_shelf(dest)
+    core = dest / "codeforge_shelf" / f"{poured.cores[0]}.py"
+    core.write_text(core.read_text(encoding="utf-8") + "\n# hand edit\n", encoding="utf-8")
+    assert any("content drift" in d for d in pour_drift(dest))  # a hand-edit is caught
+    core.unlink()
+    assert any("missing in shelf" in d for d in pour_drift(dest))  # a stale/missing file is caught
+
+
+def test_pour_never_declares_an_in_tree_native_accelerator_as_a_dep() -> None:
+    from parts.shelf_pour import shelf_third_party_deps
+
+    # textmatch imports the optional codeforge_textkernel behind a fallback; it is not a PyPI dep
+    assert not any(dep.startswith("codeforge_") for dep in shelf_third_party_deps())
