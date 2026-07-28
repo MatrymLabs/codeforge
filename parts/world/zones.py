@@ -20,6 +20,7 @@ with a copy a player carried off, and opt-in `resettable` leaves quest items and
 """
 
 from parts.world import items
+from parts.world.respawn import SPAWN_RNG, pick_room
 from parts.world.seed import SEED_DIR, Zone, load_zones
 from parts.world.session import Session
 from parts.world.spiral import load_spiral_config, spiral_zones
@@ -117,6 +118,39 @@ def _perform_reset(label: str) -> None:
             items.clone(prototype, home)
         except items.ItemError:
             continue  # at the spawn ceiling: skip this one, keep the beat alive
+    _spawn_wanderers(rooms)
+
+
+def _spawn_wanderers(rooms: set[str]) -> None:
+    """The DYNAMIC spawn (respawn policy `wandering_spawn`): a wandering pickup (a `spawn_pool`
+    item) appears at ONE pick_room-chosen site inside this area, but only when no instance of it is
+    loose anywhere in its whole pool, and only when its rarity roll (`spawn_chance`) comes up. So
+    the pickup moves between resets and is not always there -- avoiding static, predictable spots.
+
+    The pool may span areas; restricting sites to this area's rooms while checking the WHOLE pool
+    for a live instance keeps a wanderer single across the map (one loose copy at a time). A
+    prototype at its instance ceiling is skipped, never a crash. Only engine logic mutates state;
+    the beat fires this, respawn.pick_room chooses where."""
+    for prototype, template in items.PROTOTYPES.items():
+        pool = template.get("spawn_pool")
+        if not pool:
+            continue
+        sites = [room for room in pool if room in rooms]
+        if not sites:
+            continue  # this area holds none of the wanderer's candidate rooms
+        if any(
+            items.prototype_of(iid) == prototype
+            for room in pool
+            for iid in items.items_in(f"room:{room}")
+        ):
+            continue  # already loose somewhere in its pool -- one at a time, never duplicated
+        chance = template.get("spawn_chance", 1)
+        if chance > 1 and SPAWN_RNG.randrange(chance) != 0:
+            continue  # rarity: this reset it stays hidden
+        try:
+            items.clone(prototype, pick_room(sites, rng=SPAWN_RNG))  # sites non-empty: a real room
+        except items.ItemError:
+            continue  # at the spawn ceiling: skip, keep the beat alive
 
 
 def tick_zones(session: Session) -> str:
