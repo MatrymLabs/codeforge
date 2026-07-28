@@ -5784,5 +5784,31 @@
     "aliases": [],
     "created": "2026-07-27",
     "updated": "2026-07-27"
+  },
+  {
+    "designation": "MOD-04.101",
+    "name": "factions",
+    "status": "active",
+    "function": "the standing between the Orders: who is allied, who is rival (faction conflicts)",
+    "label": "factions",
+    "file": "parts/world/factions.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "",
+    "tests": "tests/test_factions.py",
+    "depends_on": [],
+    "related": [
+      "orders",
+      "climate"
+    ],
+    "reuse": "the WORLD-SIM layer's FACTION CONFLICTS (content campaign slice 4, Part II 'faction conflicts'): a relationship model OVER the existing Orders (parts.world.orders), never a replacement. Two axes -- the hand that builds (making+gathering) vs the memory+shield that endure (warcraft+knowing) allied, the cross-cutting tensions rival. stance(a,b) = self/allied/rival/neutral (symmetric); relations_of(order) = (allies, rivals); render_factions(sworn) shows the politics of the Row, marking the reader's Order. The `factions` verb (CMD-04.094). The seam a faction-gated spawn or faction storyline pulls next (stance(mine, theirs)).",
+    "notes": "Pure data over the 4 Orders; no new allegiance, no second source of truth (Forger still swears one Order via `join`). Reputation (a numeric standing) is a later slice; this is the conflict MODEL. _ALLIED/_RIVAL are unordered frozenset pairs; every un-named pairing is neutral.",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-27",
+    "updated": "2026-07-27"
   }
 ]

@@ -2981,5 +2981,31 @@
     "aliases": [],
     "created": "2026-07-27",
     "updated": "2026-07-27"
+  },
+  {
+    "designation": "CMD-04.094",
+    "name": "factions",
+    "status": "active",
+    "function": "the standing between the Orders: who is allied, who is rival",
+    "label": "factions",
+    "file": "forge.py",
+    "type": "CMD",
+    "domain": "04",
+    "docs": "",
+    "tests": "tests/test_factions.py",
+    "depends_on": [],
+    "related": [
+      "factions",
+      "orders"
+    ],
+    "reuse": "",
+    "tags": [
+      "command"
+    ],
+    "notes": "factions.render_factions: the politics of the Row (each Order's allies + rivals), marking the reader's own sworn Order. The faction-conflict model over the existing Orders.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-27",
+    "updated": "2026-07-27"
   }
 ]
