@@ -1593,3 +1593,22 @@ scale_bracer:
   location: nowhere
   slot: arm
   mods: {DEF: 2, EVA: 3}
+
+# --- Wandering pickups (live dynamic spawning): a rare find that appears at one of several places in
+# --- the wilds on an area reset, not always the same spot, and only some of the time -- so exploring
+# --- the region is rewarded over memorizing one pickup room. location: nowhere (a wanderer appears,
+# --- it is not placed); spawn_pool is its candidate rooms; spawn_chance is its rarity. ---
+wayfarers_tonic:
+  name: a wayfarer's tonic
+  keywords: [tonic, wayfarer, flask, heal]
+  location: nowhere
+  consume: {hp: 40}
+  spawn_pool: [greenhold, elderwatch, riverbend, sunmeadow]
+  spawn_chance: 2
+foragers_flask:
+  name: a forager's flask
+  keywords: [flask, forager, draught, mana]
+  location: nowhere
+  consume: {mp: 20}
+  spawn_pool: [wildgrowth, greenmist, the_great_tree]
+  spawn_chance: 3

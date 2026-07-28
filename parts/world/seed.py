@@ -131,6 +131,14 @@ class Item(TypedDict):
     # Readable lore: the text `read <item>` shows. A lore book, a record, an inscription -- readable
     # environmental storytelling you can carry. Optional -- a bare item has nothing written on it.
     lore: NotRequired[str]
+    # A WANDERING pickup (dynamic spawn): the candidate rooms this item may appear in. On an area
+    # reset, if no instance is loose anywhere in the pool, one spawns at a pick_room-chosen site, so
+    # the pickup is not always in the same spot (parts.world.zones._spawn_wanderers). Requires
+    # location: nowhere -- a wanderer is not placed, it appears. Absent = an ordinary fixed item.
+    spawn_pool: NotRequired[list[str]]
+    # Rarity for a wandering spawn: appear on only 1-in-N eligible resets. Absent/1 = every eligible
+    # reset. Combined with spawn_pool this gives a rare pickup that also moves. Positive int.
+    spawn_chance: NotRequired[int]
 
 
 class Npc(TypedDict):
@@ -555,6 +563,30 @@ def load_items(path: Path) -> dict[str, Item]:
         lore = merged.get("lore")
         if lore is not None and (not isinstance(lore, str) or not lore.strip()):
             raise SeedError(f"Item '{label}': 'lore' must be non-empty readable text.")
+        spawn_pool = merged.get("spawn_pool")
+        if spawn_pool is not None:
+            if (
+                not isinstance(spawn_pool, list)
+                or not spawn_pool
+                or not all(isinstance(r, str) and r for r in spawn_pool)
+            ):
+                raise SeedError(
+                    f"Item '{label}': 'spawn_pool' must be a non-empty list of room labels."
+                )
+            if loc != UNPLACED:
+                raise SeedError(
+                    f"Item '{label}': a wandering 'spawn_pool' item must have location: {UNPLACED} "
+                    "(it appears in the world, it is not placed in one room)."
+                )
+        spawn_chance = merged.get("spawn_chance")
+        if spawn_chance is not None and (
+            not isinstance(spawn_chance, int) or isinstance(spawn_chance, bool) or spawn_chance < 1
+        ):
+            raise SeedError(
+                f"Item '{label}': 'spawn_chance' must be a positive integer (1 = every reset)."
+            )
+        if spawn_chance is not None and spawn_pool is None:
+            raise SeedError(f"Item '{label}': 'spawn_chance' only applies to a 'spawn_pool' item.")
         item = Item(
             name=merged["name"],
             keywords=merged["keywords"],
@@ -569,6 +601,12 @@ def load_items(path: Path) -> dict[str, Item]:
             item["consume"] = dict(consume)
         if lore:
             item["lore"] = str(lore)  # readable text: `read <item>` shows it
+        if spawn_pool:
+            item["spawn_pool"] = [
+                str(r) for r in spawn_pool
+            ]  # a wandering pickup's candidate rooms
+        if spawn_chance:
+            item["spawn_chance"] = int(spawn_chance)  # rarity for the wanderer
         items[label] = item
     return items
 
@@ -784,6 +822,11 @@ def inspect_world_links(
                 f"Item '{label}' is placed in room '{loc.removeprefix('room:')}', "
                 "which does not exist."
             )
+        for site in item.get("spawn_pool", []):  # a wanderer's candidate rooms must all be real
+            if site not in rooms:
+                raise SeedError(
+                    f"Item '{label}' spawn_pool names room '{site}', which does not exist."
+                )
     for label, npc in npcs.items():
         if npc["location"] not in rooms:
             raise SeedError(

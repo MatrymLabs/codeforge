@@ -295,3 +295,147 @@ def test_merged_zones_adds_the_spiral_areas_only_when_a_spiral_seed_opts_in():
     assert "coast" in merged  # the authored area survives
     assert any(label.startswith("spiral_coil_") for label in merged)  # and the marches are named
     assert any(z["name"] == "The Forge's Edge" for z in merged.values())
+
+
+# --- live dynamic spawning: _spawn_wanderers places a wandering pickup (roadmap #1) ---------------
+class _FixedRNG:
+    """A deterministic stand-in for SPAWN_RNG: randrange always rolls the rarity HIT (0), and choice
+    takes the first candidate -- so a test draws an exact site, not real randomness."""
+
+    def randrange(self, n: int) -> int:
+        return 0
+
+    def choices(self, population, weights=None, k=1):
+        return [population[0]]
+
+    def choice(self, seq):
+        return seq[0]
+
+
+def _wanderer(chance: int | None = None) -> Item:
+    item = Item(
+        name="a wayfarer's tonic",
+        keywords=["tonic"],
+        location="nowhere",
+        slot="",
+        mods={},
+        prototype="tonic",
+    )
+    item["spawn_pool"] = ["a", "b"]
+    if chance is not None:
+        item["spawn_chance"] = chance
+    return item
+
+
+def _wander_world(monkeypatch, prototype: Item, rng=None) -> None:
+    monkeypatch.setattr(items, "PROTOTYPES", {"tonic": prototype})
+    monkeypatch.setattr(
+        items, "ITEMS", {"tonic": dict(prototype)}
+    )  # the 'nowhere' seed placeholder
+    monkeypatch.setattr(
+        zones,
+        "ZONES",
+        {"z": Zone(name="Z", rooms=["a", "b"], reset_mode="always", beats_between=1)},
+    )
+    monkeypatch.setattr(zones, "SPAWN_RNG", rng or _FixedRNG())
+
+
+def _loose_in(room: str) -> list[str]:
+    return [iid for iid in items.items_in(f"room:{room}") if items.prototype_of(iid) == "tonic"]
+
+
+def test_a_wanderer_spawns_at_a_pool_site_on_reset(monkeypatch):
+    _wander_world(monkeypatch, _wanderer())
+    zones._perform_reset("z")
+    # the FixedRNG picks the first candidate -> room a gets exactly one fresh instance
+    assert len(_loose_in("a")) == 1 and _loose_in("b") == []
+
+
+def test_a_wanderer_does_not_duplicate_while_one_is_loose(monkeypatch):
+    _wander_world(monkeypatch, _wanderer())
+    zones._perform_reset("z")
+    zones._perform_reset("z")  # already loose in a pool room -> no second instance
+    assert len(_loose_in("a")) + len(_loose_in("b")) == 1
+
+
+def test_spawn_chance_can_skip_a_reset(monkeypatch):
+    class _Miss(_FixedRNG):
+        def randrange(self, n: int) -> int:
+            return 1  # never the 0 that spawns
+
+    _wander_world(monkeypatch, _wanderer(chance=3), rng=_Miss())
+    zones._perform_reset("z")
+    assert _loose_in("a") == [] and _loose_in("b") == []  # rarity roll missed -> nothing spawned
+
+
+def test_a_wanderer_ignores_an_area_holding_none_of_its_pool(monkeypatch):
+    _wander_world(monkeypatch, _wanderer())
+    monkeypatch.setattr(
+        zones, "ZONES", {"z": Zone(name="Z", rooms=["c"], reset_mode="always", beats_between=1)}
+    )
+    zones._perform_reset("z")
+    assert _loose_in("a") == [] and _loose_in("b") == []  # none of its sites are in this area
+
+
+def test_the_beat_drives_a_wandering_spawn(monkeypatch):
+    _wander_world(monkeypatch, _wanderer())
+    monkeypatch.setattr(zones, "_beats", {"z": 0})
+    s = Session(player_id="p", location="a")
+    tick_zones(s)  # one beat: area z is due (beats_between 1) -> fires the wanderer
+    assert len(_loose_in("a")) == 1
+
+
+# --- seed validation: the wandering-spawn fields fail loud on misuse ------------------------------
+def _items_yaml(tmp_path, body: str):
+    path = tmp_path / "items.yaml"
+    path.write_text(body)
+    return path
+
+
+def test_spawn_pool_requires_location_nowhere(tmp_path):
+    body = "t:\n  location: a\n  spawn_pool: [a, b]\n"
+    with pytest.raises(seed.SeedError, match="nowhere"):
+        seed.load_items(_items_yaml(tmp_path, body))
+
+
+def test_spawn_pool_must_be_a_non_empty_room_list(tmp_path):
+    body = "t:\n  location: nowhere\n  spawn_pool: []\n"
+    with pytest.raises(seed.SeedError, match="spawn_pool"):
+        seed.load_items(_items_yaml(tmp_path, body))
+
+
+def test_spawn_chance_must_be_positive(tmp_path):
+    body = "t:\n  location: nowhere\n  spawn_pool: [a]\n  spawn_chance: 0\n"
+    with pytest.raises(seed.SeedError, match="spawn_chance"):
+        seed.load_items(_items_yaml(tmp_path, body))
+
+
+def test_spawn_chance_needs_a_spawn_pool(tmp_path):
+    body = "t:\n  location: nowhere\n  spawn_chance: 2\n"
+    with pytest.raises(seed.SeedError, match="spawn_chance"):
+        seed.load_items(_items_yaml(tmp_path, body))
+
+
+def test_a_valid_wanderer_loads(tmp_path):
+    body = "t:\n  location: nowhere\n  spawn_pool: [a, b]\n  spawn_chance: 2\n"
+    loaded = seed.load_items(_items_yaml(tmp_path, body))["t"]
+    assert loaded["spawn_pool"] == ["a", "b"] and loaded["spawn_chance"] == 2
+
+
+def test_inspect_world_links_rejects_a_spawn_pool_room_that_does_not_exist():
+    rooms = {"a": seed.Room(name="A", desc="", exits={})}
+    item = Item(name="t", keywords=["t"], location="nowhere", slot="", mods={}, prototype="t")
+    item["spawn_pool"] = ["a", "ghost_room"]
+    with pytest.raises(seed.SeedError, match="ghost_room"):
+        seed.inspect_world_links(rooms, {"t": item}, {})
+
+
+def test_a_wanderer_at_its_instance_ceiling_is_skipped_not_a_crash(monkeypatch):
+    _wander_world(monkeypatch, _wanderer())
+
+    def _ceiling(*_a, **_k):
+        raise items.ItemError("at the instance ceiling")
+
+    monkeypatch.setattr(items, "clone", _ceiling)
+    zones._perform_reset("z")  # the ceiling is swallowed: no crash, nothing spawned
+    assert _loose_in("a") == [] and _loose_in("b") == []

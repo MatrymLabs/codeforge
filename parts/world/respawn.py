@@ -62,6 +62,15 @@ CATALOG: tuple[RespawnPolicy, ...] = (
         lives_in=("parts.world.combat", "land_hit"),
     ),
     RespawnPolicy(
+        key="wandering_spawn",
+        what="a wandering pickup (a `spawn_pool` item -- a rare herb, a loose relic)",
+        trigger="an area it can appear in comes due on the world beat",
+        cadence="one instance at a pick_room-chosen site, at most 1-in-`spawn_chance` resets",
+        reason="rewards exploration over route-memorization: the pickup moves and is often absent.",
+        lives_in=("parts.world.zones", "_spawn_wanderers"),
+        dynamic=True,
+    ),
+    RespawnPolicy(
         key="lethal_recover",
         what="a lethal boss (and the felled player)",
         trigger="the boss fells a player",
