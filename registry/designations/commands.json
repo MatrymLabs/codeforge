@@ -2956,5 +2956,30 @@
     "aliases": [],
     "created": "2026-07-27",
     "updated": "2026-07-27"
+  },
+  {
+    "designation": "CMD-04.093",
+    "name": "weather",
+    "status": "active",
+    "function": "the season and sky over the world right now",
+    "label": "weather",
+    "file": "forge.py",
+    "type": "CMD",
+    "domain": "04",
+    "docs": "docs/respawn.md",
+    "tests": "tests/test_climate.py",
+    "depends_on": [],
+    "related": [
+      "climate"
+    ],
+    "reuse": "",
+    "tags": [
+      "command"
+    ],
+    "notes": "climate.weather_view: the world's current season + weather, derived from the world beat. The world-simulation layer's first player face; the seam future seasonal/weather-gated spawns read.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-27",
+    "updated": "2026-07-27"
   }
 ]
