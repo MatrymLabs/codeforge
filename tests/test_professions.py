@@ -16,7 +16,7 @@ import pytest
 
 import forge
 from parts.world import crafting, items, professions
-from parts.world.seed import load_items, load_professions, load_recipes
+from parts.world.seed import SeedError, load_items, load_professions, load_recipes
 from parts.world.session import SESSIONS, Session
 from parts.world.world import WORLD
 
@@ -168,3 +168,53 @@ def test_restore_drops_unknown_or_malformed_trades(synthetic):
 def test_professions_verb_is_reachable_through_the_tick(synthetic):
     out = forge.handle_command(Session(player_id="maker", location="void"), "professions")
     assert "Your trades" in out
+
+
+def test_reverse_lookups_map_each_governed_label_to_its_trade(monkeypatch):
+    monkeypatch.setattr(professions, "PROFESSIONS", _TRADES)
+    assert professions._reverse("gather", "works") == {"forge_wrench": "testmine"}
+    assert professions._reverse("craft", "makes") == {"testmake": "testsmith"}
+
+
+def test_the_sheet_reports_no_trades_when_the_world_declares_none(monkeypatch):
+    monkeypatch.setattr(professions, "PROFESSIONS", {})
+    assert "no trades" in professions.render_professions(Session(player_id="m", location="void"))
+
+
+def test_the_sheet_shows_only_the_kinds_that_exist(monkeypatch):
+    # A world with only gather trades shows a Gathering header and no Crafting one (the `continue`).
+    monkeypatch.setattr(
+        professions,
+        "PROFESSIONS",
+        {"testmine": {"name": "Testmine", "kind": "gather", "works": ["x"], "makes": []}},
+    )
+    sheet = professions.render_professions(Session(player_id="m", location="void"))
+    assert "Gathering" in sheet and "Crafting" not in sheet
+
+
+# --- load_professions: the seed loader's structural gates -----------------------------------------
+
+
+def test_load_professions_returns_empty_when_the_seed_ships_none(tmp_path):
+    assert load_professions(tmp_path / "absent.yaml") == {}
+
+
+def test_load_professions_reads_a_valid_trade(tmp_path):
+    p = tmp_path / "professions.yaml"
+    p.write_text("mining:\n  kind: gather\n  works: [raw_ore]\n", encoding="utf-8")
+    profs = load_professions(p)
+    assert profs["mining"]["kind"] == "gather" and profs["mining"]["works"] == ["raw_ore"]
+
+
+def test_load_professions_rejects_an_unknown_kind(tmp_path):
+    p = tmp_path / "professions.yaml"
+    p.write_text("smith:\n  kind: forging\n  makes: [x]\n", encoding="utf-8")
+    with pytest.raises(SeedError, match="'gather' or 'craft'"):
+        load_professions(p)
+
+
+def test_load_professions_rejects_an_empty_governed_list(tmp_path):
+    p = tmp_path / "professions.yaml"
+    p.write_text("smith:\n  kind: craft\n  makes: []\n", encoding="utf-8")
+    with pytest.raises(SeedError, match="non-empty"):
+        load_professions(p)
