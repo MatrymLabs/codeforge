@@ -6018,6 +6018,33 @@
     "updated": "2026-07-28"
   },
   {
+    "designation": "MOD-04.110",
+    "name": "condition",
+    "status": "active",
+    "function": "a Lens on the hero's present state: vital pools, afflictions, sworn standing",
+    "label": "condition",
+    "file": "parts/world/condition.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "",
+    "tests": "tests/test_condition.py",
+    "depends_on": [],
+    "related": [
+      "afflictions",
+      "reputation",
+      "session"
+    ],
+    "reuse": "the at-a-glance transient-state view pattern: compose fast-changing session facts into one read-only projection, distinct from the persistent record sheet",
+    "notes": "Backs the `condition` verb (CMD-04.098); wires afflictions.render_afflictions (a tested renderer that had no verb) into a player-reachable readout. Read-only projection (state is canonical). Roadmap: status view.",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-28",
+    "updated": "2026-07-28"
+  },
+  {
     "designation": "MOD-05.067",
     "name": "textmatch",
     "status": "active",

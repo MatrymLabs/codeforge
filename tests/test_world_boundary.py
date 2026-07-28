@@ -73,6 +73,7 @@ _GAME_SEED = {
     "gearsets",
     "derived",
     "score_sheet",
+    "condition",
     "aggression",
     "session",
     "seed",
