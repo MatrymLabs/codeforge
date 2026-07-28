@@ -108,7 +108,7 @@ class PyNavGraph:
 
 NavGraph: type[NavGraphLike]
 try:  # the native Rust accelerator, when built (native/codeforge_nav via maturin)
-    from codeforge_nav import NavGraph as _RustNavGraph  # type: ignore[import-untyped]
+    from codeforge_nav import NavGraph as _RustNavGraph
 
     NavGraph = _RustNavGraph
     BACKEND = "rust"

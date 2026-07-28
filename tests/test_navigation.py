@@ -75,7 +75,7 @@ def test_world_navgraph_builds_from_the_live_world():
 def test_rust_matches_the_python_reference():
     import random
 
-    import codeforge_nav  # type: ignore[import-untyped]
+    import codeforge_nav
 
     rng = random.Random(1234)
     n = 4000
