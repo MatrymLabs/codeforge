@@ -9,6 +9,8 @@ validated item logic alone; a failed craft spends nothing.
 
 from __future__ import annotations
 
+from collections.abc import Mapping
+
 from parts.world import items
 from parts.world.seed import SEED_DIR, load_recipes
 from parts.world.session import Session
@@ -23,14 +25,43 @@ def _held(prototype: str) -> list[str]:
     return [iid for iid in items.items_in("player") if items.prototype_of(iid) == prototype]
 
 
-def render_recipes(_session: Session) -> str:
-    """What the crafter can forge here, with what each needs (the bare `craft` verb)."""
+def locked_reason(session: Session, recipe: Mapping[str, object]) -> str | None:
+    """Why this recipe is beyond the crafter, or None if they may forge it (slice 1d). A gated
+    recipe demands a profession LEVEL (earned by practising the trade) and/or a sworn ORDER;
+    knowledge derives from the player's professions + allegiance, never a stored flag. An ungated
+    recipe is always open."""
+    gate = recipe.get("requires")
+    if not isinstance(gate, dict):
+        return None
+    from parts.world.professions import PROFESSIONS, level_for
+
+    prof = gate.get("profession")
+    if isinstance(prof, str):
+        level = gate.get("level", 1)
+        need = level if isinstance(level, int) else 1
+        if level_for(session.professions.get(prof, 0)) < need:
+            name = PROFESSIONS[prof]["name"] if prof in PROFESSIONS else prof
+            return f"needs {name} level {need}"
+    order = gate.get("order")
+    if isinstance(order, str) and getattr(session, "order", "") != order:
+        from parts.world.orders import order_name
+
+        return f"needs the {order_name(order)}"
+    return None
+
+
+def render_recipes(session: Session) -> str:
+    """What the crafter can forge here, with what each needs (the bare `craft` verb). A recipe gated
+    beyond the crafter still lists, marked with what it takes to earn it, so a maker sees the goal
+    (slice 1d)."""
     if not RECIPES:
         return "There is nothing to craft here."
     lines = ["You can forge:"]
     for label, recipe in sorted(RECIPES.items()):
         needs = ", ".join(f"{qty}x {proto}" for proto, qty in sorted(recipe["inputs"].items()))
-        lines.append(f"  {recipe['name']} ({label}) -- needs {needs}")
+        locked = locked_reason(session, recipe)
+        mark = f"  [locked: {locked}]" if locked else ""
+        lines.append(f"  {recipe['name']} ({label}) -- needs {needs}{mark}")
     lines.append("Forge one with:  craft <recipe>")
     return "\n".join(lines)
 
@@ -46,6 +77,9 @@ def craft(session: Session, arg: str) -> str:
     recipe = RECIPES.get(name)
     if recipe is None:
         return f"You know no recipe called '{name}'. Type CRAFT to see what you can forge."
+    locked = locked_reason(session, recipe)
+    if locked:
+        return f"You have not earned the craft of {recipe['name']}: it {locked}."
     held = {proto: _held(proto) for proto in recipe["inputs"]}
     short = {p: q - len(held[p]) for p, q in recipe["inputs"].items() if len(held[p]) < q}
     if short:

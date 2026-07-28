@@ -36,6 +36,7 @@ brew_grand_healing:
   name: a grand healing draught
   makes: grand_healing_draught
   inputs: {ember_shard: 10, hollow_ingot: 1}
+  requires: {profession: alchemy, level: 4}  # earned: a practised alchemist's craft
 
 brew_greater_mana:
   name: a greater mana draught
@@ -46,11 +47,13 @@ brew_grand_mana:
   name: a grand mana draught
   makes: grand_mana_draught
   inputs: {ember_shard: 10, hollow_ingot: 1}
+  requires: {profession: alchemy, level: 4}
 
 brew_forgefire_elixir:
   name: a forgefire elixir
   makes: forgefire_elixir
   inputs: {ember_shard: 12, hollow_ingot: 3}
+  requires: {profession: alchemy, level: 7}  # the master alchemist's capstone brew
 
 stitch_emberhide_hood:
   name: an emberhide hood
@@ -71,6 +74,7 @@ forge_reaver_blade:
   name: a reaver's blade
   makes: reaver_blade
   inputs: {ember_shard: 4, hollow_ingot: 2}
+  requires: {profession: smithing, level: 5}  # a weaponsmith's proven work
 
 # The completionist endgame craft: one essence from every great Reach's boss forges the Reachlord's
 # Signet, a legendary that says you conquered the whole world across the sea and the sky.
@@ -78,6 +82,9 @@ forge_reachlord_signet:
   name: the Reachlord's Signet
   makes: reachlord_signet
   inputs: {brine_essence: 1, grove_essence: 1, rime_essence: 1, molten_essence: 1, storm_essence: 1}
+  # The legendary capstone: only a master smith sworn to the Making Order may forge it (slice 1d
+  # profession + Order gate together -- the recipe is earned by BOTH skill and allegiance).
+  requires: {profession: smithing, level: 8, order: making}
 
 # Herbal salves: each biome's gather-herb (items.yaml) worked into a healing salve, so every
 # forageable material feeds a real recipe (the maker's loop reaches the wilds' herbs, not just ore).
