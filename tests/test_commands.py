@@ -21,6 +21,7 @@ from parts.commands import (
     reserved_words,
 )
 from parts.registry import load_collective
+from parts.scripting import scripting_available
 from parts.world.session import SESSIONS, Session
 from parts.world.world import WORLD
 
@@ -266,6 +267,41 @@ def test_pure_nonsense_gets_no_suggestion() -> None:
     out = handle_command(session, "qwertyzxcv")
     assert "Huh?" in out
     assert "Did you mean" not in out
+
+
+# --- @script: the owner-only sandboxed Lua console (polyglot organ 7) ---------
+
+
+def test_script_command_is_owner_gated() -> None:
+    player = _walker("forge")  # default rank: player
+    out = handle_command(player, "@script return 1")
+    assert "Denied" in out  # an ADMIN verb a mere player cannot reach
+
+
+def test_script_command_without_lua_reports_cleanly(monkeypatch) -> None:
+    # Even with lupa installed, the graceful 'not installed' path must read cleanly (base gate).
+    import parts.scripting as scripting
+
+    monkeypatch.setattr(scripting, "scripting_available", lambda: False)
+    session = _walker("forge")
+    session.rank = "owner"
+    assert "not installed" in handle_command(session, "@script return 1").lower()
+
+
+@pytest.mark.skipif(not scripting_available(), reason="Lua runtime not installed (the [lua] extra)")
+def test_owner_runs_a_sandboxed_script_through_the_tick() -> None:
+    session = _walker("forge")
+    session.rank = "owner"
+    out = handle_command(session, "@script emit('hi'); return 6 * 7")
+    assert "hi" in out and "42" in out
+
+
+@pytest.mark.skipif(not scripting_available(), reason="Lua runtime not installed (the [lua] extra)")
+def test_a_sandbox_violation_returns_a_script_error_not_a_crash() -> None:
+    session = _walker("forge")
+    session.rank = "owner"
+    out = handle_command(session, "@script return os.time()")
+    assert "script error" in out.lower()  # os is denied; the tick reports it, never crashes
 
 
 # --- stage 2 slice E: console/diagnostic verbs, now on the spine -------------

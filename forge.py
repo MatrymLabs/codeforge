@@ -491,6 +491,28 @@ def _say_cmd(session: Session, message: str) -> str:
 PLUGIN_LOAD: PluginLoad | None = None
 
 
+def _script_command(session: Session, arg: str) -> str:
+    """Owner-only sandboxed Lua console: run a snippet, show its emit() output + return value.
+
+    The safety boundary is parts.scripting.LuaSandbox (no os/io/require; loops bounded), so even the
+    owner's console cannot reach the host. When the [lua] extra is absent, it says so cleanly."""
+    from parts.scripting import LuaSandbox, ScriptError, scripting_available
+
+    code = arg.strip()
+    if not code:
+        return "Usage: @script <lua>. Runs sandboxed (no os/io/require; loops are bounded)."
+    if not scripting_available():
+        return "Lua scripting is not installed. Enable it with: pip install '.[lua]'"
+    try:
+        result = LuaSandbox().run(code)
+    except ScriptError as exc:
+        return f"[script error] {exc}"
+    lines = list(result.output)
+    if result.value is not None:
+        lines.append(f"=> {result.value}")
+    return "\n".join(lines) if lines else "(no output)"
+
+
 def _build_commands() -> CommandSet:
     """The registry command family, filed as CMD-* designations. First family on the
     command spine; the legacy tick still handles everything else via fall-through."""
@@ -576,6 +598,16 @@ def _build_commands() -> CommandSet:
             "CMD-10.024",
             "flush the after-action tallies into the Chronicle as metrics (owner)",
             lambda _s, arg: flush_encounters(arg),
+            namespace=ADMIN,
+            min_rank="owner",
+        )
+    )
+    cs.add(
+        Command(
+            "@script",
+            "CMD-10.025",
+            "run a sandboxed Lua snippet (owner; no os/io/require, bounded loops)",
+            _script_command,
             namespace=ADMIN,
             min_rank="owner",
         )
