@@ -61,6 +61,7 @@ from parts.world.accounts import (
     verify_password,
 )
 from parts.world.accounts import register as register_account
+from parts.world.afflictions import tick_afflictions
 from parts.world.aggression import menace
 from parts.world.character_view import sheet_from_session
 from parts.world.characters import load_character, restore_character, save_character
@@ -1982,7 +1983,7 @@ def handle_command(session: Session, signal: str) -> str:
 
     response = _route(session, true_signal, routed_signal)
     beat = (
-        f"{tick_burns(session)}{menace(session)}{tick_zones(session)}"
+        f"{tick_burns(session)}{tick_afflictions(session)}{menace(session)}{tick_zones(session)}"
         f"{gather.tick_gather(session)}{tick_climate(session)}{_sands_beat(session)}"
     )
     return f"{response}{beat}"

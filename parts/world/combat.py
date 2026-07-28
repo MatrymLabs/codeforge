@@ -232,6 +232,14 @@ def _resolve_npc_blow(session: Session, npc: Npc, verb: str) -> str:
     else:  # Immune or Absorb: the blow lands no damage, the note carries the outcome
         body = f"{name} {verb}.{resist_note}"
     line = f"{body} (HP {hp.current}/{hp.maximum})"
+    # A boss's venomous or stunning blow may lay an affliction on the player (afflictions.py),
+    # rolled from the NPC's opt-in `inflicts` spec. Only a blow that landed damage can afflict.
+    if power > 0:
+        from parts.world.afflictions import maybe_inflict
+
+        afflicted = maybe_inflict(session, npc.get("inflicts"))
+        if afflicted:
+            line = f"{line}\n{afflicted}"
     if phase_line:  # a fresh enrage announces before the blow it empowers
         line = f"{phase_line}\n{line}"
     # The Engineer's Emergency Repair reacts to a dangerous blow: it auto-heals once (then cools
@@ -353,6 +361,10 @@ def attack(session: Session, word: str) -> str:
     """One strike of the training loop."""
     if session.stats is None:
         return "You have no calling yet. Type JOBS before you pick a fight."
+    from parts.world.afflictions import is_dazed
+
+    if is_dazed(session):
+        return "You are dazed and cannot strike -- it will pass."
     nid = trace_npc(word, session.location)
     if nid is None:
         return "There is no one like that here."
