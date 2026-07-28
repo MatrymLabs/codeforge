@@ -55,6 +55,13 @@ def maybe_inflict(session: Session, inflicts: dict | None) -> str | None:
     chance = int(inflicts.get("chance", 1))
     if chance > 1 and _AFFLICT_RNG.randrange(chance) != 0:
         return None  # the blow lands, but the affliction does not take this time
+    return inflict(session, inflicts)
+
+
+def inflict(session: Session, inflicts: dict) -> str:
+    """Lay an affliction on the player UNCONDITIONALLY (no chance roll), from an `inflicts` spec --
+    the door a guaranteed effect uses (a boss's telegraphed special always connects). `status`
+    'daze' stuns for `beats`; any other name is a damage-over-time of that name."""
     status = str(inflicts["status"])
     if status == "daze":
         apply_daze(session, int(inflicts.get("beats", 1)))

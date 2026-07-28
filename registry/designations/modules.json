@@ -5888,5 +5888,32 @@
     "aliases": [],
     "created": "2026-07-28",
     "updated": "2026-07-28"
+  },
+  {
+    "designation": "MOD-04.105",
+    "name": "boss_specials",
+    "status": "active",
+    "function": "a telegraphed boss SPECIAL: an enraged boss winds up (readable), then unleashes hard",
+    "label": "boss_specials",
+    "file": "parts/world/boss_specials.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "",
+    "tests": "tests/test_boss_specials.py",
+    "depends_on": [],
+    "related": [
+      "boss_phases",
+      "afflictions",
+      "combat"
+    ],
+    "reuse": "",
+    "notes": "maybe_begin_charge telegraphs (no blow), unleash spikes the next blow + guaranteed affliction. Encounter depth (#4).",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-28",
+    "updated": "2026-07-28"
   }
 ]
