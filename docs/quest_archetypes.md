@@ -42,6 +42,21 @@ and the test twin proves **every** quest a booted world posts classifies to exac
 Each record in the code carries **purpose, narrative role, gameplay loop, success condition,
 rewards, replay value, and scope** -- read `CATALOG` in the module for the full text.
 
+## The Zone Story Framework
+
+Every zone already carries its story across six generators -- a tale (`storyline`), a dungeon and its
+named `warden`, a surface `landmark`, a depths `inscription`, and a board of `cull` / `forage`
+contracts. `parts/world/zone_story.py` (MOD-04.098) is the framework that gathers those pieces from
+the **live world** into one `ZoneStory` and renders a dossier -- the history, dangers, and
+opportunities of a place at a glance. It is read-only and derived: a zone's story is exactly the sum
+of its filed content, never a second source of truth.
+
+Players read it with the **`region`** verb (CMD-04.092), which shows the dossier of the zone they
+stand in. The completeness test pins that a dungeon-bearing zone reports its full depths (a warden
+implies its inscription). This is where the campaign's Part II ("every zone should possess...") is
+made legible and checkable; the still-missing pieces (supporting arcs, faction conflicts, local
+mysteries, long-term consequences) hang off this framework as they land.
+
 ## Roadmap (archetypes still to build)
 
 Grouped by the machinery they need. Each becomes a new generator + a catalog record, expanding the

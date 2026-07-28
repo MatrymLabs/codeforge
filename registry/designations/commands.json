@@ -2930,5 +2930,31 @@
     "aliases": [],
     "created": "2026-07-27",
     "updated": "2026-07-27"
+  },
+  {
+    "designation": "CMD-04.092",
+    "name": "region",
+    "status": "active",
+    "function": "the story of the zone you stand in (its tale, depths, and work)",
+    "label": "region",
+    "file": "forge.py",
+    "type": "CMD",
+    "domain": "04",
+    "docs": "docs/quest_archetypes.md",
+    "tests": "tests/test_zone_story.py",
+    "depends_on": [],
+    "related": [
+      "zone_story",
+      "zones"
+    ],
+    "reuse": "",
+    "tags": [
+      "command"
+    ],
+    "notes": "zone_story.region_view: composes the player's current zone into a story dossier (tale + warden + inscription + landmark + cull/forage counts). The Zone Story Framework's player face.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-27",
+    "updated": "2026-07-27"
   }
 ]

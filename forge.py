@@ -100,6 +100,7 @@ from parts.world.world import (
     render_room,
     resolve_move,
 )
+from parts.world.zone_story import region_view
 from parts.world.zones import area_line, tick_zones
 from parts.world_cert import certify
 
@@ -108,7 +109,8 @@ NAME_RE = re.compile(r"^[a-z][a-z0-9_]{1,15}$")
 HELP_TEXT = (
     "Commands: look, go <direction> (or n/s/e/w/u/d), "
     "take, drop, inventory, talk <npc>, ask <npc> about <topic>, say <msg>, name <yourname>, who, "
-    "jobs, job <calling>, subjob <calling>, join <order>, wallet, quaff <item>, contracts, score, "
+    "jobs, job <calling>, subjob <calling>, join <order>, wallet, quaff <item>, contracts, region, "
+    "score, "
     "equip <item>, unequip <slot>, "
     "attack <target>, skills, use <ability> [on <foe>], repair, scan <target>, deploy, calibrate, "
     "channel, journal [text], vitals, "
@@ -1415,6 +1417,15 @@ def _build_commands() -> CommandSet:
             "CMD-04.076",
             "the bounty board (generated hunt-contracts)",
             lambda s, _a: contracts_view(s),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "region",
+            "CMD-04.092",
+            "the story of the zone you stand in (its tale, depths, and work)",
+            lambda s, _a: region_view(s),
             namespace=CORE,
         )
     )

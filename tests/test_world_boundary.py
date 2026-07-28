@@ -51,6 +51,7 @@ _GAME_SEED = {
     "delivery",
     "dungeon_crawl",
     "quest_archetypes",
+    "zone_story",
     "storylines",
     "townsfolk",
     "rooms",
