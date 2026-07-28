@@ -78,8 +78,14 @@ salve: every forageable herb feeds the refined tier, so no herb is a dead end.
 - **Professions** (mining, herbalism, smithing, alchemy, ...) shipped as **slice 1b**: a data-driven
   skill track over these same chains, composing with the existing calling ladder. See
   [professions.md](professions.md).
-- **Recipe acquisition** (train / discover / quest / faction-gated) is **slice 1d**, over
-  `parts.world.factions`.
+- **Recipe acquisition** shipped as **slice 1d**: a recipe may carry a `requires` gate (a craft
+  profession + level, and/or a sworn Order), and craftability **derives** from the player's
+  professions and allegiance -- no stored "known recipe" flag (derive-don't-store). Practising a
+  trade unlocks its master recipes, so leveling a profession has a payoff and advanced recipes feel
+  earned. Aethryn gates its master tier (the grand draughts, the forgefire elixir, the reaver's
+  blade, and the Reachlord's Signet, which also demands the Making Order). The same `requires` seam
+  is where trainer/quest acquisition can later hang; the gate check lives in
+  `parts.world.crafting.locked_reason`.
 
 Every future tier is an extension of this same RAW -> REFINED -> COMPONENT -> PRODUCT spine, and is
 exactly the kind of proven subsystem the Seed Platform will later generalise into a generator.

@@ -283,6 +283,11 @@ class Recipe(TypedDict):
     name: str  # display name of what it forges, e.g. "a healing draught"
     makes: str  # the output item prototype label (cloned into the crafter's hands)
     inputs: dict[str, int]  # material prototype label -> quantity consumed from the inventory
+    # Optional acquisition gate (slice 1d): a recipe you must EARN before you can forge it. Keys:
+    # `profession` (a trade id) + `level` (the trade level it demands), and/or `order` (a sworn
+    # Order id). Absent = an open recipe anyone can forge. Craftability derives from the player's
+    # professions + Order, no stored "known" flag (derive-don't-store). Validated at load.
+    requires: NotRequired[dict[str, object]]
 
 
 class Profession(TypedDict):
@@ -1099,12 +1104,42 @@ def load_recipes(path: Path) -> dict[str, Recipe]:
                 f"recipe '{label}': 'inputs' must map a material prototype to a positive count "
                 "(at least one input)."
             )
-        recipes[label] = Recipe(
+        recipe = Recipe(
             name=str(merged["name"]),
             makes=str(merged["makes"]),
             inputs={str(k): int(v) for k, v in inputs.items()},
         )
+        requires = _inspect_recipe_gate(label, merged.get("requires"))
+        if requires:
+            recipe["requires"] = requires
+        recipes[label] = recipe
     return recipes
+
+
+def _inspect_recipe_gate(label: str, requires: object) -> dict[str, object]:
+    """Validate a recipe's optional acquisition gate (slice 1d). Returns the cleaned dict, or {} if
+    absent. `profession` (str) demands a `level` (positive int); `order` (str) is standalone. Fails
+    loud on any other key or a malformed value, so a typo'd gate never silently opens a recipe."""
+    if requires is None:
+        return {}
+    if not isinstance(requires, dict) or set(requires) - {"profession", "level", "order"}:
+        raise SeedError(
+            f"recipe '{label}': 'requires' allows only 'profession'/'level'/'order' keys."
+        )
+    gate: dict[str, object] = {}
+    if "profession" in requires or "level" in requires:
+        prof, level = requires.get("profession"), requires.get("level")
+        if not isinstance(prof, str) or not prof:
+            raise SeedError(f"recipe '{label}': 'requires.profession' must name a trade.")
+        if not isinstance(level, int) or isinstance(level, bool) or level < 1:
+            raise SeedError(f"recipe '{label}': 'requires.level' must be a positive integer.")
+        gate["profession"], gate["level"] = prof, level
+    order = requires.get("order")
+    if order is not None:
+        if not isinstance(order, str) or not order:
+            raise SeedError(f"recipe '{label}': 'requires.order' must name an Order.")
+        gate["order"] = order
+    return gate
 
 
 def load_professions(path: Path) -> dict[str, Profession]:

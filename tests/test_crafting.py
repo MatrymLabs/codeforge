@@ -91,3 +91,129 @@ def test_craft_is_reachable_through_the_engine_tick(monkeypatch):
     monkeypatch.setattr(crafting, "RECIPES", _RECIPES)
     out = forge.handle_command(Session(player_id="maker", location="courtyard"), "craft")
     assert "You can forge" in out  # the verb is wired into the tick
+
+
+# --- Recipe acquisition gates (slice 1d): a recipe earned by profession level and/or a sworn Order.
+
+_GATED = {
+    "mastercraft": {
+        "name": "a mastercraft draught",
+        "makes": "healing_draught",
+        "inputs": {"forge_wrench": 1},
+        "requires": {"profession": "alchemy", "level": 3},
+    },
+}
+# The test seed ships no professions, so patch a trade in for the gate's display name to resolve.
+_ALCHEMY = {"alchemy": {"name": "Alchemy", "kind": "craft", "works": [], "makes": []}}
+
+
+def test_an_open_recipe_has_no_lock():
+    assert crafting.locked_reason(_player(), _RECIPES["testmake"]) is None
+
+
+def test_a_gated_recipe_is_locked_until_the_profession_level(monkeypatch):
+    from parts.world import professions
+
+    monkeypatch.setattr(professions, "PROFESSIONS", _ALCHEMY)
+    monkeypatch.setattr(crafting, "RECIPES", _GATED)
+    s = _player()
+    items.clone("forge_wrench", "player")
+    # Under the required level: locked, craft refuses, and nothing is spent.
+    assert "needs Alchemy level 3" in crafting.locked_reason(s, _GATED["mastercraft"])
+    out = crafting.craft(s, "mastercraft")
+    assert "have not earned" in out.lower()
+    assert len(crafting._held("forge_wrench")) == 1  # refused, nothing spent
+    # Practise the trade to level 3 (PER_LEVEL per rank) and the gate opens.
+    s.professions["alchemy"] = professions.PER_LEVEL * 2  # level 3
+    assert crafting.locked_reason(s, _GATED["mastercraft"]) is None
+    assert "forge" in crafting.craft(s, "mastercraft").lower()
+
+
+def test_an_order_gated_recipe_needs_the_sworn_order():
+    recipe = {
+        "name": "a guild relic",
+        "makes": "x",
+        "inputs": {"y": 1},
+        "requires": {"order": "making"},
+    }
+    unsworn = Session(player_id="m", location="void")  # order == ""
+    assert "needs the" in crafting.locked_reason(unsworn, recipe)
+    sworn = Session(player_id="m", location="void")
+    sworn.order = "making"
+    assert crafting.locked_reason(sworn, recipe) is None
+
+
+def test_the_recipe_sheet_marks_a_locked_recipe(monkeypatch):
+    from parts.world import professions
+
+    monkeypatch.setattr(professions, "PROFESSIONS", _ALCHEMY)
+    monkeypatch.setattr(crafting, "RECIPES", _GATED)
+    sheet = crafting.render_recipes(_player())
+    assert "[locked: needs Alchemy level 3]" in sheet
+
+
+def test_load_recipes_accepts_a_valid_gate(tmp_path):
+    from parts.world.seed import load_recipes
+
+    p = tmp_path / "recipes.yaml"
+    p.write_text(
+        "r:\n  makes: x\n  inputs: {y: 1}\n"
+        "  requires: {profession: smithing, level: 2, order: making}\n",
+        encoding="utf-8",
+    )
+    assert load_recipes(p)["r"]["requires"] == {
+        "profession": "smithing",
+        "level": 2,
+        "order": "making",
+    }
+
+
+def test_load_recipes_rejects_an_unknown_gate_key(tmp_path):
+    from parts.world.seed import SeedError, load_recipes
+
+    p = tmp_path / "recipes.yaml"
+    p.write_text("r:\n  makes: x\n  inputs: {y: 1}\n  requires: {level_up: 3}\n", encoding="utf-8")
+    with pytest.raises(SeedError, match="requires"):
+        load_recipes(p)
+
+
+def test_load_recipes_rejects_a_profession_gate_without_a_positive_level(tmp_path):
+    from parts.world.seed import SeedError, load_recipes
+
+    p = tmp_path / "recipes.yaml"
+    p.write_text(
+        "r:\n  makes: x\n  inputs: {y: 1}\n  requires: {profession: smithing}\n", encoding="utf-8"
+    )
+    with pytest.raises(SeedError, match="level"):
+        load_recipes(p)
+
+
+def test_load_recipes_rejects_a_non_string_profession(tmp_path):
+    from parts.world.seed import SeedError, load_recipes
+
+    p = tmp_path / "recipes.yaml"
+    p.write_text(
+        "r:\n  makes: x\n  inputs: {y: 1}\n  requires: {profession: 7, level: 2}\n",
+        encoding="utf-8",
+    )
+    with pytest.raises(SeedError, match="profession"):
+        load_recipes(p)
+
+
+def test_load_recipes_rejects_a_non_string_order(tmp_path):
+    from parts.world.seed import SeedError, load_recipes
+
+    p = tmp_path / "recipes.yaml"
+    p.write_text("r:\n  makes: x\n  inputs: {y: 1}\n  requires: {order: 3}\n", encoding="utf-8")
+    with pytest.raises(SeedError, match="Order"):
+        load_recipes(p)
+
+
+def test_load_recipes_accepts_an_order_only_gate(tmp_path):
+    from parts.world.seed import load_recipes
+
+    p = tmp_path / "recipes.yaml"
+    p.write_text(
+        "r:\n  makes: x\n  inputs: {y: 1}\n  requires: {order: making}\n", encoding="utf-8"
+    )
+    assert load_recipes(p)["r"]["requires"] == {"order": "making"}

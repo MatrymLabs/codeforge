@@ -17,7 +17,7 @@ from pathlib import Path
 import pytest
 
 from parts.world import crafting, items
-from parts.world.seed import load_items, load_recipes
+from parts.world.seed import load_items, load_professions, load_recipes
 from parts.world.session import Session
 
 _AETHRYN = Path(__file__).resolve().parent.parent / "seeds" / "aethryn"
@@ -79,6 +79,27 @@ def test_every_refinement_link_references_a_real_item(aethryn):
             assert output in protos, f"{label} makes '{output}', not a real item"
             for proto in recipe["inputs"]:
                 assert proto in protos, f"{label} needs '{proto}', not a real item"
+
+
+def test_every_recipe_gate_names_a_real_trade_and_order(aethryn):
+    """A gated recipe (slice 1d) must require a real CRAFT profession and/or a real Order, else a
+    maker could never earn it."""
+    from parts.world.orders import ORDERS
+
+    profs = load_professions(_AETHRYN / "professions.yaml")
+    craft_trades = {p for p in profs if profs[p]["kind"] == "craft"}
+    for label, recipe in aethryn["recipes"].items():
+        gate = recipe.get("requires")
+        if not gate:
+            continue
+        if "profession" in gate:
+            assert gate["profession"] in craft_trades, f"{label} gate names bad trade"
+        if "order" in gate:
+            assert gate["order"] in ORDERS, f"{label} gate names unknown Order"
+
+
+def test_at_least_one_recipe_is_gated_so_the_system_is_live(aethryn):
+    assert any(r.get("requires") for r in aethryn["recipes"].values()), "1d gating is dormant"
 
 
 def test_each_tier_feeds_the_next(aethryn):
