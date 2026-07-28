@@ -1,4 +1,4 @@
-.PHONY: hooks env fix lint typecheck test property fuzz coverage audit audit-runtime security sast secrets deps intake sbom bench trend ai-eval retention doctor patch daily check readiness arc-verdicts truth forge cast-plan cast cast-selective cast-install-check cast-diff cast-update plugins coupling shelf-pour shelf-build smoke repo-integrity ship run world store hardware clean serve backup db-up db-down db-migrate docs-serve docs-build demo-gif e2e evolution ritual-fast ritual ritual-down unskew loop proto
+.PHONY: hooks env fix lint typecheck test property fuzz coverage audit audit-runtime security sast secrets deps intake sbom bench trend ai-eval retention doctor patch daily check readiness arc-verdicts truth forge cast-plan cast cast-selective cast-install-check cast-diff cast-update plugins coupling shelf-pour shelf-build smoke repo-integrity ship run world store hardware clean serve backup db-up db-down db-migrate docs-serve docs-build demo-gif e2e evolution ritual-fast ritual ritual-down unskew loop proto contracts
 
 # --- Environment: create/validate the .venv, fail loud on version mismatch.
 # Uses uv when present (a Rust resolver; measured ~20x faster than pip on this host:
@@ -248,6 +248,11 @@ proto:
 	protoc --proto_path=proto --python_out=proto proto/telemetry.proto
 	protoc --proto_path=proto --go_out=native/spine --go_opt=module=codeforge/spine proto/telemetry.proto
 	@echo "regenerated proto/telemetry_pb2.py + native/spine/telemetrypb/telemetry.pb.go"
+
+# --- Contracts: regenerate the published Fleet Core contract authorities from the Pydantic models
+# (ship ADR 0003). The drift gate tests/test_contracts.py fails if the committed schema goes stale. ---
+contracts:
+	@python contracts/generate.py
 
 # --- Trend: measure the engine tick, RECORD its median as a retained Chronicle metric point
 # (chronicle/ledger.jsonl, git-tracked), then render the series over time. `make bench` stays pure. ---
