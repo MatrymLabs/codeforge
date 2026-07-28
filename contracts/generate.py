@@ -27,15 +27,24 @@ SCHEMA_PATH = Path(__file__).resolve().parent / "readiness.schema.json"
 
 
 def build_schema() -> dict[str, Any]:
-    """The readiness contract as a single JSON Schema document (all payloads under `$defs`)."""
+    """The readiness contract as one JSON Schema document.
+
+    The payloads live under `$defs`; a `ReadinessContract` root ties them together so every type is
+    reachable (clean code generation, no orphan/`unreachableDefinitions` types). The schema is made
+    codegen-friendly: Pydantic's per-field `title` noise is stripped, and each payload object is
+    closed (`additionalProperties: false`) so a generated type is exact, not open-ended.
+    """
     _, schema = models_json_schema(
         [(StatusPayload, "serialization"), (BlueprintSummary, "serialization")],
-        title="CodeForge Readiness Contract",
-        description=(
-            "The fleet's readiness API payloads served by codeforge "
-            "(GET /api/status, GET /api/blueprints). Fleet Core contract; see ship ADR 0003."
-        ),
     )
+    defs: dict[str, Any] = schema["$defs"]
+    for model in defs.values():
+        model.pop("title", None)
+        for prop in model.get("properties", {}).values():
+            prop.pop("title", None)  # "Blueprint Id" etc. -> codegen aliases; drop it
+        if model.get("type") == "object":
+            model.setdefault("additionalProperties", False)  # closed payload; `rows` keeps its own
+
     return {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://github.com/MatrymLabs/codeforge/blob/main/contracts/readiness.schema.json",
@@ -44,7 +53,20 @@ def build_schema() -> dict[str, Any]:
             "source": "codeforge parts/dashboard.py + parts/api.py",
             "adr": "MatrymLabs/ship docs/adr/0003-fleet-core.md",
         },
-        **schema,
+        "title": "ReadinessContract",
+        "description": (
+            "The fleet's readiness API payloads served by codeforge "
+            "(GET /api/status -> status, GET /api/blueprints -> blueprints). "
+            "Fleet Core contract; see ship ADR 0003."
+        ),
+        "type": "object",
+        "additionalProperties": False,
+        "properties": {
+            "status": {"$ref": "#/$defs/StatusPayload"},
+            "blueprints": {"type": "array", "items": {"$ref": "#/$defs/BlueprintSummary"}},
+        },
+        "required": ["status", "blueprints"],
+        "$defs": defs,
     }
 
 
