@@ -5731,5 +5731,32 @@
     "aliases": [],
     "created": "2026-07-27",
     "updated": "2026-07-27"
+  },
+  {
+    "designation": "MOD-04.099",
+    "name": "respawn",
+    "status": "active",
+    "function": "the world's respawn philosophy: a catalog of its policies + the dynamic-spawn primitive",
+    "label": "respawn",
+    "file": "parts/world/respawn.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "docs/respawn.md",
+    "tests": "tests/test_respawn.py",
+    "depends_on": [],
+    "related": [
+      "zones",
+      "gather",
+      "combat"
+    ],
+    "reuse": "the RESPAWN FRAMEWORK (content campaign slice 3, Part IV): one RespawnPolicy record per respawn behavior in the game (zone_item_reset / gather_node / training_dummy / lethal_recover), naming what respawns, its trigger, cadence, and the gameplay REASON it exists, plus the module.attr that implements it. Carries pick_room(candidates, weights, rng) -- the pure, seedable dynamic-spawn primitive (weighted site choice from a pool, '' for empty) the dynamic policies build on ('avoid static, predictable locations'). render_policies() summarises the philosophy. Doc: docs/respawn.md.",
+    "notes": "The completeness test pins that every policy's lives_in=(module, attr) still resolves, so the philosophy can't drift loose from the code. SPAWN_RNG is a seedable module RNG (runtime variety, not world-gen which stays deterministic). NEXT (slice 3b): wire pick_room live -- an opt-in item spawn_pool the zone reset draws from (the wandering pickup), then rare-spawn rotation.",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-27",
+    "updated": "2026-07-27"
   }
 ]
