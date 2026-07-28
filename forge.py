@@ -65,6 +65,7 @@ from parts.world.aggression import menace
 from parts.world.character_view import sheet_from_session
 from parts.world.characters import load_character, restore_character, save_character
 from parts.world.chime import chime
+from parts.world.climate import tick_climate, weather_view
 from parts.world.coinage import purse
 from parts.world.combat import attack, examine_foe, tick_burns
 from parts.world.consumables import quaff
@@ -110,7 +111,7 @@ HELP_TEXT = (
     "Commands: look, go <direction> (or n/s/e/w/u/d), "
     "take, drop, inventory, talk <npc>, ask <npc> about <topic>, say <msg>, name <yourname>, who, "
     "jobs, job <calling>, subjob <calling>, join <order>, wallet, quaff <item>, contracts, region, "
-    "score, "
+    "weather, score, "
     "equip <item>, unequip <slot>, "
     "attack <target>, skills, use <ability> [on <foe>], repair, scan <target>, deploy, calibrate, "
     "channel, journal [text], vitals, "
@@ -1431,6 +1432,15 @@ def _build_commands() -> CommandSet:
     )
     cs.add(
         Command(
+            "weather",
+            "CMD-04.093",
+            "the season and sky over the world right now",
+            lambda s, _a: weather_view(s),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
             "quaff",
             "CMD-04.074",
             "drink a consumable (quaff <item>)",
@@ -1943,7 +1953,7 @@ def handle_command(session: Session, signal: str) -> str:
     response = _route(session, true_signal, routed_signal)
     beat = (
         f"{tick_burns(session)}{menace(session)}{tick_zones(session)}"
-        f"{gather.tick_gather(session)}{_sands_beat(session)}"
+        f"{gather.tick_gather(session)}{tick_climate(session)}{_sands_beat(session)}"
     )
     return f"{response}{beat}"
 

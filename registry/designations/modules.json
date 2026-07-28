@@ -5758,5 +5758,31 @@
     "aliases": [],
     "created": "2026-07-27",
     "updated": "2026-07-27"
+  },
+  {
+    "designation": "MOD-04.100",
+    "name": "climate",
+    "status": "active",
+    "function": "the world's season and weather, turning on the beat (the world-sim layer's clock)",
+    "label": "climate",
+    "file": "parts/world/climate.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "docs/respawn.md",
+    "tests": "tests/test_climate.py",
+    "depends_on": [],
+    "related": [
+      "zones",
+      "respawn"
+    ],
+    "reuse": "the WORLD-SIMULATION layer, slice 1 (content campaign slice 4, Part IV): season_of(beat)/weather_of(beat) derive the world's season (spring/summer/autumn/winter, 40 beats each) and weather (a season's pool, holding 7 beats) PURELY from the world beat, so any two readers agree and a test can name the day. climate_line renders it; the `weather` verb (CMD-04.093) shows it. tick_climate rides the beat beside tick_zones. The seam future 'seasonal availability' / 'weather-dependent spawns' read (respawn.pick_room weights); the world-sim layer factions/reputation ride next.",
+    "notes": "The MATH is pure and total (tested without booting a world); the beat counter (_beat) is runtime, like the zone beats -- a fresh boot starts the year at day 0 (a documented limitation, no persistence yet). tick_climate/weather_view are silent/read-only, so no existing look/combat test moves.",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-27",
+    "updated": "2026-07-27"
   }
 ]

@@ -53,6 +53,7 @@ _GAME_SEED = {
     "quest_archetypes",
     "zone_story",
     "respawn",
+    "climate",
     "storylines",
     "townsfolk",
     "rooms",

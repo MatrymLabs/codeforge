@@ -44,5 +44,8 @@ than always the same spot.
   on the item schema + the zone reset draws a site.)*
 - **Rare-spawn rotation** -- a named rare elite relocates among a zone's rooms on the beat.
 - **Population-aware, weather-, season-, reputation-, quest-state-, and faction-gated spawns** --
-  these ride the world-simulation layer (factions / season / weather), a later campaign slice; the
-  `weights` argument to `pick_room` is the seam they will pull.
+  these ride the world-simulation layer (factions / season / weather); the `weights` argument to
+  `pick_room` is the seam they pull. Season and weather have landed: `parts/world/climate.py`
+  (MOD-04.100) derives `season_of(beat)` / `weather_of(beat)` purely from the world beat (the
+  `weather` verb shows the sky), so seasonal-availability and weather-dependent spawns can gate on
+  them. Factions / reputation ride the next slice.
