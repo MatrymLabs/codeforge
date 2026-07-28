@@ -5991,5 +5991,30 @@
     "aliases": [],
     "created": "2026-07-28",
     "updated": "2026-07-28"
+  },
+  {
+    "designation": "MOD-04.109",
+    "name": "analytics",
+    "status": "active",
+    "function": "SQL analytics over the character archive (leaderboard, spread, wealth)",
+    "label": "analytics",
+    "file": "parts/analytics.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "docs/adr/0013-sql-analytics.md",
+    "tests": "tests/test_analytics.py",
+    "depends_on": [],
+    "related": [
+      "db"
+    ],
+    "reuse": "set-shaped reports (rank / group / aggregate) as portable SQL over any archive; a template for pushing analytics into the database engine",
+    "notes": "Python reference + identical-result SQL query (window functions/GROUP BY/aggregates) per report; parity pinned by tests/test_analytics.py; portable SQLite + PostgreSQL (Postgres-gated test). Adds no dependency (stdlib sqlite3 + approved SQLAlchemy/psycopg). The SQL analytics organ (ADR-0013).",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-28",
+    "updated": "2026-07-28"
   }
 ]
