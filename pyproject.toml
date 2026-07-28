@@ -70,6 +70,13 @@ files = ["parts", "tests", "forge.py"]
 module = "anthropic"
 ignore_missing_imports = true
 
+# codeforge_nav is the OPTIONAL native accelerator (native/codeforge_nav, Rust via PyO3), imported
+# opportunistically behind a pure-Python fallback (ADR-0010). It is absent in the dev/CI venv and
+# carries no type stubs, so don't require them -- whether or not the compiled kernel is built.
+[[tool.mypy.overrides]]
+module = "codeforge_nav"
+ignore_missing_imports = true
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 # Fail loud on typos, not silently: an unregistered marker or an unknown config

@@ -5915,5 +5915,31 @@
     "aliases": [],
     "created": "2026-07-28",
     "updated": "2026-07-28"
+  },
+  {
+    "designation": "MOD-04.106",
+    "name": "navigation",
+    "status": "active",
+    "function": "the world as a graph: shortest room paths + reachability, native-accelerated (Rust/PyO3)",
+    "label": "navigation",
+    "file": "parts/world/navigation.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "docs/design/economy.md",
+    "tests": "tests/test_navigation.py",
+    "depends_on": [],
+    "related": [
+      "travel",
+      "world"
+    ],
+    "reuse": "",
+    "notes": "Python-first NavGraph with an identical-interface Rust fallback (native/codeforge_nav); parity-pinned. First polyglot organ.",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-28",
+    "updated": "2026-07-28"
   }
 ]
