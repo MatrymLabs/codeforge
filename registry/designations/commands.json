@@ -3007,5 +3007,32 @@
     "aliases": [],
     "created": "2026-07-27",
     "updated": "2026-07-27"
+  },
+  {
+    "designation": "CMD-04.095",
+    "name": "professions",
+    "status": "active",
+    "function": "your maker's trades and their levels (gathering and crafting skills)",
+    "label": "professions",
+    "file": "forge.py",
+    "type": "CMD",
+    "domain": "04",
+    "docs": "",
+    "tests": "tests/test_professions.py",
+    "depends_on": [],
+    "related": [
+      "professions",
+      "crafting",
+      "gather"
+    ],
+    "reuse": "",
+    "tags": [
+      "command"
+    ],
+    "notes": "professions.render_professions: the trade sheet. Slice 1b of the Crafting Campaign.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-27",
+    "updated": "2026-07-27"
   }
 ]

@@ -55,8 +55,27 @@ def test_save_and_load_roundtrip():
         "coins": 0,
         "quest_state": "",
         "allocated": "",
+        "professions": "",
     }
     assert load_character("stranger") is None
+
+
+def test_profession_practice_survives_a_save_and_restore(monkeypatch):
+    """A maker's trade skill is a persisted character fact: it must ride through save -> load ->
+    restore. (Patch the trade registry so 'mining' is known under the test seed.)"""
+    from parts.world import professions
+
+    monkeypatch.setattr(
+        professions,
+        "PROFESSIONS",
+        {"mining": {"name": "Mining", "kind": "gather", "works": [], "makes": []}},
+    )
+    s = _hero()
+    s.professions = {"mining": 5}
+    save_character(s)
+    fresh = Session(player_id="matrym", location="courtyard")
+    restore_character(fresh, load_character("matrym"))
+    assert fresh.professions == {"mining": 5}
 
 
 def test_restore_rebuilds_the_full_sheet():

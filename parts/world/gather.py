@@ -39,6 +39,13 @@ def gather(session: Session) -> str:
         return "There is nothing to gather here."  # a node naming an unknown material: fail soft
     session.gather_cooldowns[session.location] = GATHER_COOLDOWN
     line = f"You gather {items.ITEMS[iid]['name']}."
+    # Working a material advances the gather trade that claims it (mining/herbalism/prospecting);
+    # a rank-up appends its own line, a no-op is silent (parts.world.professions).
+    from parts.world.professions import advance, trade_for_gather
+
+    rose = advance(session, trade_for_gather(str(node)))
+    if rose:
+        line = f"{line}\n{rose}"
     # A forage contract ('gather N of a material HERE') advances on the harvest, scoped to this zone
     # -- the non-combat twin of a cull (parts.world.forage). Cheap: an unrouted key is a dict miss.
     from parts.world import quest

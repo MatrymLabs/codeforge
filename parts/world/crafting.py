@@ -58,4 +58,12 @@ def craft(session: Session, arg: str) -> str:
     for proto, qty in recipe["inputs"].items():
         for iid in held[proto][:qty]:
             del items.ITEMS[iid]  # spend the materials only once the output is in hand
-    return f"You forge {items.ITEMS[made]['name']} at the hearth."
+    line = f"You forge {items.ITEMS[made]['name']} at the hearth."
+    # Forging advances the craft trade that makes this recipe (smithing/alchemy/leatherworking);
+    # a rank-up appends its own line, a no-op is silent (parts.world.professions).
+    from parts.world.professions import advance, trade_for_craft
+
+    rose = advance(session, trade_for_craft(name))
+    if rose:
+        line = f"{line}\n{rose}"
+    return line
