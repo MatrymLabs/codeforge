@@ -69,6 +69,7 @@ from parts.world.chime import chime
 from parts.world.climate import tick_climate, weather_view
 from parts.world.coinage import purse
 from parts.world.combat import attack, examine_foe, tick_burns
+from parts.world.condition import render_condition
 from parts.world.consumables import quaff
 from parts.world.crafting import craft
 from parts.world.doors import reclose, unlock
@@ -115,7 +116,7 @@ HELP_TEXT = (
     "Commands: look, go <direction> (or n/s/e/w/u/d), "
     "take, drop, inventory, talk <npc>, ask <npc> about <topic>, say <msg>, name <yourname>, who, "
     "jobs, job <calling>, subjob <calling>, join <order>, wallet, quaff <item>, contracts, region, "
-    "weather, factions, professions, standing, route <room>, score, "
+    "weather, factions, professions, standing, condition, route <room>, score, "
     "equip <item>, unequip <slot>, "
     "attack <target>, skills, use <ability> [on <foe>], repair, scan <target>, deploy, calibrate, "
     "channel, journal [text], vitals, "
@@ -1517,6 +1518,15 @@ def _build_commands() -> CommandSet:
             "CMD-04.096",
             "your reputation and tier with each Order (Hostile .. Revered)",
             lambda s, _a: render_standing(s),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "condition",
+            "CMD-04.098",
+            "how you are right now: vital pools, what ails you, your sworn standing",
+            lambda s, _a: render_condition(s),
             namespace=CORE,
         )
     )

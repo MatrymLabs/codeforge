@@ -3089,6 +3089,33 @@
     "updated": "2026-07-28"
   },
   {
+    "designation": "CMD-04.098",
+    "name": "condition",
+    "status": "active",
+    "function": "how you are right now: vital pools, what ails you, your sworn standing",
+    "label": "condition",
+    "file": "forge.py",
+    "type": "CMD",
+    "domain": "04",
+    "docs": "",
+    "tests": "tests/test_condition.py",
+    "depends_on": [],
+    "related": [
+      "condition",
+      "afflictions",
+      "reputation"
+    ],
+    "reuse": "",
+    "tags": [
+      "command"
+    ],
+    "notes": "condition.render_condition: the at-a-glance state view; wires the orphaned afflictions renderer. Roadmap: status view.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-28",
+    "updated": "2026-07-28"
+  },
+  {
     "designation": "CMD-10.025",
     "name": "`@script`",
     "status": "active",
