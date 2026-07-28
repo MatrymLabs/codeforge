@@ -80,6 +80,7 @@ the_black_hollow_guardian:
   lethal: true
   drops: [greater_healing_draught]
   loot: {ember_shard: 5, nothing: 2}
+  inflicts: {status: daze, chance: 3, beats: 1}  # a dark, reeling blow costs the hero an action
 
 caeloria_warden:
   name: a warden of Caeloria
@@ -314,6 +315,7 @@ heart_of_xilnath_guardian:
   lethal: true
   drops: [greater_healing_draught]
   loot: {ember_shard: 5, nothing: 2}
+  inflicts: {status: venom, chance: 2, damage: 12, ticks: 4}  # its bite leaves a venom that saps you
 
 thalorin_warden:
   name: a warden of Thalorin

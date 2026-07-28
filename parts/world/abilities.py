@@ -100,6 +100,10 @@ def use_ability(session: Session, arg: str) -> str:
     """Channel one ability: `use <ability> [on <target>]`. Fails loud, spends MP only on success."""
     if session.stats is None:
         return "You have no calling yet. Type JOBS before you channel a skill."
+    from parts.world.afflictions import is_dazed
+
+    if is_dazed(session):
+        return "You are dazed and cannot channel a skill -- it will pass."
     name, _, target_word = arg.partition(" on ")
     found = _resolve(name)
     if found is None:

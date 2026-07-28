@@ -46,6 +46,11 @@ class Session:
     # each a name -> remaining-ticks countdown. A fresh session starts with a clear board.
     cooldowns: dict[str, int] = field(default_factory=dict)
     statuses: dict[str, int] = field(default_factory=dict)
+    # Harmful statuses the player SUFFERS (the mirror of the foe-side burn/daze): damage-over-time
+    # afflictions (name -> {damage, ticks}) and a daze countdown. Aged on the world beat
+    # (parts.world.afflictions.tick_afflictions), transient, never persisted.
+    afflictions: dict[str, dict[str, int]] = field(default_factory=dict)
+    dazed: int = 0
     # Aggression leash: unanswered world-beats per aggressive NPC sharing the room. A player's
     # strike resets that NPC's count; after LEASH beats with no answer the foe breaks off, so a
     # player who cannot win but stops fighting is never soft-locked. Transient, not persisted.

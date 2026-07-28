@@ -191,6 +191,11 @@ class Npc(TypedDict):
     # elemental ability is scaled by it -- freeze the fire creature, don't burn it. Absent = a foe
     # that resists nothing (every hit lands full). Validated vs RESIST_ORDER and RESIST_LEVELS.
     resistances: NotRequired[dict[str, str]]
+    # Optional: an AFFLICTION this foe's landed blow may lay on the player (afflictions.py):
+    # {status, chance?, damage?, ticks?, beats?}. `status` 'daze' stuns for `beats`; any other name
+    # is a damage-over-time of that name (`damage` per beat for `ticks`). `chance` is 1-in-N (def.
+    # 1 = always). The substrate a telegraphed boss special needs. Validated at load.
+    inflicts: NotRequired[dict[str, object]]
     # Item prototype labels this NPC drops when defeated: a fresh instance of each is spawned into
     # the room (parts.world.items.clone). Optional; a bare NPC drops nothing. Loot is real object
     # instancing -- the drop is a new instance, so it never collides with the seed original.
@@ -779,6 +784,29 @@ def load_npcs(path: Path) -> dict[str, Npc]:
                         f"NPC '{label}': resistance {code!r} must be one of {RESIST_LEVELS}, "
                         f"got {resist_level!r}."
                     )
+        inflicts = merged.get("inflicts")
+        if inflicts is not None:
+            if not isinstance(inflicts, dict) or set(inflicts) - {
+                "status",
+                "chance",
+                "damage",
+                "ticks",
+                "beats",
+            }:
+                raise SeedError(
+                    f"NPC '{label}': 'inflicts' allows only status/chance/damage/ticks/beats keys."
+                )
+            status = inflicts.get("status")
+            if not isinstance(status, str) or not status:
+                raise SeedError(
+                    f"NPC '{label}': 'inflicts.status' must name an affliction ('poison', 'daze')."
+                )
+            for key in ("chance", "damage", "ticks", "beats"):
+                value = inflicts.get(key)
+                if value is not None and (
+                    not isinstance(value, int) or isinstance(value, bool) or value < 1
+                ):
+                    raise SeedError(f"NPC '{label}': 'inflicts.{key}' must be a positive integer.")
         # Optional shop: a merchant's `sells`/`buys` price tables. Prices are positive ints; the
         # prototypes are cross-checked against the seed's items at boot (inspect_world_links).
         shop = merged.get("shop")
@@ -826,6 +854,8 @@ def load_npcs(path: Path) -> dict[str, Npc]:
             npc["attack_element"] = element
         if resistances:
             npc["resistances"] = dict(resistances)
+        if inflicts:
+            npc["inflicts"] = dict(inflicts)
         npcs[label] = npc
     return npcs
 

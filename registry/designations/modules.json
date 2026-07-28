@@ -5862,5 +5862,31 @@
     "aliases": [],
     "created": "2026-07-28",
     "updated": "2026-07-28"
+  },
+  {
+    "designation": "MOD-04.104",
+    "name": "afflictions",
+    "status": "active",
+    "function": "harmful statuses the PLAYER suffers: damage-over-time and daze (the foe-side mirror)",
+    "label": "afflictions",
+    "file": "parts/world/afflictions.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "",
+    "tests": "tests/test_afflictions.py",
+    "depends_on": [],
+    "related": [
+      "combat",
+      "abilities"
+    ],
+    "reuse": "",
+    "notes": "tick_afflictions ages player DoT/daze on the world beat; maybe_inflict is the NPC-blow door. Unblocks encounter depth (#4).",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-28",
+    "updated": "2026-07-28"
   }
 ]
