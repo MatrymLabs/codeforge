@@ -74,6 +74,7 @@ _GAME_SEED = {
     "derived",
     "score_sheet",
     "condition",
+    "party",
     "aggression",
     "session",
     "seed",

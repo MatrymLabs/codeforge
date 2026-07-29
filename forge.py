@@ -90,6 +90,22 @@ from parts.world.items import (
 from parts.world.jobs import JOBS, bind_calling, calling_index, set_secondary
 from parts.world.npcs import ask, room_npcs_text, talk, trace_npc
 from parts.world.orders import swear_order
+from parts.world.party import (
+    disband as party_disband,
+)
+from parts.world.party import (
+    invite as party_invite,
+)
+from parts.world.party import (
+    join as party_join,
+)
+from parts.world.party import (
+    leave as party_leave,
+)
+from parts.world.party import (
+    party_say,
+    render_party,
+)
 from parts.world.professions import render_professions
 from parts.world.quest import contracts_view, quest_view
 from parts.world.ranks import wizard_command
@@ -116,7 +132,8 @@ HELP_TEXT = (
     "Commands: look, go <direction> (or n/s/e/w/u/d), "
     "take, drop, inventory, talk <npc>, ask <npc> about <topic>, say <msg>, name <yourname>, who, "
     "jobs, job <calling>, subjob <calling>, join <order>, wallet, quaff <item>, contracts, region, "
-    "weather, factions, professions, standing, condition, route <room>, score, "
+    "weather, factions, professions, standing, condition, "
+    "party [invite|join|leave|disband], psay <msg>, route <room>, score, "
     "equip <item>, unequip <slot>, "
     "attack <target>, skills, use <ability> [on <foe>], repair, scan <target>, deploy, calibrate, "
     "channel, journal [text], vitals, "
@@ -1532,6 +1549,24 @@ def _build_commands() -> CommandSet:
     )
     cs.add(
         Command(
+            "party",
+            "CMD-04.099",
+            "form a fellowship: party [invite|join <player>|leave|disband]",
+            _party_cmd,
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "psay",
+            "CMD-04.100",
+            "speak on your party's private channel (psay <message>)",
+            lambda s, arg: party_say(s.player_id, arg),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
             "shop",
             "CMD-04.071",
             "list a merchant's wares",
@@ -1936,6 +1971,28 @@ def _ask_cmd(session: Session, arg: str) -> str:
     """`ask <npc> about <topic>` (or bare `ask <npc>` to list topics): topic-based conversation."""
     who, _, topic = arg.lower().partition(" about ")
     return ask(who.strip(), topic.strip(), session.location)
+
+
+def _party_cmd(session: Session, arg: str) -> str:
+    """The `party` verb: form and command a fellowship. The spine preserves argument case, so a
+    player name arrives as typed and is lowered to its label inside `parts.world.party`. Bare
+    `party` shows the roster; `party invite <player>`, `party join <player>`, `party leave`,
+    `party disband`. Party chat is the separate `psay` verb (which keeps its message case)."""
+    me = session.player_id
+    parts_ = arg.split(maxsplit=1)
+    sub = parts_[0].lower() if parts_ else ""
+    rest = parts_[1] if len(parts_) > 1 else ""
+    if sub == "":
+        return render_party(me)
+    if sub == "invite":
+        return party_invite(me, rest)
+    if sub == "join":
+        return party_join(me, rest)
+    if sub == "leave":
+        return party_leave(me)
+    if sub == "disband":
+        return party_disband(me)
+    return "Party: party, party invite <player>, party join <player>, party leave, party disband."
 
 
 def _unlock_cmd(session: Session, arg: str) -> str:

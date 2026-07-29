@@ -10,7 +10,7 @@ is rendered text; later it becomes validated event frames that
 sinks render per-recipient.
 """
 
-from collections.abc import Callable
+from collections.abc import Callable, Iterable
 
 from parts.world.frames import Frame
 from parts.world.session import SESSIONS
@@ -73,6 +73,20 @@ def announce_frame(room: str, frame: Frame, exclude: str = "") -> None:
         sink = _ECHO_SINKS.get(player_id)
         if sink is not None:
             _deliver(player_id, sink, frame.render_for(player_id))
+
+
+def announce_to(player_ids: Iterable[str], text: str, exclude: str = "") -> None:
+    """Deliver text to a specific SET of players (a party, a guild, any cohort), not a room.
+
+    The complement to announce(): where announce() is scoped by location, this is scoped by an
+    explicit membership. An id with no bound sink (an offline member) is simply skipped, so a
+    cohort message never fails because someone logged out."""
+    for player_id in player_ids:
+        if player_id == exclude:
+            continue
+        sink = _ECHO_SINKS.get(player_id)
+        if sink is not None:
+            _deliver(player_id, sink, text)
 
 
 def broadcast(text: str) -> None:
