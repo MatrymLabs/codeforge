@@ -88,6 +88,18 @@ compatibility, automate repository mutations, or move CodeForge away from its pr
 When stopping, present: current design, proposed design, benefits, risks, migration cost, test
 plan, rollback plan, recommendation. Do not silently redirect the flagship.
 
+**Non-overridable escalation classes (hardening, from the 2026-07-28 convergence audit).** The
+junctions above are judgment calls; these are not. A change must NEVER auto-proceed past a
+**security failure** (a gate flags a real vulnerability, a secret would enter git, an auth or crypto
+boundary weakens) or an **evidence-absence failure** (a claim that cannot be grounded in a test, a
+benchmark, or a source, so "no claim without correspondence" is unmet). These are stop conditions
+even when the change is otherwise local, reversible, and low risk; a confidence call does not
+override them. The same principle names the QA invariant: **evaluators produce evidence, they never
+hold merge authority.** A gate, a scorer, or an AI reviewer reports a verdict; a human decides on
+it, and nothing scoring the work writes to the trunk. Independent literatures (secure coding,
+clinical high-reliability, supply-chain governance) converge on this: some failure classes are not
+overridable.
+
 ## Idea-capture rule
 
 Ideas are welcome continuously but must not fracture the active build. Classify as Immediate,

@@ -40,6 +40,29 @@ regression protection.
 - platform support breaks without approval;
 - **or the apparent gain falls within measurement noise** (median delta < the journey's noise band).
 
+## Statistical rigor (the comparison method)
+
+A before/after claim is only as honest as the statistics under it. Three independent empirical
+studies (LLM-code energy, compiled Python, Rust-from-Python; recorded in
+`docs/reports/2026-07-28-native-organ-benchmarks.md`) converge on the same shape, adopted here as the
+standard for a defensible comparison:
+
+- **Control the environment.** Pin the process to a core, fix the CPU governor/frequency where the
+  host allows, warm up before measuring, and treat the platform as a blocking factor: report each
+  platform, never average a number across two of them.
+- **Do not assume normality.** Timing distributions are skewed; compare medians with a
+  non-parametric test (Mann-Whitney U for two conditions, Kruskal-Wallis for more), not a t-test on
+  the mean.
+- **Report an effect size, not just a verdict.** A small-sample "faster" can be trivial. Report the
+  size of the change (Cliff's delta or Hedges' g) so it is visible, and label it with the ethos's
+  honest words (verified / likely / neutral / regression / inconclusive).
+- **Ship a replication package.** The recorded evidence must be reproducible from the committed
+  benchmark and the noted command, so a reviewer can re-run it rather than take it on faith.
+
+This is not required for every micro-change (the noise-band screen above already filters trivia); it
+is the bar for any change presented AS a measured improvement, above all a native or compiled organ
+whose whole justification is the number.
+
 ## Record fields (per measured journey)
 
 `journey · commit · branch · python_version · os · processor · cores · memory · workload ·
