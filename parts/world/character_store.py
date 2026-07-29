@@ -37,6 +37,8 @@ class CharacterRecord:
     rank: str = "player"
     account: str = ""
     order: str = ""
+    guild: str = ""  # the player guild this hero belongs to (a name), or "" for none
+    guild_rank: str = ""  # rank in that guild: leader | officer | member (or "" when guildless)
     equipped_gear: str = ""
     coins: int = 0
     quest_state: str = ""
@@ -67,6 +69,16 @@ class CharacterStore(Protocol):
 
     def set_rank(self, name: str, rank: str) -> bool:
         """Set only the rank column. False if no such character exists."""
+        ...
+
+    def members_of_guild(self, guild: str) -> list[str]:
+        """The names of every character in `guild` (online or not). Empty for "" or an empty guild.
+        This is how a guild reads its full roster and reaches offline members (to disband)."""
+        ...
+
+    def set_guild(self, name: str, guild: str, guild_rank: str) -> bool:
+        """Set a character's guild + rank columns (works for an offline member's row). False if no
+        such character exists. Never touches auth: guild is a gameplay fact."""
         ...
 
 
@@ -101,4 +113,18 @@ class InMemoryCharacterStore:
         if existing is None:
             return False
         self._rows[name] = replace(existing, rank=rank)
+        return True
+
+    def members_of_guild(self, guild: str) -> list[str]:
+        if not guild:
+            return []
+        return sorted(name for name, r in self._rows.items() if r.guild == guild)
+
+    def set_guild(self, name: str, guild: str, guild_rank: str) -> bool:
+        from dataclasses import replace
+
+        existing = self._rows.get(name)
+        if existing is None:
+            return False
+        self._rows[name] = replace(existing, guild=guild, guild_rank=guild_rank)
         return True

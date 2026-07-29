@@ -3196,6 +3196,56 @@
     "updated": "2026-07-28"
   },
   {
+    "designation": "CMD-04.102",
+    "name": "guild",
+    "status": "active",
+    "function": "a persisted guild: guild [found <name>|invite <player>|accept|promote|leave|disband]",
+    "label": "guild",
+    "file": "forge.py",
+    "type": "CMD",
+    "domain": "04",
+    "docs": "docs/party_system.md",
+    "tests": "tests/test_guild.py",
+    "depends_on": [],
+    "related": [
+      "guild"
+    ],
+    "reuse": "",
+    "tags": [
+      "command"
+    ],
+    "notes": "_guild_cmd dispatches to parts.world.guild (found/invite/accept/promote/leave/disband/roster). The persisted social pillar; membership survives logout.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-28",
+    "updated": "2026-07-28"
+  },
+  {
+    "designation": "CMD-04.103",
+    "name": "gsay",
+    "status": "active",
+    "function": "speak on your guild's channel (gsay <message>)",
+    "label": "gsay",
+    "file": "forge.py",
+    "type": "CMD",
+    "domain": "04",
+    "docs": "docs/party_system.md",
+    "tests": "tests/test_guild.py",
+    "depends_on": [],
+    "related": [
+      "guild"
+    ],
+    "reuse": "",
+    "tags": [
+      "command"
+    ],
+    "notes": "guild.guild_say: the guild chat channel; reaches online guild-mates via events.announce_to.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-28",
+    "updated": "2026-07-28"
+  },
+  {
     "designation": "CMD-10.025",
     "name": "`@script`",
     "status": "active",

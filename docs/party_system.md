@@ -67,6 +67,27 @@ rather than a way to split one prize thinner. It hangs off combat's single kill/
 - **The killer's own reward is untouched** (awarded by `land_hit` as before); `share_kill` only reaches
   the mates, so the seam adds sharing without double-awarding.
 
+## The guild: a persisted organization (`parts/world/guild.py`, MOD-04.115)
+
+The party's durable big sibling. Where a party is a moment (transient), a **guild is a record**: a
+hero's `guild` and `guild_rank` are saved columns on their character (migration `e7a3c1b5f2d8`), so
+the guild survives logout and restart, and its roster names members whether or not they are online.
+
+- **Verbs:** `guild found <name>` | `invite <player>` | `accept` | `promote <player>` | `leave` |
+  `disband`; bare `guild` is the roster; `gsay <message>` is guild chat.
+- **Ranks** are `member < officer < leader`: an officer or leader may invite, the leader may promote
+  and disband. Promoting a member to leader **transfers leadership** (the old leader steps down to
+  officer), which is how a leader hands off before leaving.
+- **The persisted membership is the source of truth.** The `CharacterStore` gained
+  `members_of_guild` (the full roster, including offline members) and `set_guild` (write a member's
+  columns, even an offline one). Every change writes through immediately (an online member via
+  `save_character`, an offline one via `set_guild`), so `disband` clears *every* member's row and the
+  roster is always consistent. A live session only mirrors the stored fact.
+- **Only the invitation is transient** (in-memory, dropped on logout, like the party's); the
+  membership itself persists, which is the whole point.
+- **Extension points:** a guild bank (reusing the atomic-exchange discipline), a message of the day,
+  guild quests.
+
 ## Shared combat: the loot half (`parts/world/party_loot.py`, MOD-04.114)
 
 The XP half pays everyone; this is the loot half. A solo hero's kill still drops to the floor to be

@@ -50,6 +50,7 @@ from parts.titles import title
 from parts.vitals import vitals
 from parts.world import allocate, artifact, creator_workshop, gather, quest
 from parts.world import feats as feats_mod
+from parts.world import guild as guild_mod
 from parts.world import trade as trade_mod
 from parts.world import travel as travel_net
 from parts.world.abilities import render_abilities, use_ability
@@ -136,7 +137,8 @@ HELP_TEXT = (
     "jobs, job <calling>, subjob <calling>, join <order>, wallet, quaff <item>, contracts, region, "
     "weather, factions, professions, standing, condition, "
     "party [invite|join|leave|disband], psay <msg>, "
-    "trade <player> [accept|add <item>|coins <n>|confirm|cancel], route <room>, score, "
+    "trade <player> [accept|add <item>|coins <n>|confirm|cancel], "
+    "guild [found <name>|invite|accept|promote|leave|disband], gsay <msg>, route <room>, score, "
     "equip <item>, unequip <slot>, "
     "attack <target>, skills, use <ability> [on <foe>], repair, scan <target>, deploy, calibrate, "
     "channel, journal [text], vitals, "
@@ -1587,6 +1589,24 @@ def _build_commands() -> CommandSet:
     )
     cs.add(
         Command(
+            "guild",
+            "CMD-04.102",
+            "a persisted guild: guild [found <name>|invite <player>|accept|promote|leave|disband]",
+            _guild_cmd,
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "gsay",
+            "CMD-04.103",
+            "speak on your guild's channel (gsay <message>)",
+            lambda s, arg: guild_mod.guild_say(s, arg),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
             "shop",
             "CMD-04.071",
             "list a merchant's wares",
@@ -2013,6 +2033,30 @@ def _party_cmd(session: Session, arg: str) -> str:
     if sub == "disband":
         return party_disband(me)
     return "Party: party, party invite <player>, party join <player>, party leave, party disband."
+
+
+def _guild_cmd(session: Session, arg: str) -> str:
+    """The `guild` verb: a persisted player organization. `guild found <name>`, `guild invite
+    <player>`, `guild accept`, `guild promote <player>`, `guild leave`, `guild disband`; bare
+    `guild` shows the roster. Guild chat is the separate `gsay` verb."""
+    parts_ = arg.split(maxsplit=1)
+    sub = parts_[0].lower() if parts_ else ""
+    rest = parts_[1] if len(parts_) > 1 else ""
+    if sub == "":
+        return guild_mod.render_guild(session)
+    if sub == "found":
+        return guild_mod.found(session, rest)
+    if sub == "invite":
+        return guild_mod.invite(session, rest)
+    if sub == "accept":
+        return guild_mod.accept(session)
+    if sub == "promote":
+        return guild_mod.promote(session, rest)
+    if sub == "leave":
+        return guild_mod.leave(session)
+    if sub == "disband":
+        return guild_mod.disband(session)
+    return "Guild: guild [found <name>|invite <player>|accept|promote <player>|leave|disband]."
 
 
 def _trade_cmd(session: Session, arg: str) -> str:

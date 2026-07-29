@@ -76,6 +76,7 @@ _GAME_SEED = {
     "condition",
     "party",
     "trade",
+    "guild",
     "aggression",
     "session",
     "seed",

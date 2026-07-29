@@ -91,6 +91,8 @@ def _record_to_casefile(record: CharacterRecord) -> dict[str, Any]:
         "rank": record.rank,
         "account": record.account,
         "order": record.order,
+        "guild": record.guild,
+        "guild_rank": record.guild_rank,
         "equipped_gear": record.equipped_gear,
         "coins": record.coins,
         "quest_state": record.quest_state,
@@ -123,6 +125,8 @@ def put_record(name: str, casefile: dict[str, Any], store: CharacterStore | None
         rank=casefile.get("rank", "player"),
         account=casefile.get("account", ""),
         order=casefile.get("order", ""),
+        guild=casefile.get("guild", ""),
+        guild_rank=casefile.get("guild_rank", ""),
         equipped_gear=casefile.get("equipped_gear", ""),
         coins=int(casefile.get("coins", 0)),
         quest_state=casefile.get("quest_state", ""),
@@ -153,6 +157,8 @@ def save_character(session: Session, store: CharacterStore | None = None) -> Non
         rank=session.rank,
         account=session.account,
         order=session.order,
+        guild=session.guild,
+        guild_rank=session.guild_rank,
         equipped_gear=_serialize_gear(session),
         coins=session.coins,
         quest_state=save_state(session.player_id),
@@ -173,6 +179,8 @@ def restore_character(session: Session, casefile: dict[str, Any]) -> None:
     session.rank = str(casefile.get("rank", "player"))
     session.account = str(casefile.get("account", ""))
     session.order = str(casefile.get("order", ""))
+    session.guild = str(casefile.get("guild", ""))
+    session.guild_rank = str(casefile.get("guild_rank", ""))
     session.coins = int(casefile.get("coins", 0))
     session.level = int(casefile["level"])
     session.xp = int(casefile["xp"])
