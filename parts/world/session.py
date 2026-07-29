@@ -37,6 +37,8 @@ class Session:
     job: str = ""
     secondary_job: str = ""  # the equipped subjob label, or "" for none
     order: str = ""  # the sworn Order (guild-allegiance) label, or "" for none; persisted
+    guild: str = ""  # the player guild this hero belongs to (a name), or "" for none; persisted
+    guild_rank: str = ""  # rank in that guild: leader | officer | member (or "" when guildless)
     coins: int = 0  # the purse: earned from kills, spent at shops; persisted
     level: int = 1
     xp: int = 0

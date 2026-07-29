@@ -41,6 +41,8 @@ class SqlCharacterStore:
                 rank=row.rank,
                 account=row.account,
                 order=row.order,
+                guild=row.guild,
+                guild_rank=row.guild_rank,
                 equipped_gear=row.equipped_gear,
                 coins=row.coins,
                 quest_state=row.quest_state,
@@ -83,6 +85,29 @@ class SqlCharacterStore:
             db.commit()
             return True
 
+    def members_of_guild(self, guild: str) -> list[str]:
+        if not guild:
+            return []
+        from sqlalchemy import select
+
+        from parts.world.db import CharacterRow, open_archive_session
+
+        with open_archive_session() as db:
+            rows = db.scalars(select(CharacterRow.name).where(CharacterRow.guild == guild))
+            return sorted(rows)
+
+    def set_guild(self, name: str, guild: str, guild_rank: str) -> bool:
+        from parts.world.db import CharacterRow, open_archive_session
+
+        with open_archive_session() as db:
+            row = db.get(CharacterRow, name)
+            if row is None:
+                return False
+            row.guild = guild
+            row.guild_rank = guild_rank
+            db.commit()  # gameplay columns only; auth untouched (the merge-save law)
+            return True
+
 
 def _apply_gameplay(row: CharacterRow, record: CharacterRecord) -> None:
     """Copy the gameplay columns (everything but auth) from a record onto an ORM row."""
@@ -94,6 +119,8 @@ def _apply_gameplay(row: CharacterRow, record: CharacterRecord) -> None:
     row.rank = record.rank
     row.account = record.account
     row.order = record.order
+    row.guild = record.guild
+    row.guild_rank = record.guild_rank
     row.equipped_gear = record.equipped_gear
     row.coins = record.coins
     row.quest_state = record.quest_state

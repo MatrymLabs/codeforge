@@ -6157,6 +6157,34 @@
     "updated": "2026-07-28"
   },
   {
+    "designation": "MOD-04.115",
+    "name": "guild",
+    "status": "active",
+    "function": "a PERSISTED player organization: a named guild with ranks and a chat channel",
+    "label": "guild",
+    "file": "parts/world/guild.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "docs/party_system.md",
+    "tests": "tests/test_guild.py",
+    "depends_on": [],
+    "related": [
+      "party",
+      "character_store",
+      "events",
+      "session"
+    ],
+    "reuse": "the persisted-membership organization: durable member+rank columns as the source of truth, live sessions mirroring them, with a rank ladder gating governance actions",
+    "notes": "The party's durable big sibling. Guild+guild_rank are additive character columns (migration e7a3c1b5f2d8); the CharacterStore gained members_of_guild + set_guild so a guild reads its full roster and reaches offline members (disband). Every change writes through immediately (online via save_character, offline via set_guild) so the persisted roster stays authoritative. Ranks member<officer<leader. Verbs guild (CMD-04.102) + gsay (CMD-04.103). Extension: guild bank, MOTD, guild quests.",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-28",
+    "updated": "2026-07-28"
+  },
+  {
     "designation": "MOD-05.067",
     "name": "textmatch",
     "status": "active",

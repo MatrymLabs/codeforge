@@ -51,6 +51,8 @@ def test_save_and_load_roundtrip():
         "rank": "player",
         "account": "",
         "order": "",
+        "guild": "",
+        "guild_rank": "",
         "equipped_gear": "",
         "coins": 0,
         "quest_state": "",
