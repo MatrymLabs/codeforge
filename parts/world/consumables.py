@@ -19,7 +19,7 @@ def quaff(session: Session, word: str) -> str:
     """`quaff <item>`: spend a carried consumable and restore its pools. Fails loud on a miss."""
     if not word.strip():
         return "Quaff what? You must be carrying it."
-    iid = items.trace_item(word.strip().lower(), "player")
+    iid = items.trace_item(word.strip().lower(), items.carrier(session.player_id))
     if iid is None:
         return "You aren't carrying that."
     item = items.ITEMS[iid]

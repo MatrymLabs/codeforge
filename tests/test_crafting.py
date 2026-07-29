@@ -39,12 +39,12 @@ def _player() -> Session:
 def test_craft_consumes_inputs_and_mints_the_output(monkeypatch):
     monkeypatch.setattr(crafting, "RECIPES", _RECIPES)
     s = _player()
-    items.clone("forge_wrench", "player")
-    items.clone("forge_wrench", "player")
+    items.clone("forge_wrench", items.carrier("maker"))
+    items.clone("forge_wrench", items.carrier("maker"))
     out = crafting.craft(s, "testmake")
     assert "forge" in out.lower() and "healing draught" in out.lower()
-    assert len(crafting._held("healing_draught")) == 1  # one made
-    assert len(crafting._held("forge_wrench")) == 0  # both spent
+    assert len(crafting._held("healing_draught", items.carrier("maker"))) == 1  # one made
+    assert len(crafting._held("forge_wrench", items.carrier("maker"))) == 0  # both spent
 
 
 def test_craft_refuses_an_unknown_recipe(monkeypatch):
@@ -55,11 +55,11 @@ def test_craft_refuses_an_unknown_recipe(monkeypatch):
 def test_craft_without_materials_refuses_and_spends_nothing(monkeypatch):
     monkeypatch.setattr(crafting, "RECIPES", _RECIPES)
     s = _player()
-    items.clone("forge_wrench", "player")  # only one, the recipe needs two
+    items.clone("forge_wrench", items.carrier("maker"))  # only one, the recipe needs two
     out = crafting.craft(s, "testmake")
     assert "lack materials" in out.lower() and "1 more forge_wrench" in out
-    assert len(crafting._held("forge_wrench")) == 1  # nothing spent
-    assert len(crafting._held("healing_draught")) == 0  # nothing made
+    assert len(crafting._held("forge_wrench", items.carrier("maker"))) == 1  # nothing spent
+    assert len(crafting._held("healing_draught", items.carrier("maker"))) == 0  # nothing made
 
 
 def test_bare_craft_lists_the_recipes(monkeypatch):
@@ -79,10 +79,12 @@ def test_craft_fails_gracefully_when_the_output_is_unknown(monkeypatch):
     bad = {"bad": {"name": "a phantom", "makes": "no_such_item", "inputs": {"forge_wrench": 1}}}
     monkeypatch.setattr(crafting, "RECIPES", bad)
     s = _player()
-    items.clone("forge_wrench", "player")
+    items.clone("forge_wrench", items.carrier("maker"))
     out = crafting.craft(s, "bad")
     assert "cannot forge" in out.lower()
-    assert len(crafting._held("forge_wrench")) == 1  # materials untouched on a failed craft
+    assert (
+        len(crafting._held("forge_wrench", items.carrier("maker"))) == 1
+    )  # materials untouched on a failed craft
 
 
 def test_craft_is_reachable_through_the_engine_tick(monkeypatch):
@@ -117,12 +119,14 @@ def test_a_gated_recipe_is_locked_until_the_profession_level(monkeypatch):
     monkeypatch.setattr(professions, "PROFESSIONS", _ALCHEMY)
     monkeypatch.setattr(crafting, "RECIPES", _GATED)
     s = _player()
-    items.clone("forge_wrench", "player")
+    items.clone("forge_wrench", items.carrier("maker"))
     # Under the required level: locked, craft refuses, and nothing is spent.
     assert "needs Alchemy level 3" in crafting.locked_reason(s, _GATED["mastercraft"])
     out = crafting.craft(s, "mastercraft")
     assert "have not earned" in out.lower()
-    assert len(crafting._held("forge_wrench")) == 1  # refused, nothing spent
+    assert (
+        len(crafting._held("forge_wrench", items.carrier("maker"))) == 1
+    )  # refused, nothing spent
     # Practise the trade to level 3 (PER_LEVEL per rank) and the gate opens.
     s.professions["alchemy"] = professions.PER_LEVEL * 2  # level 3
     assert crafting.locked_reason(s, _GATED["mastercraft"]) is None

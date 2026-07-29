@@ -37,7 +37,7 @@ def test_load_without_file_starts_at_forge(tmp_path):
 
 def test_roundtrip_restores_progress(tmp_path):
     path = tmp_path / "save.json"
-    take("key", "library")
+    take("key", "library", "player")
     unlock("door", "key", "library")
     seal_snapshot("archive", path)
 
@@ -138,7 +138,7 @@ def test_a_legacy_v1_save_still_loads(tmp_path):
     path.write_text(
         json.dumps({"location": "forge", "items": {"copper_key": "room:forge"}, "doors": {}})
     )
-    take("key", "library")  # move the key first, so the restore visibly moves it back
+    take("key", "library", "player")  # move the key first, so the restore visibly moves it back
     location, msg = awaken_snapshot(path)
     assert "Loaded" in msg and location == "forge"
     assert items.ITEMS["copper_key"]["location"] == "room:forge"

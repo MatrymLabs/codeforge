@@ -1,7 +1,10 @@
 """CARD: items -- objects, containment, take/drop/inventory.
 
 Design rule: an item stores its own location. Nothing else does.
-Locations are tagged strings: "room:library" or "player".
+Locations are tagged strings: "room:library" (a room) or "player:<id>" (one hero's hands, via
+`carrier(player_id)`). The per-player carrier tag is what keeps two logged-in heroes from sharing
+one inventory: containment is a query (`items_in`), so the carrier MUST be unique per hero. The bare
+"player" tag is a legacy shared bucket still accepted by `clone` for tests; the game never uses it.
 Items are born from the seed (seeds/first-forge/items.yaml).
 Functions RETURN text; the game loop decides what to print.
 """
@@ -109,7 +112,12 @@ def clone(prototype: str, location: str) -> str:
             "refusing to spawn more (bounds runaway growth)"
         )
     iid = _mint_instance_id(prototype)
-    tagged = "player" if location == "player" else f"room:{location.removeprefix('room:')}"
+    # A carrier tag ("player:<id>", or the legacy shared "player") passes through unchanged; any
+    # other value is a room. This is what lets an item be minted straight into one hero's hands.
+    if location == "player" or location.startswith("player:"):
+        tagged = location
+    else:
+        tagged = f"room:{location.removeprefix('room:')}"
     ITEMS[iid] = Item(
         name=template["name"],
         keywords=list(template["keywords"]),
@@ -136,30 +144,37 @@ def trace_item(word: str, location: str) -> str | None:
     return None
 
 
-def take(word: str, room_id: str) -> str:
+def carrier(player_id: str) -> str:
+    """The inventory-location tag for one hero's hands. A per-player tag (not a shared "player"
+    bucket) is what keeps two logged-in heroes from carrying the same items: containment is a query
+    (`items_in`), so the carrier must be unique per hero or their bags bleed together."""
+    return f"player:{player_id}"
+
+
+def take(word: str, room_id: str, owner: str) -> str:
     iid = trace_item(word, f"room:{room_id}")
     if iid is None:
         return "You don't see that here."
-    ITEMS[iid]["location"] = "player"
+    ITEMS[iid]["location"] = owner
     return f"You take {ITEMS[iid]['name']}."
 
 
-def drop(word: str, room_id: str) -> str:
-    iid = trace_item(word, "player")
+def drop(word: str, room_id: str, owner: str) -> str:
+    iid = trace_item(word, owner)
     if iid is None:
         return "You aren't carrying that."
     ITEMS[iid]["location"] = f"room:{room_id}"
     return f"You drop {ITEMS[iid]['name']}."
 
 
-def read_item(word: str, room_id: str) -> str:
+def read_item(word: str, room_id: str, owner: str) -> str:
     """`read <item>`: show an item's readable lore. Looks in your hands first, then the room, so a
     lore book you carry or an inscription in the room both read. Refuses loud on a miss, and says so
     plainly when a thing carries no writing (a sword is not a story)."""
     if not word.strip():
         return "Read what?"
     word = word.strip().lower()
-    iid = trace_item(word, "player") or trace_item(word, f"room:{room_id}")
+    iid = trace_item(word, owner) or trace_item(word, f"room:{room_id}")
     if iid is None:
         return "You don't see that to read."
     item = ITEMS[iid]
@@ -169,8 +184,8 @@ def read_item(word: str, room_id: str) -> str:
     return f"You read {item['name']}:\n{lore}"
 
 
-def inventory_text() -> str:
-    carried = items_in("player")
+def inventory_text(owner: str) -> str:
+    carried = items_in(owner)
     if not carried:
         return "You are carrying nothing."
     lines = "\n".join(f"  {ITEMS[iid]['name']}" for iid in carried)

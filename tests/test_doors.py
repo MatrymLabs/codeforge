@@ -50,7 +50,7 @@ def test_unlocking_a_self_closing_door_arms_the_world_timer():
     from parts.shelf.hourglass import WORLD_SANDS
 
     doors.DOORS["oak_door"]["recloses_after"] = 5
-    take("key", "library")
+    take("key", "library", "player")
     unlock("door", "key", "library")
     assert doors.DOORS["oak_door"]["locked"] is False
     assert WORLD_SANDS.remaining("reclose:oak_door") == 5  # armed, counting down
@@ -59,7 +59,7 @@ def test_unlocking_a_self_closing_door_arms_the_world_timer():
 def test_a_plain_door_does_not_arm_the_world_timer():
     from parts.shelf.hourglass import WORLD_SANDS
 
-    take("key", "library")
+    take("key", "library", "player")
     unlock("door", "key", "library")  # oak_door ships no recloses_after -> stays open
     assert WORLD_SANDS.pending() == 0
 
@@ -78,7 +78,7 @@ def test_a_self_closing_door_slams_shut_on_a_later_world_beat():
     from parts.world.session import Session
 
     doors.DOORS["oak_door"]["recloses_after"] = 2
-    take("key", "library")
+    take("key", "library", items.carrier("tester"))
     session = Session(player_id="tester", location="library")
     handle_command(session, "unlock door with key")  # arms after=2; this beat -> remaining 1
     assert doors.DOORS["oak_door"]["locked"] is False
@@ -104,14 +104,14 @@ def test_unlock_fails_without_key():
 
 
 def test_unlock_with_carried_key_succeeds():
-    take("key", "library")
+    take("key", "library", "player")
     result = unlock("door", "key", "library")
     assert "unlock" in result
     assert doors.DOORS["oak_door"]["locked"] is False
 
 
 def test_unlocked_door_allows_movement():
-    take("key", "library")
+    take("key", "library", "player")
     unlock("door", "key", "library")
     arrived, _ = resolve_move("library", "north")
     assert arrived == "archive"
@@ -135,14 +135,14 @@ def test_open_gate_is_a_no_op_on_unknown_or_already_open_doors():
 def test_a_wrong_key_reports_it_does_not_fit_with_the_key_named():
     """The guard's refusal starts a sentence with the carried key's authored name, sentence-cased
     (not str.capitalize(), which would lower-case a proper-noun key)."""
-    take("key", "library")  # carries the copper key
+    take("key", "library", "player")  # carries the copper key
     doors.DOORS["oak_door"]["key_id"] = "some_other_key"  # fixture restores after
     result = unlock("door", "key", "library")
     assert result == "A copper key doesn't fit the lock."
 
 
 def test_unlocking_an_already_open_door_says_so_with_the_door_named():
-    take("key", "library")
+    take("key", "library", "player")
     unlock("door", "key", "library")  # now open
     result = unlock("door", "key", "library")  # unlock again
     assert result == "The oak door is already unlocked."

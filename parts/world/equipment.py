@@ -21,7 +21,7 @@ SLOTS = ("weapon", "body", "head", "arm", "accessory_1", "accessory_2")
 
 def equip(session: Session, word: str) -> str:
     """Wear a carried, equippable item in its slot. Refuses loud on a bad item or slot."""
-    iid = items.trace_item(word, "player")
+    iid = items.trace_item(word, items.carrier(session.player_id))
     if iid is None:
         return "You aren't carrying that."
     item = items.ITEMS[iid]

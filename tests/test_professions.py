@@ -135,8 +135,8 @@ def test_gathering_earns_the_gather_trade(synthetic):
 
 def test_crafting_earns_the_craft_trade(synthetic):
     s = Session(player_id="smith", location="void")
-    items.clone("forge_wrench", "player")
-    items.clone("forge_wrench", "player")
+    items.clone("forge_wrench", items.carrier("smith"))
+    items.clone("forge_wrench", items.carrier("smith"))
     out = crafting.craft(s, "testmake")
     assert "forge" in out.lower()
     assert s.professions.get("testsmith") == 1  # forging testmake earned Testsmith

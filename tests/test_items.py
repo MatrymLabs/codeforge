@@ -5,7 +5,9 @@ import copy
 import pytest
 
 from parts.world import items
-from parts.world.items import drop, inventory_text, items_in, read_item, take
+from parts.world.items import carrier, drop, inventory_text, items_in, read_item, take
+
+_ME = carrier("hero")  # one hero's per-player inventory tag
 
 
 @pytest.fixture(autouse=True)
@@ -22,20 +24,20 @@ def test_key_starts_in_library():
 
 
 def test_take_moves_key_to_player():
-    result = take("key", "library")
+    result = take("key", "library", _ME)
     assert "take" in result
-    assert items.ITEMS["copper_key"]["location"] == "player"
+    assert items.ITEMS["copper_key"]["location"] == _ME
 
 
 def test_take_fails_in_wrong_room():
-    result = take("key", "forge")
+    result = take("key", "forge", _ME)
     assert result == "You don't see that here."
     assert items.ITEMS["copper_key"]["location"] == "room:library"
 
 
 def test_drop_returns_key_to_room():
-    take("key", "library")
-    result = drop("key", "cellar")
+    take("key", "library", _ME)
+    result = drop("key", "cellar", _ME)
     assert "drop" in result
     assert items.ITEMS["copper_key"]["location"] == "room:cellar"
 
@@ -49,7 +51,7 @@ def test_read_shows_an_items_lore():
         "mods": {},
         "lore": "Once, the world was warm.",
     }
-    out = read_item("tome", "library")
+    out = read_item("tome", "library", _ME)
     assert "a dusty tome" in out and "Once, the world was warm." in out
 
 
@@ -57,31 +59,31 @@ def test_read_prefers_a_carried_item_over_one_in_the_room():
     items.ITEMS["note"] = {
         "name": "a carried note",
         "keywords": ["note"],
-        "location": "player",
+        "location": _ME,
         "slot": "",
         "mods": {},
         "lore": "carry me",
     }
-    assert "carry me" in read_item("note", "anywhere")  # reads from the hand, no room needed
+    assert "carry me" in read_item("note", "anywhere", _ME)  # reads from the hand, no room needed
 
 
 def test_read_a_thing_with_no_writing_says_so():
-    out = read_item("key", "library")  # the copper key carries no lore
+    out = read_item("key", "library", _ME)  # the copper key carries no lore
     assert "nothing written" in out
 
 
 def test_read_a_thing_not_present_is_refused():
-    assert read_item("dragon", "library") == "You don't see that to read."
+    assert read_item("dragon", "library", _ME) == "You don't see that to read."
 
 
 def test_read_nothing_asks_what():
-    assert read_item("  ", "library") == "Read what?"
+    assert read_item("  ", "library", _ME) == "Read what?"
 
 
 def test_inventory_empty_then_full():
-    assert inventory_text() == "You are carrying nothing."
-    take("key", "library")
-    assert "copper key" in inventory_text()
+    assert inventory_text(_ME) == "You are carrying nothing."
+    take("key", "library", _ME)
+    assert "copper key" in inventory_text(_ME)
 
 
 # --- object instancing: prototype + clone (Fork A, slice 1) ---------------------------
@@ -120,3 +122,19 @@ def test_cloning_an_unknown_prototype_fails_loud():
 
 def test_prototype_of_falls_back_to_the_id_for_an_unknown_item():
     assert items.prototype_of("mystery") == "mystery"
+
+
+def test_two_heroes_do_not_share_one_inventory():
+    """The point of per-player inventory: each hero's carrier tag is distinct, so what one takes the
+    other never sees. A shared \"player\" bucket would fail this."""
+    alia, bram = carrier("alia"), carrier("bram")
+    items.ITEMS["gem"] = {
+        "name": "a gem",
+        "keywords": ["gem"],
+        "location": "room:forge",
+        "slot": "",
+        "mods": {},
+    }
+    take("gem", "forge", alia)  # alia picks it up
+    assert items_in(alia) == ["gem"] and items_in(bram) == []  # bram's bag is untouched
+    assert "a gem" in inventory_text(alia) and inventory_text(bram) == "You are carrying nothing."

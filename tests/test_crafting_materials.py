@@ -122,18 +122,22 @@ def test_a_maker_can_craft_a_whole_chain_end_to_end(monkeypatch, aethryn, chain)
     # Stock enough of the FIRST recipe's inputs (its raw materials) to run step one.
     for proto, qty in aethryn["recipes"][steps[0][0]]["inputs"].items():
         for _ in range(qty):
-            items.clone(proto, "player")
+            items.clone(proto, items.carrier("maker"))
     s = _player()
     for label, output in steps:
         # top up any extra ingredient a step needs beyond the prior tier (e.g. ember_shard)
         for proto, qty in aethryn["recipes"][label]["inputs"].items():
-            while len(crafting._held(proto)) < qty:
-                items.clone(proto, "player")
+            while len(crafting._held(proto, items.carrier("maker"))) < qty:
+                items.clone(proto, items.carrier("maker"))
         out = crafting.craft(s, label)
         assert "forge" in out.lower(), f"{chain}:{label} did not craft: {out}"
-        assert len(crafting._held(output)) >= 1, f"{chain}:{label} minted no {output}"
+        assert len(crafting._held(output, items.carrier("maker"))) >= 1, (
+            f"{chain}:{label} minted no {output}"
+        )
     product = steps[-1][1]
-    assert len(crafting._held(product)) == 1, f"{chain} did not yield its product {product}"
+    assert len(crafting._held(product, items.carrier("maker"))) == 1, (
+        f"{chain} did not yield its product {product}"
+    )
 
 
 def test_a_refined_step_refuses_the_raw_tier_and_spends_nothing(monkeypatch, aethryn):
@@ -141,9 +145,11 @@ def test_a_refined_step_refuses_the_raw_tier_and_spends_nothing(monkeypatch, aet
     consumes nothing -- the raw tier stays in your hands."""
     monkeypatch.setattr(crafting, "RECIPES", aethryn["recipes"])
     s = _player()
-    items.clone("meadowfoil", "player")  # a raw herb, but the tonic needs the refined reagent
-    items.clone("meadowfoil", "player")
+    items.clone(
+        "meadowfoil", items.carrier("maker")
+    )  # a raw herb, but the tonic needs the refined reagent
+    items.clone("meadowfoil", items.carrier("maker"))
     out = crafting.craft(s, "brew_restorative_tonic")
     assert "lack materials" in out.lower() and "herbal_reagent" in out
-    assert len(crafting._held("meadowfoil")) == 2  # nothing spent
-    assert len(crafting._held("restorative_tonic")) == 0  # nothing made
+    assert len(crafting._held("meadowfoil", items.carrier("maker"))) == 2  # nothing spent
+    assert len(crafting._held("restorative_tonic", items.carrier("maker"))) == 0  # nothing made

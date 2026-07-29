@@ -62,7 +62,7 @@ def _restore_gear(session: Session, raw: str) -> None:
     except (ValueError, TypeError):
         return
     from parts.world.equipment import SLOTS
-    from parts.world.items import ITEMS, PROTOTYPES, clone
+    from parts.world.items import ITEMS, PROTOTYPES, carrier, clone
 
     for slot, saved in gear.items():
         if slot not in SLOTS:
@@ -70,7 +70,7 @@ def _restore_gear(session: Session, raw: str) -> None:
         prototype = saved if isinstance(saved, str) else saved.get("prototype")
         if not isinstance(prototype, str) or prototype not in PROTOTYPES:
             continue
-        iid = clone(prototype, "player")
+        iid = clone(prototype, carrier(session.player_id))
         if isinstance(saved, dict):  # restore the rolled affixes over the fresh base clone
             if isinstance(saved.get("name"), str):
                 ITEMS[iid]["name"] = saved["name"]
