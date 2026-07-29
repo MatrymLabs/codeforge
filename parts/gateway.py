@@ -36,7 +36,7 @@ from parts.gmcp import (
 )
 from parts.shelf.bulkhead import Bulkhead, BulkheadFull
 from parts.shelf.telnet_codec import IAC, WILL, WONT, strip_iac
-from parts.world import guild, maintenance_mode, party, trade
+from parts.world import bans, guild, maintenance_mode, party, trade
 from parts.world.accounts import password_fixable
 from parts.world.characters import save_all, save_character
 from parts.world.events import SHUTDOWN, bind_echo, bind_gmcp, unbind_echo, unbind_gmcp
@@ -360,9 +360,13 @@ class _GateHandler(socketserver.StreamRequestHandler):
                     response = handle_command(session, f"login {who} {secret.strip()}")
             self._send(response)
             if response.startswith(("Welcome back,", "Welcome,")):
-                # A proven login, but the door may be down for maintenance: staff (wizard+) still
-                # enter; everyone else is turned away with the reason, so no one walks into a world
-                # about to sleep. Rank is known now (the login set session.rank).
+                # A proven login, but a banned hero is turned away with their reason (moderation
+                # outranks even a wizard's rank; an admin must lift it).
+                if bans.is_banned(session.player_id):
+                    self._send(f"You are banned: {bans.reason(session.player_id)}")
+                    return False
+                # The door may be down for maintenance: staff (wizard+) still enter; everyone else
+                # is turned away with the reason. Rank is known now (the login set session.rank).
                 if maintenance_mode.is_on() and not has_rank(session, "wizard"):
                     self._send(f"CodeForge is closed for maintenance: {maintenance_mode.reason()}")
                     return False

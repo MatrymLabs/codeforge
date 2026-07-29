@@ -3496,5 +3496,80 @@
     "aliases": [],
     "created": "2026-07-29",
     "updated": "2026-07-29"
+  },
+  {
+    "designation": "CMD-10.028",
+    "name": "@ban",
+    "status": "active",
+    "function": "bar a character: @ban <player> <reason> (wizard+)",
+    "label": "@ban",
+    "file": "forge.py",
+    "type": "CMD",
+    "domain": "10",
+    "docs": "docs/infrastructure_spec.md",
+    "tests": "tests/test_bans.py",
+    "depends_on": [],
+    "related": [
+      "bans"
+    ],
+    "reuse": "",
+    "tags": [
+      "command"
+    ],
+    "notes": "Moderation verb over parts.world.bans; audited.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-29",
+    "updated": "2026-07-29"
+  },
+  {
+    "designation": "CMD-10.029",
+    "name": "@unban",
+    "status": "active",
+    "function": "lift a ban: @unban <player> (wizard+)",
+    "label": "@unban",
+    "file": "forge.py",
+    "type": "CMD",
+    "domain": "10",
+    "docs": "docs/infrastructure_spec.md",
+    "tests": "tests/test_bans.py",
+    "depends_on": [],
+    "related": [
+      "bans"
+    ],
+    "reuse": "",
+    "tags": [
+      "command"
+    ],
+    "notes": "Moderation verb over parts.world.bans; audited.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-29",
+    "updated": "2026-07-29"
+  },
+  {
+    "designation": "CMD-10.030",
+    "name": "@bans",
+    "status": "active",
+    "function": "the roster of banned characters (wizard+)",
+    "label": "@bans",
+    "file": "forge.py",
+    "type": "CMD",
+    "domain": "10",
+    "docs": "docs/infrastructure_spec.md",
+    "tests": "tests/test_bans.py",
+    "depends_on": [],
+    "related": [
+      "bans"
+    ],
+    "reuse": "",
+    "tags": [
+      "command"
+    ],
+    "notes": "Moderation verb over parts.world.bans; audited.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-29",
+    "updated": "2026-07-29"
   }
 ]

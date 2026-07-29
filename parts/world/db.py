@@ -156,6 +156,18 @@ class LooseItemRow(ArchiveBase):
     rarity: Mapped[str] = mapped_column(default="common")
 
 
+class BanRow(ArchiveBase):
+    """One banned character: moderation state, checked at the login gate. Keyed by character name;
+    a row means that hero is refused entry with the stored reason until an admin lifts it."""
+
+    __tablename__ = "bans"
+
+    name: Mapped[str] = mapped_column(primary_key=True)  # the banned character
+    reason: Mapped[str] = mapped_column(default="")
+    moderator: Mapped[str] = mapped_column(default="")  # who imposed it
+    created_utc: Mapped[str] = mapped_column(default="")
+
+
 class AuctionRow(ArchiveBase):
     """One item listed for sale on the auction house. The item is ESCROWED here (an item snapshot,
     like a vaulted item) from the moment it is listed until it is bought or expires, so it is out of

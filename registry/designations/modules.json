@@ -6633,5 +6633,32 @@
     "aliases": [],
     "created": "2026-07-29",
     "updated": "2026-07-29"
+  },
+  {
+    "designation": "MOD-04.130",
+    "name": "bans",
+    "status": "active",
+    "function": "moderation: a banned character is refused at the login gate (persisted)",
+    "label": "bans",
+    "file": "parts/world/bans.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "docs/infrastructure_spec.md",
+    "tests": "tests/test_bans.py",
+    "depends_on": [],
+    "related": [
+      "gateway",
+      "audit",
+      "db"
+    ],
+    "reuse": "the persisted-block primitive: ban/unban/is_banned/reason/all over a keyed table, checked by a driver at the door; the moderation twin of the transient maintenance gate and the address ledger",
+    "notes": "Infra spec Phase 3. bans table (BanRow, migration a7d3c9f1b4e2). ban(name, reason, moderator)/unban/is_banned/reason/all_bans, direct SQL lazy off the hot path. The TCP gateway front desk refuses a banned hero (outranks maintenance + even a wizard's rank). Verbs @ban/@unban (CMD-10.028/029, wizard+) drop an online target (session.alive=False) and record to the audit log; @bans (CMD-10.030) lists.",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-29",
+    "updated": "2026-07-29"
   }
 ]
