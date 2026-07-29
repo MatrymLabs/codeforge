@@ -108,8 +108,11 @@ moves coin from your purse into the treasury (any member may give); `guild withd
 Both purse and treasury are persisted and kept in step. Guild-level state lives here, distinct from
 the per-member columns on characters.
 
-- **Coin-only for now.** A guild *item* vault is a documented extension: it needs loose-item
-  persistence first (today only equipped gear persists), so v1 banks coin.
+- **The item vault (shipped).** Now that loose items persist (Keystone A), the treasury has an item
+  twin: `guild vault deposit <item>` contributes a carried item to shared storage (any member may
+  give); `guild vault withdraw <n>` takes one out (officer or leader only, the same gate as the coin
+  treasury); `guild vault` lists it. A vaulted item lives on the `items` table under owner
+  `guildvault:<guild>` (a non-player owner, the pattern the personal bank proved) until withdrawn.
 
 - **Further extensions:** a message of the day, a guild level, guild quests.
 

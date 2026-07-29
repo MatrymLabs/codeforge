@@ -2208,9 +2208,18 @@ def _guild_cmd(session: Session, arg: str) -> str:
         return guild_mod.bank_deposit(session, rest)
     if sub == "withdraw":
         return guild_mod.bank_withdraw(session, rest)
+    if sub == "vault":  # the item vault: `guild vault [deposit <item>|withdraw <n>]`
+        v_parts = rest.split(maxsplit=1)
+        v_sub = v_parts[0].lower() if v_parts else ""
+        v_rest = v_parts[1] if len(v_parts) > 1 else ""
+        if v_sub == "deposit":
+            return guild_mod.vault_deposit(session, v_rest)
+        if v_sub == "withdraw":
+            return guild_mod.vault_withdraw(session, v_rest)
+        return guild_mod.vault_render(session)
     return (
         "Guild: guild [found <name>|invite <player>|accept|promote <player>|leave|disband"
-        "|bank|deposit <n>|withdraw <n>]."
+        "|bank|deposit <n>|withdraw <n>|vault [deposit <item>|withdraw <n>]]."
     )
 
 

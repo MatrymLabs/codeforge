@@ -14,8 +14,6 @@ non-player-owner pattern that guild vaults, mail attachments, and the auction ho
 
 from __future__ import annotations
 
-from typing import Any
-
 from parts.world.session import Session, sentence_case
 
 
@@ -58,10 +56,10 @@ def withdraw(session: Session, arg: str) -> str:
     stored = loose_store.contents(_vault(session.player_id))
     if not stored:
         return "Your vault is empty. (bank deposit <item>)"
-    match = _match(stored, arg)
-    if match is None:
+    picked = loose_store.match(stored, arg)
+    if picked is None:
         return "You have nothing like that in your vault. (bank to list it)"
-    row_id, _snap = match
+    row_id, _snap = picked
     taken = loose_store.take(row_id, _vault(session.player_id))
     if taken is None:
         return "It is no longer in your vault."
@@ -81,18 +79,3 @@ def render(session: Session) -> str:
         lines.append(f"  {i}. {sentence_case(str(snap['name']))}")
     lines.append("(bank deposit <item>, bank withdraw <n>)")
     return "\n".join(lines)
-
-
-def _match(stored: list[tuple[int, dict[str, Any]]], arg: str) -> tuple[int, dict[str, Any]] | None:
-    """The stored entry `arg` names: its 1-based list number, or a word from its name/proto."""
-    word = arg.strip().lower()
-    if not word:
-        return None
-    if word.isdigit():
-        n = int(word)
-        return stored[n - 1] if 1 <= n <= len(stored) else None
-    for entry in stored:
-        snap = entry[1]
-        if word in str(snap["name"]).lower() or word in str(snap["prototype"]).lower():
-            return entry
-    return None

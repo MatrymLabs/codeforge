@@ -10,10 +10,24 @@ members still in the guild are all refused. Uses the real store, quarantined to 
 
 from __future__ import annotations
 
+import copy
+
+import pytest
+
 from parts.world import events, guild, guild_store
+from parts.world import items as _items
 from parts.world.character_store import CharacterRecord
 from parts.world.characters import _default_store, load_character, restore_character, save_character
 from parts.world.session import SESSIONS, Session
+
+
+@pytest.fixture(autouse=True)
+def _fresh_items():
+    """Snapshot ITEMS so a vault test's cloned items never leak into the next test."""
+    snap = copy.deepcopy(_items.ITEMS)
+    yield
+    _items.ITEMS.clear()
+    _items.ITEMS.update(snap)
 
 
 def _hero(name: str, room: str = "hall") -> Session:
@@ -224,5 +238,87 @@ def test_the_guild_and_gsay_verbs_are_reachable():
         alia = _hero("alia")
         assert "found the guild" in forge.handle_command(alia, "guild found ironforge")
         assert "[Guild] You:" in forge.handle_command(alia, "gsay hail")
+    finally:
+        _teardown()
+
+
+# --- the guild item-vault -----------------------------------------------------------------------
+def _guilded_pair():
+    """A founded guild: alia (leader) + bram (member), both online."""
+    guild.found(_hero("alia"), "ironforge")
+    _hero("bram")  # bram must be seated before he can be invited/accept
+    guild.invite(SESSIONS["alia"], "bram")
+    guild.accept(SESSIONS["bram"])
+    return SESSIONS["alia"], SESSIONS["bram"]
+
+
+def test_a_member_can_deposit_to_the_guild_vault():
+    from parts.world import loose_store
+    from parts.world.items import carrier
+
+    try:
+        _alia, bram = _guilded_pair()
+        _items.clone("forge_wrench", carrier("bram"))
+        out = guild.vault_deposit(bram, "wrench")
+        assert "deposit" in out.lower()
+        assert len(loose_store.contents("guildvault:ironforge")) == 1
+        assert "ironforge' vault (1)" in guild.vault_render(bram)
+    finally:
+        _teardown()
+
+
+def test_only_an_officer_may_withdraw_from_the_vault():
+    from parts.world.items import carrier
+
+    try:
+        alia, bram = _guilded_pair()  # alia leader, bram member
+        _items.clone("forge_wrench", carrier("bram"))
+        guild.vault_deposit(bram, "wrench")
+        # a plain member is refused
+        assert "officer or the leader" in guild.vault_withdraw(bram, "1").lower()
+        # the leader may take it
+        out = guild.vault_withdraw(alia, "1")
+        assert "withdraw" in out.lower()
+        assert any(
+            _items.prototype_of(i) == "forge_wrench" for i in _items.items_in(carrier("alia"))
+        )
+    finally:
+        _teardown()
+
+
+def test_the_guild_vault_is_scoped_to_its_guild():
+    from parts.world import loose_store
+    from parts.world.items import carrier
+
+    try:
+        _a, bram = _guilded_pair()
+        _items.clone("forge_wrench", carrier("bram"))
+        guild.vault_deposit(bram, "wrench")
+        # a different guild's vault is empty and untouched
+        assert loose_store.contents("guildvault:otherclan") == []
+        assert len(loose_store.contents("guildvault:ironforge")) == 1
+    finally:
+        _teardown()
+
+
+def test_vault_ops_refuse_the_guildless():
+    try:
+        loner = _hero("loner")
+        assert "not in a guild" in guild.vault_render(loner).lower()
+        assert "not in a guild" in guild.vault_deposit(loner, "wrench").lower()
+        assert "not in a guild" in guild.vault_withdraw(loner, "1").lower()
+    finally:
+        _teardown()
+
+
+def test_the_guild_vault_verb_is_reachable():
+    import forge
+    from parts.world.items import carrier
+
+    try:
+        _a, bram = _guilded_pair()
+        _items.clone("forge_wrench", carrier("bram"))
+        assert "deposit" in forge.handle_command(bram, "guild vault deposit wrench").lower()
+        assert "vault" in forge.handle_command(bram, "guild vault").lower()
     finally:
         _teardown()

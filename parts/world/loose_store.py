@@ -102,6 +102,22 @@ def contents(owner: str) -> list[tuple[int, dict[str, Any]]]:
         return [(row.id, _row_snapshot(row)) for row in rows]
 
 
+def match(stored: list[tuple[int, dict[str, Any]]], arg: str) -> tuple[int, dict[str, Any]] | None:
+    """The `contents()` entry that `arg` names: its 1-based list number, or a word from its
+    name/prototype. None if nothing matches. The one picker every vault (personal, guild) shares."""
+    word = arg.strip().lower()
+    if not word:
+        return None
+    if word.isdigit():
+        n = int(word)
+        return stored[n - 1] if 1 <= n <= len(stored) else None
+    for entry in stored:
+        snap = entry[1]
+        if word in str(snap["name"]).lower() or word in str(snap["prototype"]).lower():
+            return entry
+    return None
+
+
 def load(owner: str) -> list[dict[str, Any]]:
     """A hero's persisted loose bag as snapshots ready to re-clone. Empty for a hero who carried
     nothing. A malformed mods blob (should not happen) decodes to {} rather than crash login."""
