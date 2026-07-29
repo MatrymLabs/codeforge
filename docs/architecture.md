@@ -37,7 +37,11 @@ commands any player could type; authentication logic lives in one place.
 
 Threads own sockets; the world processes **one command at a time** under a single
 tick lock -- the classic MUD model. Broadcasts happen inside the tick, so delivery
-is serialized. An async event-loop gateway is a future card, not a correction.
+is serialized. The async event-loop (WebSocket) gateway is already shipped and shares
+that same lock, so both transports mutate one world through one door. The full
+guarantee (single-writer invariant, I/O never held under the lock, the GIL's role,
+tradeoffs, and the rules for touching it) is written up in
+[`concurrency_model.md`](concurrency_model.md).
 
 ## Security model
 
