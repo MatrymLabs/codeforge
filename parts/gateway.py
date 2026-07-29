@@ -5,14 +5,18 @@ same engine tick under one lock -- the classic MUD 'one command at a
 time' model. Plain lines in, plain text out: connect with nc or any
 telnet client.
 
-Security: plaintext, no auth, LAN-visible. This is the compatibility
-transport for your home network, not an internet-facing service.
+Security: plaintext by default (the compatibility transport for a home
+LAN). Set CODEFORGE_TLS_CERT + CODEFORGE_TLS_KEY to serve over TLS for an
+internet-facing deployment; the message layer is identical behind either.
+Account auth (salted pbkdf2) gates entry at the login front desk.
 """
 
 import contextlib
+import os
 import re
 import socket
 import socketserver
+import ssl
 import sys
 import threading
 import time
@@ -145,9 +149,40 @@ def _sanitize(text: str) -> str:
     return _CONTROL_RE.sub("", text)
 
 
+def _tls_context() -> ssl.SSLContext | None:
+    """The server's TLS context if a cert + key are configured, else None (plaintext, LAN mode).
+
+    Set CODEFORGE_TLS_CERT and CODEFORGE_TLS_KEY to PEM paths to serve over TLS -- the encrypted
+    transport an internet-facing deployment needs. Unset (or either missing) means the historical
+    plaintext transport, so a home-LAN server keeps working unchanged. The message layer is the same
+    behind either; only the socket is wrapped."""
+    cert = os.environ.get("CODEFORGE_TLS_CERT", "").strip()
+    key = os.environ.get("CODEFORGE_TLS_KEY", "").strip()
+    if not cert or not key:
+        return None
+    context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+    context.minimum_version = ssl.TLSVersion.TLSv1_2  # refuse legacy TLS 1.0/1.1 outright
+    context.load_cert_chain(certfile=cert, keyfile=key)  # fails loud on a bad/missing cert
+    return context
+
+
 class ForgeGateServer(socketserver.ThreadingTCPServer):
     allow_reuse_address = True
     daemon_threads = True
+
+    def __init__(self, *args: object, **kwargs: object) -> None:
+        super().__init__(*args, **kwargs)  # type: ignore[arg-type]
+        # Wrap every accepted socket in TLS when configured; None keeps the plaintext transport.
+        self._tls = _tls_context()
+
+    def get_request(self) -> tuple[socket.socket, object]:
+        """Accept a connection, TLS-wrapping it if the server is running with a cert. A handshake
+        failure (a plaintext client on a TLS port) raises OSError, which the accept loop logs and
+        skips -- one bad client never stops the server."""
+        sock, addr = super().get_request()
+        if self._tls is not None:
+            sock = self._tls.wrap_socket(sock, server_side=True)
+        return sock, addr
 
 
 class _GateHandler(socketserver.StreamRequestHandler):
@@ -461,7 +496,8 @@ def serve(host: str = "0.0.0.0", port: int = 4000) -> None:
             server.shutdown()
 
         SHUTDOWN["hook"] = _save_and_stop
-        print(f"CodeForge gateway listening on {host}:{port}")
+        transport = "TLS (encrypted)" if server._tls is not None else "plaintext (LAN only)"
+        print(f"CodeForge gateway listening on {host}:{port}  [{transport}]")
         print(f"Connect with:  nc <this-machine> {port}   (or any telnet client)")
         print("Press Ctrl+C to shut down.")
         try:
