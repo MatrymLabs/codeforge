@@ -85,8 +85,19 @@ the guild survives logout and restart, and its roster names members whether or n
   roster is always consistent. A live session only mirrors the stored fact.
 - **Only the invitation is transient** (in-memory, dropped on logout, like the party's); the
   membership itself persists, which is the whole point.
-- **Extension points:** a guild bank (reusing the atomic-exchange discipline), a message of the day,
-  guild quests.
+### The guild bank (`parts/world/guild_store.py`, MOD-04.116)
+
+A guild's shared **treasury**: guild-level coin, persisted in its own `guilds` table (`GuildRow`;
+migration `f1b9d3e6c284`), created when the guild founds and dropped on disband. `guild deposit <n>`
+moves coin from your purse into the treasury (any member may give); `guild withdraw <n>` moves it back
+(officer or leader only, so a member cannot drain the guild funds); `guild bank` shows the balance.
+Both purse and treasury are persisted and kept in step. Guild-level state lives here, distinct from
+the per-member columns on characters.
+
+- **Coin-only for now.** A guild *item* vault is a documented extension: it needs loose-item
+  persistence first (today only equipped gear persists), so v1 banks coin.
+
+- **Further extensions:** a message of the day, a guild level, guild quests.
 
 ## Shared combat: the loot half (`parts/world/party_loot.py`, MOD-04.114)
 

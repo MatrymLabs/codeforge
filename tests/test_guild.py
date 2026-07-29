@@ -10,7 +10,7 @@ members still in the guild are all refused. Uses the real store, quarantined to 
 
 from __future__ import annotations
 
-from parts.world import events, guild
+from parts.world import events, guild, guild_store
 from parts.world.character_store import CharacterRecord
 from parts.world.characters import _default_store, load_character, restore_character, save_character
 from parts.world.session import SESSIONS, Session
@@ -151,6 +151,67 @@ def test_accept_with_no_invite_and_a_leader_leaving_with_members_are_refused():
         guild.found(SESSIONS["alia"], "ironforge")
         _offline_member("cade", "ironforge")
         assert "promote a new leader" in guild.leave(SESSIONS["alia"]).lower()
+    finally:
+        _teardown()
+
+
+# --- the guild bank (a persisted shared treasury) ---------------------------------------------
+def test_a_member_deposits_and_the_treasury_persists():
+    try:
+        alia = _hero("alia")
+        alia.coins = 100
+        guild.found(alia, "ironforge")
+        out = guild.bank_deposit(alia, "40")
+        assert "deposit 40 coins" in out.lower()
+        assert alia.coins == 60  # left the purse
+        assert guild_store.coins("ironforge") == 40  # persisted in the treasury row
+    finally:
+        _teardown()
+
+
+def test_only_an_officer_may_withdraw_and_never_beyond_the_balance():
+    try:
+        guild.found(
+            _hero(
+                "alia",
+            ),
+            "ironforge",
+        )
+        SESSIONS["alia"].coins = 100
+        guild.bank_deposit(SESSIONS["alia"], "50")
+        # a plain member cannot drain the treasury
+        _hero("bram")
+        guild.invite(SESSIONS["alia"], "bram")
+        guild.accept(SESSIONS["bram"])
+        assert "officer or the leader" in guild.bank_withdraw(SESSIONS["bram"], "10").lower()
+        # the leader can, but never beyond the balance
+        assert "does not hold that many" in guild.bank_withdraw(SESSIONS["alia"], "999").lower()
+        out = guild.bank_withdraw(SESSIONS["alia"], "30")
+        assert "withdraw 30" in out.lower() and guild_store.coins("ironforge") == 20
+        assert SESSIONS["alia"].coins == 80  # 100 - 50 deposited + 30 withdrawn
+    finally:
+        _teardown()
+
+
+def test_depositing_more_than_you_hold_is_refused():
+    try:
+        alia = _hero("alia")
+        alia.coins = 10
+        guild.found(alia, "ironforge")
+        assert "do not have that many" in guild.bank_deposit(alia, "50").lower()
+        assert guild_store.coins("ironforge") == 0
+    finally:
+        _teardown()
+
+
+def test_disband_removes_the_treasury_row():
+    try:
+        alia = _hero("alia")
+        alia.coins = 100
+        guild.found(alia, "ironforge")
+        guild.bank_deposit(alia, "40")
+        guild.disband(alia)
+        assert guild_store.coins("ironforge") == 0  # the row is gone
     finally:
         _teardown()
 

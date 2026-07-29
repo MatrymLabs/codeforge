@@ -107,6 +107,16 @@ class AccountRow(ArchiveBase):
     auth_hash: Mapped[str] = mapped_column()
 
 
+class GuildRow(ArchiveBase):
+    """A guild's own record: guild-LEVEL state (its shared treasury), distinct from the per-member
+    guild columns on characters. One row per guild, created on found, dropped on disband."""
+
+    __tablename__ = "guilds"
+
+    name: Mapped[str] = mapped_column(primary_key=True)
+    coins: Mapped[int] = mapped_column(default=0)  # the shared treasury: deposited by members
+
+
 def engine_url() -> str:
     """The SQLAlchemy URL in force. DATABASE_URL wins (PostgreSQL in production);
     otherwise a SQLite file at DB_PATH (the zero-config default for dev and tests)."""

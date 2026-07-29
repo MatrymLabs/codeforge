@@ -17,7 +17,9 @@ from __future__ import annotations
 
 import re
 
+import parts.world.guild_store as guild_store
 from parts.world.characters import _default_store, save_character
+from parts.world.coinage import purse
 from parts.world.events import announce_to
 from parts.world.session import SESSIONS, Session, display_name
 
@@ -70,6 +72,7 @@ def found(session: Session, name: str) -> str:
     if _members(guild):
         return f"A guild named '{guild}' already exists."
     _set_membership(session.player_id, guild, "leader")
+    guild_store.ensure(guild)  # open the guild's treasury (at zero)
     return f"You found the guild '{guild}'. You lead it. (guild invite <player> to grow it)"
 
 
@@ -139,6 +142,7 @@ def disband(session: Session) -> str:
     others = [m for m in _online_members(guild) if m != session.player_id]
     for name in _members(guild):
         _set_membership(name, "", "")
+    guild_store.remove(guild)  # the treasury dissolves with the guild
     announce_to(others, f"\nThe guild '{guild}' is disbanded.")
     return f"You disband the guild '{guild}'."
 
@@ -205,6 +209,61 @@ def render_guild(session: Session) -> str:
         here = "" if SESSIONS.get(name) is not None else "  [offline]"
         lines.append(f"  {display_name(name)} ({rank}){here}")
     return "\n".join(lines)
+
+
+def bank_balance(session: Session) -> str:
+    """Show the guild's shared treasury. Any member may look."""
+    if not session.guild:
+        return "You are not in a guild."
+    return f"The guild '{session.guild}' treasury holds {purse(guild_store.coins(session.guild))}."
+
+
+def bank_deposit(session: Session, amount_word: str) -> str:
+    """Deposit coin from your purse into the guild treasury. Any member may give."""
+    if not session.guild:
+        return "You are not in a guild."
+    amount = _parse_amount(amount_word)
+    if amount is None or amount <= 0:
+        return "Deposit how many coins? (guild deposit <number>)"
+    if amount > session.coins:
+        return "You do not have that many coins."
+    session.coins -= amount
+    save_character(session)  # the purse is persisted; keep it and the treasury in step
+    balance = guild_store.adjust(session.guild, amount)
+    announce_to(
+        [m for m in _online_members(session.guild) if m != session.player_id],
+        f"\n{display_name(session.player_id)} deposits {amount} coins into the guild treasury.",
+    )
+    return f"You deposit {amount} coins. The treasury holds {purse(balance)}."
+
+
+def bank_withdraw(session: Session, amount_word: str) -> str:
+    """Withdraw coin from the treasury into your purse. Officer or leader only, so a member cannot
+    drain the guild funds."""
+    if not session.guild:
+        return "You are not in a guild."
+    if not _rank_at_least(session.guild_rank, "officer"):
+        return "Only an officer or the leader may withdraw from the treasury."
+    amount = _parse_amount(amount_word)
+    if amount is None or amount <= 0:
+        return "Withdraw how many coins? (guild withdraw <number>)"
+    if amount > guild_store.coins(session.guild):
+        return "The treasury does not hold that many coins."
+    balance = guild_store.adjust(session.guild, -amount)
+    session.coins += amount
+    save_character(session)
+    announce_to(
+        [m for m in _online_members(session.guild) if m != session.player_id],
+        f"\n{display_name(session.player_id)} withdraws {amount} coins from the guild treasury.",
+    )
+    return f"You withdraw {amount} coins. The treasury holds {purse(balance)}."
+
+
+def _parse_amount(word: str) -> int | None:
+    try:
+        return int(word.strip())
+    except ValueError:
+        return None
 
 
 def on_disconnect(player_id: str) -> None:

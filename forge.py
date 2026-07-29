@@ -2056,7 +2056,16 @@ def _guild_cmd(session: Session, arg: str) -> str:
         return guild_mod.leave(session)
     if sub == "disband":
         return guild_mod.disband(session)
-    return "Guild: guild [found <name>|invite <player>|accept|promote <player>|leave|disband]."
+    if sub == "bank":
+        return guild_mod.bank_balance(session)
+    if sub == "deposit":
+        return guild_mod.bank_deposit(session, rest)
+    if sub == "withdraw":
+        return guild_mod.bank_withdraw(session, rest)
+    return (
+        "Guild: guild [found <name>|invite <player>|accept|promote <player>|leave|disband"
+        "|bank|deposit <n>|withdraw <n>]."
+    )
 
 
 def _trade_cmd(session: Session, arg: str) -> str:

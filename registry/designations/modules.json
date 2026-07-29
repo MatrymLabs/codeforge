@@ -6185,6 +6185,34 @@
     "updated": "2026-07-28"
   },
   {
+    "designation": "MOD-04.116",
+    "name": "guild_store",
+    "status": "active",
+    "function": "persistence for a guild's own record (its shared treasury): one row per guild",
+    "label": "guild_store",
+    "file": "parts/world/guild_store.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "docs/party_system.md",
+    "tests": "tests/test_guild.py",
+    "depends_on": [
+      "db"
+    ],
+    "related": [
+      "guild",
+      "db"
+    ],
+    "reuse": "a small guild-LEVEL persistence adapter (a treasury row): the pattern for any org-level state distinct from per-member columns; direct SQL, no auth/merge-save law needed",
+    "notes": "The guilds table (GuildRow: name PK, coins; migration f1b9d3e6c284). Created on found(), dropped on disband(). ensure/remove/coins/adjust; adjust floors the balance at 0. Backs the guild bank (guild deposit/withdraw/bank). Extension: MOTD, guild level, a guild item vault (needs loose-item persistence first).",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-28",
+    "updated": "2026-07-28"
+  },
+  {
     "designation": "MOD-05.067",
     "name": "textmatch",
     "status": "active",
