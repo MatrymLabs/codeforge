@@ -106,6 +106,13 @@ def buy(session: Session, id_word: str) -> str:
     else:
         _default_store().add_coins(sold.seller, sold.price)
     reclone_item(sold.item, carrier(session.player_id))  # the item is yours
+    from parts.world import audit
+
+    audit.record(  # the coin/item move is on record for economy accounting
+        session.player_id,
+        "auction-buy",
+        f"{sold.item['name']} from {sold.seller} for {sold.price}",
+    )
     return f"You buy {sold.item['name']} for {sold.price} coins."
 
 

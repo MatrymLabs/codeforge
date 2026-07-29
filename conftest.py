@@ -33,6 +33,10 @@ def _isolated_database(tmp_path, monkeypatch):
     monkeypatch.setattr(db, "DB_PATH", tmp_path / "test.db")
     monkeypatch.setattr(accounts, "_ITERATIONS", 1000)
 
+    # The audit ledger is a real runtime state file too: quarantine it into tmp so a test never
+    # appends to (or reads) the real audit.jsonl at the repo root.
+    monkeypatch.setenv("CODEFORGE_AUDIT", str(tmp_path / "audit.jsonl"))
+
     # The Chronicle ledger is a real, git-tracked state file too. Now that main RETAINS evidence
     # (no longer an empty vault), a test that reads it with the default root would depend on the
     # committed ledger's contents. Quarantine root=None into tmp, so tests see an empty store unless
