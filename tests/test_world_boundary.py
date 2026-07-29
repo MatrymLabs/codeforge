@@ -91,6 +91,8 @@ _GAME_SEED = {
     "audit",
     "bans",
     "metrics",
+    "bus",
+    "presence",
     "aggression",
     "session",
     "seed",
