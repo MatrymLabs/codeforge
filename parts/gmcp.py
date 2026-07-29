@@ -150,6 +150,33 @@ def quest_report(session: Session) -> dict[str, str] | None:
     return active_quest(session)
 
 
+def party_report(session: Session) -> dict[str, object] | None:
+    """A Char.Party payload: the player's fellowship as {members: [names], leader, size}, or None
+    when solo (an empty frame then clears the client's party panel, like Char.Target). Read-only
+    projection of the party registry; the leader is always members[0]."""
+    from parts.world.party import party_of
+    from parts.world.session import display_name
+
+    band = party_of(session.player_id)
+    if band is None:
+        return None
+    return {
+        "members": [display_name(m) for m in band.members],
+        "leader": display_name(band.leader),
+        "size": len(band.members),
+    }
+
+
+def guild_report(session: Session) -> dict[str, str] | None:
+    """A Char.Guild payload: the player's guild as {name, rank}, or None when guildless (an empty
+    frame clears the client's guild panel). Read-only projection of the persisted guild columns."""
+    from parts.world.session import display_name
+
+    if not session.guild:
+        return None
+    return {"name": display_name(session.guild), "rank": session.guild_rank}
+
+
 def items_report(session: Session) -> dict[str, dict[str, object]]:
     """A Char.Items payload: the equipped loadout as {slot: {name, mods, rarity}}, so a client can
     show what is worn, what it grants (the flat stat modifiers), and its rarity tier (to colour it).

@@ -22,7 +22,9 @@ from parts.gmcp import (
     GMCP_OPT,
     enables_gmcp,
     gmcp_frame,
+    guild_report,
     items_report,
+    party_report,
     quest_report,
     resists_report,
     room_report,
@@ -162,6 +164,8 @@ class _GateHandler(socketserver.StreamRequestHandler):
         self._last_items: dict[str, dict[str, object]] = {}  # {} = nothing worn; clears the panel
         self._last_skills: list[dict[str, object]] = []  # [] = no calling; the wieldable kit
         self._last_resists: dict[str, str] = {}  # {} = resists nothing unusual; the defensive grid
+        self._last_party: dict[str, object] = {}  # {} = solo; clears the client's party panel
+        self._last_guild: dict[str, str] = {}  # {} = guildless; clears the client's guild panel
         with contextlib.suppress(OSError):
             self.wfile.write(_WILL_GMCP)
 
@@ -217,6 +221,16 @@ class _GateHandler(socketserver.StreamRequestHandler):
         if resists != self._last_resists:
             self._send_gmcp("Char.Resists", resists)
             self._last_resists = resists
+        # Char.Party / Char.Guild: the player's social memberships, so a client can render a party
+        # roster and guild badge. An empty {} clears the panel when they leave (like Char.Target).
+        party = party_report(session) or {}
+        if party != self._last_party:
+            self._send_gmcp("Char.Party", party)
+            self._last_party = party
+        guild = guild_report(session) or {}
+        if guild != self._last_guild:
+            self._send_gmcp("Char.Guild", guild)
+            self._last_guild = guild
 
     def _send(self, text: str) -> None:
         self.wfile.write((_sanitize(text) + "\r\n").encode("utf-8"))
