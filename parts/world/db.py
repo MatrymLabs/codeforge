@@ -229,3 +229,28 @@ def backup_db(dest_dir: Path | None = None) -> Path:
     with sqlite3.connect(DB_PATH) as src, sqlite3.connect(dest) as dst:
         src.backup(dst)  # online snapshot: consistent even under concurrent writes
     return dest
+
+
+def restore_db(backup_path: Path, dest: Path | None = None) -> Path:
+    """Restore a SQLite backup file over the live database (or a given dest) and return the restored
+    path -- the recovery half of backup_db. Disposes any cached engine on the target so the next
+    session opens the RESTORED file, not a pre-restore connection. Refuses loud on a missing backup
+    or a non-SQLite backend."""
+    import shutil
+
+    url = engine_url()
+    if not url.startswith("sqlite"):
+        raise RuntimeError(
+            f"restore_db supports SQLite only; the backend is {url.split(':', 1)[0]}. "
+            "For PostgreSQL use pg_restore (see docs/database.md)."
+        )
+    src = Path(backup_path)
+    if not src.exists():
+        raise FileNotFoundError(f"no backup to restore at {src}")
+    target = Path(dest) if dest is not None else Path(DB_PATH)
+    target.parent.mkdir(parents=True, exist_ok=True)
+    dead = _ENGINES.pop(f"sqlite:///{target}", None)  # drop the stale engine on the target URL
+    if dead is not None:
+        dead.dispose()
+    shutil.copy2(src, target)
+    return target

@@ -105,3 +105,33 @@ def test_backup_db_refuses_a_non_sqlite_backend(monkeypatch):
     monkeypatch.setenv("DATABASE_URL", "postgresql+psycopg://u:p@localhost/x")
     with pytest.raises(RuntimeError, match="pg_dump"):
         backup_db()
+
+
+def test_a_backup_restores_and_the_store_boots_against_it(tmp_path):
+    # The restore TEST the infra spec asks for: a backup is only real if it restores AND the store
+    # boots against it. conftest already points DB_PATH at a tmp live db; write a real character,
+    # snapshot it, LOSE the live db, restore from the snapshot, and confirm the store reads it back.
+    from parts.world.db import backup_db, restore_db
+
+    put_record("ada", {"job": "vanguard", "level": 7, "location": "hall", "xp": 300})
+    assert load_character("ada")["level"] == 7  # a real row in the live db
+    snapshot = backup_db(dest_dir=tmp_path / "backups")
+
+    # DISASTER: the live database is gone, and a fresh process holds no connection to it.
+    Path(db.DB_PATH).unlink()
+    db._ENGINES.clear()
+
+    # RECOVERY: restore the snapshot over DB_PATH, then boot the store against it.
+    restored = restore_db(snapshot)
+    assert restored == Path(db.DB_PATH)
+    assert load_character("ada")["level"] == 7  # the backup restored AND the store reads it clean
+
+
+def test_restore_db_refuses_a_missing_backup_or_a_non_sqlite_backend(monkeypatch, tmp_path):
+    from parts.world.db import restore_db
+
+    with pytest.raises(FileNotFoundError):
+        restore_db(tmp_path / "nope.db")
+    monkeypatch.setenv("DATABASE_URL", "postgresql+psycopg://u:p@localhost/x")
+    with pytest.raises(RuntimeError, match="pg_restore"):
+        restore_db(tmp_path / "any.db")
