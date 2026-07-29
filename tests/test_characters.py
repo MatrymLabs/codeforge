@@ -5,7 +5,12 @@ import copy
 import pytest
 
 from parts.world import items, npcs
-from parts.world.characters import load_character, restore_character, save_character
+from parts.world.characters import (
+    load_character,
+    restore_character,
+    save_all,
+    save_character,
+)
 from parts.world.combat import award_xp
 from parts.world.jobs import bind_calling
 from parts.world.session import SESSIONS, Session
@@ -261,3 +266,22 @@ def test_the_legacy_bare_prototype_gear_format_still_restores():
 
     assert prototype_of(fresh.equipped["weapon"]) == "forge_wrench"
     assert ITEMS[fresh.equipped["weapon"]]["name"]  # a real base clone, no override
+
+
+def test_save_all_persists_every_named_live_hero():
+    # two named heroes + one unnamed seat, all live in SESSIONS
+    ada = Session(player_id="ada", location="courtyard", named=True)
+    bram = Session(player_id="bram", location="courtyard", named=True)
+    stranger = Session(player_id="player9")  # still at the login desk, unnamed
+    SESSIONS.update({"ada": ada, "bram": bram, "player9": stranger})
+    for hero in (ada, bram):
+        bind_calling(hero, "vanguard")
+    saved = save_all()
+    assert saved == 2  # the two named heroes, not the unnamed seat
+    assert load_character("ada") is not None
+    assert load_character("bram") is not None
+    assert load_character("player9") is None  # an unnamed seat is never persisted
+
+
+def test_save_all_on_an_empty_world_saves_nothing():
+    assert save_all() == 0  # no live sessions -> a no-op, not a crash
