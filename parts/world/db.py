@@ -131,6 +131,12 @@ class MailRow(ArchiveBase):
     body: Mapped[str] = mapped_column()
     sent_utc: Mapped[str] = mapped_column()
     read: Mapped[bool] = mapped_column(default=False)
+    # An optional attached item (a gift/parcel): a snapshot, like a vaulted item. attach_proto == ""
+    # means no attachment. Cleared to "" once claimed, so an item is never claimed twice.
+    attach_proto: Mapped[str] = mapped_column(default="")
+    attach_name: Mapped[str] = mapped_column(default="")
+    attach_mods: Mapped[str] = mapped_column(default="{}")
+    attach_rarity: Mapped[str] = mapped_column(default="common")
 
 
 class LooseItemRow(ArchiveBase):

@@ -60,9 +60,61 @@ def render_inbox(session: Session) -> str:
     for i, letter in enumerate(letters, 1):
         mark = " " if letter.read else "*"
         snippet = letter.body[:40] + ("..." if len(letter.body) > 40 else "")
-        lines.append(f"  {mark}{i}. from {display_name(letter.sender)}: {snippet}")
-    lines.append("(mail read <n>, mail delete <n>, mail send <player> <message>)")
+        parcel = f"  [+ {letter.attachment['name']}]" if letter.attachment else ""
+        lines.append(f"  {mark}{i}. from {display_name(letter.sender)}: {snippet}{parcel}")
+    lines.append("(mail read <n>, mail claim <n>, mail send/gift <player> ...)")
     return "\n".join(lines)
+
+
+def gift(session: Session, arg: str) -> str:
+    """`mail gift <player> <item>`: mail a carried item to a hero (online or not). It waits in their
+    inbox as a parcel until they `mail claim` it. Fails loud on a bad target, a full inbox, an item
+    you are not carrying, or a worn item."""
+    from parts.world.characters import snapshot_item
+    from parts.world.items import ITEMS, carrier, trace_item
+
+    parts = arg.split(maxsplit=1)
+    if len(parts) < 2:
+        return "Gift whom, and what? (mail gift <player> <item>)"
+    target, item_kw = parts[0].strip().lower(), parts[1].strip().lower()
+    if not _character_exists(target):
+        return f"There is no hero named '{target}' to send to."
+    if mail_store.count(target) >= MAX_INBOX:
+        return f"{display_name(target)}'s inbox is full; your parcel is returned."
+    iid = trace_item(item_kw, carrier(session.player_id))
+    if iid is None:
+        return "You aren't carrying that."
+    if iid in set(session.equipped.values()):
+        return "That is worn. Unequip it before you mail it."
+    snapshot = snapshot_item(iid)
+    if snapshot is None:
+        return "You aren't carrying that."
+    name = ITEMS[iid]["name"]
+    stamp = datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
+    body = f"A parcel from {display_name(session.player_id)}."
+    mail_store.send(target, session.player_id, body, sent_utc=stamp, attachment=snapshot)
+    ITEMS.pop(iid, None)  # it leaves your bag, into the mail
+    if SESSIONS.get(target) is not None:
+        announce_to([target], f"\nA parcel from {display_name(session.player_id)} awaits. (mail)")
+    return f"You mail {name} to {display_name(target)}."
+
+
+def claim(session: Session, n_word: str) -> str:
+    """`mail claim <n>`: take the item attached to the nth letter into your bag (once)."""
+    from parts.world.characters import reclone_item
+    from parts.world.items import carrier
+
+    letters = mail_store.inbox(session.player_id)
+    letter = _pick(letters, n_word)
+    if letter is None:
+        return "No such letter. (mail to list your inbox)"
+    if letter.attachment is None:
+        return "That letter carries no parcel."
+    snapshot = mail_store.claim(letter.id, session.player_id)
+    if snapshot is None:
+        return "There is nothing left to claim."
+    reclone_item(snapshot, carrier(session.player_id))
+    return f"You claim {snapshot['name']} from the letter."
 
 
 def read_mail(session: Session, n_word: str) -> str:

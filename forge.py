@@ -2130,7 +2130,14 @@ def _mail_cmd(session: Session, arg: str) -> str:
         return mail_mod.read_mail(session, rest)
     if sub == "delete":
         return mail_mod.delete_mail(session, rest)
-    return "Mail: mail | mail send <player> <message> | mail read <n> | mail delete <n>."
+    if sub == "gift":
+        return mail_mod.gift(session, rest)
+    if sub == "claim":
+        return mail_mod.claim(session, rest)
+    return (
+        "Mail: mail | mail send <player> <message> | mail read <n> | mail delete <n> "
+        "| mail gift <player> <item> | mail claim <n>."
+    )
 
 
 def _maintenance_cmd(session: Session, arg: str) -> str:
