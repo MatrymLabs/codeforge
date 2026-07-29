@@ -12,29 +12,76 @@ plain text a caller has already sanitized for its transport.
 
 from __future__ import annotations
 
+import json
 from dataclasses import dataclass
+from typing import Any
 
 
 @dataclass(frozen=True)
 class Letter:
-    """One delivered letter as plain data (no ORM leak)."""
+    """One delivered letter as plain data (no ORM leak). `attachment` is an unclaimed item snapshot
+    (prototype + rolled name/mods/rarity) or None when the letter carries no parcel."""
 
     id: int
     sender: str
     body: str
     sent_utc: str
     read: bool
+    attachment: dict[str, Any] | None = None
 
 
-def send(recipient: str, sender: str, body: str, *, sent_utc: str) -> None:
-    """Deliver a letter into `recipient`'s inbox."""
+def _attachment_of(row: Any) -> dict[str, Any] | None:
+    """A row's unclaimed item attachment as a re-clone snapshot, or None if it carries none."""
+    if not row.attach_proto:
+        return None
+    try:
+        mods = json.loads(row.attach_mods)
+    except (ValueError, TypeError):
+        mods = {}
+    return {
+        "prototype": row.attach_proto,
+        "name": row.attach_name,
+        "mods": mods if isinstance(mods, dict) else {},
+        "rarity": row.attach_rarity,
+    }
+
+
+def send(
+    recipient: str,
+    sender: str,
+    body: str,
+    *,
+    sent_utc: str,
+    attachment: dict[str, Any] | None = None,
+) -> None:
+    """Deliver a letter into `recipient`'s inbox, optionally carrying an item snapshot parcel."""
     from parts.world.db import MailRow, open_archive_session
 
     with open_archive_session() as db:
-        db.add(
-            MailRow(recipient=recipient, sender=sender, body=body, sent_utc=sent_utc, read=False)
-        )
+        row = MailRow(recipient=recipient, sender=sender, body=body, sent_utc=sent_utc, read=False)
+        if attachment is not None:
+            row.attach_proto = str(attachment["prototype"])
+            row.attach_name = str(attachment.get("name", ""))
+            row.attach_mods = json.dumps(attachment.get("mods", {}), sort_keys=True)
+            row.attach_rarity = str(attachment.get("rarity", "common"))
+        db.add(row)
         db.commit()
+
+
+def claim(letter_id: int, recipient: str) -> dict[str, Any] | None:
+    """Take a letter's attached item (scoped to its recipient), returning its snapshot and clearing
+    the attachment so it can never be claimed twice. None if there is no such letter for that
+    recipient, or it carries nothing to claim."""
+    from parts.world.db import MailRow, open_archive_session
+
+    with open_archive_session() as db:
+        row = db.get(MailRow, letter_id)
+        if row is None or row.recipient != recipient or not row.attach_proto:
+            return None
+        snapshot = _attachment_of(row)
+        row.attach_proto = ""  # consumed: the letter keeps its text, the parcel is gone
+        db.commit()
+        return snapshot
 
 
 def inbox(recipient: str) -> list[Letter]:
@@ -47,7 +94,7 @@ def inbox(recipient: str) -> list[Letter]:
         rows = db.scalars(
             select(MailRow).where(MailRow.recipient == recipient).order_by(MailRow.id.desc())
         )
-        return [Letter(r.id, r.sender, r.body, r.sent_utc, r.read) for r in rows]
+        return [Letter(r.id, r.sender, r.body, r.sent_utc, r.read, _attachment_of(r)) for r in rows]
 
 
 def count(recipient: str) -> int:

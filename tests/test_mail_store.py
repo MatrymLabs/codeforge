@@ -60,3 +60,34 @@ def test_unread_count_tallies_only_unread_letters():
     mail_store.mark_read(mail_store.inbox("alia")[0].id)
     assert mail_store.unread_count("alia") == 1  # one read, one still unread
     assert mail_store.unread_count("nobody") == 0
+
+
+def test_a_letter_can_carry_and_yield_an_item_attachment():
+    snap = {
+        "prototype": "warm_cloak",
+        "name": "a Cruel cloak [rare]",
+        "mods": {"MAG DEF": 8},
+        "rarity": "rare",
+    }
+    mail_store.send("ada", "bram", "a gift", sent_utc=_T, attachment=snap)
+    letter = mail_store.inbox("ada")[0]
+    assert letter.attachment == snap  # the parcel rides the letter
+    claimed = mail_store.claim(letter.id, "ada")
+    assert claimed == snap
+    # the letter stays but the parcel is gone: a second claim yields nothing (no dupe)
+    assert mail_store.inbox("ada")[0].attachment is None
+    assert mail_store.claim(letter.id, "ada") is None
+
+
+def test_claim_is_scoped_to_the_recipient():
+    snap = {"prototype": "forge_wrench", "name": "a wrench", "mods": {}, "rarity": "common"}
+    mail_store.send("ada", "bram", "yours", sent_utc=_T, attachment=snap)
+    letter_id = mail_store.inbox("ada")[0].id
+    assert mail_store.claim(letter_id, "cade") is None  # not cade's to claim
+    assert mail_store.inbox("ada")[0].attachment == snap  # still ada's, unclaimed
+
+
+def test_a_plain_letter_has_no_attachment():
+    mail_store.send("ada", "bram", "just words", sent_utc=_T)
+    assert mail_store.inbox("ada")[0].attachment is None
+    assert mail_store.claim(mail_store.inbox("ada")[0].id, "ada") is None
