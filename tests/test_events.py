@@ -11,8 +11,12 @@ from parts.world.events import (
     announce,
     announce_frame,
     bind_echo,
+    bind_gmcp,
     broadcast,
+    push_gmcp,
+    rename_gmcp,
     unbind_echo,
+    unbind_gmcp,
 )
 from parts.world.frames import SpeechFrame
 from parts.world.session import SESSIONS, Session
@@ -183,3 +187,48 @@ def test_scene_shows_other_players_but_not_yourself():
     assert "A is here." not in scene
     unbind_echo("a")
     unbind_echo("b")
+
+
+# --- the GMCP push channel ----------------------------------------------------------------------
+def test_push_gmcp_delivers_a_frame_to_a_bound_player():
+    frames: list[tuple[str, object]] = []
+    try:
+        bind_gmcp("ada", lambda pkg, data: frames.append((pkg, data)))
+        push_gmcp(["ada"], "Char.Party", {"size": 2})
+        assert frames == [("Char.Party", {"size": 2})]
+    finally:
+        unbind_gmcp("ada")
+
+
+def test_push_gmcp_skips_the_unbound_and_the_excluded():
+    frames: list[tuple[str, object]] = []
+    try:
+        bind_gmcp("ada", lambda pkg, data: frames.append((pkg, data)))
+        # bram has no sink (plain-text client / offline); ada is excluded
+        push_gmcp(["ada", "bram"], "Char.Guild", {"name": "X"}, exclude="ada")
+        assert frames == []  # ada excluded, bram unbound -> nobody delivered
+    finally:
+        unbind_gmcp("ada")
+
+
+def test_rename_gmcp_moves_the_channel_to_the_new_name():
+    frames: list[tuple[str, object]] = []
+    try:
+        bind_gmcp("player7", lambda pkg, data: frames.append((pkg, data)))
+        rename_gmcp("player7", "ada")  # login rename
+        push_gmcp(["player7"], "Char.Party", {})  # the old id no longer reaches them
+        push_gmcp(["ada"], "Char.Party", {"size": 3})
+        assert frames == [("Char.Party", {"size": 3})]
+    finally:
+        unbind_gmcp("ada")
+
+
+def test_push_gmcp_prunes_a_sink_that_raises_oserror():
+    def _dead(_pkg: str, _data: object) -> None:
+        raise OSError("socket closed")
+
+    bind_gmcp("ada", _dead)
+    push_gmcp(["ada"], "Char.Party", {})  # must not raise; the dead sink is pruned
+    from parts.world.events import _GMCP_SINKS
+
+    assert "ada" not in _GMCP_SINKS  # pruned, so it is never tried again

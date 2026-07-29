@@ -81,7 +81,14 @@ from parts.world.crafting import craft
 from parts.world.doors import reclose, unlock
 from parts.world.engineer import deploy_barrier, diagnostic_scan, field_repair
 from parts.world.equipment import equip, unequip
-from parts.world.events import announce, announce_frame, bind_echo, rename_echo, unbind_echo
+from parts.world.events import (
+    announce,
+    announce_frame,
+    bind_echo,
+    rename_echo,
+    rename_gmcp,
+    unbind_echo,
+)
 from parts.world.factions import render_factions
 from parts.world.frames import SpeechFrame
 from parts.world.items import (
@@ -401,6 +408,7 @@ def _authenticate(session: Session, verb: str, arg: str) -> str:
     session.account = account
     SESSIONS[char] = session
     rename_echo(old, char)
+    rename_gmcp(old, char)
     casefile = load_character(char)
     if casefile is not None:
         announce(session.location, f"{display_name(old)} leaves.", exclude=char)
@@ -476,6 +484,7 @@ def _name_cmd(session: Session, arg: str) -> str:
     session.player_id = wanted
     SESSIONS[wanted] = session
     rename_echo(old, wanted)
+    rename_gmcp(old, wanted)
     if casefile is not None:
         announce(session.location, f"{display_name(old)} leaves.", exclude=wanted)
         restore_character(session, casefile)
