@@ -154,10 +154,10 @@ def test_name_command_restores_a_saved_hero():
 def test_equipped_gear_persists_across_a_save_and_restore():
     """Worn gear survives logout: it is stored by prototype and re-cloned + re-equipped on login."""
     from parts.world.equipment import equip
-    from parts.world.items import clone, prototype_of
+    from parts.world.items import carrier, clone, prototype_of
 
     s = _hero()
-    clone("forge_wrench", "player")
+    clone("forge_wrench", carrier("matrym"))
     equip(s, "wrench")
     assert "weapon" in s.equipped
     save_character(s)
@@ -204,10 +204,10 @@ def test_quest_progress_persists_across_a_save_and_restore():
 def test_affixed_gear_keeps_its_rarity_across_a_save_and_restore():
     """A rolled legendary survives logout with its name, mods, AND rarity tier."""
     from parts.world.equipment import equip
-    from parts.world.items import ITEMS, clone
+    from parts.world.items import ITEMS, carrier, clone
 
     s = _hero()
-    iid = clone("forge_wrench", "player")
+    iid = clone("forge_wrench", carrier("matrym"))
     ITEMS[iid]["name"] = "a Savage forge wrench of Ruin"  # a rolled affix instance
     ITEMS[iid]["mods"] = {"ATK": 20, "ACC": 8}
     ITEMS[iid]["rarity"] = "legendary"

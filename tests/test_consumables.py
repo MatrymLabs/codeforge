@@ -36,17 +36,17 @@ def test_quaffing_a_draught_restores_hp_and_spends_it():
     s = _drinker()
     s.resources["hp"] = s.resources["hp"].damage(15)
     before = s.resources["hp"].current
-    items.clone("healing_draught", "player")
+    items.clone("healing_draught", items.carrier("drinker"))
     out = quaff(s, "draught")
     assert "You quaff" in out and "HP" in out
     assert s.resources["hp"].current > before  # healed
-    assert not items.items_in("player")  # the draught is spent
+    assert not items.items_in(items.carrier("drinker"))  # the draught is spent
 
 
 def test_quaffing_restores_at_most_to_full():
     s = _drinker()  # already at full HP
     full = s.resources["hp"].current
-    items.clone("healing_draught", "player")
+    items.clone("healing_draught", items.carrier("drinker"))
     quaff(s, "draught")
     assert s.resources["hp"].current == full  # clamped, never over the maximum
 
@@ -57,12 +57,12 @@ def test_quaffing_something_not_carried_is_refused():
 
 def test_quaffing_a_non_drinkable_is_refused():
     s = _drinker()
-    items.clone("forge_wrench", "player")  # a weapon, not a consumable
+    items.clone("forge_wrench", items.carrier("drinker"))  # a weapon, not a consumable
     assert "not something you can drink" in quaff(s, "wrench")
 
 
 def test_quaff_is_reachable_through_the_engine_tick():
     s = _drinker()
     s.resources["hp"] = s.resources["hp"].damage(10)
-    items.clone("healing_draught", "player")
+    items.clone("healing_draught", items.carrier("drinker"))
     assert "You quaff" in forge.handle_command(s, "quaff draught")

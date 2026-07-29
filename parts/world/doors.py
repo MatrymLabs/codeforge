@@ -88,7 +88,7 @@ def _key_fits(ctx: Mapping[str, object]) -> str | None:
     """Guard for the unlock edge: is the actor carrying the key that fits this door?"""
     door = cast(Door, ctx["door"])
     key_word = cast(str, ctx["key_word"])
-    key_iid = items.trace_item(key_word, "player")
+    key_iid = items.trace_item(key_word, cast(str, ctx["owner"]))
     if key_iid is None:
         return "You aren't carrying that."
     # Match by PROTOTYPE, not instance id: a door keyed to `copper_key` opens for any instance of
@@ -130,7 +130,11 @@ def _requirement_unmet(door: Door, actor: dict[str, object] | None) -> str | Non
 
 
 def unlock(
-    door_word: str, key_word: str, room_id: str, actor: dict[str, object] | None = None
+    door_word: str,
+    key_word: str,
+    room_id: str,
+    actor: dict[str, object] | None = None,
+    owner: str = "player",
 ) -> str:
     did = trace_door(door_word, room_id)
     if did is None:
@@ -139,7 +143,12 @@ def unlock(
     barred = _requirement_unmet(door, actor)
     if barred is not None:
         return barred
-    ctx: dict[str, object] = {"door": door, "key_word": key_word, "room_id": room_id}
+    ctx: dict[str, object] = {
+        "door": door,
+        "key_word": key_word,
+        "room_id": room_id,
+        "owner": owner,
+    }
     outcome = advance(_DOOR_MACHINE, _door_state(door), "unlock", ctx, _DOOR_GUARDS)
     if isinstance(outcome, Refusal):
         # An open door has no unlock edge (no_transition); a locked door refuses via the guard.
@@ -150,6 +159,6 @@ def unlock(
     # Fired(effect="open"): the machine decided; this module applies the effect.
     door["locked"] = False
     _arm_reclose(did, door)  # a self-closing door starts its relock countdown now
-    key_iid = items.trace_item(key_word, "player")
+    key_iid = items.trace_item(key_word, owner)
     assert key_iid is not None  # the key_fits guard already proved the key is carried
     return f"You unlock {door['name']} with {items.ITEMS[key_iid]['name']}."

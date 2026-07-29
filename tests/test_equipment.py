@@ -32,7 +32,7 @@ def fresh_world():
 def _engineer_with_wrench() -> Session:
     s = Session(player_id="matrym", location="workshop")
     bind_calling(s, "engineer")
-    items.ITEMS["forge_wrench"]["location"] = "player"  # carried
+    items.ITEMS["forge_wrench"]["location"] = items.carrier("matrym")  # carried
     return s
 
 
@@ -84,7 +84,7 @@ def test_equipping_what_you_do_not_carry_is_refused() -> None:
 def test_a_non_equippable_item_is_refused() -> None:
     s = Session(player_id="matrym", location="workshop")
     bind_calling(s, "engineer")
-    items.ITEMS["rusty_lantern"]["location"] = "player"
+    items.ITEMS["rusty_lantern"]["location"] = items.carrier("matrym")
     assert "not something you can equip" in equip(s, "lantern")
 
 

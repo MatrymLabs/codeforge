@@ -79,6 +79,7 @@ from parts.world.events import announce, announce_frame, bind_echo, rename_echo,
 from parts.world.factions import render_factions
 from parts.world.frames import SpeechFrame
 from parts.world.items import (
+    carrier,
     drop,
     inventory_text,
     prototype_of,
@@ -1031,18 +1032,26 @@ def _build_commands() -> CommandSet:
             "inventory",
             "CMD-04.021",
             "what you carry",
-            lambda _s, _a: inventory_text(),
+            lambda s, _a: inventory_text(carrier(s.player_id)),
             namespace=CORE,
         )
     )
     cs.add(
         Command(
-            "i", "CMD-04.021", "what you carry", lambda _s, _a: inventory_text(), namespace=CORE
+            "i",
+            "CMD-04.021",
+            "what you carry",
+            lambda s, _a: inventory_text(carrier(s.player_id)),
+            namespace=CORE,
         )
     )
     cs.add(
         Command(
-            "inv", "CMD-04.021", "what you carry", lambda _s, _a: inventory_text(), namespace=CORE
+            "inv",
+            "CMD-04.021",
+            "what you carry",
+            lambda s, _a: inventory_text(carrier(s.player_id)),
+            namespace=CORE,
         )
     )
     cs.add(
@@ -1624,7 +1633,7 @@ def _build_commands() -> CommandSet:
             "read",
             "CMD-04.080",
             "read an item's lore (read <item>)",
-            lambda s, a: read_item(a, s.location),
+            lambda s, a: read_item(a, s.location, carrier(s.player_id)),
             namespace=CORE,
         )
     )
@@ -1926,7 +1935,7 @@ def _take_cmd(session: Session, arg: str) -> str:
     """Pick up an item; announce it, and let a pickup advance the arc."""
     word = arg.lower()
     picked = trace_item(word, f"room:{session.location}")  # label, captured before it moves
-    verdict = take(word, session.location)
+    verdict = take(word, session.location, carrier(session.player_id))
     if verdict.startswith("You take"):
         announce(
             session.location,
@@ -1947,7 +1956,7 @@ def _take_cmd(session: Session, arg: str) -> str:
 def _drop_cmd(session: Session, arg: str) -> str:
     """Drop a carried item; announce it to the room."""
     word = arg.lower()
-    verdict = drop(word, session.location)
+    verdict = drop(word, session.location, carrier(session.player_id))
     if verdict.startswith("You drop"):
         announce(
             session.location,
@@ -2002,7 +2011,7 @@ def _unlock_cmd(session: Session, arg: str) -> str:
         door_word, key_word = (p.strip() for p in rest.split(" with ", 1))
         # the actor context a door's optional `requires` condition is evaluated against
         actor = {"level": session.level, "rank": session.rank}
-        return unlock(door_word, key_word, session.location, actor)
+        return unlock(door_word, key_word, session.location, actor, carrier(session.player_id))
     return "Unlock what with what? Try: unlock door with key"
 
 

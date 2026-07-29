@@ -34,7 +34,7 @@ def gather(session: Session) -> str:
     from parts.world import items
 
     try:
-        iid = items.clone(node, "player")
+        iid = items.clone(node, items.carrier(session.player_id))
     except items.ItemError:
         return "There is nothing to gather here."  # a node naming an unknown material: fail soft
     session.gather_cooldowns[session.location] = GATHER_COOLDOWN

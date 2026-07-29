@@ -42,7 +42,9 @@ def test_gathering_mints_the_nodes_material_into_your_hands():
     s = _forager()
     out = forge.handle_command(s, "gather")
     assert "gather" in out.lower()
-    assert any(items.prototype_of(i) == "forge_wrench" for i in items.items_in("player"))
+    assert any(
+        items.prototype_of(i) == "forge_wrench" for i in items.items_in(items.carrier("forager"))
+    )
 
 
 def test_a_worked_node_is_spent_then_renews_after_the_cooldown():

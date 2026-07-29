@@ -20,9 +20,9 @@ from parts.world.session import Session
 RECIPES = load_recipes(SEED_DIR / "recipes.yaml")
 
 
-def _held(prototype: str) -> list[str]:
-    """The inventory instances of this material prototype (a clone counts as the real one)."""
-    return [iid for iid in items.items_in("player") if items.prototype_of(iid) == prototype]
+def _held(prototype: str, owner: str) -> list[str]:
+    """The `owner`'s inventory instances of this prototype (a clone counts as the real one)."""
+    return [iid for iid in items.items_in(owner) if items.prototype_of(iid) == prototype]
 
 
 def locked_reason(session: Session, recipe: Mapping[str, object]) -> str | None:
@@ -87,13 +87,16 @@ def craft(session: Session, arg: str) -> str:
     locked = locked_reason(session, recipe)
     if locked:
         return f"You have not earned the craft of {recipe['name']}: it {locked}."
-    held = {proto: _held(proto) for proto in recipe["inputs"]}
+    owner = items.carrier(session.player_id)
+    held = {proto: _held(proto, owner) for proto in recipe["inputs"]}
     short = {p: q - len(held[p]) for p, q in recipe["inputs"].items() if len(held[p]) < q}
     if short:
         lack = ", ".join(f"{count} more {proto}" for proto, count in sorted(short.items()))
         return f"You lack materials to forge {recipe['name']}: need {lack}."
     try:
-        made = items.clone(recipe["makes"], "player")  # mint first: nothing is spent if this fails
+        made = items.clone(
+            recipe["makes"], items.carrier(session.player_id)
+        )  # mint first: spent only on success
     except items.ItemError:
         return f"You cannot forge {recipe['name']} right now."
     for proto, qty in recipe["inputs"].items():

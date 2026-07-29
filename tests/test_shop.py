@@ -20,7 +20,7 @@ from parts.world.shop import buy, render_shop, sell
 _WARE = {
     "name": "a test trinket",
     "keywords": ["trinket"],
-    "location": "player",
+    "location": items.carrier("shopper"),
     "slot": "",
     "mods": {},
     "prototype": "trinket",
@@ -78,7 +78,7 @@ def test_buying_spends_coins_and_hands_over_a_fresh_instance():
     s = _shopper(coins=100)
     out = buy(s, "trinket")
     assert "You buy" in out and s.coins == 70
-    assert any(items.prototype_of(i) == "trinket" for i in items.items_in("player"))
+    assert any(items.prototype_of(i) == "trinket" for i in items.items_in(items.carrier("shopper")))
 
 
 def test_buying_something_not_for_sale_is_refused():
@@ -93,10 +93,10 @@ def test_buying_without_enough_coins_is_refused():
 
 def test_selling_a_carried_item_pays_coins_and_removes_it():
     s = _shopper(coins=0)
-    items.clone("trinket", "player")
+    items.clone("trinket", items.carrier("shopper"))
     out = sell(s, "trinket")
     assert "You sell" in out and s.coins == 12
-    assert not items.items_in("player")  # the shop took it
+    assert not items.items_in(items.carrier("shopper"))  # the shop took it
 
 
 def test_selling_something_you_do_not_carry_is_refused():

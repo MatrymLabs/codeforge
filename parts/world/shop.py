@@ -74,7 +74,7 @@ def buy(session: Session, word: str) -> str:
     if session.coins < price:
         return f"You cannot afford that ({_price(price)}; your purse holds {purse(session.coins)})."
     session.coins -= price
-    items.clone(proto, "player")
+    items.clone(proto, items.carrier(session.player_id))
     _save(session)
     name = items.PROTOTYPES[proto]["name"]
     return f"You buy {name} for {_price(price)}. (purse: {purse(session.coins)})"
@@ -88,7 +88,7 @@ def sell(session: Session, word: str) -> str:
     if nid is None:
         return "There is no one buying anything here."
     buys = NPCS[nid]["shop"].get("buys", {})
-    iid = items.trace_item(word.strip().lower(), "player")
+    iid = items.trace_item(word.strip().lower(), items.carrier(session.player_id))
     if iid is None:
         return "You aren't carrying that."
     proto = items.prototype_of(iid)
