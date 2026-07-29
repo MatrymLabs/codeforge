@@ -82,6 +82,11 @@ class CharacterStore(Protocol):
         such character exists. Never touches auth: guild is a gameplay fact."""
         ...
 
+    def add_coins(self, name: str, delta: int) -> bool:
+        """Add `delta` (may be negative, floored at zero) to a character's coins, for crediting an
+        OFFLINE hero without a live session (e.g. auction proceeds). False if no such character."""
+        ...
+
 
 class InMemoryCharacterStore:
     """A dict-backed CharacterStore: dependency-free and deterministic, for the contract tests and a
@@ -128,4 +133,13 @@ class InMemoryCharacterStore:
         if existing is None:
             return False
         self._rows[name] = replace(existing, guild=guild, guild_rank=guild_rank)
+        return True
+
+    def add_coins(self, name: str, delta: int) -> bool:
+        from dataclasses import replace
+
+        existing = self._rows.get(name)
+        if existing is None:
+            return False
+        self._rows[name] = replace(existing, coins=max(0, existing.coins + delta))
         return True

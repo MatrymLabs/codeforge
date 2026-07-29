@@ -6551,5 +6551,60 @@
     "aliases": [],
     "created": "2026-07-29",
     "updated": "2026-07-29"
+  },
+  {
+    "designation": "MOD-04.127",
+    "name": "auction",
+    "status": "active",
+    "function": "the marketplace: list an item for coin, buy another's, expiry mails the unsold back",
+    "label": "auction",
+    "file": "parts/world/auction.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "docs/infrastructure_spec.md",
+    "tests": "tests/test_auction.py",
+    "depends_on": [],
+    "related": [
+      "auction_store",
+      "characters",
+      "mail_store",
+      "scheduler",
+      "climate"
+    ],
+    "reuse": "the escrow-marketplace pattern: an item held out of the world under storage, sold atomically with coin credited to an offline seller, returned by a scheduler sweep; the Phase-2 economy capstone",
+    "notes": "Infra spec Phase 2 slice 4. list_item escrows a carried item (snapshot->auction_store, drop instance, expiry=climate.now()+AUCTION_BEATS); browse renders live listings; buy pays (session.coins or store.add_coins for an offline seller), atomically removes the listing (auction_store.buy) so it can't be double-sold, and reclones the item to the buyer; sweep_expired mails lapsed items back via mail attachments; register_sweep arms the recurring scheduler job at world assembly. GOTCHA: list matches by item KEYWORD not prototype.",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-29",
+    "updated": "2026-07-29"
+  },
+  {
+    "designation": "MOD-04.128",
+    "name": "auction_store",
+    "status": "active",
+    "function": "persistence for the auction house's escrowed listings (item snapshot + price + expiry)",
+    "label": "auction_store",
+    "file": "parts/world/auction_store.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "docs/infrastructure_spec.md",
+    "tests": "tests/test_auction.py",
+    "depends_on": [],
+    "related": [
+      "auction",
+      "db"
+    ],
+    "reuse": "the escrow-storage adapter: a Listing value object over an auction_listings row; create/active/get/buy(atomic remove)/expired/remove; the storage twin of loose_store for a marketplace",
+    "notes": "auction_listings table (AuctionRow, ArchiveBase, migration f6a2d9b3e8c1), seller+expiry indexed. buy() removes and returns a listing in ONE transaction so two buyers can never both win it. Lazy ORM off the hot path.",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-29",
+    "updated": "2026-07-29"
   }
 ]

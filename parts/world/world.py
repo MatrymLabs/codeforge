@@ -130,6 +130,12 @@ from parts.world.quest import (  # noqa: E402 -- after NPCS ready
 
 register_bounties(NPCS)
 
+# Arm the auction house's recurring expiry sweep on the scheduler, so a lapsed listing is mailed
+# back to its seller (parts.world.auction). Registered once at world assembly, off any thread.
+from parts.world.auction import register_sweep as _register_auction_sweep  # noqa: E402
+
+_register_auction_sweep()
+
 # The Waystone travel network: the seed's zone hubs a player may pay to cross between
 # (parts.world.travel). {} when the seed ships no network (first-forge/spiral-ascent).
 WAYSTONES = load_waystones(SEED_DIR / "waystones.yaml") or {}

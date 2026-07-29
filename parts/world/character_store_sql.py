@@ -109,6 +109,17 @@ class SqlCharacterStore:
             db.commit()  # gameplay columns only; auth untouched (the merge-save law)
             return True
 
+    def add_coins(self, name: str, delta: int) -> bool:
+        from parts.world.db import CharacterRow, open_archive_session
+
+        with open_archive_session() as db:
+            row = db.get(CharacterRow, name)
+            if row is None:
+                return False
+            row.coins = max(0, row.coins + delta)  # gameplay column only; auth untouched
+            db.commit()
+            return True
+
 
 def _apply_gameplay(row: CharacterRow, record: CharacterRecord) -> None:
     """Copy the gameplay columns (everything but auth) from a record onto an ORM row."""

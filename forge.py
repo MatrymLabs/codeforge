@@ -57,6 +57,7 @@ from parts.world import (
     quest,
     scheduler,
 )
+from parts.world import auction as auction_mod
 from parts.world import bank as bank_mod
 from parts.world import chat as chat_mod
 from parts.world import feats as feats_mod
@@ -161,7 +162,8 @@ HELP_TEXT = (
     "trade <player> [accept|add <item>|coins <n>|confirm|cancel], "
     "guild [found <name>|invite|accept|promote|leave|disband], gsay <msg>, "
     "mail [send <player> <msg>|read <n>|delete <n>], friends [add|remove <player>], "
-    "chat <message>, rest, bank [deposit|withdraw <item>], route <room>, score, "
+    "chat <message>, rest, bank [deposit|withdraw <item>], auction [list <item> <price>|buy <#>], "
+    "route <room>, score, "
     "equip <item>, unequip <slot>, "
     "attack <target>, skills, use <ability> [on <foe>], repair, scan <target>, deploy, calibrate, "
     "channel, journal [text], vitals, "
@@ -1696,6 +1698,15 @@ def _build_commands() -> CommandSet:
     )
     cs.add(
         Command(
+            "auction",
+            "CMD-04.110",
+            "the marketplace: auction | auction list <item> <price> | auction buy <#>",
+            _auction_cmd,
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
             "shop",
             "CMD-04.071",
             "list a merchant's wares",
@@ -2164,6 +2175,21 @@ def _maintenance_cmd(session: Session, arg: str) -> str:
         return "Maintenance OFF. The forge is open to everyone."
     state = f"ON ({maintenance_mode.reason()})" if maintenance_mode.is_on() else "OFF"
     return f"Maintenance is {state}. Usage: @maintenance on <reason> | @maintenance off"
+
+
+def _auction_cmd(session: Session, arg: str) -> str:
+    """The `auction` verb: the marketplace. Bare `auction` browses; `auction list <item> <price>`
+    escrows an item for sale, `auction buy <#>` buys one. The spine preserves the item word."""
+    parts_ = arg.split(maxsplit=1)
+    sub = parts_[0].lower() if parts_ else ""
+    rest = parts_[1] if len(parts_) > 1 else ""
+    if sub in ("", "browse"):
+        return auction_mod.browse(session)
+    if sub == "list":
+        return auction_mod.list_item(session, rest)
+    if sub == "buy":
+        return auction_mod.buy(session, rest)
+    return "Auction: auction | auction list <item> <price> | auction buy <#>."
 
 
 def _bank_cmd(session: Session, arg: str) -> str:
