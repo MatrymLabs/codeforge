@@ -84,6 +84,7 @@ _GAME_SEED = {
     "stores",
     "maintenance_mode",
     "loose_store",
+    "bank",
     "aggression",
     "session",
     "seed",

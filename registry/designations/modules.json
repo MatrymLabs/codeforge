@@ -6498,5 +6498,32 @@
     "aliases": [],
     "created": "2026-07-29",
     "updated": "2026-07-29"
+  },
+  {
+    "designation": "MOD-04.125",
+    "name": "bank",
+    "status": "active",
+    "function": "a hero's personal vault: deposit/withdraw items that wait in storage between sessions",
+    "label": "bank",
+    "file": "parts/world/bank.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "docs/infrastructure_spec.md",
+    "tests": "tests/test_bank.py",
+    "depends_on": [],
+    "related": [
+      "loose_store",
+      "characters",
+      "items"
+    ],
+    "reuse": "the non-player-owner storage pattern (Phase 2): move a live item into storage under a namespaced owner and back, via loose_store.stow/take + snapshot_item/reclone_item; the shape guild vaults, mail attachments, and the auction house all extend",
+    "notes": "Infra spec Phase 2 slice 1 - the first thing Keystone A unlocks. deposit(snapshot->stow, drop the instance)/withdraw(take->reclone into carrier)/render, owner key vault:<player> on the loose_items table. Refuses depositing worn gear. Item-level loose_store.stow/take/contents added as the twin of the whole-bag save/load; characters.snapshot_item/reclone_item made public for reuse.",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-29",
+    "updated": "2026-07-29"
   }
 ]

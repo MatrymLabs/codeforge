@@ -3421,5 +3421,30 @@
     "aliases": [],
     "created": "2026-07-29",
     "updated": "2026-07-29"
+  },
+  {
+    "designation": "CMD-04.109",
+    "name": "bank",
+    "status": "active",
+    "function": "your personal vault: bank | bank deposit <item> | bank withdraw <n>",
+    "label": "bank",
+    "file": "forge.py",
+    "type": "CMD",
+    "domain": "04",
+    "docs": "docs/infrastructure_spec.md",
+    "tests": "tests/test_bank.py",
+    "depends_on": [],
+    "related": [
+      "bank"
+    ],
+    "reuse": "",
+    "tags": [
+      "command"
+    ],
+    "notes": "_bank_cmd dispatches to parts.world.bank (render/deposit/withdraw). A deposited item leaves the world into storage until withdrawn; survives logout via the loose_items table.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-29",
+    "updated": "2026-07-29"
   }
 ]

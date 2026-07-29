@@ -31,7 +31,7 @@ def _default_store() -> CharacterStore:
     return SqlCharacterStore()
 
 
-def _snapshot_item(iid: str) -> dict[str, Any] | None:
+def snapshot_item(iid: str) -> dict[str, Any] | None:
     """A persistable snapshot of one live item instance: its PROTOTYPE (the seed label to re-clone)
     plus the instance's rolled name, mods, and rarity, so an AFFIXED drop ('a Cruel blade of the
     Bear [rare]') survives logout with its roll intact, not just the base item. None if the id names
@@ -49,7 +49,7 @@ def _snapshot_item(iid: str) -> dict[str, Any] | None:
     }
 
 
-def _reclone_item(snapshot: Any, carrier_tag: str) -> str | None:
+def reclone_item(snapshot: Any, carrier_tag: str) -> str | None:
     """Re-mint a snapshotted item into a carrier, restoring its rolled affixes over a fresh base
     clone. Accepts the legacy bare-prototype string too (backward-compatible). None (skipped, not a
     crash) if the prototype is unknown or has been retired from the seed."""
@@ -79,7 +79,7 @@ def _serialize_gear(session: Session) -> str:
     equipped. Instances die with the process; a snapshot per slot is enough to rebuild them."""
     gear: dict[str, dict[str, Any]] = {}
     for slot, iid in session.equipped.items():
-        snap = _snapshot_item(iid)
+        snap = snapshot_item(iid)
         if snap is not None:
             gear[slot] = snap
     return json.dumps(gear, sort_keys=True) if gear else ""
@@ -100,7 +100,7 @@ def _restore_gear(session: Session, raw: str) -> None:
     for slot, saved in gear.items():
         if slot not in SLOTS:
             continue
-        iid = _reclone_item(saved, carrier(session.player_id))
+        iid = reclone_item(saved, carrier(session.player_id))
         if iid is not None:
             session.equipped[slot] = iid
 
@@ -116,7 +116,7 @@ def _snapshot_loose(session: Session) -> list[dict[str, Any]]:
     for iid in items_in(carrier(session.player_id)):
         if iid in equipped:
             continue
-        snap = _snapshot_item(iid)
+        snap = snapshot_item(iid)
         if snap is not None:
             bag.append(snap)
     return bag
@@ -277,7 +277,7 @@ def restore_character(session: Session, casefile: dict[str, Any]) -> None:
     from parts.world.loose_store import load as load_loose
 
     for snap in load_loose(session.player_id):
-        _reclone_item(snap, _carrier(session.player_id))
+        reclone_item(snap, _carrier(session.player_id))
     # ...and seed their quest arc back to where they left it, so a story-in-progress survives.
     from parts.world.quest import restore_state
 

@@ -49,6 +49,7 @@ from parts.telegraph import telegraph
 from parts.titles import title
 from parts.vitals import vitals
 from parts.world import allocate, artifact, creator_workshop, gather, maintenance_mode, quest
+from parts.world import bank as bank_mod
 from parts.world import chat as chat_mod
 from parts.world import feats as feats_mod
 from parts.world import friends as friends_mod
@@ -152,7 +153,7 @@ HELP_TEXT = (
     "trade <player> [accept|add <item>|coins <n>|confirm|cancel], "
     "guild [found <name>|invite|accept|promote|leave|disband], gsay <msg>, "
     "mail [send <player> <msg>|read <n>|delete <n>], friends [add|remove <player>], "
-    "chat <message>, rest, route <room>, score, "
+    "chat <message>, rest, bank [deposit|withdraw <item>], route <room>, score, "
     "equip <item>, unequip <slot>, "
     "attack <target>, skills, use <ability> [on <foe>], repair, scan <target>, deploy, calibrate, "
     "channel, journal [text], vitals, "
@@ -1678,6 +1679,15 @@ def _build_commands() -> CommandSet:
     )
     cs.add(
         Command(
+            "bank",
+            "CMD-04.109",
+            "your personal vault: bank | bank deposit <item> | bank withdraw <n>",
+            _bank_cmd,
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
             "shop",
             "CMD-04.071",
             "list a merchant's wares",
@@ -2139,6 +2149,21 @@ def _maintenance_cmd(session: Session, arg: str) -> str:
         return "Maintenance OFF. The forge is open to everyone."
     state = f"ON ({maintenance_mode.reason()})" if maintenance_mode.is_on() else "OFF"
     return f"Maintenance is {state}. Usage: @maintenance on <reason> | @maintenance off"
+
+
+def _bank_cmd(session: Session, arg: str) -> str:
+    """The `bank` verb: your personal vault. Bare `bank` lists it; `bank deposit <item>` puts a
+    carried item away, `bank withdraw <n|item>` takes one back. The spine keeps the item word."""
+    parts_ = arg.split(maxsplit=1)
+    sub = parts_[0].lower() if parts_ else ""
+    rest = parts_[1] if len(parts_) > 1 else ""
+    if sub in ("", "list"):
+        return bank_mod.render(session)
+    if sub == "deposit":
+        return bank_mod.deposit(session, rest)
+    if sub == "withdraw":
+        return bank_mod.withdraw(session, rest)
+    return "Bank: bank | bank deposit <item> | bank withdraw <n>."
 
 
 def _friend_cmd(session: Session, arg: str) -> str:
