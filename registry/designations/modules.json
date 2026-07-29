@@ -6525,5 +6525,31 @@
     "aliases": [],
     "created": "2026-07-29",
     "updated": "2026-07-29"
+  },
+  {
+    "designation": "MOD-04.126",
+    "name": "scheduler",
+    "status": "active",
+    "function": "a timed-job registry the world beat drains (deferred work on the game clock)",
+    "label": "scheduler",
+    "file": "parts/world/scheduler.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "docs/infrastructure_spec.md",
+    "tests": "tests/test_scheduler.py",
+    "depends_on": [],
+    "related": [
+      "climate",
+      "forge"
+    ],
+    "reuse": "the deferred-work primitive: register a callback for a future BEAT (one-shot or recurring), the tick drains it - deterministic, no wall-clock, no background thread; for auction expiry, timed world events, buff expiry",
+    "notes": "Infra spec Phase 0/2.4, the auction house's prerequisite. schedule(due_beat, run, every=0)/run_due(now_beat)->fired/pending/clear; tick(session) drains at climate.now() and composes into the beat AFTER tick_climate advances it. A job that raises is DROPPED (never crashes the tick). In-memory: work that must survive a restart re-registers a sweep at boot over its own persisted rows.",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-29",
+    "updated": "2026-07-29"
   }
 ]
