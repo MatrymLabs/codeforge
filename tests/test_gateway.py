@@ -613,9 +613,10 @@ def test_the_server_context_completes_a_real_tls_handshake(monkeypatch, _tls_pai
     monkeypatch.setenv("CODEFORGE_TLS_KEY", str(key))
     server_ctx = gateway._tls_context()
     assert server_ctx is not None
-    client_ctx = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
-    client_ctx.check_hostname = False
-    client_ctx.verify_mode = ssl.CERT_NONE  # a self-signed test cert: trust it, we made it
+    # Trust the self-signed test cert as its own CA and VERIFY it (CN=localhost). This exercises a
+    # real, checked handshake -- not one with verification disabled -- so the test proves the server
+    # presents a valid cert, not merely that bytes flow.
+    client_ctx = ssl.create_default_context(cafile=str(cert))
     a, b = socket.socketpair()
     got: dict[str, bytes] = {}
 
