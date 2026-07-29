@@ -31,31 +31,63 @@ def _default_store() -> CharacterStore:
     return SqlCharacterStore()
 
 
-def _serialize_gear(session: Session) -> str:
-    """Worn gear as a {slot: {prototype, name, mods}} JSON map, or "" when nothing is equipped.
-
-    We store the PROTOTYPE (the seed label to re-clone) PLUS the instance's rolled name and mods, so
-    an AFFIXED drop ('a Cruel blade of the Bear [rare]') survives logout with its rarity intact --
-    not just the base weapon. Instances die with the process; this is enough to rebuild them."""
+def _snapshot_item(iid: str) -> dict[str, Any] | None:
+    """A persistable snapshot of one live item instance: its PROTOTYPE (the seed label to re-clone)
+    plus the instance's rolled name, mods, and rarity, so an AFFIXED drop ('a Cruel blade of the
+    Bear [rare]') survives logout with its roll intact, not just the base item. None if the id names
+    no live item. The one shape both worn gear and loose inventory persist through."""
     from parts.world.items import ITEMS, prototype_of
 
+    item = ITEMS.get(iid)
+    if item is None:
+        return None
+    return {
+        "prototype": prototype_of(iid),
+        "name": item["name"],
+        "mods": item["mods"],
+        "rarity": item.get("rarity", "common"),
+    }
+
+
+def _reclone_item(snapshot: Any, carrier_tag: str) -> str | None:
+    """Re-mint a snapshotted item into a carrier, restoring its rolled affixes over a fresh base
+    clone. Accepts the legacy bare-prototype string too (backward-compatible). None (skipped, not a
+    crash) if the prototype is unknown or has been retired from the seed."""
+    from parts.world.items import ITEMS, PROTOTYPES, clone
+
+    if isinstance(snapshot, str):
+        prototype: Any = snapshot
+    elif isinstance(snapshot, dict):
+        prototype = snapshot.get("prototype")
+    else:
+        return None
+    if not isinstance(prototype, str) or prototype not in PROTOTYPES:
+        return None
+    iid = clone(prototype, carrier_tag)
+    if isinstance(snapshot, dict):  # restore the rolled affixes over the fresh base clone
+        if isinstance(snapshot.get("name"), str):
+            ITEMS[iid]["name"] = snapshot["name"]
+        if isinstance(snapshot.get("mods"), dict):
+            ITEMS[iid]["mods"] = {k: v for k, v in snapshot["mods"].items() if isinstance(v, int)}
+        if isinstance(snapshot.get("rarity"), str):
+            ITEMS[iid]["rarity"] = snapshot["rarity"]
+    return iid
+
+
+def _serialize_gear(session: Session) -> str:
+    """Worn gear as a {slot: {prototype, name, mods, rarity}} JSON map, or "" when nothing is
+    equipped. Instances die with the process; a snapshot per slot is enough to rebuild them."""
     gear: dict[str, dict[str, Any]] = {}
     for slot, iid in session.equipped.items():
-        item = ITEMS.get(iid)
-        if item is not None:
-            gear[slot] = {
-                "prototype": prototype_of(iid),
-                "name": item["name"],
-                "mods": item["mods"],
-                "rarity": item.get("rarity", "common"),
-            }
+        snap = _snapshot_item(iid)
+        if snap is not None:
+            gear[slot] = snap
     return json.dumps(gear, sort_keys=True) if gear else ""
 
 
 def _restore_gear(session: Session, raw: str) -> None:
-    """Re-clone and re-equip the gear a character logged out wearing, RESTORING any rolled affixes
-    (name + mods). Best-effort, never a crash: an unknown/removed prototype is skipped, and the old
-    bare-prototype format (a plain string) still restores the base item (backward-compatible)."""
+    """Re-clone and re-equip the gear a character logged out wearing, restoring any rolled affixes.
+    Best-effort, never a crash: an unknown slot or retired prototype is skipped."""
     if not raw:
         return
     try:
@@ -63,23 +95,41 @@ def _restore_gear(session: Session, raw: str) -> None:
     except (ValueError, TypeError):
         return
     from parts.world.equipment import SLOTS
-    from parts.world.items import ITEMS, PROTOTYPES, carrier, clone
+    from parts.world.items import carrier
 
     for slot, saved in gear.items():
         if slot not in SLOTS:
             continue
-        prototype = saved if isinstance(saved, str) else saved.get("prototype")
-        if not isinstance(prototype, str) or prototype not in PROTOTYPES:
+        iid = _reclone_item(saved, carrier(session.player_id))
+        if iid is not None:
+            session.equipped[slot] = iid
+
+
+def _snapshot_loose(session: Session) -> list[dict[str, Any]]:
+    """Every LOOSE item a hero carries (in the bag, not worn) as snapshots. Worn gear is excluded on
+    purpose: it persists on the character row via _serialize_gear, so a snapshot here would double
+    it. loose = the items tagged to this hero's carrier, minus the ones currently equipped."""
+    from parts.world.items import carrier, items_in
+
+    equipped = set(session.equipped.values())
+    bag: list[dict[str, Any]] = []
+    for iid in items_in(carrier(session.player_id)):
+        if iid in equipped:
             continue
-        iid = clone(prototype, carrier(session.player_id))
-        if isinstance(saved, dict):  # restore the rolled affixes over the fresh base clone
-            if isinstance(saved.get("name"), str):
-                ITEMS[iid]["name"] = saved["name"]
-            if isinstance(saved.get("mods"), dict):
-                ITEMS[iid]["mods"] = {k: v for k, v in saved["mods"].items() if isinstance(v, int)}
-            if isinstance(saved.get("rarity"), str):
-                ITEMS[iid]["rarity"] = saved["rarity"]
-        session.equipped[slot] = iid
+        snap = _snapshot_item(iid)
+        if snap is not None:
+            bag.append(snap)
+    return bag
+
+
+def _clear_carrier(player_id: str) -> None:
+    """Drop every item currently tagged to a hero's carrier from the live ITEMS map. Called before a
+    restore re-clones from storage, so a reconnect in the same process can never DUPLICATE a bag by
+    stacking freshly-cloned items on top of the previous session's orphaned instances."""
+    from parts.world.items import ITEMS, carrier, items_in
+
+    for iid in items_in(carrier(player_id)):
+        ITEMS.pop(iid, None)
 
 
 def _record_to_casefile(record: CharacterRecord) -> dict[str, Any]:
@@ -174,6 +224,10 @@ def save_character(session: Session, store: CharacterStore | None = None) -> Non
     # Persist per-job progress AFTER the character row exists (the foreign key needs it).
     if session.job_progress:
         save_job_progress(session.player_id, session.job_progress.values())
+    # Persist the loose bag (Keystone A): everything carried but not worn, so it survives logout.
+    from parts.world.loose_store import save as save_loose
+
+    save_loose(session.player_id, _snapshot_loose(session))
 
 
 def save_all(store: CharacterStore | None = None) -> int:
@@ -213,8 +267,17 @@ def restore_character(session: Session, casefile: dict[str, Any]) -> None:
     session.cooldowns.clear()
     session.statuses.clear()
     session.equipped.clear()
+    # Drop any items still tagged to this carrier (a same-process reconnect leaves orphans), so the
+    # re-clones below never stack on top of a previous session's instances and double the bag.
+    _clear_carrier(session.player_id)
     # ...then re-clone and re-equip THIS hero's own persisted gear (folds back into their stats).
     _restore_gear(session, str(casefile.get("equipped_gear", "")))
+    # ...and re-clone their loose bag (Keystone A), so everything carried but not worn is back too.
+    from parts.world.items import carrier as _carrier
+    from parts.world.loose_store import load as load_loose
+
+    for snap in load_loose(session.player_id):
+        _reclone_item(snap, _carrier(session.player_id))
     # ...and seed their quest arc back to where they left it, so a story-in-progress survives.
     from parts.world.quest import restore_state
 

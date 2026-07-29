@@ -133,6 +133,23 @@ class MailRow(ArchiveBase):
     read: Mapped[bool] = mapped_column(default=False)
 
 
+class LooseItemRow(ArchiveBase):
+    """One loose (non-worn) item a hero carries, persisted so bags survive logout. A snapshot of the
+    instance: its prototype (the seed label to re-clone) plus the rolled name/mods/rarity. Equipped
+    gear is NOT here (it rides the character row's equipped_gear); this is only the bag. Keyed by
+    owner so a whole bag loads in one query. The keystone the auction house, mail attachments,
+    and a guild item-vault build on (items with a non-player owner)."""
+
+    __tablename__ = "loose_items"
+
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    owner: Mapped[str] = mapped_column(index=True)  # the carrier: a player id today
+    prototype: Mapped[str] = mapped_column()  # the seed label to re-clone
+    name: Mapped[str] = mapped_column()  # the rolled display name
+    mods: Mapped[str] = mapped_column(default="{}")  # the rolled stat modifiers, JSON
+    rarity: Mapped[str] = mapped_column(default="common")
+
+
 def engine_url() -> str:
     """The SQLAlchemy URL in force. DATABASE_URL wins (PostgreSQL in production);
     otherwise a SQLite file at DB_PATH (the zero-config default for dev and tests)."""

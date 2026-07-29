@@ -6471,5 +6471,32 @@
     "aliases": [],
     "created": "2026-07-29",
     "updated": "2026-07-29"
+  },
+  {
+    "designation": "MOD-04.124",
+    "name": "loose_store",
+    "status": "active",
+    "function": "persistence for a hero's loose inventory (their bag survives logout) - Keystone A",
+    "label": "loose_store",
+    "file": "parts/world/loose_store.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "docs/infrastructure_spec.md",
+    "tests": "tests/test_loose_store.py",
+    "depends_on": [],
+    "related": [
+      "characters",
+      "db",
+      "items"
+    ],
+    "reuse": "the item-instance-persistence primitive: snapshot (prototype + rolled name/mods/rarity) a live item into a row and re-clone it back; the keystone the auction house, mail attachments, and a guild item-vault build on (items with a non-player owner)",
+    "notes": "Keystone A slice 1. save(owner, snapshots) replaces a hero's whole bag (delete-then-insert) so storage always mirrors the live bag; load(owner) returns snapshots to re-clone. Direct SQL on the loose_items table (ArchiveBase, migration d4b8f1a2c6e9), lazy ORM import off the hot path. Domain glue in characters.py: _snapshot_loose (items_in(carrier) minus equipped), _clear_carrier before restore (no reconnect dup), _snapshot_item/_reclone_item shared with equipped gear.",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-29",
+    "updated": "2026-07-29"
   }
 ]
