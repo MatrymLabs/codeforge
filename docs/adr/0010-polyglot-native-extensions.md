@@ -35,10 +35,31 @@ A native (or other-language) component is adopted only when it satisfies **all**
 
 ## First application
 
-`codeforge_nav` (Rust via PyO3/maturin) — the world-navigation kernel (`NavGraph`: shortest room
+`codeforge_nav` (Rust via PyO3/maturin) - the world-navigation kernel (`NavGraph`: shortest room
 paths + reachability). Fallback: `parts.world.navigation.PyNavGraph`. Parity: `tests/test_navigation.py`.
-Evidence: `benchmarks/bench_nav.py` (measured ~30x reachability / ~17x pathfinding at scale). Wired
-into the `route <room>` command via `parts.world.travel`.
+Evidence: `benchmarks/bench_nav.py`, recorded in
+[`docs/reports/2026-07-28-native-organ-benchmarks.md`](../reports/2026-07-28-native-organ-benchmarks.md)
+(measured **~11x-16x** at 30k-50k rooms; the report is the source of truth, so this ADR does not
+hardcode a single multiple that drifts). Wired into the `route <room>` command via
+`parts.world.travel`.
+
+## Language selection: why Rust here, not Numba or ahead-of-time-to-C++
+
+The accelerator language is a measured choice, not a default. For this kernel (bulk graph traversal,
+called at world scale but not kept warm), Rust via PyO3 won on evidence:
+
+- **Rust vs Numba.** Numba is the cheaper option (a decorator, no separate crate) and reaches similar
+  gains on compute-bound Python loops. Its cost is a first-call JIT warm-up on the order of ~0.3 s.
+  The compiled Rust kernel's cold-import overhead is ~0.7 ms (see the evidence report), roughly three
+  orders of magnitude smaller. For a path that runs at scale but is not continuously warm, that
+  warm-up tax is the deciding factor. Numba remains the right, lighter reach for a genuinely
+  hot, always-warm pure-Python loop, and should be benchmarked head-to-head before any future kernel.
+- **Rust vs ahead-of-time-to-C++ (Cython/Nuitka/Mypyc).** The empirical compiled-Python literature
+  shows AOT-to-C++ can *increase* energy and time on math-and-list-heavy workloads (up to a regression
+  on n-body-style kernels), and it adds a C toolchain without Rust's memory-safety guarantees. Rust
+  gives the speedup plus safety across the FFI boundary.
+- **Honest ceiling.** Rust-from-Python studies report 100x-300x on toy kernels; our real kernel returns
+  11x-16x. We state the measured figure on the real workload, not the literature's best case.
 
 ## Consequences
 
