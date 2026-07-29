@@ -18,7 +18,7 @@ this transient primitive.
 from __future__ import annotations
 
 from parts.shelf.cohort import Cohort, CohortRegistry
-from parts.world.events import announce_to, push_gmcp
+from parts.world.events import announce_to, push_channel, push_gmcp
 from parts.world.session import SESSIONS, display_name
 
 #: The largest a party may grow. Five is the genre-standard small-group (dungeon) size; a raid tier
@@ -162,6 +162,7 @@ def party_say(actor: str, message: str) -> str:
     if not text:
         return "Say what to the party? (psay <message>)"
     announce_to(band.members, f"\n[Party] {display_name(actor)}: {text}", exclude=actor)
+    push_channel(band.members, "party", display_name(actor), text)  # structured, for a chat pane
     return f"[Party] You: {text}"
 
 

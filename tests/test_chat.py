@@ -88,3 +88,19 @@ def test_the_chat_verb_is_reachable():
         assert forge.handle_command(alia, "chat testing") == "[World] You: testing"
     finally:
         _teardown()
+
+
+def test_world_say_pushes_a_comm_channel_frame():
+    frames: list = []
+    try:
+        alia = _hero("alia")
+        _hero("bram")
+        events.bind_gmcp("bram", lambda pkg, data: frames.append((pkg, data)))
+        chat.world_say(alia, "LFG dragon")
+        assert (
+            "Comm.Channel",
+            {"channel": "world", "from": "Alia", "text": "LFG dragon"},
+        ) in frames
+    finally:
+        events.unbind_gmcp("bram")
+        _teardown()

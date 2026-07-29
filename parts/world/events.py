@@ -134,3 +134,18 @@ def push_gmcp(player_ids: Iterable[str], package: str, data: object, exclude: st
                 sink(package, data)
             except OSError:
                 unbind_gmcp(player_id)
+
+
+def push_channel(
+    player_ids: Iterable[str], channel: str, sender: str, text: str, exclude: str = ""
+) -> None:
+    """Push a Comm.Channel frame -- one chat line on a named channel (party/guild/world) -- to a set
+    of players. The structured twin of the chat text, so a client can route chat into per-channel
+    panes instead of one scrolling buffer. The one place the frame's shape is built, so it never
+    drifts between the three channels."""
+    push_gmcp(
+        player_ids,
+        "Comm.Channel",
+        {"channel": channel, "from": sender, "text": text},
+        exclude=exclude,
+    )

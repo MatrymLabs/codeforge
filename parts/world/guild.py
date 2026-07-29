@@ -20,7 +20,7 @@ import re
 import parts.world.guild_store as guild_store
 from parts.world.characters import _default_store, save_character
 from parts.world.coinage import purse
-from parts.world.events import announce_to
+from parts.world.events import announce_to, push_channel
 from parts.world.session import SESSIONS, Session, display_name
 
 #: Guild ranks in ascending authority. A rank gate ("officer or above may invite") reads this order.
@@ -193,6 +193,9 @@ def guild_say(session: Session, message: str) -> str:
         [m for m in _online_members(session.guild) if m != session.player_id],
         f"\n[Guild] {display_name(session.player_id)}: {text}",
     )
+    push_channel(
+        _online_members(session.guild), "guild", display_name(session.player_id), text
+    )  # structured twin, includes the speaker so their own guild pane logs it
     return f"[Guild] You: {text}"
 
 
