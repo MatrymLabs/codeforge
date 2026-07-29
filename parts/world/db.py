@@ -156,6 +156,25 @@ class LooseItemRow(ArchiveBase):
     rarity: Mapped[str] = mapped_column(default="common")
 
 
+class AuctionRow(ArchiveBase):
+    """One item listed for sale on the auction house. The item is ESCROWED here (an item snapshot,
+    like a vaulted item) from the moment it is listed until it is bought or expires, so it is out of
+    the world and cannot be double-sold. Priced in coin; expires at a world beat, when a scheduler
+    sweep mails it back to the seller. The economy's marketplace, built on the persistent items
+    table."""
+
+    __tablename__ = "auction_listings"
+
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    seller: Mapped[str] = mapped_column(index=True)  # who listed it (paid when it sells)
+    price: Mapped[int] = mapped_column()  # coin the buyer pays, the seller receives
+    expiry_beat: Mapped[int] = mapped_column(index=True)  # the world beat it lapses at
+    prototype: Mapped[str] = mapped_column()  # the escrowed item snapshot (re-clone on buy/return)
+    name: Mapped[str] = mapped_column()
+    mods: Mapped[str] = mapped_column(default="{}")
+    rarity: Mapped[str] = mapped_column(default="common")
+
+
 def engine_url() -> str:
     """The SQLAlchemy URL in force. DATABASE_URL wins (PostgreSQL in production);
     otherwise a SQLite file at DB_PATH (the zero-config default for dev and tests)."""

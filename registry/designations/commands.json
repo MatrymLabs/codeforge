@@ -3446,5 +3446,30 @@
     "aliases": [],
     "created": "2026-07-29",
     "updated": "2026-07-29"
+  },
+  {
+    "designation": "CMD-04.110",
+    "name": "auction",
+    "status": "active",
+    "function": "the marketplace: auction | auction list <item> <price> | auction buy <#>",
+    "label": "auction",
+    "file": "forge.py",
+    "type": "CMD",
+    "domain": "04",
+    "docs": "docs/infrastructure_spec.md",
+    "tests": "tests/test_auction.py",
+    "depends_on": [],
+    "related": [
+      "auction"
+    ],
+    "reuse": "",
+    "tags": [
+      "command"
+    ],
+    "notes": "_auction_cmd dispatches to parts.world.auction (browse/list_item/buy). Listing escrows an item out of the world; buying pays the seller and re-clones it to the buyer; unsold items are mailed back on expiry.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-29",
+    "updated": "2026-07-29"
   }
 ]

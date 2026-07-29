@@ -22,14 +22,14 @@ from dataclasses import dataclass
 @dataclass
 class _Job:
     due: int  # the world beat at or after which this job fires
-    run: Callable[[], None]
+    run: Callable[[], object]
     every: int  # 0 = one-shot; > 0 = re-arm for due + every after each firing
 
 
 _JOBS: list[_Job] = []
 
 
-def schedule(due_beat: int, run: Callable[[], None], *, every: int = 0) -> None:
+def schedule(due_beat: int, run: Callable[[], object], *, every: int = 0) -> None:
     """Register `run` to fire once at `due_beat` (or every `every` beats from then, if given). The
     tick fires it via run_due when the beat arrives."""
     _JOBS.append(_Job(due_beat, run, max(0, every)))
