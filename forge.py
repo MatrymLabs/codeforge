@@ -51,6 +51,7 @@ from parts.vitals import vitals
 from parts.world import allocate, artifact, creator_workshop, gather, quest
 from parts.world import feats as feats_mod
 from parts.world import guild as guild_mod
+from parts.world import mail as mail_mod
 from parts.world import trade as trade_mod
 from parts.world import travel as travel_net
 from parts.world.abilities import render_abilities, use_ability
@@ -138,7 +139,8 @@ HELP_TEXT = (
     "weather, factions, professions, standing, condition, "
     "party [invite|join|leave|disband], psay <msg>, "
     "trade <player> [accept|add <item>|coins <n>|confirm|cancel], "
-    "guild [found <name>|invite|accept|promote|leave|disband], gsay <msg>, route <room>, score, "
+    "guild [found <name>|invite|accept|promote|leave|disband], gsay <msg>, "
+    "mail [send <player> <msg>|read <n>|delete <n>], route <room>, score, "
     "equip <item>, unequip <slot>, "
     "attack <target>, skills, use <ability> [on <foe>], repair, scan <target>, deploy, calibrate, "
     "channel, journal [text], vitals, "
@@ -1607,6 +1609,15 @@ def _build_commands() -> CommandSet:
     )
     cs.add(
         Command(
+            "mail",
+            "CMD-04.104",
+            "async letters: mail | mail send <player> <msg> | mail read <n> | mail delete <n>",
+            _mail_cmd,
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
             "shop",
             "CMD-04.071",
             "list a merchant's wares",
@@ -2033,6 +2044,23 @@ def _party_cmd(session: Session, arg: str) -> str:
     if sub == "disband":
         return party_disband(me)
     return "Party: party, party invite <player>, party join <player>, party leave, party disband."
+
+
+def _mail_cmd(session: Session, arg: str) -> str:
+    """The `mail` verb: async letters. Bare `mail` shows the inbox; `mail send <player>
+    <message>`, `mail read <n>`, `mail delete <n>`. The spine preserves the letter's case."""
+    parts_ = arg.split(maxsplit=1)
+    sub = parts_[0].lower() if parts_ else ""
+    rest = parts_[1] if len(parts_) > 1 else ""
+    if sub == "":
+        return mail_mod.render_inbox(session)
+    if sub == "send":
+        return mail_mod.send(session, rest)
+    if sub == "read":
+        return mail_mod.read_mail(session, rest)
+    if sub == "delete":
+        return mail_mod.delete_mail(session, rest)
+    return "Mail: mail | mail send <player> <message> | mail read <n> | mail delete <n>."
 
 
 def _guild_cmd(session: Session, arg: str) -> str:

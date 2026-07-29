@@ -6213,6 +6213,61 @@
     "updated": "2026-07-28"
   },
   {
+    "designation": "MOD-04.117",
+    "name": "mail",
+    "status": "active",
+    "function": "asynchronous letters between heroes: send now, read later (reaches an offline hero)",
+    "label": "mail",
+    "file": "parts/world/mail.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "docs/party_system.md",
+    "tests": "tests/test_mail.py",
+    "depends_on": [],
+    "related": [
+      "mail_store",
+      "characters",
+      "events"
+    ],
+    "reuse": "the async-message primitive: validated send + bounded inbox + read/delete over a persisted store; the pattern for any offline-delivered notification",
+    "notes": "The social layer's patient channel (vs party/guild live chat). Sends to any real character (validated via the character store, online or not); nudges the recipient if online. Body <= MAX_BODY, inbox <= MAX_INBOX (bounds flooding); body sanitized by the transport on read. Verb mail (CMD-04.104).",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-28",
+    "updated": "2026-07-28"
+  },
+  {
+    "designation": "MOD-04.118",
+    "name": "mail_store",
+    "status": "active",
+    "function": "persistence for stored letters: send, inbox (newest first), count, mark-read, delete",
+    "label": "mail_store",
+    "file": "parts/world/mail_store.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "docs/party_system.md",
+    "tests": "tests/test_mail_store.py",
+    "depends_on": [
+      "db"
+    ],
+    "related": [
+      "mail",
+      "db"
+    ],
+    "reuse": "a per-recipient message queue over a table with an autoincrement id; delete scoped to the owner so no id-guessing across inboxes",
+    "notes": "The mail table (MailRow: id autoincrement, recipient[indexed], sender, body, sent_utc, read; migration a3e7c9b1d5f4). A Letter value object crosses the boundary (no ORM leak). Direct SQL, lazy import (EXP-003).",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-28",
+    "updated": "2026-07-28"
+  },
+  {
     "designation": "MOD-05.067",
     "name": "textmatch",
     "status": "active",
