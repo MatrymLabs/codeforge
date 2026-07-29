@@ -67,6 +67,19 @@ rather than a way to split one prize thinner. It hangs off combat's single kill/
 - **The killer's own reward is untouched** (awarded by `land_hit` as before); `share_kill` only reaches
   the mates, so the seam adds sharing without double-awarding.
 
+## Shared combat: the loot half (`parts/world/party_loot.py`, MOD-04.114)
+
+The XP half pays everyone; this is the loot half. A solo hero's kill still drops to the floor to be
+taken (unchanged). But when a party fells a foe, each drop is **awarded to a co-located mate by
+round-robin** and moved straight into their hands, so nobody races for the floor and the haul is
+shared fairly over a fight. It hangs off combat's single loot-spawn seam (`_spawn_loot`) with one
+call, reading the party's `members_in_room` and moving the drop by carrier-tag reassignment
+(per-player inventory).
+
+- **`LOOT_POLICY = "round-robin"`** is the data-driven policy seam: a need-vs-greed roll, a master
+  looter, or free-for-all would branch here without touching combat.
+- **Solo behavior is untouched** (a lone or alone-here hero's loot falls to the floor, first-come).
+
 ## Player trade: the first economy loop (`parts/world/trade.py`, MOD-04.113)
 
 Two co-located heroes can swap goods and coin safely. `trade <player>` proposes; `trade accept` opens
