@@ -6128,6 +6128,35 @@
     "updated": "2026-07-28"
   },
   {
+    "designation": "MOD-04.114",
+    "name": "party_loot",
+    "status": "active",
+    "function": "shared combat's loot half: a party's drops are awarded to co-located mates by round-robin",
+    "label": "party_loot",
+    "file": "parts/world/party_loot.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "docs/party_system.md",
+    "tests": "tests/test_party_loot.py",
+    "depends_on": [
+      "party"
+    ],
+    "related": [
+      "party",
+      "combat",
+      "items"
+    ],
+    "reuse": "the fair-distribution seam: a data-driven LOOT_POLICY rotates a shared resource across a cohort; need-vs-greed / master-looter swap the policy without touching combat",
+    "notes": "Hangs off combat._spawn_loot's single seam (one lazy call); reads party.members_in_room, moves a just-spawned drop by carrier-tag reassignment (per-player inventory). Solo/unpartied loot unchanged (falls to floor). Round-robin turn keyed by party leader. Companion to party_rewards (shared XP). Extension: need-greed rolls, master looter.",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-28",
+    "updated": "2026-07-28"
+  },
+  {
     "designation": "MOD-05.067",
     "name": "textmatch",
     "status": "active",

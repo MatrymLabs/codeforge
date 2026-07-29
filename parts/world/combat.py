@@ -486,6 +486,13 @@ def _spawn_loot(session: Session, prototype: str, level: int = 0) -> str:
         rolled = affixes.roll(_LOOT_RNG, base, item["mods"], level)
         item["name"], item["mods"], item["rarity"] = rolled.name, rolled.mods, rolled.rarity
         rarity = "" if rolled.rarity == "common" else f" [{rolled.rarity}]"
+    # Shared combat, loot half: in a party, a drop is awarded to a co-located mate by round-robin
+    # instead of dropping to the floor. Solo/unpartied loot is unchanged (falls to the ground).
+    from parts.world.party_loot import assign_drop
+
+    awarded = assign_drop(session.player_id, session.location, iid)
+    if awarded is not None:
+        return awarded
     line = f"{sentence_case(item['name'])}{rarity} drops to the ground."
     announce(session.location, line, exclude=session.player_id)
     return line
