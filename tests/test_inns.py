@@ -110,3 +110,24 @@ def test_the_rest_verb_is_reachable_through_the_tick():
     out = forge.handle_command(hero, "rest")
     assert "return in full" in out
     assert hero.resources["hp"].is_full
+
+
+def test_a_party_rests_together_at_the_hearth():
+    from parts.world import events, party
+    from parts.world.session import SESSIONS
+
+    try:
+        alia = _weary_hero("greenhold_inn")
+        bram = Session(player_id="bram", location="greenhold_inn")
+        bram.resources = {"hp": Resource(name="hp", current=1, maximum=40)}
+        SESSIONS["alia"], SESSIONS["bram"] = alia, bram
+        party.invite("alia", "bram")
+        party.join("bram", "alia")
+        out = rest(alia)  # the leader rests; the whole party at the hearth is mended
+        assert "party settles" in out.lower()
+        assert alia.resources["hp"].is_full and bram.resources["hp"].is_full
+    finally:
+        party._reset()
+        for name in ("alia", "bram"):
+            events.unbind_echo(name)
+            SESSIONS.pop(name, None)
