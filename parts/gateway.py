@@ -39,7 +39,7 @@ from parts.shelf.telnet_codec import IAC, WILL, WONT, strip_iac
 from parts.world import guild, party, trade
 from parts.world.accounts import password_fixable
 from parts.world.characters import save_character
-from parts.world.events import SHUTDOWN, bind_echo, unbind_echo
+from parts.world.events import SHUTDOWN, bind_echo, bind_gmcp, unbind_echo, unbind_gmcp
 from parts.world.seed import load_splash
 from parts.world.session import SESSIONS, Session
 
@@ -371,6 +371,7 @@ class _GateHandler(socketserver.StreamRequestHandler):
         with TICK_LOCK:
             SESSIONS[player_id] = session
             bind_echo(player_id, self._send)
+            bind_gmcp(player_id, self._send_gmcp)  # structured frames pushed by social events
         try:
             # The front desk may raise if the client drops mid-handshake (a
             # health-check connect, a reset). Whatever happens, the finally below
@@ -412,6 +413,7 @@ class _GateHandler(socketserver.StreamRequestHandler):
                 trade.on_disconnect(session.player_id)  # ...and cancels any open trade
                 guild.on_disconnect(session.player_id)  # ...and drops a pending guild invite
                 unbind_echo(session.player_id)
+                unbind_gmcp(session.player_id)
                 SESSIONS.pop(session.player_id, None)
 
 

@@ -154,17 +154,12 @@ def party_report(session: Session) -> dict[str, object] | None:
     """A Char.Party payload: the player's fellowship as {members: [names], leader, size}, or None
     when solo (an empty frame then clears the client's party panel, like Char.Target). Read-only
     projection of the party registry; the leader is always members[0]."""
-    from parts.world.party import party_of
-    from parts.world.session import display_name
+    from parts.world.party import party_of, roster_frame
 
     band = party_of(session.player_id)
     if band is None:
         return None
-    return {
-        "members": [display_name(m) for m in band.members],
-        "leader": display_name(band.leader),
-        "size": len(band.members),
-    }
+    return roster_frame(band)
 
 
 def guild_report(session: Session) -> dict[str, str] | None:

@@ -225,3 +225,37 @@ def test_the_party_and_psay_verbs_are_reachable():
         assert "You:" in forge.handle_command(SESSIONS["alia"], "psay Hold the line")
     finally:
         _teardown()
+
+
+def test_party_changes_push_char_party_frames_to_every_member():
+    from parts.world import events
+    from parts.world.session import SESSIONS, Session
+
+    frames: dict[str, list] = {"alia": [], "bram": []}
+    try:
+        SESSIONS["alia"] = Session(player_id="alia")
+        SESSIONS["bram"] = Session(player_id="bram")
+        events.bind_gmcp("alia", lambda pkg, data: frames["alia"].append((pkg, data)))
+        events.bind_gmcp("bram", lambda pkg, data: frames["bram"].append((pkg, data)))
+        party.invite("alia", "bram")
+        party.join("bram", "alia")
+        # both members got a Char.Party roster the instant bram joined
+        assert frames["alia"][-1] == (
+            "Char.Party",
+            {"members": ["Alia", "Bram"], "leader": "Alia", "size": 2},
+        )
+        assert frames["bram"][-1] == (
+            "Char.Party",
+            {"members": ["Alia", "Bram"], "leader": "Alia", "size": 2},
+        )
+        party.leave("bram")
+        assert frames["bram"][-1] == ("Char.Party", {})  # the leaver's panel cleared
+        assert frames["alia"][-1] == (
+            "Char.Party",
+            {"members": ["Alia"], "leader": "Alia", "size": 1},
+        )
+    finally:
+        party._reset()
+        for name in ("alia", "bram"):
+            events.unbind_gmcp(name)
+            SESSIONS.pop(name, None)

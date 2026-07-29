@@ -18,7 +18,7 @@ this transient primitive.
 from __future__ import annotations
 
 from parts.shelf.cohort import Cohort, CohortRegistry
-from parts.world.events import announce_to
+from parts.world.events import announce_to, push_gmcp
 from parts.world.session import SESSIONS, display_name
 
 #: The largest a party may grow. Five is the genre-standard small-group (dungeon) size; a raid tier
@@ -35,6 +35,27 @@ _INVITES: dict[str, set[str]] = {}
 def party_of(player_id: str) -> Cohort | None:
     """The party a hero belongs to, or None if they run alone. The one read other systems use."""
     return _REGISTRY.cohort_of(player_id)
+
+
+def roster_frame(band: Cohort) -> dict[str, object]:
+    """The Char.Party GMCP payload for a band: {members, leader, size}, display-named. The one shape
+    both the state report (gmcp.party_report) and the live push below emit, so they never drift."""
+    return {
+        "members": [display_name(m) for m in band.members],
+        "leader": display_name(band.leader),
+        "size": len(band.members),
+    }
+
+
+def _push_roster(band: Cohort) -> None:
+    """Push the fresh roster to every member's client the instant the band changes (not on their
+    next tick), so a party panel stays live for everyone, not just whoever just acted."""
+    push_gmcp(band.members, "Char.Party", roster_frame(band))
+
+
+def _clear_party(player_ids: list[str]) -> None:
+    """Push an empty Char.Party to players who just left or were disbanded, clearing their panel."""
+    push_gmcp(player_ids, "Char.Party", {})
 
 
 def members_in_room(player_id: str, room: str) -> list[str]:
@@ -98,6 +119,7 @@ def join(actor: str, inviter_name: str) -> str:
     _REGISTRY.add(band, actor)
     _INVITES.pop(actor, None)  # accepting one offer clears all pending offers to this hero
     announce_to(band.members, f"\n{display_name(actor)} joins the party.", exclude=actor)
+    _push_roster(band)  # every member's panel, including the newcomer, updates at once
     return f"You join {display_name(inviter)}'s party."
 
 
@@ -107,11 +129,13 @@ def leave(actor: str) -> str:
     if _REGISTRY.cohort_of(actor) is None:
         return "You are not in a party."
     band, was_leader = _REGISTRY.leave(actor)
+    _clear_party([actor])  # the leaver's own panel empties either way
     if band is None:
         return "You leave the party. It disbands."
     announce_to(band.members, f"\n{display_name(actor)} leaves the party.")
     if was_leader:
         announce_to(band.members, f"{display_name(band.leader)} now leads the party.")
+    _push_roster(band)  # the remaining members see the smaller roster (and any new leader) at once
     return "You leave the party."
 
 
@@ -125,6 +149,7 @@ def disband(actor: str) -> str:
         return "Only the party leader may disband the party."
     members = _REGISTRY.disband(band)
     announce_to(members, "\nThe party disbands.", exclude=actor)
+    _clear_party(members)  # every former member's party panel empties at once
     return "You disband the party."
 
 

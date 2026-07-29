@@ -93,3 +93,44 @@ def broadcast(text: str) -> None:
     """Deliver text to every sink in the world, no exclusions."""
     for player_id, sink in list(_ECHO_SINKS.items()):
         _deliver(player_id, sink, text)
+
+
+# --- the GMCP push channel: structured frames to a set of players -----------------------------
+# The typed sibling of the echo channel. Where an EchoSink carries a line of text, a GmcpSink takes
+# a (package, data) frame, so a social event (a party changing, a guild message) can PUSH structured
+# state to the affected players the instant it happens, instead of waiting for each one's next tick.
+# The gateway binds a connection's _send_gmcp here; a plain-text client's sink is a harmless no-op.
+GmcpSink = Callable[[str, object], None]
+
+_GMCP_SINKS: dict[str, GmcpSink] = {}
+
+
+def bind_gmcp(player_id: str, sink: GmcpSink) -> None:
+    """Attach a GMCP frame channel for one player (alongside their echo channel)."""
+    _GMCP_SINKS[player_id] = sink
+
+
+def unbind_gmcp(player_id: str) -> None:
+    _GMCP_SINKS.pop(player_id, None)
+
+
+def rename_gmcp(old_id: str, new_id: str) -> None:
+    """Move a player's GMCP channel to their new name (login rename), mirroring rename_echo."""
+    sink = _GMCP_SINKS.pop(old_id, None)
+    if sink is not None:
+        _GMCP_SINKS[new_id] = sink
+
+
+def push_gmcp(player_ids: Iterable[str], package: str, data: object, exclude: str = "") -> None:
+    """Push a GMCP frame to a specific SET of players (a party, a guild) -- the typed complement to
+    announce_to. A player with no GMCP sink (plain-text client, or offline) is simply skipped, and a
+    sink that raises is pruned, so one dead client never crashes another's command."""
+    for player_id in player_ids:
+        if player_id == exclude:
+            continue
+        sink = _GMCP_SINKS.get(player_id)
+        if sink is not None:
+            try:
+                sink(package, data)
+            except OSError:
+                unbind_gmcp(player_id)
