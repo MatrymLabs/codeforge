@@ -52,53 +52,57 @@ would mislead, so the estimate is split by yardstick and by dimension, and every
 
 | Dimension | vs. AAA graphical MMORPG | vs. flagship commercial text MUD | Basis (measured) |
 |-----------|--------------------------|----------------------------------|------------------|
-| **Engine / architecture** | ~45% | ~70% | Pure-function tick, 3-table persistence, 215 modules, a large CI-gated suite (count via `pytest --collect-only`), 7 native-accelerator organs. Mature core; missing distributed/sharded serving. |
-| **Combat systems** | ~30% | ~55% | 63 abilities, 10 damage types, boss phases + telegraphed specials + afflictions. Solo-vs-NPC only; no party/raid/group. |
+| **Engine / architecture** | ~45% | ~70% | Pure-function tick, 5-table persistence, a large module base, a CI-gated suite (count via `pytest --collect-only`), 7 native-accelerator organs. Mature core; missing distributed/sharded serving. |
+| **Combat systems** | ~35% | ~55% | 63 abilities, 10 damage types, boss phases + telegraphed specials + afflictions. Party combat shares XP + round-robin loot; still solo-role (no threat/aggro table, heals are self-only, no tank/healer trinity). |
 | **Content scale (world)** | ~15% | ~40% | ~26,800 rooms at default scale (procedural), 45 settlements, 16 dungeons. Authored depth thin (75 hand rooms, 7 authored quests). |
 | **Content scale (items/NPCs)** | ~10% | ~35% | 180 items, 75 authored NPCs + procedural guardians, 38 recipes. Well below launch density. |
 | **Progression / player systems** | ~35% | ~60% | 31 jobs, 6 professions, 4 Orders, level cap 255, ember-coin currency. Broad skeleton, shallow per-system depth. |
-| **Social / multiplayer** | ~8% | ~20% | Chat channels exist. No guilds, mail, friends, party, trade, auction, or housing. **Largest gap.** |
-| **Economy** | ~12% | ~30% | Tiered currency, shops, crafting sinks. No player market, auction, or macro sinks/faucets balancing. |
+| **Social / multiplayer** | ~30% | ~20% | Shipped: party (max 5, shared XP + round-robin loot), atomic player trade, persisted guilds (ranks + chat + coin treasury), async mail, friends, world chat. Gaps: no LFG/matchmaking, no raid-size cohort, mail carries no attachments, no housing. |
+| **Economy** | ~22% | ~30% | Tiered currency, NPC shops, per-town general-store materials market (buy/sell spread), crafting sinks, inns as a coin sink, guild treasury, direct player trade. Gaps: no auction house, no durability/repair sink, no macro sink/faucet model. |
 | **World simulation** | ~30% | ~55% | Weather, seasons, day/night, respawn policies, dynamic spawns, zone resets. No NPC schedules or faction war. |
 | **Live ops / tooling** | ~20% | ~40% | CI, security gates, readiness rituals, admin surface, world generator. No telemetry/analytics pipeline or patch cadence. |
 | **Accessibility** | ~15% | n/a | Text-native (screen-reader friendly by medium). No declared text-scaling, colorblind, or remap options in the client contract. |
 
 **Blended engineering read:** roughly **~20-25% of a AAA graphical MMORPG's total scope**, and
 roughly **~45% of a credible commercial *text* MUD's scope**. The engine punches well above the
-content: CodeForge is architecturally closer to done than Aethryn is content-complete. The honest
-one-line summary is *strong spine, thin flesh, no crowd* (multiplayer social/economy is the least
-built dimension).
+content: CodeForge is architecturally closer to done than Aethryn is content-complete. With the
+2026-07-29 social layer shipped, the honest one-line summary has moved from *strong spine, thin
+flesh, no crowd* to *strong spine, thin flesh, a crowd with no endgame*: the multiplayer layer now
+exists (party, guild, mail, friends, trade, chat), and the deepest remaining gaps are the endgame
+loop and item persistence.
 
-### Highest-risk engineering gaps (ranked)
+### Highest-risk engineering gaps (ranked, per the 2026-07-29 gap analysis)
 
-1. **No multiplayer group layer.** Combat, quests, and rewards are single-session. Party/raid/guild
-   is the deepest structural gap and touches the tick, persistence, and networking at once.
-2. **Content density far below launch scale.** ~180 items and ~75 authored NPCs cannot sustain a
-   level-1-to-255 curve; the procedural world is broad but shallow in authored encounters.
-3. **No economy sinks/faucets model.** A currency exists but nothing balances inflation at
-   population; this breaks quietly and late.
-4. **No telemetry/analytics.** Live-ops decisions would be blind; there is no measured session
-   length, retention, or economy-flow data path.
-5. **Serving model is single-process.** Fine for a demo; a sharded/instanced model is unproven for
-   concurrency at MMO scale.
+1. **No endgame loop.** No raids, no daily/weekly content, no lockouts, no gear treadmill/ilvl
+   ceiling. Bosses are infinitely farmable with no diminishing returns; there is nothing to *do* at
+   cap. This is now the emptiest dimension relative to AAA.
+2. **Loose inventory does not persist.** Only *equipped* gear survives logout (`db.py`); non-worn
+   items are in-memory instances that vanish. This keystone blocks the auction house, mail
+   attachments, a guild item-bank, and real hoarding. Items are runtime instances, not persisted rows.
+3. **Combat has no trinity.** No threat/aggro table, no taunt, and heals are self-only, so the
+   shipped party layer cannot express tank/healer/DPS roles or support raids.
+4. **Content density far below launch scale.** ~180 items and ~75 authored NPCs cannot sustain a
+   1-to-255 curve; ~1,680 quests are 8 template generators over ~7 authored arcs (wide, not deep).
+5. **No economy sink/faucet model** and **no telemetry/analytics** (live-ops would be blind).
 
 ### Highest-value next milestones
 
-1. **Party + shared combat** (unlocks the "multi-user" in MUD; prerequisite for dungeons/raids).
-2. **Content-density pass to a playable 1-to-30 band** (authored quests, NPCs, items at real
-   density for one starter Reach).
-3. **Player trade + market** (the smallest real economy loop; sink/faucet instrumentation rides on
-   it).
-4. **Telemetry seam** (a typed event stream feeding a simple analytics table; reuses the SQL
-   analytics organ).
+1. **Loose-item persistence** (the keystone: unblocks auction house, mail attachments, guild
+   item-bank, and endgame gear hoarding all at once).
+2. **Endgame loop** (repeatable dungeon/raid cadence with lockouts + a gear-tier chase).
+3. **Combat trinity** (ally-targeted heals + a minimal threat model, so the party layer matters and
+   raids become possible).
+4. **Social surfacing in the client** (emit Party/Guild/Mail/Friend GMCP frames + render panels, so
+   the client stops lagging the engine's social layer).
 
 ### Fastest paths (engineering estimate, to be firmed after benchmark passes)
 
 - **To a playable prototype:** it largely exists. A single-player vertical slice (create -> level a
   few bands -> craft -> beat a boss -> spend currency) is reachable now; the gap is a curated
   starter-Reach content pass and an onboarding path.
-- **To Alpha:** add the party layer + one dungeon runnable by a group + a trade loop + a
-  content-density pass on the 1-to-30 band + a telemetry seam.
+- **To Alpha:** the party layer + group-runnable dungeons + a trade loop now exist; the remaining
+  Alpha gaps are loose-item persistence, a content-density pass on the 1-to-30 band, and a
+  telemetry seam.
 - **To Launch:** economy balancing at population, guild layer, achievements/titles system, a full
   level-cap content curve, moderation/support tooling, and load-tested concurrent serving.
 
@@ -246,14 +250,14 @@ engineering estimates unless a cited benchmark has landed.
 | Damage / resistance types | 10 (FIR ICE LGT WND ERT WTR HLY DRK PSN CRS) | same | [Pass 2] | [Pass 2] | Measured | score_sheet_model.py |
 | Status effects | Foe: burn/weaken/daze/brand; player: DoT + daze | same | [Pass 2] | [Pass 2] | Measured | afflictions.py |
 | Boss mechanics | Phases (enrage) + telegraphed specials | 16 bosses, 2 with specials | [Pass 2] | [Pass 2] | Measured | boss_phases/specials |
-| Party / group | **None** | 0 | [Pass 2] (5 party / 10-40 raid common) | [Pass 2] | Measured (absent) | combat.py |
+| Party / group | 5-player party, shared XP + round-robin loot | present | [Pass 2] (5 party / 10-40 raid common) | [Pass 2] | Measured | party.py, party_rewards.py, party_loot.py |
 | Combat cadence | World-beat tick, synchronous | same | [Pass 2] | [Pass 2] | Measured | forge.py |
 
 **Targets**
 
 | Subsystem | Prototype | Alpha | Launch | Five-Year | Gap Remaining | Priority | Notes |
 |-----------|-----------|-------|--------|-----------|---------------|----------|-------|
-| Party layer | seam | 5-player party | party + 10 raid | party + 20-40 raid | **Whole layer absent** | **Highest** | Unlocks dungeons/raids/social |
+| Party layer | 5-player party (shipped) | party + shared combat | party + 10 raid | party + 20-40 raid | Raid-size cohort + LFG | High | Party done; raids need ally-heals + threat |
 | Boss mechanics | 4 patterns | 8 | 20 | 40 | Encounter pass-2 staged | High | Composes existing phases/specials/afflictions |
 | Status effects | 8 | 16 | 30 | 50 | Medium | Med | Substrate exists |
 
@@ -266,19 +270,19 @@ engineering estimates unless a cited benchmark has landed.
 | Subsystem | Current CodeForge | Current Aethryn | AAA Benchmark | Historical MUD Benchmark | Confidence | Sources |
 |-----------|-------------------|-----------------|---------------|--------------------------|------------|---------|
 | Chat channels | Relay channels | present | [Pass 2] | [Pass 2] | Measured | relay.py |
-| Guilds | **None** | 0 | [Pass 2] | [Pass 2] | Measured (absent) | - |
-| Mail | **None** | 0 | [Pass 2] | [Pass 2] | Measured (absent) | - |
-| Friends / ignore | **None** | 0 | [Pass 2] | [Pass 2] | Measured (absent) | - |
-| Player trade | **None** | 0 | [Pass 2] | [Pass 2] | Measured (absent) | - |
+| Guilds | Persisted; ranks + chat + coin treasury | present | [Pass 2] | [Pass 2] | Measured | guild.py, guild_store.py |
+| Mail | Async persisted letters (inbox/read/delete) | present | [Pass 2] | [Pass 2] | Measured | mail.py, mail_store.py |
+| Friends / ignore | Persisted friends list (no ignore yet) | present | [Pass 2] | [Pass 2] | Measured | friends.py |
+| Player trade | Atomic item + coin swap | present | [Pass 2] | [Pass 2] | Measured | trade.py |
 | Housing | **None** | 0 | [Pass 2] | [Pass 2] | Measured (absent) | - |
 
 **Targets**
 
 | Subsystem | Prototype | Alpha | Launch | Five-Year | Gap Remaining | Priority | Notes |
 |-----------|-----------|-------|--------|-----------|---------------|----------|-------|
-| Guilds | 0 | basic (create/join/roster) | ranks + bank + hall | alliances | Whole system | High | After party layer |
-| Player trade | 0 | direct trade | + auction house | + cross-region market | Whole system | High | Smallest real economy loop |
-| Mail / friends | 0 | friends | + mail | + social graph | Whole system | Med | Cheap, high retention value |
+| Guilds | ranks + chat + coin bank (shipped) | + guild hall | + item bank | alliances | Item bank (needs loose-item persistence), hall, perks | Med | Coin bank done; item bank blocked on inventory persistence |
+| Player trade | direct trade (shipped) | + auction house | + cross-region market | commodity pricing | Auction house (needs loose-item persistence) | High | Direct trade done; AH is the next loop |
+| Mail / friends | friends + mail (shipped) | + attachments | + ignore + social graph | cross-shard | Mail attachments (needs inventory persistence), ignore list | Med | Text mail done; attachments blocked on inventory persistence |
 
 ---
 
@@ -289,10 +293,12 @@ engineering estimates unless a cited benchmark has landed.
 | Subsystem | Current CodeForge | Current Aethryn | AAA Benchmark | Historical MUD Benchmark | Confidence | Sources |
 |-----------|-------------------|-----------------|---------------|--------------------------|------------|---------|
 | Currencies | Tiered ember-coin (1 currency, 4 tiers) | same | [Pass 2] | [Pass 2] | Measured | coinage.py |
-| Shops / vendors | Buy/sell | present | [Pass 2] | [Pass 2] | Measured | shop.py |
+| Shops / vendors | Buy/sell; per-town materials market (spread) | present (45 stores) | [Pass 2] | [Pass 2] | Measured | shop.py, stores.py |
 | Crafting sinks | Recipes consume materials/coin | present | [Pass 2] | [Pass 2] | Measured | crafting.py |
+| Coin sinks | Draught vendors + inn hearth | present (45 inns) | [Pass 2] | [Pass 2] | Measured | inns.py |
+| Player trade | Atomic item + coin swap | present | [Pass 2] | [Pass 2] | Measured | trade.py |
 | Repair / durability | **None** | 0 | [Pass 2] | [Pass 2] | Measured (absent) | - |
-| Auction / market | **None** | 0 | [Pass 2] | [Pass 2] | Measured (absent) | - |
+| Auction / market | **None** (direct trade only) | 0 | [Pass 2] | [Pass 2] | Measured (absent) | - |
 | Sink/faucet balancing | **None modelled** | 0 | [Pass 2] | [Pass 2] | Measured (absent) | - |
 
 **Targets**
@@ -332,7 +338,7 @@ engineering estimates unless a cited benchmark has landed.
 | Subsystem | Current CodeForge | AAA Benchmark | Historical MUD Benchmark | Confidence | Command / Source |
 |-----------|-------------------|---------------|--------------------------|------------|------------------|
 | Tick model | Synchronous pure-function `handle_command`, world-beat | [Pass 2] | [Pass 2] | Measured | forge.py |
-| Persistence | SQLite via SQLAlchemy 2.0, 3 tables (characters, job_progress, accounts) | [Pass 2] | [Pass 2] | Measured | grep `__tablename__` |
+| Persistence | SQLite via SQLAlchemy 2.0, 5 tables (characters, job_progress, accounts, guilds, mail) | [Pass 2] | [Pass 2] | Measured | grep `__tablename__` |
 | Save cadence | On key events (login/logout/level/command milestones) | [Pass 2] | [Pass 2] | Measured | forge.py save_character |
 | Engine LOC (parts + forge) | 34,373 | n/a | n/a | Measured | census |
 | Total LOC incl. tests | 63,239 | n/a | n/a | Measured | `wc -l` parts forge tests |
@@ -346,7 +352,7 @@ engineering estimates unless a cited benchmark has landed.
 | Subsystem | Prototype | Alpha | Launch | Five-Year | Gap | Priority | Notes |
 |-----------|-----------|-------|--------|-----------|-----|----------|-------|
 | Concurrent players | 10 | 100 | 1,000 | 10,000 | Unproven past demo | High | Needs load test + serving model |
-| DB tables | 3 | ~8 | ~20 | sharded | Grows with features | Med | Party/guild/mail/market add tables |
+| DB tables | 5 | ~8 | ~20 | sharded | Grows with features | Med | Market + a loose-items table are next |
 | Telemetry | seam | typed events | analytics pipeline | live dashboards | Absent | High | Reuse SQL analytics organ |
 
 ---
