@@ -17,6 +17,26 @@ from __future__ import annotations
 from typing import Any
 
 from parts.world.seed import Npc, Room
+from parts.world.session import Session
+
+_INN_SUFFIX = "_inn"  # every generated inn room ends in this (a label convention, like the depths)
+
+
+def is_inn_room(label: str) -> bool:
+    """True if `label` is one of this generator's inn interiors (the `_inn` suffix convention)."""
+    return label.endswith(_INN_SUFFIX)
+
+
+def rest(session: Session) -> str:
+    """`rest`: at an inn's hearth, restore a hero's depleting resources (HP/MP/focus) to full. The
+    inn's whole purpose in play, and the reason its interior exists; refused anywhere else, since
+    only a hearth mends a hero. Reuses combat's heal-to-max idiom; no world state."""
+    if not is_inn_room(session.location):
+        return "There is no hearth here to rest at. Find an inn (a town's `in` door), then REST."
+    for name, resource in session.resources.items():
+        session.resources[name] = resource.heal(resource.maximum)
+    return "You settle by the hearth and rest. Your strength and focus return in full."
+
 
 _INN_DESC = (
     "The {town} Inn. A low fire mutters in the hearth and the long tables are worn smooth by "

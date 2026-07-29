@@ -53,6 +53,7 @@ from parts.world import chat as chat_mod
 from parts.world import feats as feats_mod
 from parts.world import friends as friends_mod
 from parts.world import guild as guild_mod
+from parts.world import inns as inns_mod
 from parts.world import mail as mail_mod
 from parts.world import trade as trade_mod
 from parts.world import travel as travel_net
@@ -143,7 +144,7 @@ HELP_TEXT = (
     "trade <player> [accept|add <item>|coins <n>|confirm|cancel], "
     "guild [found <name>|invite|accept|promote|leave|disband], gsay <msg>, "
     "mail [send <player> <msg>|read <n>|delete <n>], friends [add|remove <player>], "
-    "chat <message>, route <room>, score, "
+    "chat <message>, rest, route <room>, score, "
     "equip <item>, unequip <slot>, "
     "attack <target>, skills, use <ability> [on <foe>], repair, scan <target>, deploy, calibrate, "
     "channel, journal [text], vitals, "
@@ -1643,6 +1644,15 @@ def _build_commands() -> CommandSet:
             "CMD-04.107",
             "speak on the world channel, heard by every hero online (chat <message>)",
             lambda s, arg: chat_mod.world_say(s, arg),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "rest",
+            "CMD-04.108",
+            "rest at an inn's hearth to restore HP/MP to full",
+            lambda s, _a: inns_mod.rest(s),
             namespace=CORE,
         )
     )

@@ -3371,5 +3371,30 @@
     "aliases": [],
     "created": "2026-07-29",
     "updated": "2026-07-29"
+  },
+  {
+    "designation": "CMD-04.108",
+    "name": "rest",
+    "status": "active",
+    "function": "rest at an inn's hearth to restore HP/MP/focus to full",
+    "label": "rest",
+    "file": "forge.py",
+    "type": "CMD",
+    "domain": "04",
+    "docs": "docs/party_system.md",
+    "tests": "tests/test_inns.py",
+    "depends_on": [],
+    "related": [
+      "inns"
+    ],
+    "reuse": "",
+    "tags": [
+      "command"
+    ],
+    "notes": "Routes to parts.world.inns.rest. Restores every session resource to maximum, but only in an inn interior (is_inn_room); refused elsewhere. Reuses combat's heal-to-max idiom; moves no world state.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-29",
+    "updated": "2026-07-29"
   }
 ]

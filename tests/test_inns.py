@@ -7,8 +7,10 @@ hub absent from the world is skipped rather than crashing the boot (mirrors the 
 
 from __future__ import annotations
 
-from parts.world.inns import raise_inns, wire_inn_doors
+from parts.world.inns import is_inn_room, raise_inns, rest, wire_inn_doors
+from parts.world.resources import Resource
 from parts.world.seed import Room
+from parts.world.session import Session
 
 _CONFIGS = [
     {"room": "veridia_town", "name": "Veridia", "zone": "veridia", "level": 5},
@@ -67,3 +69,44 @@ def test_a_hub_absent_from_the_world_is_skipped_not_crashed():
 
 def test_generation_is_deterministic():
     assert raise_inns(_CONFIGS) == raise_inns(_CONFIGS)
+
+
+# --- rest at the hearth ------------------------------------------------------------------------
+def _weary_hero(location: str) -> Session:
+    """A hero with depleted HP and MP, standing wherever we place them."""
+    s = Session(player_id="alia", location=location)
+    s.resources = {
+        "hp": Resource(name="hp", current=3, maximum=50),
+        "mp": Resource(name="mp", current=0, maximum=20),
+    }
+    return s
+
+
+def test_is_inn_room_reads_the_suffix_convention():
+    assert is_inn_room("greenhold_inn") is True
+    assert is_inn_room("greenhold") is False
+
+
+def test_resting_at_an_inn_restores_every_resource_to_full():
+    hero = _weary_hero("greenhold_inn")
+    out = rest(hero)
+    assert "return in full" in out
+    assert hero.resources["hp"].current == 50 and hero.resources["hp"].is_full
+    assert hero.resources["mp"].current == 20 and hero.resources["mp"].is_full
+
+
+def test_resting_anywhere_but_an_inn_is_refused_and_heals_nothing():
+    hero = _weary_hero("greenhold")  # the plaza, not the inn
+    out = rest(hero)
+    assert "no hearth here" in out.lower()
+    assert hero.resources["hp"].current == 3  # untouched
+    assert hero.resources["mp"].current == 0
+
+
+def test_the_rest_verb_is_reachable_through_the_tick():
+    import forge
+
+    hero = _weary_hero("greenhold_inn")
+    out = forge.handle_command(hero, "rest")
+    assert "return in full" in out
+    assert hero.resources["hp"].is_full

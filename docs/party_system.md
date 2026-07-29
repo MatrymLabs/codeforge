@@ -231,5 +231,10 @@ because the crowd is now real.
   `generate_delves` / `wire_delve_mouths` pair. Deterministic per settlement, merged before the link
   audit so the new rooms and exits pass the same gate as authored ones.
 
+- **A hearth mends a hero.** `rest` (CMD-04.108) restores a hero's depleting resources (HP/MP/focus)
+  to full, but only inside an inn interior (`is_inn_room`); it is refused anywhere else, so an inn is
+  worth walking into. It reuses combat's own heal-to-maximum idiom and moves no world state.
+
 `tests/test_inns.py` covers acceptance (one inn + keeper per town, the two-way hub<->inn link, the
-keeper's topics), tolerance (a hub absent from the world is skipped, not crashed), and determinism.
+keeper's topics, resting to full at the hearth), refusal (resting outside an inn heals nothing),
+tolerance (a hub absent from the world is skipped, not crashed), and determinism.
