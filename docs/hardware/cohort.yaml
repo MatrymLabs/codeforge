@@ -1,0 +1,36 @@
+part_id: cohort
+name: Cohort Registry
+version: "0.1"
+maturity: beta
+purpose: >
+  A transient membership group: a leader-led band of member ids, plus a registry that keeps a
+  member-to-group map so any member reaches their group in one lookup. Forming, admitting (bounded
+  by a max size), leaving with automatic leadership handoff, and disbanding, with no domain attached.
+source: parts/shelf/cohort.py
+domain: coordination
+inputs: >
+  member ids (any hashable string handle) and a per-group max size
+outputs: >
+  a Cohort (ordered members, leader = head); leave() returns (group_after, was_leader); disband()
+  returns the former members for the caller to notify
+interfaces:
+  - CohortRegistry.form
+  - CohortRegistry.add
+  - CohortRegistry.leave
+  - CohortRegistry.disband
+  - CohortRegistry.cohort_of
+  - CohortRegistry.is_full
+  - Cohort.leader
+security: >
+  fail-loud on a broken membership rule (a member already grouped, or a full group) rather than
+  silently corrupting the member-to-group map. No I/O, no persistence: a caller owns those.
+tests:
+  - tests/test_cohort.py
+license: MIT
+source_status: original
+owner: MatrymLabs
+adapters:
+  - parts/world/party.py  # the game's party bolts invites + chat + logout cleanup onto this core
+provenance: >
+  independently_implemented_pattern (transient membership group), harvested from the game's
+  party / shared-reward / loot systems. No code copied.

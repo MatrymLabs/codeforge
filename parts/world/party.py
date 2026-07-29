@@ -17,8 +17,7 @@ this transient primitive.
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
-
+from parts.shelf.cohort import Cohort, CohortRegistry
 from parts.world.events import announce_to
 from parts.world.session import SESSIONS, display_name
 
@@ -26,38 +25,22 @@ from parts.world.session import SESSIONS, display_name
 #: would be a separate, larger cohort, not a bigger party.
 MAX_PARTY = 5
 
-
-@dataclass
-class Party:
-    """A transient band. `members` is ordered; `members[0]` is always the leader, so leadership
-    handoff is just dropping the leaver and promoting the new head of the list."""
-
-    members: list[str] = field(default_factory=list)
-
-    @property
-    def leader(self) -> str:
-        return self.members[0] if self.members else ""
-
-    def is_full(self) -> bool:
-        return len(self.members) >= MAX_PARTY
-
-
-# Party state, owned here and nowhere else. `_BANDS` maps every banded player id to their Party
-# (members of one party share the same Party object). `_INVITES` maps an invited player id to the
-# set of inviter ids who have a pending offer out to them.
-_BANDS: dict[str, Party] = {}
+# Membership is the Hardware Store's transient cohort primitive (parts/shelf/cohort): party bolts
+# invites, chat, and logout cleanup onto it. `_REGISTRY` owns who is banded with whom; `_INVITES`
+# maps an invited player id to the set of inviter ids who have a pending offer out to them.
+_REGISTRY = CohortRegistry(MAX_PARTY)
 _INVITES: dict[str, set[str]] = {}
 
 
-def party_of(player_id: str) -> Party | None:
+def party_of(player_id: str) -> Cohort | None:
     """The party a hero belongs to, or None if they run alone. The one read other systems use."""
-    return _BANDS.get(player_id)
+    return _REGISTRY.cohort_of(player_id)
 
 
 def members_in_room(player_id: str, room: str) -> list[str]:
     """This hero's party-mates who are present in `room` (the seam shared combat/XP will read). An
     empty list when they are unpartied or alone here, so a caller never special-cases 'no party'."""
-    band = _BANDS.get(player_id)
+    band = _REGISTRY.cohort_of(player_id)
     if band is None:
         return [m for m in [player_id] if SESSIONS.get(player_id) and _here(player_id, room)]
     return [m for m in band.members if _here(m, room)]
@@ -79,15 +62,14 @@ def invite(actor: str, target_name: str) -> str:
         return "You cannot invite yourself."
     if SESSIONS.get(target) is None:
         return f"No one named '{target}' is here to invite."
-    if target in _BANDS:
+    if _REGISTRY.cohort_of(target) is not None:
         return f"{display_name(target)} is already in a party."
-    band = _BANDS.get(actor)
+    band = _REGISTRY.cohort_of(actor)
     if band is None:
-        band = Party(members=[actor])  # the invite forms the band, with the actor leading
-        _BANDS[actor] = band
+        band = _REGISTRY.form(actor)  # the invite forms the band, with the actor leading
     elif band.leader != actor:
         return "Only the party leader may invite."
-    if band.is_full():
+    if _REGISTRY.is_full(band):
         return f"Your party is full ({MAX_PARTY})."
     _INVITES.setdefault(target, set()).add(actor)
     announce_to(
@@ -103,18 +85,17 @@ def join(actor: str, inviter_name: str) -> str:
     inviter = inviter_name.strip().lower()
     if not inviter:
         return "Join whose party? (party join <player>)"
-    if actor in _BANDS:
+    if _REGISTRY.cohort_of(actor) is not None:
         return "You are already in a party; leave it first."
     if inviter not in _INVITES.get(actor, set()):
         return f"You have no invitation from '{inviter}'."
-    band = _BANDS.get(inviter)
+    band = _REGISTRY.cohort_of(inviter)
     if band is None or SESSIONS.get(inviter) is None:
         _INVITES.get(actor, set()).discard(inviter)
         return f"{display_name(inviter)}'s party is no longer forming."
-    if band.is_full():
+    if _REGISTRY.is_full(band):
         return f"{display_name(inviter)}'s party is full ({MAX_PARTY})."
-    band.members.append(actor)
-    _BANDS[actor] = band
+    _REGISTRY.add(band, actor)
     _INVITES.pop(actor, None)  # accepting one offer clears all pending offers to this hero
     announce_to(band.members, f"\n{display_name(actor)} joins the party.", exclude=actor)
     return f"You join {display_name(inviter)}'s party."
@@ -123,13 +104,10 @@ def join(actor: str, inviter_name: str) -> str:
 def leave(actor: str) -> str:
     """Leave your band. If you were the leader and others remain, leadership passes to the next
     member; if you were the last, the party disbands. A no-op message when you run alone."""
-    band = _BANDS.get(actor)
-    if band is None:
+    if _REGISTRY.cohort_of(actor) is None:
         return "You are not in a party."
-    was_leader = band.leader == actor
-    band.members.remove(actor)
-    _BANDS.pop(actor, None)
-    if not band.members:
+    band, was_leader = _REGISTRY.leave(actor)
+    if band is None:
         return "You leave the party. It disbands."
     announce_to(band.members, f"\n{display_name(actor)} leaves the party.")
     if was_leader:
@@ -140,21 +118,19 @@ def leave(actor: str) -> str:
 def disband(actor: str) -> str:
     """Leader-only: dissolve the whole band for everyone. Fails loud if the actor is unpartied or
     not the leader."""
-    band = _BANDS.get(actor)
+    band = _REGISTRY.cohort_of(actor)
     if band is None:
         return "You are not in a party."
     if band.leader != actor:
         return "Only the party leader may disband the party."
-    members = list(band.members)
-    for member in members:
-        _BANDS.pop(member, None)
+    members = _REGISTRY.disband(band)
     announce_to(members, "\nThe party disbands.", exclude=actor)
     return "You disband the party."
 
 
 def party_say(actor: str, message: str) -> str:
     """Speak on the party channel. Fails loud when unpartied or the message is empty."""
-    band = _BANDS.get(actor)
+    band = _REGISTRY.cohort_of(actor)
     if band is None:
         return "You are not in a party. (party invite <player> to form one)"
     text = message.strip()
@@ -166,7 +142,7 @@ def party_say(actor: str, message: str) -> str:
 
 def render_party(actor: str) -> str:
     """The read-only roster: who is in the band, the leader marked, and who is currently online."""
-    band = _BANDS.get(actor)
+    band = _REGISTRY.cohort_of(actor)
     if band is None:
         return "You are not in a party. (party invite <player> to form one)"
     lines = [f"Your party ({len(band.members)}/{MAX_PARTY}):"]
@@ -181,7 +157,7 @@ def on_disconnect(player_id: str) -> None:
     """Logout cleanup: a hero who leaves the world leaves their party (with leadership handoff), and
     any pending invitations to or from them are dropped. Called from the gateway teardown so a party
     never carries a ghost. Silent (no return): the disconnect path is not a command."""
-    if player_id in _BANDS:
+    if _REGISTRY.cohort_of(player_id) is not None:
         leave(player_id)
     _INVITES.pop(player_id, None)  # drop invites TO the leaver
     for pending in _INVITES.values():  # drop invites FROM the leaver
@@ -190,5 +166,5 @@ def on_disconnect(player_id: str) -> None:
 
 def _reset() -> None:
     """Clear all party state. For tests only, so one test's bands never leak into the next."""
-    _BANDS.clear()
+    _REGISTRY.clear()
     _INVITES.clear()

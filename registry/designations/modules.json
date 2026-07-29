@@ -6180,6 +6180,31 @@
     "updated": "2026-07-28"
   },
   {
+    "designation": "MOD-05.068",
+    "name": "cohort",
+    "status": "active",
+    "function": "a transient membership group: a leader-led band formed/joined/left/disbanded via a registry",
+    "label": "cohort",
+    "file": "parts/shelf/cohort.py",
+    "type": "MOD",
+    "domain": "05",
+    "docs": "docs/hardware/cohort.yaml",
+    "tests": "tests/test_cohort.py",
+    "depends_on": [],
+    "related": [
+      "party"
+    ],
+    "reuse": "the transient membership-group primitive: a member->group registry with leadership handoff and a size cap; a party/guild/chat-room/raid all layer domain on this core",
+    "notes": "Hardware Store part harvested from the game's party/shared-reward/loot systems (proven by 3 uses). party.py is its adapter (bolts invites+chat+logout cleanup on). Framework-free, fail-loud, no persistence. The guild will be its next consumer.",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-28",
+    "updated": "2026-07-28"
+  },
+  {
     "designation": "MOD-10.046",
     "name": "scripting",
     "status": "active",
