@@ -6677,8 +6677,8 @@
       "db",
       "dashboard"
     ],
-    "reuse": "the ops-snapshot primitive: one read-only projection of counts + sums an operator watches, from SQL aggregates (not row loads), available to any process sharing the DB without the live-roster bus",
-    "notes": "Infra spec Phase 3. snapshot()->{characters, coins_in_circulation (purse+guild treasuries), guild_treasuries, guilds, auction_listings, mail_in_flight, bans} via func.count/sum; render() labels it. Verb @metrics (CMD-10.031, owner). Concurrent-players is deliberately absent (needs the live SESSIONS map, a Phase-4 shared-bus seam).",
+    "reuse": "the ops-snapshot primitive: one read-only projection of counts + sums an operator watches, from SQL aggregates (not row loads), plus the players-online figure off the bus-fed presence roster",
+    "notes": "Infra spec Phase 3 + Phase-4 roster fold-in. snapshot()->{characters, players_online, coins_in_circulation (purse+guild treasuries), guild_treasuries, guilds, auction_listings, mail_in_flight, bans}; the stored figures via func.count/sum, players_online via presence.count() (the bus-fed roster, cross-process once a broker is set). render() labels it. Verb @metrics (CMD-10.031, owner). The concurrent-player count the panel could not name before the bus now exists.",
     "tags": [
       "module"
     ],
