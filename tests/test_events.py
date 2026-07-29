@@ -13,6 +13,7 @@ from parts.world.events import (
     bind_echo,
     bind_gmcp,
     broadcast,
+    push_channel,
     push_gmcp,
     rename_gmcp,
     unbind_echo,
@@ -232,3 +233,15 @@ def test_push_gmcp_prunes_a_sink_that_raises_oserror():
     from parts.world.events import _GMCP_SINKS
 
     assert "ada" not in _GMCP_SINKS  # pruned, so it is never tried again
+
+
+def test_push_channel_builds_a_comm_channel_frame():
+    frames: list[tuple[str, object]] = []
+    try:
+        bind_gmcp("ada", lambda pkg, data: frames.append((pkg, data)))
+        push_channel(["ada"], "party", "Bram", "on my way")
+        assert frames == [
+            ("Comm.Channel", {"channel": "party", "from": "Bram", "text": "on my way"})
+        ]
+    finally:
+        unbind_gmcp("ada")

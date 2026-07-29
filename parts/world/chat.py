@@ -12,7 +12,7 @@ opt-out mute are documented extension points, not built, until a crowd is large 
 
 from __future__ import annotations
 
-from parts.world.events import announce_to
+from parts.world.events import announce_to, push_channel
 from parts.world.session import Session, display_name, roster
 
 
@@ -29,4 +29,5 @@ def world_say(session: Session, message: str) -> str:
         f"\n[World] {display_name(session.player_id)}: {text}",
         exclude=session.player_id,
     )
+    push_channel(roster(), "world", display_name(session.player_id), text)  # structured twin
     return f"[World] You: {text}"
