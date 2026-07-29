@@ -6416,5 +6416,34 @@
     "aliases": [],
     "created": "2026-07-29",
     "updated": "2026-07-29"
+  },
+  {
+    "designation": "MOD-04.122",
+    "name": "stores",
+    "status": "active",
+    "function": "a general store off every town plaza: the two-way market for raw materials",
+    "label": "stores",
+    "file": "parts/world/stores.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "docs/party_system.md",
+    "tests": "tests/test_stores.py",
+    "depends_on": [],
+    "related": [
+      "townsfolk",
+      "inns",
+      "wildlands",
+      "seed",
+      "world"
+    ],
+    "reuse": "the interior-market primitive: per site, emit a linked interior + a vendor NPC with a two-way shop and open the hub's exit into it (raise/wire pair, like inns/delve); the pattern for any specialized vendor building",
+    "notes": "Additive world generator, the inn's counterpart. raise_stores(configs, known_items)->(rooms,npcs): one store room f'{hub}_store' (exit out->hub) + a provisioner per settlement whose two-way shop BUYS raw materials (the coin SOURCE gatherers lacked) and SELLS them on at 2x (crafters short a material). Buy list filtered to materials present in the loaded seed (herbs canonical from wildlands._BIOME_HERB) so the boot cross-check always passes. wire_store_doors opens each hub's `market` exit (reached via `go market`). Merged before the link audit.",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-29",
+    "updated": "2026-07-29"
   }
 ]

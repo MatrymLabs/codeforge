@@ -98,6 +98,15 @@ if _settlements is not None:
     WORLD.update(_inn_rooms)
     NPCS.update(_inn_npcs)
     wire_inn_doors(WORLD, _settlements)
+    # ...and a general store (parts.world.stores): the materials market off the plaza, the coin
+    # SOURCE for gatherers that the draught-selling merchant (a sink) is the counterpart to. Its buy
+    # list is filtered to materials the loaded seed has, so the boot cross-check always holds.
+    from parts.world.stores import raise_stores, wire_store_doors
+
+    _store_rooms, _store_npcs = raise_stores(_settlements, set(ITEMS))
+    WORLD.update(_store_rooms)
+    NPCS.update(_store_npcs)
+    wire_store_doors(WORLD, _settlements)
 
 # Every generated world carries the Creator's Workshop: a Grand Library linked to the spawn, and a
 # concealed Creator's Door onto an isolated administrative instance only the Seed Owner may cross
