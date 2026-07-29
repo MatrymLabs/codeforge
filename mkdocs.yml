@@ -48,6 +48,7 @@ nav:
   - Architecture and decisions:
       - Product vision (canonical): vision_resync.md
       - Architecture: architecture.md
+      - Composition thesis (evidence): composition_thesis.md
       - Concurrency model: concurrency_model.md
       - Architecture-first Python: frameless_python.md
       - Convergence Review (method): convergence_review.md
