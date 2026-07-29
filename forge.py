@@ -48,7 +48,7 @@ from parts.store_index import store
 from parts.telegraph import telegraph
 from parts.titles import title
 from parts.vitals import vitals
-from parts.world import allocate, artifact, creator_workshop, gather, quest
+from parts.world import allocate, artifact, creator_workshop, gather, maintenance_mode, quest
 from parts.world import chat as chat_mod
 from parts.world import feats as feats_mod
 from parts.world import friends as friends_mod
@@ -85,6 +85,7 @@ from parts.world.events import (
     announce,
     announce_frame,
     bind_echo,
+    broadcast,
     rename_echo,
     rename_gmcp,
     unbind_echo,
@@ -646,6 +647,16 @@ def _build_commands() -> CommandSet:
             "CMD-10.025",
             "run a sandboxed Lua snippet (owner; no os/io/require, bounded loops)",
             _script_command,
+            namespace=ADMIN,
+            min_rank="owner",
+        )
+    )
+    cs.add(
+        Command(
+            "@maintenance",
+            "CMD-10.026",
+            "close/open the forge to non-staff: @maintenance [on <reason>|off] (owner)",
+            _maintenance_cmd,
             namespace=ADMIN,
             min_rank="owner",
         )
@@ -2110,6 +2121,24 @@ def _mail_cmd(session: Session, arg: str) -> str:
     if sub == "delete":
         return mail_mod.delete_mail(session, rest)
     return "Mail: mail | mail send <player> <message> | mail read <n> | mail delete <n>."
+
+
+def _maintenance_cmd(session: Session, arg: str) -> str:
+    """`@maintenance [on <reason>|off]`: close or open the forge to non-staff (owner). Bare shows
+    the status. On/off broadcast to everyone online so players in the world can wrap up."""
+    parts_ = arg.split(maxsplit=1)
+    sub = parts_[0].lower() if parts_ else ""
+    rest = parts_[1] if len(parts_) > 1 else ""
+    if sub == "on":
+        active = maintenance_mode.enable(rest)
+        broadcast(f"\n** CodeForge is entering maintenance: {active}. Staff only from here. **")
+        return f"Maintenance ON: {active}. Non-staff logins are now refused."
+    if sub == "off":
+        maintenance_mode.disable()
+        broadcast("\n** Maintenance is over. CodeForge is open again. **")
+        return "Maintenance OFF. The forge is open to everyone."
+    state = f"ON ({maintenance_mode.reason()})" if maintenance_mode.is_on() else "OFF"
+    return f"Maintenance is {state}. Usage: @maintenance on <reason> | @maintenance off"
 
 
 def _friend_cmd(session: Session, arg: str) -> str:
