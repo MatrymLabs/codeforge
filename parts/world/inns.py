@@ -27,15 +27,43 @@ def is_inn_room(label: str) -> bool:
     return label.endswith(_INN_SUFFIX)
 
 
-def rest(session: Session) -> str:
-    """`rest`: at an inn's hearth, restore a hero's depleting resources (HP/MP/focus) to full. The
-    inn's whole purpose in play, and the reason its interior exists; refused anywhere else, since
-    only a hearth mends a hero. Reuses combat's heal-to-max idiom; no world state."""
-    if not is_inn_room(session.location):
-        return "There is no hearth here to rest at. Find an inn (a town's `in` door), then REST."
+def _restore(session: Session) -> None:
+    """Heal one hero's every depleting resource to its maximum (combat's own heal-to-max idiom)."""
     for name, resource in session.resources.items():
         session.resources[name] = resource.heal(resource.maximum)
+
+
+def rest(session: Session) -> str:
+    """`rest`: at an inn's hearth, restore a hero's depleting resources (HP/MP/focus) to full, and
+    any party-mates resting here too. The inn's whole purpose in play; refused anywhere else, since
+    only a hearth mends a hero. Reuses combat's heal-to-max idiom; moves no world state."""
+    if not is_inn_room(session.location):
+        return "There is no hearth here to rest at. Find an inn (a town's `in` door), then REST."
+    _restore(session)  # the caller is always mended, party or not
+    mates = _rest_party_mates(session)
+    if mates:
+        return f"Your party settles by the hearth. You and {len(mates)} more return to full."
     return "You settle by the hearth and rest. Your strength and focus return in full."
+
+
+def _rest_party_mates(session: Session) -> list[str]:
+    """Mend the caller's party-mates resting in the same inn (never the caller), and tell them.
+    Returns the mates healed. Empty for a solo hero. Reuses the party's members_in_room seam."""
+    from parts.world.events import announce_to
+    from parts.world.party import members_in_room
+    from parts.world.session import SESSIONS, display_name
+
+    mates: list[str] = []
+    for pid in members_in_room(session.player_id, session.location):
+        if pid == session.player_id:
+            continue
+        mate = SESSIONS.get(pid)
+        if mate is not None:
+            _restore(mate)
+            mates.append(pid)
+    if mates:
+        announce_to(mates, f"\nYou rest by the hearth with {display_name(session.player_id)}.")
+    return mates
 
 
 _INN_DESC = (
