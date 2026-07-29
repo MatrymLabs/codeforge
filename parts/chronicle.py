@@ -7,7 +7,10 @@ is it getting better, and can we prove it?"
 
 One core mechanism (a content-addressed, hash-chained JSONL ledger) with typed `Record` kinds.
 Slice 1 ships the core plus the `evidence` kind (a retained, cited gate verdict); later approved
-slices add `metric` (trend series), `incident` (FRACAS), `ai-eval`, and `edge` (provenance).
+slices add `metric` (trend series), `incident` (FRACAS), `ai-eval`, `edge` (provenance), and
+`counterexample` (a defect that escaped, kept as durable regression memory so it never silently
+returns; the convergence-audit's most cross-recommended artifact, filed here rather than in a
+second store, so the ship keeps one memory, not many).
 
 Honesty rules, mirrored from `arc_ledger`:
 - **Append-only + hash-chained.** Each record carries a content hash over its own fields and the
@@ -31,9 +34,20 @@ from pathlib import Path
 from parts.shelf import hashchain
 
 # The record kinds the Chronicle understands. Slices added, in order: `evidence` (1), `metric`
-# (2), `edge` (3), `incident` (4), `ai-eval` (5). A record with any other kind fails loud, so the
-# store never accretes junk.
-KINDS = ("evidence", "metric", "edge", "incident", "ai-eval")
+# (2), `edge` (3), `incident` (4), `ai-eval` (5), `counterexample` (6). A record with any other
+# kind fails loud, so the store never accretes junk.
+KINDS = ("evidence", "metric", "edge", "incident", "ai-eval", "counterexample")
+
+# How a counterexample surfaced: a flaky test finally pinned, a mutant the suite let live, a fuzz
+# crash, a defect that escaped to a user, or a package the intake screen blocked. A source outside
+# this set fails loud, so the bank stays a meaningful record of real escapes.
+COUNTEREXAMPLE_SOURCES = (
+    "flaky-test",
+    "surviving-mutant",
+    "fuzz-crash",
+    "escaped-defect",
+    "blocked-package",
+)
 
 # The provenance relations an `edge` may assert (PROV-O flavored). A relation outside this set
 # fails loud, so the graph stays meaningful rather than a free-for-all of ad-hoc verbs.
@@ -135,6 +149,17 @@ def _validate_payload(kind: str, payload: object, where: str) -> None:
             raise ChronicleError(f"{where}: an ai-eval needs a non-empty 'model'")
         if not isinstance(payload.get("passed"), bool):
             raise ChronicleError(f"{where}: an ai-eval 'passed' must be a bool")
+    if kind == "counterexample":
+        if payload.get("source") not in COUNTEREXAMPLE_SOURCES:
+            raise ChronicleError(
+                f"{where}: counterexample source must be one of {COUNTEREXAMPLE_SOURCES}, "
+                f"got {payload.get('source')!r}"
+            )
+        signature = payload.get("signature")
+        if not isinstance(signature, str) or not signature.strip():
+            raise ChronicleError(f"{where}: a counterexample needs a non-empty 'signature'")
+        if not isinstance(payload.get("guard", ""), str):
+            raise ChronicleError(f"{where}: counterexample 'guard' must be a string")
 
 
 def _parse_line(line: str, where: str) -> Record:
@@ -426,6 +451,58 @@ def render_ai_evals(records: list[Record]) -> str:
     return "\n".join(lines)
 
 
+def record_counterexample(
+    source: str,
+    signature: str,
+    *,
+    guard: str = "",
+    commit: str,
+    root: Path | None = None,
+    stamp: datetime | None = None,
+) -> Record:
+    """Append one `counterexample` - a defect that escaped, turned into durable memory so it can
+    never silently return. `source` names how it surfaced (a flaky test, a surviving mutant, a fuzz
+    crash, an escaped defect, a blocked package); `guard` names the regression test that now pins it
+    ("" = not yet guarded, filed honestly as open work). A typed convenience over `append`."""
+    return append(
+        "counterexample",
+        {"source": source, "signature": signature, "guard": guard},
+        commit=commit,
+        root=root,
+        stamp=stamp,
+    )
+
+
+def counterexamples(
+    source: str | None = None, *, guarded: bool | None = None, root: Path | None = None
+) -> list[Record]:
+    """Every `counterexample` record, optionally filtered by source and/or whether it is guarded yet
+    (a regression test now pins it). Append order, oldest first."""
+    recs = read("counterexample", root=root)
+    if source is not None:
+        recs = [r for r in recs if r.payload.get("source") == source]
+    if guarded is not None:
+        recs = [r for r in recs if bool(r.payload.get("guard")) == guarded]
+    return recs
+
+
+def render_counterexamples(records: list[Record]) -> str:
+    """A read-only view of the counterexample bank: UNGUARDED first (each an open regression risk,
+    a defect known to have escaped but not yet pinned by a test), then the guarded ones."""
+    if not records:
+        return "The counterexample bank is empty; no escaped defect has been filed yet."
+    unguarded = [r for r in records if not r.payload.get("guard")]
+    guarded = [r for r in records if r.payload.get("guard")]
+    lines = ["COUNTEREXAMPLE BANK - escaped defects as durable memory (unguarded first)", ""]
+    for r in unguarded:
+        p = r.payload
+        lines.append(f"  [OPEN]    {p['source']}: {p['signature']}  @ {r.commit}")
+    for r in guarded:
+        p = r.payload
+        lines.append(f"  [guarded] {p['source']}: {p['signature']}  -> {p['guard']}  @ {r.commit}")
+    return "\n".join(lines)
+
+
 def render(records: list[Record]) -> str:
     """A read-only human view of the memory (newest first), for the `chronicle` verb."""
     if not records:
@@ -449,6 +526,7 @@ def chronicle(arg: str = "") -> str:
     - `chronicle provenance <n>`  the provenance edges around node `<n>`
     - `chronicle incidents`       the FRACAS register (open first, most severe first)
     - `chronicle evals`           the AI-evaluation memory (latest score per subject)
+    - `chronicle counterexamples` escaped defects kept as durable regression memory (open first)
 
     Reads only. A tampered or broken ledger surfaces its integrity failure honestly rather than
     crashing the tick (text is a projection; it never mutates the store).
@@ -469,6 +547,8 @@ def chronicle(arg: str = "") -> str:
             return render_incidents(incidents())
         if tokens and tokens[0].lower() == "evals":
             return render_ai_evals(ai_evals())
+        if tokens and tokens[0].lower() == "counterexamples":
+            return render_counterexamples(counterexamples())
         kind = arg.strip().lower() or None
         if kind is not None and kind not in KINDS:
             return f"Unknown record kind {kind!r}; the Chronicle knows: {', '.join(KINDS)}."
@@ -504,6 +584,16 @@ def main(argv: list[str] | None = None) -> int:
     if args and args[0] == "evals":
         print(render_ai_evals(ai_evals()))
         return 0
+    if args and args[0] == "counterexamples":
+        print(render_counterexamples(counterexamples()))
+        return 0
+    if (
+        # record-counterexample <source> <commit> <signature...>
+        len(args) >= 4 and args[0] == "record-counterexample"
+    ):
+        ce = record_counterexample(args[1], " ".join(args[3:]), commit=args[2])
+        print(f"  recorded counterexample [{ce.payload['source']}] {ce.payload['signature']}")
+        return 0
     if (
         len(args) >= 4 and args[0] == "record-incident"
     ):  # record-incident <severity> <commit> <what...>
@@ -512,9 +602,10 @@ def main(argv: list[str] | None = None) -> int:
         return 0
     print(
         "usage: python -m parts.chronicle {trend <name> | provenance <node> | incidents | "
-        "evals | record-metric <name> <value> <commit> | "
+        "evals | counterexamples | record-metric <name> <value> <commit> | "
         "record-edge <from> <relation> <to> <commit> | "
-        "record-incident <severity> <commit> <what...>}"
+        "record-incident <severity> <commit> <what...> | "
+        "record-counterexample <source> <commit> <signature...>}"
     )
     return 2
 

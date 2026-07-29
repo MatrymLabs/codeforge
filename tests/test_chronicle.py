@@ -21,16 +21,19 @@ from parts.chronicle import (
     ChronicleError,
     ai_evals,
     append,
+    counterexamples,
     incidents,
     provenance,
     read,
     read_latest,
     record_ai_eval,
+    record_counterexample,
     record_edge,
     record_incident,
     record_metric,
     render,
     render_ai_evals,
+    render_counterexamples,
     render_incidents,
     render_provenance,
     render_trend,
@@ -177,9 +180,76 @@ def test_read_with_an_unknown_kind_fails_loud(tmp_path: Path) -> None:
         read("retention", root=tmp_path)  # a later-slice kind, not yet valid
 
 
-def test_kinds_are_the_five_shipped_kinds() -> None:
+def test_kinds_are_the_shipped_kinds() -> None:
     # A guard so a later slice that widens KINDS updates this test deliberately.
-    assert KINDS == ("evidence", "metric", "edge", "incident", "ai-eval")
+    assert KINDS == ("evidence", "metric", "edge", "incident", "ai-eval", "counterexample")
+
+
+# --- counterexample kind: escaped defects as durable regression memory -------------------------
+
+
+def test_record_counterexample_round_trips(tmp_path: Path) -> None:
+    rec = record_counterexample(
+        "surviving-mutant",
+        "combat.apply_dot floored damage at 0 not 1",
+        guard="tests/test_afflictions.py::test_a_dot_never_fells_the_player",
+        commit="abc123",
+        root=tmp_path,
+        stamp=_STAMP,
+    )
+    assert rec.kind == "counterexample"
+    stored = counterexamples(root=tmp_path)
+    assert len(stored) == 1 and stored[0].payload["source"] == "surviving-mutant"
+    assert "combat.apply_dot" in stored[0].payload["signature"]
+
+
+def test_counterexamples_filter_by_source_and_guarded_state(tmp_path: Path) -> None:
+    record_counterexample("flaky-test", "race in poll deadline", commit="c1", root=tmp_path)
+    record_counterexample(
+        "blocked-package", "reqests typo-squat", guard="intake gate", commit="c2", root=tmp_path
+    )
+    assert len(counterexamples("flaky-test", root=tmp_path)) == 1
+    assert len(counterexamples(guarded=False, root=tmp_path)) == 1  # the flaky one, not yet pinned
+    assert len(counterexamples(guarded=True, root=tmp_path)) == 1  # the blocked package
+
+
+def test_render_counterexamples_puts_open_ones_first(tmp_path: Path) -> None:
+    record_counterexample(
+        "escaped-defect",
+        "lowercased a mixed-case password",
+        guard="regression test",
+        commit="c1",
+        root=tmp_path,
+    )
+    record_counterexample(
+        "fuzz-crash", "endswith(b'') always true loop", commit="c2", root=tmp_path
+    )
+    out = render_counterexamples(counterexamples(root=tmp_path))
+    assert "[OPEN]" in out and "[guarded]" in out
+    assert out.index("[OPEN]") < out.index("[guarded]")  # open (unpinned) risk shown first
+    assert render_counterexamples([]) == (
+        "The counterexample bank is empty; no escaped defect has been filed yet."
+    )
+
+
+def test_a_counterexample_with_an_unknown_source_fails_loud(tmp_path: Path) -> None:
+    with pytest.raises(ChronicleError, match="counterexample source"):
+        record_counterexample("typo-source", "whatever", commit="c1", root=tmp_path)
+
+
+def test_a_counterexample_needs_a_non_empty_signature(tmp_path: Path) -> None:
+    with pytest.raises(ChronicleError, match="non-empty 'signature'"):
+        record_counterexample("flaky-test", "   ", commit="c1", root=tmp_path)
+
+
+def test_a_counterexample_guard_must_be_a_string(tmp_path: Path) -> None:
+    with pytest.raises(ChronicleError, match="'guard' must be a string"):
+        append(
+            "counterexample",
+            {"source": "flaky-test", "signature": "x", "guard": 42},
+            commit="c1",
+            root=tmp_path,
+        )
 
 
 # --- metric kind + trend series (slice 2) ------------------------------------------------------
