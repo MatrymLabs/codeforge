@@ -11,7 +11,9 @@ from parts.gmcp import (
     enables_gmcp,
     escape_iac,
     gmcp_frame,
+    guild_report,
     items_report,
+    party_report,
     quest_report,
     resists_report,
     room_report,
@@ -273,3 +275,39 @@ def test_quest_report_is_none_when_no_authored_quest_is_active(monkeypatch):
 
     monkeypatch.setattr(quest_card, "_QUESTS", {})  # a world with no story arcs
     assert quest_report(_hero()) is None
+
+
+# --- Char.Party / Char.Guild social frames ------------------------------------------------------
+def test_party_report_is_none_when_solo():
+    session = _hero()
+    assert party_report(session) is None
+
+
+def test_party_report_names_the_fellowship_and_leader():
+    from parts.world import party
+    from parts.world.session import SESSIONS
+
+    try:
+        ada = _hero()  # player_id "ada"
+        bram = Session(player_id="bram")
+        SESSIONS["ada"], SESSIONS["bram"] = ada, bram
+        party.invite("ada", "bram")
+        party.join("bram", "ada")
+        report = party_report(ada)
+        assert report == {"members": ["Ada", "Bram"], "leader": "Ada", "size": 2}
+    finally:
+        party._reset()
+        for name in ("ada", "bram"):
+            SESSIONS.pop(name, None)
+
+
+def test_guild_report_is_none_when_guildless():
+    session = _hero()
+    assert guild_report(session) is None
+
+
+def test_guild_report_carries_the_guild_name_and_rank():
+    session = _hero()
+    session.guild = "iron_wardens"
+    session.guild_rank = "officer"
+    assert guild_report(session) == {"name": "Iron Wardens", "rank": "officer"}
