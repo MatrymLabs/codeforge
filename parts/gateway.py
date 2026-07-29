@@ -38,7 +38,7 @@ from parts.shelf.bulkhead import Bulkhead, BulkheadFull
 from parts.shelf.telnet_codec import IAC, WILL, WONT, strip_iac
 from parts.world import guild, party, trade
 from parts.world.accounts import password_fixable
-from parts.world.characters import save_character
+from parts.world.characters import save_all, save_character
 from parts.world.events import SHUTDOWN, bind_echo, bind_gmcp, unbind_echo, unbind_gmcp
 from parts.world.seed import load_splash
 from parts.world.session import SESSIONS, Session
@@ -48,6 +48,9 @@ _counter_lock = threading.Lock()
 _counter = 0
 
 # --- the doorman's post: seats, silence, and the turnaway ledger ---
+AUTOSAVE_EVERY = 25  # a named hero is autosaved every this many of their own commands, so a crash
+# loses at most that many commands of progress (not a whole session). The tick lock is already held
+# when it fires, so the save is consistent with the command that triggered it.
 IDLE_TIMEOUT = 300.0  # seconds of silence before a connection is dropped
 MAX_CONNECTIONS = 128  # concurrent sockets; thread-per-connection has a ceiling
 MAX_LINE_BYTES = (
@@ -170,6 +173,7 @@ class _GateHandler(socketserver.StreamRequestHandler):
         self._last_guild: dict[str, str] = {}  # {} = guildless; clears the client's guild panel
         self._last_mail: dict[str, int] = {}  # {} = empty inbox; clears the mail badge
         self._last_friends: dict[str, object] = {}  # {} = no friends; clears the friends line
+        self._cmds_since_save = 0  # autosave cadence counter for this connection's hero
         with contextlib.suppress(OSError):
             self.wfile.write(_WILL_GMCP)
 
@@ -245,6 +249,16 @@ class _GateHandler(socketserver.StreamRequestHandler):
         if friends != self._last_friends:
             self._send_gmcp("Char.Friends", friends)
             self._last_friends = friends
+
+    def _autosave(self, session: Session) -> None:
+        """Persist a named hero every AUTOSAVE_EVERY commands. Called under the tick lock just after
+        the command that may have changed their state, so the save is consistent and cheap."""
+        if not session.named:
+            return
+        self._cmds_since_save += 1
+        if self._cmds_since_save >= AUTOSAVE_EVERY:
+            save_character(session)
+            self._cmds_since_save = 0
 
     def _send(self, text: str) -> None:
         self.wfile.write((_sanitize(text) + "\r\n").encode("utf-8"))
@@ -400,6 +414,7 @@ class _GateHandler(socketserver.StreamRequestHandler):
                     continue
                 with TICK_LOCK:
                     response = handle_command(session, text)
+                    self._autosave(session)  # periodic persist, under the same lock as the tick
                 if response:
                     self._send(response)
                 self._push_state(session)  # reflect any vitals/room change into GMCP
@@ -428,7 +443,15 @@ def serve(host: str = "0.0.0.0", port: int = 4000) -> None:
         print(f"REFUSING TO START: {exc}", file=sys.stderr)
         raise SystemExit(2) from exc
     with ForgeGateServer((host, port), _GateHandler) as server:
-        SHUTDOWN["hook"] = server.shutdown
+
+        def _save_and_stop() -> None:
+            """The @shutdown hook. It runs INSIDE the tick lock (the verb reached it through
+            handle_command), so it drains every live hero to disk WITHOUT re-acquiring the lock,
+            then stops accepting. No player loses progress to an admin shutdown."""
+            print(f"Shutdown: saved {save_all()} live hero(es).")
+            server.shutdown()
+
+        SHUTDOWN["hook"] = _save_and_stop
         print(f"CodeForge gateway listening on {host}:{port}")
         print(f"Connect with:  nc <this-machine> {port}   (or any telnet client)")
         print("Press Ctrl+C to shut down.")
@@ -436,6 +459,11 @@ def serve(host: str = "0.0.0.0", port: int = 4000) -> None:
             server.serve_forever()
         except KeyboardInterrupt:
             print("\nShutting down the gateway. The world sleeps.")
+            # A signal, not a command: the lock is free here, so acquire it to save consistently
+            # (waiting out any in-flight command first).
+            with TICK_LOCK:
+                saved = save_all()
+            print(f"Saved {saved} live hero(es).")
             server.shutdown()
 
 

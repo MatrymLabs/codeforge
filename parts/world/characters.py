@@ -176,6 +176,24 @@ def save_character(session: Session, store: CharacterStore | None = None) -> Non
         save_job_progress(session.player_id, session.job_progress.values())
 
 
+def save_all(store: CharacterStore | None = None) -> int:
+    """Persist EVERY named live hero at once (the autosave sweep and the save-on-shutdown drain) and
+    return how many were saved. So a crash or a restart loses at most the interval since the last
+    sweep, not a whole session of progress.
+
+    Lock-agnostic on purpose: the caller holds the tick lock (or is the shutdown path) so no session
+    is mutating mid-save. Iterates a snapshot of the roster, so a disconnect pruning SESSIONS during
+    the loop never trips it."""
+    from parts.world.session import SESSIONS
+
+    saved = 0
+    for session in list(SESSIONS.values()):
+        if session.named:
+            save_character(session, store)
+            saved += 1
+    return saved
+
+
 def restore_character(session: Session, casefile: dict[str, Any]) -> None:
     """Rebuild the full sheet from minimal state. Resources return full:
     logging back in is a night's rest."""
