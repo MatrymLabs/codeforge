@@ -634,3 +634,22 @@ def test_the_server_context_completes_a_real_tls_handshake(monkeypatch, _tls_pai
     finally:
         thread.join(timeout=5)
     assert got["data"] == b"forge over tls"
+
+
+# --- structured server logging ------------------------------------------------------------------
+def test_the_gateway_emits_structured_lifecycle_events():
+    from structlog.testing import capture_logs
+
+    with capture_logs() as logs:
+        gateway._LOG.info("gateway_start", host="0.0.0.0", port=4000, tls=True)
+        gateway._LOG.info("connection_open", peer="127.0.0.1")
+        gateway._LOG.info("connection_close", player="ada", entered=True)
+    events = {e["event"] for e in logs}
+    assert {"gateway_start", "connection_open", "connection_close"} <= events
+    start = next(e for e in logs if e["event"] == "gateway_start")
+    assert start["port"] == 4000 and start["tls"] is True  # structured fields, queryable
+
+
+def test_configure_logging_is_idempotent():
+    gateway._configure_logging()
+    gateway._configure_logging()  # a second call must not raise

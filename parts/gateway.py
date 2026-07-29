@@ -21,6 +21,8 @@ import sys
 import threading
 import time
 
+import structlog
+
 from forge import handle_command, render_scene
 from parts.gmcp import (
     GMCP_OPT,
@@ -51,6 +53,24 @@ from parts.world.session import SESSIONS, Session
 TICK_LOCK = threading.Lock()
 _counter_lock = threading.Lock()
 _counter = 0
+
+# Structured server logs: one queryable event per lifecycle moment (start, connect, disconnect,
+# stop), not prose. structlog only (no FastAPI on this hot path); configured for JSON in serve().
+_LOG = structlog.get_logger("gateway")
+
+
+def _configure_logging() -> None:
+    """Emit gateway events as structured JSON lines. Idempotent; called once from serve() so tests
+    (which drive the server directly, never serve()) keep structlog's default readable config."""
+    structlog.configure(
+        processors=[
+            structlog.processors.add_log_level,
+            structlog.processors.TimeStamper(fmt="iso"),
+            structlog.processors.JSONRenderer(),
+        ],
+        cache_logger_on_first_use=True,
+    )
+
 
 # --- the doorman's post: seats, silence, and the turnaway ledger ---
 AUTOSAVE_EVERY = 25  # a named hero is autosaved every this many of their own commands, so a crash
@@ -430,6 +450,7 @@ class _GateHandler(socketserver.StreamRequestHandler):
             SESSIONS[player_id] = session
             bind_echo(player_id, self._send)
             bind_gmcp(player_id, self._send_gmcp)  # structured frames pushed by social events
+        _LOG.info("connection_open", peer=self.client_address[0])
         try:
             # The front desk may raise if the client drops mid-handshake (a
             # health-check connect, a reset). Whatever happens, the finally below
@@ -474,6 +495,7 @@ class _GateHandler(socketserver.StreamRequestHandler):
                 unbind_echo(session.player_id)
                 unbind_gmcp(session.player_id)
                 SESSIONS.pop(session.player_id, None)
+            _LOG.info("connection_close", player=session.player_id, entered=entered)
 
 
 def serve(host: str = "0.0.0.0", port: int = 4000) -> None:
@@ -486,17 +508,21 @@ def serve(host: str = "0.0.0.0", port: int = 4000) -> None:
     except SchemaError as exc:
         print(f"REFUSING TO START: {exc}", file=sys.stderr)
         raise SystemExit(2) from exc
+    _configure_logging()  # gateway events emit as structured JSON from here
     with ForgeGateServer((host, port), _GateHandler) as server:
 
         def _save_and_stop() -> None:
             """The @shutdown hook. It runs INSIDE the tick lock (the verb reached it through
             handle_command), so it drains every live hero to disk WITHOUT re-acquiring the lock,
             then stops accepting. No player loses progress to an admin shutdown."""
-            print(f"Shutdown: saved {save_all()} live hero(es).")
+            saved = save_all()
+            _LOG.info("gateway_stop", reason="admin", saved=saved)
+            print(f"Shutdown: saved {saved} live hero(es).")
             server.shutdown()
 
         SHUTDOWN["hook"] = _save_and_stop
         transport = "TLS (encrypted)" if server._tls is not None else "plaintext (LAN only)"
+        _LOG.info("gateway_start", host=host, port=port, tls=server._tls is not None)
         print(f"CodeForge gateway listening on {host}:{port}  [{transport}]")
         print(f"Connect with:  nc <this-machine> {port}   (or any telnet client)")
         print("Press Ctrl+C to shut down.")
