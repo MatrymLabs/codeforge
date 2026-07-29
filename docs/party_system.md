@@ -67,6 +67,20 @@ rather than a way to split one prize thinner. It hangs off combat's single kill/
 - **The killer's own reward is untouched** (awarded by `land_hit` as before); `share_kill` only reaches
   the mates, so the seam adds sharing without double-awarding.
 
+## Mail: the async channel (`parts/world/mail.py` + `mail_store.py`, MOD-04.117/118)
+
+Party and guild chat reach whoever is online *now*; **mail** reaches a hero who is offline and waits
+in their inbox until they read it. A letter is a persisted row (the `mail` table, `MailRow`; migration
+`a3e7c9b1d5f4`). `mail send <player> <message>` posts to any real character (validated against the
+character store, online or not, and nudged if online); bare `mail` lists the inbox newest-first with
+unread starred; `mail read <n>` shows a letter and clears its unread mark; `mail delete <n>` discards
+one.
+
+- **Bounded + safe.** A body is capped at `MAX_BODY` and an inbox at `MAX_INBOX` (a mailbox cannot be
+  flooded); the body is plain text the transport sanitizes on the way out; `delete` is scoped to the
+  recipient in the store, so no one removes another's mail by guessing an id.
+- **Value-object boundary.** The store returns a `Letter` value object, never an ORM row.
+
 ## The guild: a persisted organization (`parts/world/guild.py`, MOD-04.115)
 
 The party's durable big sibling. Where a party is a moment (transient), a **guild is a record**: a

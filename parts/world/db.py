@@ -117,6 +117,20 @@ class GuildRow(ArchiveBase):
     coins: Mapped[int] = mapped_column(default=0)  # the shared treasury: deposited by members
 
 
+class MailRow(ArchiveBase):
+    """One stored letter: an asynchronous message a hero sent to another (who may be offline). The
+    recipient reads their inbox on their own time; a letter is a row until they delete it."""
+
+    __tablename__ = "mail"
+
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    recipient: Mapped[str] = mapped_column(index=True)  # whose inbox it lands in
+    sender: Mapped[str] = mapped_column()
+    body: Mapped[str] = mapped_column()
+    sent_utc: Mapped[str] = mapped_column()
+    read: Mapped[bool] = mapped_column(default=False)
+
+
 def engine_url() -> str:
     """The SQLAlchemy URL in force. DATABASE_URL wins (PostgreSQL in production);
     otherwise a SQLite file at DB_PATH (the zero-config default for dev and tests)."""

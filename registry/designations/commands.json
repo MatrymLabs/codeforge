@@ -3246,6 +3246,31 @@
     "updated": "2026-07-28"
   },
   {
+    "designation": "CMD-04.104",
+    "name": "mail",
+    "status": "active",
+    "function": "asynchronous letters: mail | mail send <player> <message> | mail read <n> | delete <n>",
+    "label": "mail",
+    "file": "forge.py",
+    "type": "CMD",
+    "domain": "04",
+    "docs": "docs/party_system.md",
+    "tests": "tests/test_mail.py",
+    "depends_on": [],
+    "related": [
+      "mail"
+    ],
+    "reuse": "",
+    "tags": [
+      "command"
+    ],
+    "notes": "_mail_cmd dispatches to parts.world.mail (inbox/send/read/delete). The async social channel, reaching offline heroes.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-28",
+    "updated": "2026-07-28"
+  },
+  {
     "designation": "CMD-10.025",
     "name": "`@script`",
     "status": "active",
