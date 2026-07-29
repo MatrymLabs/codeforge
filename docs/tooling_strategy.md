@@ -170,6 +170,15 @@ without a ledger row (and warns on a stale row). The test twin rides `make check
 unjustified dependency cannot merge silently. Adding a dependency now means adding its
 row here first.
 
+**Admission screen (offline typo-squat / hallucination check).** Before a name is trusted,
+`python -m parts.dependencies screen <name>` screens it for the supply-chain risk that an AI
+assistant confidently invents a plausible-but-wrong package name (a documented, systemic threat).
+A name that is not a valid PEP 503 name, or is one edit from a well-known package while being
+neither that package nor already justified, is flagged. It is offline and stdlib-only (no PyPI
+call, so tests never touch the network); it screens the name, and human judgement admits the
+dependency after verifying it. This is the "check before you trust" first line, complementary to
+the ledger's "justify what you trust."
+
 ---
 
 ## Phased roadmap (where CodeForge sits)
