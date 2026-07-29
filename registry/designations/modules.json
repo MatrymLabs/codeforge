@@ -6389,5 +6389,32 @@
     "aliases": [],
     "created": "2026-07-29",
     "updated": "2026-07-29"
+  },
+  {
+    "designation": "MOD-04.121",
+    "name": "inns",
+    "status": "active",
+    "function": "give every settlement an inn interior and its keeper (a town's twin of the delve)",
+    "label": "inns",
+    "file": "parts/world/inns.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "docs/party_system.md",
+    "tests": "tests/test_inns.py",
+    "depends_on": [],
+    "related": [
+      "townsfolk",
+      "seed",
+      "world"
+    ],
+    "reuse": "the interior-generator primitive: per site, emit one linked interior room + a peaceful host and open the hub's exit into it (raise/wire pair mirrors the delve generator); the pattern for shops, homes, guildhalls",
+    "notes": "Additive world generator. raise_inns(configs)->(rooms,npcs): one inn room f'{hub}_inn' (exit out->hub) + an innkeeper per settlement. wire_inn_doors opens each hub's `in` exit into its inn, in place (skips a hub absent from the world, like wire_delve_mouths). Merged before the link audit. Composes with the social layer (a gathering point for parties + world chat). Deterministic per settlement.",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-29",
+    "updated": "2026-07-29"
   }
 ]

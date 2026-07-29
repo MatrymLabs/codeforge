@@ -89,6 +89,15 @@ _town_npcs: dict[str, Npc] = {}
 if _settlements is not None:
     _town_npcs = populate_settlements(_settlements)
     NPCS.update(_town_npcs)
+    # Give every settlement an inn to step into (parts.world.inns): a warm interior and its keeper,
+    # the town's twin of the delve. Merged before the link audit so the new rooms + `in` exits pass
+    # the same gate as authored rooms.
+    from parts.world.inns import raise_inns, wire_inn_doors
+
+    _inn_rooms, _inn_npcs = raise_inns(_settlements)
+    WORLD.update(_inn_rooms)
+    NPCS.update(_inn_npcs)
+    wire_inn_doors(WORLD, _settlements)
 
 # Every generated world carries the Creator's Workshop: a Grand Library linked to the spawn, and a
 # concealed Creator's Door onto an isolated administrative instance only the Seed Owner may cross

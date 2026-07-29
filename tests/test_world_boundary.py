@@ -80,6 +80,7 @@ _GAME_SEED = {
     "mail",
     "friends",
     "chat",
+    "inns",
     "aggression",
     "session",
     "seed",

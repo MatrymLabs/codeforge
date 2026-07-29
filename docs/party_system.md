@@ -215,3 +215,21 @@ whole world. `parts/world/chat.py` (MOD-04.120), verb `chat` (CMD-04.107).
 `tests/test_chat.py` covers acceptance (a shout reaches every other hero but not the speaker's own
 channel, message case preserved), refusal (empty message, an unnamed speaker still at the login desk),
 and engine-tick reachability of the `chat` verb through `handle_command`.
+
+## Inns (a place for the crowd to gather)
+
+The social layer gives heroes reasons to travel together and shout across the world; inns give them a
+place to do it. `parts/world/inns.py` (MOD-04.121) is a world generator, not a social module, but it
+earns a mention here: it is the first *interior* the map's towns have had, and it exists in part
+because the crowd is now real.
+
+- **A town's twin of the delve.** Where a dungeon mouth sinks `down` into danger, a town hub now opens
+  `in` to shelter: one warm inn room per settlement, with a peaceful keeper who talks about rest, the
+  roads, and the parties that form over a cup before setting out.
+- **Pure additive generation.** `raise_inns(configs)` returns (rooms, npcs) to merge and
+  `wire_inn_doors` opens each hub's `in` exit into its inn, in place, mirroring the delve generator's
+  `generate_delves` / `wire_delve_mouths` pair. Deterministic per settlement, merged before the link
+  audit so the new rooms and exits pass the same gate as authored ones.
+
+`tests/test_inns.py` covers acceptance (one inn + keeper per town, the two-way hub<->inn link, the
+keeper's topics), tolerance (a hub absent from the world is skipped, not crashed), and determinism.
