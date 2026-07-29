@@ -6445,5 +6445,31 @@
     "aliases": [],
     "created": "2026-07-29",
     "updated": "2026-07-29"
+  },
+  {
+    "designation": "MOD-04.123",
+    "name": "maintenance_mode",
+    "status": "active",
+    "function": "a runtime gate that closes the forge to non-staff for an orderly shutdown",
+    "label": "maintenance_mode",
+    "file": "parts/world/maintenance_mode.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "docs/infrastructure_spec.md",
+    "tests": "tests/test_maintenance_mode.py",
+    "depends_on": [],
+    "related": [
+      "gateway",
+      "ranks"
+    ],
+    "reuse": "the runtime-ops-flag primitive: a transient process-lifetime gate a driver reads at the door and an admin verb writes; the pattern for any 'close the service' control",
+    "notes": "Infrastructure spec Phase 0. Transient (not persisted; a restart clears it, which is correct). enable(reason)/disable()/is_on()/reason(). The gateway front desk turns away sub-wizard logins with the reason while on; the @maintenance verb (CMD-10.026, owner) toggles it and broadcasts. Distinct from the existing `maintenance` change-log verb (parts/maintenance.py).",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-29",
+    "updated": "2026-07-29"
   }
 ]

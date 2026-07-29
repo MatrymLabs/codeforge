@@ -3396,5 +3396,30 @@
     "aliases": [],
     "created": "2026-07-29",
     "updated": "2026-07-29"
+  },
+  {
+    "designation": "CMD-10.026",
+    "name": "@maintenance",
+    "status": "active",
+    "function": "close/open the forge to non-staff: @maintenance [on <reason>|off] (owner)",
+    "label": "@maintenance",
+    "file": "forge.py",
+    "type": "CMD",
+    "domain": "10",
+    "docs": "docs/infrastructure_spec.md",
+    "tests": "tests/test_maintenance_mode.py",
+    "depends_on": [],
+    "related": [
+      "maintenance_mode"
+    ],
+    "reuse": "",
+    "tags": [
+      "command"
+    ],
+    "notes": "_maintenance_cmd toggles parts.world.maintenance_mode and broadcasts. Owner-gated ADMIN verb. Non-staff logins refused at the front desk while on. Distinct from the CORE `maintenance` change-log verb.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-29",
+    "updated": "2026-07-29"
   }
 ]

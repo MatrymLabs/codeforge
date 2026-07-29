@@ -82,6 +82,7 @@ _GAME_SEED = {
     "chat",
     "inns",
     "stores",
+    "maintenance_mode",
     "aggression",
     "session",
     "seed",

@@ -36,10 +36,11 @@ from parts.gmcp import (
 )
 from parts.shelf.bulkhead import Bulkhead, BulkheadFull
 from parts.shelf.telnet_codec import IAC, WILL, WONT, strip_iac
-from parts.world import guild, party, trade
+from parts.world import guild, maintenance_mode, party, trade
 from parts.world.accounts import password_fixable
 from parts.world.characters import save_all, save_character
 from parts.world.events import SHUTDOWN, bind_echo, bind_gmcp, unbind_echo, unbind_gmcp
+from parts.world.ranks import has_rank
 from parts.world.seed import load_splash
 from parts.world.session import SESSIONS, Session
 
@@ -358,12 +359,16 @@ class _GateHandler(socketserver.StreamRequestHandler):
                 with TICK_LOCK:
                     response = handle_command(session, f"login {who} {secret.strip()}")
             self._send(response)
-            if response.startswith("Welcome back,"):
+            if response.startswith(("Welcome back,", "Welcome,")):
+                # A proven login, but the door may be down for maintenance: staff (wizard+) still
+                # enter; everyone else is turned away with the reason, so no one walks into a world
+                # about to sleep. Rank is known now (the login set session.rank).
+                if maintenance_mode.is_on() and not has_rank(session, "wizard"):
+                    self._send(f"CodeForge is closed for maintenance: {maintenance_mode.reason()}")
+                    return False
                 _forgive_address(ip)  # a proven-good login clears any prior fumbles
-                return True  # the restore response already renders the scene
-            if response.startswith("Welcome,"):
-                _forgive_address(ip)
-                self._send(render_scene(session.location, viewer=session.player_id))
+                if response.startswith("Welcome,"):  # a fresh character needs its opening scene
+                    self._send(render_scene(session.location, viewer=session.player_id))
                 return True
             _log_turnaway(ip)  # this login/register attempt failed
         self._send("Too many attempts. The door closes.")
