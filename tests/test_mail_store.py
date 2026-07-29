@@ -51,3 +51,12 @@ def test_delete_is_scoped_to_the_recipient():
 
 def test_a_stranger_has_an_empty_inbox():
     assert mail_store.inbox("nobody") == [] and mail_store.count("nobody") == 0
+
+
+def test_unread_count_tallies_only_unread_letters():
+    mail_store.send("alia", "bram", "one", sent_utc=_T)
+    mail_store.send("alia", "bram", "two", sent_utc=_T)
+    assert mail_store.unread_count("alia") == 2
+    mail_store.mark_read(mail_store.inbox("alia")[0].id)
+    assert mail_store.unread_count("alia") == 1  # one read, one still unread
+    assert mail_store.unread_count("nobody") == 0
