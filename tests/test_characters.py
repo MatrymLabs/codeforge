@@ -59,6 +59,7 @@ def test_save_and_load_roundtrip():
         "allocated": "",
         "professions": "",
         "reputation": "",
+        "friends": "",
     }
     assert load_character("stranger") is None
 

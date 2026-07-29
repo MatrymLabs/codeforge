@@ -45,6 +45,7 @@ class CharacterRecord:
     allocated: str = ""  # JSON: attribute -> allocated points (build customization)
     professions: str = ""  # 'trade:practice' pairs, comma-joined (the maker's trade skills)
     reputation: str = ""  # 'order:standing' pairs, comma-joined (standing with the Orders)
+    friends: str = ""  # lowercase hero labels, comma-joined (this hero's personal friends list)
     auth_salt: str | None = None
     auth_hash: str | None = None
 

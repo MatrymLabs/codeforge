@@ -3296,5 +3296,55 @@
     "aliases": [],
     "created": "2026-07-28",
     "updated": "2026-07-28"
+  },
+  {
+    "designation": "CMD-04.105",
+    "name": "friend",
+    "status": "active",
+    "function": "your friends list: friend | friend add <player> | friend remove <player>",
+    "label": "friend",
+    "file": "forge.py",
+    "type": "CMD",
+    "domain": "04",
+    "docs": "docs/party_system.md",
+    "tests": "tests/test_friends.py",
+    "depends_on": [],
+    "related": [
+      "friends"
+    ],
+    "reuse": "",
+    "tags": [
+      "command"
+    ],
+    "notes": "_friend_cmd dispatches to parts.world.friends (list/add/remove). Personal, one-directional roster with online status.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-29",
+    "updated": "2026-07-29"
+  },
+  {
+    "designation": "CMD-04.106",
+    "name": "friends",
+    "status": "active",
+    "function": "show your friends list and who is online (alias of `friend`)",
+    "label": "friends",
+    "file": "forge.py",
+    "type": "CMD",
+    "domain": "04",
+    "docs": "docs/party_system.md",
+    "tests": "tests/test_friends.py",
+    "depends_on": [],
+    "related": [
+      "friends"
+    ],
+    "reuse": "",
+    "tags": [
+      "command"
+    ],
+    "notes": "Second verb for the friends list, both friend and friends route to _friend_cmd.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-29",
+    "updated": "2026-07-29"
   }
 ]

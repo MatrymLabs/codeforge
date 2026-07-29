@@ -75,6 +75,9 @@ class Session:
     # Standing with each Order: order id -> reputation, earned through deeds. The named tier derives
     # from the number (parts.world.reputation). Persisted per hero.
     reputation: dict[str, int] = field(default_factory=dict)
+    # This hero's personal friends list: lowercase labels of heroes worth tracking. One-directional
+    # (yours alone); `friends` shows who is online. Persisted per hero (parts.world.friends).
+    friends: list[str] = field(default_factory=list)
 
 
 # The registry of connected sessions. Gateways and game_loop register

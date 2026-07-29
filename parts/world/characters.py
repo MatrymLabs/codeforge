@@ -14,6 +14,7 @@ import json
 from typing import Any
 
 from parts.world import allocate, professions, reputation
+from parts.world import friends as friends_mod
 from parts.world.character_store import CharacterRecord, CharacterStore
 from parts.world.job_progress import load_job_progress, save_job_progress
 from parts.world.jobs import BASE_HP, BASE_MP, JOBS, bind_calling
@@ -99,6 +100,7 @@ def _record_to_casefile(record: CharacterRecord) -> dict[str, Any]:
         "allocated": record.allocated,
         "professions": record.professions,
         "reputation": record.reputation,
+        "friends": record.friends,
     }
     if record.auth_salt and record.auth_hash:
         casefile["auth"] = {"salt": record.auth_salt, "hash": record.auth_hash}
@@ -133,6 +135,7 @@ def put_record(name: str, casefile: dict[str, Any], store: CharacterStore | None
         allocated=casefile.get("allocated", ""),
         professions=casefile.get("professions", ""),
         reputation=casefile.get("reputation", ""),
+        friends=casefile.get("friends", ""),
         auth_salt=auth.get("salt"),
         auth_hash=auth.get("hash"),
     )
@@ -165,6 +168,7 @@ def save_character(session: Session, store: CharacterStore | None = None) -> Non
         allocated=allocate.serialize(session),
         professions=professions.serialize(session),
         reputation=reputation.serialize(session),
+        friends=friends_mod.serialize(session),
     )
     (store or _default_store()).upsert_gameplay(record)
     # Persist per-job progress AFTER the character row exists (the foreign key needs it).
@@ -204,6 +208,8 @@ def restore_character(session: Session, casefile: dict[str, Any]) -> None:
     professions.restore(session, str(casefile.get("professions", "")))
     # Rebuild standing with the Orders; the tier recomputes from the number (derive-don't-store).
     reputation.restore(session, str(casefile.get("reputation", "")))
+    # Rebuild this hero's personal friends list.
+    friends_mod.restore(session, str(casefile.get("friends", "")))
     job = str(casefile["job"])
     if not job or job not in JOBS:
         # No calling, or the calling vanished from THIS seed (seeds are games -- a character saved
