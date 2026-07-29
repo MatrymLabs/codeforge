@@ -6100,6 +6100,34 @@
     "updated": "2026-07-28"
   },
   {
+    "designation": "MOD-04.113",
+    "name": "trade",
+    "status": "active",
+    "function": "a safe, atomic player-to-player swap of goods and coin between two co-located heroes",
+    "label": "trade",
+    "file": "parts/world/trade.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "docs/party_system.md",
+    "tests": "tests/test_trade.py",
+    "depends_on": [],
+    "related": [
+      "items",
+      "coinage",
+      "events",
+      "session"
+    ],
+    "reuse": "the atomic two-party exchange pattern: validate all stakes on both sides, then apply in one pass (validate-all-then-apply) so a swap can never duplicate, lose, or overpay",
+    "notes": "First player-to-player economy loop, built on per-player inventory (#569). Transient module registry keyed by player id (never persisted); items move by carrier-tag reassignment, coin by the purse scalar. Nothing moves until the atomic execute, so cancel/logout unwind cleanly. on_disconnect hooked into both gateways. Verb: trade (CMD-04.101). Foundation for a market/auction.",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-28",
+    "updated": "2026-07-28"
+  },
+  {
     "designation": "MOD-05.067",
     "name": "textmatch",
     "status": "active",

@@ -75,6 +75,7 @@ _GAME_SEED = {
     "score_sheet",
     "condition",
     "party",
+    "trade",
     "aggression",
     "session",
     "seed",

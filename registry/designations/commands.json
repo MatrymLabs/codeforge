@@ -3169,6 +3169,33 @@
     "updated": "2026-07-28"
   },
   {
+    "designation": "CMD-04.101",
+    "name": "trade",
+    "status": "active",
+    "function": "trade goods and coin with a hero: trade <player> | accept | add <item> | coins <n> | confirm | cancel",
+    "label": "trade",
+    "file": "forge.py",
+    "type": "CMD",
+    "domain": "04",
+    "docs": "docs/party_system.md",
+    "tests": "tests/test_trade.py",
+    "depends_on": [],
+    "related": [
+      "trade",
+      "items",
+      "coinage"
+    ],
+    "reuse": "",
+    "tags": [
+      "command"
+    ],
+    "notes": "_trade_cmd dispatches to parts.world.trade (propose/accept/add/coins/confirm/cancel/render). The first player economy verb; atomic swap on per-player inventory.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-28",
+    "updated": "2026-07-28"
+  },
+  {
     "designation": "CMD-10.025",
     "name": "`@script`",
     "status": "active",
