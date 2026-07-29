@@ -3346,5 +3346,30 @@
     "aliases": [],
     "created": "2026-07-29",
     "updated": "2026-07-29"
+  },
+  {
+    "designation": "CMD-04.107",
+    "name": "chat",
+    "status": "active",
+    "function": "speak on the world channel, heard by every hero online (chat <message>)",
+    "label": "chat",
+    "file": "forge.py",
+    "type": "CMD",
+    "domain": "04",
+    "docs": "docs/party_system.md",
+    "tests": "tests/test_chat.py",
+    "depends_on": [],
+    "related": [
+      "chat"
+    ],
+    "reuse": "",
+    "tags": [
+      "command"
+    ],
+    "notes": "Routes to parts.world.chat.world_say. The world-wide live channel; the spine preserves the message case.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-29",
+    "updated": "2026-07-29"
   }
 ]

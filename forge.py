@@ -49,6 +49,7 @@ from parts.telegraph import telegraph
 from parts.titles import title
 from parts.vitals import vitals
 from parts.world import allocate, artifact, creator_workshop, gather, quest
+from parts.world import chat as chat_mod
 from parts.world import feats as feats_mod
 from parts.world import friends as friends_mod
 from parts.world import guild as guild_mod
@@ -142,7 +143,7 @@ HELP_TEXT = (
     "trade <player> [accept|add <item>|coins <n>|confirm|cancel], "
     "guild [found <name>|invite|accept|promote|leave|disband], gsay <msg>, "
     "mail [send <player> <msg>|read <n>|delete <n>], friends [add|remove <player>], "
-    "route <room>, score, "
+    "chat <message>, route <room>, score, "
     "equip <item>, unequip <slot>, "
     "attack <target>, skills, use <ability> [on <foe>], repair, scan <target>, deploy, calibrate, "
     "channel, journal [text], vitals, "
@@ -1633,6 +1634,15 @@ def _build_commands() -> CommandSet:
             "CMD-04.106",
             "show your friends list and who is online (alias of `friend`)",
             _friend_cmd,
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "chat",
+            "CMD-04.107",
+            "speak on the world channel, heard by every hero online (chat <message>)",
+            lambda s, arg: chat_mod.world_say(s, arg),
             namespace=CORE,
         )
     )
