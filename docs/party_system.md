@@ -67,11 +67,31 @@ rather than a way to split one prize thinner. It hangs off combat's single kill/
 - **The killer's own reward is untouched** (awarded by `land_hit` as before); `share_kill` only reaches
   the mates, so the seam adds sharing without double-awarding.
 
+## Player trade: the first economy loop (`parts/world/trade.py`, MOD-04.113)
+
+Two co-located heroes can swap goods and coin safely. `trade <player>` proposes; `trade accept` opens
+the window; `trade add <item>` and `trade coins <n>` stake each side; `trade confirm` locks a side, and
+when both sides have confirmed the exchange **executes atomically**. `trade cancel` (or a logout)
+aborts. Built on per-player inventory (items move by carrier-tag reassignment) and the purse scalar.
+
+- **Atomicity is the whole point.** `_execute` validates *every* staked item and coin on *both* sides
+  first, then moves them all in one pass (validate-all-then-apply). A swap can never duplicate an item,
+  lose one, or pay coin a hero no longer has: if anything is missing at seal time (an item dropped, coin
+  spent, a partner stepped away), the entire trade aborts and nothing changes hands.
+- **No confirm-then-alter.** Any change to an offer voids both confirmations, so a locked deal cannot be
+  quietly changed after the other party agreed.
+- **Nothing moves until the seal**, so cancel and logout unwind with nothing to restore (transient
+  module registry, never persisted; `on_disconnect` hooked into both gateway teardowns).
+- **Reusable pattern:** the atomic two-party exchange (validate-all-then-apply) is the seam a market /
+  auction house is built on.
+
 ## Extension points (documented, not built)
 
 - **Shared threat / aggro.** The reward half is shipped; the *threat* half (a foe engaging one member
   pulls the whole co-located party) is the natural next slice, hanging off the aggression beat and the
   same `members_in_room` seam.
+- **Market / auction house.** Trade is face-to-face; an asynchronous market (list, bid, buy) is the
+  next economy rung, reusing the atomic-exchange discipline.
 - **Loot rules.** Round-robin / need-vs-greed / master-looter distribution of coins and drops, the
   companion to shared XP.
 - **`party kick <player>`.** Leader-only removal hangs off the existing leader check; deferred as it is

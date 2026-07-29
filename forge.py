@@ -50,6 +50,7 @@ from parts.titles import title
 from parts.vitals import vitals
 from parts.world import allocate, artifact, creator_workshop, gather, quest
 from parts.world import feats as feats_mod
+from parts.world import trade as trade_mod
 from parts.world import travel as travel_net
 from parts.world.abilities import render_abilities, use_ability
 from parts.world.accounts import (
@@ -134,7 +135,8 @@ HELP_TEXT = (
     "take, drop, inventory, talk <npc>, ask <npc> about <topic>, say <msg>, name <yourname>, who, "
     "jobs, job <calling>, subjob <calling>, join <order>, wallet, quaff <item>, contracts, region, "
     "weather, factions, professions, standing, condition, "
-    "party [invite|join|leave|disband], psay <msg>, route <room>, score, "
+    "party [invite|join|leave|disband], psay <msg>, "
+    "trade <player> [accept|add <item>|coins <n>|confirm|cancel], route <room>, score, "
     "equip <item>, unequip <slot>, "
     "attack <target>, skills, use <ability> [on <foe>], repair, scan <target>, deploy, calibrate, "
     "channel, journal [text], vitals, "
@@ -1576,6 +1578,15 @@ def _build_commands() -> CommandSet:
     )
     cs.add(
         Command(
+            "trade",
+            "CMD-04.101",
+            "trade goods and coin with a hero (trade <player>, then add/coins/confirm/cancel)",
+            _trade_cmd,
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
             "shop",
             "CMD-04.071",
             "list a merchant's wares",
@@ -2002,6 +2013,30 @@ def _party_cmd(session: Session, arg: str) -> str:
     if sub == "disband":
         return party_disband(me)
     return "Party: party, party invite <player>, party join <player>, party leave, party disband."
+
+
+def _trade_cmd(session: Session, arg: str) -> str:
+    """The `trade` verb: a safe atomic swap with a co-located hero. The spine preserves argument
+    case, so a player name / item word arrives as typed; names lower to their label downstream.
+    `trade <player>` proposes; `trade accept`; `trade add <item>`; `trade coins <n>`;
+    `trade confirm`; `trade cancel`; bare `trade` shows the open trade."""
+    me = session.player_id
+    parts_ = arg.split(maxsplit=1)
+    sub = parts_[0].lower() if parts_ else ""
+    rest = parts_[1] if len(parts_) > 1 else ""
+    if sub == "":
+        return trade_mod.render(me)
+    if sub == "accept":
+        return trade_mod.accept(me)
+    if sub == "add":
+        return trade_mod.add_item(me, rest)
+    if sub == "coins":
+        return trade_mod.offer_coins(me, rest)
+    if sub == "confirm":
+        return trade_mod.confirm(me)
+    if sub == "cancel":
+        return trade_mod.cancel(me)
+    return trade_mod.propose(me, arg)  # `trade <player>`: the whole arg is the target name
 
 
 def _unlock_cmd(session: Session, arg: str) -> str:

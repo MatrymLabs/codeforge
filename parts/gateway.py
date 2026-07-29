@@ -32,7 +32,7 @@ from parts.gmcp import (
 )
 from parts.shelf.bulkhead import Bulkhead, BulkheadFull
 from parts.shelf.telnet_codec import IAC, WILL, WONT, strip_iac
-from parts.world import party
+from parts.world import party, trade
 from parts.world.accounts import password_fixable
 from parts.world.characters import save_character
 from parts.world.events import SHUTDOWN, bind_echo, unbind_echo
@@ -381,6 +381,7 @@ class _GateHandler(socketserver.StreamRequestHandler):
                 if entered:
                     save_character(session)  # only real players persist
                 party.on_disconnect(session.player_id)  # a logout leaves the fellowship
+                trade.on_disconnect(session.player_id)  # ...and cancels any open trade
                 unbind_echo(session.player_id)
                 SESSIONS.pop(session.player_id, None)
 
