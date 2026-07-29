@@ -682,6 +682,36 @@ def _build_commands() -> CommandSet:
             min_rank="owner",
         )
     )
+    cs.add(
+        Command(
+            "@ban",
+            "CMD-10.028",
+            "bar a character from the world: @ban <player> <reason> (wizard+)",
+            _ban_cmd,
+            namespace=ADMIN,
+            min_rank="wizard",
+        )
+    )
+    cs.add(
+        Command(
+            "@unban",
+            "CMD-10.029",
+            "lift a ban: @unban <player> (wizard+)",
+            _unban_cmd,
+            namespace=ADMIN,
+            min_rank="wizard",
+        )
+    )
+    cs.add(
+        Command(
+            "@bans",
+            "CMD-10.030",
+            "the roster of banned characters (wizard+)",
+            _bans_cmd,
+            namespace=ADMIN,
+            min_rank="wizard",
+        )
+    )
     # --- Safety + QA spine (read-only; composes with the registry) ---
     cs.add(
         Command(
@@ -2167,6 +2197,50 @@ def _mail_cmd(session: Session, arg: str) -> str:
         "Mail: mail | mail send <player> <message> | mail read <n> | mail delete <n> "
         "| mail gift <player> <item> | mail claim <n>."
     )
+
+
+def _ban_cmd(session: Session, arg: str) -> str:
+    """`@ban <player> <reason>`: bar a character from the world (wizard+), audited. If online they
+    drop on their next command. A ban outranks maintenance and even a wizard's rank."""
+    from parts.world import audit, bans
+
+    parts_ = arg.split(maxsplit=1)
+    name = parts_[0].strip().lower() if parts_ else ""
+    reason = parts_[1].strip() if len(parts_) > 1 else "no reason given"
+    if not name:
+        return "Ban whom? (@ban <player> <reason>)"
+    bans.ban(name, reason, session.player_id)
+    audit.record(session.player_id, "ban", f"{name}: {reason}")
+    target = SESSIONS.get(name)
+    if target is not None:
+        target.alive = False  # drop them on their next command
+    return f"{display_name(name)} is banned: {reason}"
+
+
+def _unban_cmd(session: Session, arg: str) -> str:
+    """`@unban <player>`: lift a ban (wizard+), audited."""
+    from parts.world import audit, bans
+
+    name = arg.strip().lower()
+    if not name:
+        return "Unban whom? (@unban <player>)"
+    if not bans.unban(name):
+        return f"{display_name(name)} is not banned."
+    audit.record(session.player_id, "unban", name)
+    return f"{display_name(name)} is no longer banned."
+
+
+def _bans_cmd(_session: Session, _arg: str) -> str:
+    """`@bans`: the moderation roster of banned characters (wizard+)."""
+    from parts.world import bans
+
+    rows = bans.all_bans()
+    if not rows:
+        return "No one is banned."
+    lines = ["Banned characters:"]
+    for name, reason, moderator in rows:
+        lines.append(f"  {display_name(name)}: {reason} (by {display_name(moderator)})")
+    return "\n".join(lines)
 
 
 def _audit_cmd(_session: Session, arg: str) -> str:
