@@ -48,11 +48,32 @@ action while unpartied.
 leadership handoff) and drops their pending invites. It is called from both gateway teardowns (TCP and
 WebSocket), under the same `TICK_LOCK` as the rest of session cleanup, so a party never carries a ghost.
 
+## Shared combat: the reward half (`parts/world/party_rewards.py`, MOD-04.112)
+
+Fighting together pays. When a partied hero fells a foe, `party_rewards.share_kill` spreads the kill's
+**advancement** (XP / JP / TP) to every party-mate present in the same room, so grouping is worthwhile
+rather than a way to split one prize thinner. It hangs off combat's single kill/reward seam
+(`combat.land_hit`) with one call, so combat itself is untouched, and it reads the party's
+`members_in_room` seam.
+
+- **Full-credit policy.** `SHARE_POLICY = "full"`: every present member earns the *full* reward (the
+  tag-credit model that makes grouping purely rewarding). The policy is **data, not hard-coded logic**
+  (Hardware Store principle): an alternative economy (even-split, diminishing returns, level-scaled)
+  swaps `SHARE_POLICY` without touching the callers.
+- **Progression only.** XP/JP/TP are shared; **coins and loot are not** auto-split here. Loot rules
+  (round-robin, need/greed, master looter) are their own feature and their own extension point.
+- **Fail-safe sharing.** An offline or callingless mate earns nothing (they cannot advance) and is
+  skipped without error; delivery rides the dead-sink-safe `announce_to`.
+- **The killer's own reward is untouched** (awarded by `land_hit` as before); `share_kill` only reaches
+  the mates, so the seam adds sharing without double-awarding.
+
 ## Extension points (documented, not built)
 
-- **Shared combat and XP.** `members_in_room(player_id, room)` returns the co-located party-mates and
-  is the seam a shared-damage / split-XP system reads. It returns `[player_id]` for a lone player, so a
-  caller never special-cases "no party."
+- **Shared threat / aggro.** The reward half is shipped; the *threat* half (a foe engaging one member
+  pulls the whole co-located party) is the natural next slice, hanging off the aggression beat and the
+  same `members_in_room` seam.
+- **Loot rules.** Round-robin / need-vs-greed / master-looter distribution of coins and drops, the
+  companion to shared XP.
 - **`party kick <player>`.** Leader-only removal hangs off the existing leader check; deferred as it is
   not needed for the foundation.
 - **The guild.** A guild is the *persisted* big sibling of this transient primitive: a named, durable

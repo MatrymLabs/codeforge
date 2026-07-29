@@ -6071,6 +6071,35 @@
     "updated": "2026-07-28"
   },
   {
+    "designation": "MOD-04.112",
+    "name": "party_rewards",
+    "status": "active",
+    "function": "shared combat's reward half: a felled foe's advancement spreads across the co-located party",
+    "label": "party_rewards",
+    "file": "parts/world/party_rewards.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "docs/party_system.md",
+    "tests": "tests/test_party_rewards.py",
+    "depends_on": [
+      "party"
+    ],
+    "related": [
+      "party",
+      "combat",
+      "progression_awards"
+    ],
+    "reuse": "the shared-reward seam: distribute a progression award across a cohort via a data-driven SHARE_POLICY, awarding through the same path a solo action uses; an alternative economy (even-split, diminishing returns) swaps the policy without touching callers",
+    "notes": "Hangs off combat.land_hit's single kill/reward seam (one lazy call), so combat stays untouched. Reads party.members_in_room; awards XP/JP/TP to present mates via progression_awards (coins/loot NOT split -- loot rules are a separate feature). SHARE_POLICY='full' (tag-credit: grouping is purely rewarding). Extension: even-split policy, shared threat/aggro, loot rules.",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-28",
+    "updated": "2026-07-28"
+  },
+  {
     "designation": "MOD-05.067",
     "name": "textmatch",
     "status": "active",
