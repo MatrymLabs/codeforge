@@ -10,9 +10,11 @@ from parts.gmcp import (
     GMCP_OPT,
     enables_gmcp,
     escape_iac,
+    friends_report,
     gmcp_frame,
     guild_report,
     items_report,
+    mail_report,
     party_report,
     quest_report,
     resists_report,
@@ -311,3 +313,40 @@ def test_guild_report_carries_the_guild_name_and_rank():
     session.guild = "iron_wardens"
     session.guild_rank = "officer"
     assert guild_report(session) == {"name": "Iron Wardens", "rank": "officer"}
+
+
+def test_mail_report_is_none_for_an_empty_inbox_or_unnamed_hero():
+    from parts.world.session import Session
+
+    solo = _hero()  # not named
+    assert mail_report(solo) is None  # unnamed: no inbox
+    named = Session(player_id="ada", named=True)
+    assert mail_report(named) is None  # named but empty inbox
+
+
+def test_mail_report_counts_unread_and_total():
+    from parts.world import mail_store
+    from parts.world.session import Session
+
+    ada = Session(player_id="ada", named=True)
+    mail_store.send("ada", "bram", "one", sent_utc="2026-07-28T12:00:00Z")
+    mail_store.send("ada", "bram", "two", sent_utc="2026-07-28T12:01:00Z")
+    mail_store.mark_read(mail_store.inbox("ada")[0].id)  # read the newest
+    assert mail_report(ada) == {"unread": 1, "total": 2}
+
+
+def test_friends_report_is_none_with_no_friends():
+    assert friends_report(_hero()) is None
+
+
+def test_friends_report_counts_online_and_names_them():
+    from parts.world.session import SESSIONS, Session
+
+    try:
+        ada = _hero()
+        ada.friends = ["bram", "cade"]  # cade is offline
+        SESSIONS["bram"] = Session(player_id="bram")
+        report = friends_report(ada)
+        assert report == {"online": 1, "total": 2, "names": ["Bram"]}
+    finally:
+        SESSIONS.pop("bram", None)

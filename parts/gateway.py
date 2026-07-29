@@ -21,9 +21,11 @@ from forge import handle_command, render_scene
 from parts.gmcp import (
     GMCP_OPT,
     enables_gmcp,
+    friends_report,
     gmcp_frame,
     guild_report,
     items_report,
+    mail_report,
     party_report,
     quest_report,
     resists_report,
@@ -166,6 +168,8 @@ class _GateHandler(socketserver.StreamRequestHandler):
         self._last_resists: dict[str, str] = {}  # {} = resists nothing unusual; the defensive grid
         self._last_party: dict[str, object] = {}  # {} = solo; clears the client's party panel
         self._last_guild: dict[str, str] = {}  # {} = guildless; clears the client's guild panel
+        self._last_mail: dict[str, int] = {}  # {} = empty inbox; clears the mail badge
+        self._last_friends: dict[str, object] = {}  # {} = no friends; clears the friends line
         with contextlib.suppress(OSError):
             self.wfile.write(_WILL_GMCP)
 
@@ -231,6 +235,16 @@ class _GateHandler(socketserver.StreamRequestHandler):
         if guild != self._last_guild:
             self._send_gmcp("Char.Guild", guild)
             self._last_guild = guild
+        # Char.Mail / Char.Friends: the unread-letter count and who of your friends is online, so a
+        # client can badge mail and show the fellowship. Empty {} clears each when it empties.
+        mail = mail_report(session) or {}
+        if mail != self._last_mail:
+            self._send_gmcp("Char.Mail", mail)
+            self._last_mail = mail
+        friends = friends_report(session) or {}
+        if friends != self._last_friends:
+            self._send_gmcp("Char.Friends", friends)
+            self._last_friends = friends
 
     def _send(self, text: str) -> None:
         self.wfile.write((_sanitize(text) + "\r\n").encode("utf-8"))

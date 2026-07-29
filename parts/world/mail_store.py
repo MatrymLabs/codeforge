@@ -65,6 +65,24 @@ def count(recipient: str) -> int:
         )
 
 
+def unread_count(recipient: str) -> int:
+    """How many UNREAD letters wait in a hero's inbox (for a client's mail badge). A COUNT query, so
+    it stays cheap enough to read on the state tick without fetching every letter."""
+    from sqlalchemy import func, select
+
+    from parts.world.db import MailRow, open_archive_session
+
+    with open_archive_session() as db:
+        return (
+            db.scalar(
+                select(func.count())
+                .select_from(MailRow)
+                .where(MailRow.recipient == recipient, MailRow.read.is_(False))
+            )
+            or 0
+        )
+
+
 def mark_read(letter_id: int) -> None:
     """Mark one letter read. A no-op if it no longer exists."""
     from parts.world.db import MailRow, open_archive_session

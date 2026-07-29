@@ -177,6 +177,36 @@ def guild_report(session: Session) -> dict[str, str] | None:
     return {"name": display_name(session.guild), "rank": session.guild_rank}
 
 
+def mail_report(session: Session) -> dict[str, int] | None:
+    """A Char.Mail payload: {unread, total} for the hero's inbox, or None when the inbox is empty
+    (an empty frame then clears the client's mail badge). A named hero only; an unnamed connection
+    at the login desk has no inbox to read."""
+    from parts.world.mail_store import count, unread_count
+
+    if not session.named:
+        return None
+    total = count(session.player_id)
+    if total == 0:
+        return None
+    return {"unread": unread_count(session.player_id), "total": total}
+
+
+def friends_report(session: Session) -> dict[str, object] | None:
+    """A Char.Friends payload: {online, total, names} for the hero's friends who are logged in right
+    now, or None when the list is empty. Read-only projection of session.friends against who is
+    seated (SESSIONS); names are the online friends, so a client can show who is around."""
+    from parts.world.session import SESSIONS, display_name
+
+    if not session.friends:
+        return None
+    online = [f for f in session.friends if f in SESSIONS]
+    return {
+        "online": len(online),
+        "total": len(session.friends),
+        "names": [display_name(f) for f in sorted(online)],
+    }
+
+
 def items_report(session: Session) -> dict[str, dict[str, object]]:
     """A Char.Items payload: the equipped loadout as {slot: {name, mods, rarity}}, so a client can
     show what is worn, what it grants (the flat stat modifiers), and its rarity tier (to colour it).
