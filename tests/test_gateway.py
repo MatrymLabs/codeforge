@@ -2,6 +2,8 @@
 
 import copy
 import socket
+import ssl
+import subprocess
 import threading
 import time
 
@@ -560,3 +562,72 @@ def test_a_plain_client_never_receives_gmcp_frames(server):
     out = _read_until_raw(sock, b"> ")
     assert _SB_GMCP not in out  # no structured frames leak to a plain-text client
     sock.close()
+
+
+# --- TLS transport (config-gated encrypted sockets) ---------------------------------------------
+@pytest.fixture
+def _tls_pair(tmp_path):
+    """A throwaway self-signed cert + key for localhost, generated with the openssl binary (no
+    Python crypto dep; a test-only key never enters the repo, so the secret scanner stays green)."""
+    cert, key = tmp_path / "cert.pem", tmp_path / "key.pem"
+    subprocess.run(
+        [
+            "openssl",
+            "req",
+            "-x509",
+            "-newkey",
+            "rsa:2048",
+            "-nodes",
+            "-keyout",
+            str(key),
+            "-out",
+            str(cert),
+            "-days",
+            "1",
+            "-subj",
+            "/CN=localhost",
+        ],
+        check=True,
+        capture_output=True,
+    )
+    return cert, key
+
+
+def test_tls_context_is_none_without_a_configured_cert(monkeypatch):
+    monkeypatch.delenv("CODEFORGE_TLS_CERT", raising=False)
+    monkeypatch.delenv("CODEFORGE_TLS_KEY", raising=False)
+    assert gateway._tls_context() is None  # unset -> plaintext transport, unchanged
+
+
+def test_tls_context_loads_a_configured_cert(monkeypatch, _tls_pair):
+    cert, key = _tls_pair
+    monkeypatch.setenv("CODEFORGE_TLS_CERT", str(cert))
+    monkeypatch.setenv("CODEFORGE_TLS_KEY", str(key))
+    ctx = gateway._tls_context()
+    assert isinstance(ctx, ssl.SSLContext)  # the cert loaded (a bad path/format would raise)
+
+
+def test_the_server_context_completes_a_real_tls_handshake(monkeypatch, _tls_pair):
+    cert, key = _tls_pair
+    monkeypatch.setenv("CODEFORGE_TLS_CERT", str(cert))
+    monkeypatch.setenv("CODEFORGE_TLS_KEY", str(key))
+    server_ctx = gateway._tls_context()
+    assert server_ctx is not None
+    client_ctx = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
+    client_ctx.check_hostname = False
+    client_ctx.verify_mode = ssl.CERT_NONE  # a self-signed test cert: trust it, we made it
+    a, b = socket.socketpair()
+    got: dict[str, bytes] = {}
+
+    def _server_side() -> None:
+        with server_ctx.wrap_socket(a, server_side=True) as tls:
+            tls.sendall(b"forge over tls")
+
+    thread = threading.Thread(target=_server_side)
+    thread.start()
+    try:
+        with client_ctx.wrap_socket(b, server_hostname="localhost") as tls:
+            got["data"] = tls.recv(64)  # the handshake completed and bytes crossed encrypted
+    finally:
+        thread.join(timeout=5)
+    assert got["data"] == b"forge over tls"
