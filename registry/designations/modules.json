@@ -6686,5 +6686,59 @@
     "aliases": [],
     "created": "2026-07-29",
     "updated": "2026-07-29"
+  },
+  {
+    "designation": "MOD-04.132",
+    "name": "bus",
+    "status": "active",
+    "function": "a publish/subscribe seam: the network backing the event bus grows into (Phase 4)",
+    "label": "bus",
+    "file": "parts/world/bus.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "docs/infrastructure_spec.md",
+    "tests": "tests/test_bus.py",
+    "depends_on": [],
+    "related": [
+      "events",
+      "presence"
+    ],
+    "reuse": "the one true multi-process seam: a MessageBus Protocol (publish/subscribe/unsubscribe) callers go through, an InProcessBus default identical to a direct call, and set_bus to inject a broker adapter (Redis/socket) unchanged; a fake satisfies it with no network so CI never touches a broker",
+    "notes": "Infra spec Phase 4. The step from one process to many: today the event bus delivers only to this process's connections. MessageBus is the seam; InProcessBus is the single-process default (synchronous, behaviour-identical); a network adapter implements the same Protocol and set_bus swaps it in with no caller change. A raising subscriber is isolated (one bad handler never breaks a publish). First rider: presence.",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-29",
+    "updated": "2026-07-29"
+  },
+  {
+    "designation": "MOD-04.133",
+    "name": "presence",
+    "status": "active",
+    "function": "who is online, maintained across the bus so any process can read the live roster (Phase 4)",
+    "label": "presence",
+    "file": "parts/world/presence.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "docs/infrastructure_spec.md",
+    "tests": "tests/test_presence.py",
+    "depends_on": [
+      "bus"
+    ],
+    "related": [
+      "metrics",
+      "session"
+    ],
+    "reuse": "the shared-roster primitive: mark_online/mark_offline announce onto the bus, online()/count() read a set folded from those announcements; one process today, cross-process the day a broker is injected -- the concurrent-player count metrics could not name before the bus",
+    "notes": "Infra spec Phase 4. The first rider on the message bus. The gateway announces a named hero online after login and offline on teardown; every subscribing process folds it into a shared online set. reconnect() re-subscribes after a bus swap. A malformed frame never corrupts the roster; a double-online does not double-count. Fed through the bus, so a network adapter makes the same set cross-process with no caller change.",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-29",
+    "updated": "2026-07-29"
   }
 ]

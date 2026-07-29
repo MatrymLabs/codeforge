@@ -42,7 +42,7 @@ from parts.gmcp import (
 )
 from parts.shelf.bulkhead import Bulkhead, BulkheadFull
 from parts.shelf.telnet_codec import IAC, WILL, WONT, strip_iac
-from parts.world import bans, guild, maintenance_mode, party, trade
+from parts.world import bans, guild, maintenance_mode, party, presence, trade
 from parts.world.accounts import password_fixable
 from parts.world.characters import save_all, save_character
 from parts.world.events import SHUTDOWN, bind_echo, bind_gmcp, unbind_echo, unbind_gmcp
@@ -459,6 +459,7 @@ class _GateHandler(socketserver.StreamRequestHandler):
             entered = self._front_desk(session)
             if not entered:
                 return
+            presence.mark_online(session.player_id)  # a named hero joins the shared roster
             self._push_state(session)  # first frames: the scene they logged into
             while session.alive:
                 self.wfile.write(b"> ")
@@ -489,6 +490,7 @@ class _GateHandler(socketserver.StreamRequestHandler):
             with TICK_LOCK:
                 if entered:
                     save_character(session)  # only real players persist
+                    presence.mark_offline(session.player_id)  # ...and leaves the shared roster
                 party.on_disconnect(session.player_id)  # a logout leaves the fellowship
                 trade.on_disconnect(session.player_id)  # ...and cancels any open trade
                 guild.on_disconnect(session.player_id)  # ...and drops a pending guild invite
