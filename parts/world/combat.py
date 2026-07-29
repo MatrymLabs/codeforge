@@ -349,6 +349,15 @@ def land_hit(session: Session, npc: Npc, nid: str, dmg: int) -> tuple[bool, str]
     for extra in (award_jp(session, jp_award), award_tp(session, tp_award)):
         if extra:
             rewards = f"{rewards}\n{extra}"
+    # Shared combat: a party-mate present for the kill shares its advancement (the reward half of
+    # fighting as one). One call at the reward seam; the sharing logic lives in party_rewards.
+    from parts.world.party_rewards import share_kill
+
+    shared = share_kill(
+        session.player_id, session.location, npc["name"], xp_award, jp_award, tp_award
+    )
+    if shared:
+        rewards = f"{rewards}\n{shared}"
     coins = _coin_reward(npc)
     session.coins += coins
     rewards = f"{rewards}\nYou find {purse(coins)}. (purse: {purse(session.coins)})"
