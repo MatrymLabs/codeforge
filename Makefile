@@ -1,4 +1,4 @@
-.PHONY: hooks env fix lint typecheck test property fuzz coverage audit audit-runtime security sast secrets deps intake sbom bench trend ai-eval retention doctor patch daily check readiness arc-verdicts truth forge cast-plan cast cast-selective cast-install-check cast-diff cast-update plugins coupling shelf-pour shelf-build smoke repo-integrity ship run world store hardware clean serve backup db-up db-down db-migrate docs-serve docs-build demo-gif e2e evolution ritual-fast ritual ritual-down unskew loop proto contracts
+.PHONY: hooks env fix lint typecheck test property fuzz coverage audit audit-runtime security sast secrets deps intake sbom bench trend ai-eval retention doctor patch daily check readiness arc-verdicts truth forge cast-plan cast cast-selective cast-install-check cast-diff cast-update plugins coupling shelf-pour shelf-build smoke repo-integrity ship run world store hardware clean serve backup restore db-up db-down db-migrate docs-serve docs-build demo-gif e2e evolution ritual-fast ritual ritual-down unskew loop proto contracts
 
 # --- Environment: create/validate the .venv, fail loud on version mismatch.
 # Uses uv when present (a Rust resolver; measured ~20x faster than pip on this host:
@@ -363,7 +363,14 @@ serve-mmo:
 # (git-ignored). Safe to run while the server is up (online .backup). Restore: see
 # docs/database.md. For PostgreSQL use pg_dump. ---
 backup:
-	@python3 -c "from parts.db import backup_db; print('backed up ->', backup_db())"
+	@python3 -c "from parts.world.db import backup_db; print('backed up ->', backup_db())"
+
+# Restore a SQLite snapshot over the live database (recovery). Usage: make restore BACKUP=<path>.
+# Disposes the cached engine so the server reopens the restored file. The restore is TESTED end to
+# end in tests/test_db.py (untested backups are not backups). For PostgreSQL use pg_restore.
+restore:
+	@test -n "$(BACKUP)" || (echo "usage: make restore BACKUP=<path-to-.db>" && exit 2)
+	@python3 -c "from pathlib import Path; from parts.world.db import restore_db; print('restored ->', restore_db(Path('$(BACKUP)')))"
 
 db-up:
 	docker compose up -d db
