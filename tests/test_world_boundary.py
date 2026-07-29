@@ -83,6 +83,7 @@ _GAME_SEED = {
     "inns",
     "stores",
     "maintenance_mode",
+    "loose_store",
     "aggression",
     "session",
     "seed",

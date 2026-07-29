@@ -285,3 +285,79 @@ def test_save_all_persists_every_named_live_hero():
 
 def test_save_all_on_an_empty_world_saves_nothing():
     assert save_all() == 0  # no live sessions -> a no-op, not a crash
+
+
+# --- Keystone A: loose inventory survives logout ------------------------------------------------
+def test_a_loose_item_survives_a_save_and_restore():
+    hero = _hero()  # matrym / vanguard
+    iid = items.clone("forge_wrench", items.carrier("matrym"))
+    original = items.ITEMS[iid]["name"]
+    save_character(hero)
+    # a fresh process rebuilds ITEMS from seed: drop the live instance, then restore from storage
+    items.ITEMS.pop(iid, None)
+    reborn = SESSIONS["matrym"] = Session(player_id="matrym", named=True)
+    restore_character(reborn, load_character("matrym"))
+    names = [items.ITEMS[i]["name"] for i in items.items_in(items.carrier("matrym"))]
+    assert original in names  # the loose wrench is back in the bag
+
+
+def test_a_rolled_affix_survives_on_a_loose_item():
+    hero = _hero()
+    iid = items.clone("forge_wrench", items.carrier("matrym"))
+    items.ITEMS[iid]["name"] = "a Cruel forge wrench [rare]"
+    items.ITEMS[iid]["mods"] = {"ATK": 7}
+    items.ITEMS[iid]["rarity"] = "rare"
+    save_character(hero)
+    items.ITEMS.pop(iid, None)
+    reborn = SESSIONS["matrym"] = Session(player_id="matrym", named=True)
+    restore_character(reborn, load_character("matrym"))
+    restored = [items.ITEMS[i] for i in items.items_in(items.carrier("matrym"))]
+    wrench = next(i for i in restored if i.get("rarity") == "rare")
+    assert wrench["name"] == "a Cruel forge wrench [rare]" and wrench["mods"] == {"ATK": 7}
+
+
+def test_two_heroes_keep_separate_bags():
+    ada = SESSIONS["ada"] = Session(player_id="ada", location="courtyard", named=True)
+    bram = SESSIONS["bram"] = Session(player_id="bram", location="courtyard", named=True)
+    for hero in (ada, bram):
+        bind_calling(hero, "vanguard")
+    items.clone("forge_wrench", items.carrier("ada"))
+    items.clone("rusty_lantern", items.carrier("bram"))
+    save_character(ada)
+    save_character(bram)
+    re_ada = SESSIONS["ada"] = Session(player_id="ada", named=True)
+    re_bram = SESSIONS["bram"] = Session(player_id="bram", named=True)
+    restore_character(re_ada, load_character("ada"))
+    restore_character(re_bram, load_character("bram"))
+    ada_protos = {items.prototype_of(i) for i in items.items_in(items.carrier("ada"))}
+    bram_protos = {items.prototype_of(i) for i in items.items_in(items.carrier("bram"))}
+    assert "forge_wrench" in ada_protos and "rusty_lantern" not in ada_protos
+    assert "rusty_lantern" in bram_protos and "forge_wrench" not in bram_protos
+
+
+def test_a_reconnect_does_not_duplicate_the_bag():
+    # restore twice WITHOUT dropping the live instances (a same-process reconnect): the clear
+    # must keep the bag at one copy, never two.
+    hero = _hero()
+    items.clone("forge_wrench", items.carrier("matrym"))
+    save_character(hero)
+    for _ in range(2):
+        reborn = SESSIONS["matrym"] = Session(player_id="matrym", named=True)
+        restore_character(reborn, load_character("matrym"))
+    wrenches = [
+        i
+        for i in items.items_in(items.carrier("matrym"))
+        if items.prototype_of(i) == "forge_wrench"
+    ]
+    assert len(wrenches) == 1  # exactly one, not doubled by the reconnect
+
+
+def test_equipped_gear_is_not_also_stored_as_a_loose_item():
+    from parts.world.loose_store import load as load_loose
+
+    hero = _hero()
+    iid = items.clone("forge_wrench", items.carrier("matrym"))
+    hero.equipped["weapon"] = iid  # worn, not loose
+    save_character(hero)
+    bag = load_loose("matrym")
+    assert bag == []  # the worn wrench persists via equipped_gear, not the loose bag (no double)
