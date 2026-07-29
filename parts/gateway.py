@@ -161,6 +161,7 @@ def _tls_context() -> ssl.SSLContext | None:
     if not cert or not key:
         return None
     context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+    context.minimum_version = ssl.TLSVersion.TLSv1_2  # refuse legacy TLS 1.0/1.1 outright
     context.load_cert_chain(certfile=cert, keyfile=key)  # fails loud on a bad/missing cert
     return context
 

@@ -605,6 +605,7 @@ def test_tls_context_loads_a_configured_cert(monkeypatch, _tls_pair):
     monkeypatch.setenv("CODEFORGE_TLS_KEY", str(key))
     ctx = gateway._tls_context()
     assert isinstance(ctx, ssl.SSLContext)  # the cert loaded (a bad path/format would raise)
+    assert ctx.minimum_version == ssl.TLSVersion.TLSv1_2  # legacy TLS 1.0/1.1 refused
 
 
 def test_the_server_context_completes_a_real_tls_handshake(monkeypatch, _tls_pair):
@@ -617,6 +618,7 @@ def test_the_server_context_completes_a_real_tls_handshake(monkeypatch, _tls_pai
     # real, checked handshake -- not one with verification disabled -- so the test proves the server
     # presents a valid cert, not merely that bytes flow.
     client_ctx = ssl.create_default_context(cafile=str(cert))
+    client_ctx.minimum_version = ssl.TLSVersion.TLSv1_2  # match the server: no legacy TLS
     a, b = socket.socketpair()
     got: dict[str, bytes] = {}
 
