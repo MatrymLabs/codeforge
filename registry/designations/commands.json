@@ -3116,6 +3116,59 @@
     "updated": "2026-07-28"
   },
   {
+    "designation": "CMD-04.099",
+    "name": "party",
+    "status": "active",
+    "function": "form a fellowship: party [invite|join <player>|leave|disband]",
+    "label": "party",
+    "file": "forge.py",
+    "type": "CMD",
+    "domain": "04",
+    "docs": "docs/party_system.md",
+    "tests": "tests/test_party.py",
+    "depends_on": [],
+    "related": [
+      "party",
+      "events",
+      "session"
+    ],
+    "reuse": "",
+    "tags": [
+      "command"
+    ],
+    "notes": "_party_cmd dispatches to parts.world.party (invite/join/leave/disband/roster). The first shared-purpose multiplayer verb; foundation for shared combat + dungeons + raids.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-28",
+    "updated": "2026-07-28"
+  },
+  {
+    "designation": "CMD-04.100",
+    "name": "psay",
+    "status": "active",
+    "function": "speak on your party's private channel (psay <message>)",
+    "label": "psay",
+    "file": "forge.py",
+    "type": "CMD",
+    "domain": "04",
+    "docs": "docs/party_system.md",
+    "tests": "tests/test_party.py",
+    "depends_on": [],
+    "related": [
+      "party",
+      "events"
+    ],
+    "reuse": "",
+    "tags": [
+      "command"
+    ],
+    "notes": "party.party_say: the party-only chat channel; message case preserved by the spine (Architecture Law 7). Delivers via events.announce_to.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-28",
+    "updated": "2026-07-28"
+  },
+  {
     "designation": "CMD-10.025",
     "name": "`@script`",
     "status": "active",

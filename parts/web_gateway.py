@@ -30,6 +30,7 @@ from parts.gateway import (
     _next_player_id,
     _sanitize,
 )
+from parts.world import party
 from parts.world.accounts import password_fixable
 from parts.world.characters import save_character
 from parts.world.events import bind_echo, unbind_echo
@@ -174,6 +175,7 @@ async def play(ws: WebSocket) -> None:
         with TICK_LOCK:
             if entered:
                 save_character(session)  # only real (registered) players persist
+            party.on_disconnect(session.player_id)  # a logout leaves the fellowship
             unbind_echo(session.player_id)
             SESSIONS.pop(session.player_id, None)
         _web_seats -= 1

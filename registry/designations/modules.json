@@ -6045,6 +6045,32 @@
     "updated": "2026-07-28"
   },
   {
+    "designation": "MOD-04.111",
+    "name": "party",
+    "status": "active",
+    "function": "the fellowship: a transient leader-led band of heroes with its own chat channel",
+    "label": "party",
+    "file": "parts/world/party.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "docs/party_system.md",
+    "tests": "tests/test_party.py",
+    "depends_on": [],
+    "related": [
+      "events",
+      "session"
+    ],
+    "reuse": "the transient cohort primitive: own membership in a module registry keyed by player id, deliver to the set via events.announce_to, persist nothing; a guild is its persisted big sibling",
+    "notes": "Backs the `party` (CMD-04.099) + `psay` (CMD-04.100) verbs. All state in the module registry (never persisted, dissolves on logout via on_disconnect, hooked into both gateway teardowns). members_in_room is the seam shared combat/XP will read. Foundation for dungeons/raids/social (the AAA-scorecard's deepest gap).",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-28",
+    "updated": "2026-07-28"
+  },
+  {
     "designation": "MOD-05.067",
     "name": "textmatch",
     "status": "active",
