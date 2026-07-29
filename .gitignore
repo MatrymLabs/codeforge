@@ -59,3 +59,6 @@ native/spine/xcheck/xcheck
 native/textkernel/build/
 native/textkernel/*.so
 native/textkernel/*.egg-info/
+
+# Runtime audit ledger (tamper-evident admin/economy log; reproducible, not tracked)
+audit.jsonl

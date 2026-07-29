@@ -672,6 +672,16 @@ def _build_commands() -> CommandSet:
             min_rank="owner",
         )
     )
+    cs.add(
+        Command(
+            "@audit",
+            "CMD-10.027",
+            "the tamper-evident admin/economy log: @audit [verify] (owner)",
+            _audit_cmd,
+            namespace=ADMIN,
+            min_rank="owner",
+        )
+    )
     # --- Safety + QA spine (read-only; composes with the registry) ---
     cs.add(
         Command(
@@ -2157,6 +2167,23 @@ def _mail_cmd(session: Session, arg: str) -> str:
         "Mail: mail | mail send <player> <message> | mail read <n> | mail delete <n> "
         "| mail gift <player> <item> | mail claim <n>."
     )
+
+
+def _audit_cmd(_session: Session, arg: str) -> str:
+    """`@audit [verify]`: the tamper-evident admin/economy log (owner). Bare shows recent entries;
+    `@audit verify` checks the hash chain end to end."""
+    from parts.world import audit
+
+    if arg.strip().lower() == "verify":
+        return "Audit log: chain intact." if audit.verify() else "Audit log: CHAIN BROKEN."
+    entries = audit.tail(20)
+    if not entries:
+        return "The audit log is empty."
+    lines = ["Audit log (recent):"]
+    for entry in entries:
+        detail = f" - {entry['detail']}" if entry.get("detail") else ""
+        lines.append(f"  [{entry['ts']}] {entry['actor']}: {entry['action']}{detail}")
+    return "\n".join(lines)
 
 
 def _maintenance_cmd(session: Session, arg: str) -> str:

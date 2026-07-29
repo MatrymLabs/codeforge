@@ -6606,5 +6606,32 @@
     "aliases": [],
     "created": "2026-07-29",
     "updated": "2026-07-29"
+  },
+  {
+    "designation": "MOD-04.129",
+    "name": "audit",
+    "status": "active",
+    "function": "a tamper-evident, hash-chained log of admin + economy actions (who did what)",
+    "label": "audit",
+    "file": "parts/world/audit.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "docs/infrastructure_spec.md",
+    "tests": "tests/test_audit.py",
+    "depends_on": [],
+    "related": [
+      "hashchain",
+      "ranks",
+      "auction"
+    ],
+    "reuse": "the accountability-log primitive: append(who, what, detail) to a hash-chained JSONL ledger a live server can be held to and an incident reconstructed from; the observability backbone bans + economy inspection feed",
+    "notes": "Infra spec Phase 3. Built on the hashchain shelf part: record(actor, action, detail, ts=None) appends a sealed entry (best-effort: an unwritable path never aborts the action); tail(limit) reads recent (verifies the chain, raises on tamper); verify() checks it end to end. Writers: ranks.grant (admin) + auction.buy (economy). Verb @audit (CMD-10.027, owner) + @audit verify. Path CODEFORGE_AUDIT (default audit.jsonl at repo root, git-ignored; conftest quarantines to tmp).",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-29",
+    "updated": "2026-07-29"
   }
 ]

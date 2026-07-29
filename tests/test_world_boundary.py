@@ -88,6 +88,7 @@ _GAME_SEED = {
     "scheduler",
     "auction",
     "auction_store",
+    "audit",
     "aggression",
     "session",
     "seed",

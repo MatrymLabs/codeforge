@@ -3471,5 +3471,30 @@
     "aliases": [],
     "created": "2026-07-29",
     "updated": "2026-07-29"
+  },
+  {
+    "designation": "CMD-10.027",
+    "name": "@audit",
+    "status": "active",
+    "function": "the tamper-evident admin/economy log: @audit [verify] (owner)",
+    "label": "@audit",
+    "file": "forge.py",
+    "type": "CMD",
+    "domain": "10",
+    "docs": "docs/infrastructure_spec.md",
+    "tests": "tests/test_audit.py",
+    "depends_on": [],
+    "related": [
+      "audit"
+    ],
+    "reuse": "",
+    "tags": [
+      "command"
+    ],
+    "notes": "_audit_cmd shows recent audit entries or, with 'verify', checks the hash chain. Owner-gated ADMIN verb.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-29",
+    "updated": "2026-07-29"
   }
 ]

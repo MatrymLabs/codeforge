@@ -60,6 +60,9 @@ def grant(session: Session, words: str) -> str:
         return f"No one called {display_name(target_name)} is connected."
     target.rank = rank
     save_character(target)
+    from parts.world import audit
+
+    audit.record(session.player_id, "grant", f"{target_name} -> {rank}")  # an admin act, on record
     announce(
         target.location,
         f"{display_name(target_name)} is invested with the rank of {rank}.",
