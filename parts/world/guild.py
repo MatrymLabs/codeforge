@@ -21,7 +21,7 @@ import parts.world.guild_store as guild_store
 from parts.world.characters import _default_store, save_character
 from parts.world.coinage import purse
 from parts.world.events import announce_to, push_channel
-from parts.world.session import SESSIONS, Session, display_name
+from parts.world.session import SESSIONS, Session, display_name, sentence_case
 
 #: Guild ranks in ascending authority. A rank gate ("officer or above may invite") reads this order.
 GUILD_RANKS = ("member", "officer", "leader")
@@ -260,6 +260,85 @@ def bank_withdraw(session: Session, amount_word: str) -> str:
         f"\n{display_name(session.player_id)} withdraws {amount} coins from the guild treasury.",
     )
     return f"You withdraw {amount} coins. The treasury holds {purse(balance)}."
+
+
+# --- the guild item-vault: shared storage, the coin treasury's item twin ----------------------
+def _guild_vault(guild: str) -> str:
+    """The storage owner key for a guild's shared item vault (a non-player owner on the items)."""
+    return f"guildvault:{guild}"
+
+
+def vault_render(session: Session) -> str:
+    """The guild's shared item vault, numbered. Any member may look."""
+    from parts.world import loose_store
+
+    if not session.guild:
+        return "You are not in a guild."
+    stored = loose_store.contents(_guild_vault(session.guild))
+    if not stored:
+        return f"The '{session.guild}' vault is empty. (guild vault deposit <item>)"
+    lines = [f"The '{session.guild}' vault ({len(stored)}):"]
+    for i, (_row_id, snap) in enumerate(stored, 1):
+        lines.append(f"  {i}. {sentence_case(str(snap['name']))}")
+    lines.append("(guild vault deposit <item>, guild vault withdraw <n>)")
+    return "\n".join(lines)
+
+
+def vault_deposit(session: Session, keyword: str) -> str:
+    """Contribute a carried item to the guild vault. Any member may give (like a coin deposit)."""
+    from parts.world import loose_store
+    from parts.world.characters import snapshot_item
+    from parts.world.items import ITEMS, carrier, trace_item
+
+    if not session.guild:
+        return "You are not in a guild."
+    kw = keyword.strip().lower()
+    if not kw:
+        return "Deposit what? (guild vault deposit <item>)"
+    iid = trace_item(kw, carrier(session.player_id))
+    if iid is None:
+        return "You aren't carrying that."
+    if iid in set(session.equipped.values()):
+        return "That is worn. Unequip it before you bank it."
+    snapshot = snapshot_item(iid)
+    if snapshot is None:
+        return "You aren't carrying that."
+    name = ITEMS[iid]["name"]
+    loose_store.stow(_guild_vault(session.guild), snapshot)
+    ITEMS.pop(iid, None)
+    announce_to(
+        [m for m in _online_members(session.guild) if m != session.player_id],
+        f"\n{display_name(session.player_id)} deposits {name} into the guild vault.",
+    )
+    return f"You deposit {name} into the guild vault."
+
+
+def vault_withdraw(session: Session, arg: str) -> str:
+    """Take an item from the guild vault. Officer or leader only, so a member cannot loot the
+    guild's shared goods (the same gate the coin treasury keeps)."""
+    from parts.world import loose_store
+    from parts.world.characters import reclone_item
+    from parts.world.items import carrier
+
+    if not session.guild:
+        return "You are not in a guild."
+    if not _rank_at_least(session.guild_rank, "officer"):
+        return "Only an officer or the leader may withdraw from the guild vault."
+    stored = loose_store.contents(_guild_vault(session.guild))
+    if not stored:
+        return "The guild vault is empty."
+    picked = loose_store.match(stored, arg)
+    if picked is None:
+        return "The vault holds nothing like that. (guild vault to list it)"
+    taken = loose_store.take(picked[0], _guild_vault(session.guild))
+    if taken is None:
+        return "It is no longer in the vault."
+    reclone_item(taken, carrier(session.player_id))
+    announce_to(
+        [m for m in _online_members(session.guild) if m != session.player_id],
+        f"\n{display_name(session.player_id)} withdraws {taken['name']} from the guild vault.",
+    )
+    return f"You withdraw {taken['name']} from the guild vault."
 
 
 def _parse_amount(word: str) -> int | None:
