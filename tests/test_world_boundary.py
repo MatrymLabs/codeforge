@@ -90,6 +90,7 @@ _GAME_SEED = {
     "auction_store",
     "audit",
     "bans",
+    "metrics",
     "aggression",
     "session",
     "seed",
