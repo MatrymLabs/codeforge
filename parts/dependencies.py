@@ -6,6 +6,13 @@ then reports every dependency that is declared but unjustified (a FAIL) or justi
 longer declared (a stale WARN). Frameless discipline: stdlib only (tomllib), no new dep to
 police the deps. It mutates nothing; it reports a verdict. `make deps` runs it; the test twin
 rides `make check`, so an unjustified dependency cannot merge silently.
+
+It also carries an offline ADMISSION SCREEN (`screen <name>`): before a package is ever trusted,
+check the NAME for the AI-hallucination / typo-squat risk the supply-chain literature warns is
+systemic (an assistant confidently invents `reqeusts` or `python-dateutils`). A name that is not a
+valid package name, or is one edit from a well-known package while being neither that package nor
+already justified, is flagged. Offline and stdlib-only (no PyPI call, so it never touches the
+network in a test); it screens the name, human judgement admits the dependency.
 """
 
 from __future__ import annotations
@@ -19,6 +26,103 @@ _ROOT = Path(__file__).resolve().parent.parent
 _PYPROJECT = _ROOT / "pyproject.toml"
 _LEDGER = _ROOT / "dependency_ledger.toml"
 _REQUIRED_FIELDS = ("why", "stdlib_alternative", "removable")
+
+# A PEP 503-normalized package name: lowercase alphanumerics plus internal . _ - separators.
+_PEP503 = re.compile(r"^[a-z0-9]([a-z0-9._-]*[a-z0-9])?$")
+
+# Well-known PyPI packages an assistant is likely to invent a plausible-but-wrong near-miss of
+# (the frequent typo-squat / hallucination targets). Curated, not exhaustive: the point is to catch
+# the common one-edit near-misses, not to mirror the whole index. A declared name one edit from one
+# of these, but neither that package nor already justified in our ledger, is suspect until verified.
+POPULAR_PACKAGES = frozenset(
+    {
+        "requests",
+        "urllib3",
+        "httpx",
+        "aiohttp",
+        "numpy",
+        "pandas",
+        "scipy",
+        "matplotlib",
+        "scikit-learn",
+        "torch",
+        "tensorflow",
+        "flask",
+        "django",
+        "fastapi",
+        "starlette",
+        "pydantic",
+        "sqlalchemy",
+        "uvicorn",
+        "gunicorn",
+        "websockets",
+        "pytest",
+        "hypothesis",
+        "pyyaml",
+        "click",
+        "rich",
+        "boto3",
+        "pillow",
+        "beautifulsoup4",
+        "python-dateutil",
+        "setuptools",
+        "wheel",
+        "cryptography",
+        "certifi",
+        "jinja2",
+        "typing-extensions",
+        "packaging",
+        "ruff",
+        "mypy",
+        "bandit",
+        "pip-audit",
+    }
+)
+
+
+def _edit_distance(a: str, b: str, *, cap: int = 2) -> int:
+    """Levenshtein distance between two names, capped (we only care whether it is exactly 1).
+    Stdlib only, no dependency. Returns `cap + 1` once the distance provably exceeds the cap."""
+    if abs(len(a) - len(b)) > cap:
+        return cap + 1
+    prev = list(range(len(b) + 1))
+    for i, ca in enumerate(a, 1):
+        cur = [i]
+        for j, cb in enumerate(b, 1):
+            cur.append(min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (ca != cb)))
+        prev = cur
+    return prev[-1]
+
+
+def admission_concerns(
+    name: str,
+    *,
+    trusted: frozenset[str],
+    popular: frozenset[str] = POPULAR_PACKAGES,
+) -> list[str]:
+    """Screen one package NAME for admission (offline). Returns the concerns, empty when it is
+    clean. Catches an invalid name, or a name one edit from a popular package while being neither
+    that package nor already `trusted` (justified in our ledger): the typo-squat / hallucination
+    signal. Existence on PyPI is deliberately NOT checked here (that needs the network); this is the
+    offline first line, and human judgement admits the dependency after verifying it."""
+    canon = _canonical(name)
+    if not _PEP503.match(canon):
+        return [f"{canon!r} is not a valid package name (PEP 503)"]
+    if canon in trusted or canon in popular:
+        return []  # already justified in our ledger, or itself the well-known package
+    for pop in sorted(popular):
+        if _edit_distance(canon, pop) == 1:
+            return [
+                f"{canon!r} is one edit from the popular package {pop!r}: possible typo-squat or "
+                f"a hallucinated name. Verify it is the package you mean before trusting it."
+            ]
+    return []
+
+
+def screen_name(name: str, ledger: Path = _LEDGER) -> list[str]:
+    """Screen a proposed dependency name against the trusted (justified) set + the popular set."""
+    trusted = frozenset(read_ledger(ledger))
+    return admission_concerns(name, trusted=trusted)
 
 
 class LedgerError(RuntimeError):
@@ -139,7 +243,27 @@ def render_dependencies(pyproject: Path = _PYPROJECT, ledger: Path = _LEDGER) ->
 
 
 def main(argv: list[str] | None = None) -> int:
-    """`make deps`: print the verdict; exit non-zero if any dependency is unjustified."""
+    """`make deps`: print the gate verdict; exit non-zero if any dependency is unjustified.
+    `python -m parts.dependencies screen <name>`: run the offline admission screen on one name."""
+    import sys
+
+    args = list(sys.argv[1:] if argv is None else argv)
+    if len(args) >= 2 and args[0] == "screen":
+        try:
+            concerns = screen_name(args[1])
+        except LedgerError as exc:
+            print(f"admission screen: {exc}")
+            return 2
+        canon = _canonical(args[1])
+        if not concerns:
+            print(
+                f"admission screen: {canon!r} looks admissible (valid name, no typo-squat signal)."
+            )
+            return 0
+        print(f"admission screen: {canon!r} has concerns:")
+        for concern in concerns:
+            print(f"  - {concern}")
+        return 1
     try:
         audit = audit_dependencies()
     except LedgerError as exc:

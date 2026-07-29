@@ -13,8 +13,11 @@ from pathlib import Path
 import pytest
 
 from parts.dependencies import (
+    POPULAR_PACKAGES,
     LedgerError,
     _canonical,
+    _edit_distance,
+    admission_concerns,
     audit_dependencies,
     read_declared,
     read_ledger,
@@ -104,3 +107,57 @@ def test_render_shows_the_verdict() -> None:
     out = render_dependencies()
     assert "DEPENDENCY GATE" in out
     assert "PASS" in out  # the real repo is clean
+
+
+# --- the offline admission screen (typo-squat / hallucination defense) --------------------------
+
+_TRUSTED = frozenset({"pyyaml", "sqlalchemy", "fastapi"})
+
+
+def test_a_typosquat_of_a_popular_package_is_flagged() -> None:
+    # 'requsts' is one edit (a dropped 'e') from 'requests': neither that package nor trusted
+    concerns = admission_concerns("requsts", trusted=_TRUSTED)
+    assert concerns and "requests" in concerns[0] and "typo-squat" in concerns[0]
+
+
+def test_a_near_miss_of_a_hyphenated_popular_package_is_flagged() -> None:
+    # 'python-dateutils' is one edit (a trailing 's') from the real 'python-dateutil'
+    concerns = admission_concerns("python-dateutils", trusted=_TRUSTED)
+    assert concerns and "python-dateutil" in concerns[0]
+
+
+def test_a_popular_package_itself_is_admissible() -> None:
+    assert admission_concerns("requests", trusted=_TRUSTED) == []
+
+
+def test_a_trusted_justified_package_is_admissible() -> None:
+    # in our ledger already: justified by a human, so the screen stays quiet
+    assert admission_concerns("sqlalchemy", trusted=_TRUSTED) == []
+
+
+def test_a_novel_unrelated_name_is_admissible_no_false_positive() -> None:
+    # far from any popular name: the screen must not cry wolf on legitimate new names
+    assert admission_concerns("codeforge-nav", trusted=_TRUSTED) == []
+
+
+def test_an_invalid_package_name_is_refused() -> None:
+    # '@' is not stripped by _canonical and is not a legal PEP 503 name char, so it survives to fail
+    concerns = admission_concerns("weird@name", trusted=_TRUSTED)
+    assert concerns and "not a valid package name" in concerns[0]
+
+
+def test_edit_distance_is_capped_and_correct() -> None:
+    assert _edit_distance("requests", "requsts") == 1  # one deletion
+    assert _edit_distance("requests", "requests") == 0
+    assert (
+        _edit_distance("requests", "reqeusts") == 2
+    )  # an adjacent transposition is two in plain Levenshtein
+    assert _edit_distance("abc", "xyzxyz", cap=2) == 3  # length gap beyond cap -> cap + 1
+
+
+def test_screen_uses_the_real_ledger_and_clears_our_own_deps() -> None:
+    from parts.dependencies import screen_name
+
+    # every real declared dep is justified (trusted), so none trips the screen
+    assert screen_name("sqlalchemy") == []
+    assert POPULAR_PACKAGES  # the curated set is non-empty
