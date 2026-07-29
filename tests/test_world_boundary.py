@@ -81,6 +81,7 @@ _GAME_SEED = {
     "friends",
     "chat",
     "inns",
+    "stores",
     "aggression",
     "session",
     "seed",

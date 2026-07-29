@@ -238,3 +238,21 @@ because the crowd is now real.
 `tests/test_inns.py` covers acceptance (one inn + keeper per town, the two-way hub<->inn link, the
 keeper's topics, resting to full at the hearth), refusal (resting outside an inn heals nothing),
 tolerance (a hub absent from the world is skipped, not crashed), and determinism.
+
+## The general store (a materials market)
+
+The plaza merchant is the coin *sink* (draughts to buy); the general store is its *source*. Gatherers
+had nowhere to turn ore, shards, and herbs into coin, and crafters had no way to buy a material their
+biome does not yield. `parts/world/stores.py` (MOD-04.122) is both: a second town interior, reached
+`market` off the hub and `out` back, keeping a provisioner with a two-way materials shop.
+
+- **Same mould as the inn.** `raise_stores(configs, known_items)` returns (rooms, npcs) and
+  `wire_store_doors` opens each hub's `market` exit in place. The provisioner's `shop` buys raw
+  materials and sells them on at twice the buy price (the market's spread), so `shop`/`buy`/`sell`
+  work there like any merchant.
+- **Cross-check safe.** The buy list is filtered to materials the loaded seed actually has (herb
+  labels taken canonically from the wildlands biome map), so a world missing a material simply does
+  not price it and the boot cross-check (real prototypes only) always passes.
+
+`tests/test_stores.py` covers acceptance (one store + provisioner per town, the two-way spread, the
+`market` exit), tolerance (only present materials priced; a missing hub skipped), and determinism.
