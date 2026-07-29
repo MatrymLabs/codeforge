@@ -3571,5 +3571,30 @@
     "aliases": [],
     "created": "2026-07-29",
     "updated": "2026-07-29"
+  },
+  {
+    "designation": "CMD-10.031",
+    "name": "@metrics",
+    "status": "active",
+    "function": "a live-ops snapshot from storage: population + economy health (owner)",
+    "label": "@metrics",
+    "file": "forge.py",
+    "type": "CMD",
+    "domain": "10",
+    "docs": "docs/infrastructure_spec.md",
+    "tests": "tests/test_metrics.py",
+    "depends_on": [],
+    "related": [
+      "metrics"
+    ],
+    "reuse": "",
+    "tags": [
+      "command"
+    ],
+    "notes": "_metrics_cmd renders parts.world.metrics.snapshot for a live admin.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-29",
+    "updated": "2026-07-29"
   }
 ]

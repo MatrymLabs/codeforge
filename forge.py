@@ -684,6 +684,16 @@ def _build_commands() -> CommandSet:
     )
     cs.add(
         Command(
+            "@metrics",
+            "CMD-10.031",
+            "a live-ops snapshot from storage: population + economy health (owner)",
+            _metrics_cmd,
+            namespace=ADMIN,
+            min_rank="owner",
+        )
+    )
+    cs.add(
+        Command(
             "@ban",
             "CMD-10.028",
             "bar a character from the world: @ban <player> <reason> (wizard+)",
@@ -2241,6 +2251,13 @@ def _bans_cmd(_session: Session, _arg: str) -> str:
     for name, reason, moderator in rows:
         lines.append(f"  {display_name(name)}: {reason} (by {display_name(moderator)})")
     return "\n".join(lines)
+
+
+def _metrics_cmd(_session: Session, _arg: str) -> str:
+    """`@metrics`: a live-ops snapshot from storage (population + economy health) (owner)."""
+    from parts.world import metrics
+
+    return metrics.render()
 
 
 def _audit_cmd(_session: Session, arg: str) -> str:
