@@ -195,3 +195,23 @@ carry no such import. This keeps the boundary one-way and the closure test green
 save+restore round-trip, the one-directional guarantee), refusal (missing name, yourself, unknown hero,
 duplicate, full list, removing a non-friend), a serialize/restore round-trip, and engine-tick
 reachability of the `friend`/`friends` verbs through `handle_command`.
+
+## Chat (the world channel)
+
+The widest voice in the social layer. Party reaches your band, guild reaches your order, mail reaches
+one offline hero; `chat <message>` reaches *everyone* online at that moment, the town square of the
+whole world. `parts/world/chat.py` (MOD-04.120), verb `chat` (CMD-04.107).
+
+- **Transient by nature.** A live channel carries a line of text and nothing else; it persists nothing
+  and moves no world state. Delivery is `events.announce_to(roster(), exclude=self)`, so offline heroes
+  are simply skipped and the speaker hears their own line only as the `[World] You:` confirmation.
+- **Validated.** A speaker must be a named hero already in the world (the login desk does not chat) and
+  a message must not be empty; both refusals fail loud and broadcast nothing.
+- **Smallest useful version.** A per-speaker rate limit and an opt-out mute are documented extension
+  points, deliberately not built until a crowd is large enough to need them.
+
+### Testing
+
+`tests/test_chat.py` covers acceptance (a shout reaches every other hero but not the speaker's own
+channel, message case preserved), refusal (empty message, an unnamed speaker still at the login desk),
+and engine-tick reachability of the `chat` verb through `handle_command`.

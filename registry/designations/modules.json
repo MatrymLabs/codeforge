@@ -6363,5 +6363,31 @@
     "aliases": [],
     "created": "2026-07-29",
     "updated": "2026-07-29"
+  },
+  {
+    "designation": "MOD-04.120",
+    "name": "chat",
+    "status": "active",
+    "function": "the world channel: one line heard by every hero online right now",
+    "label": "chat",
+    "file": "parts/world/chat.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "docs/party_system.md",
+    "tests": "tests/test_chat.py",
+    "depends_on": [],
+    "related": [
+      "events",
+      "session"
+    ],
+    "reuse": "the broadcast-channel primitive: validated, membership-wide delivery over the online roster; the pattern for any world-wide or zone-wide live announcement",
+    "notes": "The social layer's widest voice (vs party->band, guild->order, mail->one offline hero). Transient, moves no world state. Speaker must be named + in the world; message non-empty. Delivers via events.announce_to(roster(), exclude=self); offline heroes skipped. Rate-limit + opt-out mute are documented extension points, not built. Verb chat (CMD-04.107).",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-29",
+    "updated": "2026-07-29"
   }
 ]
