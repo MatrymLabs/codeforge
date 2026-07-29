@@ -78,6 +78,7 @@ _GAME_SEED = {
     "trade",
     "guild",
     "mail",
+    "friends",
     "aggression",
     "session",
     "seed",

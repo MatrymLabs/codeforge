@@ -49,6 +49,7 @@ class SqlCharacterStore:
                 allocated=row.allocated,
                 professions=row.professions,
                 reputation=row.reputation,
+                friends=row.friends,
                 auth_salt=row.auth_salt,
                 auth_hash=row.auth_hash,
             )
@@ -127,3 +128,4 @@ def _apply_gameplay(row: CharacterRow, record: CharacterRecord) -> None:
     row.allocated = record.allocated
     row.professions = record.professions
     row.reputation = record.reputation
+    row.friends = record.friends

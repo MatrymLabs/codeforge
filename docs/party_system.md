@@ -164,3 +164,34 @@ aborts. Built on per-player inventory (items move by carrier-tag reassignment) a
 `tests/test_party.py` covers acceptance (form via invite+join, roster, party chat delivery, leadership
 handoff, disband, logout cleanup, `members_in_room`), refusal (every validation path above), and
 engine-tick reachability of both verbs through `handle_command`.
+
+## Friends (the personal roster)
+
+Party, guild, and mail are *shared* channels; a friends list is one hero's own private ledger of
+people worth keeping track of. It is deliberately the smallest social primitive: `parts/world/friends.py`
+(MOD-04.119), one comma-joined column on the character row, no new table beyond a column migration.
+
+- **One-directional by design.** Your list is yours. `friend add <player>` puts a name on *your* roster
+  and does not touch theirs, enlist them in anything, or notify them. The only power a friends list
+  holds is sight.
+- **Validated, bounded, persisted.** A name is added only after the character store confirms a real
+  hero wears it (a friend may be offline, so we check the store, not who is logged in). The list is
+  capped at `MAX_FRIENDS` to bound growth, and serialize/restore mirror the professions/reputation
+  columns so the roster survives a logout.
+- **`friends` shows who is around.** The render lists online friends first, each marked online/offline,
+  so a returning hero sees at a glance who is available to adventure with. `friend` and `friends` are
+  both filed verbs (CMD-04.105 / CMD-04.106) routing to one dispatcher.
+
+### A note on the import cycle
+
+`characters` imports `friends` at module load (for the column's serialize/restore), so `friends` must
+*not* import `characters` at the top level. The two functions that need the store (`add`, `_character_exists`)
+and `save_character` import them lazily inside the call; serialize/restore touch only the session and
+carry no such import. This keeps the boundary one-way and the closure test green.
+
+### Testing
+
+`tests/test_friends.py` covers acceptance (add a real hero, render's online/offline marks, remove,
+save+restore round-trip, the one-directional guarantee), refusal (missing name, yourself, unknown hero,
+duplicate, full list, removing a non-friend), a serialize/restore round-trip, and engine-tick
+reachability of the `friend`/`friends` verbs through `handle_command`.

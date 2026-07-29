@@ -50,6 +50,7 @@ from parts.titles import title
 from parts.vitals import vitals
 from parts.world import allocate, artifact, creator_workshop, gather, quest
 from parts.world import feats as feats_mod
+from parts.world import friends as friends_mod
 from parts.world import guild as guild_mod
 from parts.world import mail as mail_mod
 from parts.world import trade as trade_mod
@@ -140,7 +141,8 @@ HELP_TEXT = (
     "party [invite|join|leave|disband], psay <msg>, "
     "trade <player> [accept|add <item>|coins <n>|confirm|cancel], "
     "guild [found <name>|invite|accept|promote|leave|disband], gsay <msg>, "
-    "mail [send <player> <msg>|read <n>|delete <n>], route <room>, score, "
+    "mail [send <player> <msg>|read <n>|delete <n>], friends [add|remove <player>], "
+    "route <room>, score, "
     "equip <item>, unequip <slot>, "
     "attack <target>, skills, use <ability> [on <foe>], repair, scan <target>, deploy, calibrate, "
     "channel, journal [text], vitals, "
@@ -1618,6 +1620,24 @@ def _build_commands() -> CommandSet:
     )
     cs.add(
         Command(
+            "friend",
+            "CMD-04.105",
+            "your friends list: friend | friend add <player> | friend remove <player>",
+            _friend_cmd,
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "friends",
+            "CMD-04.106",
+            "show your friends list and who is online (alias of `friend`)",
+            _friend_cmd,
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
             "shop",
             "CMD-04.071",
             "list a merchant's wares",
@@ -2061,6 +2081,21 @@ def _mail_cmd(session: Session, arg: str) -> str:
     if sub == "delete":
         return mail_mod.delete_mail(session, rest)
     return "Mail: mail | mail send <player> <message> | mail read <n> | mail delete <n>."
+
+
+def _friend_cmd(session: Session, arg: str) -> str:
+    """The `friend` verb: your personal friends list. Bare `friend`/`friends` shows the roster with
+    who is online; `friend add <player>`, `friend remove <player>`."""
+    parts_ = arg.split(maxsplit=1)
+    sub = parts_[0].lower() if parts_ else ""
+    rest = parts_[1] if len(parts_) > 1 else ""
+    if sub in ("", "list"):
+        return friends_mod.render(session)
+    if sub == "add":
+        return friends_mod.add(session, rest)
+    if sub in ("remove", "rem", "del"):
+        return friends_mod.remove(session, rest)
+    return "Friends: friend | friend add <player> | friend remove <player>."
 
 
 def _guild_cmd(session: Session, arg: str) -> str:

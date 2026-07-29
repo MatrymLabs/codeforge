@@ -81,6 +81,8 @@ class CharacterRow(ArchiveBase):
     # Standing with each Order as 'order:standing' pairs, comma-joined, or "". The named tier
     # recomputes from the number on restore (derive-don't-store).
     reputation: Mapped[str] = mapped_column(default="")
+    # This hero's friends list: lowercase labels, comma-joined, or "" (parts.world.friends).
+    friends: Mapped[str] = mapped_column(default="")
     auth_salt: Mapped[str | None] = mapped_column(default=None)  # legacy v1 char passwords
     auth_hash: Mapped[str | None] = mapped_column(default=None)
 

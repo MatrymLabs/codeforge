@@ -6337,5 +6337,31 @@
     "aliases": [],
     "created": "2026-07-28",
     "updated": "2026-07-28"
+  },
+  {
+    "designation": "MOD-04.119",
+    "name": "friends",
+    "status": "active",
+    "function": "a hero's personal, one-directional friends list; shows who is online",
+    "label": "friends",
+    "file": "parts/world/friends.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "docs/party_system.md",
+    "tests": "tests/test_friends.py",
+    "depends_on": [],
+    "related": [
+      "characters",
+      "session"
+    ],
+    "reuse": "the personal-roster primitive: a validated, bounded, per-owner list of labels persisted as a comma-joined column; the pattern for any user-curated watch list",
+    "notes": "The social layer's quiet corner (vs shared party/guild). One-directional: your list is yours; adding does not touch the other hero. Names validated against the character store (a friend may be offline); list <= MAX_FRIENDS. serialize/restore mirror the professions/reputation columns; characters imports it lazily-free via a top-level import while friends imports characters lazily (no cycle). Verbs friend (CMD-04.105) + friends (CMD-04.106).",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-29",
+    "updated": "2026-07-29"
   }
 ]
