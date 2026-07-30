@@ -460,7 +460,10 @@ class _GateHandler(socketserver.StreamRequestHandler):
             entered = self._front_desk(session)
             if not entered:
                 return
-            presence.mark_online(session.player_id)  # a named hero joins the shared roster
+            presence.mark_online(
+                session.player_id, session.location
+            )  # joins the shared roster + room
+            last_room = session.location  # track moves so the cross-process room view stays current
             self._push_state(session)  # first frames: the scene they logged into
             while session.alive:
                 self.wfile.write(b"> ")
@@ -485,6 +488,9 @@ class _GateHandler(socketserver.StreamRequestHandler):
                 if response:
                     self._send(response)
                 self._push_state(session)  # reflect any vitals/room change into GMCP
+                if session.location != last_room:  # a move: refresh the cross-process room roster
+                    last_room = session.location
+                    presence.mark_at(session.player_id, last_room)
         except OSError:
             pass  # client dropped (broken pipe / reset) -- disconnect quietly
         finally:

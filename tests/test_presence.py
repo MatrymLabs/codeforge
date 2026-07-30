@@ -90,3 +90,45 @@ def test_reconnect_keeps_the_roster_fed_after_a_bus_swap() -> None:
     presence.reconnect()
     presence.mark_online("new")  # only reaches the roster if presence re-subscribed
     assert "new" in presence.online()
+
+
+# --- Phase 5: the roster also carries WHERE each hero stands ------------------------------------
+
+
+def test_mark_online_with_a_room_places_the_hero():
+    presence.mark_online("bram", "forge")
+    assert presence.in_room("forge") == {"bram"}
+    assert presence.online() == {"bram"}
+
+
+def test_mark_at_moves_a_hero_between_rooms():
+    presence.mark_online("bram", "forge")
+    presence.mark_at("bram", "library")
+    assert presence.in_room("forge") == set()
+    assert presence.in_room("library") == {"bram"}
+
+
+def test_mark_offline_clears_the_location():
+    presence.mark_online("bram", "forge")
+    presence.mark_offline("bram")
+    assert presence.in_room("forge") == set()
+
+
+def test_in_room_gathers_everyone_in_that_room():
+    presence.mark_online("bram", "forge")
+    presence.mark_online("mira", "forge")
+    presence.mark_online("cass", "library")
+    assert presence.in_room("forge") == {"bram", "mira"}
+
+
+def test_mark_at_ignores_an_offline_hero():
+    # a moved event for someone not online must not resurrect them onto the roster
+    presence.mark_at("ghost", "forge")
+    assert presence.in_room("forge") == set()
+    assert presence.online() == set()
+
+
+def test_mark_online_without_a_room_leaves_them_placeless():
+    presence.mark_online("bram")  # no room -> online but not placed
+    assert presence.online() == {"bram"}
+    assert presence.in_room("forge") == set()

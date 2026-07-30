@@ -490,3 +490,22 @@ def test_on_room_skips_an_occupant_with_no_sink():
         )  # must not raise
     finally:
         SESSIONS.pop("sinkless", None)
+
+
+def test_render_scene_shows_a_remote_player_from_the_roster():
+    # Phase 5.2: a player hosted on ANOTHER process (present only in the shared roster, not local
+    # SESSIONS) appears in the room scene, so both gateways show one shared room.
+    from parts.world import presence
+
+    bus.reset_bus()
+    presence._reset()
+    _seat("local", "library")  # a locally-hosted player
+    presence.mark_online("remote", "library")  # a player on another gateway, same room
+    try:
+        scene = render_scene("library", viewer="local")
+        assert "Remote is here." in scene  # the cross-process occupant is shown
+        assert "Local is here." not in scene  # never yourself... this is local's own scene
+    finally:
+        unbind_echo("local")
+        presence._reset()
+        bus.reset_bus()
