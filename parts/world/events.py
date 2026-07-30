@@ -9,21 +9,26 @@ This is the embryo of the canonical event bus: today the payload
 is rendered text; later it becomes validated event frames that
 sinks render per-recipient.
 
-Two delivery scopes, two homes (Phase 4). ROOM-scoped delivery (announce,
-announce_frame) reads the local SESSIONS map -- room occupancy is this
-process's world state, so it stays local until shared world state exists
-(Phase 5). MEMBERSHIP-scoped delivery (announce_to a cohort, broadcast to
-everyone, push_gmcp to a set) is process-agnostic -- a party or guild can
-span gateways -- so it PUBLISHES onto the message bus. In one process the
-in-process bus delivers synchronously to this process's own subscriber, so
-behaviour is identical; once a broker is injected the same publish fans out
-to every process, and each delivers to the members it hosts.
+Every fan-out rides the message bus now (Phase 4 for cohorts, Phase 5 for rooms).
+ROOM-scoped delivery (announce, announce_frame) publishes to a room topic; each
+process delivers to the sinks IT hosts whose session is in that room, so two
+players standing in the same room on DIFFERENT gateways see each other's actions
+and hear each other speak. MEMBERSHIP-scoped delivery (announce_to a cohort,
+broadcast to everyone, push_gmcp to a set) publishes the same way -- a party or
+guild can span gateways. In one process the in-process bus delivers synchronously,
+so behaviour is identical; once a broker is injected the same publish fans out to
+every process, and each delivers to the players it hosts.
+
+The boundary this does NOT cross: shared authoritative OBJECT state (NPCs, room
+items, combat targets) is still per-process -- a felled NPC on one gateway is not
+felled on another. This carries player PRESENCE and COMMUNICATION across the wire,
+not world mutation; the authoritative world server is the deferred next step.
 """
 
 from collections.abc import Callable, Iterable
 from typing import Any
 
-from parts.world import bus
+from parts.world import bus, frames
 from parts.world.frames import Frame
 from parts.world.session import SESSIONS
 
@@ -31,10 +36,12 @@ EchoSink = Callable[[str], None]
 
 _ECHO_SINKS: dict[str, EchoSink] = {}
 
-# The bus topics the membership-scoped channels ride. One subscriber per process per topic (wired
-# below) delivers a published message to the sinks THIS process hosts.
+# The bus topics delivery rides. One subscriber per process per topic (wired below) delivers a
+# published message to the sinks THIS process hosts: echo/gmcp are membership-scoped (a target set),
+# room is location-scoped (whoever this process hosts in that room).
 _ECHO_TOPIC = "delivery:echo"
 _GMCP_TOPIC = "delivery:gmcp"
+_ROOM_TOPIC = "delivery:room"
 
 # The gateway registers its stop function here at boot; the @shutdown
 # verb calls it. Dependency inversion: forge never imports the gateway.
@@ -68,28 +75,57 @@ def _deliver(player_id: str, sink: EchoSink, text: str) -> None:
 
 
 def announce(room: str, text: str, exclude: str = "") -> None:
-    """Deliver text to every seated player in a room, except the actor."""
-    # Snapshot: _deliver may prune a dead sink mid-loop (mutates _ECHO_SINKS).
-    for player_id, session in list(SESSIONS.items()):
-        if player_id == exclude or session.location != room:
-            continue
-        sink = _ECHO_SINKS.get(player_id)
-        if sink is not None:
-            _deliver(player_id, sink, text)
+    """Deliver text to every seated player in a room except the actor, on any process (Phase 5)."""
+    bus.get_bus().publish(
+        _ROOM_TOPIC, {"kind": "text", "room": room, "text": text, "exclude": exclude}
+    )
 
 
 def announce_frame(room: str, frame: Frame, exclude: str = "") -> None:
-    """Deliver a typed Frame to every seated player in a room except the actor,
-    rendering it PER RECIPIENT. The typed successor to announce(): the payload is a
-    structured Frame, and each sink receives text the frame projects for its own
-    viewer, instead of one line pre-rendered for the whole room."""
-    # Snapshot: _deliver may prune a dead sink mid-loop (mutates _ECHO_SINKS).
-    for player_id, session in list(SESSIONS.items()):
-        if player_id == exclude or session.location != room:
-            continue
+    """Deliver a typed Frame to every seated player in a room except the actor, rendering it PER
+    RECIPIENT on whichever process hosts them. The typed successor to announce(): the frame crosses
+    the bus as JSON (frames.to_wire) and each process reconstructs it and renders for its own local
+    viewers, so per-recipient projection survives the wire."""
+    bus.get_bus().publish(
+        _ROOM_TOPIC,
+        {"kind": "frame", "room": room, "frame": frames.to_wire(frame), "exclude": exclude},
+    )
+
+
+def _room_targets(room: str, exclude: str) -> list[str]:
+    """The players THIS process hosts in the room, minus the actor. Snapshot: delivery may prune a
+    dead sink mid-loop (mutates _ECHO_SINKS)."""
+    return [
+        pid
+        for pid, session in list(SESSIONS.items())
+        if pid != exclude and session.location == room
+    ]
+
+
+def _on_room(payload: dict[str, Any]) -> None:
+    """Deliver a published room event to the local sinks in that room. Text is delivered as-is; a
+    frame is reconstructed from the wire and rendered per local recipient."""
+    room = payload.get("room")
+    if not isinstance(room, str):
+        return
+    exclude = payload.get("exclude", "")
+    if payload.get("kind") == "frame":
+        try:
+            frame = frames.from_wire(payload.get("frame") or {})
+        except ValueError:
+            return  # a garbled frame never renders as noise
+        for player_id in _room_targets(room, exclude):
+            sink = _ECHO_SINKS.get(player_id)
+            if sink is not None:
+                _deliver(player_id, sink, frame.render_for(player_id))
+        return
+    text = payload.get("text")
+    if not isinstance(text, str):
+        return
+    for player_id in _room_targets(room, exclude):
         sink = _ECHO_SINKS.get(player_id)
         if sink is not None:
-            _deliver(player_id, sink, frame.render_for(player_id))
+            _deliver(player_id, sink, text)
 
 
 def announce_to(player_ids: Iterable[str], text: str, exclude: str = "") -> None:
@@ -190,7 +226,11 @@ def rewire_delivery() -> None:
     a bus rewire hook and run at import, so a bus swap (a broker replacing the default) never leaves
     delivery attached to a dead bus."""
     active = bus.get_bus()
-    for topic, handler in ((_ECHO_TOPIC, _on_echo), (_GMCP_TOPIC, _on_gmcp)):
+    for topic, handler in (
+        (_ECHO_TOPIC, _on_echo),
+        (_GMCP_TOPIC, _on_gmcp),
+        (_ROOM_TOPIC, _on_room),
+    ):
         active.unsubscribe(topic, handler)  # idempotent
         active.subscribe(topic, handler)
 
