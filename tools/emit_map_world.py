@@ -13,6 +13,7 @@ Run from the repo root:  python tools/emit_map_world.py
 from __future__ import annotations
 
 from pathlib import Path
+from typing import Any
 
 # --- The map, as data --------------------------------------------------------------------------
 # Each zone: id, display name, level band, biome (a wildlands biome key), a hub blurb, the wildlands
@@ -579,7 +580,7 @@ def q(s: str) -> str:
     return s.replace('"', "'")
 
 
-def emit() -> None:
+def emit(out_root: Path | None = None) -> None:
     rooms: list[str] = [
         "# SEED: aethryn -- rooms.yaml  (GENERATED from the world map by tools/emit_map_world.py)",
         "# The canonical map of Aethryn: 14 zones, their settlements, dungeons, and landmarks,",
@@ -729,7 +730,12 @@ def emit() -> None:
         wild.append(f"{SP}trail_length: {_fill_trail(zid)}")
         wild.append("")
 
-    root = Path(__file__).resolve().parent.parent / "seeds" / "aethryn"
+    root = (
+        out_root
+        if out_root is not None
+        else Path(__file__).resolve().parent.parent / "seeds" / "aethryn"
+    )
+    root.mkdir(parents=True, exist_ok=True)
     (root / "rooms.yaml").write_text("\n".join(rooms) + "\n")
     (root / "npcs.yaml").write_text("\n".join(npcs) + "\n")
     (root / "zones.yaml").write_text("\n".join(zones_y) + "\n")
@@ -754,6 +760,46 @@ def _resident(kind: str, name: str) -> str:
     return f"{role} of {name}"
 
 
+# Per-NPC hand-tuning the emitter reproduces (so a regen is non-destructive). These override or
+# augment the generic townsfolk/guardian output for the few NPCs given individual character by hand:
+# a lived-in wander on the starter towns, and telegraphed specials, raid-gating, and regional armour
+# drops on the bosses that anchor progression. Keeping them here means the map source stays the one
+# source of truth: `python tools/emit_map_world.py` rebuilds the world exactly as committed.
+_FOLK_WANDER = {"greenhold_folk", "riverbend_folk", "sunmeadow_folk"}
+_WANDER_LINE = "wander: true  # ambient: strolls the town on the beat (world life)"
+
+_FOE_TUNING: dict[str, dict[str, Any]] = {
+    "the_black_hollow_guardian": {
+        "trailing": [
+            "inflicts: {status: daze, chance: 3, beats: 1}"
+            "  # a dark, reeling blow costs the hero an action",
+            'special: {telegraph: "The guardian draws the hollow\'s dark in around its fists", '
+            "mult: 2, cadence: 3}",
+        ],
+    },
+    "glacial_bastion_guardian": {
+        "name_comment": "  # mid-tier: drops the leg + feet armor for the open world",
+        "drops": "[greater_healing_draught, ashlord_greaves, emberstride_boots]",
+    },
+    "heart_of_xilnath_guardian": {
+        "trailing": [
+            "inflicts: {status: venom, chance: 2, damage: 12, ticks: 4}"
+            "  # its bite leaves a venom that saps you",
+            'special: {telegraph: "The guardian rears, venom beading along its fangs", '
+            "mult: 2, cadence: 3}",
+        ],
+    },
+    "netharions_throne_guardian": {
+        "raid": "  # the final weekly raid: Netharion's Throne, the apex of the climb",
+        "drops": "[greater_healing_draught, abyssal_legguards, abyssal_sabatons]",
+    },
+    "the_rifted_abyss_guardian": {
+        "raid": "  # an apex weekly raid: bring a party and the trinity, not a solo lap",
+        "drops": "[greater_healing_draught, abyssal_legguards, abyssal_sabatons]",
+    },
+}
+
+
 def _npc(out: list[str], nid: str, name: str, room: str, line: str) -> None:
     out.append(f"{nid}:")
     out.append(f"{SP}name: {name}")
@@ -763,6 +809,8 @@ def _npc(out: list[str], nid: str, name: str, room: str, line: str) -> None:
     out.append(f"{SP}location: {room}")
     out.append(f"{SP}dialogue:")
     out.append(f"{SP}{SP}- {line}")
+    if nid in _FOLK_WANDER:
+        out.append(f"{SP}{_WANDER_LINE}")
     out.append("")
 
 
@@ -774,8 +822,9 @@ def _foe(out: list[str], nid: str, name: str, room: str, level: int, biome: str)
         "salt-desert": "ERT",
         "coastal-strand": "WTR",
     }.get(biome, "DRK")
+    tuning = _FOE_TUNING.get(nid, {})
     out.append(f"{nid}:")
-    out.append(f"{SP}name: {name}")
+    out.append(f"{SP}name: {name}{tuning.get('name_comment', '')}")
     out.append(f"{SP}keywords: [guardian, {room.split('_')[0]}]")
     out.append(f"{SP}location: {room}")
     out.append(f"{SP}dialogue:")
@@ -786,9 +835,13 @@ def _foe(out: list[str], nid: str, name: str, room: str, level: int, biome: str)
     out.append(f"{SP}attack_element: {el}")
     out.append(f"{SP}level: {level}")
     out.append(f"{SP}tier: boss")
+    if "raid" in tuning:
+        out.append(f"{SP}raid: true{tuning['raid']}")
     out.append(f"{SP}lethal: true")
-    out.append(f"{SP}drops: [greater_healing_draught]")
+    out.append(f"{SP}drops: {tuning.get('drops', '[greater_healing_draught]')}")
     out.append(f"{SP}loot: {{ember_shard: 5, nothing: 2}}")
+    for line in tuning.get("trailing", []):
+        out.append(f"{SP}{line}")
     out.append("")
 
 
