@@ -1624,3 +1624,33 @@ rimeberry_draught:
   spawn_pool: [frosthold, winters_grasp, glacial_bastion]
   spawn_chance: 2
   seasons: [winter]
+
+# Leg and feet: the two armor slots the armory was missing (itemization depth). A mid pair from the
+# open world, and a raid-tier pair the apex guardians drop -- the top of the gear-slot treadmill.
+ashlord_greaves:
+  name: the Ashlord's greaves
+  keywords: [greaves, legs, leg, ashlord]
+  location: nowhere
+  slot: leg
+  mods: {DEF: 8, MAG DEF: 4}
+
+emberstride_boots:
+  name: emberstride boots
+  keywords: [boots, feet, feet, emberstride]
+  location: nowhere
+  slot: feet
+  mods: {EVA: 6, ACC: 3}
+
+abyssal_legguards:
+  name: the abyssal legguards
+  keywords: [legguards, legs, leg, abyssal]
+  location: nowhere
+  slot: leg
+  mods: {DEF: 22, MAG DEF: 14}
+
+abyssal_sabatons:
+  name: the abyssal sabatons
+  keywords: [sabatons, feet, boots, abyssal]
+  location: nowhere
+  slot: feet
+  mods: {EVA: 18, ACC: 10}

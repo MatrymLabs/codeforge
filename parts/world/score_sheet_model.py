@@ -50,6 +50,8 @@ class EquipmentLoadout:
     body: str = ""
     head: str = ""
     arm: str = ""
+    leg: str = ""
+    feet: str = ""
     accessory_1: str = ""
     accessory_2: str = ""
 
