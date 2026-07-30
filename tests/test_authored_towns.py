@@ -293,7 +293,7 @@ def test_stonehelms_second_quest_is_a_making_hunt():
 
 def test_batch_c_towns_carry_a_vendor_a_node_and_a_working_economy():
     # Density-v2 (batch C): Zul'karak, Stonefang, Stonehelm each gain the same working-economy depth
-    # -- a vendor who sells supplies and buys the town's own gather-node yield, a node, three reactive
+    # -- a vendor who sells supplies and buys the town's own gather-node yield, a node, three
     # voices, two dangers, and two lore items.
     for stem, material in (
         ("zulkarak", "vinesilk"),
