@@ -2,19 +2,43 @@
 
 Acceptance: an empty world reports zeros; after seeding characters (with coin), a guild treasury, an
 auction listing, mail, and a ban, snapshot reports the right counts and the coin-in-circulation sum
-(purses + treasuries); render labels them. Read-only: it mutates nothing. Real store, tmp.
+(purses + treasuries); render labels them. The players-online figure comes off the bus-fed presence
+roster, not storage, and tracks mark_online/mark_offline. Read-only: it mutates nothing. Real store,
+tmp.
 """
 
 from __future__ import annotations
 
-from parts.world import auction_store, bans, guild_store, mail_store, metrics
+from typing import Any
+
+import pytest
+
+from parts.world import auction_store, bans, bus, guild_store, mail_store, metrics, presence
 from parts.world.characters import put_record
+
+
+@pytest.fixture(autouse=True)
+def _fresh_roster() -> Any:
+    bus.reset_bus()
+    presence._reset()  # the online count reads the bus-fed roster; start each test clean
+    yield
+    bus.reset_bus()
+    presence._reset()
 
 
 def test_an_empty_world_reports_zeros():
     snap = metrics.snapshot()
     assert snap["characters"] == 0 and snap["coins_in_circulation"] == 0
     assert snap["guilds"] == 0 and snap["auction_listings"] == 0 and snap["bans"] == 0
+    assert snap["players_online"] == 0
+
+
+def test_players_online_tracks_the_presence_roster():
+    presence.mark_online("ada")
+    presence.mark_online("bram")
+    assert metrics.snapshot()["players_online"] == 2
+    presence.mark_offline("ada")
+    assert metrics.snapshot()["players_online"] == 1
 
 
 def test_snapshot_counts_and_sums_across_storage():
