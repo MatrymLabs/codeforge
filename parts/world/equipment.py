@@ -47,9 +47,13 @@ def equipped_modifiers(session: Session) -> dict[str, list[StatModifier]]:
     """Gather every equipped item's modifiers, grouped by the stat they target, PLUS any set bonus
     earned by wearing a whole gear set at once (parts.world.gearsets). Set bonuses stack on top of
     the pieces' own mods, so a full regional set beats three unrelated pieces of the same tier."""
+    from parts.world import durability
+
     by_target: dict[str, list[StatModifier]] = {}
     worn_prototypes: set[str] = set()
     for slot, iid in session.equipped.items():
+        if durability.is_broken(iid):
+            continue  # a broken piece grants nothing (and no set bonus) until it is repaired
         worn_prototypes.add(items.prototype_of(iid))
         for target, amount in items.ITEMS[iid]["mods"].items():
             by_target.setdefault(target, []).append(StatModifier(source=slot, flat=amount))

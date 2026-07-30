@@ -64,6 +64,7 @@ _GAME_SEED = {
     "combat",
     "threat",
     "lockouts",
+    "durability",
     "abilities",
     "jobs",
     "progression",

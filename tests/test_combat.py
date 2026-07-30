@@ -16,12 +16,17 @@ from parts.world.session import SESSIONS, Session
 def fresh_world():
     # Restore in place (clear + update, never rebind): combat.py holds
     # `from parts.world.npcs import NPCS`, so rebinding npcs.NPCS would strand that alias.
+    from parts.world import items
+
     npcs_snap = copy.deepcopy(npcs.NPCS)
+    items_snap = copy.deepcopy(items.ITEMS)  # durability tests clone gear; never leak the clones
     SESSIONS.clear()
     yield
     npcs.NPCS.clear()
     npcs.NPCS.update(npcs_snap)
     npcs.reindex_npcs()
+    items.ITEMS.clear()
+    items.ITEMS.update(items_snap)
     SESSIONS.clear()
 
 
@@ -949,3 +954,38 @@ def test_an_empowered_strike_hits_fifty_percent_harder() -> None:
     s.statuses["empowered"] = 3
     out = attack(s, "dummy")
     assert "for 10" in out and "(empowered!)" in out  # 7 + 7//2
+
+
+# --- durability: gear wears in combat (the economy's sink) ---------------------------------------
+
+
+def test_a_landed_strike_wears_the_equipped_weapon():
+    from parts.world import durability, items
+
+    s = _fighter()
+    s.equipped["weapon"] = items.clone("forge_wrench", items.carrier("matrym"))
+    attack(s, "dummy")
+    assert durability.current(s.equipped["weapon"]) == durability.MAX - 1  # the strike dulled it
+
+
+def test_a_landed_blow_wears_the_equipped_body_armor():
+    from parts.world import durability, items
+    from parts.world.aggression import menace
+
+    s = _fighter()
+    s.equipped["body"] = items.clone("padded_jerkin", items.carrier("matrym"))
+    npcs.NPCS["reaver"] = {
+        "name": "the reaver",
+        "keywords": ["reaver"],
+        "location": "courtyard",
+        "dialogue": ["..."],
+        "next_line": 0,
+        "hp": 60,
+        "hp_now": 60,
+        "xp": 10,
+        "atk": 5,
+        "aggressive": True,
+    }
+    npcs.reindex_npcs()
+    menace(s)  # the reaver strikes the fighter on the beat
+    assert durability.current(s.equipped["body"]) == durability.MAX - 1  # the blow dented it
