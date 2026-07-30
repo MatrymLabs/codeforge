@@ -102,6 +102,11 @@ def load_canon(path: Path | None = None) -> dict[str, Any]:
         if not term.get("name") or not term.get("usage"):
             raise SeedError(f"canon collective name {term.get('id')!r}: needs a name and usage")
         _status(term, f"collective name {term.get('id')!r}")
+
+    for faction in data.get("world_factions", []):
+        if not faction.get("id") or not faction.get("name") or not faction.get("stance"):
+            raise SeedError(f"canon faction {faction.get('id')!r}: needs an id, name, and stance")
+        _status(faction, f"faction {faction.get('id')!r}")
     return data
 
 
@@ -130,6 +135,16 @@ def collective_names(canon: dict[str, Any] | None = None) -> list[dict[str, Any]
     """The six names for the Seven Crowns, each with its own tier and the worldview that uses it.
     The neutral names are CANON_LOCKED; the ideological ones are RUMOR (belief, not fact)."""
     return list((canon or load_canon()).get("collective_names", []))
+
+
+def world_factions(canon: dict[str, Any] | None = None) -> list[dict[str, Any]]:
+    """The provisional world-scale factions (CANON_WORKING): each an id, name, and stance."""
+    return list((canon or load_canon()).get("world_factions", []))
+
+
+def world_faction_ids(canon: dict[str, Any] | None = None) -> set[str]:
+    """The set of known faction ids, so a reference to a faction can be validated against canon."""
+    return {f["id"] for f in world_factions(canon)}
 
 
 def is_generated_status(status: str) -> bool:

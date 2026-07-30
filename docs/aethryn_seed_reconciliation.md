@@ -67,6 +67,12 @@ Checked against `seeds/aethryn/` and `parts/world/` on the day this doc landed.
 - **6 named seas** (Western Ocean, Northland Sea, Central Sea, Sundaram Sea, Southern Ocean, Eastern
   Ocean).
 - **33 of 35 canonical anchors** present in `settlements.yaml` / `dungeons.yaml` (see gap below).
+- **The 8 world-scale faction seeds** (Veiled Covenant, Crownseekers, Netharian Concord, Wardens of
+  the Scars, Ashforged Houses, Deep Archive, Tidebound League, Greenward Compact) live in
+  `canon.yaml` as `world_factions` (CANON_WORKING / C2), validated by `canon.py`. The Surveyor's
+  `faction_references` check (folded into `world validate`) catches any location that names an
+  unknown faction. (Distinct from the legacy `parts/world/factions.py`, which models the game's
+  Orders and their standings, not these world powers.)
 - **Collective-term tiers.** `canon.yaml`'s `collective_names` carries each of the six names for the
   Seven Crowns with its own tier and worldview: Seven Crowns and Seven Wounds are `CANON_LOCKED`
   (C1, neutral / common), the four ideological names are `RUMOR` (C4, belief), each with its `usage`.
@@ -85,10 +91,6 @@ Checked against `seeds/aethryn/` and `parts/world/` on the day this doc landed.
 - **Water edges as travel routes.** `world_graph.yaml` records each region's bordering seas and uses
   them for reachability, but the code does not yet model sea *routes* as travelable player links (a
   port-to-port journey), only as region adjacency.
-- **The 8 C2 faction seeds.** Veiled Covenant, Crownseekers, Netharian Concord, Wardens of the
-  Scars, Ashforged Houses, Deep Archive, Tidebound League, Greenward Compact. `parts/world/factions.py`
-  exists but carries the legacy design's factions, not these. The seed's world-validation list
-  includes "invalid faction references," so these belong in canon data eventually.
 - **Two anchor names drifted from canon (a keel call, not a quick fix).** The seed's canonical
   anchors `Red Dune` (Zhaar Desert) and `Cinderfire` (Ashen Wastes) exist in the world under variant
   names: `Red Dunes` and `Cragfire`. These names are woven through `zones.yaml`, `npcs.yaml`,

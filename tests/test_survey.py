@@ -56,6 +56,20 @@ def test_run_list_locations_reports_a_count_and_names():
     assert "Greenhold" in text
 
 
+def test_no_invalid_faction_references_in_the_seed():
+    assert survey.faction_references() == []
+
+
+def test_faction_references_flags_a_location_under_an_unknown_faction(monkeypatch):
+    def fake_locations():
+        return [{"id": "spy_den", "source": "settlements.yaml", "faction": "the_illuminati"}]
+
+    monkeypatch.setattr(survey, "locations", fake_locations)
+    violations = survey.faction_references()
+    assert len(violations) == 1
+    assert "spy_den" in violations[0] and "the_illuminati" in violations[0]
+
+
 def test_run_find_unreachable_is_clean_on_the_connected_world():
     code, text = survey.run(["find-unreachable"])
     assert code == 0 and "CLEAN" in text

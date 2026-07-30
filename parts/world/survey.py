@@ -89,6 +89,21 @@ def broken_references() -> list[str]:
     return violations
 
 
+def faction_references() -> list[str]:
+    """Any location that names a `faction` canon does not know (the seed's 'invalid faction
+    references' check). Satisfied today (no location carries one yet), but live the moment content
+    references a faction, so a typo cannot slip a settlement under a nonexistent power."""
+    known = canon.world_faction_ids()
+    violations: list[str] = []
+    for loc in locations():
+        faction = loc.get("faction")
+        if faction is not None and faction not in known:
+            violations.append(
+                f"location '{loc['id']}' ({loc['source']}) references unknown faction {faction!r}"
+            )
+    return violations
+
+
 def unreachable() -> list[str]:
     """Any canon region the spawn cannot reach by land or sea (a stranded region is a broken map).
     Delegates to the topology graph; a graph that names an unknown region raises from load_graph."""
@@ -99,9 +114,16 @@ def unreachable() -> list[str]:
 
 
 def validate() -> list[str]:
-    """The aggregate `world validate`: duplicate ids, broken references, canon drift, and
-    unreachable regions. Empty means the world map is consistent, faithful, and fully connected."""
-    return duplicate_ids() + broken_references() + canon.check_canon() + unreachable()
+    """The aggregate `world validate`: duplicate ids, broken references, canon drift, unreachable
+    regions, and invalid faction references. Empty means the world map is consistent, faithful,
+    fully connected, and every faction reference resolves."""
+    return (
+        duplicate_ids()
+        + broken_references()
+        + faction_references()
+        + canon.check_canon()
+        + unreachable()
+    )
 
 
 def _format_regions() -> str:

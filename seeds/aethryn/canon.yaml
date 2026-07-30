@@ -167,6 +167,43 @@ regions:
   - {id: the_deepreach,     name: The Deepreach,       threat_min: 100, threat_max: 250, canon_status: CANON_LOCKED}
   - {id: the_voidscar,      name: The Voidscar,        threat_min: 250, threat_max: 300, canon_status: CANON_LOCKED}
 
+# --- World-scale faction seeds (CANON_WORKING): provisional powers so content can begin. Named ----
+# here so a location or quest can reference a faction and the Surveyor can catch an invalid one.
+# Every faction holds internal disagreement (the seed's rule): none is morally uniform.
+world_factions:
+  - id: veiled_covenant
+    name: The Veiled Covenant
+    canon_status: CANON_WORKING
+    stance: God-loyalist institution; treats the Fall as necessary and regulates temples and relics.
+  - id: crownseekers
+    name: The Crownseekers
+    canon_status: CANON_WORKING
+    stance: Archaeologists, salvagers, and scholars divided over who should recover and own the past.
+  - id: netharian_concord
+    name: The Netharian Concord
+    canon_status: CANON_WORKING
+    stance: Holds that artificial divinity was mortal emancipation; ranges from philosophers to cults.
+  - id: wardens_scars
+    name: Wardens of the Scars
+    canon_status: CANON_WORKING
+    stance: Pragmatic containment order that keeps unstable sites from destroying settlements.
+  - id: ashforged_houses
+    name: The Ashforged Houses
+    canon_status: CANON_WORKING
+    stance: Industrial houses, guilds, and warlords seeking access to Flamewrought production.
+  - id: deep_archive
+    name: The Deep Archive
+    canon_status: CANON_WORKING
+    stance: Memory-keepers of the Crystal Labyrinth who control access to preserved testimony.
+  - id: tidebound_league
+    name: The Tidebound League
+    canon_status: CANON_WORKING
+    stance: Merchants, navigators, privateers, and harbor rulers of the Shattered Isles.
+  - id: greenward_compact
+    name: The Greenward Compact
+    canon_status: CANON_WORKING
+    stance: Stewards protecting the living regions from reckless exploitation.
+
 # --- Named bodies of water (CANON_LOCKED): registered for travel + world adjacency ----------------
 waters:
   canon_status: CANON_LOCKED
