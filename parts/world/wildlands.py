@@ -109,6 +109,14 @@ def gatherable_materials(biome: str) -> tuple[str, ...]:
     return tuple(mats)
 
 
+def biome_spoil(biome: str) -> str | None:
+    """The biome's signature material -- the herb its gather nodes yield, its forage board asks for,
+    and (via the ambient loot table) its wildlife drops. One source of truth for all three, so a
+    meadow kill gives the same meadowfoil a forager cuts and the Greenhold trader buys. None for an
+    unknown biome."""
+    return _BIOME_HERB.get(biome)
+
+
 # Per-biome ROOM vocabulary: a lead sentence, terrain FEATURES (composed by index so adjacent rooms
 # differ but relate), and LANDMARKS (a branch-end payoff). The ambient CREATURES come from the
 # procedural bestiary (parts.world.bestiary), keyed by the same biome name -- kept separate so life
