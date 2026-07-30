@@ -107,6 +107,7 @@ _GAME_SEED = {
     "caves",
     "area_store",
     "worldgraph",
+    "generation_contract",
     "seed",
     "db",
     "events",
