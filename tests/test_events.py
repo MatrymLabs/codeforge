@@ -439,3 +439,54 @@ def test_a_room_frame_from_the_wire_renders_per_local_recipient():
         assert b_heard == ['A says, "well met"']  # reconstructed + rendered locally
     finally:
         unbind_echo("b")
+
+
+def test_on_room_ignores_a_malformed_room_field():
+    _, b_heard = _seat("b", "library")
+    try:
+        bus.get_bus().publish(
+            _ROOM_TOPIC, {"kind": "text", "room": 123, "text": "x"}
+        )  # room not a str
+        assert b_heard == []  # nothing delivered, no raise
+    finally:
+        unbind_echo("b")
+
+
+def test_on_room_ignores_a_non_string_text():
+    _, b_heard = _seat("b", "library")
+    try:
+        bus.get_bus().publish(_ROOM_TOPIC, {"kind": "text", "room": "library", "text": 5})
+        assert b_heard == []
+    finally:
+        unbind_echo("b")
+
+
+def test_on_room_drops_a_garbled_frame():
+    _, b_heard = _seat("b", "library")
+    try:
+        # an unknown frame type on the wire -> from_wire raises -> the handler drops it silently
+        bus.get_bus().publish(
+            _ROOM_TOPIC,
+            {"kind": "frame", "room": "library", "frame": {"type": "GhostFrame", "fields": {}}},
+        )
+        assert b_heard == []  # no noise rendered
+    finally:
+        unbind_echo("b")
+
+
+def test_on_room_skips_an_occupant_with_no_sink():
+    # A player in the room's SESSIONS but with no bound echo sink (a plain-text edge / mid-teardown)
+    # is skipped, not crashed on -- covers both the text and frame no-sink branches.
+    SESSIONS["sinkless"] = Session(player_id="sinkless", location="library")  # no bind_echo
+    try:
+        bus.get_bus().publish(_ROOM_TOPIC, {"kind": "text", "room": "library", "text": "hi"})
+        bus.get_bus().publish(
+            _ROOM_TOPIC,
+            {
+                "kind": "frame",
+                "room": "library",
+                "frame": {"type": "SpeechFrame", "fields": {"speaker_id": "a", "words": "hi"}},
+            },
+        )  # must not raise
+    finally:
+        SESSIONS.pop("sinkless", None)
