@@ -160,6 +160,7 @@ def test_the_score_sheet_shows_the_gear_score_when_geared() -> None:
     s = _engineer_with_wrench()
     equip(s, "wrench")
     sheet = sheet_from_session(s)
+    assert sheet is not None
     assert sheet.gear_score == 9
     assert "Gear Score : 9" in render_score_sheet(sheet)
 
@@ -169,5 +170,7 @@ def test_an_ungeared_sheet_hides_the_gear_score() -> None:
 
     s = Session(player_id="matrym", location="workshop")
     bind_calling(s, "engineer")
-    out = render_score_sheet(sheet_from_session(s))
+    sheet = sheet_from_session(s)
+    assert sheet is not None
+    out = render_score_sheet(sheet)
     assert "Gear Score" not in out  # hidden at score 0, no clutter for a fresh hero
