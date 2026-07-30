@@ -78,7 +78,7 @@ def render_abilities(session: Session) -> str:
     subjob_only = {label for label, _ in pairs} - {label for label, _ in abilities_for(session.job)}
     lines = ["Abilities:"]
     for label, a in pairs:
-        target = "self or ally" if a["kind"] == "heal" else "a target"
+        target = "self or ally" if a["kind"] in ("heal", "cleanse") else "a target"
         scale = f" +{a['scales']}/3" if a["scales"] else ""
         via = "  (subjob)" if label in subjob_only else ""
         cd = a.get("cooldown", 0)
@@ -128,6 +128,8 @@ def use_ability(session: Session, arg: str) -> str:
     move = ability["name"]
     if ability["kind"] == "heal":
         return _channel_heal(session, ability, label, target_word.strip(), who, move)
+    if ability["kind"] == "cleanse":
+        return _channel_cleanse(session, ability, label, target_word.strip(), who, move)
 
     # a strike, a brand, or a taunt needs a target
     nid = trace_npc(target_word.strip(), session.location) if target_word.strip() else None
@@ -192,6 +194,37 @@ def _channel_heal(
         f"You channel {move} on {ally_name}, mending {amount} HP. "
         f"({healed.current}/{healed.maximum})"
     )
+
+
+def _channel_cleanse(
+    session: Session, ability: Ability, label: str, target_word: str, who: str, move: str
+) -> str:
+    """Purge an ally's afflictions (the support's counter to a boss's venom and stuns). Costs MP and
+    arms the cooldown ONLY when there was something to cleanse -- a wasted cleanse on a clean hero
+    never burns the MP. Reuses _trace_ally, so `on me` / `on <ally>` resolve like a heal."""
+    from parts.world import afflictions
+
+    ally = _trace_ally(target_word, session)
+    if ally is None:
+        return f"There is no ally called '{target_word}' here to cleanse."
+    them = "you" if ally is session else display_name(ally.player_id)
+    if not (ally.afflictions or ally.dazed):
+        return f"Nothing ails {them}."  # a clean target: no effect, no MP spent
+    purged = afflictions.cleanse(ally)
+    session.resources["mp"] = session.resources["mp"].damage(ability["mp_cost"])
+    _arm_cooldown(session, label, ability)
+    cleared = ", ".join(purged)
+    if ally is session:
+        announce(session.location, f"{who} channels {move}.", exclude=session.player_id)
+        return f"You channel {move} and shake off {cleared}."
+    ally_name = display_name(ally.player_id)
+    announce(session.location, f"{who} channels {move} on {ally_name}.", exclude=session.player_id)
+    announce_to(
+        [ally.player_id],
+        f"{who} channels {move} on you; {cleared} is purged.",
+        exclude=session.player_id,
+    )
+    return f"You channel {move} on {ally_name}, purging {cleared}."
 
 
 def _heal_threat(session: Session, amount: int) -> None:

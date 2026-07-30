@@ -62,3 +62,11 @@ bulwark_challenge:
   mp_cost: 3
   cooldown: 2
   jobs: [vanguard]
+
+cleansing_light:
+  name: Cleansing Light
+  kind: cleanse  # purge an ally's afflictions (the support's counter to venom + stuns)
+  power: 0  # cleanse has no magnitude; the effect is the purge
+  mp_cost: 4
+  cooldown: 2
+  jobs: [scholar]

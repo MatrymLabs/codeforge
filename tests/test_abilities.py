@@ -43,7 +43,12 @@ def _at_dummy(job: str) -> Session:
 
 
 def test_abilities_map_to_the_jobs_that_declare_them() -> None:
-    assert [a["name"] for _, a in abilities_for("scholar")] == ["Arcane Bolt", "Corrode", "Mend"]
+    assert [a["name"] for _, a in abilities_for("scholar")] == [
+        "Arcane Bolt",
+        "Cleansing Light",
+        "Corrode",
+        "Mend",
+    ]
     assert [a["name"] for _, a in abilities_for("vanguard")] == [
         "Bulwark Challenge",
         "Power Strike",
