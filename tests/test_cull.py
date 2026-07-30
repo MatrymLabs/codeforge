@@ -64,3 +64,27 @@ def test_kills_in_one_zone_do_not_advance_another_zones_cull():
 def test_a_biomeless_zone_posts_nothing_and_forging_is_deterministic():
     assert generate_culls([{"label": "x", "name": "X", "biome": ""}]) == []
     assert generate_culls(_ZONES) == generate_culls(_ZONES)
+
+
+def test_the_board_reads_varied_not_a_thousand_clones():
+    # The mechanic is fixed, but presentation must vary: across a zone's kinds the contract framings
+    # differ (not all "Cull the X"), tiers get distinct words, and the close is region-toned.
+    from parts.world.cull import generate_culls
+
+    culls = generate_culls(_ZONES)
+    # name reads "<tier-phrase> <framing>: the <kind>-kind of <zone>", e.g. "A great Purge: ...".
+    framings = {c["name"].split(":")[0].split(" ")[-1] for c in culls}  # the framing word
+    assert len(framings) >= 2, "the board should not read as one framing repeated"
+    tiers = {" ".join(c["name"].split(" ")[:2]) for c in culls}  # the two-word tier phrase
+    assert {"A small", "A standing", "A great"} <= tiers
+    # a Veridia (temperate-meadow) cull's completion carries the region's tone
+    veridia = next(c for c in culls if c["id"].startswith("cull_veridia_wild_"))
+    assert "farm-roads" in veridia["labels"]["done"]
+
+
+def test_the_flavour_is_deterministic():
+    from parts.world.cull import generate_culls
+
+    a = {(c["id"], c["name"]) for c in generate_culls(_ZONES)}
+    b = {(c["id"], c["name"]) for c in generate_culls(_ZONES)}
+    assert a == b  # same board, same faces, every boot
