@@ -86,10 +86,16 @@ def archetype_shares(contract: dict[str, Any] | None = None) -> dict[str, float]
     return {a["id"]: a["share"] for a in (contract or load_contract())["minor_area_archetypes"]}
 
 
+def _is_blank(value: Any) -> bool:
+    """A field counts as missing when it is absent, None, or an empty string/list/dict, so a
+    placeholder cannot pass. A real 0 or False is a value, not a blank (a seed of 0 is valid)."""
+    return value is None or value == "" or value == [] or value == {}
+
+
 def missing_fields(area: dict[str, Any], contract: dict[str, Any] | None = None) -> list[str]:
     """The required fields a generated area lacks (empty == it satisfies the contract). A field
-    present but empty counts as missing, so a placeholder cannot pass."""
-    return [field for field in required_area_fields(contract) if not area.get(field)]
+    present but blank counts as missing; a real 0/False does not (a seed of 0 is valid)."""
+    return [field for field in required_area_fields(contract) if _is_blank(area.get(field))]
 
 
 def distribution_gaps(

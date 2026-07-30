@@ -26,6 +26,7 @@ veridia:
   resources: [a clearwater spring, saltpetre crust, cave mushrooms, a clay seam]
   landmarks: [a still underground pool, a farmer's forgotten cache, a vein of pale crystal]
   hidden: [a bricked-up alcove, a hidden fishing shrine]
+  livelihoods: [farming, river fishing, road trade]
   naming:
     adjectives: [Damp, Still, Pale, Winding, Low]
     nouns: [Hollow, Passage, Grotto, Undercroft, Cut]
@@ -39,6 +40,7 @@ duskwood_vale:
   resources: [nightcap fungus, bog iron, a still cistern]
   landmarks: [a root-throttled sarcophagus, a sunken shrine, a knot of ancient roots]
   hidden: [a sealed crypt door, a diver's air pocket]
+  livelihoods: [charcoal burning, trapping, grave-tending]
   naming:
     adjectives: [Sunken, Rotten, Misted, Tangled, Silent]
     nouns: [Hollow, Crypt, Sinkhole, Warren, Deep]
@@ -52,6 +54,7 @@ caeloria:
   resources: [aqueduct water, mortared brick, votive wax]
   landmarks: [a saint's dry cistern, a wall of sealed niches, an aqueduct junction]
   hidden: [a heretic's hidden reliquary, a bricked-over sublevel]
+  livelihoods: [stonemasonry, licensed digging, temple service]
   naming:
     adjectives: [Sealed, Sacred, Flooded, Forgotten, Vaulted]
     nouns: [Catacomb, Aqueduct, Sublevel, Ossuary, Conduit]
@@ -65,6 +68,7 @@ eldryn_forest:
   resources: [luminous fungus, living amber, a nutrient spring]
   landmarks: [a heart-root chamber, a dormant growth-engine, a cathedral of fungus]
   hidden: [a maintenance hatch grown over, a seed-vault alcove]
+  livelihoods: [foraging, beekeeping, woodcraft]
   naming:
     adjectives: [Living, Overgrown, Luminous, Breathing, Green]
     nouns: [Cavern, Chamber, Tunnel, Hollow, Bloom]
@@ -78,6 +82,7 @@ frostspire_peaks:
   resources: [glacier melt, sulphur crust, a warm spring]
   landmarks: [a frozen waterfall, a spire of blue ice, a geothermal pool]
   hidden: [a body preserved in ice, a warm-cored vault]
+  livelihoods: [herding, ice-cutting, sky-metal prospecting]
   naming:
     adjectives: [Frozen, Glacial, Blue, Still, Deep]
     nouns: [Cave, Tunnel, Chamber, Fissure, Vault]
@@ -91,6 +96,7 @@ zhaar_desert:
   resources: [a buried cistern, desert glass, natron salt]
   landmarks: [a glass-lined gallery, a dry king's cistern, a wall of tomb-glyphs]
   hidden: [a sealed tomb chamber, a cache under the sand]
+  livelihoods: [caravan trade, shard mining, water-selling]
   naming:
     adjectives: [Buried, Glassed, Dry, Sunbaked, Hollow]
     nouns: [Cave, Tomb, Cistern, Gallery, Warren]
@@ -104,6 +110,7 @@ xilnath_jungle:
   resources: [medicinal sap, engineered fruit, a clean spring]
   landmarks: [a runaway growth-vat, a nest of engineered life, a drowned laboratory]
   hidden: [a sealed specimen vault, a hidden clutch of eggs]
+  livelihoods: [medicine gathering, hunting, sap tapping]
   naming:
     adjectives: [Overgrown, Engineered, Flooded, Teeming, Green]
     nouns: [Tunnel, Nest, Vault, Hollow, Root]
@@ -117,6 +124,7 @@ thalorin:
   resources: [an ore vein, a coal seam, a support-timber cache]
   landmarks: [an abandoned dig-face, a garrison chokepoint, a rich ore vein]
   hidden: [a paymaster's hidden strongbox, a sealed side-drift]
+  livelihoods: [mining, smithing, mountain soldiering]
   naming:
     adjectives: [Deep, Abandoned, Rich, Braced, Collapsed]
     nouns: [Mine, Drift, Cavern, Tunnel, Shaft]
@@ -130,6 +138,7 @@ ashen_wastes:
   resources: [obsidian, refined slag, a coolant line]
   landmarks: [a stalled production line, a lake of cooled slag, a malformed foundry-god]
   hidden: [a sealed foundry vault, an intact tool-cache]
+  livelihoods: [salvage, slag working, glass making]
   naming:
     adjectives: [Ashen, Molten, Ruined, Toxic, Stalled]
     nouns: [Tube, Underwork, Fissure, Foundry, Vent]
@@ -143,6 +152,7 @@ korvash_highlands:
   resources: [a supply cache, sealed rations, a power cell]
   landmarks: [a dead command table, a wall of unspoken oaths, a crater-glass floor]
   hidden: [an authorization vault, a bunker still under orders]
+  livelihoods: [herding, relic salvage, pilgrim guiding]
   naming:
     adjectives: [Sealed, Sworn, Cratered, Silent, Locked]
     nouns: [Bunker, Vault, Passage, Tomb, Hold]
@@ -156,6 +166,7 @@ shattered_isles:
   resources: [pearl oysters, salvage, a freshwater seep]
   landmarks: [a wrecked hull run through the rock, a drowned gate, a pearl-strewn pool]
   hidden: [a smuggler's dry cache, a gate that opens wrong]
+  livelihoods: [fishing, wreck diving, harbor piloting]
   naming:
     adjectives: [Tidal, Drowned, Wrecked, Salted, Reefed]
     nouns: [Cave, Corridor, Tunnel, Hull, Reef]
@@ -169,6 +180,7 @@ skyward_spires:
   resources: [sky-crystal, a charged conduit, condensed cloud-water]
   landmarks: [an inverted chamber, a stalled transit ring, a floating shard of city]
   hidden: [a sealed gravity vault, a transit car still docked]
+  livelihoods: [wind farming, salvage climbing, sky observation]
   naming:
     adjectives: [Floating, Inverted, Suspended, Fractured, High]
     nouns: [Cavern, Chamber, Ruin, Span, Drift]
@@ -182,6 +194,7 @@ the_deepreach:
   resources: [deep ore, luminous fungus, an archive spring]
   landmarks: [a hall of contradictory records, a fungal city, a deep junction]
   hidden: [a memory construct still running, a sealed archive vault]
+  livelihoods: [mushroom farming, deep mining, archive keeping]
   naming:
     adjectives: [Deep, Fungal, Recorded, Rearranging, Endless]
     nouns: [Network, Tunnel, Archive, Mine, Junction]
@@ -197,6 +210,7 @@ the_voidscar:
   resources: [a fragment of stable matter, residual belief, a still point]
   landmarks: [a room that should not close, a mirror of an earlier chamber, a stable eye]
   hidden: [a door that remembers, a chamber outside the count]
+  livelihoods: [warding, relic scavenging, pilgrim guarding]
   naming:
     adjectives: [Impossible, Repeating, Altered, Unstable, Wounded]
     nouns: [Chamber, Loop, Fracture, Room, Scar]

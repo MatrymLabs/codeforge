@@ -33,6 +33,34 @@ def test_all_regions_generate_caves_that_pass_their_own_validation():
             assert area["validation"] == [], f"{region}/{seed}: {area['validation']}"
 
 
+def test_every_cave_satisfies_the_generation_contract():
+    from parts.world import generation_contract as gc
+
+    for region in caves.cave_regions():
+        for seed in (0, 1, 7, 13):  # includes seed 0 (a real value, not a blank)
+            area = caves.generate_cave(region, seed)
+            assert gc.missing_fields(area) == [], f"{region}/{seed}: {gc.missing_fields(area)}"
+
+
+def test_a_cave_carries_its_narrative_and_provenance():
+    area = caves.generate_cave("ashen_wastes", 3)
+    assert area["parent_region"] == "ashen_wastes"
+    assert area["canon_tier"] == "C3"
+    assert area["historical_layer"] and area["local_livelihood"]
+    assert area["gameplay_hooks"] and area["creator_extension_hooks"]
+    assert area["provenance"]["parent_region"] == "ashen_wastes"
+    # A region that holds a Seven Crown nods to it in the world-clue (never asserting).
+    assert "Ember Crown" in area["larger_world_clue"]
+
+
+def test_archetype_is_one_the_contract_knows():
+    from parts.world import generation_contract as gc
+
+    known = set(gc.archetype_shares())
+    for region in caves.cave_regions():
+        assert caves.generate_cave(region, 5)["archetype"] in known
+
+
 def test_a_cave_has_the_required_shape():
     area = caves.generate_cave("veridia", 3)
     rooms = area["rooms"]
@@ -209,12 +237,19 @@ def _valid_area() -> dict:
         },
         {"id": "r4", "role": "branch", "tags": ["cave", "branch"], "exits": {"out": "r2"}},
     ]
-    return {
+    area: dict[str, object] = {
         "rooms": rooms,
         "return_room": "r0",
         "micro_story": "once, a scavenger worked here",
         "canon_status": "GENERATED_LOCAL",
     }
+    # A valid area is also generation-contract-complete: give it every required field.
+    from parts.world import generation_contract as gc
+
+    for field in gc.required_area_fields():
+        area.setdefault(field, "x")
+    area["generation_seed"] = 0  # a real value (regression: 0 must not read as blank)
+    return area
 
 
 def test_the_hand_built_area_is_valid():
@@ -274,6 +309,14 @@ def test_validator_flags_a_return_room_that_points_nowhere():
     area = _valid_area()
     area["return_room"] = "nowhere"  # the escape route names a room that does not exist
     assert any("unreachable" in p for p in caves._validation_report(area))
+
+
+def test_validator_flags_a_missing_generation_contract_field():
+    area = _valid_area()
+    del area["identity"]  # drop a required contract field
+    assert any(
+        "generation contract" in p and "identity" in p for p in caves._validation_report(area)
+    )
 
 
 def test_validator_flags_a_missing_micro_story():

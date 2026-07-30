@@ -99,6 +99,7 @@ def preview(area: dict[str, Any]) -> str:
     rooms = area["rooms"]
     lines = [
         f"{area['display_name']}  [{area['id']}]",
+        f"  {area.get('identity', '')}".rstrip(),
         f"  region {area['region_id']} | biome {area['biome']} | {area['subtype']}",
         f"  status {area['canon_status']} | seed {area['generation_seed']} | {len(rooms)} rooms",
         f"  entrance: {area['entrance']} | return via {area['return_room']}",
