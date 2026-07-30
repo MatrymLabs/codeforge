@@ -12,7 +12,7 @@ ai = ["anthropic>=0.118.0"]
 postgres = ["psycopg[binary]>=3.3.4"]
 # Embedded Lua scripting (the sandboxed @script console; parts.scripting). Optional: absent -> the
 # feature reports itself unavailable and the game is untouched (ADR-0014). lupa bundles the runtime.
-lua = ["lupa>=2.0"]
+lua = ["lupa>=2.8"]
 dev = [
     # Pinned: `ruff format --check` is a hard gate, so it must be reproducible. Unpinned, CI installs
     # the latest ruff and local lags -- a minor bump (0.15 -> 0.16) reformatted and reddened CI once.
