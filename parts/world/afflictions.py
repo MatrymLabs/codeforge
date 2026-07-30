@@ -44,6 +44,18 @@ def is_dazed(session: Session) -> bool:
     return session.dazed > 0
 
 
+def cleanse(session: Session) -> list[str]:
+    """Purge every affliction from a hero at once -- each damage-over-time AND the daze. Returns the
+    names cleared (sorted, 'daze' included when it was up), or [] when nothing ailed them. The
+    support role's reactive counter to a boss's venom and stuns (the `cleanse` ability)."""
+    cleared = sorted(session.afflictions)
+    session.afflictions.clear()
+    if session.dazed > 0:
+        session.dazed = 0
+        cleared.append("daze")
+    return cleared
+
+
 def maybe_inflict(session: Session, inflicts: dict | None) -> str | None:
     """Roll an NPC's `inflicts` spec on a landed blow and, on a hit, lay the affliction on the
     player. Returns the line the player sees, or None (no spec, or the chance roll missed). The

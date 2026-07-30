@@ -307,6 +307,13 @@ heal:
   mp_cost: 6
   cooldown: 3
   jobs: [cleric]
+purify:
+  name: Purify
+  kind: cleanse  # the Divine counter to a boss's venom + stuns: purge an ally's afflictions
+  power: 0
+  mp_cost: 5
+  cooldown: 2
+  jobs: [cleric]
 
 # Oracle -- bend the odds.
 hex:

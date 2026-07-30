@@ -204,3 +204,82 @@ def test_a_valid_inflicts_loads(tmp_path):
     )
     npc = load_npcs(path)["boss"]
     assert npc["inflicts"] == {"status": "venom", "damage": 12, "ticks": 4}
+
+
+# --- cleanse: purge every affliction at once (the support's counter) -----------------------------
+
+
+def test_cleanse_purges_dots_and_daze_and_names_them():
+    s = _hurtable()
+    afflictions.apply_dot(s, "venom", 3)
+    afflictions.apply_daze(s, 2)
+    cleared = afflictions.cleanse(s)
+    assert cleared == ["venom", "daze"]  # dots (sorted) then daze
+    assert s.afflictions == {} and s.dazed == 0
+
+
+def test_cleanse_of_a_clean_hero_returns_nothing():
+    s = _hurtable()
+    assert afflictions.cleanse(s) == []
+
+
+def test_cleanse_ability_purges_an_afflicted_ally_and_spends_mp():
+    from parts.world.jobs import bind_calling
+
+    healer = Session(player_id="cleo", location="void")
+    bind_calling(healer, "scholar")
+    ally = Session(player_id="bram", location="void")
+    bind_calling(ally, "vanguard")
+    SESSIONS.update({"cleo": healer, "bram": ally})
+    afflictions.apply_daze(ally, 3)
+    afflictions.apply_dot(ally, "venom", 2)
+    mp_before = healer.resources["mp"].current
+    try:
+        out = use_ability(healer, "cleansing light on bram")
+        assert "purging" in out and "on Bram" in out
+        assert not ally.afflictions and ally.dazed == 0  # the ally is clean
+        assert healer.resources["mp"].current == mp_before - 4  # MP spent
+    finally:
+        SESSIONS.clear()
+
+
+def test_cleanse_on_a_clean_ally_spends_no_mp():
+    from parts.world.jobs import bind_calling
+
+    healer = Session(player_id="cleo", location="void")
+    bind_calling(healer, "scholar")
+    SESSIONS["cleo"] = healer  # cleanse self, nothing ails
+    mp_before = healer.resources["mp"].current
+    try:
+        out = use_ability(healer, "cleansing light on me")
+        assert "Nothing ails you" in out
+        assert healer.resources["mp"].current == mp_before  # no MP wasted on a clean target
+    finally:
+        SESSIONS.clear()
+
+
+def test_cleanse_ability_on_self_shakes_off_the_affliction():
+    from parts.world.jobs import bind_calling
+
+    healer = Session(player_id="cleo", location="void")
+    bind_calling(healer, "scholar")
+    SESSIONS["cleo"] = healer
+    afflictions.apply_dot(healer, "venom", 3)  # a DoT, not a daze -- a dazed caster can't act
+    try:
+        out = use_ability(healer, "cleansing light on me")
+        assert "shake off" in out and "venom" in out
+        assert not healer.afflictions
+    finally:
+        SESSIONS.clear()
+
+
+def test_cleanse_ability_on_an_absent_ally_fails_loud():
+    from parts.world.jobs import bind_calling
+
+    healer = Session(player_id="cleo", location="void")
+    bind_calling(healer, "scholar")
+    SESSIONS["cleo"] = healer
+    try:
+        assert "no ally called 'ghost'" in use_ability(healer, "cleansing light on ghost")
+    finally:
+        SESSIONS.clear()
