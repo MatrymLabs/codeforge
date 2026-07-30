@@ -19,6 +19,14 @@ ward:
   cooldown: 3
   jobs: [vanguard]
 
+guard_challenge:
+  name: Guard's Challenge
+  kind: taunt  # the tank's lever: forces the foe's aggro onto the wielder (no damage)
+  power: 0
+  mp_cost: 3
+  cooldown: 2
+  jobs: [vanguard]
+
 # Pathfinder -- reads the wilds, strikes from the flank; speed over brute force.
 flank_strike:
   name: Flank Strike

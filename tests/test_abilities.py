@@ -44,7 +44,10 @@ def _at_dummy(job: str) -> Session:
 
 def test_abilities_map_to_the_jobs_that_declare_them() -> None:
     assert [a["name"] for _, a in abilities_for("scholar")] == ["Arcane Bolt", "Corrode", "Mend"]
-    assert [a["name"] for _, a in abilities_for("vanguard")] == ["Power Strike"]
+    assert [a["name"] for _, a in abilities_for("vanguard")] == [
+        "Bulwark Challenge",
+        "Power Strike",
+    ]
     assert abilities_for("") == []  # no calling, no abilities
 
 
@@ -270,7 +273,8 @@ def test_a_subjob_lends_its_kit_so_switching_opens_a_new_moveset() -> None:
     from parts.world.jobs import set_secondary
 
     s = _at_dummy("vanguard")
-    assert [a["name"] for _, a in abilities_for_session(s)] == ["Power Strike"]  # primary only
+    # primary only: the vanguard's own kit (a strike + the taunt), before any subjob is lent
+    assert [a["name"] for _, a in abilities_for_session(s)] == ["Bulwark Challenge", "Power Strike"]
     set_secondary(s, "scholar")
     names = {a["name"] for _, a in abilities_for_session(s)}
     assert {"Power Strike", "Arcane Bolt", "Mend"} <= names  # the subjob's moves are lent
@@ -463,3 +467,62 @@ def test_the_aethryn_seed_arms_a_rotation() -> None:
     )
     assert any(a.get("cooldown", 0) > 0 for a in ab.values())  # a rotation exists
     assert any(a.get("cooldown", 0) == 0 for a in ab.values())  # spammable filler remains
+
+
+# --- taunt: the tank forces a foe's aggro onto itself -------------------------------------------
+
+
+def _aggressor(label: str = "reaver", location: str = "courtyard", atk: int = 5) -> str:
+    """Place an aggressive foe in a room (so heal/taunt threat has a target)."""
+    npcs.NPCS[label] = {
+        "name": f"the {label}",
+        "keywords": [label],
+        "location": location,
+        "dialogue": ["..."],
+        "next_line": 0,
+        "hp": 80,
+        "hp_now": 80,
+        "xp": 10,
+        "atk": atk,
+        "aggressive": True,
+    }
+    npcs.reindex_npcs()
+    return label
+
+
+def test_a_taunt_forces_the_foe_onto_the_wielder() -> None:
+    from parts.world import threat
+
+    threat._reset()
+    tank = _seated("vanguard", "bram")
+    dps = _seated("engineer", "cora")  # present, so the taunt must beat their threat
+    nid = _aggressor()
+    threat.add(nid, "cora", 40)  # the dps holds aggro first
+    try:
+        out = use_ability(tank, "bulwark challenge on reaver")
+        assert "turns to you" in out
+        present = {"bram": tank, "cora": dps}
+        assert threat.top_target(nid, present) is tank  # the tank now holds the foe
+        assert tank.resources["mp"].current == tank.resources["mp"].maximum - 3  # MP paid
+    finally:
+        threat._reset()
+
+
+def test_a_taunt_needs_a_present_foe() -> None:
+    tank = _seated("vanguard", "bram")
+    out = use_ability(tank, "bulwark challenge")  # no target
+    assert "on whom?" in out
+
+
+def test_a_heal_generates_threat_on_engaged_foes() -> None:
+    from parts.world import threat
+
+    threat._reset()
+    healer = _seated("scholar", "cleo")
+    healer.resources["hp"] = healer.resources["hp"].damage(10)
+    nid = _aggressor()  # an aggressive foe shares the room
+    try:
+        use_ability(healer, "mend")  # a self-heal is still loud
+        assert threat.score(nid, "cleo") > 0  # the healer drew aggro
+    finally:
+        threat._reset()

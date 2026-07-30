@@ -19,7 +19,7 @@ A move with no cooldown stays MP-limited only.
 
 from __future__ import annotations
 
-from parts.world import combat
+from parts.world import combat, threat
 from parts.world.events import announce, announce_to
 from parts.world.npcs import NPCS, trace_npc
 from parts.world.seed import SEED_DIR, Ability, Npc, load_abilities
@@ -129,13 +129,15 @@ def use_ability(session: Session, arg: str) -> str:
     if ability["kind"] == "heal":
         return _channel_heal(session, ability, label, target_word.strip(), who, move)
 
-    # a strike or a brand needs a target
+    # a strike, a brand, or a taunt needs a target
     nid = trace_npc(target_word.strip(), session.location) if target_word.strip() else None
     if nid is None:
         return f"Use {move} on whom? Try: use {move} on <target>"
     npc = NPCS[nid]
     if npc["hp"] <= 0:
         return f"{sentence_case(npc['name'])} is not something you can fight."
+    if ability["kind"] == "taunt":
+        return _channel_taunt(session, ability, label, npc, nid, who, move)
     session.resources["mp"] = mp.damage(ability["mp_cost"])
     # The offense resolves (a landed strike advances the clock); the cooldown is armed AFTER, so it
     # is set to its full duration and not thawed by this same action's own clock advance.
@@ -174,6 +176,7 @@ def _channel_heal(
     ally.resources["hp"] = ally.resources["hp"].heal(amount)
     healed = ally.resources["hp"]
     _arm_cooldown(session, label, ability)
+    _heal_threat(session, amount)  # mending draws aggro: every engaged foe now eyes the healer
     if ally is session:
         announce(session.location, f"{who} channels {move}.", exclude=session.player_id)
         return f"You channel {move} and recover {amount} HP. ({healed.current}/{healed.maximum})"
@@ -189,6 +192,39 @@ def _channel_heal(
         f"You channel {move} on {ally_name}, mending {amount} HP. "
         f"({healed.current}/{healed.maximum})"
     )
+
+
+def _heal_threat(session: Session, amount: int) -> None:
+    """A heal is loud: it generates threat on every aggressive foe in the room, so a healer climbs
+    the aggro table and a tank must peel them off. Half the mended amount, the MMO convention."""
+    from parts.world.npcs import npcs_in
+
+    gain = max(1, amount // 2)
+    for nid in npcs_in(session.location):
+        if NPCS[nid].get("aggressive"):
+            threat.add(nid, session.player_id, gain)
+
+
+def _channel_taunt(
+    session: Session, ability: Ability, label: str, npc: Npc, nid: str, who: str, move: str
+) -> str:
+    """Force a foe's aggro onto the wielder: spike their threat one above the room's current top, so
+    the foe turns from the healer or the glass cannon to the tank. Spends MP, arms the cooldown."""
+    present_ids = [
+        pid
+        for pid, other in list(SESSIONS.items())
+        if other.location == session.location and other.stats is not None
+    ]
+    session.resources["mp"] = session.resources["mp"].damage(ability["mp_cost"])
+    threat.taunt(nid, session.player_id, present_ids)
+    _arm_cooldown(session, label, ability)
+    foe = sentence_case(npc["name"])
+    announce(
+        session.location,
+        f"{who} channels {move}, seizing {npc['name']}'s attention.",
+        exclude=session.player_id,
+    )
+    return f"You channel {move} on {foe}; its fury turns to you."
 
 
 def _arm_cooldown(session: Session, label: str, ability: Ability) -> None:

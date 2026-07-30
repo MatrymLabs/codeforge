@@ -54,3 +54,11 @@ sunder_guard:
   power: 3  # the number of its blows that land soft
   mp_cost: 3
   jobs: [artificer]
+
+bulwark_challenge:
+  name: Bulwark Challenge
+  kind: taunt  # the tank's lever: forces the foe's aggro onto the wielder (no damage)
+  power: 0  # taunt has no magnitude; the effect is the aggro spike
+  mp_cost: 3
+  cooldown: 2
+  jobs: [vanguard]
