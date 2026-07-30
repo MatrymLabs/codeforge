@@ -320,6 +320,29 @@ def _coin_reward(npc: Npc) -> int:
     return level * _TIER_COINS.get(npc.get("tier", "normal"), 1)
 
 
+# The FIRST kill of a boss each day pays this multiple of its coin drop as a bounty, then nothing
+# extra until the UTC date rolls. A boss stays farmable (it reassembles), but infinite farming no
+# longer pays infinite reward -- the endgame's daily reason to return (parts.world.lockouts).
+BOSS_BOUNTY_MULT = 5
+
+
+def _daily_boss_bounty(session: Session, npc: Npc, nid: str) -> str:
+    """A bonus on the first kill of a BOSS today, gated by the per-hero daily lockout. Returns the
+    bounty line (and credits the coins), or '' for a non-boss or a boss already claimed today."""
+    if npc.get("tier") != "boss":
+        return ""
+    from parts.world import lockouts
+
+    if not lockouts.claim(session, f"boss:{nid}", lockouts.today_utc()):
+        return ""  # already claimed today: the base drop stands, the bounty does not repeat
+    bonus = _coin_reward(npc) * BOSS_BOUNTY_MULT
+    session.coins += bonus
+    return (
+        f"Daily bounty! Today's first {npc['name']} falls: you claim {purse(bonus)} extra. "
+        f"(purse: {purse(session.coins)})"
+    )
+
+
 def land_hit(session: Session, npc: Npc, nid: str, dmg: int) -> tuple[bool, str]:
     """Apply `dmg` to `npc` and resolve the outcome; return (defeated, tail).
 
@@ -363,6 +386,9 @@ def land_hit(session: Session, npc: Npc, nid: str, dmg: int) -> tuple[bool, str]
     coins = _coin_reward(npc)
     session.coins += coins
     rewards = f"{rewards}\nYou find {purse(coins)}. (purse: {purse(session.coins)})"
+    bounty = _daily_boss_bounty(session, npc, nid)  # endgame: a bonus on the FIRST boss kill today
+    if bounty:
+        rewards = f"{rewards}\n{bounty}"
     # guaranteed drops, then one weighted loot roll -- both spawn fresh instances on the floor
     haul = "\n".join(
         part for part in (_spawn_drops(session, npc), _roll_loot(session, npc)) if part

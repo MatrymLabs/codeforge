@@ -42,6 +42,16 @@ def test_unnamed_seats_are_never_saved():
     assert load_character("player1") is None
 
 
+def test_daily_lockouts_survive_save_and_restore():
+    # The endgame cap must persist: a boss claimed today stays claimed after a logout/login.
+    s = _hero()
+    s.lockouts = {"boss:warlord": "2026-07-29"}
+    save_character(s)
+    fresh = Session(player_id="matrym")
+    restore_character(fresh, load_character("matrym"))
+    assert fresh.lockouts == {"boss:warlord": "2026-07-29"}
+
+
 def test_save_and_load_roundtrip():
     s = _hero()
     s.level, s.xp = 2, 90
@@ -61,6 +71,7 @@ def test_save_and_load_roundtrip():
         "equipped_gear": "",
         "coins": 0,
         "quest_state": "",
+        "lockouts": "",
         "allocated": "",
         "professions": "",
         "reputation": "",
