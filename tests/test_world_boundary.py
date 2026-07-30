@@ -102,7 +102,7 @@ _GAME_SEED = {
     "roaming",
     "session",
     "tutorial",
-    "greenhold",
+    "authored_towns",
     "canon",
     "survey",
     "caves",
