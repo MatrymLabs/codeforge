@@ -1,0 +1,22 @@
+# SEED: aethryn -- quests/ravenwatch_hollow.yaml  (Ravenwatch's second quest: The Hollow Man)
+# Auto-loaded. Ravenwatch's SIDE quest, a HUNT (a different shape from the barrow fetch): the Widow
+# Enna and the townsfolk beg an end to the grief-shaped thing under the black eaves. Enter the eaves,
+# put it down. A local grief made monstrous, a light thread to Duskwood's mnemonic scars, a real
+# fight, a visible mercy, an open remainder (whose grief it wore). Rewards XP + Gathering standing
+# (the trappers and wood-folk), varying the town's offering from the warden's Knowing.
+id: ravenwatch_hollow
+name: The Hollow Man
+start: offered
+reward_xp: 34
+steps:
+  - {state: offered, event: enter, to: hunting, on_enter: ravenwatch_eaves}
+  - state: hunting
+    event: defeat
+    to: done
+    on_defeat: ravenwatch_hollow
+    effect: "award_xp;grant_rep:gathering:20"
+terminal: [done]
+labels:
+  offered: "The Widow Enna grieves a thing under the black eaves. Go EAST into the eaves and see what walks there."
+  hunting: "The hollow man is here in the mist, wearing sorrow like a face. Give it rest."
+  done: "*** The hollow man is laid to rest, and whatever grief wore it is quiet at last. Ravenwatch will walk after dusk again, and the Widow Enna weeps, this time with something like relief. ***"
