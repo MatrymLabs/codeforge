@@ -54,6 +54,7 @@ from parts.world import (
     creator_workshop,
     gather,
     maintenance_mode,
+    presence,
     quest,
     scheduler,
 )
@@ -2034,7 +2035,11 @@ def render_scene(location: str, viewer: str = "") -> str:
     company = room_npcs_text(location)
     if company:
         scene.append(company)
-    others = [pid for pid, s in SESSIONS.items() if s.location == location and pid != viewer]
+    # Local players in the room, plus any the shared roster places here from another process
+    # (Phase 5). The union dedupes; presence is empty in a single process, so this stays the
+    # local list until a gateway feeds cross-process locations.
+    local = {pid for pid, s in SESSIONS.items() if s.location == location}
+    others = (local | presence.in_room(location)) - {viewer}
     for pid in sorted(others):
         scene.append(f"{display_name(pid)} is here.")
     return "\n".join(scene)
