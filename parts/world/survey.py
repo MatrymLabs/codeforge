@@ -2,9 +2,10 @@
 
 The prompt's developer tools ask for a `world` command family that VALIDATES the world without
 touching it: duplicate ids, broken references (a location placed in a region that does not exist),
-and canon drift. This is that read-only half. The Surveyor never edits the world; it inspects the
-shipped seed and reports, and its verdict is the truth of the map. The mutating half (generate-area,
-promote, export, import) lands later with the deterministic area generator.
+canon drift, and unreachable regions. This is that read-only half. The Surveyor never edits the
+world; it inspects the shipped seed and reports, and its verdict is the truth of the map. The
+region topology it reasons over lives in parts/world/worldgraph.py; the mutating half
+(generate-area, promote, export, import) lives in parts/world/area_store.py.
 
 Every check is a pure function over the seed data returning a list of human-readable violation
 lines (empty == clean), so each is unit-testable in isolation and `validate` is just their union.
@@ -17,16 +18,25 @@ from typing import Any
 
 import yaml
 
-from parts.world import canon
-from parts.world.seed import _UniqueKeyLoader
+from parts.world import canon, worldgraph
+from parts.world.seed import SeedError, _UniqueKeyLoader
 
 # The seed files the Surveyor reads. Regions come from canon; these carry the placed locations.
 _LOCATION_FILES = ("settlements.yaml", "dungeons.yaml")
 _ZONE_FILE = "waystones.yaml"
 
-# The subcommands this slice actually implements (the read-only half). Anything else is refused
-# honestly rather than faked; the generator half (generate-area, promote, export) is planned.
-_COMMANDS = ("validate", "check-canon", "list-regions", "list-locations", "find-broken-references")
+# The read-only subcommands. The mutating half (generate-area, promote, export, ...) lives in
+# area_store; only `import` and `reset-dev-state` are still planned.
+_COMMANDS = (
+    "validate",
+    "check-canon",
+    "list-regions",
+    "list-locations",
+    "find-broken-references",
+    "find-unreachable",
+    "inspect",
+    "graph",
+)
 
 
 def _records(filename: str) -> dict[str, dict[str, Any]]:
@@ -79,10 +89,19 @@ def broken_references() -> list[str]:
     return violations
 
 
+def unreachable() -> list[str]:
+    """Any canon region the spawn cannot reach by land or sea (a stranded region is a broken map).
+    Delegates to the topology graph; a graph that names an unknown region raises from load_graph."""
+    return [
+        f"region '{r}' is unreachable from {worldgraph.DEFAULT_START}"
+        for r in worldgraph.unreachable_regions()
+    ]
+
+
 def validate() -> list[str]:
-    """The aggregate `world validate`: duplicate ids, broken references, and canon drift, together.
-    Empty list means the world map is internally consistent and faithful to locked canon."""
-    return duplicate_ids() + broken_references() + canon.check_canon()
+    """The aggregate `world validate`: duplicate ids, broken references, canon drift, and
+    unreachable regions. Empty means the world map is consistent, faithful, and fully connected."""
+    return duplicate_ids() + broken_references() + canon.check_canon() + unreachable()
 
 
 def _format_regions() -> str:
@@ -122,10 +141,21 @@ def run(argv: list[str]) -> tuple[int, str]:
         return _verdict("find-broken-references", broken_references())
     if command == "validate":
         return _verdict("world validate", validate())
+    if command == "find-unreachable":
+        return _verdict("find-unreachable", unreachable())
     if command == "list-regions":
         return 0, _format_regions()
     if command == "list-locations":
         return 0, _format_locations()
+    if command == "graph":
+        return 0, worldgraph.graph_lines()
+    if command == "inspect":
+        if len(argv) < 2:
+            return 2, "usage: world inspect <region-id>"
+        try:
+            return 0, worldgraph.region_detail(argv[1])
+        except SeedError as exc:  # unknown region id
+            return 1, f"refused: {exc}"
     return 2, f"unknown or not-yet-built subcommand: {command!r}\n\n{_usage()}"
 
 
@@ -135,6 +165,5 @@ def _usage() -> str:
         "The Surveyor: read-only Aethryn world validation.\n\n"
         f"Available now:\n{available}\n\n"
         "Area generation (mutating): world generate-area / preview-area / promote / export /\n"
-        "list-areas (see parts/world/area_store.py). Planned: world inspect / graph /\n"
-        "find-unreachable / import / reset-dev-state."
+        "list-areas (see parts/world/area_store.py). Planned: world import / reset-dev-state."
     )

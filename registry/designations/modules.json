@@ -7038,5 +7038,32 @@
     "aliases": [],
     "created": "2026-07-30",
     "updated": "2026-07-30"
+  },
+  {
+    "designation": "MOD-04.145",
+    "name": "worldgraph",
+    "status": "active",
+    "function": "the region topology: canonical land + sea adjacency and reachability (the world as a graph)",
+    "label": "worldgraph",
+    "file": "parts/world/worldgraph.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "docs/aethryn_seed_reconciliation.md",
+    "tests": "tests/test_worldgraph.py",
+    "depends_on": [
+      "canon"
+    ],
+    "related": [
+      "survey"
+    ],
+    "reuse": "the world-graph primitive (the prompt's pillar 2): loads seeds/aethryn/world_graph.yaml (the seed's adjacent_regions + water_edges), validates it against canon (every region present, every neighbour/sea real, no self-links), and computes reachability. neighbors() treats land links as undirected (The Deepreach lists surface it runs beneath one-way) and joins regions sharing a sea; unreachable_regions() powers `world find-unreachable`, region_detail() powers `world inspect`, graph_lines() powers `world graph`",
+    "notes": "Turns the three honestly-stubbed world commands (find-unreachable / inspect / graph) into real checks and folds reachability into `world validate`. The validator checks referential integrity, NOT symmetry (Deepreach is asymmetric by design); island + sky regions (no land links) connect only by shared sea, so the graph stays fully connected from the spawn (veridia). Data from the Aethryn Coding Seed's region adjacency; see docs/aethryn_seed_reconciliation.md. Only `world import` / `reset-dev-state` remain planned.",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-30",
+    "updated": "2026-07-30"
   }
 ]

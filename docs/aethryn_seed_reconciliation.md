@@ -67,19 +67,20 @@ Checked against `seeds/aethryn/` and `parts/world/` on the day this doc landed.
 - **6 named seas** (Western Ocean, Northland Sea, Central Sea, Sundaram Sea, Southern Ocean, Eastern
   Ocean).
 - **33 of 35 canonical anchors** present in `settlements.yaml` / `dungeons.yaml` (see gap below).
+- **The region adjacency graph.** `seeds/aethryn/world_graph.yaml` encodes every region's land
+  neighbours and bordering seas from the seed's `adjacent_regions` / `water_edges`;
+  `parts/world/worldgraph.py` validates it against canon and computes reachability. All 14 regions
+  are reachable from the spawn by land or sea. This powers `world find-unreachable`, `world inspect`,
+  and `world graph`, and folds reachability into `world validate`.
 - **The generator half of the brief**: the deterministic cave forge (`parts/world/caves.py`), the
   area bench (`parts/world/area_store.py`), and the read-only validators (`parts/world/survey.py`,
   the `world` CLI). Generated content is stamped `GENERATED_LOCAL` (C3) and may raise a forbidden
   topic only as a `RUMOR` (C4).
 
 ### Gaps (in the source, not yet in code)
-- **Region adjacency graph.** The seed gives every region an `adjacent_regions` list (the canonical
-  world graph). The code has inter-zone links in `tools/emit_map_world.py` but no typed adjacency /
-  `TravelRoute` records validated against the seed. This is the data behind `world find-unreachable`
-  and `world inspect` / `graph`, which are still honestly stubbed. **This is the ready-to-build
-  next slice** (pillar 2).
-- **Water edges per region.** The seed maps each region to its bordering seas (`water_edges`); the
-  code does not yet model sea routes as world links.
+- **Water edges as travel routes.** `world_graph.yaml` records each region's bordering seas and uses
+  them for reachability, but the code does not yet model sea *routes* as travelable player links (a
+  port-to-port journey), only as region adjacency.
 - **The 8 C2 faction seeds.** Veiled Covenant, Crownseekers, Netharian Concord, Wardens of the
   Scars, Ashforged Houses, Deep Archive, Tidebound League, Greenward Compact. `parts/world/factions.py`
   exists but carries the legacy design's factions, not these. The seed's world-validation list
@@ -88,8 +89,11 @@ Checked against `seeds/aethryn/` and `parts/world/` on the day this doc landed.
   Seven Wounds are **C1**, while Seven Blasphemies, Murdered Crowns, Seven Lessons, and Seven Engines
   are **C4** (ideological belief). `canon.yaml` currently carries all six as one `CANON_WORKING`
   block; refining them to match (2 anchored, 4 rumor, each with its `usage`) is a small follow-up.
-- **Two canonical anchors missing**: `Red Dune` (Zhaar Desert) and `Cinderfire` (Ashen Wastes) are
-  not yet in `settlements.yaml`.
+- **Two anchor names drifted from canon (a keel call, not a quick fix).** The seed's canonical
+  anchors `Red Dune` (Zhaar Desert) and `Cinderfire` (Ashen Wastes) exist in the world under variant
+  names: `Red Dunes` and `Cragfire`. These names are woven through `zones.yaml`, `npcs.yaml`,
+  `rooms.yaml`, and a test, and the seed arrived after they were authored, so renaming to canon
+  ripples and is Josh's call (Cragfire may be intentional local flavour, not drift).
 - **The generation contract, as data.** The seed specifies `required_area_fields` (identity,
   historical_layer, local_livelihood, active_conflict, ...), the minor-area distribution
   (35% natural, 20% present-use, 20% old-world, 15% scar, 10% faction/cult), the dungeon grammar
