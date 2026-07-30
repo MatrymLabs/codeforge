@@ -1,0 +1,23 @@
+# SEED: aethryn -- quests/stonefang_drift.yaml  (Stonefang's quest: The Contested Drift)
+# Auto-loaded. Local need (a clan keystone lost in the collapsed drift), world echo (an old-world
+# road under the mines that still hums), a cost (the drift and its golem), a result (the clan claim
+# kept), an unresolved remainder (where the old road goes). Natural triggers: ENTER hall -> TAKE
+# keystone -> ENTER hall. Rewards XP + Making standing (the smiths and makers of Thalorin).
+id: stonefang_drift
+name: The Contested Drift
+start: offered
+reward_xp: 95
+steps:
+  - {state: offered, event: enter, to: accepted, on_enter: stonefang_hall}
+  - {state: accepted, event: take, to: recovered, on_take: stonefang_clan_keystone}
+  - state: recovered
+    event: enter
+    to: done
+    on_enter: stonefang_hall
+    effect: "award_xp;grant_rep:making:30"
+terminal: [done]
+labels:
+  offered: "In Stonefang Keep, the clan needs a maker's hands and a fighter's nerve. Step into the clanhall and hear the thane."
+  accepted: "Descend into the collapsed drift and dig out the clan keystone (mind what the rockfall woke, and do not follow the old road)."
+  recovered: "Carry the keystone back UP to Thane Dorgan in the clanhall."
+  done: "*** The keystone is home and the Stonefang claim on the deep road is held. The clan will remember it in steel. ***"

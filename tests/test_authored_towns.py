@@ -162,6 +162,45 @@ def test_the_voidspire_endgame_quest_walks_and_grants_warcraft():
     assert "grant_rep:warcraft" in (finish.effect or "")
 
 
+def test_the_stonefang_quest_walks_and_grants_making():
+    finish, reward = _walk_quest("stonefang_drift.yaml")
+    assert reward == 95 and "grant_rep:making" in (finish.effect or "")
+
+
+def test_the_stonehelm_quest_walks_and_grants_warcraft():
+    finish, reward = _walk_quest("stonehelm_order.yaml")
+    assert reward == 140 and "grant_rep:warcraft" in (finish.effect or "")
+
+
+def test_the_stormreach_quest_walks_and_grants_gathering():
+    finish, reward = _walk_quest("stormreach_gate.yaml")
+    assert reward == 165 and "grant_rep:gathering" in (finish.effect or "")
+
+
+def test_the_aurelian_quest_walks_and_grants_knowing():
+    finish, reward = _walk_quest("aurelian_nexus.yaml")
+    assert reward == 185 and "grant_rep:knowing" in (finish.effect or "")
+
+
+def test_every_canon_region_has_an_authored_town():
+    # The content spine: a hand-authored place in every one of the fourteen reaches.
+    import yaml
+
+    from parts.world import canon
+    from parts.world.seed import _UniqueKeyLoader
+
+    settlements = yaml.load(
+        (_AETHRYN / "settlements.yaml").read_text(encoding="utf-8"), Loader=_UniqueKeyLoader
+    )
+    covered = set()
+    for path in towns.town_files(_AUTHORED):
+        hub = towns._load(path)["hub"]["room"]
+        covered.add(settlements[hub]["zone"])  # the region name the town's hub sits in
+    assert covered == canon.locked_region_names(), (
+        f"reaches without an authored town: {canon.locked_region_names() - covered}"
+    )
+
+
 def test_the_four_orders_are_each_granted_by_an_authored_quest():
     # Across the authored towns, every Order is earnable, so the reputation web is reachable.
     from parts.world.seed import load_quest

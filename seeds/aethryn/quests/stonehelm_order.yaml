@@ -1,0 +1,23 @@
+# SEED: aethryn -- quests/stonehelm_order.yaml  (Stonehelm's quest: The Standing Order)
+# Auto-loaded. Local need (an authority-seal to legitimize the tribunal's law), world echo (an old
+# command bunker still issuing orders to a dead garrison), a cost (the bunker and its sentinel), a
+# result (the highlands ruled another season), an unresolved remainder (whether the command will be
+# answered). Natural triggers: ENTER tribunal -> TAKE seal -> ENTER tribunal. Rewards XP + Warcraft.
+id: stonehelm_order
+name: The Standing Order
+start: offered
+reward_xp: 140
+steps:
+  - {state: offered, event: enter, to: accepted, on_enter: stonehelm_tribunal}
+  - {state: accepted, event: take, to: recovered, on_take: stonehelm_authority_seal}
+  - state: recovered
+    event: enter
+    to: done
+    on_enter: stonehelm_tribunal
+    effect: "award_xp;grant_rep:warcraft:35"
+terminal: [done]
+labels:
+  offered: "In Stonehelm, the tribunal weighs who may rule. Step into the Tribunal Hall and hear the tribune."
+  accepted: "Descend into the command bunker and take the authority-seal from its old cradle (mind what still keeps a dead post, and sign nothing)."
+  recovered: "Carry the authority-seal back UP to Tribune Valeska in the Tribunal Hall."
+  done: "*** The seal is re-sworn before the claimants, and Stonehelm's law stands another season, on authority borrowed from a dead world. ***"

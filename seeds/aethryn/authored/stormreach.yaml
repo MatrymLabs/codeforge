@@ -1,0 +1,100 @@
+# SEED: aethryn -- authored/stormreach.yaml  (Stormreach, a maritime city of The Shattered Isles, ~L180)
+#
+# The Shattered Isles' canon identity: a maritime frontier and broken global-passage system of storm
+# seas, wreck salvage, pirate polities, and drowned infrastructure where the old transport Crown (the
+# Maelstrom Rise) shattered into anomalies. Stormreach is a wreck-salvage port over a drowned old-world
+# sea-gate that still opens on a tide no calendar keeps. The conflict is ordinary and cut-throat
+# (salvage rights to a newly-opened facility); the clue to the larger world is the drowned gate; the
+# rumour is left unproven. Installed by parts/world/authored_towns.py; its quest is
+# quests/stormreach_gate.yaml.
+
+rooms:
+  stormreach_market:
+    name: The Salt Market
+    desc: >-
+      The storm-battered heart of Stormreach, its quays loud with gulls and salvers trading the guts
+      of a hundred wrecks: sea-charts, drowned relics, and rope by the mile. Every deal is watched by
+      three sea-factions and a customs officer nobody trusts. Ways lead OUT to the harbour road, NORTH
+      to the salvers' league, and WEST to the wreck docks.
+    exits: {out: stormreach, north: stormreach_league, west: stormreach_docks}
+  stormreach_docks:
+    name: The Wreck Docks
+    desc: >-
+      Slipways of half-broken hulls hauled in from the storm seas, picked over by divers who know
+      exactly what a drowned facility is worth and exactly how many never come back up. The market is EAST.
+    exits: {east: stormreach_market}
+  stormreach_league:
+    name: The Salvers' League
+    desc: >-
+      The hall of the Salvers' League, where wreck-rights are bought, sold, and occasionally settled
+      with knives, and the League keeps a fragile peace among privateers who would rather have none. A
+      league-captain keeps the salvage-charter. A stair descends DOWN to the drowned gate; the market
+      is back SOUTH.
+    exits: {south: stormreach_market, down: stormreach_gate}
+  stormreach_gate:
+    name: The Drowned Gate
+    desc: >-
+      A flooded chamber of the old sea-Crown, its great gate half-open on a dark water that is not
+      quite the sea outside: a drowned door that once joined the world's oceans and now opens, on the
+      wrong tide, onto somewhere else. A gate-key hangs in the current. Stairs climb back UP.
+    exits: {up: stormreach_league}
+
+hub: {room: stormreach, keyword: square, entry: stormreach_market}
+
+npcs:
+  stormreach_captain:
+    name: League-Captain Meire
+    keywords: [meire, captain, league-captain]
+    location: stormreach_league
+    dialogue:
+      - >-
+        "You dive, or you fight, or both, and Stormreach has need of all three. The drowned gate
+        below has swung open on a bad tide and its gate-key is loose in the current. Whoever holds
+        that key holds the salvage-rights to whatever the gate opens onto, and half the privateers in
+        the isles will kill for it. Go down, take it, bring it up to me. The League pays in shares,
+        and the League remembers a diver who comes back."
+    topics:
+      wrecks:
+        - >-
+          "The storm seas give up a wreck a week and a fortune in every one, if the drowned facility
+          it fell from does not keep you. We license the salvage. The privateers ignore the licence.
+          That is the isles for you: everyone salvaging, no one agreeing whose it is."
+      gates:
+        - >-
+          "The old sea-Crown, the Maelstrom Rise, joined every ocean with drowned gates. When it
+          shattered they went wild. Ours opens on the wrong tide, onto a sea that is not on any chart.
+          We do not sail through it. We salvage what washes back."
+      rumor:
+        - >-
+          "They say the drowned gate opens on a tide no calendar keeps, and sometimes the WRONG sea
+          comes through, with the wrong things swimming in it. They say one tide it will open and not
+          close. Go down, take the key, and be up the stair before the water turns."
+      meire:
+        - >-
+          "League-Captain of Stormreach, keeper of a peace held together with rope and threat. Someone
+          must stand between the salvers and each other, or the isles drown in their own quarrels. It
+          is loud, wet work, and it pays."
+    hp: 0
+  stormreach_drowned:
+    name: a drowned reaver
+    keywords: [reaver, drowned, drowned-reaver]
+    location: stormreach_gate
+    dialogue:
+      - The drowned reaver hauls up out of the black water, still gripping a cutlass gone green with age.
+    aggressive: true
+    hp: 1140
+    atk: 88
+    xp: 168
+    level: 178
+    tier: normal
+    attack_element: WTR
+
+items:
+  stormreach_gate_key:
+    name: a drowned gate-key
+    keywords: [gate-key, key, gate]
+    location: stormreach_gate
+    lore: >-
+      A key of green-grown sea-Crown metal, cold and dripping, cut with a chart of currents that
+      belong to no ocean anyone has sailed. Held near the drowned gate it thrums, and the water
+      answers, as if key and gate still remember how the old world joined every sea to every other.

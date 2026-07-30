@@ -1,0 +1,94 @@
+# SEED: aethryn -- authored/stonefang_keep.yaml  (Stonefang Keep, a fortress-city of Thalorin, ~L100)
+#
+# Thalorin's canon identity: a fortress culture and mining power whose digging exposes old structural
+# systems and dangerous relic strata. Stonefang Keep is a clan-hold of smiths and deep-miners; its
+# deepest drift has broken into a collapsed old-world military road that still hums. The conflict is
+# ordinary and proud (which clan claims a rich relic-vein); the clue to the larger world is the old
+# road; the rumour is left unproven. Installed by parts/world/authored_towns.py; its quest is
+# quests/stonefang_drift.yaml.
+
+rooms:
+  stonefang_market:
+    name: The Fang Market
+    desc: >-
+      A hall of the mountain-hold hewn under the peaks, its stalls ringing with hammered iron and
+      the trade of ore, arms, and deep-salvage between the clans of Thalorin. Everything here is
+      heavy and made to last. Ways lead OUT to the mountain road, NORTH to the clanhall, and WEST to
+      the deep forges.
+    exits: {out: stonefang_keep, north: stonefang_hall, west: stonefang_forge}
+  stonefang_forge:
+    name: The Deep Forges
+    desc: >-
+      Great forge-halls sunk into the living rock, their fires fed by the mountain's own heat, where
+      Stonefang's smiths work iron and the stranger metals the deep gives up. The market is back EAST.
+    exits: {east: stonefang_market}
+  stonefang_hall:
+    name: The Clanhall
+    desc: >-
+      The seat of the Stonefang clan, its walls hung with the axes of dead thanes and the maps of a
+      hundred contested drifts. A thane keeps the claim-roll here. A stair descends DOWN into the
+      collapsed drift; the market is back SOUTH.
+    exits: {south: stonefang_market, down: stonefang_drift}
+  stonefang_drift:
+    name: The Collapsed Drift
+    desc: >-
+      A mine-drift that dug too deep and broke through into something older: a stretch of old-world
+      road, straight and seamless, that still hums faintly under a hand. A clan keystone was lost when
+      the drift came down. The dark is total but for the road's faint light. Stairs climb back UP.
+    exits: {up: stonefang_hall}
+
+hub: {room: stonefang_keep, keyword: square, entry: stonefang_market}
+
+npcs:
+  stonefang_thane:
+    name: Thane Dorgan
+    keywords: [dorgan, thane]
+    location: stonefang_hall
+    dialogue:
+      - >-
+        "You have a maker's hands, stranger, or a fighter's, and the drift below needs both. Our clan
+        keystone, the one that marks our claim on the deep road, was lost when the drift came down.
+        Go down, dig it out, and bring it up to me. Cross the wrong clan's claim and there will be
+        worse than rockfall waiting. The Stonefangs pay their debts in steel."
+    topics:
+      mines:
+        - >-
+          "We dig deeper than any hold in Thalorin, and we pay for it. Every rich vein is a claim,
+          every claim a quarrel, and the deepest quarrels are settled with axes, not ledgers."
+      relics:
+        - >-
+          "The deep gives up stranger things than ore now. Metal that will not rust, roads that were
+          never cut. Old-world work. We forge what we can of it and we do not ask too loudly what it was."
+      rumor:
+        - >-
+          "They say the collapsed drift broke clean into an old-world road, and the road still HUMS,
+          like it is waiting for something to travel it. They say if you follow it far enough it goes
+          somewhere no map of Thalorin knows. Go down and dig, and do not follow the road."
+      dorgan:
+        - >-
+          "Thane of the Stonefangs, third to hold this hall. A thane keeps the claim and keeps the
+          peace between clans that would rather not have it. It is loud work, and it is honest."
+    hp: 0
+  stonefang_golem:
+    name: a drift-collapsed golem
+    keywords: [golem, drift-golem, drift]
+    location: stonefang_drift
+    dialogue:
+      - The golem hauls itself from the rubble, old-road metal grinding in its half-buried frame.
+    aggressive: true
+    hp: 680
+    atk: 51
+    xp: 92
+    level: 98
+    tier: normal
+    attack_element: ERT
+
+items:
+  stonefang_clan_keystone:
+    name: the Stonefang clan keystone
+    keywords: [keystone, clan-keystone, stone]
+    location: stonefang_drift
+    lore: >-
+      A blunt wedge of grey stone cut with the Stonefang mark, but set into it, where no clan-mason
+      put it, is a seam of the old road's seamless metal, warm and faintly humming. Whoever last held
+      this keystone set it against the old road on purpose, for a reason the claim-roll does not record.
