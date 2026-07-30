@@ -12,6 +12,7 @@ from parts.world.delve import generate_delves, load_dungeons, wire_delve_mouths
 from parts.world.delve_sets import forge_delve_sets
 from parts.world.doors import DOORS, barred_door_for
 from parts.world.gearsets import register_sets
+from parts.world.greenhold import install_greenhold
 from parts.world.inscriptions import carve_inscriptions
 from parts.world.items import ITEMS, register_prototypes
 from parts.world.landmarks import raise_landmarks
@@ -107,6 +108,12 @@ if _settlements is not None:
     WORLD.update(_store_rooms)
     NPCS.update(_store_npcs)
     wire_store_doors(WORLD, _settlements)
+
+# Raise Greenhold's hand-authored interior (parts.world.greenhold): the polished starter town off
+# the Veridia hub, its keeper, its old-world key, and the rooms its quest turns on. A no-op unless
+# the Greenhold hub is present (only the aethryn world has it), so other seeds are untouched. Merged
+# before the link audit, so its rooms/NPCs/item pass the same gate as every authored location.
+register_prototypes(install_greenhold(WORLD, NPCS))
 
 # Every generated world carries the Creator's Workshop: a Grand Library linked to the spawn, and a
 # concealed Creator's Door onto an isolated administrative instance only the Seed Owner may cross
