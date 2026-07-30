@@ -141,6 +141,12 @@ def test_the_lumengrotto_quest_walks_and_grants_knowing():
     assert "grant_rep:knowing" in (finish.effect or "")
 
 
+def test_the_voidspire_endgame_quest_walks_and_grants_warcraft():
+    finish, reward = _walk_quest("voidspire_threshold.yaml")
+    assert reward == 200  # the endgame staging quest pays the most
+    assert "grant_rep:warcraft" in (finish.effect or "")
+
+
 def test_the_four_orders_are_each_granted_by_an_authored_quest():
     # Across the authored towns, every Order is earnable, so the reputation web is reachable.
     from parts.world.seed import load_quest

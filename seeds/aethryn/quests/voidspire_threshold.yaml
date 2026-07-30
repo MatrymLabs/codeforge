@@ -1,0 +1,27 @@
+# SEED: aethryn -- quests/voidspire_threshold.yaml  (Voidspire's quest: The Warden's Leave)
+#
+# Auto-loaded. The endgame staging quest: a local need (the fracture has worked the stable anchor
+# loose), a world echo (the edge of Netharion's wound, the apex raids beyond), a cost (the fracture
+# and its law-shade, a level-248 fight), a result (the Warden-Marshal's leave to attempt the apex
+# ways), and an unresolved remainder (whether Netharion answers, left as rumour). Natural triggers:
+# ENTER the watch -> TAKE the anchor -> ENTER the watch. Rewards XP + standing with the Warcraft
+# order (the Wardens who hold the descent). Thematically the gate before Netharion's Throne and the
+# Rifted Abyss (the weekly apex raids); it does not hard-lock them, it earns the warden's leave.
+id: voidspire_threshold
+name: The Warden's Leave
+start: offered
+reward_xp: 200
+steps:
+  - {state: offered, event: enter, to: accepted, on_enter: voidspire_watch}
+  - {state: accepted, event: take, to: recovered, on_take: voidspire_stable_anchor}
+  - state: recovered
+    event: enter
+    to: done
+    on_enter: voidspire_watch
+    effect: "award_xp;grant_rep:warcraft:50"
+terminal: [done]
+labels:
+  offered: "At Voidspire, the Wardens of the Scars weigh who may descend. Step into the Wardens' Watch and hear the marshal."
+  accepted: "Descend to the fracture edge and recover the watch's stable anchor (a law-shade holds it -- come ready)."
+  recovered: "Carry the stable anchor back UP to Warden-Marshal Cael in the Wardens' Watch."
+  done: "*** You stood at the edge and kept your name. The Warden-Marshal gives her leave: the apex ways to Netharion's Throne and the Rifted Abyss are open to you now. ***"
