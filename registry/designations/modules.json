@@ -6983,5 +6983,33 @@
     "aliases": [],
     "created": "2026-07-30",
     "updated": "2026-07-30"
+  },
+  {
+    "designation": "MOD-04.143",
+    "name": "caves",
+    "status": "active",
+    "function": "the deterministic cave forge: generate one reusable area-family, varied by region, without touching the engine (game)",
+    "label": "caves",
+    "file": "parts/world/caves.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "docs/aethryn_lore_bible.md",
+    "tests": "tests/test_caves.py",
+    "depends_on": [
+      "canon"
+    ],
+    "related": [
+      "survey",
+      "wildlands"
+    ],
+    "reuse": "the local area-generation primitive (the prompt's centerpiece): generate_cave(region, seed) forges a navigable room graph (5-18 rooms, a branch, a loop, a landmark, a hazard, a resource, an optional secret, a micro-story, a return route) that inherits its region's identity from seeds/aethryn/cave_families.yaml; deterministic (sha512-seeded random.Random, same inputs -> identical cave), stamped GENERATED_LOCAL, and self-validating (_validation_report is the generator's own acceptance gate, pinned empty across regions and seeds)",
+    "notes": "The prompt: expand the world locally WITHOUT inventing global canon. cave_families.yaml is the per-region data (biome, subtypes, entrances, creature/hazard/resource families, landmarks, secrets, naming grammar) the forge composes from, so content stays data. The chain runs on a 4-compass cycle (no axis collides its reverse); branch uses in/out, loop uses up/down, so the graph is always navigable and reciprocal. Generated-lore guardrail: forbidden global canon (gods, pantheon, Netharion's fate) surfaces only as a RUMOR that RAISES a canon.unresolved_question, never asserts it. Sibling of wildlands (MOD-04.070). Next slice wires generate-area/preview/promote/export into the world tool (MOD-04.142).",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-30",
+    "updated": "2026-07-30"
   }
 ]
