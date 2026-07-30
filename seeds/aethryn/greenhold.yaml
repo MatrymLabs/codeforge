@@ -1,0 +1,95 @@
+# SEED: aethryn -- greenhold.yaml  (the hand-authored interior of Greenhold, Veridia's starter town)
+#
+# The map places Greenhold as a single hub room; this is its polished interior: a market square, a
+# smithy, a granary, and the granary undercroft, plus the people, the item, and (with
+# seeds/aethryn/quests/greenhold_intro.yaml) the quest that make it a place and not a signpost. It
+# expands a named location per the seed's recipe: preserve the map name, give it a role, add
+# subareas, a livelihood, one conflict, one rumor (marked as belief), one clue to a larger mystery,
+# and one revisitable change. The old-world cistern under the granary is Veridia's canon identity
+# made concrete: ordinary life built over forgotten abundance infrastructure, never explained away.
+#
+# Loaded and merged by parts/world/greenhold.py (the inns pattern: interior rooms built directly and
+# wired to the hub in code, so the boundary exit `out: greenhold` does not trip the per-file gate).
+
+# The town's interior subareas. Exits reference each other and the hub `greenhold` (wired in code).
+rooms:
+  greenhold_market:
+    name: Greenhold Market Square
+    desc: >-
+      The cobbled heart of Greenhold: stalls of green produce, a stone well, and the smell of fresh
+      bread. Farm-folk haggle over grain and trade the day's gossip. Ways lead OUT to the town gate,
+      NORTH to the granary, and WEST to the smithy.
+    exits: {out: greenhold, north: greenhold_granary, west: greenhold_smithy}
+  greenhold_smithy:
+    name: The Greenhold Smithy
+    desc: >-
+      A low forge where the town's ploughs and horseshoes are mended. The smith works old iron
+      turned up from the fields, some of it stranger and finer than any modern make. The square lies
+      back EAST.
+    exits: {east: greenhold_market}
+  greenhold_granary:
+    name: Greenhold Granary
+    desc: >-
+      A tall stone granary, its bins half-empty this season. A dry channel in the floor once carried
+      clean water up from below; now it only ticks and sighs. Stairs lead DOWN into the undercroft,
+      and the square is back SOUTH.
+    exits: {south: greenhold_market, down: greenhold_undercroft}
+  greenhold_undercroft:
+    name: The Granary Undercroft
+    desc: >-
+      A cold vaulted cellar older than the granary raised over it. A ring of pale, untarnished metal
+      and a seized valve mark an ancient fountain-head, its workings long forgotten. Water stains
+      climb the walls. Stairs climb back UP.
+    exits: {up: greenhold_granary}
+
+# How the hub connects to the interior: the hub room, the exit keyword to add, and the entry room.
+hub: {room: greenhold, keyword: square, entry: greenhold_market}
+
+# The people of Greenhold: a peaceful keeper who sets the quest, and the danger that guards the key.
+npcs:
+  greenhold_keeper:
+    name: Keeper Wenna
+    keywords: [wenna, keeper, granary-keeper]
+    location: greenhold_granary
+    dialogue:
+      - >-
+        "You there, traveller. The old cistern under my granary has failed, and the town grows
+        thirsty. If you have the nerve for the dark, go DOWN and free the valve-key from the
+        fountain-head. Bring it up to me, and Greenhold will owe you a good turn."
+    topics:
+      cistern:
+        - >-
+          "My grandmother said the fountain ran clean without a hand ever touching it. Old-world
+          work. I do not understand it, and I do not fully trust what I cannot understand."
+      rumor:
+        - >-
+          "Folk say the fountain still runs pure, if only someone could wake it. Folk say a great
+          many things. Go down and see for yourself."
+      wenna:
+        - >-
+          "Keeper of this granary, as my mother was. Someone must mind the grain, and the strange
+          old water beneath it."
+    hp: 0
+  greenhold_vermin:
+    name: a swarm of cellar vermin
+    keywords: [vermin, swarm, rats]
+    location: greenhold_undercroft
+    dialogue:
+      - The vermin bare their teeth and skitter over the cold old stone.
+    aggressive: true
+    hp: 16
+    atk: 4
+    xp: 12
+    level: 3
+    tier: normal
+
+# The item the quest turns on: an old-world key, a small clue to the world before the Fall.
+items:
+  greenhold_valve_key:
+    name: a corroded valve-key
+    keywords: [valve-key, valve, key]
+    location: greenhold_undercroft
+    lore: >-
+      A heavy key of pale metal, corroded only where later hands have touched it. It fits the seized
+      fountain-head exactly, as though key and fountain were made in the same breath, in a workshop
+      no one now living in Greenhold could name.

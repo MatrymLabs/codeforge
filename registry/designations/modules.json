@@ -7093,5 +7093,34 @@
     "aliases": [],
     "created": "2026-07-30",
     "updated": "2026-07-30"
+  },
+  {
+    "designation": "MOD-04.147",
+    "name": "greenhold",
+    "status": "active",
+    "function": "the hand-authored interior of Greenhold, Veridia's polished starting town (game)",
+    "label": "greenhold",
+    "file": "parts/world/greenhold.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "docs/aethryn_seed_reconciliation.md",
+    "tests": "tests/test_greenhold.py",
+    "depends_on": [
+      "seed"
+    ],
+    "related": [
+      "inns",
+      "quest",
+      "canon"
+    ],
+    "reuse": "the authored-location primitive (the prompt's 'first polished playable slice'): raise_greenhold builds the town interior (market, smithy, granary, undercroft + a keeper, an old-world key, an aggressive foe) from seeds/aethryn/greenhold.yaml as directly-built Room/Npc/Item records, so the boundary exit `out: greenhold` never trips load_rooms' per-file exit gate; install_greenhold merges + wires the hub exit only when the Greenhold hub is present (a no-op on non-aethryn seeds), following the inns generator exactly. The paired quest (seeds/aethryn/quests/greenhold_intro.yaml) drives entirely off natural play (enter -> take -> enter), never the bare `quest accept` verb.",
+    "notes": "Expands a named location per the seed recipe: the failing old-world cistern under the granary is Veridia's canon identity (life over forgotten abundance infrastructure) shown through function, never explained. The quest 'The Granary's Thirst' (id greenhold_granary) rewards XP + Making standing; both enter-steps target the granary but fire only from their own state, so mid-quest passing is inert. Content is data; this is the factory. Wired into world.py before the link audit; registered in test_world_boundary _GAME_SEED.",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-30",
+    "updated": "2026-07-30"
   }
 ]
