@@ -18,7 +18,7 @@ import forge
 from parts.world import npcs
 from parts.world.abilities import abilities_for, render_abilities, use_ability
 from parts.world.seed import Npc, SeedError, load_abilities
-from parts.world.session import Session
+from parts.world.session import SESSIONS, Session
 
 
 @pytest.fixture(autouse=True)
@@ -28,6 +28,7 @@ def fresh_npcs():
     yield
     npcs.NPCS.clear()
     npcs.NPCS.update(snap)
+    SESSIONS.clear()  # ally-heal tests seat sessions; never leak them to the next test
 
 
 def _at_dummy(job: str) -> Session:
@@ -69,6 +70,68 @@ def test_a_heal_ability_restores_hp_and_costs_mp() -> None:
     assert "Mend" in out and "recover" in out
     assert s.resources["hp"].current > hp_before
     assert s.resources["mp"].current == mp_before - 5
+
+
+def _seated(job: str, pid: str, location: str = "courtyard") -> Session:
+    """A session with a calling, seated in SESSIONS at a room (so _trace_ally can find it)."""
+    s = Session(player_id=pid)
+    forge.handle_command(s, f"job {job}")
+    s.location = location
+    SESSIONS[pid] = s
+    return s
+
+
+# --- the trinity seam: a heal can mend an ally in the room --------------------------------------
+
+
+def test_a_heal_mends_a_wounded_ally_in_the_room() -> None:
+    healer = _seated("scholar", "cleo")
+    ally = _seated("vanguard", "bram")
+    ally.resources["hp"] = ally.resources["hp"].damage(12)
+    ally_before, healer_hp_before = ally.resources["hp"].current, healer.resources["hp"].current
+    mp_before = healer.resources["mp"].current
+    out = use_ability(healer, "mend on bram")
+    assert "on Bram" in out and "mending" in out
+    assert ally.resources["hp"].current > ally_before  # the ally was healed
+    assert healer.resources["hp"].current == healer_hp_before  # not the healer
+    assert healer.resources["mp"].current == mp_before - 5  # the healer paid
+
+
+def test_a_heal_on_self_by_name_still_heals_the_wielder() -> None:
+    healer = _seated("scholar", "cleo")
+    healer.resources["hp"] = healer.resources["hp"].damage(10)
+    before = healer.resources["hp"].current
+    out = use_ability(healer, "mend on me")
+    assert "recover" in out
+    assert healer.resources["hp"].current > before
+
+
+def test_healing_an_absent_ally_fails_loud_and_keeps_the_mp() -> None:
+    healer = _seated("scholar", "cleo")
+    mp_before = healer.resources["mp"].current
+    out = use_ability(healer, "mend on nobody")
+    assert "no ally called 'nobody'" in out
+    assert healer.resources["mp"].current == mp_before  # MP never burned into the void
+
+
+def test_a_heal_will_not_reach_an_ally_in_another_room() -> None:
+    healer = _seated("scholar", "cleo", location="courtyard")
+    _seated("vanguard", "bram", location="forge")  # same world, different room
+    out = use_ability(healer, "mend on bram")
+    assert "no ally called 'bram'" in out  # room-local: out of reach elsewhere
+
+
+def test_healing_a_name_no_one_in_the_room_answers_to_fails_loud() -> None:
+    healer = _seated("scholar", "cleo")
+    _seated("vanguard", "bram")  # a real ally present, but not the one named
+    out = use_ability(healer, "mend on ghost")  # scans the room, finds no match
+    assert "no ally called 'ghost'" in out
+
+
+def test_render_abilities_shows_a_heal_targets_self_or_ally() -> None:
+    healer = _seated("scholar", "cleo")
+    out = render_abilities(healer)
+    assert "self or ally" in out
 
 
 def test_a_strike_that_fells_the_dummy_still_awards_and_reassembles() -> None:
