@@ -141,6 +141,21 @@ def test_the_lumengrotto_quest_walks_and_grants_knowing():
     assert "grant_rep:knowing" in (finish.effect or "")
 
 
+def test_the_ravenwatch_quest_walks_and_grants_knowing():
+    finish, reward = _walk_quest("ravenwatch_barrow.yaml")
+    assert reward == 32 and "grant_rep:knowing" in (finish.effect or "")
+
+
+def test_the_sunscar_quest_walks_and_grants_gathering():
+    finish, reward = _walk_quest("sunscar_charter.yaml")
+    assert reward == 85 and "grant_rep:gathering" in (finish.effect or "")
+
+
+def test_the_zulkarak_quest_walks_and_grants_making():
+    finish, reward = _walk_quest("zulkarak_physic.yaml")
+    assert reward == 90 and "grant_rep:making" in (finish.effect or "")
+
+
 def test_the_voidspire_endgame_quest_walks_and_grants_warcraft():
     finish, reward = _walk_quest("voidspire_threshold.yaml")
     assert reward == 200  # the endgame staging quest pays the most

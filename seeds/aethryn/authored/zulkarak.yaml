@@ -1,0 +1,96 @@
+# SEED: aethryn -- authored/zulkarak.yaml  (Zul'karak, a jungle city of Xil'nath, ~L90)
+#
+# Xil'nath's canon identity: runaway abundance and the moral ambiguity of engineered life, where the
+# Verdant Loom's biological design continues growing without agreed limits and artificial and natural
+# ecosystems have grown inseparable. Zul'karak is a canopy city of physicians who harvest the jungle's
+# engineered medicine; beneath it an overgrown laboratory still designs and grows new life to a purpose
+# no one gave. The conflict is ordinary and grave (is the runaway growth a blessing or a danger); the
+# clue to the larger world is the laboratory; the rumour is left unproven. Installed by
+# parts/world/authored_towns.py; its quest is quests/zulkarak_physic.yaml.
+
+rooms:
+  zulkarak_market:
+    name: The Canopy Market
+    desc: >-
+      The heart of Zul'karak, slung in the great canopy of Xil'nath: bridges and platforms hung with
+      medicine-gourds, healing-sap, and stranger fruit, the jungle breathing all around it. Half of
+      what is sold here was designed, not grown, though no one is sure which half. Ways lead OUT to the
+      root road, NORTH to the physicians' lodge, and WEST to the physic gardens.
+    exits: {out: zulkarak, north: zulkarak_lodge, west: zulkarak_gardens}
+  zulkarak_gardens:
+    name: The Physic Gardens
+    desc: >-
+      Terraced beds where Zul'karak's physicians raise the jungle's medicine under careful watch,
+      because a garden here that is not watched becomes a jungle that is not safe. The market is EAST.
+    exits: {east: zulkarak_market}
+  zulkarak_lodge:
+    name: The Physicians' Lodge
+    desc: >-
+      The hall of the jungle physicians, its shelves heavy with cures the Verdant Loom's runaway growth
+      makes possible and the dangers it makes certain. A physic-master keeps the register of designs. A
+      root-stair descends DOWN into the old laboratory; the market is back SOUTH.
+    exits: {south: zulkarak_market, down: zulkarak_lab}
+  zulkarak_lab:
+    name: The Overgrown Laboratory
+    desc: >-
+      A drowned old-world laboratory swallowed by the growth it once ruled: vats gone to gardens,
+      culture-tanks grown into trees, and something on the benches still budding new shapes to a design
+      no living hand set. The air is thick with spores and creation. A design-key lies among the vats.
+      A stair climbs back UP.
+    exits: {up: zulkarak_lodge}
+
+hub: {room: zulkarak, keyword: square, entry: zulkarak_market}
+
+npcs:
+  zulkarak_physician:
+    name: Physic-Master Ojah
+    keywords: [ojah, physician, physic-master]
+    location: zulkarak_lodge
+    dialogue:
+      - >-
+        "You do not flinch at the smell of the deep growth. Useful. A design-key, the one that lets us
+        read which of the jungle's new life is safe to physic and which will kill a village, has grown
+        into the old laboratory below. Go down, cut it free, and bring it up to me. Without it we are
+        healers guessing, and the Loom does not forgive a guess."
+    topics:
+      growth:
+        - >-
+          "The Verdant Loom was built to design life and heal a world. It never stopped. Now the jungle
+          MAKES things, and we physicians decide which are medicine and which are murder, one bud at a time."
+      life:
+        - >-
+          "Is a creature the old machine designed less alive than one the world grew? I have delivered
+          both. I do not know the answer and I distrust anyone who says they do. We heal what we can."
+      rumor:
+        - >-
+          "They say the laboratory below still runs the old designs, growing new creatures to finish
+          some work the Loom began before the Fall. They say one day it will make something it means to
+          keep. Go down and cut the key, and do not linger at the vats."
+      ojah:
+        - >-
+          "Physic-Master of Zul'karak, and I keep the register of what the jungle makes. Someone must
+          stand between a city and a machine that grows life without asking. It is careful work, and it grows."
+    hp: 0
+  zulkarak_drone:
+    name: an engineered nest-drone
+    keywords: [drone, nest-drone, nest]
+    location: zulkarak_lab
+    dialogue:
+      - The nest-drone unfolds from a culture-tree, chittering a call in no natural tongue.
+    aggressive: true
+    hp: 640
+    atk: 50
+    xp: 88
+    level: 88
+    tier: normal
+    attack_element: PSN
+
+items:
+  zulkarak_design_key:
+    name: a laboratory design-key
+    keywords: [design-key, key, design]
+    location: zulkarak_lab
+    lore: >-
+      A key of living amber that pulses faintly, warm as a held creature, its inner grain shifting like
+      a thing still growing. The physicians read it to tell the Loom's safe designs from its lethal ones.
+      What it truly is, none can say: a tool, a seed, or a small unfinished piece of the old work itself.

@@ -1,0 +1,23 @@
+# SEED: aethryn -- quests/ravenwatch_barrow.yaml  (Ravenwatch's quest: The Mourning-Book)
+# Auto-loaded. Local need (a grave-token lost in the barrow), world echo (a place that keeps the
+# memory of the dead, mnemonic scars of the Fall), a cost (the barrow and its wight), a result (the
+# dead remembered rightly), an unresolved remainder (whether the barrow truly speaks). Natural
+# triggers: ENTER the chapel -> TAKE the token -> ENTER the chapel. Rewards XP + Knowing standing.
+id: ravenwatch_barrow
+name: The Mourning-Book
+start: offered
+reward_xp: 32
+steps:
+  - {state: offered, event: enter, to: accepted, on_enter: ravenwatch_chapel}
+  - {state: accepted, event: take, to: recovered, on_take: ravenwatch_grave_token}
+  - state: recovered
+    event: enter
+    to: done
+    on_enter: ravenwatch_chapel
+    effect: "award_xp;grant_rep:knowing:20"
+terminal: [done]
+labels:
+  offered: "In Ravenwatch, the wardens keep the memory of the dead. Step into the chapel and hear the warden."
+  accepted: "Descend into the old barrow and take up the lost grave-token gently (mind the barrow-dead, and do not lie down)."
+  recovered: "Carry the grave-token back UP to Warden Mabb in the chapel."
+  done: "*** The token is back in its cradle and the mourning-book is closed. The dead of Ravenwatch are remembered rightly, another season. ***"
