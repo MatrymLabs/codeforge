@@ -62,6 +62,7 @@ _GAME_SEED = {
     "npcs",
     "doors",
     "combat",
+    "threat",
     "abilities",
     "jobs",
     "progression",

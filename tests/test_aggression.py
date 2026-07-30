@@ -221,3 +221,66 @@ def test_open_strike_from_a_passive_npc_lands_nothing():
     max_hp = s.resources["hp"].maximum
     assert open_strike(s, passive) == ""
     assert s.resources["hp"].current == max_hp
+
+
+# --- the trinity tank: a foe strikes the hero at the top of its threat table --------------------
+
+
+def test_a_foe_strikes_the_top_threat_hero_not_the_actor():
+    from parts.world import threat
+    from parts.world.events import bind_echo, unbind_echo
+
+    threat._reset()
+    actor = _fighter(job="scholar")  # matrym: low threat, whose beat this is
+    tank = Session(player_id="bram", location="courtyard")
+    bind_calling(tank, "vanguard")
+    SESSIONS["bram"] = tank
+    heard: list[str] = []
+    bind_echo("bram", heard.append)
+    _spawn_aggressor(atk=5, hp=50)
+    threat.add("reaver", "bram", 100)  # the tank holds the foe's attention
+    tank_hp, actor_hp = tank.resources["hp"].current, actor.resources["hp"].current
+    try:
+        out = menace(actor)  # runs on the actor's beat
+        assert out == ""  # the actor's own tick shows no blow: they were not hit
+        assert tank.resources["hp"].current == tank_hp - 5  # the tank took it
+        assert actor.resources["hp"].current == actor_hp  # the actor was spared
+        assert any("lunges for 5" in line for line in heard)  # and the tank was told
+    finally:
+        unbind_echo("bram")
+        threat._reset()
+
+
+def test_damage_through_combat_draws_the_foe_onto_the_damager():
+    # End to end: a hero who hurts the foe (land_hit -> threat.add) becomes its target on the beat,
+    # even though a different hero's tick drives the world.
+    from parts.world import threat
+    from parts.world.combat import attack
+    from parts.world.events import bind_echo, unbind_echo
+
+    threat._reset()
+    actor = _fighter(job="scholar")  # never attacks
+    tank = Session(player_id="bram", location="courtyard")
+    bind_calling(tank, "vanguard")
+    SESSIONS["bram"] = tank
+    heard: list[str] = []
+    bind_echo("bram", heard.append)
+    _spawn_aggressor(atk=5, hp=200)  # tough enough to survive the blow
+    try:
+        attack(tank, "reaver")  # the tank hurts it -> builds threat, no explicit threat.add
+        tank_hp = tank.resources["hp"].current
+        assert threat.score("reaver", "bram") > 0
+        menace(actor)  # the foe turns on the tank
+        assert tank.resources["hp"].current == tank_hp - 5
+    finally:
+        unbind_echo("bram")
+        threat._reset()
+
+
+def test_an_aggressive_but_harmless_foe_lands_nothing():
+    # An aggressive foe with no attack stat presses the beat but its blow is empty -- covers the
+    # skip-the-empty-line branch of menace.
+    s = _fighter()
+    _spawn_aggressor(atk=0, hp=20)
+    assert menace(s) == ""  # no blow, no line
+    assert s.resources["hp"].current == s.resources["hp"].maximum  # untouched

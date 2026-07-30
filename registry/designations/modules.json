@@ -6799,5 +6799,31 @@
     "aliases": [],
     "created": "2026-07-29",
     "updated": "2026-07-29"
+  },
+  {
+    "designation": "MOD-04.136",
+    "name": "threat",
+    "status": "active",
+    "function": "who a foe wants to hit: a per-NPC aggro table (the trinity's tank seam)",
+    "label": "threat",
+    "file": "parts/world/threat.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "docs/architecture.md",
+    "tests": "tests/test_threat.py",
+    "depends_on": [],
+    "related": [
+      "combat",
+      "aggression"
+    ],
+    "reuse": "the aggro primitive that makes the tank real: a per-foe threat map (add on damage/heal/taunt, top_target picks the highest-threat present hero, taunt spikes it, drop/clear on leave/defeat) so a foe strikes the hero holding its attention instead of whoever acted last",
+    "notes": "The missing half of the holy trinity. combat.land_hit adds threat = damage dealt (and clears the table when a foe is felled/reassembles); aggression.menace targets threat.top_target(nid, fighters-in-room) instead of the acting session, pushing the blow to the victim while the room sees the StrikeFrame. top_target only considers PRESENT heroes, so a departed hero's stale entry never mis-targets. taunt(nid, player, present) sets the taunter one above the current top (the tank's lever); heal-generated threat + the taunt verb land in the next slice.",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-29",
+    "updated": "2026-07-29"
   }
 ]
