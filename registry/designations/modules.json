@@ -6744,5 +6744,60 @@
     "aliases": [],
     "created": "2026-07-29",
     "updated": "2026-07-29"
+  },
+  {
+    "designation": "MOD-04.134",
+    "name": "broker",
+    "status": "active",
+    "function": "the stdlib pub/sub broker the bus fans across processes (Phase 4)",
+    "label": "broker",
+    "file": "parts/world/broker.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "docs/infrastructure_spec.md",
+    "tests": "tests/test_broker.py",
+    "depends_on": [],
+    "related": [
+      "bus",
+      "socket_bus"
+    ],
+    "reuse": "the network backing behind the MessageBus seam without a dependency: a line-delimited-JSON protocol (encode_frame/decode_frame) + a transport-agnostic Broker that fans a publish to every subscriber of a topic + a thin ThreadingTCPServer daemon; provable with a fake client (no socket) and a socketpair (no port)",
+    "notes": "Infra spec Phase 4. No Redis: our own architecture is the spine. encode_frame/decode_frame are the pure wire protocol (sub/unsub/pub); Broker.on_frame routes, _fan pushes to every subscribed Client (anything with send(bytes)) including the sender (its delivery handler needs the echo), drop() removes a disconnected client, topics() is the ops health read. serve() is a thin StreamRequestHandler over the tested Broker; port 0 binds ephemeral for tests. A dead client never breaks the fan-out; a garbled frame never drops a connection.",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-29",
+    "updated": "2026-07-29"
+  },
+  {
+    "designation": "MOD-04.135",
+    "name": "socket_bus",
+    "status": "active",
+    "function": "the MessageBus adapter that rides a socket to the broker (Phase 4)",
+    "label": "socket_bus",
+    "file": "parts/world/socket_bus.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "docs/infrastructure_spec.md",
+    "tests": "tests/test_socket_bus.py",
+    "depends_on": [
+      "broker"
+    ],
+    "related": [
+      "bus",
+      "events",
+      "presence"
+    ],
+    "reuse": "the network implementation of the bus seam: a SocketBus satisfying the MessageBus Protocol over a socket to the broker (publish writes a frame, subscribe registers a local handler + tells the broker, a reader thread turns the fan-out back into handler calls), injected with bus.set_bus so announce_to/push_gmcp/presence reach every process with no caller change",
+    "notes": "Infra spec Phase 4. connect(host, port) opens one. The one behaviour difference from InProcessBus: delivery is a round trip (publish -> broker -> reader -> handler), so a message to a player on THIS process comes back through the broker too -- the price of one shared roster; tests poll with a deadline. A dropped broker connection never crashes a publish; a bad handler never breaks delivery; close() is idempotent. Proven over socketpair (no port) + once over the serve() daemon on loopback.",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-29",
+    "updated": "2026-07-29"
   }
 ]

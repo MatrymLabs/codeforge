@@ -93,6 +93,8 @@ _GAME_SEED = {
     "metrics",
     "bus",
     "presence",
+    "broker",
+    "socket_bus",
     "aggression",
     "session",
     "seed",
