@@ -162,6 +162,9 @@ class Npc(TypedDict):
     # sent back to your start room at full health while it recovers, not revived in place. Default
     # False, so every training-ground foe stays gentle. A lethal foe must be combatable (hp > 0).
     lethal: NotRequired[bool]
+    # A RAID boss: a boss-tier foe on a WEEKLY lockout (parts.world.lockouts), meant for a party,
+    # not a solo lap. It composes the trinity + shared rooms + threat + the once-a-week reward.
+    raid: NotRequired[bool]
     # Optional: a level (1-300) and tier (normal/elite/boss) that scale the kill reward through the
     # challenge curve (parts.shelf.reward_curve): fighting up pays more, grays pay nothing. A foe
     # WITHOUT a level keeps its flat `xp` award (the tutorial default). Validated at load.
@@ -746,6 +749,13 @@ def load_npcs(path: Path) -> dict[str, Npc]:
                 f"NPC '{label}': 'tier' {tier!r} is set but 'level' is not; a tier only scales a "
                 "levelled foe. Give the NPC a level or drop the tier."
             )
+        # A raid boss must actually BE a boss: it rides the boss reward curve + the weekly lockout,
+        # so a raid flag without tier 'boss' is a contradiction. Refuse it loud rather than ship a
+        # 'raid' that pays like a trash mob.
+        if merged.get("raid") and tier != "boss":
+            raise SeedError(
+                f"NPC '{label}': 'raid' is set but tier is {tier!r}; a raid must be tier 'boss'."
+            )
         # Optional conversation topics: a keyword -> non-empty list of response lines.
         topics = merged.get("topics")
         if topics is not None and (
@@ -863,6 +873,8 @@ def load_npcs(path: Path) -> dict[str, Npc]:
         if level is not None:
             npc["level"] = level
             npc["tier"] = tier if tier is not None else "normal"
+        if merged.get("raid"):
+            npc["raid"] = True
         if drops:
             npc["drops"] = list(drops)
         if loot:

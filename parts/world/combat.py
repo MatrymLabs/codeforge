@@ -320,25 +320,37 @@ def _coin_reward(npc: Npc) -> int:
     return level * _TIER_COINS.get(npc.get("tier", "normal"), 1)
 
 
-# The FIRST kill of a boss each day pays this multiple of its coin drop as a bounty, then nothing
-# extra until the UTC date rolls. A boss stays farmable (it reassembles), but infinite farming no
-# longer pays infinite reward -- the endgame's daily reason to return (parts.world.lockouts).
+# The first kill of a boss each PERIOD pays this multiple of its coin drop as a bounty, then nothing
+# extra until the period rolls. The foe stays farmable (it reassembles), but infinite farming no
+# longer pays infinite reward -- the endgame's reason to return (parts.world.lockouts). A raid is a
+# weekly cadence and pays far more than a daily boss (a party's marquee objective, not a solo lap).
 BOSS_BOUNTY_MULT = 5
+RAID_BOUNTY_MULT = 20
 
 
-def _daily_boss_bounty(session: Session, npc: Npc, nid: str) -> str:
-    """A bonus on the first kill of a BOSS today, gated by the per-hero daily lockout. Returns the
-    bounty line (and credits the coins), or '' for a non-boss or a boss already claimed today."""
-    if npc.get("tier") != "boss":
-        return ""
+def _kill_bounty(session: Session, npc: Npc, nid: str) -> str:
+    """A lockout-gated bonus on the period's first kill of a raid (weekly) or a boss (daily). It
+    returns the bounty line (and credits the coins), or '' for a normal foe, or one already claimed
+    this period. A raid outranks the plain boss cadence: it is checked first."""
     from parts.world import lockouts
 
-    if not lockouts.claim(session, f"boss:{nid}", lockouts.today_utc()):
-        return ""  # already claimed today: the base drop stands, the bounty does not repeat
-    bonus = _coin_reward(npc) * BOSS_BOUNTY_MULT
+    if npc.get("raid"):
+        key, period, mult, label = (
+            f"raid:{nid}",
+            lockouts.this_week_utc(),
+            RAID_BOUNTY_MULT,
+            "Weekly raid",
+        )
+    elif npc.get("tier") == "boss":
+        key, period, mult, label = f"boss:{nid}", lockouts.today_utc(), BOSS_BOUNTY_MULT, "Daily"
+    else:
+        return ""
+    if not lockouts.claim(session, key, period):
+        return ""  # already claimed this period: the base drop stands, the bounty does not repeat
+    bonus = _coin_reward(npc) * mult
     session.coins += bonus
     return (
-        f"Daily bounty! Today's first {npc['name']} falls: you claim {purse(bonus)} extra. "
+        f"{label} bounty! The first {npc['name']} falls: you claim {purse(bonus)} extra. "
         f"(purse: {purse(session.coins)})"
     )
 
@@ -386,7 +398,9 @@ def land_hit(session: Session, npc: Npc, nid: str, dmg: int) -> tuple[bool, str]
     coins = _coin_reward(npc)
     session.coins += coins
     rewards = f"{rewards}\nYou find {purse(coins)}. (purse: {purse(session.coins)})"
-    bounty = _daily_boss_bounty(session, npc, nid)  # endgame: a bonus on the FIRST boss kill today
+    bounty = _kill_bounty(
+        session, npc, nid
+    )  # endgame: the period's-first bonus (daily boss / weekly raid)
     if bounty:
         rewards = f"{rewards}\n{bounty}"
     # guaranteed drops, then one weighted loot roll -- both spawn fresh instances on the floor

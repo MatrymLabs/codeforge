@@ -24,6 +24,14 @@ def today_utc() -> str:
     return datetime.now(UTC).strftime("%Y-%m-%d")
 
 
+def this_week_utc() -> str:
+    """The current ISO year-week as 'YYYY-Www' (e.g. '2026-W31'). The weekly reset a raid rides on:
+    its full reward pays once per week, then again next week. Resolved at the call edge like
+    today_utc, so pure logic stays clock-free and a test can name the week."""
+    year, week, _ = datetime.now(UTC).isocalendar()
+    return f"{year}-W{week:02d}"
+
+
 def is_locked(session: Session, key: str, day: str) -> bool:
     """True if this hero already claimed `key` on `day` (the bonus is spent until the day rolls)."""
     return session.lockouts.get(key) == day

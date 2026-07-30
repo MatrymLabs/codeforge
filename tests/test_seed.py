@@ -256,6 +256,33 @@ def test_a_valid_aggressive_npc_loads(tmp_path):
     assert reaver["atk"] == 5
 
 
+def test_a_raid_without_tier_boss_is_rejected_at_load(tmp_path):
+    """A raid flag on a non-boss is a contradiction: a raid rides the boss curve + weekly lock."""
+    from parts.world.seed import load_npcs
+
+    bad = tmp_path / "npcs.yaml"
+    bad.write_text(
+        "impostor:\n  location: courtyard\n  hp: 30\n  atk: 5\n  level: 10\n"
+        "  tier: elite\n  raid: true\n"
+    )
+    with pytest.raises(SeedError, match="raid.*must be tier 'boss'"):
+        load_npcs(bad)
+
+
+def test_a_valid_raid_boss_loads_and_carries_the_flag(tmp_path):
+    """A boss-tier foe flagged raid loads with raid=True (the weekly party objective)."""
+    from parts.world.seed import load_npcs
+
+    good = tmp_path / "npcs.yaml"
+    good.write_text(
+        "abyss_guardian:\n  location: courtyard\n  hp: 900\n  atk: 40\n  level: 300\n"
+        "  tier: boss\n  raid: true\n  lethal: true\n"
+    )
+    guardian = load_npcs(good)["abyss_guardian"]
+    assert guardian["raid"] is True
+    assert guardian["tier"] == "boss"
+
+
 def test_npcs_are_reactive_by_default(tmp_path):
     """No `aggressive` key means a reactive/passive NPC -- the flag defaults False."""
     from parts.world.seed import load_npcs
