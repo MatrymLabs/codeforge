@@ -98,7 +98,7 @@ sunscar_city:
   level: 80
 
 red_dunes:
-  name: Red Dunes
+  name: Red Dune
   zone: "Zhaar Desert"
   level: 80
 
@@ -143,7 +143,7 @@ moltenhold:
   level: 120
 
 cragfire:
-  name: Cragfire
+  name: Cinderfire
   zone: "Ashen Wastes"
   level: 120
 

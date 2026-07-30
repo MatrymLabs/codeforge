@@ -220,7 +220,7 @@ glacial_bastion:
 zhaar_desert:
   name: Zhaar Desert
   desc: |-
-    The Zhaar Desert zone (levels 80-130): a vast scorched desert of dunes, ruins, and buried fire. Within its bounds lie Sunscar City, Red Dunes, Sandspire Ruins, The Obsidian Pit, Scorchstone Keep. Roads and routes run on to the neighbouring lands.
+    The Zhaar Desert zone (levels 80-130): a vast scorched desert of dunes, ruins, and buried fire. Within its bounds lie Sunscar City, Red Dune, Sandspire Ruins, The Obsidian Pit, Scorchstone Keep. Roads and routes run on to the neighbouring lands.
   exits:
     north: duskwood_vale
     east: eldryn_forest
@@ -239,7 +239,7 @@ sunscar_city:
     out: zhaar_desert
 
 red_dunes:
-  name: Red Dunes
+  name: Red Dune
   desc: |-
     A caravan-outpost among the great red dunes of the deep desert. It lies within Zhaar Desert (levels 80-130); the zone road runs back out to the wider land.
   exits:
@@ -359,7 +359,7 @@ irondeep_mines:
 ashen_wastes:
   name: Ashen Wastes
   desc: |-
-    The Ashen Wastes zone (levels 120-170): a scorched volcanic waste of lava-fields and standing fire. Within its bounds lie Moltenhold, Cragfire, Ashen Monoliths, The Flamewrought Forge, The Scorched Gate. Roads and routes run on to the neighbouring lands.
+    The Ashen Wastes zone (levels 120-170): a scorched volcanic waste of lava-fields and standing fire. Within its bounds lie Moltenhold, Cinderfire, Ashen Monoliths, The Flamewrought Forge, The Scorched Gate. Roads and routes run on to the neighbouring lands.
   exits:
     west: eldryn_forest
     north: thalorin
@@ -379,9 +379,9 @@ moltenhold:
     out: ashen_wastes
 
 cragfire:
-  name: Cragfire
+  name: Cinderfire
   desc: |-
-    A town on a cooling crag, its forges never cold and never safe. It lies within Ashen Wastes (levels 120-170); the zone road runs back out to the wider land.
+    A town raised on cooling cinder, its forges never cold and never safe. It lies within Ashen Wastes (levels 120-170); the zone road runs back out to the wider land.
   exits:
     out: ashen_wastes
 

@@ -211,7 +211,7 @@ ZONES = [
             ),
             (
                 "red_dunes",
-                "Red Dunes",
+                "Red Dune",
                 "village",
                 "a caravan-outpost among the great red dunes of the deep desert",
             ),
@@ -325,9 +325,9 @@ ZONES = [
             ),
             (
                 "cragfire",
-                "Cragfire",
+                "Cinderfire",
                 "town",
-                "a town on a cooling crag, its forges never cold and never safe",
+                "a town raised on cooling cinder, its forges never cold and never safe",
             ),
             (
                 "ashen_monoliths",
