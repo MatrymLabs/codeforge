@@ -7065,5 +7065,33 @@
     "aliases": [],
     "created": "2026-07-30",
     "updated": "2026-07-30"
+  },
+  {
+    "designation": "MOD-04.146",
+    "name": "generation_contract",
+    "status": "active",
+    "function": "the generator's contract as data + the checks that enforce it (required fields, archetype mix, dungeon grammar, forbidden changes)",
+    "label": "generation_contract",
+    "file": "parts/world/generation_contract.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "docs/aethryn_seed_reconciliation.md",
+    "tests": "tests/test_generation_contract.py",
+    "depends_on": [
+      "canon"
+    ],
+    "related": [
+      "caves",
+      "area_store"
+    ],
+    "reuse": "the generation-contract primitive (documenting half of the 'both' directive): loads seeds/aethryn/generation_contract.yaml (the seed's GENERATION_CONTRACT as data) and exposes required_area_fields/historical_layers/dungeon_grammar/forbidden_changes/archetype_shares plus the checks missing_fields(area) (one area vs the 16 required fields, a present-but-empty field still counts missing) and distribution_gaps(areas) (a batch vs the 35/20/20/15/10 archetype mix within tolerance); canon_tier_for maps canon_status to the seed's C0-C4 label",
+    "notes": "The ruler the cave forge is measured against. Contract is data, so the requirement changes without touching the checker; load_contract validates its shape (every section present, archetype shares sum to 1.0). Build half (making the cave forge EMIT the 16 required fields so missing_fields comes back empty) lands in the next slice. From the Aethryn seed's GENERATION_CONTRACT.md + aethryn_world_seed.json generation_contract block.",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-30",
+    "updated": "2026-07-30"
   }
 ]

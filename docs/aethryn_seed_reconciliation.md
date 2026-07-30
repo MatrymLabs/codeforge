@@ -82,6 +82,11 @@ Checked against `seeds/aethryn/` and `parts/world/` on the day this doc landed.
   `parts/world/worldgraph.py` validates it against canon and computes reachability. All 14 regions
   are reachable from the spawn by land or sea. This powers `world find-unreachable`, `world inspect`,
   and `world graph`, and folds reachability into `world validate`.
+- **The generation contract, as data.** `seeds/aethryn/generation_contract.yaml` encodes the seed's
+  GENERATION_CONTRACT: the 16 `required_area_fields`, the historical layers, the minor-area archetype
+  mix (35 / 20 / 20 / 15 / 10), the dungeon grammar, and the forbidden changes.
+  `parts/world/generation_contract.py` validates it and exposes the checks (`missing_fields` for one
+  area, `distribution_gaps` for a batch). The forge is not yet fully compliant (see gap below).
 - **The generator half of the brief**: the deterministic cave forge (`parts/world/caves.py`), the
   area bench (`parts/world/area_store.py`), and the read-only validators (`parts/world/survey.py`,
   the `world` CLI). Generated content is stamped `GENERATED_LOCAL` (C3) and may raise a forbidden
@@ -96,12 +101,11 @@ Checked against `seeds/aethryn/` and `parts/world/` on the day this doc landed.
   names: `Red Dunes` and `Cragfire`. These names are woven through `zones.yaml`, `npcs.yaml`,
   `rooms.yaml`, and a test, and the seed arrived after they were authored, so renaming to canon
   ripples and is Josh's call (Cragfire may be intentional local flavour, not drift).
-- **The generation contract, as data.** The seed specifies `required_area_fields` (identity,
-  historical_layer, local_livelihood, active_conflict, ...), the minor-area distribution
-  (35% natural, 20% present-use, 20% old-world, 15% scar, 10% faction/cult), the dungeon grammar
-  (threshold, orientation, escalation, revelation, choice, aftermath), and the approved cave
-  archetypes. The cave forge honors the shape informally; encoding the ratios and area recipe as a
-  validated contract would let `world validate` enforce them.
+- **The cave forge does not yet emit the full contract.** The generation contract is now data
+  (below), but the cave forge still produces its own simpler field set, so `missing_fields` reports
+  the richer narrative fields (`historical_layer`, `local_livelihood`, `active_conflict`,
+  `larger_world_clue`, ...) as absent. Bringing the forge into compliance (emitting all 16 required
+  fields deterministically) is the "build" half, landing next.
 - **The magic / technology framework** (Crowncraft, Theomimetic arts, Scarcraft, and the four power
   channels) and the **historical-arc age names** (Age of Near Gods, Age of Plenty, the Imitation,
   the Starfall, ...) are C2 lore in the bible with no home in canon data yet.
