@@ -2,7 +2,7 @@
 #
 # The prompt: implement caves as ONE reusable area family with regional variants. This is the DATA
 # that varies it: for each canon region, the cave subtypes, entrance types, biome, creature / hazard
-# / resource families, landmarks, optional secrets, and a naming grammar the deterministic generator
+# / resource families, landmarks, an optional hidden feature, and a naming grammar the deterministic generator
 # (parts/world/caves.py) composes from. Content is data, never code; the generator is only its
 # factory. Every generated cave inherits its region's identity from the row here, so a Veridia cave
 # reads like Veridia and a Frostspire cave reads like Frostspire.
@@ -25,7 +25,7 @@ veridia:
   hazards: [slick flowstone, a sudden drop, rising damp, a loose ceiling]
   resources: [a clearwater spring, saltpetre crust, cave mushrooms, a clay seam]
   landmarks: [a still underground pool, a farmer's forgotten cache, a vein of pale crystal]
-  secrets: [a bricked-up alcove, a hidden fishing shrine]
+  hidden: [a bricked-up alcove, a hidden fishing shrine]
   naming:
     adjectives: [Damp, Still, Pale, Winding, Low]
     nouns: [Hollow, Passage, Grotto, Undercroft, Cut]
@@ -38,7 +38,7 @@ duskwood_vale:
   hazards: [black water, tangling roots, a false floor, choking mist]
   resources: [nightcap fungus, bog iron, a still cistern]
   landmarks: [a root-throttled sarcophagus, a sunken shrine, a knot of ancient roots]
-  secrets: [a sealed crypt door, a diver's air pocket]
+  hidden: [a sealed crypt door, a diver's air pocket]
   naming:
     adjectives: [Sunken, Rotten, Misted, Tangled, Silent]
     nouns: [Hollow, Crypt, Sinkhole, Warren, Deep]
@@ -51,7 +51,7 @@ caeloria:
   hazards: [foul air, a flooded run, a collapsing arch, a spiked grate]
   resources: [aqueduct water, mortared brick, votive wax]
   landmarks: [a saint's dry cistern, a wall of sealed niches, an aqueduct junction]
-  secrets: [a heretic's hidden reliquary, a bricked-over sublevel]
+  hidden: [a heretic's hidden reliquary, a bricked-over sublevel]
   naming:
     adjectives: [Sealed, Sacred, Flooded, Forgotten, Vaulted]
     nouns: [Catacomb, Aqueduct, Sublevel, Ossuary, Conduit]
@@ -64,7 +64,7 @@ eldryn_forest:
   hazards: [spore clouds, a living snare, a sap flood, a sudden bloom]
   resources: [luminous fungus, living amber, a nutrient spring]
   landmarks: [a heart-root chamber, a dormant growth-engine, a cathedral of fungus]
-  secrets: [a maintenance hatch grown over, a seed-vault alcove]
+  hidden: [a maintenance hatch grown over, a seed-vault alcove]
   naming:
     adjectives: [Living, Overgrown, Luminous, Breathing, Green]
     nouns: [Cavern, Chamber, Tunnel, Hollow, Bloom]
@@ -77,7 +77,7 @@ frostspire_peaks:
   hazards: [thin ice, a crevasse, a steam vent, sudden cold]
   resources: [glacier melt, sulphur crust, a warm spring]
   landmarks: [a frozen waterfall, a spire of blue ice, a geothermal pool]
-  secrets: [a body preserved in ice, a warm-cored vault]
+  hidden: [a body preserved in ice, a warm-cored vault]
   naming:
     adjectives: [Frozen, Glacial, Blue, Still, Deep]
     nouns: [Cave, Tunnel, Chamber, Fissure, Vault]
@@ -90,7 +90,7 @@ zhaar_desert:
   hazards: [a sand slide, glass shards, a dry heat, a collapsing shelf]
   resources: [a buried cistern, desert glass, natron salt]
   landmarks: [a glass-lined gallery, a dry king's cistern, a wall of tomb-glyphs]
-  secrets: [a sealed tomb chamber, a cache under the sand]
+  hidden: [a sealed tomb chamber, a cache under the sand]
   naming:
     adjectives: [Buried, Glassed, Dry, Sunbaked, Hollow]
     nouns: [Cave, Tomb, Cistern, Gallery, Warren]
@@ -103,7 +103,7 @@ xilnath_jungle:
   hazards: [a strangling vine, a sap pit, a spore bloom, a flooded run]
   resources: [medicinal sap, engineered fruit, a clean spring]
   landmarks: [a runaway growth-vat, a nest of engineered life, a drowned laboratory]
-  secrets: [a sealed specimen vault, a hidden clutch of eggs]
+  hidden: [a sealed specimen vault, a hidden clutch of eggs]
   naming:
     adjectives: [Overgrown, Engineered, Flooded, Teeming, Green]
     nouns: [Tunnel, Nest, Vault, Hollow, Root]
@@ -116,7 +116,7 @@ thalorin:
   hazards: [a cave-in, a flooded shaft, foul gas, an old trap]
   resources: [an ore vein, a coal seam, a support-timber cache]
   landmarks: [an abandoned dig-face, a garrison chokepoint, a rich ore vein]
-  secrets: [a paymaster's hidden strongbox, a sealed side-drift]
+  hidden: [a paymaster's hidden strongbox, a sealed side-drift]
   naming:
     adjectives: [Deep, Abandoned, Rich, Braced, Collapsed]
     nouns: [Mine, Drift, Cavern, Tunnel, Shaft]
@@ -129,7 +129,7 @@ ashen_wastes:
   hazards: [a heat vent, toxic fumes, a slag flow, a live machine]
   resources: [obsidian, refined slag, a coolant line]
   landmarks: [a stalled production line, a lake of cooled slag, a malformed foundry-god]
-  secrets: [a sealed foundry vault, an intact tool-cache]
+  hidden: [a sealed foundry vault, an intact tool-cache]
   naming:
     adjectives: [Ashen, Molten, Ruined, Toxic, Stalled]
     nouns: [Tube, Underwork, Fissure, Foundry, Vent]
@@ -142,7 +142,7 @@ korvash_highlands:
   hazards: [a locked-down door, an old authorization trap, unstable rubble]
   resources: [a supply cache, sealed rations, a power cell]
   landmarks: [a dead command table, a wall of unspoken oaths, a crater-glass floor]
-  secrets: [an authorization vault, a bunker still under orders]
+  hidden: [an authorization vault, a bunker still under orders]
   naming:
     adjectives: [Sealed, Sworn, Cratered, Silent, Locked]
     nouns: [Bunker, Vault, Passage, Tomb, Hold]
@@ -155,7 +155,7 @@ shattered_isles:
   hazards: [a rising tide, a sharp reef, a riptide, a rotten deck]
   resources: [pearl oysters, salvage, a freshwater seep]
   landmarks: [a wrecked hull run through the rock, a drowned gate, a pearl-strewn pool]
-  secrets: [a smuggler's dry cache, a gate that opens wrong]
+  hidden: [a smuggler's dry cache, a gate that opens wrong]
   naming:
     adjectives: [Tidal, Drowned, Wrecked, Salted, Reefed]
     nouns: [Cave, Corridor, Tunnel, Hull, Reef]
@@ -168,7 +168,7 @@ skyward_spires:
   hazards: [a gravity shift, a long fall, a fractured floor, a dead transit line]
   resources: [sky-crystal, a charged conduit, condensed cloud-water]
   landmarks: [an inverted chamber, a stalled transit ring, a floating shard of city]
-  secrets: [a sealed gravity vault, a transit car still docked]
+  hidden: [a sealed gravity vault, a transit car still docked]
   naming:
     adjectives: [Floating, Inverted, Suspended, Fractured, High]
     nouns: [Cavern, Chamber, Ruin, Span, Drift]
@@ -181,7 +181,7 @@ the_deepreach:
   hazards: [a bottomless pit, a fungal bloom, a rockfall, a rearranging passage]
   resources: [deep ore, luminous fungus, an archive spring]
   landmarks: [a hall of contradictory records, a fungal city, a deep junction]
-  secrets: [a memory construct still running, a sealed archive vault]
+  hidden: [a memory construct still running, a sealed archive vault]
   naming:
     adjectives: [Deep, Fungal, Recorded, Rearranging, Endless]
     nouns: [Network, Tunnel, Archive, Mine, Junction]
@@ -196,7 +196,7 @@ the_voidscar:
   hazards: [an unstable exit, a repeating room, a law in conflict, a fracture]
   resources: [a fragment of stable matter, residual belief, a still point]
   landmarks: [a room that should not close, a mirror of an earlier chamber, a stable eye]
-  secrets: [a door that remembers, a chamber outside the count]
+  hidden: [a door that remembers, a chamber outside the count]
   naming:
     adjectives: [Impossible, Repeating, Altered, Unstable, Wounded]
     nouns: [Chamber, Loop, Fracture, Room, Scar]

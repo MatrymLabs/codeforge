@@ -134,6 +134,7 @@ def _usage() -> str:
     return (
         "The Surveyor: read-only Aethryn world validation.\n\n"
         f"Available now:\n{available}\n\n"
-        "Planned (with the area generator): world generate-area / preview-area / promote /\n"
-        "export / import / inspect / graph / find-unreachable / reset-dev-state."
+        "Area generation (mutating): world generate-area / preview-area / promote / export /\n"
+        "list-areas (see parts/world/area_store.py). Planned: world inspect / graph /\n"
+        "find-unreachable / import / reset-dev-state."
     )
