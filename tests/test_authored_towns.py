@@ -192,6 +192,59 @@ def test_ravenwatch_has_a_second_quest_of_a_hunt_shape():
     assert "grant_rep:gathering" in (finish.effect or "")
 
 
+def _walk_hunt(quest_file: str, order: str, reward: int) -> None:
+    """Walk an authored town's HUNT-shape side quest: enter -> defeat -> done. Asserts the shape (a
+    defeat, no fetch), the reward, and the granted Order. The second-quest twin of _walk_quest."""
+    from parts.shelf.workflow import Fired, Instance, WorkflowEngine
+    from parts.world.quest import _from_seed
+    from parts.world.seed import load_quest
+
+    spec = load_quest(_AETHRYN / "quests" / quest_file)
+    assert spec is not None and spec["reward_xp"] == reward
+    events = {step["event"] for step in spec["steps"]}
+    assert "defeat" in events and "take" not in events  # a hunt, not a fetch: quest-shape variety
+    engine = WorkflowEngine(_from_seed(spec)[0])
+    run = Instance(spec["id"], spec["start"], [], {})
+    assert isinstance(engine.advance(run, "enter"), Fired)
+    finish = engine.advance(run, "defeat")
+    assert isinstance(finish, Fired) and engine.is_done(run)
+    assert f"grant_rep:{order}" in (finish.effect or "")
+
+
+def test_brightwaters_second_quest_is_a_warcraft_hunt():
+    _walk_hunt("brightwater_weir.yaml", "warcraft", 42)
+
+
+def test_wildgrowths_second_quest_is_a_warcraft_hunt():
+    _walk_hunt("wildgrowth_thorns.yaml", "warcraft", 65)
+
+
+def test_frostholds_second_quest_is_a_gathering_hunt():
+    _walk_hunt("frosthold_shelf.yaml", "gathering", 75)
+
+
+def test_batch_a_towns_carry_a_vendor_a_node_and_a_working_economy():
+    # Density-v2: each deepened town gains a working economy (a vendor who SELLS supplies and BUYS
+    # the town's own gather-node yield), a gather node, a third voice, a second danger, and a second
+    # lore item -- the Greenhold density standard, now with the pipeline's vendor + node.
+    for stem, material in (
+        ("brightwater", "meadowfoil"),
+        ("wildgrowth", "fernshade"),
+        ("frosthold", "frostmoss"),
+    ):
+        rooms, npcs, items = towns.raise_town(_AUTHORED / f"{stem}.yaml")
+        vendors = [n for n in npcs.values() if n.get("shop")]
+        assert len(vendors) == 1, f"{stem}: exactly one vendor"
+        shop = vendors[0]["shop"]
+        assert shop.get("sells"), f"{stem}: the vendor sells supplies"
+        assert shop.get("buys", {}).get(material), f"{stem}: the vendor buys its own node's yield"
+        assert any(r.get("node") == material for r in rooms.values()), f"{stem}: a {material} node"
+        talkers = [n for n in npcs.values() if n["hp"] == 0 and n.get("topics")]
+        assert len(talkers) >= 3, f"{stem}: three reactive voices"
+        assert len([n for n in npcs.values() if n.get("aggressive")]) >= 2, f"{stem}: two dangers"
+        assert len([i for i in items.values() if "lore" in i]) >= 2, f"{stem}: two lore items"
+
+
 def test_the_sunscar_quest_walks_and_grants_gathering():
     finish, reward = _walk_quest("sunscar_charter.yaml")
     assert reward == 85 and "grant_rep:gathering" in (finish.effect or "")

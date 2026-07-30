@@ -4,8 +4,12 @@
 # control systems may still shape the cold. Frosthold is a fortress-city carved into the ice; beneath
 # it a buried observatory-engine once ruled the storms, and on the worst nights the cold seems to
 # obey something older than the weather. The conflict is ordinary and hard (the winter is winning);
-# the clue to the larger world is the old weather-engine; the rumour is left unproven. Installed by
-# parts/world/authored_towns.py; its quest is quests/frosthold_observatory.yaml.
+# the clue to the larger world is the old weather-engine; the rumour is left unproven. Five subareas,
+# three voices (a captain, a sky-metal trader, a hunt-mistress) that cross-reference, two dangers, a
+# frostmoss gather node on the shelf and a trader who buys its yield (a working economy), and readable
+# watch lore. Installed by parts/world/authored_towns.py; its quests are
+# quests/frosthold_observatory.yaml (a fetch, Warcraft) and quests/frosthold_shelf.yaml (a hunt of a
+# different shape, Gathering).
 
 rooms:
   frosthold_market:
@@ -13,9 +17,13 @@ rooms:
     desc: >-
       The heart of Frosthold, hewn into blue glacier-ice and warmed by deep vents: stalls of furs,
       dried fish, and sky-metal traded under lamps that never go out, because the dark outside never
-      quite does either. Ways lead OUT to the ice gate, NORTH to the wardroom, and WEST to the deep
-      vents.
-    exits: {out: frosthold, north: frosthold_wardroom, west: frosthold_vents}
+      quite does either. Ways lead OUT to the ice gate, NORTH to the wardroom, WEST to the deep vents,
+      and EAST out onto the open glacier shelf.
+    exits:
+      out: frosthold
+      north: frosthold_wardroom
+      west: frosthold_vents
+      east: frosthold_shelf
   frosthold_vents:
     name: The Deep Vents
     desc: >-
@@ -36,6 +44,15 @@ rooms:
       commanded: a place built to READ the sky and, the oldest tales say, to tell the storms where
       to go. Something in it still turns, slowly, toward the cold. Stairs climb back UP.
     exits: {up: frosthold_wardroom}
+  frosthold_shelf:
+    name: The Glacier Shelf
+    desc: >-
+      The open ice beyond the gate, a wind-scoured shelf where the killing cold is a hand's breadth
+      from any exposed skin. Pale frostmoss clings to the lee of the ice-ridges, prized by the
+      healers who can reach it and live. Something large has left a trail across the snow. The market
+      is back WEST through the gate.
+    exits: {west: frosthold_market}
+    node: frostmoss
 
 hub: {room: frosthold, keyword: square, entry: frosthold_market}
 
@@ -67,6 +84,55 @@ npcs:
           "Captain of the ice-watch, third of my family to hold this fortress against the dark. We do
           not win here. We hold. Ask any of us why, and we will point at the town behind us."
     hp: 0
+  frosthold_trader:
+    name: Sky-Metal Trader Halvor
+    keywords: [halvor, trader, sky-metal]
+    location: frosthold_market
+    dialogue:
+      - >-
+        "Cold-trade, southerner? I keep the strong draughts a body needs to work the ice, and rations
+        that will not freeze in your pack. And I buy frostmoss off the shelf for the healers, good
+        coin, if you can gather it out there and keep your fingers. Few can. You look like you might."
+    topics:
+      trade:
+        - >-
+          "Grand draughts I sell, for the cold takes more than a scratch out here. Frostmoss I buy, off
+          the glacier shelf EAST of the gate. Gather it and come back whole and we will both do well."
+      frostmoss:
+        - >-
+          "A pale moss that only grows where the ice is worst, and the healers cannot set a frost-bite
+          without it. That is why it pays. That is also why the ones who gather it do not grow old."
+      halvor:
+        - >-
+          "Trader of the Ice Market, and I have not been warm since I came north. But the coin is warm,
+          and warm coin buys warm nights. That is the whole philosophy of Frosthold, southerner."
+    shop:
+      sells: {grand_healing_draught: 90, greater_mana_draught: 60, water_ration: 5}
+      buys: {frostmoss: 9}
+    hp: 0
+  frosthold_huntmistress:
+    name: Hunt-Mistress Ylva
+    keywords: [ylva, hunt-mistress, huntmistress]
+    location: frosthold_market
+    dialogue:
+      - >-
+        "You have the walk of a hunter, and I need one. Something large is out on the shelf, EAST past
+        the gate, and it has taken two of my frostmoss-gatherers already. Go and put it down, and the
+        hunters of Frosthold will call you one of our own. That is not a thing we say twice."
+    topics:
+      beast:
+        - >-
+          "A pale thing, big as a sledge and patient, that dens where the moss grows and waits for the
+          gatherers. Go EAST onto the shelf and end it, before it takes another of mine."
+      shelf:
+        - >-
+          "The glacier shelf feeds this town as much as the vents do: frostmoss for the healers, and
+          the hunt for the pot. But the ice keeps its own predators, and lately they hunt us back."
+      ylva:
+        - >-
+          "Hunt-mistress of Frosthold. I lead the ones who go out onto the ice for what the town needs
+          and I bring back as many as I can. Lately that is fewer than I like. Help me change that."
+    hp: 0
   frosthold_revenant:
     name: a frost-bound revenant
     keywords: [revenant, frost-bound, frost]
@@ -80,6 +146,19 @@ npcs:
     level: 72
     tier: normal
     attack_element: ICE
+  frosthold_shelfbeast:
+    name: a pale glacier-stalker
+    keywords: [glacier-stalker, stalker, shelfbeast]
+    location: frosthold_shelf
+    dialogue:
+      - The snow itself seems to rise and turn: the glacier-stalker, white on white, opens its jaws.
+    aggressive: true
+    hp: 560
+    atk: 45
+    xp: 76
+    level: 73
+    tier: normal
+    attack_element: ICE
 
 items:
   frosthold_reading_core:
@@ -90,3 +169,12 @@ items:
       A sphere of frost-clear crystal threaded with lines of pale metal, cold past cold, that shows a
       turning map of the peaks when the light catches it. It reads the sky still, though the hall it
       served is buried, as if it is waiting to be told again where to make the storms fall.
+  frosthold_watch_roll:
+    name: the ice-watch roll
+    keywords: [watch-roll, roll, watch]
+    location: frosthold_wardroom
+    lore: >-
+      A long roll of vellum naming every soul the ice-watch has lost to the cold, kept nailed to the
+      wardroom wall so no captain forgets the count. The oldest names are worn to shadows, but the roll
+      has never been retired and never been full, as though Frosthold long ago made peace with a war
+      that has no last page.

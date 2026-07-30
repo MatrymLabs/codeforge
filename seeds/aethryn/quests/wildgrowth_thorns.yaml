@@ -1,0 +1,24 @@
+# SEED: aethryn -- quests/wildgrowth_thorns.yaml  (Wildgrowth's second quest: The Thornwall Maw)
+#
+# Auto-loaded. Wildgrowth's SIDE quest, a different SHAPE from the root-deep fetch: a HUNT. Road-Keeper
+# Oren (on the green) points you EAST to the thornwall; the quest arms on ENTER and completes on
+# DEFEAT of the thorn-tangled maw-stalker. A local need (the beast has stopped the road-crews), a
+# light thread to the larger world (the wild that grows the road shut every night), a cost (a real
+# fight at the wild edge), a visible result (the road kept open), an open remainder (why the Eldryn's
+# beasts grow bold). Rewards XP + standing with the Warcraft order (the road-keepers who hold the way).
+id: wildgrowth_thorns
+name: The Thornwall Maw
+start: offered
+reward_xp: 65
+steps:
+  - {state: offered, event: enter, to: hunting, on_enter: wildgrowth_thornwall}
+  - state: hunting
+    event: defeat
+    to: done
+    on_defeat: wildgrowth_thornbeast
+    effect: "award_xp;grant_rep:warcraft:25"
+terminal: [done]
+labels:
+  offered: "Road-Keeper Oren says a beast dens past the thornwall. Go EAST from the green to the wild edge and see."
+  hunting: "The thorn-tangled maw-stalker unfolds from the briars. Put it down so the road-crews can work again."
+  done: "*** The maw-stalker is dead and the crews can cut the road again. Wildgrowth's road-keepers owe you the way itself, and Oren says so. ***"
