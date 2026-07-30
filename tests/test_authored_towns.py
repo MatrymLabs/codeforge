@@ -123,6 +123,44 @@ def test_the_moltenhold_quest_walks_to_done_and_rewards():
     assert "award_xp" in (finish.effect or "") and "grant_rep:warcraft" in (finish.effect or "")
 
 
+def test_the_wildgrowth_quest_walks_and_grants_gathering():
+    finish, reward = _walk_quest("wildgrowth_root.yaml")
+    assert reward == 70
+    assert "grant_rep:gathering" in (finish.effect or "")
+
+
+def test_the_frosthold_quest_walks_and_grants_warcraft():
+    finish, reward = _walk_quest("frosthold_observatory.yaml")
+    assert reward == 80
+    assert "grant_rep:warcraft" in (finish.effect or "")
+
+
+def test_the_lumengrotto_quest_walks_and_grants_knowing():
+    finish, reward = _walk_quest("lumengrotto_archive.yaml")
+    assert reward == 100
+    assert "grant_rep:knowing" in (finish.effect or "")
+
+
+def test_the_four_orders_are_each_granted_by_an_authored_quest():
+    # Across the authored towns, every Order is earnable, so the reputation web is reachable.
+    from parts.world.seed import load_quest
+
+    effects = " ".join(
+        step.get("effect", "")
+        for name in (
+            "greenhold_intro",
+            "brightwater_sluice",
+            "moltenhold_foundry",
+            "wildgrowth_root",
+            "frosthold_observatory",
+            "lumengrotto_archive",
+        )
+        for step in (load_quest(_AETHRYN / "quests" / f"{name}.yaml") or {}).get("steps", [])
+    )
+    for order in ("making", "knowing", "warcraft", "gathering"):
+        assert f"grant_rep:{order}" in effects, f"no authored quest grants {order}"
+
+
 # --- Refusal: the guard and the loud failures ----------------------------------------------------
 
 
