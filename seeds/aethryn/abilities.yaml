@@ -26,6 +26,13 @@ guard_challenge:
   mp_cost: 3
   cooldown: 2
   jobs: [vanguard]
+war_cry:
+  name: War Cry
+  kind: buff  # empower an ally's blows (+50% strike damage) for a spell -- the party leader's rally
+  power: 3
+  mp_cost: 4
+  cooldown: 3
+  jobs: [vanguard]
 
 # Pathfinder -- reads the wilds, strikes from the flank; speed over brute force.
 flank_strike:

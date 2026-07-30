@@ -52,6 +52,7 @@ def test_abilities_map_to_the_jobs_that_declare_them() -> None:
     assert [a["name"] for _, a in abilities_for("vanguard")] == [
         "Bulwark Challenge",
         "Power Strike",
+        "Rally",
     ]
     assert abilities_for("") == []  # no calling, no abilities
 
@@ -279,7 +280,11 @@ def test_a_subjob_lends_its_kit_so_switching_opens_a_new_moveset() -> None:
 
     s = _at_dummy("vanguard")
     # primary only: the vanguard's own kit (a strike + the taunt), before any subjob is lent
-    assert [a["name"] for _, a in abilities_for_session(s)] == ["Bulwark Challenge", "Power Strike"]
+    assert [a["name"] for _, a in abilities_for_session(s)] == [
+        "Bulwark Challenge",
+        "Power Strike",
+        "Rally",
+    ]
     set_secondary(s, "scholar")
     names = {a["name"] for _, a in abilities_for_session(s)}
     assert {"Power Strike", "Arcane Bolt", "Mend"} <= names  # the subjob's moves are lent
@@ -531,3 +536,33 @@ def test_a_heal_generates_threat_on_engaged_foes() -> None:
         assert threat.score(nid, "cleo") > 0  # the healer drew aggro
     finally:
         threat._reset()
+
+
+# --- buff: the support empowers an ally's blows (composes the trinity) ---------------------------
+
+
+def test_a_buff_empowers_an_ally_and_spends_mp() -> None:
+    tank = _seated("vanguard", "bram")
+    ally = _seated("engineer", "cora")
+    mp_before = tank.resources["mp"].current
+    out = use_ability(tank, "rally on cora")
+    assert "empowered" in out and "on Cora" in out
+    assert ally.statuses["empowered"] == 3  # the buff duration
+    assert tank.resources["mp"].current == mp_before - 4
+
+
+def test_a_buff_on_self_empowers_the_wielder() -> None:
+    tank = _seated("vanguard", "bram")
+    out = use_ability(tank, "rally on me")
+    assert "empowered" in out
+    assert tank.statuses["empowered"] == 3
+
+
+def test_a_buff_needs_a_present_ally() -> None:
+    tank = _seated("vanguard", "bram")
+    assert "no ally called 'ghost'" in use_ability(tank, "rally on ghost")
+
+
+def test_render_abilities_shows_a_buff_targets_self_or_ally() -> None:
+    tank = _seated("vanguard", "bram")
+    assert "self or ally" in render_abilities(tank)

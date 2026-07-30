@@ -70,3 +70,11 @@ cleansing_light:
   mp_cost: 4
   cooldown: 2
   jobs: [scholar]
+
+rally:
+  name: Rally
+  kind: buff  # empower an ally's blows (+50% strike damage) for a spell
+  power: 3  # combat actions the buff lasts
+  mp_cost: 4
+  cooldown: 3
+  jobs: [vanguard]

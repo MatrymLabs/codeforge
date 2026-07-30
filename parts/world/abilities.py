@@ -78,7 +78,7 @@ def render_abilities(session: Session) -> str:
     subjob_only = {label for label, _ in pairs} - {label for label, _ in abilities_for(session.job)}
     lines = ["Abilities:"]
     for label, a in pairs:
-        target = "self or ally" if a["kind"] in ("heal", "cleanse") else "a target"
+        target = "self or ally" if a["kind"] in ("heal", "cleanse", "buff") else "a target"
         scale = f" +{a['scales']}/3" if a["scales"] else ""
         via = "  (subjob)" if label in subjob_only else ""
         cd = a.get("cooldown", 0)
@@ -130,6 +130,8 @@ def use_ability(session: Session, arg: str) -> str:
         return _channel_heal(session, ability, label, target_word.strip(), who, move)
     if ability["kind"] == "cleanse":
         return _channel_cleanse(session, ability, label, target_word.strip(), who, move)
+    if ability["kind"] == "buff":
+        return _channel_buff(session, ability, label, target_word.strip(), who, move)
 
     # a strike, a brand, or a taunt needs a target
     nid = trace_npc(target_word.strip(), session.location) if target_word.strip() else None
@@ -225,6 +227,32 @@ def _channel_cleanse(
         exclude=session.player_id,
     )
     return f"You channel {move} on {ally_name}, purging {cleared}."
+
+
+def _channel_buff(
+    session: Session, ability: Ability, label: str, target_word: str, who: str, move: str
+) -> str:
+    """Empower an ally's blows for a spell: set the `empowered` combat status, which combat.attack
+    reads for a heavier strike, ticking down as they fight (like the Engineer's own scan). Reuses
+    _trace_ally, so `on me` / `on <ally>` resolve like a heal. The ability's `power` is the duration
+    (combat actions the buff lasts)."""
+    ally = _trace_ally(target_word, session)
+    if ally is None:
+        return f"There is no ally called '{target_word}' here to empower."
+    session.resources["mp"] = session.resources["mp"].damage(ability["mp_cost"])
+    ally.statuses["empowered"] = max(ally.statuses.get("empowered", 0), ability["power"])
+    _arm_cooldown(session, label, ability)
+    if ally is session:
+        announce(session.location, f"{who} channels {move}.", exclude=session.player_id)
+        return f"You channel {move}; your blows are empowered for {ability['power']}."
+    ally_name = display_name(ally.player_id)
+    announce(session.location, f"{who} channels {move} on {ally_name}.", exclude=session.player_id)
+    announce_to(
+        [ally.player_id],
+        f"{who} channels {move} on you; your blows are empowered for {ability['power']}.",
+        exclude=session.player_id,
+    )
+    return f"You channel {move} on {ally_name}; their blows are empowered for {ability['power']}."
 
 
 def _heal_threat(session: Session, amount: int) -> None:

@@ -448,7 +448,12 @@ def attack(session: Session, word: str) -> str:
     exposed = session.statuses.get("analyzed", 0) > 0
     if exposed:  # a Diagnostic Scan revealed the foe's weak point: +50% damage while it holds
         dmg += dmg // 2
+    empowered = session.statuses.get("empowered", 0) > 0
+    if empowered:  # a support's buff (the `buff` ability): +50% damage while it holds
+        dmg += dmg // 2
     weak = " (weak point!)" if exposed else ""
+    if empowered:
+        weak += " (empowered!)"
     announce(
         session.location,
         f"{display_name(session.player_id)} strikes {npc['name']} for {dmg}.",
