@@ -313,6 +313,65 @@ def test_batch_c_towns_carry_a_vendor_a_node_and_a_working_economy():
         assert len([i for i in items.values() if "lore" in i]) >= 2, f"{stem}: two lore items"
 
 
+def test_stormreachs_second_quest_is_a_warcraft_hunt():
+    _walk_hunt("stormreach_reef.yaml", "warcraft", 150)
+
+
+def test_aurelians_second_quest_is_a_gathering_hunt():
+    _walk_hunt("aurelian_gantry.yaml", "gathering", 155)
+
+
+def test_batch_d_towns_carry_a_vendor_a_node_and_a_working_economy():
+    # Density-v2 (batch D): Stormreach and Aurelian each gain the same working-economy depth -- a
+    # vendor who sells supplies and buys the town's own gather-node yield, a node, three voices, two
+    # dangers, and two lore items. (Voidspire is the endgame town: see its own test below.)
+    for stem, material in (
+        ("stormreach", "saltkelp"),
+        ("aurelian_city", "hollow_ingot"),
+    ):
+        rooms, npcs, items = towns.raise_town(_AUTHORED / f"{stem}.yaml")
+        vendors = [n for n in npcs.values() if n.get("shop")]
+        assert len(vendors) == 1, f"{stem}: exactly one vendor"
+        shop = vendors[0]["shop"]
+        assert shop.get("sells"), f"{stem}: the vendor sells supplies"
+        assert shop.get("buys", {}).get(material), f"{stem}: the vendor buys its own node's yield"
+        assert any(r.get("node") == material for r in rooms.values()), f"{stem}: a {material} node"
+        talkers = [n for n in npcs.values() if n["hp"] == 0 and n.get("topics")]
+        assert len(talkers) >= 3, f"{stem}: three reactive voices"
+        assert len([n for n in npcs.values() if n.get("aggressive")]) >= 2, f"{stem}: two dangers"
+        assert len([i for i in items.values() if "lore" in i]) >= 2, f"{stem}: two lore items"
+
+
+def test_voidspire_gets_town_fabric_but_no_endgame_deepening():
+    # Voidspire is the endgame-staging town (the apex ways to the Throne). By design it gets LIGHT
+    # town-fabric depth -- a vendor, a third voice, a second lore item -- so the outpost feels lived
+    # in, but NO second combat quest, NO new foe, and NO farm node: no endgame content is developed
+    # until the normal game is AAA-complete.
+    rooms, npcs, items = towns.raise_town(_AUTHORED / "voidspire.yaml")
+    vendors = [n for n in npcs.values() if n.get("shop")]
+    assert len(vendors) == 1 and vendors[0]["shop"].get("sells"), "a quartermaster who outfits"
+    assert not vendors[0]["shop"].get("buys"), "sells-only: no farm-economy at the threshold"
+    assert len([n for n in npcs.values() if n["hp"] == 0 and n.get("topics")]) >= 3, "three voices"
+    assert len([i for i in items.values() if "lore" in i]) >= 2, "two lore items"
+    # The restraint, pinned: exactly one danger and no gather node -- the endgame is untouched.
+    assert len([n for n in npcs.values() if n.get("aggressive")]) == 1, "no new endgame foe"
+    assert all(not r.get("node") for r in rooms.values()), "no farm node at the threshold"
+
+
+def test_every_authored_town_meets_the_density_floor():
+    # The capstone: after the hand-authored depth pass, EVERY one of the fourteen towns clears a
+    # universal density floor -- at least one vendor (a shop that sells), three reactive voices, and
+    # two readable lore items -- so no reach is a bare signpost. Combat towns add a node + second
+    # hunt (their own tests); Voidspire meets the floor without the endgame extras.
+    for path in towns.town_files(_AUTHORED):
+        _, npcs, items = towns.raise_town(path)
+        stem = path.stem
+        assert any(n.get("shop", {}).get("sells") for n in npcs.values()), f"{stem}: a vendor"
+        talkers = [n for n in npcs.values() if n["hp"] == 0 and n.get("topics")]
+        assert len(talkers) >= 3, f"{stem}: three reactive voices"
+        assert len([i for i in items.values() if "lore" in i]) >= 2, f"{stem}: two lore items"
+
+
 def test_the_sunscar_quest_walks_and_grants_gathering():
     finish, reward = _walk_quest("sunscar_charter.yaml")
     assert reward == 85 and "grant_rep:gathering" in (finish.effect or "")

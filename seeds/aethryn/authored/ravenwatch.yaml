@@ -108,6 +108,32 @@ npcs:
           "The Widow Enna, they call me, as if a name were a thing you keep after. I keep the roost
           warm and the ravens fed, and I wait, which is the whole trade of Duskwood."
     hp: 0
+  ravenwatch_trader:
+    name: Pelt-Trader Osric
+    keywords: [osric, trader, pelt-trader]
+    location: ravenwatch_market
+    dialogue:
+      - >-
+        "Trade before dark, stranger, we close early here. I keep the draughts a body needs to walk
+        Duskwood and come back, and I buy fernshade off any forager brave enough to cut it in the
+        wood, for the grief-charms the Widow makes. Buy what you need and be indoors by dusk. I mean it."
+    topics:
+      trade:
+        - >-
+          "Draughts I sell, healing and mana both, and charms against the dark. Fernshade I buy, cut
+          in the Duskwood shade, for the wardens' rites and the Widow's charms. Bring a bundle by daylight."
+      dark:
+        - >-
+          "Something walks the eaves after dusk, wearing sorrow like a cloak, and the town locks early
+          for it. I do not go east past the square once the ravens go quiet. Neither should you, laden or not."
+      osric:
+        - >-
+          "Pelt-trader of Ravenwatch, and I keep the town in draughts and charms and small comforts.
+          Someone must sell the living what they need to outlast the dead. In Duskwood, that is a trade."
+    shop:
+      sells: {healing_draught: 22, mana_draught: 22}
+      buys: {fernshade: 5}
+    hp: 0
   ravenwatch_wight:
     name: a barrow-wight
     keywords: [wight, barrow-wight, barrow]

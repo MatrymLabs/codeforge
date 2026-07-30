@@ -46,8 +46,10 @@ rooms:
     desc: >-
       Open barley-fields under a wide Veridia sky, the town at your back and the tree-line ahead.
       Good earth, and quiet, but the near rows are trampled and torn, and something heavy has been at
-      the crop. The market gate is back WEST.
+      the crop. Pale meadowfoil grows along the field-margins, cut for the Veridia dyers. The market
+      gate is back WEST.
     exits: {west: greenhold_market}
+    node: meadowfoil
 
 # How the hub connects to the interior: the hub room, the exit keyword to add, and the entry room.
 hub: {room: greenhold, keyword: square, entry: greenhold_market}
@@ -130,6 +132,28 @@ npcs:
         - >-
           "Old Sabra, who has outlived three husbands and every secret in this town but her own.
           Someone must remember what Greenhold would rather forget. It may as well be me."
+    hp: 0
+  greenhold_trader:
+    name: Trader Pell
+    keywords: [pell, trader, merchant]
+    location: greenhold_market
+    dialogue:
+      - >-
+        "New face at the well! I keep what a traveller needs: a healing draught, a water-ration for
+        the road. And I buy meadowfoil by the bunch, if you gather it out in the green fields, for the
+        Veridia dyers pay well and so do I. Everything Greenhold spares to sell passes my stall."
+    topics:
+      trade:
+        - >-
+          "Draughts and rations I sell; meadowfoil I buy, cut out EAST in the fields. The dyers
+          upcountry cannot colour a cloth without it, so gather a bunch and I will weigh it fair."
+      pell:
+        - >-
+          "Trader of Greenhold, and I keep the market stocked between harvests. Someone must, or a
+          farm-town has nothing to buy with the coin its barley earns. It may as well be me."
+    shop:
+      sells: {healing_draught: 24, water_ration: 3}
+      buys: {meadowfoil: 5}
     hp: 0
   greenhold_vermin:
     name: a swarm of cellar vermin

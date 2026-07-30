@@ -9,6 +9,12 @@
 # it); the clue to the larger world is the fracture itself; the open questions (is Netharion alive?)
 # surface here only as rumour, never answered. Installed by parts/world/authored_towns.py; its quest
 # is quests/voidspire_threshold.yaml.
+#
+# NOTE (density): Voidspire is the endgame-staging town (the apex ways to the Throne and the Abyss).
+# By design it gets only LIGHT town-fabric depth here, so the last outpost feels lived-in: a
+# quartermaster who outfits the descent, a pilgrim who names its dread, and a second readable lore
+# item. It is deliberately NOT given a second combat quest, a new foe, or a farm node -- no endgame
+# content is developed until the normal game is AAA-complete. The threshold quest below is untouched.
 
 rooms:
   voidspire_market:
@@ -88,6 +94,60 @@ npcs:
     level: 248
     tier: normal
     attack_element: DRK
+  voidspire_quartermaster:
+    name: Quartermaster Hale
+    keywords: [hale, quartermaster, master]
+    location: voidspire_market
+    dialogue:
+      - >-
+        "Bound for the Throne, then. They all are. Outfit first: I keep the strongest draughts this
+        side of the wound and the rations that hold a warband through a week below. Wardings and
+        anchors too, though whether they help down there is between you and whatever answers. Buy well.
+        The edge does not refund the unprepared."
+    topics:
+      supplies:
+        - >-
+          "Grand draughts, deep rations, spare anchors, spare wardings. Take more than you think you
+          need; the descent takes more than you think it will. I have outfitted a hundred warbands and
+          seen the change in the ones that came back. Buy, and go careful."
+      descent:
+        - >-
+          "I do not go down. I outfit those who do, and I keep the tally of who does not come up. It is
+          a long tally. I sell to the living and I remember the rest. Someone at the edge should."
+      hale:
+        - >-
+          "Quartermaster of the last outpost, keeper of the supply the descent runs on. Cael decides
+          who is fit; I decide whether they are ready. Different questions. I have buried people who
+          passed the first and failed the second."
+    shop:
+      sells: {grand_healing_draught: 120, grand_mana_draught: 80, water_ration: 9}
+    hp: 0
+  voidspire_pilgrim:
+    name: the grey pilgrim
+    keywords: [pilgrim, grey-pilgrim, grey]
+    location: voidspire_rest
+    dialogue:
+      - >-
+        "Sit a moment before you go down. Everyone here is going down, sooner or late, and the ones in
+        a hurry are the ones the wound keeps. I have made my peace three times and come back up with it
+        broken each time. Ask me what waits, if you like. I will tell you honestly that I do not know."
+    topics:
+      throne:
+        - >-
+          "I have stood at the fracture and heard the Throne breathe. Or heard my own blood in my ears
+          and called it the Throne. Down there the two are not easily told apart, and that is the danger
+          the wardens cannot warn you of, because it wears your own voice."
+      netharion:
+        - >-
+          "The first god that men built, and could not unbuild. Alive? I do not think the word fits what
+          is down there. I think it is still deciding what it is, and I think it would like our help to
+          decide. That is why I keep coming back up. So it does not."
+      pilgrim:
+        - >-
+          "A pilgrim of no order, walker. I came to the wound to lose a grief and found a larger one. Now
+          I sit in the Rest and talk the hurried ones into an hour's patience. It is the only mercy the
+          edge allows me to give."
+    hp: 0
 
 items:
   voidspire_stable_anchor:
@@ -98,3 +158,13 @@ items:
       A blunt spike of no metal the wastes can name, dead cold and utterly still in a place where
       nothing else is. Socketed into the fracture, it holds one small patch of the wound readable and
       real. The wardens do not know who made it, only that without it the edge stops keeping its shape.
+  voidspire_watch_creed:
+    name: the Wardens' creed-stone
+    keywords: [creed-stone, creed, stone]
+    location: voidspire_watch
+    lore: >-
+      A plain slab set at the head of the descent, cut with the only three lines every Warden of the
+      Scars swears: We do not close it. We do not open it. We hold. Beneath them, in a hundred smaller
+      hands across the years, the wardens who have kept this watch have each added a single scratched
+      mark for a season survived at the edge, so the stone reads as much as a tally of endurance as a
+      creed, and the newest marks are cut deepest, as though the holding has lately grown harder.
