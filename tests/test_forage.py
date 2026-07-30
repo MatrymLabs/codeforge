@@ -56,3 +56,23 @@ def test_harvests_in_one_zone_do_not_fill_another():
 def test_a_biomeless_zone_posts_nothing_and_forging_is_deterministic():
     assert generate_forages([{"label": "x", "name": "X", "biome": ""}]) == []
     assert generate_forages(_ZONES) == generate_forages(_ZONES)
+
+
+def test_the_forage_board_reads_varied():
+    from parts.world.forage import generate_forages
+
+    forages = generate_forages(_ZONES)
+    framings = {f["name"].split(":")[0].split(" ")[-1] for f in forages}
+    assert len(framings) >= 2, "the forage board should not read as one framing repeated"
+    tiers = {" ".join(f["name"].split(" ")[:2]) for f in forages}
+    assert {"A small", "A standing"} <= tiers
+    veridia = next(f for f in forages if f["id"].startswith("forage_veridia_wild_"))
+    assert "makers" in veridia["labels"]["done"]  # region-toned close
+
+
+def test_the_forage_flavour_is_deterministic():
+    from parts.world.forage import generate_forages
+
+    a = {(f["id"], f["name"]) for f in generate_forages(_ZONES)}
+    b = {(f["id"], f["name"]) for f in generate_forages(_ZONES)}
+    assert a == b
