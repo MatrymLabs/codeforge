@@ -1,5 +1,13 @@
 # The Forged World: the CodeForge Canonical World Bible
 
+> **LEGACY LORE (superseded fiction).** This bible and the `docs/world/` library describe the
+> earlier **Forge / Ember / Unforging** design of Aethryn. Its *world-fiction* is **superseded** by
+> the current **Netharion / divine-strike canon**: `seeds/aethryn/canon.yaml` (machine-checkable)
+> and `docs/aethryn_lore_bible.md` (readable), reconciled in `docs/aethryn_seed_reconciliation.md`.
+> Where this text and the current canon disagree, the canon wins. Note: the *mechanical* system docs
+> under `docs/world/` (crafting, professions, afflictions, bestiary, reputation, ...) still describe
+> live game systems; only the world-fiction here is retired. Kept for provenance, not as current canon.
+
 *The flagship Seed. The reference world that proves the engine. Aethryn is not another fantasy
 setting; it is the living demonstration that CodeForge's engineering philosophy and its world
 philosophy are the same philosophy, read twice.*

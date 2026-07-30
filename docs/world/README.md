@@ -1,5 +1,13 @@
 # The World Forge — Aethryn's AAA World Library
 
+> **LEGACY LORE (superseded fiction).** The *world-fiction* in this library (the Forge / Ember /
+> Unforging setting: continental atlas, global history, magic and faction encyclopedias) is
+> **superseded** by the current **Netharion / divine-strike canon** in `seeds/aethryn/canon.yaml`
+> and `docs/aethryn_lore_bible.md` (see `docs/aethryn_seed_reconciliation.md`). The current canon
+> wins on any disagreement. The *mechanical* system docs here (crafting_materials, professions,
+> afflictions, bestiary, reputation, boss_specials, ...) still describe **live** game systems and
+> are not retired. Kept for provenance and design history, not as current world canon.
+
 *The campaign to build a universe, not a game. This library is the design canon for Aethryn as a
 persistent, handcrafted, AAA-scale world — enough content to support years of exploration,
 progression, and expansion. It builds ON the core [`docs/world_bible.md`](../world_bible.md) (the
