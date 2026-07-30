@@ -110,8 +110,8 @@ def broadcast(text: str) -> None:
 
 
 def _on_echo(payload: dict[str, Any]) -> None:
-    """Deliver a published echo message to the sinks THIS process hosts. targets=None means broadcast
-    to every local sink; a list means only those ids. The one place membership echo actually lands."""
+    """Deliver a published echo message to the sinks THIS process hosts. targets=None means
+    broadcast to every local sink; a list means only those ids. Where membership echo lands."""
     text = payload.get("text")
     if not isinstance(text, str):
         return
@@ -158,9 +158,9 @@ def rename_gmcp(old_id: str, new_id: str) -> None:
 def push_gmcp(player_ids: Iterable[str], package: str, data: object, exclude: str = "") -> None:
     """Push a GMCP frame to a specific SET of players (a party, a guild) -- the typed complement to
     announce_to. Rides the bus like announce_to, so members on any process receive it. A player with
-    no GMCP sink (plain-text client, or offline) is simply skipped, and a sink that raises is pruned,
-    so one dead client never crashes another's command. (A broker requires JSON-serialisable data,
-    which GMCP frames already are.)"""
+    no GMCP sink (plain-text client, or offline) is simply skipped, and a sink that raises is
+    pruned, so one dead client never crashes another's command. (A broker requires JSON-serialisable
+    data, which GMCP frames already are.)"""
     bus.get_bus().publish(
         _GMCP_TOPIC,
         {"targets": list(player_ids), "package": package, "data": data, "exclude": exclude},

@@ -65,7 +65,7 @@ _REWIRE_HOOKS: list[Callable[[], None]] = []
 
 
 def on_rewire(hook: Callable[[], None]) -> None:
-    """Register a callback to re-run whenever the bus is swapped (a subscriber re-attaches itself)."""
+    """Register a callback to re-run whenever the bus is swapped (a subscriber re-attaches)."""
     if hook not in _REWIRE_HOOKS:
         _REWIRE_HOOKS.append(hook)
 
