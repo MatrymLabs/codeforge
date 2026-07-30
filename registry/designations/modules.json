@@ -6956,5 +6956,32 @@
     "aliases": [],
     "created": "2026-07-30",
     "updated": "2026-07-30"
+  },
+  {
+    "designation": "MOD-04.142",
+    "name": "survey",
+    "status": "active",
+    "function": "the Surveyor: a read-only developer audit of the Aethryn world map (validate, check-canon, references)",
+    "label": "survey",
+    "file": "parts/world/survey.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "docs/aethryn_lore_bible.md",
+    "tests": "tests/test_survey.py",
+    "depends_on": [
+      "canon"
+    ],
+    "related": [
+      "seed"
+    ],
+    "reuse": "the world-validation primitive: pure checks over the shipped seed (duplicate_ids across files, broken_references to a region canon does not know, and canon.check_canon) whose union is `world validate`; each returns a violation-line list so it is unit-testable and composes; run(argv) is the read-only `world` command family the CLI (tools/world.py) and a Make button call, exit 0 clean / 1 problems / 2 usage",
+    "notes": "The prompt's developer tools: a `world` command family that validates the world WITHOUT mutating it. This is the read-only half (validate / check-canon / list-regions / list-locations / find-broken-references); the mutating half (generate-area / promote / export / import / inspect / graph / find-unreachable) is planned with the deterministic area generator and is refused honestly (exit 2) rather than faked. Anchors to canon.AETHRYN_DIR so it audits aethryn regardless of the booted seed. tools/world.py is the thin CLI; all logic + tests live in the part.",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-30",
+    "updated": "2026-07-30"
   }
 ]
