@@ -64,7 +64,7 @@ describes how it decomposes into services without rewriting the core.
 | **Command dispatcher** | EXISTS | The command spine: `parts/commands.py` (`Command` / `CommandSet`), namespaced `CORE` / `ADMIN @` / `SEED`, longest-verb-first match, rank-gated, argument case preserved (architecture law 7). |
 | **Event bus** | EXISTS | `parts/world/events.py`: room-scoped `announce` / `announce_frame`, set-scoped `announce_to`, world-wide `broadcast`, and the typed GMCP push channel `push_gmcp` / `push_channel` (frames to a player set). Delivery is per-sink, dead sinks pruned. |
 | **Session manager** | EXISTS | `parts/world/session.py`: `SESSIONS: dict[player_id, Session]`, `roster()`. A `Session` is per-connection live state; identity is a lowercase label, renamed on login (`rename_echo` / `rename_gmcp`). |
-| **Scheduler** | PARTIAL | The beat is a cooperative scheduler for periodic world logic (respawns, reclose, climate). There is no general timed-job queue (cron-like) yet. (DESIGNED: §2.4.) |
+| **Scheduler** | EXISTS | The beat is a cooperative scheduler for periodic world logic (respawns, reclose, climate); a general timed-job queue (`scheduler.py`, MOD-04.126, #594) rides the beat for one-shot/recurring jobs (e.g. the auction expiry sweep). |
 | **Login / world / auth / character services** | PARTIAL | All exist as *modules in one process*: login dialogue in the gateway front desk, auth in `parts/world/accounts.py`, character persistence behind the `CharacterStore` port. They are not yet separate *services* (§11). |
 | **HTTP admin driver** | EXISTS | `parts/api.py` (FastAPI): a separate driver that reads **canonical storage** (SQL + seeds), not live sessions, because separate processes share databases, not memory. Owner-auth on mutations. |
 | **Read-only web Lens** | EXISTS | `parts/dashboard.py`: server-rendered HTML + JSON twin projecting real state (career board, QA gate, hardware store, perf run); frameless, fails honest. |
@@ -75,9 +75,10 @@ describes how it decomposes into services without rewriting the core.
 ### 2.2 Service boundaries (the decomposition map)
 
 The monolith is drawn so that each future service is *already a module boundary*. The seam to watch:
-`api.py` reads canonical storage, not gateway memory - **"live rosters need a shared bus" is the one
-named future card** (`parts/api.py` docstring). That bus (§11.3) is the keystone that lets a second
-process see live players. Until then, cross-process features read SQL, not sessions.
+`api.py` reads canonical storage, not gateway memory - the **shared live-state bus** that lets a
+second process see live players is now **built** (§11.3, Phase 4): presence rides it, so a live roster
+is available cross-process; `api.py` can read `presence.online()` instead of only SQL. Room-scoped
+world state across processes remains future (§11.4).
 
 Target boundaries (module → future service):
 
@@ -100,13 +101,13 @@ the bus, and (d) declares a `CARD` + test twin. Plugins are **gated** (a feature
 harvested pattern) so experimental surfaces never run in a public edition. Plugins observe and
 register; they mutate world state only through the tick.
 
-### 2.4 Scheduler (DESIGNED, extends the beat)
+### 2.4 Scheduler (EXISTS, extends the beat)
 
-Add a **timed-job registry** beside the beat: `(due_beat | due_utc, job, payload)` entries the tick
-drains when due. Uses: scheduled maintenance, timed world events, mail expiry, auction close, buff
-ticks. It must be *deterministic and seedable* (no wall-clock in pure logic; pass timestamps in) so
-tests stay reproducible, matching the existing beat discipline. Persist due jobs (§4) so a restart
-does not drop a scheduled auction close.
+A **timed-job registry** beside the beat (`scheduler.py`, #594): `(due_beat, job, every)` entries the
+tick drains when due, one-shot or recurring. In use for the auction expiry sweep; a raising job is
+dropped, not fatal. It is *deterministic and seedable* (beat-driven, no wall-clock in pure logic) so
+tests stay reproducible, matching the beat discipline. Still to add: persisting due jobs (§4) so a
+restart does not drop a scheduled close (today the sweep is re-armed at world assembly).
 
 ### 2.5 Hot reload strategy (DESIGNED)
 
@@ -147,10 +148,10 @@ Two tiers, both server-authoritative:
 
 ### 3.2 Gaps and design
 
-- **Encryption (TLS/SSL): DESIGNED - priority.** The current TCP/telnet transport is plaintext,
-  LAN-intended. Add a TLS listener (an `ssl`-wrapped socket / WSS for the web gateway) as a config
-  option; the message layer is unchanged behind it. This is the single most important networking gap
-  for any internet-facing deployment.
+- **Encryption (TLS/SSL): EXISTS.** A TLS listener (`ssl`-wrapped sockets, minimum TLS 1.2) is a
+  config option via `CODEFORGE_TLS_CERT`/`CODEFORGE_TLS_KEY` (#600); the message layer is unchanged
+  behind it. Plaintext remains the LAN default when no cert is set. (WSS for the web gateway is still
+  DESIGNED.)
 - **Message protocol / serialization:** text + GMCP (compact JSON) is the wire format today; it is
   sufficient through Launch. A binary packet format is DEFERRED until profiling shows JSON framing is
   a bottleneck (it will not be at MUD line rates).
@@ -180,9 +181,9 @@ removed.** The classification below is the contract.
 | Mail (async letters) | **PERSIST** | EXISTS | `mail` table. |
 | Friends list | **PERSIST** | EXISTS | `characters.friends` column. |
 | Equipped gear (prototype + rolled name/mods/rarity) | **PERSIST** | EXISTS | serialized on the character row; re-cloned on restore. |
-| **Loose inventory (bags)** | **PERSIST** | **DESIGNED (Keystone A)** | Only equipped gear persists today; non-worn items are in-memory instances that vanish on logout. The next foundation: a real `items` table so item instances persist independent of a carrier. **Unblocks mail attachments, bank/guild item-vault, and the auction house.** |
-| Bank / vault storage | **PERSIST** | DESIGNED | Rides Keystone A (items with a non-player owner). |
-| Marketplace / auctions | **PERSIST** | DESIGNED | Rides Keystone A (a listing is an item with an escrow owner + price/expiry row). |
+| **Loose inventory (bags)** | **PERSIST** | **EXISTS (Keystone A, #590)** | A real `loose_items` table; item instances persist independent of a carrier (owner-keyed). Unblocked mail attachments, bank/guild item-vault, and the auction house. |
+| Bank / vault storage | **PERSIST** | EXISTS | Items under a non-player owner (`vault:<player>`, `guildvault:<guild>`) on the items table (#591, #592). |
+| Marketplace / auctions | **PERSIST** | EXISTS | `auction_listings` table; a listing is an escrowed item + price/expiry, closed by the scheduler (#595). |
 | Currency | **PERSIST** | EXISTS | `characters.coins` (+ guild treasury). |
 | Crafting progression | **PERSIST** | EXISTS | via professions on the character row. |
 | Achievements / reputation | **PERSIST/DERIVE** | PARTIAL | reputation persists (`reputation` column); an achievements *system* is DESIGNED. |
@@ -191,8 +192,8 @@ removed.** The classification below is the contract.
 | World state - respawns, doors, weather, time, season | **DERIVE (from the beat)** | EXISTS | Recomputed from the persisted beat + seed, not stored per-object. Persist only the **beat** and deviations. |
 | World state - dynamic events, faction control, ownership | **PERSIST** | DESIGNED | New world-state tables once these systems exist. |
 | NPC state (hp, aggro, position) | **TRANSIENT** | EXISTS | Rebuilt from seed on boot; a felled boss reassembles. Persist only durable deviations (e.g. a killed unique on a lockout) when those systems land. |
-| Live sessions / rosters | **TRANSIENT** | EXISTS | In-memory `SESSIONS`; rebuilt on reconnect. The cross-process view needs the shared bus (§11.3). |
-| Admin/audit data | **PERSIST (append-only)** | DESIGNED | §9. |
+| Live sessions / rosters | **TRANSIENT** | EXISTS | In-memory `SESSIONS`; rebuilt on reconnect. The cross-process roster now rides the shared bus (`presence`, §11.3); room-level session sharing is §11.4. |
+| Admin/audit data | **PERSIST (append-only)** | EXISTS | Hash-chained audit log + bans table (§9, #596/#597). |
 
 ### 4.2 Save frequency, caching, recovery
 
@@ -216,9 +217,9 @@ removed.** The classification below is the contract.
 
 - **Engine:** SQLite via **SQLAlchemy 2.0** ORM, behind the `CharacterStore` **port** (SQL +
   in-memory adapters) so the framework never leaks into domain logic (`persistence_ports.md`).
-- **Schema philosophy:** narrow canonical tables (5 today: `accounts`, `characters`, `job_progress`,
-  `guilds`, `mail`); derive-don't-store keeps rows minimal. Labels are `lowercase_snake_case`,
-  permanent (frozen identifiers - never restyled).
+- **Schema philosophy:** narrow canonical tables (8 today: `accounts`, `characters`, `job_progress`,
+  `guilds`, `mail`, `loose_items`, `auction_listings`, `bans`); derive-don't-store keeps rows minimal.
+  Labels are `lowercase_snake_case`, permanent (frozen identifiers - never restyled).
 - **Migrations:** **Alembic** (`migrations/versions/*`), one revision per additive change, a
   step-test pins the count and the up/down chain.
 - **Object identity:** characters keyed by name; items keyed by a minted instance id
@@ -237,10 +238,11 @@ removed.** The classification below is the contract.
 - **Versioning:** schema via Alembic; **data/record versioning** DESIGNED (a `schema_version` per
   serialized blob so an old save upgrades forward - the forgiving-restore pattern already drops
   unknown fields).
-- **Backup / restore / DR:** DESIGNED. SQLite: scheduled file snapshot + WAL archive, and a
-  **restore test** (a job that restores a backup into a scratch DB and boots a smoke world against
-  it - untested backups are not backups). Postgres tier: streaming replication + PITR + a documented
-  RPO/RTO. Evidence bundles are dated + hashed (the ship's evidence discipline).
+- **Backup / restore / DR:** PARTIAL. SQLite backup + a **restore test** EXISTS (#598): `restore_db`
+  copies a snapshot over the live DB (disposing the cached engine first), and the test restores into a
+  scratch DB and reads a character back - untested backups are not backups. Still DESIGNED: a
+  *scheduled* snapshot + WAL archive, the Postgres tier (streaming replication + PITR + documented
+  RPO/RTO), and dated + hashed evidence bundles.
 
 ---
 
@@ -292,19 +294,23 @@ part.** Never hard-code content in Python; a loader gate must validate it and fa
   (`characters.account`); a full "account → many characters → select at login" flow is DESIGNED
   (the schema supports it; the login dialogue is single-character today).
 - **Permissions / roles (EXISTS):** rank-gated capability (`ranks.py`); owner-auth on HTTP admin.
-- **Bans / moderation / audit (DESIGNED):** a `bans` table (account/address, reason, expiry,
-  moderator) checked at the login gate (the failure-ledger cooldown is the seam), a moderation
-  toolset (§13), and an append-only audit log (§9).
+- **Bans / moderation / audit (EXISTS):** a `bans` table (name, reason, moderator, #597) checked at
+  the login gate (a banned hero is refused, outranking maintenance and even a wizard's rank), with
+  `@ban`/`@unban`/`@bans` verbs that drop an online target and record to the audit log; plus the
+  append-only audit log (§9).
 
 ---
 
 ## 9. Logging & observability
 
 - **Structured logging (PARTIAL):** the observability shelf part (`parts/shelf/observability.py`)
-  exists; standardise structured (JSON) logs fleet-wide with correlation ids per session/command.
-- **Audit logs (DESIGNED):** append-only, tamper-evident (hash-chained, matching the ship's
-  `matrym-hashchain` capability) for **admin actions, economy events, bans**. These are evidence,
-  not debug output - dated + hashed, retained per the ship's retention rules (never deleted on a
+  exists; the gateway now emits structured JSON lifecycle events (`gateway_start`/`connection_open`/
+  `connection_close`/`gateway_stop`, #601). Still to standardise: correlation ids per session/command
+  fleet-wide.
+- **Audit logs (EXISTS):** append-only, tamper-evident (hash-chained, matching the ship's
+  `matrym-hashchain` capability, #596) for **admin actions, economy events, bans**. `@audit` tails it
+  and `@audit verify` checks the chain end to end. These are evidence, not debug output - dated +
+  hashed, retained per the ship's retention rules (never deleted on a
   calendar alone).
 - **Domain logs (DESIGNED):** combat log, economy log (every coin/item faucet and sink - the data
   the scorecard flags is missing for sink/faucet tuning), login/session log.
@@ -327,8 +333,9 @@ part.** Never hard-code content in Python; a loader gate must validate it and fa
   maintenance notice, save all sessions, stop. At the service tier (§11), roll one service at a time.
   The **"deploy ≠ restart"** rule is doctrine: a running server is a snapshot of launch-time code;
   kill the ghost, restart from the repo root.
-- **Maintenance mode (DESIGNED):** a flag the login gate honours (admins bypass), with a scheduled
-  window via the scheduler (§2.4).
+- **Maintenance mode (EXISTS):** a flag the login gate honours (sub-wizard logins turned away with the
+  reason; admins bypass), toggled by `@maintenance` and broadcast (#589). A *scheduled* window via the
+  scheduler (§2.4) is still DESIGNED.
 - **Content deployment (EXISTS/DESIGNED):** content is data → deploy is a seed swap + a hot content
   reload (§2.5) or a restart; CI gates the seed before it ships.
 - **Rollback (EXISTS/DESIGNED):** git revert for code/seeds; DB rollback via migration `downgrade` +
@@ -350,15 +357,19 @@ TLS, autosave sweep, bans/moderation, audit logs, backups + restore test, Keysto
 economy logs. Optionally swap SQLite→Postgres behind the port for a busier community server. No core
 rewrite: the tick, spine, bus, and port are unchanged.
 
-### 11.3 Launch - the shared bus (the one true seam)
+### 11.3 Launch - the shared bus (the one true seam) - BUILT
 The single architectural investment that unlocks multi-process: **a shared live-state bus** so a
 second process (a second gateway, the admin service) sees live rosters and can push to sessions it
-does not own. Today `api.py` reads SQL because "separate processes share databases, not memory";
-the bus (Redis pub/sub or a message queue) replaces that limitation. The **event bus + push channel
-are already the in-process shape of this** - the bus is their network backing. Once it exists:
+does not own. **This is built** (Phase 4, #602-#605): a `MessageBus` seam (`parts/world/bus.py`) with
+an in-process default and a **stdlib socket broker** (`parts/world/broker.py` + `socket_bus.py`) as
+its network backing - no Redis dependency, and the seam keeps a Redis/queue adapter open behind the
+same Protocol if scale ever demands it. The **event bus + push channel now publish onto it**, so
+presence and membership-scoped delivery (party/guild/broadcast/chat) already cross processes. What
+remains for full launch scale: room-scoped delivery and one authoritative shared world (§11.4). Once
+those land:
 - Multiple **gateway** processes behind a load balancer, one authoritative **world server**.
 - The **auth/character** modules become callable services.
-- The **message queue** carries cross-service events (chat, party, presence).
+- The **broker** carries cross-service events (chat, party, presence) - it already carries the first.
 
 ### 11.4 Large community / AAA - distribute the world
 Zone/shard the world across world-server processes (the zone/region model already partitions content;
@@ -380,12 +391,13 @@ only net-new backbone piece is the shared bus (§11.3); everything else is a con
   (control chars stripped) so chat can't hijack a terminal; case preserved for secrets.
 - **Secrets management (EXISTS):** `.env` git-ignored (only `.env.example` tracked); `make secrets`
   (detect-secrets, baselined) gates commits; docs that name an env var carry an allowlist pragma.
-- **Encryption (DESIGNED - priority):** TLS transport (§3.2).
+- **Encryption (EXISTS):** TLS transport (§3.2), config-gated, minimum TLS 1.2 (#600).
 - **Replay/abuse protection (PARTIAL):** rate limits + the login-fail ledger + the bulkhead exist;
   add per-intent rate/sanity checks and abuse detection (economy anomaly alerts) at Launch.
 - **Administrative security (EXISTS/DESIGNED):** owner-auth today; add an audit trail (§9) and 2FA
   for admin accounts at the public tier.
-- **Backup integrity (DESIGNED):** dated + hashed evidence bundles; hash-chained audit logs.
+- **Backup integrity (PARTIAL):** hash-chained audit logs (EXISTS, #596); a backup + restore-test path
+  (EXISTS, #598); dated + hashed evidence bundles remain DESIGNED.
 - **Federal posture (context):** readiness, never certification; AI output is not authority; see the
   ship's federal rules. This spec is technical controls (~30%); policy/process controls are human
   work no script performs.
@@ -431,18 +443,20 @@ Each phase is gated: `make check` green, branch → PR → CI → merge, evidenc
 S/M/L. This ordering respects dependencies - persistence foundations precede the features that need
 them, and the shared bus precedes multi-process.
 
-### Phase 0 - Harden the monolith (in progress)
+### Phase 0 - Harden the monolith (DONE)
 - **Objective:** production-safe single process.
 - **Items:** TLS transport; autosave sweep + save-on-shutdown; maintenance mode; structured logging
-  baseline.
+  baseline. **All shipped** (TLS #600, structured logging #601, autosave/shutdown #588, maintenance
+  #589).
 - **Dependencies:** none. **Complexity:** M. **Risks:** TLS handshake edge cases; autosave races
   (mitigate: save under `TICK_LOCK`).
 - **Testing:** TLS connect test (fake cert); autosave round-trip; shutdown-saves-all.
 - **Docs:** update this spec's status tags; a networking-security ADR.
-- **DoD:** an internet-facing deploy loses no data on crash/restart and speaks encrypted transport.
+- **DoD (met):** an internet-facing deploy loses no data on crash/restart and speaks encrypted
+  transport.
 
-### Phase 1 - Keystone A: durable items (the persistence keystone)
-- **Objective:** loose inventory survives logout; the `items` table foundation.
+### Phase 1 - Keystone A: durable items (DONE)
+- **Objective:** loose inventory survives logout; the `items` table foundation. **Shipped #590.**
 - **Items:** `items` table + migration; `loose_store` adapter (port-shaped); save/restore hooks in
   `characters.py`; reuse `restore_instance` + the gear roll-overlay.
 - **Dependencies:** none (builds on existing item lifecycle). **Complexity:** M. **Risks:** a
@@ -452,33 +466,39 @@ them, and the shared bus precedes multi-process.
 - **Docs:** a keel record (the design in this spec) + the persistence matrix flip to EXISTS.
 - **DoD:** an item earned, logged out, and logged back in is still in the bag, identical.
 
-### Phase 2 - Economy/social durability on the items table
-- **Objective:** the features Keystone A unblocks. **Items:** bank/vault (items with a non-player
-  owner), guild item-bank, mail attachments, then the auction house (listing = escrowed item +
-  price/expiry + the scheduler close).
+### Phase 2 - Economy/social durability on the items table (DONE)
+- **Objective:** the features Keystone A unblocks. **Items (all shipped):** bank/vault (items with a
+  non-player owner, #591), guild item-bank (#592), mail attachments (#593), the scheduler (#594), and
+  the auction house (listing = escrowed item + price/expiry + the scheduler close, #595).
 - **Dependencies:** Phase 1. **Complexity:** L. **Risks:** economy exploits (dupe on trade/mail/AH)
  - mitigate with atomic transactions (the trade card's validate-all-then-apply is the pattern) and
   the economy audit log. **Testing:** atomicity/abort, no-dupe under concurrent claim, expiry close.
 - **Docs:** economy-flow doc; sink/faucet accounting. **DoD:** items move async between players and
   survive restart with zero duplication, all logged.
 
-### Phase 3 - Ops & observability
-- **Objective:** run it in the dark safely. **Items:** audit log (hash-chained), combat/economy/admin
-  logs, backups + a restore test, live metrics on the Lens, bans/moderation table.
+### Phase 3 - Ops & observability (DONE)
+- **Objective:** run it in the dark safely. **Items (all shipped):** audit log (hash-chained, #596),
+  bans/moderation table (#597), backups + a restore test (#598), live metrics (#599, now including
+  players-online off the Phase-4 roster).
 - **Dependencies:** Phase 0. **Complexity:** M. **Risks:** log volume/perf (sample; async write).
 - **Testing:** restore-from-backup smoke; audit append-only property test; ban gate refusal.
 - **Docs:** an ops runbook. **DoD:** a restore test passes in CI and every admin/economy action is
   auditable.
 
-### Phase 4 - The shared bus (multi-process enabler)
-- **Objective:** a second process sees live players. **Items:** a live-state bus (pub/sub) backing
-  the event/push channels; presence + cross-process chat/party.
+### Phase 4 - The shared bus (multi-process enabler) (DONE)
+- **Objective:** a second process sees live players. **Items (all shipped):** the MessageBus seam +
+  in-process default (#602), presence on the bus (#602), the live-player metric (#603), the event/push
+  channels routed through the bus (#604), and the stdlib socket broker + network adapter (#605).
 - **Dependencies:** Phases 0-3. **Complexity:** L. **Risks:** the biggest architectural step - 
   ordering/at-least-once semantics, split-brain. Mitigate: the bus is a *seam behind the existing
   bus API*, mockable in tests (network never gates CI).
-- **Testing:** a fake bus in tests; presence consistency; delivery under a dropped subscriber.
-- **Docs:** the §11.3 design as an ADR. **DoD:** two gateway processes share one authoritative world
-  and players in one see players in the other.
+- **Testing (done):** a fake bus + a spy bus in tests; presence consistency; cross-process cohort
+  delivery over `socketpair`; delivery survives a bus swap and a dropped subscriber.
+- **Docs:** the §11.3 design + the keel records in #604/#605. **DoD (met for membership state):** two
+  processes share one live roster and membership-scoped delivery (party/guild/broadcast/chat) reaches
+  members on either process. **Deferred to Phase 5:** *room-scoped* delivery across processes and one
+  shared authoritative world state (shared `SESSIONS`); that needs shared world state, not just the
+  bus, so a player in one process does not yet see a player standing in the same room on the other.
 
 ### Phase 5 - Postgres + scale-out (DEFERRED until load demands)
 - **Objective:** horizontal capacity. **Items:** a Postgres adapter behind the ports; connection
