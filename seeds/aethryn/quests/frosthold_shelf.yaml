@@ -1,0 +1,25 @@
+# SEED: aethryn -- quests/frosthold_shelf.yaml  (Frosthold's second quest: The Glacier-Stalker)
+#
+# Auto-loaded. Frosthold's SIDE quest, a different SHAPE from the observatory fetch: a HUNT. Hunt-
+# Mistress Ylva (in the market) points you EAST onto the glacier shelf; the quest arms on ENTER and
+# completes on DEFEAT of the pale glacier-stalker. A local need (the beast is killing the frostmoss-
+# gatherers the town lives on), a light thread to the larger world (the ice breeds its own predators),
+# a cost (a hard fight in killing cold), a visible result (the shelf made safe to work), an open
+# remainder (why the ice-things hunt the town now). Rewards XP + standing with the Gathering order
+# (the hunters and gatherers who feed the fortress off the ice).
+id: frosthold_shelf
+name: The Glacier-Stalker
+start: offered
+reward_xp: 75
+steps:
+  - {state: offered, event: enter, to: hunting, on_enter: frosthold_shelf}
+  - state: hunting
+    event: defeat
+    to: done
+    on_defeat: frosthold_shelfbeast
+    effect: "award_xp;grant_rep:gathering:30"
+terminal: [done]
+labels:
+  offered: "Hunt-Mistress Ylva says something is killing her gatherers on the shelf. Go EAST past the gate onto the ice and see."
+  hunting: "The pale glacier-stalker rises from the snow. Put it down so the gatherers can work the shelf again."
+  done: "*** The glacier-stalker is dead and the shelf is safe to gather again. Frosthold's hunters call you one of their own now, and Ylva says so. ***"

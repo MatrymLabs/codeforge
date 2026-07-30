@@ -1,0 +1,25 @@
+# SEED: aethryn -- quests/brightwater_weir.yaml  (Brightwater's second quest: The Drowned Wyrm)
+#
+# Auto-loaded. Brightwater's SIDE quest, a different SHAPE from the sluice fetch: a HUNT. River-Warden
+# Kess (in the market) points you WEST past the millrace to the flooded lower weirs; the quest arms on
+# ENTER and completes on DEFEAT of the drowned river-wyrm. No fetch, no return -- variety in the
+# questing. A local need (the wyrm will take a fisher), a light thread to the larger world (the old
+# river the sluice once ruled), a cost (a real fight), a visible result (the water made safe again),
+# an open remainder (why the drowned things are growing bold). Rewards XP + standing with the Warcraft
+# order (the river-wardens who keep the peace the licence-clerks will not).
+id: brightwater_weir
+name: The Drowned Wyrm
+start: offered
+reward_xp: 42
+steps:
+  - {state: offered, event: enter, to: hunting, on_enter: brightwater_lowerweir}
+  - state: hunting
+    event: defeat
+    to: done
+    on_defeat: brightwater_riverwyrm
+    effect: "award_xp;grant_rep:warcraft:22"
+terminal: [done]
+labels:
+  offered: "River-Warden Kess says a drowned wyrm has taken the lower weirs. Go WEST from the millrace and see."
+  hunting: "The drowned river-wyrm coils in the flooded timber. Put it down before it takes a fisher."
+  done: "*** The wyrm is dead and the lower weirs are a fisher's water again. Brightwater's river-wardens mark the debt, and Kess says so. ***"
