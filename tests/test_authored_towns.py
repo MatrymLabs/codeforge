@@ -86,22 +86,35 @@ def test_authored_towns_compose_into_the_real_aethryn_map():
         assert set(rooms) <= seen, f"{path.stem}: not every subarea reachable from its hub"
 
 
-def test_the_granary_quest_still_walks_to_done_and_rewards():
+def _walk_quest(quest_file: str):
+    """Load an authored town's quest and walk enter -> take -> enter to done; return the final
+    Fired outcome. Every authored town's arc uses the same natural-trigger shape."""
     from parts.shelf.workflow import Fired, Instance, WorkflowEngine
     from parts.world.quest import _from_seed
     from parts.world.seed import load_quest
 
-    spec = load_quest(_AETHRYN / "quests" / "greenhold_intro.yaml")
-    assert spec is not None and spec["name"] == "The Granary's Thirst"
+    spec = load_quest(_AETHRYN / "quests" / quest_file)
+    assert spec is not None
     workflow, _, reward = _from_seed(spec)
-    assert reward == 40
     engine = WorkflowEngine(workflow)
     run = Instance(workflow.workflow_id, spec["start"], [], {})
-    assert isinstance(engine.advance(run, "enter"), Fired)  # meet the keeper
-    assert isinstance(engine.advance(run, "take"), Fired)  # recover the key
-    finish = engine.advance(run, "enter")  # return to the granary
+    assert isinstance(engine.advance(run, "enter"), Fired)  # meet the giver
+    assert isinstance(engine.advance(run, "take"), Fired)  # recover the item
+    finish = engine.advance(run, "enter")  # return to the giver
     assert isinstance(finish, Fired) and engine.is_done(run)
+    return finish, reward
+
+
+def test_the_granary_quest_still_walks_to_done_and_rewards():
+    finish, reward = _walk_quest("greenhold_intro.yaml")
+    assert reward == 40
     assert "award_xp" in (finish.effect or "") and "grant_rep:making" in (finish.effect or "")
+
+
+def test_the_brightwater_quest_walks_to_done_and_rewards():
+    finish, reward = _walk_quest("brightwater_sluice.yaml")
+    assert reward == 55
+    assert "award_xp" in (finish.effect or "") and "grant_rep:knowing" in (finish.effect or "")
 
 
 # --- Refusal: the guard and the loud failures ----------------------------------------------------

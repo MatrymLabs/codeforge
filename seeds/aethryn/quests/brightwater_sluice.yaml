@@ -1,0 +1,28 @@
+# SEED: aethryn -- quests/brightwater_sluice.yaml  (Brightwater's local quest: A Matter of Licence)
+#
+# Auto-loaded from seeds/aethryn/quests/. It expands Brightwater per the seed's quest structure: a
+# local need (the state wants the sluice-token registered), a world-level echo (old-world flow-
+# control tech beneath the mills), a cost (the flooded sluice and its eels), a visible result (the
+# fee + the law's favour), and an unresolved remainder (whether the state should own what the old
+# world left). Driven entirely by natural play, so it never collides with the bare `quest accept`
+# verb: ENTER the Licensing Hall to hear Licensor Aldre, TAKE the token in the old sluice, then
+# return and ENTER the hall to register it. Rewards XP and standing with the Knowing order (records,
+# law, and scholarship, Caeloria's temper).
+id: brightwater_sluice
+name: A Matter of Licence
+start: offered
+reward_xp: 55
+steps:
+  - {state: offered, event: enter, to: accepted, on_enter: brightwater_hall}
+  - {state: accepted, event: take, to: recovered, on_take: brightwater_sluice_token}
+  - state: recovered
+    event: enter
+    to: done
+    on_enter: brightwater_hall
+    effect: "award_xp;grant_rep:knowing:25"
+terminal: [done]
+labels:
+  offered: "In Brightwater, the Licensing Hall has need of a steady hand. Step inside and hear the licensor."
+  accepted: "Descend to the old sluice beneath the millrace and recover the warden's token (mind the eels)."
+  recovered: "Carry the sluice-token back UP to Licensor Aldre in the Licensing Hall to register it."
+  done: "*** The token is entered in the great book. The law is satisfied, and Brightwater remembers the favour. ***"
