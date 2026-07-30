@@ -1,0 +1,98 @@
+# SEED: aethryn -- authored/stonehelm.yaml  (Stonehelm, a city of the Korvash Highlands, ~L150)
+#
+# Korvash's canon identity: the ruined administrative heart of the old world and a modern contest
+# over legitimate authority, where old command systems may still issue obsolete orders and oath or
+# identity phenomena linger. Stonehelm is a storm-bound city over a command bunker that never stopped
+# giving orders. The conflict is ordinary and grave (who holds legitimate authority); the clue to the
+# larger world is the command bunker; the rumour is left unproven. Installed by
+# parts/world/authored_towns.py; its quest is quests/stonehelm_order.yaml.
+
+rooms:
+  stonehelm_market:
+    name: The Helm Market
+    desc: >-
+      A monumental market under the storm-wracked crags of Korvash, its stalls dwarfed by the broken
+      arches of an administration that once ruled a world. Folk trade here in the shadow of a law no
+      one living wrote. Ways lead OUT to the highland road, NORTH to the tribunal hall, and WEST to
+      the barracks.
+    exits: {out: stonehelm, north: stonehelm_tribunal, west: stonehelm_barracks}
+  stonehelm_barracks:
+    name: The Storm Barracks
+    desc: >-
+      The garrison of Stonehelm, its soldiers holding a line against claimants, raiders, and the
+      storms that never fully break here. They serve the tribunal, and argue in their cups over whom
+      the tribunal truly serves. The market is back EAST.
+    exits: {east: stonehelm_market}
+  stonehelm_tribunal:
+    name: The Tribunal Hall
+    desc: >-
+      A vast hall of old law, where Stonehelm's tribunes rule by the fragments of an authority they
+      inherited but cannot fully read. A tribune keeps the seal of standing orders. A stair descends
+      DOWN into the command bunker; the market is back SOUTH.
+    exits: {south: stonehelm_market, down: stonehelm_bunker}
+  stonehelm_bunker:
+    name: The Command Bunker
+    desc: >-
+      An old-world command post buried under the tribunal, its consoles still lit, still issuing
+      orders in a dead tongue to a garrison an age in the grave. Something here still expects to be
+      obeyed. An authority-seal was left in its cradle. Stairs climb back UP.
+    exits: {up: stonehelm_tribunal}
+
+hub: {room: stonehelm, keyword: square, entry: stonehelm_market}
+
+npcs:
+  stonehelm_tribune:
+    name: Tribune Valeska
+    keywords: [valeska, tribune]
+    location: stonehelm_tribunal
+    dialogue:
+      - >-
+        "You come before the tribunal as a stranger, which is honest, at least. There is an
+        authority-seal in the command bunker below, the one token that lets Stonehelm's law claim any
+        legitimacy at all, and it must be brought up and re-sworn before the claimants at our gates
+        press their case. Go down, take it from the old cradle, and bring it to me. Mind what still
+        gives orders down there. It does not know its garrison is dead."
+    topics:
+      command:
+        - >-
+          "The old world ruled from Korvash, and its command systems did not stop when it fell. Down
+          in the bunker, consoles still issue orders. We inherited an authority we cannot read. So we
+          quarrel over who holds it, as if the reading were settled. It is not."
+      oaths:
+        - >-
+          "The old command bound its soldiers by oath, and the oath outlived the soldiers. Some who
+          go down into the bunker come up sworn to a service that ended an epoch ago. Guard your name."
+      rumor:
+        - >-
+          "They say the command bunker still gives orders to a garrison a thousand years in the grave,
+          and every year the orders grow more urgent. They say one day something will finally ANSWER
+          them. Go down, take the seal, and do not sign your name to anything."
+      valeska:
+        - >-
+          "Tribune of Stonehelm, keeper of a law I did not make and cannot fully read. Someone must
+          rule the highlands, even by borrowed authority. Better a doubter on the seat than a believer."
+    hp: 0
+  stonehelm_sentinel:
+    name: an oath-bound sentinel
+    keywords: [sentinel, oath-bound, oath]
+    location: stonehelm_bunker
+    dialogue:
+      - The sentinel snaps to a challenge in a dead tongue, still keeping a post whose army is dust.
+    aggressive: true
+    hp: 980
+    atk: 75
+    xp: 145
+    level: 148
+    tier: normal
+    attack_element: DRK
+
+items:
+  stonehelm_authority_seal:
+    name: the tribunal's authority-seal
+    keywords: [authority-seal, seal, authority]
+    location: stonehelm_bunker
+    lore: >-
+      A cold disc of old command-metal that seems to grow heavier the longer it is held, stamped with
+      an authority older than any living crown. Those who carry it feel, faintly, the pull to give
+      orders and be obeyed. The tribunal re-swears it each generation, and each generation is a little
+      less certain the seal serves them, rather than the other way about.

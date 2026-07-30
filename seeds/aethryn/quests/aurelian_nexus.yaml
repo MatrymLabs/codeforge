@@ -1,0 +1,24 @@
+# SEED: aethryn -- quests/aurelian_nexus.yaml  (Aurelian's quest: The Broken Nexus)
+# Auto-loaded. Local need (a routing-core to count the ring's turning), world echo (an old transit-
+# nexus turning toward a circuit that would call something back), a cost (the nexus and its transit-
+# drone), a result (the scholars can read the ring again), an unresolved remainder (what completing
+# the circuit calls). Natural triggers: ENTER college -> TAKE core -> ENTER college. Rewards XP +
+# Knowing standing (the star-scholars who read and count).
+id: aurelian_nexus
+name: The Broken Nexus
+start: offered
+reward_xp: 185
+steps:
+  - {state: offered, event: enter, to: accepted, on_enter: aurelian_college}
+  - {state: accepted, event: take, to: recovered, on_take: aurelian_routing_core}
+  - state: recovered
+    event: enter
+    to: done
+    on_enter: aurelian_college
+    effect: "award_xp;grant_rep:knowing:40"
+terminal: [done]
+labels:
+  offered: "In Aurelian City, the star-college needs a steady climber. Step into the college and hear the scholar."
+  accepted: "Descend to the broken nexus and retrieve the loose routing-core (mind the derelict machines, and do NOT help the ring turn)."
+  recovered: "Carry the routing-core back UP to Star-Scholar Ilen in the college."
+  done: "*** The core is read again, and the scholars can count how near the ring is to closing its circuit. The decision to wake it or wall it will be made by people who KNOW. ***"

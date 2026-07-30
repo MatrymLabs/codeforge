@@ -1,0 +1,23 @@
+# SEED: aethryn -- quests/stormreach_gate.yaml  (Stormreach's quest: The Drowned Gate)
+# Auto-loaded. Local need (a gate-key that holds the salvage-rights), world echo (a drowned old-world
+# sea-gate that opens on the wrong tide), a cost (the drowned gate and its reaver), a result (the
+# League's shares), an unresolved remainder (what sea the gate opens onto). Natural triggers: ENTER
+# league -> TAKE key -> ENTER league. Rewards XP + Gathering standing (the wreck-salvers).
+id: stormreach_gate
+name: The Drowned Gate
+start: offered
+reward_xp: 165
+steps:
+  - {state: offered, event: enter, to: accepted, on_enter: stormreach_league}
+  - {state: accepted, event: take, to: recovered, on_take: stormreach_gate_key}
+  - state: recovered
+    event: enter
+    to: done
+    on_enter: stormreach_league
+    effect: "award_xp;grant_rep:gathering:35"
+terminal: [done]
+labels:
+  offered: "In Stormreach, the Salvers' League needs a diver who can fight. Step into the league-hall and hear the captain."
+  accepted: "Descend to the drowned gate and take the gate-key from the current (mind what swims up, and be quick before the tide turns)."
+  recovered: "Carry the gate-key back UP to League-Captain Meire in the league-hall."
+  done: "*** The gate-key is landed, and the salvage-rights to the drowned facility are the League's. Your shares are counted, and Stormreach remembers a diver who comes back. ***"

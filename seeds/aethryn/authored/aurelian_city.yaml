@@ -1,0 +1,102 @@
+# SEED: aethryn -- authored/aurelian_city.yaml  (Aurelian City, a sky-capital of the Skyward Spires, ~L200)
+#
+# The Skyward Spires' canon identity: a possible surviving old-world enclave and the highest
+# concentration of intact Crowncraft, sublime and precarious, with failing life-support and political
+# isolation. Aurelian City clings to a floating island above the clouds, its star-college reading a
+# sky the ground forgot; below it a broken transit-nexus of the old Spire Nexus still turns. The
+# conflict is ordinary and fateful (wake the nexus and reconnect the isles, or leave it sealed for
+# fear of what a completed circuit calls back); the clue to the larger world is the nexus; the rumour
+# is left unproven. Installed by parts/world/authored_towns.py; its quest is quests/aurelian_nexus.yaml.
+
+rooms:
+  aurelian_market:
+    name: The Skyhold Market
+    desc: >-
+      The heart of Aurelian City, a plaza of white stone on a floating island where the clouds pass
+      below the railings: a market of sky-metal, star-charts, and the careful rationing of a people
+      whose old life-support is failing a little each year. Ways lead OUT to the sky-bridge, NORTH to
+      the star-college, and WEST to the sky-docks.
+    exits: {out: aurelian_city, north: aurelian_college, west: aurelian_docks}
+  aurelian_docks:
+    name: The Sky-Docks
+    desc: >-
+      Suspended berths where the isle's few working sky-craft are tended with obsessive care, because
+      each one that fails is a road to another island lost for good. The market is back EAST.
+    exits: {east: aurelian_market}
+  aurelian_college:
+    name: The Star-College
+    desc: >-
+      The hall of Aurelian's scholars, who read the sky with instruments the old world left and
+      preserve what Crowncraft still works. They argue, endlessly and in whispers, over whether to
+      wake the nexus below. A scholar keeps the routing-cores. A stair descends DOWN to the broken
+      nexus; the market is back SOUTH.
+    exits: {south: aurelian_market, down: aurelian_nexus}
+  aurelian_nexus:
+    name: The Broken Nexus
+    desc: >-
+      A vast old-world transit-ring under the college, a fragment of the Spire Nexus that once joined
+      the sky-cities of the world: half its arc is gone into cloud, but the rest still turns, slow and
+      patient, one degree a year toward a circuit it must not be allowed to complete. A routing-core
+      sits loose in its cradle. Stairs climb back UP.
+    exits: {up: aurelian_college}
+
+hub: {room: aurelian_city, keyword: square, entry: aurelian_market}
+
+npcs:
+  aurelian_scholar:
+    name: Star-Scholar Ilen
+    keywords: [ilen, scholar, star-scholar]
+    location: aurelian_college
+    dialogue:
+      - >-
+        "You climbed all the way to the sky-cities. Then you are either desperate or curious, and both
+        can be useful. A routing-core has worked loose in the broken nexus below, the core that lets us
+        read how far the ring has turned, and without it we cannot tell how near it is to completing a
+        circuit no one alive wants completed. Go down, retrieve it, bring it up to me. Do not touch the
+        ring. Do not, whatever you hear, help it turn."
+    topics:
+      crowncraft:
+        - >-
+          "The Spire Nexus was the old world's road between its sky-cities. Ours is the largest piece
+          that survived. We keep the Crowncraft that still works and we do not wake the parts that
+          sleep, because we have read what the waking parts are for, and we would rather not."
+      survivors:
+        - >-
+          "Are we the old world's children, or only squatters in its ruins? We do not know. Our
+          life-support fails a little each year and we ration and we read the stars, and we call that
+          a civilisation. Perhaps it is. Perhaps we are the last of something, keeping its light lit."
+      rumor:
+        - >-
+          "They say the old transit-ring below still turns, one degree a year, and when it finally
+          completes a circuit it will CALL something back, along the road it was built to be. They say
+          it has turned a long way already. Go down, take the core, and do not help the ring."
+      ilen:
+        - >-
+          "Star-Scholar of Aurelian, keeper of a sky the ground forgot. Someone must read the ring and
+          count its turning, so that when the decision comes to wake it or wall it, it is made by people
+          who KNOW. Better a frightened scholar than a hopeful one, this high up."
+    hp: 0
+  aurelian_drone:
+    name: a derelict transit-drone
+    keywords: [drone, transit-drone, transit]
+    location: aurelian_nexus
+    dialogue:
+      - The transit-drone wakes with a rising whine, its broken lights fixing on you as an obstacle to clear.
+    aggressive: true
+    hp: 1260
+    atk: 98
+    xp: 188
+    level: 198
+    tier: normal
+    attack_element: LGT
+
+items:
+  aurelian_routing_core:
+    name: a nexus routing-core
+    keywords: [routing-core, core, routing]
+    location: aurelian_nexus
+    lore: >-
+      A sphere of clear old-world glass threaded with turning light, cold and humming, that shows the
+      slow angle of the great ring and the single destination it is patiently turning toward. The
+      scholars read it to count how near the circuit is to closing. None of them will say aloud what
+      the reading has lately become, only that the ring turns faster than a dead machine should.
