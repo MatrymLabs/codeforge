@@ -117,6 +117,12 @@ def test_the_brightwater_quest_walks_to_done_and_rewards():
     assert "award_xp" in (finish.effect or "") and "grant_rep:knowing" in (finish.effect or "")
 
 
+def test_the_moltenhold_quest_walks_to_done_and_rewards():
+    finish, reward = _walk_quest("moltenhold_foundry.yaml")
+    assert reward == 110
+    assert "award_xp" in (finish.effect or "") and "grant_rep:warcraft" in (finish.effect or "")
+
+
 # --- Refusal: the guard and the loud failures ----------------------------------------------------
 
 

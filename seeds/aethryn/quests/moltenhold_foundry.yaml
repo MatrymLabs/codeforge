@@ -1,0 +1,28 @@
+# SEED: aethryn -- quests/moltenhold_foundry.yaml  (Moltenhold's local quest: The Unknown Casting)
+#
+# Auto-loaded from seeds/aethryn/quests/. It expands Moltenhold per the seed's quest structure: a
+# local need (the Watch must know what the foundry is making), a world-level echo (Ember Crown
+# manufacturing running an order from a lost age), a cost (the foundry floor and its constructs), a
+# visible result (the fee + the Watch's favour), and an unresolved remainder (what the machine is
+# finishing, left as a rumour). Driven by natural play, so it never collides with the bare `quest
+# accept` verb: ENTER the Foundry Watch to hear Captain Ordric, TAKE the casting-die on the foundry
+# floor, then return and ENTER the watch. Rewards XP and standing with the Warcraft order (the shield
+# that holds the stair, the Ashen Wastes' temper).
+id: moltenhold_foundry
+name: The Unknown Casting
+start: offered
+reward_xp: 110
+steps:
+  - {state: offered, event: enter, to: accepted, on_enter: moltenhold_watch}
+  - {state: accepted, event: take, to: recovered, on_take: moltenhold_casting_die}
+  - state: recovered
+    event: enter
+    to: done
+    on_enter: moltenhold_watch
+    effect: "award_xp;grant_rep:warcraft:35"
+terminal: [done]
+labels:
+  offered: "In Moltenhold, the Foundry Watch needs a hand it can spare. Step into the watch-hall and hear the captain."
+  accepted: "Descend to the foundry floor and take the unknown casting-die from the line (mind the constructs)."
+  recovered: "Carry the casting-die back UP to Watch-Captain Ordric in the Foundry Watch."
+  done: "*** The Watch has its casting, and a name for what the machine is making. Moltenhold stands another season. ***"
