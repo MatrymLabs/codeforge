@@ -38,6 +38,37 @@ def test_the_schema_yields_wide_variety():
     assert len(names) > 500, f"only {len(names)} distinct creatures -- the schema is too shallow"
 
 
+def test_every_class_has_its_own_combat_telegraph_pool():
+    # The combat tell (read at the start of every fight) is keyed to the creature's class, so a wolf
+    # circles and a colossus grinds. This gate pins that EVERY body-class has a real pool, or one
+    # would silently fall back to the six generic tells and combat would read flat for that enemy.
+    from parts.world.bestiary import _CLASS_TELEGRAPHS
+
+    for cls_name in _CLASSES:
+        pool = _CLASS_TELEGRAPHS.get(cls_name)
+        assert pool and len(pool) >= 6, f"class {cls_name!r} lacks a real telegraph pool"
+
+
+def test_the_combat_tell_is_class_flavored_not_generic():
+    from parts.world.bestiary import _CLASS_TELEGRAPHS, _telegraph
+
+    # A creature's opening line ends with a tell drawn from ITS class's pool (in-character), and two
+    # different classes do not read alike at the same index -- combat is flavoured, not one of six.
+    for cls_name in _CLASSES:
+        assert _telegraph(cls_name, 3) in _CLASS_TELEGRAPHS[cls_name]
+    assert _telegraph("canid", 0) != _telegraph("colossus", 0), "classes must read differently"
+    # And it shows up in the actual beast: a colossus's line reads like a colossus.
+    colossus = next(
+        make_beast("volcanic-flats", 200, i, "r")
+        for i in range(20)
+        if "hulk" in make_beast("volcanic-flats", 200, i, "r")["name"]
+        or "golem" in make_beast("volcanic-flats", 200, i, "r")["name"]
+        or "colossus" in make_beast("volcanic-flats", 200, i, "r")["name"]
+    )
+    tell = colossus["dialogue"][0]
+    assert any(line in tell for line in _CLASS_TELEGRAPHS["colossus"]), "the beast speaks its class"
+
+
 def test_biome_marks_the_element_and_the_name():
     # Environmental coherence: a beast of a biome-typed class takes on its land's element (volcanic
     # -> FIR, glacier -> ICE), and the biome adjective appears in the name. Classes with an
