@@ -40,7 +40,7 @@ wheels = [
 
 [[package]]
 name = "anthropic"
-version = "0.118.0"
+version = "0.120.2"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "anyio" },
@@ -52,9 +52,9 @@ dependencies = [
     { name = "sniffio" },
     { name = "typing-extensions" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/07/ff/bbad57650babf07ae9761f1d974fcee73430387b5d3aa0ddb395234906e8/anthropic-0.118.0.tar.gz", hash = "sha256:acb3c43b7e7592cf635fa21930e67a99d32641d68ccd53f625b52f71d7870d55", size = 994705, upload-time = "2026-07-22T16:43:57.019Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/d7/10/4ca013cb166f226bd89e0aeb0fcaff94f45ddf716d4925ce89475d3c587b/anthropic-0.120.2.tar.gz", hash = "sha256:9722efc10c27a30a69f5338ddacdb35bc6a64297a4e4ba729bf83af873d5fb3a", size = 1008421, upload-time = "2026-07-28T17:38:26.986Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/91/9f/d46e77054d7efb61c85ef5e8c7e95927cc89988b6491b46d22af60d63bda/anthropic-0.118.0-py3-none-any.whl", hash = "sha256:524d835869b8e374510b3bcc552e28dbdafc035a61d63fc0088c4035286ef8fe", size = 1010922, upload-time = "2026-07-22T16:43:55.461Z" },
+    { url = "https://files.pythonhosted.org/packages/63/af/0f5db57b9397a0f3b7fc204cbef143401a7cadaf982330f97f1ce3d39f34/anthropic-0.120.2-py3-none-any.whl", hash = "sha256:0f0bc2b381dc0eb41c8d886b815d79c2041cd2374f83aed36f574b6dc9c579c1", size = 1022851, upload-time = "2026-07-28T17:38:25.466Z" },
 ]
 
 [[package]]
@@ -319,14 +319,14 @@ postgres = [
 [package.metadata]
 requires-dist = [
     { name = "alembic", marker = "extra == 'dev'" },
-    { name = "anthropic", marker = "extra == 'ai'", specifier = ">=0.118.0" },
+    { name = "anthropic", marker = "extra == 'ai'", specifier = ">=0.120.2" },
     { name = "bandit", extras = ["toml"], marker = "extra == 'dev'" },
     { name = "cyclonedx-bom", marker = "extra == 'dev'" },
     { name = "detect-secrets", marker = "extra == 'dev'" },
     { name = "fastapi" },
     { name = "httpx2", marker = "extra == 'dev'" },
     { name = "hypothesis", marker = "extra == 'dev'" },
-    { name = "lupa", marker = "extra == 'lua'", specifier = ">=2.0" },
+    { name = "lupa", marker = "extra == 'lua'", specifier = ">=2.8" },
     { name = "mkdocs-material", marker = "extra == 'dev'" },
     { name = "mypy", marker = "extra == 'dev'" },
     { name = "pip-audit", marker = "extra == 'dev'" },
