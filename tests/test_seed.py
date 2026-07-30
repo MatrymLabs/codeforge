@@ -43,7 +43,11 @@ def test_aethryn_boss_drops_a_valid_unplaced_prototype():
     items = load_items(root / "items.yaml")
     npcs = load_npcs(root / "npcs.yaml")
     inspect_world_links(rooms, items, npcs)  # the whole flagship seed still links cleanly
-    assert npcs["netharions_throne_guardian"]["drops"] == ["greater_healing_draught"]
+    assert npcs["netharions_throne_guardian"]["drops"] == [
+        "greater_healing_draught",
+        "abyssal_legguards",  # the raid drops the top-tier leg + feet gear
+        "abyssal_sabatons",
+    ]
     assert items["greater_healing_draught"]["location"] == "nowhere"  # drop-only prototype
 
 

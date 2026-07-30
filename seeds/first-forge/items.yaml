@@ -24,3 +24,18 @@ healing_draught:
   keywords: [draught, healing, potion, heal]
   location: courtyard
   consume: {hp: 20}
+
+# Leg + feet starter armor, so the tutorial exercises the two new slots (itemization depth).
+leather_greaves:
+  name: sturdy leather greaves
+  keywords: [greaves, legs, leg]
+  location: workshop
+  slot: leg
+  mods: {DEF: 4}
+
+worn_boots:
+  name: a pair of worn boots
+  keywords: [boots, feet]
+  location: workshop
+  slot: feet
+  mods: {EVA: 3}

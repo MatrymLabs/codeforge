@@ -136,8 +136,8 @@ def test_aethryn_regional_sets_grant_bonuses_from_real_pieces():
 
 
 def test_aethryn_boss_drops_are_real_gear_across_every_slot():
-    """Felling a boss now yields equippable gear, not just keepsakes: the ladder fills all six
-    equipment slots (weapon, body, head, arm, two accessories) with flat stat mods."""
+    """Felling a boss now yields equippable gear, not just keepsakes: the ladder fills all eight
+    equipment slots (weapon, body, head, arm, leg, feet, two accessories) with flat stat mods."""
     from parts.world.equipment import SLOTS
     from parts.world.stat_rules import DERIVED_STATS
 
@@ -148,6 +148,8 @@ def test_aethryn_boss_drops_are_real_gear_across_every_slot():
         "cindershell_plate": "body",
         "wraithlamp_circlet": "head",
         "ashlord_gauntlet": "arm",
+        "ashlord_greaves": "leg",
+        "emberstride_boots": "feet",
         "warden_sigil": "accessory_1",
         "coil_keystone": "accessory_2",
     }

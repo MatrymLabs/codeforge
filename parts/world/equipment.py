@@ -16,7 +16,7 @@ from parts.world import gearsets, items
 from parts.world.score_sheet_model import EquipmentLoadout
 from parts.world.session import Session, sentence_case
 
-SLOTS = ("weapon", "body", "head", "arm", "accessory_1", "accessory_2")
+SLOTS = ("weapon", "body", "head", "arm", "leg", "feet", "accessory_1", "accessory_2")
 
 
 def equip(session: Session, word: str) -> str:
@@ -104,6 +104,8 @@ def equipped_loadout(session: Session) -> EquipmentLoadout:
         body=names.get("body", ""),
         head=names.get("head", ""),
         arm=names.get("arm", ""),
+        leg=names.get("leg", ""),
+        feet=names.get("feet", ""),
         accessory_1=names.get("accessory_1", ""),
         accessory_2=names.get("accessory_2", ""),
     )

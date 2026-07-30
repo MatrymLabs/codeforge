@@ -114,6 +114,8 @@ def _equipment_lefts(sheet: CharacterSheet) -> list[str]:
         ("Body", eq.body),
         ("Head", eq.head),
         ("Arm", eq.arm),
+        ("Leg", eq.leg),
+        ("Feet", eq.feet),
         ("Accessory 1", eq.accessory_1),
         ("Accessory 2", eq.accessory_2),
     ]

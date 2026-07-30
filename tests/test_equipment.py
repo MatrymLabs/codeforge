@@ -174,3 +174,42 @@ def test_an_ungeared_sheet_hides_the_gear_score() -> None:
     assert sheet is not None
     out = render_score_sheet(sheet)
     assert "Gear Score" not in out  # hidden at score 0, no clutter for a fresh hero
+
+
+# --- itemization: the leg + feet slots (gap analysis: "6 slots, no leg/feet") --------------------
+
+
+def test_leg_and_feet_gear_equips_into_its_slots() -> None:
+    s = Session(player_id="matrym", location="workshop")
+    bind_calling(s, "engineer")
+    items.ITEMS["leather_greaves"]["location"] = items.carrier("matrym")
+    items.ITEMS["worn_boots"]["location"] = items.carrier("matrym")
+    assert "You equip" in equip(s, "greaves")
+    assert "You equip" in equip(s, "boots")
+    assert s.equipped["leg"] == "leather_greaves"
+    assert s.equipped["feet"] == "worn_boots"
+
+
+def test_leg_and_feet_gear_counts_toward_the_gear_score() -> None:
+    from parts.world.equipment import gear_score
+
+    s = Session(player_id="matrym", location="workshop")
+    bind_calling(s, "engineer")
+    for label in ("leather_greaves", "worn_boots"):
+        items.ITEMS[label]["location"] = items.carrier("matrym")
+    equip(s, "greaves")
+    equip(s, "boots")
+    assert gear_score(s) == 7  # greaves DEF 4 + boots EVA 3
+
+
+def test_the_score_sheet_shows_the_leg_and_feet_slots() -> None:
+    from parts.world.score_sheet import render_score_sheet
+
+    s = Session(player_id="matrym", location="workshop")
+    bind_calling(s, "engineer")
+    items.ITEMS["leather_greaves"]["location"] = items.carrier("matrym")
+    equip(s, "greaves")
+    sheet = sheet_from_session(s)
+    assert sheet is not None
+    out = render_score_sheet(sheet)
+    assert "Leg : sturdy leather greaves" in out

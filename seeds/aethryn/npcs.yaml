@@ -198,7 +198,7 @@ ironwall_pass_folk:
     - "Ironwall Pass keeps to itself, traveller, but you are welcome to pass through."
 
 glacial_bastion_guardian:
-  name: the guardian of Glacial Bastion
+  name: the guardian of Glacial Bastion  # mid-tier: drops the leg + feet armor for the open world
   keywords: [guardian, glacial]
   location: glacial_bastion
   dialogue:
@@ -210,7 +210,7 @@ glacial_bastion_guardian:
   level: 90
   tier: boss
   lethal: true
-  drops: [greater_healing_draught]
+  drops: [greater_healing_draught, ashlord_greaves, emberstride_boots]
   loot: {ember_shard: 5, nothing: 2}
 
 zhaar_desert_warden:
@@ -657,7 +657,7 @@ netharions_throne_guardian:
   tier: boss
   raid: true  # the final weekly raid: Netharion's Throne, the apex of the climb
   lethal: true
-  drops: [greater_healing_draught]
+  drops: [greater_healing_draught, abyssal_legguards, abyssal_sabatons]
   loot: {ember_shard: 5, nothing: 2}
 
 the_rifted_abyss_guardian:
@@ -674,6 +674,6 @@ the_rifted_abyss_guardian:
   tier: boss
   raid: true  # an apex weekly raid: bring a party and the trinity, not a solo lap
   lethal: true
-  drops: [greater_healing_draught]
+  drops: [greater_healing_draught, abyssal_legguards, abyssal_sabatons]
   loot: {ember_shard: 5, nothing: 2}
 
