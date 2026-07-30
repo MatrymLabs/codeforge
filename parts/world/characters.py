@@ -15,6 +15,7 @@ from typing import Any
 
 from parts.world import allocate, professions, reputation
 from parts.world import friends as friends_mod
+from parts.world import lockouts as lockouts_mod
 from parts.world.character_store import CharacterRecord, CharacterStore
 from parts.world.job_progress import load_job_progress, save_job_progress
 from parts.world.jobs import BASE_HP, BASE_MP, JOBS, bind_calling
@@ -147,6 +148,7 @@ def _record_to_casefile(record: CharacterRecord) -> dict[str, Any]:
         "equipped_gear": record.equipped_gear,
         "coins": record.coins,
         "quest_state": record.quest_state,
+        "lockouts": record.lockouts,
         "allocated": record.allocated,
         "professions": record.professions,
         "reputation": record.reputation,
@@ -182,6 +184,7 @@ def put_record(name: str, casefile: dict[str, Any], store: CharacterStore | None
         equipped_gear=casefile.get("equipped_gear", ""),
         coins=int(casefile.get("coins", 0)),
         quest_state=casefile.get("quest_state", ""),
+        lockouts=casefile.get("lockouts", ""),
         allocated=casefile.get("allocated", ""),
         professions=casefile.get("professions", ""),
         reputation=casefile.get("reputation", ""),
@@ -215,6 +218,7 @@ def save_character(session: Session, store: CharacterStore | None = None) -> Non
         equipped_gear=_serialize_gear(session),
         coins=session.coins,
         quest_state=save_state(session.player_id),
+        lockouts=lockouts_mod.serialize(session.lockouts),
         allocated=allocate.serialize(session),
         professions=professions.serialize(session),
         reputation=reputation.serialize(session),
@@ -282,6 +286,8 @@ def restore_character(session: Session, casefile: dict[str, Any]) -> None:
     from parts.world.quest import restore_state
 
     restore_state(session.player_id, str(casefile.get("quest_state", "")))
+    # ...and restore the daily lockout ledger, so the once-a-day boss bonus cap survives logout.
+    session.lockouts = lockouts_mod.deserialize(str(casefile.get("lockouts", "")))
     # Load allocated attribute points BEFORE building stats, so bind_calling folds them into the
     # StatBlock (and the HP/MP recompute below includes the allocated stamina/magic).
     allocate.restore(session, str(casefile.get("allocated", "")))

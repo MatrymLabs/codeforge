@@ -6817,7 +6817,33 @@
       "aggression"
     ],
     "reuse": "the aggro primitive that makes the tank real: a per-foe threat map (add on damage/heal/taunt, top_target picks the highest-threat present hero, taunt spikes it, drop/clear on leave/defeat) so a foe strikes the hero holding its attention instead of whoever acted last",
-    "notes": "The missing half of the holy trinity. combat.land_hit adds threat = damage dealt (and clears the table when a foe is felled/reassembles); aggression.menace targets threat.top_target(nid, fighters-in-room) instead of the acting session, pushing the blow to the victim while the room sees the StrikeFrame. top_target only considers PRESENT heroes, so a departed hero's stale entry never mis-targets. taunt(nid, player, present) sets the taunter one above the current top (the tank's lever); heal-generated threat + the taunt verb land in the next slice.",
+    "notes": "The missing half of the holy trinity. combat.land_hit adds threat = damage dealt (and clears the table when a foe is felled/reassembles); aggression.menace targets threat.top_target(nid, fighters-in-room) instead of the acting session, pushing the blow to the victim while the room sees the StrikeFrame. top_target only considers PRESENT heroes, so a departed hero's stale entry never mis-targets. taunt(nid, player, present) sets the taunter one above the current top (the tank's lever); heal-generated threat + the taunt ability (kind 'taunt') shipped alongside.",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-29",
+    "updated": "2026-07-29"
+  },
+  {
+    "designation": "MOD-04.137",
+    "name": "lockouts",
+    "status": "active",
+    "function": "daily reset markers, so endgame rewards a return, not a grind",
+    "label": "lockouts",
+    "file": "parts/world/lockouts.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "docs/architecture.md",
+    "tests": "tests/test_lockouts.py",
+    "depends_on": [],
+    "related": [
+      "combat",
+      "characters"
+    ],
+    "reuse": "the daily-cap primitive: a per-hero {key -> UTC date} ledger with claim (true on the first claim of the day, then false) so a repeatable activity's BONUS pays once per day; the period boundary is a date passed in (no wall-clock in pure logic), persisted on the character record",
+    "notes": "Endgame's first lever against 'infinitely farmable, no diminishing returns'. session.lockouts persists via a new characters.lockouts JSON column (migration b8e4f1c2d3a9). combat.land_hit calls _daily_boss_bounty on a boss (tier=='boss') defeat: lockouts.claim(session, 'boss:<nid>', today_utc()) pays BOSS_BOUNTY_MULT x the coin drop on the day's first kill, base only after. The boss still reassembles + is farmable; only the bounty is capped. today_utc() reads the clock at the edge (monkeypatchable); deserialize tolerates a blank/garbled ledger (a lost lockout never locks a hero out).",
     "tags": [
       "module"
     ],

@@ -42,6 +42,7 @@ class CharacterRecord:
     equipped_gear: str = ""
     coins: int = 0
     quest_state: str = ""
+    lockouts: str = ""  # JSON: key -> "YYYY-MM-DD" the daily bonus was last claimed (endgame cap)
     allocated: str = ""  # JSON: attribute -> allocated points (build customization)
     professions: str = ""  # 'trade:practice' pairs, comma-joined (the maker's trade skills)
     reputation: str = ""  # 'order:standing' pairs, comma-joined (standing with the Orders)

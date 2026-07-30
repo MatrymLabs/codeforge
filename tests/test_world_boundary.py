@@ -63,6 +63,7 @@ _GAME_SEED = {
     "doors",
     "combat",
     "threat",
+    "lockouts",
     "abilities",
     "jobs",
     "progression",

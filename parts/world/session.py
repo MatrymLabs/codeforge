@@ -60,6 +60,9 @@ class Session:
     # Per-job progression, keyed by job id. A character keeps a record per job they take up,
     # so switching jobs never erases a prior job's level. Persisted via the job_progress card.
     job_progress: dict[str, JobProgress] = field(default_factory=dict)
+    # Daily lockouts: a key (a boss, a daily) -> the UTC date its bonus was last claimed. Persisted,
+    # so the once-a-day cap survives logout (parts.world.lockouts).
+    lockouts: dict[str, str] = field(default_factory=dict)
     # Equipped gear, keyed by slot (weapon/body/head/...). Values are item ids. Runtime state.
     equipped: dict[str, str] = field(default_factory=dict)
     # Allocated attribute points: attribute -> points spent (build agency). A level-up grants points

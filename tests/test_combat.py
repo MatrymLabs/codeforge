@@ -818,3 +818,67 @@ def test_a_reassembling_foe_recovers_its_full_strength():
     apply_weaken(npc, 3)
     attack(s, "brute")  # felled -> reassembles whole
     assert "weakened" not in npc  # the weaken clears on reassemble
+
+
+# --- endgame: the first boss kill of the day pays a daily bounty --------------------------------
+
+
+def _spawn_boss(label: str = "warlord", location: str = "courtyard", hp: int = 6, level: int = 3):
+    npcs.NPCS[label] = {
+        "name": f"the {label}",
+        "keywords": [label],
+        "location": location,
+        "dialogue": ["..."],
+        "next_line": 0,
+        "hp": hp,
+        "hp_now": hp,
+        "xp": 20,
+        "atk": 0,
+        "level": level,
+        "tier": "boss",
+    }
+    npcs.reindex_npcs()
+    return label
+
+
+def _fell(s: Session, kw: str) -> str:
+    out = ""
+    for _ in range(20):
+        out = attack(s, kw)
+        if "collapses" in out:
+            return out
+    return out
+
+
+def test_first_boss_kill_of_the_day_pays_a_daily_bounty(monkeypatch):
+    from parts.world import lockouts
+
+    monkeypatch.setattr(lockouts, "today_utc", lambda: "2026-07-29")
+    s = _fighter()
+    _spawn_boss()
+    first = _fell(s, "warlord")
+    assert "Daily bounty!" in first  # the day's first kill pays extra
+    # the boss reassembles and is still farmable, but a second kill the SAME day pays base only
+    second = _fell(s, "warlord")
+    assert "Daily bounty!" not in second
+    assert "You find" in second  # base coins still drop
+
+
+def test_a_new_day_reopens_the_boss_bounty(monkeypatch):
+    from parts.world import lockouts
+
+    s = _fighter()
+    _spawn_boss()
+    monkeypatch.setattr(lockouts, "today_utc", lambda: "2026-07-29")
+    assert "Daily bounty!" in _fell(s, "warlord")
+    monkeypatch.setattr(lockouts, "today_utc", lambda: "2026-07-30")
+    assert "Daily bounty!" in _fell(s, "warlord")  # the date rolled: the bounty returns
+
+
+def test_a_normal_foe_pays_no_daily_bounty(monkeypatch):
+    from parts.world import lockouts
+
+    monkeypatch.setattr(lockouts, "today_utc", lambda: "2026-07-29")
+    s = _fighter()
+    out = _fell(s, "dummy")  # the training dummy is no boss
+    assert "Daily bounty!" not in out
