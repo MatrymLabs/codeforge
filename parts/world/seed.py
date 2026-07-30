@@ -278,8 +278,8 @@ class Ability(TypedDict):
     """
 
     name: str  # display name, e.g. "Power Strike"
-    # kinds: "strike" (damage) | "heal" (self) | "brand" (burn DoT) | "daze" (skip strikes) |
-    # "weaken" (soften its blows)
+    # kinds: "strike" (damage) | "heal" (self/ally) | "brand" (burn DoT) | "daze" (skip strikes) |
+    # "weaken" (soften its blows) | "taunt" (force a foe's aggro onto the wielder)
     kind: str
     power: int  # flat base magnitude before the stat scale (for `daze`/`weaken`, a number of beats)
     scales: str  # the attribute it scales on (strength/magic/...), or "" for flat
@@ -1153,10 +1153,10 @@ def load_abilities(path: Path) -> dict[str, Ability]:
                 ("jobs", list),
             ),
         )
-        if merged["kind"] not in ("strike", "heal", "brand", "daze", "weaken"):
+        if merged["kind"] not in ("strike", "heal", "brand", "daze", "weaken", "taunt"):
             raise SeedError(
-                f"ability '{label}': 'kind' must be 'strike', 'heal', 'brand', 'daze', or "
-                f"'weaken', got {merged['kind']!r}."
+                f"ability '{label}': 'kind' must be 'strike', 'heal', 'brand', 'daze', "
+                f"'weaken', or 'taunt', got {merged['kind']!r}."
             )
         for num_field in ("power", "mp_cost", "cooldown"):
             value = merged[num_field]
