@@ -58,6 +58,21 @@ def equipped_modifiers(session: Session) -> dict[str, list[StatModifier]]:
     return by_target
 
 
+def item_power(iid: str) -> int:
+    """One item's power: the sum of the stat modifiers it grants. A single number to rank gear by.
+    A raid drop, its affixes rolled by a level-300 foe, carries far bigger mods than an open-world
+    piece, so this simply reads the gear treadmill the affix roll already scales -- no stored ilvl,
+    derive-don't-store: the mods are canonical, the power recomputes."""
+    return sum(items.ITEMS[iid]["mods"].values())
+
+
+def gear_score(session: Session) -> int:
+    """A hero's GEAR SCORE: the summed power of everything worn, INCLUDING the set bonuses a full
+    gear set grants (equipped_modifiers composes both). The endgame progression metric -- an
+    ungeared hero reads 0; push it up by trading open-world pieces for raid gear and full sets."""
+    return sum(mod.flat for stack in equipped_modifiers(session).values() for mod in stack)
+
+
 def apply_stat_modifiers(
     base_derived: dict[str, int], mods_by_target: dict[str, list[StatModifier]]
 ) -> dict[str, int]:
