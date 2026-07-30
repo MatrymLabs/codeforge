@@ -7011,5 +7011,32 @@
     "aliases": [],
     "created": "2026-07-30",
     "updated": "2026-07-30"
+  },
+  {
+    "designation": "MOD-04.144",
+    "name": "area_store",
+    "status": "active",
+    "function": "the area bench: preview, save, promote (GENERATED_LOCAL -> AUTHORED_LOCAL), and export generated areas (game)",
+    "label": "area_store",
+    "file": "parts/world/area_store.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "docs/aethryn_lore_bible.md",
+    "tests": "tests/test_area_store.py",
+    "depends_on": [
+      "caves"
+    ],
+    "related": [
+      "survey"
+    ],
+    "reuse": "the generated-content lifecycle primitive (the prompt's admin loop): generate_and_save -> preview -> promote -> export over a JSON bench (world_areas/, git-ignored, reproducible from seed). promote is the one authority act (a human flips GENERATED_LOCAL to AUTHORED_LOCAL) and refuses anything not GENERATED_LOCAL, so canon or an already-authored area can never be promoted; run(argv) is the mutating half of the `world` CLI, exit 0 ok / 1 refused / 2 usage",
+    "notes": "Completes the `world` tool family with the mutating commands (generate-area / preview-area / promote / export / list-areas), the read-only half being survey (MOD-04.142). Generated areas are mutable dev state kept APART from static canon in seeds/ (world_areas/ is git-ignored with a tracked README, like reports/ and workspace/). Persistence is plain JSON with sorted keys for a stable round-trip. Still planned: world inspect / graph / find-unreachable / import (need the region travel graph). tools/world.py routes read-only -> survey, everything else -> area_store.",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-30",
+    "updated": "2026-07-30"
   }
 ]

@@ -3,7 +3,7 @@
 The prompt's centerpiece: let a developer generate a small area (a cave) WITHOUT touching the
 engine, expanding the world locally while never inventing global canon. This forges one cave from
 (region, seed): a navigable room graph of 5 to 18 rooms with at least one branch, one loop, a
-memorable landmark, an environmental hazard, a local resource, an optional secret, a one-paragraph
+memorable landmark, an environmental hazard, a local resource, an optional hidden feature, a
 micro-story, and an understandable return route. Every cave inherits its region's identity (biome,
 subtypes, creature / hazard / resource families, naming grammar) from
 seeds/aethryn/cave_families.yaml, so a Veridia cave reads like Veridia and a Voidscar cave reads
@@ -176,11 +176,11 @@ def generate_cave(region_id: str, seed: int, *, size: int | None = None) -> dict
     resource_room = rng.choice(interior)
     resource_room["resource"] = resource
 
-    # An optional secret (roughly one cave in three) tucked onto a room as a hidden feature.
-    secret = None
-    if rng.random() < 0.34 and family.get("secrets"):
-        secret = rng.choice(family["secrets"])
-        rng.choice(interior)["secret"] = secret
+    # An optional hidden feature (roughly one cave in three) tucked onto a room to reward searching.
+    hidden = None
+    if rng.random() < 0.34 and family.get("hidden"):
+        hidden = rng.choice(family["hidden"])
+        rng.choice(interior)["hidden"] = hidden
 
     for room in rooms:
         room["description"] = _describe(room, family, subtype, creature)
@@ -208,7 +208,7 @@ def generate_cave(region_id: str, seed: int, *, size: int | None = None) -> dict
         "landmark": landmark,
         "hazard": hazard,
         "resource": resource,
-        "secret": secret,
+        "hidden": hidden,
         "micro_story": micro_story,
         "rumor": rumor,
     }
@@ -230,8 +230,8 @@ def _describe(room: dict[str, Any], family: dict[str, Any], subtype: str, creatu
         parts.append(f"Beware {room['hazard']}.")
     if room.get("resource"):
         parts.append(f"You could gather {room['resource']} here.")
-    if room.get("secret"):
-        parts.append("Something here does not sit right, as if a detail were hidden.")
+    if room.get("hidden"):
+        parts.append("Something here does not sit right, as if a detail were concealed.")
     parts.append(f"A {creature} has left its sign.")
     return " ".join(parts)
 

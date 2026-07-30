@@ -105,6 +105,7 @@ _GAME_SEED = {
     "canon",
     "survey",
     "caves",
+    "area_store",
     "seed",
     "db",
     "events",
