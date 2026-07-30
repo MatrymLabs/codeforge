@@ -941,3 +941,11 @@ def test_a_raid_uses_the_weekly_not_the_daily_cadence(monkeypatch):
     _fell(s, "abyssal")
     assert lockouts.is_locked(s, "raid:abyssal", "2026-W31") is True  # the raid week is claimed
     assert lockouts.is_locked(s, "boss:abyssal", lockouts.today_utc()) is False  # daily untouched
+
+
+def test_an_empowered_strike_hits_fifty_percent_harder() -> None:
+    # the `buff` ability sets the empowered status; combat.attack reads it for a heavier blow
+    s = _fighter("vanguard")  # base strike is 7 (3 + strength 14 // 3)
+    s.statuses["empowered"] = 3
+    out = attack(s, "dummy")
+    assert "for 10" in out and "(empowered!)" in out  # 7 + 7//2
