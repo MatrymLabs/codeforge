@@ -65,13 +65,44 @@ def raise_town(path: Path) -> tuple[dict[str, Room], dict[str, Npc], dict[str, I
     return rooms, npcs, items
 
 
+# Optional Room fields an authored town may carry beyond name/desc/exits: a GATHER node (a material
+# prototype harvested here) and a `dynamic` live-capability the room surfaces on look.
+_ROOM_OPTS = ("node", "dynamic")
+
+
 def _build_rooms(town: str, records: dict[str, Any]) -> dict[str, Room]:
     rooms: dict[str, Room] = {}
     for label, rec in records.items():
         if not rec.get("name") or not rec.get("desc") or not isinstance(rec.get("exits"), dict):
             raise SeedError(f"authored town {town!r} room '{label}': needs a name, desc, and exits")
-        rooms[label] = Room(name=rec["name"], desc=rec["desc"], exits=dict(rec["exits"]))
+        room = Room(name=rec["name"], desc=rec["desc"], exits=dict(rec["exits"]))
+        for opt in _ROOM_OPTS:
+            if opt in rec:
+                room[opt] = rec[opt]  # type: ignore[literal-required]
+        rooms[label] = room
     return rooms
+
+
+# Optional Npc fields an authored town may carry beyond the core set: combat flavour (element, its
+# own resistances, an affliction, a telegraphed special, lethal/raid gating), loot (drops/loot), a
+# vendor's `shop`, and ambient roaming (wander). Boot's link audit cross-checks drops/shop/loot.
+_NPC_OPTS = (
+    "aggressive",
+    "level",
+    "tier",
+    "topics",
+    "wander",
+    "attack_element",
+    "resistances",
+    "inflicts",
+    "special",
+    "lethal",
+    "raid",
+    "drops",
+    "loot",
+    "shop",
+    "ambient",
+)
 
 
 def _build_npcs(town: str, records: dict[str, Any], rooms: dict[str, Room]) -> dict[str, Npc]:
@@ -101,9 +132,9 @@ def _build_npcs(town: str, records: dict[str, Any], rooms: dict[str, Room]) -> d
             xp=int(rec.get("xp", 0)),
             atk=atk,
         )
-        for opt in ("aggressive", "level", "tier", "topics", "wander"):
+        for opt in _NPC_OPTS:
             if opt in rec:
-                npc[opt] = rec[opt]
+                npc[opt] = rec[opt]  # type: ignore[literal-required]
         npcs[label] = npc
     return npcs
 

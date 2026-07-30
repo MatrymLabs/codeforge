@@ -290,6 +290,33 @@ def test_town_files_of_a_missing_dir_is_empty(tmp_path: Path):
     assert towns.town_files(tmp_path / "nope") == []
 
 
+def test_authored_foes_keep_their_region_element():
+    # Regression: the pipeline once dropped attack_element, so elemental foes loaded UNTYPED and the
+    # score sheet's resistance grid never engaged. Every authored region-foe must keep its element.
+    for town, foe, element in (
+        ("moltenhold", "moltenhold_construct", "FIR"),
+        ("frosthold", "frosthold_revenant", "ICE"),
+        ("stormreach", "stormreach_drowned", "WTR"),
+        ("aurelian_city", "aurelian_drone", "LGT"),
+    ):
+        _, npcs, _ = towns.raise_town(_AUTHORED / f"{town}.yaml")
+        assert npcs[foe]["attack_element"] == element
+
+
+def test_the_pipeline_carries_a_gather_node_and_a_vendor_shop(tmp_path: Path):
+    # Density capability: authored rooms may hold a gather node, and authored NPCs a vendor shop.
+    body = (
+        "rooms: {harbor_market: {name: M, desc: d, exits: {out: harborville}, node: iron_ore}}\n"
+        "hub: {room: harborville, keyword: square, entry: harbor_market}\n"
+        "npcs: {harbor_broker: {name: V, keywords: [v], location: harbor_market, "
+        "shop: {sells: {relic: 50}}}}\n"
+        "items: {harbor_relic: {name: k, keywords: [k], location: harbor_market}}\n"
+    )
+    rooms, npcs, _ = towns.raise_town(_write(tmp_path, body))
+    assert rooms["harbor_market"]["node"] == "iron_ore"
+    assert npcs["harbor_broker"]["shop"] == {"sells": {"relic": 50}}
+
+
 def _write(tmp_path: Path, body: str) -> Path:
     p = tmp_path / "harborville.yaml"
     p.write_text(body, encoding="utf-8")
