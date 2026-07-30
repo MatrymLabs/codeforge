@@ -1,0 +1,94 @@
+# SEED: aethryn -- authored/sunscar_city.yaml  (Sunscar City, the desert capital of Zhaar, ~L80)
+#
+# Zhaar's canon identity: a shard-mining frontier and archaeology economy over a secondary impact
+# zone of buried cities and exposed remains. Sunscar City rings the only sweet well for a hundred
+# miles, and beneath it a buried city is dug for impact-glass and old-world salvage. The conflict is
+# ordinary and greedy (who owns what the digging finds); the clue to the larger world is the buried
+# city; the rumour is left unproven. Installed by parts/world/authored_towns.py; its quest is
+# quests/sunscar_charter.yaml.
+
+rooms:
+  sunscar_market:
+    name: The Sunscar Bazaar
+    desc: >-
+      The teeming heart of Sunscar City, a sandstone maze of awnings over the desert's one sweet well,
+      trading water, glass, and salvage hauled up from the buried city below. Every third stall sells
+      a map to a ruin that does not exist. Ways lead OUT to the caravan road, NORTH to the diggers'
+      guild, and WEST to the deep wells.
+    exits: {out: sunscar_city, north: sunscar_guild, west: sunscar_wells}
+  sunscar_wells:
+    name: The Deep Wells
+    desc: >-
+      The stone throat of Sunscar's one good well, where water-sellers draw the life of the city bucket
+      by bucket and guard it like gold, because here it is. The bazaar is back EAST.
+    exits: {east: sunscar_market}
+  sunscar_guild:
+    name: The Diggers' Guild
+    desc: >-
+      A cool sandstone hall where the Diggers' Guild licenses every shaft into the buried city and
+      takes its cut of every glass and relic hauled up. A guild-master keeps the charter of digs. A
+      stair leads DOWN into the glass vault; the bazaar is back SOUTH.
+    exits: {south: sunscar_market, down: sunscar_vault}
+  sunscar_vault:
+    name: The Glass Vault
+    desc: >-
+      A chamber of the buried city, its walls run to smooth impact-glass by whatever fell here in the
+      old age, still holding the shapes of doors and streets no one has walked in an epoch. A guild
+      charter-seal was lost among the glass. The heat is a weight. Stairs climb back UP.
+    exits: {up: sunscar_guild}
+
+hub: {room: sunscar_city, keyword: square, entry: sunscar_market}
+
+npcs:
+  sunscar_guildmaster:
+    name: Guild-Master Ravi
+    keywords: [ravi, guild-master, master]
+    location: sunscar_guild
+    dialogue:
+      - >-
+        "You have the look of someone who can walk in glass and come out. Good. A charter-seal, the
+        one that licenses every dig in the buried city, was lost down in the glass vault, and without
+        it every scavenger in Sunscar will be down a shaft by dusk. Go down, find it, bring it up. The
+        Guild pays fair, and the Guild remembers who it owes."
+    topics:
+      shards:
+        - >-
+          "Impact-glass. The old age's cities, run to glass by whatever the gods threw down. We cut it,
+          we sell it, we license the digging. The desert gives up a fortune and a hundred ways to die."
+      buried:
+        - >-
+          "There is a whole city under Sunscar, streets and doors caught in the glass. We dig the edges.
+          No one has walked its heart and come back to say what is down there. The Guild does not fund that."
+      rumor:
+        - >-
+          "They say deep in the buried city there are lamps still burning, in streets no living foot has
+          touched since the Fall. They say the glass remembers the shape of everyone who died in it. Go
+          down and dig, and mind whose shape you disturb."
+      ravi:
+        - >-
+          "Guild-Master of Sunscar, and I license the past by the cartload. Is it right, to own what the
+          dead left? Above my pay. Someone must keep order at the shaft-head, or the desert eats us all."
+    hp: 0
+  sunscar_husk:
+    name: a glass-bound husk
+    keywords: [husk, glass-husk, glass]
+    location: sunscar_vault
+    dialogue:
+      - The husk unfolds from the glass wall, a figure caught mid-stride an age ago and still walking.
+    aggressive: true
+    hp: 560
+    atk: 45
+    xp: 78
+    level: 78
+    tier: normal
+    attack_element: ERT
+
+items:
+  sunscar_charter_seal:
+    name: the guild's charter-seal
+    keywords: [charter-seal, seal, charter]
+    location: sunscar_vault
+    lore: >-
+      A heavy seal of impact-glass and old bronze, the Guild's authority to open the buried city cast
+      into a thing older than the Guild by an epoch. Held to the light it shows a street-plan of a city
+      no living map remembers, as if the seal were cut from a door of the buried place itself.

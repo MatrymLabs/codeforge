@@ -1,0 +1,24 @@
+# SEED: aethryn -- quests/zulkarak_physic.yaml  (Zul'karak's quest: The Design-Key)
+# Auto-loaded. Local need (a design-key grown into the old laboratory), world echo (the Verdant Loom's
+# runaway biological design still making life), a cost (the laboratory and its nest-drone), a result
+# (the physicians can tell medicine from murder again), an unresolved remainder (what the Loom is still
+# making). Natural triggers: ENTER the lodge -> TAKE the key -> ENTER the lodge. Rewards XP + Making
+# standing (biological design, the Verdant Loom's craft of MAKING life).
+id: zulkarak_physic
+name: The Design-Key
+start: offered
+reward_xp: 90
+steps:
+  - {state: offered, event: enter, to: accepted, on_enter: zulkarak_lodge}
+  - {state: accepted, event: take, to: recovered, on_take: zulkarak_design_key}
+  - state: recovered
+    event: enter
+    to: done
+    on_enter: zulkarak_lodge
+    effect: "award_xp;grant_rep:making:30"
+terminal: [done]
+labels:
+  offered: "In Zul'karak, the physicians need a steady hand for the deep growth. Step into the lodge and hear the physic-master."
+  accepted: "Descend into the overgrown laboratory and cut free the design-key (mind the engineered things that grow there)."
+  recovered: "Carry the design-key back UP to Physic-Master Ojah in the lodge."
+  done: "*** The design-key is read again, and Zul'karak can tell the Loom's medicine from its murder. A city of healers, safer for a dangerous walk. ***"
