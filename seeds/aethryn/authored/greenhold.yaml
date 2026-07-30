@@ -1,25 +1,25 @@
-# SEED: aethryn -- greenhold.yaml  (the hand-authored interior of Greenhold, Veridia's starter town)
+# SEED: aethryn -- authored/greenhold.yaml  (the hand-authored interior of Greenhold, Veridia's starter town)
 #
-# The map places Greenhold as a single hub room; this is its polished interior: a market square, a
-# smithy, a granary, and the granary undercroft, plus the people, the item, and (with
-# seeds/aethryn/quests/greenhold_intro.yaml) the quest that make it a place and not a signpost. It
-# expands a named location per the seed's recipe: preserve the map name, give it a role, add
-# subareas, a livelihood, one conflict, one rumor (marked as belief), one clue to a larger mystery,
-# and one revisitable change. The old-world cistern under the granary is Veridia's canon identity
-# made concrete: ordinary life built over forgotten abundance infrastructure, never explained away.
-#
-# Loaded and merged by parts/world/greenhold.py (the inns pattern: interior rooms built directly and
-# wired to the hub in code, so the boundary exit `out: greenhold` does not trip the per-file gate).
+# The map places Greenhold as a single hub room; this is its polished, LIVED-IN interior: a market
+# square, a smithy, a granary and its undercroft, and the green fields beyond, peopled by a keeper, a
+# miller, and a market gossip, with two quests of different shapes (a fetch into the old cistern, a
+# hunt out in the fields), an aggressive foe in each danger-room, readable parish lore, and NPCs whose
+# talk cross-references each other and the town's mysteries. It expands a named location per the seed
+# recipe (a role, subareas, a livelihood, a conflict, a rumour, a clue to the larger world, a
+# revisitable change) at AAA density -- a place, not a signpost. The old-world cistern under the
+# granary is Veridia's canon identity made concrete: ordinary life over forgotten abundance
+# infrastructure, shown through function. Loaded by parts/world/authored_towns.py; its quests are
+# seeds/aethryn/quests/greenhold_intro.yaml (the cistern) and greenhold_fields.yaml (the beast).
 
-# The town's interior subareas. Exits reference each other and the hub `greenhold` (wired in code).
 rooms:
   greenhold_market:
     name: Greenhold Market Square
     desc: >-
       The cobbled heart of Greenhold: stalls of green produce, a stone well, and the smell of fresh
-      bread. Farm-folk haggle over grain and trade the day's gossip. Ways lead OUT to the town gate,
-      NORTH to the granary, and WEST to the smithy.
-    exits: {out: greenhold, north: greenhold_granary, west: greenhold_smithy}
+      bread. Farm-folk haggle over grain and trade the day's gossip, and a miller leans in the sun
+      with a worried look. Ways lead OUT to the town gate, NORTH to the granary, WEST to the smithy,
+      and EAST out to the green fields.
+    exits: {out: greenhold, north: greenhold_granary, west: greenhold_smithy, east: greenhold_fields}
   greenhold_smithy:
     name: The Greenhold Smithy
     desc: >-
@@ -41,11 +41,19 @@ rooms:
       and a seized valve mark an ancient fountain-head, its workings long forgotten. Water stains
       climb the walls. Stairs climb back UP.
     exits: {up: greenhold_granary}
+  greenhold_fields:
+    name: The Green Fields
+    desc: >-
+      Open barley-fields under a wide Veridia sky, the town at your back and the tree-line ahead.
+      Good earth, and quiet, but the near rows are trampled and torn, and something heavy has been at
+      the crop. The market gate is back WEST.
+    exits: {west: greenhold_market}
 
 # How the hub connects to the interior: the hub room, the exit keyword to add, and the entry room.
 hub: {room: greenhold, keyword: square, entry: greenhold_market}
 
-# The people of Greenhold: a peaceful keeper who sets the quest, and the danger that guards the key.
+# The people of Greenhold: a keeper with an old-world problem, a miller with a plain one, a gossip who
+# ties the town together, and the two dangers that guard their answers.
 npcs:
   greenhold_keeper:
     name: Keeper Wenna
@@ -65,10 +73,63 @@ npcs:
         - >-
           "Folk say the fountain still runs pure, if only someone could wake it. Folk say a great
           many things. Go down and see for yourself."
+      miller:
+        - >-
+          "Old Harl? He mills what the fields give, when the fields give. He has been sour since
+          something started at his barley. Talk to him if you have a strong arm to spare."
       wenna:
         - >-
           "Keeper of this granary, as my mother was. Someone must mind the grain, and the strange
           old water beneath it."
+    hp: 0
+  greenhold_miller:
+    name: Miller Harl
+    keywords: [harl, miller]
+    location: greenhold_market
+    dialogue:
+      - >-
+        "You look like you have swung a blade at more than flies. Good. Something has been in my
+        barley three nights running, out EAST in the fields, and it is no fox. Go and put it down
+        before there is nothing left to mill, and I will see you paid in more than bread."
+    topics:
+      beast:
+        - >-
+          "A boar, I reckon, but a big one, and bold. It has torn the near rows to mud. Go out to the
+          fields and end it. A miller with no barley is just a man with a heavy stone."
+      fields:
+        - >-
+          "Best earth in Veridia, those fields, and half of it built over something older, if you
+          believe Wenna. All I know is my grandfather's plough turns up metal that will not rust."
+      harl:
+        - >-
+          "Miller of Greenhold, like my father. I grind what grows and I worry about what does not.
+          Just now I am worrying about a boar."
+    hp: 0
+  greenhold_gossip:
+    name: Old Sabra
+    keywords: [sabra, gossip, woman]
+    location: greenhold_market
+    dialogue:
+      - >-
+        "New face! Sit a moment. Everything worth knowing in Greenhold passes this well, and I have
+        sat by it forty years. Ask me of anyone; I will tell you truer than they would themselves."
+    topics:
+      cistern:
+        - >-
+          "Wenna's water? It has failed before, in my mother's day, and a stranger fixed it then too.
+          Funny how the old fountain only ever wakes for someone from away. Make of that what you like."
+      beast:
+        - >-
+          "Harl's boar. I have seen it, big as a cart and mean with it. And I will tell you a thing:
+          it started at his barley the same week Wenna's fountain went dry. Coincidence, surely. Surely."
+      rumor:
+        - >-
+          "They say the old works under this whole town still run, here and there, and wake things
+          they ought not. But an old woman by a well says a great many things. Sit, and I will say more."
+      sabra:
+        - >-
+          "Old Sabra, who has outlived three husbands and every secret in this town but her own.
+          Someone must remember what Greenhold would rather forget. It may as well be me."
     hp: 0
   greenhold_vermin:
     name: a swarm of cellar vermin
@@ -82,8 +143,21 @@ npcs:
     xp: 12
     level: 3
     tier: normal
+  greenhold_boar:
+    name: the great field-boar
+    keywords: [boar, field-boar, great-boar]
+    location: greenhold_fields
+    dialogue:
+      - The great boar lifts its scarred head from the ruined barley and lowers its tusks at you.
+    aggressive: true
+    hp: 48
+    atk: 8
+    xp: 22
+    level: 4
+    tier: normal
 
-# The item the quest turns on: an old-world key, a small clue to the world before the Fall.
+# The item the cistern quest turns on, plus a readable parish record for anyone who likes to know a
+# place before they trust it.
 items:
   greenhold_valve_key:
     name: a corroded valve-key
@@ -93,3 +167,12 @@ items:
       A heavy key of pale metal, corroded only where later hands have touched it. It fits the seized
       fountain-head exactly, as though key and fountain were made in the same breath, in a workshop
       no one now living in Greenhold could name.
+  greenhold_parish_record:
+    name: the Greenhold parish record
+    keywords: [record, parish-record, book]
+    location: greenhold_market
+    lore: >-
+      A water-stained parish book chained to the market well. Its oldest legible entry, in a hand
+      three centuries dead, reads: "The good water failed again this Spring, and was woken again by a
+      stranger's hand, as the elders say it was in their grandmothers' time. We do not write down how.
+      We only write that Greenhold has never yet gone thirsty, and pray the pattern holds."
