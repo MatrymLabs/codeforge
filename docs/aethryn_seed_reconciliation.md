@@ -66,7 +66,8 @@ Checked against `seeds/aethryn/` and `parts/world/` on the day this doc landed.
   deliberate strike, the withdrawal, uneven survival) and **7 open questions** kept unresolved.
 - **6 named seas** (Western Ocean, Northland Sea, Central Sea, Sundaram Sea, Southern Ocean, Eastern
   Ocean).
-- **33 of 35 canonical anchors** present in `settlements.yaml` / `dungeons.yaml` (see gap below).
+- **All 35 canonical anchors** present in `settlements.yaml` / `dungeons.yaml` by their canon names
+  (Red Dune and Cinderfire were reconciled from the earlier `Red Dunes` / `Cragfire`).
 - **The 8 world-scale faction seeds** (Veiled Covenant, Crownseekers, Netharian Concord, Wardens of
   the Scars, Ashforged Houses, Deep Archive, Tidebound League, Greenward Compact) live in
   `canon.yaml` as `world_factions` (CANON_WORKING / C2), validated by `canon.py`. The Surveyor's
@@ -98,11 +99,6 @@ Checked against `seeds/aethryn/` and `parts/world/` on the day this doc landed.
 - **Water edges as travel routes.** `world_graph.yaml` records each region's bordering seas and uses
   them for reachability, but the code does not yet model sea *routes* as travelable player links (a
   port-to-port journey), only as region adjacency.
-- **Two anchor names drifted from canon (a keel call, not a quick fix).** The seed's canonical
-  anchors `Red Dune` (Zhaar Desert) and `Cinderfire` (Ashen Wastes) exist in the world under variant
-  names: `Red Dunes` and `Cragfire`. These names are woven through `zones.yaml`, `npcs.yaml`,
-  `rooms.yaml`, and a test, and the seed arrived after they were authored, so renaming to canon
-  ripples and is Josh's call (Cragfire may be intentional local flavour, not drift).
 - **Archetype ratio weighting.** The cave forge classifies each cave into an archetype and
   `generation_contract.distribution_gaps` can measure a batch against the 35 / 20 / 20 / 15 / 10
   mix, but the forge still picks a subtype uniformly, so a batch is not yet actively steered to hit

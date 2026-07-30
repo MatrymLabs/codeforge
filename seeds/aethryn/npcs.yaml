@@ -231,11 +231,11 @@ sunscar_city_folk:
     - "Sunscar City keeps to itself, traveller, but you are welcome to pass through."
 
 red_dunes_folk:
-  name: a villager of Red Dunes
-  keywords: [villager, Red, Dunes]
+  name: a villager of Red Dune
+  keywords: [villager, Red, Dune]
   location: red_dunes
   dialogue:
-    - "Red Dunes keeps to itself, traveller, but you are welcome to pass through."
+    - "Red Dune keeps to itself, traveller, but you are welcome to pass through."
 
 sandspire_ruins_folk:
   name: a keeper of Sandspire Ruins
@@ -397,11 +397,11 @@ moltenhold_folk:
     - "Moltenhold keeps to itself, traveller, but you are welcome to pass through."
 
 cragfire_folk:
-  name: a townsfolk of Cragfire
-  keywords: [townsfolk, Cragfire]
+  name: a townsfolk of Cinderfire
+  keywords: [townsfolk, Cinderfire]
   location: cragfire
   dialogue:
-    - "Cragfire keeps to itself, traveller, but you are welcome to pass through."
+    - "Cinderfire keeps to itself, traveller, but you are welcome to pass through."
 
 ashen_monoliths_folk:
   name: a keeper of Ashen Monoliths
