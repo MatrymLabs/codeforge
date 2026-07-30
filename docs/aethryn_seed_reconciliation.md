@@ -1,0 +1,109 @@
+# Aethryn Seed Reconciliation (source, tiers, coverage)
+
+*This doc traces Aethryn's canon back to its external source and states, honestly, what the code
+already encodes and what the source still carries that the code does not. It exists because the
+authoritative seed arrived after the first implementation, uses its own canon vocabulary, and lives
+alongside an older, superseded world design in this repo. No claim without correspondence: the
+coverage matrix below is checked against the shipped seed, not asserted.*
+
+## The authoritative source
+
+The single external source of Aethryn's canon is the **Aethryn Coding Seed v0.1** pack:
+
+| File | What it is |
+|------|-----------|
+| `PROMPT_FOR_CODING_AI.md` | the build brief (the prompt this campaign implements) |
+| `AETHRYN_WORLD_BIBLE.md` | the narrative + world-structure bible (14 regions, Seven Crowns, factions, magic) |
+| `aethryn_world_seed.json` | the structured source of truth (regions, anchors, adjacency, seas, factions, generation contract) |
+| `GENERATION_CONTRACT.md` | the compact generator contract (area recipe, content ratios, review gate) |
+| `AETHRYN_WORLD_MAP.jpeg` | the world map image |
+
+It was received as `~/Downloads/aethryn seed/` (bundled as `Aethryn_Coding_Seed_v0.1.zip`). The pack
+is **not vendored into this repo**: its prose uses long-dash glyphs this repo forbids fleet-wide, and
+`seeds/aethryn/canon.yaml` is already the machine-checkable snapshot of its locked canon. Keep the
+pack as the cited external source; keep `canon.yaml` as the on-disk, test-gated encoding of it.
+
+## Doc hierarchy (which file is authoritative)
+
+```
+aethryn_world_seed.json + AETHRYN_WORLD_BIBLE.md   (external source, v0.1)
+      -> seeds/aethryn/canon.yaml                  (machine-checkable snapshot; parts/world/canon.py gates it)
+      -> docs/aethryn_lore_bible.md                (the readable companion)
+      -> docs/aethryn_seed_reconciliation.md       (this file: crosswalk + coverage)
+```
+
+**Legacy warning.** `docs/world_bible.md` and everything under `docs/world/` (continental_atlas,
+faction_encyclopedia, global_history, magic_encyclopedia, bestiary, build_order, ...) are the
+**earlier "Forge / Unforging" world design**. None of them mention Netharion or the divine strike.
+Where they conflict with the Aethryn Coding Seed, the seed wins and they are superseded. Treat those
+files as a legacy alternate, not current canon.
+
+## Canon tier crosswalk
+
+The seed labels every record C0 to C4. This repo's `parts/world/canon.py` uses `CANON_STATUSES`.
+They line up like this:
+
+| Seed tier | Meaning | This repo's `canon_status` |
+|-----------|---------|----------------------------|
+| **C0** Fixed canon | must never be contradicted | `CANON_LOCKED` |
+| **C1** Anchored canon | core fact fixed, details may expand | `CANON_LOCKED` (name/band frozen) |
+| **C2** Provisional seed | supplied to start; may be revised | `CANON_WORKING` |
+| **C3** Generated local canon | new local detail; must fit C0 to C2 | `GENERATED_LOCAL` |
+| **C4** Rumor / belief | may be false, biased, or contradictory | `RUMOR` |
+
+Conflict resolution is identical in both: C0 wins, then C1; C2 may be revised; C3 is regenerated or
+edited; C4 is allowed to conflict because it is belief, not fact.
+
+## Coverage matrix (built vs. gaps)
+
+Checked against `seeds/aethryn/` and `parts/world/` on the day this doc landed.
+
+### Built and faithful to the source
+- **14 regions**: names and threat bands **all match** the seed (Veridia 1-30 through The Voidscar
+  250-300). `seeds/aethryn/canon.yaml`, gated by `check_canon`.
+- **7 Seven Crowns**: map names, mythic titles, and **region assignments all match** the seed.
+- **6 established facts** (advanced civilization, imitation, Netharion the first artificial god, the
+  deliberate strike, the withdrawal, uneven survival) and **7 open questions** kept unresolved.
+- **6 named seas** (Western Ocean, Northland Sea, Central Sea, Sundaram Sea, Southern Ocean, Eastern
+  Ocean).
+- **33 of 35 canonical anchors** present in `settlements.yaml` / `dungeons.yaml` (see gap below).
+- **The generator half of the brief**: the deterministic cave forge (`parts/world/caves.py`), the
+  area bench (`parts/world/area_store.py`), and the read-only validators (`parts/world/survey.py`,
+  the `world` CLI). Generated content is stamped `GENERATED_LOCAL` (C3) and may raise a forbidden
+  topic only as a `RUMOR` (C4).
+
+### Gaps (in the source, not yet in code)
+- **Region adjacency graph.** The seed gives every region an `adjacent_regions` list (the canonical
+  world graph). The code has inter-zone links in `tools/emit_map_world.py` but no typed adjacency /
+  `TravelRoute` records validated against the seed. This is the data behind `world find-unreachable`
+  and `world inspect` / `graph`, which are still honestly stubbed. **This is the ready-to-build
+  next slice** (pillar 2).
+- **Water edges per region.** The seed maps each region to its bordering seas (`water_edges`); the
+  code does not yet model sea routes as world links.
+- **The 8 C2 faction seeds.** Veiled Covenant, Crownseekers, Netharian Concord, Wardens of the
+  Scars, Ashforged Houses, Deep Archive, Tidebound League, Greenward Compact. `parts/world/factions.py`
+  exists but carries the legacy design's factions, not these. The seed's world-validation list
+  includes "invalid faction references," so these belong in canon data eventually.
+- **Collective-term tiers.** The seed tiers the six collective names precisely: Seven Crowns and
+  Seven Wounds are **C1**, while Seven Blasphemies, Murdered Crowns, Seven Lessons, and Seven Engines
+  are **C4** (ideological belief). `canon.yaml` currently carries all six as one `CANON_WORKING`
+  block; refining them to match (2 anchored, 4 rumor, each with its `usage`) is a small follow-up.
+- **Two canonical anchors missing**: `Red Dune` (Zhaar Desert) and `Cinderfire` (Ashen Wastes) are
+  not yet in `settlements.yaml`.
+- **The generation contract, as data.** The seed specifies `required_area_fields` (identity,
+  historical_layer, local_livelihood, active_conflict, ...), the minor-area distribution
+  (35% natural, 20% present-use, 20% old-world, 15% scar, 10% faction/cult), the dungeon grammar
+  (threshold, orientation, escalation, revelation, choice, aftermath), and the approved cave
+  archetypes. The cave forge honors the shape informally; encoding the ratios and area recipe as a
+  validated contract would let `world validate` enforce them.
+- **The magic / technology framework** (Crowncraft, Theomimetic arts, Scarcraft, and the four power
+  channels) and the **historical-arc age names** (Age of Near Gods, Age of Plenty, the Imitation,
+  the Starfall, ...) are C2 lore in the bible with no home in canon data yet.
+
+## Forbidden changes (the guardrail the generators already honor)
+
+The seed's non-negotiables, restated so the generators keep obeying them: never rename Aethryn, never
+make the divine strike accidental, never make Netharion a natural-born god, never erase or replace a
+map region, never relocate a Seven Crown without approval, and never resolve an open mystery as
+objective truth. Generated content (C3) may build local detail on top; forbidden global canon may
+surface only as a marked `RUMOR` (C4), which is exactly what the cave forge does today.

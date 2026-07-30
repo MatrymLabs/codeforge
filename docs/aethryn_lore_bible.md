@@ -5,6 +5,11 @@
 never contradict it. The machine-checkable form of this canon is `seeds/aethryn/canon.yaml`, enforced
 by `parts/world/canon.py` (`check-canon`); this file is the readable companion.*
 
+> **Source and reconciliation.** This canon derives from the external **Aethryn Coding Seed v0.1**
+> pack (its world bible + `aethryn_world_seed.json`). For the tier crosswalk (the pack's C0 to C4
+> labels vs. this repo's `canon_status` ladder) and an honest built-vs-gaps coverage matrix, see
+> `docs/aethryn_seed_reconciliation.md`.
+
 > **Note on an older draft.** `docs/world_bible.md` is an earlier, *different* design of Aethryn (a
 > "Forge / Ember / Unforging" metaphysics). It is **superseded** by this Lore Bible, which matches the
 > shipped seed (the fourteen regions, the Seven Crowns, Netharion). Treat `world_bible.md` as a legacy
