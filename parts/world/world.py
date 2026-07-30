@@ -7,12 +7,12 @@ resolve_move is the only function that changes a player's location.
 from itertools import zip_longest
 
 from parts.world.armory import arm_guardians
+from parts.world.authored_towns import install_authored_towns
 from parts.world.creator_workshop import install_workshop
 from parts.world.delve import generate_delves, load_dungeons, wire_delve_mouths
 from parts.world.delve_sets import forge_delve_sets
 from parts.world.doors import DOORS, barred_door_for
 from parts.world.gearsets import register_sets
-from parts.world.greenhold import install_greenhold
 from parts.world.inscriptions import carve_inscriptions
 from parts.world.items import ITEMS, register_prototypes
 from parts.world.landmarks import raise_landmarks
@@ -109,11 +109,12 @@ if _settlements is not None:
     NPCS.update(_store_npcs)
     wire_store_doors(WORLD, _settlements)
 
-# Raise Greenhold's hand-authored interior (parts.world.greenhold): the polished starter town off
-# the Veridia hub, its keeper, its old-world key, and the rooms its quest turns on. A no-op unless
-# the Greenhold hub is present (only the aethryn world has it), so other seeds are untouched. Merged
-# before the link audit, so its rooms/NPCs/item pass the same gate as every authored location.
-register_prototypes(install_greenhold(WORLD, NPCS))
+# Raise every hand-authored town interior (parts.world.authored_towns): each polished settlement
+# off its map hub, with its residents, items, and the rooms its quest turns on. Data-driven -- a new
+# town is a file in seeds/aethryn/authored/. A no-op for any town whose hub this world lacks (only
+# aethryn has them), so other seeds are untouched. Merged before the link audit, so every authored
+# room/NPC/item passes the same gate as the generated world.
+register_prototypes(install_authored_towns(WORLD, NPCS))
 
 # Every generated world carries the Creator's Workshop: a Grand Library linked to the spawn, and a
 # concealed Creator's Door onto an isolated administrative instance only the Seed Owner may cross

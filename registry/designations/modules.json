@@ -7096,15 +7096,15 @@
   },
   {
     "designation": "MOD-04.147",
-    "name": "greenhold",
+    "name": "authored_towns",
     "status": "active",
-    "function": "the hand-authored interior of Greenhold, Veridia's polished starting town (game)",
-    "label": "greenhold",
-    "file": "parts/world/greenhold.py",
+    "function": "the content pipeline for hand-authored settlement interiors: a new town is pure data (game)",
+    "label": "authored_towns",
+    "file": "parts/world/authored_towns.py",
     "type": "MOD",
     "domain": "04",
     "docs": "docs/aethryn_seed_reconciliation.md",
-    "tests": "tests/test_greenhold.py",
+    "tests": "tests/test_authored_towns.py",
     "depends_on": [
       "seed"
     ],
@@ -7113,8 +7113,8 @@
       "quest",
       "canon"
     ],
-    "reuse": "the authored-location primitive (the prompt's 'first polished playable slice'): raise_greenhold builds the town interior (market, smithy, granary, undercroft + a keeper, an old-world key, an aggressive foe) from seeds/aethryn/greenhold.yaml as directly-built Room/Npc/Item records, so the boundary exit `out: greenhold` never trips load_rooms' per-file exit gate; install_greenhold merges + wires the hub exit only when the Greenhold hub is present (a no-op on non-aethryn seeds), following the inns generator exactly. The paired quest (seeds/aethryn/quests/greenhold_intro.yaml) drives entirely off natural play (enter -> take -> enter), never the bare `quest accept` verb.",
-    "notes": "Expands a named location per the seed recipe: the failing old-world cistern under the granary is Veridia's canon identity (life over forgotten abundance infrastructure) shown through function, never explained. The quest 'The Granary's Thirst' (id greenhold_granary) rewards XP + Making standing; both enter-steps target the granary but fire only from their own state, so mid-quest passing is inert. Content is data; this is the factory. Wired into world.py before the link audit; registered in test_world_boundary _GAME_SEED.",
+    "reuse": "the authored-content pipeline (generalised from the Greenhold slice): each seeds/aethryn/authored/<town>.yaml declares its rooms/hub/npcs/items; raise_town builds them as directly-built Room/Npc/Item records (so a boundary exit `out: <hub>` never trips load_rooms' per-file exit gate), and install_authored_towns merges + wires every town whose hub is present (a no-op on non-aethryn seeds, following the inns generator). Adding a polished town is DATA ONLY -- drop a file in the authored dir; its quest goes in seeds/aethryn/quests/ (auto-loaded). Content scales without code.",
+    "notes": "Generalises MOD-04.147 (was module `greenhold`) into a reusable factory so authored content density scales. Greenhold is the first town through it (market/smithy/granary/undercroft + Keeper Wenna + valve-key + the cistern mystery, quest 'The Granary's Thirst'). Each town expands a named location per the seed recipe (subareas, a livelihood, a conflict, a rumour, a clue to a larger mystery, a revisitable change). Wired into world.py before the link audit; registered in test_world_boundary _GAME_SEED as authored_towns.",
     "tags": [
       "module"
     ],
