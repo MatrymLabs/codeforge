@@ -62,6 +62,13 @@ def test_missing_fields_flags_absent_and_empty_fields():
     assert set(missing) == {"identity", "hazard"}
 
 
+def test_a_real_zero_or_false_is_not_blank():
+    # A generation_seed of 0 is a valid value, not a missing field (regression: `not 0` is True).
+    area = {field: "x" for field in gc.required_area_fields()}
+    area["generation_seed"] = 0
+    assert gc.missing_fields(area) == []
+
+
 # --- Acceptance: distribution_gaps measures a batch ----------------------------------------------
 
 

@@ -25,7 +25,7 @@ from typing import Any
 
 import yaml
 
-from parts.world import canon
+from parts.world import canon, generation_contract
 from parts.world.seed import SeedError, _UniqueKeyLoader
 
 _FAMILIES_PATH = canon.AETHRYN_DIR / "cave_families.yaml"
@@ -187,18 +187,23 @@ def generate_cave(region_id: str, seed: int, *, size: int | None = None) -> dict
 
     micro_story = _micro_story(rng, family, subtype, landmark)
     rumor = _maybe_rumor(rng)
+    livelihood = rng.choice(family["livelihoods"])
+    tier = generation_contract.canon_tier_for("GENERATED_LOCAL")
 
     area: dict[str, Any] = {
         "id": f"gen_cave_{region_id}_{seed}",
         "display_name": _name(),
         "canon_status": "GENERATED_LOCAL",
+        "canon_tier": tier,
         "source": "caves.generate_cave",
         "version": 1,
         "template": "cave",
         "region_id": region_id,
+        "parent_region": region_id,
         "parent_id": None,
         "biome": family["biome"],
         "subtype": subtype,
+        "archetype": _archetype(subtype),
         "entrance": entrance_kind,
         "danger_rating": region["threat_min"],
         "level_band": [region["threat_min"], region["threat_max"]],
@@ -211,9 +216,103 @@ def generate_cave(region_id: str, seed: int, *, size: int | None = None) -> dict
         "hidden": hidden,
         "micro_story": micro_story,
         "rumor": rumor,
+        # The generation-contract narrative fields (deterministic, local, never asserting canon).
+        "identity": (
+            f"A {subtype} that could only be {region['name']}'s: {landmark}, where the old world "
+            f"still bleeds through the rock."
+        ),
+        "historical_layer": rng.choice(generation_contract.historical_layers()),
+        "local_livelihood": livelihood,
+        "active_conflict": f"a standing quarrel over who may work {resource}",
+        "ordinary_experience": (
+            f"For most it is plain hard work: {livelihood}, and an eye on {hazard}."
+        ),
+        "traversal_identity": f"{_traversal(family['biome'])} past {landmark}",
+        "larger_world_clue": _world_clue(region["name"], landmark),
+        "unresolved_mystery": f"Who sealed the way past {landmark}, and why?",
+        "gameplay_hooks": [
+            f"explore the {subtype}",
+            f"gather {resource}",
+            f"drive off the {creature}",
+        ],
+        "creator_extension_hooks": [
+            "extend the cave deeper",
+            "link it to a neighbouring region",
+            "seat a local faction here",
+        ],
+        "state_changes": f"Drive off the {creature} and locals can work {resource} again.",
+    }
+    area["provenance"] = {
+        "source": area["source"],
+        "generation_seed": seed,
+        "parent_region": region_id,
+        "template": "cave",
+        "canon_tier": tier,
     }
     area["validation"] = _validation_report(area)
     return area
+
+
+# Which minor-area archetype a cave subtype falls under (for generation_contract.distribution_gaps),
+# by keyword in priority order: a scar or old-world reading wins over the natural default.
+_SCAR_WORDS = ("lava", "impact", "fissure", "fracture", "slag", "reality", "euclidean", "altered")
+_OLD_WORLD_WORDS = (
+    "aqueduct",
+    "maintenance",
+    "service",
+    "laborator",
+    "factory",
+    "underwork",
+    "bunker",
+    "vault",
+    "sublevel",
+    "transit",
+    "archive",
+    "oath",
+    "command",
+    "foundry",
+)
+_PRESENT_USE_WORDS = ("cellar", "mine", "cistern", "shelter", "sewer", "catacomb", "tomb", "quarry")
+
+
+def _archetype(subtype: str) -> str:
+    """Classify a cave subtype into a minor-area archetype the generation contract knows."""
+    text = subtype.lower()
+    if any(w in text for w in _SCAR_WORDS):
+        return "scar"
+    if any(w in text for w in _OLD_WORLD_WORDS):
+        return "old_world"
+    if any(w in text for w in _PRESENT_USE_WORDS):
+        return "present_use"
+    return "natural"
+
+
+_TRAVERSAL = {
+    "coastal": "a wade through drowned corridors",
+    "tundra": "a careful climb over blue ice",
+    "aerial": "a climb across broken spans",
+    "subterranean": "a long descent into the dark",
+    "volcanic": "a hot scramble over cooled slag",
+    "jungle": "a push through living tunnels",
+    "ancient-forest": "a push through living roots",
+    "dark-forest": "a wary crawl through black water",
+    "desert": "a crawl through shifting sandstone",
+    "wounded": "a disorientating passage where the way does not hold still",
+}
+
+
+def _traversal(biome: str) -> str:
+    """How a cave of this biome is moved through (its traversal identity)."""
+    return _TRAVERSAL.get(biome, "a crawl through close stone")
+
+
+def _world_clue(region_name: str, landmark: str) -> str:
+    """A thread pointing at a larger mystery: if the region holds a Seven Crown, the clue nods to it
+    (never asserting), otherwise it points vaguely at the old world."""
+    crown = next((c for c in canon.seven_crowns() if c["region"] == region_name), None)
+    if crown:
+        return f"Marks near {landmark} echo {crown['mythic_title']}, though no one agrees how."
+    return f"Old marks near {landmark} point somewhere larger, and no one agrees where."
 
 
 def _describe(room: dict[str, Any], family: dict[str, Any], subtype: str, creature: str) -> str:
@@ -322,4 +421,7 @@ def _validation_report(area: dict[str, Any]) -> list[str]:
         problems.append("no micro-story")
     if area.get("canon_status") != "GENERATED_LOCAL":
         problems.append("generated content must be stamped GENERATED_LOCAL")
+    # The generation contract: every required narrative field must be present and non-empty.
+    for field in generation_contract.missing_fields(area):
+        problems.append(f"generation contract: missing field '{field}'")
     return problems
