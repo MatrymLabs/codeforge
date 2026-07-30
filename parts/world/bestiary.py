@@ -269,6 +269,8 @@ def make_notable(biome: str, level: int, idx: int, room: str, seq: int) -> Npc:
     return beast
 
 
+# The generic fallback: creature-agnostic tells for a class without its own pool (all ten have one
+# below, so this is a safety net, never the main path).
 _TELEGRAPHS = (
     "watches from cover, unblinking",
     "rises to meet you",
@@ -278,6 +280,107 @@ _TELEGRAPHS = (
     "breaks from the brush, already moving",
 )
 
+# CLASS-AWARE combat tells: the line a player reads at the start of every fight, keyed to the
+# creature's body-class so a wolf circles, a wraith drifts, and a colossus grinds -- combat reads
+# in-character instead of cycling six generic sentences worldwide. Seven per class; the beast's name
+# already varies widely, so name x tell gives a large, flavour-correct space. Extend a pool freely;
+# the test twin pins that every class has one.
+_CLASS_TELEGRAPHS: dict[str, tuple[str, ...]] = {
+    "canid": (
+        "circles low, hackles up and teeth bared",
+        "paces the trail, watching for your throat",
+        "drops its head and growls from deep in the chest",
+        "fans wide as if it hunts with a pack long dead",
+        "bares its teeth and will not be stared down",
+        "slinks closer on silent pads, testing you",
+        "throws back its head and howls, and the sound is answered",
+    ),
+    "felid": (
+        "flattens to the ground, all coiled patience",
+        "watches from the shadow with lamp-bright eyes",
+        "pads a slow circle and never once looks away",
+        "lashes its tail and gathers itself to spring",
+        "melts half into cover, only its stare left",
+        "shows its fangs in something too cold for a snarl",
+        "moves without a sound, and is suddenly nearer",
+    ),
+    "ursine": (
+        "rears up huge and bellows a warning",
+        "drops to all fours and shakes the ground coming on",
+        "swings its great head, small eyes fixing on you",
+        "roars until the very air seems to shake",
+        "lumbers forward, in no hurry and utterly certain",
+        "rakes the earth with claws like plough-blades",
+        "stands its ground and dares you to come closer",
+    ),
+    "boar": (
+        "lowers its tusks and paws the trampled ground",
+        "snorts and squares up, small-eyed and furious",
+        "charges a step and pulls up, testing your nerve",
+        "grinds its tusks and will not give the path",
+        "wheels to keep its tusks between you and it",
+        "breaks into a bristling, head-down charge",
+        "champs and slavers, working itself to a fury",
+    ),
+    "reptile": (
+        "coils tight and tastes the air with a flickering tongue",
+        "rears its head and holds, still as cut stone",
+        "hisses low and fixes you with a lidless stare",
+        "draws back to strike, its jaws unhinging",
+        "pours itself into a coil across the way",
+        "sways, slow and hypnotic, and does not blink",
+        "opens its mouth on a bright threat of venom",
+    ),
+    "avian": (
+        "mantles its wings and shrieks a challenge",
+        "drops from the height in a stoop of talons",
+        "rakes the air and circles for an opening",
+        "screams once, high and cold, and folds to dive",
+        "spreads vast wings that blot out the light",
+        "cocks its head, marking you with a killer's eye",
+        "beats up into the wind to gain the killing height",
+    ),
+    "insectoid": (
+        "clashes its mandibles and rears on spined legs",
+        "chitters a dry warning through a hundred mouthparts",
+        "raises barbed forelimbs and holds, waiting",
+        "scuttles a half-circle on far too many legs",
+        "flexes its carapace and clicks, and clicks, and clicks",
+        "unfolds sawing limbs from beneath its shell",
+        "swings its horned head, feelers reading your fear",
+    ),
+    "elemental": (
+        "gathers itself brighter, humming with charge",
+        "draws the loose light and cold in toward its core",
+        "flickers, reforms a pace nearer, and steadies",
+        "pulses with a glow that carries no warmth",
+        "coalesces out of the air where nothing stood",
+        "hums up the scale toward a note that hurts",
+        "sheds sparks that die before they touch the ground",
+    ),
+    "undead": (
+        "drifts nearer, cold pouring off it in a wave",
+        "turns a ruined face toward you and does not stop",
+        "raises a withered hand and beckons you closer",
+        "moans low, a dead language moving under the sound",
+        "wears a grief older than the ground it rose from",
+        "flickers between one step and the next, gaining",
+        "fixes you with eyes that hold no light at all",
+    ),
+    "colossus": (
+        "grinds forward, stone-jawed and terribly slow",
+        "rises with a shriek of settling rock and metal",
+        "plants a foot that cracks the ground beneath it",
+        "swings a fist the size of a millstone to bear",
+        "looms up until it blots the sky, and steps",
+        "hauls its vast bulk around to face you square",
+        "shudders to life, dust sheeting off ancient shoulders",
+    ),
+}
+
 
 def _telegraph(cls_name: str, idx: int) -> str:
-    return _TELEGRAPHS[(idx + len(cls_name)) % len(_TELEGRAPHS)]
+    """The creature's opening combat tell, drawn from its CLASS pool so the fight reads in
+    character. An unknown class falls back to the generic tells. Deterministic by (class, idx)."""
+    pool = _CLASS_TELEGRAPHS.get(cls_name, _TELEGRAPHS)
+    return pool[(idx + len(cls_name)) % len(pool)]
