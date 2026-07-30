@@ -10,6 +10,7 @@ from parts.world.events import (
     _ECHO_SINKS,
     _ECHO_TOPIC,
     _GMCP_TOPIC,
+    _ROOM_TOPIC,
     announce,
     announce_frame,
     announce_to,
@@ -348,3 +349,144 @@ def test_delivery_survives_a_bus_swap():
     finally:
         unbind_echo("ada")
         bus.reset_bus()
+
+
+# --- Phase 5: room-scoped delivery rides the bus (cross-process rooms) ---------------------------
+# announce / announce_frame publish to a room topic; each process delivers to the sinks IT hosts in
+# that room. In-process the tests above already prove delivery; these pin the SEAM + the frame wire.
+
+
+def test_announce_publishes_a_room_frame_onto_the_bus():
+    published: list[tuple[str, dict[str, object]]] = []
+
+    class SpyBus:
+        def publish(self, topic: str, payload: dict[str, object]) -> None:
+            published.append((topic, payload))
+
+        def subscribe(self, topic: str, handler: object) -> None: ...
+        def unsubscribe(self, topic: str, handler: object) -> None: ...
+
+    bus.set_bus(SpyBus())
+    try:
+        announce("forge", "the anvil rings.", exclude="a")
+        assert published == [
+            (
+                "delivery:room",
+                {"kind": "text", "room": "forge", "text": "the anvil rings.", "exclude": "a"},
+            )
+        ]
+    finally:
+        bus.reset_bus()
+
+
+def test_announce_frame_publishes_the_frame_as_wire_json():
+    published: list[tuple[str, dict[str, object]]] = []
+
+    class SpyBus:
+        def publish(self, topic: str, payload: dict[str, object]) -> None:
+            published.append((topic, payload))
+
+        def subscribe(self, topic: str, handler: object) -> None: ...
+        def unsubscribe(self, topic: str, handler: object) -> None: ...
+
+    bus.set_bus(SpyBus())
+    try:
+        announce_frame("library", SpeechFrame(speaker_id="a", words="hello"), exclude="a")
+        topic, payload = published[0]
+        assert topic == "delivery:room"
+        assert payload["kind"] == "frame"
+        assert payload["frame"] == {
+            "type": "SpeechFrame",
+            "fields": {"speaker_id": "a", "words": "hello"},
+        }
+    finally:
+        bus.reset_bus()
+
+
+def test_a_second_process_delivers_a_room_text_to_its_own_occupants():
+    # The cross-process payoff: a subscriber standing in for another gateway receives the room frame
+    # and delivers to the players IT hosts in that room -- exactly what a remote gateway would do.
+    _, b_heard = _seat("b", "forge")  # b is "hosted here"
+    _, c_heard = _seat("c", "library")  # different room
+    try:
+        # simulate a publish that originated on another process (actor 'a' is not local)
+        bus.get_bus().publish(
+            _ROOM_TOPIC,
+            {"kind": "text", "room": "forge", "text": "a distant hammer falls.", "exclude": "a"},
+        )
+        assert b_heard == ["a distant hammer falls."]  # same room -> heard
+        assert c_heard == []  # other room -> silent
+    finally:
+        unbind_echo("b")
+        unbind_echo("c")
+
+
+def test_a_room_frame_from_the_wire_renders_per_local_recipient():
+    _, b_heard = _seat("b", "library")
+    try:
+        bus.get_bus().publish(
+            _ROOM_TOPIC,
+            {
+                "kind": "frame",
+                "room": "library",
+                "frame": {
+                    "type": "SpeechFrame",
+                    "fields": {"speaker_id": "a", "words": "well met"},
+                },
+                "exclude": "a",
+            },
+        )
+        assert b_heard == ['A says, "well met"']  # reconstructed + rendered locally
+    finally:
+        unbind_echo("b")
+
+
+def test_on_room_ignores_a_malformed_room_field():
+    _, b_heard = _seat("b", "library")
+    try:
+        bus.get_bus().publish(
+            _ROOM_TOPIC, {"kind": "text", "room": 123, "text": "x"}
+        )  # room not a str
+        assert b_heard == []  # nothing delivered, no raise
+    finally:
+        unbind_echo("b")
+
+
+def test_on_room_ignores_a_non_string_text():
+    _, b_heard = _seat("b", "library")
+    try:
+        bus.get_bus().publish(_ROOM_TOPIC, {"kind": "text", "room": "library", "text": 5})
+        assert b_heard == []
+    finally:
+        unbind_echo("b")
+
+
+def test_on_room_drops_a_garbled_frame():
+    _, b_heard = _seat("b", "library")
+    try:
+        # an unknown frame type on the wire -> from_wire raises -> the handler drops it silently
+        bus.get_bus().publish(
+            _ROOM_TOPIC,
+            {"kind": "frame", "room": "library", "frame": {"type": "GhostFrame", "fields": {}}},
+        )
+        assert b_heard == []  # no noise rendered
+    finally:
+        unbind_echo("b")
+
+
+def test_on_room_skips_an_occupant_with_no_sink():
+    # A player in the room's SESSIONS but with no bound echo sink (a plain-text edge / mid-teardown)
+    # is skipped, not crashed on -- covers both the text and frame no-sink branches.
+    SESSIONS["sinkless"] = Session(player_id="sinkless", location="library")  # no bind_echo
+    try:
+        bus.get_bus().publish(_ROOM_TOPIC, {"kind": "text", "room": "library", "text": "hi"})
+        bus.get_bus().publish(
+            _ROOM_TOPIC,
+            {
+                "kind": "frame",
+                "room": "library",
+                "frame": {"type": "SpeechFrame", "fields": {"speaker_id": "a", "words": "hi"}},
+            },
+        )  # must not raise
+    finally:
+        SESSIONS.pop("sinkless", None)

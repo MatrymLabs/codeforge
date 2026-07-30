@@ -8,7 +8,7 @@ to render until a subclass implements it.
 
 import pytest
 
-from parts.world.frames import Frame, SpeechFrame, StrikeFrame
+from parts.world.frames import Frame, SpeechFrame, StrikeFrame, from_wire, to_wire
 
 # --- acceptance --------------------------------------------------------------------------------
 
@@ -71,3 +71,51 @@ def test_strike_frame_needs_a_positive_blow():
 def test_strike_frame_needs_a_verb():
     with pytest.raises(ValueError, match="verb"):
         StrikeFrame(attacker_name="The brawler", verb="  ", target_id="matrym", amount=3)
+
+
+# --- the wire registry: a frame round-trips over the bus as JSON (Phase 5) ----------------------
+
+
+def test_a_speech_frame_round_trips_over_the_wire():
+    frame = SpeechFrame(speaker_id="matrym", words="hello there")
+    wire = to_wire(frame)
+    assert wire == {
+        "type": "SpeechFrame",
+        "fields": {"speaker_id": "matrym", "words": "hello there"},
+    }
+    restored = from_wire(wire)
+    assert isinstance(restored, SpeechFrame)
+    assert restored.render_for("anyone") == 'Matrym says, "hello there"'
+
+
+def test_a_strike_frame_round_trips_over_the_wire():
+    frame = StrikeFrame(attacker_name="The brawler", verb="lunges", target_id="matrym", amount=4)
+    restored = from_wire(to_wire(frame))
+    assert isinstance(restored, StrikeFrame)
+    assert restored == frame  # frozen dataclass equality: every field survived
+
+
+def test_from_wire_rejects_an_unknown_frame_type():
+    with pytest.raises(ValueError, match="unknown frame type"):
+        from_wire({"type": "GhostFrame", "fields": {}})
+
+
+def test_from_wire_rejects_a_missing_field_set():
+    with pytest.raises(ValueError, match="missing its fields"):
+        from_wire({"type": "SpeechFrame"})
+
+
+def test_from_wire_revalidates_the_reconstructed_frame():
+    # A malformed wire frame (blank words) must fail the same loud validation as construction,
+    # so a garbled event never renders as noise on the far process.
+    with pytest.raises(ValueError, match="non-empty words"):
+        from_wire({"type": "SpeechFrame", "fields": {"speaker_id": "matrym", "words": "  "}})
+
+
+def test_to_wire_refuses_an_unregistered_frame():
+    class RogueFrame(Frame):
+        def render_for(self, viewer_id: str) -> str:
+            return "rogue"
+
+    with pytest.raises(ValueError, match="not registered"):
+        to_wire(RogueFrame())

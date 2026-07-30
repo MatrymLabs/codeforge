@@ -14,7 +14,8 @@ State stays canonical; a Frame is a projection request, never a mutation.
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass, is_dataclass
+from typing import Any
 
 from parts.world.session import display_name
 
@@ -31,6 +32,41 @@ class Frame:
         raise NotImplementedError("a Frame subclass must implement render_for")
 
 
+# --- the wire registry: a frame crosses the message bus as JSON, then renders per recipient -------
+# When room delivery rides the bus (Phase 5), a Frame must survive a broker hop, which only carries
+# JSON. A frame serialises to {type, fields}; the receiving process rebuilds it (re-validating on
+# build) and renders it for ITS OWN local viewers, so per-recipient projection is preserved across
+# processes, not flattened to one pre-baked line.
+_WIRE_REGISTRY: dict[str, type[Frame]] = {}
+
+
+def register_frame(cls: type[Frame]) -> type[Frame]:
+    """Register a Frame subclass so it can round-trip over the bus. Decorate each wire type."""
+    _WIRE_REGISTRY[cls.__name__] = cls
+    return cls
+
+
+def to_wire(frame: Frame) -> dict[str, Any]:
+    """Serialise a frame to a JSON-safe dict for the bus. A non-dataclass or unregistered frame
+    fails loud rather than crossing the wire half-formed."""
+    if not is_dataclass(frame) or type(frame).__name__ not in _WIRE_REGISTRY:
+        raise ValueError(f"frame {type(frame).__name__} is not registered for the wire")
+    return {"type": type(frame).__name__, "fields": asdict(frame)}
+
+
+def from_wire(payload: dict[str, Any]) -> Frame:
+    """Reconstruct a frame from its wire dict, re-running the subclass validation. An unknown type
+    or a malformed field set fails loud (ValueError), so a garbled frame never renders as noise."""
+    cls = _WIRE_REGISTRY.get(payload.get("type", ""))
+    if cls is None:
+        raise ValueError(f"unknown frame type {payload.get('type')!r}")
+    fields = payload.get("fields")
+    if not isinstance(fields, dict):
+        raise ValueError("frame wire payload missing its fields")
+    return cls(**fields)
+
+
+@register_frame
 @dataclass(frozen=True)
 class SpeechFrame(Frame):
     """Someone spoke a line aloud in a room."""
@@ -52,6 +88,7 @@ class SpeechFrame(Frame):
         return f'{display_name(self.speaker_id)} says, "{self.words}"'
 
 
+@register_frame
 @dataclass(frozen=True)
 class StrikeFrame(Frame):
     """An NPC landed a blow on a player -- a counter or an unprovoked opening strike.
