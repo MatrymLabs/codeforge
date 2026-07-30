@@ -98,6 +98,7 @@ _GAME_SEED = {
     "broker",
     "socket_bus",
     "aggression",
+    "roaming",
     "session",
     "seed",
     "db",

@@ -15,6 +15,7 @@ greenhold_folk:
   location: greenhold
   dialogue:
     - "Greenhold keeps to itself, traveller, but you are welcome to pass through."
+  wander: true  # ambient: strolls the town on the beat (world life)
 
 elderwatch_folk:
   name: a townsfolk of Elderwatch
@@ -29,6 +30,7 @@ riverbend_folk:
   location: riverbend
   dialogue:
     - "Riverbend keeps to itself, traveller, but you are welcome to pass through."
+  wander: true  # ambient: strolls the town on the beat (world life)
 
 sunmeadow_folk:
   name: a townsfolk of Sunmeadow
@@ -36,6 +38,7 @@ sunmeadow_folk:
   location: sunmeadow
   dialogue:
     - "Sunmeadow keeps to itself, traveller, but you are welcome to pass through."
+  wander: true  # ambient: strolls the town on the beat (world life)
 
 duskwood_vale_warden:
   name: a warden of Duskwood Vale

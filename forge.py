@@ -136,6 +136,7 @@ from parts.world.professions import render_professions
 from parts.world.quest import contracts_view, quest_view
 from parts.world.ranks import wizard_command
 from parts.world.reputation import render_standing
+from parts.world.roaming import roam
 from parts.world.score_sheet import render_score_sheet
 from parts.world.seed import load_splash
 from parts.world.session import SESSIONS, Session, display_name, roster
@@ -2522,9 +2523,9 @@ def handle_command(session: Session, signal: str) -> str:
 
     response = _route(session, true_signal, routed_signal)
     beat = (
-        f"{tick_burns(session)}{tick_afflictions(session)}{menace(session)}{tick_zones(session)}"
-        f"{gather.tick_gather(session)}{tick_climate(session)}{scheduler.tick(session)}"
-        f"{_sands_beat(session)}"
+        f"{tick_burns(session)}{tick_afflictions(session)}{menace(session)}{roam(session)}"
+        f"{tick_zones(session)}{gather.tick_gather(session)}{tick_climate(session)}"
+        f"{scheduler.tick(session)}{_sands_beat(session)}"
     )
     return f"{response}{beat}"
 
