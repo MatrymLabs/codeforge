@@ -12,9 +12,14 @@ rooms:
     name: The Raven Market
     desc: >-
       A close timber square under the black eaves of Duskwood, its roofs loud with roosting ravens
-      and its stalls trading pelts, charms, and quiet. Folk here speak low and lock their doors early.
-      Ways lead OUT to the forest road, NORTH to the wardens' chapel, and WEST to the roost.
-    exits: {out: ravenwatch, north: ravenwatch_chapel, west: ravenwatch_roost}
+      and its stalls trading pelts, charms, and quiet. Folk here speak low and lock their doors early,
+      and lately they lock them earlier. Ways lead OUT to the forest road, NORTH to the wardens'
+      chapel, WEST to the roost, and EAST under the black eaves.
+    exits:
+      out: ravenwatch
+      north: ravenwatch_chapel
+      west: ravenwatch_roost
+      east: ravenwatch_eaves
   ravenwatch_roost:
     name: The Roost
     desc: >-
@@ -35,6 +40,13 @@ rooms:
       the last thoughts of the dead as well. Lie still too long here and you may remember what is not
       yours to remember. A grave-token has gone missing from its cradle. Stairs climb back UP.
     exits: {up: ravenwatch_chapel}
+  ravenwatch_eaves:
+    name: The Black Eaves
+    desc: >-
+      The wood presses close here, the ravens gone silent, the mist thick between black trunks. This
+      is where the townsfolk stopped walking after dusk: something grief-shaped moves under the eaves,
+      wearing sorrow like a cloak. The lit square is back WEST.
+    exits: {west: ravenwatch_market}
 
 hub: {room: ravenwatch, keyword: square, entry: ravenwatch_market}
 
@@ -68,6 +80,34 @@ npcs:
           "Warden of Ravenwatch, keeper of the mourning-book. Someone must remember the dead correctly,
           or the woods will remember them wrong. It is quiet work, and it does not end."
     hp: 0
+  ravenwatch_widow:
+    name: the Widow Enna
+    keywords: [enna, widow, mourner]
+    location: ravenwatch_roost
+    dialogue:
+      - >-
+        "You are not from the Vale, or you would not meet my eye so. Sit by the ravens a while.
+        Grief is the only crop that never fails in Duskwood, and I have a rich harvest of it."
+    topics:
+      grief:
+        - >-
+          "My husband walked into the eaves a year gone and did not come back a man. The thing out
+          there now wears his sorrow, or my own, I cannot tell which. Someone brave should end it,
+          for his sake and mine."
+      wood:
+        - >-
+          "The Duskwood keeps what it takes. Not the body always, but the grief of it, and grief
+          walks. Warden Mabb will tell you it is only sorrow forgetting it is dead. She is not wrong,
+          and it is no comfort at all."
+      warden:
+        - >-
+          "Mabb keeps the mourning-book, and she is right to. But a book remembers the dead, and out
+          in the eaves something is trying to be remembered, and there is a difference she will not say aloud."
+      enna:
+        - >-
+          "The Widow Enna, they call me, as if a name were a thing you keep after. I keep the roost
+          warm and the ravens fed, and I wait, which is the whole trade of Duskwood."
+    hp: 0
   ravenwatch_wight:
     name: a barrow-wight
     keywords: [wight, barrow-wight, barrow]
@@ -81,6 +121,19 @@ npcs:
     level: 18
     tier: normal
     attack_element: DRK
+  ravenwatch_hollow:
+    name: the hollow man of the eaves
+    keywords: [hollow, hollow-man, man]
+    location: ravenwatch_eaves
+    dialogue:
+      - The hollow man turns, wearing a grief that is almost a face, and reaches for you as if it knows you.
+    aggressive: true
+    hp: 150
+    atk: 17
+    xp: 28
+    level: 20
+    tier: normal
+    attack_element: DRK
 
 items:
   ravenwatch_grave_token:
@@ -91,3 +144,12 @@ items:
       A worn coin of grey lead, its face rubbed smooth by grieving thumbs, warm though the barrow is
       cold. Hold it and you half-remember a life that is not yours: a road, a name half-heard, a grief
       that was someone else's first. The wardens read such tokens to keep the dead remembered rightly.
+  ravenwatch_grave_marker:
+    name: a leaning grave-marker
+    keywords: [grave-marker, marker, grave]
+    location: ravenwatch_chapel
+    lore: >-
+      A grey slate marker leaned against the chapel wall, its cut names worn to shadows but for the
+      warden's rubric at the foot: "Here we do not carve the dead their deeds, only that they were
+      remembered, and by whom. A name unremembered walks. A name remembered rests. Keep the book."
+

@@ -176,6 +176,22 @@ def test_the_ravenwatch_quest_walks_and_grants_knowing():
     assert reward == 32 and "grant_rep:knowing" in (finish.effect or "")
 
 
+def test_ravenwatch_has_a_second_quest_of_a_hunt_shape():
+    from parts.shelf.workflow import Fired, Instance, WorkflowEngine
+    from parts.world.quest import _from_seed
+    from parts.world.seed import load_quest
+
+    spec = load_quest(_AETHRYN / "quests" / "ravenwatch_hollow.yaml")
+    assert spec is not None and spec["name"] == "The Hollow Man"
+    assert {step["event"] for step in spec["steps"]} == {"enter", "defeat"}  # a hunt
+    engine = WorkflowEngine(_from_seed(spec)[0])
+    run = Instance(spec["id"], spec["start"], [], {})
+    assert isinstance(engine.advance(run, "enter"), Fired)
+    finish = engine.advance(run, "defeat")
+    assert isinstance(finish, Fired) and engine.is_done(run)
+    assert "grant_rep:gathering" in (finish.effect or "")
+
+
 def test_the_sunscar_quest_walks_and_grants_gathering():
     finish, reward = _walk_quest("sunscar_charter.yaml")
     assert reward == 85 and "grant_rep:gathering" in (finish.effect or "")
