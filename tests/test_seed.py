@@ -565,3 +565,24 @@ def test_load_recipes_rejects_empty_inputs(tmp_path):
     p.write_text("bad:\n  makes: healing_draught\n  inputs: {}\n")
     with pytest.raises(SeedError, match="inputs"):
         load_recipes(p)
+
+
+def test_an_aggressive_wanderer_is_rejected_at_load(tmp_path):
+    """A wanderer must be peaceful: an aggressive NPC that drifts would flee a fight it opened."""
+    from parts.world.seed import load_npcs
+
+    bad = tmp_path / "npcs.yaml"
+    bad.write_text(
+        "beast:\n  location: cell\n  hp: 10\n  atk: 5\n  aggressive: true\n  wander: true\n"
+    )
+    with pytest.raises(SeedError, match="wander.*peaceful|peaceful"):
+        load_npcs(bad)
+
+
+def test_a_valid_wanderer_loads_and_carries_the_flag(tmp_path):
+    """A peaceful ambient NPC flagged wander loads with wander=True."""
+    from parts.world.seed import load_npcs
+
+    good = tmp_path / "npcs.yaml"
+    good.write_text("critter:\n  location: cell\n  hp: 3\n  wander: true\n")
+    assert load_npcs(good)["critter"]["wander"] is True

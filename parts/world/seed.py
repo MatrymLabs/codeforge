@@ -165,6 +165,9 @@ class Npc(TypedDict):
     # A RAID boss: a boss-tier foe on a WEEKLY lockout (parts.world.lockouts), meant for a party,
     # not a solo lap. It composes the trinity + shared rooms + threat + the once-a-week reward.
     raid: NotRequired[bool]
+    # WANDER: an ambient peaceful NPC that drifts between rooms on the beat (parts.world.roaming),
+    # so a town feels lived-in. Must be non-aggressive (a foe cannot wander out of a fight).
+    wander: NotRequired[bool]
     # Optional: a level (1-300) and tier (normal/elite/boss) that scale the kill reward through the
     # challenge curve (parts.shelf.reward_curve): fighting up pays more, grays pay nothing. A foe
     # WITHOUT a level keeps its flat `xp` award (the tutorial default). Validated at load.
@@ -757,6 +760,13 @@ def load_npcs(path: Path) -> dict[str, Npc]:
             raise SeedError(
                 f"NPC '{label}': 'raid' is set but tier is {tier!r}; a raid must be tier 'boss'."
             )
+        # A wanderer is ambient life, not a foe: an aggressive NPC that drifts away would break off
+        # a fight it started. Refuse the contradiction loud rather than ship a foe that flees.
+        if merged.get("wander") and merged["aggressive"]:
+            raise SeedError(
+                f"NPC '{label}': 'wander' is set but the NPC is aggressive; a wanderer must be "
+                "peaceful (it must not leave a fight it opened)."
+            )
         # Optional conversation topics: a keyword -> non-empty list of response lines.
         topics = merged.get("topics")
         if topics is not None and (
@@ -876,6 +886,8 @@ def load_npcs(path: Path) -> dict[str, Npc]:
             npc["tier"] = tier if tier is not None else "normal"
         if merged.get("raid"):
             npc["raid"] = True
+        if merged.get("wander"):
+            npc["wander"] = True
         if drops:
             npc["drops"] = list(drops)
         if loot:

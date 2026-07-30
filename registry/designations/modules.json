@@ -6851,5 +6851,31 @@
     "aliases": [],
     "created": "2026-07-29",
     "updated": "2026-07-29"
+  },
+  {
+    "designation": "MOD-04.138",
+    "name": "roaming",
+    "status": "active",
+    "function": "ambient NPCs that drift between rooms on the world's beat (world life)",
+    "label": "roaming",
+    "file": "parts/world/roaming.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "docs/architecture.md",
+    "tests": "tests/test_roaming.py",
+    "depends_on": [],
+    "related": [
+      "aggression",
+      "npcs"
+    ],
+    "reuse": "the ambient-movement primitive: the peaceful twin of aggression on the same beat -- a seed `wander` NPC drifts room to room near the player (out through an exit, or in from next door), so a static world breathes; deterministic under a seeded RNG, reindexed once per beat",
+    "notes": "The 'NPCs don't move' gap. roam(session) runs in the beat chain after menace; scoped to the player's room + its neighbours (bounded cost). A `wander` NPC in the room may leave via a random exit; a wanderer next door may amble in (at most one per exit). ROAM_CHANCE gates the drift (1-in-N per beat). Seed-gated to PEACEFUL NPCs (wander + aggressive is refused loud -- a foe must not flee a fight it opened). Seeded on three aethryn townsfolk. reindex_npcs() once, only if something moved.",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-30",
+    "updated": "2026-07-30"
   }
 ]
