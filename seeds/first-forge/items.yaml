@@ -39,3 +39,10 @@ worn_boots:
   location: workshop
   slot: feet
   mods: {EVA: 3}
+
+padded_jerkin:
+  name: a padded leather jerkin
+  keywords: [jerkin, vest, body]
+  location: workshop
+  slot: body
+  mods: {DEF: 5}

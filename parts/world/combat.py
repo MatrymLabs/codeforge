@@ -140,6 +140,17 @@ def examine_foe(session: Session, word: str) -> str:
     return f"{name}: {npc['hp_now']}/{npc['hp']} HP.{nature}"
 
 
+def _wear_gear(session: Session, slot: str) -> None:
+    """Wear the piece in `slot` by one point, if the hero has one equipped there. The economy's
+    durability drain: a struck blade and a dented breastplate are what make repair (a coin sink)
+    necessary. A bare slot is a clean no-op."""
+    from parts.world import durability
+
+    iid = session.equipped.get(slot)
+    if iid is not None:
+        durability.wear(iid)
+
+
 def _stat_bonus(session: Session, stat: str) -> int:
     """The total flat bonus to a derived stat from everything a character carries: equipped gear,
     the active job's perks, and the sworn Order. Combat reads the SAME composition as the score
@@ -229,6 +240,8 @@ def _resolve_npc_blow(session: Session, npc: Npc, verb: str) -> str:
     # A typed blow (the foe's attack_element) is scaled by the player's resistance to that element.
     power, healed, resist_note = _typed_blow(session, npc, power)
     session.resources["hp"] = session.resources["hp"].damage(power)
+    if power > 0:  # a landed blow dents worn armour (economy: durability -> repair)
+        _wear_gear(session, "body")
     if healed:  # Absorb: the element mends instead of harming
         session.resources["hp"] = session.resources["hp"].heal(healed)
     name = sentence_case(npc["name"])
@@ -460,6 +473,7 @@ def attack(session: Session, word: str) -> str:
         exclude=session.player_id,
     )
     struck = f"You strike {npc['name']} for {dmg}.{weak}"
+    _wear_gear(session, "weapon")  # a landed strike dulls the blade (economy: durability -> repair)
     defeated, tail = land_hit(session, npc, nid, dmg)
     if not defeated:
         # An aggressive NPC's blow arrives on the world beat (parts.world.aggression), never as a

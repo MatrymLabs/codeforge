@@ -61,6 +61,7 @@ from parts.world import (
 from parts.world import auction as auction_mod
 from parts.world import bank as bank_mod
 from parts.world import chat as chat_mod
+from parts.world import durability as durability_mod
 from parts.world import feats as feats_mod
 from parts.world import friends as friends_mod
 from parts.world import guild as guild_mod
@@ -1736,6 +1737,15 @@ def _build_commands() -> CommandSet:
             "CMD-04.108",
             "rest at an inn's hearth to restore HP/MP to full",
             lambda s, _a: inns_mod.rest(s),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "mend",
+            "CMD-04.111",
+            "mend your worn gear for coins (the economy's repair sink)",
+            lambda s, _a: durability_mod.repair_session(s),
             namespace=CORE,
         )
     )

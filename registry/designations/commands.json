@@ -3596,5 +3596,30 @@
     "aliases": [],
     "created": "2026-07-29",
     "updated": "2026-07-29"
+  },
+  {
+    "designation": "CMD-04.111",
+    "name": "mend",
+    "status": "active",
+    "function": "mend your worn gear for coins (the economy's repair sink)",
+    "label": "mend",
+    "file": "forge.py",
+    "type": "CMD",
+    "domain": "04",
+    "docs": "docs/architecture.md",
+    "tests": "tests/test_durability.py",
+    "depends_on": [],
+    "related": [
+      "durability"
+    ],
+    "reuse": "",
+    "tags": [
+      "command"
+    ],
+    "notes": "Routes to parts.world.durability.repair_session: fully repairs all equipped gear for coins (REPAIR_COST_PER_POINT per point of wear), the economy's coin sink against inflation. Refuses loud (charges nothing) when the purse is short or nothing is worn. Distinct from CMD-04.050 'repair' (the Engineer's field self-heal).",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-30",
+    "updated": "2026-07-30"
   }
 ]

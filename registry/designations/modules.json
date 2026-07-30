@@ -6877,5 +6877,32 @@
     "aliases": [],
     "created": "2026-07-30",
     "updated": "2026-07-30"
+  },
+  {
+    "designation": "MOD-04.139",
+    "name": "durability",
+    "status": "active",
+    "function": "gear wears and breaks; repair is the economy's coin sink (game)",
+    "label": "durability",
+    "file": "parts/world/durability.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "docs/architecture.md",
+    "tests": "tests/test_durability.py",
+    "depends_on": [],
+    "related": [
+      "combat",
+      "equipment",
+      "characters"
+    ],
+    "reuse": "the coin-sink primitive the economy lacked: per-instance gear durability (wear on use, broken at 0 = no mods) + repair for coins, so a faucet-heavy economy finally drains; persists on the one snapshot_item shape worn gear + the bag both ride, so wear survives logout",
+    "notes": "The 'no coin sink' gap. Durability lives on the gear instance (items.ITEMS[iid]['durability'], full when absent - old saves upgrade clean). combat._wear_gear dulls the weapon on a landed player strike + dents the body on a landed foe blow; equipment.equipped_modifiers skips a broken (0) piece so it grants no mods until mended; the `mend` verb (CMD-04.111) -> repair_session charges REPAIR_COST_PER_POINT per point and refuses loud when short. Non-gear items never wear. Persists via characters.snapshot_item/reclone_item (worn gear + bag), so you cannot repair by relogging.",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-30",
+    "updated": "2026-07-30"
   }
 ]

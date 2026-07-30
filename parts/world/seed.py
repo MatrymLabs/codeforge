@@ -128,6 +128,9 @@ class Item(TypedDict):
     # legendary. Set when combat rolls affixes onto an instance; absent (read as "common") on a
     # base seed item. A client colours the loadout by it; readers use `.get("rarity", "common")`.
     rarity: NotRequired[str]
+    # Runtime wear on a gear instance (parts.world.durability): current durability, MAX when absent.
+    # Erodes as the piece is used; at 0 the piece is broken and grants no mods until mended.
+    durability: NotRequired[int]
     # Readable lore: the text `read <item>` shows. A lore book, a record, an inscription -- readable
     # environmental storytelling you can carry. Optional -- a bare item has nothing written on it.
     lore: NotRequired[str]

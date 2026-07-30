@@ -42,12 +42,17 @@ def snapshot_item(iid: str) -> dict[str, Any] | None:
     item = ITEMS.get(iid)
     if item is None:
         return None
-    return {
+    snap: dict[str, Any] = {
         "prototype": prototype_of(iid),
         "name": item["name"],
         "mods": item["mods"],
         "rarity": item.get("rarity", "common"),
     }
+    if item.get("slot"):  # only gear wears; carry its durability so wear survives logout
+        from parts.world.durability import current as _durability
+
+        snap["durability"] = _durability(iid)
+    return snap
 
 
 def reclone_item(snapshot: Any, carrier_tag: str) -> str | None:
@@ -72,6 +77,8 @@ def reclone_item(snapshot: Any, carrier_tag: str) -> str | None:
             ITEMS[iid]["mods"] = {k: v for k, v in snapshot["mods"].items() if isinstance(v, int)}
         if isinstance(snapshot.get("rarity"), str):
             ITEMS[iid]["rarity"] = snapshot["rarity"]
+        if isinstance(snapshot.get("durability"), int):  # restore any accrued wear
+            ITEMS[iid]["durability"] = snapshot["durability"]
     return iid
 
 
