@@ -69,6 +69,7 @@ from parts.world import inns as inns_mod
 from parts.world import mail as mail_mod
 from parts.world import trade as trade_mod
 from parts.world import travel as travel_net
+from parts.world import tutorial as tutorial_mod
 from parts.world.abilities import render_abilities, use_ability
 from parts.world.accounts import (
     has_password,
@@ -1172,6 +1173,15 @@ def _build_commands() -> CommandSet:
             "CMD-04.024",
             "a hint for the current question",
             lambda s, _a: hint(s.player_id),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "tutorial",
+            "CMD-04.112",
+            "the guided next step for a new hero (onboarding)",
+            lambda s, _a: tutorial_mod.next_step(s),
             namespace=CORE,
         )
     )

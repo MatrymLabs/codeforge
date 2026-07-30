@@ -6904,5 +6904,30 @@
     "aliases": [],
     "created": "2026-07-30",
     "updated": "2026-07-30"
+  },
+  {
+    "designation": "MOD-04.140",
+    "name": "tutorial",
+    "status": "active",
+    "function": "a state-driven onboarding ladder: tell a new hero the next step (game)",
+    "label": "tutorial",
+    "file": "parts/world/tutorial.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "docs/architecture.md",
+    "tests": "tests/test_tutorial.py",
+    "depends_on": [],
+    "related": [
+      "session"
+    ],
+    "reuse": "the onboarding primitive: next_step(session) reads the hero's live state and names the single next thing to do (pick a calling -> learn to fight -> gear up -> world open), so guidance is always current and never a scripted rail; greeting() nudges a brand-new hero once and never nags a veteran",
+    "notes": "The 'no tutorial' gap. next_step is a ladder off session.job/level/equipped. The `tutorial` verb (CMD-04.112) surfaces the current step any time; gateway._front_desk fires greeting() once on a fresh character's first scene (gated on no-job so an established hero is never nudged). Distinct from parts/onboarding.py (a WorkflowEngine demo, not a game tutorial).",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-30",
+    "updated": "2026-07-30"
   }
 ]

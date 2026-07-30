@@ -101,6 +101,7 @@ _GAME_SEED = {
     "aggression",
     "roaming",
     "session",
+    "tutorial",
     "seed",
     "db",
     "events",

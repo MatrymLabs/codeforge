@@ -3621,5 +3621,30 @@
     "aliases": [],
     "created": "2026-07-30",
     "updated": "2026-07-30"
+  },
+  {
+    "designation": "CMD-04.112",
+    "name": "tutorial",
+    "status": "active",
+    "function": "the guided next step for a new hero (onboarding)",
+    "label": "tutorial",
+    "file": "forge.py",
+    "type": "CMD",
+    "domain": "04",
+    "docs": "docs/architecture.md",
+    "tests": "tests/test_tutorial.py",
+    "depends_on": [],
+    "related": [
+      "tutorial"
+    ],
+    "reuse": "",
+    "tags": [
+      "command"
+    ],
+    "notes": "Routes to parts.world.tutorial.next_step: the state-driven onboarding ladder. Any hero can call it at any stage; a brand-new hero is also nudged toward it on first login (gateway greeting).",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-30",
+    "updated": "2026-07-30"
   }
 ]
