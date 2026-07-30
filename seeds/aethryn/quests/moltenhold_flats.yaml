@@ -1,0 +1,25 @@
+# SEED: aethryn -- quests/moltenhold_flats.yaml  (Moltenhold's second quest: The Slag-Drake)
+#
+# Auto-loaded. Moltenhold's SIDE quest, a different SHAPE from the foundry fetch: a HUNT. Cinder-
+# Marshal Bex (in the market) points you EAST onto the cinder flats; the quest arms on ENTER and
+# completes on DEFEAT of the slag-scaled drake. A local need (the drake is burning the fuel-crews that
+# keep the slagworks alight), a light thread to the larger world (the heat of the dead Crown breeds
+# its own monsters), a cost (a hard fight in killing heat), a visible result (the flats made workable
+# again), an open remainder (why the wastes' beasts crowd the gate now). Rewards XP + standing with
+# the Making order (the casters and fuel-crews who keep the forge-city working).
+id: moltenhold_flats
+name: The Slag-Drake
+start: offered
+reward_xp: 118
+steps:
+  - {state: offered, event: enter, to: hunting, on_enter: moltenhold_flats}
+  - state: hunting
+    event: defeat
+    to: done
+    on_defeat: moltenhold_drake
+    effect: "award_xp;grant_rep:making:35"
+terminal: [done]
+labels:
+  offered: "Cinder-Marshal Bex says a slag-drake is burning the fuel-crews on the flats. Go EAST from the gate and see."
+  hunting: "The slag-scaled drake wheels over the cinder flats. Put it down so the cutters can work the cinderroot again."
+  done: "*** The slag-drake is dead and the cinder flats can be worked again. Moltenhold's casters owe you fire and forge both, and Bex says so. ***"

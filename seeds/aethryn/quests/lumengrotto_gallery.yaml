@@ -1,0 +1,25 @@
+# SEED: aethryn -- quests/lumengrotto_gallery.yaml  (Lumengrotto's second quest: The Gallery-Stalker)
+#
+# Auto-loaded. Lumengrotto's SIDE quest, a different SHAPE from the vault fetch: a HUNT. Delve-Warden
+# Sorrel (in the market) points you EAST into the dark gallery where the crystal-light fails; the
+# quest arms on ENTER and completes on DEFEAT of the blind gallery-stalker. A local need (the stalker
+# is taking delvers at the town's edge), a light thread to the larger world (the deep is mostly dark
+# and mostly teeth), a cost (a hard fight where the light gives out), a visible result (the edge held),
+# an open remainder (why the dark presses toward the glow now). Rewards XP + standing with the
+# Gathering order (the terrace-farmers and delvers who work the deep for what the town lives on).
+id: lumengrotto_gallery
+name: The Gallery-Stalker
+start: offered
+reward_xp: 100
+steps:
+  - {state: offered, event: enter, to: hunting, on_enter: lumengrotto_gallery}
+  - state: hunting
+    event: defeat
+    to: done
+    on_defeat: lumengrotto_stalker
+    effect: "award_xp;grant_rep:gathering:35"
+terminal: [done]
+labels:
+  offered: "Delve-Warden Sorrel says a stalker has come up out of the black. Go EAST from the market into the dark gallery and see."
+  hunting: "The blind gallery-stalker turns toward your heartbeat. Put it down before it finds the way to the terraces."
+  done: "*** The gallery-stalker is dead and the town's edge holds another season. Lumengrotto's delve-wardens call you kin of the deep, and Sorrel says so. ***"

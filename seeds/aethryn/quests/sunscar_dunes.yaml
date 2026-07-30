@@ -1,0 +1,25 @@
+# SEED: aethryn -- quests/sunscar_dunes.yaml  (Sunscar's second quest: The Sand-Wyrm)
+#
+# Auto-loaded. Sunscar's SIDE quest, a different SHAPE from the glass-vault fetch: a HUNT. Caravan-
+# Captain Doran (in the bazaar) points you EAST onto the dig-dunes; the quest arms on ENTER and
+# completes on DEFEAT of the pale sand-wyrm. A local need (the wyrm is eating the diggers the guild
+# lives on), a light thread to the larger world (the digging wakes what the sand buried), a cost (a
+# hard fight on open dune), a visible result (the shafts made workable again), an open remainder (what
+# else the digging is waking). Rewards XP + standing with the Warcraft order (the caravan-guard that
+# fights the desert while the diggers rob it).
+id: sunscar_dunes
+name: The Sand-Wyrm
+start: offered
+reward_xp: 82
+steps:
+  - {state: offered, event: enter, to: hunting, on_enter: sunscar_dunes}
+  - state: hunting
+    event: defeat
+    to: done
+    on_defeat: sunscar_wyrm
+    effect: "award_xp;grant_rep:warcraft:32"
+terminal: [done]
+labels:
+  offered: "Caravan-Captain Doran says a sand-wyrm dens in the dig-dunes. Go EAST from the bazaar onto the sand and see."
+  hunting: "The pale sand-wyrm rises from the old bones. Put it down so the dune-crews can work the shafts again."
+  done: "*** The sand-wyrm is dead and the dig-dunes can be worked again. Sunscar's caravan-guard call you one of their own now, and Doran says so. ***"
