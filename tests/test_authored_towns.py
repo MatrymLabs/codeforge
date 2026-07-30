@@ -245,6 +245,40 @@ def test_batch_a_towns_carry_a_vendor_a_node_and_a_working_economy():
         assert len([i for i in items.values() if "lore" in i]) >= 2, f"{stem}: two lore items"
 
 
+def test_moltenholds_second_quest_is_a_making_hunt():
+    _walk_hunt("moltenhold_flats.yaml", "making", 118)
+
+
+def test_lumengrottos_second_quest_is_a_gathering_hunt():
+    _walk_hunt("lumengrotto_gallery.yaml", "gathering", 100)
+
+
+def test_sunscars_second_quest_is_a_warcraft_hunt():
+    _walk_hunt("sunscar_dunes.yaml", "warcraft", 82)
+
+
+def test_batch_b_towns_carry_a_vendor_a_node_and_a_working_economy():
+    # Density-v2 (batch B): Moltenhold, Lumengrotto, Sunscar each gain the same working-economy
+    # depth as batch A -- a vendor who sells supplies and buys the town's own gather-node yield, a
+    # node, three reactive voices, two dangers, and two lore items.
+    for stem, material in (
+        ("moltenhold", "cinderroot"),
+        ("lumengrotto", "glowcap"),
+        ("sunscar_city", "dustbloom"),
+    ):
+        rooms, npcs, items = towns.raise_town(_AUTHORED / f"{stem}.yaml")
+        vendors = [n for n in npcs.values() if n.get("shop")]
+        assert len(vendors) == 1, f"{stem}: exactly one vendor"
+        shop = vendors[0]["shop"]
+        assert shop.get("sells"), f"{stem}: the vendor sells supplies"
+        assert shop.get("buys", {}).get(material), f"{stem}: the vendor buys its own node's yield"
+        assert any(r.get("node") == material for r in rooms.values()), f"{stem}: a {material} node"
+        talkers = [n for n in npcs.values() if n["hp"] == 0 and n.get("topics")]
+        assert len(talkers) >= 3, f"{stem}: three reactive voices"
+        assert len([n for n in npcs.values() if n.get("aggressive")]) >= 2, f"{stem}: two dangers"
+        assert len([i for i in items.values() if "lore" in i]) >= 2, f"{stem}: two lore items"
+
+
 def test_the_sunscar_quest_walks_and_grants_gathering():
     finish, reward = _walk_quest("sunscar_charter.yaml")
     assert reward == 85 and "grant_rep:gathering" in (finish.effect or "")
