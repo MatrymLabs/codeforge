@@ -514,13 +514,17 @@
     "domain": "04",
     "docs": "docs/architecture.md",
     "tests": "tests/test_events.py",
-    "depends_on": [],
-    "related": [],
-    "reuse": "",
+    "depends_on": [
+      "bus"
+    ],
+    "related": [
+      "presence"
+    ],
+    "reuse": "the delivery bus: room-scoped fan-out (announce/announce_frame off local SESSIONS) plus membership-scoped fan-out (announce_to/broadcast/push_gmcp) that rides the message bus, so a cohort spanning processes is reached everywhere once a broker is set",
     "tags": [
       "module"
     ],
-    "notes": "",
+    "notes": "Phase 4: the membership channels (announce_to/broadcast/push_gmcp, and push_channel over them) now PUBLISH onto the message bus (topics delivery:echo/delivery:gmcp) instead of touching local sinks directly; one subscriber per process (_on_echo/_on_gmcp, wired via rewire_delivery + a bus.on_rewire hook so a bus swap re-attaches them) delivers to the sinks THAT process hosts. In-process the InProcessBus delivers synchronously = behaviour-identical; a broker fans the same publish across processes. Room-scoped announce/announce_frame stay local (room occupancy is per-process world state until Phase 5 shared state).",
     "superseded_by": "",
     "aliases": [
       "MOD-UM04-S01-N001-008-R0"

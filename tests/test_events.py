@@ -5,11 +5,14 @@ import copy
 import pytest
 
 from forge import handle_command, render_scene
-from parts.world import doors, items, npcs
+from parts.world import bus, doors, items, npcs
 from parts.world.events import (
     _ECHO_SINKS,
+    _ECHO_TOPIC,
+    _GMCP_TOPIC,
     announce,
     announce_frame,
+    announce_to,
     bind_echo,
     bind_gmcp,
     broadcast,
@@ -245,3 +248,103 @@ def test_push_channel_builds_a_comm_channel_frame():
         ]
     finally:
         unbind_gmcp("ada")
+
+
+# --- Phase 4: the membership channels ride the bus (cross-process routing) -----------------------
+# announce_to / broadcast / push_gmcp publish onto the message bus instead of touching local sinks
+# directly, so a cohort split across processes is reached everywhere. In one process the in-process
+# bus delivers synchronously (the tests above already prove that path); these pin the SEAM.
+
+
+def test_announce_to_publishes_onto_the_bus():
+    # A spy bus standing in for a broker: it captures the publish instead of delivering. This is
+    # what a second process would receive off the wire, proving the message left this process.
+    published: list[tuple[str, dict[str, object]]] = []
+
+    class SpyBus:
+        def publish(self, topic: str, payload: dict[str, object]) -> None:
+            published.append((topic, payload))
+
+        def subscribe(self, topic: str, handler: object) -> None: ...
+        def unsubscribe(self, topic: str, handler: object) -> None: ...
+
+    bus.set_bus(SpyBus())
+    try:
+        announce_to(["ada", "bram"], "the horn sounds.", exclude="cara")
+        assert published == [
+            (
+                _ECHO_TOPIC,
+                {"targets": ["ada", "bram"], "text": "the horn sounds.", "exclude": "cara"},
+            )
+        ]
+    finally:
+        bus.reset_bus()
+
+
+def test_broadcast_publishes_a_targets_none_frame():
+    published: list[tuple[str, dict[str, object]]] = []
+
+    class SpyBus:
+        def publish(self, topic: str, payload: dict[str, object]) -> None:
+            published.append((topic, payload))
+
+        def subscribe(self, topic: str, handler: object) -> None: ...
+        def unsubscribe(self, topic: str, handler: object) -> None: ...
+
+    bus.set_bus(SpyBus())
+    try:
+        broadcast("the world shudders.")
+        assert published == [
+            (_ECHO_TOPIC, {"targets": None, "text": "the world shudders.", "exclude": ""})
+        ]
+    finally:
+        bus.reset_bus()
+
+
+def test_push_gmcp_publishes_onto_the_bus():
+    published: list[tuple[str, dict[str, object]]] = []
+
+    class SpyBus:
+        def publish(self, topic: str, payload: dict[str, object]) -> None:
+            published.append((topic, payload))
+
+        def subscribe(self, topic: str, handler: object) -> None: ...
+        def unsubscribe(self, topic: str, handler: object) -> None: ...
+
+    bus.set_bus(SpyBus())
+    try:
+        push_gmcp(["ada"], "Char.Party", {"size": 2})
+        assert published == [
+            (
+                _GMCP_TOPIC,
+                {"targets": ["ada"], "package": "Char.Party", "data": {"size": 2}, "exclude": ""},
+            )
+        ]
+    finally:
+        bus.reset_bus()
+
+
+def test_a_second_subscriber_sees_the_cohort_message():
+    # The cross-process payoff in one process: another subscriber on the delivery topic (a second
+    # gateway) receives the same echo frame and delivers to the members IT hosts.
+    heard: list[dict[str, object]] = []
+    bus.get_bus().subscribe(_ECHO_TOPIC, heard.append)
+    try:
+        announce_to(["ada"], "rally to me.")
+        assert {"targets": ["ada"], "text": "rally to me.", "exclude": ""} in heard
+    finally:
+        bus.get_bus().unsubscribe(_ECHO_TOPIC, heard.append)
+
+
+def test_delivery_survives_a_bus_swap():
+    # Swap in a fresh bus (standing for a broker). The rewire hook must re-attach the delivery
+    # handler, or a production broker injection would silently stop cohort delivery.
+    heard: list[str] = []
+    bind_echo("ada", heard.append)
+    try:
+        bus.reset_bus()  # fires the rewire hooks -> _on_echo re-subscribes to the new bus
+        announce_to(["ada"], "still here.")
+        assert heard == ["still here."]
+    finally:
+        unbind_echo("ada")
+        bus.reset_bus()

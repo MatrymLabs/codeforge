@@ -68,4 +68,5 @@ def _reset() -> None:
     reconnect()
 
 
+bus.on_rewire(reconnect)  # a bus swap re-attaches the roster handler
 reconnect()  # subscribe to the default in-process bus at import
