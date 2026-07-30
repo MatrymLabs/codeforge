@@ -1,0 +1,92 @@
+# SEED: aethryn -- authored/brightwater.yaml  (Brightwater, a river-city of Caeloria, level ~30)
+#
+# The map places Brightwater as a single hub; this is its polished interior. It expands the named
+# location per the seed recipe and carries Caeloria's canon identity: the successor kingdom where
+# law, religion, and relic ownership collide. Under the mill-weirs runs an old-world sluice, a
+# flow-control system no one now fully understands, and the state means to license whatever comes
+# out of it. The conflict is ordinary and political (who owns what the river gives up), the clue to
+# the larger world is the sluice itself (pre-Fall abundance infrastructure), and the rumour is left
+# unproven. Installed by parts/world/authored_towns.py; its quest is quests/brightwater_sluice.yaml.
+
+rooms:
+  brightwater_market:
+    name: The Weir Market
+    desc: >-
+      The bright heart of Brightwater: stalls strung along the mill-weirs, the river loud and white
+      over the sluice-gates below. Millers, fishers, and a licence-clerk or two trade over the
+      spray. Ways lead OUT to the river gate, NORTH to the millrace, and WEST to the Licensing Hall.
+    exits: {out: brightwater, north: brightwater_millrace, west: brightwater_hall}
+  brightwater_millrace:
+    name: The Millrace
+    desc: >-
+      A working waterfront of turning wheels and dripping timber, the river driven hard through
+      narrow races. A worn stair leads DOWN to the old sluice beneath the weirs, and the market is
+      back SOUTH.
+    exits: {south: brightwater_market, down: brightwater_sluice}
+  brightwater_hall:
+    name: The Licensing Hall
+    desc: >-
+      A cool stone hall of ledgers and seals, where the state of Caeloria registers every relic the
+      river gives up before a soul may keep it. A licensor keeps the great book here. The market is
+      back EAST.
+    exits: {east: brightwater_market}
+  brightwater_sluice:
+    name: The Old Sluice
+    desc: >-
+      A flooded chamber older than the mills raised over it: pale channels and a bank of seized
+      flow-gates that once ruled the whole river without a hand. Something still ticks behind the
+      water. Stairs climb back UP to the millrace.
+    exits: {up: brightwater_millrace}
+
+hub: {room: brightwater, keyword: square, entry: brightwater_market}
+
+npcs:
+  brightwater_licensor:
+    name: Licensor Aldre
+    keywords: [aldre, licensor, clerk]
+    location: brightwater_hall
+    dialogue:
+      - >-
+        "You have the look of someone the river might use. There is a token down in the old sluice,
+        pale metal, older than the city. The state must register it before any hand keeps it. Bring
+        it up to me and there is a fee in it for you, and the law's good favour."
+    topics:
+      sluice:
+        - >-
+          "The old sluice ruled the whole river once, so the ledgers say, without a hand to turn a
+          gate. We license what comes out of it. We do not pretend to understand it."
+      relic:
+        - >-
+          "Everything the river gives up is the state's to register first. That is the law. Whether
+          it is right is a question above a clerk's pay."
+      rumor:
+        - >-
+          "They say the old gates still answer a spoken word, if you knew the right one. They say a
+          great many things in the Weir Market. Go down and see."
+      aldre:
+        - >-
+          "Licensor of Brightwater, third of my line to keep this book. The river gives; the state
+          records; the people grumble. So it has always been."
+    hp: 0
+  brightwater_eels:
+    name: a knot of sluice-eels
+    keywords: [eels, knot, sluice-eels]
+    location: brightwater_sluice
+    dialogue:
+      - The eels coil and snap in the pale flooded channels.
+    aggressive: true
+    hp: 210
+    atk: 19
+    xp: 30
+    level: 28
+    tier: normal
+
+items:
+  brightwater_sluice_token:
+    name: a warden's sluice-token
+    keywords: [sluice-token, token, warden]
+    location: brightwater_sluice
+    lore: >-
+      A flat token of pale, untarnished metal, its face worked with channels like a river seen from
+      above. It is warm to the touch though the water is cold, as if some old purpose still runs in
+      it, waiting for a gate to open.
