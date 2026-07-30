@@ -49,6 +49,7 @@ from parts.world.events import SHUTDOWN, bind_echo, bind_gmcp, unbind_echo, unbi
 from parts.world.ranks import has_rank
 from parts.world.seed import load_splash
 from parts.world.session import SESSIONS, Session
+from parts.world.socket_bus import maybe_wire_broker
 
 TICK_LOCK = threading.Lock()
 _counter_lock = threading.Lock()
@@ -511,6 +512,9 @@ def serve(host: str = "0.0.0.0", port: int = 4000) -> None:
         print(f"REFUSING TO START: {exc}", file=sys.stderr)
         raise SystemExit(2) from exc
     _configure_logging()  # gateway events emit as structured JSON from here
+    broker_bus = maybe_wire_broker()  # CODEFORGE_BUS_BROKER set -> join a multi-process deployment
+    if broker_bus is not None:
+        _LOG.info("bus_broker_wired", broker=os.environ.get("CODEFORGE_BUS_BROKER"))
     with ForgeGateServer((host, port), _GateHandler) as server:
 
         def _save_and_stop() -> None:
