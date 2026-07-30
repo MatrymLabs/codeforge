@@ -103,6 +103,7 @@ _GAME_SEED = {
     "session",
     "tutorial",
     "canon",
+    "survey",
     "seed",
     "db",
     "events",
