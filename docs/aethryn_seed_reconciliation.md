@@ -67,6 +67,10 @@ Checked against `seeds/aethryn/` and `parts/world/` on the day this doc landed.
 - **6 named seas** (Western Ocean, Northland Sea, Central Sea, Sundaram Sea, Southern Ocean, Eastern
   Ocean).
 - **33 of 35 canonical anchors** present in `settlements.yaml` / `dungeons.yaml` (see gap below).
+- **Collective-term tiers.** `canon.yaml`'s `collective_names` carries each of the six names for the
+  Seven Crowns with its own tier and worldview: Seven Crowns and Seven Wounds are `CANON_LOCKED`
+  (C1, neutral / common), the four ideological names are `RUMOR` (C4, belief), each with its `usage`.
+  Validated by `canon.py` (`collective_names`).
 - **The region adjacency graph.** `seeds/aethryn/world_graph.yaml` encodes every region's land
   neighbours and bordering seas from the seed's `adjacent_regions` / `water_edges`;
   `parts/world/worldgraph.py` validates it against canon and computes reachability. All 14 regions
@@ -85,10 +89,6 @@ Checked against `seeds/aethryn/` and `parts/world/` on the day this doc landed.
   Scars, Ashforged Houses, Deep Archive, Tidebound League, Greenward Compact. `parts/world/factions.py`
   exists but carries the legacy design's factions, not these. The seed's world-validation list
   includes "invalid faction references," so these belong in canon data eventually.
-- **Collective-term tiers.** The seed tiers the six collective names precisely: Seven Crowns and
-  Seven Wounds are **C1**, while Seven Blasphemies, Murdered Crowns, Seven Lessons, and Seven Engines
-  are **C4** (ideological belief). `canon.yaml` currently carries all six as one `CANON_WORKING`
-  block; refining them to match (2 anchored, 4 rumor, each with its `usage`) is a small follow-up.
 - **Two anchor names drifted from canon (a keel call, not a quick fix).** The seed's canonical
   anchors `Red Dune` (Zhaar Desert) and `Cinderfire` (Ashen Wastes) exist in the world under variant
   names: `Red Dunes` and `Cragfire`. These names are woven through `zones.yaml`, `npcs.yaml`,

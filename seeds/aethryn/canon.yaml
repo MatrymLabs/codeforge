@@ -62,12 +62,16 @@ unresolved_questions:
   - Whether the gods acted to preserve creation, preserve their authority, or both.
 
 # --- The Seven Crowns: the old civilization's seven principal centres (CANON_LOCKED sites) --------
-# Collective names, chosen by a speaker's worldview (a reverent pilgrim says one thing, a technologist
-# another): The Seven Crowns / The Seven Wounds / The Seven Blasphemies / The Murdered Crowns /
-# The Seven Lessons / The Seven Engines.
-seven_crowns_names:
-  canon_status: CANON_WORKING
-  names: [Seven Crowns, Seven Wounds, Seven Blasphemies, Murdered Crowns, Seven Lessons, Seven Engines]
+# The collective name a speaker uses reveals their worldview, and each name carries its OWN tier
+# (from the source seed): the neutral/common names are anchored (CANON_LOCKED), while the ideological
+# names are belief, not fact, and are tagged RUMOR (they may be held sincerely but are not canon).
+collective_names:
+  - {id: seven_crowns,     name: The Seven Crowns,     canon_status: CANON_LOCKED, usage: neutral or scholarly}
+  - {id: seven_wounds,     name: The Seven Wounds,     canon_status: CANON_LOCKED, usage: common modern}
+  - {id: seven_blasphemies, name: The Seven Blasphemies, canon_status: RUMOR,      usage: god-loyalist}
+  - {id: murdered_crowns,  name: The Murdered Crowns,  canon_status: RUMOR,        usage: anti-divine or restorationist}
+  - {id: seven_lessons,    name: The Seven Lessons,    canon_status: RUMOR,        usage: penitential}
+  - {id: seven_engines,    name: The Seven Engines,    canon_status: RUMOR,        usage: technical or relic-hunter}
 
 seven_crowns:
   - id: the_flamewrought_forge
