@@ -6929,5 +6929,32 @@
     "aliases": [],
     "created": "2026-07-30",
     "updated": "2026-07-30"
+  },
+  {
+    "designation": "MOD-04.141",
+    "name": "canon",
+    "status": "active",
+    "function": "Aethryn's LOCKED world canon as machine-checkable data, so generators cannot contradict it (game)",
+    "label": "canon",
+    "file": "parts/world/canon.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "docs/aethryn_lore_bible.md",
+    "tests": "tests/test_canon.py",
+    "depends_on": [
+      "seed"
+    ],
+    "related": [
+      "travel"
+    ],
+    "reuse": "the canon-authority primitive: load_canon validates the world's established facts (the divine strike, Netharion the first artificial god, the Seven Crowns and their functions, the 14 regions + threat bands) at load and fails loud like every seed loader; the CANON_STATUSES ladder (CANON_LOCKED > CANON_WORKING > AUTHORED_LOCAL > GENERATED_LOCAL > RUMOR) is the provenance stamp every future generator writes, and check_canon confirms the shipped world still corresponds to canon (drift caught, never hidden)",
+    "notes": "The prompt's first law: established canon may NEVER be overwritten by generated content. seeds/aethryn/canon.yaml is the single source; parts/world/canon.py loads + validates it (exactly 7 CANON_LOCKED crowns, exactly 14 CANON_LOCKED regions with ordered threat bands, facts with id+text, valid statuses) and exposes seven_crowns/regions/locked_region_names/unresolved_questions/is_generated_status. check_canon delegates to a pure _correspondence_violations so the drift guard is unit-testable: today every locked region is a registered waystone zone and every Seven Crown site a registered settlement/dungeon (zero drift). Readable companion: docs/aethryn_lore_bible.md (supersedes the legacy docs/world_bible.md).",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-30",
+    "updated": "2026-07-30"
   }
 ]
