@@ -8,16 +8,33 @@ fans an event out to every echo sink in a room, excluding the actor.
 This is the embryo of the canonical event bus: today the payload
 is rendered text; later it becomes validated event frames that
 sinks render per-recipient.
+
+Two delivery scopes, two homes (Phase 4). ROOM-scoped delivery (announce,
+announce_frame) reads the local SESSIONS map -- room occupancy is this
+process's world state, so it stays local until shared world state exists
+(Phase 5). MEMBERSHIP-scoped delivery (announce_to a cohort, broadcast to
+everyone, push_gmcp to a set) is process-agnostic -- a party or guild can
+span gateways -- so it PUBLISHES onto the message bus. In one process the
+in-process bus delivers synchronously to this process's own subscriber, so
+behaviour is identical; once a broker is injected the same publish fans out
+to every process, and each delivers to the members it hosts.
 """
 
 from collections.abc import Callable, Iterable
+from typing import Any
 
+from parts.world import bus
 from parts.world.frames import Frame
 from parts.world.session import SESSIONS
 
 EchoSink = Callable[[str], None]
 
 _ECHO_SINKS: dict[str, EchoSink] = {}
+
+# The bus topics the membership-scoped channels ride. One subscriber per process per topic (wired
+# below) delivers a published message to the sinks THIS process hosts.
+_ECHO_TOPIC = "delivery:echo"
+_GMCP_TOPIC = "delivery:gmcp"
 
 # The gateway registers its stop function here at boot; the @shutdown
 # verb calls it. Dependency inversion: forge never imports the gateway.
@@ -79,20 +96,37 @@ def announce_to(player_ids: Iterable[str], text: str, exclude: str = "") -> None
     """Deliver text to a specific SET of players (a party, a guild, any cohort), not a room.
 
     The complement to announce(): where announce() is scoped by location, this is scoped by an
-    explicit membership. An id with no bound sink (an offline member) is simply skipped, so a
+    explicit membership, so it rides the bus and reaches members on any process. An id with no bound
+    sink (an offline member, or one hosted elsewhere with no broker yet) is simply skipped, so a
     cohort message never fails because someone logged out."""
-    for player_id in player_ids:
+    bus.get_bus().publish(
+        _ECHO_TOPIC, {"targets": list(player_ids), "text": text, "exclude": exclude}
+    )
+
+
+def broadcast(text: str) -> None:
+    """Deliver text to every sink in the world, no exclusions -- across every process on the bus."""
+    bus.get_bus().publish(_ECHO_TOPIC, {"targets": None, "text": text, "exclude": ""})
+
+
+def _on_echo(payload: dict[str, Any]) -> None:
+    """Deliver a published echo message to the sinks THIS process hosts. targets=None means broadcast
+    to every local sink; a list means only those ids. The one place membership echo actually lands."""
+    text = payload.get("text")
+    if not isinstance(text, str):
+        return
+    targets = payload.get("targets")
+    exclude = payload.get("exclude", "")
+    if targets is None:  # broadcast: every sink this process holds
+        for held_id, held_sink in list(_ECHO_SINKS.items()):
+            _deliver(held_id, held_sink, text)
+        return
+    for player_id in targets:
         if player_id == exclude:
             continue
         sink = _ECHO_SINKS.get(player_id)
         if sink is not None:
             _deliver(player_id, sink, text)
-
-
-def broadcast(text: str) -> None:
-    """Deliver text to every sink in the world, no exclusions."""
-    for player_id, sink in list(_ECHO_SINKS.items()):
-        _deliver(player_id, sink, text)
 
 
 # --- the GMCP push channel: structured frames to a set of players -----------------------------
@@ -123,9 +157,24 @@ def rename_gmcp(old_id: str, new_id: str) -> None:
 
 def push_gmcp(player_ids: Iterable[str], package: str, data: object, exclude: str = "") -> None:
     """Push a GMCP frame to a specific SET of players (a party, a guild) -- the typed complement to
-    announce_to. A player with no GMCP sink (plain-text client, or offline) is simply skipped, and a
-    sink that raises is pruned, so one dead client never crashes another's command."""
-    for player_id in player_ids:
+    announce_to. Rides the bus like announce_to, so members on any process receive it. A player with
+    no GMCP sink (plain-text client, or offline) is simply skipped, and a sink that raises is pruned,
+    so one dead client never crashes another's command. (A broker requires JSON-serialisable data,
+    which GMCP frames already are.)"""
+    bus.get_bus().publish(
+        _GMCP_TOPIC,
+        {"targets": list(player_ids), "package": package, "data": data, "exclude": exclude},
+    )
+
+
+def _on_gmcp(payload: dict[str, Any]) -> None:
+    """Deliver a published GMCP frame to the sinks THIS process hosts."""
+    package = payload.get("package")
+    if not isinstance(package, str):
+        return
+    data = payload.get("data")
+    exclude = payload.get("exclude", "")
+    for player_id in payload.get("targets") or []:
         if player_id == exclude:
             continue
         sink = _GMCP_SINKS.get(player_id)
@@ -134,6 +183,20 @@ def push_gmcp(player_ids: Iterable[str], package: str, data: object, exclude: st
                 sink(package, data)
             except OSError:
                 unbind_gmcp(player_id)
+
+
+def rewire_delivery() -> None:
+    """(Re)subscribe this process's echo + GMCP delivery handlers to the bus in force. Registered as
+    a bus rewire hook and run at import, so a bus swap (a broker replacing the default) never leaves
+    delivery attached to a dead bus."""
+    active = bus.get_bus()
+    for topic, handler in ((_ECHO_TOPIC, _on_echo), (_GMCP_TOPIC, _on_gmcp)):
+        active.unsubscribe(topic, handler)  # idempotent
+        active.subscribe(topic, handler)
+
+
+bus.on_rewire(rewire_delivery)
+rewire_delivery()  # attach to the default in-process bus at import
 
 
 def push_channel(

@@ -57,6 +57,24 @@ class InProcessBus:
 
 _BUS: MessageBus = InProcessBus()
 
+# Core subscribers (delivery, presence) hold subscriptions that must survive a bus swap: when the
+# backing changes, a subscription on the old bus is dead. Rather than have the bus import those
+# modules (a layering violation), they REGISTER a rewire hook here; set_bus/reset_bus re-fire every
+# hook so each re-subscribes to the new bus. Dependency inversion, the same shape SHUTDOWN uses.
+_REWIRE_HOOKS: list[Callable[[], None]] = []
+
+
+def on_rewire(hook: Callable[[], None]) -> None:
+    """Register a callback to re-run whenever the bus is swapped (a subscriber re-attaches itself)."""
+    if hook not in _REWIRE_HOOKS:
+        _REWIRE_HOOKS.append(hook)
+
+
+def _fire_rewire() -> None:
+    for hook in list(_REWIRE_HOOKS):
+        with suppress(Exception):  # nosec B110 -- one bad rewire hook never blocks the others
+            hook()
+
 
 def get_bus() -> MessageBus:
     """The message bus in force. Single-process by default; a broker adapter once one is set."""
@@ -65,12 +83,14 @@ def get_bus() -> MessageBus:
 
 def set_bus(bus: MessageBus) -> None:
     """Swap the backing bus (a network adapter in production, a fake in tests). Callers are
-    unchanged; they always go through get_bus()."""
+    unchanged; they always go through get_bus(). Core subscribers re-attach via the rewire hooks."""
     global _BUS
     _BUS = bus
+    _fire_rewire()
 
 
 def reset_bus() -> None:
     """Restore the default single-process bus (for tests, so one test's bus never leaks onward)."""
     global _BUS
     _BUS = InProcessBus()
+    _fire_rewire()
