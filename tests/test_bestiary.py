@@ -69,6 +69,31 @@ def test_the_combat_tell_is_class_flavored_not_generic():
     assert any(line in tell for line in _CLASS_TELEGRAPHS["colossus"]), "the beast speaks its class"
 
 
+def test_the_same_slot_in_different_rooms_mints_different_creatures():
+    # Regression: every wildlands region restarts its room index at 0, so without a per-room phase
+    # the same (biome, level, idx) minted the identical creature in every region and a few names
+    # swamped the wilds. The room label now phases the cosmetic axes -- distinct rooms, new life.
+    names = {make_beast("volcanic-flats", 200, 5, f"room_{r}")["name"] for r in range(40)}
+    assert len(names) >= 12, f"only {len(names)} creatures across 40 rooms -- the phase is dead"
+
+
+def test_the_adjective_and_kin_axes_decorrelate():
+    # The adjective pool (12) and a class's kin pool (3) must vary INDEPENDENTLY. A single shared
+    # room-phase links them (3 divides 12), capping the adj-kin pairs at 12 of the 36 possible and
+    # gutting the variety. Two independent phases must realize far more of the space.
+    from parts.world.bestiary import _CLASSES
+
+    pairs = set()
+    for r in range(400):
+        b = make_beast("volcanic-flats", 200, 0, f"cell_{r}")  # idx 0 -> one fixed class
+        adj, kin = b["keywords"][0], b["keywords"][1]
+        pairs.add((adj, kin))
+    # one class has 3 kin; the biome has 12 adjectives -> 36 possible pairs. The correlated bug
+    # capped this at 12; independent phases must clear it comfortably.
+    assert len(pairs) >= 24, f"only {len(pairs)} adj-kin pairs -- the two axes are still correlated"
+    assert all(kin in _CLASSES["elemental"]["kin"] for _, kin in pairs), "kin stays in its class"
+
+
 def test_biome_marks_the_element_and_the_name():
     # Environmental coherence: a beast of a biome-typed class takes on its land's element (volcanic
     # -> FIR, glacier -> ICE), and the biome adjective appears in the name. Classes with an

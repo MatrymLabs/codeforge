@@ -62,42 +62,146 @@ _BIOME_LIFE: dict[str, dict[str, object]] = {
     "temperate-meadow": {
         "classes": ("canid", "boar", "avian", "reptile"),
         "el": "WND",
-        "adj": ("meadow", "field", "green", "russet", "hedgerow"),
+        "adj": (
+            "meadow",
+            "field",
+            "green",
+            "russet",
+            "hedgerow",
+            "clover",
+            "thistle",
+            "briar",
+            "upland",
+            "downland",
+            "gorse",
+            "heath",
+        ),
     },
     "wild-forest": {
         "classes": ("canid", "felid", "boar", "insectoid"),
         "el": "WND",
-        "adj": ("wood", "bramble", "shadow", "moss", "thorn"),
+        "adj": (
+            "wood",
+            "bramble",
+            "shadow",
+            "moss",
+            "thorn",
+            "fern",
+            "birch",
+            "hollow",
+            "timber",
+            "root",
+            "gloam",
+            "dusk",
+        ),
     },
     "highland-moor": {
         "classes": ("canid", "avian", "ursine", "undead"),
         "el": "LGT",
-        "adj": ("moor", "crag", "cairn", "windward", "peat"),
+        "adj": (
+            "moor",
+            "crag",
+            "cairn",
+            "windward",
+            "peat",
+            "tor",
+            "fell",
+            "heather",
+            "scree",
+            "mist",
+            "granite",
+            "brae",
+        ),
     },
     "coastal-strand": {
         "classes": ("reptile", "avian", "insectoid", "undead"),
         "el": "WTR",
-        "adj": ("strand", "tide", "brine", "shingle", "wrack"),
+        "adj": (
+            "strand",
+            "tide",
+            "brine",
+            "shingle",
+            "wrack",
+            "surf",
+            "foam",
+            "reef",
+            "salt",
+            "storm",
+            "cliff",
+            "spray",
+        ),
     },
     "glacier-waste": {
         "classes": ("canid", "elemental", "ursine", "undead"),
         "el": "ICE",
-        "adj": ("rime", "glacier", "frost", "hoar", "floe"),
+        "adj": (
+            "rime",
+            "glacier",
+            "frost",
+            "hoar",
+            "floe",
+            "ice",
+            "snow",
+            "sleet",
+            "glaze",
+            "drift",
+            "pale",
+            "boreal",
+        ),
     },
     "volcanic-flats": {
         "classes": ("elemental", "reptile", "colossus", "insectoid"),
         "el": "FIR",
-        "adj": ("ash", "cinder", "slag", "ember", "obsidian"),
+        "adj": (
+            "ash",
+            "cinder",
+            "slag",
+            "ember",
+            "obsidian",
+            "basalt",
+            "magma",
+            "sulphur",
+            "char",
+            "scoria",
+            "pyre",
+            "forge",
+        ),
     },
     "living-jungle": {
         "classes": ("felid", "reptile", "insectoid", "boar"),
         "el": "PSN",
-        "adj": ("mire", "canopy", "green", "vine", "root"),
+        "adj": (
+            "mire",
+            "canopy",
+            "green",
+            "vine",
+            "root",
+            "fern",
+            "spore",
+            "bloom",
+            "sap",
+            "moss",
+            "humid",
+            "tangle",
+        ),
     },
     "salt-desert": {
         "classes": ("canid", "reptile", "undead", "insectoid"),
         "el": "ERT",
-        "adj": ("salt", "dune", "ash", "glass", "grey"),
+        "adj": (
+            "salt",
+            "dune",
+            "ash",
+            "glass",
+            "grey",
+            "bleach",
+            "mirage",
+            "bone",
+            "scour",
+            "crust",
+            "waste",
+            "sun",
+        ),
     },
 }
 
@@ -153,10 +257,20 @@ def make_beast(biome: str, level: int, idx: int, room: str) -> Npc:
     adjs: tuple = life["adj"]  # type: ignore[assignment]
     biome_el: str = life["el"]  # type: ignore[assignment]
 
+    # Two per-room phases (char-sums of the room label) decorrelate the COSMETIC axes -- which kin
+    # of the class, and which biome adjective -- across regions. Without them every region restarts
+    # its index at 0, so same-index rooms in the same biome minted the identical creature and a few
+    # names swamped the wilds. The two phases must be INDEPENDENT: a single shared phase links adj
+    # (mod 12) and kin (mod 3), and since 3 divides 12 only a third of the pairs can appear. A plain
+    # char-sum drives adj; a position-weighted one drives kin, so they decorrelate. The class stays
+    # idx-driven (it fixes the element, the stats, the cull ecology), but every kin of every class
+    # still appears across a zone, so no cull target vanishes -- only its room shifts.
+    adj_phase = sum(ord(c) for c in room)
+    kin_phase = sum((i + 1) * ord(c) for i, c in enumerate(room))
     cls_name = _pick(classes, idx)
     cls = _CLASSES[cls_name]
-    kin = _pick(cls["kin"], idx // len(classes))  # type: ignore[arg-type]
-    adj = _pick(adjs, idx // 2)
+    kin = _pick(cls["kin"], idx // len(classes) + kin_phase)  # type: ignore[arg-type]
+    adj = _pick(adjs, idx // 2 + adj_phase)
     size_word, size_mult = _SIZES[_size_tier(level, idx)]
 
     element = str(cls["el"] or biome_el)  # class element if set, else the biome's
