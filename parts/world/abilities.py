@@ -1,10 +1,11 @@
-"""CARD: abilities -- a job's usable combat moves: strikes that scale on a stat, and self-heals.
+"""CARD: abilities -- a job's usable combat moves: strikes that scale on a stat, and heals.
 
 This is the batch the Job card promised ("combat wiring is a later batch"). An ability is data
 (parts.world.seed.Ability, loaded from abilities.yaml): a `strike` deals `power + stat // 3` damage
-to a target, a `heal` restores the wielder's HP, and each costs MP. Which jobs may wield an ability
-lives in the ability's `jobs` list, so a Vanguard and a Scholar fight differently without a line of
-hardcoding. `use <ability> [on <target>]` fires one; `skills` lists what your calling can wield.
+to a target, a `heal` restores HP -- the wielder's, or an ALLY's in the same room (the trinity seam:
+a healer can mend a party-mate, not only themselves) -- and each costs MP. Which jobs may wield an
+ability lives in the ability's `jobs` list, so a Vanguard and a Scholar fight differently without a
+line of hardcoding. `use <ability> [on <target>]` fires one; `skills` lists what your calling has.
 
 Strikes reuse combat.land_hit, so an ability shares the exact defeat/award/loot/quest machinery the
 basic attack uses -- a foe felled by a skill still drops loot and advances a quest.
@@ -19,10 +20,10 @@ A move with no cooldown stays MP-limited only.
 from __future__ import annotations
 
 from parts.world import combat
-from parts.world.events import announce
+from parts.world.events import announce, announce_to
 from parts.world.npcs import NPCS, trace_npc
 from parts.world.seed import SEED_DIR, Ability, Npc, load_abilities
-from parts.world.session import Session, display_name, sentence_case
+from parts.world.session import SESSIONS, Session, display_name, sentence_case
 
 # The world is data: a seed's abilities live in its own abilities.yaml (empty if it ships none).
 ABILITIES: dict[str, Ability] = load_abilities(SEED_DIR / "abilities.yaml")
@@ -77,7 +78,7 @@ def render_abilities(session: Session) -> str:
     subjob_only = {label for label, _ in pairs} - {label for label, _ in abilities_for(session.job)}
     lines = ["Abilities:"]
     for label, a in pairs:
-        target = "self" if a["kind"] == "heal" else "a target"
+        target = "self or ally" if a["kind"] == "heal" else "a target"
         scale = f" +{a['scales']}/3" if a["scales"] else ""
         via = "  (subjob)" if label in subjob_only else ""
         cd = a.get("cooldown", 0)
@@ -126,13 +127,7 @@ def use_ability(session: Session, arg: str) -> str:
     who = display_name(session.player_id)
     move = ability["name"]
     if ability["kind"] == "heal":
-        session.resources["mp"] = mp.damage(ability["mp_cost"])
-        amount = _magnitude(session, ability)
-        session.resources["hp"] = session.resources["hp"].heal(amount)
-        healed = session.resources["hp"]
-        announce(session.location, f"{who} channels {move}.", exclude=session.player_id)
-        _arm_cooldown(session, label, ability)
-        return f"You channel {move} and recover {amount} HP. ({healed.current}/{healed.maximum})"
+        return _channel_heal(session, ability, label, target_word.strip(), who, move)
 
     # a strike or a brand needs a target
     nid = trace_npc(target_word.strip(), session.location) if target_word.strip() else None
@@ -147,6 +142,53 @@ def use_ability(session: Session, arg: str) -> str:
     result = _channel_offense(session, ability, npc, nid, who, move)
     _arm_cooldown(session, label, ability)
     return result
+
+
+def _trace_ally(target_word: str, session: Session) -> Session | None:
+    """Resolve who a heal should mend: an empty or self-referring target is the wielder; otherwise a
+    living player in the same room, matched by handle or display name (the trinity seam). A cross-
+    process ally (a party-mate on another gateway) is not a local session, so it is out of reach
+    until shared authoritative session state exists -- room-local healing, honestly bounded."""
+    key = target_word.strip().lower()
+    mine = display_name(session.player_id).lower()
+    if key in ("", "me", "self", "myself", session.player_id.lower(), mine):
+        return session
+    for pid, other in list(SESSIONS.items()):
+        if other is session or other.location != session.location:
+            continue
+        if key in (pid.lower(), display_name(pid).lower()):
+            return other
+    return None
+
+
+def _channel_heal(
+    session: Session, ability: Ability, label: str, target_word: str, who: str, move: str
+) -> str:
+    """Mend the wielder or an ally in the room. Spends MP and arms the cooldown only on a real
+    target; a named ally who is not present fails loud so the MP is never burned into the void."""
+    ally = _trace_ally(target_word, session)
+    if ally is None:
+        return f"There is no ally called '{target_word}' here to mend."
+    session.resources["mp"] = session.resources["mp"].damage(ability["mp_cost"])
+    amount = _magnitude(session, ability)
+    ally.resources["hp"] = ally.resources["hp"].heal(amount)
+    healed = ally.resources["hp"]
+    _arm_cooldown(session, label, ability)
+    if ally is session:
+        announce(session.location, f"{who} channels {move}.", exclude=session.player_id)
+        return f"You channel {move} and recover {amount} HP. ({healed.current}/{healed.maximum})"
+    ally_name = display_name(ally.player_id)
+    announce(session.location, f"{who} channels {move} on {ally_name}.", exclude=session.player_id)
+    announce_to(
+        [ally.player_id],
+        f"{who} channels {move} on you; you recover {amount} HP. "
+        f"({healed.current}/{healed.maximum})",
+        exclude=session.player_id,
+    )
+    return (
+        f"You channel {move} on {ally_name}, mending {amount} HP. "
+        f"({healed.current}/{healed.maximum})"
+    )
 
 
 def _arm_cooldown(session: Session, label: str, ability: Ability) -> None:
