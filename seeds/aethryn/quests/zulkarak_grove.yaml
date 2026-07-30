@@ -1,0 +1,25 @@
+# SEED: aethryn -- quests/zulkarak_grove.yaml  (Zul'karak's second quest: The Bloom-Stalker)
+#
+# Auto-loaded. Zul'karak's SIDE quest, a different SHAPE from the laboratory fetch: a HUNT. Canopy-
+# Warden Tavi (in the market) points you EAST into the wild grove; the quest arms on ENTER and
+# completes on DEFEAT of the wild bloom-stalker. A local need (the thing is taking the vinesilk-
+# gatherers), a light thread to the larger world (the Loom's designs grown wild past any leash), a cost
+# (a hard fight in the untended canopy), a visible result (the grove made workable again), an open
+# remainder (why the designed things crowd the city now). Rewards XP + standing with the Gathering
+# order (the canopy-gatherers who harvest the jungle's engineered medicine).
+id: zulkarak_grove
+name: The Bloom-Stalker
+start: offered
+reward_xp: 88
+steps:
+  - {state: offered, event: enter, to: hunting, on_enter: zulkarak_grove}
+  - state: hunting
+    event: defeat
+    to: done
+    on_defeat: zulkarak_bloomstalker
+    effect: "award_xp;grant_rep:gathering:33"
+terminal: [done]
+labels:
+  offered: "Canopy-Warden Tavi says a wild thing dens in the grove. Go EAST from the market into the wild canopy and see."
+  hunting: "The wild bloom-stalker drops from the high boughs. Put it down so the gatherers can work the grove again."
+  done: "*** The bloom-stalker is dead and the wild grove can be worked again. Zul'karak's canopy-folk name you a friend of the high boughs, and Tavi says so. ***"
