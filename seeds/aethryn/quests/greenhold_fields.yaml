@@ -1,0 +1,25 @@
+# SEED: aethryn -- quests/greenhold_fields.yaml  (Greenhold's second quest: The Field-Beast)
+#
+# Auto-loaded. Greenhold's SIDE quest, a different SHAPE from the cistern fetch: a HUNT. Miller Harl
+# (in the market) points you EAST to the fields; the quest arms when you ENTER the fields and
+# completes when you DEFEAT the great field-boar. No fetch, no return -- variety in the questing. A
+# local need (the boar is ruining the barley), a light thread to the larger world (the fields are
+# built over old works, per the gossip), a cost (a real fight for a low-level hero), a visible result
+# (the crop saved), an open remainder (whether the beast and the failing cistern are truly unrelated).
+# Rewards XP + standing with the Gathering order (the farmers and field-folk).
+id: greenhold_fields
+name: The Field-Beast
+start: offered
+reward_xp: 35
+steps:
+  - {state: offered, event: enter, to: hunting, on_enter: greenhold_fields}
+  - state: hunting
+    event: defeat
+    to: done
+    on_defeat: greenhold_boar
+    effect: "award_xp;grant_rep:gathering:20"
+terminal: [done]
+labels:
+  offered: "Miller Harl says a beast is ruining his barley. Go EAST out to the green fields and see for yourself."
+  hunting: "The great field-boar is here among the trampled rows. Put it down."
+  done: "*** The field-boar is dead and the barley is saved. Miller Harl will not go hungry, nor will Greenhold. Harl owes you a good turn, and says so loudly. ***"

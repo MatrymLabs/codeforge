@@ -23,7 +23,13 @@ _AETHRYN = Path(__file__).resolve().parent.parent / "seeds" / "aethryn"
 _AUTHORED = _AETHRYN / "authored"
 _GH = _AUTHORED / "greenhold.yaml"
 
-_GH_INTERIOR = {"greenhold_market", "greenhold_smithy", "greenhold_granary", "greenhold_undercroft"}
+_GH_INTERIOR = {
+    "greenhold_market",
+    "greenhold_smithy",
+    "greenhold_granary",
+    "greenhold_undercroft",
+    "greenhold_fields",
+}
 
 
 # --- Acceptance: the pipeline discovers and builds every authored town ----------------------------
@@ -50,14 +56,20 @@ def test_every_authored_town_builds_and_its_exits_stay_within_the_town():
             assert item["location"].split(":")[-1] in rooms
 
 
-def test_greenhold_keeps_its_authored_shape():
+def test_greenhold_is_a_dense_authored_town():
     rooms, npcs, items = towns.raise_town(_GH)
-    assert set(rooms) == _GH_INTERIOR
-    assert npcs["greenhold_keeper"]["hp"] == 0 and npcs["greenhold_keeper"].get("topics")
-    vermin = npcs["greenhold_vermin"]
-    assert vermin.get("aggressive") and vermin["hp"] > 0 and vermin["atk"] > 0
-    key = items["greenhold_valve_key"]
-    assert key["location"] == "room:greenhold_undercroft" and "lore" in key
+    assert set(rooms) == _GH_INTERIOR  # five subareas incl. the fields
+    # Multiple voices: a keeper, a miller, a gossip (peaceful, with topics), and two foes.
+    talkers = [n for n in npcs.values() if n["hp"] == 0 and n.get("topics")]
+    assert len(talkers) >= 3
+    foes = [n for n in npcs.values() if n.get("aggressive")]
+    assert {"greenhold_vermin", "greenhold_boar"} <= set(npcs)
+    assert len(foes) == 2 and all(f["hp"] > 0 and f["atk"] > 0 for f in foes)
+    # Side content: a quest item AND a readable parish record (environmental storytelling).
+    assert "lore" in items["greenhold_valve_key"]
+    assert "lore" in items["greenhold_parish_record"]
+    # Reactivity: NPCs cross-reference each other and the town's mysteries.
+    assert any("beast" in n.get("topics", {}) for n in npcs.values())
 
 
 # --- Acceptance: it composes onto the real generated aethryn map ----------------------------------
@@ -109,6 +121,24 @@ def test_the_granary_quest_still_walks_to_done_and_rewards():
     finish, reward = _walk_quest("greenhold_intro.yaml")
     assert reward == 40
     assert "award_xp" in (finish.effect or "") and "grant_rep:making" in (finish.effect or "")
+
+
+def test_greenholds_second_quest_is_a_hunt_of_a_different_shape():
+    # The field-beast quest is enter -> DEFEAT (a hunt), not a fetch: quest variety.
+    from parts.shelf.workflow import Fired, Instance, WorkflowEngine
+    from parts.world.quest import _from_seed
+    from parts.world.seed import load_quest
+
+    spec = load_quest(_AETHRYN / "quests" / "greenhold_fields.yaml")
+    assert spec is not None and spec["name"] == "The Field-Beast"
+    events = {step["event"] for step in spec["steps"]}
+    assert "defeat" in events and "take" not in events  # a hunt, not a fetch
+    engine = WorkflowEngine(_from_seed(spec)[0])
+    run = Instance(spec["id"], spec["start"], [], {})
+    assert isinstance(engine.advance(run, "enter"), Fired)  # into the fields
+    finish = engine.advance(run, "defeat")  # fell the boar
+    assert isinstance(finish, Fired) and engine.is_done(run)
+    assert "grant_rep:gathering" in (finish.effect or "")
 
 
 def test_the_brightwater_quest_walks_to_done_and_rewards():
