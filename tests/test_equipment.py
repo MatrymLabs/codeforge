@@ -134,3 +134,43 @@ def test_apply_stat_modifiers_clamps_an_out_of_range_derived_stat() -> None:
     base = derived_stats({"strength": -50}, 0)  # yields a negative ATK
     out = apply_stat_modifiers(base, {"ATK": [StatModifier("sword", flat=5)]})
     assert out["ATK"] == 5  # base clamped to 0, then + the flat modifier; no ValueError
+
+
+# --- gear score: the endgame treadmill metric (derived from worn mods) ---------------------------
+
+
+def test_item_power_sums_an_items_mods() -> None:
+    from parts.world.equipment import item_power
+
+    assert item_power("forge_wrench") == 9  # ATK 6 + ACC 3
+
+
+def test_gear_score_is_zero_ungeared_and_sums_worn_power() -> None:
+    from parts.world.equipment import gear_score
+
+    s = _engineer_with_wrench()
+    assert gear_score(s) == 0  # nothing worn yet
+    equip(s, "wrench")
+    assert gear_score(s) == 9  # the wrench's power now counts
+
+
+def test_the_score_sheet_shows_the_gear_score_when_geared() -> None:
+    from parts.world.score_sheet import render_score_sheet
+
+    s = _engineer_with_wrench()
+    equip(s, "wrench")
+    sheet = sheet_from_session(s)
+    assert sheet is not None
+    assert sheet.gear_score == 9
+    assert "Gear Score : 9" in render_score_sheet(sheet)
+
+
+def test_an_ungeared_sheet_hides_the_gear_score() -> None:
+    from parts.world.score_sheet import render_score_sheet
+
+    s = Session(player_id="matrym", location="workshop")
+    bind_calling(s, "engineer")
+    sheet = sheet_from_session(s)
+    assert sheet is not None
+    out = render_score_sheet(sheet)
+    assert "Gear Score" not in out  # hidden at score 0, no clutter for a fresh hero

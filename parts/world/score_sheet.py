@@ -119,6 +119,8 @@ def _equipment_lefts(sheet: CharacterSheet) -> list[str]:
     ]
     lines = [" Equipment"]
     lines += [f" {slot} : {item}" for slot, item in slots if item]
+    if sheet.gear_score:  # the endgame treadmill number; hidden for an ungeared hero (score 0)
+        lines.append(f" Gear Score : {sheet.gear_score}")
     if sheet.key_item:
         lines.append(f" Key Item : {sheet.key_item}")
     return lines

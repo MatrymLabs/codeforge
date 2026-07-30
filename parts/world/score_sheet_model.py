@@ -84,6 +84,7 @@ class CharacterSheet:
     attributes: dict[str, int] = field(default_factory=dict)
     derived: dict[str, int] = field(default_factory=dict)
     equipment: EquipmentLoadout = field(default_factory=EquipmentLoadout)
+    gear_score: int = 0  # the summed power of equipped gear (the endgame treadmill metric)
     resistances: dict[str, str] = field(default_factory=dict)
     key_item: str = ""
     jobs: tuple[JobLine, ...] = ()  # every unlocked job, for the `jobs` view

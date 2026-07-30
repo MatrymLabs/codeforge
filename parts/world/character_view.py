@@ -15,7 +15,12 @@ from __future__ import annotations
 
 from parts.shelf.stats import StatModifier
 from parts.world.derived import derived_stats
-from parts.world.equipment import apply_stat_modifiers, equipped_loadout, equipped_modifiers
+from parts.world.equipment import (
+    apply_stat_modifiers,
+    equipped_loadout,
+    equipped_modifiers,
+    gear_score,
+)
 from parts.world.jobs import BASE_HP, BASE_MP, JOBS
 from parts.world.progression import get_next_level_threshold
 from parts.world.score_sheet_model import (
@@ -175,6 +180,7 @@ def sheet_from_session(session: Session) -> CharacterSheet | None:
         ),
         tp_rows=tp_rows,
         equipment=equipped_loadout(session),
+        gear_score=gear_score(session),  # the endgame treadmill number: worn power, sets included
         # A character knows their own resistances: declared levels shown, the rest Normal.
         resistances={code: job["resistances"].get(code, "Normal") for code in RESIST_ORDER},
         jobs=tuple(
