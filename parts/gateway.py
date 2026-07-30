@@ -42,7 +42,7 @@ from parts.gmcp import (
 )
 from parts.shelf.bulkhead import Bulkhead, BulkheadFull
 from parts.shelf.telnet_codec import IAC, WILL, WONT, strip_iac
-from parts.world import bans, guild, maintenance_mode, party, presence, trade
+from parts.world import bans, guild, maintenance_mode, party, presence, trade, tutorial
 from parts.world.accounts import password_fixable
 from parts.world.characters import save_all, save_character
 from parts.world.events import SHUTDOWN, bind_echo, bind_gmcp, unbind_echo, unbind_gmcp
@@ -429,6 +429,11 @@ class _GateHandler(socketserver.StreamRequestHandler):
                 _forgive_address(ip)  # a proven-good login clears any prior fumbles
                 if response.startswith("Welcome,"):  # a fresh character needs its opening scene
                     self._send(render_scene(session.location, viewer=session.player_id))
+                    nudge = tutorial.greeting(
+                        session
+                    )  # onboarding: point a new hero at the first step
+                    if nudge:
+                        self._send(nudge)
                 return True
             _log_turnaway(ip)  # this login/register attempt failed
         self._send("Too many attempts. The door closes.")
