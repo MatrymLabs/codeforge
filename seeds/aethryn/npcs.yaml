@@ -655,6 +655,7 @@ netharions_throne_guardian:
   attack_element: FIR
   level: 300
   tier: boss
+  raid: true  # the final weekly raid: Netharion's Throne, the apex of the climb
   lethal: true
   drops: [greater_healing_draught]
   loot: {ember_shard: 5, nothing: 2}
@@ -671,6 +672,7 @@ the_rifted_abyss_guardian:
   attack_element: FIR
   level: 300
   tier: boss
+  raid: true  # an apex weekly raid: bring a party and the trinity, not a solo lap
   lethal: true
   drops: [greater_healing_draught]
   loot: {ember_shard: 5, nothing: 2}

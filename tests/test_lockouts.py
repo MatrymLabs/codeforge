@@ -54,3 +54,16 @@ def test_a_garbled_ledger_restores_empty_not_crashing():
 def test_today_utc_is_an_iso_date():
     day = lockouts.today_utc()
     assert len(day) == 10 and day[4] == "-" and day[7] == "-"  # YYYY-MM-DD
+
+
+def test_this_week_utc_is_an_iso_year_week():
+    week = lockouts.this_week_utc()
+    year, _, num = week.partition("-W")
+    assert year.isdigit() and len(year) == 4  # YYYY
+    assert num.isdigit() and len(num) == 2 and 1 <= int(num) <= 53  # Www
+
+
+def test_a_weekly_and_a_daily_lock_are_independent():
+    s = Session(player_id="bram")
+    lockouts.claim(s, "raid:abyss", "2026-W31")  # a weekly raid claim
+    assert lockouts.claim(s, "boss:abyss", "2026-07-29") is True  # the daily key is its own lock

@@ -882,3 +882,62 @@ def test_a_normal_foe_pays_no_daily_bounty(monkeypatch):
     s = _fighter()
     out = _fell(s, "dummy")  # the training dummy is no boss
     assert "Daily bounty!" not in out
+
+
+# --- raids: a boss-tier foe on a WEEKLY lockout, the party's marquee objective -------------------
+
+
+def _spawn_raid(label: str = "abyssal", location: str = "courtyard", hp: int = 6, level: int = 50):
+    npcs.NPCS[label] = {
+        "name": f"the {label} guardian",
+        "keywords": [label],
+        "location": location,
+        "dialogue": ["..."],
+        "next_line": 0,
+        "hp": hp,
+        "hp_now": hp,
+        "xp": 40,
+        "atk": 0,
+        "level": level,
+        "tier": "boss",
+        "raid": True,
+    }
+    npcs.reindex_npcs()
+    return label
+
+
+def test_first_raid_kill_of_the_week_pays_a_weekly_bounty(monkeypatch):
+    from parts.world import lockouts
+
+    monkeypatch.setattr(lockouts, "this_week_utc", lambda: "2026-W31")
+    s = _fighter()
+    _spawn_raid()
+    first = _fell(s, "abyssal")
+    assert "Weekly raid bounty!" in first  # the week's first kill pays the marquee reward
+    second = _fell(s, "abyssal")
+    assert "Weekly raid bounty!" not in second  # farmable, but the bounty is once a week
+    assert "You find" in second  # base coins still drop
+
+
+def test_a_new_week_reopens_the_raid_bounty(monkeypatch):
+    from parts.world import lockouts
+
+    s = _fighter()
+    _spawn_raid()
+    monkeypatch.setattr(lockouts, "this_week_utc", lambda: "2026-W31")
+    assert "Weekly raid bounty!" in _fell(s, "abyssal")
+    monkeypatch.setattr(lockouts, "this_week_utc", lambda: "2026-W32")
+    assert "Weekly raid bounty!" in _fell(s, "abyssal")  # the week rolled: the raid resets
+
+
+def test_a_raid_uses_the_weekly_not_the_daily_cadence(monkeypatch):
+    # A raid outranks the plain boss branch: it claims the WEEKLY key, not the daily one, so a raid
+    # cleared this week does not also silently consume the day's boss lockout.
+    from parts.world import lockouts
+
+    monkeypatch.setattr(lockouts, "this_week_utc", lambda: "2026-W31")
+    s = _fighter()
+    _spawn_raid()
+    _fell(s, "abyssal")
+    assert lockouts.is_locked(s, "raid:abyssal", "2026-W31") is True  # the raid week is claimed
+    assert lockouts.is_locked(s, "boss:abyssal", lockouts.today_utc()) is False  # daily untouched
