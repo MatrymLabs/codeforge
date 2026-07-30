@@ -82,6 +82,42 @@ def test_generation_is_deterministic():
     assert {k: v["desc"] for k, v in a.items()} == {k: v["desc"] for k, v in b.items()}
 
 
+def test_every_biome_pairs_features_and_atmospheres_coprimely():
+    # The variety engine: a room's text pairs a terrain FEATURE (idx % F) with an ATMOSPHERE
+    # (idx % A). If F and A share a factor the pair cannot reach F*A combinations and variety
+    # silently collapses. This gate pins gcd(F, A) == 1 per biome, so the CRT multiplier holds.
+    from math import gcd
+
+    from parts.world.wildlands import _BIOMES
+
+    for biome, d in _BIOMES.items():
+        f, a = len(d["features"]), len(d.get("atmospheres", []))
+        assert a >= 8, f"{biome}: needs a real atmosphere pool, has {a}"
+        assert gcd(f, a) == 1, f"{biome}: features({f}) and atmospheres({a}) must be coprime"
+
+
+def test_a_room_description_carries_both_a_feature_and_an_atmosphere():
+    _, rooms, _ = _world_with(_CFG)
+    from parts.world.wildlands import _BIOMES
+
+    meadow = _BIOMES["temperate-meadow"]
+    a_room = next(iter(rooms.values()))
+    desc = a_room["desc"]
+    assert "; " in desc, "the two axes are joined by a semicolon"
+    assert any(feat in desc for feat in meadow["features"]), "a terrain feature is present"
+    assert any(atmo in desc for atmo in meadow["atmospheres"]), "an atmosphere is present"
+
+
+def test_the_atmosphere_axis_multiplies_the_descriptive_variety():
+    # A single long region should read varied, not as a handful of clones cycling. With 8 features
+    # and 9 atmospheres the pair space is 72, so a 60-room region clears a healthy variety floor
+    # (the pre-atmosphere generator, with only 8 features, capped hard below this).
+    cfg = {**_CFG, "trail_length": 60, "branch_every": 6, "notable_every": 0}
+    _, rooms, _ = _world_with(cfg)
+    descs = [r["desc"] for r in rooms.values()]
+    assert len(set(descs)) >= 40, f"only {len(set(descs))} unique of {len(descs)} rooms: too samey"
+
+
 def test_zone_covers_every_generated_room_with_metadata():
     _, rooms, _ = _world_with(_CFG)
     zones = wildlands_zones([_CFG])

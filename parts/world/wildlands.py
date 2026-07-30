@@ -132,6 +132,17 @@ _BIOMES: dict[str, dict[str, Any]] = {
             "a ring of ember-mushrooms glows faint in a grass hollow",
             "a broken plough rusts where a farm once was, the field gone to meadow",
         ],
+        "atmospheres": [
+            "the air is sweet with crushed grass and the drone of bees",
+            "a warm wind combs the grass into long silver waves",
+            "somewhere unseen a lark climbs and will not stop singing",
+            "the sun lies heavy and gold and the whole field seems to breathe",
+            "cloud-shadows drift across the green like slow grazing beasts",
+            "the far hedges shimmer in the heat and a dog barks once, a mile off",
+            "dusk comes soft here, and the first ember-moths wake in the dew",
+            "rain has just passed, and the turf steams and smells of iron and clover",
+            "the quiet runs deep enough to hear your own blood, and nothing means you harm",
+        ],
     },
     "wild-forest": {
         "lead": "The wood closes overhead into a green, breathing dusk",
@@ -149,6 +160,17 @@ _BIOMES: dict[str, dict[str, Any]] = {
             "a hunter's blind rots in the crook of an old oak, long abandoned",
             "a spring wells up cold and clear beneath a mossed rock-face",
             "a shrine-post to the wood-warden leans, its offerings gone to seed",
+        ],
+        "atmospheres": [
+            "the air hangs green and close, and every sound comes back changed",
+            "light falls in coins through the canopy and moves when you do",
+            "something large shifts its weight far off, and then holds very still",
+            "the wood smells of wet bark, cold sap, and older, darker growth",
+            "birdsong stops as you pass and starts again once you are gone",
+            "a warm wind moves the high branches though the floor stays dead calm",
+            "the dusk here never fully lifts, and the shadows keep their own counsel",
+            "resin and rot mingle sweet and sharp, and the ferns drip in the hush",
+            "you have the sense of being counted, and not by anything kind",
         ],
     },
     "highland-moor": {
@@ -168,6 +190,17 @@ _BIOMES: dict[str, dict[str, Any]] = {
             "a ruined bothy offers cold shelter, its hearth long dead",
             "a boundary-cairn of the old marches stands taller than a man",
         ],
+        "atmospheres": [
+            "the wind never falls, and it carries the smell of peat and cold stone",
+            "cloud tears low over the tops and the light changes minute to minute",
+            "a curlew cries somewhere out in the grey and nothing answers",
+            "the cold gets into the bones out here, patient and unhurried",
+            "mist rolls up out of the hollows and swallows the cairns one by one",
+            "the silence is huge, broken only by the wind worrying the heather",
+            "rain comes sideways and stinging, then clears to a hard clean light",
+            "the ground gives spongy underfoot and the air tastes of iron and rain",
+            "you feel very small here, and very watched, though nothing shows itself",
+        ],
     },
     "coastal-strand": {
         "lead": "The trail runs the strand where the Cooling-Sea meets the land",
@@ -185,6 +218,17 @@ _BIOMES: dict[str, dict[str, Any]] = {
             "a beacon-cairn stands on the point, its old fire-basket rusted through",
             "a fisher's upturned hull rots above the tideline, a shelter of sorts",
             "a shrine to the drowned keeps a guttering lamp against the sea",
+        ],
+        "atmospheres": [
+            "the air is thick with salt and the endless grinding of the surf",
+            "gulls wheel and complain overhead and the wind never lets up",
+            "the tide is turning, and the whole shore mutters and shifts with it",
+            "spray hangs in the cold air and beads on everything the wind touches",
+            "far out, a bell-buoy tolls slow over the grey heave of the sea",
+            "the light off the water is hard and bright and edged with cold",
+            "kelp and brine and old tar hang heavy, and something drowned besides",
+            "fog rolls in off the Cooling-Sea and the land ends ten paces off",
+            "the sea says the same thing over and over, and it is not comforting",
         ],
     },
     "glacier-waste": {
@@ -204,6 +248,17 @@ _BIOMES: dict[str, dict[str, Any]] = {
             "a Silent Anvil shrine-post forbids the touching of what the ice keeps",
             "a warm-camp's dead fire-ring marks where salvagers wintered and left",
         ],
+        "atmospheres": [
+            "the cold is a physical weight, and the air burns going down",
+            "the light off the ice is blinding and casts no honest shadow",
+            "the silence is total, until the floe groans somewhere beneath you",
+            "wind-driven crystal stings the skin and glitters in the flat glare",
+            "the horizon and the sky are the same white, with no line between",
+            "your breath freezes hard and the world holds utterly still",
+            "far off the ice cracks like a shot and the echo runs for a mile",
+            "the cold smells of nothing at all, which is its own kind of warning",
+            "nothing lives here that should, and you feel the ice waiting you out",
+        ],
     },
     "volcanic-flats": {
         "lead": "Black obsidian flats crack with the glow of the fire below",
@@ -221,6 +276,17 @@ _BIOMES: dict[str, dict[str, Any]] = {
             "a Kollkin pilgrim-cairn marks a way to the raw Ember below",
             "a slagged ruin of a Forger who reached too hot stands half-melted",
             "a Vent-Forge waymark points the safe line across the burning ground",
+        ],
+        "atmospheres": [
+            "the heat comes up through the soles and the air stinks of sulphur",
+            "the ground ticks and creaks as the cooling crust settles over the fire",
+            "a red glow pulses from every crack, keeping time with something deep",
+            "ash sifts down out of a brown sky and grits between the teeth",
+            "the air is too hot to breathe deep and tastes of iron and burning",
+            "far off a vent lets go with a roar and a fountain of embers",
+            "the light is the colour of a forge at work, and never fully dark",
+            "heat-haze bends the black spires until they seem to walk",
+            "the whole plain feels one breath from waking, and it knows you are here",
         ],
     },
     "living-jungle": {
@@ -240,6 +306,17 @@ _BIOMES: dict[str, dict[str, Any]] = {
             "a poacher's ruin lies where someone tried to harvest the wild and was eaten",
             "a hidden grove-shrine breathes a green quiet older than the Reaches",
         ],
+        "atmospheres": [
+            "the air is a warm wet weight, loud with insects and unseen throats",
+            "everything drips, and the green light comes from the leaves themselves",
+            "something calls, is answered, and the whole canopy falls abruptly silent",
+            "the smell is sweet rot and ember-bloom and a green so thick it cloys",
+            "the heat presses down and the growth seems to lean in to watch",
+            "a warm rain starts without warning and stops the same way",
+            "the wild here feels awake in a way that has nothing to do with beasts",
+            "luminous spores drift on the heavy air and light the black beneath the leaves",
+            "you are certain, without proof, that the grove remembers your face",
+        ],
     },
     "salt-desert": {
         "lead": "A bleached salt-waste glares white under an enormous sky",
@@ -257,6 +334,17 @@ _BIOMES: dict[str, dict[str, Any]] = {
             "an Ashborn waymoot keeps a water-cache by unbreakable road-code",
             "a salvage-clan marker leans over a dig gone down into the salt",
             "the last Ashborn stone stands before the un-ness, hung with tokens",
+        ],
+        "atmospheres": [
+            "the heat is a hammer and the light off the salt is merciless",
+            "the wind carries fine grey grit and the taste of old ash",
+            "the silence is enormous, and the sky goes on past all reason",
+            "heat-devils spin up off the flat and walk the shimmering distance",
+            "nothing moves but the mirage, and the mirage moves wrong",
+            "the cold comes fast when the sun drops, and the salt ticks as it cools",
+            "the air is bone-dry and every breath pulls the water from you",
+            "far off the un-ness hums at the edge of hearing, or seems to",
+            "the waste offers no landmark and no mercy, and does not notice you at all",
         ],
     },
 }
@@ -365,12 +453,21 @@ def _ambient(cfg: dict[str, Any], room: str, idx: int, level: int) -> tuple[str,
 def _describe(
     cfg: dict[str, Any], idx: int, back_dir: str, on_dir: str | None, landmark: str | None
 ) -> str:
-    """Compose a room description by structured variation: the biome lead, an indexed feature,
-    a directional cue back and onward, and (at a branch-end) a landmark. Adjacent rooms differ by
-    index but share the biome voice; distant biomes read wholly different."""
+    """Compose a room description by structured variation: the biome lead, an indexed terrain
+    feature, an indexed atmosphere (a second, independent axis of sound/light/weather/mood), a
+    directional cue back and onward, and (at a branch-end) a landmark. Feature and atmosphere are
+    each indexed by the SAME room index but at co-prime pool sizes (8 features x 9 atmospheres), so
+    by the Chinese remainder theorem the (feature, atmosphere) pair cycles over all 72 combinations
+    before repeating -- 9x the old variety from one extra pool, with no random state. A per-region
+    phase offset (a deterministic char-sum of the region id, immune to PYTHONHASHSEED) rotates the
+    starting point, so two regions of the SAME biome do not read identically at the same index --
+    without it, every region restarted at index 0 and collapsed onto the same handful of rooms.
+    Adjacent rooms differ on both axes; distant biomes read wholly different."""
     biome = _biome(cfg["biome"])
-    feature = biome["features"][idx % len(biome["features"])]
-    lines = [f"{biome['lead']}: {feature}."]
+    phase = sum(ord(c) for c in str(cfg["id"]))  # per-region offset; distinct regions decorrelate
+    feature = biome["features"][(idx + phase) % len(biome["features"])]
+    atmosphere = biome["atmospheres"][(idx + phase) % len(biome["atmospheres"])]
+    lines = [f"{biome['lead']}: {feature}; {atmosphere}."]
     if landmark:
         lines.append(f"{landmark[0].upper()}{landmark[1:]}.")
     cue = f"The way runs back {back_dir}"
