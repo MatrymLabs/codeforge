@@ -65,6 +65,32 @@ def test_collective_names_carry_per_name_tiers_matching_the_source():
     assert all(t["usage"] for t in terms.values())  # each names the worldview that uses it
 
 
+def test_world_factions_are_the_eight_provisional_powers():
+    factions = canon.world_factions()
+    assert len(factions) == 8
+    ids = canon.world_faction_ids()
+    assert {"veiled_covenant", "crownseekers", "greenward_compact"} <= ids
+    for f in factions:
+        assert f["canon_status"] == "CANON_WORKING"  # provisional (C2), revisable
+        assert f["stance"]  # each carries its stance
+
+
+def test_a_faction_missing_its_stance_is_refused(tmp_path: Path):
+    body = (
+        _GOOD_WORLD
+        + _seven_good_crowns()
+        + _fourteen_good_regions()
+        + textwrap.dedent(
+            """\
+        world_factions:
+          - {id: shadowy_cabal, name: The Shadowy Cabal, canon_status: CANON_WORKING}
+        """
+        )
+    )
+    with pytest.raises(SeedError, match="needs an id, name, and stance"):
+        canon.load_canon(_write(tmp_path, body))
+
+
 def test_a_collective_name_missing_its_usage_is_refused(tmp_path: Path):
     body = (
         _GOOD_WORLD
