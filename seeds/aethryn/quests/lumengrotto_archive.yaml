@@ -1,0 +1,25 @@
+# SEED: aethryn -- quests/lumengrotto_archive.yaml  (Lumengrotto's quest: The Contested Record)
+#
+# Auto-loaded. Local need (a record-shard that could settle a hundred-year quarrel), world echo (the
+# Crystal Labyrinth's archive that keeps and perhaps MAKES memory), a cost (the memory-vault and its
+# wraith), a result (an answer, or the vault's chosen lie), an unresolved remainder (whether the
+# record is true). Natural triggers: ENTER the archive-house -> TAKE the shard -> ENTER the archive-
+# house. Rewards XP + standing with the Knowing order (records, law, and scholarship).
+id: lumengrotto_archive
+name: The Contested Record
+start: offered
+reward_xp: 100
+steps:
+  - {state: offered, event: enter, to: accepted, on_enter: lumengrotto_archive}
+  - {state: accepted, event: take, to: recovered, on_take: lumengrotto_record_shard}
+  - state: recovered
+    event: enter
+    to: done
+    on_enter: lumengrotto_archive
+    effect: "award_xp;grant_rep:knowing:30"
+terminal: [done]
+labels:
+  offered: "In Lumengrotto, the archive-house needs a doubter it can trust. Step inside and hear the archivist."
+  accepted: "Descend into the memory-vault and take the contested record-shard from the shelf (mind the memory-wraith)."
+  recovered: "Carry the record-shard back UP to Archivist Vell in the archive-house."
+  done: "*** The shard is read at last. Whether it holds the truth or only what the vault chose to keep, Lumengrotto has its answer. ***"

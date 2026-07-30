@@ -1,0 +1,25 @@
+# SEED: aethryn -- quests/frosthold_observatory.yaml  (Frosthold's quest: Where the Storm Falls)
+#
+# Auto-loaded. Local need (a reading-core that warns where the killing cold will strike), world echo
+# (an old-world weather-engine that once commanded the storms), a cost (the buried observatory and
+# its frost-revenant), a result (a season of lives), an unresolved remainder (whether the cold is
+# sent). Natural triggers: ENTER the wardroom -> TAKE the core -> ENTER the wardroom. Rewards XP +
+# standing with the Warcraft order (the ice-watch that holds the fortress).
+id: frosthold_observatory
+name: Where the Storm Falls
+start: offered
+reward_xp: 80
+steps:
+  - {state: offered, event: enter, to: accepted, on_enter: frosthold_wardroom}
+  - {state: accepted, event: take, to: recovered, on_take: frosthold_reading_core}
+  - state: recovered
+    event: enter
+    to: done
+    on_enter: frosthold_wardroom
+    effect: "award_xp;grant_rep:warcraft:30"
+terminal: [done]
+labels:
+  offered: "In Frosthold, the ice-watch needs a hand that can stand the cold. Step into the wardroom and hear the captain."
+  accepted: "Descend to the buried observatory and pull the reading-core from the instrument (mind the frost-bound dead)."
+  recovered: "Carry the reading-core back UP to Ice-Captain Bryn in the wardroom."
+  done: "*** The core reads the sky for the watch now, and Frosthold will know where the storm falls. A season of lives, bought with a cold walk. ***"

@@ -1,0 +1,95 @@
+# SEED: aethryn -- authored/lumengrotto.yaml  (Lumengrotto, an archive-town of The Deepreach, ~L100)
+#
+# The Deepreach's canon identity: a vast underground realm of the Crystal Labyrinth (the Memory Deep),
+# archives and artificial minds, fragmented and partly self-rearranging, holding contradictory
+# records. Lumengrotto is a crystal-lit town grown up around a spur of the old archive, its people
+# living by the light of records they cannot fully read. Beneath it a memory-vault still keeps
+# testimony, though what it keeps and what it invents are not always told apart. The conflict is
+# ordinary (whose account of an old crime the town believes); the clue to the larger world is the
+# archive itself; the rumour is left unproven. Installed by parts/world/authored_towns.py; its quest
+# is quests/lumengrotto_archive.yaml.
+
+rooms:
+  lumengrotto_market:
+    name: The Lumen Market
+    desc: >-
+      The heart of Lumengrotto, lit not by fire but by veins of pale crystal that run through the
+      cavern like caught daylight. Deep-folk trade fungus, ore, and copied records under a ceiling
+      that glows. Ways lead OUT to the deep road, NORTH to the archive-house, and WEST to the fungal
+      terraces.
+    exits: {out: lumengrotto, north: lumengrotto_archive, west: lumengrotto_terraces}
+  lumengrotto_terraces:
+    name: The Fungal Terraces
+    desc: >-
+      Stepped beds of pale, luminous fungus tended in the crystal-light, the deep's own harvest.
+      Farmers work here who have never seen a sky and do not miss it. The market is back EAST.
+    exits: {east: lumengrotto_market}
+  lumengrotto_archive:
+    name: The Archive-House
+    desc: >-
+      A hall of copyists and readers built against a spur of the old Crystal Labyrinth, where the
+      town keeps the records it can reach and argues over the ones it cannot. An archivist keeps the
+      key to the deeper vault. A stair descends DOWN into the memory-vault; the market is back SOUTH.
+    exits: {south: lumengrotto_market, down: lumengrotto_vault}
+  lumengrotto_vault:
+    name: The Memory-Vault
+    desc: >-
+      A deeper chamber of the old archive, its crystal shelves half-melted and rearranging, showing
+      faces and voices that stop when you look straight at them. Testimony is kept here, true and
+      false in the same light. Something files it still. Stairs climb back UP.
+    exits: {up: lumengrotto_archive}
+
+hub: {room: lumengrotto, keyword: square, entry: lumengrotto_market}
+
+npcs:
+  lumengrotto_archivist:
+    name: Archivist Vell
+    keywords: [vell, archivist]
+    location: lumengrotto_archive
+    dialogue:
+      - >-
+        "You came down the deep road on purpose, so you are either brave or paid. Good. There is a
+        record-shard loose in the memory-vault below, and it holds testimony the town has quarrelled
+        over for a hundred years. Go down, take it from the shelf, and bring it up to me. Then perhaps
+        we will finally know what happened, or perhaps only what the vault decided to keep."
+    topics:
+      archive:
+        - >-
+          "The vault keeps testimony, but it does not always keep it TRUE. It rearranges. A shelf you
+          read yesterday says otherwise today. We copy what we can and we distrust all of it, wisely."
+      records:
+        - >-
+          "The whole town lives by copied records and cannot agree on a single old crime. One shard
+          could settle it. Or the vault has been filing a lie so long it has become the only account."
+      rumor:
+        - >-
+          "They say the vault does not only KEEP memory, it MAKES it, and some of what the town
+          remembers never happened. They say the deep minds are still down there, sorting. Go and read."
+      vell:
+        - >-
+          "Archivist of Lumengrotto, keeper of a key to a vault I do not trust. Someone must read the
+          old records, even knowing the reading changes them. Better a doubter than a believer, down here."
+    hp: 0
+  lumengrotto_wraith:
+    name: a flickering memory-wraith
+    keywords: [wraith, memory-wraith, memory]
+    location: lumengrotto_vault
+    dialogue:
+      - The wraith wears a face that keeps changing, and none of them are glad to see you.
+    aggressive: true
+    hp: 660
+    atk: 50
+    xp: 90
+    level: 100
+    tier: normal
+    attack_element: DRK
+
+items:
+  lumengrotto_record_shard:
+    name: a contested record-shard
+    keywords: [record-shard, shard, record]
+    location: lumengrotto_vault
+    lore: >-
+      A splinter of archive-crystal that holds a single testimony, replaying a moment that stops
+      whenever you look straight at it. Whether it preserves what happened or only what the vault has
+      long since decided to keep, no one in Lumengrotto can any longer say, and that is the whole quarrel.

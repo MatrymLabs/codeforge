@@ -1,0 +1,93 @@
+# SEED: aethryn -- authored/wildgrowth.yaml  (Wildgrowth, a forest frontier of Eldryn Forest, ~L50)
+#
+# Eldryn's canon identity: an ancient forest with a memory deeper than any kingdom, where it is never
+# certain whether the growth is wholly natural or old-world ecology still running. Wildgrowth is a
+# forest-compact town holding the road against a wild that keeps taking it back. Beneath it a root
+# deep is an old ecological-maintenance space, and the deep roots seem to remember every hand that
+# tended them. The conflict is ordinary (cut the growth back, or let it grow); the clue to the larger
+# world is the root deep; the rumour is left unproven. Installed by parts/world/authored_towns.py; its
+# quest is quests/wildgrowth_root.yaml.
+
+rooms:
+  wildgrowth_green:
+    name: The Compact Green
+    desc: >-
+      The gathering-heart of Wildgrowth: a broad green ringed by timber halls, where the forest-folk
+      trade forage and forest-lore and argue over the road. Roots have cracked the paving and no one
+      hurries to mend it. Ways lead OUT to the forest road, NORTH to the Wardens' Lodge, and WEST to
+      the foragers' rest.
+    exits: {out: wildgrowth, north: wildgrowth_lodge, west: wildgrowth_rest}
+  wildgrowth_rest:
+    name: The Foragers' Rest
+    desc: >-
+      A long low hall of drying herbs, honey, and the day's forage, warm with woodsmoke and the talk
+      of folk who know every leaf in the Eldryn. The green is back EAST.
+    exits: {east: wildgrowth_green}
+  wildgrowth_lodge:
+    name: The Wardens' Lodge
+    desc: >-
+      The hall of the forest compact, its walls grown from living trunks that the wardens tend rather
+      than cut. Here the pact between the town and the old wood is kept. A warden holds the tally of
+      the deep. A stair descends DOWN into the roots; the green is back SOUTH.
+    exits: {south: wildgrowth_green, down: wildgrowth_rootdeep}
+  wildgrowth_rootdeep:
+    name: The Root Deep
+    desc: >-
+      A cavern of vast pale roots older than the forest above, laid in channels too even to be wild.
+      Sap moves in them like slow blood, and the air tastes of green and iron. Something tends this
+      place still. Stairs climb back UP to the lodge.
+    exits: {up: wildgrowth_lodge}
+
+hub: {room: wildgrowth, keyword: square, entry: wildgrowth_green}
+
+npcs:
+  wildgrowth_warden:
+    name: Warden Sela
+    keywords: [sela, warden]
+    location: wildgrowth_lodge
+    dialogue:
+      - >-
+        "You have the sense not to trample what you cannot name, I hope. The deep roots have taken
+        the old tally-stone the compact reads to keep our pact with the wood. Go down, free it from
+        the roots, and bring it up to me. The forest-folk pay their debts in more than coin."
+    topics:
+      growth:
+        - >-
+          "The wood takes the road back a little every season. Some say cut it; the compact says a
+          road is a small thing and the Eldryn is old. We hold the pact and we do not win, only keep."
+      roots:
+        - >-
+          "The deep roots are laid too straight to be wild. My grandmother tended them and said they
+          remember every hand. I have felt them turn toward me in the dark. Make of that what you will."
+      rumor:
+        - >-
+          "They say the deep roots hold a grudge, and remember every axe the town ever swung. They
+          say the Great Tree remembers more. Go down and lay your hand on a root and listen."
+      sela:
+        - >-
+          "Warden of the compact, keeper of the pact between Wildgrowth and the wood. Someone must
+          speak for the forest that cannot speak, and be answered by roots that maybe can."
+    hp: 0
+  wildgrowth_rootbeast:
+    name: a bristling spore-hound
+    keywords: [spore-hound, hound, beast]
+    location: wildgrowth_rootdeep
+    dialogue:
+      - The spore-hound bristles, a cloud of pale spores rising from its hackles.
+    aggressive: true
+    hp: 390
+    atk: 33
+    xp: 55
+    level: 48
+    tier: normal
+    attack_element: PSN
+
+items:
+  wildgrowth_tally_stone:
+    name: the compact's tally-stone
+    keywords: [tally-stone, tally, stone]
+    location: wildgrowth_rootdeep
+    lore: >-
+      A smooth stone marked with a growing tally that no hand seems to cut: new notches appear in it
+      season by season, as if the wood itself keeps a count of something, and the compact only reads
+      what the roots have already decided to record.
