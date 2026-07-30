@@ -20,7 +20,7 @@ import random
 from parts.shelf import affixes
 from parts.shelf.reward_curve import jp_for_kill, xp_for_kill
 from parts.shelf.weighted_table import WeightedTable
-from parts.world import items
+from parts.world import items, threat
 from parts.world.boss_phases import boss_phase
 from parts.world.coinage import purse
 from parts.world.combat_clock import advance as advance_clock
@@ -329,10 +329,12 @@ def land_hit(session: Session, npc: Npc, nid: str, dmg: int) -> tuple[bool, str]
     strike broadcast, and any counter, so `attack` and an ability share this defeat/award core."""
     npc["hp_now"] -= dmg
     advance_clock(session)  # a landed strike is a combat action: cooldowns thaw, statuses age
+    threat.add(nid, session.player_id, dmg)  # damage builds aggro: the foe remembers who hurt it
     if npc.get("aggressive"):
         session.aggro_beats[nid] = 0  # the player answered the foe: re-engage its leash from zero
     if npc["hp_now"] > 0:
         return (False, "")
+    threat.clear(nid)  # a felled foe reassembles with no grudge -- the aggro table resets
     npc["hp_now"] = npc["hp"]  # the dummy reassembles at full health
     npc.pop("burn", None)  # a reassembled foe is whole again -- any burn is quenched
     npc.pop("dazed", None)  # ...and shakes off any daze

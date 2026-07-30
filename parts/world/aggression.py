@@ -11,16 +11,28 @@ combat to resolve an unprovoked blow and returns the line for the tick to append
 state stays canonical, mutated solely by validated combat logic.
 """
 
+from parts.world import threat
 from parts.world.combat import open_strike
 from parts.world.encounter_log import witness
+from parts.world.events import announce_to
 from parts.world.npcs import NPCS, npcs_in
-from parts.world.session import Session, sentence_case
+from parts.world.session import SESSIONS, Session, sentence_case
 
 # Unanswered world-beats an aggressive foe presses before it breaks off. The leash is the
 # engineered exit the failsafe alone does not give: a player who cannot out-damage a foe and
 # stops fighting is released instead of looped forever (hit -> restore -> hit). A player strike
 # resets the count (parts.world.combat.attack), so a real fight keeps the foe engaged.
 LEASH = 5
+
+
+def _fighters_in(location: str) -> dict[str, Session]:
+    """The heroes present in a room who can be struck: alive, with a calling. The pool a foe picks
+    its target from by threat."""
+    return {
+        pid: s
+        for pid, s in list(SESSIONS.items())
+        if s.location == location and s.alive and s.stats is not None
+    }
 
 
 def menace(session: Session) -> str:
@@ -56,10 +68,19 @@ def menace(session: Session) -> str:
             lines.append(f"\n{sentence_case(npc['name'])} breaks off its assault.")
             witness("leash_break", npc["name"], "broke off its assault")
             continue
-        blow = open_strike(session, npc)
+        # The foe strikes whoever tops its threat table (the tank's whole job), falling back to the
+        # hero whose beat this is when no threat is recorded yet. The blow resolves against the
+        # victim; if that is not the acting hero, it is pushed to them, the room sees the broadcast.
+        victim = threat.top_target(nid, _fighters_in(session.location)) or session
+        blow = open_strike(victim, npc)
         if blow:  # a passive foe (atk 0) lands nothing; skip its empty line
-            lines.append(blow)
             witness("open_strike", npc["name"], "struck first on the world beat")
-            if "wake restored" in blow:  # the failsafe fired: one near-death per beat, then stop
-                break
+            if victim is session:
+                lines.append(blow)
+                if (
+                    "wake restored" in blow
+                ):  # the failsafe fired: one near-death per beat, then stop
+                    break
+            else:
+                announce_to([victim.player_id], blow)  # the tank feels it; the actor sees the frame
     return "".join(lines)
