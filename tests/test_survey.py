@@ -56,6 +56,36 @@ def test_run_list_locations_reports_a_count_and_names():
     assert "Greenhold" in text
 
 
+def test_run_find_unreachable_is_clean_on_the_connected_world():
+    code, text = survey.run(["find-unreachable"])
+    assert code == 0 and "CLEAN" in text
+
+
+def test_run_inspect_shows_a_region_and_refuses_an_unknown_one():
+    code, text = survey.run(["inspect", "veridia"])
+    assert code == 0 and "Veridia" in text
+    code, text = survey.run(["inspect", "nowhere"])
+    assert code == 1 and "refused" in text
+    assert survey.run(["inspect"])[0] == 2  # missing arg
+
+
+def test_run_graph_lists_the_topology():
+    code, text = survey.run(["graph"])
+    assert code == 0 and "the_voidscar" in text
+
+
+def test_validate_surfaces_an_unreachable_region(monkeypatch):
+    monkeypatch.setattr(survey.worldgraph, "unreachable_regions", lambda: ["the_voidscar"])
+    assert any("the_voidscar" in v and "unreachable" in v for v in survey.validate())
+
+
+def test_run_find_unreachable_reports_a_stranded_region_as_exit_1(monkeypatch):
+    monkeypatch.setattr(survey.worldgraph, "unreachable_regions", lambda: ["skyward_spires"])
+    code, text = survey.run(["find-unreachable"])
+    assert code == 1
+    assert "skyward_spires" in text and "problem" in text
+
+
 # --- Refusal: the guardrail bites, and unknown commands are refused honestly ----------------------
 
 

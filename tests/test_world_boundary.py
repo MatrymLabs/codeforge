@@ -106,6 +106,7 @@ _GAME_SEED = {
     "survey",
     "caves",
     "area_store",
+    "worldgraph",
     "seed",
     "db",
     "events",

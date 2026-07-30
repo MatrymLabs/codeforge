@@ -8,6 +8,9 @@ Surveyor) and parts/world/area_store.py (the mutating area bench). Usage:
     python -m tools.world list-regions
     python -m tools.world list-locations
     python -m tools.world find-broken-references
+    python -m tools.world find-unreachable
+    python -m tools.world inspect <region-id>
+    python -m tools.world graph
     python -m tools.world generate-area <region> [--seed N] [--size N]
     python -m tools.world preview-area <area-id>
     python -m tools.world promote <area-id>
@@ -25,7 +28,16 @@ import sys
 from parts.world import area_store, survey
 
 # The read-only half routes to the Surveyor; everything else is the area bench.
-_READ_ONLY = {"validate", "check-canon", "list-regions", "list-locations", "find-broken-references"}
+_READ_ONLY = {
+    "validate",
+    "check-canon",
+    "list-regions",
+    "list-locations",
+    "find-broken-references",
+    "find-unreachable",
+    "inspect",
+    "graph",
+}
 
 
 def main(argv: list[str] | None = None) -> int:

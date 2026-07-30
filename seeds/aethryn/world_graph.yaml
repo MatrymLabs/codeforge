@@ -1,0 +1,67 @@
+# SEED: aethryn -- world_graph.yaml  (the canonical region topology: land adjacency + sea edges)
+#
+# The world as an expandable graph (the prompt's pillar 2). Every canon region lists the regions it
+# touches by land and the seas it borders, straight from the Aethryn Coding Seed's `adjacent_regions`
+# and `water_edges`. parts/world/worldgraph.py loads and validates this against canon and computes
+# reachability, so `world find-unreachable` can prove no region is stranded.
+#
+# Two seams to know:
+#   - Adjacency is DIRECTED as authored (The Deepreach lists the surface regions it runs beneath, but
+#     those surface regions do not list it back). Reachability treats every land link as UNDIRECTED,
+#     so a one-way listing still connects both ends. The validator therefore checks referential
+#     integrity, NOT symmetry.
+#   - Two regions that border the SAME sea are reachable from each other by sea route (the seed's
+#     rule: sea routes are real world links). That is what connects the island and sky regions, which
+#     have no land neighbours at all.
+
+seas:
+  - western_ocean
+  - northland_sea
+  - central_sea
+  - sundaram_sea
+  - southern_ocean
+  - eastern_ocean
+
+regions:
+  veridia:
+    land: [frostspire_peaks, caeloria, duskwood_vale]
+    seas: [western_ocean]
+  duskwood_vale:
+    land: [veridia, caeloria, zhaar_desert, eldryn_forest]
+    seas: [western_ocean]
+  caeloria:
+    land: [veridia, frostspire_peaks, duskwood_vale, eldryn_forest]
+    seas: [central_sea]
+  frostspire_peaks:
+    land: [veridia, caeloria]
+    seas: [northland_sea]
+  eldryn_forest:
+    land: [duskwood_vale, zhaar_desert, caeloria]
+    seas: [sundaram_sea]
+  zhaar_desert:
+    land: [duskwood_vale, eldryn_forest]
+    seas: [western_ocean, southern_ocean]
+  thalorin:
+    land: [ashen_wastes]
+    seas: [northland_sea, central_sea]
+  ashen_wastes:
+    land: [thalorin, xilnath_jungle, korvash_highlands]
+    seas: [central_sea, sundaram_sea]
+  xilnath_jungle:
+    land: [ashen_wastes, korvash_highlands]
+    seas: [eastern_ocean]
+  korvash_highlands:
+    land: [ashen_wastes, xilnath_jungle]
+    seas: [sundaram_sea, eastern_ocean]
+  shattered_isles:
+    land: []
+    seas: [northland_sea, eastern_ocean]
+  the_deepreach:
+    land: [zhaar_desert, eldryn_forest, korvash_highlands]
+    seas: []
+  skyward_spires:
+    land: []
+    seas: [eastern_ocean]
+  the_voidscar:
+    land: []
+    seas: [eastern_ocean]
