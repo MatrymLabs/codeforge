@@ -1,0 +1,25 @@
+# SEED: aethryn -- quests/stormreach_reef.yaml  (Stormreach's second quest: The Reef-Horror)
+#
+# Auto-loaded. Stormreach's SIDE quest, a different SHAPE from the drowned-gate fetch: a HUNT. Reef-
+# Warden Halloran (in the market) points you EAST out to the storm reef; the quest arms on ENTER and
+# completes on DEFEAT of the rising reef-horror. A local need (the thing is taking the deep divers the
+# port lives on), a light thread to the larger world (what rises from the drowned facility on the bad
+# tide), a cost (a hard fight on the breakwater), a visible result (the far wrecks worked again), an
+# open remainder (why the deep sends up worse each season). Rewards XP + standing with the Warcraft
+# order (the League's fighters who keep the salvage-crews alive).
+id: stormreach_reef
+name: The Reef-Horror
+start: offered
+reward_xp: 150
+steps:
+  - {state: offered, event: enter, to: hunting, on_enter: stormreach_reef}
+  - state: hunting
+    event: defeat
+    to: done
+    on_defeat: stormreach_horror
+    effect: "award_xp;grant_rep:warcraft:42"
+terminal: [done]
+labels:
+  offered: "Reef-Warden Halloran says something is rising to feed on the storm reef. Go EAST from the harbour and see."
+  hunting: "The rising reef-horror boils up over the breakwater. Put it down so the deep divers can work the far wrecks again."
+  done: "*** The reef-horror is dead and the far wrecks can be worked again. Stormreach's League cuts you a full share, and Halloran says so. ***"

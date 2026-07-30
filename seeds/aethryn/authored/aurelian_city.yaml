@@ -6,7 +6,11 @@
 # sky the ground forgot; below it a broken transit-nexus of the old Spire Nexus still turns. The
 # conflict is ordinary and fateful (wake the nexus and reconnect the isles, or leave it sealed for
 # fear of what a completed circuit calls back); the clue to the larger world is the nexus; the rumour
-# is left unproven. Installed by parts/world/authored_towns.py; its quest is quests/aurelian_nexus.yaml.
+# is left unproven. Five subareas, three voices (a star-scholar, a salvage-broker, a dock-master) that
+# cross-reference, two dangers, a hollow-ingot salvage node on the outer gantry and a broker who buys
+# its yield (a working economy), and readable Crowncraft lore. Installed by
+# parts/world/authored_towns.py; its quests are quests/aurelian_nexus.yaml (a fetch, Knowing) and
+# quests/aurelian_gantry.yaml (a hunt of a different shape, Gathering).
 
 rooms:
   aurelian_market:
@@ -15,8 +19,12 @@ rooms:
       The heart of Aurelian City, a plaza of white stone on a floating island where the clouds pass
       below the railings: a market of sky-metal, star-charts, and the careful rationing of a people
       whose old life-support is failing a little each year. Ways lead OUT to the sky-bridge, NORTH to
-      the star-college, and WEST to the sky-docks.
-    exits: {out: aurelian_city, north: aurelian_college, west: aurelian_docks}
+      the star-college, WEST to the sky-docks, and EAST out onto the outer gantry.
+    exits:
+      out: aurelian_city
+      north: aurelian_college
+      west: aurelian_docks
+      east: aurelian_gantry
   aurelian_docks:
     name: The Sky-Docks
     desc: >-
@@ -39,6 +47,15 @@ rooms:
       patient, one degree a year toward a circuit it must not be allowed to complete. A routing-core
       sits loose in its cradle. Stairs climb back UP.
     exits: {up: aurelian_college}
+  aurelian_gantry:
+    name: The Outer Gantry
+    desc: >-
+      A wind-torn walk of old Crowncraft that juts from the isle's edge into open sky, where the
+      salvage-crews prise hollow ingots of sky-metal from the derelict spurs the clouds have not yet
+      claimed. The wind screams and the drop is forever. Something rides the high wind here that is
+      not a bird. The market is back WEST.
+    exits: {west: aurelian_market}
+    node: hollow_ingot
 
 hub: {room: aurelian_city, keyword: square, entry: aurelian_market}
 
@@ -76,6 +93,58 @@ npcs:
           count its turning, so that when the decision comes to wake it or wall it, it is made by people
           who KNOW. Better a frightened scholar than a hopeful one, this high up."
     hp: 0
+  aurelian_broker:
+    name: Salvage-Broker Nyra
+    keywords: [nyra, broker, salvage-broker]
+    location: aurelian_docks
+    dialogue:
+      - >-
+        "Sky-trade, ground-born? I keep the strong draughts a body needs to work the thin high air and
+        the rations that stretch a failing larder. And I buy hollow ingots, prised off the outer gantry,
+        for the sky-craft the wrights can never let fail. Salvage a load and I will pay you in real coin."
+    topics:
+      trade:
+        - >-
+          "Draughts I sell, and rations, dear as everything is this high. Hollow ingots I buy, cut off
+          the gantry EAST. The wrights mend the sky-craft with them, and a failed craft is an island lost,
+          so I pay well and the wrights pay me."
+      salvage:
+        - >-
+          "The outer gantry is a graveyard of old Crowncraft, sky-metal for the prising, if the wind and
+          what rides it do not take you first. The crews work roped to the rail. Even so, some do not come back."
+      nyra:
+        - >-
+          "Broker of the sky-docks, and I keep the wrights in metal and the crews in coin. Someone must
+          turn a dying enclave's salvage into another year of flying. This high up, that is the whole economy."
+    shop:
+      sells: {grand_healing_draught: 104, greater_mana_draught: 68, water_ration: 8}
+      buys: {hollow_ingot: 13}
+    hp: 0
+  aurelian_master:
+    name: Dock-Master Perrin
+    keywords: [perrin, dock-master, master]
+    location: aurelian_market
+    dialogue:
+      - >-
+        "You have the nerve for heights, I hope, because my crews have lost theirs. A wind-wraith has
+        come down onto the outer gantry, EAST of the market, riding the high gusts, and it has thrown
+        two of my salvage-crew off the rail into the cloud. Put it down so the crews can work the gantry
+        again, and Aurelian will owe you the sky itself."
+    topics:
+      wraith:
+        - >-
+          "A thing of the high wind, half-seen, that walks the gusts along the gantry and throws a
+          roped man off the rail as easy as a leaf. Go EAST and end it before the salvage stops and the
+          sky-craft with it."
+      gantry:
+        - >-
+          "The outer gantry feeds this whole isle: hollow ingots for the wrights, salvage for the trade.
+          But the wind out there hunts, and lately it hunts with a purpose. My crews will not rope on without escort."
+      perrin:
+        - >-
+          "Dock-master of Aurelian, and I keep the sky-craft flying on what the gantry gives. Lose the
+          gantry and we lose the sky, and the sky is the only road we have left. Do me this turn, ground-born."
+    hp: 0
   aurelian_drone:
     name: a derelict transit-drone
     keywords: [drone, transit-drone, transit]
@@ -89,6 +158,19 @@ npcs:
     level: 198
     tier: normal
     attack_element: LGT
+  aurelian_windwraith:
+    name: a keening wind-wraith
+    keywords: [wind-wraith, wraith, wind]
+    location: aurelian_gantry
+    dialogue:
+      - The gale on the gantry gathers into a keening shape, half-seen, and reaches along the rail for you.
+    aggressive: true
+    hp: 1300
+    atk: 100
+    xp: 192
+    level: 201
+    tier: normal
+    attack_element: WND
 
 items:
   aurelian_routing_core:
@@ -100,3 +182,13 @@ items:
       slow angle of the great ring and the single destination it is patiently turning toward. The
       scholars read it to count how near the circuit is to closing. None of them will say aloud what
       the reading has lately become, only that the ring turns faster than a dead machine should.
+  aurelian_ration_roll:
+    name: the skyhold ration-roll
+    keywords: [ration-roll, roll, ration]
+    location: aurelian_market
+    lore: >-
+      The isle's public ledger of its failing life-support, posted in the market so every soul can read
+      how much air and water the old Crowncraft still makes and how fast the making dwindles. Its yearly
+      columns march steadily down toward a final line the scholars have already calculated and no tribune
+      will name aloud, the year the isle can no longer breathe, unless the sleeping Crowncraft is woken,
+      and no one dares wake it.

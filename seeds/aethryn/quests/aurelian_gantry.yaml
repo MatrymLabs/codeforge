@@ -1,0 +1,25 @@
+# SEED: aethryn -- quests/aurelian_gantry.yaml  (Aurelian's second quest: The Wind-Wraith)
+#
+# Auto-loaded. Aurelian's SIDE quest, a different SHAPE from the nexus fetch: a HUNT. Dock-Master
+# Perrin (in the market) points you EAST onto the outer gantry; the quest arms on ENTER and completes
+# on DEFEAT of the keening wind-wraith. A local need (the wraith is throwing the salvage-crews off the
+# rail), a light thread to the larger world (the high winds that hunt the dying enclave), a cost (a
+# hard fight over open sky), a visible result (the gantry made workable again), an open remainder (why
+# the wind hunts with a purpose now). Rewards XP + standing with the Gathering order (the salvage-crews
+# who keep the sky-craft, and the isle, flying).
+id: aurelian_gantry
+name: The Wind-Wraith
+start: offered
+reward_xp: 155
+steps:
+  - {state: offered, event: enter, to: hunting, on_enter: aurelian_gantry}
+  - state: hunting
+    event: defeat
+    to: done
+    on_defeat: aurelian_windwraith
+    effect: "award_xp;grant_rep:gathering:44"
+terminal: [done]
+labels:
+  offered: "Dock-Master Perrin says a wind-wraith walks the outer gantry. Go EAST from the market onto the gantry and see."
+  hunting: "The keening wind-wraith reaches along the rail. Put it down so the salvage-crews can work the gantry again."
+  done: "*** The wind-wraith is scattered and the gantry can be worked again. Aurelian owes you the sky itself, and Perrin says so. ***"
