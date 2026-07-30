@@ -54,6 +54,33 @@ def test_unresolved_questions_are_carried_and_never_empty():
     assert any("Netharion" in q for q in questions)
 
 
+def test_collective_names_carry_per_name_tiers_matching_the_source():
+    terms = {t["id"]: t for t in canon.collective_names()}
+    assert len(terms) == 6
+    # The neutral / common names are anchored; the ideological ones are belief (RUMOR).
+    assert terms["seven_crowns"]["canon_status"] == "CANON_LOCKED"
+    assert terms["seven_wounds"]["canon_status"] == "CANON_LOCKED"
+    for ideological in ("seven_blasphemies", "murdered_crowns", "seven_lessons", "seven_engines"):
+        assert terms[ideological]["canon_status"] == "RUMOR"
+    assert all(t["usage"] for t in terms.values())  # each names the worldview that uses it
+
+
+def test_a_collective_name_missing_its_usage_is_refused(tmp_path: Path):
+    body = (
+        _GOOD_WORLD
+        + _seven_good_crowns()
+        + _fourteen_good_regions()
+        + textwrap.dedent(
+            """\
+        collective_names:
+          - {id: seven_crowns, name: The Seven Crowns, canon_status: CANON_LOCKED}
+        """
+        )
+    )
+    with pytest.raises(SeedError, match="needs a name and usage"):
+        canon.load_canon(_write(tmp_path, body))
+
+
 def test_generated_statuses_are_the_lower_three_only():
     assert canon.is_generated_status("GENERATED_LOCAL")
     assert canon.is_generated_status("AUTHORED_LOCAL")
@@ -158,6 +185,14 @@ def _seven_good_crowns() -> str:
         for i in range(7)
     )
     return "seven_crowns:\n" + lines + "\n"
+
+
+def _fourteen_good_regions() -> str:
+    rows = "\n".join(
+        f"  - {{id: r{i}, name: R{i}, threat_min: 1, threat_max: 5, canon_status: CANON_LOCKED}}"
+        for i in range(14)
+    )
+    return "regions:\n" + rows + "\n"
 
 
 def test_the_wrong_number_of_regions_is_refused(tmp_path: Path):

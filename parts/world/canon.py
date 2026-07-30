@@ -97,6 +97,11 @@ def load_canon(path: Path | None = None) -> dict[str, Any]:
         if not fact.get("id") or not fact.get("text"):
             raise SeedError(f"canon fact {fact.get('id')!r}: needs an id and text")
         _status(fact, f"fact {fact.get('id')!r}")
+
+    for term in data.get("collective_names", []):
+        if not term.get("name") or not term.get("usage"):
+            raise SeedError(f"canon collective name {term.get('id')!r}: needs a name and usage")
+        _status(term, f"collective name {term.get('id')!r}")
     return data
 
 
@@ -119,6 +124,12 @@ def locked_region_names(canon: dict[str, Any] | None = None) -> set[str]:
 def unresolved_questions(canon: dict[str, Any] | None = None) -> list[str]:
     """The questions the world keeps OPEN: generated content may raise them only as RUMOR."""
     return list((canon or load_canon()).get("unresolved_questions", []))
+
+
+def collective_names(canon: dict[str, Any] | None = None) -> list[dict[str, Any]]:
+    """The six names for the Seven Crowns, each with its own tier and the worldview that uses it.
+    The neutral names are CANON_LOCKED; the ideological ones are RUMOR (belief, not fact)."""
+    return list((canon or load_canon()).get("collective_names", []))
 
 
 def is_generated_status(status: str) -> bool:
