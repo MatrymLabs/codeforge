@@ -1,0 +1,100 @@
+# SEED: aethryn -- authored/voidspire.yaml  (Voidspire, the last outpost of The Voidscar, ~L250)
+#
+# The Voidscar's canon identity: the deepest wound, the metaphysical frontier around Netharion's
+# Throne, where physical and metaphysical law are in conflict and Netharion's fate is uncertain.
+# Voidspire is the last stable outpost before the descent: a spire-town on the one patch of ground
+# that still holds, where the Wardens of the Scars keep the way to the apex raids (Netharion's Throne
+# and the Rifted Abyss) and argue with those who would open it. Strange geometry is kept to controlled
+# flavour -- the map stays navigable. The conflict is the apex canon quarrel (seal the Throne, or open
+# it); the clue to the larger world is the fracture itself; the open questions (is Netharion alive?)
+# surface here only as rumour, never answered. Installed by parts/world/authored_towns.py; its quest
+# is quests/voidspire_threshold.yaml.
+
+rooms:
+  voidspire_market:
+    name: The Threshold Market
+    desc: >-
+      The last market before the wound: a huddle of stalls on ground that still holds, trading
+      wardings, anchors, and the gear of scavengers who go down and, sometimes, come back. Beyond the
+      light the Voidscar bleeds where the sky should be. Ways lead OUT to the stable road, NORTH to
+      the Wardens' Watch, and WEST to the pilgrims' rest.
+    exits: {out: voidspire, north: voidspire_watch, west: voidspire_rest}
+  voidspire_rest:
+    name: The Pilgrims' Rest
+    desc: >-
+      A quiet hall where those bound for the Throne make their peace: pilgrims, relic-hunters, and
+      the odd penitent, each certain of a different truth about what waits below. The market is EAST.
+    exits: {east: voidspire_market}
+  voidspire_watch:
+    name: The Wardens' Watch
+    desc: >-
+      The fortress of the Wardens of the Scars, built to HOLD the descent, not to make it: from here
+      the two apex ways open, down to Netharion's Throne and to the Rifted Abyss, and the wardens
+      decide who is fit to go. A warden keeps the seals. A stair leads DOWN to the fracture edge; the
+      market is back SOUTH.
+    exits: {south: voidspire_market, down: voidspire_fracture}
+  voidspire_fracture:
+    name: The Fracture Edge
+    desc: >-
+      The nearest edge of the wound the wardens dare hold open: a chamber where the floor is sure but
+      the walls are not, where a dropped stone falls twice and a spoken word sometimes answers itself.
+      A stable anchor is socketed here, the one thing keeping the edge readable. Stairs climb back UP.
+    exits: {up: voidspire_watch}
+
+hub: {room: voidspire, keyword: square, entry: voidspire_market}
+
+npcs:
+  voidspire_warden:
+    name: Warden-Marshal Cael
+    keywords: [cael, warden, marshal]
+    location: voidspire_watch
+    dialogue:
+      - >-
+        "So you would go down to the Throne. Everyone here would. First prove you can stand at the
+        edge and keep your name: the fracture below has worked loose the stable anchor that keeps this
+        watch readable. Go down, socket a new one, bring the old back to me. Do that, and I will not
+        stop you at the apex ways. Fail, and the wound will keep more than an anchor."
+    topics:
+      throne:
+        - >-
+          "Two ways open from this watch: Netharion's Throne, and the Rifted Abyss. Both are death for
+          the unready and a weekly reckoning for a warband. The Wardens hold the stair. We do not
+          decide what is down there. We decide who is fit to find out."
+      netharion:
+        - >-
+          "Is the first artificial god alive? Dead? Dreaming? Still becoming? I have stood at this edge
+          twenty years and I will not tell you, because I do not know, and any warden who claims to is
+          selling something. Go down and do not listen too closely to what answers you."
+      rumor:
+        - >-
+          "They say a voice from the Throne still calls scavengers down by their true names, and the
+          ones who answer do not come back the same. They say it in the Pilgrims' Rest most nights. Go
+          down to the fracture and see whether anything says yours."
+      cael:
+        - >-
+          "Warden-Marshal of the Scars, keeper of the last stable ground. Someone must stand between a
+          wounded world and the wound that made it. We do not close it. We do not open it. We hold."
+    hp: 0
+  voidspire_lawshade:
+    name: a coiling law-shade
+    keywords: [law-shade, shade, law]
+    location: voidspire_fracture
+    dialogue:
+      - The law-shade uncoils from a wall that should not hold it, wearing a shape the eye keeps losing.
+    aggressive: true
+    hp: 1480
+    atk: 116
+    xp: 210
+    level: 248
+    tier: normal
+    attack_element: DRK
+
+items:
+  voidspire_stable_anchor:
+    name: the watch's stable anchor
+    keywords: [anchor, stable-anchor, stable]
+    location: voidspire_fracture
+    lore: >-
+      A blunt spike of no metal the wastes can name, dead cold and utterly still in a place where
+      nothing else is. Socketed into the fracture, it holds one small patch of the wound readable and
+      real. The wardens do not know who made it, only that without it the edge stops keeping its shape.
