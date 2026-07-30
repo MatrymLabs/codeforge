@@ -1,0 +1,25 @@
+# SEED: aethryn -- quests/stonefang_stope.yaml  (Stonefang's second quest: The Deep-Delver)
+#
+# Auto-loaded. Stonefang's SIDE quest, a different SHAPE from the drift fetch: a HUNT. Mine-Captain
+# Bral (in the market) points you EAST to the working stope; the quest arms on ENTER and completes on
+# DEFEAT of the stone-hided deep-delver. A local need (the thing is crushing the cutters at the ore-
+# face), a light thread to the larger world (the old strata are rising), a cost (a hard fight at the
+# face), a visible result (the richest vein worked again), an open remainder (why the deep breeds
+# these now). Rewards XP + standing with the Warcraft order (the clan-guard that keeps the faces safe
+# to work).
+id: stonefang_stope
+name: The Deep-Delver
+start: offered
+reward_xp: 92
+steps:
+  - {state: offered, event: enter, to: hunting, on_enter: stonefang_stope}
+  - state: hunting
+    event: defeat
+    to: done
+    on_defeat: stonefang_delver
+    effect: "award_xp;grant_rep:warcraft:34"
+terminal: [done]
+labels:
+  offered: "Mine-Captain Bral says a stone-hided thing has come up into the working stope. Go EAST from the market and see."
+  hunting: "The stone-hided deep-delver hauls into the stope. Put it down so the cutters can work the ore-face again."
+  done: "*** The deep-delver is dead and the richest vein is worked again. The Stonefangs owe you steel, and Bral says so. ***"

@@ -4,8 +4,12 @@
 # over legitimate authority, where old command systems may still issue obsolete orders and oath or
 # identity phenomena linger. Stonehelm is a storm-bound city over a command bunker that never stopped
 # giving orders. The conflict is ordinary and grave (who holds legitimate authority); the clue to the
-# larger world is the command bunker; the rumour is left unproven. Installed by
-# parts/world/authored_towns.py; its quest is quests/stonehelm_order.yaml.
+# larger world is the command bunker; the rumour is left unproven. Five subareas, three voices (a
+# tribune, a quartermaster, a storm-captain) that cross-reference, two dangers, a hollow-ingot salvage
+# node on the broken ramparts and a quartermaster who buys its yield (a working economy), and readable
+# authority lore. Installed by parts/world/authored_towns.py; its quests are
+# quests/stonehelm_order.yaml (a fetch, Warcraft) and quests/stonehelm_ramparts.yaml (a hunt of a
+# different shape, Making).
 
 rooms:
   stonehelm_market:
@@ -13,9 +17,13 @@ rooms:
     desc: >-
       A monumental market under the storm-wracked crags of Korvash, its stalls dwarfed by the broken
       arches of an administration that once ruled a world. Folk trade here in the shadow of a law no
-      one living wrote. Ways lead OUT to the highland road, NORTH to the tribunal hall, and WEST to
-      the barracks.
-    exits: {out: stonehelm, north: stonehelm_tribunal, west: stonehelm_barracks}
+      one living wrote. Ways lead OUT to the highland road, NORTH to the tribunal hall, WEST to the
+      barracks, and EAST out onto the broken ramparts.
+    exits:
+      out: stonehelm
+      north: stonehelm_tribunal
+      west: stonehelm_barracks
+      east: stonehelm_ramparts
   stonehelm_barracks:
     name: The Storm Barracks
     desc: >-
@@ -37,6 +45,15 @@ rooms:
       orders in a dead tongue to a garrison an age in the grave. Something here still expects to be
       obeyed. An authority-seal was left in its cradle. Stairs climb back UP.
     exits: {up: stonehelm_tribunal}
+  stonehelm_ramparts:
+    name: The Broken Ramparts
+    desc: >-
+      The shattered outer walls of the old administration, open to the Korvash storms that never quite
+      break: fallen arches and drifts of old-world salvage, hollow ingots of a metal the storms cannot
+      rust prised from the rubble here. Lightning walks the broken stone, and something rides it. The
+      market is back WEST.
+    exits: {west: stonehelm_market}
+    node: hollow_ingot
 
 hub: {room: stonehelm, keyword: square, entry: stonehelm_market}
 
@@ -72,6 +89,57 @@ npcs:
           "Tribune of Stonehelm, keeper of a law I did not make and cannot fully read. Someone must
           rule the highlands, even by borrowed authority. Better a doubter on the seat than a believer."
     hp: 0
+  stonehelm_quartermaster:
+    name: Quartermaster Rurik
+    keywords: [rurik, quartermaster, master]
+    location: stonehelm_barracks
+    dialogue:
+      - >-
+        "Garrison-trade, stranger? I keep the strong draughts a soldier needs to stand a storm-watch
+        and the rations that outlast a siege. And I buy hollow ingots, prised off the broken ramparts,
+        to keep the barracks armed, for the old metal takes an edge no forge-iron holds. Salvage it and I pay."
+    topics:
+      trade:
+        - >-
+          "Draughts I sell, and rations, and I buy hollow ingots off the ramparts EAST. The old
+          administration built in a metal the storms cannot rust, and it makes better arms than we can
+          smelt. Prise it loose and bring it here."
+      salvage:
+        - >-
+          "The ramparts are a ruin and a mine both: old-world metal for the taking, if the storms and
+          what rides them do not take you first. The barracks arm on it. So bring a sack, and keep low."
+      rurik:
+        - >-
+          "Quartermaster of Stonehelm's garrison, and I keep soldiers fed and armed on the leavings of
+          a dead empire. Someone must, or the tribunal's law is just words with no steel behind it. So I do."
+    shop:
+      sells: {grand_healing_draught: 100, greater_mana_draught: 66, water_ration: 7}
+      buys: {hollow_ingot: 12}
+    hp: 0
+  stonehelm_captain:
+    name: Storm-Captain Ilsa
+    keywords: [ilsa, captain, storm-captain]
+    location: stonehelm_market
+    dialogue:
+      - >-
+        "You have the look of someone who can fight in a storm, and I have need of it. A storm-thing
+        has come down onto the broken ramparts EAST of the market, riding the lightning, and it has
+        burned two of my salvage-crews to ash. Put it down so my folk can work the old metal again, and
+        the garrison of Stonehelm will call you one of ours."
+    topics:
+      beast:
+        - >-
+          "A thing of the storm itself, walking the lightning that never leaves the ramparts. It kills
+          the salvage-crews where they work. Go EAST and end it before the garrison loses the metal it arms on."
+      ramparts:
+        - >-
+          "The broken ramparts arm this whole garrison: old metal for the prising. But the storms hunt
+          the crews, and lately something in the storms hunts with a will. My folk will not go up without an escort now."
+      ilsa:
+        - >-
+          "Storm-captain of Stonehelm, and I hold the ramparts and the crews that work them. Lately the
+          storm fights like it has a grudge. Do me this turn and the garrison will not forget it."
+    hp: 0
   stonehelm_sentinel:
     name: an oath-bound sentinel
     keywords: [sentinel, oath-bound, oath]
@@ -85,6 +153,19 @@ npcs:
     level: 148
     tier: normal
     attack_element: DRK
+  stonehelm_stormrider:
+    name: a storm-walking wraith
+    keywords: [storm-walking, wraith, stormrider]
+    location: stonehelm_ramparts
+    dialogue:
+      - The lightning on the ramparts gathers, folds, and steps down as a shape with a storm for a face.
+    aggressive: true
+    hp: 1020
+    atk: 78
+    xp: 150
+    level: 151
+    tier: normal
+    attack_element: WND
 
 items:
   stonehelm_authority_seal:
@@ -96,3 +177,12 @@ items:
       an authority older than any living crown. Those who carry it feel, faintly, the pull to give
       orders and be obeyed. The tribunal re-swears it each generation, and each generation is a little
       less certain the seal serves them, rather than the other way about.
+  stonehelm_muster_roll:
+    name: the old muster-roll
+    keywords: [muster-roll, roll, muster]
+    location: stonehelm_barracks
+    lore: >-
+      A brittle roll the barracks keeps though no one can read its dead script, salvaged whole from the
+      bunker generations ago: the muster of the old garrison, every soldier the command once counted.
+      The quartermasters swear the names on it change, that soldiers long struck off reappear at the
+      foot in fresh ink, as though the bunker below is still enlisting a garrison, and the roll is how it counts.

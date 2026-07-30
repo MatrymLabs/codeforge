@@ -279,6 +279,40 @@ def test_batch_b_towns_carry_a_vendor_a_node_and_a_working_economy():
         assert len([i for i in items.values() if "lore" in i]) >= 2, f"{stem}: two lore items"
 
 
+def test_zulkaraks_second_quest_is_a_gathering_hunt():
+    _walk_hunt("zulkarak_grove.yaml", "gathering", 88)
+
+
+def test_stonefangs_second_quest_is_a_warcraft_hunt():
+    _walk_hunt("stonefang_stope.yaml", "warcraft", 92)
+
+
+def test_stonehelms_second_quest_is_a_making_hunt():
+    _walk_hunt("stonehelm_ramparts.yaml", "making", 135)
+
+
+def test_batch_c_towns_carry_a_vendor_a_node_and_a_working_economy():
+    # Density-v2 (batch C): Zul'karak, Stonefang, Stonehelm each gain the same working-economy depth
+    # -- a vendor who sells supplies and buys the town's own gather-node yield, a node, three
+    # voices, two dangers, and two lore items.
+    for stem, material in (
+        ("zulkarak", "vinesilk"),
+        ("stonefang_keep", "raw_ore"),
+        ("stonehelm", "hollow_ingot"),
+    ):
+        rooms, npcs, items = towns.raise_town(_AUTHORED / f"{stem}.yaml")
+        vendors = [n for n in npcs.values() if n.get("shop")]
+        assert len(vendors) == 1, f"{stem}: exactly one vendor"
+        shop = vendors[0]["shop"]
+        assert shop.get("sells"), f"{stem}: the vendor sells supplies"
+        assert shop.get("buys", {}).get(material), f"{stem}: the vendor buys its own node's yield"
+        assert any(r.get("node") == material for r in rooms.values()), f"{stem}: a {material} node"
+        talkers = [n for n in npcs.values() if n["hp"] == 0 and n.get("topics")]
+        assert len(talkers) >= 3, f"{stem}: three reactive voices"
+        assert len([n for n in npcs.values() if n.get("aggressive")]) >= 2, f"{stem}: two dangers"
+        assert len([i for i in items.values() if "lore" in i]) >= 2, f"{stem}: two lore items"
+
+
 def test_the_sunscar_quest_walks_and_grants_gathering():
     finish, reward = _walk_quest("sunscar_charter.yaml")
     assert reward == 85 and "grant_rep:gathering" in (finish.effect or "")

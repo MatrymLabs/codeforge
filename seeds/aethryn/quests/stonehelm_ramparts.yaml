@@ -1,0 +1,25 @@
+# SEED: aethryn -- quests/stonehelm_ramparts.yaml  (Stonehelm's second quest: The Storm-Rider)
+#
+# Auto-loaded. Stonehelm's SIDE quest, a different SHAPE from the bunker fetch: a HUNT. Storm-Captain
+# Ilsa (in the market) points you EAST onto the broken ramparts; the quest arms on ENTER and completes
+# on DEFEAT of the storm-walking wraith. A local need (the storm-thing is killing the salvage-crews the
+# garrison arms on), a light thread to the larger world (the Korvash storms that never break, and what
+# rides them), a cost (a hard fight in the lightning), a visible result (the ramparts made workable
+# again), an open remainder (why the storm hunts with a will now). Rewards XP + standing with the
+# Making order (the salvage-crews and armorers who forge the garrison's steel from old-world metal).
+id: stonehelm_ramparts
+name: The Storm-Rider
+start: offered
+reward_xp: 135
+steps:
+  - {state: offered, event: enter, to: hunting, on_enter: stonehelm_ramparts}
+  - state: hunting
+    event: defeat
+    to: done
+    on_defeat: stonehelm_stormrider
+    effect: "award_xp;grant_rep:making:38"
+terminal: [done]
+labels:
+  offered: "Storm-Captain Ilsa says a storm-thing walks the broken ramparts. Go EAST from the market onto the old walls and see."
+  hunting: "The storm-walking wraith steps down from the lightning. Put it down so the salvage-crews can work the old metal again."
+  done: "*** The storm-rider is scattered and the ramparts can be salvaged again. Stonehelm's garrison call you one of their own now, and Ilsa says so. ***"

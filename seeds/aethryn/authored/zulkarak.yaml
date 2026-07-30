@@ -5,8 +5,11 @@
 # ecosystems have grown inseparable. Zul'karak is a canopy city of physicians who harvest the jungle's
 # engineered medicine; beneath it an overgrown laboratory still designs and grows new life to a purpose
 # no one gave. The conflict is ordinary and grave (is the runaway growth a blessing or a danger); the
-# clue to the larger world is the laboratory; the rumour is left unproven. Installed by
-# parts/world/authored_towns.py; its quest is quests/zulkarak_physic.yaml.
+# clue to the larger world is the laboratory; the rumour is left unproven. Five subareas, three voices
+# (a physic-master, a physic-broker, a canopy-warden) that cross-reference, two dangers, a vinesilk
+# gather node in the physic gardens and a broker who buys its yield (a working economy), and readable
+# design lore. Installed by parts/world/authored_towns.py; its quests are quests/zulkarak_physic.yaml
+# (a fetch, Making) and quests/zulkarak_grove.yaml (a hunt of a different shape, Gathering).
 
 rooms:
   zulkarak_market:
@@ -15,14 +18,21 @@ rooms:
       The heart of Zul'karak, slung in the great canopy of Xil'nath: bridges and platforms hung with
       medicine-gourds, healing-sap, and stranger fruit, the jungle breathing all around it. Half of
       what is sold here was designed, not grown, though no one is sure which half. Ways lead OUT to the
-      root road, NORTH to the physicians' lodge, and WEST to the physic gardens.
-    exits: {out: zulkarak, north: zulkarak_lodge, west: zulkarak_gardens}
+      root road, NORTH to the physicians' lodge, WEST to the physic gardens, and EAST out to the wild
+      grove where the canopy runs untended.
+    exits:
+      out: zulkarak
+      north: zulkarak_lodge
+      west: zulkarak_gardens
+      east: zulkarak_grove
   zulkarak_gardens:
     name: The Physic Gardens
     desc: >-
       Terraced beds where Zul'karak's physicians raise the jungle's medicine under careful watch,
-      because a garden here that is not watched becomes a jungle that is not safe. The market is EAST.
+      because a garden here that is not watched becomes a jungle that is not safe. Vinesilk is trained
+      along the frames, cut for thread and bandage-cloth both. The market is EAST.
     exits: {east: zulkarak_market}
+    node: vinesilk
   zulkarak_lodge:
     name: The Physicians' Lodge
     desc: >-
@@ -38,6 +48,13 @@ rooms:
       no living hand set. The air is thick with spores and creation. A design-key lies among the vats.
       A stair climbs back UP.
     exits: {up: zulkarak_lodge}
+  zulkarak_grove:
+    name: The Wild Grove
+    desc: >-
+      Where the tended canopy gives way to the true jungle, untended and unsafe, the growth here
+      designs itself and answers to no physician. Vinesilk grows wild and tangled, but so does worse,
+      and something heavy has been moving through the high boughs. The market is back WEST.
+    exits: {west: zulkarak_market}
 
 hub: {room: zulkarak, keyword: square, entry: zulkarak_market}
 
@@ -71,6 +88,58 @@ npcs:
           "Physic-Master of Zul'karak, and I keep the register of what the jungle makes. Someone must
           stand between a city and a machine that grows life without asking. It is careful work, and it grows."
     hp: 0
+  zulkarak_broker:
+    name: Physic-Broker Indira
+    keywords: [indira, broker, physic-broker]
+    location: zulkarak_gardens
+    dialogue:
+      - >-
+        "Canopy-trade, ground-walker? I keep the draughts a physician's hands make and the rations
+        that will not rot in the wet. And I buy vinesilk by the hank, cut here on the frames or wild
+        out in the grove, for thread and bandage both. The jungle gives freely, if you know what to cut."
+    topics:
+      trade:
+        - >-
+          "Draughts I sell, and clean cloth. Vinesilk I buy, trained here in the gardens or gathered
+          wild in the grove EAST. The physicians cannot bind a wound without it, so cut a hank and I
+          will pay you fair."
+      vinesilk:
+        - >-
+          "A living thread the Loom designed, stronger than any spun by hand and it heals the skin it
+          binds. It grows tame on our frames and wild past the grove. The wild is stronger, and dearer,
+          and far more dangerous to cut."
+      indira:
+        - >-
+          "Broker of the physic gardens, and I turn what the jungle grows into what the healers need.
+          Someone must price a miracle so a physician can afford to work one. It may as well be me."
+    shop:
+      sells: {grand_healing_draught: 86, greater_mana_draught: 57, water_ration: 6}
+      buys: {vinesilk: 8}
+    hp: 0
+  zulkarak_warden:
+    name: Canopy-Warden Tavi
+    keywords: [tavi, warden, canopy-warden]
+    location: zulkarak_market
+    dialogue:
+      - >-
+        "You have the look of a fighter, and the grove needs one. Something the Loom never meant to
+        make dens in the wild canopy EAST of the market, and it has taken two of my vinesilk-gatherers
+        already. Go and put it down so the grove can be worked again, and the canopy-folk will name
+        you a friend of the high boughs."
+    topics:
+      beast:
+        - >-
+          "A great designed thing, half-bloom and all hunger, grown wild past any physician's leash.
+          It dens in the grove EAST and hunts the gatherers. End it before it learns the way to the gardens."
+      grove:
+        - >-
+          "The wild grove gives the strongest vinesilk and the worst dangers both. The gardens are
+          tame; the grove is not. Lately what the grove grows is bolder, and it comes toward the city."
+      tavi:
+        - >-
+          "Canopy-warden of Zul'karak. I keep the high paths and the gatherers who walk them alive.
+          Lately that is harder than it was. Do me this turn and the canopy-folk will not forget it."
+    hp: 0
   zulkarak_drone:
     name: an engineered nest-drone
     keywords: [drone, nest-drone, nest]
@@ -84,6 +153,19 @@ npcs:
     level: 88
     tier: normal
     attack_element: PSN
+  zulkarak_bloomstalker:
+    name: a wild bloom-stalker
+    keywords: [bloom-stalker, stalker, bloom]
+    location: zulkarak_grove
+    dialogue:
+      - The high boughs shudder and a vast petalled shape drops through them, all maw and grasping vine.
+    aggressive: true
+    hp: 690
+    atk: 52
+    xp: 92
+    level: 91
+    tier: normal
+    attack_element: PSN
 
 items:
   zulkarak_design_key:
@@ -94,3 +176,12 @@ items:
       A key of living amber that pulses faintly, warm as a held creature, its inner grain shifting like
       a thing still growing. The physicians read it to tell the Loom's safe designs from its lethal ones.
       What it truly is, none can say: a tool, a seed, or a small unfinished piece of the old work itself.
+  zulkarak_bloom_register:
+    name: the physicians' bloom-register
+    keywords: [bloom-register, register, bloom]
+    location: zulkarak_lodge
+    lore: >-
+      The lodge's running register of every new life the jungle has budded and the physicians' verdict
+      on each: medicine, murder, or unknown. The unknown column is the longest and grows fastest, and
+      a note in the newest hand admits what no physic-master says aloud: that the register is losing the
+      race, that the Loom designs faster than a city of healers can judge, and always has.
