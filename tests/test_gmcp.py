@@ -150,6 +150,27 @@ def test_room_report_on_an_unknown_location_renders_honestly():
     assert report == {"num": "void_that_is_not_seeded", "name": "(nowhere)", "exits": {}}
 
 
+def test_room_report_carries_the_area_when_a_zone_owns_the_room(monkeypatch):
+    import parts.world.zones as zones
+
+    session = _hero()
+    monkeypatch.setattr(
+        zones, "zone_of", lambda room: "emberreach" if room == session.location else None
+    )
+    report = room_report(session)
+    assert report["area"] == "emberreach"  # a client can colour its map by this region label
+
+
+def test_room_report_omits_the_area_for_a_room_in_no_zone(monkeypatch):
+    import parts.world.zones as zones
+
+    session = _hero()
+    monkeypatch.setattr(zones, "zone_of", lambda room: None)  # a room outside every area
+    report = room_report(session)
+    # additive: no zone, no key, so an old client sees exactly today's shape
+    assert "area" not in report
+
+
 def test_skills_report_lists_the_wieldable_kit():
     session = _hero()  # a vanguard: wields Power Strike in first-forge
     kit = skills_report(session)
