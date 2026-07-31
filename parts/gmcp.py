@@ -93,17 +93,25 @@ def room_report(session: Session) -> dict[str, object]:
     """A Room.Info payload for the session's current location, from world data.
 
     `num` is the room's frozen label (the dict key); `name` and `exits` come straight from the
-    seeded room. An unknown location renders honestly rather than raising: the player is
+    seeded room. `area` is the label of the zone that owns the room, when one does, so a client can
+    colour its map by region -- additive and optional: a room in no zone carries no `area`, and an
+    old client ignores it. An unknown location renders honestly rather than raising: the player is
     somewhere the world does not describe, and the client should see that, not a crash.
     """
+    from parts.world.zones import zone_of
+
     room = WORLD.get(session.location)
     if room is None:
         return {"num": session.location, "name": "(nowhere)", "exits": {}}
-    return {
+    report: dict[str, object] = {
         "num": session.location,
         "name": room["name"],
         "exits": dict(room["exits"]),
     }
+    area = zone_of(session.location)
+    if area is not None:
+        report["area"] = area
+    return report
 
 
 def target_report(session: Session) -> dict[str, object] | None:
