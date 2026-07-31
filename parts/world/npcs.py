@@ -5,6 +5,8 @@ NPCs are born from the seed (seeds/first-forge/npcs.yaml).
 MUD-IL shape: verb=talk, direct_object=npc.
 """
 
+import contextlib
+
 from parts.world.seed import SEED_DIR, Npc, load_npcs
 from parts.world.session import sentence_case
 
@@ -12,12 +14,12 @@ NPCS: dict[str, Npc] = load_npcs(SEED_DIR / "npcs.yaml")
 
 # Room index: room label -> the npc labels standing in it. Presence is queried on EVERY world beat
 # (aggression.menace and render both call npcs_in), so a full scan of NPCS per call is O(npcs) per
-# command -- fine at hundreds of NPCs, fatal at tens of thousands (the world-generation scale). NPCs
-# never relocate after creation (only their runtime fields -- hp_now, burn -- change; felled foes
-# reassemble in place), so the ONLY event that can stale this index is a change in NPC MEMBERSHIP:
-# the procedural road adding foes at boot, or a test adding one. We detect that by the size of NPCS
-# and rebuild only then; every steady-state lookup is a dict hit. Rebuilding is O(npcs), but happens
-# on a membership change, not per command. (Location is never mutated, so len is a sufficient key.)
+# command -- fine at hundreds of NPCs, fatal at tens of thousands (the world-generation scale). Two
+# things can stale it: a change in NPC MEMBERSHIP (the procedural road adding foes at boot, or a
+# test), detected by the size of NPCS and rebuilt only then; and ambient ROAMING relocating a few
+# wanderers per beat (parts.world.roaming), which updates the index in place via `apply_npc_moves`
+# rather than rebuilding it -- a handful of dict ops, not an O(npcs) scan. Every steady-state lookup
+# is a dict hit; a full rebuild happens on membership change, never per command.
 _by_room: dict[str, list[str]] = {}
 _indexed_len: int = -1
 
@@ -44,6 +46,24 @@ def reindex_npcs() -> None:
     same-size replacement is invisible to the automatic size check in _ensure_room_index."""
     global _indexed_len
     _indexed_len = -1
+
+
+def apply_npc_moves(moves: list[tuple[str, str, str]]) -> None:
+    """Relocate NPCs in the room index in O(moves), not a full O(npcs) rebuild -- used by ambient
+    roaming so a handful of wanderers changing rooms does not cost a ~140ms rebuild at world scale.
+
+    Each move is (nid, old_room, new_room); membership is unchanged, so the size key stays valid.
+    Apply this AFTER a beat's moves are decided (not mid-loop), which reproduces the previous
+    rebuild-once-at-end-of-beat semantics exactly: mid-beat lookups still see pre-roam positions."""
+    _ensure_room_index()
+    for nid, old_room, new_room in moves:
+        bucket = _by_room.get(old_room)
+        if bucket is not None:
+            with contextlib.suppress(ValueError):
+                bucket.remove(nid)  # tolerate an already-absent id, stay correct
+            if not bucket:
+                del _by_room[old_room]
+        _by_room.setdefault(new_room, []).append(nid)
 
 
 def npcs_in(room_id: str) -> list[str]:
