@@ -16,7 +16,7 @@ are deterministic under a seeded RNG, so the test twin names exact outcomes.
 import random
 
 from parts.world.events import announce
-from parts.world.npcs import NPCS, npcs_in, reindex_npcs
+from parts.world.npcs import NPCS, apply_npc_moves, npcs_in
 from parts.world.session import Session, sentence_case
 from parts.world.world import WORLD
 
@@ -32,14 +32,14 @@ def roam(session: Session) -> str:
     """Drift the ambient `wander` NPCs near the player one step, and return the line(s) the player
     sees (each newline-led), or ''. A wanderer in the player's room may leave through a random exit;
     a wanderer in a neighboring room may amble in. Non-wanderers and a roomless session are left
-    alone; the room index is rebuilt once, only if something actually moved."""
+    alone; the room index is updated once, only for the NPCs that actually moved."""
     here = session.location
     room = WORLD.get(here)
     if room is None:
         return ""
     exits: dict[str, str] = room.get("exits", {})
     lines: list[str] = []
-    moved = False
+    moves: list[tuple[str, str, str]] = []  # (nid, old_room, new_room), applied to the index at end
 
     # OUT: a wanderer standing with the player may leave through a random exit.
     if exits:
@@ -49,7 +49,7 @@ def roam(session: Session) -> str:
                 continue
             direction = _ROAM_RNG.choice(sorted(exits))
             npc["location"] = exits[direction]
-            moved = True
+            moves.append((nid, here, exits[direction]))
             name = sentence_case(npc["name"])
             announce(here, f"{name} wanders {direction}.", exclude=session.player_id)
             lines.append(f"\n{name} wanders {direction}.")
@@ -61,10 +61,12 @@ def roam(session: Session) -> str:
             if not npc.get("wander") or _ROAM_RNG.randrange(ROAM_CHANCE) != 0:
                 continue
             npc["location"] = here
-            moved = True
+            moves.append((nid, adjacent, here))
             lines.append(f"\n{sentence_case(npc['name'])} wanders in.")
             break
 
-    if moved:
-        reindex_npcs()  # one rebuild after all of this beat's moves, never per move
+    if moves:
+        # One incremental index update after all of this beat's moves are decided (not mid-loop, so
+        # a lookup inside the loops still sees pre-roam positions -- the old rebuild-once rule).
+        apply_npc_moves(moves)
     return "".join(lines)

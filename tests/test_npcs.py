@@ -23,6 +23,27 @@ def test_librarian_lives_in_the_library():
     assert "librarian" in room_npcs_text("library").lower()
 
 
+def test_apply_npc_moves_matches_a_full_rebuild():
+    # The optimization's core contract: relocating a few NPCs in the index incrementally yields
+    # exactly what a from-scratch rebuild would, so ambient roaming stays correct without the
+    # O(npcs) rebuild that thrashed the hot path (every look/score paid a full ~54k-NPC rebuild).
+    npcs.reindex_npcs()
+    npcs_in("library")  # force the index to build
+    mover = "librarian"
+    old = npcs.NPCS[mover]["location"]
+    dest = "a_far_off_room"
+    npcs.NPCS[mover]["location"] = dest  # mutate world state, then mirror it in the index
+    npcs.apply_npc_moves([(mover, old, dest)])
+    incremental = {room: sorted(ids) for room, ids in npcs._by_room.items()}
+
+    npcs.reindex_npcs()
+    npcs_in("library")  # full rebuild over the same (now-mutated) NPCS
+    rebuilt = {room: sorted(ids) for room, ids in npcs._by_room.items()}
+
+    assert incremental == rebuilt  # incremental update is indistinguishable from a full rebuild
+    assert mover in npcs_in(dest) and mover not in npcs_in(old)
+
+
 def test_an_aggressive_npc_is_telegraphed_in_the_room():
     """A hostile foe is flagged in the room render so a strike on the world beat is never a
     surprise: the room text is the player's only rubric for reading danger."""
