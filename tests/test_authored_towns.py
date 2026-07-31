@@ -29,6 +29,12 @@ _GH_INTERIOR = {
     "greenhold_granary",
     "greenhold_undercroft",
     "greenhold_fields",
+    # The deep Source descent below the undercroft (the moltenhold pattern: a town + internal dungeon).
+    "greenhold_deepstair",
+    "source_gallery",
+    "source_channelworks",
+    "source_vault",
+    "source_heart",
 }
 
 
@@ -58,13 +64,18 @@ def test_every_authored_town_builds_and_its_exits_stay_within_the_town():
 
 def test_greenhold_is_a_dense_authored_town():
     rooms, npcs, items = towns.raise_town(_GH)
-    assert set(rooms) == _GH_INTERIOR  # five subareas incl. the fields
-    # Multiple voices: a keeper, a miller, a gossip (peaceful, with topics), and two foes.
+    assert set(rooms) == _GH_INTERIOR  # five town subareas + the five-room Source descent below them
+    # Multiple voices: a keeper, a miller, a gossip, and the deep-stair scholar (peaceful, with topics).
     talkers = [n for n in npcs.values() if n["hp"] == 0 and n.get("topics")]
     assert len(talkers) >= 3
     foes = [n for n in npcs.values() if n.get("aggressive")]
+    # The two town foes, plus the three keepers of the Source descent (a tender, a sentinel, and the
+    # elite Warden at the heart). Every foe is a real, fightable threat.
     assert {"greenhold_vermin", "greenhold_boar"} <= set(npcs)
-    assert len(foes) == 2 and all(f["hp"] > 0 and f["atk"] > 0 for f in foes)
+    assert {"source_tender", "source_sentinel", "source_warden"} <= set(npcs)
+    assert len(foes) == 5 and all(f["hp"] > 0 and f["atk"] > 0 for f in foes)
+    # The Source's Warden is an elite gate far above the cradle band (an off-path challenge).
+    assert npcs["source_warden"]["tier"] == "elite" and npcs["source_warden"]["level"] > 10
     # Side content: a quest item AND a readable parish record (environmental storytelling).
     assert "lore" in items["greenhold_valve_key"]
     assert "lore" in items["greenhold_parish_record"]
