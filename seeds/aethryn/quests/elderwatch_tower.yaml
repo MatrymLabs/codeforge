@@ -1,0 +1,24 @@
+# SEED: aethryn -- quests/elderwatch_tower.yaml  (Elderwatch's second quest: The Long View)
+#
+# Auto-loaded. Elderwatch's SIDE quest, a different SHAPE from the beacon hunt: a DISCOVERY. Both the
+# warden and Old Cerdic point you UP the tower stair; the quest arms and completes the moment you ENTER
+# the tower and stand in Veridia's finest view, where the walled watcher's cache waits to be taken. No
+# fetch, no fight -- the reward is for looking, and finding. A local prompt (climb and see), a light
+# thread to the larger world (the old-world tower built its seeing into the stone, per the far-lens
+# lore), a cost of only the stair, a visible result (XP + Knowing standing for the discovery), and an
+# open remainder (whether the old beacon-fire that this tower once watched over could ever be woken).
+# Rewards XP + standing with the Knowing order (scholars and lorekeepers).
+id: elderwatch_tower
+name: The Long View
+start: offered
+reward_xp: 25
+steps:
+  - state: offered
+    event: enter
+    to: done
+    on_enter: elderwatch_tower
+    effect: "award_xp;grant_rep:knowing:15"
+terminal: [done]
+labels:
+  offered: "They say Elderwatch's tower holds the finest view in Veridia, and a forgotten cache with it. Climb the stair UP from the muster yard and see for yourself."
+  done: "*** From the tower crown the whole cradle lies open, and in the wall-niche an old-world far-lens waits to be taken. You have found the long view Elderwatch was raised to keep. ***"

@@ -1,0 +1,29 @@
+# SEED: aethryn -- quests/elderwatch_beacon.yaml  (Elderwatch's local quest: The Dark Watch)
+#
+# Auto-loaded by parts/world/quest.py from seeds/aethryn/quests/. A small, local HUNT that expands the
+# named location per the seed's quest structure: a local need (a beacon has gone dark and blinds the
+# line), a world-level echo (the old-world beacon-chain that once lit itself), a cost (a real fight at
+# the lonely den), a visible result (the reward + warcraft standing), and an unresolved remainder
+# (whether the old fire could ever be woken again, left to Cerdic's rumour). It triggers entirely off
+# natural play so it never collides with the bare `quest accept` verb: ENTER the hall to meet Warden
+# Aldith (offered -> accepted), DEFEAT the beacon-den lurker out east (accepted -> slain), then return
+# and ENTER the hall to report (slain -> done). The two enter-steps both target the hall but fire only
+# from their own state, so mid-quest passing is inert.
+id: elderwatch_beacon
+name: The Dark Watch
+start: offered
+reward_xp: 42
+steps:
+  - {state: offered, event: enter, to: accepted, on_enter: elderwatch_hall}
+  - {state: accepted, event: defeat, to: slain, on_defeat: elderwatch_denbeast}
+  - state: slain
+    event: enter
+    to: done
+    on_enter: elderwatch_hall
+    effect: "award_xp;grant_rep:warcraft:20"
+terminal: [done]
+labels:
+  offered: "Somewhere in Elderwatch, a warden needs a strong arm. Step into the garrison hall and hear her out."
+  accepted: "Warden Aldith needs the dark beacon cleared. Go EAST along the beacon-walk to the den and put the lurker down."
+  slain: "The lurker is dead. Carry the word back WEST to Warden Aldith in the garrison hall."
+  done: "*** The den is cleared and the watchers relight the beacon. The Veridia line is whole again, and Warden Aldith marks your name in the watch-log. ***"

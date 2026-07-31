@@ -1,0 +1,188 @@
+# SEED: aethryn -- authored/elderwatch.yaml  (the hand-authored interior of Elderwatch, Veridia's eastern watch)
+#
+# The map places Elderwatch as a single hub room; this is its polished, LIVED-IN interior: a muster
+# yard, a garrison hall, the high watchtower that gives the settlement its name, the beacon-walk along
+# the old wall, and the dark stretch where a beacon has failed. Peopled by a warden, a retired watcher
+# who remembers, and a quartermaster, with two quests of different shapes (a HUNT to relight the dark
+# beacon, a DISCOVERY reward for climbing to the viewpoint) and readable watch-lore. It expands the
+# named location per the seed recipe (a role, subareas, a livelihood, a conflict, a rumour, a clue to
+# the larger world, a revisitable change) at AAA density -- a place, not a signpost. The beacon-chain
+# is Veridia's canon identity made concrete: ordinary folk keeping watch over old-world signal works
+# that once lit themselves, shown through function. Loaded by parts/world/authored_towns.py; its
+# quests are seeds/aethryn/quests/elderwatch_beacon.yaml (the dark beacon) and elderwatch_tower.yaml
+# (the long view). The tower is Veridia's scenic viewpoint; the beacon-walk offers meadowfoil, which
+# Greenhold's Trader Pell buys -- gather here, sell a town over.
+
+rooms:
+  elderwatch_yard:
+    name: The Elderwatch Muster Yard
+    desc: >-
+      A cobbled yard inside Elderwatch's old wall, where the watch forms up at dusk and the day's
+      folk cross to the hall for their bread and orders. A signal-horn hangs by the well, and above it
+      all the great watchtower throws its long shadow. Ways lead OUT to the road gate, UP the tower
+      stair, NORTH to the garrison hall, and EAST onto the beacon-walk.
+    exits: {out: elderwatch, up: elderwatch_tower, north: elderwatch_hall, east: elderwatch_beaconwalk}
+  elderwatch_tower:
+    name: The Elderwatch Tower
+    desc: >-
+      The high crown of Elderwatch, and the finest view in all Veridia: from here the whole cradle
+      lies open, the smoke of Greenhold to the west, the silver bend of the river, the green meadows
+      running out to the pale line of the passes. The stone is old-world work, dressed too fine for a
+      border fort, and in a wall-niche a forgotten watcher's cache still waits. The stair drops back
+      DOWN to the yard.
+    exits: {down: elderwatch_yard}
+  elderwatch_hall:
+    name: The Garrison Hall
+    desc: >-
+      A long timber hall warmed by a hearth, where the watch eats and the warden keeps her roster. A
+      quartermaster's counter stands by the door with what a traveller needs for the road, and an old
+      watcher holds the bench nearest the fire, ready to talk to anyone who will listen. The yard is
+      back SOUTH.
+    exits: {south: elderwatch_yard}
+  elderwatch_beaconwalk:
+    name: The Beacon-Walk
+    desc: >-
+      A parapet along the old wall, running east to the first of the beacon-cairns that carry warning
+      down the whole Veridia line. Wild meadowfoil grows thick in the sheltered stone, cut for the
+      dyers a town over. The next beacon east has gone dark, and the walk runs on toward it. The yard
+      gate is back WEST.
+    exits: {west: elderwatch_yard, east: elderwatch_deadbeacon}
+    node: meadowfoil
+  elderwatch_deadbeacon:
+    name: The Dark Beacon
+    desc: >-
+      The failed link in the chain: a cold beacon-cairn on a lonely spur, its old-world lamp cracked
+      and its fire long out. Something has denned in the black stones beneath it, and the bones of a
+      watcher's dog lie scattered on the cairn steps. Whatever it is, it has kept this beacon dark. The
+      walk runs back WEST toward the tower.
+    exits: {west: elderwatch_beaconwalk}
+
+# How the hub connects to the interior: the hub room, the exit keyword to add, and the entry room.
+hub: {room: elderwatch, keyword: gate, entry: elderwatch_yard}
+
+# The people of Elderwatch: a warden with a dark beacon to relight, a retired watcher who remembers the
+# old works, a quartermaster who keeps the road-folk supplied, and the den-thing that guards the answer.
+npcs:
+  elderwatch_warden:
+    name: Warden Aldith
+    keywords: [aldith, warden]
+    location: elderwatch_hall
+    dialogue:
+      - >-
+        "You have the look of the road, and the road is where I need eyes. The beacon EAST along the
+        walk has gone dark three nights, and a dark beacon is a hole in the whole Veridia line.
+        Something has denned beneath it. Go and put the thing down so my watchers can relight the fire,
+        and Elderwatch will owe you a warden's word."
+    topics:
+      beacon:
+        - >-
+          "The beacons carry warning down the cradle faster than any rider: light one and the next
+          answers, all the way to the capital. A dark one blinds us. I will not have Veridia blind
+          because some beast likes the cold stones."
+      tower:
+        - >-
+          "The tower? Climb it, if you have the wind for the stair. There is no better watch in
+          Veridia, and old Cerdic swears a watcher's cache is still walled up at the top. Ask him."
+      cerdic:
+        - >-
+          "The old watcher by the fire. Forty years on this wall, and he remembers when the beacons
+          were said to light themselves. Half his talk is smoke, but the half that is not is worth
+          your ear."
+      aldith:
+        - >-
+          "Warden of Elderwatch, as my captain was before the pass-winter took him. Someone must keep
+          the line lit and the road-folk safe. It fell to me, and I do not mean to fail it."
+    hp: 0
+  elderwatch_watcher:
+    name: Old Cerdic
+    keywords: [cerdic, watcher, oldman]
+    location: elderwatch_hall
+    dialogue:
+      - >-
+        "A new face off the road! Sit by the fire a moment. I have watched this wall forty years and
+        I know every stone and every story in it, which is more than the warden will tell you. Ask me
+        what you like."
+    topics:
+      tower:
+        - >-
+          "The tower was here before the fort, before Veridia was called Veridia. Old-world stone,
+          dressed like a lord's house, raised on a border no lord ever cared for. There is a cache
+          walled at the top that no watcher will touch, for luck. Go up and look. Luck is for the young."
+      beacon:
+        - >-
+          "In my grandfather's day the beacons wanted no torch. They woke on their own when danger
+          came down the passes, old-world fire that knew its own business. Now we light them by hand,
+          and one has gone dark, and the warden thinks it is a beast. Maybe it is only a beast."
+      rumor:
+        - >-
+          "They say the whole beacon-chain still runs under the hand-lit fires, sleeping, and that one
+          day it will wake and light the length of Veridia in a single breath. An old man says a great
+          many things by a warm fire. Climb the tower and tell me what you see."
+      cerdic:
+        - >-
+          "Old Cerdic, last of the watchers who served before the beacons went to torch and tinder.
+          Someone must remember how the wall was meant to work. It may as well be the one who cannot
+          climb the stair to see it fail."
+    hp: 0
+  elderwatch_quartermaster:
+    name: Quartermaster Bryn
+    keywords: [bryn, quartermaster, merchant]
+    location: elderwatch_hall
+    dialogue:
+      - >-
+        "Off the road and low on supply? You have come to the right counter. I keep the watch and the
+        road-folk both in draughts and rations, and I buy meadowfoil by the bunch off the beacon-walk,
+        for the dyers a town over pay for it and so, a little, do I. Everything the watch can spare to
+        trade passes here."
+    topics:
+      trade:
+        - >-
+          "Draughts and rations I sell; meadowfoil I buy, cut EAST along the beacon-walk where it
+          grows thick in the old stone. Bring me a bunch and I will weigh it fair, and it goes on to
+          Greenhold's trader in the end, so we all eat."
+      bryn:
+        - >-
+          "Quartermaster of Elderwatch, and I keep a border fort fed on a capital's afterthought.
+          Someone must turn a warden's short coin into full bellies. It may as well be the one who
+          counts straight."
+    shop:
+      sells: {healing_draught: 24, water_ration: 3}
+      buys: {meadowfoil: 5}
+    hp: 0
+  elderwatch_denbeast:
+    name: the beacon-den lurker
+    keywords: [lurker, den, beast, beacon-den]
+    location: elderwatch_deadbeacon
+    dialogue:
+      - The lurker uncoils from the cold beacon-stones, eyes catching the last grey light, and hisses.
+    aggressive: true
+    hp: 74
+    atk: 11
+    xp: 30
+    level: 6
+    tier: normal
+
+# The old-world far-lens hidden in the tower (the viewpoint's reward and its clue to the larger
+# world), and a readable watch-roster that roots Elderwatch's history.
+items:
+  elderwatch_farlens:
+    name: an old-world far-lens
+    keywords: [far-lens, lens, cache, farlens]
+    location: elderwatch_tower
+    lore: >-
+      A disc of pale, flawless old-world glass in a bezel of the same untarnished metal as the tower
+      stones, left walled in the watcher's cache. Held to the eye it draws the far meadows up close as
+      a hand's breadth, sharp beyond any lens a Veridia grinder could cut. Whoever raised this tower
+      meant its watchers to see trouble a full day before it arrived, and built the seeing into the
+      stone.
+  elderwatch_watch_log:
+    name: the Elderwatch watch-log
+    keywords: [watch-log, log, roster, book]
+    location: elderwatch_hall
+    lore: >-
+      A thick roster-book chained to the warden's table, its watch-lists running back three hundred
+      years in a hundred different hands. An early page, the ink gone brown, notes plainly: "The east
+      beacon woke of itself again this night, unlit, and warned us of the pass-raiders a day before
+      the riders came. We do not know the trick of it. We only keep the wall, and are grateful for the
+      old fire while it burns." A later hand has added beneath: "The old fire burns no more. We light
+      them now ourselves, and pray we are never late."
