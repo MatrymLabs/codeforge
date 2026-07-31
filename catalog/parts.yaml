@@ -1342,3 +1342,26 @@
     government: a capacity/latency artifact for a public service before a peak-demand event
     compliance: reproducible performance evidence (workload, data size, host, p50/p95/p99, reproduction command)
     general: an in-process load harness that captures a latency histogram for any callable workload
+- id: artifact-scaffold
+  name: Artifact Scaffold Forge
+  source: parts/artifact_forge.py
+  category: developer-experience
+  tags:
+  - scaffolding
+  - templates
+  - developer-experience
+  - documentation
+  - portfolio
+  maturity: shipped
+  source_status: original
+  license: MIT
+  influence: portfolio-presentation layout conventions (predictable /docs, /adr, /.github/workflows; a case-study README leading with the live demo) - original implementation, no code copied
+  experimental: 'add more kinds (data-pipeline, library), a build-tracker that seeds issues/milestones per artifact, and an OpenAPI-stub-from-model generator. Traded away (v1): running any generated tooling; it stamps files and stops (the guardrail).'
+  risk: low
+  purpose: 'Stamp a standardized project skeleton so a new artifact starts consistent and documented instead of blank: a case-study README, sequential Nygard ADRs + template, a design doc, an API-spec stub, a test-plan checklist, a reusable CI workflow, a docker-compose file, and a .env.example. Guardrail: it generates structure and boilerplate, never business logic. Path-traversal-safe and refuses to overwrite; a bad name/kind fails loud before writing.'
+  reuse:
+    game: stamp a new seed/sub-tool repo with the ship''s doc + CI conventions from commit one
+    business: a repository template that bakes in README/ADR/test-plan/CI standards for every new service
+    government: a standardized, auditable project layout (decision records + test plan) for each new system
+    compliance: consistent evidence-ready structure (ADRs, test plan, CI) across projects
+    general: a repo-skeleton generator that turns documented layout conventions into a one-command scaffold

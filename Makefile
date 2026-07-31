@@ -1,4 +1,4 @@
-.PHONY: hooks env fix lint typecheck test property fuzz coverage audit audit-runtime security sast secrets deps intake sbom bench trend slo loadtest ai-eval retention doctor patch daily check readiness arc-verdicts truth forge cast-plan cast cast-selective cast-install-check cast-diff cast-update plugins coupling shelf-pour shelf-build smoke repo-integrity ship run world world-check store hardware clean serve backup restore db-up db-down db-migrate docs-serve docs-build demo-gif e2e evolution ritual-fast ritual ritual-down unskew loop proto contracts
+.PHONY: hooks env fix lint typecheck test property fuzz coverage audit audit-runtime security sast secrets deps intake sbom bench trend slo loadtest artifact ai-eval retention doctor patch daily check readiness arc-verdicts truth forge cast-plan cast cast-selective cast-install-check cast-diff cast-update plugins coupling shelf-pour shelf-build smoke repo-integrity ship run world world-check store hardware clean serve backup restore db-up db-down db-migrate docs-serve docs-build demo-gif e2e evolution ritual-fast ritual ritual-down unskew loop proto contracts
 
 # --- Environment: create/validate the .venv, fail loud on version mismatch.
 # Uses uv when present (a Rust resolver; measured ~20x faster than pip on this host:
@@ -270,6 +270,11 @@ slo:
 # artifact (p50/p95/p99). Read-only rotation; localhost/in-process only. NOT in make check. ---
 loadtest:
 	@python3 -m parts.loadtest
+
+# --- Artifact: stamp a portfolio-artifact repo skeleton (README/ADR/design-doc/api-spec/
+# test-plan/CI/compose) into git-ignored workspace/artifacts/. Structure + boilerplate only. ---
+artifact:
+	@python3 -m parts.artifact_forge "$(NAME)" "$(KIND)"
 
 # --- AI eval: score the offline LocalArchitect against a rubric, RECORD it as a Chronicle
 # ai-eval (eval-regression memory), then show the memory. Network-free; point it at the real

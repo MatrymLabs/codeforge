@@ -7261,5 +7261,28 @@
     "aliases": [],
     "created": "2026-07-31",
     "updated": "2026-07-31"
+  },
+  {
+    "designation": "MOD-10.050",
+    "name": "artifact_forge",
+    "status": "active",
+    "function": "stamp a portfolio-artifact repo skeleton (README/ADR/design-doc/api-spec/test-plan/CI/compose) - structure + boilerplate, never logic",
+    "label": "artifact_forge",
+    "file": "parts/artifact_forge.py",
+    "type": "MOD",
+    "domain": "10",
+    "docs": "docs/repo_templates/README.md",
+    "tests": "tests/test_artifact_forge.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "a repo-skeleton generator: stamp the standardized doc + CI + compose layout for any new project, consistent and documented from commit one",
+    "tags": [
+      "module"
+    ],
+    "notes": "Turns the reference layouts in docs/repo_templates/* from prose into a live generator. Kinds: service|full-stack|cli. Guardrail: generates structure + boilerplate, never business/learning-bearing code (human-keel doctrine). Path-traversal-safe, no-overwrite-without-flag. make artifact NAME=<slug> [KIND=...]; writes to git-ignored workspace/artifacts/. Original impl of the portfolio-presentation layout conventions.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-31",
+    "updated": "2026-07-31"
   }
 ]
