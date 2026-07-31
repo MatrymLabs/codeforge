@@ -117,6 +117,45 @@ def test_undead_class_carries_its_own_dark_element():
     assert all(b["attack_element"] == "DRK" for b in found)
 
 
+def test_ambient_loot_carries_the_biome_spoil_matching_the_gather_economy():
+    # A kill should feed the local crafting economy: its loot carries the biome's signature spoil,
+    # the SAME material the biome's gather nodes yield and its town vendor buys. One source of truth
+    from parts.world.bestiary import _ambient_loot
+    from parts.world.wildlands import biome_spoil, gatherable_materials
+
+    for biome in _BIOME_LIFE:
+        spoil = biome_spoil(biome)
+        assert spoil, f"{biome}: expected a signature spoil"
+        assert spoil in _ambient_loot("canid", biome, "normal"), f"{biome}: kill drops its spoil"
+        assert spoil in gatherable_materials(biome), f"{biome}: spoil == the forageable material"
+
+
+def test_ambient_loot_falls_back_cleanly_for_an_unknown_biome():
+    # An unknown biome has no signature spoil; the table stays valid (ember/nothing/material) and
+    # never injects a None outcome. Guards the spoil-absent branch.
+    from parts.world.bestiary import _ambient_loot
+
+    loot = _ambient_loot("canid", "no-such-biome", "normal")
+    assert set(loot) == {"ember_shard", "nothing", "raw_hide"}, "no spoil, no None, still valid"
+
+
+def test_an_elite_kill_always_pays_and_pays_heavier():
+    from parts.world.bestiary import _ambient_loot
+
+    normal = _ambient_loot("canid", "temperate-meadow", "normal")
+    elite = _ambient_loot("canid", "temperate-meadow", "elite")
+    assert "nothing" not in elite, "an elite never leaves you empty-handed"
+    assert elite["meadowfoil"] > normal["meadowfoil"], "an elite's materials come dearer"
+    assert elite["raw_hide"] > normal["raw_hide"]
+
+
+def test_a_generated_elite_wires_its_richer_loot_through():
+    elite = make_beast("temperate-meadow", 30, 10, "r")  # idx % 11 == 10 -> elite
+    assert elite["tier"] == "elite"
+    assert "nothing" not in elite["loot"], "the tier must reach the loot table, not just the stats"
+    assert "meadowfoil" in elite["loot"], "and the biome spoil rides along"
+
+
 def test_size_and_stats_climb_with_level():
     low = make_beast("wild-forest", 5, 1, "r")
     high = make_beast("wild-forest", 200, 1, "r")

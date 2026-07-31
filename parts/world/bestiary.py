@@ -299,18 +299,33 @@ def make_beast(biome: str, level: int, idx: int, room: str) -> Npc:
         level=level,
         tier=tier,
         attack_element=element,
-        loot=_ambient_loot(cls_name),
+        loot=_ambient_loot(cls_name, biome, tier),
         ambient=True,  # mass wilderness life: no per-foe bounty (see register_bounties)
     )
 
 
-def _ambient_loot(cls_name: str) -> dict[str, int]:
-    """A common creature's weighted loot: ember-shards, its class's monster material (if any), and
-    a chance of nothing (parts.shelf.weighted_table)."""
+def _ambient_loot(cls_name: str, biome: str, tier: str = "normal") -> dict[str, int]:
+    """A common creature's weighted loot: ember-shards, its class's monster material (hide/chitin,
+    if any), the biome's signature SPOIL (the same herb its nodes yield and its town vendor buys, so
+    a kill feeds the local crafting economy), and a chance of nothing. An ELITE is worth the harder
+    fight: it never drops nothing and its materials weigh heavier (parts.shelf.weighted_table).
+
+    The biome spoil is resolved through wildlands.biome_spoil (the single source of truth for a
+    biome's herb); the import is local to avoid a cycle (wildlands imports this module)."""
+    from parts.world.wildlands import biome_spoil
+
     loot = {"ember_shard": 3, "nothing": 2}
     material = _CLASS_MATERIAL.get(cls_name)
     if material:
         loot[material] = 2
+    spoil = biome_spoil(biome)
+    if spoil and spoil != "ember_shard":
+        loot[spoil] = 2
+    if tier == "elite":
+        loot.pop("nothing", None)  # an elite always yields something for the harder fight
+        for drop in list(loot):
+            if drop != "ember_shard":
+                loot[drop] += 2  # and its materials come dearer
     return loot
 
 
