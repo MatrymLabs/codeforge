@@ -72,6 +72,9 @@ class Session:
     # Gather-node cooldowns: room -> world-beats until this player may `gather` there again. A node
     # renews per player (an MMO node is not contested). Transient combat/world state, not persisted.
     gather_cooldowns: dict[str, int] = field(default_factory=dict)
+    # Shrine cooldowns: room -> world-beats until this player may `pray` at that shrine again. Per
+    # player, like a gather node; transient, not persisted (parts.world.shrine).
+    shrine_cooldowns: dict[str, int] = field(default_factory=dict)
     # Maker's trades: profession id -> units of practice earned by gathering/crafting what the trade
     # governs. Level derives from practice (parts.world.professions.level_for); persisted per hero.
     professions: dict[str, int] = field(default_factory=dict)

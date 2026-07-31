@@ -1161,7 +1161,7 @@
     "designation": "MOD-10.007",
     "name": "cast",
     "status": "active",
-    "function": "Seed\u2192cast planner: plan a standalone game project from a seed pack + the engine (dry run).",
+    "function": "Seed→cast planner: plan a standalone game project from a seed pack + the engine (dry run).",
     "label": "cast",
     "file": "parts/cast.py",
     "type": "MOD",
@@ -7121,6 +7121,35 @@
     "superseded_by": "",
     "aliases": [],
     "created": "2026-07-30",
+    "updated": "2026-07-30"
+  },
+  {
+    "aliases": [],
+    "created": "2026-07-30",
+    "depends_on": [
+      "session"
+    ],
+    "designation": "MOD-04.148",
+    "docs": "",
+    "domain": "04",
+    "function": "pray at a wayshrine for a rest boon (the world reacts to the traveller)",
+    "file": "parts/world/shrine.py",
+    "label": "shrine",
+    "name": "shrine",
+    "notes": "Restores maximum//2 of each pool, so it helps when hurt and does nothing when whole. One wayshrine per wildlands region (first branch landmark) keeps it rare.",
+    "related": [
+      "gather",
+      "wildlands",
+      "resources"
+    ],
+    "reuse": "The non-combat, non-gather sibling of the gather node: a Room.shrine field, a pray verb, and a per-player cooldown (session.shrine_cooldowns) ticked by tick_shrines on the world beat. shrine_hint shows it on look. The wildlands generator seeds one wayshrine per region.",
+    "status": "active",
+    "superseded_by": "",
+    "tags": [
+      "module"
+    ],
+    "tests": "tests/test_shrine.py",
+    "type": "MOD",
     "updated": "2026-07-30"
   }
 ]

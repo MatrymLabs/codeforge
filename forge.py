@@ -57,6 +57,7 @@ from parts.world import (
     presence,
     quest,
     scheduler,
+    shrine,
 )
 from parts.world import auction as auction_mod
 from parts.world import bank as bank_mod
@@ -1927,6 +1928,15 @@ def _build_commands() -> CommandSet:
     )
     cs.add(
         Command(
+            "pray",
+            "CMD-04.113",
+            "take the boon of this room's wayshrine",
+            lambda s, _a: shrine.pray(s),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
             "travel",
             "CMD-04.090",
             "the Waystone network: pay to cross the world (travel [where])",
@@ -2053,6 +2063,9 @@ def render_scene(location: str, viewer: str = "") -> str:
     node = gather.gather_hint(location)
     if node:
         scene.append(node)
+    boon = shrine.shrine_hint(location)
+    if boon:
+        scene.append(boon)
     company = room_npcs_text(location)
     if company:
         scene.append(company)
@@ -2544,7 +2557,8 @@ def handle_command(session: Session, signal: str) -> str:
     response = _route(session, true_signal, routed_signal)
     beat = (
         f"{tick_burns(session)}{tick_afflictions(session)}{menace(session)}{roam(session)}"
-        f"{tick_zones(session)}{gather.tick_gather(session)}{tick_climate(session)}"
+        f"{tick_zones(session)}{gather.tick_gather(session)}{shrine.tick_shrines(session)}"
+        f"{tick_climate(session)}"
         f"{scheduler.tick(session)}{_sands_beat(session)}"
     )
     return f"{response}{beat}"

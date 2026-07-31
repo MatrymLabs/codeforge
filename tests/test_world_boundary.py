@@ -89,6 +89,7 @@ _GAME_SEED = {
     "loose_store",
     "bank",
     "scheduler",
+    "shrine",
     "auction",
     "auction_store",
     "audit",
