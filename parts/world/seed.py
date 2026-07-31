@@ -98,6 +98,10 @@ class Room(TypedDict):
     # (a crafting material). The node renews after a short cooldown (parts.world.gather). Absent = a
     # room with nothing to gather.
     node: NotRequired[str]
+    # Optional: a SHRINE the room surfaces -- a landmark a traveller can `pray` at for a boon (e.g.
+    # "wayshrine" restores a share of HP/MP). Renews on a long cooldown (parts.world.shrine).
+    # Absent = no shrine here.
+    shrine: NotRequired[str]
 
 
 class Item(TypedDict):

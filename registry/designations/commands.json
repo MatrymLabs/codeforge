@@ -3646,5 +3646,28 @@
     "aliases": [],
     "created": "2026-07-30",
     "updated": "2026-07-30"
+  },
+  {
+    "aliases": [],
+    "created": "2026-07-30",
+    "depends_on": [],
+    "designation": "CMD-04.113",
+    "docs": "",
+    "domain": "04",
+    "function": "take the boon of this room's wayshrine",
+    "file": "forge.py",
+    "label": "pray",
+    "name": "pray",
+    "notes": "The pray verb: take a wayshrine boon (restores a share of HP/MP/power) with a per-player renewal cooldown; the non-combat rest stop of a journey.",
+    "related": [],
+    "reuse": "",
+    "status": "active",
+    "superseded_by": "",
+    "tags": [
+      "command"
+    ],
+    "tests": "tests/test_shrine.py",
+    "type": "CMD",
+    "updated": "2026-07-30"
   }
 ]

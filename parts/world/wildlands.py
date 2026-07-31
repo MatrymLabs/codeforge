@@ -580,6 +580,10 @@ def _branch(
             _describe(cfg, trail_i * 3 + j + 1, back, flank if not last else None, landmark),
             exits,
         )
+        # A single WAYSHRINE per region, set at its first branch's landmark pocket: a rare rest boon
+        # a traveller can `pray` at (parts.world.shrine), not a heal on every corner. Deterministic.
+        if last and trail_i == cfg["branch_every"]:
+            rooms[room]["shrine"] = "wayshrine"
 
 
 _PLACE_WORDS = (
