@@ -70,6 +70,27 @@ def test_world_navgraph_builds_from_the_live_world():
     assert graph.node_count() > 0
 
 
+def test_world_navgraph_is_cached_between_calls():
+    # The ~130ms build must not repeat on every `route`: a static world returns the same graph.
+    navigation.reindex_navgraph()  # start cold (another test may have swapped WORLD)
+    first = navigation.world_navgraph()
+    assert navigation.world_navgraph() is first  # reused, not rebuilt
+
+
+def test_world_navgraph_rebuilds_when_the_world_is_swapped(monkeypatch):
+    import parts.world.world as world_mod
+
+    first = navigation.world_navgraph()
+    mini = {
+        "a": {"name": "A", "desc": "", "exits": {"north": "b"}},
+        "b": {"name": "B", "desc": "", "exits": {}},
+    }
+    monkeypatch.setattr(world_mod, "WORLD", mini)
+    swapped = navigation.world_navgraph()
+    assert swapped is not first  # a different world rebuilds the graph
+    assert swapped.node_count() == 2  # over the swapped world, not the cached one
+
+
 # --- Rust <-> Python parity (skips when the native kernel is not built) -------------------------
 @pytest.mark.skipif(not _HAS_RUST, reason="native codeforge_nav not built (maturin develop)")
 def test_rust_matches_the_python_reference():

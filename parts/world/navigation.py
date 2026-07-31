@@ -126,6 +126,31 @@ def world_edges() -> list[tuple[str, str]]:
     ]
 
 
+_cached_graph: NavGraphLike | None = None
+_cached_world_key: tuple[int, int] = (-1, -1)
+
+
+def reindex_navgraph() -> None:
+    """Drop the cached world NavGraph so the next lookup rebuilds it. Production builds WORLD once
+    at boot (delves and all) and never changes it, so this is only needed after mutating WORLD in
+    place at an unchanged size -- e.g. a test -- which the automatic size check cannot see."""
+    global _cached_world_key
+    _cached_world_key = (-1, -1)
+
+
 def world_navgraph() -> NavGraphLike:
-    """A NavGraph over the live world -- native if the Rust kernel is built, else pure-Python."""
-    return NavGraph(world_edges())
+    """A NavGraph over the live world -- native if the Rust kernel is built, else pure-Python.
+
+    CACHED: building it scans every room and exit (~130ms at aethryn's ~53k-room scale) and the
+    `route` command asks for it on every call, so a fresh build per route added ~130ms of latency
+    each time. WORLD is assembled once at boot and does not change during play, so the graph is
+    built once and reused. Invalidation is keyed on WORLD's identity and size: swapping it (a test)
+    or growing it in place rebuilds on the next call; `reindex_navgraph` forces it."""
+    global _cached_graph, _cached_world_key
+    from parts.world.world import WORLD
+
+    key = (id(WORLD), len(WORLD))
+    if _cached_graph is None or _cached_world_key != key:
+        _cached_graph = NavGraph(world_edges())
+        _cached_world_key = key
+    return _cached_graph
