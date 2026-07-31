@@ -156,6 +156,34 @@ case-sensitive.
   an upsert) to make check-run-store atomic across processes.
 - Evidence: `tests/test_idempotency.py`. Maturity `shipped`.
 
+## The part: `dead-letter-queue`
+
+`parts/shelf/dead_letter.py` -- the last part in the at-least-once family, and the recovery half of
+message processing. `retry` makes a failed call happen again; `idempotency-key` makes that repeat
+safe; but some messages fail *permanently* (a poison payload, a downstream that stays down). A
+`DeadLetterQueue` is the third answer: `bury(message, reason, attempts)` sets the exhausted message
+aside instead of losing it or looping forever; `letters()` inspects the buried set; `replay(handler)`
+redrives them, so a message the handler now accepts recovers and leaves while one that still fails
+stays with its reason and attempt count updated.
+
+This is a clean-room reimplementation of the dead-letter-queue pattern (RabbitMQ dead-letter
+exchange, SQS dead-letter queue, Kafka dead-letter topic). No code copied; not affiliated with any
+broker.
+
+**Invariants (tested):** a bury records reason + attempts; the queue is bounded and drops the OLDEST
+letter when full while COUNTING the drop (`dropped` is queryable and is exactly what you alert on -
+never a silent loss); replay recovers accepted messages and keeps the still-failing ones (attempt
+count incremented, reason updated); a zero capacity, empty reason, or negative attempts fails loud.
+
+- **Practical:** a poison message on a queue, a webhook a downstream keeps rejecting, an event whose
+  sink stays broken -- held for triage and replayed after the fix.
+- **Composition:** it closes the at-least-once family -- `retry` (retry the transient failures),
+  `idempotency-key` (make the retry safe), `dead-letter-queue` (hold the permanent failures). A
+  consumer retries within a budget, then buries; an operator replays once the cause is fixed.
+- **Honest limit:** in-memory and single-process; a networked deployment maps the same contract onto
+  a broker's real dead-letter queue for durability and cross-process delivery.
+- Evidence: `tests/test_dead_letter.py` (incl. a full retry -> bury -> replay flow). Maturity `shipped`.
+
 ## Deferred (needs Josh's approval)
 
 For retry: a cancellation token and an async variant. For the circuit breaker: half-open
