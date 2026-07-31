@@ -7204,5 +7204,33 @@
     "aliases": [],
     "created": "2026-07-31",
     "updated": "2026-07-31"
+  },
+  {
+    "designation": "MOD-10.048",
+    "name": "ledger",
+    "status": "active",
+    "function": "a double-entry ledger: every transfer posts an equal debit and credit, so money is conserved and retries are safe",
+    "label": "ledger",
+    "file": "parts/ledger.py",
+    "type": "MOD",
+    "domain": "10",
+    "docs": "docs/design/double_entry_ledger.md",
+    "tests": "tests/test_ledger.py",
+    "depends_on": [
+      "MOD-05.069"
+    ],
+    "related": [
+      "MOD-04.076",
+      "MOD-04.113"
+    ],
+    "reuse": "correct money movement for any domain: a payments/transfer service, an in-game economy audit mirror, an accounting subledger",
+    "tags": [
+      "module"
+    ],
+    "notes": "Clean-room reimplementation of the TigerBeetle double-entry model (accounts + immutable transfers + debits_must_not_exceed_credits guard) fused with the Stripe idempotency key (consumes MOD-05.069). Conservation (total debits == total credits) pinned by unit tests + a Hypothesis property suite. SELF-CONTAINED: does not touch the canonical single-entry coinage (MOD-04.076); integration is a human-approved decision. Not affiliated with TigerBeetle or Stripe.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-31",
+    "updated": "2026-07-31"
   }
 ]
