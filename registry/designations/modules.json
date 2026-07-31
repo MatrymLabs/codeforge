@@ -7284,5 +7284,31 @@
     "aliases": [],
     "created": "2026-07-31",
     "updated": "2026-07-31"
+  },
+  {
+    "designation": "MOD-05.070",
+    "name": "dead_letter",
+    "status": "active",
+    "function": "a dead-letter queue: hold messages that could not be processed, for inspection and replay",
+    "label": "dead_letter",
+    "file": "parts/shelf/dead_letter.py",
+    "type": "MOD",
+    "domain": "05",
+    "docs": "docs/hardware_store/patterns/resilience.md",
+    "tests": "tests/test_dead_letter.py",
+    "depends_on": [],
+    "related": [
+      "retry",
+      "MOD-05.069"
+    ],
+    "reuse": "the third answer for a failed message (after retry + idempotency): set the poison message aside with its reason, inspect it, replay it once fixed",
+    "tags": [
+      "module"
+    ],
+    "notes": "Clean-room reimplementation of the dead-letter-queue pattern (RabbitMQ DLX / SQS DLQ / Kafka dead-letter topic). Bounded (drops oldest, counts drops - alertable, never silent); bury/inspect/replay(redrive). Completes the at-least-once family: retry (MOD-05.035) + idempotency (MOD-05.069) + dead-letter. In-memory/single-process; a networked deployment maps onto a broker's DLQ. Not affiliated with any broker.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-31",
+    "updated": "2026-07-31"
   }
 ]

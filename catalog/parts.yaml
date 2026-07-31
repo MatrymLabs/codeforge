@@ -1365,3 +1365,26 @@
     government: a standardized, auditable project layout (decision records + test plan) for each new system
     compliance: consistent evidence-ready structure (ADRs, test plan, CI) across projects
     general: a repo-skeleton generator that turns documented layout conventions into a one-command scaffold
+- id: dead-letter-queue
+  name: Dead-Letter Queue
+  source: parts/shelf/dead_letter.py
+  category: resilience
+  tags:
+  - dead-letter
+  - messaging
+  - at-least-once
+  - resilience
+  - recovery
+  maturity: shipped
+  source_status: original
+  license: MIT
+  influence: dead-letter-queue pattern (RabbitMQ dead-letter exchange, SQS dead-letter queue, Kafka dead-letter topic) - original implementation, no code copied
+  experimental: 'map it onto a broker''s real dead-letter queue for durability and cross-process use; add per-letter TTL, an alerting hook on dropped > 0, and a partial-replay (redrive only N). Traded away (v1): durability and cross-process delivery, keeping a bounded in-memory core.'
+  risk: low
+  purpose: 'Hold the messages that could not be processed, safely: bury a message that exhausted its retries with the reason and attempt count, stay bounded (drop the oldest and COUNT it - alertable, never silent), inspect the buried letters, and replay them through a handler (redrive) so a recovered message leaves and a still-failing one stays. Fails loud on a zero capacity, empty reason, or negative attempts.'
+  reuse:
+    game: set aside an event whose sink kept failing, for triage, instead of losing it or looping
+    finance: a dead-letter queue for a payment/transfer message that a downstream keeps rejecting, with replay after the fix
+    government: hold a filing/submission that failed processing for operator review and re-submission
+    compliance: an auditable record of what failed processing, why, and how many times - never a silent drop
+    general: the third answer for a failed message after retry + idempotency; the at-least-once consumer''s safety net
