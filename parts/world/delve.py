@@ -105,6 +105,22 @@ def boss_chamber(mouth: str) -> str:
     return f"{mouth}_delve_{_DEPTH}"
 
 
+_VAULT_OFF = 2  # the mid chamber a treasure vault forks from (a trash chamber, never the lair)
+_VAULT_DESC = (
+    "A side-passage opens off the descent into {name} onto a low treasure-vault: old strongboxes "
+    "and the dust-furred hoard of whatever the deep buried here. {note} Something has kept this "
+    "hoard a long age, and it has noticed you."
+)
+
+
+def _vault_room(name: str, biome: str) -> Room:
+    """A treasure-vault pocket branching off the descent: a real fork, so a delve is a choice (take
+    the detour for the hoard, or press straight for the boss) and not a single corridor."""
+    note = _BIOME_DELVE_NOTE.get(biome, _DEFAULT_DELVE_NOTE)
+    desc = _VAULT_DESC.format(name=name, note=note)
+    return Room(name=f"{name}, the treasure-vault", desc=desc, exits={})
+
+
 def _chamber(name: str, idx: int, biome: str) -> Room:
     """One chamber of a delve, read as a stage of a DESCENT: the deeper it sits the graver the lead
     (threshold -> mid-depths -> deep -> lair), carrying the biome's inherited stone-and-air note and
@@ -145,6 +161,18 @@ def generate_delves(
                 npcs[f"{mouth}_deep_boss"] = boss
             rooms[label] = room
             prev = label
+            # A treasure vault forks off one mid chamber: an OPTIONAL pocket with a named guardian
+            # (an ambush, unlike the patient deep boss), so clearing a delve to the last strongbox
+            # is a choice with a reward. Guarded below the deep boss's level, so it stays the lord.
+            if i == _VAULT_OFF and _DEPTH > _VAULT_OFF + 1:
+                vault_label = f"{mouth}_delve_vault"
+                room["exits"]["vault"] = vault_label
+                vault = _vault_room(name, biome)
+                vault["exits"]["out"] = label
+                rooms[vault_label] = vault
+                guard = make_notable(biome, base + _VAULT_OFF + 1, i, vault_label, 6)
+                guard["aggressive"] = True  # it sits the hoard and will not let you at it
+                npcs[f"{mouth}_vault_guard"] = guard
     return rooms, npcs
 
 

@@ -14,7 +14,7 @@ from pathlib import Path
 import pytest
 import yaml
 
-from parts.world.delve import _DEPTH, generate_delves, load_dungeons, wire_delve_mouths
+from parts.world.delve import _DEPTH, _VAULT_OFF, generate_delves, load_dungeons, wire_delve_mouths
 from parts.world.seed import SeedError
 
 _CFG = [
@@ -30,7 +30,7 @@ _CFG = [
 
 def test_a_dungeon_sinks_a_connected_descent_of_chambers():
     rooms, npcs = generate_delves(_CFG)
-    assert len(rooms) == _DEPTH  # one chamber per depth
+    assert len(rooms) == _DEPTH + 1  # one chamber per depth, plus the treasure-vault pocket
     # every chamber is reachable walking `down` from the mouth once the mouth is wired
     world = {"black_hollow": {"name": "mouth", "desc": "d", "exits": {}}}
     world.update(rooms)
@@ -43,6 +43,31 @@ def test_a_dungeon_sinks_a_connected_descent_of_chambers():
                 seen.add(dest)
                 q.append(dest)
     assert set(rooms) <= seen, "a delve chamber is unreachable from the mouth"
+
+
+def test_a_delve_forks_into_an_optional_guarded_treasure_vault():
+    # A delve is a choice, not a corridor: a mid chamber opens a `vault` exit into a treasure pocket
+    # that leads back `out`, and a named guardian holds it -- optional, but you must fight for it.
+    rooms, npcs = generate_delves(_CFG)
+    vault = f"black_hollow_delve_{_VAULT_OFF}"
+    assert rooms[vault]["exits"].get("vault") == "black_hollow_delve_vault"
+    pocket = rooms["black_hollow_delve_vault"]
+    assert pocket["exits"].get("out") == vault, "the vault leads back to the descent"
+    assert "treasure-vault" in pocket["name"] and "hoard" in pocket["desc"]
+    guard = npcs["black_hollow_vault_guard"]
+    assert guard["aggressive"] and not guard.get("ambient")  # a named guardian, an ambush
+    # and it does NOT upstage the deep boss
+    assert guard["level"] < npcs["black_hollow_deep_boss"]["level"]
+
+
+def test_the_vault_is_reachable_and_optional_off_the_main_descent():
+    # The vault hangs off the side: the straight down-descent to the boss never passes through it.
+    rooms, _ = generate_delves(_CFG)
+    descent = [f"black_hollow_delve_{i}" for i in range(1, _DEPTH + 1)]
+    for label in descent:
+        assert "black_hollow_delve_vault" not in [
+            dest for d, dest in rooms[label]["exits"].items() if d in ("up", "down")
+        ], "the vault must not sit on the main up/down spine"
 
 
 def test_a_delve_reads_as_a_descent_with_distinct_depth_stages():
