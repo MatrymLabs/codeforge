@@ -7310,5 +7310,31 @@
     "aliases": [],
     "created": "2026-07-31",
     "updated": "2026-07-31"
+  },
+  {
+    "designation": "MOD-05.071",
+    "name": "cache_aside",
+    "status": "active",
+    "function": "a cache-aside (lazy) cache with a TTL and explicit invalidation: read fast, never serve a stale answer too long",
+    "label": "cache_aside",
+    "file": "parts/shelf/cache_aside.py",
+    "type": "MOD",
+    "domain": "05",
+    "docs": "docs/hardware_store/patterns/persistence.md",
+    "tests": "tests/test_cache_aside.py",
+    "depends_on": [],
+    "related": [
+      "repository",
+      "token_bucket"
+    ],
+    "reuse": "cache a slow query/computation/third-party lookup behind a bounded TTL, invalidating on write; the read side of a service",
+    "tags": [
+      "module"
+    ],
+    "notes": "Clean-room reimplementation of the cache-aside (lazy-loading) pattern (Redis GET->SETEX, DEL to invalidate). Two eviction levers first-class: TTL + explicit invalidate (optimization ethos: cache only when invalidation is clear). Injectable clock (tested with a fake, no sleep); a failed load is never cached; hit/miss stats. In-memory/single-process; a networked deployment maps onto Redis. Not affiliated with Redis.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-31",
+    "updated": "2026-07-31"
   }
 ]

@@ -55,6 +55,32 @@ asset registry) does not change.
 - **Maturity: `beta`** -- demonstrated in two contexts and tested, but not `stable` (no database
   adapter, UnitOfWork, or transactions yet).
 
+## The part: `cache-aside`
+
+`parts/shelf/cache_aside.py` -- the read-path companion to the repository: read a value fast without
+re-hitting the source of truth every time, while bounding how stale that value can get. On a read,
+`get(key, loader)` returns the cached value if it is a hit within its TTL; on a miss or an expired
+entry it calls `loader` (the source of truth), stores the result with a fresh expiry, and returns
+it. This is the documented cache-aside (lazy-loading) pattern used with Redis.
+
+The discipline it enforces (the optimization ethos: "cache only when invalidation is clear") is that
+every value has **two** eviction levers, both first-class: a **TTL** (staleness bounded by time) and
+an explicit **`invalidate(key)`** (a known change evicts immediately rather than waiting out the
+clock). It tracks hit/miss stats so the cache's value is measured, not assumed.
+
+**Invariants (tested, with a fake clock -- no real sleep):** a hit avoids the loader (proven by a
+call count); an entry past its TTL reloads; the TTL boundary is strict (at exactly the TTL it is
+expired); `invalidate` evicts before the TTL; a loader that raises caches nothing (a failed load is
+never a cached failure); a non-positive TTL fails loud.
+
+- **Practical:** cache a slow query, an expensive computation, or a third-party lookup behind a
+  bounded TTL, invalidating on write.
+- **Composition:** it sits in front of the `repository` (read-through), and pairs with `token-bucket`
+  rate limiting and `rank-gate` RBAC to form the read side of a typical service.
+- **Honest limit:** in-memory and single-process; a networked deployment maps the same contract onto
+  Redis (`GET` -> on miss load + `SETEX`, and `DEL` for `invalidate`).
+- Evidence: `tests/test_cache_aside.py`. Maturity `shipped`.
+
 ## Deferred (needs Josh's approval)
 
 A SQLAlchemy-backed repository, a `UnitOfWork`/transaction boundary, and async CRUD are later slices.
