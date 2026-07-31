@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pytest
+
 from parts.shelf.reporting import _find_root, report_path, write_report
 
 
@@ -26,6 +28,15 @@ def test_write_report_writes_and_normalizes_trailing_newline(tmp_path: Path) -> 
 def test_write_report_returns_the_path(tmp_path: Path) -> None:
     p = write_report("misc", "body", root=tmp_path, stamp="2026-07-10")
     assert p.exists() and p.read_text().strip() == "body"
+
+
+def test_report_path_refuses_a_category_that_escapes_reports(tmp_path: Path) -> None:
+    # a category is one dir name under reports/; empty or traversing names must fail loud, never
+    # write (and mkdir) outside the reports/ tree.
+    for bad in ("", "   ", "../secrets", "a/b", "..\\x", "reports/../.."):
+        with pytest.raises(ValueError, match="category"):
+            report_path(bad, root=tmp_path)
+    assert not (tmp_path / "secrets").exists()  # nothing escaped to disk
 
 
 def test_find_root_walks_up_to_the_pyproject_marker(tmp_path: Path) -> None:

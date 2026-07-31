@@ -12,8 +12,10 @@ from pathlib import Path
 import pytest
 
 from parts.shelf_pour import (
+    _ROOT,
     PACKAGE,
     ShelfPourError,
+    _core_files,
     _main,
     _rewrite,
     poolable_twins,
@@ -28,7 +30,11 @@ from parts.shelf_pour import (
 def test_pour_produces_the_standalone_package(tmp_path: Path) -> None:
     poured = pour_shelf(tmp_path)
     assert poured.package == PACKAGE
-    assert len(poured.cores) >= 25  # the 27-core shelf (guards against an accidental empty pour)
+    # Tie the guard to the live shelf: every core on disk is poured and none is dropped. A hardcoded
+    # floor once claimed a stale "27-core shelf" and drifted 11 cores below reality; a set equality
+    # tracks the shelf exactly, so it can never silently undercount again.
+    live_cores = {p.stem for p in _core_files(_ROOT / "parts" / "shelf")}
+    assert set(poured.cores) == live_cores
     pkg = tmp_path / PACKAGE
     assert (pkg / "__init__.py").exists()
     assert (tmp_path / "pyproject.toml").exists() and (tmp_path / "README.md").exists()
@@ -91,7 +97,9 @@ def test_pour_ships_the_engine_free_twins_and_holds_the_rest(tmp_path: Path) -> 
     poured = pour_shelf(tmp_path)
     # the engine-coupled twins are held back, named -- not silently dropped
     assert set(poured.tests_held) == {"console", "observability"}
-    assert len(poured.tests) >= 20 and "console" not in poured.tests
+    # every engine-free twin ships; tie the count to poolable_twins so it tracks the live shelf
+    poolable, _held = poolable_twins()
+    assert len(poured.tests) == len(poolable) and "console" not in poured.tests
     # test deps are auto-declared beyond the runtime deps
     assert "pytest" in poured.test_dependencies
     for name in poured.tests:

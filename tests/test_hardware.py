@@ -5,7 +5,14 @@ Refusal: a malformed entry fails loud rather than stocking a bad part."""
 
 import pytest
 
-from parts.hardware import CatalogError, catalog_text, find_part, load_catalog, source_gaps
+from parts.hardware import (
+    CatalogError,
+    catalog_text,
+    find_part,
+    load_catalog,
+    source_gaps,
+    uncataloged_cores,
+)
 
 
 def _write(tmp_path, text: str):
@@ -216,3 +223,24 @@ def test_source_gaps_flags_a_part_that_cites_a_missing_file(tmp_path):
     )
     gaps = source_gaps(root=tmp_path, path=cat)
     assert any("ghost" in g and "does_not_exist" in g for g in gaps)
+
+
+def test_every_shelf_core_is_cataloged_or_declared_local_only():
+    # the converse of source_gaps: no reusable shelf core sits unfiled and unexplained. A new core
+    # is either stocked in the catalog or added to _LOCAL_ONLY_CORES with a reason -- never silent.
+    assert uncataloged_cores() == []
+
+
+def test_uncataloged_cores_flags_a_core_no_card_covers_and_excuses_local_only(tmp_path):
+    shelf = tmp_path / "parts" / "shelf"
+    shelf.mkdir(parents=True)
+    (shelf / "__init__.py").write_text("")
+    (shelf / "widget.py").write_text("x = 1\n")  # a reusable core no catalog card covers
+    (shelf / "affixes.py").write_text("x = 1\n")  # a declared local-only core (allowlisted)
+    cat = _write(
+        tmp_path,
+        "- id: other\n  name: O\n  source: parts/shelf/other.py\n  category: c\n"
+        "  maturity: beta\n  risk: low\n  reuse: {game: y}\n  purpose: p\n",
+    )
+    gaps = uncataloged_cores(root=tmp_path, path=cat)
+    assert gaps == ["widget"]  # widget flagged; affixes excused by the local-only allowlist

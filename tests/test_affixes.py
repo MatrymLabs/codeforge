@@ -2,6 +2,8 @@
 
 from random import Random
 
+import pytest
+
 from parts.shelf.affixes import Rolled, roll
 
 # The five derived combat stats affixes may target (mirrored locally so this stays an ENGINE-FREE
@@ -46,3 +48,10 @@ def test_higher_level_makes_affix_bonuses_larger():
     high = roll(Random(3), "blade", {"ATK": 10}, 60)
     assert high.rarity == low.rarity and high.name == low.name
     assert sum(high.mods.values()) >= sum(low.mods.values())  # level lifts the affix bonuses
+
+
+def test_roll_refuses_an_empty_base_name():
+    # a rolled item with no base to name is nonsense: fail loud instead of leaking a nameless drop
+    for blank in ("", "   "):
+        with pytest.raises(ValueError, match="non-empty item name"):
+            roll(Random(0), blank, {"ATK": 5}, 3)
