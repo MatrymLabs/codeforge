@@ -16,6 +16,15 @@ resource "docker_container" "codeforge" {
   image   = docker_image.codeforge.image_id
   restart = "unless-stopped"
 
+  # Runtime hardening (defense in depth; the image already runs as non-root UID 10001).
+  # Verified not to break the telnet server: it needs no Linux capability (a non-root high-port
+  # bind) and never escalates privilege. Bounds a runaway from exhausting the host (a DoS control).
+  security_opts = ["no-new-privileges:true"]
+  memory        = 512 # MB
+  capabilities {
+    drop = ["ALL"]
+  }
+
   # Telnet gateway. The container's CMD is `spark` (the LAN telnet server).
   ports {
     internal = 4000
@@ -34,8 +43,11 @@ resource "docker_container" "codeforge" {
     container_path = "/data"
   }
 
+  # Real liveness: a plain TCP connect to the game port (the image's own HEALTHCHECK), so a hung
+  # server is detected and `restart = unless-stopped` brings it back. The prior "CMD true" override
+  # always reported healthy, which defeated the point.
   healthcheck {
-    test     = ["CMD-SHELL", "true"] # the engine has no in-container HTTP health probe on the telnet gate; liveness is the process
+    test     = ["CMD", "python", "-c", "import socket; socket.create_connection(('127.0.0.1', 4000), 3).close()"]
     interval = "30s"
     timeout  = "5s"
     retries  = 3
