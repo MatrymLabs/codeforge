@@ -1,0 +1,242 @@
+# CodeForge security control crosswalk (machine-readable evidence index).
+#
+# This maps IMPLEMENTED controls to the framework families they contribute evidence to. It is an
+# engineering evidence index, tested for honesty by tests/test_security_crosswalk.py: every cited
+# path must exist, and no control may claim compliance.
+#
+# READ THIS FIRST (non-negotiable framing):
+#   - This is NOT a compliance claim. A mapping shows where a control contributes EVIDENCE to a
+#     framework; it does not establish that the framework's scope, parameters, tailoring, assessment,
+#     or contractual requirements are satisfied.
+#   - No CMMC / FedRAMP / HIPAA / PCI compliance, certification, authorization, or assessment-readiness
+#     is asserted anywhere in this file. Those require independent assessment by the authorized path.
+#   - `status: verified_against` means "an implemented control, exercised by cited evidence, that
+#     aligns with the mapped controls." It never means "satisfied" or "compliant".
+#   - A scanner passing is never, by itself, evidence that a control is satisfied.
+
+meta:
+  title: CodeForge security control crosswalk
+  scope: codeforge engine + gateway + API image (LAN-first TCP/telnet MUD server, FastAPI admin)
+  compliance_claim: none
+  disclaimer: >-
+    Internal control-to-framework evidence crosswalk only. Not a compliance claim, certification,
+    authorization, or assessment-readiness statement. Framework satisfaction requires independent
+    assessment. Language is limited to "supports / aligns with / contributes evidence to / verified
+    against / requires independent assessment / not applicable".
+  evidence_kinds: [implementation, test, config, operational]
+  # The only statuses a control may carry. Deliberately EXCLUDES "satisfied", "compliant",
+  # "certified", "authorized" -- the honesty test rejects those.
+  allowed_status: [verified_against, implemented, not_applicable]
+  review_date: 2026-07-31
+
+controls:
+  - id: CF-SEC-001
+    control: Deserialization safety on the world-input boundary
+    applicability: applicable
+    assurance_profile: B
+    implementation: parts/world/seed.py  # _UniqueKeyLoader on a SafeConstructor base
+    evidence:
+      - {kind: test, path: tests/test_seed_security.py}
+    status: verified_against
+    frameworks: {nist_800_53: [SI-10, SI-16], ssdf: [PW.5.1], owasp_top10: [A08], owasp_asvs: [file-handling]}
+    assessment_requirement: independent_assessment_required
+    notes: the whole world loads through one safe YAML loader that refuses python object tags.
+
+  - id: CF-SEC-002
+    control: Fuzzing of the telnet protocol parser (network trust boundary)
+    applicability: applicable
+    assurance_profile: B
+    implementation: parts/shelf/telnet_codec.py
+    evidence:
+      - {kind: test, path: tests/test_fuzz_telnet.py}
+    status: verified_against
+    frameworks: {nist_800_53: [SI-10, SI-16], ssdf: [PW.8], owasp_top10: [A10]}
+    assessment_requirement: independent_assessment_required
+    notes: strip_iac never crashes/grows on hostile bytes; escape/strip proven exact inverses.
+
+  - id: CF-SEC-003
+    control: Container hardening (non-root numeric UID, liveness healthcheck)
+    applicability: applicable
+    assurance_profile: B
+    implementation: Dockerfile
+    evidence:
+      - {kind: config, path: Dockerfile}
+      - {kind: config, path: Dockerfile.api}
+    status: verified_against
+    frameworks: {nist_800_53: [CM-6, SI-4], owasp_top10: [A02]}
+    assessment_requirement: requires_organizational_implementation
+    notes: fixed UID 10001 enables runAsNonRoot/read-only-fs enforcement; healthcheck is liveness.
+
+  - id: CF-SEC-004
+    control: Password hashing (salted pbkdf2-sha256, constant-time, case-preserving)
+    applicability: applicable
+    assurance_profile: B
+    implementation: parts/world/accounts.py
+    evidence:
+      - {kind: test, path: tests/test_accounts.py}
+    status: verified_against
+    frameworks: {nist_800_53: [IA-5, SC-13], owasp_top10: [A07], owasp_asvs: [authentication]}
+    assessment_requirement: independent_assessment_required
+    notes: mixed-case/symbol secrets survive the tick (raw is never lowercased); floor is 8.
+
+  - id: CF-SEC-005
+    control: Online brute-force defence + non-enumerating login refusals
+    applicability: applicable
+    assurance_profile: B
+    implementation: parts/gateway.py
+    evidence:
+      - {kind: implementation, path: parts/gateway.py}
+    status: verified_against
+    frameworks: {nist_800_53: [AC-7, IA-5], owasp_top10: [A07]}
+    assessment_requirement: independent_assessment_required
+    notes: per-connection 3-strikes-then-close; generic "no such account or password" refusal.
+
+  - id: CF-SEC-006
+    control: Server-side authorization (rank-gated @-verbs, namespaced command spine)
+    applicability: applicable
+    assurance_profile: B
+    implementation: parts/world/ranks.py
+    evidence:
+      - {kind: implementation, path: parts/commands.py}
+    status: verified_against
+    frameworks: {nist_800_53: [AC-3, AC-6], owasp_top10: [A01], owasp_asvs: [access-control]}
+    assessment_requirement: independent_assessment_required
+    notes: authorization runs before capability; the @ sigil is reserved for admin by construction.
+
+  - id: CF-SEC-007
+    control: Secret scanning gate (detect-secrets, baselined)
+    applicability: applicable
+    assurance_profile: B
+    implementation: Makefile  # make secrets
+    evidence:
+      - {kind: config, path: .secrets.baseline}
+      - {kind: config, path: .github/workflows/ci.yml}
+    status: verified_against
+    frameworks: {nist_800_53: [IA-5, SA-15], owasp_top10: [A05]}
+    assessment_requirement: requires_organizational_implementation
+    notes: .env git-ignored; the baseline holds hashed false-positives only, no live secrets.
+
+  - id: CF-SEC-008
+    control: SAST (bandit, medium+ severity, in CI)
+    applicability: applicable
+    assurance_profile: B
+    implementation: Makefile  # make sast
+    evidence:
+      - {kind: config, path: .github/workflows/ci.yml}
+    status: verified_against
+    frameworks: {nist_800_53: [SA-11], ssdf: [PW.7, PW.8], owasp_top10: [A06]}
+    assessment_requirement: requires_organizational_implementation
+
+  - id: CF-SEC-009
+    control: Software composition analysis (pip-audit dependency CVE gate)
+    applicability: applicable
+    assurance_profile: B
+    implementation: Makefile  # make audit / audit-runtime
+    evidence:
+      - {kind: config, path: .github/workflows/ci.yml}
+    status: verified_against
+    frameworks: {nist_800_53: [RA-5, SA-12, SR-3], ssdf: [PW.4, RV.1], owasp_top10: [A06]}
+    assessment_requirement: requires_organizational_implementation
+
+  - id: CF-SEC-010
+    control: SBOM generation (CycloneDX, uploaded as a CI artifact)
+    applicability: applicable
+    assurance_profile: B
+    implementation: Makefile  # make sbom
+    evidence:
+      - {kind: config, path: .github/workflows/ci.yml}
+    status: verified_against
+    frameworks: {nist_800_53: [CM-8, SR-4], ssdf: [PS.3, PW.4], owasp_top10: [A06]}
+    assessment_requirement: requires_organizational_implementation
+    notes: manifest-derived today; artifact-derived SBOM is a Profile-C follow-up.
+
+  - id: CF-SEC-011
+    control: Static analysis (GitHub CodeQL)
+    applicability: applicable
+    assurance_profile: B
+    implementation: .github/workflows/codeql.yml
+    evidence:
+      - {kind: config, path: .github/workflows/codeql.yml}
+    status: verified_against
+    frameworks: {nist_800_53: [SA-11], ssdf: [PW.8]}
+    assessment_requirement: requires_organizational_implementation
+
+  - id: CF-SEC-012
+    control: Supply-chain posture scoring (OpenSSF Scorecard)
+    applicability: applicable
+    assurance_profile: B
+    implementation: .github/workflows/scorecard.yml
+    evidence:
+      - {kind: config, path: .github/workflows/scorecard.yml}
+    status: verified_against
+    frameworks: {nist_800_53: [SR-3, SR-11], ssdf: [PO.3]}
+    assessment_requirement: requires_organizational_implementation
+
+  - id: CF-SEC-013
+    control: CI/CD hardening (SHA-pinned actions, least-privilege workflow permissions)
+    applicability: applicable
+    assurance_profile: C
+    implementation: .github/workflows/ci.yml
+    evidence:
+      - {kind: config, path: .github/workflows/ci.yml}
+    status: verified_against
+    frameworks: {nist_800_53: [CM-3, SR-3, SR-11], ssdf: [PS.1], owasp_top10: [A08]}
+    assessment_requirement: requires_organizational_implementation
+    notes: "every action is pinned to a commit SHA; permissions default to contents-read, scoped writes."
+
+  - id: CF-SEC-014
+    control: Field sanitization (control-char + log-injection stripping for storage/logs)
+    applicability: applicable
+    assurance_profile: B
+    implementation: parts/field_sanitizer.py
+    evidence:
+      - {kind: test, path: tests/test_field_sanitizer.py}
+    status: verified_against
+    frameworks: {nist_800_53: [AU-9, SI-10], owasp_top10: [A09]}
+    assessment_requirement: independent_assessment_required
+
+  - id: CF-SEC-015
+    control: Safe subprocess execution (fixed argv, no shell, read-only)
+    applicability: applicable
+    assurance_profile: B
+    implementation: parts/integrity.py  # representative nosec-annotated call site
+    evidence:
+      - {kind: implementation, path: parts/integrity.py}
+    status: verified_against
+    frameworks: {nist_800_53: [SI-10], ssdf: [PW.5.1], owasp_top10: [A03]}
+    assessment_requirement: independent_assessment_required
+    notes: every subprocess.run uses a fixed argv, no shell; each site carries a reviewed nosec.
+
+  - id: CF-SEC-016
+    control: Embedded-script sandbox (Lua instruction budget + whitelisted env)
+    applicability: applicable
+    assurance_profile: B
+    implementation: parts/scripting.py
+    evidence:
+      - {kind: implementation, path: parts/scripting.py}
+    status: verified_against
+    frameworks: {nist_800_53: [SC-2, SI-10], ssdf: [PW.5.1], owasp_top10: [A08]}
+    assessment_requirement: independent_assessment_required
+    notes: register_eval=False, whitelisted _ENV, an instruction-count hook the script cannot disarm.
+
+  # --- Not applicable (recorded, so scope is explicit and never silently assumed) ---
+  - id: CF-SEC-NA-001
+    control: SSRF / outbound-request destination controls
+    applicability: not_applicable
+    status: not_applicable
+    frameworks: {nist_800_53: [SC-7], owasp_top10: [A10]}
+    notes: codeforge makes no user-influenced outbound requests; the network fetch lives in FGL.
+
+  - id: CF-SEC-NA-002
+    control: Archive/upload extraction safety (zip-slip, decompression bombs)
+    applicability: not_applicable
+    status: not_applicable
+    frameworks: {nist_800_53: [SI-3], owasp_top10: [A08]}
+    notes: codeforge imports no archives/uploads; world content is validated YAML on disk.
+
+  - id: CF-SEC-NA-003
+    control: Payment (PAN), ePHI, and CUI data-handling controls
+    applicability: not_applicable
+    status: not_applicable
+    frameworks: {pci: [3, 4], hipaa: ["164.312"]}
+    notes: codeforge processes no payment, health, or CUI data; these frameworks are out of scope.
