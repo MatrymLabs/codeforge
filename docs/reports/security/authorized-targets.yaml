@@ -1,0 +1,111 @@
+# CodeForge authorized-target manifest: the explicit boundary for developer-driven security testing.
+#
+# ACTIVE security testing -- DAST, fuzzing pointed at a network service, credential/injection testing,
+# scanning, bypass testing -- may run ONLY against a target listed here. A target that is not listed is
+# AUTHORIZATION_REQUIRED: stop that test, record it, and do not probe it. This file is tested for
+# safety by tests/test_authorized_targets.py, so it cannot silently authorize a non-local target.
+#
+# DOCTRINE (non-negotiable):
+#   - Public accessibility is NEVER authorization.
+#   - Possession of a hostname, IP, API key, account, or source-code copy is NEVER authorization.
+#   - Only systems Josh owns and controls, and only the entries below, are in scope.
+#   - Static analysis (SAST/SCA/secret scan/lint/SBOM) needs no running target and is always allowed.
+
+meta:
+  purpose: authorization scope for self-security-testing of CodeForge (owned, local targets only)
+  approver: Josh / MatrymLabs
+  default_scope: ["127.0.0.1", "::1", "localhost"]
+  # Hostnames/IPs considered local and owned (loopback + explicitly named local docker services).
+  local_hosts: ["127.0.0.1", "::1", "localhost", "0.0.0.0"]
+  review_date: 2026-07-31
+
+# --- IN SCOPE (owned, local; active testing permitted within the stated modes) -------------------
+targets:
+  - target_id: local-telnet-gateway
+    owner: Josh / MatrymLabs
+    system_name: CodeForge telnet gateway (spark)
+    environment: local_dev
+    host: "127.0.0.1"
+    port: 4000
+    protocol: telnet
+    authorization_basis: owned_local
+    authorized_tools: [pytest, hypothesis, netcat, custom-harness]
+    authorized_test_types: [STATIC_SAFE, LOCAL_PASSIVE, LOCAL_ACTIVE]
+    prohibited_test_types: [production_exploitation, destructive_mutation, denial_of_service]
+    maximum_request_rate: bounded_local
+    maximum_concurrency: 8
+    test_accounts: synthetic_only
+    data_classification: synthetic
+    snapshot_required: false
+    stop_conditions: [unexpected_non_local_host, 5xx_spike, latency_spike, instability]
+    expiration_date: null # standing: local, owned, ephemeral state
+
+  - target_id: local-web-gate
+    owner: Josh / MatrymLabs
+    system_name: CodeForge browser gate (codeforge web / FastAPI)
+    environment: local_dev
+    host: "127.0.0.1"
+    port: 8000
+    protocol: http
+    base_url: "http://127.0.0.1:8000"
+    authorization_basis: owned_local
+    authorized_tools: [pytest, httpx, "owasp-zap (baseline/passive first)"]
+    authorized_test_types: [STATIC_SAFE, LOCAL_PASSIVE, LOCAL_ACTIVE]
+    prohibited_test_types: [production_exploitation, destructive_mutation, denial_of_service]
+    maximum_request_rate: bounded_local
+    maximum_concurrency: 8
+    test_accounts: synthetic_only
+    data_classification: synthetic
+    snapshot_required: false
+    stop_conditions: [unexpected_non_local_host, 5xx_spike, latency_spike, instability, account_lockout]
+    expiration_date: null
+
+  - target_id: local-api
+    owner: Josh / MatrymLabs
+    system_name: CodeForge admin/status API (codeforge api / FastAPI)
+    environment: local_dev
+    host: "127.0.0.1"
+    port: 8000
+    protocol: http
+    base_url: "http://127.0.0.1:8000"
+    authorization_basis: owned_local
+    authorized_tools: [pytest, httpx, "owasp-zap (baseline/passive first)"]
+    authorized_test_types: [STATIC_SAFE, LOCAL_PASSIVE, LOCAL_ACTIVE]
+    prohibited_test_types: [production_exploitation, destructive_mutation, denial_of_service]
+    maximum_request_rate: bounded_local
+    test_accounts: synthetic_only
+    data_classification: synthetic
+    snapshot_required: false
+    stop_conditions: [unexpected_non_local_host, 5xx_spike, instability]
+    expiration_date: null
+
+  - target_id: local-docker-disposable
+    owner: Josh / MatrymLabs
+    system_name: disposable local Docker containers (codeforge:ci / codeforge-api:ci)
+    environment: local_disposable
+    host: "127.0.0.1"
+    protocol: any
+    authorization_basis: owned_local_disposable
+    authorized_tools: [docker, pytest, "owasp-zap", trivy]
+    authorized_test_types: [STATIC_SAFE, LOCAL_PASSIVE, LOCAL_ACTIVE]
+    prohibited_test_types: [production_exploitation, denial_of_service]
+    maximum_request_rate: bounded_local
+    test_accounts: synthetic_only
+    data_classification: synthetic
+    snapshot_required: false # disposable: rebuild instead of restore
+    stop_conditions: [unexpected_non_local_host, instability]
+    expiration_date: null
+
+# --- EXPLICITLY OUT OF SCOPE (recorded so scope is never silently assumed) ------------------------
+# Listed to document intent, NOT to authorize. Active testing of these is refused.
+out_of_scope:
+  - target_id: public-render-demo
+    system_name: the public browser demo (codeforge-demo, Render)
+    posture: PRODUCTION_OBSERVE_ONLY # passive checks + provenance/health only; NO active testing
+    reason: production, public-facing; active exploitation/fuzzing/DoS is prohibited by policy
+  - target_id: any-non-local-target
+    system_name: any host not in `targets` (third-party MUD, public service, external API, staging)
+    posture: AUTHORIZATION_REQUIRED
+    reason: >
+      requires explicit written scope, owner, test window, rate limit, and stop conditions before any
+      active test. Absent that, STOP and record AUTHORIZATION_REQUIRED.
