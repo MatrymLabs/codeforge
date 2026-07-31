@@ -1296,3 +1296,26 @@
     government: a submit-once guard on a filing or benefit request across client retries
     compliance: exactly-once processing evidence for an at-least-once queue or webhook
     general: dedup any retried web/API request or message so redelivery is safe
+- id: double-entry-ledger
+  name: Double-Entry Ledger
+  source: parts/ledger.py
+  category: finance
+  tags:
+  - double-entry
+  - accounting
+  - ledger
+  - idempotency
+  - correctness
+  maturity: shipped
+  source_status: original
+  license: MIT
+  influence: TigerBeetle double-entry model (accounts + immutable transfers + debits_must_not_exceed_credits) fused with the Stripe idempotency key - original implementation, no code copied
+  experimental: 'back the transfer log with a transactional store (the two balance updates + the log insert commit in ONE DB transaction; a UNIQUE transfer id); add account types, transfer flags (pending/void two-phase), and a reconciliation job. Traded away (v1): durability and multi-process atomicity, keeping a pure in-memory core with the invariant intact.'
+  risk: low
+  purpose: 'Move money correctly: every transfer posts an equal debit and credit into an append-only immutable log, so across the whole ledger total debits always equal total credits (money is conserved, never created or destroyed). An optional idempotency key makes a retry safe (a post applies exactly once); an overdraft guard, an unknown account, a non-positive/non-integer amount, a self-transfer, or a duplicate transfer id is refused before any balance moves.'
+  reuse:
+    game: an audit-grade coin economy or an audit mirror over the single-entry coinage; every gold sink/source provable
+    finance: a payments/transfer subledger with idempotent endpoints and a conservation invariant an auditor can verify
+    government: a funds-disbursement or benefit-issuance ledger with an immutable, reconcilable audit trail
+    compliance: evidence that value is conserved and every movement is logged, immutable, and retry-safe
+    general: any system that must move a countable resource between accounts without ever losing or duplicating it
