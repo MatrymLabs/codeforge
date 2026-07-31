@@ -1,4 +1,4 @@
-.PHONY: hooks env fix lint typecheck test property fuzz coverage audit audit-runtime security sast secrets deps intake sbom bench trend ai-eval retention doctor patch daily check readiness arc-verdicts truth forge cast-plan cast cast-selective cast-install-check cast-diff cast-update plugins coupling shelf-pour shelf-build smoke repo-integrity ship run world world-check store hardware clean serve backup restore db-up db-down db-migrate docs-serve docs-build demo-gif e2e evolution ritual-fast ritual ritual-down unskew loop proto contracts
+.PHONY: hooks env fix lint typecheck test property fuzz coverage audit audit-runtime security sast secrets deps intake sbom bench trend slo ai-eval retention doctor patch daily check readiness arc-verdicts truth forge cast-plan cast cast-selective cast-install-check cast-diff cast-update plugins coupling shelf-pour shelf-build smoke repo-integrity ship run world world-check store hardware clean serve backup restore db-up db-down db-migrate docs-serve docs-build demo-gif e2e evolution ritual-fast ritual ritual-down unskew loop proto contracts
 
 # --- Environment: create/validate the .venv, fail loud on version mismatch.
 # Uses uv when present (a Rust resolver; measured ~20x faster than pip on this host:
@@ -259,6 +259,12 @@ contracts:
 trend:
 	@python3 -m parts.bench --record $$(git rev-parse --short HEAD 2>/dev/null || echo unknown)
 	@python3 -m parts.chronicle trend engine_tick.median_us
+
+# --- SLO: evaluate the recorded engine-tick SLI against its objective + error budget
+# (docs/reports/slo/engine-tick-slo.md). Read-only over the Chronicle; exits 1 on a breach so a
+# pipeline can act. NOT in `make check` (the SLI is host-relative and sparse). ---
+slo:
+	@python3 -m parts.slo
 
 # --- AI eval: score the offline LocalArchitect against a rubric, RECORD it as a Chronicle
 # ai-eval (eval-regression memory), then show the memory. Network-free; point it at the real
