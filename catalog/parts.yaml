@@ -1388,3 +1388,26 @@
     government: hold a filing/submission that failed processing for operator review and re-submission
     compliance: an auditable record of what failed processing, why, and how many times - never a silent drop
     general: the third answer for a failed message after retry + idempotency; the at-least-once consumer''s safety net
+- id: cache-aside
+  name: Cache-Aside (TTL)
+  source: parts/shelf/cache_aside.py
+  category: performance
+  tags:
+  - cache
+  - ttl
+  - cache-aside
+  - performance
+  - invalidation
+  maturity: shipped
+  source_status: original
+  license: MIT
+  influence: cache-aside / lazy-loading pattern (Redis GET then SETEX; DEL to invalidate) - original implementation, no code copied
+  experimental: 'map onto Redis for cross-process caching; add an LRU/size bound alongside the TTL, a stale-while-revalidate mode, and a per-key TTL. Traded away (v1): cross-process durability and size eviction, keeping a pure in-memory TTL core with an injectable clock.'
+  risk: low
+  purpose: 'Read a value fast without re-hitting the source every time, while bounding staleness: on a hit within the TTL return the cached value; on a miss or expiry load from the source, store with a fresh expiry, and return. Two eviction levers, both first-class: a TTL (staleness bounded by time) and an explicit invalidate(key) (a known change evicts now). A failed load is never cached; hit/miss stats make the cache measurable; a non-positive TTL fails loud.'
+  reuse:
+    game: cache a computed lookup (a zone index, a derived stat) behind a short TTL, invalidating on change
+    finance: cache a slow quote or reference-data lookup with a bounded staleness window and explicit invalidation on update
+    government: cache an expensive record or eligibility lookup with a defensible freshness bound
+    compliance: bounded-staleness caching with an auditable invalidation lever (not a cache that can serve stale indefinitely)
+    general: the read side of a service - cache-aside a slow query/computation/third-party call with a TTL
