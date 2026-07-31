@@ -1,9 +1,13 @@
 """CARD: combat -- the training loop: strike, defeat, hand off to the leveling engine.
 
-Assembly card: npcs (targets) + stats (damage). Damage is deterministic in v0: no dice
-yet, so every number in the test twin is exact. The one randomness is a defeated foe's
-WEIGHTED loot roll (`_roll_loot`, parts.shelf.weighted_table), and even that is seedable: it draws
-from `_LOOT_RNG`, a module-level RNG tests replace for exact outcomes. The dummy reassembles on
+Assembly card: npcs (targets) + stats (damage). Damage MATH is deterministic; the one die on a
+blow is its VARIANCE -- a rare miss, a rare crit, an occasional glance -- drawn from `_COMBAT_RNG`,
+a module-level RNG the test suite installs NEUTRAL (always a normal hit) so every exact number in
+the twin still holds, and variance tests force an outcome. A defeated foe's WEIGHTED loot roll
+(`_roll_loot`, parts.shelf.weighted_table) draws from a second seedable RNG, `_LOOT_RNG`. A fall now
+carries a modest, reversible stake (`_death_toll`): carried coins scatter and a non-lethal fall
+wakes at half health -- defeat costs something, so it is no longer consequence-free. The dummy
+reassembles on
 defeat -- it is a training dummy; collapsing is its job. A landed strike advances the combat clock
 (`combat_clock`), so cooldowns thaw and statuses age as rounds pass. When a foe falls,
 combat hands the reward to the leveling engine (`progression_awards`) rather than climbing
@@ -33,11 +37,62 @@ from parts.world.progression_awards import award_jp, award_tp, award_xp
 from parts.world.seed import Npc
 from parts.world.session import Session, display_name, sentence_case
 
-# Loot-only randomness. Combat MATH stays deterministic (no dice in damage); only a defeated foe's
-# WEIGHTED loot table rolls here. A module-level RNG so tests seed or replace it for exact draws.
+# Loot-only randomness. A defeated foe's WEIGHTED loot table rolls here. A module-level RNG so tests
+# seed or replace it for exact draws.
 _LOOT_RNG = random.Random()  # nosec B311 -- game loot, not security; seeded for tests, not secrecy
 
+# Combat variance -- the ONE die on a blow. Damage MATH stays deterministic; this rolls whether a
+# blow whiffs, glances, crits, or lands normally. The test suite installs a NEUTRAL RNG (always a
+# normal hit, note below) so exact-number assertions hold; variance tests force an outcome. Live
+# play is stochastic -- fights breathe instead of reading off a table.
+_COMBAT_RNG = random.Random()  # nosec B311 -- game feel, not security; neutralized in tests
+
+MISS_CHANCE = 0.05  # a blow goes wide: 0 damage
+CRIT_CHANCE = 0.10  # a critical strike: CRIT_MULT times damage
+GLANCE_CHANCE = 0.15  # a glancing blow: half damage (floored 1)
+CRIT_MULT = 2  # a crit doubles the blow
+
+
+def _apply_variance(dmg: int) -> tuple[int, str]:
+    """Roll the one die on a landed blow of magnitude `dmg`. Returns (damage, note):
+
+    - miss (MISS_CHANCE): 0 damage, " (miss!)"
+    - crit (CRIT_CHANCE): CRIT_MULT x damage, " (critical!)"
+    - glance (GLANCE_CHANCE): half damage (floored 1), " (glancing)"
+    - normal (the rest): `dmg` unchanged, "" (no note)
+
+    A non-positive `dmg` passes through untouched (no die on a blow that was already nothing). The
+    suite's neutral RNG always rolls into the normal band, so existing exact numbers are preserved.
+    """
+    if dmg <= 0:
+        return dmg, ""
+    roll = _COMBAT_RNG.random()
+    if roll < MISS_CHANCE:
+        return 0, " (miss!)"
+    if roll < MISS_CHANCE + CRIT_CHANCE:
+        return dmg * CRIT_MULT, " (critical!)"
+    if roll < MISS_CHANCE + CRIT_CHANCE + GLANCE_CHANCE:
+        return max(1, dmg // 2), " (glancing)"
+    return dmg, ""
+
+
 DAMAGE_BASE = 3  # damage dealt = DAMAGE_BASE + strength // 3
+
+# Death stakes -- a modest, reversible cost so defeat is no longer consequence-free. Carried coins
+# scatter on a fall (banked coins are safe -- only what you carry is at risk), and a non-lethal fall
+# wakes at half health rather than full. A lethal boss fall already stakes the trip home; it pays
+# the coin toll too. The knobs are named so the balance is one edit, not a hunt.
+DEATH_COIN_PENALTY = 0.10  # a tenth of carried coins scatter when you fall
+DEATH_HP_FRACTION = 0.5  # a non-lethal fall wakes you at this fraction of full health
+
+
+def _death_toll(session: Session) -> int:
+    """Scatter DEATH_COIN_PENALTY of the hero's carried coins on a fall; return the coins lost
+    (0 for an empty purse). Banked/vaulted coins are safe -- only the carried purse is staked."""
+    lost = int(session.coins * DEATH_COIN_PENALTY)
+    session.coins -= lost
+    return lost
+
 
 # Readable names for the element/status codes a foe's blow may carry (seed RESIST_ORDER codes).
 _ELEMENT_NAMES = {
@@ -173,13 +228,16 @@ def npc_strike_power(npc: Npc) -> int:
 
 
 def _fall_and_recover(session: Session, npc: Npc) -> str:
-    """Safe defeat: a felled player is restored in place. Never a broken state (v0 failsafe)."""
+    """Non-lethal defeat: the failsafe pulls a felled player back in place (never a broken state),
+    but the fall now carries a stake. Carried coins scatter and the hero wakes at HALF health, not
+    full, so defeat costs something. Location unchanged."""
+    lost = _death_toll(session)
     hp = session.resources["hp"]
-    session.resources["hp"] = hp.heal(hp.maximum)  # back to full; location unchanged
-    witness("fall", npc["name"], "felled the player; the failsafe restored them")
-    return (
-        f"You fall to {npc['name']}, and wake restored at full health. (Training-ground failsafe.)"
-    )
+    revived = max(1, int(hp.maximum * DEATH_HP_FRACTION))  # wake at DEATH_HP_FRACTION of full
+    session.resources["hp"] = hp.heal(hp.maximum).damage(hp.maximum - revived)  # -> exactly revived
+    witness("fall", npc["name"], "felled the player; the failsafe restored them, at a cost")
+    toll = f" You scatter {purse(lost)} in the fall." if lost else ""
+    return f"You fall to {npc['name']}, and wake at half health.{toll} (Training-ground failsafe.)"
 
 
 def _fall_to_death(session: Session, npc: Npc) -> str:
@@ -187,15 +245,17 @@ def _fall_to_death(session: Session, npc: Npc) -> str:
     room at full health, and the foe recovers -- the fight is earned again. Levels are kept."""
     from parts.world.world import START_ROOM  # lazy: world binds seed state at import
 
+    lost = _death_toll(session)
     session.location = START_ROOM
     hp = session.resources["hp"]
     session.resources["hp"] = hp.heal(hp.maximum)
     npc["hp_now"] = npc["hp"]  # the boss recovers for the rematch
     witness("fall", npc["name"], "felled the player, who woke where their road began")
     foe = sentence_case(npc["name"])
+    toll = f" {purse(lost)} scatters from your purse." if lost else ""
     return (
         f"{foe} fells you. Darkness takes you -- and you wake where your road "
-        "began, whole but shaken. It still waits below."
+        f"began, whole but shaken.{toll} It still waits below."
     )
 
 
@@ -237,6 +297,11 @@ def _resolve_npc_blow(session: Session, npc: Npc, verb: str) -> str:
     warded = session.statuses.get("barrier", 0) > 0
     if warded:  # a deployed barrier (Engineer) turns half the blow while it holds
         power = max(1, power // 2)
+    # The one die: the foe may whiff, glance, or crit -- UNLESS this is a telegraphed unleash, which
+    # was announced and connects by design (a guaranteed special never whiffs).
+    vnote = ""
+    if not guaranteed:
+        power, vnote = _apply_variance(power)
     # A typed blow (the foe's attack_element) is scaled by the player's resistance to that element.
     power, healed, resist_note = _typed_blow(session, npc, power)
     session.resources["hp"] = session.resources["hp"].damage(power)
@@ -255,9 +320,9 @@ def _resolve_npc_blow(session: Session, npc: Npc, verb: str) -> str:
     ward = " Your barrier turns half of it." if warded else ""
     sap = " (weakened)" if sapped > 0 else ""
     if power > 0:
-        body = f"{name} {verb} for {power}.{sap}{ward}{resist_note}"
-    else:  # Immune or Absorb: the blow lands no damage, the note carries the outcome
-        body = f"{name} {verb}.{resist_note}"
+        body = f"{name} {verb} for {power}.{sap}{ward}{resist_note}{vnote}"
+    else:  # a miss, or an Immune/Absorb: the blow lands no damage, the note carries the outcome
+        body = f"{name} {verb}.{resist_note}{vnote}"
     line = f"{body} (HP {hp.current}/{hp.maximum})"
     # A boss's venomous or stunning blow may lay an affliction on the player (afflictions.py), from
     # the NPC's `inflicts` spec -- but an UNLEASHED special's affliction is GUARANTEED (it was
@@ -467,13 +532,23 @@ def attack(session: Session, word: str) -> str:
     weak = " (weak point!)" if exposed else ""
     if empowered:
         weak += " (empowered!)"
-    announce(
-        session.location,
-        f"{display_name(session.player_id)} strikes {npc['name']} for {dmg}.",
-        exclude=session.player_id,
-    )
-    struck = f"You strike {npc['name']} for {dmg}.{weak}"
-    _wear_gear(session, "weapon")  # a landed strike dulls the blade (economy: durability -> repair)
+    dmg, vnote = _apply_variance(dmg)  # the one die: a miss (0), a glance, a crit, or a normal hit
+    if dmg > 0:
+        announce(
+            session.location,
+            f"{display_name(session.player_id)} strikes {npc['name']} for {dmg}.",
+            exclude=session.player_id,
+        )
+        struck = f"You strike {npc['name']} for {dmg}.{weak}{vnote}"
+        # a landed strike dulls the blade (economy: durability -> repair); a whiff does not
+        _wear_gear(session, "weapon")
+    else:  # a miss: no damage and no wear, but still a spent beat -- the foe gets its counter
+        announce(
+            session.location,
+            f"{display_name(session.player_id)} swings at {npc['name']} and misses.",
+            exclude=session.player_id,
+        )
+        struck = f"You swing at {npc['name']} and miss."
     defeated, tail = land_hit(session, npc, nid, dmg)
     if not defeated:
         # An aggressive NPC's blow arrives on the world beat (parts.world.aggression), never as a

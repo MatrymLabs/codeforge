@@ -78,7 +78,7 @@ def menace(session: Session) -> str:
             if victim is session:
                 lines.append(blow)
                 if (
-                    "wake restored" in blow
+                    "Training-ground failsafe" in blow
                 ):  # the failsafe fired: one near-death per beat, then stop
                     break
             else:

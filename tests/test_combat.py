@@ -181,8 +181,9 @@ def test_a_fallen_player_is_restored_safely():
     _spawn_hostile(atk=9999, hp=50)  # its counter empties the player's HP
     out = attack(s, "brawler")
     assert "Emergency Repair" not in out  # only an Engineer gets the reaction
-    assert "wake restored at full health" in out
-    assert s.resources["hp"].is_full  # never a broken state
+    assert "wake at half health" in out  # the failsafe now leaves a mark
+    assert not s.resources["hp"].is_full  # a fall costs something -- no free full restore
+    assert s.resources["hp"].current == s.resources["hp"].maximum // 2  # exactly half
     assert s.location == "courtyard"  # restored in place
 
 
@@ -192,7 +193,7 @@ def test_a_lethal_foe_kills_and_sends_the_player_home():
     s = _fighter()  # courtyard, a vanguard
     _spawn_hostile(atk=9999, hp=50, lethal=True)  # a real boss: no training-ground failsafe
     out = attack(s, "brawler")
-    assert "wake where your road began" in out and "wake restored" not in out
+    assert "wake where your road began" in out and "Training-ground failsafe" not in out
     assert s.location == START_ROOM and s.location != "courtyard"  # sent home, not revived in place
     assert s.resources["hp"].is_full  # full health at the start room
     assert npcs.NPCS["brawler"]["hp_now"] == npcs.NPCS["brawler"]["hp"]  # the boss recovered
@@ -204,7 +205,7 @@ def test_an_engineer_emergency_repairs_out_of_a_killing_blow():
     out = attack(s, "brawler")
     assert "Emergency Repair triggers" in out  # the Engineer's reaction fired
     assert s.resources["hp"].current > 0  # pulled back from the fall
-    assert "wake restored" not in out  # never needed the training-ground failsafe
+    assert "Training-ground failsafe" not in out  # never needed the training-ground failsafe
     assert "emergency_repair" in s.cooldowns  # and armed its cooldown
 
 
@@ -215,7 +216,7 @@ def test_emergency_repair_fires_once_then_cools_down():
     assert "Emergency Repair triggers" in first  # fires the first time
     second = attack(s, "brawler")
     assert "Emergency Repair" not in second  # on cooldown now
-    assert "wake restored" in second  # so the failsafe catches this fall instead
+    assert "wake at half health" in second  # so the failsafe catches this fall instead
 
 
 def test_counterattack_flows_through_the_engine_tick():
@@ -989,3 +990,139 @@ def test_a_landed_blow_wears_the_equipped_body_armor():
     npcs.reindex_npcs()
     menace(s)  # the reaver strikes the fighter on the beat
     assert durability.current(s.equipped["body"]) == durability.MAX - 1  # the blow dented it
+
+
+# --- Combat variance (the one die on a blow) and death stakes ---------------------------------
+
+
+class _ForceRng:
+    """Forces combat's variance die to a chosen roll, so a test can pin an exact outcome. The suite
+    installs a neutral RNG (conftest); a variance test installs this to demand miss/crit/glance."""
+
+    def __init__(self, roll: float) -> None:
+        self._roll = roll
+
+    def random(self) -> float:
+        return self._roll
+
+
+def test_apply_variance_covers_every_band(monkeypatch):
+    """The variance die maps its roll to (damage, note): a miss zeroes the blow, a crit doubles it,
+    a glance halves it (floored 1), a normal hit passes through, a zero blow never rolls."""
+    from parts.world import combat
+
+    def force(roll: float) -> None:
+        monkeypatch.setattr(combat, "_COMBAT_RNG", _ForceRng(roll))
+
+    force(0.0)
+    assert combat._apply_variance(10) == (0, " (miss!)")
+    force(0.10)
+    assert combat._apply_variance(10) == (20, " (critical!)")  # CRIT_MULT x 10
+    force(0.20)
+    assert combat._apply_variance(10) == (5, " (glancing)")  # 10 // 2
+    force(0.99)
+    assert combat._apply_variance(10) == (10, "")  # normal: unchanged
+    force(0.0)
+    assert combat._apply_variance(0) == (0, "")  # nothing to roll on a zero blow
+
+
+def test_a_critical_strike_doubles_the_players_blow(monkeypatch):
+    from parts.world import combat
+
+    monkeypatch.setattr(combat, "_COMBAT_RNG", _ForceRng(0.10))  # crit band
+    s = _fighter()  # strike_power 7
+    out = attack(s, "dummy")
+    assert "for 14" in out and "(critical!)" in out  # 7 doubled, and tagged
+
+
+def test_a_missed_strike_deals_nothing_and_reads_as_a_whiff(monkeypatch):
+    from parts.world import combat
+
+    monkeypatch.setattr(combat, "_COMBAT_RNG", _ForceRng(0.0))  # miss band
+    s = _fighter()
+    out = attack(s, "dummy")
+    assert "and miss" in out  # the whiff line, not a strike line
+    assert npcs.NPCS["training_dummy"]["hp_now"] == 20  # the dummy took nothing
+
+
+def test_a_glancing_strike_lands_soft(monkeypatch):
+    from parts.world import combat
+
+    monkeypatch.setattr(combat, "_COMBAT_RNG", _ForceRng(0.20))  # glance band
+    s = _fighter()  # strike_power 7
+    out = attack(s, "dummy")
+    assert "for 3" in out and "(glancing)" in out  # 7 // 2, tagged
+
+
+def test_an_npc_blow_can_crit(monkeypatch):
+    from parts.world import combat
+
+    monkeypatch.setattr(combat, "_COMBAT_RNG", _ForceRng(0.10))  # crit band
+    s = _fighter()
+    _spawn_hostile(atk=5, hp=50)
+    max_hp = s.resources["hp"].maximum
+    out = attack(s, "brawler")  # the counter rides the same die
+    assert "strikes back for 10" in out and "(critical!)" in out  # atk 5 doubled
+    assert s.resources["hp"].current == max_hp - 10
+
+
+def test_an_npc_blow_can_miss(monkeypatch):
+    from parts.world import combat
+
+    monkeypatch.setattr(combat, "_COMBAT_RNG", _ForceRng(0.0))  # miss band
+    s = _fighter()
+    _spawn_hostile(atk=5, hp=50)
+    max_hp = s.resources["hp"].maximum
+    out = attack(s, "brawler")
+    assert "strikes back" in out and "(miss!)" in out  # the counter whiffed
+    assert s.resources["hp"].current == max_hp  # unhurt
+
+
+def test_a_telegraphed_unleash_never_whiffs(monkeypatch):
+    """A guaranteed special was telegraphed and connects by design: the miss die does not apply."""
+    from parts.world import combat
+
+    monkeypatch.setattr(combat, "_COMBAT_RNG", _ForceRng(0.0))  # would MISS a normal blow
+    s = _fighter()
+    _spawn_hostile(atk=10, hp=50)
+    npc = npcs.NPCS["brawler"]
+    npc["special"] = {"telegraph": "it winds up", "mult": 2}
+    npc["charging"] = True  # mid-unleash: this beat lands
+    max_hp = s.resources["hp"].maximum
+    out = attack(s, "brawler")
+    assert "unleashes its special" in out
+    assert "(miss!)" not in out  # the guaranteed blow ignored the miss die
+    assert s.resources["hp"].current < max_hp  # it connected
+
+
+def test_a_fall_scatters_carried_coins_and_wakes_at_half():
+    s = _fighter()
+    s.coins = 100
+    _spawn_hostile(atk=9999, hp=50)  # its counter empties the player's HP
+    out = attack(s, "brawler")
+    assert s.coins == 90  # a tenth of the carried purse scattered
+    assert "scatter" in out
+    assert s.resources["hp"].current == s.resources["hp"].maximum // 2  # woke at half, not full
+
+
+def test_a_penniless_fall_scatters_nothing():
+    s = _fighter()  # an empty purse
+    _spawn_hostile(atk=9999, hp=50)
+    out = attack(s, "brawler")
+    assert "scatter" not in out  # nothing to lose, no toll line
+    assert s.coins == 0
+
+
+def test_a_lethal_fall_also_scatters_coins():
+    from parts.world.world import START_ROOM
+
+    s = _fighter()
+    s.coins = 100
+    _spawn_hostile(atk=9999, hp=50, lethal=True)  # a real boss
+    out = attack(s, "brawler")
+    assert s.coins == 90  # the toll applies to a lethal fall too
+    assert "scatters from your purse" in out
+    assert s.location == START_ROOM
+    assert s.resources[
+        "hp"
+    ].is_full  # full health at the start room (the trip home is its own stake)
