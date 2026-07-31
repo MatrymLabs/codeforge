@@ -7178,5 +7178,31 @@
     "aliases": [],
     "created": "2026-07-31",
     "updated": "2026-07-31"
+  },
+  {
+    "designation": "MOD-05.069",
+    "name": "idempotency",
+    "status": "active",
+    "function": "an idempotency-key store: run an operation at most once per key, replay its stored result on retry",
+    "label": "idempotency",
+    "file": "parts/shelf/idempotency.py",
+    "type": "MOD",
+    "domain": "05",
+    "docs": "docs/hardware_store/patterns/resilience.md",
+    "tests": "tests/test_idempotency.py",
+    "depends_on": [],
+    "related": [
+      "retry",
+      "circuit_breaker"
+    ],
+    "reuse": "make any retried operation safe: web/API request dedup, at-least-once queue redelivery, a double-submit guard",
+    "tags": [
+      "module"
+    ],
+    "notes": "Clean-room reimplementation of the Stripe idempotency-key pattern (key + request fingerprint; replay returns the stored result; a mismatched fingerprint under a reused key is refused; only a successful result is cached). In-memory/single-process; a networked deployment fronts a durable UNIQUE-indexed table. Not affiliated with Stripe. Consumed by the double-entry ledger (batch 2b).",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-31",
+    "updated": "2026-07-31"
   }
 ]
