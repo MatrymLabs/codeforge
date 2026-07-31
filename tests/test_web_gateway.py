@@ -8,7 +8,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 import parts.web_gateway as web
-from parts.web_gateway import app
+from parts.web_gateway import _SECURITY_HEADERS, app
 from parts.world import doors, items, npcs
 from parts.world.accounts import account_password_ok
 from parts.world.session import SESSIONS
@@ -56,6 +56,28 @@ def test_index_serves_the_browser_client():
     assert "CodeForge" in page
     assert "/ws" in page  # the client dials the websocket
     assert "xterm" in page  # the terminal it renders into
+
+
+def test_the_public_page_carries_security_headers():
+    # The public demo is browser-facing, so every HTTP response is hardened against clickjacking,
+    # MIME-sniffing, referrer leakage, and off-origin script injection.
+    resp = TestClient(app).get("/")
+    assert resp.headers["x-content-type-options"] == "nosniff"
+    assert resp.headers["x-frame-options"] == "DENY"
+    assert resp.headers["referrer-policy"] == "no-referrer"
+    assert "max-age=" in resp.headers["strict-transport-security"]  # HSTS
+    csp = resp.headers["content-security-policy"]
+    assert "frame-ancestors 'none'" in csp and "object-src 'none'" in csp
+    # The exact reviewed policy reaches the client, compared to the source of truth so it can never
+    # silently weaken. That constant is what permits the SRI-pinned xterm CDN + the same-origin ws.
+    assert csp == _SECURITY_HEADERS["Content-Security-Policy"]
+
+
+def test_the_health_probe_is_also_hardened():
+    # Render's health check hits /health; it carries the headers too (defence in depth, no cost).
+    resp = TestClient(app).get("/health")
+    assert resp.status_code == 200
+    assert resp.headers["x-content-type-options"] == "nosniff"
 
 
 def test_empty_input_is_refused_login_is_required():

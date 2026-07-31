@@ -19,8 +19,10 @@ import asyncio
 import contextlib
 from pathlib import Path
 
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect
+from fastapi import FastAPI, Request, WebSocket, WebSocketDisconnect
 from fastapi.responses import HTMLResponse
+from starlette.middleware.base import RequestResponseEndpoint
+from starlette.responses import Response
 
 from forge import handle_command, render_scene
 from parts.gateway import (
@@ -40,6 +42,37 @@ from parts.world.session import SESSIONS, Session
 _PAGE = (Path(__file__).parent / "web" / "index.html").read_text(encoding="utf-8")
 
 app = FastAPI(title="CodeForge -- play in the browser", docs_url=None, redoc_url=None)
+
+# Security response headers for the public browser demo. The page loads xterm from jsdelivr (SRI-
+# pinned) and opens a same-origin WebSocket; the CSP permits exactly that and nothing else, so a
+# clickjacking frame, a MIME-sniff, or an injected off-origin script is refused by the browser. HSTS
+# is safe here: Render serves the demo over HTTPS, and browsers ignore the header on plain HTTP.
+_SECURITY_HEADERS = {
+    "Content-Security-Policy": (
+        "default-src 'self'; "
+        "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; "
+        "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; "
+        "connect-src 'self' ws: wss:; "
+        "img-src 'self' data:; "
+        "base-uri 'none'; frame-ancestors 'none'; object-src 'none'"
+    ),
+    "X-Content-Type-Options": "nosniff",
+    "X-Frame-Options": "DENY",
+    "Referrer-Policy": "no-referrer",
+    "Strict-Transport-Security": "max-age=63072000; includeSubDomains",
+    "Permissions-Policy": "geolocation=(), camera=(), microphone=()",
+}
+
+
+@app.middleware("http")
+async def _apply_security_headers(request: Request, call_next: RequestResponseEndpoint) -> Response:
+    """Stamp the security headers on every HTTP response (the page and the health probe). The
+    WebSocket upgrade is separate and carries no HTML, so it needs none of these."""
+    response = await call_next(request)
+    for name, value in _SECURITY_HEADERS.items():
+        response.headers.setdefault(name, value)
+    return response
+
 
 # One shared counter for the seats the browser gate has filled. All WS
 # handlers live on a single asyncio loop, so a plain int with no await
