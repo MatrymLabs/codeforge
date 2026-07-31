@@ -45,6 +45,42 @@ def test_a_dungeon_sinks_a_connected_descent_of_chambers():
     assert set(rooms) <= seen, "a delve chamber is unreachable from the mouth"
 
 
+def test_a_delve_reads_as_a_descent_with_distinct_depth_stages():
+    # The chambers must not read alike: each names how deep it sits (threshold -> ... -> lair), so a
+    # descent feels like progression. The four leads are distinct and the deepest is the lair.
+    rooms, _ = generate_delves(_CFG)
+    ordered = [rooms[f"black_hollow_delve_{i}"] for i in range(1, _DEPTH + 1)]
+    stage_words = [r["name"].rsplit(", ", 1)[1] for r in ordered]
+    assert stage_words[0] == "the threshold" and stage_words[-1] == "the lair"
+    leads = {r["desc"].split(".")[0] for r in ordered}
+    assert len(leads) == _DEPTH, "every depth must read differently, not one template repeated"
+
+
+def test_a_delve_inherits_its_biome_note():
+    # A dungeon carries the stone-and-air of the Reach it sinks below: a forest delve reads unlike
+    # an ice delve, on the same dungeon.
+    from parts.world.delve import _BIOME_DELVE_NOTE
+
+    forest = generate_delves(_CFG)[0]["black_hollow_delve_1"]["desc"]
+    assert _BIOME_DELVE_NOTE["wild-forest"] in forest
+    icy_cfg = [{**_CFG[0], "biome": "glacier-waste"}]
+    icy = generate_delves(icy_cfg)[0]["black_hollow_delve_1"]["desc"]
+    assert _BIOME_DELVE_NOTE["glacier-waste"] in icy and forest != icy
+
+
+def test_an_unknown_biome_delve_falls_back_to_a_plain_note():
+    from parts.world.delve import _DEFAULT_DELVE_NOTE, _chamber
+
+    desc = _chamber("Nowhere Deep", 1, "no-such-biome")["desc"]
+    assert _DEFAULT_DELVE_NOTE in desc, "an unknown biome still gets a valid note, never a crash"
+
+
+def test_delve_generation_is_deterministic():
+    a, _ = generate_delves(_CFG)
+    b, _ = generate_delves(_CFG)
+    assert {k: v["desc"] for k, v in a.items()} == {k: v["desc"] for k, v in b.items()}
+
+
 def test_foes_deepen_and_the_bottom_holds_a_named_lethal_boss():
     _, npcs = generate_delves(_CFG)
     trash = [n for k, n in npcs.items() if k.endswith("_foe")]
