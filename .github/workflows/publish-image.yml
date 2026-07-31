@@ -15,6 +15,8 @@ on:
 permissions:
   contents: read
   packages: write
+  id-token: write # OIDC token for keyless Sigstore signing of the provenance
+  attestations: write # write the SLSA build-provenance attestation to the registry
 
 jobs:
   publish:
@@ -30,7 +32,21 @@ jobs:
       - name: Build and tag (commit sha + latest)
         run: docker build -t "$IMAGE:${GITHUB_SHA}" -t "$IMAGE:latest" .
 
-      - name: Push
+      - name: Push and capture the pushed digest
+        id: push
         run: |
           docker push "$IMAGE:${GITHUB_SHA}"
           docker push "$IMAGE:latest"
+          DIGEST="$(docker inspect --format='{{index .RepoDigests 0}}' "$IMAGE:${GITHUB_SHA}" | cut -d@ -f2)"
+          echo "digest=$DIGEST" >> "$GITHUB_OUTPUT"
+
+      # Signed SLSA build provenance (keyless via Sigstore + GitHub OIDC), attached to the image in
+      # GHCR. A consumer can `gh attestation verify oci://$IMAGE@<digest> --repo MatrymLabs/codeforge`
+      # to prove the image was built from THIS repo and commit by THIS workflow, not substituted.
+      # Separation of duties: the pipeline attests provenance; it does not approve its own release.
+      - name: Attest build provenance
+        uses: actions/attest-build-provenance@0f67c3f4856b2e3261c31976d6725780e5e4c373  # v4.1.1
+        with:
+          subject-name: ${{ env.IMAGE }}
+          subject-digest: ${{ steps.push.outputs.digest }}
+          push-to-registry: true
