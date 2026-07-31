@@ -7232,5 +7232,34 @@
     "aliases": [],
     "created": "2026-07-31",
     "updated": "2026-07-31"
+  },
+  {
+    "designation": "MOD-10.049",
+    "name": "loadtest",
+    "status": "active",
+    "function": "concurrent load evidence: drive handle_command from many sessions at once and capture the latency distribution under contention",
+    "label": "loadtest",
+    "file": "parts/loadtest.py",
+    "type": "MOD",
+    "domain": "10",
+    "docs": "docs/reports/slo/engine-tick-slo.md",
+    "tests": "tests/test_loadtest.py",
+    "depends_on": [
+      "MOD-10.013",
+      "MOD-10.047"
+    ],
+    "related": [
+      "MOD-10.013",
+      "MOD-10.047"
+    ],
+    "reuse": "a load-test-as-artifact pattern: drive any in-process workload under concurrency, capture p50/p95/p99, feed an SLO/postmortem",
+    "tags": [
+      "module"
+    ],
+    "notes": "Threads (stdlib) drive the read-only bench rotation from N sessions on a barrier for real contention; captures p50/p95/p99/max/throughput/errors and files a dated report. Honest about the GIL (latency-under-contention, not linear speedup). compare_to_slo links the result to the engine-tick SLO (MOD-10.047). In-process/localhost-only; make loadtest; NOT in make check (host-relative). Original impl of the load-testing-as-artifact practice.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-31",
+    "updated": "2026-07-31"
   }
 ]

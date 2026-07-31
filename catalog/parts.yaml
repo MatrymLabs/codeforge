@@ -1319,3 +1319,26 @@
     government: a funds-disbursement or benefit-issuance ledger with an immutable, reconcilable audit trail
     compliance: evidence that value is conserved and every movement is logged, immutable, and retry-safe
     general: any system that must move a countable resource between accounts without ever losing or duplicating it
+- id: load-test
+  name: Concurrent Load Test
+  source: parts/loadtest.py
+  category: observability
+  tags:
+  - load-test
+  - latency
+  - concurrency
+  - performance
+  - slo
+  maturity: shipped
+  source_status: original
+  license: MIT
+  influence: load-testing-as-a-committed-artifact practice (latency histograms feeding an SLO/postmortem) - original implementation, no code copied
+  experimental: 'drive it from a real client transport instead of in-process, ramp concurrency to find the knee, and export a latency histogram (HdrHistogram) for the SLO dashboard. Traded away (v1): out-of-process traffic and ramp profiles, keeping an in-process, localhost-only harness on a real workload.'
+  risk: low
+  purpose: 'Measure latency under concurrent load, honestly: drive a real workload from N workers started together on a barrier, capture p50/p95/p99/max/throughput/errors, and report whether the p50 still meets the SLO objective under load. Fails loud on a nonsensical request; counts a faulting call rather than letting it abort the run; claims only what it measured.'
+  reuse:
+    game: prove the engine tick stays bounded when many players hit the world at once
+    finance: latency-under-load evidence for a transfer/quote endpoint feeding its SLO and error budget
+    government: a capacity/latency artifact for a public service before a peak-demand event
+    compliance: reproducible performance evidence (workload, data size, host, p50/p95/p99, reproduction command)
+    general: an in-process load harness that captures a latency histogram for any callable workload
