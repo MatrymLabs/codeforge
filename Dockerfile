@@ -12,9 +12,10 @@ COPY parts/ parts/
 COPY seeds/ seeds/
 RUN pip install --no-cache-dir .
 
-# Never run a network service as root -- even a toy one.
-RUN useradd --create-home smith && mkdir -p /data && chown -R smith /app /data
-USER smith
+# Never run a network service as root -- even a toy one. A FIXED numeric UID (not just a name) lets
+# an orchestrator enforce runAsNonRoot and a read-only root filesystem against a known identity.
+RUN useradd --uid 10001 --create-home smith && mkdir -p /data && chown -R smith /app /data
+USER 10001
 
 # The package installs to site-packages, apart from the seed files, so point the
 # loader back at the seeds we copied into /app. Canonical state lives on /data so
@@ -25,4 +26,11 @@ ENV CODEFORGE_SEEDS_ROOT=/app/seeds \
     CODEFORGE_DB=/data/codeforge.db
 
 EXPOSE 4000
+
+# Liveness: a hung server (port bound but not accepting) is detected so an orchestrator can restart
+# it. A plain TCP connect to the game port -- no sensitive detail is exposed. Uses the interpreter
+# already in the image, so no extra package is added to the attack surface.
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+    CMD ["python", "-c", "import socket; socket.create_connection(('127.0.0.1', 4000), 3).close()"]
+
 CMD ["spark"]
