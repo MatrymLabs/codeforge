@@ -126,6 +126,36 @@ work raises; a limit < 1 or a bool/non-int fails loud at construction.
   transient failures (`retry`) within a time budget (`deadline`).
 - Evidence: `tests/test_bulkhead.py`. Maturity `beta`.
 
+## The part: `idempotency-key`
+
+`parts/shelf/idempotency.py` -- retry-safety for the family: the part that makes it safe to *repeat*
+an operation, not just to slow, bound, or abandon one. An `IdempotencyStore` runs an operation at
+most once per idempotency key and replays its stored result on retry, so a network retry, a
+double-click, or an at-least-once redelivery cannot apply it twice. `store.remember(key, fingerprint,
+factory)` runs `factory` on a first (key, fingerprint), replays the stored result on a matching repeat
+without running it again, and refuses a key reused for a *different* fingerprint (`IdempotencyConflict`
+-- the same key must never stand for two different requests). Only a successful result is cached, so a
+failed attempt is safely retried rather than remembered as a false success.
+
+This is a clean-room reimplementation of the publicly documented Stripe idempotency-key pattern (the
+`Idempotency-Key` header; a response keyed by (account, key); a mismatched body under the same key
+rejected). No code copied; not affiliated with Stripe.
+
+**Invariants (tested):** a first call runs once and returns fresh; a matching replay returns the stored
+result without re-running (a call counter proves it); a reused key with a changed fingerprint raises;
+empty key or fingerprint fails loud; a raising factory stores nothing so a real retry re-runs; keys are
+case-sensitive.
+
+- **Practical:** an idempotent payment/transfer endpoint (the same key never posts twice), exactly-once
+  processing of an at-least-once queue or webhook, a submit-once guard on a filing.
+- **Composition:** it closes the loop with `retry` -- retry makes a failed call happen *again*;
+  idempotency makes that repeat *safe*. It is the correctness half of the double-entry ledger's
+  transfer path (`parts/ledger.py`).
+- **Honest limit:** in-memory and single-process (the tick is single-threaded, so no lock is taken). A
+  networked deployment fronts the same contract with a durable, UNIQUE-indexed table (and a row lock or
+  an upsert) to make check-run-store atomic across processes.
+- Evidence: `tests/test_idempotency.py`. Maturity `shipped`.
+
 ## Deferred (needs Josh's approval)
 
 For retry: a cancellation token and an async variant. For the circuit breaker: half-open

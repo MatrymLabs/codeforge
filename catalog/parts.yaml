@@ -1273,3 +1273,26 @@
     government: a public-service reliability objective with an honest, evidence-backed attainment report
     compliance: reliability evidence with a stated target and a documented policy when it is missed
     general: wrap any recorded latency/availability SLI in an SRE-style objective + error budget for any service
+- id: idempotency-key
+  name: Idempotency Key Store
+  source: parts/shelf/idempotency.py
+  category: resilience
+  tags:
+  - idempotency
+  - retry-safety
+  - api
+  - exactly-once
+  - resilience
+  maturity: shipped
+  source_status: original
+  license: MIT
+  influence: Stripe idempotency-key pattern (Idempotency-Key header; response keyed by (account, key); mismatched body rejected) - original implementation, no code copied
+  experimental: 'back it with a durable UNIQUE-indexed table + row lock or upsert for atomic check-run-store across processes; add a TTL and a "request in flight" state for concurrent first-calls. Traded away (v1): durability and cross-process atomicity, keeping a pure single-process core.'
+  risk: low
+  purpose: 'Run an operation at most once per idempotency key and replay its stored result on retry, so a network retry, a double-click, or an at-least-once redelivery cannot apply it twice. A key reused for a different request fingerprint is refused; only a successful result is cached, so a failed attempt is safely retried.'
+  reuse:
+    game: guard a coin transfer or a purchase against a double-submit or a reconnect replay
+    finance: an idempotent payment/transfer endpoint - the same Idempotency-Key never posts twice
+    government: a submit-once guard on a filing or benefit request across client retries
+    compliance: exactly-once processing evidence for an at-least-once queue or webhook
+    general: dedup any retried web/API request or message so redelivery is safe
