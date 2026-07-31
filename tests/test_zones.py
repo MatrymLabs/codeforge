@@ -170,6 +170,32 @@ def test_zone_of_and_area_line(monkeypatch):
     assert area_line("z") == ""  # a room in no area renders unchanged
 
 
+def test_zone_of_index_rebuilds_when_zones_are_swapped(monkeypatch):
+    # The O(1) reverse index is keyed on ZONES identity: swapping the dict must invalidate it, so a
+    # lookup never returns a stale area from a previous world. Pins the cache-invalidation contract.
+    _install(
+        monkeypatch, {"one": Zone(name="One", rooms=["a"], reset_mode="never", beats_between=1)}
+    )
+    assert zone_of("a") == "one"
+    _install(
+        monkeypatch, {"two": Zone(name="Two", rooms=["a"], reset_mode="never", beats_between=1)}
+    )
+    assert zone_of("a") == "two"  # the new world's area, not the cached "one"
+
+
+def test_zone_of_first_area_wins_on_overlap(monkeypatch):
+    # The old linear scan returned the FIRST area that listed a room; the index must match that with
+    # first-wins, so behaviour is preserved even in the (undocumented) overlap case.
+    _install(
+        monkeypatch,
+        {
+            "first": Zone(name="First", rooms=["shared"], reset_mode="never", beats_between=1),
+            "second": Zone(name="Second", rooms=["shared"], reset_mode="never", beats_between=1),
+        },
+    )
+    assert zone_of("shared") == "first"  # insertion order wins, exactly like the scan did
+
+
 # --- scheduler: due detection per mode --------------------------------------------------
 def test_zones_due_respects_mode_cadence_and_occupancy(monkeypatch):
     _install(

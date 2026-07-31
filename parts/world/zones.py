@@ -53,13 +53,36 @@ if _wildlands_cfg is not None:
 # persisted (derive, don't store) -- a fresh boot starts every area at zero.
 _beats: dict[str, int] = {label: 0 for label in ZONES}
 
+# Reverse index: room label -> its owning area label. Built once from ZONES so `zone_of` is an O(1)
+# lookup instead of a linear scan over every area's room list. At aethryn scale (28 areas spanning
+# ~53k rooms in plain lists) the scan cost ~800us per call, on a path hit every move, render, and
+# combat beat; the index makes it a single dict lookup. Cache invalidation is by IDENTITY: if ZONES
+# is replaced (a seed swap, or a test's monkeypatch), the next lookup rebuilds from the new dict.
+_room_zone: dict[str, str] = {}
+_room_zone_source: dict[str, Zone] | None = None
+
+
+def _room_zone_index() -> dict[str, str]:
+    """The room -> area-label index, rebuilt only when ZONES has been swapped for a different dict.
+    First area wins on the (undocumented) overlap case, exactly matching the old scan's
+    first-match-returns behaviour, so this is a pure speedup with no change in what is returned."""
+    global _room_zone, _room_zone_source
+    if _room_zone_source is not ZONES:
+        index: dict[str, str] = {}
+        for label, zone in ZONES.items():
+            for room in zone["rooms"]:
+                index.setdefault(room, label)  # first area wins, as the linear scan did
+        _room_zone = index
+        _room_zone_source = ZONES
+    return _room_zone
+
 
 def zone_of(room: str) -> str | None:
-    """The area label that owns this room, or None. A room belongs to at most one area."""
-    for label, zone in ZONES.items():
-        if room in zone["rooms"]:
-            return label
-    return None
+    """The area label that owns this room, or None. A room belongs to at most one area.
+
+    O(1) via a reverse index built once from ZONES (`_room_zone_index`); the earlier linear scan
+    over every area's room list cost ~800us per call at aethryn's ~53k-room scale, on a hot path."""
+    return _room_zone_index().get(room)
 
 
 def area_line(room: str) -> str:
