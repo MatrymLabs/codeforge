@@ -28,12 +28,25 @@ def _find_root(start: Path | None = None) -> Path:
 _ROOT = _find_root()
 
 
+def _clean_category(category: str) -> str:
+    """A category is a single directory name under reports/, so it must not escape it. Reject an
+    empty name or one carrying a path separator or `..` traversal (a category of '../secrets' would
+    otherwise write, and mkdir, OUTSIDE reports/). Fail loud: a mis-filed report is a silent gap."""
+    cat = category.strip()
+    if not cat or "/" in cat or "\\" in cat or ".." in cat:
+        raise ValueError(
+            f"reporting: category must be a single simple name, not {category!r} "
+            "(no path separators, no '..' traversal)"
+        )
+    return cat
+
+
 def report_path(
     category: str, root: Path | None = None, stamp: str | None = None, slug: str | None = None
 ) -> Path:
     """The dated path a report would occupy: reports/<category>/<stamp>[-<slug>].md.
     Creates the category dir if absent. `stamp` defaults to today (injectable for tests)."""
-    base = (root or _ROOT) / "reports" / category
+    base = (root or _ROOT) / "reports" / _clean_category(category)
     base.mkdir(parents=True, exist_ok=True)
     tag = stamp or date.today().isoformat()
     name = f"{tag}-{slug}.md" if slug else f"{tag}.md"

@@ -163,6 +163,41 @@ def source_gaps(root: Path | None = None, path: Path | None = None) -> list[str]
     ]
 
 
+# Shelf cores deliberately kept OFF the cross-domain catalog: game/engine-flavored helpers whose
+# value is local to CodeForge, not a general-purpose part worth stocking for reuse elsewhere.
+# Naming them here is the honest counterpart to source_gaps -- it makes "intentionally local"
+# explicit, so uncataloged_cores flags only a core that is neither cataloged NOR declared local.
+# A genuinely reusable core that nobody filed then shows up as a gap instead of hiding.
+_LOCAL_ONLY_CORES = frozenset(
+    {
+        "affixes",  # loot rarity + affix rolls: a game mechanic, not a cross-domain part
+        "conditions",  # trigger condition variables for the MUD automation layer
+        "reward_curve",  # XP / reward pacing: a leveling mechanic
+        "textmatch",  # "did you mean?" verb suggestions, tuned to the tick's command set
+    }
+)
+
+
+def uncataloged_cores(root: Path | None = None, path: Path | None = None) -> list[str]:
+    """Shelf cores that are neither cataloged nor declared local-only: the converse of source_gaps.
+
+    source_gaps proves every catalog card cites real code; this proves the other direction -- every
+    reusable shelf core is either filed in the catalog (some card's `source` points at it) or
+    explicitly marked local-only (a game/engine helper). A core that is neither is a silent gap: a
+    genuinely reusable part nobody filed. Returns each such core's name; an empty list means the
+    shelf and the catalog agree. Reads and reports; mutates nothing."""
+    base = root if root is not None else Path(__file__).resolve().parent.parent
+    cataloged = {part.source for part in load_catalog(path)}  # e.g. "parts/shelf/retry.py"
+    shelf = base / "parts" / "shelf"
+    return [
+        core.stem
+        for core in sorted(shelf.glob("*.py"))
+        if core.name != "__init__.py"
+        and f"parts/shelf/{core.name}" not in cataloged
+        and core.stem not in _LOCAL_ONLY_CORES
+    ]
+
+
 def find_part(part_id: str, path: Path | None = None) -> Part | None:
     """Return the part with this id, or None."""
     for part in load_catalog(path):
