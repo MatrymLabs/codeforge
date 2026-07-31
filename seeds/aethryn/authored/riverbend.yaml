@@ -1,0 +1,198 @@
+# SEED: aethryn -- authored/riverbend.yaml  (the hand-authored interior of Riverbend, Veridia's river-crossing)
+#
+# The map places Riverbend as a single hub room; this is its polished, LIVED-IN interior: the wharf
+# landing, the ferry-house, the crossing tavern, the reed-flats, and the flooded weir-vault beneath the
+# ferry-house where the old-world lock has jammed. Peopled by a ferrymaster, a tavern-keeper who buys
+# the river's greens, and a lockkeeper who remembers, with two quests of different shapes (a FETCH to
+# free the jammed weir, a DISCOVERY of the shrine hidden in the reeds) and readable lock-lore. It
+# expands the named location per the seed recipe (a role, subareas, a livelihood, a conflict, a rumour,
+# a clue to the larger world, a revisitable change) at AAA density -- a place, not a signpost. The weir
+# is Veridia's canon identity made concrete: ordinary river-folk living over old-world water-works that
+# once tuned themselves to the flood, shown through function. Loaded by parts/world/authored_towns.py;
+# its quests are seeds/aethryn/quests/riverbend_weir.yaml (the jammed weir) and riverbend_reeds.yaml
+# (the reed-shrine). The reed-flats offer rivercress, a distinct Veridia gather the tavern-keeper buys.
+
+rooms:
+  riverbend_landing:
+    name: The Riverbend Landing
+    desc: >-
+      A broad stone wharf where the Veridia river bends slow and wide, and the whole cradle's traffic
+      crosses: carts waiting on the ferry, fishers mending nets, a ferrymaster frowning at a still and
+      silent ferry-chain. The water is higher than it should be, lapping the top step. Ways lead OUT to
+      the river road, WEST to the crossing tavern, NORTH to the ferry-house, and EAST out to the reed-flats.
+    exits: {out: riverbend, west: riverbend_tavern, north: riverbend_ferryhouse, east: riverbend_reeds}
+  riverbend_ferryhouse:
+    name: The Ferry-House
+    desc: >-
+      The ferrymaster's post, hung with coiled chain and river-charts, its floor wet where the risen
+      water has come up through the boards. A trapdoor stair drops DOWN into the weir-vault below,
+      where the sound of jammed machinery grinds under the flood. The landing is back SOUTH.
+    exits: {south: riverbend_landing, down: riverbend_weirvault}
+  riverbend_tavern:
+    name: The Crossing Tavern
+    desc: >-
+      A warm, low tavern where travelers wait out the ferry over crossing-stew and river-ale, the talk
+      as thick as the steam. The tavern-keeper works the pot and the lockkeeper holds the corner bench,
+      the only two in Riverbend old enough to remember when the weir kept itself. The landing is back EAST.
+    exits: {east: riverbend_landing}
+  riverbend_reeds:
+    name: The Reed-Flats
+    desc: >-
+      A wide margin of reeds and slow backwater east of the landing, where rivercress grows thick in
+      the shallows and herons stand in the mist. Half-sunk in the reeds, where only the low water of a
+      good year shows it, an old marker-stone leans at the water's edge, older than the crossing, older
+      than Riverbend. The landing is back WEST.
+    exits: {west: riverbend_landing}
+    node: rivercress
+  riverbend_weirvault:
+    name: The Weir-Vault
+    desc: >-
+      A flooded old-world chamber under the ferry-house, thigh-deep in cold river-water, where the
+      great lock-gears that once tuned the weir to the flood have seized fast. Something pale has come
+      up the drowned channel to nest in the stilled machinery, and it does not want the water disturbed.
+      The stair climbs back UP to the ferry-house.
+    exits: {up: riverbend_ferryhouse}
+
+# How the hub connects to the interior: the hub room, the exit keyword to add, and the entry room.
+hub: {room: riverbend, keyword: landing, entry: riverbend_landing}
+
+# The people of Riverbend: a ferrymaster with a jammed weir, a tavern-keeper who feeds the crossing and
+# buys its greens, a lockkeeper who remembers the old works, and the pale thing that has taken the vault.
+npcs:
+  riverbend_ferrymaster:
+    name: Ferrymaster Coll
+    keywords: [coll, ferrymaster]
+    location: riverbend_ferryhouse
+    dialogue:
+      - >-
+        "You picked a poor day to cross, traveller, unless you have a strong arm to lend. The weir
+        below has jammed and the river is rising over my landing, and I cannot run the ferry on a wild
+        current. Go DOWN into the vault and bring me up the old lock-lever so I can free the gears.
+        Mind what has nested down there. Do this and you cross for free, and with my thanks."
+    topics:
+      weir:
+        - >-
+          "The weir holds the crossing calm: old-world lock-work that used to read the flood and tune
+          itself, gear by gear, so the ferry never fought the current. It jammed a week ago, and no
+          smith in Veridia knows its make. The lever throws the gears by hand, if you can reach it."
+      vault:
+        - >-
+          "Something came up the drowned channel and nested in the stilled gears. Pale, and it does not
+          like the water stirred. It is between me and the lever, so it is between Riverbend and a
+          crossing. Put it down if it will not move."
+      lockkeeper:
+        - >-
+          "Old Merta, in the tavern. She kept the weir before it jammed, and her mother before her.
+          She will tell you the old works still run under the whole river, if you let her. Some of it
+          may even be true."
+      coll:
+        - >-
+          "Ferrymaster of Riverbend, third of my line on this chain. Someone must carry the cradle
+          across its own river, and keep the old lock from drowning the town while they do it. It fell
+          to me."
+    hp: 0
+  riverbend_tavernkeeper:
+    name: Tavern-Keeper Doran
+    keywords: [doran, tavern-keeper, keeper]
+    location: riverbend_tavern
+    dialogue:
+      - >-
+        "Come in out of the damp! I keep a traveller in draughts and rations while the ferry sits, and
+        I buy rivercress by the handful off the reed-flats EAST, for there is no crossing-stew worth
+        the name without it. Cut a handful and I will weigh it fair, and pour you a bowl besides."
+    topics:
+      trade:
+        - >-
+          "Draughts and rations I sell; rivercress I buy, pulled from the shallows EAST on the reeds.
+          The stew-pot never has enough and the reeds never run short, so it is honest coin for a wet
+          hour's work."
+      reeds:
+        - >-
+          "The reed-flats? Good cress, and a bad old feeling. There is a marker-stone half-sunk out
+          there that the fishers will not touch, older than the crossing. Merta says it marked the
+          weir's reach before the weir was ever built. Go and see it while the water is low."
+      doran:
+        - >-
+          "Tavern-keeper at the crossing, and I have poured for every traveller in Veridia twice over.
+          Someone must feed a town that lives on other people passing through. It may as well be the
+          one with the biggest pot."
+    shop:
+      sells: {healing_draught: 24, water_ration: 3}
+      buys: {rivercress: 5}
+    hp: 0
+  riverbend_lockkeeper:
+    name: Old Merta
+    keywords: [merta, lockkeeper, oldwoman]
+    location: riverbend_tavern
+    dialogue:
+      - >-
+        "Sit, stranger, and let an old lockkeeper look at you. I kept the weir forty years before it
+        jammed, and my mother before me, and we neither of us understood it. We only kept it. Ask me
+        of the river and I will tell you truer than the ferrymaster, who is young."
+    topics:
+      weir:
+        - >-
+          "The weir is not a dam, whatever Coll calls it. It is a machine that listens to the river and
+          answers it, gear by gear, and it was old when the first ferry-chain was hung. It has jammed
+          before, in my mother's day, and a stranger's hand freed it then too. The pattern holds."
+      marker:
+        - >-
+          "The stone in the reeds? It marked the weir's reach before there was a weir to reach, which
+          should not be possible, and yet there it stands. Go out at low water and lay your hand on it.
+          Some who do come back knowing a thing they cannot name. Some just come back wet."
+      rumor:
+        - >-
+          "They say the old lock still reads the river true, under the jam, and only wants waking, the
+          way Greenhold's fountain wanted waking and Elderwatch's beacon wanted a torch. The whole
+          cradle is built over old works that sleep. An old woman says so. Make of it what you will."
+      merta:
+        - >-
+          "Last lockkeeper of Riverbend who served before the jam. Someone must remember how the weir
+          was meant to sing, even if the singing has stopped. It may as well be the one who cannot mend it."
+    hp: 0
+  riverbend_vault_lurker:
+    name: the pale vault-lurker
+    keywords: [lurker, vault-lurker, pale, thing]
+    location: riverbend_weirvault
+    dialogue:
+      - The pale lurker rises dripping from the flooded gears, blind and bloated, and turns toward the ripples you make.
+    aggressive: true
+    hp: 62
+    atk: 10
+    xp: 27
+    level: 5
+    tier: normal
+    attack_element: ICE
+
+# The old lock-lever the weir quest turns on, a readable lock-log that roots Riverbend's history, and
+# the river-charm hidden at the reed-shrine (the exploration secret's reward and its clue to the works).
+items:
+  riverbend_lock_lever:
+    name: an old-world lock-lever
+    keywords: [lock-lever, lever, weir-lever]
+    location: riverbend_weirvault
+    lore: >-
+      A long bar of the same pale, untarnished metal as Greenhold's valve-key and Elderwatch's tower,
+      seated in a socket cut to fit it and nothing else. Thrown by hand it grinds the seized weir-gears
+      back into their track, one hard notch at a time, doing by main strength what the old lock once did
+      by listening. Whoever built the weir never meant a hand to touch this. They left it only in case.
+  riverbend_lock_log:
+    name: the Riverbend lock-log
+    keywords: [lock-log, log, book, record]
+    location: riverbend_ferryhouse
+    lore: >-
+      A swollen, much-corrected ledger chained in the ferry-house, the lockkeepers' record of the weir
+      running back past the first ferry-chain. An old entry, the ink run with damp, reads: "The weir
+      tuned itself again through the spring flood, and no hand was laid on the gears. We do not know how
+      it reads the river. We only keep the log, and cross dry." A later, firmer hand has scored beneath:
+      "The gears read nothing now. We throw the lever by hand and pray the flood is kind. Merta says a
+      stranger will free it, as one did before. We are not too proud to hope she is right."
+  riverbend_river_charm:
+    name: a river-worn charm
+    keywords: [charm, river-charm, token]
+    location: riverbend_reeds
+    lore: >-
+      A small disc of pale old-world metal, worn smooth by the river, tucked in a niche at the foot of
+      the sunken marker-stone as if left there in offering, long ago, by someone who understood what the
+      stone marked. Its face carries the same fine gear-work as the weir below, shrunk to a keepsake, as
+      though the whole old lock had once been cast in miniature and given to the river to keep.

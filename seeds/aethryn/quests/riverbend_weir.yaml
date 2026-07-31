@@ -1,0 +1,29 @@
+# SEED: aethryn -- quests/riverbend_weir.yaml  (Riverbend's local quest: The Jammed Weir)
+#
+# Auto-loaded by parts/world/quest.py from seeds/aethryn/quests/. A small, local FETCH that expands the
+# named location per the seed's quest structure: a local need (the jammed weir floods the crossing and
+# stills the ferry), a world-level echo (the old-world lock that once tuned itself to the river), a cost
+# (the flooded vault and the thing nesting in it), a visible result (the reward + Making standing), and
+# an unresolved remainder (whether the old lock could ever read the river again, left to Merta's rumour).
+# It triggers entirely off natural play so it never collides with the bare `quest accept` verb: ENTER
+# the ferry-house to meet Ferrymaster Coll (offered -> accepted), TAKE the lock-lever down in the vault
+# (accepted -> recovered), then return and ENTER the ferry-house to free the weir (recovered -> done).
+# Both enter-steps target the ferry-house but fire only from their own state, so mid-quest passing is inert.
+id: riverbend_weir
+name: The Jammed Weir
+start: offered
+reward_xp: 44
+steps:
+  - {state: offered, event: enter, to: accepted, on_enter: riverbend_ferryhouse}
+  - {state: accepted, event: take, to: recovered, on_take: riverbend_lock_lever}
+  - state: recovered
+    event: enter
+    to: done
+    on_enter: riverbend_ferryhouse
+    effect: "award_xp;grant_rep:making:20"
+terminal: [done]
+labels:
+  offered: "Somewhere in Riverbend, a ferrymaster needs a strong arm. Step into the ferry-house and hear him out."
+  accepted: "Ferrymaster Coll needs the weir freed. Go DOWN into the flooded vault and take the old lock-lever (mind the pale thing nesting there)."
+  recovered: "Carry the lock-lever back UP to Ferrymaster Coll in the ferry-house."
+  done: "*** The lever throws, the seized gears grind back into their track, and the weir eases the river off the landing. The ferry can run again, and Riverbend crosses dry. Coll waves you across for free. ***"
