@@ -20,11 +20,18 @@ RUN pip install --no-cache-dir -e .
 # (otherwise it honestly reads "not yet run"). Cheap; the tick is pure-function.
 RUN python -m parts.bench || true
 
-# Never run a network service as root, even a read-only one.
-RUN useradd --create-home smith && chown -R smith /app
-USER smith
+# Never run a network service as root, even a read-only one. A FIXED numeric UID (not just a name)
+# lets an orchestrator enforce runAsNonRoot and a read-only root filesystem against a known identity.
+RUN useradd --uid 10001 --create-home smith && chown -R smith /app
+USER 10001
 
 # Canonical state on tmp: the API surface is read-mostly and the demo is ephemeral.
 ENV CODEFORGE_DB=/tmp/codeforge.db
 EXPOSE 8000
+
+# Liveness: hit the app's own /health probe so a hung or unready API is detected and restarted. The
+# endpoint returns status only (no sensitive detail). Uses the interpreter already in the image.
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+    CMD ["python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=3)"]
+
 CMD ["codeforge", "api"]
