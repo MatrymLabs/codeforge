@@ -8,7 +8,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 import parts.web_gateway as web
-from parts.web_gateway import app
+from parts.web_gateway import _SECURITY_HEADERS, app
 from parts.world import doors, items, npcs
 from parts.world.accounts import account_password_ok
 from parts.world.session import SESSIONS
@@ -68,8 +68,9 @@ def test_the_public_page_carries_security_headers():
     assert "max-age=" in resp.headers["strict-transport-security"]  # HSTS
     csp = resp.headers["content-security-policy"]
     assert "frame-ancestors 'none'" in csp and "object-src 'none'" in csp
-    # the CSP must still permit what the page loads: the SRI-pinned xterm CDN + the same-origin ws
-    assert "https://cdn.jsdelivr.net" in csp and "connect-src 'self' ws: wss:" in csp
+    # The exact reviewed policy reaches the client, compared to the source of truth so it can never
+    # silently weaken. That constant is what permits the SRI-pinned xterm CDN + the same-origin ws.
+    assert csp == _SECURITY_HEADERS["Content-Security-Policy"]
 
 
 def test_the_health_probe_is_also_hardened():
