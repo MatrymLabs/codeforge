@@ -7151,5 +7151,32 @@
     "tests": "tests/test_shrine.py",
     "type": "MOD",
     "updated": "2026-07-30"
+  },
+  {
+    "designation": "MOD-10.047",
+    "name": "slo",
+    "status": "active",
+    "function": "service-level objective + error budget for the engine-tick latency SLI",
+    "label": "slo",
+    "file": "parts/slo.py",
+    "type": "MOD",
+    "domain": "10",
+    "docs": "docs/reports/slo/engine-tick-slo.md",
+    "tests": "tests/test_slo.py",
+    "depends_on": [
+      "MOD-10.029"
+    ],
+    "related": [
+      "MOD-10.013"
+    ],
+    "reuse": "wrap any recorded latency/availability SLI in an SRE-style objective + error budget for any service",
+    "tags": [
+      "module"
+    ],
+    "notes": "Clean-room reimplementation of the Google SRE error-budget pattern (budget = 1 - SLO); read-only over the Chronicle SLI series (MOD-10.029) recorded by bench (MOD-10.013). make slo; NOT in make check (host-relative, sparse). Provenance: original, not affiliated with Google.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-07-31",
+    "updated": "2026-07-31"
   }
 ]

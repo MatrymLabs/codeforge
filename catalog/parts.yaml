@@ -1250,3 +1250,26 @@
     game: 'a party, guild, chat room, or raid: a leader-led band with a size cap and leadership handoff'
     business: a work group, an on-call rotation, or a session pool keyed by member id
     general: any transient membership group where a member reaches their group in one lookup and the map must never claim one member for two groups
+- id: slo-error-budget
+  name: SLO + Error Budget
+  source: parts/slo.py
+  category: observability
+  tags:
+  - slo
+  - sli
+  - error-budget
+  - observability
+  - reliability
+  maturity: shipped
+  source_status: original
+  license: MIT
+  influence: Google SRE error-budget pattern (budget = 1 - SLO; SRE Book ch.3-4) - original implementation, no code copied
+  experimental: 'compute the SLO from live per-request latency histograms instead of recorded benchmark runs, add multi-window burn-rate alerting (SRE Workbook), and expose per-shard/per-host budgets. Traded away (v1): live traffic and alerting, keeping a read-only evaluator over a recorded SLI series on one host.'
+  risk: low
+  purpose: 'Turn a recorded SLI into a stated objective and an error budget: given a latency threshold and an objective percentage, report attainment, how much of the (1 - SLO) budget is burned, and a pass/watchlist/breach/no-data verdict. Absence reads as no-data, never a false pass; a sparse series is flagged as not-yet-meaningful.'
+  reuse:
+    game: hold the engine tick to a latency objective and act when the budget is exhausted
+    finance: an availability/latency SLO for a trading or ledger service, with a spend-freeze policy on breach
+    government: a public-service reliability objective with an honest, evidence-backed attainment report
+    compliance: reliability evidence with a stated target and a documented policy when it is missed
+    general: wrap any recorded latency/availability SLI in an SRE-style objective + error budget for any service
