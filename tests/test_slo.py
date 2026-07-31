@@ -155,3 +155,29 @@ def test_main_returns_zero_on_pass(tmp_path: Path, monkeypatch: pytest.MonkeyPat
     _seed(tmp_path, [50.0] * 5)
     _bind_root(monkeypatch, tmp_path)
     assert slo.main([]) == 0
+
+
+# --- Refusal: error paths never crash the caller ---------------------------------------------
+
+
+def test_verb_reports_evaluation_failure_instead_of_raising(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    # A tampered/broken ledger surfaces its integrity failure as text, never raising into the tick.
+    def _boom(*_a: object, **_k: object) -> list[object]:
+        raise chronicle.ChronicleError("broken chain")
+
+    monkeypatch.setattr(chronicle, "trend", _boom)
+    out = slo.slo()
+    assert "could not be evaluated" in out
+    assert "broken chain" in out
+
+
+def test_main_returns_2_on_bad_objective() -> None:
+    # threshold 0 is refused by evaluate -> main catches SloError and returns 2 (not a crash).
+    assert slo.main(["0"]) == 2
+
+
+def test_main_returns_2_on_nonnumeric_arg() -> None:
+    # A non-numeric argument is a ValueError from float(); main reports it and returns 2.
+    assert slo.main(["not-a-number"]) == 2
