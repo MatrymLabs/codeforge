@@ -3,6 +3,16 @@ from pathlib import Path
 import pytest
 
 
+class _NeutralRng:
+    """A stand-in for combat's variance RNG whose roll always lands in the NORMAL band (no miss,
+    no crit, no glance). Installed for the whole suite so every deterministic exact-damage assertion
+    still holds; a variance test replaces `combat._COMBAT_RNG` with its own forcing stub."""
+
+    @staticmethod
+    def random() -> float:
+        return 0.99  # > MISS + CRIT + GLANCE: always a normal hit
+
+
 @pytest.fixture(autouse=True)
 def _isolated_database(tmp_path, monkeypatch):
     """Every test runs isolated and fast:
@@ -54,3 +64,9 @@ def _isolated_database(tmp_path, monkeypatch):
             tmp_path if root is None or Path(root).resolve() == _repo_root else root
         ),
     )
+
+    # Combat variance rolls a die on every blow (miss/glance/crit). Neutralize it suite-wide so the
+    # deterministic damage assertions stay exact; a variance test installs its own forcing RNG.
+    from parts.world import combat
+
+    monkeypatch.setattr(combat, "_COMBAT_RNG", _NeutralRng())

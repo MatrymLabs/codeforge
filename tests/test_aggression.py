@@ -197,8 +197,8 @@ def test_a_felled_player_is_restored_by_the_failsafe():
     s = _fighter()  # a vanguard: no Engineer reaction
     _spawn_aggressor(atk=9999, hp=50)  # its opening blow would empty the player's HP
     out = menace(s)
-    assert "wake restored at full health" in out
-    assert s.resources["hp"].is_full  # never a broken state
+    assert "wake at half health" in out  # the failsafe catches the fall, at a cost
+    assert not s.resources["hp"].is_full  # a fall now leaves the hero at half, not full
     assert s.location == "courtyard"  # restored in place
 
 
@@ -209,8 +209,8 @@ def test_a_second_aggressor_never_re_fells_a_restored_player():
     _spawn_aggressor(label="wight", atk=9999, hp=50)
     _spawn_aggressor(label="brute", atk=9999, hp=50)  # a second lethal foe in the same room
     out = menace(s)
-    assert out.count("wake restored") == 1  # exactly one near-death this beat, not two
-    assert s.resources["hp"].is_full  # restored, and not struck down again
+    assert out.count("wake at half health") == 1  # exactly one near-death this beat, not two
+    assert not s.resources["hp"].is_full  # restored to half, and not struck down again
 
 
 def test_open_strike_from_a_passive_npc_lands_nothing():
