@@ -28,9 +28,45 @@ from parts.world.seed import Npc, Room, SeedError
 _DEPTH = 4  # chambers in a delve's descent below the mouth
 _BOSS_BUMP = 5  # the deep boss out-levels the dungeon's mouth guardian by this many levels
 
-_CHAMBER_DESC = (
-    "The way sinks into {name}. {mood} Rough walls close around a chamber where something waits.",
+# A descent should READ like one: a chamber names how deep it sits, so the threshold and the boss's
+# lair do not read alike. Four stages (a short title + a lead), mapped across `_DEPTH` by fraction,
+# so the count is robust if the depth changes; the last chamber always lands on the lair.
+_CHAMBER_STAGES = (
+    (
+        "the threshold",
+        "The descent into {name} begins here, where the last of the daylight fails. {note} {mood}",
+    ),
+    (
+        "the mid-depths",
+        "Deeper beneath {name}, the passage narrows and the air turns stale and close. "
+        "{note} {mood}",
+    ),
+    (
+        "the deep",
+        "Far under {name} now, the weight of all that stone overhead is a thing you can feel. "
+        "{note} {mood}",
+    ),
+    (
+        "the lair",
+        "The way opens into a great vault at the root of {name}, where the deep thing makes its "
+        "lair. {note} {mood}",
+    ),
 )
+
+# The stone and air a delve INHERITS from the Reach it sinks below, so a dungeon under the ice reads
+# unlike one under the jungle. Keyed by the same biome names as the bestiary; unknown -> plain note.
+_BIOME_DELVE_NOTE: dict[str, str] = {
+    "temperate-meadow": "Old field-stone and the roots of the world above lace the walls.",
+    "wild-forest": "Pale roots thread the ceiling and the walls breathe a green, living damp.",
+    "highland-moor": "The walls are raw granite, and cold peat-water seeps between the courses.",
+    "coastal-strand": "Brine crusts the stone and, far off, the walls answer the pull of the tide.",
+    "glacier-waste": "The passage is sheathed in black ice that groans and ticks as you pass.",
+    "volcanic-flats": "The rock sweats a dry heat and glows a dull red in the deepest seams.",
+    "living-jungle": "Living vine has breached the old stone, and pale things grow in the dark.",
+    "salt-desert": "Drifted salt and dry bone floor the passage, and the air is a desiccated hush.",
+}
+_DEFAULT_DELVE_NOTE = "The walls are old, worked stone, and the dark between them is very old."
+
 _MOODS = (
     "Cold air breathes up from below.",
     "The dark thickens; your lamp gutters.",
@@ -69,11 +105,15 @@ def boss_chamber(mouth: str) -> str:
     return f"{mouth}_delve_{_DEPTH}"
 
 
-def _chamber(name: str, idx: int) -> Room:
-    """One chamber of a delve: themed by the dungeon and how deep the chamber sits."""
+def _chamber(name: str, idx: int, biome: str) -> Room:
+    """One chamber of a delve, read as a stage of a DESCENT: the deeper it sits the graver the lead
+    (threshold -> mid-depths -> deep -> lair), carrying the biome's inherited stone-and-air note and
+    a per-depth mood. The stage is by fraction of `_DEPTH`, so the bottom is always the lair."""
+    stage_word, lead = _CHAMBER_STAGES[(idx - 1) * len(_CHAMBER_STAGES) // _DEPTH]
+    note = _BIOME_DELVE_NOTE.get(biome, _DEFAULT_DELVE_NOTE)
     mood = _MOODS[idx % len(_MOODS)]
-    desc = _CHAMBER_DESC[0].format(name=name, mood=mood)
-    return Room(name=f"{name}, depth {idx}", desc=desc, exits={})
+    desc = lead.format(name=name, note=note, mood=mood)
+    return Room(name=f"{name}, {stage_word}", desc=desc, exits={})
 
 
 def generate_delves(
@@ -90,7 +130,7 @@ def generate_delves(
         prev = mouth
         for i in range(1, _DEPTH + 1):
             label = f"{mouth}_delve_{i}"
-            room = _chamber(name, i)
+            room = _chamber(name, i, biome)
             room["exits"]["up"] = prev  # back toward the mouth
             if i < _DEPTH:
                 room["exits"]["down"] = f"{mouth}_delve_{i + 1}"
