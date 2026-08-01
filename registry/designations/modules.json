@@ -7795,6 +7795,33 @@
     "updated": "2026-08-01"
   },
   {
+    "designation": "MOD-10.057",
+    "name": "tool_runner",
+    "status": "active",
+    "function": "Stage 5: controlled build/test execution - run an ALLOWLISTED command (fixed shell-free argv) inside an approved source with cwd boundary, timeout, output cap, and secret redaction; refuse an unlisted profile; capture a ToolRunResult and persist it (FileRunLog, survives restart) as evidence that feeds the Hub builds/tests facets",
+    "label": "tool_runner",
+    "file": "parts/seedlab/tool_runner.py",
+    "type": "MOD",
+    "domain": "10",
+    "docs": "docs/seed_platform/RECENTERING.md",
+    "tests": "tests/test_tool_runner.py",
+    "depends_on": [
+      "MOD-10.054"
+    ],
+    "related": [
+      "MOD-10.053"
+    ],
+    "reuse": "reuses the FailsafeRunner pattern (parts/shelf/console.py): allowlist dict + shell-free argv + timeout + output cap, binding cwd to the approved source",
+    "tags": [
+      "module"
+    ],
+    "notes": "Stage 5 of the Seed Platform Production Directive. HONEST SCOPE: executes code from the approved source, fenced by the controls above; stronger sandboxing (containers/namespaces) is future hardening. Isolated in parts/seedlab/.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-08-01",
+    "updated": "2026-08-01"
+  },
+  {
     "designation": "MOD-05.022",
     "name": "corpus",
     "status": "active",
