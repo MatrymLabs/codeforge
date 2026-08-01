@@ -15,9 +15,9 @@ Legend: ✅ done · 🔨 next · 📋 planned · 🧭 later (gated/advanced)
 | 2 | **Workshop room** | ✅ | The `workshop` room (off the cellar) is furnished as the engineering cockpit; walk in after login. |
 | 3 | **Workshop command menu** | ✅ | The `workshop` cockpit now advertises its real live tools: `catalog`/`hardware`/`parts`, `reuse <term>`, `blueprint` (browse/show/render/draft), `ai <prompt>`, and `console`/`diagnostics`/`security`. Only `patch proposal` and `arch` remain "coming" (the file-editing phases). |
 | 4 | **Hardware catalog** | ✅ | `catalog/parts.yaml` + `parts/hardware.py`; `make hardware` lists parts with cross-domain reuse; ≥4 real parts stocked. |
-| 5 | **AI NPC (read-only)** | 🟡 | `parts/architect.py`: `ai <prompt>` in-world. A **local rule-based** Architect navigates you to the right command/part today, behind a swappable `Advisor` seam; a Claude-backed brain drops in next (same interface, redacted context, key from env, mocked in tests). Advisory only - no edits, no execution. |
+| 5 | **AI NPC (read-only)** | ✅ | `parts/architect.py`: `ai <prompt>` in-world, behind a swappable `Advisor` seam. The **local rule-based** Architect is the default; a **Claude-backed brain** (`ClaudeAdvisor`, Anthropic Messages API) drops in when `CODEFORGE_ARCHITECT=claude` + `ANTHROPIC_API_KEY` are present, with context **redacted** before it leaves the machine (`anthropic` is an optional extra, `codeforge[ai]`). Advisory only - no edits, no execution. Mocked in tests with a fake client (`test_architect.py`, incl. a redaction test); CI never touches the network. The live path is one key away and never runs in CI (readiness, not a live claim). |
 | 6 | **Diagnostic console** | ✅ | `parts/shelf/console.py` (`FailsafeRunner`) runs an **allowlisted, read-only** set as argument lists (no shell), under a timeout + output cap, each run logged. In-world: `console`, `run <check>`, `diagnostics`. Refuses anything off the list. |
-| 7 | **Report system** | ✅ | `parts/reporting.py` (`write_report`) files dated evidence under `reports/<kind>/`; used by the bench, frame-up, repo-integrity, and blueprint renderers. |
+| 7 | **Report system** | ✅ | `parts/shelf/reporting.py` (`write_report`) files dated evidence under `reports/<kind>/`; used by the bench, frame-up, repo-integrity, and blueprint renderers. |
 | 8 | **AI planning mode** | ✅ | `blueprint` drafts a structured plan: `blueprint draft <idea>` uses the Claude Architect (schema-enforced `messages.parse`) to author a Blueprint, re-validated through the same gate and always a Tier-4 draft. `parts/blueprint_ai.py`, no direct edits. |
 | 9 | **Safe patch proposal** | ✅ | `parts/foundry.py`: a `PatchProposal` (target, why, part, risk, test, rollback) is a data artifact - creating one writes NOTHING; a human must `approve()` it first. Tested with refusal cases. |
 | 10 | **Controlled generation** | ✅ (sandboxed) | Applying an approved proposal generates a NEW file into a git-ignored `workspace/` sandbox - refuses to overwrite, refuses to escape, files evidence. In-world: owner-only `@forge <name>` then `@forge approve <name>`. It never edits existing source, config, git, or main; promoting a candidate into `parts/` stays a human branch → check → PR step. |
@@ -54,11 +54,11 @@ Repo-safe, low-risk, high-signal - the base of the climb:
 3. ✅ Furnish the `workshop` room as the cockpit (it already existed off the cellar). *(done)*
 4. ✅ `parts/workshop.py` - the `workshop` menu command, wired in the tick with an engine-tick test. **Display only.** *(done)*
 5. ✅ Wire `catalog`/`hardware`/`parts` + `reuse <term>` in-world to `parts/hardware.py` (read-only). *(done)*
-6. 📋 Stock 2-3 more real parts in the catalog as they prove reusable.
-7. 📋 `reports/` scaffold + a tiny `save_report()` helper (write + summarize).
-8. 📋 `parts/shelf/console.py` - the `CommandRelay` skeleton with the allowlist (Phase 6), tests first, **no execution of anything not on the list**.
-9. 📋 `parts/architect.py` - the AI seam as a `Protocol` (mockable), read-only, context **redacted**; tests use a fake, never the network.
-10. 📋 Document a first `PatchProposal` shape (no implementation) so Phase 9 has a target.
+6. ✅ Stock more real parts in the catalog as they prove reusable (now ~89, incl. the seedlab harvest). *(done)*
+7. ✅ `reports/` scaffold + `write_report()` (`parts/shelf/reporting.py`, Phase 7). *(done)*
+8. ✅ `parts/shelf/console.py` - the `FailsafeRunner` with the allowlist (Phase 6), tests first, **no execution of anything not on the list**. *(done)*
+9. ✅ `parts/architect.py` - the AI seam as a `Protocol` (mockable), read-only, context **redacted**; tests use a fake, never the network (Phase 5). *(done)*
+10. ✅ `PatchProposal` shape as a data artifact - creating one writes nothing (`parts/foundry.py`, Phase 9). *(done)*
 
 Tasks 1-2 are done. 3-5 are the next shippable slices (each: branch → `make check`
 → merge → push).
