@@ -92,8 +92,22 @@ def test_a_drain_never_overheals_past_the_maximum() -> None:
     assert s.resources["hp"].current == full  # a siphon at full HP wastes no overheal
 
 
-# --- kit density: the iconic aethryn callings carry a coherent, varied moveset -------------------
-def test_aethryn_iconic_kits_have_depth_and_variety() -> None:
+# --- regen: a woven heal-over-time that mends across the world beats -----------------------------
+def test_a_regen_ability_mends_over_the_world_beat() -> None:
+    from parts.world.afflictions import tick_regens
+
+    s = _at_dummy("artificer")
+    s.resources["hp"] = s.resources["hp"].damage(30)  # take a wound the HoT can mend
+    out = use_ability(s, "repair field")  # a regen on self
+    assert "Repair Field" in out and "mend" in out
+    assert s.regens  # a heal-over-time boon is now active
+    hp_before = s.resources["hp"].current
+    tick_regens(s)  # one world beat
+    assert s.resources["hp"].current > hp_before  # the boon mended HP on the beat
+
+
+# --- kit density: EVERY aethryn calling carries a full, coherent moveset (batches 1-3) -----------
+def test_every_aethryn_calling_has_a_full_kit() -> None:
     from collections import Counter, defaultdict
 
     ab = load_abilities(Path("seeds/aethryn/abilities.yaml"))
@@ -103,9 +117,12 @@ def test_aethryn_iconic_kits_have_depth_and_variety() -> None:
         for job in a["jobs"]:
             per[job] += 1
             kinds[job].add(a["kind"])
-    for job in ("berserker", "duelist", "ranger", "elementalist", "stormcaller", "scout"):
-        assert per[job] >= 5, f"{job} kit is thin ({per[job]} abilities)"
-        assert len(kinds[job]) >= 2, f"{job} kit is one-note ({kinds[job]})"
+    # After the three density passes, every playable calling has a full 5-ability kit with >=2 kinds
+    # (a role identity, not just a pile of strikes). `template` is the non-playable base row.
+    thin = sorted(f"{j}({c})" for j, c in per.items() if j != "template" and c < 5)
+    assert not thin, f"callings without a full 5-ability kit: {thin}"
+    one_note = sorted(j for j, ks in kinds.items() if j != "template" and len(ks) < 2)
+    assert not one_note, f"callings with a one-note kit: {one_note}"
 
 
 @pytest.mark.parametrize("job", ["vanguard", "scholar", "artificer", "engineer"])

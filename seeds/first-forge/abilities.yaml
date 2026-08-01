@@ -86,3 +86,12 @@ siphon:
   scales: magic
   mp_cost: 4
   jobs: [artificer]
+
+repair_field:
+  name: Repair Field
+  kind: regen  # a heal-over-time: mends a share of HP each world beat for a few beats
+  power: 5
+  scales: magic
+  mp_cost: 4
+  cooldown: 3
+  jobs: [artificer]

@@ -1996,6 +1996,42 @@
     security: author a readable, deterministic decision policy
     compliance: a deterministic, auditable engineering aid with an honest caveat
     general: a domain-neutral behavior tree for AI + workflow orchestration
+- id: probabilistic
+  name: Probabilistic Structures
+  source: parts/shelf/probabilistic.py
+  category: sampling
+  tags: [bloom-filter, hyperloglog, count-min, probabilistic, cardinality, membership]
+  maturity: beta
+  source_status: original
+  license: MIT
+  influence: the R&D Algorithms Lab (docs/rd EXP-31; from the master cross-domain ingestion survey; clean-room stdlib)
+  experimental: 'wire a Bloom seen-set into the wildlands world generator for dedup at 50k-room scale; HLL for distinct-player telemetry; CountMin for hot-room heavy-hitters. Traded away (v1): a counting/deletable Cuckoo filter, keeping the three proven sketches.'
+  risk: low
+  purpose: 'Space-efficient sketches with provable one-sided error bounds: BloomFilter (membership, NO false negatives, tunable+measured FPR), HyperLogLog (cardinality, standard error 1.04/sqrt(m)), CountMinSketch (frequency, over-counts only). APPROXIMATE by design - each states its guarantee in the open; a hash match is not an exact count. Case-preserving hashing (no secrets-style case-mangling); not cryptographic.'
+  reuse:
+    game: dedup a world generator''s seen rooms/names in kilobytes at scale; count distinct players / hot rooms without storing ids
+    education: teach probabilistic data structures and provable error bounds
+    security: a cache-penetration guard (the canonical Bloom use)
+    compliance: a deterministic, auditable engineering aid with an honest error bound
+    general: members-and-counts at scale for any Python corpus
+- id: transform-verifier
+  name: Transform Verifier
+  source: parts/shelf/transform_verifier.py
+  category: validation
+  tags: [verifier-gate, behavioral-equivalence, differential-testing, codemod, refactor-safety]
+  maturity: beta
+  source_status: original
+  license: MIT
+  influence: the R&D Synthesis / Parts-Factory Lab (docs/rd EXP-32; from the pipeline/MVP verifier-gated-transforms corpus; pairs with content_address EXP-27; clean-room stdlib)
+  experimental: 'a qa verb that gates a codemod/refactor/LLM edit before it lands; a CrossHair/Z3 upgrade (a Josh-gated dependency) would strengthen PRESERVED toward proof. Traded away (v1): the LibCST lossless round-trip gate, keeping the dependency-free behavioral core.'
+  risk: low
+  purpose: 'Decide whether a code transform preserved behavior: a PARSE gate (broken output = BROKEN) plus a differential BEHAVIOR gate (run both versions on a hostile input battery; a diverging return/exception is a counterexample). Verdict PRESERVED/BROKEN/INCONCLUSIVE. SAMPLING, not a proof - absence of a counterexample raises confidence, a found one proves the behavior changed. Executes code in-process: trusted code only.'
+  reuse:
+    game: gate an automated refactor of engine code before it ships
+    education: teach behavioral equivalence and why a hash match is not a proof
+    security: catch a transform (human or LLM) that silently changed behavior
+    compliance: an auditable pre/post-transform evidence record with an honest caveat
+    general: a dependency-free stand-in for CrossHair diffbehavior on any Python function
 - id: path-bounded-reader
   name: Path-Bounded Source Reader
   source: parts/seedlab/source_connector.py

@@ -728,3 +728,472 @@ deadeye:
   mp_cost: 5
   cooldown: 3
   jobs: [gunsmith]
+
+# === Kit density, batch 2: the remaining thin callings get their coherent ~5-ability role kits. ===
+
+# Pathfinder -- survival ranger: a snare, a venom trap, a quick shot.
+trappers_snare:
+  name: Trapper's Snare
+  kind: weaken
+  power: 2
+  mp_cost: 3
+  cooldown: 3
+  jobs: [pathfinder]
+venom_trap:
+  name: Venom Trap
+  kind: brand
+  power: 5
+  scales: speed
+  mp_cost: 4
+  cooldown: 2
+  element: PSN
+  jobs: [pathfinder]
+snap_shot:
+  name: Snap Shot
+  kind: strike
+  power: 8
+  scales: speed
+  mp_cost: 3
+  jobs: [pathfinder]
+
+# Summoner -- pact caster: an eldritch bolt, a soul-bond lifesteal, a familiar empower.
+eldritch_bolt:
+  name: Eldritch Bolt
+  kind: strike
+  power: 9
+  scales: magic
+  mp_cost: 4
+  element: DRK
+  jobs: [summoner]
+soul_bond:
+  name: Soul Bond
+  kind: drain
+  power: 7
+  scales: magic
+  mp_cost: 4
+  cooldown: 2
+  element: DRK
+  jobs: [summoner]
+empower_familiar:
+  name: Empower Familiar
+  kind: buff
+  power: 3
+  mp_cost: 4
+  cooldown: 3
+  jobs: [summoner]
+
+# Templar -- holy knight: a taunt, a blessing, a smite (a second tank-capable calling).
+holy_challenge:
+  name: Holy Challenge
+  kind: taunt
+  power: 0
+  mp_cost: 3
+  cooldown: 2
+  jobs: [templar]
+blessing:
+  name: Blessing
+  kind: buff
+  power: 3
+  mp_cost: 4
+  cooldown: 3
+  jobs: [templar]
+radiant_smite:
+  name: Radiant Smite
+  kind: strike
+  power: 10
+  scales: wisdom
+  mp_cost: 5
+  cooldown: 2
+  element: HLY
+  jobs: [templar]
+
+# Engineer -- tech control: an EMP daze, an overload, a corrosive charge.
+emp_burst:
+  name: EMP Burst
+  kind: daze
+  power: 2
+  mp_cost: 4
+  cooldown: 4
+  jobs: [engineer]
+overload_surge:
+  name: Overload Surge
+  kind: strike
+  power: 9
+  scales: magic
+  mp_cost: 4
+  element: LGT
+  jobs: [engineer]
+corrosive_charge:
+  name: Corrosive Charge
+  kind: weaken
+  power: 2
+  mp_cost: 3
+  cooldown: 3
+  jobs: [engineer]
+
+# Artificer -- tinker DPS: an incendiary bomb, a siphon coil, a precision bolt.
+incendiary_bomb:
+  name: Incendiary Bomb
+  kind: brand
+  power: 6
+  scales: magic
+  mp_cost: 4
+  cooldown: 2
+  element: FIR
+  jobs: [artificer]
+siphon_coil:
+  name: Siphon Coil
+  kind: drain
+  power: 7
+  scales: magic
+  mp_cost: 4
+  cooldown: 2
+  element: LGT
+  jobs: [artificer]
+precision_bolt:
+  name: Precision Bolt
+  kind: strike
+  power: 9
+  scales: magic
+  mp_cost: 4
+  jobs: [artificer]
+
+# Mechanist -- war machines: a stun bot, a laser lance, a rust field.
+stun_bot:
+  name: Stun Bot
+  kind: daze
+  power: 2
+  mp_cost: 4
+  cooldown: 4
+  jobs: [mechanist]
+laser_lance:
+  name: Laser Lance
+  kind: strike
+  power: 10
+  scales: magic
+  mp_cost: 5
+  cooldown: 2
+  element: LGT
+  jobs: [mechanist]
+rust_field:
+  name: Rust Field
+  kind: weaken
+  power: 2
+  mp_cost: 3
+  cooldown: 3
+  jobs: [mechanist]
+
+# Beastmaster -- the wild: a rabid bite, a maul, an intimidate.
+rabid_bite:
+  name: Rabid Bite
+  kind: brand
+  power: 5
+  scales: strength
+  mp_cost: 4
+  cooldown: 2
+  element: PSN
+  jobs: [beastmaster]
+savage_maul:
+  name: Savage Maul
+  kind: strike
+  power: 10
+  scales: strength
+  mp_cost: 4
+  cooldown: 2
+  jobs: [beastmaster]
+intimidate:
+  name: Intimidate
+  kind: weaken
+  power: 2
+  mp_cost: 3
+  cooldown: 3
+  jobs: [beastmaster]
+
+# Geomancer -- the earth: a tremor stun, an entomb, a boulder (has Stonefall).
+tremor:
+  name: Tremor
+  kind: daze
+  power: 2
+  mp_cost: 5
+  cooldown: 4
+  jobs: [geomancer]
+entomb:
+  name: Entomb
+  kind: weaken
+  power: 2
+  mp_cost: 4
+  cooldown: 3
+  jobs: [geomancer]
+boulder_toss:
+  name: Boulder Toss
+  kind: strike
+  power: 11
+  scales: stamina
+  mp_cost: 5
+  cooldown: 2
+  element: ERT
+  jobs: [geomancer]
+
+# Runesmith -- graven power: a rune of power, a searing rune, a rune blast.
+rune_of_power:
+  name: Rune of Power
+  kind: buff
+  power: 3
+  mp_cost: 4
+  cooldown: 3
+  jobs: [runesmith]
+searing_rune:
+  name: Searing Rune
+  kind: brand
+  power: 6
+  scales: magic
+  mp_cost: 4
+  cooldown: 2
+  element: FIR
+  jobs: [runesmith]
+runic_blast:
+  name: Runic Blast
+  kind: strike
+  power: 9
+  scales: magic
+  mp_cost: 4
+  jobs: [runesmith]
+
+# === Kit density, batch 3: round out the mid-tier callings (3-4 -> 5) to finish the roster. =======
+
+# Sentinel -- the wall: a taunt and a shield bash (a 2nd tank-capable calling; had weaken).
+guardians_call:
+  name: Guardian's Call
+  kind: taunt
+  power: 0
+  mp_cost: 3
+  cooldown: 2
+  jobs: [sentinel]
+shield_slam:
+  name: Shield Slam
+  kind: strike
+  power: 8
+  scales: stamina
+  mp_cost: 3
+  cooldown: 2
+  jobs: [sentinel]
+
+# Cleric -- the light: a benediction and a censure (support kit; had heal + cleanse).
+sanctuary:
+  name: Sanctuary
+  kind: buff
+  power: 3
+  mp_cost: 4
+  cooldown: 3
+  jobs: [cleric]
+censure:
+  name: Censure
+  kind: strike
+  power: 9
+  scales: wisdom
+  mp_cost: 4
+  element: HLY
+  jobs: [cleric]
+
+# Oracle -- the seer: a premonition stun and a mind spike (control; had weaken).
+premonition:
+  name: Premonition
+  kind: daze
+  power: 2
+  mp_cost: 5
+  cooldown: 4
+  jobs: [oracle]
+mind_spike:
+  name: Mind Spike
+  kind: strike
+  power: 9
+  scales: wisdom
+  mp_cost: 4
+  jobs: [oracle]
+
+# Warden -- nature's guard: a thornlash and a nature's wrath taunt (tank; had drain).
+bramble_snare:
+  name: Bramble Snare
+  kind: brand
+  power: 5
+  scales: wisdom
+  mp_cost: 4
+  cooldown: 2
+  element: PSN
+  jobs: [warden]
+natures_wrath:
+  name: Nature's Wrath
+  kind: taunt
+  power: 0
+  mp_cost: 3
+  cooldown: 2
+  jobs: [warden]
+
+# Druid -- the wild: a wild leech and an entangle root (had brand).
+wild_leech:
+  name: Wild Leech
+  kind: drain
+  power: 7
+  scales: wisdom
+  mp_cost: 4
+  cooldown: 2
+  element: PSN
+  jobs: [druid]
+entangle:
+  name: Entangle
+  kind: daze
+  power: 2
+  mp_cost: 4
+  cooldown: 4
+  jobs: [druid]
+
+# Trickster -- the cheat: a cheap-shot leech and a sabotage (had daze).
+cheap_shot:
+  name: Cheap Shot
+  kind: drain
+  power: 6
+  scales: speed
+  mp_cost: 4
+  cooldown: 2
+  element: DRK
+  jobs: [trickster]
+sabotage:
+  name: Sabotage
+  kind: weaken
+  power: 2
+  mp_cost: 3
+  cooldown: 3
+  jobs: [trickster]
+
+# Hierophant -- dark rites: a blight and a word of silence (had drain).
+dark_blight:
+  name: Dark Blight
+  kind: brand
+  power: 6
+  scales: wisdom
+  mp_cost: 4
+  cooldown: 2
+  element: DRK
+  jobs: [hierophant]
+word_of_silence:
+  name: Word of Silence
+  kind: daze
+  power: 2
+  mp_cost: 5
+  cooldown: 4
+  jobs: [hierophant]
+
+# Shadowblade -- the assassin: a poison blade and a blindside (had drain).
+poison_blade:
+  name: Poison Blade
+  kind: brand
+  power: 5
+  scales: speed
+  mp_cost: 4
+  cooldown: 2
+  element: PSN
+  jobs: [shadowblade]
+blindside:
+  name: Blindside
+  kind: daze
+  power: 2
+  mp_cost: 4
+  cooldown: 4
+  jobs: [shadowblade]
+
+# Saboteur -- the wrecker: an acid vial and flashpowder (had weaken).
+acid_vial:
+  name: Acid Vial
+  kind: brand
+  power: 5
+  scales: speed
+  mp_cost: 4
+  cooldown: 2
+  element: PSN
+  jobs: [saboteur]
+flashpowder:
+  name: Flashpowder
+  kind: daze
+  power: 2
+  mp_cost: 4
+  cooldown: 4
+  jobs: [saboteur]
+
+# Reaver -- brutal: a gore bleed and a devastating blow (had drain).
+gore:
+  name: Gore
+  kind: brand
+  power: 6
+  scales: strength
+  mp_cost: 4
+  cooldown: 2
+  jobs: [reaver]
+devastate:
+  name: Devastate
+  kind: strike
+  power: 12
+  scales: strength
+  mp_cost: 5
+  cooldown: 3
+  element: DRK
+  jobs: [reaver]
+
+# Round out the last three (were at 4) so every calling carries a full 5-ability kit.
+cleave:
+  name: Cleave
+  kind: strike
+  power: 9
+  scales: strength
+  mp_cost: 4
+  cooldown: 2
+  jobs: [vanguard]
+immolate:
+  name: Immolate
+  kind: strike
+  power: 10
+  scales: magic
+  mp_cost: 5
+  cooldown: 2
+  element: FIR
+  jobs: [emberwright]
+temporal_slow:
+  name: Temporal Slow
+  kind: weaken
+  power: 2
+  mp_cost: 4
+  cooldown: 3
+  jobs: [chronomancer]
+
+# === Heal-over-time (regen): the support callings gain a woven mend that ticks over the beats. ====
+renewal:
+  name: Renewal
+  kind: regen
+  power: 5
+  scales: wisdom
+  mp_cost: 4
+  cooldown: 3
+  jobs: [cleric]
+verdant_mend:
+  name: Verdant Mend
+  kind: regen
+  power: 5
+  scales: wisdom
+  mp_cost: 4
+  cooldown: 3
+  jobs: [druid]
+lifebloom:
+  name: Lifebloom
+  kind: regen
+  power: 4
+  scales: wisdom
+  mp_cost: 4
+  cooldown: 3
+  jobs: [warden]
+sacrament:
+  name: Sacrament
+  kind: regen
+  power: 6
+  scales: wisdom
+  mp_cost: 5
+  cooldown: 3
+  jobs: [hierophant]

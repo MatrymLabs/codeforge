@@ -79,7 +79,7 @@ def render_abilities(session: Session) -> str:
     subjob_only = {label for label, _ in pairs} - {label for label, _ in abilities_for(session.job)}
     lines = ["Abilities:"]
     for label, a in pairs:
-        target = "self or ally" if a["kind"] in ("heal", "cleanse", "buff") else "a target"
+        target = "self or ally" if a["kind"] in ("heal", "cleanse", "buff", "regen") else "a target"
         scale = f" +{a['scales']}/3" if a["scales"] else ""
         via = "  (subjob)" if label in subjob_only else ""
         cd = a.get("cooldown", 0)
@@ -131,6 +131,8 @@ def use_ability(session: Session, arg: str) -> str:
         return _channel_heal(session, ability, label, target_word.strip(), who, move)
     if ability["kind"] == "cleanse":
         return _channel_cleanse(session, ability, label, target_word.strip(), who, move)
+    if ability["kind"] == "regen":
+        return _channel_regen(session, ability, label, target_word.strip(), who, move)
     if ability["kind"] == "buff":
         return _channel_buff(session, ability, label, target_word.strip(), who, move)
 
@@ -197,6 +199,31 @@ def _channel_heal(
         f"You channel {move} on {ally_name}, mending {amount} HP. "
         f"({healed.current}/{healed.maximum})"
     )
+
+
+def _channel_regen(
+    session: Session, ability: Ability, label: str, target_word: str, who: str, move: str
+) -> str:
+    """Weave a heal-over-time on the wielder or an ally: it mends a share each beat for a few beats
+    (the friendly mirror of a `brand` burn). Spends MP + arms the cooldown only on a real target; a
+    named ally who is not present fails loud, so the MP is never burned into the void."""
+    from parts.world import afflictions
+
+    ally = _trace_ally(target_word, session)
+    if ally is None:
+        return f"There is no ally called '{target_word}' here to bless."
+    session.resources["mp"] = session.resources["mp"].damage(ability["mp_cost"])
+    per_beat = _magnitude(session, ability)
+    ticks = afflictions.DOT_TICKS
+    afflictions.apply_regen(ally, move.lower(), per_beat, ticks)
+    _arm_cooldown(session, label, ability)
+    _heal_threat(session, per_beat)  # weaving a mend draws aggro, like a heal
+    if ally is session:
+        announce(session.location, f"{who} weaves {move}.", exclude=session.player_id)
+        return f"You weave {move}: it will mend {per_beat} HP a beat for {ticks} beats."
+    ally_name = display_name(ally.player_id)
+    announce(session.location, f"{who} weaves {move} on {ally_name}.", exclude=session.player_id)
+    return f"You weave {move} on {ally_name}: it mends {per_beat} HP a beat for {ticks} beats."
 
 
 def _channel_cleanse(
