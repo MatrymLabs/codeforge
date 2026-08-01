@@ -225,6 +225,11 @@ jobs:
           maturin build --release -m native/codeforge_nav/Cargo.toml --out dist
           pip install --no-index --find-links dist codeforge-nav
 
+      - name: Stable-ABI (abi3) audit -- 0 violations required (T-AP-07)
+        run: |
+          pip install abi3audit
+          abi3audit dist/codeforge_nav-*.whl
+
       - name: Parity + navigation tests (native backend present)
         run: python -m pytest tests/test_navigation.py -q
 
@@ -324,11 +329,20 @@ jobs:
         with:
           python-version: "3.13"
 
-      - name: Build + install the C text kernel (system cc)
-        run: pip install ./native/textkernel
+      - name: Build the C text kernel as an abi3 wheel (system cc)
+        run: |
+          pip install build
+          python -m build --wheel native/textkernel --outdir dist
 
-      - name: Install the Python test deps
-        run: pip install -e ".[dev]"
+      - name: Stable-ABI (abi3) audit -- 0 violations required (T-AP-07)
+        run: |
+          pip install abi3audit
+          abi3audit dist/codeforge_textkernel-*.whl
+
+      - name: Install the C kernel (from the audited abi3 wheel) + test deps
+        run: |
+          pip install --no-index --find-links dist codeforge-textkernel
+          pip install -e ".[dev]"
 
       - name: Parity test (C kernel present, matched to the Python reference)
         run: python -m pytest tests/test_textmatch.py -q

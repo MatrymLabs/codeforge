@@ -6,7 +6,8 @@ build-backend = "maturin"
 name = "codeforge-nav"
 version = "0.1.0"
 description = "CodeForge native navigation kernel (Rust/PyO3): fast room pathfinding + reachability"
-requires-python = ">=3.13"
+# abi3 floor 3.10 (PyO3 abi3-py310): one Stable-ABI wheel loads on CPython >= 3.10.
+requires-python = ">=3.10"
 license = { text = "MIT" }
 classifiers = [
     "Programming Language :: Rust",
