@@ -522,3 +522,209 @@ curse_of_frailty:
   mp_cost: 5
   cooldown: 4
   jobs: [oracle]
+
+# === Kit density pass: give iconic callings a coherent ~5-ability kit with a role identity, ========
+# using the full 9-kind engine (strike/drain/brand/daze/weaken/buff/heal/cleanse/taunt).
+
+# Berserker -- rage melee: lifesteal fury, a bleed, and a self-empower.
+bloodthirst:
+  name: Bloodthirst
+  kind: drain
+  power: 8
+  scales: strength
+  mp_cost: 4
+  cooldown: 2
+  element: DRK
+  jobs: [berserker]
+rend:
+  name: Rend
+  kind: brand
+  power: 5
+  scales: strength
+  mp_cost: 3
+  cooldown: 2
+  jobs: [berserker]
+frenzy:
+  name: Frenzy
+  kind: buff
+  power: 3
+  mp_cost: 4
+  cooldown: 3
+  jobs: [berserker]
+
+# Duelist -- precise blade: a riposte stun, a disarm, a gap-closing lunge.
+feint:
+  name: Feint
+  kind: daze
+  power: 2
+  mp_cost: 4
+  cooldown: 4
+  jobs: [duelist]
+disarm:
+  name: Disarm
+  kind: weaken
+  power: 2
+  mp_cost: 3
+  cooldown: 3
+  jobs: [duelist]
+lunge:
+  name: Lunge
+  kind: strike
+  power: 9
+  scales: speed
+  mp_cost: 4
+  cooldown: 2
+  jobs: [duelist]
+
+# Ranger -- ranged bow: a poison arrow, a crippling shot, an aimed shot.
+serpent_arrow:
+  name: Serpent Arrow
+  kind: brand
+  power: 5
+  scales: speed
+  mp_cost: 4
+  cooldown: 2
+  element: PSN
+  jobs: [ranger]
+crippling_shot:
+  name: Crippling Shot
+  kind: weaken
+  power: 2
+  mp_cost: 3
+  cooldown: 3
+  jobs: [ranger]
+precise_shot:
+  name: Precise Shot
+  kind: strike
+  power: 10
+  scales: speed
+  mp_cost: 4
+  cooldown: 2
+  jobs: [ranger]
+
+# Elementalist -- turn the elements: ignite (fire DoT), frost lance, arc bolt.
+ignite:
+  name: Ignite
+  kind: brand
+  power: 6
+  scales: magic
+  mp_cost: 4
+  cooldown: 2
+  element: FIR
+  jobs: [elementalist]
+frost_lance:
+  name: Frost Lance
+  kind: strike
+  power: 10
+  scales: magic
+  mp_cost: 5
+  element: ICE
+  jobs: [elementalist]
+arc_bolt:
+  name: Arc Bolt
+  kind: strike
+  power: 8
+  scales: magic
+  mp_cost: 3
+  element: LGT
+  jobs: [elementalist]
+
+# Stormcaller -- the storm: a thunderclap stun, a static burn, a squall.
+thunderclap:
+  name: Thunderclap
+  kind: daze
+  power: 2
+  mp_cost: 5
+  cooldown: 4
+  jobs: [stormcaller]
+static_field:
+  name: Static Field
+  kind: brand
+  power: 5
+  scales: magic
+  mp_cost: 4
+  cooldown: 2
+  element: LGT
+  jobs: [stormcaller]
+squall:
+  name: Squall
+  kind: strike
+  power: 9
+  scales: magic
+  mp_cost: 4
+  element: WND
+  jobs: [stormcaller]
+
+# Scout -- from the shadows: a smoke daze, an expose, an ambush lifesteal.
+smoke_bomb:
+  name: Smoke Bomb
+  kind: daze
+  power: 2
+  mp_cost: 4
+  cooldown: 4
+  jobs: [scout]
+expose_weakness:
+  name: Expose Weakness
+  kind: weaken
+  power: 2
+  mp_cost: 3
+  cooldown: 3
+  jobs: [scout]
+ambush:
+  name: Ambush
+  kind: drain
+  power: 7
+  scales: speed
+  mp_cost: 4
+  cooldown: 2
+  element: DRK
+  jobs: [scout]
+
+# Arcanist -- arcane control: missiles, an enfeeble, a mana leech.
+arcane_missiles:
+  name: Arcane Missiles
+  kind: strike
+  power: 9
+  scales: magic
+  mp_cost: 4
+  jobs: [arcanist]
+enfeeble:
+  name: Enfeeble
+  kind: weaken
+  power: 2
+  mp_cost: 3
+  cooldown: 3
+  jobs: [arcanist]
+mana_leech:
+  name: Mana Leech
+  kind: drain
+  power: 7
+  scales: magic
+  mp_cost: 4
+  cooldown: 2
+  element: DRK
+  jobs: [arcanist]
+
+# Gunsmith -- powder and lead: a pistol-whip daze, suppressive fire, a deadeye shot.
+pistol_whip:
+  name: Pistol Whip
+  kind: daze
+  power: 2
+  mp_cost: 3
+  cooldown: 3
+  jobs: [gunsmith]
+suppressive_fire:
+  name: Suppressive Fire
+  kind: weaken
+  power: 2
+  mp_cost: 4
+  cooldown: 3
+  jobs: [gunsmith]
+deadeye:
+  name: Deadeye
+  kind: strike
+  power: 11
+  scales: speed
+  mp_cost: 5
+  cooldown: 3
+  jobs: [gunsmith]
