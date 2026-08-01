@@ -68,6 +68,22 @@ def test_viewing_a_finished_quest_shows_its_done_label():
     assert "fulfilled" in out and "You can:" not in out
 
 
+def test_finishing_a_completed_quest_again_refuses_and_never_reawards():
+    """Reward idempotency (Stage 5): once an arc is 'done', a repeated `finish` is
+    refused and the XP is NOT granted twice -- no progression duplication, even if a
+    client double-sends the winning move."""
+    s = _player()
+    quest_view(s, "accept")
+    quest_view(s, "begin")
+    first = quest_view(s, "finish")
+    assert "You gain 50 XP." in first
+    xp_once = s.xp
+    again = quest_view(s, "finish")  # the double-claim
+    assert "can't do that now" in again  # terminal state has no `finish` transition
+    assert "You gain" not in again  # no second award fired
+    assert s.xp == xp_once  # XP unchanged: the reward is idempotent
+
+
 def test_open_door_effect_reforges_a_barrier():
     """A quest step's open_door effect opens a world barrier (the workflow names it, the game
     applies it). Proven against the default seed's oak_door standing in for aethryn's bridge."""
