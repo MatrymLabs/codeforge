@@ -1563,3 +1563,104 @@
     government: guaranteed at-least-once processing of a records or notification job
     security: bounded retries + dead-letter for poison work; no double-completion
     general: a durable background work queue for any state-change-plus-process flow
+
+- id: workflow-linter
+  name: Workflow Linter
+  source: parts/shelf/workflow_linter.py
+  category: security
+  tags: [ci, supply-chain, github-actions, least-privilege, static-analysis]
+  maturity: beta
+  source_status: original
+  license: MIT
+  influence: least-privilege GitHub Actions + CI-hardening literature (clean-room; RS-2026-07-11-fwa)
+  experimental: 'add rules for reusable-workflow inputs, OIDC scoping, and per-step permission mediation; wire it as a CI gate that fails on high findings. Traded away (v1): a fixer, keeping a pure reporter over a parsed dict.'
+  risk: low
+  purpose: 'Static-lint a parsed GitHub Actions workflow for over-broad permissions, unpinned actions, secret sprawl, and complexity - waste and abuse surface caught before it merges. The core operates on a dict, so it is dependency-free; a convenience parses YAML.
+
+    '
+  reuse:
+    game: n/a (dev tooling), but the fleet''s own CI hardening is portfolio-visible
+    security: pin actions to SHAs, scope permissions least-privilege, cap secret sprawl - supply-chain defence
+    government: enforce a CI permission budget as an auditable control
+    compliance: evidence that pipelines follow least-privilege
+    general: a CI supply-chain linter for any GitHub Actions repo
+- id: diagnostic-runner
+  name: Diagnostic Runner
+  source: parts/shelf/diagnostic_runner.py
+  category: resilience
+  tags: [decision, escalation, evidence, safety, ai-assisted-delivery]
+  maturity: beta
+  source_status: original
+  license: MIT
+  influence: differential-diagnosis + non-overridable escalation classes (clean-room; RS-2026-07-11-clinical)
+  experimental: 'add per-kind minimum-evidence thresholds and a rationale ledger. Traded away (v1): the check-runner itself, keeping the pure decision aggregator.'
+  risk: low
+  purpose: 'Aggregate check results into proceed/revise/escalate/stop from the weighted evidence, where a FAILED escalation-class check (security/sandbox/grounding) forces escalation regardless of the confidence score - stopping the "looks fine, ship it" failure when a critical signal is red.
+
+    '
+  reuse:
+    game: gate a risky admin/world action on a panel of checks with a hard-stop on safety failures
+    security: a red security check can never be overridden by an otherwise-high score
+    finance: proceed/hold/escalate a transaction on weighted risk signals with non-overridable holds
+    compliance: an auditable, evidence-weighted decision with escalation reasons
+    general: any decision point that must not let a good score bury a critical failure
+- id: risk-router
+  name: Risk Router
+  source: parts/shelf/risk_router.py
+  category: governance
+  tags: [review, risk-scoring, routing, change-management, governance]
+  maturity: beta
+  source_status: original
+  license: MIT
+  influence: risk-based review routing (clean-room; RS-2026-07-11-fwa)
+  experimental: 'infer signals from a real diff (paths -> flags) and post the routing as a PR comment. Traded away (v1): the diff parser, keeping the scorer + router over explicit signals.'
+  risk: low
+  purpose: 'Score a change''s risk from what it touches (auth, secrets, migrations, CI, added deps) and route the required review depth, where high-risk signals floor the band regardless of the numeric score - tying oversight to actual risk, not to whether a diff "looks simple".
+
+    '
+  reuse:
+    game: route a world/content change to deeper review when it touches persistence or economy
+    security: force a second approval + security review on auth/secrets changes
+    government: risk-tiered approval authority for a records change
+    compliance: an auditable, risk-based review-routing control
+    general: PR/change triage for any review process
+- id: checklist-gate
+  name: Checklist Gate
+  source: parts/shelf/checklist_gate.py
+  category: validation
+  tags: [safety, pre-flight, attestation, checklist, irreversible-action]
+  maturity: beta
+  source_status: original
+  license: MIT
+  influence: the WHO surgical sign-in/time-out/sign-out gates (clean-room; RS-2026-07-11-clinical)
+  experimental: 'persist signed attestations to the hashchain audit log as evidence. Traded away (v1): persistence, keeping the pure gate.'
+  risk: low
+  purpose: 'Block an irreversible action until a phase-keyed checklist (sign-in / time-out / sign-out) is attested - repository context, runtime target, secret exposure, test coverage, rollback plan, authorization - and name exactly the item that is missing, so a critical step is never skipped silently.
+
+    '
+  reuse:
+    game: a pre-flight gate before a destructive owner verb or a world reseed
+    security: confirm no secret exposure + a tested rollback before a deploy
+    government: a signed readiness attestation before an irreversible records action
+    compliance: the checklist itself is the evidence a control was applied
+    general: a pre-action attestation gate before any irreversible operation
+- id: context-selector
+  name: Context Selector
+  source: parts/shelf/context_selector.py
+  category: ai
+  tags: [context, relevance, budget, llm, retrieval]
+  maturity: beta
+  source_status: original
+  license: MIT
+  influence: the context ROI selector (clean-room; RS-2026-07-11-nature)
+  experimental: 'add code-aware signal extractors (name match, dependency centrality, churn). Traded away (v1): the signal extractors, keeping a generic weighted-relevance selector.'
+  risk: low
+  purpose: 'Rank candidate items by weighted signals and greedily select the most relevant that fit a token/count budget - the context ROI selector - so an LLM prompt, a retrieval set, or a review scope is focused on the highest-value items before expensive reasoning. Generic: the consumer supplies signals + weights.
+
+    '
+  reuse:
+    game: pick the few rooms/items most relevant to a query within a render budget
+    security: focus a scanner on the highest-risk files within a time budget
+    finance: rank and cap the transactions most worth a manual review
+    education: select the most relevant lesson snippets within a context window
+    general: a budgeted weighted-relevance pre-filter for any LLM/retrieval/review scope
