@@ -7520,5 +7520,120 @@
     "aliases": [],
     "created": "2026-08-01",
     "updated": "2026-08-01"
+  },
+  {
+    "designation": "MOD-05.017",
+    "name": "workflow_linter",
+    "status": "active",
+    "function": "lint a GitHub Actions workflow for permission, pinning, secret, and complexity risk",
+    "label": "workflow_linter",
+    "file": "parts/shelf/workflow_linter.py",
+    "type": "MOD",
+    "domain": "05",
+    "docs": "docs/hardware_store/patterns/validation.md",
+    "tests": "tests/test_workflow_linter.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "CI supply-chain linter; dogfoodable on the fleet's workflows + forge-audit",
+    "tags": [
+      "module"
+    ],
+    "notes": "R&D AI-assisted-delivery / DevSecOps part (docs/rd digests); clean-room from the research.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-08-01",
+    "updated": "2026-08-01"
+  },
+  {
+    "designation": "MOD-05.018",
+    "name": "diagnostic_runner",
+    "status": "active",
+    "function": "aggregate check results into proceed/revise/escalate/stop, with non-overridable escalation classes",
+    "label": "diagnostic_runner",
+    "file": "parts/shelf/diagnostic_runner.py",
+    "type": "MOD",
+    "domain": "05",
+    "docs": "docs/hardware_store/patterns/resilience.md",
+    "tests": "tests/test_diagnostic_runner.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "weighted-evidence decision core; a red security/sandbox/grounding check outranks any score",
+    "tags": [
+      "module"
+    ],
+    "notes": "R&D AI-assisted-delivery / DevSecOps part (docs/rd digests); clean-room from the research.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-08-01",
+    "updated": "2026-08-01"
+  },
+  {
+    "designation": "MOD-05.019",
+    "name": "risk_router",
+    "status": "active",
+    "function": "score a change's risk and route the required review depth",
+    "label": "risk_router",
+    "file": "parts/shelf/risk_router.py",
+    "type": "MOD",
+    "domain": "05",
+    "docs": "docs/hardware_store/patterns/change_management.md",
+    "tests": "tests/test_risk_router.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "PR change-risk scorer; auth/secrets/migrations floor the review band",
+    "tags": [
+      "module"
+    ],
+    "notes": "R&D AI-assisted-delivery / DevSecOps part (docs/rd digests); clean-room from the research.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-08-01",
+    "updated": "2026-08-01"
+  },
+  {
+    "designation": "MOD-05.020",
+    "name": "checklist_gate",
+    "status": "active",
+    "function": "require a signed pre-flight attestation before an irreversible action",
+    "label": "checklist_gate",
+    "file": "parts/shelf/checklist_gate.py",
+    "type": "MOD",
+    "domain": "05",
+    "docs": "docs/hardware_store/patterns/validation.md",
+    "tests": "tests/test_checklist_gate.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "WHO sign-in/time-out/sign-out gate; blocks + names an unattested required item",
+    "tags": [
+      "module"
+    ],
+    "notes": "R&D AI-assisted-delivery / DevSecOps part (docs/rd digests); clean-room from the research.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-08-01",
+    "updated": "2026-08-01"
+  },
+  {
+    "designation": "MOD-05.021",
+    "name": "context_selector",
+    "status": "active",
+    "function": "rank candidate items by weighted signals and select the most relevant within a budget",
+    "label": "context_selector",
+    "file": "parts/shelf/context_selector.py",
+    "type": "MOD",
+    "domain": "05",
+    "docs": "docs/hardware_store/patterns/framing.md",
+    "tests": "tests/test_context_selector.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "context ROI selector; budgeted weighted-relevance pre-filter for LLM/retrieval/review",
+    "tags": [
+      "module"
+    ],
+    "notes": "R&D AI-assisted-delivery / DevSecOps part (docs/rd digests); clean-room from the research.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-08-01",
+    "updated": "2026-08-01"
   }
 ]
