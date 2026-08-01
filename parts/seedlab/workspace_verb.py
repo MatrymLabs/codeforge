@@ -23,7 +23,7 @@ from parts.seedlab.model_store import FileModelStore, ModelStore, model_labels
 
 _USAGE = (
     "workspace commands: list | create <name> [purpose] | status <id> | "
-    "start <id> | stop <id> | model <id>"
+    "start <id> | stop <id> | connect <id> <path> | model <id>"
 )
 
 
@@ -106,5 +106,31 @@ def workspace_command(
         if not labels:
             return f"No models for {rest[0]} yet (connect a source and model it)."
         return "Models:\n" + "\n".join(f"  - {label}" for label in labels)
+
+    if sub == "connect":
+        if len(rest) < 2:
+            return "usage: workspace connect <seed_id> <path>"
+        seed_id, path = rest[0], " ".join(rest[1:])
+        try:
+            kernel.get(seed_id)  # the workspace must exist
+        except SeedKernelError as exc:
+            return f"workspace: {exc}"
+        # Lazy imports: the connect flow pulls in the connector + modeler only when used.
+        from parts.seedlab.project_model import Provenance, SeedLabError
+        from parts.seedlab.source_connector import LocalSource, SourceConnectorError
+        from parts.seedlab.source_modeler import model_and_store
+
+        store = model_store or FileModelStore(_home() / "models")
+        source_id = Path(path).name or "source"
+        try:
+            source = LocalSource(Path(path), Provenance(source_id, owner=actor))
+            model = model_and_store(store, seed_id, source)
+        except (SourceConnectorError, SeedLabError) as exc:
+            return f"workspace: {exc}"
+        return (
+            f"Connected {path} to {seed_id} and modeled it: {model.identity} "
+            f"({len(model.entities)} entities, {len(model.unknowns)} unknowns). "
+            f"See: workspace model {seed_id}"
+        )
 
     return _USAGE
