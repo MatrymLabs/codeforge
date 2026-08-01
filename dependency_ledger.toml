@@ -60,6 +60,11 @@ why = "Optional (extra 'lua'): embeds the Lua runtime so parts/scripting.py can 
 stdlib_alternative = "None; there is no stdlib scripting-language sandbox, and a hand-rolled interpreter would be a worse, less-safe reimplementation of a proven embedded language."
 removable = "Yes; it is an optional extra. Absent, scripting_available() is False and the game runs untouched; delete parts/scripting.py + the @script command to remove it entirely (ADR-0014)."
 
+[runtime.crosshair-tool]
+why = "Optional (extra 'verify'): the deep behavioral-equivalence gate (parts/verify_smt.py) drives CrossHair's symbolic diff_behavior to prove a code transform preserved behavior. Admitted via Track-T T-EXP-08 / CAND-06: it caught a rare-input divergence the stdlib sampler called PRESERVED even at 5000 samples. Not installed by default; the stdlib sampler (transform_verifier) remains the always-available default and CI runs without it (the symbolic tests skip)."
+stdlib_alternative = "The stdlib sampler (transform_verifier) is the zero-dependency default and stays in place; it just cannot catch rare-input divergences. There is no stdlib concolic/SMT engine, and hand-rolling one would be a worse reimplementation of a proven tool (z3-backed)."
+removable = "Yes; it is an optional extra. Absent, the deep gate fails loud with an install hint and the sampler default is untouched; delete parts/verify_smt.py + the 'verify' extra to remove it entirely."
+
 # ----- dev dependencies (quality gates, never shipped) --------------------------------
 
 [dev.ruff]
