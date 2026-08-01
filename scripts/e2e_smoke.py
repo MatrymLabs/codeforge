@@ -25,6 +25,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 PORT = 4071  # a spare port, off the real :4000
 AETHRYN_PORT = 4072  # the flagship-seed leg runs on its own spare port
+MULTIPLAYER_PORT = 4073  # the two-player leg runs on its own spare port
 HOST = "127.0.0.1"
 IAC_WILL_ECHO = bytes([255, 251, 1])  # telnet negotiation before a password prompt
 # The engine's command prompt is always line-anchored ("\r\n> " / "\n> "). Match on
@@ -113,6 +114,17 @@ def login(sock: socket.socket, handle: str, password: str, new: bool) -> None:
     _recv_until(sock, PROMPT)
 
 
+def register(sock: socket.socket, handle: str, password: str = "lumos_1234") -> str:
+    """Register a fresh account/character and land in the world; return the welcome text."""
+    _recv_until(sock, b"NEW:")
+    sock.sendall(b"new\n")
+    _recv_until(sock, b"account:")
+    sock.sendall(handle.encode() + b"\n")
+    _recv_until(sock, IAC_WILL_ECHO)
+    sock.sendall(password.encode() + b"\n")
+    return _recv_until(sock, PROMPT)
+
+
 def connect(port: int = PORT) -> socket.socket:
     for _ in range(80):
         try:
@@ -176,6 +188,67 @@ def aethryn_journey() -> None:
         step("AETHRYN reward on sheet", s, "score", ["XP"])
         step("AETHRYN logout", s, "quit", ["world dims"])
         s.close()
+    finally:
+        server.terminate()
+        try:
+            server.wait(timeout=5)
+        except subprocess.TimeoutExpired:
+            server.kill()
+
+
+def multiplayer_journey() -> None:
+    """A third leg: two players share one world over real TCP. Proves the MMO spine the
+    single-player legs can't -- room-presence broadcast (A sees B arrive), `who` listing
+    both, and room chat carrying from one live session to the other.
+    """
+    db = Path(tempfile.mkdtemp(prefix="cf-e2e-mp-")) / "mp.db"
+    env = {**os.environ, "CODEFORGE_DB": str(db), "PYTHONUNBUFFERED": "1"}
+    t0 = time.monotonic()
+    server = subprocess.Popen(
+        [sys.executable, "-c", f"from parts.gateway import serve; serve(port={MULTIPLAYER_PORT})"],
+        cwd=ROOT,
+        env=env,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+    )
+    try:
+        assert server.stdout is not None
+        boot = time.monotonic()
+        while time.monotonic() - boot < 20:
+            if server.poll() is not None:
+                raise SystemExit("multiplayer server exited during boot")
+            if "listening on" in server.stdout.readline().decode(errors="ignore"):
+                break
+        results.append(("MULTIPLAYER boot (isolated)", True, (time.monotonic() - t0) * 1000, ""))
+
+        alia = connect(MULTIPLAYER_PORT)
+        register(alia, "alia@smoke")
+        step("MP who (alone)", alia, "who", ["Alia"])
+
+        bram = connect(MULTIPLAYER_PORT)  # B joins A's spawn room
+        register(bram, "bram@smoke")
+        # A should receive B's presence broadcast (they share the spawn room)
+        t = time.monotonic()
+        seen = _recv_until(alia, b"Bram", timeout=4)
+        results.append(
+            ("MP presence: A sees B arrive", "bram" in seen.lower(),
+             (time.monotonic() - t) * 1000, "" if "bram" in seen.lower() else seen[:100])
+        )
+        step("MP who (both present)", alia, "who", ["Alia", "Bram"])
+        # A speaks; B hears it in the shared room
+        alia.sendall(b"say hello there\n")
+        _recv_until(alia, PROMPT)  # A's own confirmation
+        t = time.monotonic()
+        heard = _recv_until(bram, b"says", timeout=4)
+        ok = "alia" in heard.lower() and "hello there" in heard.lower()
+        results.append(
+            ("MP chat: B hears A's say", ok, (time.monotonic() - t) * 1000,
+             "" if ok else heard[:100].replace("\n", " | "))
+        )
+        step("MP logout A", alia, "quit", ["world dims"])
+        step("MP logout B", bram, "quit", ["world dims"])
+        alia.close()
+        bram.close()
     finally:
         server.terminate()
         try:
@@ -306,6 +379,9 @@ def main() -> int:
 
     # --- SECOND LEG: the flagship Aethryn world (its own isolated server) ------
     aethryn_journey()
+
+    # --- THIRD LEG: two players share a world (the MMO spine) ------------------
+    multiplayer_journey()
 
     # --- report ---------------------------------------------------------------
     passed = sum(1 for _, ok, _, _ in results if ok)
