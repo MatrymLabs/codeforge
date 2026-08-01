@@ -31,6 +31,13 @@ def _home() -> Path:
     return Path(os.environ.get("SEEDLAB_HOME", ".seedlab"))
 
 
+def _allowed_root() -> Path | None:
+    """The base dir `workspace connect` is confined to, if $SEEDLAB_SOURCES is set. When unset,
+    connect is owner-trusted (any path); when set, a path outside the base is refused."""
+    base = os.environ.get("SEEDLAB_SOURCES")
+    return Path(base).resolve() if base else None
+
+
 def _default_kernel() -> SeedKernel:
     return SeedKernel(FileSeedStore(_home() / "seeds"))
 
@@ -115,15 +122,24 @@ def workspace_command(
             kernel.get(seed_id)  # the workspace must exist
         except SeedKernelError as exc:
             return f"workspace: {exc}"
+        # If an operator set an allowed-sources base, refuse a path outside it (defence in depth on
+        # top of owner-gating; the connector still bounds reads WITHIN the chosen root).
+        allowed = _allowed_root()
+        resolved = Path(path).resolve()
+        if allowed is not None:
+            try:
+                resolved.relative_to(allowed)
+            except ValueError:
+                return f"workspace: {path!r} is outside the allowed sources root ({allowed})"
         # Lazy imports: the connect flow pulls in the connector + modeler only when used.
         from parts.seedlab.project_model import Provenance, SeedLabError
         from parts.seedlab.source_connector import LocalSource, SourceConnectorError
         from parts.seedlab.source_modeler import model_and_store
 
         store = model_store or FileModelStore(_home() / "models")
-        source_id = Path(path).name or "source"
+        source_id = resolved.name or "source"
         try:
-            source = LocalSource(Path(path), Provenance(source_id, owner=actor))
+            source = LocalSource(resolved, Provenance(source_id, owner=actor))
             model = model_and_store(store, seed_id, source)
         except (SourceConnectorError, SeedLabError) as exc:
             return f"workspace: {exc}"

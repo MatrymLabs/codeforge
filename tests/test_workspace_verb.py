@@ -115,6 +115,24 @@ def test_connect_to_a_bad_path_is_clean() -> None:
     assert "workspace:" in out and "directory" in out
 
 
+def test_connect_respects_an_allowed_sources_root(tmp_path: Path, monkeypatch) -> None:
+    base = tmp_path / "allowed"
+    base.mkdir()
+    inside = _source_dir(base, "widget")
+    outside = _source_dir(tmp_path, "sneaky")
+    monkeypatch.setenv("SEEDLAB_SOURCES", str(base))
+
+    k = _kernel()
+    workspace_command(_owner(), "create Proj x", kernel=k)
+    sid = k.list_seeds()[0].identity.seed_id
+    store = InMemorySeedModels()
+
+    ok = workspace_command(_owner(), f"connect {sid} {inside}", kernel=k, model_store=store)
+    assert "Connected" in ok  # a path under the allowed root is fine
+    denied = workspace_command(_owner(), f"connect {sid} {outside}", kernel=k, model_store=store)
+    assert "outside the allowed sources root" in denied  # a path outside is refused
+
+
 def test_model_of_an_unknown_workspace_is_clean() -> None:
     assert "workspace: no Seed" in workspace_command(_owner(), "model nope", kernel=_kernel())
 
