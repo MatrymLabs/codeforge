@@ -7336,5 +7336,28 @@
     "aliases": [],
     "created": "2026-07-31",
     "updated": "2026-07-31"
+  },
+  {
+    "designation": "MOD-04.149",
+    "name": "coin_flow",
+    "status": "active",
+    "function": "the designed coin economy: audit faucets (foe drops) vs sinks (repair, the fall)",
+    "label": "coin_flow",
+    "file": "parts/coin_flow.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "docs/architecture.md",
+    "tests": "tests/test_coin_flow.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "module"
+    ],
+    "notes": "The AAA scorecard's 'no economy sink/faucet macro-model' gap, first slice. Read-only; reuses combat + durability knobs (parity-tested).",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-08-01",
+    "updated": "2026-08-01"
   }
 ]
