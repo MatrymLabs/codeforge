@@ -522,3 +522,439 @@ curse_of_frailty:
   mp_cost: 5
   cooldown: 4
   jobs: [oracle]
+
+# === Kit density pass: give iconic callings a coherent ~5-ability kit with a role identity, ========
+# using the full 9-kind engine (strike/drain/brand/daze/weaken/buff/heal/cleanse/taunt).
+
+# Berserker -- rage melee: lifesteal fury, a bleed, and a self-empower.
+bloodthirst:
+  name: Bloodthirst
+  kind: drain
+  power: 8
+  scales: strength
+  mp_cost: 4
+  cooldown: 2
+  element: DRK
+  jobs: [berserker]
+rend:
+  name: Rend
+  kind: brand
+  power: 5
+  scales: strength
+  mp_cost: 3
+  cooldown: 2
+  jobs: [berserker]
+frenzy:
+  name: Frenzy
+  kind: buff
+  power: 3
+  mp_cost: 4
+  cooldown: 3
+  jobs: [berserker]
+
+# Duelist -- precise blade: a riposte stun, a disarm, a gap-closing lunge.
+feint:
+  name: Feint
+  kind: daze
+  power: 2
+  mp_cost: 4
+  cooldown: 4
+  jobs: [duelist]
+disarm:
+  name: Disarm
+  kind: weaken
+  power: 2
+  mp_cost: 3
+  cooldown: 3
+  jobs: [duelist]
+lunge:
+  name: Lunge
+  kind: strike
+  power: 9
+  scales: speed
+  mp_cost: 4
+  cooldown: 2
+  jobs: [duelist]
+
+# Ranger -- ranged bow: a poison arrow, a crippling shot, an aimed shot.
+serpent_arrow:
+  name: Serpent Arrow
+  kind: brand
+  power: 5
+  scales: speed
+  mp_cost: 4
+  cooldown: 2
+  element: PSN
+  jobs: [ranger]
+crippling_shot:
+  name: Crippling Shot
+  kind: weaken
+  power: 2
+  mp_cost: 3
+  cooldown: 3
+  jobs: [ranger]
+precise_shot:
+  name: Precise Shot
+  kind: strike
+  power: 10
+  scales: speed
+  mp_cost: 4
+  cooldown: 2
+  jobs: [ranger]
+
+# Elementalist -- turn the elements: ignite (fire DoT), frost lance, arc bolt.
+ignite:
+  name: Ignite
+  kind: brand
+  power: 6
+  scales: magic
+  mp_cost: 4
+  cooldown: 2
+  element: FIR
+  jobs: [elementalist]
+frost_lance:
+  name: Frost Lance
+  kind: strike
+  power: 10
+  scales: magic
+  mp_cost: 5
+  element: ICE
+  jobs: [elementalist]
+arc_bolt:
+  name: Arc Bolt
+  kind: strike
+  power: 8
+  scales: magic
+  mp_cost: 3
+  element: LGT
+  jobs: [elementalist]
+
+# Stormcaller -- the storm: a thunderclap stun, a static burn, a squall.
+thunderclap:
+  name: Thunderclap
+  kind: daze
+  power: 2
+  mp_cost: 5
+  cooldown: 4
+  jobs: [stormcaller]
+static_field:
+  name: Static Field
+  kind: brand
+  power: 5
+  scales: magic
+  mp_cost: 4
+  cooldown: 2
+  element: LGT
+  jobs: [stormcaller]
+squall:
+  name: Squall
+  kind: strike
+  power: 9
+  scales: magic
+  mp_cost: 4
+  element: WND
+  jobs: [stormcaller]
+
+# Scout -- from the shadows: a smoke daze, an expose, an ambush lifesteal.
+smoke_bomb:
+  name: Smoke Bomb
+  kind: daze
+  power: 2
+  mp_cost: 4
+  cooldown: 4
+  jobs: [scout]
+expose_weakness:
+  name: Expose Weakness
+  kind: weaken
+  power: 2
+  mp_cost: 3
+  cooldown: 3
+  jobs: [scout]
+ambush:
+  name: Ambush
+  kind: drain
+  power: 7
+  scales: speed
+  mp_cost: 4
+  cooldown: 2
+  element: DRK
+  jobs: [scout]
+
+# Arcanist -- arcane control: missiles, an enfeeble, a mana leech.
+arcane_missiles:
+  name: Arcane Missiles
+  kind: strike
+  power: 9
+  scales: magic
+  mp_cost: 4
+  jobs: [arcanist]
+enfeeble:
+  name: Enfeeble
+  kind: weaken
+  power: 2
+  mp_cost: 3
+  cooldown: 3
+  jobs: [arcanist]
+mana_leech:
+  name: Mana Leech
+  kind: drain
+  power: 7
+  scales: magic
+  mp_cost: 4
+  cooldown: 2
+  element: DRK
+  jobs: [arcanist]
+
+# Gunsmith -- powder and lead: a pistol-whip daze, suppressive fire, a deadeye shot.
+pistol_whip:
+  name: Pistol Whip
+  kind: daze
+  power: 2
+  mp_cost: 3
+  cooldown: 3
+  jobs: [gunsmith]
+suppressive_fire:
+  name: Suppressive Fire
+  kind: weaken
+  power: 2
+  mp_cost: 4
+  cooldown: 3
+  jobs: [gunsmith]
+deadeye:
+  name: Deadeye
+  kind: strike
+  power: 11
+  scales: speed
+  mp_cost: 5
+  cooldown: 3
+  jobs: [gunsmith]
+
+# === Kit density, batch 2: the remaining thin callings get their coherent ~5-ability role kits. ===
+
+# Pathfinder -- survival ranger: a snare, a venom trap, a quick shot.
+trappers_snare:
+  name: Trapper's Snare
+  kind: weaken
+  power: 2
+  mp_cost: 3
+  cooldown: 3
+  jobs: [pathfinder]
+venom_trap:
+  name: Venom Trap
+  kind: brand
+  power: 5
+  scales: speed
+  mp_cost: 4
+  cooldown: 2
+  element: PSN
+  jobs: [pathfinder]
+snap_shot:
+  name: Snap Shot
+  kind: strike
+  power: 8
+  scales: speed
+  mp_cost: 3
+  jobs: [pathfinder]
+
+# Summoner -- pact caster: an eldritch bolt, a soul-bond lifesteal, a familiar empower.
+eldritch_bolt:
+  name: Eldritch Bolt
+  kind: strike
+  power: 9
+  scales: magic
+  mp_cost: 4
+  element: DRK
+  jobs: [summoner]
+soul_bond:
+  name: Soul Bond
+  kind: drain
+  power: 7
+  scales: magic
+  mp_cost: 4
+  cooldown: 2
+  element: DRK
+  jobs: [summoner]
+empower_familiar:
+  name: Empower Familiar
+  kind: buff
+  power: 3
+  mp_cost: 4
+  cooldown: 3
+  jobs: [summoner]
+
+# Templar -- holy knight: a taunt, a blessing, a smite (a second tank-capable calling).
+holy_challenge:
+  name: Holy Challenge
+  kind: taunt
+  power: 0
+  mp_cost: 3
+  cooldown: 2
+  jobs: [templar]
+blessing:
+  name: Blessing
+  kind: buff
+  power: 3
+  mp_cost: 4
+  cooldown: 3
+  jobs: [templar]
+radiant_smite:
+  name: Radiant Smite
+  kind: strike
+  power: 10
+  scales: wisdom
+  mp_cost: 5
+  cooldown: 2
+  element: HLY
+  jobs: [templar]
+
+# Engineer -- tech control: an EMP daze, an overload, a corrosive charge.
+emp_burst:
+  name: EMP Burst
+  kind: daze
+  power: 2
+  mp_cost: 4
+  cooldown: 4
+  jobs: [engineer]
+overload_surge:
+  name: Overload Surge
+  kind: strike
+  power: 9
+  scales: magic
+  mp_cost: 4
+  element: LGT
+  jobs: [engineer]
+corrosive_charge:
+  name: Corrosive Charge
+  kind: weaken
+  power: 2
+  mp_cost: 3
+  cooldown: 3
+  jobs: [engineer]
+
+# Artificer -- tinker DPS: an incendiary bomb, a siphon coil, a precision bolt.
+incendiary_bomb:
+  name: Incendiary Bomb
+  kind: brand
+  power: 6
+  scales: magic
+  mp_cost: 4
+  cooldown: 2
+  element: FIR
+  jobs: [artificer]
+siphon_coil:
+  name: Siphon Coil
+  kind: drain
+  power: 7
+  scales: magic
+  mp_cost: 4
+  cooldown: 2
+  element: LGT
+  jobs: [artificer]
+precision_bolt:
+  name: Precision Bolt
+  kind: strike
+  power: 9
+  scales: magic
+  mp_cost: 4
+  jobs: [artificer]
+
+# Mechanist -- war machines: a stun bot, a laser lance, a rust field.
+stun_bot:
+  name: Stun Bot
+  kind: daze
+  power: 2
+  mp_cost: 4
+  cooldown: 4
+  jobs: [mechanist]
+laser_lance:
+  name: Laser Lance
+  kind: strike
+  power: 10
+  scales: magic
+  mp_cost: 5
+  cooldown: 2
+  element: LGT
+  jobs: [mechanist]
+rust_field:
+  name: Rust Field
+  kind: weaken
+  power: 2
+  mp_cost: 3
+  cooldown: 3
+  jobs: [mechanist]
+
+# Beastmaster -- the wild: a rabid bite, a maul, an intimidate.
+rabid_bite:
+  name: Rabid Bite
+  kind: brand
+  power: 5
+  scales: strength
+  mp_cost: 4
+  cooldown: 2
+  element: PSN
+  jobs: [beastmaster]
+savage_maul:
+  name: Savage Maul
+  kind: strike
+  power: 10
+  scales: strength
+  mp_cost: 4
+  cooldown: 2
+  jobs: [beastmaster]
+intimidate:
+  name: Intimidate
+  kind: weaken
+  power: 2
+  mp_cost: 3
+  cooldown: 3
+  jobs: [beastmaster]
+
+# Geomancer -- the earth: a tremor stun, an entomb, a boulder (has Stonefall).
+tremor:
+  name: Tremor
+  kind: daze
+  power: 2
+  mp_cost: 5
+  cooldown: 4
+  jobs: [geomancer]
+entomb:
+  name: Entomb
+  kind: weaken
+  power: 2
+  mp_cost: 4
+  cooldown: 3
+  jobs: [geomancer]
+boulder_toss:
+  name: Boulder Toss
+  kind: strike
+  power: 11
+  scales: stamina
+  mp_cost: 5
+  cooldown: 2
+  element: ERT
+  jobs: [geomancer]
+
+# Runesmith -- graven power: a rune of power, a searing rune, a rune blast.
+rune_of_power:
+  name: Rune of Power
+  kind: buff
+  power: 3
+  mp_cost: 4
+  cooldown: 3
+  jobs: [runesmith]
+searing_rune:
+  name: Searing Rune
+  kind: brand
+  power: 6
+  scales: magic
+  mp_cost: 4
+  cooldown: 2
+  element: FIR
+  jobs: [runesmith]
+runic_blast:
+  name: Runic Blast
+  kind: strike
+  power: 9
+  scales: magic
+  mp_cost: 4
+  jobs: [runesmith]
