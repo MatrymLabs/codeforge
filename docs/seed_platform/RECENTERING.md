@@ -32,7 +32,8 @@ Labels: VISION · RESEARCH · SPECIFIED · PROTOTYPED · INTEGRATED · PROVEN ·
 | **Project source → structured model** | **PROTOTYPED** | `parts/seedlab/project_model.py` |
 | **Seed identity + lifecycle (as an addressable entity)** | **PROTOTYPED** | `parts/seedlab/kernel.py` (MOD-10.052) — create/start/stop/archive a Seed with owner authz, an audit trail, and file-backed persistence that survives restart; distinct from the `FORGE_SEED` game pack |
 | **Functional Project Hub (enter + inspect a Seed)** | **PROTOTYPED** | `parts/seedlab/project_hub.py` (MOD-10.053) — a Seed location that renders identity/status/facets as a text `look` + its sub-verbs AND a versioned structured client contract, both from one source of truth; empty facets read "none yet (Stage N)" |
-| Repo / IDE / API / DB connectors | **VISION** | none exist |
+| **Local source connector (read-only, path-bounded)** | **PROTOTYPED** | `parts/seedlab/source_connector.py` (MOD-10.054) — register a local dir with provenance; list/search/read only approved files; refuses traversal, absolute paths, symlink escapes, and a secret denylist; feeds the Hub's `sources` facet |
+| Repo / IDE / API / DB connectors (remote) | **VISION** | remote repo/IDE/DB connectors not built; local FS connector is the first real one |
 | Multi-AI-provider connector | **VISION** | internal AI helpers exist, not a provider connector |
 | Reverse-engineering / walkthrough-to-world | **VISION** | — |
 | Build/test/deploy of *generated user targets* | **VISION** | — |
@@ -111,16 +112,26 @@ composes the Kernel and projects one Seed's persisted state two ways from a sing
 
 Proven to render both the empty and the populated case; no game coupling.
 
+## Slice 5 (PROTOTYPED, shipped): the local source connector (Stage 3)
+
+`parts/seedlab/source_connector.py` (MOD-10.054) is the first real project-source connector and the
+control plane's read-only front door. `LocalSource` registers a directory with `Provenance`, then
+lets a Seed inspect it safely: `list_files` / `read` / `search` expose only **approved** files;
+`identify` classifies manifests/tests/docs; `metadata` reads git branch+commit from `.git/` files
+(no subprocess). Two safety rails, both refusal-tested: a **path boundary** (`..`, absolute paths,
+and symlink escapes are refused — `resolve()` collapses them and the bounds-check rejects) and a
+**secret denylist** (`.env`, keys, vaults, `.git`, `secrets*` are never listed, searched, or read).
+A registered source's `source_label` feeds the Project Hub's `sources` facet — the first facet to go
+from "none yet" to real data (integration-tested).
+
 ## Next slices (roadmap, each an isolated vertical step)
 
-1. A **file-backed source connector** (Stage 3): register a local repo/spec as a project source with
-   provenance and path boundaries; its inspect commands feed the Hub's `sources` facet — VISION →
-   PROTOTYPED.
-2. A **first project model** (Stage 4): wire `project_model.extract_model` to a registered source and
-   persist it into the Hub's `models` facet, linked to source evidence.
-3. A **MUD `model` verb** + a Master-Client panel over `render_status`/`contract` (inspect a Seed and
+1. A **first project model** (Stage 4): wire `project_model.extract_model` to a registered source
+   (read its manifests/files) and persist it into the Hub's `models` facet, linked to source evidence.
+2. A **MUD `model` verb** + a Master-Client panel over `render_status`/`contract` (inspect a Seed and
    its project model live in the client).
-4. One **real build/test action** (Stage 5) and one **generated non-game target** (Stage 6: a small
-   original CLI/API), with provenance — closing the directive's first end-to-end vertical slice and
-   proving the platform *generalizes* past the game, now that the game-Seed deployment, Seed
-   lifecycle, and a functional Hub are all real.
+3. One **controlled build/test action** (Stage 5): an allowlisted, timeout-bounded, output-captured,
+   audited runner over an approved source — reusing the existing `FailsafeRunner` where it fits.
+4. The **first generated non-game target** (Stage 6): a small original **CLI app** (Josh's call,
+   2026-08-01) generated from a validated model, with tests + provenance + checksums — closing the
+   directive's first end-to-end vertical slice and proving the platform *generalizes* past the game.
