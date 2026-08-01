@@ -663,6 +663,7 @@ netharions_throne_guardian:
   lethal: true
   drops: [greater_healing_draught, abyssal_legguards, abyssal_sabatons]
   loot: {ember_shard: 5, nothing: 2}
+  special: {kind: drain, telegraph: "Netharion bares its fangs and hungers", mult: 2, cadence: 3}  # vampiric apex mechanic: its unleash drinks your wound to heal -- mitigate/interrupt
 
 the_rifted_abyss_guardian:
   name: the guardian of The Rifted Abyss

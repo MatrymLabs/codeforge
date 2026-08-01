@@ -799,6 +799,11 @@ _FOE_TUNING: dict[str, dict[str, Any]] = {
     "netharions_throne_guardian": {
         "raid": "  # the final weekly raid: Netharion's Throne, the apex of the climb",
         "drops": "[greater_healing_draught, abyssal_legguards, abyssal_sabatons]",
+        "trailing": [
+            'special: {kind: drain, telegraph: "Netharion bares its fangs and hungers", '
+            "mult: 2, cadence: 3}"
+            "  # vampiric apex mechanic: its unleash drinks your wound to heal -- mitigate/interrupt",
+        ],
     },
     "the_rifted_abyss_guardian": {
         "raid": "  # an apex weekly raid: bring a party and the trinity, not a solo lap",
