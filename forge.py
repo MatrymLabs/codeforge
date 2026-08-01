@@ -330,6 +330,14 @@ def pm_status() -> str:
     return run()
 
 
+def _workspace(session: Session, arg: str) -> str:
+    """CORE `workspace` (owner): the in-MUD front door to engineering Seeds (the text half of the
+    Master-Client workspace surface). Lazy-imported so seedlab stays off the tick's load path."""
+    from parts.seedlab.workspace_verb import workspace_command
+
+    return workspace_command(session, arg)
+
+
 def docs_check() -> str:
     from parts.qualitygate import docs_check as run
 
@@ -2033,6 +2041,16 @@ def _build_commands() -> CommandSet:
             "the after-action log: recent combat encounters and their tallies",
             lambda _s, _a: after_action(),
             namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "workspace",
+            "CMD-10.032",
+            "engineering workspaces (Seeds): list/create/status/start/stop/model (owner)",
+            _workspace,
+            namespace=CORE,
+            min_rank="owner",
         )
     )
     # Third-party command plugins register LAST (so collision checks see every built-in verb). The

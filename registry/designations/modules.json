@@ -7850,6 +7850,34 @@
     "updated": "2026-08-01"
   },
   {
+    "designation": "MOD-10.060",
+    "name": "workspace_verb",
+    "status": "active",
+    "function": "The in-MUD `workspace` verb (text half of the workspace surface): an owner lists/creates/inspects/starts/stops engineering Seeds and lists their models from inside the running MUD, over the Seed Kernel + model store; owner-gated at the command spine, Kernel-authorized per mutation, file-backed under $SEEDLAB_HOME",
+    "label": "workspace_verb",
+    "file": "parts/seedlab/workspace_verb.py",
+    "type": "MOD",
+    "domain": "10",
+    "docs": "docs/seed_platform/RECENTERING.md",
+    "tests": "tests/test_workspace_verb.py",
+    "depends_on": [
+      "MOD-10.052",
+      "MOD-10.056"
+    ],
+    "related": [
+      "MOD-10.053"
+    ],
+    "reuse": "",
+    "tags": [
+      "module"
+    ],
+    "notes": "Makes THE SEED IS THE MUD reachable in-world: the text counterpart to the workspace GMCP contract (parts/seedlab/workspace_gmcp.py). Wired into forge._build_commands as CMD-10.032 (CORE, owner). Isolated in parts/seedlab/.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-08-01",
+    "updated": "2026-08-01"
+  },
+  {
     "designation": "MOD-05.022",
     "name": "corpus",
     "status": "active",

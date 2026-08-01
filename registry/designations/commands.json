@@ -3692,5 +3692,28 @@
     "aliases": [],
     "created": "2026-08-01",
     "updated": "2026-08-01"
+  },
+  {
+    "designation": "CMD-10.032",
+    "name": "workspace",
+    "status": "active",
+    "function": "engineering workspaces (Seeds): an owner lists/creates/inspects/starts/stops a Seed and lists its models from inside the running MUD (workspace list|create <name> [purpose]|status <id>|start|stop <id>|model <id>)",
+    "label": "workspace",
+    "file": "parts/seedlab/workspace_verb.py",
+    "type": "CMD",
+    "domain": "10",
+    "docs": "docs/seed_platform/RECENTERING.md",
+    "tests": "tests/test_workspace_verb.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "command"
+    ],
+    "notes": "CORE owner-gated verb over the Seed Kernel (MOD-10.060 workspace_verb); the in-MUD text half of the workspace surface (GMCP half: parts/seedlab/workspace_gmcp.py). THE SEED IS THE MUD, reachable in-world.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-08-01",
+    "updated": "2026-08-01"
   }
 ]

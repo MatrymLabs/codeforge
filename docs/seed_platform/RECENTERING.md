@@ -37,6 +37,7 @@ Labels: VISION · RESEARCH · SPECIFIED · PROTOTYPED · INTEGRATED · PROVEN ·
 | **Controlled build/test execution** | **PROTOTYPED** | `parts/seedlab/tool_runner.py` (MOD-10.057) — run an allowlisted, shell-free command inside an approved source with cwd boundary + timeout + output cap + secret redaction; refuse an unlisted profile; persist each run (`FileRunLog`, survives restart) into the Hub's `builds`/`tests` facets |
 | **First generated target (a runnable CLI)** | **PROTOTYPED** | `parts/seedlab/cli_generator.py` (MOD-10.058) — generate a small, runnable Python CLI from a validated model (reproducible, sha256-checksummed, provenance-carrying); `validate_runs`/`validate_tests` prove it RUNS and its generated tests PASS via the Stage-5 runner. **Closes the First Platform Proof: source → model → generate → run → tests pass → artifact.** |
 | **Hardware extraction (proven mechanisms → cards)** | **PROTOTYPED** | 6 Hardware Store cards in `catalog/parts.yaml` (path-bounded-reader, provenance-record, file-record-store, lifecycle-state-machine, controlled-tool-runner, reproducible-generator), each citing real seedlab code, honestly `maturity: prototype` (candidates, not promoted prematurely) |
+| **In-MUD `workspace` verb (THE SEED IS THE MUD, in-world)** | **PROTOTYPED** | `parts/seedlab/workspace_verb.py` (MOD-10.060) + `forge.py` (CMD-10.032, CORE/owner) — an owner lists/creates/inspects/starts/stops engineering Seeds and lists their models from inside the running MUD; the text half of the workspace surface (GMCP half: `workspace_gmcp.py`, #727) |
 | Repo / IDE / API / DB connectors (remote) | **VISION** | remote repo/IDE/DB connectors not built; local FS connector is the first real one |
 | Multi-AI-provider connector | **VISION** | internal AI helpers exist, not a provider connector |
 | Reverse-engineering / walkthrough-to-world | **VISION** | — |
@@ -179,12 +180,22 @@ Machine** (`control-flow`), **Controlled Tool Runner** (`security`), and **Repro
 and is honestly `maturity: prototype` — a candidate, per the directive's "do not promote unstable
 abstractions prematurely." `tests/test_seed_hardware_cards.py` pins the extraction.
 
+## Slice 10 (PROTOTYPED, shipped): the in-MUD `workspace` verb
+
+`parts/seedlab/workspace_verb.py` (MOD-10.060), wired into `forge._build_commands` as **CMD-10.032**
+(CORE, `min_rank="owner"`), makes the recenter reachable *in the running game*: an owner types
+`workspace list` / `create <name> [purpose]` / `status <id>` / `start|stop <id>` / `model <id>` and
+operates real engineering Seeds — persisted under `$SEEDLAB_HOME`, authorized per-mutation by the
+Kernel, refused for a non-owner at the spine. It is the **text half** of the workspace surface; the
+GMCP client half is `parts/seedlab/workspace_gmcp.py` (#727), reading the same seedlab modules so the
+two never drift. An engine-tick test proves reachability + the owner gate + persistence across the
+tick. "THE SEED IS THE MUD" is now literally true in-world, not just in the CLI.
+
 ## Next slices (roadmap, each an isolated vertical step)
 
-1. A **MUD `model`/`seed` verb** — enter and inspect a Seed, its model, and its runs live in the
-   running MUD (not just the seedlab CLI), aligning with the Master-Client contract (`#727`) so the
-   in-world verb and the client speak the same shape.
-2. **Aethryn as reference Seed** (Stage 8): align the game onto the same Kernel, without making its
+1. **Aethryn as reference Seed** (Stage 8): align the game onto the same Kernel, without making its
    game concepts mandatory for non-game Seeds.
+2. Wire the `workspace` verb's `model` path to a real in-MUD **connect + model** flow (register a
+   source and run `source_modeler` from in-world), so the `models` facet fills without the CLI.
 3. Promote the strongest cards from `prototype` → `beta` once a second consumer proves each outside
    `parts/seedlab/`.
