@@ -26,8 +26,14 @@ from parts.world.world import WORLD
 # and how to shape a GMCP payload. `escape_iac` is re-exported so consumers keep importing it here.
 GMCP_OPT = 201
 
+#: The Native Seed handshake protocol version this engine speaks (matches the client's
+#: CLIENT_PROTOCOL). A Seed server announces itself with a `Seed.Hello` frame; a capable client
+#: negotiates whether it can enter from it (ADR-0002, the Master Client / Seed Client ecosystem).
+SEED_PROTOCOL = 1
+
 __all__ = [
     "GMCP_OPT",
+    "SEED_PROTOCOL",
     "enables_gmcp",
     "escape_iac",
     "gmcp_frame",
@@ -35,10 +41,30 @@ __all__ = [
     "quest_report",
     "resists_report",
     "room_report",
+    "seed_hello",
     "skills_report",
     "target_report",
     "vitals_report",
 ]
+
+
+def seed_hello(seed_id: str, version: str = "1.0.0") -> dict[str, object]:
+    """The `Seed.Hello` payload: this engine announcing the loaded Seed to a Native-Seed client.
+
+    A seed IS a game, so `seed_id` is the loaded seed and `version` its content version. `required`
+    is the capability floor a client must meet to enter -- `text`, since every Seed is playable as
+    plain text -- and `optional` are the structured capabilities this Seed emits and a client may
+    use (GMCP frames, data-bound panels, a map). A client that meets `required` enters; a missing
+    optional capability degrades the experience, it never refuses (the client negotiates the verdict
+    itself, core/seed.py). Pure: the gateway sources `seed_id` from the loaded world and sends it.
+    """
+    return {
+        "seed": seed_id,
+        "version": version,
+        "protocol": SEED_PROTOCOL,
+        "required": ["text"],
+        "optional": ["gmcp", "panels", "map"],
+    }
 
 
 def gmcp_frame(package: str, data: object) -> bytes:

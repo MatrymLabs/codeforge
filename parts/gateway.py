@@ -36,6 +36,7 @@ from parts.gmcp import (
     quest_report,
     resists_report,
     room_report,
+    seed_hello,
     skills_report,
     target_report,
     vitals_report,
@@ -47,7 +48,7 @@ from parts.world.accounts import password_fixable
 from parts.world.characters import save_all, save_character
 from parts.world.events import SHUTDOWN, bind_echo, bind_gmcp, unbind_echo, unbind_gmcp
 from parts.world.ranks import has_rank
-from parts.world.seed import load_splash
+from parts.world.seed import SEED_NAME, load_splash
 from parts.world.session import SESSIONS, Session
 from parts.world.socket_bus import maybe_wire_broker
 
@@ -219,6 +220,9 @@ class _GateHandler(socketserver.StreamRequestHandler):
         # Offer GMCP and start disabled: only a client that answers positively flips it on.
         # _last_* memoize the last frame sent so we push only what actually changed.
         self._gmcp_enabled = False
+        self._seed_announced = (
+            False  # Native Seed handshake: Seed.Hello is sent once on GMCP enable
+        )
         self._last_vitals: dict[str, int] | None = None
         self._last_room: dict[str, object] | None = None
         self._last_target: dict[str, object] = {}  # {} means "no foe"; clears the client's tracker
@@ -235,10 +239,15 @@ class _GateHandler(socketserver.StreamRequestHandler):
             self.wfile.write(_WILL_GMCP)
 
     def _note_gmcp(self, raw: bytes) -> None:
-        """Read a client's GMCP negotiation reply out of raw input and record its choice."""
+        """Read a client's GMCP negotiation reply out of raw input and record its choice. When a
+        client first enables GMCP, announce the loaded Seed with a `Seed.Hello` frame (once), so a
+        Native-Seed client can negotiate entry (ADR-0002); a plain-text client never gets here."""
         verdict = enables_gmcp(raw)
         if verdict is not None:
             self._gmcp_enabled = verdict
+        if self._gmcp_enabled and not self._seed_announced:
+            self._seed_announced = True
+            self._send_gmcp("Seed.Hello", seed_hello(SEED_NAME))
 
     def _send_gmcp(self, package: str, data: object) -> None:
         """Push one GMCP frame, only to a client that enabled GMCP (never to a plain-text nc)."""

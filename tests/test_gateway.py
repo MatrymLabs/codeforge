@@ -472,6 +472,23 @@ def test_a_gmcp_client_receives_room_and_vitals_frames_on_entry(server):
     sock.close()
 
 
+def test_a_gmcp_client_is_announced_the_seed_on_enabling_gmcp(server):
+    """The Native Seed handshake (ADR-0002): a client that enables GMCP is announced the loaded Seed
+    with a single Seed.Hello frame, so it can negotiate whether it can enter."""
+    _saved_hero_with_calling()
+    sock = _connect(server)
+    sock.sendall(_DO_GMCP)  # enable GMCP (rides the first input line), the handshake trigger
+    # Seed.Hello is announced the moment GMCP enables (before login), so accumulate all output.
+    out = _read_until_raw(sock, b"NEW: ")
+    _line(sock, "mira@mlabs")
+    out += _read_until_raw(sock, b"Password: " + bytes([255, 251, 1]))
+    _line(sock, "swordfish")
+    out += _read_until_raw(sock, b"> ")
+    assert b"Seed.Hello" in out  # the Seed announced itself to the capable client
+    assert out.count(b"Seed.Hello") == 1  # exactly once, not on every frame push
+    sock.close()
+
+
 def test_a_gmcp_client_receives_char_items_for_equipped_gear(server):
     """An equipped hero's loadout is pushed as Char.Items on entry, so the client can draw the
     inventory panel from data - a frame we emit because we own the engine, not a MUD standard."""
