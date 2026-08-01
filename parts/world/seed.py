@@ -843,14 +843,18 @@ def load_npcs(path: Path) -> dict[str, Npc]:
                     raise SeedError(f"NPC '{label}': 'inflicts.{key}' must be a positive integer.")
         special = merged.get("special")
         if special is not None:
-            if not isinstance(special, dict) or set(special) - {"telegraph", "mult", "cadence"}:
+            allowed = {"kind", "telegraph", "mult", "heal", "cadence"}
+            if not isinstance(special, dict) or set(special) - allowed:
                 raise SeedError(
-                    f"NPC '{label}': 'special' allows only telegraph/mult/cadence keys."
+                    f"NPC '{label}': 'special' allows only kind/telegraph/mult/heal/cadence keys."
                 )
+            kind = special.get("kind")
+            if kind is not None and kind not in ("strike", "mend"):
+                raise SeedError(f"NPC '{label}': 'special.kind' must be 'strike' or 'mend'.")
             tele = special.get("telegraph")
             if tele is not None and (not isinstance(tele, str) or not tele.strip()):
                 raise SeedError(f"NPC '{label}': 'special.telegraph' must be non-empty text.")
-            for key in ("mult", "cadence"):
+            for key in ("mult", "heal", "cadence"):
                 value = special.get(key)
                 if value is not None and (
                     not isinstance(value, int) or isinstance(value, bool) or value < 1

@@ -206,6 +206,39 @@ def test_a_valid_inflicts_loads(tmp_path):
     assert npc["inflicts"] == {"status": "venom", "damage": 12, "ticks": 4}
 
 
+# --- seed validation: a boss's `special` (the telegraphed-unleash mechanic) -----------------------
+def test_a_mend_special_loads(tmp_path):
+    from parts.world.seed import load_npcs
+
+    path = tmp_path / "npcs.yaml"
+    path.write_text("boss:\n  location: a\n  hp: 10\n  special: {kind: mend, heal: 40}\n")
+    assert load_npcs(path)["boss"]["special"] == {"kind": "mend", "heal": 40}
+
+
+def test_special_rejects_an_unknown_kind(tmp_path):
+    from parts.world.seed import SeedError
+
+    load = _npc_yaml(tmp_path, "boss:\n  location: a\n  hp: 10\n  special: {kind: explode}\n")
+    with pytest.raises(SeedError, match="special.kind"):
+        load()
+
+
+def test_special_rejects_an_unknown_key(tmp_path):
+    from parts.world.seed import SeedError
+
+    load = _npc_yaml(tmp_path, "boss:\n  location: a\n  hp: 10\n  special: {summon: 3}\n")
+    with pytest.raises(SeedError, match="special"):
+        load()
+
+
+def test_special_rejects_a_non_positive_heal(tmp_path):
+    from parts.world.seed import SeedError
+
+    load = _npc_yaml(tmp_path, "boss:\n  location: a\n  hp: 10\n  special: {kind: mend, heal: 0}\n")
+    with pytest.raises(SeedError, match="special.heal"):
+        load()
+
+
 # --- cleanse: purge every affliction at once (the support's counter) -----------------------------
 
 
