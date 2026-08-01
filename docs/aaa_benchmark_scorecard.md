@@ -60,6 +60,9 @@ Engine metrics use the command noted at each row (for example, test count is
 > tested), and the "no economy sink/faucet macro-model" gap (the designed audit + inflation balance
 > verdict shipped in #702/#705). Both moved to the retired list; the remaining endgame and economy
 > items were narrowed to what is genuinely still open (endgame *depth*; a *live* economy event seam).
+> A later pass the same day narrowed endgame *depth* itself: its first two slices shipped -- a
+> cohort-scaled raid reward (#711) and a second boss unleash kind, `mend` (#709) -- leaving a gear
+> ilvl ceiling, raid difficulty-scaling, and more mechanic kinds.
 
 ### Estimated completion (engineering estimate, Low confidence)
 
@@ -71,11 +74,11 @@ would mislead, so the estimate is split by yardstick and by dimension, and every
 | Dimension | vs. AAA graphical MMORPG | vs. flagship commercial text MUD | Basis (measured) |
 |-----------|--------------------------|----------------------------------|------------------|
 | **Engine / architecture** | ~45% | ~70% | Pure-function tick, 5-table persistence, a large module base, a CI-gated suite (count via `pytest --collect-only`), 7 native-accelerator organs. Mature core; missing distributed/sharded serving. |
-| **Combat systems** | ~40% | ~55% | 66 abilities, 10 damage types, boss phases + telegraphed specials + afflictions. Party combat shares XP + round-robin loot; the trinity seams now exist (per-NPC threat/aggro table + taunt, ally-targeted heals). Gaps: raid-size cohort, boss-mechanic variety. (nudged up: trinity shipped) |
+| **Combat systems** | ~40% | ~55% | 66 abilities, 10 damage types, boss phases + telegraphed specials + afflictions. Party combat shares XP + round-robin loot; the trinity seams now exist (per-NPC threat/aggro table + taunt, ally-targeted heals). A raid bounty scales with the co-located cohort (#711) and a second boss unleash kind, `mend`, shipped (#709). Gaps: raid *difficulty*-scaling (reward-scaling done), deeper boss-mechanic variety (2 kinds now). (nudged up: cohort + mend shipped) |
 | **Content scale (world)** | ~15% | ~40% | ~26,800 rooms at default scale (procedural), 45 settlements, 16 dungeons. Authored depth thin (75 hand rooms, 7 authored quests). |
 | **Content scale (items/NPCs)** | ~10% | ~35% | 185 items, 75 authored NPCs + procedural guardians, 38 recipes. Well below launch density. |
 | **Progression / player systems** | ~35% | ~60% | 31 jobs, 6 professions, 4 Orders, level cap 255, ember-coin currency. Broad skeleton, shallow per-system depth. |
-| **Social / multiplayer** | ~38% | ~20% | Shipped: party (max 5, shared XP + round-robin loot), atomic player trade, persisted guilds (ranks + chat + coin treasury + item vault), async mail with attachments, friends, world chat. Gaps: no LFG/matchmaking, no raid-size cohort, no housing. (nudged up: item vault + mail attachments shipped) |
+| **Social / multiplayer** | ~38% | ~20% | Shipped: party (max 5, shared XP + round-robin loot), atomic player trade, persisted guilds (ranks + chat + coin treasury + item vault), async mail with attachments, friends, world chat, and a raid reward that scales with the co-located cohort (#711). Gaps: no LFG/matchmaking, no housing. (nudged up: item vault + mail attachments + cohort scaling shipped) |
 | **Economy** | ~30% | ~30% | Tiered currency, NPC shops, per-town general-store materials market (buy/sell spread), crafting sinks, inns as a coin sink, guild treasury, direct player trade, a coin-escrow auction house, and a durability/repair coin sink. Gaps: no macro sink/faucet model, no cross-region market. (nudged up: auction house + durability shipped) |
 | **World simulation** | ~30% | ~55% | Weather, seasons, day/night, respawn policies, dynamic spawns, zone resets. No NPC schedules or faction war. |
 | **Live ops / tooling** | ~20% | ~40% | CI, security gates, readiness rituals, admin surface, world generator. No telemetry/analytics pipeline or patch cadence. |
@@ -89,7 +92,8 @@ since shipped, so the honest one-line summary has moved to *strong spine, a buil
 (corrected 2026-08-01): the multiplayer layer (party, guild, mail, friends, trade, chat), the endgame
 LOOP (daily bosses + weekly raids, #612/#621), and the economy sink/faucet model (#702/#705) all
 exist on the persistence + combat-trinity substrate; the deepest remaining gaps are now endgame
-*depth* (gear treadmill, raid-cohort scaling, boss-mechanic variety) and authored content density.
+*depth* (a gear ilvl ceiling; and deeper mechanic variety + raid *difficulty*-scaling atop the first
+slices shipped in #709/#711) and authored content density.
 
 ### Highest-risk engineering gaps (ranked, re-baselined 2026-07-31)
 
@@ -98,9 +102,12 @@ exist on the persistence + combat-trinity substrate; the deepest remaining gaps 
    foes on a daily bounty and 2 raid-flagged weekly bosses (Netharion's Throne, level 300, with
    above-main-path generated gear and a multi-phase enrage), all lockout-gated and tested
    (`test_combat.py` daily+weekly+reset, `test_lockouts.py`, `test_playthrough.py`). What remains is
-   endgame DEPTH, not its existence: no **gear treadmill / ilvl ceiling**, no **raid-size cohort
-   scaling** (raids are solo-killable), and low **boss-mechanic variety** (every boss shares the one
-   generic enrage). Still the shallowest dimension relative to AAA, but no longer empty.
+   endgame DEPTH, not its existence, and two of its three legs now have a first slice (corrected
+   2026-08-01): **raid-size cohort scaling** shipped as a bounty that scales with the co-located party
+   (#711), and **boss-mechanic variety** gained a second unleash kind, `mend` (#709), beyond the shared
+   enrage. Still open: an explicit **gear treadmill / ilvl ceiling** (the affix roll already scales
+   gear, but there is no stored ilvl), raid *difficulty*-scaling (only the reward scales so far), and
+   more mechanic kinds. Still the shallowest dimension relative to AAA, but no longer empty.
 2. **Content density far below launch scale.** ~185 items and ~75 authored NPCs cannot sustain a
    1-to-255 curve; ~1,680 quests are 8 template generators over ~7 authored arcs (wide, not deep).
    Only Veridia (the cradle) meets production density; the other 13 zones sit at baseline.
@@ -125,8 +132,9 @@ economy-audit`, #702/#705). These no longer belong on the risk list.*
 
 ### Highest-value next milestones
 
-1. **Endgame *depth*** (the loop is built -- #612/#621): a gear treadmill / ilvl ceiling, raid-size
-   cohort scaling, and per-boss mechanic variety beyond the shared generic enrage.
+1. **Endgame *depth*** (the loop is built -- #612/#621; first depth slices shipped -- cohort-scaled
+   raid reward #711, a second boss unleash kind #709): still open is a gear ilvl ceiling, raid
+   *difficulty*-scaling (only the reward scales so far), and more per-boss mechanic kinds.
 2. **Content-density pass on the leveling spine** (curated 1-to-30, then the next zone, at production
    density: Veridia is the proven pattern).
 3. **Live economy event seam** (the designed sink/faucet macro-model + inflation balance verdict
@@ -297,7 +305,7 @@ engineering estimates unless a cited benchmark has landed.
 
 | Subsystem | Prototype | Alpha | Launch | Five-Year | Gap Remaining | Priority | Notes |
 |-----------|-----------|-------|--------|-----------|---------------|----------|-------|
-| Party layer | 5-player party (shipped) | party + shared combat | party + 10 raid | party + 20-40 raid | Raid-size cohort + LFG | High | Party + trinity seams done (threat + taunt + ally-heals); raids need a raid-size cohort + content |
+| Party layer | 5-player party (shipped) | party + shared combat | party + 10 raid | party + 20-40 raid | Raid-size cohort + LFG | High | Party + trinity + cohort-scaled raid reward done (#711); remaining: raid difficulty-scaling, LFG, more raid content |
 | Boss mechanics | 4 patterns | 8 | 20 | 40 | Encounter pass-2 staged | High | Composes existing phases/specials/afflictions |
 | Status effects | 8 | 16 | 30 | 50 | Medium | Med | Substrate exists |
 
