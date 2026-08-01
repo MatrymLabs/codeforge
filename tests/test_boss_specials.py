@@ -87,6 +87,38 @@ def test_unleash_spikes_the_blow_and_clears_the_charge():
     assert blow == 30 and "unleashes" in line and not boss_specials.is_charging(npc)
 
 
+# --- the `mend` kind: a healing unleash turns the fight into a DPS race ---------------------------
+def test_a_mend_special_heals_the_boss_and_lands_only_a_normal_blow():
+    npc = _boss(special={"kind": "mend", "heal": 30})
+    npc["charging"] = True
+    blow, line = boss_specials.unleash(npc, 10)
+    assert blow == 10  # a normal blow, NOT a spike -- the threat is the heal, not the hit
+    assert npc["hp_now"] == 50  # 20 + 30 healed
+    assert "knits its wounds" in line and not boss_specials.is_charging(npc)
+
+
+def test_a_mend_never_heals_past_full_health():
+    npc = _boss(special={"kind": "mend", "heal": 999})
+    npc["hp_now"] = 90
+    npc["charging"] = True
+    boss_specials.unleash(npc, 10)
+    assert npc["hp_now"] == 100  # capped at max hp
+
+
+def test_a_mend_defaults_its_heal_when_the_seed_omits_it():
+    npc = _boss(special={"kind": "mend"})
+    npc["charging"] = True
+    boss_specials.unleash(npc, 5)
+    assert npc["hp_now"] == 20 + boss_specials.DEFAULT_HEAL
+
+
+def test_the_default_kind_still_strikes_backward_compatible():
+    npc = _boss(special={"mult": 2})  # no kind -> the original `strike` spike
+    npc["charging"] = True
+    blow, line = boss_specials.unleash(npc, 10)
+    assert blow == 20 and "unleashes" in line
+
+
 def test_unleash_is_a_no_op_when_not_charging():
     assert boss_specials.unleash(_boss(special={}), 10) == (10, "")
 

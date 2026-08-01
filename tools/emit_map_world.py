@@ -781,6 +781,13 @@ _FOE_TUNING: dict[str, dict[str, Any]] = {
         "name_comment": "  # mid-tier: drops the leg + feet armor for the open world",
         "drops": "[greater_healing_draught, ashlord_greaves, emberstride_boots]",
     },
+    "dreadmaw_hold_guardian": {
+        "trailing": [
+            "special: {kind: mend, telegraph: \"The dreadmaw's torn flesh writhes, "
+            'knitting itself whole", heal: 100, cadence: 3}'
+            "  # a flesh-maw that regrows: enraged, it knits its wounds -- a DPS race",
+        ],
+    },
     "heart_of_xilnath_guardian": {
         "trailing": [
             "inflicts: {status: venom, chance: 2, damage: 12, ticks: 4}"

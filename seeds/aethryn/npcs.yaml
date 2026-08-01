@@ -365,6 +365,7 @@ dreadmaw_hold_guardian:
   lethal: true
   drops: [greater_healing_draught]
   loot: {ember_shard: 5, nothing: 2}
+  special: {kind: mend, telegraph: "The dreadmaw's torn flesh writhes, knitting itself whole", heal: 100, cadence: 3}  # a flesh-maw that regrows: enraged, it knits its wounds -- a DPS race
 
 irondeep_mines_guardian:
   name: the guardian of Irondeep Mines

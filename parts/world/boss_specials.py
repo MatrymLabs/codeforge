@@ -1,16 +1,21 @@
-"""CARD: boss_specials -- a telegraphed boss SPECIAL: a wind-up you can read, then a heavy unleash.
+"""CARD: boss_specials -- a telegraphed boss SPECIAL: a wind-up you can read, then an unleash.
 
 Boss fights had a second gear (parts.world.boss_phases: a wounded boss enrages and hits harder), but
 every blow still arrived the same instant it was thrown -- nothing to READ, nothing to answer. This
 is the encounter mechanic that gear was building toward: a telegraphed special. Once enraged, a boss
 may spend a beat WINDING UP (it announces the wind-up and lands no blow that beat), and on the NEXT
-beat it UNLEASHES -- a heavier hit whose affliction is guaranteed, not merely rolled. The wind-up is
-a free beat for the hero to heal, ward, or run: the fight becomes a conversation, not a slugfest.
+beat it UNLEASHES. The wind-up is a free beat for the hero to heal, ward, or run: the fight is
+a conversation, not a slugfest.
 
-Data-driven and opt-in: a boss declares a `special` ({telegraph, mult?, cadence?}) in the seed. The
-charge is deterministic once begun (a flag on the NPC, cleared on unleash) and self-limiting (only
-an enraged boss winds up, at most 1-in-`cadence` of its beats). combat._resolve_npc_blow calls it as
-it resolves the boss's strike; the guaranteed affliction rides the boss's existing `inflicts`.
+Two `kind`s of unleash give bosses mechanic VARIETY, not just flavour:
+  * `strike` (default) -- a heavier hit whose affliction is guaranteed, not merely rolled.
+  * `mend`            -- the boss heals, turning the fight into a DPS race: out-damage the heal
+                         or it never ends. Lands only a normal blow, not a spike.
+
+Data-driven and opt-in: a boss declares a `special` ({kind?, telegraph, mult?, heal?, cadence?}) in
+the seed. The charge is deterministic once begun (a flag on the NPC, cleared on unleash) and
+self-limiting (only an enraged boss winds up, at most 1-in-`cadence` of its beats).
+combat._resolve_npc_blow calls it as it resolves the boss's strike.
 """
 
 from __future__ import annotations
@@ -23,8 +28,9 @@ from parts.world.session import sentence_case
 #: Runtime RNG for the charge cadence: encounter variety, not security. Tests monkeypatch it.
 _SPECIAL_RNG = random.Random()  # nosec B311 -- combat variety, not cryptographic
 
-DEFAULT_MULT = 2  # how much harder an unleashed special lands, on top of any enrage scaling
+DEFAULT_MULT = 2  # how much harder a `strike` unleash lands, atop any enrage scaling
 DEFAULT_CADENCE = 3  # begin a wind-up on at most 1-in-this of an enraged boss's beats
+DEFAULT_HEAL = 20  # HP a `mend` special restores per unleash (seed overrides with `heal`)
 
 
 def is_charging(npc: Npc) -> bool:
@@ -52,14 +58,24 @@ def maybe_begin_charge(npc: Npc) -> str:
 
 
 def unleash(npc: Npc, raw: int) -> tuple[int, str]:
-    """Resolve a charging boss's UNLEASH: clear the flag, scale the blow by the special's `mult`,
-    return (blow, line). The caller applies the boss's `inflicts` as a GUARANTEED effect on this hit
+    """Resolve a charging boss's UNLEASH: clear the flag and return (blow, line), dispatched on the
+    special's `kind`. The caller applies the boss's `inflicts` as a GUARANTEED effect on this hit
     (parts.world.afflictions.inflict). A non-charging boss is unchanged (raw, '')."""
     if not is_charging(npc):
         return raw, ""
     npc.pop("charging", None)
     special = npc.get("special") or {}
+    name = sentence_case(npc["name"])
+    if special.get("kind") == "mend":
+        raw_heal = special.get("heal", DEFAULT_HEAL)
+        heal = raw_heal if isinstance(raw_heal, int) and raw_heal > 0 else DEFAULT_HEAL
+        cap = npc.get("hp", 0)  # never past full health
+        before = npc.get("hp_now", cap)
+        npc["hp_now"] = min(cap, before + heal)
+        mended = npc["hp_now"] - before
+        return raw, f"{name} knits its wounds shut (+{mended} HP) -- burn it down!"
+    # default `strike`: a heavy spike
     raw_mult = special.get("mult", DEFAULT_MULT)
     mult = raw_mult if isinstance(raw_mult, int) else DEFAULT_MULT
     blow = max(raw + 1, raw * max(2, mult))  # always a real spike, even for a tiny raw
-    return blow, f"{sentence_case(npc['name'])} unleashes its special!"
+    return blow, f"{name} unleashes its special!"
