@@ -71,6 +71,20 @@ def test_a_strike_ability_hits_harder_than_a_basic_attack_and_costs_mp() -> None
     assert dealt > 6
 
 
+@pytest.mark.parametrize("job", ["vanguard", "scholar", "artificer", "engineer"])
+def test_every_approved_calling_is_playable_end_to_end(job: str) -> None:
+    """Guards Stage 3's "all approved Callings are implemented": each calling can be
+    taken, lists its abilities, and fires one of its OWN strike moves at the dummy
+    through the engine tick -- not merely present in the data."""
+    strikes = [a for _, a in abilities_for(job) if a["kind"] == "strike"]
+    assert strikes, f"{job} has no strike ability to prove combat play"
+    name = strikes[0]["name"]
+    s = _at_dummy(job)
+    assert name in forge.handle_command(s, "skills")
+    out = forge.handle_command(s, f"use {name.lower()} on dummy")
+    assert name in out and "training dummy" in out and " for " in out
+
+
 def test_a_heal_ability_restores_hp_and_costs_mp() -> None:
     s = _at_dummy("scholar")
     s.resources["hp"] = s.resources["hp"].damage(10)

@@ -37,6 +37,20 @@ jobs:
       - name: Run the gates (check = lint · types · tests+coverage)
         run: make check
 
+      # Blocking gate: the live end-to-end spine. Boots an isolated server on a spare
+      # port with an ephemeral DB and drives the real player journey over TCP -- login,
+      # look, calling, combat, ability, reward, quest, persistence, logout. A broken
+      # journey blocks merge. (It once sat red at 6/16 because nothing ran it.)
+      - name: Live spine smoke (end-to-end player journey)
+        run: make smoke
+
+      # Blocking gate: validate the flagship Aethryn world map (connectivity + no
+      # unreachable rooms). The smoke boots the small first-forge seed, so without this
+      # a seed edit that orphaned a room or broke an exit ref in the ~53k-room, 14-zone
+      # Aethryn world would merge unseen. `make world-check` is `tools.world validate`.
+      - name: Validate the Aethryn world map
+        run: make world-check
+
       # Upload coverage to Codecov. Non-blocking: a Codecov outage or a missing
       # token must never turn the portfolio's build red. Public repo uploads work
       # tokenless; set the CODECOV_TOKEN secret for higher rate limits.

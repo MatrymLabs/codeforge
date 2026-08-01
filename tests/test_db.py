@@ -57,6 +57,36 @@ def test_tables_create_and_roundtrip():
     assert "auth" not in record  # no auth columns set
 
 
+def test_backup_then_restore_recovers_the_pre_backup_state(tmp_path):
+    """Stage-9 recovery proof: back up the live DB, mutate it, restore the backup, and the
+    pre-backup character state returns intact -- the recovery half of `make backup` that
+    the live demo once lacked. Exercises restore_db's engine-dispose so the next read opens
+    the RESTORED file, not a pre-restore connection."""
+    put_record("keeper", {"job": "vanguard", "level": 5, "xp": 300, "location": "greenhold"})
+    assert load_character("keeper")["level"] == 5
+
+    backup = db.backup_db(dest_dir=tmp_path / "bk")
+    assert backup.exists()
+
+    # mutate the live DB well away from the backed-up state
+    put_record("keeper", {"job": "vanguard", "level": 99, "xp": 9999, "location": "forge"})
+    assert load_character("keeper")["level"] == 99
+
+    restored = db.restore_db(backup)
+    assert restored == Path(db.DB_PATH)
+
+    rec = load_character("keeper")  # a fresh engine reads the restored file
+    assert rec is not None
+    assert (rec["level"], rec["xp"], rec["location"]) == (5, 300, "greenhold")
+
+
+def test_restore_refuses_a_missing_backup(tmp_path):
+    """Recovery fails loud, not silently: a non-existent backup path raises, never leaving
+    the live DB half-overwritten."""
+    with pytest.raises(FileNotFoundError):
+        db.restore_db(tmp_path / "no-such-backup.db")
+
+
 def test_save_character_never_touches_auth_columns():
     """The merge-save law, enforced by column scope."""
     put_record(
