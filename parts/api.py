@@ -13,7 +13,7 @@ capability, same law as the @-verbs.
 
 from typing import Annotated
 
-from fastapi import Depends, FastAPI, HTTPException, Request
+from fastapi import Depends, FastAPI, Header, HTTPException, Request, Response
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
 from pydantic import BaseModel
 from sqlalchemy import select
@@ -21,6 +21,8 @@ from sqlalchemy import select
 from parts.blueprint import load_all as load_blueprints
 from parts.dashboard import router as dashboard_router
 from parts.login_guard import LoginGuard
+from parts.shelf import cursor as cursor_part
+from parts.shelf import precondition as precond
 from parts.shelf.observability import install_observability
 from parts.world.accounts import account_has_owner, account_password_ok
 from parts.world.characters import set_rank
@@ -113,15 +115,69 @@ def health() -> dict[str, str]:
     return {"status": "alive", "engine": "codeforge"}
 
 
+class CharacterPage(BaseModel):
+    items: list[Hero]
+    next_cursor: str | None
+
+
+def _hero(row: CharacterRow) -> Hero:
+    return Hero(name=row.name, job=row.job, level=row.level, rank=row.rank, location=row.location)
+
+
+def _character_etag(row: CharacterRow) -> precond.ETag:
+    """A content ETag over the hero's mutable state (no version column needed)."""
+    state = f"{row.name}|{row.job}|{row.level}|{row.rank}|{row.location}".encode()
+    return precond.etag_for_payload(state)
+
+
 @app.get("/characters", response_model=list[Hero])
 def characters() -> list[Hero]:
     """Every saved hero, straight from the canonical table."""
     with open_archive_session() as db:
         archive_rows = db.scalars(select(CharacterRow)).all()
-    return [
-        Hero(name=row.name, job=row.job, level=row.level, rank=row.rank, location=row.location)
-        for row in archive_rows
-    ]
+    return [_hero(row) for row in archive_rows]
+
+
+@app.get("/characters/page", response_model=CharacterPage)
+def characters_page(limit: int = 20, after: str | None = None) -> CharacterPage:
+    """Keyset-paginated heroes (stable under concurrent inserts, O(1) deep pages).
+
+    `after` is the opaque cursor from a previous page's `next_cursor`; heroes are
+    ordered by name (the unique key). Reuses the Cursor Hardware Store part.
+    """
+    try:
+        page_size = cursor_part.validate_size(limit)
+    except cursor_part.CursorError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+    boundary_name = ""
+    if after is not None:
+        try:
+            _, boundary_name = cursor_part.decode_cursor(after)
+        except cursor_part.CursorError as exc:
+            raise HTTPException(status_code=400, detail=f"bad cursor: {exc}") from exc
+    with open_archive_session() as db:
+        query = select(CharacterRow).order_by(CharacterRow.name)
+        if after is not None:
+            query = query.where(CharacterRow.name > boundary_name)
+        rows = db.scalars(query.limit(page_size + 1)).all()  # +1 to detect a next page
+    has_more = len(rows) > page_size
+    window = rows[:page_size]
+    next_cursor = None
+    if has_more and window:
+        last = window[-1]
+        next_cursor = cursor_part.encode_cursor(last.name, last.name)
+    return CharacterPage(items=[_hero(row) for row in window], next_cursor=next_cursor)
+
+
+@app.get("/characters/{name}", response_model=Hero)
+def character(name: str, response: Response) -> Hero:
+    """One hero by name, with an `ETag` header for optimistic-concurrency edits."""
+    with open_archive_session() as db:
+        row = db.scalars(select(CharacterRow).where(CharacterRow.name == name)).first()
+    if row is None:
+        raise HTTPException(status_code=404, detail=f"No saved character named '{name}'.")
+    response.headers["ETag"] = _character_etag(row).format()
+    return _hero(row)
 
 
 @app.get("/world/rooms", response_model=list[Room])
@@ -149,10 +205,31 @@ def blueprints() -> list[BlueprintSummary]:
 
 
 @app.post("/admin/grant")
-def grant(body: GrantRequest, _account: Annotated[str, Depends(_require_owner)]) -> dict[str, str]:
-    """Owner-authenticated rank change. Same gate order as @grant."""
+def grant(
+    body: GrantRequest,
+    _account: Annotated[str, Depends(_require_owner)],
+    if_match: Annotated[str | None, Header(alias="If-Match")] = None,
+) -> dict[str, str]:
+    """Owner-authenticated rank change. Same gate order as @grant.
+
+    Optional optimistic concurrency: if the client sends an `If-Match` ETag (from
+    `GET /characters/{name}`), the grant is rejected 412 when the hero changed since
+    it was read, so a stale edit never clobbers a concurrent one. Reuses the
+    Precondition Hardware Store part.
+    """
     if body.rank not in RANK_ORDER:
         raise HTTPException(status_code=422, detail=f"'{body.rank}' is not a rank.")
+    if if_match is not None:
+        with open_archive_session() as db:
+            row = db.scalars(select(CharacterRow).where(CharacterRow.name == body.name)).first()
+        if row is None:
+            raise HTTPException(status_code=404, detail=f"No saved character named '{body.name}'.")
+        try:
+            precond.if_match(_character_etag(row), if_match)
+        except precond.PreconditionError as exc:
+            raise HTTPException(status_code=400, detail=f"bad If-Match: {exc}") from exc
+        except precond.PreconditionFailed as exc:
+            raise HTTPException(status_code=412, detail=str(exc)) from exc
     message = set_rank(body.name, body.rank)
     if message.startswith("No saved character"):
         raise HTTPException(status_code=404, detail=message)
