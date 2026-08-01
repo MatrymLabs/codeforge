@@ -26,6 +26,14 @@ def test_forge_gear_makes_a_valid_levelscaled_equippable():
     assert label == "gear_ember_warblade_l60"
 
 
+def test_the_factory_forges_every_equip_slot_including_leg_and_feet():
+    # A 1-to-300 gear curve needs a full kit. leg + feet were once absent from the factory (only
+    # ~2 authored pieces each existed world-wide), so a hero could never fill those slots from
+    # drops. Pin that the factory now covers every equip slot, leg and feet included.
+    forged = {forge_gear(50, "FIR", i)[1]["slot"] for i in range(len(_SLOTS) * 3)}
+    assert forged == {"weapon", "body", "head", "arm", "leg", "feet", "accessory_1", "accessory_2"}
+
+
 def test_gear_mods_climb_with_level():
     _, low = forge_gear(10, "ICE", 0)
     _, high = forge_gear(250, "ICE", 0)

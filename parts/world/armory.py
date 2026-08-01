@@ -44,6 +44,8 @@ _SLOTS: tuple[tuple[str, tuple[str, ...], str, float], ...] = (
     ("body", ("plate", "hauberk", "cuirass"), "DEF", 1.0),
     ("head", ("helm", "crown", "hood"), "DEF", 0.6),
     ("arm", ("bracers", "gauntlets", "vambrace"), "DEF", 0.5),
+    ("leg", ("greaves", "legguards", "chausses"), "DEF", 0.6),
+    ("feet", ("sabatons", "boots", "treads"), "EVA", 0.5),
     ("accessory_1", ("band", "ring", "torc"), "ACC", 0.7),
     ("accessory_2", ("charm", "talisman", "sigil"), "EVA", 0.7),
 )
