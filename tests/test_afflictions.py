@@ -56,6 +56,33 @@ def test_a_dot_never_fells_the_player():
     assert s.resources["hp"].current == 1  # floored at 1: the foe's blow must land the kill
 
 
+# --- heal-over-time (regen): the friendly mirror ------------------------------------------------
+def test_a_regen_mends_the_player_each_beat_then_expires():
+    s = _hurtable(hp=50)
+    afflictions.apply_regen(s, "renewal", 10, ticks=2)
+    line = afflictions.tick_regens(s)
+    assert s.resources["hp"].current == 60 and "mends you for 10" in line
+    afflictions.tick_regens(s)  # second (last) tick
+    assert s.resources["hp"].current == 70 and "renewal" not in s.regens  # expired
+    assert afflictions.tick_regens(s) == ""  # nothing left to mend
+
+
+def test_a_regen_never_overheals_past_maximum():
+    s = _hurtable(hp=95)
+    afflictions.apply_regen(s, "renewal", 20, ticks=1)
+    afflictions.tick_regens(s)
+    assert s.resources["hp"].current == 100  # capped at max, no overheal
+
+
+def test_cleanse_purges_harm_but_leaves_a_regen_boon():
+    s = _hurtable(hp=50)
+    afflictions.apply_dot(s, "venom", 5, ticks=3)
+    afflictions.apply_regen(s, "renewal", 5, ticks=3)
+    cleared = afflictions.cleanse(s)
+    assert "venom" in cleared  # the harmful DoT is purged
+    assert "renewal" in s.regens  # the beneficial boon survives cleanse
+
+
 def test_apply_dot_refreshes_rather_than_stacks():
     s = _hurtable()
     afflictions.apply_dot(s, "venom", 10, ticks=1)

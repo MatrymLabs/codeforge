@@ -958,3 +958,242 @@ runic_blast:
   scales: magic
   mp_cost: 4
   jobs: [runesmith]
+
+# === Kit density, batch 3: round out the mid-tier callings (3-4 -> 5) to finish the roster. =======
+
+# Sentinel -- the wall: a taunt and a shield bash (a 2nd tank-capable calling; had weaken).
+guardians_call:
+  name: Guardian's Call
+  kind: taunt
+  power: 0
+  mp_cost: 3
+  cooldown: 2
+  jobs: [sentinel]
+shield_slam:
+  name: Shield Slam
+  kind: strike
+  power: 8
+  scales: stamina
+  mp_cost: 3
+  cooldown: 2
+  jobs: [sentinel]
+
+# Cleric -- the light: a benediction and a censure (support kit; had heal + cleanse).
+sanctuary:
+  name: Sanctuary
+  kind: buff
+  power: 3
+  mp_cost: 4
+  cooldown: 3
+  jobs: [cleric]
+censure:
+  name: Censure
+  kind: strike
+  power: 9
+  scales: wisdom
+  mp_cost: 4
+  element: HLY
+  jobs: [cleric]
+
+# Oracle -- the seer: a premonition stun and a mind spike (control; had weaken).
+premonition:
+  name: Premonition
+  kind: daze
+  power: 2
+  mp_cost: 5
+  cooldown: 4
+  jobs: [oracle]
+mind_spike:
+  name: Mind Spike
+  kind: strike
+  power: 9
+  scales: wisdom
+  mp_cost: 4
+  jobs: [oracle]
+
+# Warden -- nature's guard: a thornlash and a nature's wrath taunt (tank; had drain).
+bramble_snare:
+  name: Bramble Snare
+  kind: brand
+  power: 5
+  scales: wisdom
+  mp_cost: 4
+  cooldown: 2
+  element: PSN
+  jobs: [warden]
+natures_wrath:
+  name: Nature's Wrath
+  kind: taunt
+  power: 0
+  mp_cost: 3
+  cooldown: 2
+  jobs: [warden]
+
+# Druid -- the wild: a wild leech and an entangle root (had brand).
+wild_leech:
+  name: Wild Leech
+  kind: drain
+  power: 7
+  scales: wisdom
+  mp_cost: 4
+  cooldown: 2
+  element: PSN
+  jobs: [druid]
+entangle:
+  name: Entangle
+  kind: daze
+  power: 2
+  mp_cost: 4
+  cooldown: 4
+  jobs: [druid]
+
+# Trickster -- the cheat: a cheap-shot leech and a sabotage (had daze).
+cheap_shot:
+  name: Cheap Shot
+  kind: drain
+  power: 6
+  scales: speed
+  mp_cost: 4
+  cooldown: 2
+  element: DRK
+  jobs: [trickster]
+sabotage:
+  name: Sabotage
+  kind: weaken
+  power: 2
+  mp_cost: 3
+  cooldown: 3
+  jobs: [trickster]
+
+# Hierophant -- dark rites: a blight and a word of silence (had drain).
+dark_blight:
+  name: Dark Blight
+  kind: brand
+  power: 6
+  scales: wisdom
+  mp_cost: 4
+  cooldown: 2
+  element: DRK
+  jobs: [hierophant]
+word_of_silence:
+  name: Word of Silence
+  kind: daze
+  power: 2
+  mp_cost: 5
+  cooldown: 4
+  jobs: [hierophant]
+
+# Shadowblade -- the assassin: a poison blade and a blindside (had drain).
+poison_blade:
+  name: Poison Blade
+  kind: brand
+  power: 5
+  scales: speed
+  mp_cost: 4
+  cooldown: 2
+  element: PSN
+  jobs: [shadowblade]
+blindside:
+  name: Blindside
+  kind: daze
+  power: 2
+  mp_cost: 4
+  cooldown: 4
+  jobs: [shadowblade]
+
+# Saboteur -- the wrecker: an acid vial and flashpowder (had weaken).
+acid_vial:
+  name: Acid Vial
+  kind: brand
+  power: 5
+  scales: speed
+  mp_cost: 4
+  cooldown: 2
+  element: PSN
+  jobs: [saboteur]
+flashpowder:
+  name: Flashpowder
+  kind: daze
+  power: 2
+  mp_cost: 4
+  cooldown: 4
+  jobs: [saboteur]
+
+# Reaver -- brutal: a gore bleed and a devastating blow (had drain).
+gore:
+  name: Gore
+  kind: brand
+  power: 6
+  scales: strength
+  mp_cost: 4
+  cooldown: 2
+  jobs: [reaver]
+devastate:
+  name: Devastate
+  kind: strike
+  power: 12
+  scales: strength
+  mp_cost: 5
+  cooldown: 3
+  element: DRK
+  jobs: [reaver]
+
+# Round out the last three (were at 4) so every calling carries a full 5-ability kit.
+cleave:
+  name: Cleave
+  kind: strike
+  power: 9
+  scales: strength
+  mp_cost: 4
+  cooldown: 2
+  jobs: [vanguard]
+immolate:
+  name: Immolate
+  kind: strike
+  power: 10
+  scales: magic
+  mp_cost: 5
+  cooldown: 2
+  element: FIR
+  jobs: [emberwright]
+temporal_slow:
+  name: Temporal Slow
+  kind: weaken
+  power: 2
+  mp_cost: 4
+  cooldown: 3
+  jobs: [chronomancer]
+
+# === Heal-over-time (regen): the support callings gain a woven mend that ticks over the beats. ====
+renewal:
+  name: Renewal
+  kind: regen
+  power: 5
+  scales: wisdom
+  mp_cost: 4
+  cooldown: 3
+  jobs: [cleric]
+verdant_mend:
+  name: Verdant Mend
+  kind: regen
+  power: 5
+  scales: wisdom
+  mp_cost: 4
+  cooldown: 3
+  jobs: [druid]
+lifebloom:
+  name: Lifebloom
+  kind: regen
+  power: 4
+  scales: wisdom
+  mp_cost: 4
+  cooldown: 3
+  jobs: [warden]
+sacrament:
+  name: Sacrament
+  kind: regen
+  power: 6
+  scales: wisdom
+  mp_cost: 5
+  cooldown: 3
+  jobs: [hierophant]

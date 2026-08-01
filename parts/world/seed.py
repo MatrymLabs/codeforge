@@ -1191,7 +1191,18 @@ def load_abilities(path: Path) -> dict[str, Ability]:
                 ("jobs", list),
             ),
         )
-        _KINDS = ("strike", "heal", "brand", "daze", "weaken", "taunt", "cleanse", "buff", "drain")
+        _KINDS = (
+            "strike",
+            "heal",
+            "brand",
+            "daze",
+            "weaken",
+            "taunt",
+            "cleanse",
+            "buff",
+            "drain",
+            "regen",
+        )
         if merged["kind"] not in _KINDS:
             raise SeedError(
                 f"ability '{label}': 'kind' must be one of {', '.join(map(repr, _KINDS))}, "

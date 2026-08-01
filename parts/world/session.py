@@ -48,6 +48,9 @@ class Session:
     # each a name -> remaining-ticks countdown. A fresh session starts with a clear board.
     cooldowns: dict[str, int] = field(default_factory=dict)
     statuses: dict[str, int] = field(default_factory=dict)
+    # Heal-over-time boons (a `regen` ability): name -> {heal, ticks}. Beneficial, so `cleanse`
+    # never touches these (harmful afflictions live separately). Transient, not persisted.
+    regens: dict[str, dict[str, int]] = field(default_factory=dict)
     # Harmful statuses the player SUFFERS (the mirror of the foe-side burn/daze): damage-over-time
     # afflictions (name -> {damage, ticks}) and a daze countdown. Aged on the world beat
     # (parts.world.afflictions.tick_afflictions), transient, never persisted.
