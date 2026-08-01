@@ -7990,5 +7990,74 @@
     "aliases": [],
     "created": "2026-08-01",
     "updated": "2026-08-01"
+  },
+  {
+    "designation": "MOD-05.081",
+    "name": "sbfl",
+    "status": "active",
+    "function": "spectrum-based fault localization: rank suspicious lines from test coverage (Tarantula/Ochiai/DStar)",
+    "label": "sbfl",
+    "file": "parts/shelf/sbfl.py",
+    "type": "MOD",
+    "domain": "05",
+    "docs": "docs/hardware_store/patterns/testing.md",
+    "tests": "tests/test_sbfl.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "suggest-only fault-localization hint (ICSE-2017 caveat); pairs with ddmin",
+    "tags": [
+      "module"
+    ],
+    "notes": "R&D Debugging Lab (docs/rd EXP-24..26); from the Automating Debugging/Fixing/Optimization brief; clean-room stdlib; suggest-only/deterministic.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-08-01",
+    "updated": "2026-08-01"
+  },
+  {
+    "designation": "MOD-05.082",
+    "name": "ddmin",
+    "status": "active",
+    "function": "delta debugging: minimize a failing input to its 1-minimal reproducer (Zeller's ddmin)",
+    "label": "ddmin",
+    "file": "parts/shelf/ddmin.py",
+    "type": "MOD",
+    "domain": "05",
+    "docs": "docs/hardware_store/patterns/testing.md",
+    "tests": "tests/test_ddmin.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "deterministic reversible input minimization; pairs with sbfl",
+    "tags": [
+      "module"
+    ],
+    "notes": "R&D Debugging Lab (docs/rd EXP-24..26); from the Automating Debugging/Fixing/Optimization brief; clean-room stdlib; suggest-only/deterministic.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-08-01",
+    "updated": "2026-08-01"
+  },
+  {
+    "designation": "MOD-05.083",
+    "name": "profile_hotspots",
+    "status": "active",
+    "function": "read a cProfile run and rank where time went (self + cumulative); profile->hotspot->gated-change",
+    "label": "profile_hotspots",
+    "file": "parts/shelf/profile_hotspots.py",
+    "type": "MOD",
+    "domain": "05",
+    "docs": "docs/hardware_store/patterns/observability.md",
+    "tests": "tests/test_profile_hotspots.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "optimization hotspot pointer (gate changes by benchmark)",
+    "tags": [
+      "module"
+    ],
+    "notes": "R&D Debugging Lab (docs/rd EXP-24..26); from the Automating Debugging/Fixing/Optimization brief; clean-room stdlib; suggest-only/deterministic.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-08-01",
+    "updated": "2026-08-01"
   }
 ]
