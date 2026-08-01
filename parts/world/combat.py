@@ -404,6 +404,9 @@ def _coin_reward(npc: Npc) -> int:
 # weekly cadence and pays far more than a daily boss (a party's marquee objective, not a solo lap).
 BOSS_BOUNTY_MULT = 5
 RAID_BOUNTY_MULT = 20
+RAID_COHORT_MIN = (
+    2  # a raid's marquee weekly bounty pays only to a co-located cohort, not a solo lap
+)
 
 
 def _kill_bounty(session: Session, npc: Npc, nid: str) -> str:
@@ -426,10 +429,23 @@ def _kill_bounty(session: Session, npc: Npc, nid: str) -> str:
     if not lockouts.claim(session, key, period):
         return ""  # already claimed this period: the base drop stands, the bounty does not repeat
     bonus = _coin_reward(npc) * mult
+    cohort_note = ""
+    if npc.get("raid"):
+        # A raid rewards a COHORT: the marquee bounty scales with the party present for the kill, so
+        # a full band earns more than a solo lap (the stated intent, now paid). members_in_room
+        # includes the killer, so a solo raider scales x1 (unchanged); each present mate adds one.
+        from parts.world.party import members_in_room
+
+        cohort = max(1, len(members_in_room(session.player_id, session.location)))
+        bonus *= cohort
+        if cohort >= RAID_COHORT_MIN:
+            cohort_note = (
+                f" (a cohort of {cohort} splits the raid, and the bounty scales with them)"
+            )
     session.coins += bonus
     return (
-        f"{label} bounty! The first {npc['name']} falls: you claim {purse(bonus)} extra. "
-        f"(purse: {purse(session.coins)})"
+        f"{label} bounty! The first {npc['name']} falls: you claim {purse(bonus)} extra."
+        f"{cohort_note} (purse: {purse(session.coins)})"
     )
 
 
