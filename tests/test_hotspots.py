@@ -119,7 +119,7 @@ class Honesty(unittest.TestCase):
 
     def test_non_dict_refused(self):
         with self.assertRaises(HotspotError):
-            rank([("a", 1)], {"a": 1})  # type: ignore[arg-type]
+            rank([("a", 1)], {"a": 1})
 
 
 if __name__ == "__main__":

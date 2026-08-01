@@ -192,7 +192,7 @@ class RunAndRefusal(unittest.TestCase):
 
     def test_bad_action_return_refused(self):
         with self.assertRaises(BehaviorTreeError):
-            Action(fn=lambda _c: "nope").tick(None)  # type: ignore[return-value,arg-type]
+            Action(fn=lambda _c: "nope").tick(None)
 
     def test_bad_max_ticks_refused(self):
         with self.assertRaises(BehaviorTreeError):

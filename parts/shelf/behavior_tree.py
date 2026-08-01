@@ -26,6 +26,7 @@ from __future__ import annotations
 from collections.abc import Callable
 from dataclasses import dataclass, field
 from enum import Enum
+from typing import Any
 
 
 class Status(Enum):
@@ -40,7 +41,7 @@ class BehaviorTreeError(ValueError):
     """Raised on a malformed tree (an action returning a non-Status/bool, a bad threshold)."""
 
 
-Context = object  # a blackboard; leaves decide how to read/write it
+Context = Any  # a blackboard (any object); leaves decide how to read/write it
 
 
 @dataclass
