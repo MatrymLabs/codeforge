@@ -54,6 +54,12 @@ Engine metrics use the command noted at each row (for example, test count is
 > refreshed from `python tools/census.py`. The completion estimates below are still
 > Low-confidence engineering estimates; the three dimensions whose substrate materially grew
 > (combat, social, economy) were nudged up this pass and are flagged.
+>
+> **Correction (2026-08-01).** Two prose gaps below were stale against shipped code and are fixed
+> this pass: the "no endgame content" gap (the daily-boss + weekly-raid LOOP shipped in #612/#621,
+> tested), and the "no economy sink/faucet macro-model" gap (the designed audit + inflation balance
+> verdict shipped in #702/#705). Both moved to the retired list; the remaining endgame and economy
+> items were narrowed to what is genuinely still open (endgame *depth*; a *live* economy event seam).
 
 ### Estimated completion (engineering estimate, Low confidence)
 
@@ -79,23 +85,32 @@ would mislead, so the estimate is split by yardstick and by dimension, and every
 roughly **~45% of a credible commercial *text* MUD's scope**. The engine punches well above the
 content: CodeForge is architecturally closer to done than Aethryn is content-complete. The keystones
 that once headlined the gap list (loose-item persistence, the combat trinity, the auction house) have
-since shipped, so the honest one-line summary has moved to *strong spine, a crowd with substrate but
-no endgame content*: the multiplayer layer exists (party, guild, mail, friends, trade, chat) on top of
-a persistence + economy + combat-trinity substrate that also exists; the deepest remaining gaps are
-now the endgame *content* built on that substrate, and authored content density.
+since shipped, so the honest one-line summary has moved to *strong spine, a built-but-shallow game*
+(corrected 2026-08-01): the multiplayer layer (party, guild, mail, friends, trade, chat), the endgame
+LOOP (daily bosses + weekly raids, #612/#621), and the economy sink/faucet model (#702/#705) all
+exist on the persistence + combat-trinity substrate; the deepest remaining gaps are now endgame
+*depth* (gear treadmill, raid-cohort scaling, boss-mechanic variety) and authored content density.
 
 ### Highest-risk engineering gaps (ranked, re-baselined 2026-07-31)
 
-1. **No endgame *content*.** The substrate now exists (daily + weekly lockout markers in
-   `lockouts.py`, a threat/aggro table, ally-heals, a durability sink), but no raid encounter, gear
-   treadmill/ilvl ceiling, or assembled daily/weekly cadence is built on it. There is still little to
-   *do* at cap: this is the emptiest dimension relative to AAA.
+1. **Thin endgame *depth*.** The endgame LOOP is now built (corrected 2026-08-01): daily boss
+   lockouts (#612) + weekly raid bosses (#621) assemble a real daily/weekly cadence -- 16 boss-tier
+   foes on a daily bounty and 2 raid-flagged weekly bosses (Netharion's Throne, level 300, with
+   above-main-path generated gear and a multi-phase enrage), all lockout-gated and tested
+   (`test_combat.py` daily+weekly+reset, `test_lockouts.py`, `test_playthrough.py`). What remains is
+   endgame DEPTH, not its existence: no **gear treadmill / ilvl ceiling**, no **raid-size cohort
+   scaling** (raids are solo-killable), and low **boss-mechanic variety** (every boss shares the one
+   generic enrage). Still the shallowest dimension relative to AAA, but no longer empty.
 2. **Content density far below launch scale.** ~185 items and ~75 authored NPCs cannot sustain a
    1-to-255 curve; ~1,680 quests are 8 template generators over ~7 authored arcs (wide, not deep).
    Only Veridia (the cradle) meets production density; the other 13 zones sit at baseline.
-3. **No economy sink/faucet macro-model** and **no live telemetry/analytics** (live-ops would be
-   blind, and the now-rich economy cannot be tuned at population). Individual sinks (repair, inns,
-   crafting) exist but are not balanced as a system.
+3. **No live event-stream telemetry at population.** The economy sink/faucet **macro-model now
+   exists** (corrected 2026-08-01): `parts/coin_flow.py` + `make economy-audit` (#702, #705) audit
+   the designed faucets (foe drops) vs sinks (repair, the fall) and render an inflation **balance
+   verdict** -- which measures the economy as INFLATIONARY ~29% (a conservative floor), the very
+   "sinks not balanced as a system" this line once flagged. What remains is a *live* event seam:
+   instrumenting the running coin-change paths so actual flow (not just designed) can be tuned at
+   population. The audit answers the design question; the live seam answers the ops question.
 4. **The shipped social layer is invisible in the client.** Party/guild/mail/friend systems exist in
    the engine but no versioned event schema surfaces them, so the play experience lags the engineering.
 
@@ -103,16 +118,20 @@ now the endgame *content* built on that substrate, and authored content density.
 (`loose_store.py`, `loose_items` table), the combat trinity seams (`threat.py`, ally-targeted heals in
 `abilities.py`), daily/weekly lockouts (`lockouts.py`), the auction house (`auction.py`,
 `auction_listings` table), the durability/repair sink (`durability.py`), the guild item-vault
-(`guild.py`), and mail attachments (`mail.py`). These no longer belong on the risk list.*
+(`guild.py`), and mail attachments (`mail.py`). Retired 2026-08-01 (verified shipped): the **endgame
+loop** -- daily boss lockouts + weekly raid bosses assembling a real cadence (#612, #621); and the
+**economy sink/faucet macro-model + inflation balance verdict** (`coin_flow.py`, `make
+economy-audit`, #702/#705). These no longer belong on the risk list.*
 
 ### Highest-value next milestones
 
-1. **Endgame loop content** (a first raid encounter + an assembled daily/weekly cadence, built on the
-   shipped lockout + threat + ally-heal substrate).
+1. **Endgame *depth*** (the loop is built -- #612/#621): a gear treadmill / ilvl ceiling, raid-size
+   cohort scaling, and per-boss mechanic variety beyond the shared generic enrage.
 2. **Content-density pass on the leveling spine** (curated 1-to-30, then the next zone, at production
    density: Veridia is the proven pattern).
-3. **Economy telemetry seam + sink/faucet model** (reuse the SQL analytics organ; needed to tune the
-   now-rich economy at population).
+3. **Live economy event seam** (the designed sink/faucet macro-model + inflation balance verdict
+   shipped in #702/#705; the remaining piece is instrumenting the running coin-change paths so actual
+   flow can be tuned at population).
 4. **Social surfacing in the client** (a versioned Party/Guild/Mail/Friend event schema + rendered
    panels, so the client stops lagging the engine's shipped social layer).
 
