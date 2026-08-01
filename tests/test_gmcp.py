@@ -8,6 +8,7 @@ import json
 
 from parts.gmcp import (
     GMCP_OPT,
+    SEED_PROTOCOL,
     enables_gmcp,
     escape_iac,
     friends_report,
@@ -19,6 +20,7 @@ from parts.gmcp import (
     quest_report,
     resists_report,
     room_report,
+    seed_hello,
     skills_report,
     target_report,
     vitals_report,
@@ -371,3 +373,26 @@ def test_friends_report_counts_online_and_names_them():
         assert report == {"online": 1, "total": 2, "names": ["Bram"]}
     finally:
         SESSIONS.pop("bram", None)
+
+
+# --- Seed.Hello: the Native Seed handshake announcement (ADR-0002) -------------------------------
+
+
+def test_seed_hello_declares_the_loaded_seed():
+    payload = seed_hello("aethryn")
+    assert payload["seed"] == "aethryn"
+    assert payload["protocol"] == SEED_PROTOCOL
+    assert payload["version"]  # a non-empty content version (a client requires one)
+    assert "text" in payload["required"]  # text is the floor: every Seed is playable as text
+    assert set(payload["optional"]) >= {"gmcp", "panels", "map"}  # the structured extras it emits
+
+
+def test_seed_hello_takes_the_seed_id_it_is_given():
+    # a seed IS a game; the payload names whatever seed the engine loaded, never a hardcoded one.
+    assert seed_hello("first-forge", version="2.1.0")["seed"] == "first-forge"
+    assert seed_hello("first-forge", version="2.1.0")["version"] == "2.1.0"
+
+
+def test_seed_hello_frames_as_a_gmcp_message():
+    frame = gmcp_frame("Seed.Hello", seed_hello("aethryn"))
+    assert b"Seed.Hello" in frame and frame.startswith(bytes([255, 250, GMCP_OPT]))
