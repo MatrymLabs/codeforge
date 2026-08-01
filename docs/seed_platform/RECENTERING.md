@@ -206,7 +206,12 @@ game (accounts, navigation, combat, ... all consuming the Kernel) is a later pro
 
 1. Fully re-home Aethryn onto the Kernel (Stage 8 proper): the persistent world, accounts, and
    lifecycle consuming the same foundations — a multi-slice program, kept game-agnostic at the Kernel.
-2. Wire the `workspace` verb's `model` path to a real in-MUD **connect + model** flow (register a
-   source and run `source_modeler` from in-world), so the `models` facet fills without the CLI.
-3. Promote the strongest cards from `prototype` → `beta` once a second consumer proves each outside
+2. Promote the strongest cards from `prototype` → `beta` once a second consumer proves each outside
    `parts/seedlab/`.
+3. A configurable allowed-roots boundary for `workspace connect` (today it is owner-trusted; the
+   connector still bounds reads *within* the chosen root).
+
+**Shipped since:** the in-MUD **connect + model** flow — `workspace connect <id> <path>` registers a
+local source (owner provenance) and runs `source_modeler` from in-world, persisting the model so
+`workspace model <id>` fills without ever touching the CLI. The whole loop (connect → model → inspect)
+now works inside the running MUD.
