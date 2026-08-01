@@ -36,7 +36,8 @@ def apply_dot(session: Session, name: str, damage: int, ticks: int = DOT_TICKS) 
 def apply_regen(session: Session, name: str, heal: int, ticks: int = DOT_TICKS) -> None:
     """Lay (or refresh) a heal-over-time BOON on a hero: it restores `heal` HP each world beat for
     `ticks` beats (capped at maximum). The friendly mirror of `apply_dot`. It lives in
-    `session.regens`, NOT `session.afflictions`, so `cleanse` (which purges harm) never strips it."""
+    `session.regens`, NOT `session.afflictions`, so `cleanse` (which purges harm) never strips it.
+    """
     session.regens[name] = {"heal": max(1, heal), "ticks": max(1, ticks)}
 
 
