@@ -8198,5 +8198,97 @@
     "aliases": [],
     "created": "2026-08-01",
     "updated": "2026-08-01"
+  },
+  {
+    "designation": "MOD-05.084",
+    "name": "content_address",
+    "status": "active",
+    "function": "content-address code by hashing its normalized AST (Unison-inspired) - dedup, rename-invariance, structural clone detection",
+    "label": "content_address",
+    "file": "parts/shelf/content_address.py",
+    "type": "MOD",
+    "domain": "05",
+    "docs": "docs/hardware_store/patterns/framing.md",
+    "tests": "tests/test_content_address.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "the parts-factory identity model; pairs with the Reverse-Engineering Lab",
+    "tags": [
+      "module"
+    ],
+    "notes": "R&D Labs suite (docs/rd EXP-27..30); Synthesis/Governance/AI-Orchestration; clean-room stdlib.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-08-01",
+    "updated": "2026-08-01"
+  },
+  {
+    "designation": "MOD-05.085",
+    "name": "file_plan",
+    "status": "active",
+    "function": "lint a repo against its file-plan (canonical files, src-layout, no committed .env) with a weighted compliance score",
+    "label": "file_plan",
+    "file": "parts/shelf/file_plan.py",
+    "type": "MOD",
+    "domain": "05",
+    "docs": "docs/hardware_store/patterns/validation.md",
+    "tests": "tests/test_file_plan.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "a forge-audit structure dimension; repolinter is archived so we build our own",
+    "tags": [
+      "module"
+    ],
+    "notes": "R&D Labs suite (docs/rd EXP-27..30); Synthesis/Governance/AI-Orchestration; clean-room stdlib.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-08-01",
+    "updated": "2026-08-01"
+  },
+  {
+    "designation": "MOD-05.086",
+    "name": "hotspots",
+    "status": "active",
+    "function": "rank technical-debt hotspots by churn x complexity (CodeScene's method, license-free) from git log + AST",
+    "label": "hotspots",
+    "file": "parts/shelf/hotspots.py",
+    "type": "MOD",
+    "domain": "05",
+    "docs": "docs/hardware_store/patterns/observability.md",
+    "tests": "tests/test_hotspots.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "a forge-audit code-health dimension; pairs with the Debugging Lab",
+    "tags": [
+      "module"
+    ],
+    "notes": "R&D Labs suite (docs/rd EXP-27..30); Synthesis/Governance/AI-Orchestration; clean-room stdlib.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-08-01",
+    "updated": "2026-08-01"
+  },
+  {
+    "designation": "MOD-05.087",
+    "name": "behavior_tree",
+    "status": "active",
+    "function": "a reactive behavior tree for NPC AI + task/agent orchestration; completes the decision engine alongside the FSM",
+    "label": "behavior_tree",
+    "file": "parts/shelf/behavior_tree.py",
+    "type": "MOD",
+    "domain": "05",
+    "docs": "docs/hardware_store/patterns/framing.md",
+    "tests": "tests/test_behavior_tree.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "NPC AI + workflow orchestration; pairs with parts/shelf/statemachine",
+    "tags": [
+      "module"
+    ],
+    "notes": "R&D Labs suite (docs/rd EXP-27..30); Synthesis/Governance/AI-Orchestration; clean-room stdlib.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-08-01",
+    "updated": "2026-08-01"
   }
 ]

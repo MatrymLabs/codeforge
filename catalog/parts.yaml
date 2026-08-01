@@ -1923,6 +1923,79 @@
     security: target the real bottleneck, gated by a benchmark
     compliance: a deterministic, auditable debugging aid with an honest caveat
     general: a cProfile hotspot ranker for any Python workload
+
+- id: content-address
+  name: Content Address
+  source: parts/shelf/content_address.py
+  category: analysis
+  tags: [content-addressing, ast, parts-factory, clone-detection, unison]
+  maturity: beta
+  source_status: original
+  license: MIT
+  influence: the R&D Labs suite (docs/rd EXP-27..30; Synthesis/Governance/AI-Orchestration; clean-room stdlib)
+  experimental: 'wire content_address to a SQLite part store, file_plan/hotspots into forge-audit dimensions, behavior_tree into NPC AI. Traded away (v1): persistence + a UI, keeping proven cores.'
+  risk: low
+  purpose: 'Address code by the SHA-256 of its normalized AST - same structure, same address. rename_binding makes renaming a definition free (Unison''s property); normalize_locals collides local-renamed clones but never touches globals/attributes. A Store dedups + finds clones. STRUCTURAL not semantic - a hash match means same tree, not proven-equivalent.'
+  reuse:
+    game: give the parts factory an identity model - dedup + clone detection by hash
+    education: teach content-addressing and structural vs semantic identity
+    security: find duplicated logic across a codebase by hash alone
+    compliance: a deterministic, auditable engineering aid with an honest caveat
+    general: an ast content-addresser for any Python corpus
+- id: file-plan
+  name: File Plan
+  source: parts/shelf/file_plan.py
+  category: analysis
+  tags: [structure-linter, repo-health, governance, file-plan, forge-audit]
+  maturity: beta
+  source_status: original
+  license: MIT
+  influence: the R&D Labs suite (docs/rd EXP-27..30; Synthesis/Governance/AI-Orchestration; clean-room stdlib)
+  experimental: 'wire content_address to a SQLite part store, file_plan/hotspots into forge-audit dimensions, behavior_tree into NPC AI. Traded away (v1): persistence + a UI, keeping proven cores.'
+  risk: low
+  purpose: 'Grade a repo against a versioned file-plan of FilePlanRule records (id/kind/targets/severity/weight) - canonical files present, src-layout, no committed .env - with a weighted compliance score and blocking vs advisory findings. A CONVENTION check, not a QUALITY guarantee (a LICENSE file is not a correct license).'
+  reuse:
+    game: score the engine''s own structural conventions
+    education: teach what a canonical Python repo carries and why
+    security: grade an unfamiliar repo''s structure before trusting it
+    compliance: a deterministic, auditable engineering aid with an honest caveat
+    general: a repolinter-style structure linter (repolinter is archived)
+- id: hotspots
+  name: Hotspots
+  source: parts/shelf/hotspots.py
+  category: observability
+  tags: [churn, complexity, technical-debt, codescene, refactoring]
+  maturity: beta
+  source_status: original
+  license: MIT
+  influence: the R&D Labs suite (docs/rd EXP-27..30; Synthesis/Governance/AI-Orchestration; clean-room stdlib)
+  experimental: 'wire content_address to a SQLite part store, file_plan/hotspots into forge-audit dimensions, behavior_tree into NPC AI. Traded away (v1): persistence + a UI, keeping proven cores.'
+  risk: low
+  purpose: 'Rank technical-debt hotspots by normalized churn x normalized complexity - a file scores high only when BOTH churny and complex (high interest rate, ~2-4% of a codebase). churn_from_log parses git log; complexity_from_sources is McCabe from AST. A PRIORITIZATION hint, not a defect list (churn is history-window-bound; complexity is a proxy).'
+  reuse:
+    game: find the world tick''s highest-leverage refactor target
+    education: teach CodeScene''s churn x complexity method from git data
+    security: prioritize a limited refactoring budget
+    compliance: a deterministic, auditable engineering aid with an honest caveat
+    general: a license-free churn x complexity hotspot ranker
+- id: behavior-tree
+  name: Behavior Tree
+  source: parts/shelf/behavior_tree.py
+  category: orchestration
+  tags: [behavior-tree, npc-ai, agent-orchestration, decision, game-ai]
+  maturity: beta
+  source_status: original
+  license: MIT
+  influence: the R&D Labs suite (docs/rd EXP-27..30; Synthesis/Governance/AI-Orchestration; clean-room stdlib)
+  experimental: 'wire content_address to a SQLite part store, file_plan/hotspots into forge-audit dimensions, behavior_tree into NPC AI. Traded away (v1): persistence + a UI, keeping proven cores.'
+  risk: low
+  purpose: 'A reactive behavior tree - Status(SUCCESS/FAILURE/RUNNING), leaves(Action/Condition), composites(Sequence=AND/Selector=OR/Parallel=threshold), decorators(Inverter/AlwaysSucceed/AlwaysFail/Repeater), run() with a max_ticks cap. Re-ticks from root so priorities pre-empt reactively. Models control flow, not action correctness or termination (an always-RUNNING leaf loops -> run() caps + reports).'
+  reuse:
+    game: drive NPC AI - the same tree also gates engine tasks
+    education: teach behavior trees and reactive decision priority
+    security: author a readable, deterministic decision policy
+    compliance: a deterministic, auditable engineering aid with an honest caveat
+    general: a domain-neutral behavior tree for AI + workflow orchestration
 - id: path-bounded-reader
   name: Path-Bounded Source Reader
   source: parts/seedlab/source_connector.py
