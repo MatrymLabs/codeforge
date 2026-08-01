@@ -24,6 +24,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 PORT = 4071  # a spare port, off the real :4000
+AETHRYN_PORT = 4072  # the flagship-seed leg runs on its own spare port
 HOST = "127.0.0.1"
 IAC_WILL_ECHO = bytes([255, 251, 1])  # telnet negotiation before a password prompt
 # The engine's command prompt is always line-anchored ("\r\n> " / "\n> "). Match on
@@ -96,13 +97,68 @@ def login(sock: socket.socket, handle: str, password: str, new: bool) -> None:
     _recv_until(sock, PROMPT)
 
 
-def connect() -> socket.socket:
+def connect(port: int = PORT) -> socket.socket:
     for _ in range(80):
         try:
-            return socket.create_connection((HOST, PORT), timeout=2)
+            return socket.create_connection((HOST, port), timeout=2)
         except OSError:
             time.sleep(0.25)
     raise SystemExit("server never came up")
+
+
+def aethryn_journey() -> None:
+    """A second leg on the FLAGSHIP seed (FORGE_SEED=aethryn): prove the Aethryn world
+    is enterable and its starter zone navigable through the tick -- Veridia spawn loads,
+    exits resolve into a town, a calling is taken, and a quest accepts. Combat there
+    rides the generated wilds (no fixed dummy), so this leg stays deterministic and
+    leaves the live-combat proof to the first-forge leg above.
+    """
+    db = Path(tempfile.mkdtemp(prefix="cf-e2e-ae-")) / "ae.db"
+    env = {**os.environ, "CODEFORGE_DB": str(db), "FORGE_SEED": "aethryn", "PYTHONUNBUFFERED": "1"}
+    t0 = time.monotonic()
+    server = subprocess.Popen(
+        [sys.executable, "-c", f"from parts.gateway import serve; serve(port={AETHRYN_PORT})"],
+        cwd=ROOT,
+        env=env,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+    )
+    try:
+        assert server.stdout is not None
+        boot = time.monotonic()
+        while time.monotonic() - boot < 30:  # the flagship seed is larger; allow more boot time
+            if server.poll() is not None:
+                raise SystemExit("aethryn server exited during boot")
+            if "listening on" in server.stdout.readline().decode(errors="ignore"):
+                break
+        results.append(("AETHRYN boot (flagship seed)", True, (time.monotonic() - t0) * 1000, ""))
+
+        s = connect(AETHRYN_PORT)
+        _recv_until(s, b"NEW:")
+        s.sendall(b"new\n")
+        _recv_until(s, b"account:")
+        s.sendall(b"ranger@aethryn\n")
+        _recv_until(s, IAC_WILL_ECHO)
+        s.sendall(b"lumos_1234\n")
+        welcome = _recv_until(s, PROMPT)
+        entered = "veridia" in welcome.lower()
+        results.append(
+            ("AETHRYN enter (spawn = Veridia)", entered, 0.0,
+             "" if entered else welcome[:100].replace("\n", " | "))
+        )
+        step("AETHRYN look", s, "look", ["Veridia", "Exits"])
+        step("AETHRYN calling", s, "job vanguard", ["Vanguard"])
+        step("AETHRYN move to town", s, "go greenhold", ["Greenhold"])
+        step("AETHRYN quest accept", s, "quest the_endless_journey accept", ["Endless Journey"])
+        step("AETHRYN region", s, "region", ["Veridia", "contracts"])
+        step("AETHRYN logout", s, "quit", ["world dims"])
+        s.close()
+    finally:
+        server.terminate()
+        try:
+            server.wait(timeout=5)
+        except subprocess.TimeoutExpired:
+            server.kill()
 
 
 def main() -> int:
@@ -220,6 +276,9 @@ def main() -> int:
             server.kill()
         clear = not _port_open()
         results.append(("COMPLETE RITUAL: forge banked, port clear", clear, 0.0, ""))
+
+    # --- SECOND LEG: the flagship Aethryn world (its own isolated server) ------
+    aethryn_journey()
 
     # --- report ---------------------------------------------------------------
     passed = sum(1 for _, ok, _, _ in results if ok)
