@@ -92,6 +92,20 @@ def test_a_drain_never_overheals_past_the_maximum() -> None:
     assert s.resources["hp"].current == full  # a siphon at full HP wastes no overheal
 
 
+# --- regen: a woven heal-over-time that mends across the world beats -----------------------------
+def test_a_regen_ability_mends_over_the_world_beat() -> None:
+    from parts.world.afflictions import tick_regens
+
+    s = _at_dummy("artificer")
+    s.resources["hp"] = s.resources["hp"].damage(30)  # take a wound the HoT can mend
+    out = use_ability(s, "repair field")  # a regen on self
+    assert "Repair Field" in out and "mend" in out
+    assert s.regens  # a heal-over-time boon is now active
+    hp_before = s.resources["hp"].current
+    tick_regens(s)  # one world beat
+    assert s.resources["hp"].current > hp_before  # the boon mended HP on the beat
+
+
 # --- kit density: EVERY aethryn calling carries a full, coherent moveset (batches 1-3) -----------
 def test_every_aethryn_calling_has_a_full_kit() -> None:
     from collections import Counter, defaultdict
