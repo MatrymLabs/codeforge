@@ -1471,6 +1471,11 @@ meadowfoil:
   keywords: [meadowfoil, herb, material]
   location: nowhere
   resettable: false
+rivercress:
+  name: a handful of rivercress
+  keywords: [rivercress, cress, greens, material]
+  location: nowhere
+  resettable: false
 fernshade:
   name: a frond of fernshade
   keywords: [fernshade, herb, material]

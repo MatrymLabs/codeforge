@@ -1,0 +1,29 @@
+# SEED: aethryn -- quests/sunmeadow_channel.yaml  (Sunmeadow's second quest: The Stopped Sun)
+#
+# Auto-loaded. Sunmeadow's SIDE quest, a FETCH of a different shape from the fold hunt: restart the
+# old-world sun-channel that waters the meadow. Grange-Elder Aldwin in the green points you DOWN the
+# channel-shaft; the quest arms when you ENTER the channel-house, turns when you TAKE the sun-key from
+# the stopped gnomon, and completes when you return and ENTER the green to report the wheel turning
+# again. A local need (the pasture browns without the channel), a world-level echo (the same old-world
+# works as Greenhold's fountain, Riverbend's weir, Elderwatch's beacon), a cost (only the dark and the
+# stair), a visible result (the reward + Making standing), and an open remainder (what one hand cut all
+# four works for, left to Aldwin's rumour). Both enter-steps target the green but fire only from their
+# own state, so mid-quest passing is inert.
+id: sunmeadow_channel
+name: The Stopped Sun
+start: offered
+reward_xp: 44
+steps:
+  - {state: offered, event: enter, to: accepted, on_enter: sunmeadow_channelhouse}
+  - {state: accepted, event: take, to: recovered, on_take: sunmeadow_sun_key}
+  - state: recovered
+    event: enter
+    to: done
+    on_enter: sunmeadow_green
+    effect: "award_xp;grant_rep:making:20"
+terminal: [done]
+labels:
+  offered: "Grange-Elder Aldwin says the old sun-channel under the green has stopped. Go DOWN the shaft into the channel-house and see the stilled gnomon-wheel."
+  accepted: "The sun-wheel is seized. Draw the old-world sun-key from the gnomon so the channel can run again."
+  recovered: "Carry the sun-key back UP to Grange-Elder Aldwin on the green."
+  done: "*** The sun-key turns, the gnomon-wheel catches the light and begins to creep, and deep below the ducts wake and run. The high pasture will stay green, and Aldwin marks the day in the grange-record with a hand that shakes only a little. ***"

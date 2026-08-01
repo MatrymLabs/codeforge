@@ -1,0 +1,24 @@
+# SEED: aethryn -- quests/riverbend_reeds.yaml  (Riverbend's second quest: The Sunken Marker)
+#
+# Auto-loaded. Riverbend's SIDE quest, a different SHAPE from the weir fetch: a DISCOVERY, and one that
+# only opens at low water. Both Doran and Old Merta point you EAST to the reed-flats, where an old
+# marker-stone leans half-sunk with a river-worn charm left in offering at its foot. The quest arms and
+# completes the moment you ENTER the reeds and stand at the stone -- no fight, no fetch, the reward is
+# for going where the fishers will not and finding what they left. A local prompt (go and lay a hand on
+# the stone), a light thread to the larger world (the marker predates the weir it somehow measures), a
+# cost of only wet feet, a visible result (XP + Knowing standing), and an open remainder (what the stone
+# marked before there was anything to mark). Rewards standing with the Knowing order (scholars and lorekeepers).
+id: riverbend_reeds
+name: The Sunken Marker
+start: offered
+reward_xp: 25
+steps:
+  - state: offered
+    event: enter
+    to: done
+    on_enter: riverbend_reeds
+    effect: "award_xp;grant_rep:knowing:15"
+terminal: [done]
+labels:
+  offered: "They say an old marker-stone leans half-sunk in the Riverbend reeds, older than the crossing, with a charm left at its foot. Go EAST from the landing to the reed-flats and find it while the water is low."
+  done: "*** At the foot of the sunken marker a river-worn charm waits in its niche, cast with the same gear-work as the weir below. You have found what the fishers would not touch, and the reeds keep their older secret still. ***"
