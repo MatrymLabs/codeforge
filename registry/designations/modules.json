@@ -7341,7 +7341,7 @@
     "designation": "MOD-04.149",
     "name": "coin_flow",
     "status": "active",
-    "function": "the designed coin economy: audit faucets (foe drops) vs sinks (repair, the fall)",
+    "function": "the designed coin economy: faucet (foe drops) vs sinks (repair, the fall), with an inflation balance verdict",
     "label": "coin_flow",
     "file": "parts/coin_flow.py",
     "type": "MOD",
