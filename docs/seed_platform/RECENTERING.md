@@ -31,6 +31,7 @@ Labels: VISION · RESEARCH · SPECIFIED · PROTOTYPED · INTEGRATED · PROVEN ·
 | In-MUD building (game content, owner-only) | **PROTOTYPED** | `workshop`/`foundry` |
 | **Project source → structured model** | **PROTOTYPED** | `parts/seedlab/project_model.py` |
 | **Seed identity + lifecycle (as an addressable entity)** | **PROTOTYPED** | `parts/seedlab/kernel.py` (MOD-10.052) — create/start/stop/archive a Seed with owner authz, an audit trail, and file-backed persistence that survives restart; distinct from the `FORGE_SEED` game pack |
+| **Functional Project Hub (enter + inspect a Seed)** | **PROTOTYPED** | `parts/seedlab/project_hub.py` (MOD-10.053) — a Seed location that renders identity/status/facets as a text `look` + its sub-verbs AND a versioned structured client contract, both from one source of truth; empty facets read "none yet (Stage N)" |
 | Repo / IDE / API / DB connectors | **VISION** | none exist |
 | Multi-AI-provider connector | **VISION** | internal AI helpers exist, not a provider connector |
 | Reverse-engineering / walkthrough-to-world | **VISION** | — |
@@ -96,14 +97,30 @@ scope:** "runtime start" is the lifecycle state machine + a persisted session, *
 per-Seed server process (the game deploy case is proven separately by Slice 2). Persistence is
 file-backed by choice — a DB-backed Seed-identity table is an additive migration deferred to Josh.
 
+## Slice 4 (PROTOTYPED, shipped): the functional Project Hub (Stage 2)
+
+`parts/seedlab/project_hub.py` (MOD-10.053) gives a Seed a place you can ENTER and inspect. It
+composes the Kernel and projects one Seed's persisted state two ways from a single source of truth:
+
+- `render` / `command` — the universal text fallback: the MUD `look` and its sub-verbs (`show
+  status`, `list <sources|models|builds|tests|targets>`, `show risks`, `show history`).
+- `contract` — the versioned (`seedlab.project_hub/1`) structured dict the Master Client consumes.
+- `ProjectState` — the real contract shape for the engineering facets (sources/models/builds/tests/
+  targets/risks/decisions). Empty until later stages fill it, and the Hub says so plainly ("none yet
+  (Stage N)") rather than implying a capability that does not run.
+
+Proven to render both the empty and the populated case; no game coupling.
+
 ## Next slices (roadmap, each an isolated vertical step)
 
-1. A **functional Project Hub** (Stage 2): a Seed location whose commands display persisted Seed +
-   project state, over both a text render and a structured client contract.
-2. A **file-backed source connector** (Stage 3): read a spec/repo manifest from disk with provenance
-   and path boundaries — PROTOTYPED → INTEGRATED.
-3. A **MUD `model` verb** + a Master-Client panel over `render_model`/`render_status` (inspect a
-   Seed and its project model live).
-4. One **real build/test action** and one **generated target** (a small original CLI/API), with
-   provenance — closing the directive's first end-to-end vertical slice and proving the platform
-   *generalizes* past the game, now that both the game-Seed deployment and Seed lifecycle are real.
+1. A **file-backed source connector** (Stage 3): register a local repo/spec as a project source with
+   provenance and path boundaries; its inspect commands feed the Hub's `sources` facet — VISION →
+   PROTOTYPED.
+2. A **first project model** (Stage 4): wire `project_model.extract_model` to a registered source and
+   persist it into the Hub's `models` facet, linked to source evidence.
+3. A **MUD `model` verb** + a Master-Client panel over `render_status`/`contract` (inspect a Seed and
+   its project model live in the client).
+4. One **real build/test action** (Stage 5) and one **generated non-game target** (Stage 6: a small
+   original CLI/API), with provenance — closing the directive's first end-to-end vertical slice and
+   proving the platform *generalizes* past the game, now that the game-Seed deployment, Seed
+   lifecycle, and a functional Hub are all real.
