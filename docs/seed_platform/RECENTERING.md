@@ -26,6 +26,7 @@ Labels: VISION · RESEARCH · SPECIFIED · PROTOTYPED · INTEGRATED · PROVEN ·
 | MUD runtime + persistent world | **PROVEN** | the game engine (aethryn), end-to-end playable + gated |
 | Seed = game-data pack | **PROVEN** | `parts/world/seed.py` ("a seed IS a game") — the definition being *widened*, not deleted |
 | Target generation (games only) | **PROVEN** | `cast`/`forge` pours a standalone game from a seed + engine |
+| **Real game-Seed deployment (Aethryn poured + booted at scale)** | **DEPLOYABLE** | `make deploy-proof` (`scripts/deploy_aethryn_seed.py`) pours the whole engine + the Aethryn world, boots the cast in a fresh subprocess, serves a play corpus, and records the world's room count — the honest proof the game Seed's deployment is real, not a stub. Public deploy is a separate, gated step. |
 | Repo analysis / gate-running on a target | **PROTOTYPED** | `forge-audit` (separate repo, mock GitHub seam) |
 | In-MUD building (game content, owner-only) | **PROTOTYPED** | `workshop`/`foundry` |
 | **Project source → structured model** | **PROTOTYPED** | `parts/seedlab/project_model.py` (this slice) |
@@ -57,6 +58,20 @@ It is **isolated in `parts/seedlab/`, not `parts/world/`** — the game Seed mod
   (per the directive's own approval gates).
 - Every new part carries its test twin + registry filing; `make check` (real exit) gates each batch.
 
+## Slice 2 (DEPLOYABLE, shipped): the game Seed's deployment is real
+
+Founder correction (Josh, 2026-08-01): *"the game deployment of the seed is real … the game shows
+the scale I want the seed capable of creating."* Before generalizing sideways to a toy non-game
+target, prove the platform can really **deploy the thing it already builds, at the game's scale.**
+
+`make deploy-proof` (`scripts/deploy_aethryn_seed.py`) does exactly that with the real cast
+machinery (no stub): plan the flagship `kindlands_saga` template → `generate_cast` pours the whole
+engine + the Aethryn world → `validate_cast` boots the poured cast in a fresh subprocess and runs a
+play corpus (`look`, `score`, `inventory`, `help`) → a second subprocess boot records the world's
+room count. It files dated evidence to `reports/deploy/` (gitignored, reproducible from commit) and
+labels the result **DEPLOYABLE** only when the cast booted AND served. This is the game the platform
+is proven capable of creating — the scale bar Aethryn sets.
+
 ## Next slices (roadmap, each an isolated vertical step)
 
 1. A **file-backed source connector** (read a spec/repo manifest from disk, with provenance) —
@@ -64,4 +79,5 @@ It is **isolated in `parts/seedlab/`, not `parts/world/`** — the game Seed mod
 2. A **MUD `model` verb** + a Master-Client model panel over `render_model` (inspect the model live).
 3. A **Seed identity + local runtime** (create/enter a Seed distinct from a game world).
 4. One **real build/test action** and one **generated target** (a small original CLI/API), with
-   provenance — closing the directive's first end-to-end vertical slice.
+   provenance — the sideways proof the platform *generalizes* past the game, now that the game-Seed
+   deployment itself is proven real.
