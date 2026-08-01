@@ -1664,3 +1664,44 @@
     finance: rank and cap the transactions most worth a manual review
     education: select the most relevant lesson snippets within a context window
     general: a budgeted weighted-relevance pre-filter for any LLM/retrieval/review scope
+
+- id: coding-corpus
+  name: Coding Corpus
+  source: parts/shelf/corpus.py
+  category: reference
+  tags: [knowledge, patterns, smells, security-rules, translation-matrix]
+  maturity: beta
+  source_status: original
+  license: MIT
+  influence: the CodeForge Corpus universal record schema (reverse-engineered; RS-2026-08-01-corpus)
+  experimental: 'populate the full corpus (all 24 smells, the 65 EIP, GoF/PoEAA/DDD, CWE/ASVS/Semgrep import) and add a query DSL. Traded away (v1): a full corpus, keeping the schema + a proof seed.'
+  risk: low
+  purpose: 'Encode a coding pattern/smell/rule as one machine-readable record - how CodeForge FINDS it (detection signature) and how it CHANGES toward/away from it (transformation) - with two honesty fields: subsumed_by (the language feature that replaces a pattern, to discourage over-engineering) and contested (a first-class critique for debated laws like Singleton, Postel''s Law, SOLID).
+
+    '
+  reuse:
+    game: a queryable knowledge store the co-pilot and Classroom teach from
+    education: teach a pattern/smell with its detection, refactoring, and honest critique
+    security: encode CWE/ASVS/Semgrep taint rules in the same record shape
+    compliance: a cross-referenced, sourced, versionable rule catalog
+    general: normalize any pattern/rule catalog into one detection+transformation record
+- id: smell-engine
+  name: Smell Engine
+  source: parts/shelf/smell_engine.py
+  category: quality
+  tags: [code-smells, ast, refactoring, static-analysis, maintainability]
+  maturity: beta
+  source_status: original
+  license: MIT
+  influence: Fowler's code smells + the CodeForge Corpus Stage 1 (reverse-engineered)
+  experimental: 'add tree-sitter for other languages and a gated suggestion->apply loop under green tests. Traded away (v1): the transform half, keeping detection + a suggested refactoring (never an autonomous rewrite).'
+  risk: low
+  purpose: 'Detect Fowler code smells in Python via the stdlib ast + metrics - long methods, high complexity, magic numbers, deep nesting, God objects, swallowed exceptions, mutable defaults, boolean flags, duplicate bodies (12 detectors) - each finding naming its corpus SMELL.* id and the mechanical refactoring that resolves it. It SUGGESTS; it never rewrites.
+
+    '
+  reuse:
+    game: a `make smells` / qa maintainability report over the engine''s own parts
+    education: show a real smell in real code + the refactoring that fixes it
+    security: swallowed exceptions and bare excepts are a security smell too
+    compliance: a maintainability signal with a named, sourced remediation
+    general: an ast-based Python code-smell detector for any codebase
