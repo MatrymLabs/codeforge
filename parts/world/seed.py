@@ -849,8 +849,10 @@ def load_npcs(path: Path) -> dict[str, Npc]:
                     f"NPC '{label}': 'special' allows only kind/telegraph/mult/heal/cadence keys."
                 )
             kind = special.get("kind")
-            if kind is not None and kind not in ("strike", "mend"):
-                raise SeedError(f"NPC '{label}': 'special.kind' must be 'strike' or 'mend'.")
+            if kind is not None and kind not in ("strike", "mend", "drain"):
+                raise SeedError(
+                    f"NPC '{label}': 'special.kind' must be 'strike', 'mend', or 'drain'."
+                )
             tele = special.get("telegraph")
             if tele is not None and (not isinstance(tele, str) or not tele.strip()):
                 raise SeedError(f"NPC '{label}': 'special.telegraph' must be non-empty text.")
