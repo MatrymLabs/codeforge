@@ -29,7 +29,8 @@ Labels: VISION · RESEARCH · SPECIFIED · PROTOTYPED · INTEGRATED · PROVEN ·
 | **Real game-Seed deployment (Aethryn poured + booted at scale)** | **DEPLOYABLE** | `make deploy-proof` (`scripts/deploy_aethryn_seed.py`) pours the whole engine + the Aethryn world, boots the cast in a fresh subprocess, serves a play corpus, and records the world's room count — the honest proof the game Seed's deployment is real, not a stub. Public deploy is a separate, gated step. |
 | Repo analysis / gate-running on a target | **PROTOTYPED** | `forge-audit` (separate repo, mock GitHub seam) |
 | In-MUD building (game content, owner-only) | **PROTOTYPED** | `workshop`/`foundry` |
-| **Project source → structured model** | **PROTOTYPED** | `parts/seedlab/project_model.py` (this slice) |
+| **Project source → structured model** | **PROTOTYPED** | `parts/seedlab/project_model.py` |
+| **Seed identity + lifecycle (as an addressable entity)** | **PROTOTYPED** | `parts/seedlab/kernel.py` (MOD-10.052) — create/start/stop/archive a Seed with owner authz, an audit trail, and file-backed persistence that survives restart; distinct from the `FORGE_SEED` game pack |
 | Repo / IDE / API / DB connectors | **VISION** | none exist |
 | Multi-AI-provider connector | **VISION** | internal AI helpers exist, not a provider connector |
 | Reverse-engineering / walkthrough-to-world | **VISION** | — |
@@ -72,12 +73,37 @@ room count. It files dated evidence to `reports/deploy/` (gitignored, reproducib
 labels the result **DEPLOYABLE** only when the cast booted AND served. This is the game the platform
 is proven capable of creating — the scale bar Aethryn sets.
 
+## Slice 3 (PROTOTYPED, shipped): the Seed Kernel — identity + lifecycle
+
+This begins the full **CODEFORGE AND SEED PLATFORM PRODUCTION DIRECTIVE** (`/home/josh/Projects/
+Codeforge prompt`) at its Stage 1. The inventory was blunt: there was *no* Seed as an entity — a
+"Seed" was one global game-data pack chosen by `FORGE_SEED`, with no identity record, no lifecycle,
+no restart recovery. `parts/seedlab/kernel.py` (MOD-10.052) builds the first brick:
+
+- `SeedIdentity` / `SeedRecord` — a Seed's immutable facts + its mutable lifecycle state and audit
+  trail (frozen; the Kernel evolves a Seed by persisting a replaced record).
+- `SeedKernel` — `create` / `get` / `list` / `start` / `stop` / `archive` / `status`, with a legal-
+  transition guard, **owner authorization on every mutation** (least privilege — the Seed is a
+  control plane), and an audit event appended per act.
+- `SeedStore` — the persistence seam: `FileSeedStore` (one JSON file per Seed, atomic write) makes
+  **identity survive restart** (a fresh Kernel over the same directory recovers every Seed);
+  `InMemorySeedStore` for tests. Clock + id-minter are injected, so there is no hidden state.
+- A CLI (`python3 -m parts.seedlab.kernel create|list|status|start|stop|archive`) makes the
+  lifecycle real and inspectable from the shell.
+
+Isolated in `parts/seedlab/`: no `parts/world/` import, no `FORGE_SEED`, no game coupling. **Honest
+scope:** "runtime start" is the lifecycle state machine + a persisted session, *not yet* a spawned
+per-Seed server process (the game deploy case is proven separately by Slice 2). Persistence is
+file-backed by choice — a DB-backed Seed-identity table is an additive migration deferred to Josh.
+
 ## Next slices (roadmap, each an isolated vertical step)
 
-1. A **file-backed source connector** (read a spec/repo manifest from disk, with provenance) —
-   PROTOTYPED → INTEGRATED.
-2. A **MUD `model` verb** + a Master-Client model panel over `render_model` (inspect the model live).
-3. A **Seed identity + local runtime** (create/enter a Seed distinct from a game world).
+1. A **functional Project Hub** (Stage 2): a Seed location whose commands display persisted Seed +
+   project state, over both a text render and a structured client contract.
+2. A **file-backed source connector** (Stage 3): read a spec/repo manifest from disk with provenance
+   and path boundaries — PROTOTYPED → INTEGRATED.
+3. A **MUD `model` verb** + a Master-Client panel over `render_model`/`render_status` (inspect a
+   Seed and its project model live).
 4. One **real build/test action** and one **generated target** (a small original CLI/API), with
-   provenance — the sideways proof the platform *generalizes* past the game, now that the game-Seed
-   deployment itself is proven real.
+   provenance — closing the directive's first end-to-end vertical slice and proving the platform
+   *generalizes* past the game, now that both the game-Seed deployment and Seed lifecycle are real.
