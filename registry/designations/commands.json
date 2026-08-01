@@ -3669,5 +3669,28 @@
     "tests": "tests/test_shrine.py",
     "type": "CMD",
     "updated": "2026-07-30"
+  },
+  {
+    "designation": "CMD-04.114",
+    "name": "search",
+    "status": "active",
+    "function": "search the world for rooms, items, and beings (search <words>)",
+    "label": "search",
+    "file": "forge.py",
+    "type": "CMD",
+    "domain": "04",
+    "docs": "docs/architecture.md",
+    "tests": "tests/test_world_search.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "command"
+    ],
+    "notes": "CORE verb over the FTS5 world search index (parts/world/search.py); R&D Technology Admission T-AP-05.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-08-01",
+    "updated": "2026-08-01"
   }
 ]
