@@ -71,6 +71,46 @@ def test_a_strike_ability_hits_harder_than_a_basic_attack_and_costs_mp() -> None
     assert dealt > 6
 
 
+# --- drain: lifesteal -- strike the foe and recover half the damage as HP ------------------------
+
+
+def test_a_drain_ability_deals_damage_and_heals_the_wielder() -> None:
+    s = _at_dummy("artificer")
+    s.resources["hp"] = s.resources["hp"].damage(20)  # take a wound the siphon can restore
+    hp_before = s.resources["hp"].current
+    mp_before = s.resources["mp"].current
+    out = use_ability(s, "siphon on dummy")
+    assert "Siphon" in out and "training dummy" in out and "recover" in out
+    assert s.resources["mp"].current == mp_before - 4  # Siphon costs 4 MP
+    assert s.resources["hp"].current > hp_before  # lifesteal siphoned HP back to the wielder
+
+
+def test_a_drain_never_overheals_past_the_maximum() -> None:
+    s = _at_dummy("artificer")
+    full = s.resources["hp"].current  # already at full HP
+    use_ability(s, "siphon on dummy")
+    assert s.resources["hp"].current == full  # a siphon at full HP wastes no overheal
+
+
+# --- kit density: EVERY aethryn calling carries a full, coherent moveset (batches 1-3) -----------
+def test_every_aethryn_calling_has_a_full_kit() -> None:
+    from collections import Counter, defaultdict
+
+    ab = load_abilities(Path("seeds/aethryn/abilities.yaml"))
+    per: Counter = Counter()
+    kinds: dict[str, set] = defaultdict(set)
+    for a in ab.values():
+        for job in a["jobs"]:
+            per[job] += 1
+            kinds[job].add(a["kind"])
+    # After the three density passes, every playable calling has a full 5-ability kit with >=2 kinds
+    # (a role identity, not just a pile of strikes). `template` is the non-playable base row.
+    thin = sorted(f"{j}({c})" for j, c in per.items() if j != "template" and c < 5)
+    assert not thin, f"callings without a full 5-ability kit: {thin}"
+    one_note = sorted(j for j, ks in kinds.items() if j != "template" and len(ks) < 2)
+    assert not one_note, f"callings with a one-note kit: {one_note}"
+
+
 @pytest.mark.parametrize("job", ["vanguard", "scholar", "artificer", "engineer"])
 def test_every_approved_calling_is_playable_end_to_end(job: str) -> None:
     """Guards Stage 3's "all approved Callings are implemented": each calling can be

@@ -119,6 +119,24 @@ def test_the_default_kind_still_strikes_backward_compatible():
     assert blow == 20 and "unleashes" in line
 
 
+# --- the `drain` kind: vampiric -- it spikes the hero AND heals itself for half the blow ---------
+def test_a_drain_special_spikes_the_blow_and_heals_the_boss():
+    npc = _boss(special={"kind": "drain", "mult": 3})
+    npc["charging"] = True
+    blow, line = boss_specials.unleash(npc, 10)
+    assert blow == 30  # a real spike (10 * 3), UNLIKE mend's normal blow -- the heal rides the hit
+    assert npc["hp_now"] == 35  # 20 + 30//2 (15) siphoned back
+    assert "drinks your wound" in line and not boss_specials.is_charging(npc)
+
+
+def test_a_drain_never_heals_past_full_health():
+    npc = _boss(special={"kind": "drain", "mult": 99})
+    npc["hp_now"] = 98
+    npc["charging"] = True
+    boss_specials.unleash(npc, 10)
+    assert npc["hp_now"] == 100  # capped at max hp
+
+
 def test_unleash_is_a_no_op_when_not_charging():
     assert boss_specials.unleash(_boss(special={}), 10) == (10, "")
 
