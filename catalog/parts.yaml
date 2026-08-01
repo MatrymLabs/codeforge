@@ -1923,3 +1923,111 @@
     security: target the real bottleneck, gated by a benchmark
     compliance: a deterministic, auditable debugging aid with an honest caveat
     general: a cProfile hotspot ranker for any Python workload
+- id: path-bounded-reader
+  name: Path-Bounded Source Reader
+  source: parts/seedlab/source_connector.py
+  category: security
+  tags: [path-traversal, sandbox, filesystem, secrets, read-only]
+  maturity: prototype
+  source_status: original
+  license: MIT
+  influence: the Seed Platform directive (THE SEED IS THE MUD) - Stage 3 source connector; original implementation
+  experimental: 'back it with a chroot/namespace or a container mount for OS-level isolation, and honor .gitignore beyond the static denylist. Traded away (v1): OS sandboxing, kept a pure-stdlib, testable boundary.'
+  risk: low
+  purpose: 'Read a directory as an untrusted project source safely: every access resolves inside a root (refusing .., absolute paths, and symlink escapes via resolve() + a bounds-check) and a secret denylist (.env, keys, .git, vaults) is never listed, searched, or read.'
+  reuse:
+    game: let a tool read a mod or seed folder without escaping it
+    government: expose a records directory read-only, never leaking a sibling
+    finance: read a client upload area under a hard path + secret boundary
+    compliance: an auditable read-only file boundary (traversal + secrets refused)
+    general: a path-traversal-safe reader for any user-supplied directory
+- id: provenance-record
+  name: Provenance Record
+  source: parts/seedlab/project_model.py
+  category: governance
+  tags: [provenance, licensing, ownership, ip, fail-loud]
+  maturity: prototype
+  source_status: original
+  license: MIT
+  influence: the Seed Platform directive - the legal/IP boundary on connected sources; original implementation
+  experimental: 'extend to SPDX license identifiers and a signed provenance chain (in-toto/SLSA) as sources gain supply-chain weight. Traded away (v1): cryptographic attestation, kept a plain honest record.'
+  risk: low
+  purpose: 'Record who owns a connected input and how it may be used (owner, license, visibility, allowed_use) for every source; an unstated field reads "unknown" so a gap is visible, never silently assumed permissive.'
+  reuse:
+    game: tag imported content with its author and license
+    government: attach ownership + handling caveats to an ingested record
+    finance: record the source and permitted use of third-party data
+    compliance: an IP/licensing provenance trail with honest gaps
+    general: an ownership-and-use record for any external input
+- id: file-record-store
+  name: File-Backed Record Store
+  source: parts/seedlab/model_store.py
+  category: persistence
+  tags: [persistence, json, atomic-write, restart-recovery, crash-safe]
+  maturity: prototype
+  source_status: original
+  license: MIT
+  influence: the Seed Platform directive - Seed identity/model/run persistence; original implementation
+  experimental: 'swap the JSON files for SQLite or a KV store once query volume demands it; the seam (save/load/all) stays. Traded away (v1): indexing + transactions, kept a dependency-free store a fresh process recovers.'
+  risk: low
+  purpose: 'Persist an entity as one atomically-written JSON file per id under a root, so a brand-new process over the same directory recovers every entity: identity and state survive restart, and a crash mid-write never leaves a half-written record.'
+  reuse:
+    game: persist characters or seeds as recoverable files
+    government: a durable per-record store that survives a restart
+    finance: a crash-safe write of a ledger entry (temp-then-replace)
+    compliance: an auditable, recoverable record store with atomic writes
+    general: a dependency-free, restart-safe object store
+- id: lifecycle-state-machine
+  name: Lifecycle State Machine
+  source: parts/seedlab/kernel.py
+  category: control-flow
+  tags: [state-machine, lifecycle, authorization, audit, transitions]
+  maturity: prototype
+  source_status: original
+  license: MIT
+  influence: the Seed Platform directive - Stage 1 Seed Kernel; original implementation
+  experimental: 'externalize the transition table as data + a policy engine as states multiply, and emit typed events per transition. Traded away (v1): a workflow engine, kept an explicit, tested transition table.'
+  risk: low
+  purpose: 'Model an entity as named states with a legal-transition table: every mutation is checked against the table (an illegal move fails loud), authorized (owner-only by default), and recorded as an appended audit event - so state changes are explicit, guarded, and traceable.'
+  reuse:
+    game: a quest or session lifecycle (created to active to done) with an audit
+    government: a case or document lifecycle with authorized transitions
+    finance: an order/invoice state machine with an approval + audit trail
+    compliance: a controlled lifecycle whose every transition is evidence
+    general: an authorized, audited state machine for any entity
+- id: controlled-tool-runner
+  name: Controlled Tool Runner
+  source: parts/seedlab/tool_runner.py
+  category: security
+  tags: [subprocess, allowlist, timeout, redaction, control-plane]
+  maturity: prototype
+  source_status: original
+  license: MIT
+  influence: the Seed Platform directive - Stage 5 build/test orchestration; reuses the FailsafeRunner pattern (parts/shelf/console.py)
+  experimental: 'run inside a container or namespace with resource limits (cgroups) for real isolation. Traded away (v1): OS sandboxing, kept an allowlisted, cwd-bounded, redacted runner.'
+  risk: low
+  purpose: 'Run an allowlisted command (a fixed, shell-free argv, never user-interpolated) inside a bounded working directory, under a timeout and output cap, with captured output secret-redacted; an unlisted command is refused and never executes, and a non-zero exit is a result, not a crash.'
+  reuse:
+    game: run a modder build step in a fenced sandbox
+    government: execute an approved tool over a case folder, audited
+    finance: run a vetted report generator with a timeout + redacted logs
+    compliance: a controlled-execution primitive with refusal + redaction evidence
+    general: a safe allowlisted command runner for any control plane
+- id: reproducible-generator
+  name: Reproducible Generator
+  source: parts/seedlab/cli_generator.py
+  category: developer-experience
+  tags: [codegen, reproducible, checksums, scaffolding, provenance]
+  maturity: prototype
+  source_status: original
+  license: MIT
+  influence: the Seed Platform directive - Stage 6 target generator; original implementation
+  experimental: 'template via Jinja2 and emit an SBOM as the generated surface grows. Traded away (v1): a templating dependency, kept deterministic f-string emission with per-file checksums.'
+  risk: low
+  purpose: 'Emit a target files deterministically (no timestamps or randomness in the output) and sha256-checksum each, so the same input always yields byte-identical, verifiable output carrying its source provenance - reproducible by construction and tamper-evident.'
+  reuse:
+    game: generate a seed or mod scaffold reproducibly
+    education: a reproducible project scaffolder students can verify
+    security: tamper-evident generated output (checksummed + provenance)
+    compliance: reproducible-build evidence for generated artifacts
+    general: a deterministic, checksummed code and file generator

@@ -36,6 +36,7 @@ Labels: VISION · RESEARCH · SPECIFIED · PROTOTYPED · INTEGRATED · PROVEN ·
 | **Source → project model (persisted, honest)** | **PROTOTYPED** | `parts/seedlab/source_modeler.py` (MOD-10.055) + `model_store.py` (MOD-10.056) — extract a `ProjectModel` from a registered source (identity/entities/interfaces/provenance derived; everything else marked in `unknowns`), persist it (survives restart), and light up the Hub's `models` facet linked to source evidence |
 | **Controlled build/test execution** | **PROTOTYPED** | `parts/seedlab/tool_runner.py` (MOD-10.057) — run an allowlisted, shell-free command inside an approved source with cwd boundary + timeout + output cap + secret redaction; refuse an unlisted profile; persist each run (`FileRunLog`, survives restart) into the Hub's `builds`/`tests` facets |
 | **First generated target (a runnable CLI)** | **PROTOTYPED** | `parts/seedlab/cli_generator.py` (MOD-10.058) — generate a small, runnable Python CLI from a validated model (reproducible, sha256-checksummed, provenance-carrying); `validate_runs`/`validate_tests` prove it RUNS and its generated tests PASS via the Stage-5 runner. **Closes the First Platform Proof: source → model → generate → run → tests pass → artifact.** |
+| **Hardware extraction (proven mechanisms → cards)** | **PROTOTYPED** | 6 Hardware Store cards in `catalog/parts.yaml` (path-bounded-reader, provenance-record, file-record-store, lifecycle-state-machine, controlled-tool-runner, reproducible-generator), each citing real seedlab code, honestly `maturity: prototype` (candidates, not promoted prematurely) |
 | Repo / IDE / API / DB connectors (remote) | **VISION** | remote repo/IDE/DB connectors not built; local FS connector is the first real one |
 | Multi-AI-provider connector | **VISION** | internal AI helpers exist, not a provider connector |
 | Reverse-engineering / walkthrough-to-world | **VISION** | — |
@@ -168,9 +169,22 @@ itself. `rollback` cleans up.
 run it under control (Tool Runner) → **generate a working non-game target and prove it runs + tests
 pass** (CLI Generator). All isolated in `parts/seedlab/`, the game untouched, every claim labeled.
 
+## Slice 9 (PROTOTYPED, shipped): hardware extraction (Stage 7)
+
+With the vertical slice proven, its reusable mechanisms are filed as **Hardware Store cards** in
+`catalog/parts.yaml` — the directive's Stage-7 harvest: **Path-Bounded Source Reader** (`security`),
+**Provenance Record** (`governance`), **File-Backed Record Store** (`persistence`), **Lifecycle State
+Machine** (`control-flow`), **Controlled Tool Runner** (`security`), and **Reproducible Generator**
+(`developer-experience`). Each cites the real seedlab code that proves it, declares cross-domain reuse,
+and is honestly `maturity: prototype` — a candidate, per the directive's "do not promote unstable
+abstractions prematurely." `tests/test_seed_hardware_cards.py` pins the extraction.
+
 ## Next slices (roadmap, each an isolated vertical step)
 
-1. A **MUD `model`/`seed` verb** + a Master-Client panel over `render_status`/`contract`/`render_model`
-   (enter and inspect a Seed, its model, and its runs live in the running MUD, not just the CLI).
-2. **Hardware extraction** (Stage 7): harvest the connector, model schema, model store, and runner as
-   Hardware Store candidates once the vertical slice is proven end to end.
+1. A **MUD `model`/`seed` verb** — enter and inspect a Seed, its model, and its runs live in the
+   running MUD (not just the seedlab CLI), aligning with the Master-Client contract (`#727`) so the
+   in-world verb and the client speak the same shape.
+2. **Aethryn as reference Seed** (Stage 8): align the game onto the same Kernel, without making its
+   game concepts mandatory for non-game Seeds.
+3. Promote the strongest cards from `prototype` → `beta` once a second consumer proves each outside
+   `parts/seedlab/`.
