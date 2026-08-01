@@ -26,6 +26,11 @@ ROOT = Path(__file__).resolve().parent.parent
 PORT = 4071  # a spare port, off the real :4000
 HOST = "127.0.0.1"
 IAC_WILL_ECHO = bytes([255, 251, 1])  # telnet negotiation before a password prompt
+# The engine's command prompt is always line-anchored ("\r\n> " / "\n> "). Match on
+# the newline, not a bare "> ", so prompt-shaped text inside a reply (e.g. the login
+# hint "JOB <name> to take one") can't be mistaken for the real prompt and desync the
+# whole session by one round-trip.
+PROMPT = b"\n> "
 
 results: list[tuple[str, bool, float, str]] = []
 
@@ -45,7 +50,7 @@ def _recv_until(sock: socket.socket, marker: bytes, timeout: float = 6.0) -> str
 
 
 def step(
-    name: str, sock: socket.socket, line: str, expect: list[str], marker: bytes = b"> "
+    name: str, sock: socket.socket, line: str, expect: list[str], marker: bytes = PROMPT
 ) -> str:
     """Send one command, read the reply, assert every expected substring is present."""
     start = time.monotonic()
@@ -65,7 +70,7 @@ def login(sock: socket.socket, handle: str, password: str, new: bool) -> None:
     sock.sendall(handle.encode() + b"\n")
     _recv_until(sock, IAC_WILL_ECHO)  # password prompt (telnet echo blackout)
     sock.sendall(password.encode() + b"\n")
-    _recv_until(sock, b"> ")
+    _recv_until(sock, PROMPT)
 
 
 def connect() -> socket.socket:
@@ -113,7 +118,7 @@ def main() -> int:
         _recv_until(s, IAC_WILL_ECHO)
         t = time.monotonic()
         s.sendall(b"lumos_1234\n")
-        welcome = _recv_until(s, b"> ")
+        welcome = _recv_until(s, PROMPT)
         results.append(
             (
                 "LOG IN: register scout@smoke",
