@@ -34,6 +34,7 @@ Labels: VISION · RESEARCH · SPECIFIED · PROTOTYPED · INTEGRATED · PROVEN ·
 | **Functional Project Hub (enter + inspect a Seed)** | **PROTOTYPED** | `parts/seedlab/project_hub.py` (MOD-10.053) — a Seed location that renders identity/status/facets as a text `look` + its sub-verbs AND a versioned structured client contract, both from one source of truth; empty facets read "none yet (Stage N)" |
 | **Local source connector (read-only, path-bounded)** | **PROTOTYPED** | `parts/seedlab/source_connector.py` (MOD-10.054) — register a local dir with provenance; list/search/read only approved files; refuses traversal, absolute paths, symlink escapes, and a secret denylist; feeds the Hub's `sources` facet |
 | **Source → project model (persisted, honest)** | **PROTOTYPED** | `parts/seedlab/source_modeler.py` (MOD-10.055) + `model_store.py` (MOD-10.056) — extract a `ProjectModel` from a registered source (identity/entities/interfaces/provenance derived; everything else marked in `unknowns`), persist it (survives restart), and light up the Hub's `models` facet linked to source evidence |
+| **Controlled build/test execution** | **PROTOTYPED** | `parts/seedlab/tool_runner.py` (MOD-10.057) — run an allowlisted, shell-free command inside an approved source with cwd boundary + timeout + output cap + secret redaction; refuse an unlisted profile; persist each run (`FileRunLog`, survives restart) into the Hub's `builds`/`tests` facets |
 | Repo / IDE / API / DB connectors (remote) | **VISION** | remote repo/IDE/DB connectors not built; local FS connector is the first real one |
 | Multi-AI-provider connector | **VISION** | internal AI helpers exist, not a provider connector |
 | Reverse-engineering / walkthrough-to-world | **VISION** | — |
@@ -138,12 +139,26 @@ honored literally: never claim complete automated understanding. `ProjectModel` 
 facet, each linked back to its source. Full flow integration-tested: register → model → persist →
 the Hub's `models` facet and structured contract both show it.
 
+## Slice 7 (PROTOTYPED, shipped): controlled build/test execution (Stage 5)
+
+`parts/seedlab/tool_runner.py` (MOD-10.057) is the controlled-execution primitive. `run_tool` runs an
+**allowlisted** command (a fixed, shell-free argv — an unlisted profile is refused and never executes)
+inside the connected source (`cwd` bound to its resolved root), under a **timeout** and **output cap**,
+with captured output **secret-redacted** (key blocks, `token=`/`password=` values). A non-zero exit is
+the result, not a crash. Each run is a `ToolRunResult` persisted by a `FileRunLog` (append-only JSONL
+per Seed, survives restart) and labelled into the Hub's `builds`/`tests` facets. It reuses the
+FailsafeRunner pattern but binds cwd to the source. **Honest scope:** this executes code from the
+approved source; the fences bound it, and stronger isolation (containers/namespaces) is the future
+hardening the directive names as "sandboxing where practical."
+
 ## Next slices (roadmap, each an isolated vertical step)
 
-1. A **MUD `model`/`seed` verb** + a Master-Client panel over `render_status`/`contract`/`render_model`
-   (enter and inspect a Seed and its model live in the running MUD, not just the seedlab CLI).
-2. One **controlled build/test action** (Stage 5): an allowlisted, timeout-bounded, output-captured,
-   audited runner over an approved source — reusing the existing `FailsafeRunner` where it fits.
-3. The **first generated non-game target** (Stage 6): a small original **CLI app** (Josh's call,
-   2026-08-01) generated from a validated model, with tests + provenance + checksums — closing the
-   directive's first end-to-end vertical slice and proving the platform *generalizes* past the game.
+1. The **first generated non-game target** (Stage 6): a small original **CLI app** (Josh's call,
+   2026-08-01) generated from a validated model, with generated tests + provenance + checksums, then
+   **run through Stage 5's runner to prove it works** — closing the directive's first end-to-end
+   vertical slice (`prompt → Seed → source → model → build/test → target → recover`) and proving the
+   platform *generalizes* past the game. Public deployment of the target is a separate, gated step.
+2. A **MUD `model`/`seed` verb** + a Master-Client panel over `render_status`/`contract`/`render_model`
+   (enter and inspect a Seed, its model, and its runs live in the running MUD, not just the CLI).
+3. **Hardware extraction** (Stage 7): harvest the connector, model schema, model store, and runner as
+   Hardware Store candidates once the vertical slice is proven end to end.
