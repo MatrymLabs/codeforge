@@ -8,8 +8,13 @@
 # recipe (a role, subareas, a livelihood, a conflict, a rumour, a clue to the larger world, a
 # revisitable change) at AAA density -- a place, not a signpost. The old-world cistern under the
 # granary is Veridia's canon identity made concrete: ordinary life over forgotten abundance
-# infrastructure, shown through function. Loaded by parts/world/authored_towns.py; its quests are
-# seeds/aethryn/quests/greenhold_intro.yaml (the cistern) and greenhold_fields.yaml (the beast).
+# infrastructure, shown through function. Below the undercroft a deep old-world stair drops to THE
+# SOURCE: the region-integrated delve where the cradle's four works (Greenhold's fountain, Riverbend's
+# weir, Elderwatch's beacon, Sunmeadow's sun-channel) are revealed as one machine, guarded by an elite
+# Warden far above the cradle band -- an off-path challenge with a prize above main-path gear (the
+# moltenhold pattern: a town with an internal dungeon). Loaded by parts/world/authored_towns.py; its
+# quests are seeds/aethryn/quests/greenhold_intro.yaml (the cistern), greenhold_fields.yaml (the beast),
+# and greenhold_source.yaml (the delve to the Reservoir-Heart).
 
 rooms:
   greenhold_market:
@@ -38,9 +43,50 @@ rooms:
     name: The Granary Undercroft
     desc: >-
       A cold vaulted cellar older than the granary raised over it. A ring of pale, untarnished metal
-      and a seized valve mark an ancient fountain-head, its workings long forgotten. Water stains
-      climb the walls. Stairs climb back UP.
-    exits: {up: greenhold_granary}
+      and a seized valve mark an ancient fountain-head, its workings long forgotten. Behind the
+      fountain-head a later crack has opened on a black stair going further DOWN than any cistern
+      needs, cold clean air breathing up from it. Stairs climb back UP.
+    exits: {up: greenhold_granary, down: greenhold_deepstair}
+  greenhold_deepstair:
+    name: The Deep Stair
+    desc: >-
+      A landing on an old-world stair that drops far below the undercroft, cut from the same pale stone
+      as the fountain-head above. A travelling scholar has made a lamplit camp here among his notebooks,
+      unwilling to go lower alone. Four faint conduits run down into the dark past him. The undercroft
+      is back UP; the old works go further DOWN.
+    exits: {up: greenhold_undercroft, down: source_gallery}
+  source_gallery:
+    name: The Gallery of Names
+    desc: >-
+      A long old-world gallery where four conduits run side by side, each graven with a mark worth a
+      scholar's year to read: a fountain, a weir, a beacon, a sun. A tender-automaton walks the gallery
+      still, keeping a watch its makers set and never lifted. The deep stair is back UP; the works go
+      further DOWN. (These foes far outmatch a new hero: come back stronger.)
+    exits: {up: greenhold_deepstair, down: source_channelworks}
+  source_channelworks:
+    name: The Channel-Junction
+    desc: >-
+      The heart-junction of the whole cradle, where one great conduit splits into the four that feed
+      Greenhold, Riverbend, Elderwatch, and Sunmeadow, each gate labelled in the old hand. A sentinel of
+      pale metal holds the split, heavier and quicker than the tender above. A narrow fissure has cracked
+      the NORTH wall into a sealed alcove; the gallery is back UP, and the great work drops DOWN.
+    exits: {up: source_gallery, down: source_heart, north: source_vault}
+  source_vault:
+    name: The Keeper's Vault
+    desc: >-
+      A sealed keeper's cell behind the cracked wall, dry and untouched since the works were young. On a
+      pale stone stand rests a charm left by whoever last tended this place, set down as if they meant to
+      return within the hour and never did. The fissure back to the junction is SOUTH.
+    exits: {south: source_channelworks}
+  source_heart:
+    name: The Reservoir-Heart
+    desc: >-
+      The heart of the Source: a vast domed chamber around a stilled black engine, the reservoir from
+      which all the cradle's old works once drank and by whose clock they kept their gentle order. The
+      Warden of the Source stands over it, the last and greatest of the keepers, and it does not mean to
+      let the sleeping engine be touched. A keystone rests in a cradle at the engine's foot, and a graven
+      master-record rings the dome. The junction is back UP.
+    exits: {up: source_channelworks}
   greenhold_fields:
     name: The Green Fields
     desc: >-
@@ -179,9 +225,78 @@ npcs:
     xp: 22
     level: 4
     tier: normal
+  # The deep descent below the undercroft: a scholar who sends you down, and the three keepers of the
+  # Source. These far outmatch the cradle band -- an elite, off-path challenge, not the starter path.
+  source_scholar:
+    name: Scholar Ilric
+    keywords: [ilric, scholar]
+    location: greenhold_deepstair
+    dialogue:
+      - >-
+        "Stand a moment, traveller, and look where you are standing. I have read every parish and grange
+        and watch record in this valley, and they all say the same impossible thing: Greenhold's fountain,
+        Riverbend's weir, Elderwatch's beacon, Sunmeadow's channel, all one machine, and this stair its
+        throat. I am too old and too soft to go DOWN and prove it. You may not be. Reach the heart, end
+        whatever keeps it, and bring the valley the truth of what feeds it. The Knowing owes a debt to those who go and see."
+    topics:
+      source:
+        - >-
+          "Four old works, one heart. The cradle has lived a thousand years on abundance it never built
+          and cannot mend, and here is the well it all drank from. Go down the gallery, past the junction
+          where the four conduits split, to the reservoir-heart. And mind the keepers. The makers set
+          watchers, and the watchers do not know their work is done."
+      warden:
+        - >-
+          "At the heart, if the tales are true, stands the last keeper: a Warden built to guard the
+          reservoir against any hand, friend or thief, and it cannot tell the difference after so long.
+          It will not stand aside. You will have to put it down to stand where it stands. It is no cradle
+          boar, mind. Go strong, or do not go."
+      ilric:
+        - >-
+          "A scholar of the old works, and honest enough to know I am better at reading of them than
+          walking into them. Someone must set down what the valley is truly built on, before the last of
+          it fails and no one left even remembers to be grateful. Go, and I will write down what you find."
+    hp: 0
+  source_tender:
+    name: a gallery tender-automaton
+    keywords: [tender, automaton, tender-automaton]
+    location: source_gallery
+    dialogue:
+      - The tender turns on you with the slow certainty of a thing that has done this a thousand years, pale limbs unfolding.
+    aggressive: true
+    hp: 92
+    atk: 13
+    xp: 40
+    level: 8
+    tier: normal
+  source_sentinel:
+    name: the junction sentinel
+    keywords: [sentinel, junction, junction-sentinel]
+    location: source_channelworks
+    dialogue:
+      - The sentinel steps off the split to bar you, quicker and heavier than the tender, old metal singing as it moves.
+    aggressive: true
+    hp: 124
+    atk: 16
+    xp: 55
+    level: 10
+    tier: normal
+  source_warden:
+    name: the Warden of the Source
+    keywords: [warden, source-warden, keeper]
+    location: source_heart
+    dialogue:
+      - The Warden rises over the stilled engine, vast and pale and terribly patient, and levels a keeper's judgement at you that a thousand years has not softened.
+    aggressive: true
+    hp: 228
+    atk: 22
+    xp: 120
+    level: 14
+    tier: elite
+    attack_element: LGT
 
 # The item the cistern quest turns on, plus a readable parish record for anyone who likes to know a
-# place before they trust it.
+# place before they trust it, and the deep Source's rewards and master-record.
 items:
   greenhold_valve_key:
     name: a corroded valve-key
@@ -200,3 +315,25 @@ items:
       three centuries dead, reads: "The good water failed again this Spring, and was woken again by a
       stranger's hand, as the elders say it was in their grandmothers' time. We do not write down how.
       We only write that Greenhold has never yet gone thirsty, and pray the pattern holds."
+  veridia_source_charm:
+    name: the keeper's charm
+    keywords: [charm, keeper-charm, keeper]
+    location: source_vault
+    slot: accessory_1
+    mods: {DEF: 4, EVA: 4}
+  veridia_source_keystone:
+    name: the heart-keystone of the Source
+    keywords: [keystone, heart-keystone, source]
+    location: source_heart
+    slot: accessory_2
+    mods: {ATK: 6, MAG DEF: 4}
+  veridia_source_record:
+    name: the Source master-record
+    keywords: [master-record, source-record, dome]
+    location: source_heart
+    lore: >-
+      A single unbroken line of the old hand graven around the whole dome, above the stilled engine. It
+      names no king and dates no year. It reads only: "Here the water is kept and measured, and let out
+      by sun and season and need, that the valley above need never thirst, nor flood, nor go dark, nor
+      brown, and never know it is kept at all. Let the keepers hold it gently. Let the valley forget us,
+      and be well." The engine has kept the promise long after the keepers, and the promise, were forgotten.
