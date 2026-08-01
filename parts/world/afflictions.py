@@ -33,6 +33,33 @@ def apply_dot(session: Session, name: str, damage: int, ticks: int = DOT_TICKS) 
     session.afflictions[name] = {"damage": max(1, damage), "ticks": max(1, ticks)}
 
 
+def apply_regen(session: Session, name: str, heal: int, ticks: int = DOT_TICKS) -> None:
+    """Lay (or refresh) a heal-over-time BOON on a hero: it restores `heal` HP each world beat for
+    `ticks` beats (capped at maximum). The friendly mirror of `apply_dot`. It lives in
+    `session.regens`, NOT `session.afflictions`, so `cleanse` (which purges harm) never strips it."""
+    session.regens[name] = {"heal": max(1, heal), "ticks": max(1, ticks)}
+
+
+def tick_regens(session: Session) -> str:
+    """On the world beat: restore each heal-over-time boon (capped at max HP), age it, drop the
+    expired. Returns the lines the player sees, or ''. The mirror of `tick_afflictions`."""
+    lines: list[str] = []
+    for name in list(session.regens):
+        boon = session.regens[name]
+        hp = session.resources.get("hp")
+        if hp is not None and hp.current < hp.maximum:
+            before = hp.current
+            session.resources["hp"] = hp.heal(boon["heal"])
+            gained = session.resources["hp"].current - before
+            hp = session.resources["hp"]
+            lines.append(f"The {name} mends you for {gained}. (HP {hp.current}/{hp.maximum})")
+        boon["ticks"] -= 1
+        if boon["ticks"] <= 0:
+            del session.regens[name]
+            lines.append(f"The {name} fades.")
+    return "\n".join(lines)
+
+
 def apply_daze(session: Session, beats: int) -> None:
     """Daze the player for `beats` world beats: their offensive actions are lost until it wears off.
     Refreshes to the LONGER of current and new duration, so a fresh daze never shortens a stun."""
