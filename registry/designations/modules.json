@@ -7451,5 +7451,51 @@
     "aliases": [],
     "created": "2026-08-01",
     "updated": "2026-08-01"
+  },
+  {
+    "designation": "MOD-05.015",
+    "name": "contract",
+    "status": "active",
+    "function": "pin the shape a consumer depends on so a breaking provider change fails a test",
+    "label": "contract",
+    "file": "parts/shelf/contract.py",
+    "type": "MOD",
+    "domain": "05",
+    "docs": "docs/hardware_store/patterns/testing.md",
+    "tests": "tests/test_contract.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "consumer-driven contract testing fixture; provider verifies every consumer's shape (tolerant reader)",
+    "tags": [
+      "module"
+    ],
+    "notes": "R&D Full-Stack Climb adoption (docs/rd, AP-03/AP-07); clean-room from a public pattern.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-08-01",
+    "updated": "2026-08-01"
+  },
+  {
+    "designation": "MOD-05.016",
+    "name": "jobqueue",
+    "status": "active",
+    "function": "a durable work queue with a visibility lease, retries, and dead-lettering",
+    "label": "jobqueue",
+    "file": "parts/shelf/jobqueue.py",
+    "type": "MOD",
+    "domain": "05",
+    "docs": "docs/hardware_store/patterns/eventing.md",
+    "tests": "tests/test_jobqueue.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "durable work queue; competing consumers, visibility-lease redelivery + fencing token; composes with dead_letter",
+    "tags": [
+      "module"
+    ],
+    "notes": "R&D Full-Stack Climb adoption (docs/rd, AP-03/AP-07); clean-room from a public pattern.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-08-01",
+    "updated": "2026-08-01"
   }
 ]

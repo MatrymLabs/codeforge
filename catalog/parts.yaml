@@ -1512,3 +1512,54 @@
     government: guaranteed delivery of a records-change notification with an audit trail
     security: at-least-once delivery with idempotent consumers; poison messages dead-lettered
     general: durable producer-side messaging for any state-change-plus-publish flow
+
+- id: contract-jig
+  name: Contract Jig
+  source: parts/shelf/contract.py
+  category: testing
+  tags:
+  - contract-testing
+  - consumer-driven
+  - tolerant-reader
+  - api
+  - integration
+  maturity: beta
+  source_status: original
+  license: MIT
+  influence: consumer-driven contract testing (the Pact concept) + the tolerant-reader pattern (clean-room)
+  experimental: 'add format/range/enum constraints, a versioned contract-evolution policy, and a broker-based Pact exchange once contracts must cross organizational boundaries. Traded away (v1): a broker and non-shape constraints, keeping in-repo code contracts.'
+  risk: low
+  purpose: 'Pin the shape a consumer depends on so a provider change that drops or retypes a field a client reads fails a provider-side test, not at runtime. The consumer declares the fields it reads; a registry collects them; the provider verifies its actual response against every consumer contract, tolerant-reader style (extra provider fields fine; missing or retyped required fields fail) with a precise nested path.
+
+    '
+  reuse:
+    game: pin the shapes the Master Client reads from the game API so a server change cannot silently break it
+    finance: guard the response shape a downstream ledger/report consumer depends on
+    government: verify a records-API response still satisfies each integrating agency
+    security: catch a breaking API change in CI instead of in production
+    general: consumer-driven contract testing for any client<->server boundary
+- id: job-queue
+  name: Job Queue
+  source: parts/shelf/jobqueue.py
+  category: messaging
+  tags:
+  - work-queue
+  - visibility-timeout
+  - fencing-token
+  - at-least-once
+  - dead-letter
+  maturity: beta
+  source_status: original
+  license: MIT
+  influence: the competing-consumers work queue with a visibility timeout (SQS) + fencing tokens (Kleppmann) (clean-room)
+  experimental: 'back jobs in a table with a (status, deadline) index (claim becomes O(log n)), add priority and delayed jobs, and past a single node move to Redis/RabbitMQ. Traded away (v1): a durable store and concurrent-relay claims, keeping an in-memory reference core.'
+  risk: low
+  purpose: 'Distribute work to competing consumers so one worker claims a job under a visibility lease, and if that worker crashes the job is redelivered to another without both completing it. A monotonic fencing token (minted at claim, re-minted on reclaim) rejects a revived crashed worker''s ack; poison jobs dead-letter at a max-attempts bound. Delivery is at-least-once; consumers must be idempotent.
+
+    '
+  reuse:
+    game: durable world-upkeep or send jobs; a crashed worker''s job is not lost
+    finance: never lose a payment/settlement job when a worker dies mid-process
+    government: guaranteed at-least-once processing of a records or notification job
+    security: bounded retries + dead-letter for poison work; no double-completion
+    general: a durable background work queue for any state-change-plus-process flow
