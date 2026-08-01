@@ -78,3 +78,11 @@ rally:
   mp_cost: 4
   cooldown: 3
   jobs: [vanguard]
+
+siphon:
+  name: Siphon
+  kind: drain  # lifesteal: strike the foe and recover half the damage as HP
+  power: 6
+  scales: magic
+  mp_cost: 4
+  jobs: [artificer]
