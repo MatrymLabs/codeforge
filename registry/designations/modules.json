@@ -7660,6 +7660,31 @@
     "updated": "2026-08-01"
   },
   {
+    "designation": "MOD-10.052",
+    "name": "kernel",
+    "status": "active",
+    "function": "Seed identity + lifecycle: create/get/list/start/stop/archive a Seed as an addressable entity with owner authorization, an audit trail, and file-backed persistence that survives restart -- independent of any game world",
+    "label": "kernel",
+    "file": "parts/seedlab/kernel.py",
+    "type": "MOD",
+    "domain": "10",
+    "docs": "docs/seed_platform/RECENTERING.md",
+    "tests": "tests/test_kernel.py",
+    "depends_on": [],
+    "related": [
+      "MOD-10.051"
+    ],
+    "reuse": "",
+    "tags": [
+      "module"
+    ],
+    "notes": "Stage 1 of the Seed Platform Production Directive (the /home/josh/Projects/Codeforge prompt). The Seed Kernel: a Seed becomes a first-class persistent entity distinct from the FORGE_SEED game-data pack. Isolated in parts/seedlab/, no parts/world/ import; runtime 'start' is the lifecycle state machine + a persisted session, not yet a spawned server process.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-08-01",
+    "updated": "2026-08-01"
+  },
+  {
     "designation": "MOD-05.022",
     "name": "corpus",
     "status": "active",
