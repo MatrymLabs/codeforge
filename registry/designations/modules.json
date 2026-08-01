@@ -7343,7 +7343,7 @@
     "status": "active",
     "function": "the designed coin economy: audit faucets (foe drops) vs sinks (repair, the fall)",
     "label": "coin_flow",
-    "file": "parts/world/coin_flow.py",
+    "file": "parts/coin_flow.py",
     "type": "MOD",
     "domain": "04",
     "docs": "docs/architecture.md",

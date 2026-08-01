@@ -358,7 +358,7 @@ world-check:
 # The Assayer: read-only audit of the DESIGNED coin economy (faucets vs sinks) over the
 # assembled Aethryn world, so live-ops can read the balance without instrumenting the server.
 economy-audit:
-	@FORGE_SEED=aethryn python3 -c "import parts.world.world; from parts.world.npcs import NPCS; from parts.world.coin_flow import render_audit; print(render_audit(NPCS))"
+	@FORGE_SEED=aethryn python3 -c "import parts.world.world; from parts.world.npcs import NPCS; from parts.coin_flow import render_audit; print(render_audit(NPCS))"
 
 store:
 	python3 -m parts.store
