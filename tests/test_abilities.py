@@ -103,9 +103,31 @@ def test_aethryn_iconic_kits_have_depth_and_variety() -> None:
         for job in a["jobs"]:
             per[job] += 1
             kinds[job].add(a["kind"])
-    for job in ("berserker", "duelist", "ranger", "elementalist", "stormcaller", "scout"):
+    iconic = (
+        # batch 1
+        "berserker",
+        "duelist",
+        "ranger",
+        "elementalist",
+        "stormcaller",
+        "scout",
+        # batch 2 (the formerly-thin callings)
+        "pathfinder",
+        "summoner",
+        "templar",
+        "engineer",
+        "artificer",
+        "mechanist",
+        "beastmaster",
+        "geomancer",
+        "runesmith",
+    )
+    for job in iconic:
         assert per[job] >= 5, f"{job} kit is thin ({per[job]} abilities)"
         assert len(kinds[job]) >= 2, f"{job} kit is one-note ({kinds[job]})"
+    # no playable calling is left at kill-only (<=2) depth after the density passes
+    thin = sorted(j for j, c in per.items() if j != "template" and c < 3)
+    assert not thin, f"callings still at kill-only depth: {thin}"
 
 
 @pytest.mark.parametrize("job", ["vanguard", "scholar", "artificer", "engineer"])

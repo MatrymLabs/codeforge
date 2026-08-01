@@ -728,3 +728,233 @@ deadeye:
   mp_cost: 5
   cooldown: 3
   jobs: [gunsmith]
+
+# === Kit density, batch 2: the remaining thin callings get their coherent ~5-ability role kits. ===
+
+# Pathfinder -- survival ranger: a snare, a venom trap, a quick shot.
+trappers_snare:
+  name: Trapper's Snare
+  kind: weaken
+  power: 2
+  mp_cost: 3
+  cooldown: 3
+  jobs: [pathfinder]
+venom_trap:
+  name: Venom Trap
+  kind: brand
+  power: 5
+  scales: speed
+  mp_cost: 4
+  cooldown: 2
+  element: PSN
+  jobs: [pathfinder]
+snap_shot:
+  name: Snap Shot
+  kind: strike
+  power: 8
+  scales: speed
+  mp_cost: 3
+  jobs: [pathfinder]
+
+# Summoner -- pact caster: an eldritch bolt, a soul-bond lifesteal, a familiar empower.
+eldritch_bolt:
+  name: Eldritch Bolt
+  kind: strike
+  power: 9
+  scales: magic
+  mp_cost: 4
+  element: DRK
+  jobs: [summoner]
+soul_bond:
+  name: Soul Bond
+  kind: drain
+  power: 7
+  scales: magic
+  mp_cost: 4
+  cooldown: 2
+  element: DRK
+  jobs: [summoner]
+empower_familiar:
+  name: Empower Familiar
+  kind: buff
+  power: 3
+  mp_cost: 4
+  cooldown: 3
+  jobs: [summoner]
+
+# Templar -- holy knight: a taunt, a blessing, a smite (a second tank-capable calling).
+holy_challenge:
+  name: Holy Challenge
+  kind: taunt
+  power: 0
+  mp_cost: 3
+  cooldown: 2
+  jobs: [templar]
+blessing:
+  name: Blessing
+  kind: buff
+  power: 3
+  mp_cost: 4
+  cooldown: 3
+  jobs: [templar]
+radiant_smite:
+  name: Radiant Smite
+  kind: strike
+  power: 10
+  scales: wisdom
+  mp_cost: 5
+  cooldown: 2
+  element: HLY
+  jobs: [templar]
+
+# Engineer -- tech control: an EMP daze, an overload, a corrosive charge.
+emp_burst:
+  name: EMP Burst
+  kind: daze
+  power: 2
+  mp_cost: 4
+  cooldown: 4
+  jobs: [engineer]
+overload_surge:
+  name: Overload Surge
+  kind: strike
+  power: 9
+  scales: magic
+  mp_cost: 4
+  element: LGT
+  jobs: [engineer]
+corrosive_charge:
+  name: Corrosive Charge
+  kind: weaken
+  power: 2
+  mp_cost: 3
+  cooldown: 3
+  jobs: [engineer]
+
+# Artificer -- tinker DPS: an incendiary bomb, a siphon coil, a precision bolt.
+incendiary_bomb:
+  name: Incendiary Bomb
+  kind: brand
+  power: 6
+  scales: magic
+  mp_cost: 4
+  cooldown: 2
+  element: FIR
+  jobs: [artificer]
+siphon_coil:
+  name: Siphon Coil
+  kind: drain
+  power: 7
+  scales: magic
+  mp_cost: 4
+  cooldown: 2
+  element: LGT
+  jobs: [artificer]
+precision_bolt:
+  name: Precision Bolt
+  kind: strike
+  power: 9
+  scales: magic
+  mp_cost: 4
+  jobs: [artificer]
+
+# Mechanist -- war machines: a stun bot, a laser lance, a rust field.
+stun_bot:
+  name: Stun Bot
+  kind: daze
+  power: 2
+  mp_cost: 4
+  cooldown: 4
+  jobs: [mechanist]
+laser_lance:
+  name: Laser Lance
+  kind: strike
+  power: 10
+  scales: magic
+  mp_cost: 5
+  cooldown: 2
+  element: LGT
+  jobs: [mechanist]
+rust_field:
+  name: Rust Field
+  kind: weaken
+  power: 2
+  mp_cost: 3
+  cooldown: 3
+  jobs: [mechanist]
+
+# Beastmaster -- the wild: a rabid bite, a maul, an intimidate.
+rabid_bite:
+  name: Rabid Bite
+  kind: brand
+  power: 5
+  scales: strength
+  mp_cost: 4
+  cooldown: 2
+  element: PSN
+  jobs: [beastmaster]
+savage_maul:
+  name: Savage Maul
+  kind: strike
+  power: 10
+  scales: strength
+  mp_cost: 4
+  cooldown: 2
+  jobs: [beastmaster]
+intimidate:
+  name: Intimidate
+  kind: weaken
+  power: 2
+  mp_cost: 3
+  cooldown: 3
+  jobs: [beastmaster]
+
+# Geomancer -- the earth: a tremor stun, an entomb, a boulder (has Stonefall).
+tremor:
+  name: Tremor
+  kind: daze
+  power: 2
+  mp_cost: 5
+  cooldown: 4
+  jobs: [geomancer]
+entomb:
+  name: Entomb
+  kind: weaken
+  power: 2
+  mp_cost: 4
+  cooldown: 3
+  jobs: [geomancer]
+boulder_toss:
+  name: Boulder Toss
+  kind: strike
+  power: 11
+  scales: stamina
+  mp_cost: 5
+  cooldown: 2
+  element: ERT
+  jobs: [geomancer]
+
+# Runesmith -- graven power: a rune of power, a searing rune, a rune blast.
+rune_of_power:
+  name: Rune of Power
+  kind: buff
+  power: 3
+  mp_cost: 4
+  cooldown: 3
+  jobs: [runesmith]
+searing_rune:
+  name: Searing Rune
+  kind: brand
+  power: 6
+  scales: magic
+  mp_cost: 4
+  cooldown: 2
+  element: FIR
+  jobs: [runesmith]
+runic_blast:
+  name: Runic Blast
+  kind: strike
+  power: 9
+  scales: magic
+  mp_cost: 4
+  jobs: [runesmith]
