@@ -783,7 +783,7 @@ _FOE_TUNING: dict[str, dict[str, Any]] = {
     },
     "dreadmaw_hold_guardian": {
         "trailing": [
-            'special: {kind: mend, telegraph: "The dreadmaw\'s torn flesh writhes, '
+            "special: {kind: mend, telegraph: \"The dreadmaw's torn flesh writhes, "
             'knitting itself whole", heal: 100, cadence: 3}'
             "  # a flesh-maw that regrows: enraged, it knits its wounds -- a DPS race",
         ],
