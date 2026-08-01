@@ -7878,6 +7878,33 @@
     "updated": "2026-08-01"
   },
   {
+    "designation": "MOD-10.061",
+    "name": "reference_seed",
+    "status": "active",
+    "function": "Stage 8 (first brick): register the Aethryn game as a reference Seed in the Kernel (the game is one KIND of Seed, consuming the same Kernel), idempotently and with a stable id; game-agnostic (adds nothing game-specific to the Kernel); makes the game appear in `workspace list` beside engineering Seeds",
+    "label": "reference_seed",
+    "file": "parts/seedlab/reference_seed.py",
+    "type": "MOD",
+    "domain": "10",
+    "docs": "docs/seed_platform/RECENTERING.md",
+    "tests": "tests/test_reference_seed.py",
+    "depends_on": [
+      "MOD-10.052"
+    ],
+    "related": [
+      "MOD-10.060"
+    ],
+    "reuse": "",
+    "tags": [
+      "module"
+    ],
+    "notes": "Stage 8 of the Seed Platform directive: 'Aethryn as reference Seed'. First brick - registers the game as a Seed without re-homing the whole game onto the Kernel (that is a later program). Honors 'do not make game concepts mandatory for non-game Seeds'. Isolated in parts/seedlab/.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-08-01",
+    "updated": "2026-08-01"
+  },
+  {
     "designation": "MOD-05.022",
     "name": "corpus",
     "status": "active",

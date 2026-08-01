@@ -33,8 +33,10 @@ def _owner() -> Session:
 
 
 # --- unit: dispatch over an injected Kernel ----------------------------------------------------
-def test_list_is_empty_by_default() -> None:
-    assert "No workspaces yet" in workspace_command(_owner(), "list", kernel=_kernel())
+def test_list_always_shows_the_reference_game_seed() -> None:
+    # Stage 8: the flagship game is one kind of Seed, so it always appears in the workspace list.
+    out = workspace_command(_owner(), "list", kernel=_kernel())
+    assert "Aethryn" in out and "reference game" in out
 
 
 def test_create_then_list_status_start_stop() -> None:

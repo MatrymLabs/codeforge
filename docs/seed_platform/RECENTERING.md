@@ -38,6 +38,7 @@ Labels: VISION · RESEARCH · SPECIFIED · PROTOTYPED · INTEGRATED · PROVEN ·
 | **First generated target (a runnable CLI)** | **PROTOTYPED** | `parts/seedlab/cli_generator.py` (MOD-10.058) — generate a small, runnable Python CLI from a validated model (reproducible, sha256-checksummed, provenance-carrying); `validate_runs`/`validate_tests` prove it RUNS and its generated tests PASS via the Stage-5 runner. **Closes the First Platform Proof: source → model → generate → run → tests pass → artifact.** |
 | **Hardware extraction (proven mechanisms → cards)** | **PROTOTYPED** | 6 Hardware Store cards in `catalog/parts.yaml` (path-bounded-reader, provenance-record, file-record-store, lifecycle-state-machine, controlled-tool-runner, reproducible-generator), each citing real seedlab code, honestly `maturity: prototype` (candidates, not promoted prematurely) |
 | **In-MUD `workspace` verb (THE SEED IS THE MUD, in-world)** | **PROTOTYPED** | `parts/seedlab/workspace_verb.py` (MOD-10.060) + `forge.py` (CMD-10.032, CORE/owner) — an owner lists/creates/inspects/starts/stops engineering Seeds and lists their models from inside the running MUD; the text half of the workspace surface (GMCP half: `workspace_gmcp.py`, #727) |
+| **Aethryn as a reference Seed (the game is one *kind* of Seed)** | **PROTOTYPED** | `parts/seedlab/reference_seed.py` (MOD-10.061) — idempotently registers the flagship game as a Seed in the same Kernel (game-agnostic; adds nothing game-specific), so `workspace list` shows Aethryn `[reference game]` beside engineering Seeds. First brick of Stage 8 (full re-home is a later program) |
 | Repo / IDE / API / DB connectors (remote) | **VISION** | remote repo/IDE/DB connectors not built; local FS connector is the first real one |
 | Multi-AI-provider connector | **VISION** | internal AI helpers exist, not a provider connector |
 | Reverse-engineering / walkthrough-to-world | **VISION** | — |
@@ -191,10 +192,20 @@ GMCP client half is `parts/seedlab/workspace_gmcp.py` (#727), reading the same s
 two never drift. An engine-tick test proves reachability + the owner gate + persistence across the
 tick. "THE SEED IS THE MUD" is now literally true in-world, not just in the CLI.
 
+## Slice 11 (PROTOTYPED, shipped): Aethryn as a reference Seed (Stage 8, first brick)
+
+`parts/seedlab/reference_seed.py` (MOD-10.061) proves the recenter's core claim concretely: the
+flagship GAME is one *kind* of Seed. `ensure_reference_seed` idempotently registers Aethryn in the
+same Kernel using only standard fields (name/owner/purpose/id) — it adds **nothing game-specific** to
+the Kernel, honoring "do not make Aethryn's game concepts mandatory for non-game Seeds." The
+`workspace list` verb ensures it, so the game shows up `[reference game]` beside engineering Seeds. It
+survives restart and never duplicates. This is the **first brick** of Stage 8; fully re-homing the
+game (accounts, navigation, combat, ... all consuming the Kernel) is a later program, not one slice.
+
 ## Next slices (roadmap, each an isolated vertical step)
 
-1. **Aethryn as reference Seed** (Stage 8): align the game onto the same Kernel, without making its
-   game concepts mandatory for non-game Seeds.
+1. Fully re-home Aethryn onto the Kernel (Stage 8 proper): the persistent world, accounts, and
+   lifecycle consuming the same foundations — a multi-slice program, kept game-agnostic at the Kernel.
 2. Wire the `workspace` verb's `model` path to a real in-MUD **connect + model** flow (register a
    source and run `source_modeler` from in-world), so the `models` facet fills without the CLI.
 3. Promote the strongest cards from `prototype` → `beta` once a second consumer proves each outside

@@ -56,14 +56,14 @@ def workspace_command(
     rest = parts[1:]
 
     if sub in ("list", "ls"):
-        seeds = kernel.list_seeds()
-        if not seeds:
-            return "No workspaces yet. Create one: workspace create <name> [purpose]"
-        lines = ["== Engineering Workspaces =="]
+        from parts.seedlab.reference_seed import ensure_reference_seed, is_reference_seed
+
+        ensure_reference_seed(kernel)  # the flagship game is one kind of Seed; it always appears
+        lines = ["== Workspaces (engineering Seeds; the game is the reference Seed) =="]
         lines += [
-            f"  {r.identity.seed_id}  {r.status.upper():8}  {r.identity.name}  "
-            f"(owner: {r.identity.owner})"
-            for r in seeds
+            f"  {r.identity.seed_id}  {r.status.upper():8}  {r.identity.name}"
+            f"{'  [reference game]' if is_reference_seed(r) else ''}  (owner: {r.identity.owner})"
+            for r in kernel.list_seeds()
         ]
         return "\n".join(lines)
 
