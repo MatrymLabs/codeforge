@@ -1868,3 +1868,58 @@
     security: get an executive summary of a repo
     compliance: a single honest reverse-engineering report
     general: the Reverse-Engineering Lab unifier
+
+- id: sbfl
+  name: SBFL
+  source: parts/shelf/sbfl.py
+  category: analysis
+  tags: [fault-localization, debugging, testing, coverage, suggest-only]
+  maturity: beta
+  source_status: original
+  license: MIT
+  influence: the Automating Debugging/Fixing/Optimization brief - R&D Debugging Lab (docs/rd EXP-24..26; clean-room stdlib)
+  experimental: 'wire to real coverage.py per-test contexts (sbfl) and a sampling profiler (hotspots). Traded away (v1): live suite integration, keeping a proven injected-spectrum core.'
+  risk: low
+  purpose: 'Rank suspicious program elements from a test spectrum (which tests covered what + pass/fail) via Tarantula/Ochiai/DStar/Jaccard/Op2. SUGGEST-ONLY by evidence - the ICSE-2017 caveat (artificial-fault rankings do not transfer to real faults) rides on every report; it is a hint, never a verdict.'
+  reuse:
+    game: point at the likely-faulty room or system after a failing test run
+    education: teach spectrum-based fault localization on real coverage
+    security: narrow where a regression lives before reading code
+    compliance: a deterministic, auditable debugging aid with an honest caveat
+    general: a coverage-driven suspiciousness ranker for any Python suite
+- id: ddmin
+  name: Delta Debugging
+  source: parts/shelf/ddmin.py
+  category: analysis
+  tags: [delta-debugging, debugging, minimization, testing, deterministic]
+  maturity: beta
+  source_status: original
+  license: MIT
+  influence: the Automating Debugging/Fixing/Optimization brief - R&D Debugging Lab (docs/rd EXP-24..26; clean-room stdlib)
+  experimental: 'wire to real coverage.py per-test contexts (sbfl) and a sampling profiler (hotspots). Traded away (v1): live suite integration, keeping a proven injected-spectrum core.'
+  risk: low
+  purpose: 'Shrink a failing input to a 1-minimal reproducer (removing any single element makes it pass) via Zeller''s ddmin. Deterministic and reversible; the oracle is injected so it never runs a suite itself. is_one_minimal states the guarantee; a non-deterministic oracle is detected and noted.'
+  reuse:
+    game: reduce a crashing command sequence to the minimal repro
+    education: teach delta debugging and 1-minimality
+    security: hand a bug report the smallest failing case, not a huge one
+    compliance: a deterministic, auditable debugging aid with an honest caveat
+    general: a deterministic input minimizer for any failing predicate
+- id: profile_hotspots
+  name: Profile Hotspots
+  source: parts/shelf/profile_hotspots.py
+  category: observability
+  tags: [profiling, optimization, cprofile, hotspots, performance]
+  maturity: beta
+  source_status: original
+  license: MIT
+  influence: the Automating Debugging/Fixing/Optimization brief - R&D Debugging Lab (docs/rd EXP-24..26; clean-room stdlib)
+  experimental: 'wire to real coverage.py per-test contexts (sbfl) and a sampling profiler (hotspots). Traded away (v1): live suite integration, keeping a proven injected-spectrum core.'
+  risk: low
+  purpose: 'Read a cProfile/pstats run and rank functions by self time (where the CPU is) and cumulative time (which call trees dominate). The optimization brief profile-hotspot step; the CAVEAT rides along - a hotspot is THIS-workload not universal, and no benchmark improvement + identical tests = do not merge.'
+  reuse:
+    game: find the hottest function in the world tick before optimizing
+    education: teach reading a profile - self vs cumulative time
+    security: target the real bottleneck, gated by a benchmark
+    compliance: a deterministic, auditable debugging aid with an honest caveat
+    general: a cProfile hotspot ranker for any Python workload
