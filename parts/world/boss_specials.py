@@ -7,10 +7,12 @@ may spend a beat WINDING UP (it announces the wind-up and lands no blow that bea
 beat it UNLEASHES. The wind-up is a free beat for the hero to heal, ward, or run: the fight is
 a conversation, not a slugfest.
 
-Two `kind`s of unleash give bosses mechanic VARIETY, not just flavour:
+Three `kind`s of unleash give bosses mechanic VARIETY, not just flavour:
   * `strike` (default) -- a heavier hit whose affliction is guaranteed, not merely rolled.
   * `mend`            -- the boss heals, turning the fight into a DPS race: out-damage the heal
                          or it never ends. Lands only a normal blow, not a spike.
+  * `drain`           -- vampiric: it spikes the hero AND heals itself for half the blow. Unlike
+                         `mend`, the heal RIDES the hit, so you mitigate/interrupt it, not out-DPS.
 
 Data-driven and opt-in: a boss declares a `special` ({kind?, telegraph, mult?, heal?, cadence?}) in
 the seed. The charge is deterministic once begun (a flag on the NPC, cleared on unleash) and
@@ -74,6 +76,16 @@ def unleash(npc: Npc, raw: int) -> tuple[int, str]:
         npc["hp_now"] = min(cap, before + heal)
         mended = npc["hp_now"] - before
         return raw, f"{name} knits its wounds shut (+{mended} HP) -- burn it down!"
+    if special.get("kind") == "drain":  # vampiric: spike the hero AND drink the wound to heal
+        raw_mult = special.get("mult", DEFAULT_MULT)
+        mult = raw_mult if isinstance(raw_mult, int) else DEFAULT_MULT
+        blow = max(raw + 1, raw * max(2, mult))
+        drained = max(1, blow // 2)  # heal half the spike; the heal RIDES the hit, unlike `mend`
+        cap = npc.get("hp", 0)
+        before = npc.get("hp_now", cap)
+        npc["hp_now"] = min(cap, before + drained)
+        gained = npc["hp_now"] - before
+        return blow, f"{name} drinks your wound (+{gained} HP) as it strikes -- mitigate or fall!"
     # default `strike`: a heavy spike
     raw_mult = special.get("mult", DEFAULT_MULT)
     mult = raw_mult if isinstance(raw_mult, int) else DEFAULT_MULT
