@@ -162,5 +162,5 @@ A playbook nobody has run is a wish. Run these periodically and record the resul
 - [`render-iac-deploy.md`](render-iac-deploy.md) - deploy the codeforge-iac service safely.
 - [`../reports/security/control-crosswalk.yaml`](../reports/security/control-crosswalk.yaml) - the
   controls these incidents test.
-- [`../reports/security/security-roadmap.md`](../reports/security/security-roadmap.md),
-  [`../../SECURITY.md`](../../SECURITY.md) - reporting channel and hardening status.
+- [`../reports/security/security-roadmap.md`](../reports/security/security-roadmap.md), and
+  `SECURITY.md` at the repo root - reporting channel and hardening status.
