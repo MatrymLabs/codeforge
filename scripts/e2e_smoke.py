@@ -170,9 +170,11 @@ def main() -> int:
         step("ABILITY use", s, "use power strike on dummy", ["Power Strike"])
         fight("COMBAT resolve (defeat + reward)", s, "dummy")
         step("REWARD on sheet", s, "score", ["XP", "JP"])
-        # --- QUEST accept + track ---------------------------------------------
-        step("QUEST accept", s, "quest coilward_contract accept", ["contract"])
-        step("QUEST tracked", s, "quest", ["Coilward Contract"])
+        # --- QUEST: accept -> begin -> finish -> complete ---------------------
+        step("QUEST accept", s, "quest coilward_contract accept", ["taken the contract"])
+        step("QUEST begin", s, "quest coilward_contract begin", ["underway"])
+        step("QUEST finish", s, "quest coilward_contract finish", ["fulfilled"])
+        step("QUEST complete", s, "quest", ["complete"])
         # --- SECURITY ---------------------------------------------------------
         step("SECURITY @sg denied (player)", s, "@sg item excalibur", ["Denied"])
         # --- LOG OUT ----------------------------------------------------------
