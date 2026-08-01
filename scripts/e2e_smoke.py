@@ -1,9 +1,15 @@
 #!/usr/bin/env python3
-"""End-to-end live smoke test: the whole engine, one sequence.
+"""End-to-end live smoke test: the whole engine, three real legs over TCP.
 
-Mirrors the human flow the ritual wraps -- start (server up) -> log in -> look ->
-check -> do things -> log out -> complete (server down). Every step is a real
-round-trip over the TCP gateway, asserted against expected output and timed.
+1. first-forge: the full single-player spine -- log in, look, take a calling, run the
+   read-only systems, move, fight the training dummy with a calling ability, earn the
+   reward, walk a quest to completion, and prove state survives logout + reconnect.
+2. aethryn (flagship seed): enter Veridia, take a calling and quest, dive into
+   Greenhold's undercroft, and win a real fight against the cellar-vermin.
+3. multiplayer: two players share one world -- presence broadcast, `who`, and room chat.
+
+Every step is a real round-trip over the TCP gateway, asserted against expected output
+and timed. Each leg runs its OWN isolated server on a spare port with an ephemeral DB.
 
 Safety: runs its OWN server on a spare port with an EPHEMERAL database
 (CODEFORGE_DB in a temp dir), so the real :4000 server and codeforge.db are never
