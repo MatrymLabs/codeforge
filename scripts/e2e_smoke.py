@@ -86,6 +86,22 @@ def fight(name: str, sock: socket.socket, target: str, swings: int = 15) -> str:
     return out
 
 
+def step_either(name: str, sock: socket.socket, line: str, groups: list[list[str]]) -> str:
+    """Like step(), but passes if ANY group (a list of required substrings) fully matches.
+
+    For a command whose valid output depends on optional state -- e.g. the guidance
+    library, which shows its data when mounted but a clean "not mounted" message when
+    absent (as it is in CI, where the private FGL repo isn't checked out beside us).
+    """
+    start = time.monotonic()
+    sock.sendall(line.encode() + b"\n")
+    out = _recv_until(sock, PROMPT)
+    dt = (time.monotonic() - start) * 1000
+    ok = any(all(e.lower() in out.lower() for e in grp) for grp in groups)
+    results.append((f"{name}: `{line}`", ok, dt, "" if ok else out[:100].replace("\n", " | ")))
+    return out
+
+
 def login(sock: socket.socket, handle: str, password: str, new: bool) -> None:
     _recv_until(sock, b"NEW:")
     if new:
@@ -108,10 +124,10 @@ def connect(port: int = PORT) -> socket.socket:
 
 def aethryn_journey() -> None:
     """A second leg on the FLAGSHIP seed (FORGE_SEED=aethryn): prove the Aethryn world
-    is enterable and its starter zone navigable through the tick -- Veridia spawn loads,
-    exits resolve into a town, a calling is taken, and a quest accepts. Combat there
-    rides the generated wilds (no fixed dummy), so this leg stays deterministic and
-    leaves the live-combat proof to the first-forge leg above.
+    plays end-to-end through the tick -- Veridia spawn loads, a calling is taken, a
+    quest accepts, and a real fight resolves. The route dives into Greenhold's authored
+    interior (square -> granary -> undercroft) where the cellar-vermin (hp 16, lvl 3)
+    is a winnable starter foe for a level-1 vanguard, and reassembles on defeat.
     """
     db = Path(tempfile.mkdtemp(prefix="cf-e2e-ae-")) / "ae.db"
     env = {**os.environ, "CODEFORGE_DB": str(db), "FORGE_SEED": "aethryn", "PYTHONUNBUFFERED": "1"}
@@ -147,10 +163,17 @@ def aethryn_journey() -> None:
              "" if entered else welcome[:100].replace("\n", " | "))
         )
         step("AETHRYN look", s, "look", ["Veridia", "Exits"])
+        step("AETHRYN region", s, "region", ["Veridia", "contracts"])  # zone view from the hub
         step("AETHRYN calling", s, "job vanguard", ["Vanguard"])
-        step("AETHRYN move to town", s, "go greenhold", ["Greenhold"])
         step("AETHRYN quest accept", s, "quest the_endless_journey accept", ["Endless Journey"])
-        step("AETHRYN region", s, "region", ["Veridia", "contracts"])
+        # into Greenhold's authored interior, down to the undercroft, and a real fight
+        step("AETHRYN to town", s, "go greenhold", ["Greenhold"])
+        step("AETHRYN town interior", s, "go square", ["Market Square"])
+        step("AETHRYN to granary", s, "go north", ["Granary"])
+        step("AETHRYN to undercroft", s, "go down", ["Undercroft"])
+        step("AETHRYN combat start", s, "attack vermin", ["cellar vermin"])
+        fight("AETHRYN combat resolve (defeat + reward)", s, "vermin")
+        step("AETHRYN reward on sheet", s, "score", ["XP"])
         step("AETHRYN logout", s, "quit", ["world dims"])
         s.close()
     finally:
@@ -212,8 +235,12 @@ def main() -> int:
         # --- CALLING: take a combat discipline --------------------------------
         step("CALLING take", s, "job vanguard", ["Vanguard"])
         # --- CHECK (read-only systems) ---------------------------------------
-        step("CHECK regs", s, "regs PUB-NIST-800-171", ["Rev 2", "published"])
-        step("CHECK library", s, "library", ["document"])
+        # The guidance library is an optional integration (private FGL sibling): assert its
+        # data when mounted, or accept the clean "not mounted" message (its state in CI).
+        step_either(
+            "CHECK regs", s, "regs PUB-NIST-800-171", [["Rev 2", "published"], ["not mounted"]]
+        )
+        step_either("CHECK library", s, "library", [["document"], ["not mounted"]])
         step("CHECK registry", s, "registry show RM-03.002", ["Classroom"])
         step("CHECK qa", s, "qa gate all", ["audited"])
         step("CHECK pm", s, "pm status", ["Project Status"])
