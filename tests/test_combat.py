@@ -949,6 +949,37 @@ def test_a_raid_uses_the_weekly_not_the_daily_cadence(monkeypatch):
     assert lockouts.is_locked(s, "boss:abyssal", lockouts.today_utc()) is False  # daily untouched
 
 
+def test_a_raid_bounty_scales_with_the_cohort(monkeypatch):
+    # A raid rewards a COHORT: the first-kill-of-week bounty pays MORE when a party stood for the
+    # kill (solo x1, a duo x2, ...). The co-located band comes from party.members_in_room.
+    from parts.world import lockouts, party
+
+    try:
+        solo = _fighter()  # matrym, courtyard
+        monkeypatch.setattr(lockouts, "this_week_utc", lambda: "2026-W31")
+        _spawn_raid()
+        before = solo.coins
+        solo_out = _fell(solo, "abyssal")
+        solo_gain = solo.coins - before
+        assert "Weekly raid bounty!" in solo_out and "cohort" not in solo_out  # solo = x1, no note
+
+        monkeypatch.setattr(
+            lockouts, "this_week_utc", lambda: "2026-W32"
+        )  # a fresh week for the duo
+        SESSIONS["bram"] = Session(player_id="bram", location="courtyard")
+        party.invite("matrym", "bram")
+        party.join("bram", "matrym")
+        assert len(party.members_in_room("matrym", "courtyard")) == 2  # a real cohort
+        _spawn_raid()
+        before = solo.coins
+        duo_out = _fell(solo, "abyssal")
+        duo_gain = solo.coins - before
+        assert "Weekly raid bounty!" in duo_out and "cohort of 2" in duo_out
+        assert duo_gain > solo_gain  # the cohort's bounty scaled higher than the solo lap
+    finally:
+        party._reset()
+
+
 def test_an_empowered_strike_hits_fifty_percent_harder() -> None:
     # the `buff` ability sets the empowered status; combat.attack reads it for a heavier blow
     s = _fighter("vanguard")  # base strike is 7 (3 + strength 14 // 3)
