@@ -92,6 +92,22 @@ def test_a_drain_never_overheals_past_the_maximum() -> None:
     assert s.resources["hp"].current == full  # a siphon at full HP wastes no overheal
 
 
+# --- kit density: the iconic aethryn callings carry a coherent, varied moveset -------------------
+def test_aethryn_iconic_kits_have_depth_and_variety() -> None:
+    from collections import Counter, defaultdict
+
+    ab = load_abilities(Path("seeds/aethryn/abilities.yaml"))
+    per: Counter = Counter()
+    kinds: dict[str, set] = defaultdict(set)
+    for a in ab.values():
+        for job in a["jobs"]:
+            per[job] += 1
+            kinds[job].add(a["kind"])
+    for job in ("berserker", "duelist", "ranger", "elementalist", "stormcaller", "scout"):
+        assert per[job] >= 5, f"{job} kit is thin ({per[job]} abilities)"
+        assert len(kinds[job]) >= 2, f"{job} kit is one-note ({kinds[job]})"
+
+
 @pytest.mark.parametrize("job", ["vanguard", "scholar", "artificer", "engineer"])
 def test_every_approved_calling_is_playable_end_to_end(job: str) -> None:
     """Guards Stage 3's "all approved Callings are implemented": each calling can be
