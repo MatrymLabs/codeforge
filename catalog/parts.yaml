@@ -1411,3 +1411,104 @@
     government: cache an expensive record or eligibility lookup with a defensible freshness bound
     compliance: bounded-staleness caching with an auditable invalidation lever (not a cache that can serve stale indefinitely)
     general: the read side of a service - cache-aside a slow query/computation/third-party call with a TTL
+
+- id: trace-context
+  name: Trace Context
+  source: parts/shelf/trace.py
+  category: observability
+  tags:
+  - tracing
+  - correlation-id
+  - observability
+  - distributed-systems
+  - w3c-trace-context
+  maturity: beta
+  source_status: original
+  license: MIT
+  influence: W3C Trace Context traceparent field (clean-room from the public standard; no OpenTelemetry SDK)
+  experimental: 'add span duration + OTLP export to a collector (Tempo/Jaeger), a sampling policy, and the tracestate field once a real backend exists. Traded away (v1): span timing and export, keeping it a zero-dependency correlation context in stdlib contextvars.'
+  risk: low
+  purpose: 'Carry one correlation id across a multi-hop request (client -> gateway -> world tick) so three separate logs can be joined for a single action. W3C-traceparent wire format, contextvars ambient propagation, log-field binding; malformed inbound headers rejected loudly.
+
+    '
+  reuse:
+    game: tag each command''s tick with a span; join client + gateway + tick logs for one action
+    finance: correlate a payment request across services for a single audit trail
+    government: trace one records request end to end for accountability
+    security: a request id that is safe to log and cannot carry PII by construction
+    general: end-to-end request correlation across any multi-hop system
+- id: precondition-guard
+  name: Precondition Guard
+  source: parts/shelf/precondition.py
+  category: data-integrity
+  tags:
+  - optimistic-concurrency
+  - etag
+  - if-match
+  - lost-update
+  - rfc7232
+  maturity: beta
+  source_status: original
+  license: MIT
+  influence: HTTP conditional requests (RFC 7232 ETag/If-Match) and optimistic locking (clean-room from the public standard)
+  experimental: 'add Last-Modified/If-Modified-Since and 304 wiring, and back the version with a database-native row-version (Postgres xmin). Traded away (v1): time-based validators, keeping an ETag-only precise guard.'
+  risk: low
+  purpose: 'Reject a write whose read-version is stale so concurrent edits do not silently clobber each other. Derives an ETag from a version or payload, enforces RFC 7232 If-Match (strong) / If-None-Match (weak), and offers an integer compare-and-set guard for non-HTTP world writes. Distinct signals: malformed 400, precondition-failed 412, stale-write 409.
+
+    '
+  reuse:
+    game: guard concurrent writes to one world entity (two admins editing a room)
+    finance: prevent lost updates on a balance or invoice edited concurrently
+    government: optimistic locking on a record edited by two officers
+    security: an integrity control (lost-update / lost-delete prevention), authorization runs first
+    general: optimistic concurrency for any REST resource via ETag/If-Match
+- id: keyset-cursor
+  name: Keyset Cursor
+  source: parts/shelf/cursor.py
+  category: api
+  tags:
+  - pagination
+  - keyset
+  - cursor
+  - scaling
+  - api
+  maturity: beta
+  source_status: original
+  license: MIT
+  influence: keyset/seek pagination + the opaque-cursor convention (GraphQL Relay connections, Stripe starting_after; clean-room)
+  experimental: 'add backward (before) pagination and a full Relay connection shape (edges, pageInfo, endCursor), and pin the cursor format with a version byte. Traded away (v1): backward paging, keeping a forward-only opaque cursor.'
+  risk: low
+  purpose: 'Stable, deep-scroll-safe pagination without offset drift. Encodes the last-seen (sort_value, tiebreaker) into an opaque, optionally HMAC-signed cursor; the next page seeks past it instead of counting an offset, so rows inserted or deleted before the boundary never skip or repeat and deep pages stay O(1) at the database.
+
+    '
+  reuse:
+    game: leaderboards and audit/chronicle feeds page stably as the world writes underneath
+    finance: page a long transaction ledger without skipping or repeating rows
+    government: stable pagination over a large records list under concurrent inserts
+    security: a signed cursor cannot be forged to probe arbitrary rows; page size is bounded
+    general: keyset pagination for any large, ordered list API
+- id: transactional-outbox
+  name: Transactional Outbox
+  source: parts/shelf/outbox.py
+  category: messaging
+  tags:
+  - outbox
+  - transactional-messaging
+  - at-least-once
+  - dual-write
+  - durability
+  maturity: beta
+  source_status: original
+  license: MIT
+  influence: the Transactional Outbox pattern (clean-room; composes with dead_letter, retry, idempotency)
+  experimental: 'back records in a table with a partial index on pending, add a per-record claim for concurrent relays, a retention job for sent records, and evaluate change-data-capture (Debezium). Traded away (v1): a durable store and concurrent-relay claims, keeping an in-memory reference core.'
+  risk: low
+  purpose: 'Make event fan-out durable against the dual-write problem: stage an outbound message in the same unit of work as the state change, and a relay publishes staged messages at-least-once, marks them sent exactly once, retries failures, and routes poison messages to a dead state at a max-attempts bound.
+
+    '
+  reuse:
+    game: durable world events (quest-complete, economy transfer) survive a server restart
+    finance: never lose a payment/webhook event when the state commit succeeds but the send fails
+    government: guaranteed delivery of a records-change notification with an audit trail
+    security: at-least-once delivery with idempotent consumers; poison messages dead-lettered
+    general: durable producer-side messaging for any state-change-plus-publish flow

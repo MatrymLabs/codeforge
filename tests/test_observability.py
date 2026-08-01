@@ -11,6 +11,7 @@ from fastapi.testclient import TestClient
 
 from parts.api import app
 from parts.shelf.observability import METRICS, Metrics, configure_logging, get_logger
+from parts.shelf.trace import parse_traceparent, start_trace
 
 
 @pytest.fixture(autouse=True)
@@ -90,3 +91,25 @@ def test_middleware_records_a_request_by_route_template(client):
     text = client.get("/metrics").text
     assert 'route="/ui/blueprint/{blueprint_id}"' in text
     assert "npc_combat" not in text
+
+
+# --- trace-context correlation (the observability middleware consumes shelf/trace) ---
+
+
+def test_middleware_mints_a_trace_when_none_inbound(client):
+    resp = client.get("/health")
+    parsed = parse_traceparent(resp.headers["traceparent"])  # a fresh, valid trace echoed back
+    assert parsed.trace_id
+
+
+def test_middleware_continues_an_inbound_trace(client):
+    edge = start_trace()
+    resp = client.get("/health", headers={"traceparent": edge.traceparent()})
+    parsed = parse_traceparent(resp.headers["traceparent"])
+    assert parsed.trace_id == edge.trace_id  # same logical request, correlated across the hop
+
+
+def test_middleware_survives_a_malformed_traceparent(client):
+    resp = client.get("/health", headers={"traceparent": "not-a-traceparent"})
+    assert resp.status_code == 200  # a bad header never breaks the request
+    assert parse_traceparent(resp.headers["traceparent"]).trace_id  # a fresh trace was minted

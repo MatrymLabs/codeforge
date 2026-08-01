@@ -7359,5 +7359,97 @@
     "aliases": [],
     "created": "2026-08-01",
     "updated": "2026-08-01"
+  },
+  {
+    "designation": "MOD-05.011",
+    "name": "trace",
+    "status": "active",
+    "function": "carry one correlation id across a multi-hop request so logs correlate end to end",
+    "label": "trace",
+    "file": "parts/shelf/trace.py",
+    "type": "MOD",
+    "domain": "05",
+    "docs": "docs/hardware_store/patterns/observability.md",
+    "tests": "tests/test_trace.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "correlation core; one trace threads client -> gateway -> world tick, bound into structlog",
+    "tags": [
+      "module"
+    ],
+    "notes": "R&D Full-Stack Climb adoption (docs/rd, AP-0x); clean-room from a public standard.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-08-01",
+    "updated": "2026-08-01"
+  },
+  {
+    "designation": "MOD-05.012",
+    "name": "precondition",
+    "status": "active",
+    "function": "reject a write whose read-version is stale (lost-update prevention) via ETag/If-Match",
+    "label": "precondition",
+    "file": "parts/shelf/precondition.py",
+    "type": "MOD",
+    "domain": "05",
+    "docs": "docs/hardware_store/patterns/persistence.md",
+    "tests": "tests/test_precondition.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "optimistic-concurrency core; ETag/If-Match for HTTP + integer compare-and-set for world writes",
+    "tags": [
+      "module"
+    ],
+    "notes": "R&D Full-Stack Climb adoption (docs/rd, AP-0x); clean-room from a public standard.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-08-01",
+    "updated": "2026-08-01"
+  },
+  {
+    "designation": "MOD-05.013",
+    "name": "cursor",
+    "status": "active",
+    "function": "stable keyset pagination: an opaque cursor over a sort key + tiebreaker, no offset drift",
+    "label": "cursor",
+    "file": "parts/shelf/cursor.py",
+    "type": "MOD",
+    "domain": "05",
+    "docs": "docs/hardware_store/patterns/persistence.md",
+    "tests": "tests/test_cursor.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "pagination core; opaque signed cursor for list APIs, leaderboards, audit feeds",
+    "tags": [
+      "module"
+    ],
+    "notes": "R&D Full-Stack Climb adoption (docs/rd, AP-0x); clean-room from a public standard.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-08-01",
+    "updated": "2026-08-01"
+  },
+  {
+    "designation": "MOD-05.014",
+    "name": "outbox",
+    "status": "active",
+    "function": "stage an outbound message in the same unit of work as the state change; a relay publishes it at-least-once",
+    "label": "outbox",
+    "file": "parts/shelf/outbox.py",
+    "type": "MOD",
+    "domain": "05",
+    "docs": "docs/hardware_store/patterns/eventing.md",
+    "tests": "tests/test_outbox.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "durable fan-out core; composes with dead_letter + retry + idempotency",
+    "tags": [
+      "module"
+    ],
+    "notes": "R&D Full-Stack Climb adoption (docs/rd, AP-0x); clean-room from a public standard.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-08-01",
+    "updated": "2026-08-01"
   }
 ]
