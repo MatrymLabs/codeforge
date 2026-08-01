@@ -1,10 +1,11 @@
-"""CARD: abilities -- a job's usable combat moves: strikes that scale on a stat, and heals.
+"""CARD: abilities -- a job's usable combat moves: strikes, drains, brands, control, and heals.
 
 This is the batch the Job card promised ("combat wiring is a later batch"). An ability is data
 (parts.world.seed.Ability, loaded from abilities.yaml): a `strike` deals `power + stat // 3` damage
-to a target, a `heal` restores HP -- the wielder's, or an ALLY's in the same room (the trinity seam:
-a healer can mend a party-mate, not only themselves) -- and each costs MP. Which jobs may wield an
-ability lives in the ability's `jobs` list, so a Vanguard and a Scholar fight differently without a
+to a target, a `drain` strikes AND siphons half the damage back as HP, a `brand` lays a burn DoT, a
+`daze`/`weaken` control or soften a foe, and a `heal` restores HP -- the wielder's, or an ALLY's in
+the same room (the trinity seam: a healer can mend a party-mate) -- and each costs MP. Which jobs
+may wield an ability lives in the ability's `jobs` list, so a Vanguard and a Scholar fight without a
 line of hardcoding. `use <ability> [on <target>]` fires one; `skills` lists what your calling has.
 
 Strikes reuse combat.land_hit, so an ability shares the exact defeat/award/loot/quest machinery the
@@ -133,7 +134,7 @@ def use_ability(session: Session, arg: str) -> str:
     if ability["kind"] == "buff":
         return _channel_buff(session, ability, label, target_word.strip(), who, move)
 
-    # a strike, a brand, or a taunt needs a target
+    # a strike, a drain, a brand, or a taunt needs a target
     nid = trace_npc(target_word.strip(), session.location) if target_word.strip() else None
     if nid is None:
         return f"Use {move} on whom? Try: use {move} on <target>"
@@ -299,8 +300,8 @@ def _arm_cooldown(session: Session, label: str, ability: Ability) -> None:
 def _channel_offense(
     session: Session, ability: Ability, npc: Npc, nid: str, who: str, move: str
 ) -> str:
-    """Resolve a target-facing ability (daze / weaken / brand / strike) and return its message. MP
-    is already spent by the caller; this only applies the effect."""
+    """Resolve a target-facing ability (daze / weaken / brand / drain / strike) and return its line.
+    MP is already spent by the caller; this only applies the effect."""
     element = ability.get("element")  # a typed move is scaled by the foe's resistance to it
     if ability["kind"] == "daze":  # crowd control: the foe skips its next beats' strikes, no damage
         beats = _magnitude(session, ability)  # scales:"" -> just power = the daze duration
@@ -326,6 +327,34 @@ def _channel_offense(
         combat.apply_burn(npc, per_tick)
         bar = f"{npc['hp_now']}/{npc['hp']}"
         return f"You brand {npc['name']} with {move}; it burns for {per_tick} a beat.{note} ({bar})"
+    if ability["kind"] == "drain":  # lifesteal: strike the foe AND mend the wielder for a share
+        dmg, note = combat.typed_hit(npc, element, _magnitude(session, ability))
+        if dmg <= 0:  # the foe nullifies the element: nothing lands, so nothing is siphoned
+            announce(
+                session.location,
+                f"{who} reaches for {npc['name']} with {move}, to no effect.",
+                exclude=session.player_id,
+            )
+            return f"You reach for {npc['name']} with {move}, but{note.lower()}"
+        defeated, tail = combat.land_hit(session, npc, nid, dmg)
+        drained = max(1, dmg // 2)  # siphon half the damage back as HP (capped at your maximum)
+        session.resources["hp"] = session.resources["hp"].heal(drained)
+        healed = session.resources["hp"]
+        announce(
+            session.location,
+            f"{who} drains {npc['name']} with {move} for {dmg}.",
+            exclude=session.player_id,
+        )
+        if defeated:
+            return (
+                f"You drain {npc['name']} with {move}; it collapses -- then reassembles itself. "
+                f"You recover {drained} HP.\n{tail}"
+            )
+        bar = f"{npc['hp_now']}/{npc['hp']}"
+        return (
+            f"You drain {npc['name']} with {move} for {dmg}; you recover {drained} HP.{note} "
+            f"(foe {bar}; you {healed.current}/{healed.maximum})"
+        )
     dmg, note = combat.typed_hit(npc, element, _magnitude(session, ability))
     if dmg <= 0:  # the foe nullifies the element: the blow lands nothing
         announce(

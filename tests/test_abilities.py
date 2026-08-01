@@ -71,6 +71,27 @@ def test_a_strike_ability_hits_harder_than_a_basic_attack_and_costs_mp() -> None
     assert dealt > 6
 
 
+# --- drain: lifesteal -- strike the foe and recover half the damage as HP ------------------------
+
+
+def test_a_drain_ability_deals_damage_and_heals_the_wielder() -> None:
+    s = _at_dummy("artificer")
+    s.resources["hp"] = s.resources["hp"].damage(20)  # take a wound the siphon can restore
+    hp_before = s.resources["hp"].current
+    mp_before = s.resources["mp"].current
+    out = use_ability(s, "siphon on dummy")
+    assert "Siphon" in out and "training dummy" in out and "recover" in out
+    assert s.resources["mp"].current == mp_before - 4  # Siphon costs 4 MP
+    assert s.resources["hp"].current > hp_before  # lifesteal siphoned HP back to the wielder
+
+
+def test_a_drain_never_overheals_past_the_maximum() -> None:
+    s = _at_dummy("artificer")
+    full = s.resources["hp"].current  # already at full HP
+    use_ability(s, "siphon on dummy")
+    assert s.resources["hp"].current == full  # a siphon at full HP wastes no overheal
+
+
 @pytest.mark.parametrize("job", ["vanguard", "scholar", "artificer", "engineer"])
 def test_every_approved_calling_is_playable_end_to_end(job: str) -> None:
     """Guards Stage 3's "all approved Callings are implemented": each calling can be

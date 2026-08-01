@@ -427,3 +427,98 @@ word_of_ruin:
   {name: Word of Ruin, kind: strike, power: 14, scales: wisdom, mp_cost: 7, element: DRK, jobs: [hierophant]}
 benediction:
   {name: Benediction, kind: heal, power: 14, scales: wisdom, mp_cost: 7, jobs: [hierophant]}
+
+# --- Deeper kits: lifesteal (drain), burns (brand), and control (daze/weaken). The engine has long
+# carried these mechanics; these movesets give the callings that fight by them a real kit to wield.
+
+life_siphon:
+  name: Life Siphon
+  kind: drain
+  power: 7
+  scales: speed
+  mp_cost: 4
+  cooldown: 2
+  element: DRK
+  jobs: [shadowblade]
+
+ruin_siphon:
+  name: Ruin Siphon
+  kind: drain
+  power: 8
+  scales: strength
+  mp_cost: 5
+  cooldown: 2
+  element: DRK
+  jobs: [reaver]
+
+sap_vitality:
+  name: Sap Vitality
+  kind: drain
+  power: 6
+  scales: wisdom
+  mp_cost: 4
+  cooldown: 2
+  element: PSN
+  jobs: [warden]
+
+soul_leech:
+  name: Soul Leech
+  kind: drain
+  power: 9
+  scales: wisdom
+  mp_cost: 6
+  cooldown: 3
+  element: DRK
+  jobs: [hierophant]
+
+cinderbrand:
+  name: Cinderbrand
+  kind: brand
+  power: 6
+  scales: magic
+  mp_cost: 4
+  cooldown: 2
+  element: FIR
+  jobs: [emberwright]
+
+venom_spores:
+  name: Venom Spores
+  kind: brand
+  power: 5
+  scales: wisdom
+  mp_cost: 4
+  cooldown: 2
+  element: PSN
+  jobs: [druid]
+
+blinding_dust:
+  name: Blinding Dust
+  kind: daze  # crowd control: the foe skips its next beats' strikes (no damage)
+  power: 2
+  mp_cost: 4
+  cooldown: 4
+  jobs: [trickster]
+
+temporal_lock:
+  name: Temporal Lock
+  kind: daze
+  power: 3
+  mp_cost: 6
+  cooldown: 5
+  jobs: [chronomancer]
+
+hamstring:
+  name: Hamstring
+  kind: weaken  # debuff: softens the foe's next blows (no damage)
+  power: 2
+  mp_cost: 3
+  cooldown: 3
+  jobs: [saboteur]
+
+curse_of_frailty:
+  name: Curse of Frailty
+  kind: weaken
+  power: 3
+  mp_cost: 5
+  cooldown: 4
+  jobs: [oracle]
