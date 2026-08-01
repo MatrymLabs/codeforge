@@ -7685,6 +7685,33 @@
     "updated": "2026-08-01"
   },
   {
+    "designation": "MOD-10.053",
+    "name": "project_hub",
+    "status": "active",
+    "function": "Stage 2: the Seed's functional Project Hub - render one Seed's identity + lifecycle + project facets (sources/models/builds/tests/targets/risks/decisions) as both a text look (look/show status/list <facet>/show history) and a versioned structured client contract, both projected from one source of truth",
+    "label": "project_hub",
+    "file": "parts/seedlab/project_hub.py",
+    "type": "MOD",
+    "domain": "10",
+    "docs": "docs/seed_platform/RECENTERING.md",
+    "tests": "tests/test_project_hub.py",
+    "depends_on": [
+      "MOD-10.052"
+    ],
+    "related": [
+      "MOD-10.051"
+    ],
+    "reuse": "",
+    "tags": [
+      "module"
+    ],
+    "notes": "Stage 2 of the Seed Platform Production Directive. Composes the Seed Kernel; a pure projection of persisted Seed state. Empty facets read 'none yet (Stage N)' - honest, never decorative. Isolated in parts/seedlab/.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-08-01",
+    "updated": "2026-08-01"
+  },
+  {
     "designation": "MOD-05.022",
     "name": "corpus",
     "status": "active",
