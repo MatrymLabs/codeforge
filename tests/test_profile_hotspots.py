@@ -12,7 +12,7 @@ import unittest
 from parts.shelf.profile_hotspots import CAVEAT, ProfileError, analyze, profile_call, render
 
 # a synthetic pstats mapping: {(file, line, func): (cc, nc, tottime, cumtime, callers)}
-STATS = {
+STATS: dict[tuple[str, int, str], tuple[int, int, float, float, dict[object, object]]] = {
     ("app.py", 10, "hot"): (1, 1, 0.80, 0.90, {}),  # dominant self time
     ("app.py", 20, "warm"): (5, 5, 0.15, 0.60, {}),
     ("app.py", 30, "cold"): (100, 100, 0.05, 0.05, {}),
@@ -68,11 +68,11 @@ class Refusal(unittest.TestCase):
 
     def test_non_dict_refused(self):
         with self.assertRaises(ProfileError):
-            analyze([("f", 1, "g")])  # type: ignore[arg-type]
+            analyze([("f", 1, "g")])
 
     def test_malformed_row_refused(self):
         with self.assertRaises(ProfileError):
-            analyze({("f.py", 1, "g"): (1, 2)})  # type: ignore[dict-item]
+            analyze({("f.py", 1, "g"): (1, 2)})
 
 
 class RealProfile(unittest.TestCase):
