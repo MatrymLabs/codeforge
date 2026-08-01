@@ -62,6 +62,29 @@ def step(
     return out
 
 
+def fight(name: str, sock: socket.socket, target: str, swings: int = 15) -> str:
+    """Auto-attack a passive target until it falls and the reward lands (or give up).
+
+    The training dummy carries no atk stat, so it never strikes back -- a bounded
+    swing loop is safe. "You gain" in the reply is the leveling engine's reward
+    handoff, i.e. the foe was defeated and combat resolved.
+    """
+    start = time.monotonic()
+    out = ""
+    won = False
+    for _ in range(swings):
+        sock.sendall(f"attack {target}".encode() + b"\n")
+        out = _recv_until(sock, PROMPT)
+        if "you gain" in out.lower():
+            won = True
+            break
+    dt = (time.monotonic() - start) * 1000
+    results.append(
+        (f"{name}: `attack {target}` xN", won, dt, "" if won else out[:100].replace("\n", " | "))
+    )
+    return out
+
+
 def login(sock: socket.socket, handle: str, password: str, new: bool) -> None:
     _recv_until(sock, b"NEW:")
     if new:
@@ -130,6 +153,8 @@ def main() -> int:
 
         # --- LOOK -------------------------------------------------------------
         step("LOOK", s, "look", ["="])  # a rendered room has a header rule
+        # --- CALLING: take a combat discipline --------------------------------
+        step("CALLING take", s, "job vanguard", ["Vanguard"])
         # --- CHECK (read-only systems) ---------------------------------------
         step("CHECK regs", s, "regs PUB-NIST-800-171", ["Rev 2", "published"])
         step("CHECK library", s, "library", ["document"])
@@ -137,8 +162,18 @@ def main() -> int:
         step("CHECK qa", s, "qa gate all", ["audited"])
         step("CHECK pm", s, "pm status", ["Project Status"])
         step("CHECK docs", s, "docs check", ["Documentation Impact"])
-        # --- DO THINGS (movement + a security proof) --------------------------
-        step("DO move", s, "go north", ["="])  # spawn is `forge`; north -> courtyard
+        # --- DO THINGS (movement) ---------------------------------------------
+        step("DO move", s, "go north", ["="])  # spawn is `forge`; north -> courtyard (dummy here)
+        # --- COMBAT + CALLING ABILITY + REWARD (the training loop) ------------
+        step("CALLING abilities", s, "skills", ["Power Strike"])
+        step("COMBAT start", s, "attack dummy", ["training dummy"])
+        step("ABILITY use", s, "use power strike on dummy", ["Power Strike"])
+        fight("COMBAT resolve (defeat + reward)", s, "dummy")
+        step("REWARD on sheet", s, "score", ["XP", "JP"])
+        # --- QUEST accept + track ---------------------------------------------
+        step("QUEST accept", s, "quest coilward_contract accept", ["contract"])
+        step("QUEST tracked", s, "quest", ["Coilward Contract"])
+        # --- SECURITY ---------------------------------------------------------
         step("SECURITY @sg denied (player)", s, "@sg item excalibur", ["Denied"])
         # --- LOG OUT ----------------------------------------------------------
         step("LOG OUT", s, "quit", ["world dims"])
@@ -164,6 +199,8 @@ def main() -> int:
         if grant.returncode == 0 and "owner" in grant.stdout:
             s2 = connect()
             login(s2, "scout@smoke", "lumos_1234", new=False)
+            # The calling taken and XP earned before logout must survive the reconnect.
+            step("PERSIST calling survives reconnect", s2, "score", ["Vanguard"])
             step("DO @sg forge (owner)", s2, "@sg item excalibur", ["Forged", "ITM-04"])
             step("DO take", s2, "take excalibur", ["take"])
             step("LOG OUT (owner)", s2, "quit", ["world dims"])
