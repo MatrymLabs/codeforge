@@ -43,6 +43,18 @@ Engine metrics use the command noted at each row (for example, test count is
 
 ## Executive dashboard
 
+> **Re-baseline note (2026-07-31).** Several systems this scorecard first listed as
+> *absent/blocking* have since shipped and are verified in code. Retired from the gap and
+> risk lists this pass: loose-item persistence (`parts/world/loose_store.py`, `loose_items`
+> table), the combat trinity seams (`parts/world/threat.py` + ally-targeted heals in
+> `parts/world/abilities.py`), daily/weekly lockouts (`parts/world/lockouts.py`), the
+> auction house (`parts/world/auction.py`, `auction_listings` table), the durability/repair
+> coin sink (`parts/world/durability.py`), the guild item-vault (`parts/world/guild.py`),
+> and mail attachments (`parts/world/mail.py`). Measured counts and the DB-table list were
+> refreshed from `python tools/census.py`. The completion estimates below are still
+> Low-confidence engineering estimates; the three dimensions whose substrate materially grew
+> (combat, social, economy) were nudged up this pass and are flagged.
+
 ### Estimated completion (engineering estimate, Low confidence)
 
 "Percent complete versus a AAA MMORPG" is inherently fuzzy: it depends whether the yardstick is a
@@ -53,56 +65,65 @@ would mislead, so the estimate is split by yardstick and by dimension, and every
 | Dimension | vs. AAA graphical MMORPG | vs. flagship commercial text MUD | Basis (measured) |
 |-----------|--------------------------|----------------------------------|------------------|
 | **Engine / architecture** | ~45% | ~70% | Pure-function tick, 5-table persistence, a large module base, a CI-gated suite (count via `pytest --collect-only`), 7 native-accelerator organs. Mature core; missing distributed/sharded serving. |
-| **Combat systems** | ~35% | ~55% | 63 abilities, 10 damage types, boss phases + telegraphed specials + afflictions. Party combat shares XP + round-robin loot; still solo-role (no threat/aggro table, heals are self-only, no tank/healer trinity). |
+| **Combat systems** | ~40% | ~55% | 66 abilities, 10 damage types, boss phases + telegraphed specials + afflictions. Party combat shares XP + round-robin loot; the trinity seams now exist (per-NPC threat/aggro table + taunt, ally-targeted heals). Gaps: raid-size cohort, boss-mechanic variety. (nudged up: trinity shipped) |
 | **Content scale (world)** | ~15% | ~40% | ~26,800 rooms at default scale (procedural), 45 settlements, 16 dungeons. Authored depth thin (75 hand rooms, 7 authored quests). |
-| **Content scale (items/NPCs)** | ~10% | ~35% | 180 items, 75 authored NPCs + procedural guardians, 38 recipes. Well below launch density. |
+| **Content scale (items/NPCs)** | ~10% | ~35% | 185 items, 75 authored NPCs + procedural guardians, 38 recipes. Well below launch density. |
 | **Progression / player systems** | ~35% | ~60% | 31 jobs, 6 professions, 4 Orders, level cap 255, ember-coin currency. Broad skeleton, shallow per-system depth. |
-| **Social / multiplayer** | ~30% | ~20% | Shipped: party (max 5, shared XP + round-robin loot), atomic player trade, persisted guilds (ranks + chat + coin treasury), async mail, friends, world chat. Gaps: no LFG/matchmaking, no raid-size cohort, mail carries no attachments, no housing. |
-| **Economy** | ~22% | ~30% | Tiered currency, NPC shops, per-town general-store materials market (buy/sell spread), crafting sinks, inns as a coin sink, guild treasury, direct player trade. Gaps: no auction house, no durability/repair sink, no macro sink/faucet model. |
+| **Social / multiplayer** | ~38% | ~20% | Shipped: party (max 5, shared XP + round-robin loot), atomic player trade, persisted guilds (ranks + chat + coin treasury + item vault), async mail with attachments, friends, world chat. Gaps: no LFG/matchmaking, no raid-size cohort, no housing. (nudged up: item vault + mail attachments shipped) |
+| **Economy** | ~30% | ~30% | Tiered currency, NPC shops, per-town general-store materials market (buy/sell spread), crafting sinks, inns as a coin sink, guild treasury, direct player trade, a coin-escrow auction house, and a durability/repair coin sink. Gaps: no macro sink/faucet model, no cross-region market. (nudged up: auction house + durability shipped) |
 | **World simulation** | ~30% | ~55% | Weather, seasons, day/night, respawn policies, dynamic spawns, zone resets. No NPC schedules or faction war. |
 | **Live ops / tooling** | ~20% | ~40% | CI, security gates, readiness rituals, admin surface, world generator. No telemetry/analytics pipeline or patch cadence. |
 | **Accessibility** | ~15% | n/a | Text-native (screen-reader friendly by medium). No declared text-scaling, colorblind, or remap options in the client contract. |
 
 **Blended engineering read:** roughly **~20-25% of a AAA graphical MMORPG's total scope**, and
 roughly **~45% of a credible commercial *text* MUD's scope**. The engine punches well above the
-content: CodeForge is architecturally closer to done than Aethryn is content-complete. With the
-2026-07-29 social layer shipped, the honest one-line summary has moved from *strong spine, thin
-flesh, no crowd* to *strong spine, thin flesh, a crowd with no endgame*: the multiplayer layer now
-exists (party, guild, mail, friends, trade, chat), and the deepest remaining gaps are the endgame
-loop and item persistence.
+content: CodeForge is architecturally closer to done than Aethryn is content-complete. The keystones
+that once headlined the gap list (loose-item persistence, the combat trinity, the auction house) have
+since shipped, so the honest one-line summary has moved to *strong spine, a crowd with substrate but
+no endgame content*: the multiplayer layer exists (party, guild, mail, friends, trade, chat) on top of
+a persistence + economy + combat-trinity substrate that also exists; the deepest remaining gaps are
+now the endgame *content* built on that substrate, and authored content density.
 
-### Highest-risk engineering gaps (ranked, per the 2026-07-29 gap analysis)
+### Highest-risk engineering gaps (ranked, re-baselined 2026-07-31)
 
-1. **No endgame loop.** No raids, no daily/weekly content, no lockouts, no gear treadmill/ilvl
-   ceiling. Bosses are infinitely farmable with no diminishing returns; there is nothing to *do* at
-   cap. This is now the emptiest dimension relative to AAA.
-2. **Loose inventory does not persist.** Only *equipped* gear survives logout (`db.py`); non-worn
-   items are in-memory instances that vanish. This keystone blocks the auction house, mail
-   attachments, a guild item-bank, and real hoarding. Items are runtime instances, not persisted rows.
-3. **Combat has no trinity.** No threat/aggro table, no taunt, and heals are self-only, so the
-   shipped party layer cannot express tank/healer/DPS roles or support raids.
-4. **Content density far below launch scale.** ~180 items and ~75 authored NPCs cannot sustain a
+1. **No endgame *content*.** The substrate now exists (daily + weekly lockout markers in
+   `lockouts.py`, a threat/aggro table, ally-heals, a durability sink), but no raid encounter, gear
+   treadmill/ilvl ceiling, or assembled daily/weekly cadence is built on it. There is still little to
+   *do* at cap: this is the emptiest dimension relative to AAA.
+2. **Content density far below launch scale.** ~185 items and ~75 authored NPCs cannot sustain a
    1-to-255 curve; ~1,680 quests are 8 template generators over ~7 authored arcs (wide, not deep).
-5. **No economy sink/faucet model** and **no telemetry/analytics** (live-ops would be blind).
+   Only Veridia (the cradle) meets production density; the other 13 zones sit at baseline.
+3. **No economy sink/faucet macro-model** and **no live telemetry/analytics** (live-ops would be
+   blind, and the now-rich economy cannot be tuned at population). Individual sinks (repair, inns,
+   crafting) exist but are not balanced as a system.
+4. **The shipped social layer is invisible in the client.** Party/guild/mail/friend systems exist in
+   the engine but no versioned event schema surfaces them, so the play experience lags the engineering.
+
+*Retired since the 2026-07-29 gap analysis (verified shipped in code): loose-item persistence
+(`loose_store.py`, `loose_items` table), the combat trinity seams (`threat.py`, ally-targeted heals in
+`abilities.py`), daily/weekly lockouts (`lockouts.py`), the auction house (`auction.py`,
+`auction_listings` table), the durability/repair sink (`durability.py`), the guild item-vault
+(`guild.py`), and mail attachments (`mail.py`). These no longer belong on the risk list.*
 
 ### Highest-value next milestones
 
-1. **Loose-item persistence** (the keystone: unblocks auction house, mail attachments, guild
-   item-bank, and endgame gear hoarding all at once).
-2. **Endgame loop** (repeatable dungeon/raid cadence with lockouts + a gear-tier chase).
-3. **Combat trinity** (ally-targeted heals + a minimal threat model, so the party layer matters and
-   raids become possible).
-4. **Social surfacing in the client** (emit Party/Guild/Mail/Friend GMCP frames + render panels, so
-   the client stops lagging the engine's social layer).
+1. **Endgame loop content** (a first raid encounter + an assembled daily/weekly cadence, built on the
+   shipped lockout + threat + ally-heal substrate).
+2. **Content-density pass on the leveling spine** (curated 1-to-30, then the next zone, at production
+   density: Veridia is the proven pattern).
+3. **Economy telemetry seam + sink/faucet model** (reuse the SQL analytics organ; needed to tune the
+   now-rich economy at population).
+4. **Social surfacing in the client** (a versioned Party/Guild/Mail/Friend event schema + rendered
+   panels, so the client stops lagging the engine's shipped social layer).
 
 ### Fastest paths (engineering estimate, to be firmed after benchmark passes)
 
 - **To a playable prototype:** it largely exists. A single-player vertical slice (create -> level a
   few bands -> craft -> beat a boss -> spend currency) is reachable now; the gap is a curated
   starter-Reach content pass and an onboarding path.
-- **To Alpha:** the party layer + group-runnable dungeons + a trade loop now exist; the remaining
-  Alpha gaps are loose-item persistence, a content-density pass on the 1-to-30 band, and a
-  telemetry seam.
+- **To Alpha:** the party layer + group-runnable dungeons + a trade loop + loose-item persistence now
+  exist; the remaining Alpha gaps are a content-density pass on the 1-to-30 band, an endgame loop on
+  the shipped lockout substrate, and a telemetry seam.
 - **To Launch:** economy balancing at population, guild layer, achievements/titles system, a full
   level-cap content curve, moderation/support tooling, and load-tested concurrent serving.
 
@@ -142,7 +163,7 @@ engineering estimates unless a cited benchmark has landed.
 | Rooms (authored-quality) | 300 | 1,500 | 6,000 | 20,000 | Authored depth is the gap, not raw count | High | Procedural breadth exists; authored encounter density does not |
 | Zones | 3 polished | 7 | 20 | 40 | Polish, not count | Med | 14 exist but thinly populated |
 | Dungeons | 3 | 8 | 25 | 60 | Mechanics depth | High | Count is close; group mechanics missing |
-| Raids | 0 | 1 | 5 | 15 | Whole tier absent | Med | Blocked on party layer |
+| Raids | 0 | 1 | 5 | 15 | Content unbuilt | High | Substrate ready (party + threat + lockouts); the encounter content is the gap |
 
 ---
 
@@ -199,8 +220,8 @@ engineering estimates unless a cited benchmark has landed.
 | Level cap (character) | 255 (locked curve) | 255 | [Pass 2] | [Pass 2] | Measured | progression.py |
 | Jobs / classes | Data-driven | 31 | [Pass 2] | [Pass 2] | Measured | census |
 | Professions | Gather + craft trades | 6 | [Pass 2] | [Pass 2] | Measured | census |
-| Skills / abilities | Ability system | 63 | [Pass 2] | [Pass 2] | Measured | census |
-| Equipment slots | 6 (weapon/head/body/arm/2 accessory) | 6 | [Pass 2] | ~10-19 typical | Measured | equipment.py |
+| Skills / abilities | Ability system | 66 | [Pass 2] | [Pass 2] | Measured | census |
+| Equipment slots | 8 (weapon/head/body/arm/leg/feet/2 accessory) | 8 | [Pass 2] | ~10-19 typical | Measured | equipment.py |
 | Factions / Orders | Reputation + tiers | 4 Orders | [Pass 2] | [Pass 2] | Measured | census |
 | Currencies | Tiered ember-coin | 1 currency, 4 tiers | [Pass 2] | [Pass 2] | Measured | coinage.py |
 | Inventory slots | Unbounded list (no cap) | n/a | [Pass 2] | [Pass 2] | Measured | items.py |
@@ -222,12 +243,12 @@ engineering estimates unless a cited benchmark has landed.
 
 | Subsystem | Current CodeForge | Current Aethryn | AAA Benchmark | Historical MUD Benchmark | Confidence | Sources |
 |-----------|-------------------|-----------------|---------------|--------------------------|------------|---------|
-| Total items | Data-driven | 180 | [Pass 2] | [Pass 2] | Measured | census |
+| Total items | Data-driven | 185 | [Pass 2] | [Pass 2] | Measured | census |
 | Weapons | slot=weapon | 22 | [Pass 2] | [Pass 2] | Measured | census |
-| Armor (head/body/arm) | 3 armor slots | 32 (9+13+10) | [Pass 2] | [Pass 2] | Measured | census |
+| Armor (head/body/arm/leg/feet) | 5 armor slots | 36 (9+13+10+2+2) | [Pass 2] | [Pass 2] | Measured | census |
 | Accessories | 2 accessory slots | 31 (17+14) | [Pass 2] | [Pass 2] | Measured | census |
 | Consumables | consume field | 14 | [Pass 2] | [Pass 2] | Measured | census |
-| Materials / other | crafting + quest + lore | 81 | [Pass 2] | [Pass 2] | Measured | census |
+| Materials / other | crafting + quest + lore | 82 | [Pass 2] | [Pass 2] | Measured | census |
 | Recipes | Refinement chains | 38 | [Pass 2] | [Pass 2] | Measured | census |
 | Equipment sets | Set bonuses | 7 | [Pass 2] | [Pass 2] | Measured | census |
 
@@ -257,7 +278,7 @@ engineering estimates unless a cited benchmark has landed.
 
 | Subsystem | Prototype | Alpha | Launch | Five-Year | Gap Remaining | Priority | Notes |
 |-----------|-----------|-------|--------|-----------|---------------|----------|-------|
-| Party layer | 5-player party (shipped) | party + shared combat | party + 10 raid | party + 20-40 raid | Raid-size cohort + LFG | High | Party done; raids need ally-heals + threat |
+| Party layer | 5-player party (shipped) | party + shared combat | party + 10 raid | party + 20-40 raid | Raid-size cohort + LFG | High | Party + trinity seams done (threat + taunt + ally-heals); raids need a raid-size cohort + content |
 | Boss mechanics | 4 patterns | 8 | 20 | 40 | Encounter pass-2 staged | High | Composes existing phases/specials/afflictions |
 | Status effects | 8 | 16 | 30 | 50 | Medium | Med | Substrate exists |
 
@@ -280,9 +301,9 @@ engineering estimates unless a cited benchmark has landed.
 
 | Subsystem | Prototype | Alpha | Launch | Five-Year | Gap Remaining | Priority | Notes |
 |-----------|-----------|-------|--------|-----------|---------------|----------|-------|
-| Guilds | ranks + chat + coin bank (shipped) | + guild hall | + item bank | alliances | Item bank (needs loose-item persistence), hall, perks | Med | Coin bank done; item bank blocked on inventory persistence |
-| Player trade | direct trade (shipped) | + auction house | + cross-region market | commodity pricing | Auction house (needs loose-item persistence) | High | Direct trade done; AH is the next loop |
-| Mail / friends | friends + mail (shipped) | + attachments | + ignore + social graph | cross-shard | Mail attachments (needs inventory persistence), ignore list | Med | Text mail done; attachments blocked on inventory persistence |
+| Guilds | ranks + chat + coin bank + item vault (shipped) | + guild hall | + perks | alliances | Guild hall, perks, alliances | Med | Coin bank + item vault done; hall/perks/alliances remain |
+| Player trade | direct trade + auction house (shipped) | + auction house | + cross-region market | commodity pricing | Cross-region market, commodity pricing | High | Direct trade + coin-escrow auction house done; regional markets next |
+| Mail / friends | friends + mail + attachments (shipped) | + attachments | + ignore + social graph | cross-shard | Ignore list, social graph | Med | Mail + attachments done; ignore + social-graph remain |
 
 ---
 
@@ -297,16 +318,16 @@ engineering estimates unless a cited benchmark has landed.
 | Crafting sinks | Recipes consume materials/coin | present | [Pass 2] | [Pass 2] | Measured | crafting.py |
 | Coin sinks | Draught vendors + inn hearth | present (45 inns) | [Pass 2] | [Pass 2] | Measured | inns.py |
 | Player trade | Atomic item + coin swap | present | [Pass 2] | [Pass 2] | Measured | trade.py |
-| Repair / durability | **None** | 0 | [Pass 2] | [Pass 2] | Measured (absent) | - |
-| Auction / market | **None** (direct trade only) | 0 | [Pass 2] | [Pass 2] | Measured (absent) | - |
-| Sink/faucet balancing | **None modelled** | 0 | [Pass 2] | [Pass 2] | Measured (absent) | - |
+| Repair / durability | Gear wears with use; repair is a coin sink | present | [Pass 2] | [Pass 2] | Measured | durability.py |
+| Auction / market | Coin-escrow auction house (list / buy / expiry returns unsold) | present | [Pass 2] | [Pass 2] | Measured | auction.py, auction_store.py |
+| Sink/faucet balancing | **None modelled** (individual sinks exist, not tuned as a system) | 0 | [Pass 2] | [Pass 2] | Measured (absent) | - |
 
 **Targets**
 
 | Subsystem | Prototype | Alpha | Launch | Five-Year | Gap Remaining | Priority | Notes |
 |-----------|-----------|-------|--------|-----------|---------------|----------|-------|
-| Market | 0 | trade | auction house | regional markets | Whole system | High | Ties to social trade |
-| Sinks/faucets | 0 | repair sink | modelled + monitored | dynamic tuning | Whole model | High | Needs telemetry to tune |
+| Market | trade + auction house (shipped) | auction house | + regional markets | commodity pricing | Regional markets, commodity pricing | High | Direct trade + auction house done; regional markets next |
+| Sinks/faucets | repair + inn + craft sinks (shipped) | + monitored | modelled + monitored | dynamic tuning | Macro model + monitoring | High | Sinks exist; the macro model needs telemetry to tune |
 
 ---
 
@@ -338,11 +359,11 @@ engineering estimates unless a cited benchmark has landed.
 | Subsystem | Current CodeForge | AAA Benchmark | Historical MUD Benchmark | Confidence | Command / Source |
 |-----------|-------------------|---------------|--------------------------|------------|------------------|
 | Tick model | Synchronous pure-function `handle_command`, world-beat | [Pass 2] | [Pass 2] | Measured | forge.py |
-| Persistence | SQLite via SQLAlchemy 2.0, 5 tables (characters, job_progress, accounts, guilds, mail) | [Pass 2] | [Pass 2] | Measured | grep `__tablename__` |
+| Persistence | SQLite via SQLAlchemy 2.0, 8 tables (characters, job_progress, accounts, guilds, mail, auction_listings, loose_items, bans) | [Pass 2] | [Pass 2] | Measured | grep `__tablename__` |
 | Save cadence | On key events (login/logout/level/command milestones) | [Pass 2] | [Pass 2] | Measured | forge.py save_character |
-| Engine LOC (parts + forge) | 34,373 | n/a | n/a | Measured | census |
-| Total LOC incl. tests | 63,239 | n/a | n/a | Measured | `wc -l` parts forge tests |
-| Modules | 215 python (95 engine + 87 world + 33 shelf) | n/a | n/a | Measured | census |
+| Engine LOC (parts + forge) | 43,257 | n/a | n/a | Measured | census |
+| Total LOC incl. tests | 81,455 | n/a | n/a | Measured | `wc -l` parts forge tests |
+| Modules | 261 python (99 engine + 125 world + 37 shelf) | n/a | n/a | Measured | census |
 | Tests | full CI-gated suite (count via command, kept off docs to avoid drift) | n/a | n/a | Measured | `pytest --collect-only -q` |
 | Native accelerators | 7 organs (Rust nav, C++ map, Go edge, C textkernel, protobuf, SQL analytics, Lua) | [Pass 2] | [Pass 2] | Measured | ADRs 0010-0014 |
 | Max concurrent players | Single-process gateway (untested at scale) | [Pass 2] | [Pass 2] | Estimate | gateway.py |
@@ -352,7 +373,7 @@ engineering estimates unless a cited benchmark has landed.
 | Subsystem | Prototype | Alpha | Launch | Five-Year | Gap | Priority | Notes |
 |-----------|-----------|-------|--------|-----------|-----|----------|-------|
 | Concurrent players | 10 | 100 | 1,000 | 10,000 | Unproven past demo | High | Needs load test + serving model |
-| DB tables | 5 | ~8 | ~20 | sharded | Grows with features | Med | Market + a loose-items table are next |
+| DB tables | 8 | ~10 | ~20 | sharded | Grows with features | Med | Auction + loose-items tables shipped; a world-state + telemetry table are next |
 | Telemetry | seam | typed events | analytics pipeline | live dashboards | Absent | High | Reuse SQL analytics organ |
 
 ---
