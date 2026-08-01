@@ -7712,6 +7712,33 @@
     "updated": "2026-08-01"
   },
   {
+    "designation": "MOD-10.054",
+    "name": "source_connector",
+    "status": "active",
+    "function": "Stage 3: a safe, read-only, path-bounded local project-source connector - register a directory with provenance, inspect metadata (incl. git branch/commit from .git files, no subprocess), list/search/read ONLY approved files (refusing traversal, absolute paths, symlink escapes, and a secret denylist); a registered source feeds the Project Hub sources facet",
+    "label": "source_connector",
+    "file": "parts/seedlab/source_connector.py",
+    "type": "MOD",
+    "domain": "10",
+    "docs": "docs/seed_platform/RECENTERING.md",
+    "tests": "tests/test_source_connector.py",
+    "depends_on": [
+      "MOD-10.051"
+    ],
+    "related": [
+      "MOD-10.053"
+    ],
+    "reuse": "",
+    "tags": [
+      "module"
+    ],
+    "notes": "Stage 3 of the Seed Platform Production Directive. The control plane's read-only front door: path boundary + secret denylist are the two safety rails. Reuses Provenance from project_model. Isolated in parts/seedlab/.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-08-01",
+    "updated": "2026-08-01"
+  },
+  {
     "designation": "MOD-05.022",
     "name": "corpus",
     "status": "active",
