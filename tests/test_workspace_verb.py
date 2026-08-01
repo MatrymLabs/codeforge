@@ -75,6 +75,46 @@ def test_model_subcommand_empty_then_populated(tmp_path: Path) -> None:
     assert "widget" in out
 
 
+def _source_dir(tmp_path: Path, name: str = "gizmo") -> Path:
+    root = tmp_path / name
+    (root / name).mkdir(parents=True)
+    (root / name / "__init__.py").write_text("", encoding="utf-8")
+    (root / "pyproject.toml").write_text(f"[project]\nname = '{name}'\n", encoding="utf-8")
+    return root
+
+
+def test_connect_models_a_source_in_world(tmp_path: Path) -> None:
+    # The in-MUD loop: create a workspace, connect a source, model it, `model` shows it -- no CLI.
+    k = _kernel()
+    workspace_command(_owner(), "create Proj a demo", kernel=k)
+    sid = k.list_seeds()[0].identity.seed_id
+    store = InMemorySeedModels()
+    path = _source_dir(tmp_path)
+
+    out = workspace_command(_owner(), f"connect {sid} {path}", kernel=k, model_store=store)
+    assert "Connected" in out and "modeled it" in out and "gizmo" in out
+    assert "gizmo" in workspace_command(_owner(), f"model {sid}", kernel=k, model_store=store)
+
+
+def test_connect_needs_a_seed_and_path() -> None:
+    assert "usage: workspace connect" in workspace_command(
+        _owner(), "connect only-one", kernel=_kernel()
+    )
+
+
+def test_connect_to_an_unknown_workspace_is_clean(tmp_path: Path) -> None:
+    out = workspace_command(_owner(), f"connect nope {tmp_path}", kernel=_kernel())
+    assert "workspace: no Seed" in out
+
+
+def test_connect_to_a_bad_path_is_clean() -> None:
+    k = _kernel()
+    workspace_command(_owner(), "create Proj x", kernel=k)
+    sid = k.list_seeds()[0].identity.seed_id
+    out = workspace_command(_owner(), f"connect {sid} /no/such/dir/xyz", kernel=k)
+    assert "workspace:" in out and "directory" in out
+
+
 def test_model_of_an_unknown_workspace_is_clean() -> None:
     assert "workspace: no Seed" in workspace_command(_owner(), "model nope", kernel=_kernel())
 
