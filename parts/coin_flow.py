@@ -13,6 +13,7 @@ and in what proportion" -- the question the AAA scorecard flags as unanswerable 
 from __future__ import annotations
 
 from dataclasses import dataclass
+from math import ceil
 
 from parts.world.coinage import purse
 from parts.world.combat import (
@@ -83,6 +84,82 @@ def faucet_breakdown(npcs: dict[str, Npc]) -> FaucetBreakdown:
     return FaucetBreakdown(total=total, by_tier=by_tier, foe_count=count)
 
 
+# --- the balance verdict: does the faucet outrun the repair sink? --------------------------------
+#
+# The only sink that scales with combat (the activity that mints coins) is gear repair: each landed
+# strike wears one point = REPAIR_COST_PER_POINT coins to mend. So the coin a kill NETS into the
+# economy is its drop minus the repair the fight cost. Fight length is modelled from the foe's HP at
+# a documented reference strike: real level-appropriate players hit HARDER than this, so they land
+# FEWER strikes and pay LESS repair -- so any inflation this reports is a conservative floor, never
+# an overstatement.
+REFERENCE_STRIKE_DAMAGE = 10  # a deliberately low, documented per-strike reference (see above)
+
+
+@dataclass(frozen=True)
+class BalanceReport:
+    """Whether the designed economy mints faster than it drains, over a foe set.
+
+    `net` is total faucet minus total repair-sink; positive means coins accumulate (inflationary).
+    `by_tier` shows the net per tier, so the steepest imbalance (bosses) is visible."""
+
+    total_faucet: int
+    total_repair_sink: int
+    net: int
+    by_tier: dict[str, int]
+    verdict: str
+
+
+def fight_repair_sink(npc: Npc) -> int:
+    """The coins repairing the wear of one fight costs: strikes-to-fell (HP at the reference strike)
+    times the per-point repair rate. One point of weapon wear per landed strike."""
+    hp = npc.get("hp", 0)
+    strikes = max(1, ceil(hp / REFERENCE_STRIKE_DAMAGE))
+    return strikes * REPAIR_COST_PER_POINT
+
+
+def net_flow(npc: Npc) -> int:
+    """Coins one kill nets into the economy: its drop minus the repair its fight costs."""
+    return foe_faucet(npc) - fight_repair_sink(npc)
+
+
+def balance(npcs: dict[str, Npc]) -> BalanceReport:
+    """The faucet-vs-repair-sink balance over a foe set, with a one-line verdict."""
+    faucet = 0
+    sink = 0
+    by_tier: dict[str, int] = {}
+    for npc in npcs.values():
+        if not _is_combatant(npc):
+            continue
+        faucet += foe_faucet(npc)
+        sink += fight_repair_sink(npc)
+        tier = npc.get("tier", "normal") if npc.get("level") is not None else "tutorial"
+        by_tier[tier] = by_tier.get(tier, 0) + net_flow(npc)
+    net = faucet - sink
+    if net <= 0:
+        verdict = "BALANCED: repair drains at least what kills mint."
+    else:
+        pct = round(100 * net / faucet) if faucet else 0
+        verdict = (
+            f"INFLATIONARY: kills mint {pct}% more than repair drains "
+            "(a conservative floor; real players hit harder and pay less repair)."
+        )
+    return BalanceReport(
+        total_faucet=faucet, total_repair_sink=sink, net=net, by_tier=by_tier, verdict=verdict
+    )
+
+
+def render_balance(npcs: dict[str, Npc]) -> str:
+    """A live-ops verdict on the faucet/repair-sink balance, by tier."""
+    b = balance(npcs)
+    lines = ["== Coin Balance (faucet vs repair sink) =="]
+    lines.append(f"FAUCET  {purse(b.total_faucet)}   REPAIR SINK  {purse(b.total_repair_sink)}")
+    lines.append(f"NET     {'+' if b.net >= 0 else ''}{purse(b.net)} per full clear")
+    for tier, tier_net in sorted(b.by_tier.items()):
+        lines.append(f"          {tier:8} net {'+' if tier_net >= 0 else ''}{purse(tier_net)}")
+    lines.append(b.verdict)
+    return "\n".join(lines)
+
+
 def render_audit(npcs: dict[str, Npc]) -> str:
     """A live-ops one-look report of the designed coin economy over a foe set."""
     fb = faucet_breakdown(npcs)
@@ -98,4 +175,6 @@ def render_audit(npcs: dict[str, Npc]) -> str:
         f"BOUNTY  period-first kill pays x{SINK_RATES.boss_first_kill_bounty_mult} (boss) / "
         f"x{SINK_RATES.raid_first_kill_bounty_mult} (raid) the drop"
     )
+    lines.append("")
+    lines.append(render_balance(npcs))
     return "\n".join(lines)
