@@ -1,4 +1,4 @@
-.PHONY: hooks env fix lint typecheck test property fuzz coverage audit audit-runtime security sast secrets deps intake sbom bench trend slo loadtest artifact ai-eval retention doctor patch daily check readiness arc-verdicts truth forge cast-plan cast cast-selective cast-install-check cast-diff cast-update plugins coupling shelf-pour shelf-build smoke repo-integrity ship run world world-check store hardware clean serve backup restore db-up db-down db-migrate docs-serve docs-build demo-gif e2e evolution ritual-fast ritual ritual-down unskew loop proto contracts
+.PHONY: hooks env fix lint typecheck test property fuzz coverage audit audit-runtime security sast secrets deps intake sbom bench trend slo loadtest artifact ai-eval retention doctor patch daily check readiness arc-verdicts truth forge cast-plan cast cast-selective cast-install-check cast-diff cast-update plugins coupling shelf-pour shelf-build smoke repo-integrity ship run world world-check economy-audit store hardware clean serve backup restore db-up db-down db-migrate docs-serve docs-build demo-gif e2e evolution ritual-fast ritual ritual-down unskew loop proto contracts
 
 # --- Environment: create/validate the .venv, fail loud on version mismatch.
 # Uses uv when present (a Rust resolver; measured ~20x faster than pip on this host:
@@ -354,6 +354,11 @@ world:
 # references, canon drift). Exit non-zero on any problem, so it can gate a script.
 world-check:
 	@python3 -m tools.world validate
+
+# The Assayer: read-only audit of the DESIGNED coin economy (faucets vs sinks) over the
+# assembled Aethryn world, so live-ops can read the balance without instrumenting the server.
+economy-audit:
+	@FORGE_SEED=aethryn python3 -c "import parts.world.world; from parts.world.npcs import NPCS; from parts.coin_flow import render_audit; print(render_audit(NPCS))"
 
 store:
 	python3 -m parts.store
