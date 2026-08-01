@@ -141,6 +141,7 @@ from parts.world.ranks import wizard_command
 from parts.world.reputation import render_standing
 from parts.world.roaming import roam
 from parts.world.score_sheet import render_score_sheet
+from parts.world.search import world_search
 from parts.world.seed import load_splash
 from parts.world.session import SESSIONS, Session, display_name, roster
 from parts.world.shop import buy, render_shop, sell
@@ -1342,6 +1343,15 @@ def _build_commands() -> CommandSet:
             "CMD-04.037",
             "the Hardware Store index (store <part-id>)",
             lambda _s, arg: store(arg.lower()),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "search",
+            "CMD-04.114",
+            "search the world for rooms, items, and beings (search <words>)",
+            lambda _s, arg: world_search(arg),
             namespace=CORE,
         )
     )

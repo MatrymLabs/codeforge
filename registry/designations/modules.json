@@ -7497,5 +7497,28 @@
     "aliases": [],
     "created": "2026-08-01",
     "updated": "2026-08-01"
+  },
+  {
+    "designation": "MOD-04.150",
+    "name": "search",
+    "status": "active",
+    "function": "index the world's rooms, items, and NPCs and answer `search` by relevance",
+    "label": "world_search",
+    "file": "parts/world/search.py",
+    "type": "MOD",
+    "domain": "04",
+    "docs": "docs/architecture.md",
+    "tests": "tests/test_world_search.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "SQLite FTS5 world search adapter (T-AP-05); BM25 ranking, substring fallback",
+    "tags": [
+      "module"
+    ],
+    "notes": "R&D Technology Admission T-AP-05: SQLite FTS5 world search index over WORLD/ITEMS/NPCS.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-08-01",
+    "updated": "2026-08-01"
   }
 ]
