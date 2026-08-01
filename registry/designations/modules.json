@@ -7936,6 +7936,29 @@
     "updated": "2026-08-01"
   },
   {
+    "designation": "MOD-10.063",
+    "name": "verify_smt",
+    "status": "active",
+    "function": "the deep behavioral-equivalence gate: drive CrossHair's symbolic diff_behavior to prove a code transform preserved behavior, finding rare-input divergences the stdlib sampler (transform_verifier) misses; OPTIONAL (the [verify] extra), fails loud if absent, honest 'not a proof' caveat kept",
+    "label": "verify_smt",
+    "file": "parts/verify_smt.py",
+    "type": "MOD",
+    "domain": "10",
+    "docs": "labs/technology/reports/EXP-08-crosshair.md",
+    "tests": "tests/test_verify_smt.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "the proof-grade half of the verifier gate; pairs with the stdlib transform_verifier sampler; the roadmapped refactor tool's deep check",
+    "tags": [
+      "module"
+    ],
+    "notes": "Track-T T-EXP-08 / CAND-06 (CrossHair admitted as OPTIONAL). NOT a shelf part: crosshair is a heavy optional dep, so this lives outside parts/shelf/ (the poured Hardware Store stays portable). crosshair lazy-imported behind the [verify] extra; CI runs without it (symbolic tests skip). Runs on the aarch64 Pi / Py3.13 (z3 aarch64 wheel).",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-08-01",
+    "updated": "2026-08-01"
+  },
+  {
     "designation": "MOD-05.022",
     "name": "corpus",
     "status": "active",
