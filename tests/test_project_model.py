@@ -69,6 +69,40 @@ def test_missing_facets_default_to_empty_not_error():
     assert m.identity == "bare" and m.entities == [] and m.actions == []
 
 
+def test_new_fields_default_empty():
+    m = extract_model(_source())
+    assert m.interfaces == [] and m.unknowns == []  # backward-compatible optional facets
+
+
+def test_to_dict_from_dict_roundtrips():
+    from parts.seedlab.project_model import ProjectModel
+
+    m = extract_model(_source())
+    rebuilt = ProjectModel.from_dict(m.to_dict())
+    assert rebuilt == m  # persistence and the client contract share one honest shape
+
+
+def test_render_shows_interfaces_and_unknowns():
+    from parts.seedlab.project_model import ProjectModel
+
+    m = ProjectModel(
+        identity="X",
+        provenance=Provenance("s"),
+        interfaces=["cli.py"],
+        unknowns=["states not inferred"],
+    )
+    out = render_model(m)
+    assert "Interfaces (1): cli.py" in out
+    assert "Unknowns (inferred/uncertain" in out and "? states not inferred" in out
+
+
+def test_from_dict_refuses_a_malformed_model():
+    from parts.seedlab.project_model import ProjectModel
+
+    with pytest.raises(SeedLabError, match="malformed project model"):
+        ProjectModel.from_dict({"entities": ["X"]})  # no identity/provenance
+
+
 # --- refusal: a malformed source fails loud ----------------------------------------------------
 def test_a_spec_without_an_identity_is_refused():
     with pytest.raises(SeedLabError, match="identity"):

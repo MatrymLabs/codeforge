@@ -7739,6 +7739,62 @@
     "updated": "2026-08-01"
   },
   {
+    "designation": "MOD-10.055",
+    "name": "source_modeler",
+    "status": "active",
+    "function": "Stage 4: extract a structured ProjectModel from a registered local source - identity from a manifest (else dir name), entities + interfaces inferred from the file layout, provenance carried from the source; everything not determined (relationships/states/actions/inputs/outputs + inference basis) listed in unknowns (never claims complete automated understanding); model_and_store extracts + persists in one call",
+    "label": "source_modeler",
+    "file": "parts/seedlab/source_modeler.py",
+    "type": "MOD",
+    "domain": "10",
+    "docs": "docs/seed_platform/RECENTERING.md",
+    "tests": "tests/test_source_modeler.py",
+    "depends_on": [
+      "MOD-10.054",
+      "MOD-10.056"
+    ],
+    "related": [
+      "MOD-10.051"
+    ],
+    "reuse": "",
+    "tags": [
+      "module"
+    ],
+    "notes": "Stage 4 of the Seed Platform Production Directive. Bridges the Stage-3 source connector to the ProjectModel; honest inference (marks unknowns). Isolated in parts/seedlab/.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-08-01",
+    "updated": "2026-08-01"
+  },
+  {
+    "designation": "MOD-10.056",
+    "name": "model_store",
+    "status": "active",
+    "function": "Stage 4: persist and recover a Seed's extracted project models (file-backed JSON per seed/model, survives restart; in-memory variant for tests) and label them for the Project Hub models facet, each linked back to its source",
+    "label": "model_store",
+    "file": "parts/seedlab/model_store.py",
+    "type": "MOD",
+    "domain": "10",
+    "docs": "docs/seed_platform/RECENTERING.md",
+    "tests": "tests/test_model_store.py",
+    "depends_on": [
+      "MOD-10.051"
+    ],
+    "related": [
+      "MOD-10.053",
+      "MOD-10.055"
+    ],
+    "reuse": "",
+    "tags": [
+      "module"
+    ],
+    "notes": "Stage 4 of the Seed Platform Production Directive. Mirrors the Seed Kernel's file-backed persistence pattern for models. Isolated in parts/seedlab/.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-08-01",
+    "updated": "2026-08-01"
+  },
+  {
     "designation": "MOD-05.022",
     "name": "corpus",
     "status": "active",

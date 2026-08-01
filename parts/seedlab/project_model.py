@@ -19,7 +19,7 @@ project input." Status: PROTOTYPED.
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import asdict, dataclass, field
 from typing import Protocol, runtime_checkable
 
 
@@ -68,6 +68,33 @@ class ProjectModel:
     actions: list[str] = field(default_factory=list)
     inputs: list[str] = field(default_factory=list)
     outputs: list[str] = field(default_factory=list)
+    interfaces: list[str] = field(default_factory=list)
+    # What the extractor could NOT determine, stated plainly. The directive's rule: never claim
+    # complete automated understanding; mark inferred/uncertain fields.
+    unknowns: list[str] = field(default_factory=list)
+
+    def to_dict(self) -> dict:
+        """A machine-readable view for persistence and the Master-Client contract."""
+        return asdict(self)
+
+    @classmethod
+    def from_dict(cls, data: dict) -> ProjectModel:
+        """Rebuild a model from persisted JSON, failing loud on a malformed shape."""
+        try:
+            return cls(
+                identity=data["identity"],
+                provenance=Provenance(**data["provenance"]),
+                entities=list(data.get("entities", [])),
+                relationships=[Relationship(**r) for r in data.get("relationships", [])],
+                states=list(data.get("states", [])),
+                actions=list(data.get("actions", [])),
+                inputs=list(data.get("inputs", [])),
+                outputs=list(data.get("outputs", [])),
+                interfaces=list(data.get("interfaces", [])),
+                unknowns=list(data.get("unknowns", [])),
+            )
+        except (KeyError, TypeError) as exc:
+            raise SeedLabError(f"malformed project model: {exc}") from exc
 
 
 @runtime_checkable
@@ -163,4 +190,8 @@ def render_model(model: ProjectModel) -> str:
     lines.append(f"Actions ({len(model.actions)}): {', '.join(model.actions) or '-'}")
     lines.append(f"Inputs ({len(model.inputs)}): {', '.join(model.inputs) or '-'}")
     lines.append(f"Outputs ({len(model.outputs)}): {', '.join(model.outputs) or '-'}")
+    lines.append(f"Interfaces ({len(model.interfaces)}): {', '.join(model.interfaces) or '-'}")
+    if model.unknowns:
+        lines.append("Unknowns (inferred/uncertain, not verified):")
+        lines += [f"  ? {u}" for u in model.unknowns]
     return "\n".join(lines)
