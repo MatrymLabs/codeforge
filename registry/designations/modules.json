@@ -8348,5 +8348,51 @@
     "aliases": [],
     "created": "2026-08-01",
     "updated": "2026-08-01"
+  },
+  {
+    "designation": "MOD-05.088",
+    "name": "probabilistic",
+    "status": "active",
+    "function": "space-efficient probabilistic sketches with provable one-sided error bounds - Bloom (membership, no false negatives), HyperLogLog (cardinality), CountMin (frequency, over-counts only)",
+    "label": "probabilistic",
+    "file": "parts/shelf/probabilistic.py",
+    "type": "MOD",
+    "domain": "05",
+    "docs": "docs/hardware_store/patterns/framing.md",
+    "tests": "tests/test_probabilistic.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "members-and-counts at scale; world-gen dedup, distinct-count telemetry, heavy-hitters",
+    "tags": [
+      "module"
+    ],
+    "notes": "R&D Algorithms Lab (docs/rd EXP-31); master cross-domain ingestion survey; clean-room stdlib.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-08-01",
+    "updated": "2026-08-01"
+  },
+  {
+    "designation": "MOD-05.089",
+    "name": "transform_verifier",
+    "status": "active",
+    "function": "gate a code transform by proving it preserved behavior - a PARSE gate plus a differential BEHAVIOR gate (PRESERVED/BROKEN/INCONCLUSIVE); a dependency-free stand-in for CrossHair diffbehavior",
+    "label": "transform_verifier",
+    "file": "parts/shelf/transform_verifier.py",
+    "type": "MOD",
+    "domain": "05",
+    "docs": "docs/hardware_store/patterns/framing.md",
+    "tests": "tests/test_transform_verifier.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "the verifier half of the parts factory; pairs with content_address (structural filter, then behavioral gate)",
+    "tags": [
+      "module"
+    ],
+    "notes": "R&D Synthesis / Parts-Factory Lab (docs/rd EXP-32); pipeline/MVP verifier-gated-transforms corpus; clean-room stdlib.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-08-01",
+    "updated": "2026-08-01"
   }
 ]
