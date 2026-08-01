@@ -23,6 +23,8 @@ from typing import TYPE_CHECKING
 import structlog
 from fastapi.responses import Response
 
+from parts.shelf import trace as trace_ctx
+
 if TYPE_CHECKING:
     from fastapi import FastAPI, Request
 
@@ -120,8 +122,16 @@ def install_observability(app: FastAPI) -> None:
 
     @app.middleware("http")
     async def _observe(request: Request, call_next):
+        # Continue an inbound trace (client -> gateway) or mint a fresh one, so this
+        # request's log correlates end to end. A malformed header never breaks a request.
+        inbound = request.headers.get("traceparent")
+        try:
+            span = trace_ctx.continue_trace(inbound) if inbound else trace_ctx.start_trace()
+        except trace_ctx.TraceError:
+            span = trace_ctx.start_trace()
         start = time.perf_counter()
-        response = await call_next(request)
+        with trace_ctx.use_trace(span):
+            response = await call_next(request)
         elapsed = time.perf_counter() - start
         # The matched route template keeps metric cardinality bounded (not the raw path).
         route = getattr(request.scope.get("route"), "path", request.url.path)
@@ -132,7 +142,10 @@ def install_observability(app: FastAPI) -> None:
             route=route,
             status=response.status_code,
             duration_ms=round(elapsed * 1000, 2),
+            **span.log_fields(),
         )
+        # Echo the trace id back so a client (or the next hop) can correlate.
+        response.headers["traceparent"] = span.traceparent()
         return response
 
     @app.get("/metrics")
