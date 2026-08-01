@@ -65,6 +65,32 @@ def test_a_confirmed_trade_swaps_goods_and_coin_atomically():
         _teardown()
 
 
+def test_a_replayed_confirm_after_a_sealed_trade_never_re_swaps():
+    """Replay / duplicate-request safety (Stage 5): once a trade has sealed it is popped
+    from the registry, so a second `confirm` from either party finds no open trade and
+    moves nothing -- a double-sent confirm cannot duplicate the goods or coin already
+    swapped."""
+    try:
+        _hero("alia", coins=100)
+        _hero("bram", coins=0)
+        _give("alia", "ruby", "a ruby")
+        _open_trade("alia", "bram")
+        trade.add_item("alia", "ruby")
+        trade.offer_coins("alia", "30")
+        trade.confirm("alia")
+        assert "sealed" in trade.confirm("bram")  # the swap fires exactly once
+        assert items.ITEMS["ruby"]["location"] == carrier("bram")
+        assert (SESSIONS["alia"].coins, SESSIONS["bram"].coins) == (70, 30)
+        # replay the winning move from BOTH sides
+        assert "not in a trade" in trade.confirm("bram").lower()
+        assert "not in a trade" in trade.confirm("alia").lower()
+        # the ruby and the coin moved once and only once
+        assert items.ITEMS["ruby"]["location"] == carrier("bram")
+        assert (SESSIONS["alia"].coins, SESSIONS["bram"].coins) == (70, 30)
+    finally:
+        _teardown()
+
+
 def test_render_shows_both_sides_and_confirmation():
     try:
         _hero("alia")
