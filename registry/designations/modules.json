@@ -7905,6 +7905,37 @@
     "updated": "2026-08-01"
   },
   {
+    "designation": "MOD-10.062",
+    "name": "workspace_gmcp",
+    "status": "active",
+    "function": "project an engineering Seed's seedlab state into the Master Client's Engineering Workspace GMCP contracts (Project.Status, Source.Tree, Model.Schema) and turn a client's Seed.Create request into a real Seed via the Kernel, returning a Seed.Created verdict; pure builders, honest by construction (Build.Report not wired here yet)",
+    "label": "workspace_gmcp",
+    "file": "parts/seedlab/workspace_gmcp.py",
+    "type": "MOD",
+    "domain": "10",
+    "docs": "docs/seed_platform/RECENTERING.md",
+    "tests": "tests/test_workspace_gmcp.py",
+    "depends_on": [
+      "MOD-10.051",
+      "MOD-10.052",
+      "MOD-10.054"
+    ],
+    "related": [
+      "MOD-10.053",
+      "MOD-10.060",
+      "MOD-04.043"
+    ],
+    "reuse": "",
+    "tags": [
+      "module"
+    ],
+    "notes": "The GMCP client half of the workspace surface; parts/seedlab/workspace_verb.py (MOD-10.060, #730) is the in-MUD text half, reading the same seedlab modules so the two never drift. Package names match the Master Client's core/*.py PACKAGE constants exactly; client parsers are defensive so the engine emits the subset it models. Live gateway push is a deferred wire. Isolated in parts/seedlab/.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-08-01",
+    "updated": "2026-08-01"
+  },
+  {
     "designation": "MOD-05.022",
     "name": "corpus",
     "status": "active",

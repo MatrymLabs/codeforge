@@ -1,0 +1,208 @@
+"""Test twin for parts/seedlab/workspace_gmcp.py -- the engine speaking the client's workspace
+GMCP contracts.
+
+Acceptance: each builder projects a seedlab record into the exact package shape the Master Client
+parses (Project.Status, Source.Tree, Model.Schema), and a Seed.Create request mints a real Seed and
+returns a Seed.Created verdict. Refusal (fail loud / honest): a malformed create frame never reaches
+the Kernel and becomes an ok:false verdict; a duplicate name is refused with a reason; the engine
+emits only what it models (empty entity fields, no fabricated Build.Report).
+"""
+
+from __future__ import annotations
+
+import pytest
+
+from parts.seedlab.kernel import InMemorySeedStore, SeedKernel
+from parts.seedlab.project_model import Provenance, SpecSource, extract_model
+from parts.seedlab.source_connector import SourceRecord
+from parts.seedlab.workspace_gmcp import (
+    MODEL_SCHEMA_PACKAGE,
+    PROJECT_STATUS_PACKAGE,
+    SOURCE_TREE_PACKAGE,
+    SeedCreateRequest,
+    WorkspaceContractError,
+    create_from_request,
+    model_schema,
+    parse_seed_create,
+    project_status,
+    seed_created,
+    source_tree,
+    workspace_packages,
+)
+
+_CLOCK = iter(f"2026-08-01T00:00:{n:02d}+00:00" for n in range(120))
+
+
+def _kernel() -> SeedKernel:
+    return SeedKernel(InMemorySeedStore(), clock=lambda: next(_CLOCK))
+
+
+def _seed(kernel: SeedKernel, name: str = "Job Tracker", sid: str = "seed-jt"):
+    return kernel.create_seed(name, "josh", "a tiny tracker", seed_id=sid)
+
+
+def _source() -> SourceRecord:
+    return SourceRecord(
+        source_id="demo-src",
+        provenance=Provenance("demo-src", owner="josh", visibility="private"),
+        root="/home/josh/projects/job-tracker",
+        file_count=2,
+        branch="main",
+        commit="a1b2c3d",
+    )
+
+
+def _model():
+    spec = SpecSource(
+        {"identity": "job-tracker", "entities": ["Application", "Tag"]},
+        Provenance("job-tracker", owner="josh"),
+    )
+    return extract_model(spec)
+
+
+# --- Project.Status: the Seed's lifecycle projected -----------------------------------------------
+
+
+def test_project_status_names_the_seed_and_its_phase() -> None:
+    payload = project_status(_seed(_kernel()))
+    assert payload == {"seed": "Job Tracker", "phase": "created"}  # no branch/build/tests known yet
+
+
+def test_project_status_carries_branch_build_and_tests_when_known() -> None:
+    payload = project_status(
+        _seed(_kernel()),
+        branch="main",
+        build="passing",
+        tests={"passed": 42, "failed": 0},
+    )
+    assert payload["branch"] == "main"
+    assert payload["build"] == {"status": "passing"}
+    assert payload["tests"] == {"passed": 42, "failed": 0}
+
+
+# --- Source.Tree: the registered source projected ------------------------------------------------
+
+
+def test_source_tree_lists_files_with_repo_branch_and_commit() -> None:
+    payload = source_tree(_source(), ["src/app.py", "tests/test_app.py"], seed="Job Tracker")
+    assert payload["seed"] == "Job Tracker"
+    assert payload["repository"] == "job-tracker"  # the root's basename
+    assert payload["branch"] == "main" and payload["commit"] == "a1b2c3d"
+    assert payload["files"] == [
+        {"path": "src/app.py", "kind": "file"},
+        {"path": "tests/test_app.py", "kind": "file"},
+    ]
+
+
+def test_source_tree_omits_branch_when_there_is_no_vcs() -> None:
+    no_vcs = SourceRecord(
+        "s", Provenance("s"), root="/repos/plain", file_count=0, branch=None, commit=None
+    )
+    payload = source_tree(no_vcs, [], seed="s")
+    assert "branch" not in payload and "commit" not in payload  # honest: nothing to claim
+
+
+# --- Model.Schema: the extracted model projected (entity names, honest empty fields) -------------
+
+
+def test_model_schema_emits_entity_names_with_empty_fields() -> None:
+    payload = model_schema(_model(), seed="Job Tracker")
+    assert payload["seed"] == "Job Tracker"
+    assert payload["entities"] == [
+        {"name": "Application", "fields": []},  # fields await a richer extractor stage, honestly
+        {"name": "Tag", "fields": []},
+    ]
+
+
+def test_model_schema_defaults_the_seed_to_the_models_identity() -> None:
+    assert model_schema(_model())["seed"] == "job-tracker"
+
+
+# --- the create round-trip: a client request becomes a real Seed --------------------------------
+
+
+def test_a_valid_create_request_parses() -> None:
+    req = parse_seed_create({"name": "job-tracker", "kind": "Engineering", "description": " x "})
+    assert req == SeedCreateRequest(name="job-tracker", kind="engineering", description="x")
+
+
+@pytest.mark.parametrize(
+    "frame",
+    [
+        ["not", "an", "object"],  # not a dict
+        {"kind": "engineering"},  # no name
+        {"name": "  "},  # blank name
+        {"name": "ok", "kind": "spaceship"},  # unknown kind
+        {"name": "ok"},  # missing kind
+    ],
+)
+def test_a_malformed_create_request_fails_loud(frame) -> None:
+    with pytest.raises(WorkspaceContractError):
+        parse_seed_create(frame)
+
+
+def test_create_from_request_mints_a_real_seed_and_returns_the_verdict() -> None:
+    kernel = _kernel()
+    verdict = create_from_request(
+        kernel,
+        {"name": "job-tracker", "kind": "engineering", "description": "a tracker"},
+        owner="josh",
+    )
+    assert verdict["name"] == "job-tracker" and verdict["ok"] is True
+    seed_id = str(verdict["id"])
+    record = kernel.get(seed_id)  # the Seed really exists in the store now
+    assert record.identity.name == "job-tracker"
+    assert record.identity.purpose == "a tracker"  # description folded into purpose
+
+
+def test_create_folds_kind_into_purpose_when_no_description() -> None:
+    kernel = _kernel()
+    verdict = create_from_request(kernel, {"name": "world-x", "kind": "game"}, owner="josh")
+    record = kernel.get(str(verdict["id"]))
+    assert record.identity.purpose == "game Seed"  # intent not lost though the Kernel has no kind
+
+
+def test_a_malformed_create_frame_never_reaches_the_kernel() -> None:
+    kernel = _kernel()
+    verdict = create_from_request(kernel, {"kind": "engineering"}, owner="josh")  # no name
+    assert verdict["ok"] is False and "name" in str(verdict["reason"])
+    assert kernel.list_seeds() == []  # nothing was minted
+
+
+def test_a_kernel_refusal_becomes_an_honest_ok_false_verdict() -> None:
+    # a fixed minter forces the second create to collide on id, so the Kernel refuses; the refusal
+    # is surfaced as a verdict, not a crash.
+    kernel = SeedKernel(
+        InMemorySeedStore(), clock=lambda: next(_CLOCK), id_minter=lambda name: "seed-fixed"
+    )
+    first = create_from_request(kernel, {"name": "dup", "kind": "game"}, owner="josh")
+    assert first["ok"] is True
+    second = create_from_request(kernel, {"name": "dup", "kind": "game"}, owner="josh")
+    assert second["ok"] is False and second["reason"]  # a reason, never a crash
+    assert len(kernel.list_seeds()) == 1  # only the first was minted
+
+
+def test_seed_created_shapes_success_and_refusal() -> None:
+    assert seed_created("s", True, seed_id="seed-1") == {"name": "s", "ok": True, "id": "seed-1"}
+    assert seed_created("s", False, reason="taken") == {"name": "s", "ok": False, "reason": "taken"}
+
+
+# --- the aggregate a gateway would push ---------------------------------------------------------
+
+
+def test_workspace_packages_always_has_status_and_adds_the_rest_when_present() -> None:
+    kernel = _kernel()
+    record = _seed(kernel)
+    just_status = workspace_packages(record)
+    assert [p for p, _ in just_status] == [PROJECT_STATUS_PACKAGE]
+
+    full = workspace_packages(
+        record,
+        source=_source(),
+        files=["src/app.py"],
+        model=_model(),
+    )
+    names = [p for p, _ in full]
+    assert names == [PROJECT_STATUS_PACKAGE, SOURCE_TREE_PACKAGE, MODEL_SCHEMA_PACKAGE]
+    status_payload = full[0][1]
+    assert status_payload["branch"] == "main"  # the source's branch flows into the status
