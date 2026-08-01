@@ -7635,5 +7635,28 @@
     "aliases": [],
     "created": "2026-08-01",
     "updated": "2026-08-01"
+  },
+  {
+    "designation": "MOD-10.051",
+    "name": "project_model",
+    "status": "active",
+    "function": "the engineering Seed's first act: read a project source (+provenance) and extract a structured model (identity/entities/relationships/states/actions/inputs/outputs)",
+    "label": "project_model",
+    "file": "parts/seedlab/project_model.py",
+    "type": "MOD",
+    "domain": "10",
+    "docs": "docs/seed_platform/RECENTERING.md",
+    "tests": "tests/test_project_model.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "module"
+    ],
+    "notes": "First slice of the Seed-as-engineering-environment recenter (the /home/josh/Projects/prompt directive). Isolated in parts/seedlab/, not parts/world/, so the game Seed model is untouched.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-08-01",
+    "updated": "2026-08-01"
   }
 ]
