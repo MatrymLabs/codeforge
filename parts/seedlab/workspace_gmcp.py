@@ -15,10 +15,10 @@ Two laws hold, the same as parts/gmcp.py:
   source of truth, never a mutation. The gateway owns the socket and decides when to send.
 - **Honest by construction (No Vision Theater).** A builder emits only what THIS card wires. Per-
   entity fields are not modeled yet, so `Model.Schema` carries entity names with empty field lists.
-  `Build.Report` is deliberately NOT emitted here: a build/test model landed in a parallel seedlab
-  stage (`tool_runner`), but wiring its results into the client contract is a follow-up, not this
-  slice - and fabricating a "run" would be a lie. When those are wired, the packages fill; the
-  contract shape does not change.
+  `Build.Report` projects the `tool_runner` stage's real runs into build STEPS and an honest `ok`
+  verdict, but its `tests`/`artifacts` seams stay empty until a stage actually parses test counts or
+  records artifacts - the run model does not carry them, and fabricating a count would be a lie. As
+  those land, the packages fill; the contract shape does not change.
 
 The client's parsers are defensive (a missing field takes a default, a bad frame is surfaced), so
 the engine emits the subset it has and the client renders it. Pure and offline: the only side effect
@@ -27,12 +27,14 @@ is through an injected `SeedKernel` (a test injects an in-memory store); nothing
 
 from __future__ import annotations
 
+from collections.abc import Sequence
 from dataclasses import dataclass
 from pathlib import PurePath
 
 from parts.seedlab.kernel import SeedKernel, SeedKernelError, SeedRecord
 from parts.seedlab.project_model import ProjectModel
 from parts.seedlab.source_connector import SourceRecord
+from parts.seedlab.tool_runner import ToolRunResult
 
 # --- the workspace package names (must match the client's core/*.py PACKAGE constants) -----------
 #: An engineering Seed's project status -> the client's Project Hub (core/project.py).
@@ -45,6 +47,8 @@ MODEL_SCHEMA_PACKAGE = "Model.Schema"
 SEED_CREATE_PACKAGE = "Seed.Create"
 #: The engine's verdict on a create request (engine -> client), read by core/seed_create.py.
 SEED_CREATED_PACKAGE = "Seed.Created"
+#: An engineering Seed's build/test run -> the client's Build Report (core/build.py).
+BUILD_REPORT_PACKAGE = "Build.Report"
 
 #: The kinds of Seed a client may ask to create (matches the client's SEED_KINDS).
 SEED_KINDS = ("engineering", "game")
@@ -114,6 +118,52 @@ def model_schema(model: ProjectModel, *, seed: str | None = None) -> dict[str, o
         "seed": seed or model.identity,
         "entities": [{"name": name, "fields": []} for name in model.entities],
     }
+
+
+def build_report(
+    runs: Sequence[ToolRunResult],
+    *,
+    seed: str,
+    tests: dict[str, int] | None = None,
+    artifacts: list[dict[str, object]] | None = None,
+) -> dict[str, object]:
+    """The `Build.Report` payload for a Seed's tool runs: each run becomes a build STEP (named by
+    its profile, its status the run's outcome), and the report is `ok` only when every step passed
+    (an empty run log is not `ok` - nothing ran to succeed).
+
+    `tests`/`artifacts` are optional seams left open on purpose: the run model (`ToolRunResult`)
+    records a run's exit, timing, and output but not parsed test COUNTS or emitted artifacts, so
+    this builder does not invent them. Absent, the client renders 0 tests and no artifacts, which is
+    honest. A later stage that actually sources counts or artifacts passes them here; the contract
+    shape does not change (No Vision Theater)."""
+    payload: dict[str, object] = {
+        "seed": seed,
+        "ok": bool(runs) and all(run.ok for run in runs),
+        "steps": [_run_step(run) for run in runs],
+    }
+    if tests is not None:
+        payload["tests"] = {
+            "passed": int(tests.get("passed", 0)),
+            "failed": int(tests.get("failed", 0)),
+            "skipped": int(tests.get("skipped", 0)),
+        }
+    if artifacts:
+        payload["artifacts"] = artifacts
+    return payload
+
+
+def _run_step(run: ToolRunResult) -> dict[str, str]:
+    """One build step from a tool run: named by its profile (its kind when it has no profile), its
+    status the run's outcome - "passed" on a clean exit, "timed out" when it ran over, else
+    "failed". The client drops a nameless step, so the name always falls back to a non-empty
+    label."""
+    if run.timed_out:
+        status = "timed out"
+    elif run.exit_code == 0:
+        status = "passed"
+    else:
+        status = "failed"
+    return {"name": run.profile or run.kind or "run", "status": status}
 
 
 # --- the create round-trip: a client request becomes a real Seed --------------------------------
@@ -191,13 +241,13 @@ def workspace_packages(
     source: SourceRecord | None = None,
     files: list[str] | None = None,
     model: ProjectModel | None = None,
+    runs: Sequence[ToolRunResult] | None = None,
     branch: str | None = None,
 ) -> list[tuple[str, dict[str, object]]]:
     """The (package, payload) pairs a gateway emits for an engineering Seed: always its Project
-    Status, plus a Source Tree when a source is registered and a Model Schema when a model is
-    extracted. The one call a live driver would loop over to push the workspace; each pair frames
-    with `parts.gmcp.gmcp_frame`. Build.Report is absent until the engine models a real build/test
-    run (No Vision Theater)."""
+    Status, plus a Source Tree when a source is registered, a Model Schema when a model is
+    extracted, and a Build Report when tool runs have happened. The one call a live driver would
+    loop over to push the workspace; each pair frames with `parts.gmcp.gmcp_frame`."""
     seed = record.identity.name
     packages: list[tuple[str, dict[str, object]]] = [
         (PROJECT_STATUS_PACKAGE, project_status(record, branch=branch or _source_branch(source)))
@@ -206,6 +256,8 @@ def workspace_packages(
         packages.append((SOURCE_TREE_PACKAGE, source_tree(source, files or [], seed=seed)))
     if model is not None:
         packages.append((MODEL_SCHEMA_PACKAGE, model_schema(model, seed=seed)))
+    if runs:
+        packages.append((BUILD_REPORT_PACKAGE, build_report(runs, seed=seed)))
     return packages
 
 

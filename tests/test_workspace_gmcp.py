@@ -2,25 +2,30 @@
 GMCP contracts.
 
 Acceptance: each builder projects a seedlab record into the exact package shape the Master Client
-parses (Project.Status, Source.Tree, Model.Schema), and a Seed.Create request mints a real Seed and
-returns a Seed.Created verdict. Refusal (fail loud / honest): a malformed create frame never reaches
-the Kernel and becomes an ok:false verdict; a duplicate name is refused with a reason; the engine
-emits only what it models (empty entity fields, no fabricated Build.Report).
+parses (Project.Status, Source.Tree, Model.Schema, Build.Report), and a Seed.Create request mints a
+real Seed and returns a Seed.Created verdict. Refusal (fail loud / honest): a malformed create frame
+never reaches the Kernel and becomes an ok:false verdict; a duplicate name is refused with a reason;
+the engine emits only what it models (empty entity fields; Build.Report carries real run steps and
+an honest ok verdict but empty test/artifact seams, never a fabricated count).
 """
 
 from __future__ import annotations
 
 import pytest
 
+from parts.gmcp import gmcp_frame
 from parts.seedlab.kernel import InMemorySeedStore, SeedKernel
 from parts.seedlab.project_model import Provenance, SpecSource, extract_model
 from parts.seedlab.source_connector import SourceRecord
+from parts.seedlab.tool_runner import ToolRunResult
 from parts.seedlab.workspace_gmcp import (
+    BUILD_REPORT_PACKAGE,
     MODEL_SCHEMA_PACKAGE,
     PROJECT_STATUS_PACKAGE,
     SOURCE_TREE_PACKAGE,
     SeedCreateRequest,
     WorkspaceContractError,
+    build_report,
     create_from_request,
     model_schema,
     parse_seed_create,
@@ -58,6 +63,23 @@ def _model():
         Provenance("job-tracker", owner="josh"),
     )
     return extract_model(spec)
+
+
+def _run(
+    profile: str = "ci", *, kind: str = "build", exit_code: int = 0, timed_out: bool = False
+) -> ToolRunResult:
+    return ToolRunResult(
+        seed_id="seed-jt",
+        kind=kind,
+        profile=profile,
+        argv=["make", kind],
+        exit_code=exit_code,
+        output="",
+        duration=0.1,
+        timed_out=timed_out,
+        cwd="/srv/seed/work",
+        when="2026-08-01T00:00:00+00:00",
+    )
 
 
 # --- Project.Status: the Seed's lifecycle projected -----------------------------------------------
@@ -206,3 +228,74 @@ def test_workspace_packages_always_has_status_and_adds_the_rest_when_present() -
     assert names == [PROJECT_STATUS_PACKAGE, SOURCE_TREE_PACKAGE, MODEL_SCHEMA_PACKAGE]
     status_payload = full[0][1]
     assert status_payload["branch"] == "main"  # the source's branch flows into the status
+
+
+# --- Build.Report: a Seed's tool runs projected into a run summary --------------------------------
+
+
+def test_build_report_projects_runs_into_steps_and_an_ok_verdict() -> None:
+    payload = build_report([_run("lint"), _run("test", kind="test")], seed="Job Tracker")
+    assert payload["seed"] == "Job Tracker"
+    assert payload["ok"] is True  # every step passed
+    assert payload["steps"] == [
+        {"name": "lint", "status": "passed"},
+        {"name": "test", "status": "passed"},
+    ]
+    # the seams stay empty until a stage sources them (No Vision Theater)
+    assert "tests" not in payload
+    assert "artifacts" not in payload
+
+
+def test_build_report_is_not_ok_when_any_step_fails_or_times_out() -> None:
+    failed = build_report([_run("lint"), _run("build", exit_code=1)], seed="s")
+    assert failed["ok"] is False
+    assert failed["steps"] == [
+        {"name": "lint", "status": "passed"},
+        {"name": "build", "status": "failed"},
+    ]
+
+    slow = build_report([_run("e2e", timed_out=True)], seed="s")
+    assert slow["ok"] is False
+    assert slow["steps"] == [{"name": "e2e", "status": "timed out"}]
+
+
+def test_build_report_empty_run_log_is_not_ok() -> None:
+    # nothing ran, so nothing succeeded -- an empty log is honestly not ok, with no steps.
+    payload = build_report([], seed="s")
+    assert payload == {"seed": "s", "ok": False, "steps": []}
+
+
+def test_build_report_step_name_falls_back_so_it_is_never_dropped() -> None:
+    # the client drops a nameless step; a profileless run still names itself by kind.
+    payload = build_report([_run("", kind="test")], seed="s")
+    assert payload["steps"] == [{"name": "test", "status": "passed"}]
+
+
+def test_build_report_fills_the_test_and_artifact_seams_when_given() -> None:
+    payload = build_report(
+        [_run("test", kind="test")],
+        seed="s",
+        tests={"passed": 12, "failed": 1, "skipped": 2},
+        artifacts=[{"name": "app.whl", "kind": "wheel", "bytes": 4096}],
+    )
+    assert payload["tests"] == {"passed": 12, "failed": 1, "skipped": 2}
+    assert payload["artifacts"] == [{"name": "app.whl", "kind": "wheel", "bytes": 4096}]
+
+
+def test_build_report_frames_as_gmcp() -> None:
+    # the payload the gateway would push is JSON-able through the real framer.
+    frame = gmcp_frame(BUILD_REPORT_PACKAGE, build_report([_run()], seed="s"))
+    assert isinstance(frame, bytes)
+    assert b"Build.Report" in frame
+
+
+def test_workspace_packages_adds_build_report_only_when_runs_happened() -> None:
+    kernel = _kernel()
+    record = _seed(kernel)
+    without = workspace_packages(record)
+    assert BUILD_REPORT_PACKAGE not in [p for p, _ in without]
+
+    withruns = workspace_packages(record, runs=[_run()])
+    names = [p for p, _ in withruns]
+    assert names == [PROJECT_STATUS_PACKAGE, BUILD_REPORT_PACKAGE]
+    assert withruns[-1][1]["seed"] == record.identity.name
