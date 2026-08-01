@@ -29,7 +29,7 @@ _GH_INTERIOR = {
     "greenhold_granary",
     "greenhold_undercroft",
     "greenhold_fields",
-    # The deep Source descent below the undercroft (the moltenhold pattern: a town + internal dungeon).
+    # The deep Source descent below the undercroft (the moltenhold pattern: a town + dungeon).
     "greenhold_deepstair",
     "source_gallery",
     "source_channelworks",
@@ -64,8 +64,8 @@ def test_every_authored_town_builds_and_its_exits_stay_within_the_town():
 
 def test_greenhold_is_a_dense_authored_town():
     rooms, npcs, items = towns.raise_town(_GH)
-    assert set(rooms) == _GH_INTERIOR  # five town subareas + the five-room Source descent below them
-    # Multiple voices: a keeper, a miller, a gossip, and the deep-stair scholar (peaceful, with topics).
+    assert set(rooms) == _GH_INTERIOR  # five town subareas + the five-room Source descent
+    # Multiple voices: a keeper, a miller, a gossip, and the deep-stair scholar (peaceful).
     talkers = [n for n in npcs.values() if n["hp"] == 0 and n.get("topics")]
     assert len(talkers) >= 3
     foes = [n for n in npcs.values() if n.get("aggressive")]
