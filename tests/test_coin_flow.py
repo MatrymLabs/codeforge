@@ -96,3 +96,41 @@ def test_render_audit_shows_faucet_sinks_and_bounty():
     out = render_audit({"vermin": _foe(level=3), "dragon": _foe(level=10, tier="boss")})
     assert "FAUCET" in out and "SINKS" in out and "BOUNTY" in out
     assert "boss" in out  # the tier breakdown is shown
+
+
+# --- the balance verdict: faucet vs the repair sink ----------------------------------------------
+
+
+def test_fight_repair_sink_is_strikes_to_fell_at_the_reference_damage():
+    # hp 16 at reference damage 10 -> ceil(16/10)=2 strikes -> 2 coins of weapon repair
+    assert coin_flow.fight_repair_sink(_foe(hp=16)) == 2
+    assert coin_flow.fight_repair_sink(_foe(hp=1)) == 1  # never zero for a real fight
+
+
+def test_net_flow_is_the_drop_minus_the_fights_repair():
+    # a boss L10 (hp 200): drop = 10*10 = 100; sink = ceil(200/10)=20; net = +80
+    foe = _foe(hp=200, level=10, tier="boss")
+    assert coin_flow.foe_faucet(foe) == 100
+    assert coin_flow.fight_repair_sink(foe) == 20
+    assert coin_flow.net_flow(foe) == 80
+
+
+def test_a_high_faucet_low_hp_world_reads_inflationary():
+    # a boss mints far more than its short fight drains -> the verdict flags inflation
+    report = coin_flow.balance({"boss": _foe(hp=50, level=20, tier="boss")})  # drop 200, sink 5
+    assert report.net == 195
+    assert "INFLATIONARY" in report.verdict
+    assert report.by_tier["boss"] == 195
+
+
+def test_a_tanky_low_drop_world_can_balance():
+    # a foe whose long fight costs more repair than its drop nets negative -> BALANCED verdict
+    report = coin_flow.balance({"sponge": _foe(hp=100, level=1, tier="normal")})  # drop 1, sink 10
+    assert report.net < 0
+    assert "BALANCED" in report.verdict
+
+
+def test_render_audit_now_carries_the_balance_verdict():
+    out = render_audit({"dragon": _foe(hp=40, level=10, tier="boss")})
+    assert "Coin Balance" in out and "NET" in out
+    assert "INFLATIONARY" in out or "BALANCED" in out
