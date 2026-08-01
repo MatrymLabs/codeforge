@@ -1,4 +1,4 @@
-.PHONY: hooks env fix lint typecheck test property fuzz coverage audit audit-runtime security sast secrets deps intake sbom bench trend slo loadtest artifact ai-eval retention doctor patch daily check readiness arc-verdicts truth forge cast-plan cast cast-selective cast-install-check cast-diff cast-update plugins coupling shelf-pour shelf-build smoke repo-integrity ship run world world-check economy-audit store hardware clean serve backup restore db-up db-down db-migrate docs-serve docs-build demo-gif e2e evolution ritual-fast ritual ritual-down unskew loop proto contracts
+.PHONY: hooks env fix lint typecheck test property fuzz coverage audit audit-runtime security sast secrets deps intake sbom bench trend slo loadtest artifact ai-eval retention doctor patch daily check readiness arc-verdicts truth forge cast-plan cast cast-selective cast-install-check cast-diff cast-update deploy-proof plugins coupling shelf-pour shelf-build smoke repo-integrity ship run world world-check economy-audit store hardware clean serve backup restore db-up db-down db-migrate docs-serve docs-build demo-gif e2e evolution ritual-fast ritual ritual-down unskew loop proto contracts
 
 # --- Environment: create/validate the .venv, fail loud on version mismatch.
 # Uses uv when present (a Rust resolver; measured ~20x faster than pip on this host:
@@ -99,6 +99,13 @@ cast-plan:
 # Usage: make cast TEMPLATE=blank_mud NAME=Demo DEST=../codeforge-cast-demo ---
 cast:
 	@python3 -m parts.cast generate $(or $(TEMPLATE),blank_mud) $(or $(NAME),Demo) $(or $(DEST),../codeforge-cast-demo) $$(git rev-parse --short HEAD 2>/dev/null || echo unknown)
+
+# --- Deploy-proof: pour the REAL Aethryn game Seed (whole engine + world), boot it in a fresh
+# subprocess, and prove it serves play commands over its own world - the honest proof the game
+# Seed's deployment is real, at the scale the platform is capable of creating. Heavy (whole-engine
+# vendor), so it is a standalone proof, not a unit gate. Usage: make deploy-proof ---
+deploy-proof:
+	@python3 scripts/deploy_aethryn_seed.py
 
 # --- Forge: the manufacturing capstone. ONE command forges a standalone game - plan, selectively
 # vendor the surfaces' closure, prove it with the broad harness - and prints the summary.

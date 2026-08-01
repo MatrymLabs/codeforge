@@ -7660,6 +7660,85 @@
     "updated": "2026-08-01"
   },
   {
+    "designation": "MOD-10.052",
+    "name": "kernel",
+    "status": "active",
+    "function": "Seed identity + lifecycle: create/get/list/start/stop/archive a Seed as an addressable entity with owner authorization, an audit trail, and file-backed persistence that survives restart -- independent of any game world",
+    "label": "kernel",
+    "file": "parts/seedlab/kernel.py",
+    "type": "MOD",
+    "domain": "10",
+    "docs": "docs/seed_platform/RECENTERING.md",
+    "tests": "tests/test_kernel.py",
+    "depends_on": [],
+    "related": [
+      "MOD-10.051"
+    ],
+    "reuse": "",
+    "tags": [
+      "module"
+    ],
+    "notes": "Stage 1 of the Seed Platform Production Directive (the /home/josh/Projects/Codeforge prompt). The Seed Kernel: a Seed becomes a first-class persistent entity distinct from the FORGE_SEED game-data pack. Isolated in parts/seedlab/, no parts/world/ import; runtime 'start' is the lifecycle state machine + a persisted session, not yet a spawned server process.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-08-01",
+    "updated": "2026-08-01"
+  },
+  {
+    "designation": "MOD-10.053",
+    "name": "project_hub",
+    "status": "active",
+    "function": "Stage 2: the Seed's functional Project Hub - render one Seed's identity + lifecycle + project facets (sources/models/builds/tests/targets/risks/decisions) as both a text look (look/show status/list <facet>/show history) and a versioned structured client contract, both projected from one source of truth",
+    "label": "project_hub",
+    "file": "parts/seedlab/project_hub.py",
+    "type": "MOD",
+    "domain": "10",
+    "docs": "docs/seed_platform/RECENTERING.md",
+    "tests": "tests/test_project_hub.py",
+    "depends_on": [
+      "MOD-10.052"
+    ],
+    "related": [
+      "MOD-10.051"
+    ],
+    "reuse": "",
+    "tags": [
+      "module"
+    ],
+    "notes": "Stage 2 of the Seed Platform Production Directive. Composes the Seed Kernel; a pure projection of persisted Seed state. Empty facets read 'none yet (Stage N)' - honest, never decorative. Isolated in parts/seedlab/.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-08-01",
+    "updated": "2026-08-01"
+  },
+  {
+    "designation": "MOD-10.054",
+    "name": "source_connector",
+    "status": "active",
+    "function": "Stage 3: a safe, read-only, path-bounded local project-source connector - register a directory with provenance, inspect metadata (incl. git branch/commit from .git files, no subprocess), list/search/read ONLY approved files (refusing traversal, absolute paths, symlink escapes, and a secret denylist); a registered source feeds the Project Hub sources facet",
+    "label": "source_connector",
+    "file": "parts/seedlab/source_connector.py",
+    "type": "MOD",
+    "domain": "10",
+    "docs": "docs/seed_platform/RECENTERING.md",
+    "tests": "tests/test_source_connector.py",
+    "depends_on": [
+      "MOD-10.051"
+    ],
+    "related": [
+      "MOD-10.053"
+    ],
+    "reuse": "",
+    "tags": [
+      "module"
+    ],
+    "notes": "Stage 3 of the Seed Platform Production Directive. The control plane's read-only front door: path boundary + secret denylist are the two safety rails. Reuses Provenance from project_model. Isolated in parts/seedlab/.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-08-01",
+    "updated": "2026-08-01"
+  },
+  {
     "designation": "MOD-05.022",
     "name": "corpus",
     "status": "active",

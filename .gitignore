@@ -10,6 +10,7 @@ accounts.json
 codeforge.db
 codeforge.db.bak*
 *.db.bak*
+.seedlab/
 backups/
 *.kdbx
 
