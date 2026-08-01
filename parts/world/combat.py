@@ -285,6 +285,16 @@ def _resolve_npc_blow(session: Session, npc: Npc, verb: str) -> str:
     # A wounded BOSS enrages (parts.world.boss_phases): below its threshold its blows redouble, and
     # the room hears it announced once. A non-boss, or a boss above the line, is untouched.
     raw, phase_line = boss_phase(npc, raw)
+    # A RAID boss scales its DIFFICULTY with the co-located cohort: the more heroes stand against
+    # it, the harder its blows land (a raid should demand the trinity, not fall to a bigger zerg).
+    # A solo cohort is x1 (backward-compatible); each extra mate adds RAID_DIFFICULTY_PER_MEMBER.
+    if npc.get("raid"):
+        from parts.world.party import members_in_room
+
+        present = len(members_in_room(session.player_id, session.location))
+        cohort = min(RAID_COHORT_CAP, max(1, present))
+        if cohort > 1:
+            raw = int(raw * (1 + (cohort - 1) * RAID_DIFFICULTY_PER_MEMBER))
     # A weakened foe (a `weaken` ability) lands softer, and this blow spends one weaken charge.
     sapped = npc.get("weakened", 0)
     if sapped > 0:
@@ -407,6 +417,10 @@ RAID_BOUNTY_MULT = 20
 RAID_COHORT_MIN = (
     2  # a raid's marquee weekly bounty pays only to a co-located cohort, not a solo lap
 )
+# Raid DIFFICULTY scales with the cohort too: a raid boss hits +20% per extra hero present, so a
+# bigger band faces a bigger threat (not just a bigger reward). Solo (cohort 1) is x1, unchanged.
+RAID_DIFFICULTY_PER_MEMBER = 0.20
+RAID_COHORT_CAP = 8  # beyond this the scaling flattens, so a zerg cannot inflate it without bound
 
 
 def _kill_bounty(session: Session, npc: Npc, nid: str) -> str:
