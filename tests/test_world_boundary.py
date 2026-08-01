@@ -60,6 +60,7 @@ _GAME_SEED = {
     "rooms",
     "items",
     "npcs",
+    "search",
     "doors",
     "combat",
     "threat",
