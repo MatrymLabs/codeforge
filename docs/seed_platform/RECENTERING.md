@@ -33,6 +33,7 @@ Labels: VISION · RESEARCH · SPECIFIED · PROTOTYPED · INTEGRATED · PROVEN ·
 | **Seed identity + lifecycle (as an addressable entity)** | **PROTOTYPED** | `parts/seedlab/kernel.py` (MOD-10.052) — create/start/stop/archive a Seed with owner authz, an audit trail, and file-backed persistence that survives restart; distinct from the `FORGE_SEED` game pack |
 | **Functional Project Hub (enter + inspect a Seed)** | **PROTOTYPED** | `parts/seedlab/project_hub.py` (MOD-10.053) — a Seed location that renders identity/status/facets as a text `look` + its sub-verbs AND a versioned structured client contract, both from one source of truth; empty facets read "none yet (Stage N)" |
 | **Local source connector (read-only, path-bounded)** | **PROTOTYPED** | `parts/seedlab/source_connector.py` (MOD-10.054) — register a local dir with provenance; list/search/read only approved files; refuses traversal, absolute paths, symlink escapes, and a secret denylist; feeds the Hub's `sources` facet |
+| **Source → project model (persisted, honest)** | **PROTOTYPED** | `parts/seedlab/source_modeler.py` (MOD-10.055) + `model_store.py` (MOD-10.056) — extract a `ProjectModel` from a registered source (identity/entities/interfaces/provenance derived; everything else marked in `unknowns`), persist it (survives restart), and light up the Hub's `models` facet linked to source evidence |
 | Repo / IDE / API / DB connectors (remote) | **VISION** | remote repo/IDE/DB connectors not built; local FS connector is the first real one |
 | Multi-AI-provider connector | **VISION** | internal AI helpers exist, not a provider connector |
 | Reverse-engineering / walkthrough-to-world | **VISION** | — |
@@ -124,14 +125,25 @@ and symlink escapes are refused — `resolve()` collapses them and the bounds-ch
 A registered source's `source_label` feeds the Project Hub's `sources` facet — the first facet to go
 from "none yet" to real data (integration-tested).
 
+## Slice 6 (PROTOTYPED, shipped): source → persisted project model (Stage 4)
+
+`parts/seedlab/source_modeler.py` (MOD-10.055) turns a registered `LocalSource` into a `ProjectModel`
+without overclaiming: it derives **identity** (a manifest name, else the dir name), **entities** and
+**interfaces** (inferred from the file layout + declared entry points), and carries **provenance**
+straight from the source — then lists everything it could *not* determine (relationships, states,
+actions, inputs, outputs, and the basis of each inference) in **`unknowns`**. The directive's rule is
+honored literally: never claim complete automated understanding. `ProjectModel` gained `interfaces`,
+`unknowns`, and `to_dict`/`from_dict`. `parts/seedlab/model_store.py` (MOD-10.056) persists models
+(file-backed, one JSON per seed/model, survives restart) and labels them for the Hub's `models`
+facet, each linked back to its source. Full flow integration-tested: register → model → persist →
+the Hub's `models` facet and structured contract both show it.
+
 ## Next slices (roadmap, each an isolated vertical step)
 
-1. A **first project model** (Stage 4): wire `project_model.extract_model` to a registered source
-   (read its manifests/files) and persist it into the Hub's `models` facet, linked to source evidence.
-2. A **MUD `model` verb** + a Master-Client panel over `render_status`/`contract` (inspect a Seed and
-   its project model live in the client).
-3. One **controlled build/test action** (Stage 5): an allowlisted, timeout-bounded, output-captured,
+1. A **MUD `model`/`seed` verb** + a Master-Client panel over `render_status`/`contract`/`render_model`
+   (enter and inspect a Seed and its model live in the running MUD, not just the seedlab CLI).
+2. One **controlled build/test action** (Stage 5): an allowlisted, timeout-bounded, output-captured,
    audited runner over an approved source — reusing the existing `FailsafeRunner` where it fits.
-4. The **first generated non-game target** (Stage 6): a small original **CLI app** (Josh's call,
+3. The **first generated non-game target** (Stage 6): a small original **CLI app** (Josh's call,
    2026-08-01) generated from a validated model, with tests + provenance + checksums — closing the
    directive's first end-to-end vertical slice and proving the platform *generalizes* past the game.
