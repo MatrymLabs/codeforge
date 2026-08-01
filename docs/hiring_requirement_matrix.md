@@ -2,7 +2,8 @@
 
 *Maps 2026 hiring requirements (`docs/research/`) to concrete repo evidence. Status:
 proven / partial / missing / planned. VeritasGate: "proven" requires a cited artifact that
-exists. Last audited: 2026-07-16. Primary target: full-stack developer.*
+exists. Last audited: 2026-07-31. Primary target: Backend / Platform / Systems engineer
+(full-stack breadth is demonstrated and kept current, but backend/platform is the aim).*
 
 | Requirement | Level | Role relevance | Repo evidence | Status | Next task | Priority |
 |---|---|---|---|---|---|---|
@@ -19,7 +20,7 @@ exists. Last audited: 2026-07-16. Primary target: full-stack developer.*
 | Explain trade-offs | mid-sr | SWE | ADRs, `tooling_strategy.md`, pioneer docs | proven | keep | - |
 | REST API design + docs | mid | backend, full-stack | FastAPI + `/api/status` + `/docs` OpenAPI (`parts/dashboard.py`) | proven | keep | - |
 | Frontend (HTML/CSS/JS) | mid | full-stack | server-rendered dashboard (`parts/dashboard.py`, HTMX, e2e) | proven | keep | - |
-| **React/Next.js + TypeScript** | mid | full-stack | none | **planned** | separate `codeforge-web` flagship | P2 |
+| **React/Next.js + TypeScript** | mid | full-stack | `codeforge-console` (Next.js/React/TS front end over the readiness API) + `saas-starter` React/TS front end | proven | keep | - |
 | Relational DB (PostgreSQL) | mid | backend, full-stack | SQLite default; Postgres seam shipped (`DATABASE_URL`, `psycopg`, Alembic) | proven | keep | - |
 | Accessibility (a11y) | mid | full-stack | dashboard a11y: skip link, aria labels, focus-visible, `lang` (`parts/dashboard.py`) | proven | keep | - |
 | Cloud beyond a demo | mid-sr | DevOps | Render demo only | partial | deferred by design (see DEVELOPMENT_PLAN) | P3 |
@@ -30,9 +31,11 @@ exists. Last audited: 2026-07-16. Primary target: full-stack developer.*
 
 - **codeforge's spine is proven** for Python developer / SWE / QA-automation / DevOps-tools
   targets. Those roles are well-served today.
-- The **full-stack developer** target (the chosen priority) has its **frontend proof** shipped:
-  the server-rendered FastAPI dashboard (`parts/dashboard.py`, HTMX, a11y, e2e) with a visible
-  **API contract** (`/api/status`, `/docs` OpenAPI). The remaining full-stack lever is the
-  **React/TS second flagship** (P2, a separate `codeforge-web` repo).
+- The **Backend / Platform / Systems** target (the chosen priority) is proven by the engine's
+  authoritative server, persistence (SQLite + a Postgres seam), the API contract (`/api/status`,
+  `/docs` OpenAPI), and the fleet's multi-tenant backend (`saas-starter`: tenant isolation, RBAC,
+  billing). **Full-stack breadth is also shipped** (the server-rendered FastAPI dashboard here, plus
+  the `codeforge-console` Next.js/React/TS flagship and the `saas-starter` React front end) - the
+  React/TS lever is delivered, not planned.
 - Nothing here is marked proven without a real artifact; `partial`/`planned`/`missing` are
   used honestly so the board names its own gaps.
