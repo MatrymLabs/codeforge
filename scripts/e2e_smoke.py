@@ -177,8 +177,12 @@ def aethryn_journey() -> None:
         welcome = _recv_until(s, PROMPT)
         entered = "veridia" in welcome.lower()
         results.append(
-            ("AETHRYN enter (spawn = Veridia)", entered, 0.0,
-             "" if entered else welcome[:100].replace("\n", " | "))
+            (
+                "AETHRYN enter (spawn = Veridia)",
+                entered,
+                0.0,
+                "" if entered else welcome[:100].replace("\n", " | "),
+            )
         )
         step("AETHRYN look", s, "look", ["Veridia", "Exits"])
         step("AETHRYN region", s, "region", ["Veridia", "contracts"])  # zone view from the hub
@@ -237,8 +241,12 @@ def multiplayer_journey() -> None:
         t = time.monotonic()
         seen = _recv_until(alia, b"Bram", timeout=4)
         results.append(
-            ("MP presence: A sees B arrive", "bram" in seen.lower(),
-             (time.monotonic() - t) * 1000, "" if "bram" in seen.lower() else seen[:100])
+            (
+                "MP presence: A sees B arrive",
+                "bram" in seen.lower(),
+                (time.monotonic() - t) * 1000,
+                "" if "bram" in seen.lower() else seen[:100],
+            )
         )
         step("MP who (both present)", alia, "who", ["Alia", "Bram"])
         # A speaks; B hears it in the shared room
@@ -248,8 +256,12 @@ def multiplayer_journey() -> None:
         heard = _recv_until(bram, b"says", timeout=4)
         ok = "alia" in heard.lower() and "hello there" in heard.lower()
         results.append(
-            ("MP chat: B hears A's say", ok, (time.monotonic() - t) * 1000,
-             "" if ok else heard[:100].replace("\n", " | "))
+            (
+                "MP chat: B hears A's say",
+                ok,
+                (time.monotonic() - t) * 1000,
+                "" if ok else heard[:100].replace("\n", " | "),
+            )
         )
         step("MP logout A", alia, "quit", ["world dims"])
         step("MP logout B", bram, "quit", ["world dims"])
