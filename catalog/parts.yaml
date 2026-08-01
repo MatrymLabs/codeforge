@@ -1705,3 +1705,166 @@
     security: swallowed exceptions and bare excepts are a security smell too
     compliance: a maintainability signal with a named, sourced remediation
     general: an ast-based Python code-smell detector for any codebase
+
+- id: source-analyzer
+  name: Source Analyzer
+  source: parts/shelf/source_analyzer.py
+  category: analysis
+  tags: [reverse-engineering, ast, static-analysis, architecture]
+  maturity: beta
+  source_status: original
+  license: MIT
+  influence: the R&D Reverse-Engineering Lab (docs/rd EXP-15..23; reverse-engineered, clean-room stdlib ast)
+  experimental: 'cross-language support via tree-sitter and a whole-repo forge-audit dimension. Traded away (v1): multi-language and a UI, keeping a proven Python-native rung.'
+  risk: low
+  purpose: 'Reverse-engineer one Python module into a validated intermediate model - identity, entities, interface, dependencies, and unknowns, each carrying a confidence. It never presents inference as proven fact.'
+  reuse:
+    game: a self-model of the engine's own modules
+    education: teach how a parser reads code structure
+    security: map an unfamiliar module before changing it
+    compliance: a documented confidence-scored view of any module
+    general: an ast-based single-module reverse-engineering tool
+- id: repo-analyzer
+  name: Repo Analyzer
+  source: parts/shelf/repo_analyzer.py
+  category: analysis
+  tags: [reverse-engineering, ast, import-graph, cycles]
+  maturity: beta
+  source_status: original
+  license: MIT
+  influence: the R&D Reverse-Engineering Lab (docs/rd EXP-15..23; reverse-engineered, clean-room stdlib ast)
+  experimental: 'cross-language support via tree-sitter and a whole-repo forge-audit dimension. Traded away (v1): multi-language and a UI, keeping a proven Python-native rung.'
+  risk: low
+  purpose: 'Reverse-engineer a package internal import graph - edges, cycles (Tarjan SCC), hubs, entrypoints, leaves - with unknowns + confidence. Cycles are reported, never hidden.'
+  reuse:
+    game: find the engine coupling seams
+    education: teach dependency graphs + SCCs
+    security: surface an import cycle before it bites
+    compliance: an honest architecture map with named coupling risks
+    general: package import-graph + cycle detection
+- id: model-extractor
+  name: Model Extractor
+  source: parts/shelf/model_extractor.py
+  category: analysis
+  tags: [reverse-engineering, ast, data-model, state-machine]
+  maturity: beta
+  source_status: original
+  license: MIT
+  influence: the R&D Reverse-Engineering Lab (docs/rd EXP-15..23; reverse-engineered, clean-room stdlib ast)
+  experimental: 'cross-language support via tree-sitter and a whole-repo forge-audit dimension. Traded away (v1): multi-language and a UI, keeping a proven Python-native rung.'
+  risk: low
+  purpose: 'Reverse-engineer a module data model (entities + relationships) and state machines (Enum sets + transitions), honest about single-module scope and dynamic state.'
+  reuse:
+    game: recover the domain shape of a system
+    education: teach ERDs + FSMs from real code
+    security: confirm a data model matches the code
+    compliance: a source-derived domain map + FSM view
+    general: entity/relationship + Enum-FSM extraction
+- id: api-diff
+  name: API Diff
+  source: parts/shelf/api_diff.py
+  category: analysis
+  tags: [reverse-engineering, ast, breaking-change, semver]
+  maturity: beta
+  source_status: original
+  license: MIT
+  influence: the R&D Reverse-Engineering Lab (docs/rd EXP-15..23; reverse-engineered, clean-room stdlib ast)
+  experimental: 'cross-language support via tree-sitter and a whole-repo forge-audit dimension. Traded away (v1): multi-language and a UI, keeping a proven Python-native rung.'
+  risk: low
+  purpose: 'Diff the public API of two module versions - breaking vs compatible vs body-changed - with is_breaking as a CI gate. Signature-level; type narrowing is a documented false-negative.'
+  reuse:
+    game: gate breaking changes to a public system
+    education: teach semantic versioning from real diffs
+    security: block a breaking API change in review
+    compliance: a truthful compatibility signal
+    general: a breaking-change detector between two versions
+- id: call-graph
+  name: Call Graph
+  source: parts/shelf/call_graph.py
+  category: analysis
+  tags: [reverse-engineering, ast, dead-code, call-graph]
+  maturity: beta
+  source_status: original
+  license: MIT
+  influence: the R&D Reverse-Engineering Lab (docs/rd EXP-15..23; reverse-engineered, clean-room stdlib ast)
+  experimental: 'cross-language support via tree-sitter and a whole-repo forge-audit dimension. Traded away (v1): multi-language and a UI, keeping a proven Python-native rung.'
+  risk: low
+  purpose: 'Reverse-engineer a module internal call graph, dead-code candidates (guarded against dispatch tables + dunders), hotspots, and recursion. Dead is a candidate list, not a verdict.'
+  reuse:
+    game: find unused private helpers
+    education: teach call graphs + dead-code guards
+    security: spot a dead helper or a hotspot
+    compliance: a guarded dead-code + hotspot signal
+    general: intra-module call graph + dead-code finder
+- id: cross-module
+  name: Cross-Module Usage
+  source: parts/shelf/cross_module.py
+  category: analysis
+  tags: [reverse-engineering, ast, api, usage-graph]
+  maturity: beta
+  source_status: original
+  license: MIT
+  influence: the R&D Reverse-Engineering Lab (docs/rd EXP-15..23; reverse-engineered, clean-room stdlib ast)
+  experimental: 'cross-language support via tree-sitter and a whole-repo forge-audit dimension. Traded away (v1): multi-language and a UI, keeping a proven Python-native rung.'
+  risk: low
+  purpose: 'Reverse-engineer package-wide cross-module symbol usage - who-uses-each-symbol, keystones, and unused-public candidates (a make-it-private signal, human-filtered).'
+  reuse:
+    game: find the engine true keystones
+    education: teach API surface minimization
+    security: decide what public symbol can become private
+    compliance: a cross-module usage map
+    general: package-wide symbol usage graph
+- id: control-flow
+  name: Control Flow
+  source: parts/shelf/control_flow.py
+  category: analysis
+  tags: [reverse-engineering, ast, complexity, maintainability]
+  maturity: beta
+  source_status: original
+  license: MIT
+  influence: the R&D Reverse-Engineering Lab (docs/rd EXP-15..23; reverse-engineered, clean-room stdlib ast)
+  experimental: 'cross-language support via tree-sitter and a whole-repo forge-audit dimension. Traded away (v1): multi-language and a UI, keeping a proven Python-native rung.'
+  risk: low
+  purpose: 'Profile each function control-flow shape - branches, loops, handlers, depth, exits, guard-style, generators - and shortlist deep/many-exit functions. Static structure, not a reachability proof.'
+  reuse:
+    game: find the most complex functions
+    education: teach cyclomatic surface + guard clauses
+    security: target a refactor or test-hardening pass
+    compliance: a per-function complexity shortlist
+    general: per-function control-flow profiler
+- id: cli-surface
+  name: CLI Surface
+  source: parts/shelf/cli_surface.py
+  category: analysis
+  tags: [reverse-engineering, ast, cli, argparse]
+  maturity: beta
+  source_status: original
+  license: MIT
+  influence: the R&D Reverse-Engineering Lab (docs/rd EXP-15..23; reverse-engineered, clean-room stdlib ast)
+  experimental: 'cross-language support via tree-sitter and a whole-repo forge-audit dimension. Traded away (v1): multi-language and a UI, keeping a proven Python-native rung.'
+  risk: low
+  purpose: 'Reverse-engineer how a program is run and configured - argparse subcommands + options and env-var reads. Non-argparse frameworks + dynamic flags are flagged, never a silent empty surface.'
+  reuse:
+    game: document the engine invocation surface
+    education: teach how a CLI + env config is declared
+    security: generate a README usage section
+    compliance: a source-derived invocation contract
+    general: argparse + env-var surface extractor
+- id: repo-report
+  name: Repo Report
+  source: parts/shelf/repo_report.py
+  category: analysis
+  tags: [reverse-engineering, ast, synthesis]
+  maturity: beta
+  source_status: original
+  license: MIT
+  influence: the R&D Reverse-Engineering Lab (docs/rd EXP-15..23; reverse-engineered, clean-room stdlib ast)
+  experimental: 'cross-language support via tree-sitter and a whole-repo forge-audit dimension. Traded away (v1): multi-language and a UI, keeping a proven Python-native rung.'
+  risk: low
+  purpose: 'Unify the Reverse-Engineering Lab - run every single-snapshot rung over one package and fold into one report whose overall confidence is the weakest rung, never rounded up.'
+  reuse:
+    game: one-pass reverse-engineering of the engine
+    education: teach how analyses compose into a summary
+    security: get an executive summary of a repo
+    compliance: a single honest reverse-engineering report
+    general: the Reverse-Engineering Lab unifier
