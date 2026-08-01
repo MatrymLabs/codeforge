@@ -7822,6 +7822,34 @@
     "updated": "2026-08-01"
   },
   {
+    "designation": "MOD-10.058",
+    "name": "cli_generator",
+    "status": "active",
+    "function": "Stage 6: the first target generator - generate_cli emits a small, runnable Python CLI (package + argparse main + generated tests + conftest + pyproject + README) from a validated ProjectModel; reproducible (no timestamps in code), each file sha256-checksummed, carrying the model's provenance; validate_runs + validate_tests prove the target RUNS and its tests PASS via the Stage-5 tool_runner; rollback cleans up",
+    "label": "cli_generator",
+    "file": "parts/seedlab/cli_generator.py",
+    "type": "MOD",
+    "domain": "10",
+    "docs": "docs/seed_platform/RECENTERING.md",
+    "tests": "tests/test_cli_generator.py",
+    "depends_on": [
+      "MOD-10.051",
+      "MOD-10.057"
+    ],
+    "related": [
+      "MOD-10.055"
+    ],
+    "reuse": "",
+    "tags": [
+      "module"
+    ],
+    "notes": "Stage 6 of the Seed Platform Production Directive - the payoff: closes the First Platform Proof (source -> model -> generate -> run -> tests pass -> artifact registered). Josh's chosen first non-game target = a CLI app. Isolated in parts/seedlab/.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-08-01",
+    "updated": "2026-08-01"
+  },
+  {
     "designation": "MOD-05.022",
     "name": "corpus",
     "status": "active",

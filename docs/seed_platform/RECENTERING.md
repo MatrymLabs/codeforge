@@ -35,6 +35,7 @@ Labels: VISION · RESEARCH · SPECIFIED · PROTOTYPED · INTEGRATED · PROVEN ·
 | **Local source connector (read-only, path-bounded)** | **PROTOTYPED** | `parts/seedlab/source_connector.py` (MOD-10.054) — register a local dir with provenance; list/search/read only approved files; refuses traversal, absolute paths, symlink escapes, and a secret denylist; feeds the Hub's `sources` facet |
 | **Source → project model (persisted, honest)** | **PROTOTYPED** | `parts/seedlab/source_modeler.py` (MOD-10.055) + `model_store.py` (MOD-10.056) — extract a `ProjectModel` from a registered source (identity/entities/interfaces/provenance derived; everything else marked in `unknowns`), persist it (survives restart), and light up the Hub's `models` facet linked to source evidence |
 | **Controlled build/test execution** | **PROTOTYPED** | `parts/seedlab/tool_runner.py` (MOD-10.057) — run an allowlisted, shell-free command inside an approved source with cwd boundary + timeout + output cap + secret redaction; refuse an unlisted profile; persist each run (`FileRunLog`, survives restart) into the Hub's `builds`/`tests` facets |
+| **First generated target (a runnable CLI)** | **PROTOTYPED** | `parts/seedlab/cli_generator.py` (MOD-10.058) — generate a small, runnable Python CLI from a validated model (reproducible, sha256-checksummed, provenance-carrying); `validate_runs`/`validate_tests` prove it RUNS and its generated tests PASS via the Stage-5 runner. **Closes the First Platform Proof: source → model → generate → run → tests pass → artifact.** |
 | Repo / IDE / API / DB connectors (remote) | **VISION** | remote repo/IDE/DB connectors not built; local FS connector is the first real one |
 | Multi-AI-provider connector | **VISION** | internal AI helpers exist, not a provider connector |
 | Reverse-engineering / walkthrough-to-world | **VISION** | — |
@@ -151,14 +152,25 @@ FailsafeRunner pattern but binds cwd to the source. **Honest scope:** this execu
 approved source; the fences bound it, and stronger isolation (containers/namespaces) is the future
 hardening the directive names as "sandboxing where practical."
 
+## Slice 8 (PROTOTYPED, shipped): the first generated target — a runnable CLI (Stage 6)
+
+`parts/seedlab/cli_generator.py` (MOD-10.058) is the recenter's payoff. `generate_cli` turns a
+validated `ProjectModel` into a small but genuinely runnable Python CLI (a package with an argparse
+`main`, a generated test, a `conftest.py`, a `pyproject.toml` with a console-script, a README).
+Output is **reproducible** (no timestamps in the emitted code → identical files + checksums for the
+same model), each file is **sha256-checksummed**, and the artifact carries the model's **provenance**.
+`validate_runs` and `validate_tests` prove the target actually RUNS (`--version`) and its own
+generated tests PASS — by executing it through the Stage-5 `tool_runner`, so the slice closes on
+itself. `rollback` cleans up.
+
+**The First Platform Proof is closed end to end:** create a Seed (Kernel) → enter + inspect it (Hub)
+→ connect a real source (Connector) → extract a persisted, honest model (Modeler + Model Store) →
+run it under control (Tool Runner) → **generate a working non-game target and prove it runs + tests
+pass** (CLI Generator). All isolated in `parts/seedlab/`, the game untouched, every claim labeled.
+
 ## Next slices (roadmap, each an isolated vertical step)
 
-1. The **first generated non-game target** (Stage 6): a small original **CLI app** (Josh's call,
-   2026-08-01) generated from a validated model, with generated tests + provenance + checksums, then
-   **run through Stage 5's runner to prove it works** — closing the directive's first end-to-end
-   vertical slice (`prompt → Seed → source → model → build/test → target → recover`) and proving the
-   platform *generalizes* past the game. Public deployment of the target is a separate, gated step.
-2. A **MUD `model`/`seed` verb** + a Master-Client panel over `render_status`/`contract`/`render_model`
+1. A **MUD `model`/`seed` verb** + a Master-Client panel over `render_status`/`contract`/`render_model`
    (enter and inspect a Seed, its model, and its runs live in the running MUD, not just the CLI).
-3. **Hardware extraction** (Stage 7): harvest the connector, model schema, model store, and runner as
+2. **Hardware extraction** (Stage 7): harvest the connector, model schema, model store, and runner as
    Hardware Store candidates once the vertical slice is proven end to end.
