@@ -7658,5 +7658,51 @@
     "aliases": [],
     "created": "2026-08-01",
     "updated": "2026-08-01"
+  },
+  {
+    "designation": "MOD-05.022",
+    "name": "corpus",
+    "status": "active",
+    "function": "a machine-readable record of a coding pattern/smell/rule: how to find it and how to change toward/away from it",
+    "label": "corpus",
+    "file": "parts/shelf/corpus.py",
+    "type": "MOD",
+    "domain": "05",
+    "docs": "docs/hardware_store/patterns/validation.md",
+    "tests": "tests/test_corpus.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "coding-knowledge corpus schema; detection_signature + transformation + subsumed_by/contested honesty fields",
+    "tags": [
+      "module"
+    ],
+    "notes": "CodeForge Corpus encoding (RS-2026-08-01-corpus; docs/rd EXP-13/14); reverse-engineered.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-08-01",
+    "updated": "2026-08-01"
+  },
+  {
+    "designation": "MOD-05.023",
+    "name": "smell_engine",
+    "status": "active",
+    "function": "detect Fowler code smells in Python via ast + metrics, each paired with its refactoring",
+    "label": "smell_engine",
+    "file": "parts/shelf/smell_engine.py",
+    "type": "MOD",
+    "domain": "05",
+    "docs": "docs/hardware_store/patterns/validation.md",
+    "tests": "tests/test_smell_engine.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "Stage-1 smell->refactoring detector (12 detectors); composes with the corpus; suggestion-only",
+    "tags": [
+      "module"
+    ],
+    "notes": "CodeForge Corpus encoding (RS-2026-08-01-corpus; docs/rd EXP-13/14); reverse-engineered.",
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-08-01",
+    "updated": "2026-08-01"
   }
 ]

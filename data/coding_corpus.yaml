@@ -1,0 +1,140 @@
+# CodeForge Coding Corpus - seed records (RS-2026-08-01-corpus).
+# A proof-of-schema seed, NOT the full corpus. It demonstrates every record TYPE:
+# a subsumed GoF pattern, a contested principle, a smell->refactoring pair, an
+# anti-pattern, and a security taint rule. Full population (all 24 smells, the 65
+# EIP, CWE/ASVS/Semgrep import) is the staged roadmap (see the digest).
+
+# ---- Design patterns: the 16 Python-subsumed GoF (over-engineering guard) ----
+- id: PATTERN.GOF.STRATEGY
+  category: design
+  name: Strategy
+  intent: interchangeable algorithms behind a common interface
+  subsumed_by: first-class functions (pass a callable)
+  detection: {method: ast_query, pattern: "class implementing a single-method interface where a callable would do"}
+  transformation: {method: suggestion, steps: ["replace the strategy class hierarchy with a function parameter"]}
+  automatability: detectable
+  aliases: [Policy]
+  sources: ["GoF 1994", "Norvig 1996 (Object World)", "Ramalho, Fluent Python ch.6"]
+
+- id: PATTERN.GOF.COMMAND
+  category: design
+  name: Command
+  intent: encapsulate a request as an object
+  subsumed_by: a plain function / closure / functools.partial
+  automatability: detectable
+  sources: ["GoF 1994", "Norvig 1996"]
+
+- id: PATTERN.GOF.TEMPLATE_METHOD
+  category: design
+  name: Template Method
+  intent: a skeleton algorithm with overridable steps
+  subsumed_by: passing functions (first-class functions)
+  automatability: detectable
+  sources: ["GoF 1994", "Norvig 1996"]
+
+- id: PATTERN.GOF.VISITOR
+  category: design
+  name: Visitor
+  intent: add operations to an object structure without modifying it
+  subsumed_by: functools.singledispatch
+  detection: {method: ast_query, pattern: "double-dispatch accept()/visit() pair over a fixed type set"}
+  automatability: detectable
+  related: [PATTERN.GOF.ITERATOR]
+  sources: ["GoF 1994", "Norvig 1996"]
+
+# ---- Design patterns that stay useful at boundaries (NOT subsumed) ----
+- id: PATTERN.GOF.ADAPTER
+  category: design
+  name: Adapter
+  intent: convert one interface into another at a boundary
+  benefits: ["decouples a consumer from a foreign interface"]
+  tradeoffs: ["an extra indirection layer"]
+  automatability: judgment
+  related: [PATTERN.EIP.MESSAGE_TRANSLATOR]
+  sources: ["GoF 1994"]
+
+# ---- Contested principles (encode the critique as a first-class field) ----
+- id: PATTERN.GOF.SINGLETON
+  category: anti_pattern
+  name: Singleton
+  intent: ensure one instance with a global access point
+  anti_pattern_inverse: hidden global mutable state
+  subsumed_by: a module-level object (a Python module is already a singleton)
+  contested:
+    is_contested: true
+    critique: "widely considered an anti-pattern - hidden global state, breaks testability and dependency injection"
+    source: "common consensus; Fowler, Google testing guidance"
+  automatability: detectable
+  sources: ["GoF 1994"]
+
+- id: PRINCIPLE.POSTELS_LAW
+  category: principle
+  name: Postel's Law (Robustness Principle)
+  intent: "be conservative in what you send, liberal in what you accept"
+  contested:
+    is_contested: true
+    critique: "harmful for actively maintained protocols - liberal acceptance entrenches bugs as de-facto standards and opens security holes; prefer fail hard, loud, and consistently"
+    source: "RFC 9413, Thomson & Schinazi, IAB, June 2023"
+  automatability: judgment
+  sources: ["RFC 761 (Postel 1980)", "RFC 9413 (2023)"]
+
+- id: PRINCIPLE.SOLID
+  category: principle
+  name: SOLID
+  intent: five OO design principles (SRP, OCP, LSP, ISP, DIP)
+  contested:
+    is_contested: true
+    critique: "criticized as vague/dated for non-OO and dynamic code; SRP's 'one reason to change' is imprecise and OCP can drive speculative abstraction"
+    source: "multiple critics (e.g. Dan North, 'CUPID')"
+  automatability: judgment
+  sources: ["Martin, Agile Software Development 2002"]
+
+# ---- Code smells -> refactorings (the translation matrix, Stage 1) ----
+- id: SMELL.LONG_METHOD
+  category: smell
+  name: Long Method
+  problem: a method does too much and is hard to read, test, and reuse
+  detection: {method: metric, pattern: "method statement/line count > threshold"}
+  transformation: {method: mechanical_refactor, steps: ["Extract Method for each cohesive block", "name each by intent"]}
+  automatability: transformable
+  related: [REFACTORING.EXTRACT_METHOD]
+  sources: ["Fowler, Refactoring (Bloaters)"]
+
+- id: SMELL.LONG_PARAMETER_LIST
+  category: smell
+  name: Long Parameter List
+  problem: too many parameters obscure a call and often travel together
+  detection: {method: metric, pattern: "function parameter count > threshold"}
+  transformation: {method: mechanical_refactor, steps: ["Introduce Parameter Object for parameters that clump"]}
+  automatability: transformable
+  sources: ["Fowler, Refactoring (Bloaters)"]
+
+- id: SMELL.MAGIC_NUMBER
+  category: smell
+  name: Magic Number
+  problem: an unexplained literal buries intent and invites inconsistent edits
+  detection: {method: regex, pattern: "a numeric literal (not 0/1) used outside a named constant"}
+  transformation: {method: mechanical_refactor, steps: ["Replace Magic Number with a Symbolic Constant"]}
+  automatability: transformable
+  sources: ["Fowler, Refactoring"]
+
+- id: ANTIPATTERN.GOD_OBJECT
+  category: anti_pattern
+  name: God Object
+  problem: one class knows/does too much - low cohesion, high coupling, a change magnet
+  detection: {method: metric, pattern: "class with excessive methods/fields + high fan-in/fan-out"}
+  transformation: {method: suggestion, steps: ["Extract Class along responsibility seams", "Move Method to the right home"]}
+  automatability: judgment
+  anti_pattern_inverse: high cohesion / low coupling
+  sources: ["AntiPatterns (Brown et al.)"]
+
+# ---- Security taint rule (source -> sink -> sanitizer, Stage 2) ----
+- id: RULE.TAINT.OS_SYSTEM
+  category: rule
+  name: OS command injection via os.system
+  problem: untrusted input reaching os.system/subprocess with shell=True is command injection (CWE-78)
+  detection: {method: dataflow, pattern: "a taint source (user input/request param) reaches os.system / subprocess(shell=True) with no sanitizer on the path"}
+  transformation: {method: suggestion, steps: ["pass an argv list without shell=True", "or shlex.quote the argument"]}
+  automatability: detectable
+  aliases: [CWE-78, OS-Command-Injection]
+  sources: ["MITRE CWE-78", "OWASP ASVS 5.0", "Semgrep registry"]
