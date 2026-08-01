@@ -8,6 +8,8 @@ coverage.xml
 characters.json
 accounts.json
 codeforge.db
+codeforge.db.bak*
+*.db.bak*
 backups/
 *.kdbx
 
