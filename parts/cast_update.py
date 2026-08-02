@@ -108,7 +108,7 @@ def _sha(path: Path) -> str:
 
 
 def _engine_files(root: Path) -> dict[str, str]:
-    """Map each engine file: root-relative path -> sha256 (forge.py + all layer roots, no caches)."""
+    """Map engine files: root-relative path -> sha256 (forge.py + all layer roots, no caches)."""
     files: dict[str, str] = {}
     forge = root / "forge.py"
     if forge.is_file():
