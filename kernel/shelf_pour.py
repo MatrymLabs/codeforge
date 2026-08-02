@@ -81,6 +81,9 @@ def _third_party(files: list[Path], *, exclude: Collection[str] = frozenset()) -
     packages already declared elsewhere (e.g. runtime deps, when computing the extra TEST deps)."""
     stdlib = set(sys.stdlib_module_names)
     deps: set[str] = set()
+    # Import name != PyPI distribution name for some packages; the poured pyproject must declare
+    # the PyPI name or install fails (yaml has no PyPI dist; PyYAML provides `import yaml`).
+    pypi_name = {"yaml": "pyyaml"}
     for py in files:
         try:
             tree = ast.parse(py.read_text(encoding="utf-8"), filename=str(py))
@@ -103,7 +106,7 @@ def _third_party(files: list[Path], *, exclude: Collection[str] = frozenset()) -
                     and name not in exclude
                 ):
                     deps.add(name)
-    return sorted(deps)
+    return sorted(pypi_name.get(d, d) for d in deps)
 
 
 def shelf_third_party_deps(shelf_dir: Path | None = None) -> list[str]:
@@ -314,7 +317,8 @@ def _readme(cores: list[str], deps: list[str], n_tests: int, held: list[str]) ->
     return (
         "# CodeForge Hardware Store\n\n"
         f"{badges}\n"
-        "Reusable, engine-agnostic Python parts, proven in the CodeForge MUD and poured here as a\n"
+        "Reusable, engine-agnostic Python parts, proven in the CodeForge platform and "
+        "poured here as a\n"
         "standalone package. No game engine is required to use them. Fully typed (PEP 561).\n\n"
         "## Install\n\n"
         "```sh\n"
@@ -362,7 +366,7 @@ version tracks the pour, not hand edits.
 ## 0.1.0
 
 - Initial release: the CodeForge Hardware Store poured standalone -- reusable, engine-agnostic
-  Python cores extracted from the CodeForge MUD with a one-way dependency, fully typed (PEP 561),
+  Python cores extracted from the CodeForge platform with a one-way dependency, typed (PEP 561),
   shipping their engine-free test twins (they pass with no engine present).
 """
 
