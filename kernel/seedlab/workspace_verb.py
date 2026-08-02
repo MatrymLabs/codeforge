@@ -4,7 +4,9 @@ engineering Seeds (workspaces) from inside the running MUD.
 This is the TEXT half of the workspace surface -- the same engineering Seeds the Master Client
 renders over GMCP (kernel/seedlab/workspace_gmcp.py), reachable as a plain owner command in the
 running world. "THE SEED IS THE MUD" made walkable: `workspace list`, `workspace create <name>
-[purpose]`, `workspace status <id>`, `workspace start|stop <id>`, `workspace model <id>`.
+[purpose]`, `workspace status <id>`, `workspace start|stop <id>`, `workspace model <id>`,
+`workspace run <id> <path> <profile>` (an allowlisted, bounded tool run whose evidence feeds the
+Build Report), and `workspace report <id>`.
 
 Owner-gated at the command spine; the Kernel re-checks ownership on every mutation, so an owner can
 only start/stop a workspace they own. Persistence is file-backed under $SEEDLAB_HOME. The Kernel and
@@ -13,10 +15,10 @@ coupling is reading the caller's identity and pushing live workspace GMCP frames
 (injectable, defaults to the same `push_gmcp` bus the social events ride) whenever a subcommand
 resolves that state: `Project.Status` when a workspace is inspected or its lifecycle changes,
 `Source.Tree` + `Model.Schema` when a source is connected and modeled, and `Model.Schema` when
-models are inspected. So a Native-Seed client's Engineering Workspace (Project Hub, Source Explorer,
-Model view) updates the instant an owner acts. `Build.Report` is NOT pushed here: no subcommand runs
-tools yet, so there is no run state to project (No Vision Theater - it lands when a build/run verb
-does). Status: PROTOTYPED (see docs/seed_platform/RECENTERING.md).
+models are inspected, and `Build.Report` when `run` records an allowlisted tool run (or `report`
+replays the recorded runs). So a Native-Seed client's WHOLE Engineering Workspace - Project Hub,
+Source Explorer, Model view, Build Report - updates the instant an owner acts; the last dark panel
+lit when the run verb landed. Status: PROTOTYPED (see docs/seed_platform/RECENTERING.md).
 """
 
 from __future__ import annotations
@@ -35,9 +37,11 @@ from kernel.seedlab.kernel import (
 )
 from kernel.seedlab.model_store import FileModelStore, ModelStore, model_label
 from kernel.seedlab.workspace_gmcp import (
+    BUILD_REPORT_PACKAGE,
     MODEL_SCHEMA_PACKAGE,
     PROJECT_STATUS_PACKAGE,
     SOURCE_TREE_PACKAGE,
+    build_report,
     model_schema,
     project_status,
     source_tree,
@@ -45,7 +49,8 @@ from kernel.seedlab.workspace_gmcp import (
 
 _USAGE = (
     "workspace commands: list | create <name> [purpose] | status <id> | "
-    "start <id> | stop <id> | connect <id> <path> | model <id>"
+    "start <id> | stop <id> | connect <id> <path> | model <id> | "
+    "run <id> <path> <profile> | report <id>"
 )
 
 #: How the verb pushes a live GMCP frame to the acting owner: (player_id, package, data). The
@@ -105,12 +110,16 @@ def workspace_command(
     kernel: SeedKernel | None = None,
     model_store: ModelStore | None = None,
     gmcp_push: GmcpPush | None = None,
+    run_log: Any | None = None,
+    allowlist: dict[str, list[str]] | None = None,
 ) -> str:
     """Dispatch a `workspace` subcommand over the Seed Kernel; returns a text projection for the
     tick. Owner-gated at the spine; the Kernel authorizes each mutation by the acting owner. When a
     subcommand resolves workspace state, it also pushes the matching live GMCP frame(s) to the
     caller so a Native-Seed client's Engineering Workspace stays fresh: `Project.Status` on
-    inspect/lifecycle, `Source.Tree` + `Model.Schema` on connect, `Model.Schema` on model."""
+    inspect/lifecycle, `Source.Tree` + `Model.Schema` on connect, `Model.Schema` on model, and
+    `Build.Report` on run/report (the tool-run state the 4th client panel renders). `run_log` and
+    `allowlist` are injectable seams (tests never shell a real tool or touch the real log)."""
     kernel = kernel or _default_kernel()
     push = gmcp_push or _default_push
     actor = _actor(session)
@@ -226,5 +235,66 @@ def workspace_command(
             f"({len(model.entities)} entities, {len(model.unknowns)} unknowns). "
             f"See: workspace model {seed_id}"
         )
+
+    if sub == "run":
+        if len(rest) < 3:
+            return "usage: workspace run <seed_id> <path> <profile>"
+        seed_id, path, profile = rest[0], rest[1], rest[2]
+        try:
+            record = kernel.get(seed_id)  # the workspace must exist
+        except SeedKernelError as exc:
+            return f"workspace: {exc}"
+        allowed = _allowed_root()  # same defence-in-depth as connect
+        resolved = Path(path).resolve()
+        if allowed is not None:
+            try:
+                resolved.relative_to(allowed)
+            except ValueError:
+                return f"workspace: {path!r} is outside the allowed sources root ({allowed})"
+        from kernel.seedlab.project_model import Provenance
+        from kernel.seedlab.source_connector import LocalSource, SourceConnectorError
+        from kernel.seedlab.tool_runner import (
+            CommandRefused,
+            FileRunLog,
+            render_run,
+            run_and_record,
+        )
+
+        log = run_log if run_log is not None else FileRunLog(_home() / "runs")
+        try:
+            source = LocalSource(resolved, Provenance(resolved.name or "source", owner=actor))
+            result = run_and_record(log, source, profile, seed_id=seed_id, allowlist=allowlist)
+        except (SourceConnectorError, CommandRefused) as exc:
+            return f"workspace: {exc}"
+        # A run resolves real tool-run state, so the 4th panel lights up: push the full
+        # Build.Report (every recorded run for this Seed, not just the newest).
+        _push_frame(
+            session,
+            push,
+            BUILD_REPORT_PACKAGE,
+            build_report(log.for_seed(seed_id), seed=record.identity.name),
+        )
+        return render_run(result)
+
+    if sub == "report":
+        if not rest:
+            return "usage: workspace report <seed_id>"
+        try:
+            record = kernel.get(rest[0])
+        except SeedKernelError as exc:
+            return f"workspace: {exc}"
+        from kernel.seedlab.tool_runner import FileRunLog, render_run
+
+        log = run_log if run_log is not None else FileRunLog(_home() / "runs")
+        runs = log.for_seed(rest[0])
+        if not runs:
+            return f"No tool runs for {rest[0]} yet (workspace run <id> <path> <profile>)."
+        # Inspecting the report resolves recorded run state: re-push it so the client's Build
+        # Report panel refreshes, mirroring how `model` refreshes the Model view.
+        _push_frame(
+            session, push, BUILD_REPORT_PACKAGE, build_report(runs, seed=record.identity.name)
+        )
+        ok = sum(1 for r in runs if r.ok)
+        return f"{len(runs)} run(s), {ok} ok. Latest:\n" + render_run(runs[-1])
 
     return _USAGE
