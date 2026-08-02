@@ -43,7 +43,7 @@ def _count_dir(subdir: str) -> int:
     return len(list(d.glob("*.yaml"))) if d.is_dir() else 0
 
 
-def world_scale() -> dict[str, int]:
+def world_scale() -> dict[str, object]:
     """Authored rooms, plus the generated-room budget summed from every wildlands region's
     trail_length (the generator's own scale input at CODEFORGE_WILD_SCALE=1, the default boot)."""
     authored = _count("rooms.yaml")
@@ -78,7 +78,7 @@ def items() -> dict[str, object]:
     }
 
 
-def population() -> dict[str, int]:
+def population() -> dict[str, object]:
     data = _load("npcs.yaml")
     tiers: Counter[str] = Counter()
     aggressive = afflicting = 0
@@ -136,7 +136,7 @@ def engine() -> dict[str, object]:
 
 
 def main() -> None:
-    seed_counts = {
+    seed_counts: dict[str, object] = {
         "jobs_classes": _count("jobs.yaml"),
         "professions": _count("professions.yaml"),
         "recipes": _count("recipes.yaml"),
