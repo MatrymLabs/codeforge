@@ -16,7 +16,7 @@ import pathlib
 
 from kernel.shelf import repo_report
 
-_SHELF = pathlib.Path(__file__).resolve().parent.parent / "parts" / "shelf"
+_SHELF = pathlib.Path(__file__).resolve().parent.parent / "kernel" / "shelf"
 _LAB_MODULES = (
     "source_analyzer",
     "repo_analyzer",

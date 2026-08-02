@@ -232,7 +232,7 @@ def test_every_shelf_core_is_cataloged_or_declared_local_only():
 
 
 def test_uncataloged_cores_flags_a_core_no_card_covers_and_excuses_local_only(tmp_path):
-    shelf = tmp_path / "parts" / "shelf"
+    shelf = tmp_path / "kernel" / "shelf"
     shelf.mkdir(parents=True)
     (shelf / "__init__.py").write_text("")
     (shelf / "widget.py").write_text("x = 1\n")  # a reusable core no catalog card covers

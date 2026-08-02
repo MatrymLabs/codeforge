@@ -42,7 +42,7 @@ def test_report_path_refuses_a_category_that_escapes_reports(tmp_path: Path) -> 
 def test_find_root_walks_up_to_the_pyproject_marker(tmp_path: Path) -> None:
     # a marker two levels up is found, regardless of how deep the core is filed
     (tmp_path / "pyproject.toml").write_text("[tool]\n")
-    deep = tmp_path / "parts" / "shelf" / "reporting.py"
+    deep = tmp_path / "kernel" / "shelf" / "reporting.py"
     deep.parent.mkdir(parents=True)
     assert _find_root(start=deep) == tmp_path.resolve()
 

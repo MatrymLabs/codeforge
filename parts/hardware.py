@@ -188,7 +188,7 @@ def uncataloged_cores(root: Path | None = None, path: Path | None = None) -> lis
     shelf and the catalog agree. Reads and reports; mutates nothing."""
     base = root if root is not None else Path(__file__).resolve().parent.parent
     cataloged = {part.source for part in load_catalog(path)}  # e.g. "kernel/shelf/retry.py"
-    shelf = base / "parts" / "shelf"
+    shelf = base / "kernel" / "shelf"
     return [
         core.stem
         for core in sorted(shelf.glob("*.py"))

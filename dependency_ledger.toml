@@ -146,3 +146,8 @@ removable = "Yes; docs-build only. The repo and its Markdown docs work without t
 why = "End-to-end browser tests for the live HTMX dashboard (e2e/), driving real Chromium against the running app. Test tooling; never imported by the app or the main suite."
 stdlib_alternative = "None; there is no stdlib headless browser. Route-level tests (httpx TestClient) cover the API, but only a browser proves the HTMX behavior end to end."
 removable = "Yes; test-only, isolated in e2e/ and its own CI job. `make check` and the app run without it."
+
+[dev."import-linter"]
+why = "Enforces the style-guide section-2 dependency direction (kernel imports nothing from adapters/content/parts); the `imports` step in make check gates on it."
+stdlib_alternative = "None; a custom AST import-graph check is possible but import-linter is the standard, tested tool."
+removable = "Yes; dev-time only. The contracts move with it if ever replaced."

@@ -13,7 +13,7 @@ import pathlib
 from kernel.shelf import behavior_tree as bt
 from kernel.shelf import content_address, file_plan, hotspots
 
-_SHELF = pathlib.Path(__file__).resolve().parent.parent / "parts" / "shelf"
+_SHELF = pathlib.Path(__file__).resolve().parent.parent / "kernel" / "shelf"
 
 
 def test_content_address_finds_a_clone_group() -> None:

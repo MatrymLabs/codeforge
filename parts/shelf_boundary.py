@@ -50,7 +50,7 @@ def shelf_import_violations(shelf_dir: Path | None = None) -> dict[str, list[str
 
     A shelf core may import stdlib and other shelf cores (`kernel.shelf.*`); importing any other
     `parts.*` module is a boundary violation, because it re-couples the core to the engine."""
-    base = shelf_dir if shelf_dir is not None else _ROOT / "parts" / "shelf"
+    base = shelf_dir if shelf_dir is not None else _ROOT / "kernel" / "shelf"
     violations: dict[str, list[str]] = {}
     for module in sorted(base.glob("*.py")):
         if module.name == "__init__.py":
@@ -71,7 +71,7 @@ def shelf_boundary_gaps(root: Path | None = None) -> list[str]:
     The ritual-facing shape: one line per offending shelf core, so a regression that re-couples the
     shelf to the engine is surfaced in `make repo-integrity`, not discovered later."""
     base = root if root is not None else _ROOT
-    violations = shelf_import_violations(base / "parts" / "shelf")
+    violations = shelf_import_violations(base / "kernel" / "shelf")
     return [
         f"{name}: imports engine part(s) {', '.join(mods)}" for name, mods in violations.items()
     ]

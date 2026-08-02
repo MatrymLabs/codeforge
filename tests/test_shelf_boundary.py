@@ -29,7 +29,7 @@ def test_the_live_ritual_line_is_clean() -> None:
 
 
 def _shelf(tmp_path: Path) -> Path:
-    d = tmp_path / "parts" / "shelf"
+    d = tmp_path / "kernel" / "shelf"
     d.mkdir(parents=True)
     (d / "__init__.py").write_text("")
     return d
