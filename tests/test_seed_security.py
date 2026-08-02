@@ -3,7 +3,7 @@
 The whole world is loaded from YAML on disk (seeds, canon, authored towns, caves, the world-graph,
 the generation contract, survey data). That is the world-input TRUST BOUNDARY, and a hand-edited or
 maliciously crafted seed is untrusted input. Every world loader funnels through one shared loader,
-`parts.world.seed._UniqueKeyLoader`, a SafeLoader/CSafeLoader (SafeConstructor) subclass.
+`kernel.world.seed._UniqueKeyLoader`, a SafeLoader/CSafeLoader (SafeConstructor) subclass.
 
 This pins the security invariant BEHAVIOURALLY, not just structurally: the loader builds plain data
 and REFUSES the `!!python/...` object-construction tags that a permissive loader (yaml.Loader /
@@ -21,7 +21,7 @@ import pytest
 import yaml
 from yaml.constructor import SafeConstructor
 
-from parts.world.seed import _UniqueKeyLoader
+from kernel.world.seed import _UniqueKeyLoader
 
 # Payloads a permissive (Full/Unsafe) loader would construct into live objects or execute. A safe
 # loader has no constructor for these tags and must raise rather than build them.

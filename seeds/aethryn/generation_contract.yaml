@@ -1,7 +1,7 @@
 # SEED: aethryn -- generation_contract.yaml  (the generator's contract, as machine-checkable data)
 #
 # The source seed's GENERATION_CONTRACT, encoded so the engine can enforce it instead of trusting a
-# generator to remember it (parts/world/generation_contract.py). Every procedurally generated area
+# generator to remember it (kernel/world/generation_contract.py). Every procedurally generated area
 # must carry the required fields, draw from a real historical layer, and (across a batch of minor
 # areas) fall roughly into the archetype distribution below. The forbidden changes are the hard
 # lines no generator may cross. This is the contract the cave forge is measured against.

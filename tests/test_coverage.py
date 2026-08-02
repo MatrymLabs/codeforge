@@ -9,6 +9,7 @@ that IS exercised is flagged stale, so the reserve list cannot hide a now-covere
 from typing import cast
 
 import parts.coverage as cov
+from kernel.world.seed import Door, Item, Job, Npc, QuestSpec
 from parts.coverage import (
     CAPABILITIES,
     PackContent,
@@ -16,7 +17,6 @@ from parts.coverage import (
     _violations,
     unexercised_capabilities,
 )
-from parts.world.seed import Door, Item, Job, Npc, QuestSpec
 
 
 def _pack(**kw: object) -> PackContent:

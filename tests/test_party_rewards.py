@@ -1,4 +1,4 @@
-"""Test twin for parts/world/party_rewards.py -- shared combat's reward half.
+"""Test twin for kernel/world/party_rewards.py -- shared combat's reward half.
 
 Acceptance: when a partied hero fells a foe with a mate present, the mate earns the full kill reward
 and is told so, and the killer sees a share summary; wired through combat.land_hit end to end.
@@ -8,11 +8,11 @@ are in another room shares nothing, and an offline or callingless mate earns not
 
 from __future__ import annotations
 
-from parts.world import events, party
-from parts.world.combat import land_hit
-from parts.world.jobs import bind_calling
-from parts.world.party_rewards import share_kill
-from parts.world.session import SESSIONS, Session
+from kernel.world import events, party
+from kernel.world.combat import land_hit
+from kernel.world.jobs import bind_calling
+from kernel.world.party_rewards import share_kill
+from kernel.world.session import SESSIONS, Session
 
 
 def _hero(name: str, room: str = "greenhold") -> Session:

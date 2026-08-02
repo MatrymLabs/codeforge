@@ -37,13 +37,13 @@ These are not aspirations; they are already enforced in code and every subsystem
 2. **State is canonical; text is a projection.** Renderers and broadcasts never mutate world state;
    only validated engine logic does. (EXISTS: architecture law 1.)
 3. **The world is data.** Content lives in `seeds/*.yaml`, validated by loader gates in
-   `parts/world/seed.py`; it is never hard-coded in Python. (EXISTS.)
+   `kernel/world/seed.py`; it is never hard-coded in Python. (EXISTS.)
 4. **The tick is the only door.** `handle_command(session, text) -> str` in `forge.py` is the single
    mutation entry point; every driver (TCP, web, future gateways) is a thin caller. (EXISTS.)
-5. **Authorization before capability.** `@`-verbs check rank via `parts/world/ranks.py` before any
+5. **Authorization before capability.** `@`-verbs check rank via `kernel/world/ranks.py` before any
    code runs; HTTP admin mutations require owner-account auth. (EXISTS.)
 6. **Derive, don't store.** Records persist minimal canonical facts; stats/resources recompute on
-   restore, pinned by a parity test. (EXISTS: `parts/world/characters.py`.)
+   restore, pinned by a parity test. (EXISTS: `kernel/world/characters.py`.)
 7. **Persistence is a port, not a framework leak.** Storage sits behind the `CharacterStore` Python
    contract with SQL and in-memory adapters. (EXISTS: `docs/persistence_ports.md`.)
 
@@ -62,10 +62,10 @@ describes how it decomposes into services without rewriting the core.
 | **Game loop / tick** | EXISTS | `forge.handle_command(session, text) -> str`. Pure-function, command-driven (one command = one tick), synchronous under a global lock. There is no free-running frame loop; the "loop" is the stream of player commands plus the world beat. |
 | **Tick / world beat** | EXISTS | A monotonic `beat` counter advanced inside the tick (`forge.py`: `tick_climate` / `tick_gather` / `_sands_beat`). Time-based systems (climate `climate.py`, afflictions/daze, aggression, respawn, self-closing doors) derive from the beat rather than wall-clock threads. |
 | **Command dispatcher** | EXISTS | The command spine: `parts/commands.py` (`Command` / `CommandSet`), namespaced `CORE` / `ADMIN @` / `SEED`, longest-verb-first match, rank-gated, argument case preserved (architecture law 7). |
-| **Event bus** | EXISTS | `parts/world/events.py`: room-scoped `announce` / `announce_frame`, set-scoped `announce_to`, world-wide `broadcast`, and the typed GMCP push channel `push_gmcp` / `push_channel` (frames to a player set). Delivery is per-sink, dead sinks pruned. |
-| **Session manager** | EXISTS | `parts/world/session.py`: `SESSIONS: dict[player_id, Session]`, `roster()`. A `Session` is per-connection live state; identity is a lowercase label, renamed on login (`rename_echo` / `rename_gmcp`). |
+| **Event bus** | EXISTS | `kernel/world/events.py`: room-scoped `announce` / `announce_frame`, set-scoped `announce_to`, world-wide `broadcast`, and the typed GMCP push channel `push_gmcp` / `push_channel` (frames to a player set). Delivery is per-sink, dead sinks pruned. |
+| **Session manager** | EXISTS | `kernel/world/session.py`: `SESSIONS: dict[player_id, Session]`, `roster()`. A `Session` is per-connection live state; identity is a lowercase label, renamed on login (`rename_echo` / `rename_gmcp`). |
 | **Scheduler** | EXISTS | The beat is a cooperative scheduler for periodic world logic (respawns, reclose, climate); a general timed-job queue (`scheduler.py`, MOD-04.126, #594) rides the beat for one-shot/recurring jobs (e.g. the auction expiry sweep). |
-| **Login / world / auth / character services** | PARTIAL | All exist as *modules in one process*: login dialogue in the gateway front desk, auth in `parts/world/accounts.py`, character persistence behind the `CharacterStore` port. They are not yet separate *services* (§11). |
+| **Login / world / auth / character services** | PARTIAL | All exist as *modules in one process*: login dialogue in the gateway front desk, auth in `kernel/world/accounts.py`, character persistence behind the `CharacterStore` port. They are not yet separate *services* (§11). |
 | **HTTP admin driver** | EXISTS | `adapters/api.py` (FastAPI): a separate driver that reads **canonical storage** (SQL + seeds), not live sessions, because separate processes share databases, not memory. Owner-auth on mutations. |
 | **Read-only web Lens** | EXISTS | `parts/dashboard.py`: server-rendered HTML + JSON twin projecting real state (career board, QA gate, hardware store, perf run); frameless, fails honest. |
 | **Message queue** | DEFERRED | Not needed in-process. Becomes the inter-service spine at Launch (§11). |
@@ -84,7 +84,7 @@ Target boundaries (module → future service):
 
 - **Auth Service** ← `accounts.py` (credential verify, salted pbkdf2).
 - **Character Service** ← `characters.py` + the `CharacterStore` port (load/save canonical facts).
-- **World Server** ← `forge.py` tick + `parts/world/*` (the authoritative simulation).
+- **World Server** ← `forge.py` tick + `kernel/world/*` (the authoritative simulation).
 - **Session/Gateway** ← `gateway.py` / `web_gateway.py` (connection lifecycle, protocol).
 - **Admin/Ops** ← `api.py` + `dashboard.py`.
 
@@ -274,7 +274,7 @@ Architecture law 2: the world is data. Placement guide:
 | Belongs in | What | Status |
 |------------|------|--------|
 | **YAML seeds** (`seeds/<world>/*.yaml`) | Rooms, NPCs, items, abilities, recipes, quests, settlements, doors, zones - the authored/validated world | EXISTS |
-| **Generated data** | Procedural rooms/foes/loot from generators (`parts/world/*` generators), emitted deterministically | EXISTS |
+| **Generated data** | Procedural rooms/foes/loot from generators (`kernel/world/*` generators), emitted deterministically | EXISTS |
 | **SQL database** | Mutable per-player and per-world runtime state (§4) | EXISTS |
 | **Config** (env / `.env.example`, TOML) | Deployment knobs (DB path, scale, ports); secrets never committed | EXISTS |
 | **Markdown** | Docs, ADRs, this spec | EXISTS |
@@ -360,8 +360,8 @@ rewrite: the tick, spine, bus, and port are unchanged.
 ### 11.3 Launch - the shared bus (the one true seam) - BUILT
 The single architectural investment that unlocks multi-process: **a shared live-state bus** so a
 second process (a second gateway, the admin service) sees live rosters and can push to sessions it
-does not own. **This is built** (Phase 4, #602-#605): a `MessageBus` seam (`parts/world/bus.py`) with
-an in-process default and a **stdlib socket broker** (`parts/world/broker.py` + `socket_bus.py`) as
+does not own. **This is built** (Phase 4, #602-#605): a `MessageBus` seam (`kernel/world/bus.py`) with
+an in-process default and a **stdlib socket broker** (`kernel/world/broker.py` + `socket_bus.py`) as
 its network backing - no Redis dependency, and the seam keeps a Redis/queue adapter open behind the
 same Protocol if scale ever demands it. The **event bus + push channel now publish onto it**, so
 presence and membership-scoped delivery (party/guild/broadcast/chat) already cross processes. What

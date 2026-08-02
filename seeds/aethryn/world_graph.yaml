@@ -2,7 +2,7 @@
 #
 # The world as an expandable graph (the prompt's pillar 2). Every canon region lists the regions it
 # touches by land and the seas it borders, straight from the Aethryn Coding Seed's `adjacent_regions`
-# and `water_edges`. parts/world/worldgraph.py loads and validates this against canon and computes
+# and `water_edges`. kernel/world/worldgraph.py loads and validates this against canon and computes
 # reachability, so `world find-unreachable` can prove no region is stranded.
 #
 # Two seams to know:

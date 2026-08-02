@@ -1,4 +1,4 @@
-"""Test twin for parts/world/auction.py + auction_store.py -- the marketplace.
+"""Test twin for kernel/world/auction.py + auction_store.py -- the marketplace.
 
 Acceptance: listing escrows a carried item out of the world; browse shows it; buying pays the seller
 (online OR offline) and re-clones the item into the buyer's bag while the listing vanishes; an
@@ -13,12 +13,12 @@ import copy
 
 import pytest
 
-from parts.world import auction, auction_store, items, mail_store
-from parts.world.character_store import CharacterRecord
-from parts.world.characters import _default_store, load_character
-from parts.world.items import ITEMS, carrier, items_in, prototype_of
-from parts.world.jobs import bind_calling
-from parts.world.session import SESSIONS, Session
+from kernel.world import auction, auction_store, items, mail_store
+from kernel.world.character_store import CharacterRecord
+from kernel.world.characters import _default_store, load_character
+from kernel.world.items import ITEMS, carrier, items_in, prototype_of
+from kernel.world.jobs import bind_calling
+from kernel.world.session import SESSIONS, Session
 
 
 @pytest.fixture(autouse=True)

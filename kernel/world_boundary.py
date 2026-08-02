@@ -8,10 +8,10 @@ the world must NOT depend on the platform -- so a game can ship without the dev-
 the platform, so that independence is enforced, not merely current. A violation re-couples the game
 to the workshop and quietly breaks the "two outputs" separation.
 
-The World Package is a physical directory (`parts/world/`), the way the Hardware Store shelf is a
+The World Package is a physical directory (`kernel/world/`), the way the Hardware Store shelf is a
 directory. WORLD_MODULES is discovered from that directory -- the world IS its folder, so the set
 cannot drift from a hand-maintained list. A game module may import other world modules
-(`parts.world.*`) and the shelf (Layer 3, `kernel.shelf.*`); importing anything else in `parts/`
+(`kernel.world.*`) and the shelf (Layer 3, `kernel.shelf.*`); importing anything else in `parts/`
 is a platform reach. Reads and reports; it mutates nothing. Empty list == the boundary holds.
 """
 
@@ -24,18 +24,18 @@ _ROOT = Path(__file__).resolve().parent.parent
 
 
 def _world_dir(root: Path | None = None) -> Path:
-    return (root if root is not None else _ROOT) / "parts" / "world"
+    return (root if root is not None else _ROOT) / "kernel" / "world"
 
 
 def _discover_world(root: Path | None = None) -> frozenset[str]:
-    """The World Package's modules, read straight from `parts/world/` (the world is its dir)."""
+    """The World Package's modules, read straight from `kernel/world/` (the world is its dir)."""
     d = _world_dir(root)
     if not d.is_dir():
         return frozenset()
     return frozenset(p.stem for p in d.glob("*.py") if p.stem != "__init__")
 
 
-# The World Package: every module physically filed under parts/world/. Discovered, not declared, so
+# The World Package: every module physically filed under kernel/world/. Discovered, not declared, so
 # a new game module is a member the moment it lands in the directory -- no list to keep in sync.
 WORLD_MODULES = _discover_world()
 
@@ -45,7 +45,7 @@ class WorldBoundaryError(ValueError):
 
 
 def _parts_imports(source: str, where: str) -> set[str]:
-    """The world-relative name of every `parts.*` import: `parts.world.X` -> 'X' (the intra-world
+    """The world-relative name of every `parts.*` import: `kernel.world.X` -> 'X' (the intra-world
     module), `kernel.shelf.*` -> 'shelf', any other `parts.Y` -> 'Y' (a platform reach)."""
     try:
         tree = ast.parse(source, filename=where)
@@ -60,19 +60,20 @@ def _parts_imports(source: str, where: str) -> set[str]:
             names = [a.name for a in node.names]
         for name in names:
             if name == "kernel.shelf" or name.startswith("kernel.shelf."):
-                found.add("shelf")  # Layer 3, the Hardware Store (moved out of parts/)
+                found.add("shelf")  # Layer 3, the Hardware Store
                 continue
-            if not name.startswith("parts"):
-                continue
-            parts = name.split(".")
-            if len(parts) < 2:
-                continue
-            if parts[1] == "world":
+            if name == "kernel.world" or name.startswith("kernel.world."):
+                bits = name.split(".")
                 found.add(
-                    parts[2] if len(parts) >= 3 else "world"
+                    bits[2] if len(bits) >= 3 else "world"
                 )  # unwrap to the intra-world module
-            else:
-                found.add(parts[1])
+                continue
+            if not name.startswith(("parts", "kernel", "adapters", "content")):
+                continue
+            bits = name.split(".")
+            if len(bits) < 2:
+                continue
+            found.add(bits[1])  # any other internal reach is a platform module
     return found
 
 

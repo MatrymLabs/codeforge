@@ -58,12 +58,12 @@ def discover_imports(source_path: Path) -> list[str]:
     for node in ast.walk(tree):
         if isinstance(node, ast.Import):
             for alias in node.names:
-                if alias.name.startswith(("parts.", "kernel.shelf.")):
+                if alias.name.startswith(("parts.", "kernel.", "adapters.")):
                     modules.add(alias.name)
         elif (
             isinstance(node, ast.ImportFrom)
             and node.module
-            and node.module.startswith(("parts.", "kernel.shelf."))
+            and node.module.startswith(("parts.", "kernel.", "adapters."))
         ):
             modules.add(node.module)
     return sorted(modules)

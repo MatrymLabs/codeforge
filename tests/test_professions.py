@@ -1,4 +1,4 @@
-"""Test twin for parts/world/professions.py -- the maker's trades (Crafting Campaign, slice 1b).
+"""Test twin for kernel/world/professions.py -- the maker's trades (Crafting Campaign, slice 1b).
 
 Two layers. CONFORMANCE pins the aethryn trade data as coherent: every material a gather trade works
 and every recipe a craft trade makes is real, every recipe belongs to exactly one craft trade, and
@@ -15,10 +15,10 @@ from pathlib import Path
 import pytest
 
 import forge
-from parts.world import crafting, items, professions
-from parts.world.seed import SeedError, load_items, load_professions, load_recipes
-from parts.world.session import SESSIONS, Session
-from parts.world.world import WORLD
+from kernel.world import crafting, items, professions
+from kernel.world.seed import SeedError, load_items, load_professions, load_recipes
+from kernel.world.session import SESSIONS, Session
+from kernel.world.world import WORLD
 
 _AETHRYN = Path(__file__).resolve().parent.parent / "seeds" / "aethryn"
 
@@ -64,7 +64,7 @@ def test_every_recipe_belongs_to_exactly_one_craft_trade(aethryn):
 def test_every_gatherable_material_belongs_to_a_gather_trade(aethryn):
     """Every material the wildlands can seed as a node must be claimed by a gather trade, or working
     it earns nothing."""
-    from parts.world.wildlands import _BIOMES, gatherable_materials
+    from kernel.world.wildlands import _BIOMES, gatherable_materials
 
     gatherable = {m for biome in _BIOMES for m in gatherable_materials(biome)}
     worked = {m for p in aethryn["profs"].values() if p["kind"] == "gather" for m in p["works"]}

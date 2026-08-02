@@ -23,13 +23,13 @@ def test_discover_imports_finds_parts_imports(tmp_path):
         from kernel.shelf.statemachine import Fired
         from kernel.shelf.workflow import WorkflowEngine
         import os
-        import parts.world.events
+        import kernel.world.events
     """)
     )
     imports = discover_imports(src)
     assert "kernel.shelf.statemachine" in imports
     assert "kernel.shelf.workflow" in imports
-    assert "parts.world.events" in imports
+    assert "kernel.world.events" in imports
     assert "os" not in imports
 
 

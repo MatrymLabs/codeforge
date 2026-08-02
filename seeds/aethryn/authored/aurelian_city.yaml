@@ -9,7 +9,7 @@
 # is left unproven. Five subareas, three voices (a star-scholar, a salvage-broker, a dock-master) that
 # cross-reference, two dangers, a hollow-ingot salvage node on the outer gantry and a broker who buys
 # its yield (a working economy), and readable Crowncraft lore. Installed by
-# parts/world/authored_towns.py; its quests are quests/aurelian_nexus.yaml (a fetch, Knowing) and
+# kernel/world/authored_towns.py; its quests are quests/aurelian_nexus.yaml (a fetch, Knowing) and
 # quests/aurelian_gantry.yaml (a hunt of a different shape, Gathering).
 
 rooms:

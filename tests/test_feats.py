@@ -1,4 +1,4 @@
-"""Test twin for parts/world/feats.py -- the derived deed ledger.
+"""Test twin for kernel/world/feats.py -- the derived deed ledger.
 
 Acceptance: a fresh hero has earned nothing; a seasoned one earns the feats their persisted state
 already proves (level/job/subjob/order/coins/rank), the ledger recomputes live, and the panel shows
@@ -8,8 +8,8 @@ earned vs locked with a next-deed nudge. Derive-don't-store: no feat carries its
 from __future__ import annotations
 
 import forge
-from parts.world import feats
-from parts.world.session import Session
+from kernel.world import feats
+from kernel.world.session import Session
 
 
 def test_a_fresh_hero_has_earned_no_feats():

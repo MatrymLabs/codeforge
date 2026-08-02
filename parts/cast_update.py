@@ -108,17 +108,18 @@ def _sha(path: Path) -> str:
 
 
 def _engine_files(root: Path) -> dict[str, str]:
-    """Map each engine file's root-relative path -> sha256 (forge.py + parts/**/*.py, no caches)."""
+    """Map engine files: root-relative path -> sha256 (forge.py + all layer roots, no caches)."""
     files: dict[str, str] = {}
     forge = root / "forge.py"
     if forge.is_file():
         files["forge.py"] = _sha(forge)
-    parts = root / "parts"
-    if parts.is_dir():
-        for path in sorted(parts.rglob("*.py")):
-            if "__pycache__" in path.parts:
-                continue
-            files[str(path.relative_to(root))] = _sha(path)
+    for layer in ("parts", "kernel", "adapters", "content"):
+        layer_dir = root / layer
+        if layer_dir.is_dir():
+            for path in sorted(layer_dir.rglob("*.py")):
+                if "__pycache__" in path.parts:
+                    continue
+                files[str(path.relative_to(root))] = _sha(path)
     return files
 
 
@@ -213,7 +214,8 @@ def diff_cast(
     manifest_path = cast_dir / "cast_manifest.json"
     if not manifest_path.is_file():
         raise CastError(f"no cast_manifest.json in {cast_dir}: not a poured cast")
-    if not (source_root / "forge.py").is_file() or not (source_root / "parts").is_dir():
+    has_layer = any((source_root / d).is_dir() for d in ("parts", "kernel", "adapters", "content"))
+    if not (source_root / "forge.py").is_file() or not has_layer:
         raise CastError(f"source {source_root} is not a codeforge checkout (no forge.py / parts/)")
     manifest = read_manifest(manifest_path)
     cast_files = _engine_files(cast_dir)
@@ -415,10 +417,12 @@ def _default_validator(cast_dir: Path) -> tuple[bool, str]:
 
 
 def _restore_engine(cast_dir: Path, backup: Path) -> None:
-    """Put the backed-up engine (parts/ + forge.py) back, replacing whatever is there now."""
-    if (cast_dir / "parts").exists():
-        shutil.rmtree(cast_dir / "parts")
-    shutil.copytree(backup / "parts", cast_dir / "parts")
+    """Put the backed-up engine (every layer root + forge.py) back, replacing what is there now."""
+    for layer in ("parts", "kernel", "adapters", "content"):
+        if (cast_dir / layer).exists():
+            shutil.rmtree(cast_dir / layer)
+        if (backup / layer).is_dir():
+            shutil.copytree(backup / layer, cast_dir / layer)
     shutil.copy2(backup / "forge.py", cast_dir / "forge.py")
 
 
@@ -440,14 +444,23 @@ def _apply_update(
     ignore = shutil.ignore_patterns("__pycache__", "*.pyc")
     backup = Path(tempfile.mkdtemp(prefix="cast-update-backup-"))
     try:
-        shutil.copytree(cast_dir / "parts", backup / "parts", ignore=ignore)
+        for layer in ("parts", "kernel", "adapters", "content"):
+            if (cast_dir / layer).is_dir():
+                shutil.copytree(cast_dir / layer, backup / layer, ignore=ignore)
         shutil.copy2(cast_dir / "forge.py", backup / "forge.py")
 
-        shutil.rmtree(cast_dir / "parts")
+        for layer in ("parts", "kernel", "adapters", "content"):
+            if (cast_dir / layer).is_dir():
+                shutil.rmtree(cast_dir / layer)
         if modules is None:
-            shutil.copytree(source_root / "parts", cast_dir / "parts", ignore=ignore)
+            if (source_root / "parts").is_dir():
+                shutil.copytree(source_root / "parts", cast_dir / "parts", ignore=ignore)
         else:
             _vendor_selective(source_root / "parts", cast_dir / "parts", modules, ignore)
+        # the migrated layers ride along whole in both strategies (cf. generate_cast)
+        for layer in ("kernel", "adapters", "content"):
+            if (source_root / layer).is_dir():
+                shutil.copytree(source_root / layer, cast_dir / layer, ignore=ignore)
         shutil.copy2(source_root / "forge.py", cast_dir / "forge.py")
         revendored = len(_engine_files(cast_dir))
 

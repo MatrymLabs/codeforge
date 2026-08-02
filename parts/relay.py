@@ -12,7 +12,7 @@ import random
 from collections.abc import Callable
 
 from kernel.shelf.circuit_breaker import CircuitBreaker, CircuitOpen, Clock
-from parts.world.session import Session
+from kernel.world.session import Session
 
 _THRESHOLD = 3
 _RESET = 30.0

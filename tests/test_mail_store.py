@@ -1,4 +1,4 @@
-"""Test twin for parts/world/mail_store.py -- the stored-letter adapter.
+"""Test twin for kernel/world/mail_store.py -- the stored-letter adapter.
 
 Acceptance: a sent letter lands in the recipient's inbox (newest first), count reports the total,
 mark_read flips the flag, delete removes it. Refusal / safety: delete is scoped to the recipient, so
@@ -8,7 +8,7 @@ quarantined to tmp by conftest.
 
 from __future__ import annotations
 
-from parts.world import mail_store
+from kernel.world import mail_store
 
 _T = "2026-07-28T12:00:00Z"
 

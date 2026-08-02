@@ -1,4 +1,4 @@
-"""Test twin for parts/world/zones.py + seed.load_zones -- areas and the beat-driven reset loop.
+"""Test twin for kernel/world/zones.py + seed.load_zones -- areas and the beat-driven reset loop.
 
 Acceptance: a valid zones pack groups rooms; the scheduler advances on the world beat and comes
 due per its mode. Refusal: a malformed zone fails loud rather than booting a broken area.
@@ -6,14 +6,14 @@ due per its mode. Refusal: a malformed zone fails loud rather than booting a bro
 
 import pytest
 
-import parts.world.seed as seed  # reference SeedError via the module: other suites importlib.reload
-import parts.world.zones as zones  # parts.world.seed, so a class imported at collection won't match
+import kernel.world.seed as seed  # reference SeedError via module: other suites importlib.reload
+import kernel.world.zones as zones  # a class imported at collection must not match world.seed
 from forge import handle_command
-from parts.world import items
-from parts.world.seed import SEEDS_ROOT, Item, Zone, load_rooms, load_zones
-from parts.world.session import Session
-from parts.world.world import START_ROOM
-from parts.world.zones import area_line, tick_zones, zone_of, zones_due
+from kernel.world import items
+from kernel.world.seed import SEEDS_ROOT, Item, Zone, load_rooms, load_zones
+from kernel.world.session import Session
+from kernel.world.world import START_ROOM
+from kernel.world.zones import area_line, tick_zones, zone_of, zones_due
 
 KNOWN = {"a", "b", "c"}
 
@@ -305,7 +305,7 @@ def test_reset_only_touches_its_own_area(monkeypatch):
 def test_merged_zones_adds_the_spiral_areas_only_when_a_spiral_seed_opts_in():
     """The generated Road's marches become named areas alongside the seed's own -- but only when the
     seed ships a spiral.yaml. With no spiral config, the authored areas are returned unchanged."""
-    from parts.world.zones import merged_zones
+    from kernel.world.zones import merged_zones
 
     base = {"coast": {"name": "C", "rooms": ["shore"], "reset_mode": "never", "beats_between": 9}}
     assert merged_zones(base, None) == base  # no spiral: unchanged
@@ -476,7 +476,7 @@ def _seasonal_wanderer(seasons: list[str]) -> Item:
 
 
 def test_a_seasonal_wanderer_spawns_only_in_its_season(monkeypatch):
-    import parts.world.climate as climate
+    import kernel.world.climate as climate
 
     _wander_world(monkeypatch, _seasonal_wanderer(["winter"]))
     monkeypatch.setattr(climate, "_beat", 0)  # beat 0 -> spring (not winter)
@@ -491,7 +491,7 @@ def test_a_seasonal_wanderer_spawns_only_in_its_season(monkeypatch):
 
 
 def test_a_seasonless_wanderer_spawns_in_any_season(monkeypatch):
-    import parts.world.climate as climate
+    import kernel.world.climate as climate
 
     _wander_world(monkeypatch, _wanderer())  # no seasons -> unconditional
     monkeypatch.setattr(climate, "_beat", climate._SEASON_LENGTH)  # summer
@@ -500,7 +500,7 @@ def test_a_seasonless_wanderer_spawns_in_any_season(monkeypatch):
 
 
 def test_seasons_must_be_valid_and_need_a_pool(tmp_path):
-    from parts.world.climate import SEASONS
+    from kernel.world.climate import SEASONS
 
     assert "winter" in SEASONS
     bad_value = "t:\n  location: nowhere\n  spawn_pool: [a]\n  seasons: [monsoon]\n"

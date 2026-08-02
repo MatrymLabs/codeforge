@@ -13,7 +13,7 @@ plane's front door, so it is deliberately narrow and hostile-input-safe:
 
 Provenance (owner/license/visibility) is recorded for every registered source, reusing the Seed's
 `Provenance` type. A registered source becomes an entry in the Project Hub's `sources` facet
-(`source_label`). No `parts/world/` coupling, no subprocess (git facts are read from `.git/` files).
+(`source_label`). No `kernel/world/` coupling,no subprocess (git facts are read from `.git/` files).
 Status: PROTOTYPED (see docs/seed_platform/RECENTERING.md).
 """
 

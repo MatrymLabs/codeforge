@@ -1,6 +1,6 @@
 # SEED: aethryn -- quests/greenhold_intro.yaml  (Greenhold's local quest: The Granary's Thirst)
 #
-# Auto-loaded by parts/world/quest.py from seeds/aethryn/quests/. A small, local loop that expands
+# Auto-loaded by kernel/world/quest.py from seeds/aethryn/quests/. A small, local loop that expands
 # the named location per the seed's quest structure: a local need (the failing cistern), a
 # world-level echo (old-world purification tech), a cost (the dark undercroft and its vermin), a
 # visible result (the reward + standing), and an unresolved remainder (whether the old water can be

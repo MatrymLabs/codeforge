@@ -24,7 +24,7 @@ Labels: VISION · RESEARCH · SPECIFIED · PROTOTYPED · INTEGRATED · PROVEN ·
 | Capability | Status | Evidence / note |
 |---|---|---|
 | MUD runtime + persistent world | **PROVEN** | the game engine (aethryn), end-to-end playable + gated |
-| Seed = game-data pack | **PROVEN** | `parts/world/seed.py` ("a seed IS a game") — the definition being *widened*, not deleted |
+| Seed = game-data pack | **PROVEN** | `kernel/world/seed.py` ("a seed IS a game") — the definition being *widened*, not deleted |
 | Target generation (games only) | **PROVEN** | `cast`/`forge` pours a standalone game from a seed + engine |
 | **Real game-Seed deployment (Aethryn poured + booted at scale)** | **DEPLOYABLE** | `make deploy-proof` (`scripts/deploy_aethryn_seed.py`) pours the whole engine + the Aethryn world, boots the cast in a fresh subprocess, serves a play corpus, and records the world's room count — the honest proof the game Seed's deployment is real, not a stub. Public deploy is a separate, gated step. |
 | Repo analysis / gate-running on a target | **PROTOTYPED** | `forge-audit` (separate repo, mock GitHub seam) |
@@ -58,7 +58,7 @@ real project input and extracts a model*:
   `extract_model` (fail-loud validation) and `render_model` (inspectable; the seam a future MUD
   `model` verb and a client panel both render).
 
-It is **isolated in `parts/seedlab/`, not `parts/world/`** — the game Seed model is untouched.
+It is **isolated in `parts/seedlab/`, not `kernel/world/`** — the game Seed model is untouched.
 
 ## Compatibility & gates
 
@@ -99,7 +99,7 @@ no restart recovery. `parts/seedlab/kernel.py` (MOD-10.052) builds the first bri
 - A CLI (`python3 -m parts.seedlab.kernel create|list|status|start|stop|archive`) makes the
   lifecycle real and inspectable from the shell.
 
-Isolated in `parts/seedlab/`: no `parts/world/` import, no `FORGE_SEED`, no game coupling. **Honest
+Isolated in `parts/seedlab/`: no `kernel/world/` import, no `FORGE_SEED`, no game coupling. **Honest
 scope:** "runtime start" is the lifecycle state machine + a persisted session, *not yet* a spawned
 per-Seed server process (the game deploy case is proven separately by Slice 2). Persistence is
 file-backed by choice — a DB-backed Seed-identity table is an additive migration deferred to Josh.

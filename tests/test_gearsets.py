@@ -1,11 +1,11 @@
-"""Test twin for parts.world.gearsets: set bonuses when a whole gear set is worn.
+"""Test twin for kernel.world.gearsets: set bonuses when a whole gear set is worn.
 
 Acceptance (a full set grants its bonus; two sets stack) AND refusal (a partial set earns nothing;
 an empty registry earns nothing). Pure: the tests inject their own sets, never the loaded registry.
 """
 
-from parts.world.gearsets import active_set_bonuses
-from parts.world.seed import GearSet
+from kernel.world.gearsets import active_set_bonuses
+from kernel.world.seed import GearSet
 
 _SETS: dict[str, GearSet] = {
     "storm": GearSet(

@@ -1,7 +1,7 @@
 """The `world` developer CLI: validate the Aethryn world map, and generate areas for it.
 
-A thin front for two parts (all logic + tests live there): parts/world/survey.py (the read-only
-Surveyor) and parts/world/area_store.py (the mutating area bench). Usage:
+A thin front for two parts (all logic + tests live there): kernel/world/survey.py (the read-only
+Surveyor) and kernel/world/area_store.py (the mutating area bench). Usage:
 
     python -m tools.world validate
     python -m tools.world check-canon
@@ -25,7 +25,7 @@ from __future__ import annotations
 
 import sys
 
-from parts.world import area_store, survey
+from kernel.world import area_store, survey
 
 # The read-only half routes to the Surveyor; everything else is the area bench.
 _READ_ONLY = {

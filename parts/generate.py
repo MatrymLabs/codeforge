@@ -16,10 +16,10 @@ from typing import Any
 import yaml
 
 from kernel.registry import load_collective
-from parts.world.events import announce
-from parts.world.items import ITEMS
-from parts.world.seed import Item
-from parts.world.session import Session, display_name
+from kernel.world.events import announce
+from kernel.world.items import ITEMS
+from kernel.world.seed import Item
+from kernel.world.session import Session, display_name
 
 _ROOT = Path(__file__).resolve().parent.parent
 CATALOG_PATH = Path(os.environ.get("CODEFORGE_ITEM_CATALOG", str(_ROOT / "catalog" / "items.yaml")))

@@ -27,7 +27,7 @@ from dataclasses import dataclass
 from sqlalchemy import select, text
 from sqlalchemy.orm import Session as SqlSession
 
-from parts.world.db import CharacterRow
+from kernel.world.db import CharacterRow
 
 
 @dataclass(frozen=True)
@@ -159,7 +159,7 @@ def wealth_py(rows: list[AnalyticsRow]) -> WealthStats:
 
 def main() -> None:  # pragma: no cover - a live read of the real archive, not unit-tested
     """Print the live standings, spread, and treasury from the real archive (a runnable demo)."""
-    from parts.world.db import open_archive_session
+    from kernel.world.db import open_archive_session
 
     with open_archive_session() as session:
         print("-- leaderboard --")

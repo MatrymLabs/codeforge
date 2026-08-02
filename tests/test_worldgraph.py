@@ -1,4 +1,4 @@
-"""Test twin for parts/world/worldgraph.py -- the region topology and reachability.
+"""Test twin for kernel/world/worldgraph.py -- the region topology and reachability.
 
 Acceptance: the shipped graph covers all 14 canon regions, the whole world is reachable from the
 spawn by land or sea (find-unreachable is clean), The Deepreach connects by its one-way land listing
@@ -14,8 +14,8 @@ from pathlib import Path
 import pytest
 import yaml
 
-from parts.world import canon, worldgraph
-from parts.world.seed import SeedError
+from kernel.world import canon, worldgraph
+from kernel.world.seed import SeedError
 
 _SEAS = [
     "western_ocean",

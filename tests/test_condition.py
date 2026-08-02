@@ -1,4 +1,4 @@
-"""Test twin for parts/world/condition.py -- the at-a-glance present-state Lens (status view).
+"""Test twin for kernel/world/condition.py -- the at-a-glance present-state Lens (status view).
 
 Acceptance: a hale hero with a calling sees their vital pools and that nothing ails them; an
 afflicted hero sees exactly what ails them; a sworn hero sees their Order standing; the `condition`
@@ -9,9 +9,9 @@ invented pools (state is canonical -- the projection never fabricates resources 
 from __future__ import annotations
 
 import forge
-from parts.world import afflictions, condition
-from parts.world.jobs import bind_calling
-from parts.world.session import SESSIONS, Session
+from kernel.world import afflictions, condition
+from kernel.world.jobs import bind_calling
+from kernel.world.session import SESSIONS, Session
 
 
 def _hero() -> Session:
@@ -29,7 +29,7 @@ def test_a_hale_hero_sees_pools_and_no_affliction():
 
 
 def test_a_hero_with_a_power_pool_sees_it():
-    from parts.world.resources import Resource
+    from kernel.world.resources import Resource
 
     s = _hero()
     s.resources["power"] = Resource(name="power", current=5, maximum=10)

@@ -368,7 +368,7 @@ world-check:
 # The Assayer: read-only audit of the DESIGNED coin economy (faucets vs sinks) over the
 # assembled Aethryn world, so live-ops can read the balance without instrumenting the server.
 economy-audit:
-	@FORGE_SEED=aethryn python3 -c "import parts.world.world; from parts.world.npcs import NPCS; from parts.coin_flow import render_audit; print(render_audit(NPCS))"
+	@FORGE_SEED=aethryn python3 -c "import kernel.world.world; from kernel.world.npcs import NPCS; from parts.coin_flow import render_audit; print(render_audit(NPCS))"
 
 store:
 	python3 -m kernel.store
@@ -399,14 +399,14 @@ serve-mmo:
 # (git-ignored). Safe to run while the server is up (online .backup). Restore: see
 # docs/database.md. For PostgreSQL use pg_dump. ---
 backup:
-	@python3 -c "from parts.world.db import backup_db; print('backed up ->', backup_db())"
+	@python3 -c "from kernel.world.db import backup_db; print('backed up ->', backup_db())"
 
 # Restore a SQLite snapshot over the live database (recovery). Usage: make restore BACKUP=<path>.
 # Disposes the cached engine so the server reopens the restored file. The restore is TESTED end to
 # end in tests/test_db.py (untested backups are not backups). For PostgreSQL use pg_restore.
 restore:
 	@test -n "$(BACKUP)" || (echo "usage: make restore BACKUP=<path-to-.db>" && exit 2)
-	@python3 -c "from pathlib import Path; from parts.world.db import restore_db; print('restored ->', restore_db(Path('$(BACKUP)')))"
+	@python3 -c "from pathlib import Path; from kernel.world.db import restore_db; print('restored ->', restore_db(Path('$(BACKUP)')))"
 
 db-up:
 	docker compose up -d db

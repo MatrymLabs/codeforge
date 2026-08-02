@@ -1,4 +1,4 @@
-"""Test twin for parts/world/generation_contract.py -- the generator's contract and its checks.
+"""Test twin for kernel/world/generation_contract.py -- the generator's contract and its checks.
 
 Acceptance: the shipped contract loads with the 16 required fields, the historical layers, the six
 dungeon beats, the forbidden changes, and archetype shares that sum to 1; missing_fields measures an
@@ -15,8 +15,8 @@ from pathlib import Path
 import pytest
 import yaml
 
-from parts.world import generation_contract as gc
-from parts.world.seed import SeedError
+from kernel.world import generation_contract as gc
+from kernel.world.seed import SeedError
 
 # --- Acceptance: the shipped contract is complete and well-formed --------------------------------
 

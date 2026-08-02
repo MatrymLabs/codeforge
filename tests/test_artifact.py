@@ -1,4 +1,4 @@
-"""Test twin for parts/world/artifact.py -- the Maker's Signet (the Creator Artifact).
+"""Test twin for kernel/world/artifact.py -- the Maker's Signet (the Creator Artifact).
 
 Gates the campaign's absolutes: only the Seed Owner bears the Signet, and it opens the Creator
 Interface + channels the Workshop's read-only tools REMOTELY (from any room, not just the Workshop).
@@ -8,8 +8,8 @@ A non-owner is refused; the read-only-only boundary is honoured (no create/publi
 import pytest
 
 from forge import handle_command
-from parts.world import artifact, events
-from parts.world.session import SESSIONS, Session
+from kernel.world import artifact, events
+from kernel.world.session import SESSIONS, Session
 
 
 @pytest.fixture(autouse=True)

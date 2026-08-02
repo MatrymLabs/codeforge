@@ -8,7 +8,7 @@
 # is the root deep; the rumour is left unproven. Five subareas, three voices (a warden, a forage-
 # broker, a road-keeper) that cross-reference, two dangers, a fernshade gather node and a broker who
 # buys its yield (a working economy), and readable pact lore. Installed by
-# parts/world/authored_towns.py; its quests are quests/wildgrowth_root.yaml (a fetch, Gathering) and
+# kernel/world/authored_towns.py; its quests are quests/wildgrowth_root.yaml (a fetch, Gathering) and
 # quests/wildgrowth_thorns.yaml (a hunt of a different shape, Warcraft).
 
 rooms:

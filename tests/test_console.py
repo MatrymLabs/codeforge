@@ -11,7 +11,7 @@ import pytest
 
 from forge import handle_command
 from kernel.shelf.console import CommandRefused, console_menu, run, run_view
-from parts.world.session import SESSIONS, Session
+from kernel.world.session import SESSIONS, Session
 
 
 @pytest.fixture(autouse=True)

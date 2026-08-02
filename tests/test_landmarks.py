@@ -1,4 +1,4 @@
-"""Test twin for parts/world/landmarks.py -- a readable monument in every zone's hub.
+"""Test twin for kernel/world/landmarks.py -- a readable monument in every zone's hub.
 
 Acceptance: each zone raises one readable, unequippable monument in its hub (first room), its words
 naming the region and the level band, and any dungeon within. Refusal: a hubless zone raises none.
@@ -7,7 +7,7 @@ Determinism: the same zone always raises the same monument.
 
 from __future__ import annotations
 
-from parts.world.landmarks import (
+from kernel.world.landmarks import (
     LANDMARK_PREFIX,
     is_landmark,
     raise_landmark,

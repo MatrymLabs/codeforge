@@ -8,7 +8,7 @@
 # clue to the larger world is the laboratory; the rumour is left unproven. Five subareas, three voices
 # (a physic-master, a physic-broker, a canopy-warden) that cross-reference, two dangers, a vinesilk
 # gather node in the physic gardens and a broker who buys its yield (a working economy), and readable
-# design lore. Installed by parts/world/authored_towns.py; its quests are quests/zulkarak_physic.yaml
+# design lore. Installed by kernel/world/authored_towns.py; its quests are quests/zulkarak_physic.yaml
 # (a fetch, Making) and quests/zulkarak_grove.yaml (a hunt of a different shape, Gathering).
 
 rooms:

@@ -13,7 +13,7 @@ from kernel.learning_record import (
     load_record,
     to_markdown,
 )
-from parts.world.session import Session
+from kernel.world.session import Session
 
 _GOOD = {
     "record_id": "sample-lesson",

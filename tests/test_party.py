@@ -1,4 +1,4 @@
-"""Test twin for parts/world/party.py -- the fellowship (the first shared-purpose primitive).
+"""Test twin for kernel/world/party.py -- the fellowship (the first shared-purpose primitive).
 
 Acceptance: an invite plus a join forms a band; the roster shows it; party chat reaches the members;
 leaving hands off leadership then disbands the last seat; disband dissolves it; a logout leaves the
@@ -10,8 +10,8 @@ no invitation, and party actions while unpartied all return a refusal and mutate
 from __future__ import annotations
 
 import forge
-from parts.world import events, party
-from parts.world.session import SESSIONS, Session
+from kernel.world import events, party
+from kernel.world.session import SESSIONS, Session
 
 
 def _seat(name: str, location: str = "courtyard", *, sink: list[str] | None = None) -> Session:
@@ -228,8 +228,8 @@ def test_the_party_and_psay_verbs_are_reachable():
 
 
 def test_party_changes_push_char_party_frames_to_every_member():
-    from parts.world import events
-    from parts.world.session import SESSIONS, Session
+    from kernel.world import events
+    from kernel.world.session import SESSIONS, Session
 
     frames: dict[str, list] = {"alia": [], "bram": []}
     try:

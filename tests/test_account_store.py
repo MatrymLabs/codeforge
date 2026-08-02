@@ -5,7 +5,7 @@ the SQLAlchemy store over the quarantined tmp database (the integration test). B
 same port, so account persistence can be swapped without touching the crypto -- the assimilation
 pattern (docs/persistence_ports.md) applied to auth. The security policy (salted pbkdf2,
 constant-time compare, the missing-principal timing decoy, generic refusals) stays in
-parts/world/accounts.py and is pinned by tests/test_accounts.py; this file pins only the storage
+kernel/world/accounts.py and is pinned by tests/test_accounts.py; this file pins only the storage
 boundary and that the domain functions run over an injected store with no database at all.
 """
 
@@ -13,7 +13,7 @@ from __future__ import annotations
 
 import pytest
 
-from parts.world.accounts import (
+from kernel.world.accounts import (
     AccountCredentialStore,
     AccountSecret,
     InMemoryAccountCredentialStore,
@@ -22,7 +22,7 @@ from parts.world.accounts import (
     register,
     rotate_account_secret,
 )
-from parts.world.accounts_sql import SqlAccountCredentialStore
+from kernel.world.accounts_sql import SqlAccountCredentialStore
 
 # --- the contract: every AccountCredentialStore must obey these ------------------------
 
@@ -97,7 +97,7 @@ def test_a_too_short_password_is_refused_before_the_store_is_touched():
 
 
 def test_import_legacy_json_reports_nothing_when_no_files_are_present(tmp_path, monkeypatch):
-    from parts.world.accounts import import_legacy_json
+    from kernel.world.accounts import import_legacy_json
 
     monkeypatch.chdir(tmp_path)  # an empty working dir -- no characters.json / accounts.json
     assert "No legacy JSON found" in import_legacy_json()
@@ -108,9 +108,9 @@ def test_import_legacy_json_moves_accounts_and_links_their_characters(tmp_path, 
     onto its account -- proven end to end by a real login afterwards."""
     import json
 
-    import parts.world.accounts as acc
-    from parts.world.accounts import import_legacy_json, inspect_login
-    from parts.world.characters import load_character
+    import kernel.world.accounts as acc
+    from kernel.world.accounts import import_legacy_json, inspect_login
+    from kernel.world.characters import load_character
 
     monkeypatch.chdir(tmp_path)
     (tmp_path / "characters.json").write_text(
@@ -144,9 +144,9 @@ def test_rotate_refuses_a_too_short_or_unknown_account():
 
 
 def test_migrate_refuses_missing_char_missing_password_and_taken_account():
-    from parts.world.accounts import migrate, set_password
-    from parts.world.characters import save_character
-    from parts.world.session import SESSIONS, Session
+    from kernel.world.accounts import migrate, set_password
+    from kernel.world.characters import save_character
+    from kernel.world.session import SESSIONS, Session
 
     SESSIONS.clear()
     mem = InMemoryAccountCredentialStore()

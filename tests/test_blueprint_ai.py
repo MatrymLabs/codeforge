@@ -17,7 +17,7 @@ from adapters.blueprint_ai import (
 )
 from forge import handle_command
 from kernel.blueprint import Blueprint
-from parts.world.session import Session
+from kernel.world.session import Session
 
 _GOOD_DRAFT = BlueprintDraft(
     blueprint_id="ai_idea",

@@ -7,7 +7,7 @@
 # road; the rumour is left unproven. Five subareas, three voices (a thane, an ore-broker, a mine-
 # captain) that cross-reference, two dangers, a raw-ore gather node in the working stope and a broker
 # who buys its yield (a working economy), and readable claim lore. Installed by
-# parts/world/authored_towns.py; its quests are quests/stonefang_drift.yaml (a fetch, Making) and
+# kernel/world/authored_towns.py; its quests are quests/stonefang_drift.yaml (a fetch, Making) and
 # quests/stonefang_stope.yaml (a hunt of a different shape, Warcraft).
 
 rooms:

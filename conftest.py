@@ -25,8 +25,8 @@ def _isolated_database(tmp_path, monkeypatch):
       strength (that's a production config, not a behavior).
     """
     from kernel.shelf import loader_cache
-    from parts.world import accounts, db
-    from parts.world.session import SESSIONS
+    from kernel.world import accounts, db
+    from kernel.world.session import SESSIONS
 
     # The shared parse-once cache is keyed by resolved path + mtime; clear it so a tmp file
     # reused across tests (same path, coarse mtime granularity) can never serve stale data.
@@ -67,6 +67,6 @@ def _isolated_database(tmp_path, monkeypatch):
 
     # Combat variance rolls a die on every blow (miss/glance/crit). Neutralize it suite-wide so the
     # deterministic damage assertions stay exact; a variance test installs its own forcing RNG.
-    from parts.world import combat
+    from kernel.world import combat
 
     monkeypatch.setattr(combat, "_COMBAT_RNG", _NeutralRng())

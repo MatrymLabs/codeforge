@@ -1,11 +1,11 @@
-"""Test twin for parts/world/npcs.py -- presence, talk, and the dialogue cycle."""
+"""Test twin for kernel/world/npcs.py -- presence, talk, and the dialogue cycle."""
 
 import copy
 
 import pytest
 
-from parts.world import npcs
-from parts.world.npcs import npcs_in, room_npcs_text, talk
+from kernel.world import npcs
+from kernel.world.npcs import npcs_in, room_npcs_text, talk
 
 
 @pytest.fixture(autouse=True)
@@ -94,7 +94,7 @@ def _with_topics():
 
 
 def test_ask_returns_a_topic_response():
-    from parts.world.npcs import ask
+    from kernel.world.npcs import ask
 
     _with_topics()
     out = ask("librarian", "archive", "library")
@@ -102,7 +102,7 @@ def test_ask_returns_a_topic_response():
 
 
 def test_a_multi_line_topic_returns_all_its_lines():
-    from parts.world.npcs import ask
+    from kernel.world.npcs import ask
 
     _with_topics()
     out = ask("librarian", "codex", "library")
@@ -110,7 +110,7 @@ def test_a_multi_line_topic_returns_all_its_lines():
 
 
 def test_a_bare_ask_lists_the_topics():
-    from parts.world.npcs import ask
+    from kernel.world.npcs import ask
 
     _with_topics()
     out = ask("librarian", "", "library")
@@ -118,7 +118,7 @@ def test_a_bare_ask_lists_the_topics():
 
 
 def test_an_unknown_topic_is_refused_with_the_options():
-    from parts.world.npcs import ask
+    from kernel.world.npcs import ask
 
     _with_topics()
     out = ask("librarian", "dragons", "library")
@@ -126,14 +126,14 @@ def test_an_unknown_topic_is_refused_with_the_options():
 
 
 def test_asking_an_npc_with_no_topics():
-    from parts.world.npcs import ask
+    from kernel.world.npcs import ask
 
     assert "nothing more to discuss" in ask("librarian", "anything", "library")  # no topics set
 
 
 def test_ask_flows_through_the_engine_tick():
     import forge
-    from parts.world.session import SESSIONS, Session
+    from kernel.world.session import SESSIONS, Session
 
     _with_topics()
     s = Session(player_id="reader", location="library")
@@ -145,7 +145,7 @@ def test_ask_flows_through_the_engine_tick():
 def test_room_index_rebuilds_when_an_npc_is_added_then_removed():
     """The room index (npcs_in) must reflect NPC membership changes -- a foe added at runtime shows
     up in its room, and once removed it is gone -- so the O(1) index never lies about presence."""
-    from parts.world.seed import Npc
+    from kernel.world.seed import Npc
 
     room = "index_probe_room"
     assert npcs_in(room) == []  # nothing here yet

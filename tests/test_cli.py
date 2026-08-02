@@ -1,8 +1,8 @@
 """Test twin for parts/cli.py -- the dispatch table, not the servers."""
 
+from kernel.world.characters import save_character
+from kernel.world.session import SESSIONS, Session
 from parts.cli import main
-from parts.world.characters import save_character
-from parts.world.session import SESSIONS, Session
 
 
 def test_unknown_verbs_print_usage_and_fail(capsys):
@@ -104,7 +104,7 @@ def test_web_serves_on_the_configured_port(monkeypatch):
 
 
 def test_migrate_dispatches_and_validates_arity(capsys, monkeypatch):
-    monkeypatch.setattr("parts.world.accounts.migrate", lambda c, a: f"{c}@{a} moved")
+    monkeypatch.setattr("kernel.world.accounts.migrate", lambda c, a: f"{c}@{a} moved")
     assert main(["migrate", "matrym", "matlabs"]) == 0
     assert "matrym@matlabs moved" in capsys.readouterr().out
     assert main(["migrate", "matrym"]) == 1  # wrong arity -> usage
@@ -120,7 +120,9 @@ def test_passwd_rotates_when_the_confirmations_match(capsys, monkeypatch):
     import getpass
 
     monkeypatch.setattr(getpass, "getpass", lambda prompt="": "MatchingPw1")
-    monkeypatch.setattr("parts.world.accounts.rotate_account_secret", lambda a, pw: f"Rotated {a}.")
+    monkeypatch.setattr(
+        "kernel.world.accounts.rotate_account_secret", lambda a, pw: f"Rotated {a}."
+    )
     assert main(["passwd", "matlabs"]) == 0
     assert "Rotated matlabs." in capsys.readouterr().out
 

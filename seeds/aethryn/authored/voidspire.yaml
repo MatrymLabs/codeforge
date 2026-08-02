@@ -7,7 +7,7 @@
 # and the Rifted Abyss) and argue with those who would open it. Strange geometry is kept to controlled
 # flavour -- the map stays navigable. The conflict is the apex canon quarrel (seal the Throne, or open
 # it); the clue to the larger world is the fracture itself; the open questions (is Netharion alive?)
-# surface here only as rumour, never answered. Installed by parts/world/authored_towns.py; its quest
+# surface here only as rumour, never answered. Installed by kernel/world/authored_towns.py; its quest
 # is quests/voidspire_threshold.yaml.
 #
 # NOTE (density): Voidspire is the endgame-staging town (the apex ways to the Throne and the Abyss).

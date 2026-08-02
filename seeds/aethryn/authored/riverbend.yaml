@@ -8,7 +8,7 @@
 # expands the named location per the seed recipe (a role, subareas, a livelihood, a conflict, a rumour,
 # a clue to the larger world, a revisitable change) at AAA density -- a place, not a signpost. The weir
 # is Veridia's canon identity made concrete: ordinary river-folk living over old-world water-works that
-# once tuned themselves to the flood, shown through function. Loaded by parts/world/authored_towns.py;
+# once tuned themselves to the flood, shown through function. Loaded by kernel/world/authored_towns.py;
 # its quests are seeds/aethryn/quests/riverbend_weir.yaml (the jammed weir) and riverbend_reeds.yaml
 # (the reed-shrine). The reed-flats offer rivercress, a distinct Veridia gather the tavern-keeper buys.
 

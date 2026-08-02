@@ -36,12 +36,12 @@ A native (or other-language) component is adopted only when it satisfies **all**
 ## First application
 
 `codeforge_nav` (Rust via PyO3/maturin) - the world-navigation kernel (`NavGraph`: shortest room
-paths + reachability). Fallback: `parts.world.navigation.PyNavGraph`. Parity: `tests/test_navigation.py`.
+paths + reachability). Fallback: `kernel.world.navigation.PyNavGraph`. Parity: `tests/test_navigation.py`.
 Evidence: `benchmarks/bench_nav.py`, recorded in
 [`docs/reports/2026-07-28-native-organ-benchmarks.md`](../reports/2026-07-28-native-organ-benchmarks.md)
 (measured **~11x-16x** at 30k-50k rooms; the report is the source of truth, so this ADR does not
 hardcode a single multiple that drifts). Wired into the `route <room>` command via
-`parts.world.travel`.
+`kernel.world.travel`.
 
 ## Language selection: why Rust here, not Numba or ahead-of-time-to-C++
 

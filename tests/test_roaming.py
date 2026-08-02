@@ -1,4 +1,4 @@
-"""Test twin for parts/world/roaming.py -- ambient NPCs that drift on the world beat.
+"""Test twin for kernel/world/roaming.py -- ambient NPCs that drift on the world beat.
 
 Acceptance: a `wander` NPC in the player's room leaves through an exit; a wanderer next door ambles
 in; the room index reflects the move; the drift is reachable through the engine tick. Refusal /
@@ -13,13 +13,13 @@ import copy
 import pytest
 
 from forge import handle_command
-from parts.world import npcs, roaming
-from parts.world.jobs import bind_calling
-from parts.world.npcs import NPCS, npcs_in
-from parts.world.roaming import roam
-from parts.world.seed import Npc
-from parts.world.session import SESSIONS, Session
-from parts.world.world import WORLD
+from kernel.world import npcs, roaming
+from kernel.world.jobs import bind_calling
+from kernel.world.npcs import NPCS, npcs_in
+from kernel.world.roaming import roam
+from kernel.world.seed import Npc
+from kernel.world.session import SESSIONS, Session
+from kernel.world.world import WORLD
 
 
 @pytest.fixture(autouse=True)

@@ -21,8 +21,8 @@ import sys
 import time
 
 import forge
-from parts.world.session import Session
-from parts.world.world import START_ROOM
+from kernel.world.session import Session
+from kernel.world.world import START_ROOM
 
 # A representative mix: display commands (the hot path), movement, and social verbs.
 _COMMANDS = (

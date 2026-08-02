@@ -2125,7 +2125,7 @@
     "tags": [
       "command"
     ],
-    "notes": "parts/world/items.read_item: show a lore item's readable text (inventory or room).",
+    "notes": "kernel/world/items.read_item: show a lore item's readable text (inventory or room).",
     "superseded_by": "",
     "aliases": [],
     "created": "2026-07-26",
@@ -2408,7 +2408,7 @@
     "tags": [
       "command"
     ],
-    "notes": "CORE verb firing a job's usable ability (parts/world/abilities). A strike reuses combat.land_hit; a heal restores HP; each spends MP. Tick-reachable; refuses no-calling / unknown / wrong-job / no-MP / bad-target.",
+    "notes": "CORE verb firing a job's usable ability (kernel/world/abilities). A strike reuses combat.land_hit; a heal restores HP; each spends MP. Tick-reachable; refuses no-calling / unknown / wrong-job / no-MP / bad-target.",
     "superseded_by": "",
     "aliases": [],
     "created": "2026-07-23",
@@ -2433,7 +2433,7 @@
     "tags": [
       "command"
     ],
-    "notes": "Read-only CORE verb listing a calling's moveset (parts/world/abilities.render_abilities). Tick-reachable; never mutates.",
+    "notes": "Read-only CORE verb listing a calling's moveset (kernel/world/abilities.render_abilities). Tick-reachable; never mutates.",
     "superseded_by": "",
     "aliases": [],
     "created": "2026-07-23",
@@ -2484,7 +2484,7 @@
     "tags": [
       "command"
     ],
-    "notes": "The Orders faction join verb (parts/world/orders.swear_order): lists the Row when bare, swears a named hero to an Order and persists it. Refuses unnamed / unknown Order.",
+    "notes": "The Orders faction join verb (kernel/world/orders.swear_order): lists the Row when bare, swears a named hero to an Order and persists it. Refuses unnamed / unknown Order.",
     "superseded_by": "",
     "aliases": [],
     "created": "2026-07-24",
@@ -2534,7 +2534,7 @@
     "tags": [
       "command"
     ],
-    "notes": "The shop economy verb (parts/world/shop). Finds the merchant in the player's room.",
+    "notes": "The shop economy verb (kernel/world/shop). Finds the merchant in the player's room.",
     "superseded_by": "",
     "aliases": [],
     "created": "2026-07-24",
@@ -2559,7 +2559,7 @@
     "tags": [
       "command"
     ],
-    "notes": "The shop economy verb (parts/world/shop). Finds the merchant in the player's room.",
+    "notes": "The shop economy verb (kernel/world/shop). Finds the merchant in the player's room.",
     "superseded_by": "",
     "aliases": [],
     "created": "2026-07-24",
@@ -2584,7 +2584,7 @@
     "tags": [
       "command"
     ],
-    "notes": "The shop economy verb (parts/world/shop). Finds the merchant in the player's room.",
+    "notes": "The shop economy verb (kernel/world/shop). Finds the merchant in the player's room.",
     "superseded_by": "",
     "aliases": [],
     "created": "2026-07-24",
@@ -2609,7 +2609,7 @@
     "tags": [
       "command"
     ],
-    "notes": "parts/world/consumables.quaff: spend a carried consumable, restore hp/mp.",
+    "notes": "kernel/world/consumables.quaff: spend a carried consumable, restore hp/mp.",
     "superseded_by": "",
     "aliases": [],
     "created": "2026-07-24",
@@ -2634,7 +2634,7 @@
     "tags": [
       "command"
     ],
-    "notes": "parts/world/npcs.ask: topic-based conversation over Npc.topics (keyword -> reply lines). Bare `ask <npc>` lists topics. Backward-compatible with `talk` (no-topics NPC has nothing to ask).",
+    "notes": "kernel/world/npcs.ask: topic-based conversation over Npc.topics (keyword -> reply lines). Bare `ask <npc>` lists topics. Backward-compatible with `talk` (no-topics NPC has nothing to ask).",
     "superseded_by": "",
     "aliases": [],
     "created": "2026-07-24",
@@ -3136,7 +3136,7 @@
     "tags": [
       "command"
     ],
-    "notes": "_party_cmd dispatches to parts.world.party (invite/join/leave/disband/roster). The first shared-purpose multiplayer verb; foundation for shared combat + dungeons + raids.",
+    "notes": "_party_cmd dispatches to kernel.world.party (invite/join/leave/disband/roster). The first shared-purpose multiplayer verb; foundation for shared combat + dungeons + raids.",
     "superseded_by": "",
     "aliases": [],
     "created": "2026-07-28",
@@ -3189,7 +3189,7 @@
     "tags": [
       "command"
     ],
-    "notes": "_trade_cmd dispatches to parts.world.trade (propose/accept/add/coins/confirm/cancel/render). The first player economy verb; atomic swap on per-player inventory.",
+    "notes": "_trade_cmd dispatches to kernel.world.trade (propose/accept/add/coins/confirm/cancel/render). The first player economy verb; atomic swap on per-player inventory.",
     "superseded_by": "",
     "aliases": [],
     "created": "2026-07-28",
@@ -3214,7 +3214,7 @@
     "tags": [
       "command"
     ],
-    "notes": "_guild_cmd dispatches to parts.world.guild (found/invite/accept/promote/leave/disband/roster). The persisted social pillar; membership survives logout.",
+    "notes": "_guild_cmd dispatches to kernel.world.guild (found/invite/accept/promote/leave/disband/roster). The persisted social pillar; membership survives logout.",
     "superseded_by": "",
     "aliases": [],
     "created": "2026-07-28",
@@ -3264,7 +3264,7 @@
     "tags": [
       "command"
     ],
-    "notes": "_mail_cmd dispatches to parts.world.mail (inbox/send/read/delete). The async social channel, reaching offline heroes.",
+    "notes": "_mail_cmd dispatches to kernel.world.mail (inbox/send/read/delete). The async social channel, reaching offline heroes.",
     "superseded_by": "",
     "aliases": [],
     "created": "2026-07-28",
@@ -3316,7 +3316,7 @@
     "tags": [
       "command"
     ],
-    "notes": "_friend_cmd dispatches to parts.world.friends (list/add/remove). Personal, one-directional roster with online status.",
+    "notes": "_friend_cmd dispatches to kernel.world.friends (list/add/remove). Personal, one-directional roster with online status.",
     "superseded_by": "",
     "aliases": [],
     "created": "2026-07-29",
@@ -3366,7 +3366,7 @@
     "tags": [
       "command"
     ],
-    "notes": "Routes to parts.world.chat.world_say. The world-wide live channel; the spine preserves the message case.",
+    "notes": "Routes to kernel.world.chat.world_say. The world-wide live channel; the spine preserves the message case.",
     "superseded_by": "",
     "aliases": [],
     "created": "2026-07-29",
@@ -3391,7 +3391,7 @@
     "tags": [
       "command"
     ],
-    "notes": "Routes to parts.world.inns.rest. Restores every session resource to maximum, but only in an inn interior (is_inn_room); refused elsewhere. Reuses combat's heal-to-max idiom; moves no world state.",
+    "notes": "Routes to kernel.world.inns.rest. Restores every session resource to maximum, but only in an inn interior (is_inn_room); refused elsewhere. Reuses combat's heal-to-max idiom; moves no world state.",
     "superseded_by": "",
     "aliases": [],
     "created": "2026-07-29",
@@ -3416,7 +3416,7 @@
     "tags": [
       "command"
     ],
-    "notes": "_maintenance_cmd toggles parts.world.maintenance_mode and broadcasts. Owner-gated ADMIN verb. Non-staff logins refused at the front desk while on. Distinct from the CORE `maintenance` change-log verb.",
+    "notes": "_maintenance_cmd toggles kernel.world.maintenance_mode and broadcasts. Owner-gated ADMIN verb. Non-staff logins refused at the front desk while on. Distinct from the CORE `maintenance` change-log verb.",
     "superseded_by": "",
     "aliases": [],
     "created": "2026-07-29",
@@ -3441,7 +3441,7 @@
     "tags": [
       "command"
     ],
-    "notes": "_bank_cmd dispatches to parts.world.bank (render/deposit/withdraw). A deposited item leaves the world into storage until withdrawn; survives logout via the loose_items table.",
+    "notes": "_bank_cmd dispatches to kernel.world.bank (render/deposit/withdraw). A deposited item leaves the world into storage until withdrawn; survives logout via the loose_items table.",
     "superseded_by": "",
     "aliases": [],
     "created": "2026-07-29",
@@ -3466,7 +3466,7 @@
     "tags": [
       "command"
     ],
-    "notes": "_auction_cmd dispatches to parts.world.auction (browse/list_item/buy). Listing escrows an item out of the world; buying pays the seller and re-clones it to the buyer; unsold items are mailed back on expiry.",
+    "notes": "_auction_cmd dispatches to kernel.world.auction (browse/list_item/buy). Listing escrows an item out of the world; buying pays the seller and re-clones it to the buyer; unsold items are mailed back on expiry.",
     "superseded_by": "",
     "aliases": [],
     "created": "2026-07-29",
@@ -3516,7 +3516,7 @@
     "tags": [
       "command"
     ],
-    "notes": "Moderation verb over parts.world.bans; audited.",
+    "notes": "Moderation verb over kernel.world.bans; audited.",
     "superseded_by": "",
     "aliases": [],
     "created": "2026-07-29",
@@ -3541,7 +3541,7 @@
     "tags": [
       "command"
     ],
-    "notes": "Moderation verb over parts.world.bans; audited.",
+    "notes": "Moderation verb over kernel.world.bans; audited.",
     "superseded_by": "",
     "aliases": [],
     "created": "2026-07-29",
@@ -3566,7 +3566,7 @@
     "tags": [
       "command"
     ],
-    "notes": "Moderation verb over parts.world.bans; audited.",
+    "notes": "Moderation verb over kernel.world.bans; audited.",
     "superseded_by": "",
     "aliases": [],
     "created": "2026-07-29",
@@ -3591,7 +3591,7 @@
     "tags": [
       "command"
     ],
-    "notes": "_metrics_cmd renders parts.world.metrics.snapshot for a live admin.",
+    "notes": "_metrics_cmd renders kernel.world.metrics.snapshot for a live admin.",
     "superseded_by": "",
     "aliases": [],
     "created": "2026-07-29",
@@ -3616,7 +3616,7 @@
     "tags": [
       "command"
     ],
-    "notes": "Routes to parts.world.durability.repair_session: fully repairs all equipped gear for coins (REPAIR_COST_PER_POINT per point of wear), the economy's coin sink against inflation. Refuses loud (charges nothing) when the purse is short or nothing is worn. Distinct from CMD-04.050 'repair' (the Engineer's field self-heal).",
+    "notes": "Routes to kernel.world.durability.repair_session: fully repairs all equipped gear for coins (REPAIR_COST_PER_POINT per point of wear), the economy's coin sink against inflation. Refuses loud (charges nothing) when the purse is short or nothing is worn. Distinct from CMD-04.050 'repair' (the Engineer's field self-heal).",
     "superseded_by": "",
     "aliases": [],
     "created": "2026-07-30",
@@ -3641,7 +3641,7 @@
     "tags": [
       "command"
     ],
-    "notes": "Routes to parts.world.tutorial.next_step: the state-driven onboarding ladder. Any hero can call it at any stage; a brand-new hero is also nudged toward it on first login (gateway greeting).",
+    "notes": "Routes to kernel.world.tutorial.next_step: the state-driven onboarding ladder. Any hero can call it at any stage; a brand-new hero is also nudged toward it on first login (gateway greeting).",
     "superseded_by": "",
     "aliases": [],
     "created": "2026-07-30",
@@ -3687,7 +3687,7 @@
     "tags": [
       "command"
     ],
-    "notes": "CORE verb over the FTS5 world search index (parts/world/search.py); R&D Technology Admission T-AP-05.",
+    "notes": "CORE verb over the FTS5 world search index (kernel/world/search.py); R&D Technology Admission T-AP-05.",
     "superseded_by": "",
     "aliases": [],
     "created": "2026-08-01",

@@ -1,4 +1,4 @@
-"""Test twin for parts/world/travel.py -- the Waystone network (the economy's coin sink).
+"""Test twin for kernel/world/travel.py -- the Waystone network (the economy's coin sink).
 
 Acceptance: at a waystone, `travel` lists the network + level-scaled fares, and `travel <where>`
 pays the fare and carries you. Refusal: off a waystone, an unknown/same hub, and an empty purse all
@@ -13,9 +13,9 @@ from pathlib import Path
 import pytest
 import yaml
 
-from parts.world import travel as tv
-from parts.world.seed import SeedError
-from parts.world.session import Session
+from kernel.world import travel as tv
+from kernel.world.seed import SeedError
+from kernel.world.session import Session
 
 _STONES = {
     "veridia": {"name": "Veridia", "level": 1},

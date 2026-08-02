@@ -3,15 +3,15 @@
 *How a single hero STANDS with each Order over time, as distinct from which Order they are sworn to
 (orders) and how the Orders stand with each other (factions). Roadmap item #2: the numeric-standing
 substrate that faction-gated content and the faction-story archetype pull on. Design canon behind
-`parts/world/reputation.py`.*
+`kernel/world/reputation.py`.*
 
 ## Three layers, one politics
 
 | Layer | Question it answers | Lives in |
 | --- | --- | --- |
-| Orders | Which Order am I sworn to? | `parts.world.orders` |
-| Factions | How do the Orders stand with each other? | `parts.world.factions` |
-| Reputation | How do *I* stand with each Order? | `parts.world.reputation` (this) |
+| Orders | Which Order am I sworn to? | `kernel.world.orders` |
+| Factions | How do the Orders stand with each other? | `kernel.world.factions` |
+| Reputation | How do *I* stand with each Order? | `kernel.world.reputation` (this) |
 
 Reputation is per character, per Order: a number that content raises and lowers, banded into named
 tiers, and persisted (the tier recomputes from the number on restore -- derive-don't-store).

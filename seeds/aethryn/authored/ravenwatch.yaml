@@ -5,7 +5,7 @@
 # Ravenwatch is a timber town under the black eaves, its wardens keeping an old barrow sealed. The
 # conflict is ordinary and sad (grave-robbers want in, the wardens keep it shut); the clue to the
 # larger world is the barrow itself (a place that keeps memory); the rumour is left unproven.
-# Installed by parts/world/authored_towns.py; its quest is quests/ravenwatch_barrow.yaml.
+# Installed by kernel/world/authored_towns.py; its quest is quests/ravenwatch_barrow.yaml.
 
 rooms:
   ravenwatch_market:

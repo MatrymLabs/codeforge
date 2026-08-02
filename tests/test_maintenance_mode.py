@@ -1,4 +1,4 @@
-"""Test twin for parts/world/maintenance_mode.py -- the runtime non-staff gate.
+"""Test twin for kernel/world/maintenance_mode.py -- the runtime non-staff gate.
 
 Acceptance: enable closes the gate with a reason (a blank falls back to a generic one), disable
 re-opens it, is_on/reason report the state. Refusal / safety: the flag starts open, and the
@@ -8,9 +8,9 @@ verb (they share a stem, not a meaning).
 
 from __future__ import annotations
 
-from parts.world import maintenance_mode
-from parts.world.jobs import bind_calling
-from parts.world.session import Session
+from kernel.world import maintenance_mode
+from kernel.world.jobs import bind_calling
+from kernel.world.session import Session
 
 
 def _teardown() -> None:

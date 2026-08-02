@@ -14,7 +14,7 @@ Both derive from ONE source (Kernel record + ProjectState), so text and contract
 Honest by construction (No Vision Theater): the facets are empty until later stages build them, and
 the Hub says so plainly ("none yet") rather than implying a capability that does not run.
 `ProjectState` is the real contract shape those stages will fill; the Hub is proven to render both
-the empty and the populated case. No `parts/world/` coupling. Status: PROTOTYPED (see
+the empty and the populated case. No `kernel/world/` coupling. Status: PROTOTYPED (see
 docs/seed_platform/RECENTERING.md).
 """
 

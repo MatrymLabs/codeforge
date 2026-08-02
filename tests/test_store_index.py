@@ -3,6 +3,7 @@
 import pytest
 
 from forge import handle_command
+from kernel.world.session import Session
 from parts.hardware import Part
 from parts.store_index import (
     Domain,
@@ -13,7 +14,6 @@ from parts.store_index import (
     render_index,
     search,
 )
-from parts.world.session import Session
 
 _DOMAINS = [
     Domain("05", "Resilience", frozenset({"resilience", "rate-limiting"})),

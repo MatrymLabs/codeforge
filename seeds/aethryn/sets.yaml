@@ -1,7 +1,7 @@
 # SEED: aethryn -- sets.yaml (gear SET bonuses: wear a whole regional set and earn a bonus on top of
 # the pieces' own mods, so collecting a full set beats three unrelated pieces of the same tier).
 # Each set lists its item-prototype `pieces` and the flat `bonus` when all are worn. Bonuses scale
-# with the Reach's band. Cross-checked against real items at boot. See parts/world/gearsets.py.
+# with the Reach's band. Cross-checked against real items at boot. See kernel/world/gearsets.py.
 
 emberhide:
   name: the Emberhide set

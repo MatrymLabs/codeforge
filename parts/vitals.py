@@ -9,9 +9,9 @@ practical app (parts/service_health); only the adapter differs.
 from __future__ import annotations
 
 from kernel.shelf.health import HEALTHY, HealthRegistry, healthy_if
-from parts.world.jobs import JOBS
-from parts.world.npcs import NPCS
-from parts.world.session import Session
+from kernel.world.jobs import JOBS
+from kernel.world.npcs import NPCS
+from kernel.world.session import Session
 
 
 def _build_registry() -> HealthRegistry:

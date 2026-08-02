@@ -91,8 +91,8 @@ def _poured_cast(
 _BASE = {
     "forge.py": "def handle_command(session, text):\n    return 'ok'\n",
     "parts/__init__.py": "",
-    "parts/world/__init__.py": "",
-    "parts/world/combat.py": "def hit():\n    return 1\n",
+    "kernel/world/__init__.py": "",
+    "kernel/world/combat.py": "def hit():\n    return 1\n",
 }
 
 
@@ -110,10 +110,10 @@ def test_a_changed_upstream_module_is_named(tmp_path: Path) -> None:
     cast, source = tmp_path / "cast", tmp_path / "src"
     _poured_cast(cast, _BASE, commit="aaa111", strategy="vendored-whole")
     bumped = dict(_BASE)
-    bumped["parts/world/combat.py"] = "def hit():\n    return 2\n"  # one-byte fix upstream
+    bumped["kernel/world/combat.py"] = "def hit():\n    return 2\n"  # one-byte fix upstream
     _engine_tree(source, bumped)
     drift = diff_cast(cast, source, resolve_commit=lambda r: "bbb222")
-    assert drift.changed == ["parts/world/combat.py"]
+    assert drift.changed == ["kernel/world/combat.py"]
     assert drift.has_engine_drift
     assert drift.pinned_commit == "aaa111" and drift.target_commit == "bbb222"
 
@@ -167,7 +167,7 @@ def test_engine_files_skips_pycache_and_hashes_content(tmp_path: Path) -> None:
     (tmp_path / "parts" / "__pycache__").mkdir()
     (tmp_path / "parts" / "__pycache__" / "cached.py").write_text("x = 1\n")  # a .py in a cache
     files = _engine_files(tmp_path)
-    assert "forge.py" in files and "parts/world/combat.py" in files
+    assert "forge.py" in files and "kernel/world/combat.py" in files
     assert not any("__pycache__" in f for f in files)  # caches never compared, even a .py within
 
 
@@ -212,14 +212,14 @@ def test_render_names_every_drift_bucket() -> None:
         pinned_commit="a",
         target_commit="b",
         engine_strategy="vendored-selective",
-        changed=["parts/world/combat.py"],
+        changed=["kernel/world/combat.py"],
         upstream_only=["parts/new_core.py"],
         newly_upstream=["parts/new_core.py"],
         cast_only=["parts/house_rules.py"],
         pin_verifiable=True,
     )
     out = render_drift(drift)
-    assert "parts/world/combat.py" in out  # changed
+    assert "kernel/world/combat.py" in out  # changed
     assert "parts/new_core.py" in out  # newly upstream (split of upstream-only)
     assert "parts/house_rules.py" in out  # cast-only
     assert "Read-only report" in out  # never mistaken for an apply
@@ -426,7 +426,7 @@ def test_render_splits_new_from_shed_when_verifiable() -> None:
 def test_a_locally_edited_file_is_flagged(tmp_path: Path) -> None:
     cast, source = tmp_path / "cast", tmp_path / "src"
     edited = dict(_BASE)
-    edited["parts/world/combat.py"] = "def hit():\n    return 999  # owner tweak after pour\n"
+    edited["kernel/world/combat.py"] = "def hit():\n    return 999  # owner tweak after pour\n"
     _poured_cast(cast, edited, commit="aaa111", strategy="vendored-whole")
     _engine_tree(source, edited)  # target == cast content, so no 'changed'; but the PIN had _BASE
     drift = diff_cast(
@@ -436,7 +436,7 @@ def test_a_locally_edited_file_is_flagged(tmp_path: Path) -> None:
         commit_present=lambda r, c: True,
         read_at_commit=_pin_reader(_BASE),  # the pin's combat.py was the original
     )
-    assert drift.locally_modified == ["parts/world/combat.py"]
+    assert drift.locally_modified == ["kernel/world/combat.py"]
     assert drift.pin_verifiable and not drift.in_sync
 
 
@@ -479,12 +479,12 @@ def test_render_flags_local_edits_as_overwrite_risk() -> None:
         pinned_commit="a",
         target_commit="b",
         engine_strategy="whole",
-        locally_modified=["parts/world/combat.py"],
+        locally_modified=["kernel/world/combat.py"],
         pin_verifiable=True,
     )
     out = render_drift(drift)
     assert "local edits:      1 file(s) modified" in out
-    assert "an update would overwrite these" in out and "parts/world/combat.py" in out
+    assert "an update would overwrite these" in out and "kernel/world/combat.py" in out
 
 
 def test_render_says_when_it_cannot_verify_the_pin() -> None:
@@ -527,9 +527,9 @@ def test_drift_is_a_frozen_report(tmp_path: Path) -> None:
 
 # --- U2: apply an engine update to a poured cast, safely -----------------------------------------
 
-_BUMPED = {**_BASE, "parts/world/combat.py": "def hit():\n    return 2\n"}  # an upstream fix
+_BUMPED = {**_BASE, "kernel/world/combat.py": "def hit():\n    return 2\n"}  # an upstream fix
 _OK = lambda cd: (True, "commands ran clean")  # noqa: E731  a passing validator
-_COMBAT = "parts/world/combat.py"
+_COMBAT = "kernel/world/combat.py"
 
 
 def _whole_cast_with_upstream_fix(tmp_path: Path, *, commit="aaa111", strategy="vendored-whole"):

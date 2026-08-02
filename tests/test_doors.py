@@ -1,13 +1,13 @@
-"""Test twin for parts/world/doors.py -- locks, keys, and gated movement."""
+"""Test twin for kernel/world/doors.py -- locks, keys, and gated movement."""
 
 import copy
 
 import pytest
 
-from parts.world import doors, items
-from parts.world.doors import barred_door_for, unlock
-from parts.world.items import take
-from parts.world.world import resolve_move
+from kernel.world import doors, items
+from kernel.world.doors import barred_door_for, unlock
+from kernel.world.items import take
+from kernel.world.world import resolve_move
 
 
 @pytest.fixture(autouse=True)
@@ -75,7 +75,7 @@ def test_a_cloned_key_opens_the_door_by_prototype():
 
 def test_a_self_closing_door_slams_shut_on_a_later_world_beat():
     from forge import handle_command
-    from parts.world.session import Session
+    from kernel.world.session import Session
 
     doors.DOORS["oak_door"]["recloses_after"] = 2
     take("key", "library", items.carrier("tester"))
@@ -174,7 +174,7 @@ def test_a_gated_door_with_no_actor_context_stays_barred():
 
 
 def test_load_doors_rejects_an_unsafe_requires_condition(tmp_path):
-    from parts.world.seed import SeedError, load_doors
+    from kernel.world.seed import SeedError, load_doors
 
     (tmp_path / "doors.yaml").write_text(
         "trap_door:\n"

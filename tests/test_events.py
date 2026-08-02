@@ -1,12 +1,12 @@
-"""Test twin for parts/world/events.py -- broadcasts, presence, and say."""
+"""Test twin for kernel/world/events.py -- broadcasts, presence, and say."""
 
 import copy
 
 import pytest
 
 from forge import handle_command, render_scene
-from parts.world import bus, doors, items, npcs
-from parts.world.events import (
+from kernel.world import bus, doors, items, npcs
+from kernel.world.events import (
     _ECHO_SINKS,
     _ECHO_TOPIC,
     _GMCP_TOPIC,
@@ -23,8 +23,8 @@ from parts.world.events import (
     unbind_echo,
     unbind_gmcp,
 )
-from parts.world.frames import SpeechFrame
-from parts.world.session import SESSIONS, Session
+from kernel.world.frames import SpeechFrame
+from kernel.world.session import SESSIONS, Session
 
 
 @pytest.fixture(autouse=True)
@@ -234,7 +234,7 @@ def test_push_gmcp_prunes_a_sink_that_raises_oserror():
 
     bind_gmcp("ada", _dead)
     push_gmcp(["ada"], "Char.Party", {})  # must not raise; the dead sink is pruned
-    from parts.world.events import _GMCP_SINKS
+    from kernel.world.events import _GMCP_SINKS
 
     assert "ada" not in _GMCP_SINKS  # pruned, so it is never tried again
 
@@ -495,7 +495,7 @@ def test_on_room_skips_an_occupant_with_no_sink():
 def test_render_scene_shows_a_remote_player_from_the_roster():
     # Phase 5.2: a player hosted on ANOTHER process (present only in the shared roster, not local
     # SESSIONS) appears in the room scene, so both gateways show one shared room.
-    from parts.world import presence
+    from kernel.world import presence
 
     bus.reset_bus()
     presence._reset()

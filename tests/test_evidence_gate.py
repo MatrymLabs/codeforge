@@ -11,8 +11,8 @@ from pathlib import Path
 import pytest
 
 from forge import handle_command
+from kernel.world.session import SESSIONS, Session
 from parts.evidence_gate import FLAGGED, VERIFIED, main, render_truth, truth_checks
-from parts.world.session import SESSIONS, Session
 
 
 def test_the_real_repo_passes_its_own_truth_checks() -> None:

@@ -8,7 +8,7 @@
 # abundance infrastructure); the rumour is left unproven. Five subareas, three voices (a licensor, a
 # chandler, a river-warden) that cross-reference each other, two dangers, a riverbank gather node and
 # a chandler who buys its yield (a working economy), and readable civic lore. Installed by
-# parts/world/authored_towns.py; its quests are quests/brightwater_sluice.yaml (a fetch, Knowing) and
+# kernel/world/authored_towns.py; its quests are quests/brightwater_sluice.yaml (a fetch, Knowing) and
 # quests/brightwater_weir.yaml (a hunt of a different shape, Warcraft).
 
 rooms:

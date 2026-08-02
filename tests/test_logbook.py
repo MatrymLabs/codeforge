@@ -2,8 +2,8 @@
 
 import pytest
 
+from kernel.world.session import SESSIONS, Session
 from parts.logbook import journal, reset_logbooks
-from parts.world.session import SESSIONS, Session
 
 
 @pytest.fixture(autouse=True)

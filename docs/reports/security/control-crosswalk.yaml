@@ -34,7 +34,7 @@ controls:
     control: Deserialization safety on the world-input boundary
     applicability: applicable
     assurance_profile: B
-    implementation: parts/world/seed.py  # _UniqueKeyLoader on a SafeConstructor base
+    implementation: kernel/world/seed.py  # _UniqueKeyLoader on a SafeConstructor base
     evidence:
       - {kind: test, path: tests/test_seed_security.py}
     status: verified_against
@@ -71,7 +71,7 @@ controls:
     control: Password hashing (salted pbkdf2-sha256, constant-time, case-preserving)
     applicability: applicable
     assurance_profile: B
-    implementation: parts/world/accounts.py
+    implementation: kernel/world/accounts.py
     evidence:
       - {kind: test, path: tests/test_accounts.py}
     status: verified_against
@@ -95,7 +95,7 @@ controls:
     control: Server-side authorization (rank-gated @-verbs, namespaced command spine)
     applicability: applicable
     assurance_profile: B
-    implementation: parts/world/ranks.py
+    implementation: kernel/world/ranks.py
     evidence:
       - {kind: implementation, path: parts/commands.py}
     status: verified_against

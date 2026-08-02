@@ -9,7 +9,7 @@ the adapter and the rule differ.
 from __future__ import annotations
 
 from kernel.shelf.sanitizer import SanitizeRule, sanitize
-from parts.world.session import Session
+from kernel.world.session import Session
 
 _RULE = SanitizeRule(max_length=24)
 _TITLES: dict[str, str] = {}

@@ -29,8 +29,8 @@ if os.path.exists(_demo_db):
 os.environ.setdefault("CODEFORGE_DB", _demo_db)
 
 import forge  # noqa: E402  (import after FORGE_SEED so the world loads the flagship)
-from parts.world.session import Session  # noqa: E402
-from parts.world.world import START_ROOM  # noqa: E402
+from kernel.world.session import Session  # noqa: E402
+from kernel.world.world import START_ROOM  # noqa: E402
 
 WIDTH, HEIGHT = 94, 34
 AMBER_PROMPT = "\x1b[1;38;5;214m> \x1b[0m"

@@ -13,13 +13,13 @@ from pathlib import Path
 
 import pytest
 
+from kernel.world.session import Session
 from parts.seedlab.kernel import InMemorySeedStore, SeedKernel, SeedKernelError
 from parts.seedlab.model_store import InMemorySeedModels
 from parts.seedlab.project_model import Provenance
 from parts.seedlab.source_connector import LocalSource
 from parts.seedlab.source_modeler import model_and_store
 from parts.seedlab.workspace_verb import GmcpPush, workspace_command
-from parts.world.session import Session
 
 
 def _kernel() -> SeedKernel:

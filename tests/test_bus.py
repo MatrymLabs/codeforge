@@ -1,4 +1,4 @@
-"""Test twin for parts/world/bus.py -- the pub/sub seam the event bus grows into (Phase 4).
+"""Test twin for kernel/world/bus.py -- the pub/sub seam the event bus grows into (Phase 4).
 
 Acceptance: a subscriber receives what is published on its topic; unsubscribe stops delivery;
 set_bus swaps the backing (the network-adapter injection point) and get_bus reports it. Refusal /
@@ -12,7 +12,7 @@ from typing import Any
 
 import pytest
 
-from parts.world import bus
+from kernel.world import bus
 
 
 @pytest.fixture(autouse=True)

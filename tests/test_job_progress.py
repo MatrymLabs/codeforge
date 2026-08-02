@@ -1,4 +1,4 @@
-"""Test twin for parts/world/job_progress.py -- per-job progression survives a restart.
+"""Test twin for kernel/world/job_progress.py -- per-job progression survives a restart.
 
 Acceptance: taking a job opens a record; multiple jobs' records persist and restore
 independently (changing jobs never erases a prior job's level). The round-trip goes through
@@ -11,11 +11,11 @@ import copy
 
 import pytest
 
-from parts.world import npcs
-from parts.world.characters import load_character, restore_character, save_character
-from parts.world.job_progress import JobProgress, load_job_progress
-from parts.world.jobs import bind_calling
-from parts.world.session import SESSIONS, Session
+from kernel.world import npcs
+from kernel.world.characters import load_character, restore_character, save_character
+from kernel.world.job_progress import JobProgress, load_job_progress
+from kernel.world.jobs import bind_calling
+from kernel.world.session import SESSIONS, Session
 
 
 @pytest.fixture(autouse=True)
@@ -71,7 +71,7 @@ def test_an_unnamed_seat_persists_no_job_progress() -> None:
 
 
 def test_the_secondary_job_survives_a_character_roundtrip():
-    from parts.world.jobs import set_secondary
+    from kernel.world.jobs import set_secondary
 
     s = Session(player_id="matrym", location="courtyard", named=True)
     SESSIONS["matrym"] = s

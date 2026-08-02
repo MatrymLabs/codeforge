@@ -1,4 +1,4 @@
-"""Test twin for parts/world/guild_store.py -- the guild treasury row.
+"""Test twin for kernel/world/guild_store.py -- the guild treasury row.
 
 Acceptance: ensure opens a row at zero, adjust adds and subtracts and returns the new balance, coins
 reads it, remove drops it. Refusal / floor: adjust never lets the balance fall below zero, and coins
@@ -7,7 +7,7 @@ reads zero for a guild with no row. Uses the real table, quarantined to tmp by c
 
 from __future__ import annotations
 
-from parts.world import guild_store
+from kernel.world import guild_store
 
 
 def test_ensure_opens_a_treasury_at_zero_and_is_idempotent():

@@ -9,9 +9,9 @@ SAME evidence core backs a release-readiness gate in a practical app (`kernel/re
 from __future__ import annotations
 
 from kernel.shelf.test_evidence import FAILED, PASSED, EvidenceLedger
-from parts.world.jobs import JOBS
-from parts.world.npcs import NPCS
-from parts.world.session import Session
+from kernel.world.jobs import JOBS
+from kernel.world.npcs import NPCS
+from kernel.world.session import Session
 
 
 def _certify() -> EvidenceLedger:

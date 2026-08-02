@@ -2,8 +2,8 @@
 
 import pytest
 
+from kernel.world.session import SESSIONS, Session
 from parts.calibrate import calibrate, set_calibration_rng
-from parts.world.session import SESSIONS, Session
 
 
 @pytest.fixture(autouse=True)

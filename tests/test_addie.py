@@ -150,7 +150,7 @@ def test_the_addie_verb_renders_the_loop():
 def test_the_addie_verb_is_reachable_through_the_engine_tick():
     # a feature is not wired until handle_command proves it reachable (the CARD convention)
     from forge import handle_command
-    from parts.world.session import Session
+    from kernel.world.session import Session
 
     out = handle_command(Session(player_id="matrym", location="courtyard"), "addie")
     assert "ADDIE loop:" in out

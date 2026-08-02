@@ -1,4 +1,4 @@
-"""Test twin for parts/world/bank.py -- a hero's personal vault.
+"""Test twin for kernel/world/bank.py -- a hero's personal vault.
 
 Acceptance: deposit takes a carried item out of the world into storage; the vault lists it; withdraw
 brings it back with its rolled affix intact; a deposited item survives a save+restore in
@@ -13,11 +13,11 @@ import copy
 
 import pytest
 
-from parts.world import bank, items, loose_store
-from parts.world.characters import load_character, restore_character, save_character
-from parts.world.items import ITEMS, carrier, items_in, prototype_of
-from parts.world.jobs import bind_calling
-from parts.world.session import SESSIONS, Session
+from kernel.world import bank, items, loose_store
+from kernel.world.characters import load_character, restore_character, save_character
+from kernel.world.items import ITEMS, carrier, items_in, prototype_of
+from kernel.world.jobs import bind_calling
+from kernel.world.session import SESSIONS, Session
 
 
 @pytest.fixture(autouse=True)

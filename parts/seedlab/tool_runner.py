@@ -17,7 +17,7 @@ HONEST SCOPE / SECURITY: running a build/test executes code from the approved so
 its build). The controls above fence it; stronger isolation (containers, namespaces) is future
 hardening the directive names as "sandboxing where practical". Tests here only ever run fixed,
 harmless argv (e.g. `python --version`). Reuses the FailsafeRunner pattern, binding cwd to the
-source. No `parts/world/` coupling. Status: PROTOTYPED (see docs/seed_platform/RECENTERING.md).
+source. No `kernel/world/` coupling. Status: PROTOTYPED (see docs/seed_platform/RECENTERING.md).
 """
 
 from __future__ import annotations

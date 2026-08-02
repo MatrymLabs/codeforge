@@ -11,7 +11,7 @@ import copy
 import pytest
 
 import forge
-from parts.world import doors, items
+from kernel.world import doors, items
 
 
 @pytest.fixture(autouse=True)

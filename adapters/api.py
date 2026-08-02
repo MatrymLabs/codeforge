@@ -23,12 +23,12 @@ from kernel.login_guard import LoginGuard
 from kernel.shelf import cursor as cursor_part
 from kernel.shelf import precondition as precond
 from kernel.shelf.observability import install_observability
+from kernel.world.accounts import account_has_owner, account_password_ok
+from kernel.world.characters import set_rank
+from kernel.world.db import CharacterRow, open_archive_session
+from kernel.world.ranks import RANK_ORDER
+from kernel.world.world import WORLD
 from parts.dashboard import router as dashboard_router
-from parts.world.accounts import account_has_owner, account_password_ok
-from parts.world.characters import set_rank
-from parts.world.db import CharacterRow, open_archive_session
-from parts.world.ranks import RANK_ORDER
-from parts.world.world import WORLD
 
 app = FastAPI(
     title="CodeForge Admin API",

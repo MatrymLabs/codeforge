@@ -1,4 +1,4 @@
-"""Test twin for parts/world/canon.py -- Aethryn's LOCKED canon and its drift guardrail.
+"""Test twin for kernel/world/canon.py -- Aethryn's LOCKED canon and its drift guardrail.
 
 Acceptance: the real canon loads and exposes exactly 7 Seven Crown sites and 14 regions, each with
 its required fields and CANON_LOCKED status; check_canon confirms the shipped world still matches
@@ -15,8 +15,8 @@ from pathlib import Path
 
 import pytest
 
-from parts.world import canon
-from parts.world.seed import SeedError
+from kernel.world import canon
+from kernel.world.seed import SeedError
 
 # --- Acceptance: the real canon is well-formed and complete --------------------------------------
 

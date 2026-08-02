@@ -32,12 +32,12 @@ from adapters.gateway import (
     _sanitize,
 )
 from forge import handle_command, render_scene
-from parts.world import guild, party, trade
-from parts.world.accounts import password_fixable
-from parts.world.characters import save_character
-from parts.world.events import bind_echo, unbind_echo
-from parts.world.seed import load_splash
-from parts.world.session import SESSIONS, Session
+from kernel.world import guild, party, trade
+from kernel.world.accounts import password_fixable
+from kernel.world.characters import save_character
+from kernel.world.events import bind_echo, unbind_echo
+from kernel.world.seed import load_splash
+from kernel.world.session import SESSIONS, Session
 
 _PAGE = (Path(__file__).parent / "web" / "index.html").read_text(encoding="utf-8")
 

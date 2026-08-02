@@ -3,7 +3,7 @@
 # The prompt: implement caves as ONE reusable area family with regional variants. This is the DATA
 # that varies it: for each canon region, the cave subtypes, entrance types, biome, creature / hazard
 # / resource families, landmarks, an optional hidden feature, and a naming grammar the deterministic generator
-# (parts/world/caves.py) composes from. Content is data, never code; the generator is only its
+# (kernel/world/caves.py) composes from. Content is data, never code; the generator is only its
 # factory. Every generated cave inherits its region's identity from the row here, so a Veridia cave
 # reads like Veridia and a Frostspire cave reads like Frostspire.
 #

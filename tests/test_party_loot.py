@@ -1,4 +1,4 @@
-"""Test twin for parts/world/party_loot.py -- shared combat's loot half (round-robin drops).
+"""Test twin for kernel/world/party_loot.py -- shared combat's loot half (round-robin drops).
 
 Acceptance: a party fells a foe and each drop is awarded to a co-located mate in rotation, moved
 into their hands; wired through combat's _spawn_loot seam. Refusal (unchanged solo behavior): a solo
@@ -7,9 +7,9 @@ kill, or a partied hero with no co-located mate, leaves the drop on the floor to
 
 from __future__ import annotations
 
-from parts.world import combat, events, items, party, party_loot
-from parts.world.items import carrier
-from parts.world.session import SESSIONS, Session
+from kernel.world import combat, events, items, party, party_loot
+from kernel.world.items import carrier
+from kernel.world.session import SESSIONS, Session
 
 
 def _hero(name: str, room: str = "arena") -> Session:

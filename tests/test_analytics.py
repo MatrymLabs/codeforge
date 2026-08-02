@@ -20,6 +20,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import Session as SqlSession
 from sqlalchemy.pool import StaticPool
 
+from kernel.world.db import ArchiveBase, CharacterRow
 from parts.analytics import (
     Standing,
     WealthStats,
@@ -31,7 +32,6 @@ from parts.analytics import (
     wealth_py,
     wealth_sql,
 )
-from parts.world.db import ArchiveBase, CharacterRow
 
 # (name, level, xp, location, coins) -- hostile on purpose: (ashling, borin) tie on (level, xp) and
 # so do (esk, fira); coins include a 0 (borin) so the treasury low is a real zero, not "unset".

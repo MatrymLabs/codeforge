@@ -94,8 +94,8 @@ language = "rust"
 license = "MIT"
 provenance_status = "verified (in-tree source; PyO3 official crate)"
 proposed_role = "native accelerator for world-graph pathfinding + reachability at scale"
-proposed_boundary = "a narrow PyO3 FFI (NavGraph: path/distance/reachable_count/node_count); parts.world.navigation imports it opportunistically and falls back to pure Python"
-existing_codeforge_equivalent = "the pure-Python PyNavGraph in parts.world.navigation (the fallback + reference)"
+proposed_boundary = "a narrow PyO3 FFI (NavGraph: path/distance/reachable_count/node_count); kernel.world.navigation imports it opportunistically and falls back to pure Python"
+existing_codeforge_equivalent = "the pure-Python PyNavGraph in kernel.world.navigation (the fallback + reference)"
 capability_gap = "10-30x faster bulk graph traversal for a million-room world; a native-language showcase"
 decision = "approved"
 reviewer = "Josh"
@@ -107,9 +107,9 @@ security_review = "no network, no I/O, no unsafe blocks; in-process graph comput
 license_review = "MIT crate + PyO3 (MIT OR Apache-2.0); compatible with the MIT application"
 compatibility = "Python 3.13 (cp313), built via maturin"
 testing_strategy = "the pure-Python reference is always tested; a parity test compares Rust vs Python when built; benchmarks/bench_nav.py records the speedup"
-failure_strategy = "optional -- when the compiled module is absent, parts.world.navigation uses the identical pure-Python NavGraph, so the game is green with no Rust toolchain"
+failure_strategy = "optional -- when the compiled module is absent, kernel.world.navigation uses the identical pure-Python NavGraph, so the game is green with no Rust toolchain"
 upgrade_strategy = "pin PyO3 in Cargo.toml; bump deliberately, rebuild with maturin, re-run the parity test"
-removal_strategy = "delete native/codeforge_nav and the try-import in parts.world.navigation; the pure-Python fallback remains"
+removal_strategy = "delete native/codeforge_nav and the try-import in kernel.world.navigation; the pure-Python fallback remains"
 
 # ----- approved: the Rust extension build backend ------------------------------------
 [tech.maturin]

@@ -1,7 +1,7 @@
 """Test twin for kernel/world_boundary.py -- the World Package's one-way-dependency gate.
 
-Acceptance: the live World Package (parts/world/) imports no platform module (the Layer-1/2
-separation the recon found, now physically enforced). Completeness: parts/world/ really is the
+Acceptance: the live World Package (kernel/world/) imports no platform module (the Layer-1/2
+separation the recon found, now physically enforced). Completeness: kernel/world/ really is the
 transitive closure of the game seed -- no orphan module filed there, none missing. Refusal: a
 synthetic world module reaching into the platform is caught and named; a world/shelf import is
 allowed; an unparseable module fails loud.
@@ -24,9 +24,9 @@ from kernel.world_boundary import (
 )
 
 _ROOT = Path(__file__).resolve().parent.parent
-_WORLD = _ROOT / "parts" / "world"
+_WORLD = _ROOT / "kernel" / "world"
 
-# The game runtime's entry points. The World Package (parts/world/) is their parts-closure;
+# The game runtime's entry points. The World Package (kernel/world/) is their parts-closure;
 # the directory must equal that closure, or a new game module would escape the boundary check.
 _GAME_SEED = {
     "world",
@@ -138,9 +138,9 @@ def test_the_live_ritual_line_is_clean() -> None:
 
 
 def test_world_modules_is_the_real_closure_of_the_game_seed() -> None:
-    # Completeness: recompute the game closure from source and confirm the parts/world/ directory
+    # Completeness: recompute the game closure from source and confirm the kernel/world/ directory
     # matches it, so an orphan platform module cannot hide in the world folder and no game module
-    # can go missing. Intra-world edges are `parts.world.X` imports.
+    # can go missing. Intra-world edges are `kernel.world.X` imports.
     def imports_of(mod: str) -> set[str]:
         f = _WORLD / f"{mod}.py"
         if not f.is_file():
@@ -148,10 +148,10 @@ def test_world_modules_is_the_real_closure_of_the_game_seed() -> None:
         out: set[str] = set()
         for n in ast.walk(ast.parse(f.read_text(encoding="utf-8"))):
             names = []
-            if isinstance(n, ast.ImportFrom) and n.module and n.module.startswith("parts."):
+            if isinstance(n, ast.ImportFrom) and n.module and n.module.startswith("kernel."):
                 names = [n.module]
             elif isinstance(n, ast.Import):
-                names = [a.name for a in n.names if a.name.startswith("parts.")]
+                names = [a.name for a in n.names if a.name.startswith("kernel.")]
             for name in names:
                 comps = name.split(".")
                 if len(comps) >= 3 and comps[1] == "world":
@@ -159,7 +159,7 @@ def test_world_modules_is_the_real_closure_of_the_game_seed() -> None:
         return out
 
     # seed only from game modules that are real files (e.g. 'rooms' is data inside world/seed,
-    # not a parts/world/rooms.py), matching how the dir is the closure of EXISTING modules.
+    # not a kernel/world/rooms.py), matching how the dir is the closure of EXISTING modules.
     closure = {m for m in _GAME_SEED if (_WORLD / f"{m}.py").is_file()}
     frontier = set(closure)
     while frontier:
@@ -171,7 +171,7 @@ def test_world_modules_is_the_real_closure_of_the_game_seed() -> None:
 
 
 def test_a_world_module_reaching_into_the_platform_is_caught(tmp_path: Path) -> None:
-    world = tmp_path / "parts" / "world"
+    world = tmp_path / "kernel" / "world"
     world.mkdir(parents=True)
     # 'combat' is a World module; make it import the platform (cast, pm) + the shelf (allowed)
     (world / "combat.py").write_text(
@@ -182,17 +182,17 @@ def test_a_world_module_reaching_into_the_platform_is_caught(tmp_path: Path) -> 
 
 
 def test_intra_world_and_shelf_imports_are_allowed(tmp_path: Path) -> None:
-    world = tmp_path / "parts" / "world"
+    world = tmp_path / "kernel" / "world"
     world.mkdir(parents=True)
     (world / "combat.py").write_text(
-        "from parts.world.world import WORLD\nfrom kernel.shelf.statemachine import Fired\n"
+        "from kernel.world.world import WORLD\nfrom kernel.shelf.statemachine import Fired\n"
         "import json\n"
     )
     assert world_import_violations(tmp_path) == {}
 
 
 def test_the_ritual_line_names_the_offender(tmp_path: Path) -> None:
-    world = tmp_path / "parts" / "world"
+    world = tmp_path / "kernel" / "world"
     world.mkdir(parents=True)
     (world / "jobs.py").write_text("import parts.evidence_gate\n")
     assert world_boundary_gaps(tmp_path) == ["jobs: imports platform part(s) evidence_gate"]
@@ -207,7 +207,7 @@ def test_is_platform_classifies_correctly() -> None:
 def test_parts_import_extractor_handles_world_shelf_and_platform() -> None:
     mods = _parts_imports(
         "import parts.cast\nfrom kernel.shelf.retry import run\n"
-        "from parts.world.combat import hit\n",
+        "from kernel.world.combat import hit\n",
         "<t>",
     )
     assert mods == {"cast", "shelf", "combat"}  # platform, shelf, intra-world (unwrapped)

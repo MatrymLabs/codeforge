@@ -7,7 +7,7 @@ flagship GAME appear as one KIND of Seed, consuming the very same Seed Kernel as
 The Kernel stays game-agnostic: this registers Aethryn using only the Kernel's standard fields
 (name, owner, purpose, id); it adds NOTHING game-specific to the Kernel, honoring the directive's
 rule "do not make Aethryn's game concepts mandatory for non-game Seeds." Registration is idempotent:
-game is one stable Seed (`aethryn`), minted once and recovered thereafter. No `parts/world/` import
+game is one stable Seed (`aethryn`), minted once and recovered thereafter. No `kernel/world/` import
 (the game world is named, not loaded, so this stays cheap and decoupled). Status: PROTOTYPED.
 """
 

@@ -2,8 +2,8 @@
 
 import pytest
 
+from kernel.world.session import SESSIONS, Session
 from parts.features import _REGISTRY, feature_on, features, reset_features
-from parts.world.session import SESSIONS, Session
 
 
 @pytest.fixture(autouse=True)

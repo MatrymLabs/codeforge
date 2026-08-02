@@ -1,4 +1,4 @@
-"""Test twin for parts/world/relics.py -- signature legendary boss drops.
+"""Test twin for kernel/world/relics.py -- signature legendary boss drops.
 
 Acceptance: every dungeon's deep boss gains one named, legendary, readable relic as a GUARANTEED
 drop, on top of whatever generic gear it already carries, deterministically. Refusal: a dungeon
@@ -7,14 +7,14 @@ whose deep boss is absent is skipped; no boss loses a drop it already had.
 
 from __future__ import annotations
 
-from parts.world.relics import (
+from kernel.world.relics import (
     DEEP_BOSS_SUFFIX,
     RELIC_PREFIX,
     arm_deep_bosses,
     forge_relic,
     is_relic,
 )
-from parts.world.seed import Npc
+from kernel.world.seed import Npc
 
 _DUNGEONS = [
     {"room": "the_black_hollow", "name": "The Black Hollow", "level": 50},

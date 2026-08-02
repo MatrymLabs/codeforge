@@ -8,8 +8,8 @@ the guide's wording.
 import pytest
 
 from forge import handle_command
+from kernel.world.session import SESSIONS, Session
 from parts.ai_throttle import _CAPACITY, ask_architect, reset_ai_throttle
-from parts.world.session import SESSIONS, Session
 
 _THROTTLED = "The Architect is still thinking"
 

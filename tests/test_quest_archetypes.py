@@ -1,4 +1,4 @@
-"""Test twin for parts/world/quest_archetypes.py -- the quest archetype catalog and completeness.
+"""Test twin for kernel/world/quest_archetypes.py -- the quest archetype catalog and completeness.
 
 Acceptance: every shipped archetype is recognised by its own generated id, and the hand-written arcs
 fall through to `authored`. Completeness (the governance gate): on the LIVE booted world, every
@@ -7,7 +7,7 @@ quest classifies to exactly one archetype (or authored) -- no quest matches two,
 
 from __future__ import annotations
 
-from parts.world.quest_archetypes import (
+from kernel.world.quest_archetypes import (
     AUTHORED,
     CATALOG,
     archetype,
@@ -46,7 +46,7 @@ def test_a_hand_written_arc_is_authored():
 def test_the_live_world_partitions_cleanly_into_archetypes():
     # the completeness gate: whatever seed booted, every quest matches at most one archetype, and
     # classify agrees with the predicates. So no archetype is uncatalogued and none double-counts.
-    from parts.world import quest
+    from kernel.world import quest
 
     for qid in quest._QUESTS:
         matches = [a.key for a in CATALOG if a.member(qid)]

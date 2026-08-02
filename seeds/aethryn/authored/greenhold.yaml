@@ -12,7 +12,7 @@
 # SOURCE: the region-integrated delve where the cradle's four works (Greenhold's fountain, Riverbend's
 # weir, Elderwatch's beacon, Sunmeadow's sun-channel) are revealed as one machine, guarded by an elite
 # Warden far above the cradle band -- an off-path challenge with a prize above main-path gear (the
-# moltenhold pattern: a town with an internal dungeon). Loaded by parts/world/authored_towns.py; its
+# moltenhold pattern: a town with an internal dungeon). Loaded by kernel/world/authored_towns.py; its
 # quests are seeds/aethryn/quests/greenhold_intro.yaml (the cistern), greenhold_fields.yaml (the beast),
 # and greenhold_source.yaml (the delve to the Reservoir-Heart).
 

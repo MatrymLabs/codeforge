@@ -2,8 +2,8 @@
 
 import pytest
 
+from kernel.world.session import SESSIONS, Session
 from parts.chat_throttle import reset_throttles, shout
-from parts.world.session import SESSIONS, Session
 
 
 class FakeClock:

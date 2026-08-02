@@ -8,7 +8,7 @@
 # finishes); the clue to the larger world is the foundry (Ember Crown manufacturing); the rumour is
 # left unproven. Five subareas, three voices (a watch-captain, a slag-broker, a cinder-marshal) that
 # cross-reference, two dangers, a cinderroot gather node on the cinder flats and a broker who buys its
-# yield (a working economy), and readable foundry lore. Installed by parts/world/authored_towns.py;
+# yield (a working economy), and readable foundry lore. Installed by kernel/world/authored_towns.py;
 # its quests are quests/moltenhold_foundry.yaml (a fetch, Warcraft) and quests/moltenhold_flats.yaml
 # (a hunt of a different shape, Making).
 

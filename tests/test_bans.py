@@ -1,4 +1,4 @@
-"""Test twin for parts/world/bans.py + the @ban/@unban/@bans verbs.
+"""Test twin for kernel/world/bans.py + the @ban/@unban/@bans verbs.
 
 Acceptance: ban records a character with a reason and moderator; is_banned/reason report it; unban
 lifts it; all_bans lists them. Refusal / safety: unban a hero who is not banned returns False; the
@@ -8,9 +8,9 @@ store, quarantined to tmp by conftest.
 
 from __future__ import annotations
 
-from parts.world import audit, bans
-from parts.world.jobs import bind_calling
-from parts.world.session import SESSIONS, Session
+from kernel.world import audit, bans
+from kernel.world.jobs import bind_calling
+from kernel.world.session import SESSIONS, Session
 
 
 def _staff(name: str = "root", rank: str = "wizard") -> Session:

@@ -1,4 +1,4 @@
-"""Test twin for parts/world/guild.py -- the PERSISTED player guild.
+"""Test twin for kernel/world/guild.py -- the PERSISTED player guild.
 
 Acceptance: founding a guild persists it (the stored row carries the guild, so it survives a
 relogin); invite + accept grows it; ranks gate invite/promote/disband; promotion transfers lead;
@@ -14,11 +14,16 @@ import copy
 
 import pytest
 
-from parts.world import events, guild, guild_store
-from parts.world import items as _items
-from parts.world.character_store import CharacterRecord
-from parts.world.characters import _default_store, load_character, restore_character, save_character
-from parts.world.session import SESSIONS, Session
+from kernel.world import events, guild, guild_store
+from kernel.world import items as _items
+from kernel.world.character_store import CharacterRecord
+from kernel.world.characters import (
+    _default_store,
+    load_character,
+    restore_character,
+    save_character,
+)
+from kernel.world.session import SESSIONS, Session
 
 
 @pytest.fixture(autouse=True)
@@ -253,8 +258,8 @@ def _guilded_pair():
 
 
 def test_a_member_can_deposit_to_the_guild_vault():
-    from parts.world import loose_store
-    from parts.world.items import carrier
+    from kernel.world import loose_store
+    from kernel.world.items import carrier
 
     try:
         _alia, bram = _guilded_pair()
@@ -268,7 +273,7 @@ def test_a_member_can_deposit_to_the_guild_vault():
 
 
 def test_only_an_officer_may_withdraw_from_the_vault():
-    from parts.world.items import carrier
+    from kernel.world.items import carrier
 
     try:
         alia, bram = _guilded_pair()  # alia leader, bram member
@@ -287,8 +292,8 @@ def test_only_an_officer_may_withdraw_from_the_vault():
 
 
 def test_the_guild_vault_is_scoped_to_its_guild():
-    from parts.world import loose_store
-    from parts.world.items import carrier
+    from kernel.world import loose_store
+    from kernel.world.items import carrier
 
     try:
         _a, bram = _guilded_pair()
@@ -313,7 +318,7 @@ def test_vault_ops_refuse_the_guildless():
 
 def test_the_guild_vault_verb_is_reachable():
     import forge
-    from parts.world.items import carrier
+    from kernel.world.items import carrier
 
     try:
         _a, bram = _guilded_pair()

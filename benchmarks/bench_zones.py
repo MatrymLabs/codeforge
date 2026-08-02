@@ -18,8 +18,8 @@ import statistics
 import time
 from collections.abc import Callable
 
-from parts.world import zones
-from parts.world.world import WORLD
+from kernel.world import zones
+from kernel.world.world import WORLD
 
 
 def _linear_zone_of(room: str) -> str | None:

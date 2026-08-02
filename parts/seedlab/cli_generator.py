@@ -14,7 +14,7 @@ Output is **reproducible** (no timestamps in the emitted code, so the same model
 files and checksums), each file is **checksummed** (sha256), and the artifact carries the model's
 **provenance**. `validate_runs` and `validate_tests` prove the target actually RUNS and its tests
 PASS -- by executing it through the Stage-5 `tool_runner` (the vertical slice closes on itself).
-`rollback` removes a generated tree. No `parts/world/` coupling. Status: PROTOTYPED (see
+`rollback` removes a generated tree. No `kernel/world/` coupling. Status: PROTOTYPED (see
 docs/seed_platform/RECENTERING.md).
 """
 

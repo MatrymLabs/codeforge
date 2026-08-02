@@ -8,7 +8,7 @@
 # the seed recipe (a role, subareas, a livelihood, a conflict, a rumour, a clue to the larger world, a
 # revisitable change) at AAA density -- a place, not a signpost. The sun-channel is Veridia's canon
 # identity made concrete: ordinary pasture-folk living over old-world works that once watered the
-# meadow by the sun's own clock, shown through function. Loaded by parts/world/authored_towns.py; its
+# meadow by the sun's own clock, shown through function. Loaded by kernel/world/authored_towns.py; its
 # quests are seeds/aethryn/quests/sunmeadow_fold.yaml (the flock-beast) and sunmeadow_channel.yaml (the
 # sun-channel). The high pasture offers meadowfoil, which the dairy-trader buys for the upcountry dyers.
 

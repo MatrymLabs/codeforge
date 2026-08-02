@@ -7,7 +7,7 @@
 # larger world is the command bunker; the rumour is left unproven. Five subareas, three voices (a
 # tribune, a quartermaster, a storm-captain) that cross-reference, two dangers, a hollow-ingot salvage
 # node on the broken ramparts and a quartermaster who buys its yield (a working economy), and readable
-# authority lore. Installed by parts/world/authored_towns.py; its quests are
+# authority lore. Installed by kernel/world/authored_towns.py; its quests are
 # quests/stonehelm_order.yaml (a fetch, Warcraft) and quests/stonehelm_ramparts.yaml (a hunt of a
 # different shape, Making).
 

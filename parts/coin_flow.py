@@ -15,15 +15,15 @@ from __future__ import annotations
 from dataclasses import dataclass
 from math import ceil
 
-from parts.world.coinage import purse
-from parts.world.combat import (
+from kernel.world.coinage import purse
+from kernel.world.combat import (
     BOSS_BOUNTY_MULT,
     DEATH_COIN_PENALTY,
     RAID_BOUNTY_MULT,
     _coin_reward,  # combat owns the drop formula; reuse it so the audit can never drift
 )
-from parts.world.durability import REPAIR_COST_PER_POINT
-from parts.world.seed import Npc
+from kernel.world.durability import REPAIR_COST_PER_POINT
+from kernel.world.seed import Npc
 
 
 @dataclass(frozen=True)

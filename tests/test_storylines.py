@@ -1,4 +1,4 @@
-"""Test twin for parts/world/storylines.py -- generated zone narrative chains.
+"""Test twin for kernel/world/storylines.py -- generated zone narrative chains.
 
 Acceptance: a zone that pairs a town with a dungeon gets one three-beat tale (reach the dungeon ->
 slay its deep boss -> bear word home), keyed and rewarded off the world's own geography. Refusal: a
@@ -8,7 +8,7 @@ well-formed and its triggers target the real destination rooms and the delve's d
 
 from __future__ import annotations
 
-from parts.world.storylines import (
+from kernel.world.storylines import (
     DEEP_BOSS_SUFFIX,
     STORY_PREFIX,
     generate_storylines,

@@ -7,7 +7,7 @@ waystone (seeds/aethryn/waystones.yaml) so the road is walkable by fast-travel, 
 hero hub-to-hub over the real travel() reaches the real endgame (the Voidscar) and its reward.
 
 This is the content regression guard behind "the game plays from the valley to the endgame": the
-live spine is forged from exactly these zones (parts/world/world.py: register_spine(_story_zones),
+live spine is forged from exactly these zones (kernel/world/world.py: register_spine(_story_zones),
 _story_zones = load_zones(zones.yaml)), so reading them here walks the same road the server lays.
 
 Acceptance: every leg advances in order and the endgame terminal + XP reward fire at the Voidscar.
@@ -24,11 +24,11 @@ from typing import Any
 import pytest
 import yaml
 
-from parts.world import quest as questmod
-from parts.world.jobs import bind_calling
-from parts.world.session import Session
-from parts.world.spine import forge_spine
-from parts.world.travel import travel
+from kernel.world import quest as questmod
+from kernel.world.jobs import bind_calling
+from kernel.world.session import Session
+from kernel.world.spine import forge_spine
+from kernel.world.travel import travel
 
 _AETHRYN = Path(__file__).resolve().parent.parent / "seeds" / "aethryn"
 

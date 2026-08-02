@@ -12,7 +12,7 @@ ground floor:
   * `SeedKernel`   -- create / get / list / start / stop / archive / status, with owner authz
     on every lifecycle mutation and an audit event appended for each act.
 
-Kept independent of `parts/world/`: no game import, no `FORGE_SEED`, no world graph. Least
+Kept independent of `kernel/world/`: no game import, no `FORGE_SEED`, no world graph. Least
 privilege: a non-owner cannot start/stop/archive a Seed. Honest scope: "runtime start" here is
 the lifecycle STATE machine + a persisted runtime session; spawning a per-Seed server process is a
 later slice (the game case is proven separately by `scripts/deploy_aethryn_seed.py`). The clock and

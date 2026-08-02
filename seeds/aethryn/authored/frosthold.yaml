@@ -7,7 +7,7 @@
 # the clue to the larger world is the old weather-engine; the rumour is left unproven. Five subareas,
 # three voices (a captain, a sky-metal trader, a hunt-mistress) that cross-reference, two dangers, a
 # frostmoss gather node on the shelf and a trader who buys its yield (a working economy), and readable
-# watch lore. Installed by parts/world/authored_towns.py; its quests are
+# watch lore. Installed by kernel/world/authored_towns.py; its quests are
 # quests/frosthold_observatory.yaml (a fetch, Warcraft) and quests/frosthold_shelf.yaml (a hunt of a
 # different shape, Gathering).
 

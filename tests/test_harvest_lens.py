@@ -11,7 +11,7 @@ from kernel.harvest_lens import (
     scan_source,
     stocked_signals,
 )
-from parts.world.session import Session
+from kernel.world.session import Session
 
 _SRC = '''
 class RetryPolicy:

@@ -1,4 +1,4 @@
-"""Test twin for parts/world/coinage.py -- the tiered ember-coin denomination.
+"""Test twin for kernel/world/coinage.py -- the tiered ember-coin denomination.
 
 Acceptance: a purse denominates into its tiers, largest first, skipping empties, in full and compact
 forms, at every scale from a fleck to a fortune. Refusal: a malformed coinage table fails loud.
@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import pytest
 
-from parts.world.coinage import AETHRYN_COINAGE, Coinage, CoinageError, Tier, purse
+from kernel.world.coinage import AETHRYN_COINAGE, Coinage, CoinageError, Tier, purse
 
 _BASE = Tier("cinder", "cinders", "c", 1)  # a valid base tier, to isolate other malformations
 

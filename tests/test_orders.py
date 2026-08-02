@@ -1,13 +1,13 @@
-"""Test twin for parts.world.orders: the Orders faction allegiance primitive.
+"""Test twin for kernel.world.orders: the Orders faction allegiance primitive.
 
 Acceptance (a named hero swears and it persists) AND refusal (unnamed, unknown Order) cases, plus
 engine-tick reachability (a feature isn't wired until handle_command proves it) and a persistence
 round-trip. The conftest quarantines the DB into tmp, so save/load never touch real state.
 """
 
-from parts.world.characters import load_character, save_character
-from parts.world.orders import ORDERS, order_name, swear_order
-from parts.world.session import Session
+from kernel.world.characters import load_character, save_character
+from kernel.world.orders import ORDERS, order_name, swear_order
+from kernel.world.session import Session
 
 
 def _hero(named: bool = True, location: str = "orders_row") -> Session:

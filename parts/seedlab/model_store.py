@@ -12,7 +12,7 @@ memory. This is that store, mirroring the Seed Kernel's file-backed pattern:
     `models` facet, each linked back to its source (`<- source_id`) so the model traces to evidence.
 
 Reuses `ProjectModel.to_dict`/`from_dict` for serialization; fails loud on a corrupt record. No
-`parts/world/` coupling. Status: PROTOTYPED (see docs/seed_platform/RECENTERING.md).
+`kernel/world/` coupling. Status: PROTOTYPED (see docs/seed_platform/RECENTERING.md).
 """
 
 from __future__ import annotations

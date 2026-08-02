@@ -15,8 +15,8 @@ nouns it acts on. Dispatch checks rank BEFORE running -- authorization before ca
 from collections.abc import Callable
 from dataclasses import dataclass, field
 
-from parts.world.ranks import has_rank
-from parts.world.session import Session
+from kernel.world.ranks import has_rank
+from kernel.world.session import Session
 
 ADMIN_SIGIL = "@"
 

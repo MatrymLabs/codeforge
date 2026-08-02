@@ -16,7 +16,7 @@ from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
 
-from parts.world.seed import (
+from kernel.world.seed import (
     SEEDS_ROOT,
     Door,
     Item,

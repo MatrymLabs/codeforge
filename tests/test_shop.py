@@ -1,4 +1,4 @@
-"""Test twin for parts.world.shop: the coin economy's spending end.
+"""Test twin for kernel.world.shop: the coin economy's spending end.
 
 Acceptance (list wares, buy with enough coins, sell a bought-back item) AND refusal (no shop here,
 not for sale, cannot afford, not carrying it, not something the shop buys), plus engine-tick
@@ -11,10 +11,10 @@ import copy
 import pytest
 
 import forge  # noqa: F401 -- boot the world (inspect_world_links) BEFORE the fixture injects a merchant
-from parts.world import items, npcs
-from parts.world.jobs import bind_calling
-from parts.world.session import SESSIONS, Session
-from parts.world.shop import buy, render_shop, sell
+from kernel.world import items, npcs
+from kernel.world.jobs import bind_calling
+from kernel.world.session import SESSIONS, Session
+from kernel.world.shop import buy, render_shop, sell
 
 # A minimal merchant + a sellable/buyable item, injected into the live registries for each test.
 _WARE = {

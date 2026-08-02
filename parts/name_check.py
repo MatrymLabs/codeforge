@@ -9,7 +9,7 @@ exactly why. The rules (required, the name pattern, not a reserved word) live in
 from __future__ import annotations
 
 from kernel.shelf.validation import Data, Issue, Validator, matches, required
-from parts.world.session import Session
+from kernel.world.session import Session
 
 _RESERVED = ("admin", "system", "root", "null", "owner", "wizard")
 _NAME_PATTERN = (
