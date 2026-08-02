@@ -11,8 +11,8 @@ to the workshop and quietly breaks the "two outputs" separation.
 The World Package is a physical directory (`parts/world/`), the way the Hardware Store shelf is a
 directory. WORLD_MODULES is discovered from that directory -- the world IS its folder, so the set
 cannot drift from a hand-maintained list. A game module may import other world modules
-(`parts.world.*`) and the shelf (Layer 3, `kernel.shelf.*`); importing anything else in `parts/` is a
-platform reach. Reads and reports; it mutates nothing. Empty list == the boundary holds.
+(`parts.world.*`) and the shelf (Layer 3, `kernel.shelf.*`); importing anything else in `parts/`
+is a platform reach. Reads and reports; it mutates nothing. Empty list == the boundary holds.
 """
 
 from __future__ import annotations

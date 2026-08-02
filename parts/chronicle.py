@@ -81,7 +81,7 @@ class Record:
 
 def _digest(kind: str, payload: dict, commit: str, recorded_utc: str, prior_hash: str) -> str:
     """A deterministic sha256 over a record's content, via the ship's one canonical content hash
-    (`kernel/shelf/hashchain`), so the Chronicle and the general ledger never drift to other hashing.
+    (`kernel/shelf/hashchain`); the Chronicle and the ledger never drift to other hashing.
     The field set and canonicalization are unchanged, so on-disk hashes are byte-for-byte stable."""
     return hashchain.content_hash(
         {

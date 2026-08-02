@@ -97,7 +97,7 @@ def test_arm_guardians_leaves_ambient_wildlife_and_armed_foes_alone():
 
 def test_registered_forged_gear_drops_and_the_affix_factory_rolls_it():
     # The full loop: a guardian's forged prototype, registered, clones onto the floor as equippable
-    # gear whose rarity the affix factory has rolled (kernel.shelf.affixes). Uses the real drop path.
+    # gear whose rarity the affix factory has rolled (kernel.shelf.affixes). Real drop path.
     from parts.world import combat, items
     from parts.world.session import Session
 

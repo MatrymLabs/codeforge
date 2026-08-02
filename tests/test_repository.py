@@ -1,4 +1,4 @@
-"""Test twin for kernel/shelf/repository.py -- the in-memory Repository and its Protocol boundary."""
+"""Test twin for kernel/shelf/repository.py -- the in-memory Repository + its Protocol."""
 
 from dataclasses import dataclass
 

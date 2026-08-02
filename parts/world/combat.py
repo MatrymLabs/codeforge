@@ -4,7 +4,7 @@ Assembly card: npcs (targets) + stats (damage). Damage MATH is deterministic; th
 blow is its VARIANCE -- a rare miss, a rare crit, an occasional glance -- drawn from `_COMBAT_RNG`,
 a module-level RNG the test suite installs NEUTRAL (always a normal hit) so every exact number in
 the twin still holds, and variance tests force an outcome. A defeated foe's WEIGHTED loot roll
-(`_roll_loot`, kernel.shelf.weighted_table) draws from a second seedable RNG, `_LOOT_RNG`. A fall now
+(`_roll_loot`, kernel.shelf.weighted_table) draws from a second seedable RNG, `_LOOT_RNG`. A fall
 carries a modest, reversible stake (`_death_toll`): carried coins scatter and a non-lethal fall
 wakes at half health -- defeat costs something, so it is no longer consequence-free. The dummy
 reassembles on
