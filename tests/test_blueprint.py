@@ -1,4 +1,4 @@
-"""Test twin for parts/blueprint.py -- the Blueprint model, validator, files, and tick verb.
+"""Test twin for kernel/blueprint.py -- the Blueprint model, validator, files, and tick verb.
 
 Acceptance: a well-formed spec loads, round-trips through JSON, renders Markdown, and files
 its twins; the `blueprint` verb browses and reads plans and is reachable through the engine
@@ -11,10 +11,9 @@ import json
 import pytest
 
 from forge import handle_command
-from parts.blueprint import (
+from kernel.blueprint import (
     Blueprint,
     BlueprintError,
-    blueprint,
     from_dict,
     load_all,
     load_blueprint,
@@ -22,6 +21,7 @@ from parts.blueprint import (
     to_markdown,
     write_blueprint,
 )
+from parts.blueprint_verb import blueprint
 from parts.world.session import Session
 
 _GOOD = {

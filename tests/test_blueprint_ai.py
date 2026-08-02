@@ -9,8 +9,8 @@ Blueprint-invalid draft (bad id) fails loud through the same gate a human's woul
 import pytest
 
 from forge import handle_command
+from kernel.blueprint import Blueprint
 from parts.architect import ArchitectError
-from parts.blueprint import Blueprint
 from parts.blueprint_ai import (
     BlueprintDraft,
     BlueprintDraftError,

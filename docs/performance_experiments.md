@@ -117,7 +117,7 @@ commit de0f8a5. Reproduce with `python -m benchmarks.perf_journeys`.
   that process (a benchmark, a CLI invocation, a short session).
 - **Evidence / Profiling:** `python -X importtime -c "import forge"` (Windows PC, warm cache):
   our chain 72.5 ms of a 100.5 ms cold start; heaviest command-only subtrees
-  `parts.evolution.command` 9.0 ms, `parts.frameup` 6.4 ms, `parts.console` 4.3 ms, plus a long
+  `kernel.evolution.command` 9.0 ms, `parts.frameup` 6.4 ms, `parts.console` 4.3 ms, plus a long
   tail of ~1-2 ms modules.
 - **Hypothesis:** command lambdas resolve module globals at CALL time, so replacing each eager
   import with a module-level wrapper that imports inside its body removes the modules from the

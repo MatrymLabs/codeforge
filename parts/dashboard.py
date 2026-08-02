@@ -276,7 +276,7 @@ def render_board(snapshot: Snapshot) -> str:
 def _blueprint_list_html() -> str:
     """The filed blueprints as HTMX links. Each is a real <a href> too, so it still works
     without JavaScript (progressive enhancement); HTMX just renders it in-page instead."""
-    from parts.blueprint import load_all
+    from kernel.blueprint import load_all
 
     plans = load_all()
     if not plans:
@@ -370,8 +370,8 @@ def ui_board() -> str:
 def ui_blueprint(blueprint_id: str) -> str:
     """A Blueprint rendered as an HTML fragment, for in-page HTMX rendering. The id is matched
     against filed blueprints (never used to open a path), so there is no traversal risk."""
-    from parts.blueprint import load_all
-    from parts.blueprint_render import render_fragment
+    from kernel.blueprint import load_all
+    from kernel.blueprint_render import render_fragment
 
     bp = next((b for b in load_all() if b.blueprint_id == blueprint_id), None)
     if bp is None:

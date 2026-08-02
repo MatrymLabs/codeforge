@@ -1,4 +1,4 @@
-"""Test twin for the Blueprint Evolution Lab bake-off (parts/evolution/bakeoff.py + friends).
+"""Test twin for the Blueprint Evolution Lab bake-off (kernel/evolution/bakeoff.py + friends).
 
 The headline guarantees: the correct candidates pass the hard gate and the contract-breaking
 one is rejected AND recorded as a counterexample; a fitness score never promotes anything (the
@@ -9,18 +9,18 @@ from __future__ import annotations
 
 import pytest
 
-from parts import blueprint as bp
-from parts.evolution.bakeoff import (
+from kernel import blueprint as bp
+from kernel.evolution.bakeoff import (
     MAX_CANDIDATES,
     BakeoffError,
     build_score_sheet_pairs,
     render_run,
     run_bakeoff,
 )
-from parts.evolution.candidate import Candidate
-from parts.evolution.counterexamples import CounterexampleBank
-from parts.evolution.genome import BlueprintGenome, GenomeError
-from parts.evolution.subjects import candidate_minimal
+from kernel.evolution.candidate import Candidate
+from kernel.evolution.counterexamples import CounterexampleBank
+from kernel.evolution.genome import BlueprintGenome, GenomeError
+from kernel.evolution.subjects import candidate_minimal
 
 
 def _genome(**over: object) -> BlueprintGenome:
@@ -133,8 +133,8 @@ def test_a_run_with_only_passing_candidates_reports_no_counterexamples() -> None
 
 
 def test_a_candidate_that_raises_is_a_correctness_failure() -> None:
-    from parts.evolution.evaluators import evaluate_correctness
-    from parts.evolution.subjects import oracle_fit
+    from kernel.evolution.evaluators import evaluate_correctness
+    from kernel.evolution.subjects import oracle_fit
 
     def boom(text: str, width: int) -> str:
         raise RuntimeError("kaboom")

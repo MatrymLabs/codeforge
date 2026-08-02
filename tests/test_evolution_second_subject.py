@@ -7,10 +7,10 @@ general evaluator-guided search, not a one-function demo.
 
 from __future__ import annotations
 
-from parts import blueprint as bp
-from parts.evolution.bakeoff import build_slugify_pairs, run_bakeoff
-from parts.evolution.genome import BlueprintGenome
-from parts.evolution.subjects import (
+from kernel import blueprint as bp
+from kernel.evolution.bakeoff import build_slugify_pairs, run_bakeoff
+from kernel.evolution.genome import BlueprintGenome
+from kernel.evolution.subjects import (
     SLUGIFY_INPUTS,
     slug_extensible,
     slug_minimal,

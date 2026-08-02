@@ -431,9 +431,9 @@ date-stamped while pre-1.0.
   ledger. Adds `.env.example`, `docs/architect_brain.md`, and 8 test cases (fake-client call,
   redaction, empty-prompt no-call, key-absent refusal, local fallback).
 - **Blueprint renderer (the forge's planning spine).** An idea becomes a validated Blueprint
-  (`parts/blueprint.py`, MOD-10.015): a fail-loud model (JSON record + Markdown
+  (`kernel/blueprint.py`, MOD-10.015): a fail-loud model (JSON record + Markdown
   twin, frozen `lowercase_snake_case` identity), then a static, accessible HTML page
-  (`parts/blueprint_render.py`, MOD-10.016). Frameless: stdlib `json`/`re`/
+  (`kernel/blueprint_render.py`, MOD-10.016). Frameless: stdlib `json`/`re`/
   `html.escape`, no template engine and no new dependency. Reachable through the tick via a
   `blueprint list | show <id> | render <id>` verb (CMD-10.016), pinned by an
   engine-tick test; JSON is canonical, Markdown/HTML are projections (law 1); rendered pages

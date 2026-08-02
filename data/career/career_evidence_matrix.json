@@ -296,7 +296,7 @@
             "repo_proof": [
               "parts/api.py",
               "parts/dashboard.py",
-              "parts/blueprint_render.py",
+              "kernel/blueprint_render.py",
               "docs/dashboard.md"
             ],
             "status": "proven",
@@ -496,7 +496,7 @@
             "why_it_matters": "Turning a literature survey into a disciplined, evidence-labeled implementation is a senior differentiator (research-to-architecture), not just consuming papers.",
             "repo_proof": [
               "docs/nature_inspired/research_mapping.md",
-              "parts/evolution/genome.py",
+              "kernel/evolution/genome.py",
               "tests/test_evolution_genome.py"
             ],
             "status": "proven",
@@ -512,9 +512,9 @@
             "skill": "Design an evaluator-guided search with human governance",
             "why_it_matters": "Evolutionary/program-synthesis concepts plus AI governance and human-in-the-loop selection are 2026 differentiators; the hireable skill is a bounded, auditable, human-final design.",
             "repo_proof": [
-              "parts/evolution/bakeoff.py",
-              "parts/evolution/fitness.py",
-              "parts/evolution/evaluators.py",
+              "kernel/evolution/bakeoff.py",
+              "kernel/evolution/fitness.py",
+              "kernel/evolution/evaluators.py",
               "tests/test_evolution_bakeoff.py"
             ],
             "status": "proven",

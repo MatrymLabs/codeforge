@@ -11,7 +11,7 @@ and every proposal:
      qualified/elite, never merged, never marked autonomous.
 
 AI proposes; the gate validates; Josh decides. This is FunSearch-style variation (Romera-Paredes
-et al., 2024) with the selection authority left human - the exact line parts/evolution/genome.py
+et al., 2024) with the selection authority left human - the exact line kernel/evolution/genome.py
 draws. The operators are ENUMERATIVE (no RNG), so a run is deterministic and reproducible.
 
 No new dependency (dataclasses + the existing genome/validation parts). No world state is touched:
@@ -23,8 +23,8 @@ from __future__ import annotations
 import re
 from dataclasses import replace
 
-from parts.evolution.genome import BlueprintGenome, GenomeError
-from parts.evolution.validation import validate_genome
+from kernel.evolution.genome import BlueprintGenome, GenomeError
+from kernel.evolution.validation import validate_genome
 
 # The keel constants this module is contractually bound to. A proposal that ever drifts off these
 # is a bug the test twin pins: propose, never self-approve, never autonomous.

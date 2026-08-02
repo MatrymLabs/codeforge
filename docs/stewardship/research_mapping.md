@@ -34,7 +34,7 @@ preprint** work, and says the distinction matters for roadmap confidence. So do 
 | Dependency admission (anti-hallucination) | Preprint (Spracklen) | `dependency_ledger.toml` + `make deps`, `make audit` (pip-audit) | per-package existence/CVE/license admission (DependencyGate, later) |
 | Secure AI code review | Venue + preprint (SLR; Fu; Yu; Tony) | evaluator swarm (no merge authority), architect AI (mockable) | narrow-context CWE-framed reviewer (later) |
 | Warning-guided repair | Preprint (DeepCode AI Fix) | `make patch` (scan -> fix -> re-verify) | bounded repair loop with human sign-off (later) |
-| Reusable failures | Preprint (adjacent) | **CounterexampleBank already built** (`parts/evolution/counterexamples.py`) | reuse for blocked packages / failed prompts |
+| Reusable failures | Preprint (adjacent) | **CounterexampleBank already built** (`kernel/evolution/counterexamples.py`) | reuse for blocked packages / failed prompts |
 | Red-team the assistant | Venue (garak); preprint (CyberSecEval2) | - | garak/CyberSecEval-style probe suite (later) |
 | Traceability spine | Preprint (workflow-cost studies) | Conventional Commits, branch->PR->CI, classification registry | append-only AuditLedger (later) |
 

@@ -1,4 +1,4 @@
-"""Test twin for parts/evolution/genome.py + validation.py -- the Blueprint Genome gate.
+"""Test twin for kernel/evolution/genome.py + validation.py -- the Blueprint Genome gate.
 
 Acceptance: a well-formed genome round-trips and validates. Refusal (the headline cases): a
 malformed genome fails loud, an illegal dependency combination is rejected before expression,
@@ -9,9 +9,9 @@ from __future__ import annotations
 
 import pytest
 
-from parts import blueprint as bp
-from parts.evolution.genome import BlueprintGenome, GenomeError, from_dict, to_dict
-from parts.evolution.validation import check_constraints, constraints_ok, validate_genome
+from kernel import blueprint as bp
+from kernel.evolution.genome import BlueprintGenome, GenomeError, from_dict, to_dict
+from kernel.evolution.validation import check_constraints, constraints_ok, validate_genome
 
 
 def _seed() -> bp.Blueprint:
