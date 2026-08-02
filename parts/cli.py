@@ -25,6 +25,7 @@ USAGE = """codeforge -- hardware-store counter for the world engine
   codeforge migrate <char> <account>   move a v1 password onto an account
   codeforge migrate-db                 import legacy JSON saves into SQLite
   codeforge passwd <account>           rotate an account password (prompted)
+  codeforge refactor <f> <fn> <o> <n>  verifier-gated safe rename (dry-run; --apply to write)
   codeforge api                        serve the HTTP admin API on port 8000
   codeforge web                        serve the browser gate (WebSocket play) on $PORT
   codeforge help                       this text
@@ -155,6 +156,91 @@ def _cmd_passwd(args: list[str]) -> int:
     return 0
 
 
+def _cmd_refactor(args: list[str]) -> int:
+    """Scope-correct, verifier-gated rename of a local/param inside ONE function.
+
+    `codeforge refactor <file> <func> <old> <new> [--apply] [--deep] [--samples N]`
+
+    Dry-run by default: prints a unified diff and the behavioural verdict, writes NOTHING.
+    `--apply` writes the file, but ONLY when the rename PRESERVED behaviour -- a refused
+    (broken/inconclusive) transform is never written and exits non-zero. Verification EXECUTES
+    the target function, so point it at trusted/authorized source only.
+    """
+    import argparse
+    import difflib
+
+    from parts.refactor import RefactorError, refactor_available, verified_rename
+
+    parser = argparse.ArgumentParser(
+        prog="codeforge refactor",
+        description="Scope-correct, verifier-gated rename of a local/param inside one function.",
+    )
+    parser.add_argument("file", help="the .py file to edit")
+    parser.add_argument("func", help="the function whose local/param to rename")
+    parser.add_argument("old", help="the current local/param name")
+    parser.add_argument("new", help="the new name")
+    parser.add_argument(
+        "--apply", action="store_true", help="write the change (default: dry-run diff preview)"
+    )
+    parser.add_argument(
+        "--deep", action="store_true", help="add the CrossHair deep gate (needs the [verify] extra)"
+    )
+    parser.add_argument(
+        "--samples", type=int, default=200, help="behavioural sample count (default: 200)"
+    )
+    try:
+        ns = parser.parse_args(args[1:])
+    except SystemExit as exc:  # argparse exits on -h / bad args; route it through our exit code
+        return exc.code if isinstance(exc.code, int) else 2
+
+    if not refactor_available():
+        print(
+            "the refactor tool needs the optional dependency: "
+            "pip install 'codeforge[refactor]' (libcst).",
+            file=sys.stderr,
+        )
+        return 2
+
+    path = Path(ns.file)
+    try:
+        source = path.read_text(encoding="utf-8")
+    except OSError as exc:
+        print(f"cannot read {ns.file}: {exc}", file=sys.stderr)
+        return 2
+
+    try:
+        result = verified_rename(source, ns.func, ns.old, ns.new, samples=ns.samples, deep=ns.deep)
+    except RefactorError as exc:
+        print(f"refused: {exc}", file=sys.stderr)
+        return 2
+
+    if not result.applied:
+        print(
+            f"REFUSED -- {ns.old} -> {ns.new} in {ns.func} did not preserve behaviour "
+            f"(verdict: {result.verdict})."
+        )
+        if result.counterexample:
+            print(f"  counterexample: {result.counterexample}")
+        for note in result.notes:
+            print(f"  {note}")
+        return 1
+
+    if ns.apply:
+        path.write_text(result.source, encoding="utf-8")
+        print(f"applied: {ns.old} -> {ns.new} in {ns.func} ({ns.file}); verdict {result.verdict}.")
+        return 0
+
+    diff = difflib.unified_diff(
+        source.splitlines(keepends=True),
+        result.source.splitlines(keepends=True),
+        fromfile=f"a/{ns.file}",
+        tofile=f"b/{ns.file}",
+    )
+    sys.stdout.writelines(diff)
+    print(f"dry-run: verdict {result.verdict}. Pass --apply to write {ns.file}.")
+    return 0
+
+
 # Verb -> handler. The strings are the frozen public CLI surface; order is display order only.
 _DISPATCH: dict[str, Command] = {
     "seeds": _cmd_seeds,
@@ -167,6 +253,7 @@ _DISPATCH: dict[str, Command] = {
     "web": _cmd_web,
     "migrate-db": _cmd_migrate_db,
     "passwd": _cmd_passwd,
+    "refactor": _cmd_refactor,
 }
 
 
