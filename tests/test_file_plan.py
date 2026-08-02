@@ -22,6 +22,8 @@ CANONICAL = {
     "tests/test_thing.py",
     ".github/workflows/ci.yml",
     "src/mypkg/__init__.py",
+    "SECURITY.md",
+    "uv.lock",
 }
 
 
@@ -31,6 +33,18 @@ class Compliance(unittest.TestCase):
         self.assertTrue(report.passed)
         self.assertEqual(report.score, 1.0)
         self.assertEqual(report.failures, ())
+
+    def test_manifest_rule_is_language_aware(self):
+        # a JS repo (package.json, no pyproject) satisfies fp.manifest - it no longer mis-scores
+        js_repo = {"README.md", "LICENSE", "package.json", ".gitignore", "package-lock.json"}
+        manifest = next(f for f in check(js_repo).findings if f.rule_id == "fp.manifest")
+        self.assertTrue(manifest.ok)
+
+    def test_security_policy_and_lockfile_are_checked(self):
+        without = {"README.md", "LICENSE", "pyproject.toml", ".gitignore"}
+        ids = {f.rule_id for f in check(without).failures}
+        self.assertIn("fp.security-policy", ids)
+        self.assertIn("fp.lockfile", ids)
 
     def test_missing_license_is_a_blocking_failure(self):
         paths = CANONICAL - {"LICENSE"}

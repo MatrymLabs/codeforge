@@ -17,6 +17,16 @@ What problem does this change solve?
 
 - [ ] Low  - [ ] Medium  - [ ] High
 
+## Disclosure (AI-assisted delivery)
+
+Mark what applies. These feed the tamper-evident delivery ledger (Human-Keel transparency +
+the FWA audit-ledger discipline); an honest answer is the whole point.
+
+- [ ] `ai_assisted` - AI helped author this change
+- [ ] `security_sensitive` - touches auth, secrets, crypto, the gateway, or a security gate
+- [ ] `new_dependencies` - adds or changes a runtime/dev dependency
+- [ ] `secrets_or_config` - changes secrets handling or configuration
+
 ## Checklist
 
 - [ ] `make check` green locally
