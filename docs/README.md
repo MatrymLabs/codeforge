@@ -30,7 +30,7 @@ The one map to everything under `docs/`. New here? Read [RUNNING.md](RUNNING.md)
 
 ## The self-audit systems (how the machine grades itself)
 - [frame_up.md](frame_up.md), `inspect`, the on-demand green/yellow/red frame-up (the audit hub) + the ReportWriter.
-- [veritas.md](veritas.md), `truth check`, claims vs reality (no claim without correspondence).
+- [evidence_gate.md](evidence_gate.md), `truth check`, claims vs reality (no claim without correspondence).
 - [safety_qa_system.md](safety_qa_system.md), QualityGate + SafetyReview.
 - [repo_integrity.md](repo_integrity.md), `make repo-integrity`, the composite health report.
 - [performance.md](performance.md), `make bench`, the engine-tick throughput/latency benchmark (performance evidence).
