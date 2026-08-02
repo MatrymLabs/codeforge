@@ -586,3 +586,34 @@ def test_a_valid_wanderer_loads_and_carries_the_flag(tmp_path):
     good = tmp_path / "npcs.yaml"
     good.write_text("critter:\n  location: cell\n  hp: 3\n  wander: true\n")
     assert load_npcs(good)["critter"]["wander"] is True
+
+
+def test_reassembles_loads_through_and_marks_the_foe(tmp_path):
+    """A foe seeded `reassembles: true` carries the flag into the loaded Npc (the dummy)."""
+    seed = tmp_path / "npcs.yaml"
+    seed.write_text("dummy:\n  location: courtyard\n  hp: 20\n  reassembles: true\n")
+    npcs = load_npcs(seed)
+    assert npcs["dummy"].get("reassembles") is True
+
+
+def test_a_mortal_foe_carries_no_reassembles_flag(tmp_path):
+    """Absent `reassembles`, a foe is mortal: the flag is not stamped on by default."""
+    seed = tmp_path / "npcs.yaml"
+    seed.write_text("wolf:\n  location: courtyard\n  hp: 30\n")
+    assert "reassembles" not in load_npcs(seed)["wolf"]
+
+
+def test_reassembles_on_an_uncombatable_foe_is_rejected_at_load(tmp_path):
+    """A reassembling foe that cannot be fought (hp 0) is meaningless: refuse loud."""
+    seed = tmp_path / "npcs.yaml"
+    seed.write_text("poser:\n  location: courtyard\n  hp: 0\n  reassembles: true\n")
+    with pytest.raises(SeedError, match="reassembles"):
+        load_npcs(seed)
+
+
+def test_a_non_bool_reassembles_is_rejected_at_load(tmp_path):
+    """`reassembles` must be a real bool, not a truthy string -- refuse a bad type loud."""
+    seed = tmp_path / "npcs.yaml"
+    seed.write_text("poser:\n  location: courtyard\n  hp: 5\n  reassembles: yes-please\n")
+    with pytest.raises(SeedError, match="reassembles"):
+        load_npcs(seed)

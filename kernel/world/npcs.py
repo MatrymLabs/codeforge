@@ -67,10 +67,20 @@ def apply_npc_moves(moves: list[tuple[str, str, str]]) -> None:
 
 
 def npcs_in(room_id: str) -> list[str]:
-    """All npc labels currently in a room. Presence is a query -- O(1) via a room index rebuilt only
-    when NPC membership changes (see _ensure_room_index), not a scan of every NPC on every call."""
+    """The npc labels currently PRESENT in a room: indexed members minus any that are dead and
+    awaiting respawn (kernel.world.mortality). Presence is a query -- O(1) index lookup via a room
+    index rebuilt only when NPC membership changes (see _ensure_room_index), then an O(k) aliveness
+    filter over the few in this room. A felled mortal foe is absent until its respawn beat, at which
+    point the aliveness check revives it in place, so this is also the lazy-respawn seam."""
     _ensure_room_index()
-    return list(_by_room.get(room_id, []))
+    members = _by_room.get(room_id)
+    if not members:
+        return []
+    from kernel.world.climate import now
+    from kernel.world.mortality import is_dead
+
+    beat = now()
+    return [nid for nid in members if not is_dead(NPCS[nid], beat)]
 
 
 def trace_npc(word: str, room_id: str) -> str | None:

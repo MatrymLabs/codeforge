@@ -8643,5 +8643,33 @@
   "aliases": [],
   "created": "2026-08-02",
   "updated": "2026-08-02"
+ },
+ {
+  "designation": "MOD-04.151",
+  "name": "mortality",
+  "status": "active",
+  "function": "when a felled foe stays down and respawns, and when it reassembles (the training dummy)",
+  "label": "mortality",
+  "file": "kernel/world/mortality.py",
+  "type": "MOD",
+  "domain": "04",
+  "docs": "docs/keel_records/foe-mortality.md",
+  "tests": "tests/test_mortality.py",
+  "depends_on": [],
+  "related": [
+   "combat",
+   "npcs",
+   "respawn",
+   "seed"
+  ],
+  "reuse": "K1: a mortal world foe DIES on defeat and respawns on a tier timer (RESPAWN_BEATS: normal 15 / elite 40 / boss 120 / raid 300 beats), so a cleared room stays cleared for a while; the training dummy and anything a seed marks `reassembles` stands right back up instead. fell(npc, beat) resolves the outcome; is_dead(npc, beat) does LAZY revival at the presence seam (npcs.npcs_in) so there is no scheduler job per foe -- it holds at world-generation scale. defeat_clause(npc) gives every combat path one wording (slain vs reassembles). Pure over (npc, beat).",
+  "notes": "The keel-approved half of 'the world reads as cleared' (docs/keel_records/foe-mortality.md); the anticipated follow-up to the proactive-npcs record. Lazy respawn via a dead_until beat + the single npcs_in filter -- verified no combat/aggression/threat/party code scans NPCS for co-location directly. Player-death stakes (K2) is the separate next slice.",
+  "tags": [
+   "module"
+  ],
+  "superseded_by": "",
+  "aliases": [],
+  "created": "2026-08-02",
+  "updated": "2026-08-02"
  }
 ]

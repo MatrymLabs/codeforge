@@ -215,6 +215,13 @@ class Npc(TypedDict):
     # `charging` is the runtime wind-up flag (never seeded). Validated at load.
     special: NotRequired[dict[str, object]]
     charging: NotRequired[bool]
+    # Optional: True for a foe that REASSEMBLES at full health the instant it is felled instead of
+    # dying -- the training dummy, an endless sparring partner (kernel.world.mortality). Absent = a
+    # mortal foe that dies on defeat and respawns on a tier timer. Never runtime; a seed choice.
+    reassembles: NotRequired[bool]
+    # Runtime state: the world BEAT a felled (mortal) foe respawns; while set and in the future the
+    # foe is DEAD and absent from its room (kernel.world.mortality). Cleared on revival. Not seeded.
+    dead_until: NotRequired[int]
     # Item prototype labels this NPC drops when defeated: a fresh instance of each is spawned into
     # the room (kernel.world.items.clone). Optional; a bare NPC drops nothing. Loot is real object
     # instancing -- the drop is a new instance, so it never collides with the seed original.
@@ -901,6 +908,21 @@ def load_npcs(path: Path) -> dict[str, Npc]:
             npc["raid"] = True
         if merged.get("wander"):
             npc["wander"] = True
+        # Optional: a foe that reassembles instead of dying (the training dummy). Must be combatable
+        # -- a reassembling poser that can't be fought is meaningless -- and a real bool, else loud.
+        reassembles = merged.get("reassembles")
+        if reassembles is not None:
+            if not isinstance(reassembles, bool):
+                raise SeedError(
+                    f"NPC '{label}': 'reassembles' must be true/false, got {reassembles!r}."
+                )
+            if reassembles and merged["hp"] <= 0:
+                raise SeedError(
+                    f"NPC '{label}': 'reassembles' is set but hp is {merged['hp']}; a reassembling "
+                    "foe must be combatable (hp > 0)."
+                )
+            if reassembles:
+                npc["reassembles"] = True
         if drops:
             npc["drops"] = list(drops)
         if loot:

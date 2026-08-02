@@ -55,11 +55,19 @@ CATALOG: tuple[RespawnPolicy, ...] = (
     ),
     RespawnPolicy(
         key="training_dummy",
-        what="the training-ground dummy",
+        what="the training-ground dummy (and any foe a seed marks `reassembles`)",
         trigger="the instant it is felled in combat",
         cadence="immediate, at full health",
         reason="a safe, endless sparring partner -- collapsing is its whole job.",
-        lives_in=("kernel.world.combat", "land_hit"),
+        lives_in=("kernel.world.mortality", "reassembles"),
+    ),
+    RespawnPolicy(
+        key="mortal_foe",
+        what="a felled mortal world foe (anything NOT marked `reassembles`)",
+        trigger="it is felled in combat",
+        cadence="absent, then revives at full after a tier timer (mortality.RESPAWN_BEATS)",
+        reason="a cleared room stays cleared for a while, so a kill is a real world consequence.",
+        lives_in=("kernel.world.mortality", "fell"),
     ),
     RespawnPolicy(
         key="wandering_spawn",
