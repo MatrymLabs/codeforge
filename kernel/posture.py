@@ -267,12 +267,18 @@ def scorecard(evidence: PostureEvidence, today: date) -> Scorecard:
 
 
 def load_evidence(
-    security_evidence_dir: Path | str, today: date, *, cadence_days: int = 1
+    security_evidence_dir: Path | str,
+    today: date,
+    *,
+    cadence_days: int = 1,
+    advisory_ledger_path: Path | str | None = None,
 ) -> PostureEvidence:
     """Read the newest pip-audit json from security-evidence/ into PostureEvidence (real-use layer).
 
     An empty/absent store is HONEST evidence (latest_scan_date=None -> freshness not_computable),
-    not an error - a fleet that has not scanned recently should read that way, not green."""
+    not an error - a fleet that has not scanned recently should read that way, not green. When an
+    advisory_ledger (kernel.advisory_ledger) is supplied, its first_seen/resolved history lights up
+    the oldest-advisory and MTTR KPIs that are otherwise NOT_COMPUTABLE."""
     root = Path(security_evidence_dir)
     scans = sorted(root.glob("*-pip-audit.json")) if root.exists() else []
     if not scans:
@@ -289,9 +295,23 @@ def load_evidence(
         scan_date = date.fromisoformat(newest.name[:10])
     except ValueError:
         scan_date = date.fromtimestamp(newest.stat().st_mtime)
+
+    oldest_first_seen: date | None = None
+    remediation: tuple[int, ...] | None = None
+    if advisory_ledger_path is not None:
+        # lazy import: advisory_ledger is the optional lifecycle store; posture works without it
+        from kernel import advisory_ledger as al
+
+        states = al.load(advisory_ledger_path)
+        oldest_first_seen = al.oldest_open_first_seen(states)
+        rem = al.remediation_days(states)
+        remediation = rem or None  # empty -> None so the KPI stays honestly not_computable
+
     return PostureEvidence(
         latest_scan_date=scan_date,
         open_advisory_count=advisories,
+        oldest_advisory_first_seen=oldest_first_seen,
+        remediation_days=remediation,
         scan_cadence_days=cadence_days,
     )
 

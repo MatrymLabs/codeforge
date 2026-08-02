@@ -2337,6 +2337,27 @@
   "updated": "2026-08-02"
  },
  {
+  "designation": "MOD-10.072",
+  "name": "advisory_ledger",
+  "status": "active",
+  "function": "track each dependency advisory's first_seen/resolved lifecycle so posture can measure MTTR",
+  "label": "advisory_ledger",
+  "file": "kernel/advisory_ledger.py",
+  "type": "MOD",
+  "domain": "10",
+  "docs": "",
+  "tests": "tests/test_advisory_ledger.py",
+  "depends_on": [],
+  "related": ["MOD-10.067"],
+  "reuse": "maintain a first-seen/resolved lifecycle over any recurring scanner finding to compute exposure age + mean time to remediate",
+  "tags": ["module"],
+  "notes": "RD-2026-0002 posture-gap store. reconcile(states, open_ids, today) stamps new advisories + auto-resolves disappeared ones (idempotent); lights up posture's oldest_open_advisory + MTTR KPIs (MOD-10.067) that were NOT_COMPUTABLE. Stdlib JSONL, injected store. Dogfood: the real 2026-07-08 scan -> 'oldest open advisory 25d'. Provenance: original.",
+  "superseded_by": "",
+  "aliases": [],
+  "created": "2026-08-02",
+  "updated": "2026-08-02"
+ },
+ {
   "designation": "MOD-10.022",
   "name": "verdicts",
   "status": "active",
