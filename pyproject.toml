@@ -10,7 +10,7 @@ dependencies = ["pyyaml", "sqlalchemy", "fastapi", "uvicorn", "websockets", "pyd
 # every non-dev extra into the runtime set, so `anthropic` is justified in the ledger.
 ai = ["anthropic>=0.120.2"]
 postgres = ["psycopg[binary]>=3.3.4"]
-# Embedded Lua scripting (the sandboxed @script console; parts.scripting). Optional: absent -> the
+# Embedded Lua scripting (the sandboxed @script console; kernel.scripting). Optional: absent -> the
 # feature reports itself unavailable and the game is untouched (ADR-0014). lupa bundles the runtime.
 lua = ["lupa>=2.8"]
 # The deep behavioral-equivalence verifier (kernel.verify_smt). Optional: absent -> the deep gate
@@ -56,7 +56,7 @@ build-backend = "setuptools.build_meta"
 [tool.setuptools]
 # Style-guide section 2: modules are migrating from parts/ into the kernel/adapters/content layers.
 packages = [
-    "parts", "parts.evolution", "parts.stewardship", "parts.hubble", "parts.world",
+    "parts", "parts.evolution", "parts.stewardship", "kernel.hubble", "parts.world",
     "kernel", "kernel.shelf", "adapters", "content",
 ]
 py-modules = ["forge"]

@@ -3,7 +3,7 @@
 The "observed" leg of the aggression loop. Two facts about this module are the whole design:
 
 1. **The player's tick writes here, so it must NEVER touch the Chronicle.** The Chronicle
-   (parts/chronicle) is tamper-evident precisely because every append comes from a trusted
+   (kernel/chronicle) is tamper-evident precisely because every append comes from a trusted
    (owner/CI) actor. A per-encounter write from `handle_command` would hand any player a write
    path into the hash-chained ledger -- the exact poisoning surface the design forbids. So this
    log is a separate, un-chained store, and it imports nothing from chronicle.

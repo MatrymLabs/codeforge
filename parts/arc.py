@@ -30,7 +30,7 @@ from typing import TYPE_CHECKING
 from parts import arc_ledger
 
 if TYPE_CHECKING:
-    from parts.chronicle import Record
+    from kernel.chronicle import Record
 
 # Per-dimension status, from the one shared home (verdicts.py); re-exported so callers/tests can
 # still `from parts.arc import READY, ...`. MISSING = no wired source / never ran: never a pass.
@@ -163,7 +163,7 @@ def _improvement_dim(root: Path) -> Dimension:
     cycle that never evaluated shows up here. Reads only (architecture law 1); a malformed ledger
     fails loud (AddieError), exactly as the other filed dimensions do - never a false pass.
     """
-    from parts import addie
+    from kernel import addie
 
     ledger = root / "addie_ledger.toml"
     if not ledger.is_file():
@@ -189,7 +189,7 @@ def _control_dim(root: Path) -> Dimension:
     verdict rather than a store nothing reads. A tampered Chronicle fails loud on read (the
     Chronicle's own law), exactly as the evidence dimension does - never a false pass.
     """
-    from parts import chronicle
+    from kernel import chronicle
 
     serious = [
         r
@@ -231,7 +231,7 @@ def _evidence_dim(root: Path) -> Dimension:
     hash-chained Chronicle, so ARC now reads retained, cited evidence. Absence is MISSING (never a
     pass); a record with an unknown status or an empty source fails loud (ChronicleError).
     """
-    from parts import chronicle
+    from kernel import chronicle
 
     record = chronicle.read_latest("evidence", root=root)
     if record is None:

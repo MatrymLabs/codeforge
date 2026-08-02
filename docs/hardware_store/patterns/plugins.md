@@ -43,7 +43,7 @@ capabilities, and documented boundaries only.
 
 - **Game:** `parts/heralds.py` -- heralds are plugins that each proclaim a line; `heralds` shows the
   active ones, and one can be disabled without touching the others. Tick-reachable.
-- **Practical:** `parts/exporters.py` -- an `ExporterHub` registers export providers (json, csv), each
+- **Practical:** `kernel/exporters.py` -- an `ExporterHub` registers export providers (json, csv), each
   `serialize`-capable, and dispatches by format name. New formats are added by registration.
 
 ## Evidence

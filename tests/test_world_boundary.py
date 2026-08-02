@@ -1,4 +1,4 @@
-"""Test twin for parts/world_boundary.py -- the World Package's one-way-dependency gate.
+"""Test twin for kernel/world_boundary.py -- the World Package's one-way-dependency gate.
 
 Acceptance: the live World Package (parts/world/) imports no platform module (the Layer-1/2
 separation the recon found, now physically enforced). Completeness: parts/world/ really is the
@@ -14,7 +14,7 @@ from pathlib import Path
 
 import pytest
 
-from parts.world_boundary import (
+from kernel.world_boundary import (
     WORLD_MODULES,
     WorldBoundaryError,
     _is_platform,

@@ -8,7 +8,7 @@ review needs; it does NOT interpret law or claim compliance. Every view ends wit
 
 from pathlib import Path
 
-from parts.regulations import _NOT_MOUNTED, REGISTRY_PATH, _load
+from kernel.regulations import _NOT_MOUNTED, REGISTRY_PATH, _load
 
 _DISCLAIMER = (
     "Compliance-awareness only - NOT legal advice. CodeForge tracks sources and flags "

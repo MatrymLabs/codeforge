@@ -6,7 +6,7 @@ are git-ignored, regenerated evidence), the Chronicle is **git-tracked on purpos
 evidence is the whole point (records + safety), and each record is reproducible from the commit
 it cites.
 
-- **Written by** `parts/chronicle.py` (`append()`), only through its validating gate.
+- **Written by** `kernel/chronicle.py` (`append()`), only through its validating gate.
 - **Read by** the `chronicle` verb (read-only view, incl. `chronicle trend <name>`,
   `chronicle provenance <node>`, `chronicle incidents`, and `chronicle evals`) and, from slice 1b,
   ARC's `evidence` dimension.
@@ -29,5 +29,5 @@ what a hold protects. Retention here is **disposition, not deletion** - the appe
 never broken; R1 writes and removes nothing (dry-run only), real marking is owner-gated at R2, and
 any hold wins (federal rule #10). See `docs/reports/2026-07-14-retention-design.md`.
 
-See `docs/reports/2026-07-13-chronicle-design.md` for the design and `parts/chronicle.py` for the
+See `docs/reports/2026-07-13-chronicle-design.md` for the design and `kernel/chronicle.py` for the
 CARD. The `ledger.jsonl` appears here once a gate files its first record (e.g. `make arc-verdicts`).

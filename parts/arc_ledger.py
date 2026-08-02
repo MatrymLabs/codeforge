@@ -158,8 +158,8 @@ def emit(commit: str, *, root: Path | None = None, runner=None) -> list[Path]:
     never touch a subprocess. change/patch have no persistent store yet, so they are NOT filed here
     and stay MISSING by absence (honest, not fabricated).
     """
+    from kernel.release_gate import ReleaseGate
     from kernel.shelf.test_evidence import FAILED, PASSED, EvidenceLedger
-    from parts.release_gate import ReleaseGate
 
     run_check = runner if runner is not None else _console_runner
     lint_ok = run_check("lint")
@@ -181,7 +181,7 @@ def emit(commit: str, *, root: Path | None = None, runner=None) -> list[Path]:
     # Release stays a dated verdict under arc-evidence/ (git-ignored, reproducible). Evidence now
     # lives SOLELY in the Chronicle (git-tracked, hash-chained), which ARC reads back (slice 1b) -
     # a single retained source, not a git-ignored one.
-    from parts import chronicle
+    from kernel import chronicle
 
     filed = [record_verdict("release", rel_status, rel_source, commit=commit, root=root)]
     chronicle.append(

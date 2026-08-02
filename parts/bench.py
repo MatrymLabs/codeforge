@@ -127,7 +127,7 @@ def main(argv: list[str] | None = None) -> int:
     path = write_bench_report(result)
     print(f"\n  evidence -> {path}")
     if args and args[0] == "--record":
-        from parts import chronicle
+        from kernel import chronicle
 
         commit = args[1] if len(args) > 1 else "unknown"
         rec = chronicle.record_metric(

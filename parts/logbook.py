@@ -3,7 +3,7 @@
 A player keeps a personal logbook: `journal <text>` records a numbered entry, `journal` lists them.
 Each player's entries live in a `Repository` (kernel/shelf/repository), so the adapter never
 touches raw storage. The SAME repository core backs a records/asset registry in a practical app
-(parts/asset_registry); only the adapter differs.
+(kernel/asset_registry); only the adapter differs.
 """
 
 from __future__ import annotations

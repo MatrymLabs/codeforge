@@ -211,9 +211,9 @@ controls:
     control: Embedded-script sandbox (Lua instruction budget + whitelisted env)
     applicability: applicable
     assurance_profile: B
-    implementation: parts/scripting.py
+    implementation: kernel/scripting.py
     evidence:
-      - {kind: implementation, path: parts/scripting.py}
+      - {kind: implementation, path: kernel/scripting.py}
     status: verified_against
     frameworks: {nist_800_53: [SC-2, SI-10], ssdf: [PW.5.1], owasp_top10: [A08]}
     assessment_requirement: independent_assessment_required

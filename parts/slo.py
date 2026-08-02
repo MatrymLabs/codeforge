@@ -25,7 +25,7 @@ import math
 from dataclasses import dataclass
 from pathlib import Path
 
-from parts import chronicle
+from kernel import chronicle
 
 # The SLI the Chronicle already records (parts/bench.py --record). One point per measured run.
 SLI_NAME = "engine_tick.median_us"

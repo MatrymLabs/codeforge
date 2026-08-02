@@ -41,7 +41,7 @@ list everything not passed.
 
 - **Game:** `parts/world_cert.py` -- the `certify` verb records evidence for the world's readiness
   checks (NPCs and callings loaded) and reports whether it is certified. Tick-reachable.
-- **Practical:** `parts/release_gate.py` -- a `ReleaseGate` expects lint/tests/coverage/security
+- **Practical:** `kernel/release_gate.py` -- a `ReleaseGate` expects lint/tests/coverage/security
   evidence and is ready only when all have PASSED; a step that never ran blocks the release.
 
 ## Evidence

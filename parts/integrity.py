@@ -23,11 +23,11 @@ from dataclasses import dataclass
 from datetime import date
 from pathlib import Path
 
+from kernel.world_boundary import world_boundary_gaps
 from parts.hardware import load_catalog
 from parts.qualitygate import gate_all
 from parts.registry import load_collective, unfiled_modules, validate
 from parts.shelf_boundary import shelf_boundary_gaps
-from parts.world_boundary import world_boundary_gaps
 
 _ROOT = Path(__file__).resolve().parent.parent
 _REPORT_DIR = _ROOT / "reports" / "repo_integrity"

@@ -1,4 +1,4 @@
-"""Test twin for parts/chronicle.py -- the ship's memory (append-only hashed ledger).
+"""Test twin for kernel/chronicle.py -- the ship's memory (append-only hashed ledger).
 
 Acceptance: records append and read back in order, the hash chain links each record to its
 predecessor, read_latest/kind-filter/empty-store behave. Refusal (the point of a tamper-evident
@@ -16,7 +16,7 @@ from pathlib import Path
 
 import pytest
 
-from parts.chronicle import (
+from kernel.chronicle import (
     KINDS,
     ChronicleError,
     ai_evals,
@@ -292,7 +292,7 @@ def test_metric_refuses_an_empty_name(tmp_path: Path) -> None:
 
 
 def test_chronicle_trend_verb() -> None:
-    from parts.chronicle import chronicle as verb
+    from kernel.chronicle import chronicle as verb
 
     assert verb("trend") == "usage: chronicle trend <metric-name>"
     # Reads the real (empty in tests) ledger; an unrecorded metric renders honestly, never crashes.
@@ -343,7 +343,7 @@ def test_edge_refuses_an_empty_endpoint(tmp_path: Path) -> None:
 
 
 def test_chronicle_provenance_verb() -> None:
-    from parts.chronicle import chronicle as verb
+    from kernel.chronicle import chronicle as verb
 
     assert verb("provenance") == "usage: chronicle provenance <node>"
     assert verb("provenance nonexistent_node_xyz").startswith("No provenance")
@@ -394,7 +394,7 @@ def test_incident_refuses_a_bad_status(tmp_path: Path) -> None:
 
 
 def test_chronicle_incidents_verb() -> None:
-    from parts.chronicle import chronicle as verb
+    from kernel.chronicle import chronicle as verb
 
     # Reads the real (empty in tests) ledger; renders honestly, never crashes.
     assert verb("incidents") == "No incidents recorded."
@@ -444,7 +444,7 @@ def test_ai_eval_refuses_an_empty_subject_and_non_bool_passed(tmp_path: Path) ->
 
 
 def test_chronicle_evals_verb() -> None:
-    from parts.chronicle import chronicle as verb
+    from kernel.chronicle import chronicle as verb
 
     assert verb("evals") == "No AI evaluations recorded."
 

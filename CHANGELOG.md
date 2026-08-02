@@ -95,7 +95,7 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
   Refactor -> Compare -> Learn -> Version -> Catalog -> Reuse), mapping each station to an existing
   part (Harvest Lens = pattern capture, ARC = analyze, the registry `-R`/`superseded_by` = version)
   and stating the never-overwrite/v2 rule and the controlled-autonomy approval gates. The one missing
-  primitive ships with it: **Learning Records** (`parts/learning_record.py`, the `learnings` verb) -
+  primitive ships with it: **Learning Records** (`kernel/learning_record.py`, the `learnings` verb) -
   validated, git-diffable knowledge capture (what changed, why, evidence, tradeoffs, future reuse,
   concepts to understand), distinct from keel records, pioneer experiments, and postmortems. The
   first record dogfoods the catalog-V3 lesson. Filed UM10-025. No new dependencies.
@@ -123,10 +123,10 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
   store as full parts. **Stream Framer (`stream-framer`):** frame a byte stream into complete,
   delimiter-terminated messages, buffering a partial tail (the `endswith(b"")`-is-always-True scar);
   one core (`parts/stream_framer.py`), two adapters: a bursty in-world `telegraph`
-  (`parts/telegraph.py`) and a `RecordStream` byte-stream reader (`parts/record_stream.py`). **Typed
+  (`parts/telegraph.py`) and a `RecordStream` byte-stream reader (`kernel/record_stream.py`). **Typed
   Signal Bus (`typed-event-bus`):** a typed synchronous pub/sub (`parts/signal_bus.py`, distinct from
   the in-world echo `events`), two adapters: a world-signal `chime` (`parts/chime.py`) and a
-  domain-event `Notifier` (`parts/notifier.py`). Both cataloged, filed (UM05-055..058, UM04-041/042),
+  domain-event `Notifier` (`kernel/notifier.py`). Both cataloged, filed (UM05-055..058, UM04-041/042),
   manifests, and two new pattern docs (framing, eventing). No new dependencies. Maturity: beta.
 - **ARC review system, slice 1 (`arc`).** ARC (Assurance, Readiness, Control) is CodeForge's
   umbrella engineering-review system, filed first as a gate-validated Blueprint (`blueprints/arc`).
@@ -160,7 +160,7 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
   plugins. The trust boundary is explicit (the caller supplies the object). One core
   (`parts/plugin_registry.py`), two adapters: pluggable in-world `heralds` in the game
   (`parts/heralds.py`) and swappable json/csv export providers for a practical app
-  (`parts/exporters.py`). Cataloged, filed, manifest, new plugins pattern doc. No new dependencies.
+  (`kernel/exporters.py`). Cataloged, filed, manifest, new plugins pattern doc. No new dependencies.
   Maturity: beta.
 - **Hardware Store part: Test Evidence (`test-evidence`).** Record check evidence honestly: an
   `EvidenceLedger` where you `expect` checks and `record` outcomes (with environment and commit), and
@@ -168,7 +168,7 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
   pass (a step that never ran can't be reported ready), and a runner ERROR is distinct from a test
   FAILED. One core (`parts/test_evidence.py`), two adapters: a `certify` world-readiness certificate
   in the game (`parts/world_cert.py`) and a `ReleaseGate` for a practical app
-  (`parts/release_gate.py`). Property test pins passed iff all passed. Cataloged, filed, manifest,
+  (`kernel/release_gate.py`). Property test pins passed iff all passed. Cataloged, filed, manifest,
   new testing pattern doc. No new dependencies. Maturity: beta.
 - **Hardware Store part: Feature Flags (`feature-flags`).** Toggle features at runtime without a
   redeploy: a `FlagRegistry` of named flags with defaults, an override that beats the default, reset,
@@ -199,7 +199,7 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
   Identity-agnostic via an injected `key_of`; misuse fails loud (`DuplicateKey`/`NotFound`); a
   property test proves no accidental data loss. One core (`parts/repository.py`), two adapters: a
   per-player `journal` logbook in the game (`parts/logbook.py`) and a records/asset registry for a
-  practical app (`parts/asset_registry.py`). A database repository is a later adapter satisfying the
+  practical app (`kernel/asset_registry.py`). A database repository is a later adapter satisfying the
   same Protocol; the domain code would not change. Cataloged, filed, manifest, persistence pattern
   doc. No new dependencies. Maturity: beta.
 - **Hardware Store part: the Circuit Breaker (`circuit-breaker`).** Fail fast when a dependency is
@@ -267,7 +267,7 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
   workflow part (`parts/workflow.py`, built on the pure `statemachine`) proves the vision's
   two-way translation: it powers a **regional quest** in the MUD (`parts/quest.py`, the `quest`
   verb) *and* an **employee-onboarding** workflow through a plain non-game interface
-  (`parts/onboarding.py`) - same core, two adapters. Role-gated moves, a history trail, cataloged
+  (`kernel/onboarding.py`) - same core, two adapters. Role-gated moves, a history trail, cataloged
   in the Hardware Store (`workflow-engine`, beta), filed in the registry, documented
   (`docs/hardware/workflow_engine.md`), and tested (unit + game + practical + a one-core proof).
 - **NPCs that fight back.** An NPC that carries a seed `atk` stat now strikes back when it
@@ -541,7 +541,7 @@ date-stamped while pre-1.0.
 - **Pioneer Mode (`pioneer` command).** A disciplined-Maverick engineering framework -
   *bend convention, not truth/safety/trust* - surfaced in the MUD and codified in docs.
   `docs/pioneer_mode.md` (doctrine · Maverick Filter · risk ladder L1-L5 · constraint-review
-  + experiment templates), `parts/pioneer.py` + `data/pioneer/risk_ladder.json` (views:
+  + experiment templates), `kernel/pioneer.py` + `data/pioneer/risk_ladder.json` (views:
   `pioneer` · `risks` · `plan` · `experiments`), and a **real first filed experiment**
   (`docs/pioneer_experiments/2026-07-10-honest-gpu-split.md` - building a GPU package on a
   GPU-less host, verified CPU / honest GPU). Filed in the registry (board 79/79); the
@@ -710,7 +710,7 @@ date-stamped while pre-1.0.
   rank-gated `Command` + `CommandSet`; `registry` verbs proven on it.
 - **Classification Registry** (`parts/registry.py` + `registry/`): designations
   (`TYPE-UM-SEC-NODE-SEQ-REV`), 18 rooms + commands + items filed, schema + rules doc.
-- **In-game Library** (`parts/library.py`): `library` / `library <id>` read FGL's
+- **In-game Library** (`kernel/library.py`): `library` / `library <id>` read FGL's
   document store read-only; the Archivist NPC.
 - **Ritual WARDS**: the startup ritual now runs SAST (bandit gates) + dependency-CVE
   scan (pip-audit warns) before lighting the forge. `.github/dependabot.yml` added.

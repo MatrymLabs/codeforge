@@ -1,4 +1,4 @@
-"""Test twin for parts/intake.py -- the Technology Intake Office.
+"""Test twin for kernel/intake.py -- the Technology Intake Office.
 
 Acceptance: the real intake ledger is clean (every onboarding record is complete and consistent).
 Refusal (the point): an approved technology missing a requirement fails, an unknown class or
@@ -11,7 +11,7 @@ from __future__ import annotations
 
 import pytest
 
-from parts.intake import (
+from kernel.intake import (
     CLASSIFICATIONS,
     DECISIONS,
     REQUIRED,

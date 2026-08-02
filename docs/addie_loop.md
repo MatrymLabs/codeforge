@@ -57,7 +57,7 @@ ADDIE exists to stop CodeForge from:
 - **implementing without integration** (no IMPLEMENT),
 - **declaring success without evaluation** (no EVALUATE).
 
-`parts/addie.py` encodes this: a major cycle that skips any phase, or leaves the loop open (no next
+`kernel/addie.py` encodes this: a major cycle that skips any phase, or leaves the loop open (no next
 cycle), is refused by `gaps()`. Major cycles are filed in `addie_ledger.toml`; `make addie` (and the
 test twin on `make check`) fails loud if a filed cycle did not close its loop. The `addie` verb
 (`addie status`) surfaces the same audit in the world, the way `arc` surfaces the readiness verdict.
@@ -86,7 +86,7 @@ controls run inside:
 ## Using it in code
 
 ```python
-from parts.addie import self_check, gaps
+from kernel.addie import self_check, gaps
 
 check = self_check(
     "the thing under review",

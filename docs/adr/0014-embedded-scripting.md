@@ -20,9 +20,9 @@ Adopt Lua as an **optional, sandboxed** scripting engine, embedded via `lupa` (w
 runtime). The organ keeps the discipline's spirit, re-read for a capability rather than an accelerator:
 
 1. **Optional, game-untouched when absent.** Lua ships as the `[lua]` extra, not a core dependency.
-   When it is not installed, `parts.scripting.scripting_available()` is False, the `@script` console
+   When it is not installed, `kernel.scripting.scripting_available()` is False, the `@script` console
    says so cleanly, and the full `make check` is green with no Lua runtime. Nothing hard-depends on it.
-2. **A narrow, safe interface.** `parts.scripting.LuaSandbox.run(code) -> ScriptResult`. Scripts get a
+2. **A narrow, safe interface.** `kernel.scripting.LuaSandbox.run(code) -> ScriptResult`. Scripts get a
    value back and may `emit()` output; that is the whole surface.
 3. **Deny-by-default sandbox (the safety property, in place of parity).** A script runs with a fresh
    whitelist `_ENV` -- `math`, `string`, `table`, and a curated few -- so `os`, `io`, `require`,
@@ -63,5 +63,5 @@ boundary, so even the owner's console cannot reach the host.
 - **Costs / risks:** a Lua runtime to keep current; a sandbox whose whitelist must stay tight (the
   safety suite guards it); the documented memory limitation. All bounded by the optional extra: absent
   or broken, scripting is simply off and the game is unaffected.
-- **Exit:** delete `parts/scripting.py`, the `@script` command, and the `[lua]` extra; nothing else
+- **Exit:** delete `kernel/scripting.py`, the `@script` command, and the `[lua]` extra; nothing else
   depends on them.

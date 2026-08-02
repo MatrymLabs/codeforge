@@ -23,7 +23,7 @@ that one file. The spine keeps the same guarantees as the accelerator ADRs, appl
 rather than an implementation:
 
 1. **Python-first with a fallback.** The capability ships as a pure-Python **JSON codec** first
-   (`parts.telemetry.JsonCodec`), always available. The protobuf codec is *optional*: when the
+   (`kernel.telemetry.JsonCodec`), always available. The protobuf codec is *optional*: when the
    generated binding is not built, the spine still encodes/decodes via JSON and `make check` is green
    with no protobuf toolchain.
 2. **A narrow, identical interface.** Both codecs expose the same `(kind, payload) <-> bytes`
@@ -57,5 +57,5 @@ proven to carry the exact frames `parts/gmcp.py` emits, not a rip-out of the cli
   path; a schema to keep in step with `parts/gmcp.py`; generated code to rebuild on a schema change.
   All bounded by the JSON fallback: if the binding is absent or stale, the spine runs on JSON and the
   game is unaffected.
-- **Exit:** delete `proto/`, `native/spine/`, and the protobuf branch of `parts.telemetry`; the JSON
+- **Exit:** delete `proto/`, `native/spine/`, and the protobuf branch of `kernel.telemetry`; the JSON
   codec becomes the sole implementation with no other change.

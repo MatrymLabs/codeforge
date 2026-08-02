@@ -1298,7 +1298,7 @@
     general: dedup any retried web/API request or message so redelivery is safe
 - id: double-entry-ledger
   name: Double-Entry Ledger
-  source: parts/ledger.py
+  source: kernel/ledger.py
   category: finance
   tags:
   - double-entry
@@ -1344,7 +1344,7 @@
     general: an in-process load harness that captures a latency histogram for any callable workload
 - id: artifact-scaffold
   name: Artifact Scaffold Forge
-  source: parts/artifact_forge.py
+  source: kernel/artifact_forge.py
   category: developer-experience
   tags:
   - scaffolding

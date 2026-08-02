@@ -16,8 +16,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from kernel.chronicle import Record, record_ai_eval
 from parts.architect import CLAUDE_MODEL, Advisor
-from parts.chronicle import Record, record_ai_eval
 
 
 class AiEvalError(ValueError):

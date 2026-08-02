@@ -32,4 +32,4 @@ source_status: original
 owner: MatrymLabs
 adapters:
   - parts/world/quest.py
-  - parts/onboarding.py
+  - kernel/onboarding.py

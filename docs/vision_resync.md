@@ -99,7 +99,7 @@ removed: the rule is "don't preserve merely because it exists," and equally "don
    core is physically extracted into `kernel/shelf/` (27 cores, six families, one-way dependency).
    What remains one package is the platform/world engine itself (Layer 1/2), but its separation is
    now real and ENFORCED: the World Package (Layer 2) imports the manufacturing platform (Layer 1)
-   zero times, and `parts/world_boundary` (wired into the repo-integrity ritual) fails if a game
+   zero times, and `kernel/world_boundary` (wired into the repo-integrity ritual) fails if a game
    module ever reaches into the dev-tools -- so a world stays shippable without the workshop. Only
    the physical dir reorg (a structural-tidiness-only migration) is deferred; the boundary is held.
 3. ~~**World is content-driven, not manifest/config-driven**~~ **MOSTLY ADDRESSED:** a typed
@@ -131,7 +131,7 @@ The proof that makes the whole vision legible without finishing the platform:
 - **Game adapter:** a **Quest** (regional quest progression) via MUD commands. This also fills a
   real gap: the World Package has **no quests today**.
 - **Practical adapter:** an **onboarding / approval checklist** driven by the *same* engine
-  through a non-game interface - now shipped as the **`codeforge onboard`** CLI (`parts/onboarding`),
+  through a non-game interface - now shipped as the **`codeforge onboard`** CLI (`kernel/onboarding`),
   the practical cousin of the MUD `quest` verb.
 - One core, two adapters, two interfaces (MUD + CLI): the two-way translation thesis, demonstrated
   and runnable end to end.

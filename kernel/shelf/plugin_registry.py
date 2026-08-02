@@ -7,7 +7,7 @@ arbitrary code** -- the caller passes an already-constructed object, so the trus
 explicit. This is the safe plugin/registry pattern, reimplemented from the concept: no code copied.
 
 Framework-free and generic over the plugin type. One core, two lives: in-world heralds in the game
-(`parts/heralds`) and export providers in a practical app (`parts/exporters`).
+(`parts/heralds`) and export providers in a practical app (`kernel/exporters`).
 
 Provenance: independently_implemented_pattern (plugin registry, explicit registration only).
 """

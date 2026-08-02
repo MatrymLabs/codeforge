@@ -21,7 +21,7 @@ one core part proven in the game and reused in a practical application. Part Man
 | **security** | never mutates world state; effects are names the caller applies; role gating refuses before firing |
 | **tests** | `tests/test_workflow.py` (core), `tests/test_quest.py` (game), `tests/test_onboarding.py` (practical + one-core proof) |
 | **license** | MIT · **source_status** original · **owner** MatrymLabs |
-| **adapters** | MUD command adapter (`parts/world/quest.py`), plain-function adapter (`parts/onboarding.py`); a web/API adapter is a later slice |
+| **adapters** | MUD command adapter (`parts/world/quest.py`), plain-function adapter (`kernel/onboarding.py`); a web/API adapter is a later slice |
 
 ## Core behavior (domain logic, game-free)
 
@@ -37,7 +37,7 @@ engine tick (`handle_command(session, "quest ...")`).
 
 ## Practical translation
 
-`parts/onboarding.py` -- **employee onboarding**: the *same* `WorkflowEngine`, driven through a
+`kernel/onboarding.py` -- **employee onboarding**: the *same* `WorkflowEngine`, driven through a
 plain function interface, role-gated so only the employee submits paperwork, only HR completes
 orientation, and only a manager activates. Its cousins are approval, case, incident, and project
 workflows.

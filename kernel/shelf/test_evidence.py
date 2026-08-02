@@ -8,7 +8,7 @@ from the concept -- no code copied.
 
 Framework-free and side-effect-free: it stores what you record, nothing more. One core, two lives: a
 world-readiness certificate in the game (`parts/world_cert`) and a release-readiness gate in a
-practical app (`parts/release_gate`).
+practical app (`kernel/release_gate`).
 
 Provenance: independently_implemented_pattern (test evidence / quality gate). No code copied.
 """

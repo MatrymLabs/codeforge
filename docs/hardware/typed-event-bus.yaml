@@ -29,4 +29,4 @@ source_status: original
 owner: MatrymLabs
 adapters:
   - parts/world/chime.py
-  - parts/notifier.py
+  - kernel/notifier.py

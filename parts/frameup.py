@@ -58,7 +58,7 @@ def _career_line() -> SystemFrame:
 
 def _pioneer_line() -> SystemFrame:
     try:
-        from parts.pioneer import _EXPERIMENTS
+        from kernel.pioneer import _EXPERIMENTS
 
         n = len(list(_EXPERIMENTS.glob("*.md"))) if _EXPERIMENTS.is_dir() else 0
         return SystemFrame("pioneer mode", GREEN, f"{n} experiment(s) filed", gating=False)

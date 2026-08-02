@@ -1,4 +1,4 @@
-"""Test twin for parts/seed_package.py -- the deployment-tier scaling core.
+"""Test twin for kernel/seed_package.py -- the deployment-tier scaling core.
 
 Gates the campaign's founding move: intent (a tier's player count) in, a full, internally consistent
 world blueprint out, sized by data-driven ratios calibrated to the real aethryn build. Covers both
@@ -10,7 +10,7 @@ import json
 
 import pytest
 
-from parts import seed_package as sp
+from kernel import seed_package as sp
 
 
 def test_the_five_named_tiers_exist_and_climb_in_player_target():

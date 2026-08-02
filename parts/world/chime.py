@@ -3,7 +3,7 @@
 When a traveller arrives, the world publishes a `TravellerArrived` signal and a subscribed chime
 rings. The `chime` verb shows the bus at work: publishers raise signals, subscribers react, neither
 knowing the other. The SAME bus core fans domain events to handlers in a practical app
-(parts/notifier).
+(kernel/notifier).
 """
 
 from __future__ import annotations

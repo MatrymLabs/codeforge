@@ -8,11 +8,12 @@ terminal driver around it -- a socket gateway will be another.
 import re
 from collections.abc import Callable
 
+from kernel.addie import addie
 from kernel.clone_scan import clones
 from kernel.complexity import complexity
 from kernel.harvest_lens import harvest
+from kernel.learning_record import learnings
 from kernel.shelf.hourglass import WORLD_SANDS
-from parts.addie import addie
 from parts.arc import arc
 from parts.calibrate import calibrate
 from parts.chat_throttle import shout
@@ -30,7 +31,6 @@ from parts.classroom import (
 from parts.commands import ADMIN, CORE, Command, CommandSet
 from parts.features import features
 from parts.heralds import heralds
-from parts.learning_record import learnings
 from parts.logbook import journal
 from parts.maintenance import maintenance
 from parts.name_check import name_check
@@ -253,7 +253,7 @@ def evolution(arg: str = "") -> str:
 
 
 def chronicle(arg: str = "") -> str:
-    from parts.chronicle import chronicle as run
+    from kernel.chronicle import chronicle as run
 
     return run(arg)
 
@@ -307,13 +307,13 @@ def law(arg: str = "") -> str:
 
 
 def library(arg: str = "") -> str:
-    from parts.library import library as run
+    from kernel.library import library as run
 
     return run(arg)
 
 
 def pioneer(arg: str = "") -> str:
-    from parts.pioneer import pioneer as run
+    from kernel.pioneer import pioneer as run
 
     return run(arg)
 
@@ -363,7 +363,7 @@ def render_safety(arg: str) -> str:
 
 
 def regs(arg: str = "") -> str:
-    from parts.regulations import regs as run
+    from kernel.regulations import regs as run
 
     return run(arg)
 
@@ -558,9 +558,9 @@ PLUGIN_LOAD: PluginLoad | None = None
 def _script_command(session: Session, arg: str) -> str:
     """Owner-only sandboxed Lua console: run a snippet, show its emit() output + return value.
 
-    The safety boundary is parts.scripting.LuaSandbox (no os/io/require; loops bounded), so even the
+    The safety boundary is kernel.scripting.LuaSandbox (no os/io/require; loops bounded), so the
     owner's console cannot reach the host. When the [lua] extra is absent, it says so cleanly."""
-    from parts.scripting import LuaSandbox, ScriptError, scripting_available
+    from kernel.scripting import LuaSandbox, ScriptError, scripting_available
 
     code = arg.strip()
     if not code:

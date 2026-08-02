@@ -1,9 +1,9 @@
-"""Test twin for parts/asset_registry.py -- the practical adapter + the one-core proof."""
+"""Test twin for kernel/asset_registry.py -- the practical adapter + the one-core proof."""
 
 import pytest
 
+from kernel.asset_registry import Asset, AssetRegistry
 from kernel.shelf.repository import DuplicateKey, InMemoryRepository, NotFound
-from parts.asset_registry import Asset, AssetRegistry
 
 
 def test_register_find_and_list():

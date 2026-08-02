@@ -2,7 +2,7 @@
 
 A quest is a workflow (`kernel/shelf/workflow`) whose states a player walks with the `quest` verb.
 It proves the reusable core lives in the game: the SAME `WorkflowEngine` that drives a business
-onboarding checklist (`parts/onboarding`) drives these quests -- only the effect differs (here, a
+onboarding checklist (`kernel/onboarding`) drives these quests -- only the effect differs (here, a
 completed contract awards XP). The arcs are DATA: a seed ships `quest.yaml` (its primary arc) and
 any number of `quests/*.yaml`, so a world declares many stories, not one hard-coded in Python.
 

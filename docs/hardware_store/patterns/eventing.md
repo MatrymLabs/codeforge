@@ -39,7 +39,7 @@ subscribers is a no-op; multiple handlers fire in subscription order; the subscr
 
 - **Game:** `parts/world/chime.py` -- the `chime` verb subscribes a chime that rings when a
   `TravellerArrived` world signal is published. Tick-reachable.
-- **Practical:** `parts/notifier.py` -- a `Notifier` publishes an `OrderPlaced` domain event and fans
+- **Practical:** `kernel/notifier.py` -- a `Notifier` publishes an `OrderPlaced` domain event and fans
   it to every subscribed handler (audit, receipt, metrics).
 
 ## Evidence

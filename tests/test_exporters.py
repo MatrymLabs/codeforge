@@ -1,11 +1,11 @@
-"""Test twin for parts/exporters.py -- the practical adapter + the one-core proof."""
+"""Test twin for kernel/exporters.py -- the practical adapter + the one-core proof."""
 
 import json
 
 import pytest
 
+from kernel.exporters import CsvExporter, ExporterHub, default_hub
 from kernel.shelf.plugin_registry import PluginError, PluginRegistry
-from parts.exporters import CsvExporter, ExporterHub, default_hub
 
 
 def test_the_default_hub_exports_json_and_csv():

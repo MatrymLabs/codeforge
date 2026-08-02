@@ -464,7 +464,7 @@ def main(argv: list[str] | None = None) -> int:
 
     args = list(sys.argv[1:] if argv is None else argv)
     if not args or not args[0].strip():
-        print("usage: python -m parts.artifact_forge <name> [kind=service|full-stack|cli]")
+        print("usage: python -m kernel.artifact_forge <name> [kind=service|full-stack|cli]")
         return 2
     name = args[0].strip()
     kind = args[1].strip() if len(args) > 1 and args[1].strip() else "service"

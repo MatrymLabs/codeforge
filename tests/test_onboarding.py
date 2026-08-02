@@ -1,7 +1,7 @@
-"""Test twin for parts/onboarding.py -- the practical adapter + the one-core-two-adapters proof."""
+"""Test twin for kernel/onboarding.py -- the practical adapter + the one-core-two-adapters proof."""
 
+from kernel.onboarding import ONBOARDING, available, drive, new_onboarding, run_demo
 from kernel.shelf.workflow import WorkflowEngine
-from parts.onboarding import ONBOARDING, available, drive, new_onboarding, run_demo
 
 
 def test_the_onboarding_flow_reaches_active():
@@ -79,7 +79,7 @@ def test_drive_rejects_an_unavailable_action_then_lets_you_quit():
 
 
 def test_the_onboard_cli_subcommand_routes_to_drive(monkeypatch):
-    import parts.onboarding as onboarding_mod
+    import kernel.onboarding as onboarding_mod
     from parts.cli import main
 
     called = {"n": 0}

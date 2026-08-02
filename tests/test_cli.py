@@ -85,7 +85,7 @@ def test_play_dispatches_to_the_game_loop(monkeypatch):
 
 def test_onboard_dispatches_to_the_workflow(monkeypatch):
     calls: list[int] = []
-    monkeypatch.setattr("parts.onboarding.drive", lambda: calls.append(1))
+    monkeypatch.setattr("kernel.onboarding.drive", lambda: calls.append(1))
     assert main(["onboard"]) == 0
     assert calls == [1]
 

@@ -3,7 +3,7 @@
 `certify` records evidence for a world's readiness checks (the seed loaded NPCs and callings) and
 reports whether the world is certified, or which checks are missing/failing. It uses an
 `EvidenceLedger` (kernel/shelf/test_evidence), so a check with no evidence is never a pass. The
-SAME evidence core backs a release-readiness gate in a practical app (`parts/release_gate`).
+SAME evidence core backs a release-readiness gate in a practical app (`kernel/release_gate`).
 """
 
 from __future__ import annotations

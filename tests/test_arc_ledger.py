@@ -71,7 +71,7 @@ def test_a_partial_artifact_fails_loud(tmp_path):
 
 
 def test_emit_files_release_to_arc_evidence_and_evidence_to_the_chronicle(tmp_path):
-    from parts import chronicle
+    from kernel import chronicle
 
     filed = emit("abc123", root=tmp_path, runner=lambda check: True)
     # release stays a dated arc-evidence/ verdict; evidence moved to the Chronicle (slice 1b).
@@ -83,7 +83,7 @@ def test_emit_files_release_to_arc_evidence_and_evidence_to_the_chronicle(tmp_pa
 
 
 def test_emit_records_a_failing_check_as_blocked(tmp_path):
-    from parts import chronicle
+    from kernel import chronicle
 
     # security fails -> release blocked; evidence (tests+coverage) still ready in the Chronicle.
     emit("abc123", root=tmp_path, runner=lambda check: check != "security")

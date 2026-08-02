@@ -46,7 +46,7 @@ The one map to everything under `docs/`. New here? Read [RUNNING.md](RUNNING.md)
 Each of these translates one captured research report into a real, tested subsystem. They share one honest template on purpose (evidence labels first, then a mapping table, then how the build composes with existing gates, then metrics, then APA references), but every table, source list, and domain is its own. Nature inspires / a clinical pattern suggests / an assurance report warns; engineering translates; tests verify; metrics compare; Josh decides. A metaphor is never presented as proof.
 - [nature_inspired/research_mapping.md](nature_inspired/research_mapping.md), Nature-Inspired Design -> the Blueprint Evolution Lab (`parts/evolution/`): genotype/phenotype, candidate populations, multi-objective fitness (hard gates first), the counterexample bank.
 - [stewardship/research_mapping.md](stewardship/research_mapping.md), FWA-reduction assurance -> the Stewardship Gate + DependencyGate (`parts/stewardship/`): layered, executable controls that do not tax low-risk work.
-- [hubble/research_mapping.md](hubble/research_mapping.md), clinical workflow patterns -> the Hubble diagnostic core (`parts/hubble/`): differential diagnosis before intervention, with non-overridable escalation classes.
+- [hubble/research_mapping.md](hubble/research_mapping.md), clinical workflow patterns -> the Hubble diagnostic core (`kernel/hubble/`): differential diagnosis before intervention, with non-overridable escalation classes.
 
 ## Ritual and process
 - [startup_ritual.md](startup_ritual.md), the startup ceremony, fast/standard modes, the phases.

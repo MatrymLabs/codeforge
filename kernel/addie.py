@@ -221,7 +221,7 @@ def addie(arg: str = "") -> str:
 
 
 def main(argv: list[str] | None = None) -> int:
-    """`python -m parts.addie` / `make addie`: print the report, exit non-zero on a FAIL."""
+    """`python -m kernel.addie` / `make addie`: print the report, exit non-zero on a FAIL."""
     print(render_addie())
     return 0 if audit_addie().passed else 1
 

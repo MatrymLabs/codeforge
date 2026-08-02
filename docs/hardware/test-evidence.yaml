@@ -29,4 +29,4 @@ source_status: original
 owner: MatrymLabs
 adapters:
   - parts/world_cert.py
-  - parts/release_gate.py
+  - kernel/release_gate.py

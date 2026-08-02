@@ -7,7 +7,7 @@ project. No code was copied; the schema and semantics are reconstructed from pub
 
 Status: **implemented** (the part and its tests ship; product integration is deferred, below)
 Author: Josh (architecture + acceptance); AI-assisted implementation, human-reviewed and tested
-Part: `parts/ledger.py` (MOD-10.048) · Consumes: `kernel/shelf/idempotency.py` (MOD-05.069)
+Part: `kernel/ledger.py` (MOD-10.048) · Consumes: `kernel/shelf/idempotency.py` (MOD-05.069)
 
 ## Context and problem
 

@@ -13,16 +13,16 @@ encoded LOOP discipline: nothing structurally stops it from building without und
 declaring success without evaluation. The vision asks it to learn in a loop, not move in a straight
 line. Gap: a lightweight, composable self-check. Success = a machine-checkable five-phase record
 that refuses the four failure modes, reusing the existing gate pattern, overriding no control."""
-design = """Smallest coherent solution: parts/addie.py, mirroring the intake.py gate (record -> gaps
+design = """Smallest coherent solution: kernel/addie.py, mirroring the intake.py gate (record -> gaps
 -> audit -> render -> make button + test twin), plus a doctrine doc. Boundary: ADDIE adds NO
 authority and overrides no control - it is the loop those controls run inside. An AddieSelfCheck
 carries the five phases + next_cycle; gaps() names the four failure modes; a minor cycle is silent,
 a major cycle must close the loop. Rollback: delete the part + ledger + doc + make target; nothing
 depends on it. No new dependency (stdlib tomllib)."""
-develop = """Built parts/addie.py (CARD: addie): PHASES, SCALES, AddieSelfCheck, self_check() for
+develop = """Built kernel/addie.py (CARD: addie): PHASES, SCALES, AddieSelfCheck, self_check() for
 in-code use, gaps() validator, read_ledger/audit_addie over addie_ledger.toml, render_self_check +
 render_addie. Reused the intake.py pattern rather than inventing a new gate shape. Frameless."""
-implement = """Wired: make addie + python -m parts.addie (control panel), addie_ledger.toml seeded
+implement = """Wired: make addie + python -m kernel.addie (control panel), addie_ledger.toml seeded
 with this cycle (dogfooded), docs/addie_loop.md (the doctrine + how it composes with Blueprints, ARC,
 AURA, Ritual, Hardware Store, testing, security, docs, fleet governance), filed in the module
 registry (MOD-10.044), test twin tests/test_addie.py riding make check."""
@@ -46,7 +46,7 @@ dimension must cite its source; overrides no control. Success = ARC shows an hon
 verdict from the ledger and `addie` is reachable through the engine tick."""
 design = """Smallest coherent solution: add an 'improvement' dimension to parts/arc.py that reads the
 ADDIE ledger via addie.audit_addie (READY all-looped / WATCHLIST any-flagged / MISSING no-ledger,
-malformed fails loud), and an `addie` verb in parts/addie.py mirroring the `arc` verb, wired on the
+malformed fails loud), and an `addie` verb in kernel/addie.py mirroring the `arc` verb, wired on the
 command spine. No new part, no new dependency. Rollback: drop the dimension + verb + command."""
 develop = """arc.py: DIMENSIONS + _improvement_dim(root) reading addie_ledger.toml, composed in
 filed_review. addie.py: addie(arg) verb (status window, text is a projection). Reused the arc
