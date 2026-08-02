@@ -7205,6 +7205,31 @@
   "updated": "2026-07-31"
  },
  {
+  "designation": "MOD-10.067",
+  "name": "posture",
+  "status": "active",
+  "function": "compute the security-posture KPI scorecard from evidence we already produce",
+  "label": "posture",
+  "file": "kernel/posture.py",
+  "type": "MOD",
+  "domain": "10",
+  "docs": "",
+  "tests": "tests/test_posture.py",
+  "depends_on": [],
+  "related": [
+   "MOD-10.047"
+  ],
+  "reuse": "wrap any evidence store in a KPI catalog with anti-gaming metadata + an honest measured/not_computable verdict",
+  "tags": [
+   "module"
+  ],
+  "notes": "RD-2026-0002 finding #5. Clean-room from the DoD secure-coding metrics catalog; each KPI carries scope/source/target/owner and is MEASURED or NOT_COMPUTABLE (names the missing store), never a faked zero. Reads security-evidence/ read-only; injected-evidence seam. Provenance: original.",
+  "superseded_by": "",
+  "aliases": [],
+  "created": "2026-08-02",
+  "updated": "2026-08-02"
+ },
+ {
   "designation": "MOD-05.069",
   "name": "idempotency",
   "status": "active",
