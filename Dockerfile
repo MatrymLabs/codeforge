@@ -9,6 +9,9 @@ WORKDIR /app
 COPY pyproject.toml README.md LICENSE ./
 COPY forge.py ./
 COPY parts/ parts/
+COPY kernel/ kernel/
+COPY adapters/ adapters/
+COPY content/ content/
 COPY seeds/ seeds/
 RUN pip install --no-cache-dir .
 
