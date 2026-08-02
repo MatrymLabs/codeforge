@@ -7,7 +7,7 @@ input normalization, reimplemented from the concept -- no code copied.
 
 Framework-free and side-effect-free. It normalizes; it is NOT a security control (not escaping, not
 crypto) -- pair it with proper output-encoding and parameterized queries at each boundary. One core,
-two lives: a player's title in the game (`parts/titles`) and a stored field in a practical app
+two lives: a player's title in the game (`kernel/titles`) and a stored field in a practical app
 (`parts/field_sanitizer`).
 
 Provenance: independently_implemented_pattern (input normalization). No code copied.

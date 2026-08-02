@@ -13,7 +13,7 @@ Two catalogs, two depths:
 | `make hardware` | This curated catalog - the parts documented for **cross-domain reuse**. |
 
 The data lives in [`parts.yaml`](parts.yaml); the loader/validator is
-`parts/hardware.py` (a bad row fails loud - it is never stocked). Override the
+`kernel/hardware.py` (a bad row fails loud - it is never stocked). Override the
 path with `CODEFORGE_CATALOG`.
 
 ## Entry schema
@@ -106,4 +106,4 @@ Where a clean standalone demo is safe it runs live (`[runs]`, e.g. `report-write
 "hello world" to a temp file, `rank-gate` refuses a novice and allows an owner,
 `validated-loader` rejects a bad row and fails loud). Where a part needs world state, the
 check cites its **test twin** instead of faking a demo (`[tested]`), never a false claim.
-See `parts/functions.py`.
+See `kernel/functions.py`.

@@ -10,7 +10,7 @@ decision.*
 The inaugural board (2026-07-13) ran when the ship "felt done." A great deal has shipped since:
 the whole Chronicle (five record kinds plus retention R1), ARC completion and its Control
 dimension, auth and secure-by-design hardening, GMCP, typed event frames (`kernel/world/frames.py`),
-the proving-ground `@arch preview` (`parts/foundry.py`), and proactive NPCs
+the proving-ground `@arch preview` (`kernel/foundry.py`), and proactive NPCs
 (`kernel/world/aggression.py`, PR #247, shipped the morning of this review). A large build spree is the
 exact moment the doctrine says to re-run the board: a new capability "feels done" before a stranger
 has ever exercised it.
@@ -46,7 +46,7 @@ output.
 | Seat | Where the last inch is orphaned | Cite | Verified |
 |---|---|---|---|
 | Records/Provenance | The Chronicle is an empty vault on `main`; every producer is human-run, none in CI | `chronicle/` (README only) | CONFIRMED |
-| Quality/Observability | ARC `performance` checks that benchmark files exist, not that the tick got slower; a 10x regression stays green | `parts/arc.py:134` | CONFIRMED |
+| Quality/Observability | ARC `performance` checks that benchmark files exist, not that the tick got slower; a 10x regression stays green | `kernel/arc.py:134` | CONFIRMED |
 | Safety/Systems | The failsafe prevents death but creates a soft-lock; no disengage/leash; the multi-aggressor blast radius is uncapped | `kernel/world/aggression.py:27` | CONFIRMED (design) |
 | Security/AI-gov | The telnet codec is orphaned on the main input loop (login paths strip it, the game loop does not) | `adapters/gateway.py:288` vs `:180,197` | CONFIRMED |
 | Human-Factors/DX | An aggressive foe is not telegraphed; the `telegraph` part exists but combat does not use it; `look` takes no argument | `kernel/world/npcs.py:41` | CONFIRMED |

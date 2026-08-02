@@ -34,7 +34,7 @@ the tick, the seed-driven world, the control-panel `make`, and `kernel/store.py`
 │ Safety / Governance Layer  FailsafeRunner: allowlist, approvals, logs  │  ← wraps everything below
 ├──────────────────────────────────────────────────────────────────────┤
 │ Industry Adapter Layer     tag parts into gov/finance/compliance tracks│
-│ Hardware Catalog Layer     catalog/parts.yaml + parts/hardware.py  ✅  │
+│ Hardware Catalog Layer     catalog/parts.yaml + kernel/hardware.py  ✅  │
 │ Reusable Parts Layer       parts/*.py cards (the code being cataloged) │
 ├──────────────────────────────────────────────────────────────────────┤
 │ Code Generation Layer      PatchProposal → branch → diff → test → evid.│  (late, gated)
@@ -57,7 +57,7 @@ generation). **Nothing risky runs without the Safety layer around it.**
   gateways, combat, ranks, accounts, a full CI-gated test suite, a live browser demo.
 - **Reusable parts:** `parts/*.py` cards, each with a `CARD:` line and a test twin.
 - **Hardware store, v0:** `make store` (auto inventory) and now **`make hardware`**
-  (the cross-domain catalog, `catalog/parts.yaml` + `parts/hardware.py`).
+  (the cross-domain catalog, `catalog/parts.yaml` + `kernel/hardware.py`).
 - **Ritual & control panel:** `make ritual`, `make check/doctor/patch/daily`.
 
 ## MVP - the smallest working proving ground

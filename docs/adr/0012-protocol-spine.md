@@ -8,7 +8,7 @@ ADR-0010 (in-process kernels) and ADR-0011 (out-of-process service organs) each 
 other-language component behind a Python fallback. As the polyglot organs multiply (Rust, C++, Go,
 ...), they need a way to **talk to each other** without every pair inventing its own wire format. The
 telemetry the engine already projects to a client -- Char.Vitals, Room.Info, Char.Target, Char.Quest
--- is the natural first payload: it is emitted today as ad-hoc JSON dicts (`parts/gmcp.py`), untyped
+-- is the natural first payload: it is emitted today as ad-hoc JSON dicts (`kernel/gmcp.py`), untyped
 and language-specific by convention only.
 
 A **protocol spine** is the keystone: one schema, defined once, compiled to every language, so a frame
@@ -45,7 +45,7 @@ rather than an implementation:
    so the main gate never blocks on the protobuf toolchain.
 
 The live client's GMCP frames stay JSON: the spine is the typed transport for cross-language services,
-proven to carry the exact frames `parts/gmcp.py` emits, not a rip-out of the client wire.
+proven to carry the exact frames `kernel/gmcp.py` emits, not a rip-out of the client wire.
 
 ## Consequences
 
@@ -54,7 +54,7 @@ proven to carry the exact frames `parts/gmcp.py` emits, not a rip-out of the cli
   asserted; the wire is smaller and the frames are typed; and the spine unlocks the organs after it
   (a Go telemetry channel, SQL analytics, a C kernel) with a schema already in place.
 - **Costs / risks:** a codegen step (protoc + protoc-gen-go) and a protobuf runtime in the optional
-  path; a schema to keep in step with `parts/gmcp.py`; generated code to rebuild on a schema change.
+  path; a schema to keep in step with `kernel/gmcp.py`; generated code to rebuild on a schema change.
   All bounded by the JSON fallback: if the binding is absent or stale, the spine runs on JSON and the
   game is unaffected.
 - **Exit:** delete `proto/`, `native/spine/`, and the protobuf branch of `kernel.telemetry`; the JSON

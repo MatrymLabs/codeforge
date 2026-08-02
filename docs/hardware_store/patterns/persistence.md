@@ -29,7 +29,7 @@ asset registry) does not change.
 
 ## GAME-TO-PRACTICAL TRANSLATION
 
-- **Game component:** a per-player logbook (`parts/logbook.py`).
+- **Game component:** a per-player logbook (`kernel/logbook.py`).
 - **Core behavior:** store and retrieve entities by identity, behind a collection interface.
 - **Game-specific presentation:** "Logged (#3): ..." / a numbered listing.
 - **Reusable domain logic:** the whole `Repository` + `InMemoryRepository` (game-free).
@@ -42,7 +42,7 @@ asset registry) does not change.
 
 ## Adapters (one core, two lives)
 
-- **Game:** `parts/logbook.py` -- the `journal` verb records numbered entries into a per-player
+- **Game:** `kernel/logbook.py` -- the `journal` verb records numbered entries into a per-player
   repository and lists them. Tick-reachable.
 - **Practical:** `kernel/asset_registry.py` -- `AssetRegistry` registers, finds, updates, and retires
   assets by id, storage-agnostic (any `Repository` works). Cousins: stock control, a document registry.

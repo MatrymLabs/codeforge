@@ -1,4 +1,4 @@
-"""Test twin for parts/seedlab/workspace_gmcp.py -- the engine speaking the client's workspace
+"""Test twin for kernel/seedlab/workspace_gmcp.py -- the engine speaking the client's workspace
 GMCP contracts.
 
 Acceptance: each builder projects a seedlab record into the exact package shape the Master Client
@@ -13,12 +13,12 @@ from __future__ import annotations
 
 import pytest
 
-from parts.gmcp import gmcp_frame
-from parts.seedlab.kernel import InMemorySeedStore, SeedKernel
-from parts.seedlab.project_model import Provenance, SpecSource, extract_model
-from parts.seedlab.source_connector import SourceRecord
-from parts.seedlab.tool_runner import ToolRunResult
-from parts.seedlab.workspace_gmcp import (
+from kernel.gmcp import gmcp_frame
+from kernel.seedlab.kernel import InMemorySeedStore, SeedKernel
+from kernel.seedlab.project_model import Provenance, SpecSource, extract_model
+from kernel.seedlab.source_connector import SourceRecord
+from kernel.seedlab.tool_runner import ToolRunResult
+from kernel.seedlab.workspace_gmcp import (
     BUILD_REPORT_PACKAGE,
     MODEL_SCHEMA_PACKAGE,
     PROJECT_STATUS_PACKAGE,

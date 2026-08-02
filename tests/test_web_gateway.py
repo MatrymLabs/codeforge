@@ -1,4 +1,4 @@
-"""Test twin for parts/web_gateway.py -- the browser gate, over a real
+"""Test twin for adapters/web_gateway.py -- the browser gate, over a real
 ASGI WebSocket. The same door (handle_command) proven reachable from a
 fourth transport: connect, clear the front desk, drive the tick."""
 
@@ -7,11 +7,11 @@ import contextlib
 import pytest
 from fastapi.testclient import TestClient
 
-import parts.web_gateway as web
+import adapters.web_gateway as web
+from adapters.web_gateway import _SECURITY_HEADERS, app
 from kernel.world import doors, items, npcs
 from kernel.world.accounts import account_password_ok
 from kernel.world.session import SESSIONS
-from parts.web_gateway import _SECURITY_HEADERS, app
 
 
 def _register_and_enter(ws, handle: str = "hero@co") -> None:

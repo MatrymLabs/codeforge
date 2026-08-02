@@ -1,4 +1,4 @@
-"""Test twin for parts/foundry.py -- the propose/approve/generate safety pipeline.
+"""Test twin for kernel/foundry.py -- the propose/approve/generate safety pipeline.
 
 The refusal cases are the point: a file-writing feature is only safe if it refuses loudly.
 Acceptance: propose writes nothing; an approved proposal generates ONE new sandbox file with
@@ -10,8 +10,7 @@ gated (a player is denied at the tick).
 import pytest
 
 from forge import handle_command
-from kernel.world.session import Session
-from parts.foundry import (
+from kernel.foundry import (
     _PENDING,
     PatchProposal,
     ProposalError,
@@ -24,6 +23,7 @@ from parts.foundry import (
     render_proving_ground,
     scaffold_part,
 )
+from kernel.world.session import Session
 
 
 @pytest.fixture(autouse=True)

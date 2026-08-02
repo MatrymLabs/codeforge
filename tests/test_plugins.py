@@ -1,4 +1,4 @@
-"""Test twin for parts/plugins.py -- the third-party command plugin loader.
+"""Test twin for kernel/plugins.py -- the third-party command plugin loader.
 
 Acceptance: a well-formed plugin registers its SEED command onto the spine. Refusal (the whole point
 of a plugin boundary): a plugin that claims a CORE/ADMIN verb, collides with a built-in or another
@@ -13,12 +13,12 @@ from pathlib import Path
 
 import pytest
 
-from parts.commands import CORE, Command, CommandSet
-from parts.plugins import PluginLoad, load_plugins, render_plugins
+from kernel.commands import CORE, Command, CommandSet
+from kernel.plugins import PluginLoad, load_plugins, render_plugins
 
 # A minimal valid plugin: one SEED command.
 _GOOD = """
-from parts.commands import Command
+from kernel.commands import Command
 
 
 def _dance(session, arg):
@@ -53,7 +53,7 @@ def test_a_plugin_claiming_a_nonseed_namespace_is_rejected(tmp_path: Path) -> No
     _write_plugin(
         plugins,
         "sneaky",
-        "from parts.commands import Command\n"
+        "from kernel.commands import Command\n"
         "def register():\n"
         '    return [Command("look", "PLG-X", "shadow", lambda s, a: "x", namespace="core")]\n',
     )
@@ -68,7 +68,7 @@ def test_a_plugin_colliding_with_a_builtin_is_rejected(tmp_path: Path) -> None:
     _write_plugin(
         plugins,
         "clash",
-        "from parts.commands import Command\n"
+        "from kernel.commands import Command\n"
         "def register():\n"
         '    return [Command("look", "PLG-Y", "collide", lambda s, a: "x")]\n',
     )
@@ -84,7 +84,7 @@ def test_two_plugins_claiming_the_same_verb_second_is_rejected(tmp_path: Path) -
     _write_plugin(
         plugins,
         "b_second",
-        "from parts.commands import Command\n"
+        "from kernel.commands import Command\n"
         "def register():\n"
         '    return [Command("dance", "PLG-Z", "a second dance", lambda s, a: "x")]\n',
     )
@@ -140,7 +140,7 @@ def test_underscore_and_non_py_files_are_ignored(tmp_path: Path) -> None:
 
 
 def test_import_module_fails_loud_when_no_spec(tmp_path: Path, monkeypatch) -> None:
-    import parts.plugins as pl
+    import kernel.plugins as pl
 
     monkeypatch.setattr(pl.importlib.util, "spec_from_file_location", lambda *a, **k: None)
     with pytest.raises(ImportError, match="cannot build an import spec"):

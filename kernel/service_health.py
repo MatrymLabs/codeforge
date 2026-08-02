@@ -1,6 +1,6 @@
 """CARD: service_health -- the practical adapter for the health registry: a service readiness probe.
 
-The reverse of parts/vitals: the SAME `HealthRegistry` core aggregates a service's dependency checks
+The reverse of kernel/vitals: the SAME `HealthRegistry` core aggregates dependency checks
 (database, cache, queue, upstreams) into a readiness answer. `ready()` is True only if every check
 is healthy -- an unknown or failing dependency is never reported ready. This is the /healthz or
 /readyz probe practical services expose; its cousins are liveness checks and dashboards.

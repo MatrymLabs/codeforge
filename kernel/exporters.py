@@ -1,6 +1,6 @@
 """CARD: exporters -- the practical adapter for the plugin registry: pluggable export providers.
 
-The reverse of parts/heralds: the SAME `PluginRegistry` core holds export providers (json, csv, ...)
+The reverse of kernel/heralds: the SAME `PluginRegistry` core holds export providers (json, csv,...)
 keyed by name, each an object with an `export(rows) -> str` method. New formats are added by
 explicit registration, validated against a required capability, never by loading code. Its cousins
 are notification providers, storage backends, and any swappable integration.

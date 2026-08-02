@@ -23,7 +23,7 @@ import threading
 import time
 from collections.abc import Callable
 
-from parts.edge import EdgeProxy, resolve_edge_binary
+from kernel.edge import EdgeProxy, resolve_edge_binary
 
 
 class _EchoBackend:

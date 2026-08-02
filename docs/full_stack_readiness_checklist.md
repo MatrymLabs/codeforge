@@ -5,7 +5,7 @@
 
 ## Backend (strong)
 
-- [x] Backend entry point (`forge.py` tick; `parts/cli.py`; FastAPI admin surface)
+- [x] Backend entry point (`forge.py` tick; `adapters/cli.py`; FastAPI admin surface)
 - [x] Project config (`pyproject.toml`, env-based via `CODEFORGE_DB`, `FGL_REGISTRY`)
 - [x] Error handling (loud validation at boundaries; `SeedError`, gates)
 - [x] Input validation (seed loader gates, rank checks, password parsing rules)
@@ -19,7 +19,7 @@
 
 ## Frontend (phase 1 shipped)
 
-- [x] Semantic HTML proof - server-rendered `header/nav/main/section/footer` (`parts/dashboard.py`)
+- [x] Semantic HTML proof - server-rendered `header/nav/main/section/footer` (`kernel/dashboard.py`)
 - [x] CSS layout proof - responsive stylesheet, CSS grid `auto-fit` card board (inline, frameless)
 - [x] Responsive design proof - `minmax(240px,1fr)` grid + viewport meta, reflows on narrow screens
 - [x] Accessibility basics - `lang`, skip link, `aria-label`led regions, `:focus-visible`, text status badges (not color alone)
@@ -32,7 +32,7 @@
 
 - **First proof:** FastAPI **server-rendered** read-only dashboard (semantic HTML + responsive/
   accessible CSS), rendering **real** codeforge data, as an **in-repo add-on module**
-  (`parts/web` dashboard), not MUD-engine core. Preserves frameless-Python identity (no JS
+  (`adapters/web` dashboard), not MUD-engine core. Preserves frameless-Python identity (no JS
   build system) while proving HTML/CSS + backend/frontend separation.
 - **Second flagship (planned, target = full-stack developer):** a separate **Next.js + React +
   TypeScript** app consuming a codeforge JSON API, matching the research's separated

@@ -33,7 +33,7 @@ def test_retire_flips_the_status_and_refuses_an_unknown_asset():
 
 
 def test_one_core_powers_both_the_game_logbook_and_the_practical_registry():
-    import parts.logbook as game
+    import kernel.logbook as game
 
     reg = AssetRegistry()
     reg.register(Asset("A-1", "Laptop"))

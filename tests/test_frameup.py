@@ -1,8 +1,8 @@
-"""Test twin for parts/frameup.py -- the `inspect` frame-up of the whole machine."""
+"""Test twin for kernel/frameup.py -- the `inspect` frame-up of the whole machine."""
 
 from __future__ import annotations
 
-from parts.frameup import (
+from kernel.frameup import (
     GREEN,
     RED,
     YELLOW,

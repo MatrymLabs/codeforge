@@ -17,7 +17,7 @@ it cites.
   `incident` (a FRACAS `{what, severity, corrective_action, status}` record; slice 4 - a blocked
   release opens one automatically), and `ai-eval` (a scored `{subject, score, model, passed}`
   Advisor evaluation; slice 5 - `make ai-eval` scores the offline `LocalArchitect` against a
-  rubric via `parts/ai_eval.py`, tracking AI quality over time). The store now spans the board's
+  rubric via `adapters/ai_eval.py`, tracking AI quality over time). The store now spans the board's
   retain / relate / measure / report gaps.
 - **Integrity:** every record carries a `content_hash` over its fields plus the prior record's
   hash. Any edit to a past record breaks the chain and fails loud on read (`ChronicleError`); a

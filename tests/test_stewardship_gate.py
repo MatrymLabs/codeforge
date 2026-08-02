@@ -1,4 +1,4 @@
-"""Test twin for the Stewardship Gate (parts/stewardship/*).
+"""Test twin for the Stewardship Gate (adapters/stewardship/*).
 
 Acceptance: a clean, disclosed, low-risk change is eligible and NOT over-taxed. Refusal (each
 FWA failure mode): failing tests, SAST findings, secrets, an unadmitted dependency, undisclosed
@@ -8,9 +8,9 @@ change touches, and nothing is ever auto-merged.
 
 from __future__ import annotations
 
-from parts.stewardship.change import ChangeDescriptor
-from parts.stewardship.gate import blocking_reasons, render_verdict, verify_change
-from parts.stewardship.risk import assess_risk
+from adapters.stewardship.change import ChangeDescriptor
+from adapters.stewardship.gate import blocking_reasons, render_verdict, verify_change
+from adapters.stewardship.risk import assess_risk
 
 
 def _clean(**over: object) -> ChangeDescriptor:

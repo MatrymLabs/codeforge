@@ -28,5 +28,5 @@ license: MIT
 source_status: original
 owner: MatrymLabs
 adapters:
-  - parts/relay.py
+  - kernel/relay.py
   - kernel/service_breaker.py

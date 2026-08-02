@@ -1,4 +1,4 @@
-"""Test twin for parts/manifest.py -- the typed Part Manifest."""
+"""Test twin for kernel/manifest.py -- the typed Part Manifest."""
 
 import re
 
@@ -6,8 +6,8 @@ import pytest
 from hypothesis import given
 from hypothesis import strategies as st
 
-from parts.hardware import load_catalog
-from parts.manifest import (
+from kernel.hardware import load_catalog
+from kernel.manifest import (
     ManifestError,
     PartManifest,
     designations,
@@ -18,7 +18,7 @@ from parts.manifest import (
     to_dict,
     to_markdown,
 )
-from parts.store_index import display_designation
+from kernel.store_index import display_designation
 
 
 def _valid_raw():

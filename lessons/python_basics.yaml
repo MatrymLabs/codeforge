@@ -1,5 +1,5 @@
 # LESSON: Python Basics - Trial One
-# A question bank is DATA, not code (parts/assessment.py loads + validates it).
+# A question bank is DATA, not code (kernel/assessment.py loads + validates it).
 # The same engine drills any subject; add a lessons/<subject>_*.yaml to grow.
 
 id: python_basics_001

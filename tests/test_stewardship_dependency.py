@@ -1,4 +1,4 @@
-"""Test twin for the DependencyGate (parts/stewardship/dependency.py).
+"""Test twin for the DependencyGate (adapters/stewardship/dependency.py).
 
 Acceptance: an existing, ledger-approved, vuln-free, permissively-licensed package is admitted.
 Refusal (each FWA failure mode): a non-existent package (hallucination/typosquat), an
@@ -8,7 +8,7 @@ unapproved package, a package with a critical CVE, and a copyleft-licensed packa
 
 from __future__ import annotations
 
-from parts.stewardship.dependency import (
+from adapters.stewardship.dependency import (
     StaticOracle,
     admit_dependency,
     all_admitted,

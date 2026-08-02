@@ -10,7 +10,7 @@ net-new concept sits above it. Keep them distinct:
 | Term | What it is | Status |
 |------|-----------|--------|
 | **seed pack** | A game's **content** - `seeds/<name>/{rooms,items,npcs,jobs}.yaml` + `splash.txt`, loaded by the shared engine. "A seed IS a game." `codeforge seeds` lists them; `--seed <name>` / `FORGE_SEED` selects one. | **Exists. Frozen** - the dir name, YAML keys, `--seed`/`FORGE_SEED`, and save-file references are persisted identifiers and never renamed. |
-| **cast** | A **standalone, installable project** poured from the forge: the engine + one chosen seed pack + config, detached into its own repo. "What leaves the forge." | **Net-new.** This document + `parts/cast.py` are the Phase-1 scaffold. |
+| **cast** | A **standalone, installable project** poured from the forge: the engine + one chosen seed pack + config, detached into its own repo. "What leaves the forge." | **Net-new.** This document + `kernel/cast.py` are the Phase-1 scaffold. |
 
 A seed pack is *content the engine loads*. A cast is *a project you can clone and run on
 its own*. The generator **reads** a seed pack and **writes** a new cast elsewhere - it never
@@ -40,7 +40,7 @@ design template → plan cast (dry run) → generate → init registry/docs/test
 → migration audit → detach validate → detach → standalone boot → package/publish
 ```
 
-Phase 1 implements only the first step in software: **plan** (`parts/cast.py`) - a dry run
+Phase 1 implements only the first step in software: **plan** (`kernel/cast.py`) - a dry run
 that lists what it *would* copy and the manifest it *would* write, and **writes nothing**.
 
 ## What a cast copies - and never copies

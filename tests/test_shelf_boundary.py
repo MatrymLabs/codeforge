@@ -1,4 +1,4 @@
-"""Test twin for parts/shelf_boundary.py -- the shelf's one-way-dependency gate.
+"""Test twin for kernel/shelf_boundary.py -- the shelf's one-way-dependency gate.
 
 Acceptance: the real, live shelf imports no engine part (the invariant the whole extraction bought).
 Refusal: a synthetic shelf with a core that reaches into the engine is caught, named, and reported;
@@ -11,7 +11,7 @@ from pathlib import Path
 
 import pytest
 
-from parts.shelf_boundary import (
+from kernel.shelf_boundary import (
     ShelfBoundaryError,
     _parts_imports,
     shelf_boundary_gaps,
@@ -75,6 +75,6 @@ def test_an_unparseable_core_fails_loud(tmp_path: Path) -> None:
 
 def test_parts_import_extractor_finds_both_forms() -> None:
     mods = _parts_imports(
-        "import kernel.world.db\nfrom parts.dashboard import x\nfrom parts import x\n", "<t>"
+        "import kernel.world.db\nfrom kernel.dashboard import x\nfrom parts import x\n", "<t>"
     )
-    assert mods == {"kernel.world.db", "parts.dashboard", "parts"}
+    assert mods == {"kernel.world.db", "kernel.dashboard", "parts"}

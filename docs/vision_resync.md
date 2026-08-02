@@ -42,7 +42,7 @@ Idea -> Intake -> Requirements -> Search Existing Parts -> Blueprint -> Select M
 ```
 
 **Most stations already exist** (Blueprint, Search, Test, Diagnose, Catalog, Package-plan,
-Deploy, Monitor, Improve). The **connective tissue** now exists too: `parts/forge_line.py` (the
+Deploy, Monitor, Improve). The **connective tissue** now exists too: `kernel/forge_line.py` (the
 `line` runner) runs the loop end to end for a single built part, station by station, and reports a
 verdict at each stop (read-and-verify only; the ASSEMBLE stop is a dry-run). Generating a *brand-new*
 part through the full loop is the deeper next slice; the spine itself is executed.
@@ -91,7 +91,7 @@ removed: the rule is "don't preserve merely because it exists," and equally "don
 ## Highest architectural risks
 
 1. ~~**No connected manufacturing spine** - the vision's heart is unexecuted.~~ **CLOSED:**
-   `parts/forge_line.py` runs the loop end to end in both directions -- `run_line` inspects a built
+   `kernel/forge_line.py` runs the loop end to end in both directions -- `run_line` inspects a built
    part station by station, and `forge_new` generates a brand-new part's scaffold through the loop
    into the git-ignored sandbox. The heart executes.
 2. **Monolithic engine** ("vendored-whole") - **the Hardware Store is now physically separated:**
@@ -155,7 +155,7 @@ The proof that makes the whole vision legible without finishing the platform:
    command must run. Verified live across surface tiers: **solo+save** carries 70 of 128 modules
    (16 commands clean); **+admin** (the owner @-verb tier) carries 74 (21 commands clean, incl. the
    @-verbs) and has an end-to-end regression test (`test_pour_selective_validates_an_admin_cast`);
-   **+multiplayer** carries 78 and its `parts/web/` data dir (the import-based server tier: gateway +
+   **+multiplayer** carries 78 and its `adapters/web/` data dir (the import-based server tier: gateway +
    web_gateway import in the cut) and now also has an end-to-end regression test
    (`test_pour_selective_validates_a_multiplayer_cast`, via an injected `import_tracer` seam). So a
    package *assembles*, *runs*, *runs in isolation*, and is *selectively detached with an end-to-end

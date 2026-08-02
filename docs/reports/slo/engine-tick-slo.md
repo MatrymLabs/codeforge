@@ -10,7 +10,7 @@ Last reviewed: 2026-07-31
 
 ## Why this exists
 
-CodeForge already **measured** its engine tick: `parts/bench.py` drives `handle_command` over a
+CodeForge already **measured** its engine tick: `kernel/bench.py` drives `handle_command` over a
 read-only command rotation and reports a latency distribution, and `make trend` files the median
 of each run into the retained Chronicle as the SLI `engine_tick.median_us`. A measurement is not
 an objective. This document states the objective, the error budget, and the policy when the budget

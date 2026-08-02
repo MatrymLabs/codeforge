@@ -1,6 +1,6 @@
 """CARD: asset_registry -- the practical adapter for the repository: a records/asset registry.
 
-The reverse of parts/logbook: the SAME `Repository` core stores business records instead of game
+The reverse of kernel/logbook: the SAME `Repository` core stores business records instead of game
 entries. An `AssetRegistry` registers, finds, updates, and retires assets by id, keeping domain code
 (the registry API) independent of storage. Swap the in-memory repository for a database repository
 later and this class does not change. Its cousins are stock control, a document registry, and any

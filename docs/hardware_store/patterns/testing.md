@@ -27,7 +27,7 @@ list everything not passed.
 
 ## GAME-TO-PRACTICAL TRANSLATION
 
-- **Game component:** a world-readiness certificate (`parts/world_cert.py`).
+- **Game component:** a world-readiness certificate (`kernel/world_cert.py`).
 - **Core behavior:** record check outcomes and report an honest overall verdict.
 - **Game-specific presentation:** "EVIDENCE: PASS" with per-check rows.
 - **Reusable domain logic:** the whole `EvidenceLedger` (game-free).
@@ -39,7 +39,7 @@ list everything not passed.
 
 ## Adapters (one core, two lives)
 
-- **Game:** `parts/world_cert.py` -- the `certify` verb records evidence for the world's readiness
+- **Game:** `kernel/world_cert.py` -- the `certify` verb records evidence for the world's readiness
   checks (NPCs and callings loaded) and reports whether it is certified. Tick-reachable.
 - **Practical:** `kernel/release_gate.py` -- a `ReleaseGate` expects lint/tests/coverage/security
   evidence and is ready only when all have PASSED; a step that never ran blocks the release.

@@ -370,7 +370,7 @@ jobs:
         run: python -m pytest tests/test_scripting.py "tests/test_commands.py::test_owner_runs_a_sandboxed_script_through_the_tick" "tests/test_commands.py::test_a_sandbox_violation_returns_a_script_error_not_a_crash" -q
 
   # Pour drift gate (ship audit 2026-07-28, debt #2): codeforge-shelf is generated from
-  # kernel/shelf via parts.shelf_pour. This clones the published shelf and asserts a fresh pour
+  # kernel/shelf via kernel.shelf_pour. This clones the published shelf and asserts a fresh pour
   # matches it, so the engine's Hardware Store and the published package can never silently
   # diverge again. NOT required -- it depends on an external clone; a hiccup should not block a merge.
   shelf-drift:
@@ -382,11 +382,11 @@ jobs:
         with:
           python-version: "3.13"
 
-      - name: Install codeforge (so parts.shelf_pour imports)
+      - name: Install codeforge (so kernel.shelf_pour imports)
         run: pip install -e ".[dev]"
 
       - name: Clone the published Hardware Store
         run: git clone --depth 1 https://github.com/MatrymLabs/codeforge-shelf.git /tmp/codeforge-shelf
 
       - name: Assert the pour is in sync (no drift)
-        run: python -m parts.shelf_pour --drift /tmp/codeforge-shelf
+        run: python -m kernel.shelf_pour --drift /tmp/codeforge-shelf

@@ -175,7 +175,7 @@ def test_a_world_module_reaching_into_the_platform_is_caught(tmp_path: Path) -> 
     world.mkdir(parents=True)
     # 'combat' is a World module; make it import the platform (cast, pm) + the shelf (allowed)
     (world / "combat.py").write_text(
-        "from parts.cast import pour_shelf\nfrom kernel.shelf.retry import run\nimport parts.pm\n"
+        "from kernel.cast import pour_shelf\nfrom kernel.shelf.retry import run\nimport kernel.pm\n"
     )
     violations = world_import_violations(tmp_path)
     assert violations == {"combat": ["cast", "pm"]}  # shelf import is not a violation
@@ -194,7 +194,7 @@ def test_intra_world_and_shelf_imports_are_allowed(tmp_path: Path) -> None:
 def test_the_ritual_line_names_the_offender(tmp_path: Path) -> None:
     world = tmp_path / "kernel" / "world"
     world.mkdir(parents=True)
-    (world / "jobs.py").write_text("import parts.evidence_gate\n")
+    (world / "jobs.py").write_text("import kernel.evidence_gate\n")
     assert world_boundary_gaps(tmp_path) == ["jobs: imports platform part(s) evidence_gate"]
 
 
@@ -206,7 +206,7 @@ def test_is_platform_classifies_correctly() -> None:
 
 def test_parts_import_extractor_handles_world_shelf_and_platform() -> None:
     mods = _parts_imports(
-        "import parts.cast\nfrom kernel.shelf.retry import run\n"
+        "import kernel.cast\nfrom kernel.shelf.retry import run\n"
         "from kernel.world.combat import hit\n",
         "<t>",
     )

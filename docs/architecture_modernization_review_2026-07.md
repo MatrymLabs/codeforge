@@ -27,8 +27,8 @@ code anywhere in project source (no C/Rust/Cython/`.so`) except PyYAML's opportu
 (`socketserver.ThreadingTCPServer`), but **all game logic is serialized behind one module-global
 `TICK_LOCK`** (`adapters/gateway.py:41`), so `handle_command` runs strictly serially regardless of thread
 or core count. Four drivers funnel through the one `handle_command` "door": TCP telnet
-(`adapters/gateway.py`), FastAPI WebSocket (`parts/web_gateway.py`, genuinely asyncio but reuses the same
-sync `TICK_LOCK`), GMCP out-of-band state (`parts/gmcp.py`, diff-pushed), and a FastAPI admin HTTP
+(`adapters/gateway.py`), FastAPI WebSocket (`adapters/web_gateway.py`, genuinely asyncio but reuses the same
+sync `TICK_LOCK`), GMCP out-of-band state (`kernel/gmcp.py`, diff-pushed), and a FastAPI admin HTTP
 surface (`adapters/api.py`, reads SQL only, not live sessions). Good hygiene: `TCP_NODELAY`, line caps,
 IAC stripping, idle timeout, per-IP brute-force lockout, a 128-seat `Bulkhead`.
 

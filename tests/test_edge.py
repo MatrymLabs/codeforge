@@ -1,4 +1,4 @@
-"""Test twin for parts.edge -- the transparent edge proxy + its launch-time backend selection.
+"""Test twin for kernel.edge -- the transparent edge proxy + its launch-time backend selection.
 
 Acceptance: bytes round-trip both directions through the Python reference proxy; many concurrent
 clients all get their own byte-clean channel; when the Go binary IS built, it behaves identically
@@ -15,7 +15,7 @@ import time
 
 import pytest
 
-from parts.edge import EdgeProxy, edge_backend, resolve_edge_binary
+from kernel.edge import EdgeProxy, edge_backend, resolve_edge_binary
 
 
 class _EchoBackend:

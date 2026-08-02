@@ -1,6 +1,6 @@
 """CARD: record_stream -- practical adapter for the stream framer: read records from a byte stream.
 
-The reverse of parts/telegraph: the SAME `StreamFramer` core reads a stream of delimited records off
+The reverse of kernel/telegraph: the SAME `StreamFramer` core reads delimited records off
 a socket or a pipe, feeding chunks as they arrive and collecting complete records. Its cousins are
 log tailers, protocol clients, and any reader that must not split a record across two reads.
 """

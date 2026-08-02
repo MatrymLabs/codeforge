@@ -8,7 +8,7 @@ reimplemented from the concept (AWS Prescriptive Guidance, "retry with backoff")
 
 Framework-free and deterministic: the SLEEP is injected (default `time.sleep`), so tests pin the
 exact backoff schedule and attempt count without waiting. It holds no I/O of its own. One core, two
-lives: it auto-retries a flaky calibration in the game (`parts/calibrate`) and an unreliable API/DB
+lives: it auto-retries a flaky calibration in the game (`kernel/calibrate`) and an unreliable API/DB
 call in a practical app (`parts/resilient_call`).
 
 Composes with the Hardware Store's `deadline` part: pass an optional `Deadline` to bound the TOTAL

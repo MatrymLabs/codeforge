@@ -1,8 +1,8 @@
-"""Test twin for parts/cli.py -- the dispatch table, not the servers."""
+"""Test twin for adapters/cli.py -- the dispatch table, not the servers."""
 
+from adapters.cli import main
 from kernel.world.characters import save_character
 from kernel.world.session import SESSIONS, Session
-from parts.cli import main
 
 
 def test_unknown_verbs_print_usage_and_fail(capsys):
@@ -46,7 +46,7 @@ def test_api_command_serves_on_the_configured_port(monkeypatch):
 
 
 def test_seeds_lists_installed_games(capsys, monkeypatch):
-    monkeypatch.setattr("parts.cli._seeds_available", lambda: ["alpha", "beta"])
+    monkeypatch.setattr("adapters.cli._seeds_available", lambda: ["alpha", "beta"])
     assert main(["seeds"]) == 0
     out = capsys.readouterr().out
     assert "alpha" in out and "beta" in out
@@ -55,7 +55,7 @@ def test_seeds_lists_installed_games(capsys, monkeypatch):
 def test_a_valid_seed_sets_the_env_before_dispatch(monkeypatch):
     import os
 
-    monkeypatch.setattr("parts.cli._seeds_available", lambda: ["alpha", "beta"])
+    monkeypatch.setattr("adapters.cli._seeds_available", lambda: ["alpha", "beta"])
     monkeypatch.setattr("adapters.gateway.serve", lambda: None)
     monkeypatch.setenv("FORGE_SEED", "unset")  # tracked by monkeypatch -> restored after the test
     assert main(["--seed", "beta", "serve"]) == 0  # env must be set before the world imports

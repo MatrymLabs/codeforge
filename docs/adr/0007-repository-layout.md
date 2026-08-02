@@ -21,11 +21,11 @@ CodeForge is a **single-package, monorepo-style flagship** with a flat importabl
 
 - **`parts/`** - the importable package: the engine's parts (one job + a `CARD:` line + a
   test twin each) and the Hardware Store's reusable parts. Subpackages group cohesive
-  subsystems (`kernel.evolution`, `parts.stewardship`, `kernel.hubble`).
+  subsystems (`kernel.evolution`, `adapters.stewardship`, `kernel.hubble`).
 - **`forge.py`** (repo root) - the engine tick, `handle_command(session, signal) -> str`. It
   is the only door (ADR-0001) and stays at the root as a top-level `py-module`, exactly where
   the packaging config and the CLI entry points expect it.
-- **`parts/cli.py`** - the console entry points (`codeforge`, `spark`), declared in
+- **`adapters/cli.py`** - the console entry points (`codeforge`, `spark`), declared in
   `pyproject.toml [project.scripts]`. These verb strings are a frozen public contract.
 
 ### 2. Where each other kind of file belongs (the map)

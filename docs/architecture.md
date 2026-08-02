@@ -63,13 +63,13 @@ below it, so capability compounds without a bespoke rewrite:
 Classification Registry   registry/*.json + kernel/registry.py
    filing: every object -> a designation (TYPE-DD.NNN) keyed to its label
         |
-Command spine             parts/commands.py
+Command spine             kernel/commands.py
    namespaced verbs (CORE bare / ADMIN '@' / SEED), rank-gated; verbs filed as CMD-*
         |
 QualityGate + SafetyReview  kernel/qualitygate.py
    `qa gate all` READS the registry and grades each object -> part + part = a self-audit
         |
-Project control            parts/pm.py
+Project control            kernel/pm.py
    `pm status` COMPUTES the dashboard from the registry + the QA gate (nothing stored)
 ```
 

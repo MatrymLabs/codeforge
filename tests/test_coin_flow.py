@@ -8,8 +8,8 @@ durability's own knobs, so it can never drift from the live game.
 
 from __future__ import annotations
 
-from parts import coin_flow
-from parts.coin_flow import faucet_breakdown, foe_faucet, render_audit
+from kernel import coin_flow
+from kernel.coin_flow import faucet_breakdown, foe_faucet, render_audit
 
 
 def _foe(hp=20, level=None, tier=None, xp=10, atk=4):

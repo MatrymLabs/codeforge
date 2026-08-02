@@ -17,7 +17,7 @@ import os
 import re
 from typing import Any, Protocol
 
-from parts.hardware import Part, load_catalog, part_haystack
+from kernel.hardware import Part, load_catalog, part_haystack
 
 
 class Advisor(Protocol):

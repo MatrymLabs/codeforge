@@ -9,7 +9,7 @@ reimplemented from the concept -- no code copied.
 
 Framework-free and identity-agnostic: entities carry no base class and need no `.id`; an injected
 `key_of` reads each entity's identity, so the same repository stores anything. One core, two lives:
-a per-player logbook in the game (`parts/logbook`) and a records/asset registry in a practical app
+a per-player logbook in the game (`kernel/logbook`) and a records/asset registry in a practical app
 (`kernel/asset_registry`).
 
 Provenance: independently_implemented_pattern (Repository pattern, Fowler). No code copied.

@@ -1,11 +1,10 @@
-"""Test twin for parts/store_index.py -- V3 catalog domains, addressing, and search."""
+"""Test twin for kernel/store_index.py -- V3 catalog domains, addressing, and search."""
 
 import pytest
 
 from forge import handle_command
-from kernel.world.session import Session
-from parts.hardware import Part
-from parts.store_index import (
+from kernel.hardware import Part
+from kernel.store_index import (
     Domain,
     DomainError,
     addressed,
@@ -14,6 +13,7 @@ from parts.store_index import (
     render_index,
     search,
 )
+from kernel.world.session import Session
 
 _DOMAINS = [
     Domain("05", "Resilience", frozenset({"resilience", "rate-limiting"})),

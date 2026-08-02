@@ -7,7 +7,7 @@ is exactly how a gate and the frame-up that reads its board drift apart. One sou
 the readiness words keeps them in lockstep.
 
 Scope: this is the READINESS/QA vocabulary only. Routing decisions (proceed/revise/escalate/stop,
-`kernel/hubble`) and health colors (green/yellow/red, `parts/frameup`) are DISTINCT vocabularies
+`kernel/hubble`) and health colors (green/yellow/red, `kernel/frameup`) are DISTINCT vocabularies
 and stay with their own systems -- they answer different questions and should not be merged here.
 """
 

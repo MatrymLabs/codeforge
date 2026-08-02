@@ -1,9 +1,9 @@
-"""Test twin for parts/chat_throttle.py -- the game adapter: a rate-limited shout."""
+"""Test twin for kernel/chat_throttle.py -- the game adapter: a rate-limited shout."""
 
 import pytest
 
+from kernel.chat_throttle import reset_throttles, shout
 from kernel.world.session import SESSIONS, Session
-from parts.chat_throttle import reset_throttles, shout
 
 
 class FakeClock:

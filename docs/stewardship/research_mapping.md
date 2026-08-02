@@ -40,7 +40,7 @@ preprint** work, and says the distinction matters for roadmap confidence. So do 
 
 ## This slice (v1): the executable core
 
-`parts/stewardship/`: a typed **ChangeDescriptor** (the assurance facts of a change, read not
+`adapters/stewardship/`: a typed **ChangeDescriptor** (the assurance facts of a change, read not
 re-scanned), a **RiskRouter** (`assess_risk`: score 0-100 from visible factors -> low/medium/high
 tier -> 0/1/2 required approvals), and the **StewardshipGate** (`verify_change`): hard gates first
 (tests pass, no blocking SAST, no secrets, dependencies admitted, AI involvement disclosed), then

@@ -6,9 +6,7 @@ near-miss option, and a partial frame must all be handled without desyncing a cl
 
 import json
 
-from kernel.world.jobs import bind_calling
-from kernel.world.session import Session
-from parts.gmcp import (
+from kernel.gmcp import (
     GMCP_OPT,
     SEED_PROTOCOL,
     enables_gmcp,
@@ -27,6 +25,8 @@ from parts.gmcp import (
     target_report,
     vitals_report,
 )
+from kernel.world.jobs import bind_calling
+from kernel.world.session import Session
 
 IAC, SB, SE = 255, 250, 240
 WILL, WONT, DO, DONT = 251, 252, 253, 254

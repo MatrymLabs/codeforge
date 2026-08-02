@@ -49,8 +49,8 @@ def test_the_history_resets_between_calls():
 
 def test_one_core_powers_both_the_game_calibrate_and_the_practical_caller():
     # The whole point of the slice: both adapters run through the same run_with_retries core.
+    import kernel.calibrate as game
     import kernel.resilient_call as practical
-    import parts.calibrate as game
     from kernel.shelf.retry import run_with_retries
 
     assert game.run_with_retries is run_with_retries

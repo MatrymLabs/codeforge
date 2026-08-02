@@ -1,6 +1,6 @@
 """CARD: resilient_call -- the practical adapter for retry: an unreliable call with an audit trail.
 
-The reverse of parts/calibrate: the SAME `run_with_retries` core, driven by a plain (non-game)
+The reverse of kernel/calibrate: the SAME `run_with_retries` core, driven by a plain (non-game)
 object that wraps a retry policy and keeps a HISTORY of the attempts it made -- the audit trail that
 practical resilience needs (failures recorded, never swallowed). Its cousins are retrying a flaky
 HTTP API, a database call, or any transient-fault-prone integration. The sleep is injected, so

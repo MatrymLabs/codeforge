@@ -8,7 +8,7 @@ own buffer.
 
 Harvested from codeforge-client's line framer (proven there first), reimplemented here as a general,
 delimiter-configurable part. One core, two adapters: an in-world `telegraph` that arrives in pieces
-(parts/telegraph) and a byte-stream record reader for a practical app (kernel/record_stream).
+(kernel/telegraph) and a byte-stream record reader for a practical app (kernel/record_stream).
 
 Provenance: original implementation of a standard framing pattern. No code copied.
 """

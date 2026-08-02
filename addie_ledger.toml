@@ -44,7 +44,7 @@ the world - the exact 'next cycle' the addie_loop cycle named. Gap: an ARC conti
 dimension + an in-world verb. Constraints: ARC reads only (arch law 1), MISSING is never a pass, a
 dimension must cite its source; overrides no control. Success = ARC shows an honest improvement
 verdict from the ledger and `addie` is reachable through the engine tick."""
-design = """Smallest coherent solution: add an 'improvement' dimension to parts/arc.py that reads the
+design = """Smallest coherent solution: add an 'improvement' dimension to kernel/arc.py that reads the
 ADDIE ledger via addie.audit_addie (READY all-looped / WATCHLIST any-flagged / MISSING no-ledger,
 malformed fails loud), and an `addie` verb in kernel/addie.py mirroring the `arc` verb, wired on the
 command spine. No new part, no new dependency. Rollback: drop the dimension + verb + command."""

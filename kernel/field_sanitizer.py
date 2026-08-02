@@ -1,6 +1,6 @@
 """CARD: field_sanitizer -- the practical adapter for the sanitizer: clean fields for storage/logs.
 
-The reverse of parts/titles: the SAME `sanitize` core cleans business input before it is stored or
+The reverse of kernel/titles: the SAME `sanitize` core cleans business input before it is stored or
 logged. `clean_field` normalizes a single-line value (bounded, no control chars) and `clean_record`
 sanitizes each string in a record. This keeps control characters and log-injection newlines out of
 logs and records; it is normalization, not a substitute for escaping or parameterized queries.

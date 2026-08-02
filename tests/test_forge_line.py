@@ -1,4 +1,4 @@
-"""Test twin for parts/forge_line.py -- the manufacturing conveyor, offline + deterministic.
+"""Test twin for kernel/forge_line.py -- the manufacturing conveyor, offline + deterministic.
 
 The Writer is a seam: a FakeWriter captures the filed content so no real report/ dir is created and
 the whole line runs offline. Acceptance (token-bucket runs green through all eight stations) AND
@@ -12,8 +12,8 @@ from pathlib import Path
 
 import pytest
 
+from kernel.forge_line import forge_new, render_line, run_line
 from kernel.verdicts import FAIL, NA, PASS, WATCH
-from parts.forge_line import forge_new, render_line, run_line
 
 _STATIONS = [
     "SEARCH",
@@ -53,7 +53,7 @@ def test_the_line_runs_token_bucket_green_through_all_eight_stations() -> None:
 
 def test_the_line_never_shells_a_subprocess(monkeypatch: pytest.MonkeyPatch) -> None:
     # cast.validate_cast / install_check spawn subprocesses; the line must never touch them.
-    import parts.cast as cast
+    import kernel.cast as cast
 
     monkeypatch.setattr(cast, "validate_cast", _boom)
     monkeypatch.setattr(cast, "install_check", _boom)
@@ -133,6 +133,6 @@ def test_forge_new_rejects_an_invalid_name(tmp_path: Path) -> None:
 
 
 def test_the_forge_verb_needs_a_name() -> None:
-    from parts.forge_line import forge
+    from kernel.forge_line import forge
 
     assert "forge what" in forge("")

@@ -122,7 +122,7 @@ move directly from generation to acceptance.
 
 ## Wired into the board (the KeelGate)
 
-The one machine-enforced rule lives in the Career Evidence Board (`parts/career.py`,
+The one machine-enforced rule lives in the Career Evidence Board (`kernel/career.py`,
 `data/career/career_evidence_matrix.json`). Each skill may carry an `ownership` block:
 
 ```json

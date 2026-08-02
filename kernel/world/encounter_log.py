@@ -11,7 +11,7 @@ The "observed" leg of the aggression loop. Two facts about this module are the w
 2. **It is bounded and ephemeral by design.** A capped in-memory ring holds the most recent
    encounters (older ones roll off), so a flood just rotates the ring instead of growing without
    limit. Alongside the ring, running TALLIES count encounters by kind; a trusted boundary
-   (parts/encounter_flush, an owner command / `make daily`) later reads those tallies and records
+   (kernel/encounter_flush, an owner command / `make daily`) later reads those tallies and records
    ONE aggregate metric into the Chronicle -- never per event, never from the tick.
 
 State is world-scoped (like NPCS/SESSIONS) and mutated only by validated engine logic; rendering
@@ -91,7 +91,7 @@ def render_recent(limit: int = 10) -> str:
 
 def clear_tally() -> None:
     """Zero the running tallies WITHOUT touching the ring. The trusted boundary
-    (parts/encounter_flush) calls this after it has aggregated a period's tallies into the
+    (kernel/encounter_flush) calls this after it has aggregated a period's tallies into the
     Chronicle, so the next period counts from zero while the live ring still shows recent beats."""
     _tally.clear()
 

@@ -21,7 +21,7 @@ The **Career Evidence Sign** hangs in *The Forge Workshop*. Render it with `care
 
 The board is data-driven: `data/career/career_evidence_matrix.json` holds levels → target
 roles → skills, each with `status`, `repo_proof[]`, `why_it_matters`, and `next_proof_task`.
-`parts/career.py` loads and renders it; `docs/resume_mapping.md` is the prose companion.
+`kernel/career.py` loads and renders it; `docs/resume_mapping.md` is the prose companion.
 
 ## The honesty rule (EvidenceGate)
 

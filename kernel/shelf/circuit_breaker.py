@@ -10,7 +10,7 @@ Composition, not reinvention: the three-state lifecycle IS a state machine, so t
 ON the Hardware Store's own `state-machine` part (`parts/statemachine`); the breaker adds only the
 failure counting and the timing that decide which transition fires. Framework-free and
 deterministic: the clock is INJECTED (default `time.monotonic`). One core, two lives: it protects a
-flaky relay in the game (`parts/relay`) and an unreliable upstream service in a practical app
+flaky relay in the game (`kernel/relay`) and an unreliable upstream service in a practical app
 (`parts/service_breaker`).
 
 Provenance: independently_implemented_pattern (circuit breaker). No code copied.

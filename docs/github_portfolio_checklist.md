@@ -50,7 +50,7 @@ is checked unless the artifact exists. Last audited: 2026-07-10.*
 
 ## Open items (ranked)
 
-1. **React/TS second flagship** - the FastAPI dashboard is shipped (`parts/dashboard.py`, HTMX,
+1. **React/TS second flagship** - the FastAPI dashboard is shipped (`kernel/dashboard.py`, HTMX,
    a11y, `e2e/`, see `docs/full_stack_readiness_checklist.md`); the remaining full-stack lever is
    a Next.js/TS `codeforge-web` second flagship.
 2. **Sample PR with a linked issue** - the "collaboration signal"; the PR flow is now live.

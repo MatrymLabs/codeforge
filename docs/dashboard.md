@@ -1,6 +1,6 @@
 # The readiness dashboard (the Lens)
 
-`parts/dashboard.py` is CodeForge's first full-stack proof: a read-only web page that
+`kernel/dashboard.py` is CodeForge's first full-stack proof: a read-only web page that
 projects the forge's own evidence, the career board, the QualityGate audit, the hardware
 store, and the latest performance run, onto a server-rendered HTML dashboard, with a JSON
 twin at `/api/status`. It is the portfolio-facing answer to the 2026 full-stack expectation
@@ -12,9 +12,9 @@ Four cards, each computed live from real repo state (never hardcoded):
 
 | Card | Source | Headline |
 |---|---|---|
-| Career evidence | `parts/career.load_board` + `unproven_claims` (EvidenceGate) | proven / total skills |
+| Career evidence | `kernel/career.load_board` + `unproven_claims` (EvidenceGate) | proven / total skills |
 | QualityGate audit | `parts/qualitygate.gate_all` | pass / total filed objects |
-| Hardware store | `parts/hardware.load_catalog` | reusable part count |
+| Hardware store | `kernel/hardware.load_catalog` | reusable part count |
 | Performance | latest `reports/performance/*.md` (from `make bench`) | engine-tick throughput |
 
 ## How to run it
@@ -28,7 +28,7 @@ codeforge api          # serves the FastAPI app on :8000
 
 ## Live interactivity (HTMX, progressively enhanced)
 
-The dashboard is enhanced with **HTMX** - vendored (`parts/web/static/htmx.min.js`, served
+The dashboard is enhanced with **HTMX** - vendored (`adapters/web/static/htmx.min.js`, served
 same-origin from `/static/htmx.min.js`), so there is **no JS build system, no runtime CDN,
 and no Python dependency**. Two live interactions:
 

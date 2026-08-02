@@ -61,7 +61,7 @@ Claude Architect" message. See `docs/architect_brain.md`.
 ## Why frameless
 
 The renderer uses stdlib `html.escape` + f-strings and inline CSS - no template engine, no
-new dependency (the same approach as `parts/dashboard.py`). This keeps the architecture-first
+new dependency (the same approach as `kernel/dashboard.py`). This keeps the architecture-first
 identity intact (`docs/frameless_python.md`) while proving semantic HTML5 + responsive,
 accessible CSS. Hostile Blueprint text is escaped, never injected (tested).
 

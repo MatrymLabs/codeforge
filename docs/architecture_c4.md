@@ -40,7 +40,7 @@ flowchart TB
 flowchart TB
     subgraph drivers["Drivers (thin callers of the tick)"]
         tcp["TCP gateway<br/>adapters/gateway.py"]
-        term["Terminal loop<br/>parts/terminal.py"]
+        term["Terminal loop<br/>adapters/terminal.py"]
         web["Web admin (FastAPI)<br/>adapters/api.py"]
     end
 
@@ -52,7 +52,7 @@ flowchart TB
         ranks["Authorization / ranks<br/>kernel/world/ranks.py"]
         events["Event bus<br/>kernel/world/events.py"]
         quality["Safety + QualityGate<br/>kernel/qualitygate.py"]
-        persistence["Persistence<br/>kernel/world/db.py + parts/save.py"]
+        persistence["Persistence<br/>kernel/world/db.py + kernel/save.py"]
     end
 
     seedsdata[("seeds/&lt;pack&gt;/*.yaml + splash.txt")]
@@ -77,14 +77,14 @@ flowchart TB
 |---|---|---|
 | Engine tick | one command in, one response out; the only door that mutates world state | `forge.py` |
 | TCP gateway | telnet front desk: authenticate before the world | `adapters/gateway.py` |
-| Terminal loop | solo local driver | `parts/terminal.py` |
+| Terminal loop | solo local driver | `adapters/terminal.py` |
 | Web admin | rank-gated FastAPI admin surface | `adapters/api.py` |
 | Seed loader | validate and load the world from data, failing loud at the gate | `kernel/world/seed.py` |
 | Classification registry | file every object and module (the tech-order index) | `kernel/registry.py` |
 | Authorization | rank checks before capability | `kernel/world/ranks.py` |
 | Event bus | per-player echo sinks and room broadcasts | `kernel/world/events.py` |
 | Safety + QualityGate | readiness gates before risky actions | `kernel/qualitygate.py` |
-| Persistence | minimal canonical state; stats recompute on restore | `kernel/world/db.py`, `parts/save.py` |
+| Persistence | minimal canonical state; stats recompute on restore | `kernel/world/db.py`, `kernel/save.py` |
 
 Every module path in this file is asserted to exist by the correspondence test, so a rename
 that forgets the map turns the suite red instead of leaving a lie on the page.

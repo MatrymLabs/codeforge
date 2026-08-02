@@ -30,7 +30,7 @@ several gates rather than one ARC verdict. Neither is a redesign; both are conve
 
 - **Hardware Store** (`catalog/`, `parts/`, the manufacturing loop) - reusable parts, provenance,
   one core + two adapters, evidence per part. This is the platform thesis, working.
-- **ARC** (`parts/arc.py`) - composes existing gates into one honest readiness verdict; no new gate.
+- **ARC** (`kernel/arc.py`) - composes existing gates into one honest readiness verdict; no new gate.
 - **Registry** (`registry/`) - every module filed by domain (domain 04 game, 05 store, 10 reports).
   This IS the logical package structure, without moving a file.
 - **Evidence spine** - `test_evidence`, `qualitygate`, `integrity`, `change_ledger`, `patch_tracker`.

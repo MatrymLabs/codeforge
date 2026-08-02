@@ -52,7 +52,7 @@ def test_it_recovers_after_the_reset_timeout():
 
 
 def test_one_core_powers_both_the_game_relay_and_the_practical_service_breaker():
-    import parts.relay as game
+    import kernel.relay as game
 
     sb = ServiceBreakers(clock=FakeClock())
     sb.call("x", lambda: "ok")

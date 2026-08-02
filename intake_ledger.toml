@@ -148,8 +148,8 @@ language = "go"
 license = "MIT"
 provenance_status = "verified (in-tree source; Go standard library only, no third-party modules)"
 proposed_role = "accept the connection flood in Go (goroutine-per-connection) and byte-proxy each client to the Python gateway, raising the thread-per-connection ceiling"
-proposed_boundary = "a byte-transparent TCP proxy (listen -> backend); it never inspects the stream, so telnet/IAC stays end-to-end; selected at launch by parts.edge, which falls back to the pure-Python EdgeProxy"
-existing_codeforge_equivalent = "the pure-Python EdgeProxy in parts.edge (the fallback + reference)"
+proposed_boundary = "a byte-transparent TCP proxy (listen -> backend); it never inspects the stream, so telnet/IAC stays end-to-end; selected at launch by kernel.edge, which falls back to the pure-Python EdgeProxy"
+existing_codeforge_equivalent = "the pure-Python EdgeProxy in kernel.edge (the fallback + reference)"
 capability_gap = "~2-3x faster clearing of concurrent connection floods; Go's concurrency at the connection boundary, a native-language showcase"
 decision = "approved"
 reviewer = "Josh"
@@ -161,9 +161,9 @@ security_review = "no auth, no stream inspection; a byte pump between a client a
 license_review = "MIT (in-tree); Go standard library only (BSD-style), no third-party modules to vet"
 compatibility = "Go 1.24+; any POSIX host; the binary is optional and the game runs without it"
 testing_strategy = "the pure-Python reference is always tested; go test covers the proxy; a byte-parity test compares Go vs Python when built; benchmarks/bench_edge.py records the connection-scaling win"
-failure_strategy = "optional -- when the binary is absent, parts.edge uses the identical pure-Python EdgeProxy (or clients connect straight to the gateway), so the game is green with no Go toolchain"
+failure_strategy = "optional -- when the binary is absent, kernel.edge uses the identical pure-Python EdgeProxy (or clients connect straight to the gateway), so the game is green with no Go toolchain"
 upgrade_strategy = "pin the Go version in native/edge/go.mod; rebuild and re-run the parity test on a bump"
-removal_strategy = "delete native/edge and the binary branch of parts.edge.run_edge; the pure-Python reference remains"
+removal_strategy = "delete native/edge and the binary branch of kernel.edge.run_edge; the pure-Python reference remains"
 
 # ----- approved: the Go toolchain ------------------------------------------------------
 [tech.go]

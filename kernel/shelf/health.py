@@ -8,7 +8,7 @@ concept -- no code copied.
 
 Framework-free: a check is any `Callable[[], str]` returning a status; the registry catches its
 failures so one broken check cannot crash the report. One core, two lives: a world-vitals panel in
-the game (`parts/vitals`) and a service-readiness probe in a practical app (`parts/service_health`).
+the game (`kernel/vitals`) and a service-readiness probe in an app (`parts/service_health`).
 
 Provenance: independently_implemented_pattern (health-check registry). No code copied.
 """

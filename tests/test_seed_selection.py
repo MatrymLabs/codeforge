@@ -5,6 +5,7 @@ import importlib
 import pytest
 
 import kernel.world.seed
+from adapters.cli import _pop_seed, main
 from kernel.world.seed import (
     SEEDS_ROOT,
     SeedError,
@@ -18,7 +19,6 @@ from kernel.world.seed import (
     load_rooms,
     load_zones,
 )
-from parts.cli import _pop_seed, main
 
 FIRST_FORGE = SEEDS_ROOT / "first-forge"
 

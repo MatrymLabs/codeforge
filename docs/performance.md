@@ -23,7 +23,7 @@ latency distribution (median, p95, p99, max).
 ## Method notes (honest)
 
 - **Frameless.** stdlib `time.perf_counter` + `statistics`; no benchmark framework
-  (`parts/bench.py`). The `bench` in the tooling matrix stays `stdlib_first`.
+  (`kernel/bench.py`). The `bench` in the tooling matrix stays `stdlib_first`.
 - **Warmup.** The first calls resolve imports and build the command table; a warmup pass
   runs before the timed loop so those one-time costs are not counted.
 - **Host-relative.** Numbers scale with CPU (measured on a Raspberry Pi 5). The report says

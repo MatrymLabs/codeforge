@@ -19,6 +19,7 @@ from pydantic import BaseModel
 from sqlalchemy import select
 
 from kernel.blueprint import load_all as load_blueprints
+from kernel.dashboard import router as dashboard_router
 from kernel.login_guard import LoginGuard
 from kernel.shelf import cursor as cursor_part
 from kernel.shelf import precondition as precond
@@ -28,7 +29,6 @@ from kernel.world.characters import set_rank
 from kernel.world.db import CharacterRow, open_archive_session
 from kernel.world.ranks import RANK_ORDER
 from kernel.world.world import WORLD
-from parts.dashboard import router as dashboard_router
 
 app = FastAPI(
     title="CodeForge Admin API",

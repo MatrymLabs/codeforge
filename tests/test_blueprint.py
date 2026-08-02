@@ -10,6 +10,7 @@ import json
 
 import pytest
 
+from adapters.blueprint_verb import blueprint
 from forge import handle_command
 from kernel.blueprint import (
     Blueprint,
@@ -22,7 +23,6 @@ from kernel.blueprint import (
     write_blueprint,
 )
 from kernel.world.session import Session
-from parts.blueprint_verb import blueprint
 
 _GOOD = {
     "blueprint_id": "sample_plan",

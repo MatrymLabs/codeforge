@@ -29,7 +29,7 @@ subviews simply gather them under one audit namespace.
 
 ## What it composes
 
-`parts/frameup.py` **reuses** the existing self-audit signals (it does not duplicate them),
+`kernel/frameup.py` **reuses** the existing self-audit signals (it does not duplicate them),
 and rolls them into one verdict:
 
 | System | Signal | Green when |

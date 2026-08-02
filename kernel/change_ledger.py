@@ -10,8 +10,8 @@ non-blocked ARC verdict (slice 4: every change flows through ARC before it ships
 Assembled from parts already on the shelf, not reinvented: the lifecycle is a `workflow` (role
 gated, on the pure `statemachine`), storage is a `repository`, intake policy is a `validator`, and
 the promotion gate reads a `test-evidence` ledger. One core, two lives: a world-maintenance log in
-the game (`parts/maintenance`) and a dependency/CVE patch tracker in a practical app
-(`parts/patch_tracker`).
+the game (`kernel/maintenance`) and a dependency/CVE patch tracker in a practical app
+(`kernel/patch_tracker`).
 
 Provenance: original composition of CodeForge Hardware Store parts. No code copied.
 """

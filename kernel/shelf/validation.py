@@ -7,7 +7,7 @@ covers the common cases. This is the standard "accumulate all errors, fail loud"
 reimplemented from the concept -- no code copied.
 
 Framework-free and side-effect-free: rules never mutate the input; `raise_if_invalid` is the one
-loud exit. One core, two lives: it checks a proposed character name in the game (`parts/name_check`)
+loud exit. One core, two lives: it checks a proposed character name in game (`kernel/name_check`)
 and a signup payload in a practical app (`parts/payload_check`).
 
 Provenance: independently_implemented_pattern (input/schema validation). No code copied.
