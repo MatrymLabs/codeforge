@@ -1,5 +1,11 @@
 # The CodeForge Python Engineering Standard
 
+> Sits under the fleet standard: the [Matrym Python Style Guide](style_guide.md) is the
+> canonical signature standard for all Matrym repos; this document is codeforge's evidenced
+> engineering baseline beneath it (the toolchain and testing layers the guide's §4 requires,
+> with the research that backs each choice). See [`style_adoption.md`](style_adoption.md) for
+> how codeforge stands against the full guide.
+
 *What this repository already practices, now written down -- with the research that backs
 each choice. Derived from an audit against "Python Coding Practices: A Scholarly Survey
 (2021-2026)" on 2026-07-12. This documents the standard; it does not invent one.*
