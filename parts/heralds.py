@@ -3,7 +3,7 @@
 Heralds are small plugins that each proclaim a line. The world registers a couple by explicit
 registration (never by loading code), and `heralds` shows the active proclamations. A herald can be
 disabled without touching the others. The SAME `PluginRegistry` core drives export providers in a
-practical app (`parts/exporters`); only the plugin type differs.
+practical app (`kernel/exporters`); only the plugin type differs.
 """
 
 from __future__ import annotations

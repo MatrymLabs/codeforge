@@ -21,7 +21,7 @@ from dataclasses import dataclass
 from datetime import date
 from pathlib import Path
 
-from parts.chronicle import Record
+from kernel.chronicle import Record
 
 
 class RetentionError(ValueError):
@@ -217,7 +217,7 @@ def load_holds(path: Path | None = None) -> list[Hold]:
 
 def retention(arg: str = "") -> str:
     """The read-only `retention` verb: the retention doctor over the current Chronicle (R1)."""
-    from parts import chronicle
+    from kernel import chronicle
 
     try:
         records = chronicle.read()

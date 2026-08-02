@@ -63,7 +63,7 @@ def _run(name: str) -> str:
 
         return render_overview()
     if name == "pioneer":
-        from parts.pioneer import render_overview as pioneer_overview
+        from kernel.pioneer import render_overview as pioneer_overview
 
         return pioneer_overview()
     if name == "pm":

@@ -80,7 +80,7 @@ def _cmd_play(args: list[str]) -> int:
 
 
 def _cmd_onboard(args: list[str]) -> int:
-    from parts.onboarding import drive
+    from kernel.onboarding import drive
 
     drive()  # the Workflow Engine's practical adapter: the same core as the game quest
     return 0

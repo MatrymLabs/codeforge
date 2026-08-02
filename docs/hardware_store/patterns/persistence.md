@@ -44,7 +44,7 @@ asset registry) does not change.
 
 - **Game:** `parts/logbook.py` -- the `journal` verb records numbered entries into a per-player
   repository and lists them. Tick-reachable.
-- **Practical:** `parts/asset_registry.py` -- `AssetRegistry` registers, finds, updates, and retires
+- **Practical:** `kernel/asset_registry.py` -- `AssetRegistry` registers, finds, updates, and retires
   assets by id, storage-agnostic (any `Repository` works). Cousins: stock control, a document registry.
 
 ## Evidence

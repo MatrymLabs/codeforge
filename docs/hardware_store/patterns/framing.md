@@ -40,7 +40,7 @@ bytes are replaced, never fatal; an empty delimiter is refused.
 
 - **Game:** `parts/telegraph.py` -- the `telegraph` verb frames a dispatch delivered in awkward
   bursts into whole lines. Tick-reachable.
-- **Practical:** `parts/record_stream.py` -- a `RecordStream` reads delimited records off a byte
+- **Practical:** `kernel/record_stream.py` -- a `RecordStream` reads delimited records off a byte
   stream fed chunk by chunk, flushing a trailing partial on close.
 
 ## Evidence

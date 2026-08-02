@@ -1,4 +1,4 @@
-"""Test twin for parts/library.py -- read the guidance library's documents.
+"""Test twin for kernel/library.py -- read the guidance library's documents.
 
 Card functions run against a temp library root; reachability is proven through the
 engine tick. Acceptance (list + read + case-insensitive) and refusal (not mounted,
@@ -12,7 +12,7 @@ from pathlib import Path
 import pytest
 
 from forge import handle_command
-from parts.library import library, library_index, library_read
+from kernel.library import library, library_index, library_read
 from parts.world.session import SESSIONS, Session
 
 
@@ -92,7 +92,7 @@ def fresh() -> Iterator[None]:
 
 def test_library_reachable_through_the_tick(home: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     # FGL_HOME is read at call time, so the tick honors this repoint.
-    monkeypatch.setattr("parts.library.FGL_HOME", home)
+    monkeypatch.setattr("kernel.library.FGL_HOME", home)
     session = Session(player_id="reader")
     session.location = "archive"
     SESSIONS["reader"] = session

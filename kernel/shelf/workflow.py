@@ -3,7 +3,7 @@
 A workflow is a lifecycle whose legal moves are a state machine (`parts/statemachine`) plus the
 two things a bare FSM lacks: WHO may make each move (role gating) and a RECORD of what happened
 (the history trail). One `WorkflowEngine` drives any workflow defined as data, so the SAME core
-runs a game quest (`parts/quest`) and a business onboarding checklist (`parts/onboarding`) -- only
+runs a game quest (`parts/quest`) and a business onboarding checklist (`kernel/onboarding`) -- only
 the adapter and the applied effects differ. Like the machine it wraps, it never renders and never
 mutates world state: it steps a local `Instance` and names an effect for the caller to apply.
 

@@ -6,7 +6,7 @@ Josh approves; **AI does not assign ownership**. The level-4 ownership claim and
 learned" reflection below are left for Josh to complete when he can defend the design to an
 interviewer.*
 
-- **Build:** the Chronicle, an append-only, content-hashed record store (`parts/chronicle.py`)
+- **Build:** the Chronicle, an append-only, content-hashed record store (`kernel/chronicle.py`)
 - **Ownership level claimed:** *(pending Josh's own claim; undeclared until he defends it)*
 
 ## Intent
@@ -52,7 +52,7 @@ it is strictly more conservative than the bundled scope and was surfaced to Josh
   review surface and a non-breaking first step.
 
 ## AI contribution
-AI-assisted implementation of `parts/chronicle.py` (Record, `append`/`read`/`read_latest`, the
+AI-assisted implementation of `kernel/chronicle.py` (Record, `append`/`read`/`read_latest`, the
 `_digest` hash chain, the loud validator, the `chronicle` verb and `render`), the test twin
 (`tests/test_chronicle.py`, acceptance + hostile refusal incl. tamper and reordering), the
 additive `arc_ledger.emit` retention, the registry filings, and this record. Design proposed in
@@ -65,7 +65,7 @@ should move from git-ignored to retained, and the acceptance bar. The 1a/1b spli
 surfaced for his call.
 
 ## Tests / evidence
-- `parts/chronicle.py` + `tests/test_chronicle.py` (17 tests: round-trip, hash-chain linking,
+- `kernel/chronicle.py` + `tests/test_chronicle.py` (17 tests: round-trip, hash-chain linking,
   read_latest, empty-store, render, and hostile refusals - tampered payload, reordered chain,
   malformed line, missing field, unknown kind - plus the emit-retention and engine-tick reachability
   tests). Green on `make check`.

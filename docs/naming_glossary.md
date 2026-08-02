@@ -40,7 +40,7 @@ engine. Each maps to a real, tested module - the metaphor stays in the code; the
 | **FailsafeRunner** (`kernel/shelf/console.py`) | Safety | The safe command console: an allowlist runs only vetted checks - never raw shell. |
 | **QualityGate / SafetyReview** (`parts/qualitygate.py`) | Readiness | Grade a filed object (purpose · file · tests · docs · maturity) → `pass\|watch\|fail`; rate its risk. Readiness, never compliance. |
 | **ProjectControl / `pm status`** (`parts/pm.py`) | PM | The project dashboard, *computed* from the registry + QualityGate - no stored copy to drift. |
-| **the Archivist / `library`** (`parts/library.py`) | Library | Read the guidance library's preserved documents, read-only. |
+| **the Archivist / `library`** (`kernel/library.py`) | Library | Read the guidance library's preserved documents, read-only. |
 | **`@sg` / the generator** (`parts/generate.py`) | Admin | System item generation from filed data patterns (wizard+); refuses to conjure the unknown. |
 | **Foundry** (`parts/foundry.py`: `@forge` / `@arch`) | Workshop | Propose a change, gate it on human approval, then generate under guard - the owner-only build layer where parts are scaffolded and `@arch` previews a built game read-only. |
 | **the awareness lens / `law`** (`parts/law.py`) | Compliance-aware | Renders tracked sources through a legal-*awareness* boundary - never legal advice, always "human review required." |

@@ -131,7 +131,7 @@ class LuaSandbox:
 def main(
     argv: list[str] | None = None,
 ) -> None:  # pragma: no cover - a runnable demo, not unit-tested
-    """Evaluate a Lua snippet in the sandbox: `python -m parts.scripting 'return 2+2'`."""
+    """Evaluate a Lua snippet in the sandbox: `python -m kernel.scripting 'return 2+2'`."""
     import sys
 
     args = argv if argv is not None else sys.argv[1:]

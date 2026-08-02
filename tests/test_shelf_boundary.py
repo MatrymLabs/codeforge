@@ -75,6 +75,6 @@ def test_an_unparseable_core_fails_loud(tmp_path: Path) -> None:
 
 def test_parts_import_extractor_finds_both_forms() -> None:
     mods = _parts_imports(
-        "import parts.world.db\nfrom parts.chronicle import log\nfrom parts import x\n", "<t>"
+        "import parts.world.db\nfrom kernel.chronicle import log\nfrom parts import x\n", "<t>"
     )
-    assert mods == {"parts.world.db", "parts.chronicle", "parts"}
+    assert mods == {"parts.world.db", "kernel.chronicle", "parts"}

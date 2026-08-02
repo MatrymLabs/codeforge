@@ -10,6 +10,7 @@ from collections.abc import Iterator
 import pytest
 
 from forge import COMMANDS, handle_command, render_scene
+from kernel.scripting import scripting_available
 from parts.commands import (
     ADMIN,
     CORE,
@@ -21,7 +22,6 @@ from parts.commands import (
     reserved_words,
 )
 from parts.registry import load_collective
-from parts.scripting import scripting_available
 from parts.world.session import SESSIONS, Session
 from parts.world.world import WORLD
 
@@ -280,7 +280,7 @@ def test_script_command_is_owner_gated() -> None:
 
 def test_script_command_without_lua_reports_cleanly(monkeypatch) -> None:
     # Even with lupa installed, the graceful 'not installed' path must read cleanly (base gate).
-    import parts.scripting as scripting
+    import kernel.scripting as scripting
 
     monkeypatch.setattr(scripting, "scripting_available", lambda: False)
     session = _walker("forge")

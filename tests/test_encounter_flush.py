@@ -10,8 +10,8 @@ from pathlib import Path
 
 import pytest
 
+from kernel.chronicle import read, trend
 from parts import encounter_flush
-from parts.chronicle import read, trend
 from parts.encounter_flush import flush
 from parts.world import encounter_log
 

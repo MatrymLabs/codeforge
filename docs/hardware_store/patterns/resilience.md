@@ -150,7 +150,7 @@ case-sensitive.
   processing of an at-least-once queue or webhook, a submit-once guard on a filing.
 - **Composition:** it closes the loop with `retry` -- retry makes a failed call happen *again*;
   idempotency makes that repeat *safe*. It is the correctness half of the double-entry ledger's
-  transfer path (`parts/ledger.py`).
+  transfer path (`kernel/ledger.py`).
 - **Honest limit:** in-memory and single-process (the tick is single-threaded, so no lock is taken). A
   networked deployment fronts the same contract with a durable, UNIQUE-indexed table (and a row lock or
   an upsert) to make check-run-store atomic across processes.

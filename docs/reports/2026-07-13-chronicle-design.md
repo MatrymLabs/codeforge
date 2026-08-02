@@ -57,7 +57,7 @@ ARC reads Chronicle records the same way it already reads `arc-evidence/` (via
 
 **Slice 1 - the append-only hashed core + one record type (evidence), read by ARC.**
 
-- `parts/chronicle.py`: a `Record` (kind, payload, commit, stamp, content-hash, optional
+- `kernel/chronicle.py`: a `Record` (kind, payload, commit, stamp, content-hash, optional
   prior-hash link), `append(record)`, `read(kind, filter)`, a loud validator, a stdlib-only
   JSONL store under a retained (NOT git-ignored) `chronicle/` dir, dated + hashed.
 - Migrate the existing `arc_ledger` evidence to write through the Chronicle (evidence
@@ -102,7 +102,7 @@ Then, in later approved slices: **metric** (trend series + `make trend`), **inci
 
 - **Risk:** a new persistence layer is architecture surface. Mitigated by making slice 1
   tiny (one record type, stdlib JSONL, read-only ARC integration) and reversible.
-- **Rollback:** the Chronicle is additive; deleting `parts/chronicle.py` + the `chronicle/`
+- **Rollback:** the Chronicle is additive; deleting `kernel/chronicle.py` + the `chronicle/`
   dir reverts ARC to reading `arc-evidence/` as today. No world-state migration.
 - **Cost:** slice 1 is a bounded part + test twin + one ARC read path, comparable to the
   `arc_ledger` slice already shipped this session.

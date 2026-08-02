@@ -17,7 +17,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from parts import chronicle
+from kernel import chronicle
 from parts.world import encounter_log
 
 _METRIC_PREFIX = "encounters."  # one trend series per encounter kind, e.g. encounters.open_strike

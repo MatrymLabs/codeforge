@@ -8,7 +8,7 @@ promoted: the run ends `human_decision_required` and Josh selects the elite via 
 
 from __future__ import annotations
 
-from parts import blueprint as bp
+from kernel import blueprint as bp
 from parts.evolution.bakeoff import (
     build_score_sheet_pairs,
     build_slugify_pairs,

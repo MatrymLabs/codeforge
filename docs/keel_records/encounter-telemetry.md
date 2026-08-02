@@ -17,7 +17,7 @@ was "capable core, orphaned last inch"): make combat encounters visible and reta
 proactive behavior is not just felt but recorded and trendable.
 
 ## Problem
-The Chronicle (`parts/chronicle`) is tamper-evident precisely because **every append comes from a
+The Chronicle (`kernel/chronicle`) is tamper-evident precisely because **every append comes from a
 trusted (owner/CI) actor** (`arc_ledger.emit`, `bench --record`, `ai_eval`); there is no
 player-reachable append path, and the Security seat praised exactly that. But encounters happen on
 the **player tick** (`menace`, `_fall_and_recover`, `attack`). A per-encounter write from

@@ -29,11 +29,11 @@ reviewed → license reviewed → capability interviewed → gap analyzed → Py
 placed → security screened → dependency reviewed → prototyped → tested → ARC evaluated → **human
 approval** → carded → deployed → periodic review → upgrade / replace / retire / promote. No
 technology bypasses onboarding merely because another project already uses it.
-(`parts.intake.ONBOARDING_STAGES`.)
+(`kernel.intake.ONBOARDING_STAGES`.)
 
 ## Classification
 
-A technology holds one relationship to CodeForge (`parts.intake.CLASSIFICATIONS`): `NATIVE_PYTHON`,
+A technology holds one relationship to CodeForge (`kernel.intake.CLASSIFICATIONS`): `NATIVE_PYTHON`,
 `PYTHON_PACKAGE`, `PYTHON_FRAMEWORK_EXTENSION`, `COMPILED_EXTENSION`, `SUBPROCESS_WORKER`,
 `EXTERNAL_SERVICE`, `CLIENT_TECHNOLOGY`, `BUILD_TARGET`, `RENDER_TARGET`, `DEV_TOOL`,
 `RESEARCH_REFERENCE`, or `REJECTED`. A `NATIVE_PYTHON`/`PYTHON_PACKAGE` row must actually be Python; a
@@ -42,14 +42,14 @@ role hosted outside the core (`SUBPROCESS_WORKER`, `EXTERNAL_SERVICE`, `CLIENT_T
 
 ## The ten requirements
 
-Every integration must carry all ten (`parts.intake.REQUIRED`): **purpose, owner, contract,
+Every integration must carry all ten (`kernel.intake.REQUIRED`): **purpose, owner, contract,
 security_review, license_review, compatibility, testing_strategy, failure_strategy,
 upgrade_strategy, removal_strategy**. An **approved** technology missing any of them is incomplete
 and the gate fails.
 
 ## The decision
 
-The office reaches one decision (`parts.intake.DECISIONS`): `approved`, `held`, `rejected`, or one of
+The office reaches one decision (`kernel.intake.DECISIONS`): `approved`, `held`, `rejected`, or one of
 the three *default-down* verdicts — `stdlib_first`, `research_only`, `integrate_later` — used when the
 case is weak on need, skill, or removability. Josh retains approval authority over foundational
 frameworks, new languages, runtime changes, and major dependencies.

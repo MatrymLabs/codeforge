@@ -498,7 +498,7 @@
     general: any slotted-attachment model whose parts modify a computed value
 - id: blueprint-genome
   name: Blueprint Genome
-  source: parts/evolution/genome.py
+  source: kernel/evolution/genome.py
   category: modeling
   tags:
   - typed-model
@@ -522,7 +522,7 @@
     general: any typed IR that separates intent from emitted output
 - id: constraint-gate
   name: Constraint Gate
-  source: parts/evolution/validation.py
+  source: kernel/evolution/validation.py
   category: validation
   tags:
   - constraints
@@ -545,7 +545,7 @@
     general: a per-rule, fail-loud validator that explains every refusal
 - id: counterexample-bank
   name: Counterexample Bank
-  source: parts/evolution/counterexamples.py
+  source: kernel/evolution/counterexamples.py
   category: quality
   tags:
   - regression
@@ -567,7 +567,7 @@
     general: a normalize-and-dedup store for any recurring failure signal
 - id: fitness-aggregator
   name: Fitness Aggregator
-  source: parts/evolution/fitness.py
+  source: kernel/evolution/fitness.py
   category: decision
   tags:
   - multi-objective
@@ -589,7 +589,7 @@
     general: rank candidates by hard gates then transparent weighted objectives
 - id: evaluator-swarm
   name: Evaluator Swarm
-  source: parts/evolution/evaluators.py
+  source: kernel/evolution/evaluators.py
   category: quality
   tags:
   - evaluation
@@ -611,7 +611,7 @@
     general: an advisory multi-evaluator layer with no merge authority
 - id: evolution-lab
   name: Blueprint Evolution Lab
-  source: parts/evolution/bakeoff.py
+  source: kernel/evolution/bakeoff.py
   category: search
   tags:
   - evolutionary
@@ -1298,7 +1298,7 @@
     general: dedup any retried web/API request or message so redelivery is safe
 - id: double-entry-ledger
   name: Double-Entry Ledger
-  source: parts/ledger.py
+  source: kernel/ledger.py
   category: finance
   tags:
   - double-entry
@@ -1344,7 +1344,7 @@
     general: an in-process load harness that captures a latency histogram for any callable workload
 - id: artifact-scaffold
   name: Artifact Scaffold Forge
-  source: parts/artifact_forge.py
+  source: kernel/artifact_forge.py
   category: developer-experience
   tags:
   - scaffolding

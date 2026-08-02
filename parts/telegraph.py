@@ -2,7 +2,7 @@
 
 A courier delivers a telegraph one burst at a time; the `telegraph` verb frames those bursts into
 whole lines with a `StreamFramer`, so a message split awkwardly across bursts still reads as clean
-lines. The SAME framer core reads a byte-stream of records in a practical app (parts/record_stream).
+lines. The SAME framer core reads a byte-stream of records in an app (kernel/record_stream).
 """
 
 from __future__ import annotations

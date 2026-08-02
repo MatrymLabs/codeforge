@@ -14,7 +14,7 @@ from pathlib import Path
 
 import pytest
 
-from parts.chronicle import Record, record_incident, record_metric
+from kernel.chronicle import Record, record_incident, record_metric
 from parts.retention import (
     DEFAULT_POLICY,
     Hold,

@@ -237,14 +237,14 @@ deps:
 # Python-native: fails loud if any onboarding record is incomplete (an approved technology
 # missing one of the ten requirements) or inconsistent. Stdlib only (tomllib). ---
 intake:
-	@python -m parts.intake
+	@python -m kernel.intake
 
 # --- ADDIE: the continuous-improvement loop (docs/addie_loop.md). A systems-engineering self-check
 # that fails loud if any filed MAJOR cycle skipped a phase (built without understanding, designed
 # without evidence, implemented without integration, declared success without evaluation). It
 # overrides no control; it is the loop the controls run inside. Stdlib only (tomllib). ---
 addie:
-	@python -m parts.addie
+	@python -m kernel.addie
 
 # --- Bench: measure the engine tick (handle_command) throughput + latency and file a
 # dated performance-evidence report under reports/performance/. Frameless (stdlib). ---
@@ -268,7 +268,7 @@ contracts:
 # (chronicle/ledger.jsonl, git-tracked), then render the series over time. `make bench` stays pure. ---
 trend:
 	@python3 -m parts.bench --record $$(git rev-parse --short HEAD 2>/dev/null || echo unknown)
-	@python3 -m parts.chronicle trend engine_tick.median_us
+	@python3 -m kernel.chronicle trend engine_tick.median_us
 
 # --- SLO: evaluate the recorded engine-tick SLI against its objective + error budget
 # (docs/reports/slo/engine-tick-slo.md). Read-only over the Chronicle; exits 1 on a breach so a
@@ -284,14 +284,14 @@ loadtest:
 # --- Artifact: stamp a portfolio-artifact repo skeleton (README/ADR/design-doc/api-spec/
 # test-plan/CI/compose) into git-ignored workspace/artifacts/. Structure + boilerplate only. ---
 artifact:
-	@python3 -m parts.artifact_forge "$(NAME)" "$(KIND)"
+	@python3 -m kernel.artifact_forge "$(NAME)" "$(KIND)"
 
 # --- AI eval: score the offline LocalArchitect against a rubric, RECORD it as a Chronicle
 # ai-eval (eval-regression memory), then show the memory. Network-free; point it at the real
 # ClaudeAdvisor through the same seam to evaluate the LLM. ---
 ai-eval:
 	@python3 -m parts.ai_eval $$(git rev-parse --short HEAD 2>/dev/null || echo unknown)
-	@python3 -m parts.chronicle evals
+	@python3 -m kernel.chronicle evals
 
 # --- Retention doctor (read-only, R1): show what the Chronicle keeps, what is eligible for
 # review, and what a hold protects. Disposition is not deletion; R1 writes and removes nothing. ---

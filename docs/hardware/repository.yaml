@@ -31,4 +31,4 @@ source_status: original
 owner: MatrymLabs
 adapters:
   - parts/logbook.py
-  - parts/asset_registry.py
+  - kernel/asset_registry.py

@@ -51,7 +51,7 @@ def _isolated_database(tmp_path, monkeypatch):
     # (no longer an empty vault), a test that reads it with the default root would depend on the
     # committed ledger's contents. Quarantine root=None into tmp, so tests see an empty store unless
     # they populate their own; a test that means to read the real ledger passes an explicit root.
-    from parts import chronicle
+    from kernel import chronicle
 
     _real_ledger_path = chronicle._ledger_path
     _repo_root = Path(chronicle.__file__).resolve().parent.parent

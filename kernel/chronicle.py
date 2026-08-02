@@ -558,7 +558,7 @@ def chronicle(arg: str = "") -> str:
 
 
 def main(argv: list[str] | None = None) -> int:
-    """CLI: `python -m parts.chronicle trend <name>` (render) or `record-metric <name> <value>
+    """CLI: `python -m kernel.chronicle trend <name>` (render) or `record-metric <name> <value>
     <commit>` (append a point). Used by `make trend`; recording is a deliberate, evidenced act."""
     import sys
 
@@ -601,7 +601,7 @@ def main(argv: list[str] | None = None) -> int:
         print(f"  recorded incident [{inc.payload['severity']}] {inc.payload['what']} (chronicle)")
         return 0
     print(
-        "usage: python -m parts.chronicle {trend <name> | provenance <node> | incidents | "
+        "usage: python -m kernel.chronicle {trend <name> | provenance <node> | incidents | "
         "evals | counterexamples | record-metric <name> <value> <commit> | "
         "record-edge <from> <relation> <to> <commit> | "
         "record-incident <severity> <commit> <what...> | "

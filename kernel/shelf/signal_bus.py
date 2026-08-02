@@ -6,7 +6,7 @@ so a subscriber to one signal never sees another. Framework-free and synchronous
 
 Harvested from codeforge-client's event bus (proven there driving its state reducer), reimplemented
 here in the forge voice. One core, two adapters: an in-world `chime` that answers a world signal
-(parts/chime) and a domain-event `Notifier` for a practical app (parts/notifier). Distinct from
+(parts/chime) and a domain-event `Notifier` for a practical app (kernel/notifier). Distinct from
 parts/events (in-world echo broadcasts): this is a general typed pub/sub.
 
 Provenance: original implementation of a standard pub/sub pattern. No code copied.

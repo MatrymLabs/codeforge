@@ -11,7 +11,8 @@ from pathlib import Path
 
 import pytest
 
-from parts import chronicle, slo
+from kernel import chronicle
+from parts import slo
 
 
 def _seed(root: Path, values: list[float]) -> None:

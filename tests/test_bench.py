@@ -13,7 +13,7 @@ from types import SimpleNamespace
 import pytest
 
 import parts.bench as bench_mod
-from parts import chronicle
+from kernel import chronicle
 from parts.bench import (
     BenchError,
     benchmark,

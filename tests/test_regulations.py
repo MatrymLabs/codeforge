@@ -1,11 +1,11 @@
-"""Test twin for parts/regulations.py -- read-only guidance reference."""
+"""Test twin for kernel/regulations.py -- read-only guidance reference."""
 # ruff: noqa: E501  (the CSV fixture below has inherently long data lines)
 
 from pathlib import Path
 
 import pytest
 
-from parts.regulations import regs
+from kernel.regulations import regs
 
 _CSV = """# the guidance library registry (comment line, skipped)
 source_id,domain,authority_tier,source_name,official_url,api_url,citation_format,document_owner,internal_owner,refresh_frequency,last_checked,last_changed,current_version_or_date,status,legal_reliance_note,related_internal_controls,review_required

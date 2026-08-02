@@ -1,11 +1,11 @@
-"""Test twin for parts/learning_record.py -- capture engineering improvements as evidence."""
+"""Test twin for kernel/learning_record.py -- capture engineering improvements as evidence."""
 
 import json
 
 import pytest
 
 from forge import handle_command
-from parts.learning_record import (
+from kernel.learning_record import (
     LearningRecordError,
     from_dict,
     learnings,

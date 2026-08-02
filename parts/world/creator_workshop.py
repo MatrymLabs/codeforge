@@ -238,7 +238,7 @@ def world_survey(session: Session) -> str:
     # Lazy imports: this module is loaded during world assembly, so it must not import the world,
     # NPC, or Seed Package modules at import time (a cycle / premature read). At call time they are
     # fully built.
-    from parts import seed_package as sp
+    from kernel import seed_package as sp
     from parts.world.npcs import NPCS
     from parts.world.world import WORLD
     from parts.world.zones import ZONES

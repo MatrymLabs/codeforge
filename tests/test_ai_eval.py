@@ -12,8 +12,8 @@ from pathlib import Path
 
 import pytest
 
+from kernel.chronicle import ai_evals
 from parts.ai_eval import SAMPLE, AiEvalError, evaluate, keyword_score, main
-from parts.chronicle import ai_evals
 
 
 class _FakeAdvisor:

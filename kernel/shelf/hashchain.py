@@ -1,6 +1,6 @@
 """CARD: hashchain -- a tamper-evident, append-only, hash-chained ledger (stdlib only).
 
-The reusable primitive harvested from the Chronicle (`parts/chronicle.py`, the ship's memory):
+The reusable primitive harvested from the Chronicle (`kernel/chronicle.py`, the ship's memory):
 each entry carries a sha256 over its own payload AND the previous entry's hash, so any edit,
 reorder, or removal of a PAST record is detected the next time the log is read. Zero dependencies
 (hashlib + json). The Chronicle is this pattern's specialized proving-ground; it shares this
@@ -45,7 +45,7 @@ class Link:
 def content_hash(payload: Mapping[str, Any]) -> str:
     """A deterministic sha256 over a JSON-serializable mapping (canonical: sorted keys, no spaces).
 
-    This is the ship's one canonical content hash -- `parts/chronicle.py` computes its record
+    This is the ship's one canonical content hash -- `kernel/chronicle.py` computes its record
     digest through here, so the two ledgers can never drift to different hashing."""
     canonical = json.dumps(payload, sort_keys=True, separators=(",", ":"))
     return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
