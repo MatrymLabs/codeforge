@@ -7,7 +7,7 @@ due per its mode. Refusal: a malformed zone fails loud rather than booting a bro
 import pytest
 
 import kernel.world.seed as seed  # reference SeedError via module: other suites importlib.reload
-import kernel.world.zones as zones  # kernel.world.seed,so a class imported at collection won't match
+import kernel.world.zones as zones  # a class imported at collection must not match world.seed
 from forge import handle_command
 from kernel.world import items
 from kernel.world.seed import SEEDS_ROOT, Item, Zone, load_rooms, load_zones

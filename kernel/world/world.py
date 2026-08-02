@@ -51,7 +51,7 @@ if _wildlands_configs is not None:
     WORLD.update(_wild_rooms)
     NPCS.update(_wild_npcs)
     wire_attach_exits(WORLD, _wildlands_configs)
-    # Forge a themed gear drop for every generated guardian (kernel.world.armory), so felling a named
+    # Forge a themed gear drop for each generated guardian (kernel.world.armory): felling a named
     # hunt target can drop something to wear; the affix factory rolls rarity on top at defeat.
     # Registered as prototypes (not just appended to ITEMS) before the link audit, so a guardian's
     # drop can be cloned and passes the same gate as authored gear.
@@ -73,7 +73,7 @@ if _dungeons is not None:
     # Give every deep boss a SIGNATURE legendary relic (a named, readable payoff on top of its
     # generic gear), so felling one is a memorable event, not just a drop (kernel.world.relics).
     register_prototypes(arm_deep_bosses(_dungeons, _delve_npcs))
-    # Carve a readable lore inscription into each dungeon's boss chamber (kernel.world.inscriptions):
+    # Carve a lore inscription into each dungeon's boss chamber (kernel.world.inscriptions):
     # environmental storytelling naming the dungeon + relic, closing the rumour->depths loop.
     ITEMS.update(carve_inscriptions(_dungeons))
     # Forge a matched three-piece gear SET per dungeon, one piece on each delve trash foe, so

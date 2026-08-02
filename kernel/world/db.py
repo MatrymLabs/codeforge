@@ -73,7 +73,7 @@ class CharacterRow(ArchiveBase):
     # the quest engine on login so a story-in-progress survives a restart; ignored across seeds.
     quest_state: Mapped[str] = mapped_column(default="")
     # Daily lockouts as a JSON map {key: "YYYY-MM-DD"}, or "". The once-a-day boss/daily bonus cap
-    # that makes endgame a return, not a grind (kernel.world.lockouts). Persisted; "" for new heroes.
+    # makes endgame a return, not a grind (kernel.world.lockouts). Persisted; "" for new heroes.
     lockouts: Mapped[str] = mapped_column(default="")
     # Allocated attribute points as a JSON map {attribute: points}, or "". Build customization the
     # `allocate` verb spends; folded onto the job's base stats on restore. Derive-don't-store holds:

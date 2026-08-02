@@ -581,7 +581,7 @@ def _branch(
             exits,
         )
         # A single WAYSHRINE per region, set at its first branch's landmark pocket: a rare rest boon
-        # a traveller can `pray` at (kernel.world.shrine), not a heal on every corner. Deterministic.
+        # a traveller can `pray` at (kernel.world.shrine), not a heal on each corner. Deterministic.
         if last and trail_i == cfg["branch_every"]:
             rooms[room]["shrine"] = "wayshrine"
 

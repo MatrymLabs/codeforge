@@ -95,7 +95,7 @@ class Room(TypedDict):
     # The world stays data; the engine renders a declared capability, never a hard-coded room.
     dynamic: NotRequired[str]
     # Optional: a GATHER node -- the item prototype a Forger harvests here with `gather`
-    # (a crafting material). The node renews after a short cooldown (kernel.world.gather). Absent = a
+    # (a crafting material). The node renews after a cooldown (kernel.world.gather). Absent = a
     # room with nothing to gather.
     node: NotRequired[str]
     # Optional: a SHRINE the room surfaces -- a landmark a traveller can `pray` at for a boon (e.g.
@@ -132,7 +132,7 @@ class Item(TypedDict):
     # legendary. Set when combat rolls affixes onto an instance; absent (read as "common") on a
     # base seed item. A client colours the loadout by it; readers use `.get("rarity", "common")`.
     rarity: NotRequired[str]
-    # Runtime wear on a gear instance (kernel.world.durability): current durability, MAX when absent.
+    # Runtime wear on a gear instance (kernel.world.durability): current, MAX when absent.
     # Erodes as the piece is used; at 0 the piece is broken and grants no mods until mended.
     durability: NotRequired[int]
     # Readable lore: the text `read <item>` shows. A lore book, a record, an inscription -- readable
@@ -192,7 +192,7 @@ class Npc(TypedDict):
     # ability -- each softens (halves, floored 1) and decrements one. Cleared when the foe
     # reassembles. Never seeded; combat sets and clears it.
     weakened: NotRequired[int]
-    # Runtime state: True once a BOSS has crossed its enrage threshold (kernel.world.boss_phases), so
+    # Runtime state: True once a BOSS crossed its enrage threshold (kernel.world.boss_phases), so
     # the enrage announces once. Self-clears when the boss recovers above the line. Never seeded.
     enraged: NotRequired[bool]
     # Optional: an ELEMENT its blows carry (a RESIST code -- FIR/ICE/LGT/...). When set, the

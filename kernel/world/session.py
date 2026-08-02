@@ -69,7 +69,7 @@ class Session:
     # Equipped gear, keyed by slot (weapon/body/head/...). Values are item ids. Runtime state.
     equipped: dict[str, str] = field(default_factory=dict)
     # Allocated attribute points: attribute -> points spent (build agency). A level-up grants points
-    # (kernel.world.allocate); `allocate` spends them into an attribute, capped per level. Persisted,
+    # (kernel.world.allocate); `allocate` spends them into an attribute, per-level cap. Persisted,
     # and folded onto the job's base stats when the StatBlock is built (jobs.bind_calling).
     allocated: dict[str, int] = field(default_factory=dict)
     # Gather-node cooldowns: room -> world-beats until this player may `gather` there again. A node
