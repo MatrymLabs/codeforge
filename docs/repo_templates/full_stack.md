@@ -2,7 +2,7 @@
 
 **Use when:** a Python service grows a browser front end that is more than a single served HTML
 page. **Status for CodeForge:** planned, not present. CodeForge today serves one page from the
-browser gate (`parts/web/*.html`, shipped inside the wheel); that does not warrant a `frontend/`
+browser gate (`adapters/web/*.html`, shipped inside the wheel); that does not warrant a `frontend/`
 tree. This template is the starting point if a real React/TS client is ever built.
 
 ## Layout

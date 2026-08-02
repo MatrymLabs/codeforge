@@ -1,11 +1,11 @@
-"""Test twin for parts/hardware.py -- the cross-domain reusable-parts catalog.
+"""Test twin for kernel/hardware.py -- the cross-domain reusable-parts catalog.
 
 Acceptance: the shipped catalog loads and every part maps to a domain.
 Refusal: a malformed entry fails loud rather than stocking a bad part."""
 
 import pytest
 
-from parts.hardware import (
+from kernel.hardware import (
     CatalogError,
     catalog_text,
     find_part,

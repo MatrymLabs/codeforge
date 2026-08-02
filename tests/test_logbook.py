@@ -1,9 +1,9 @@
-"""Test twin for parts/logbook.py -- the game adapter: a repository-backed logbook."""
+"""Test twin for kernel/logbook.py -- the game adapter: a repository-backed logbook."""
 
 import pytest
 
+from kernel.logbook import journal, reset_logbooks
 from kernel.world.session import SESSIONS, Session
-from parts.logbook import journal, reset_logbooks
 
 
 @pytest.fixture(autouse=True)

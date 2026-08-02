@@ -6,7 +6,7 @@ ships or loads, and retains their license notices as those licenses require.
 
 ## Vendored (checked into this repository)
 
-### htmx (`parts/web/static/htmx.min.js`)
+### htmx (`adapters/web/static/htmx.min.js`)
 - Version: 2.x
 - License: **BSD Zero-Clause License (0BSD)**
 - Copyright: (c) the htmx authors
@@ -16,7 +16,7 @@ ships or loads, and retains their license notices as those licenses require.
 courtesy, not obligation. The dashboard uses htmx directly (no CDN), so nothing is fetched at
 runtime for it.
 
-## Loaded from a CDN (the browser demo terminal, `parts/web/index.html`)
+## Loaded from a CDN (the browser demo terminal, `adapters/web/index.html`)
 
 The WebSocket browser demo loads xterm.js from jsDelivr, pinned by version and by Subresource
 Integrity (SRI) hash so a tampered CDN asset is rejected by the browser.

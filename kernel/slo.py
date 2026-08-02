@@ -1,7 +1,7 @@
 """CARD: slo -- service-level objective + error budget for the engine-tick latency SLI.
 
 The Chronicle already records one SLI point per measured run: `engine_tick.median_us`
-(`parts/bench.py --record`, `make trend`). Measuring a latency is not the same as having an
+(`kernel/bench.py --record`, `make trend`). Measuring a latency is not the same as having an
 *objective* for it. This part wraps that recorded SLI in a stated SLO and an error budget, the
 Google SRE discipline made executable:
 
@@ -27,7 +27,7 @@ from pathlib import Path
 
 from kernel import chronicle
 
-# The SLI the Chronicle already records (parts/bench.py --record). One point per measured run.
+# The SLI the Chronicle already records (kernel/bench.py --record). One point per measured run.
 SLI_NAME = "engine_tick.median_us"
 
 # The objective, stated honestly and grounded in measured data

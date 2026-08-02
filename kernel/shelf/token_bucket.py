@@ -8,7 +8,7 @@ from the algorithm (not copied): study the concept, build the behavior.
 Framework-free and deterministic: the clock is INJECTED (default `time.monotonic`), so tests pin
 exact behavior without sleeping and property tests can drive any timeline. It never renders, never
 mutates world state, and holds no I/O. One core, two lives: it throttles a player's shouts in the
-game (`parts/chat_throttle`) and login attempts in a practical app (`parts/login_guard`).
+game (`kernel/chat_throttle`) and login attempts in a practical app (`parts/login_guard`).
 
 Provenance: independently_implemented_pattern (token-bucket algorithm, public-domain CS; see
 docs/hardware/token-bucket.yaml). No code copied.

@@ -1,8 +1,8 @@
-"""Test twin for parts/functions.py -- the Hardware Store functions check."""
+"""Test twin for kernel/functions.py -- the Hardware Store functions check."""
 
 from __future__ import annotations
 
-from parts.functions import (
+from kernel.functions import (
     _DEMOS,
     render_functions,
 )

@@ -28,5 +28,5 @@ license: MIT
 source_status: original
 owner: MatrymLabs
 adapters:
-  - parts/world_cert.py
+  - kernel/world_cert.py
   - kernel/release_gate.py

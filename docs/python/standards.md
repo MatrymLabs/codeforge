@@ -70,7 +70,7 @@ policy here, made explicit:
 - **Typed where stable:** internal functions once their shape has settled.
 - **Not required:** test bodies, one-off scripts, exploratory code.
 - **Never:** `Any` spreading through a public interface; `object` where a real union is
-  known (fixed in `parts/loop.py` -- `PartManifest | None` behind `TYPE_CHECKING`).
+  known (fixed in `kernel/loop.py` -- `PartManifest | None` behind `TYPE_CHECKING`).
 
 ## Idioms policy
 

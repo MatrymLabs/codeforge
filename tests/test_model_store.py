@@ -1,4 +1,4 @@
-"""Test twin for parts/seedlab/model_store.py -- persistence of a Seed's extracted models.
+"""Test twin for kernel/seedlab/model_store.py -- persistence of a Seed's extracted models.
 
 Acceptance: a model round-trips through the in-memory store; a file store recovers every model after
 a restart; labels link a model to its source and list per Seed.
@@ -12,7 +12,7 @@ from pathlib import Path
 
 import pytest
 
-from parts.seedlab.model_store import (
+from kernel.seedlab.model_store import (
     FileModelStore,
     InMemorySeedModels,
     ModelStore,
@@ -21,7 +21,7 @@ from parts.seedlab.model_store import (
     model_label,
     model_labels,
 )
-from parts.seedlab.project_model import ProjectModel, Provenance
+from kernel.seedlab.project_model import ProjectModel, Provenance
 
 
 def _model(identity: str = "TaskLedger", src: str = "demo-src") -> ProjectModel:

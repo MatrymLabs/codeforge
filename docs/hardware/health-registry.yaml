@@ -28,5 +28,5 @@ license: MIT
 source_status: original
 owner: MatrymLabs
 adapters:
-  - parts/vitals.py
+  - kernel/vitals.py
   - kernel/service_health.py

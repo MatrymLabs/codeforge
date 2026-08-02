@@ -7,7 +7,7 @@ of the Fleet Core rule (MatrymLabs/ship [ADR 0003](https://github.com/MatrymLabs
 ## readiness.schema.json
 
 The readiness API payloads served by codeforge:
-- `StatusPayload` - `GET /api/status` (the evidence board; `parts/dashboard.py`)
+- `StatusPayload` - `GET /api/status` (the evidence board; `kernel/dashboard.py`)
 - `BlueprintSummary` - `GET /api/blueprints` (`adapters/api.py`)
 
 The Pydantic models are the source of truth; `generate.py` derives the JSON Schema from them.

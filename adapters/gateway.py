@@ -24,17 +24,7 @@ import time
 import structlog
 
 from forge import handle_command, render_scene
-from kernel.shelf.bulkhead import Bulkhead, BulkheadFull
-from kernel.shelf.telnet_codec import IAC, WILL, WONT, strip_iac
-from kernel.world import bans, guild, maintenance_mode, party, presence, trade, tutorial
-from kernel.world.accounts import password_fixable
-from kernel.world.characters import save_all, save_character
-from kernel.world.events import SHUTDOWN, bind_echo, bind_gmcp, unbind_echo, unbind_gmcp
-from kernel.world.ranks import has_rank
-from kernel.world.seed import SEED_NAME, load_splash
-from kernel.world.session import SESSIONS, Session
-from kernel.world.socket_bus import maybe_wire_broker
-from parts.gmcp import (
+from kernel.gmcp import (
     GMCP_OPT,
     enables_gmcp,
     friends_report,
@@ -51,6 +41,16 @@ from parts.gmcp import (
     target_report,
     vitals_report,
 )
+from kernel.shelf.bulkhead import Bulkhead, BulkheadFull
+from kernel.shelf.telnet_codec import IAC, WILL, WONT, strip_iac
+from kernel.world import bans, guild, maintenance_mode, party, presence, trade, tutorial
+from kernel.world.accounts import password_fixable
+from kernel.world.characters import save_all, save_character
+from kernel.world.events import SHUTDOWN, bind_echo, bind_gmcp, unbind_echo, unbind_gmcp
+from kernel.world.ranks import has_rank
+from kernel.world.seed import SEED_NAME, load_splash
+from kernel.world.session import SESSIONS, Session
+from kernel.world.socket_bus import maybe_wire_broker
 
 TICK_LOCK = threading.Lock()
 _counter_lock = threading.Lock()
@@ -153,7 +153,7 @@ _ECHO_ON = bytes([IAC, WONT, ECHO_OPT])  # "I won't echo" -> client resumes
 
 # GMCP (option 201): offer it on connect. A capable client answers DO/WILL GMCP and then gets
 # structured state frames (Char.Vitals, Room.Info) alongside the text; a raw nc never answers, so
-# it stays a plain-text client and sees no binary. Framing + the reply-reader live in parts/gmcp.py.
+# it stays a plain-text client and sees no binary. Framing + reply-reader live in kernel/gmcp.py.
 _WILL_GMCP = bytes([IAC, WILL, GMCP_OPT])
 
 _strip_telnet = strip_iac

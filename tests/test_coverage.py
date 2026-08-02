@@ -1,4 +1,4 @@
-"""Test twin for parts/coverage.py -- the content-reaches-engine coverage gate.
+"""Test twin for kernel/coverage.py -- the content-reaches-engine coverage gate.
 
 Acceptance: the live shipped seeds witness every engine capability (the enforced gate), and each
 detector fires on the seed feature it names. Refusal: a capability no pack exercises is flagged DARK
@@ -8,15 +8,15 @@ that IS exercised is flagged stale, so the reserve list cannot hide a now-covere
 
 from typing import cast
 
-import parts.coverage as cov
-from kernel.world.seed import Door, Item, Job, Npc, QuestSpec
-from parts.coverage import (
+import kernel.coverage as cov
+from kernel.coverage import (
     CAPABILITIES,
     PackContent,
     _coverage,
     _violations,
     unexercised_capabilities,
 )
+from kernel.world.seed import Door, Item, Job, Npc, QuestSpec
 
 
 def _pack(**kw: object) -> PackContent:

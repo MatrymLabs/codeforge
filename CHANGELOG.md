@@ -104,7 +104,7 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
   identity, a re-classifiable catalog address, display designation, metadata tags - which maps onto
   CodeForge's own "labels are identity, numbers are filing aids" doctrine. The safe foundation ships
   with it: `catalog/domains.yaml` consolidates 31 ad-hoc categories into **19 stable engineering
-  domains**, and `parts/store_index.py` (the `store` verb) derives each part's catalog address
+  domains**, and `kernel/store_index.py` (the `store` verb) derives each part's catalog address
   (`domain.ordinal`) and provides multi-field search - **editing zero cards**. `store` shows the
   catalog organized by domain; `store find <query>` searches it. Richer card fields, the seven-stage
   maturity ladder, and numeric part IDs are proposed as gated later migrations. Filed UM05-059. No
@@ -123,7 +123,7 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
   store as full parts. **Stream Framer (`stream-framer`):** frame a byte stream into complete,
   delimiter-terminated messages, buffering a partial tail (the `endswith(b"")`-is-always-True scar);
   one core (`parts/stream_framer.py`), two adapters: a bursty in-world `telegraph`
-  (`parts/telegraph.py`) and a `RecordStream` byte-stream reader (`kernel/record_stream.py`). **Typed
+  (`kernel/telegraph.py`) and a `RecordStream` byte-stream reader (`kernel/record_stream.py`). **Typed
   Signal Bus (`typed-event-bus`):** a typed synchronous pub/sub (`parts/signal_bus.py`, distinct from
   the in-world echo `events`), two adapters: a world-signal `chime` (`parts/chime.py`) and a
   domain-event `Notifier` (`kernel/notifier.py`). Both cataloged, filed (UM05-055..058, UM04-041/042),
@@ -143,15 +143,15 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
   closed, plus reject and rollback edges); a change **cannot reach canary until its test evidence
   passes**. Not reinvented: **assembled from five parts already on the shelf** (repository + workflow
   + statemachine + validation + test-evidence), no code copied. One core (`kernel/change_ledger.py`),
-  two adapters: a world-`maintenance` log in the game (`parts/maintenance.py`) and a dependency/CVE
-  `PatchTracker` for a practical app (`parts/patch_tracker.py`). Cataloged, filed, manifest, new
+  two adapters: a world-`maintenance` log in the game (`kernel/maintenance.py`) and a dependency/CVE
+  `PatchTracker` for a practical app (`kernel/patch_tracker.py`). Cataloged, filed, manifest, new
   change-management pattern doc. No new dependencies. Maturity: beta.
 - **Hardware Store part: Input Sanitizer (`sanitizer`).** Normalize untrusted text deterministically
   and **idempotently** (sanitizing twice equals once, a property-tested invariant): drop control
   characters, fold whitespace, trim, optionally lowercase, cap length. Honest scope: it normalizes,
   it is not a security control, though it does neutralize control chars and log-injection newlines.
   One core (`parts/sanitizer.py`), two adapters: a sanitized player `title` in the game
-  (`parts/titles.py`) and a stored/logged field cleaner for a practical app
+  (`kernel/titles.py`) and a stored/logged field cleaner for a practical app
   (`kernel/field_sanitizer.py`). Cataloged, filed, manifest, validation pattern doc extended. No new
   dependencies. Maturity: beta.
 - **Hardware Store part: Plugin Registry (`plugin-registry`).** Extend behavior by EXPLICIT
@@ -159,7 +159,7 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
   metadata (a duplicate name or a missing required capability is refused), and enables/disables
   plugins. The trust boundary is explicit (the caller supplies the object). One core
   (`parts/plugin_registry.py`), two adapters: pluggable in-world `heralds` in the game
-  (`parts/heralds.py`) and swappable json/csv export providers for a practical app
+  (`kernel/heralds.py`) and swappable json/csv export providers for a practical app
   (`kernel/exporters.py`). Cataloged, filed, manifest, new plugins pattern doc. No new dependencies.
   Maturity: beta.
 - **Hardware Store part: Test Evidence (`test-evidence`).** Record check evidence honestly: an
@@ -167,14 +167,14 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
   `passed()` is true only when every declared check has PASSED evidence. Missing evidence is never a
   pass (a step that never ran can't be reported ready), and a runner ERROR is distinct from a test
   FAILED. One core (`parts/test_evidence.py`), two adapters: a `certify` world-readiness certificate
-  in the game (`parts/world_cert.py`) and a `ReleaseGate` for a practical app
+  in the game (`kernel/world_cert.py`) and a `ReleaseGate` for a practical app
   (`kernel/release_gate.py`). Property test pins passed iff all passed. Cataloged, filed, manifest,
   new testing pattern doc. No new dependencies. Maturity: beta.
 - **Hardware Store part: Feature Flags (`feature-flags`).** Toggle features at runtime without a
   redeploy: a `FlagRegistry` of named flags with defaults, an override that beats the default, reset,
   and retirement; an unknown flag is an error (never silently off) and flags default off. One core
   (`parts/feature_flags.py`), two adapters: an in-world `features` panel in the game
-  (`parts/features.py`) and an environment kill switch for a practical app
+  (`kernel/features.py`) and an environment kill switch for a practical app
   (`kernel/feature_control.py`, `FEATURE_<NAME>` overrides the default). Property test pins both paths
   and the override precedence. Cataloged, filed, manifest, configuration pattern doc. No new
   dependencies. Maturity: beta.
@@ -183,14 +183,14 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
   is the one loud exit. Rule builders cover the common cases (`required`, `matches`, `in_range`,
   `of_type`, `one_of`, `max_length`), with `required` kept separate from format so an empty field
   reports once. One core (`parts/validation.py`), two adapters: a `namecheck` name preview in the
-  game (`parts/name_check.py`) and a signup-payload validator for a practical app
+  game (`kernel/name_check.py`) and a signup-payload validator for a practical app
   (`kernel/payload_check.py`). Property test pins that a valid value passes and issues never exceed
   rules. Cataloged, filed, manifest, validation pattern doc. No new dependencies. Maturity: beta.
 - **Hardware Store part: the Health Registry (`health-registry`).** Run named health checks and
   aggregate an honest overall status (worst wins). The load-bearing rule: an UNKNOWN or failing
   check is never reported healthy, and an empty registry is UNKNOWN. A raising check is contained
   (never crashes the report). One core (`parts/health.py`), two adapters: a `vitals` world-health
-  panel in the game (`parts/vitals.py`) and a `ServiceHealth` readiness probe for a practical app
+  panel in the game (`kernel/vitals.py`) and a `ServiceHealth` readiness probe for a practical app
   (`kernel/service_health.py`). A property test pins that overall is healthy iff every check is.
   Cataloged, filed, manifest, observability pattern doc. No new dependencies. Maturity: beta.
 - **Hardware Store part: the Repository (`repository`).** The Repository pattern (Fowler),
@@ -198,7 +198,7 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
   replaceable storage boundary) and `InMemoryRepository` is the dependency-free implementation.
   Identity-agnostic via an injected `key_of`; misuse fails loud (`DuplicateKey`/`NotFound`); a
   property test proves no accidental data loss. One core (`parts/repository.py`), two adapters: a
-  per-player `journal` logbook in the game (`parts/logbook.py`) and a records/asset registry for a
+  per-player `journal` logbook in the game (`kernel/logbook.py`) and a records/asset registry for a
   practical app (`kernel/asset_registry.py`). A database repository is a later adapter satisfying the
   same Protocol; the domain code would not change. Cataloged, filed, manifest, persistence pattern
   doc. No new dependencies. Maturity: beta.
@@ -208,7 +208,7 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
   part from a part) - the loop's assembly stage shows the real dependency. Deterministic via an
   injected clock; a property test proves it opens exactly on a run of `threshold` failures. One core
   (`parts/circuit_breaker.py`), two adapters: a `channel` verb on a flaky relay in the game
-  (`parts/relay.py`) and a per-service `ServiceBreakers` registry for a practical app
+  (`kernel/relay.py`) and a per-service `ServiceBreakers` registry for a practical app
   (`kernel/service_breaker.py`). Cataloged, filed, manifest, resilience pattern doc. No new
   dependencies. Maturity: beta.
 - **Hardware Store part: the Retry Policy (`retry-policy`).** Retry with exponential backoff,
@@ -216,7 +216,7 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
   transient failures, re-raises permanent ones immediately, and re-raises the final one (never
   swallowed). A property test pins the invariants (calls never exceed the budget; one backoff
   between tries). One core (`parts/retry.py`), two adapters: an auto-retried `calibrate` verb in
-  the game (`parts/calibrate.py`) and a `ResilientCaller` with an attempt audit trail for a
+  the game (`kernel/calibrate.py`) and a `ResilientCaller` with an attempt audit trail for a
   practical app (`kernel/resilient_call.py`). Cataloged, filed, manifest, pattern doc
   (`docs/hardware_store/patterns/resilience.md`); `make loop PART=retry-policy` traces it. No new
   dependencies. Maturity: beta.
@@ -224,7 +224,7 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
   deterministic rate limiter (token-bucket algorithm, independently implemented) with an
   INJECTED clock, so tests pin exact behavior and a property test proves the conservation law
   (consumed never exceeds `capacity + rate*elapsed`). One core (`parts/token_bucket.py`), two
-  adapters: a rate-limited `shout` verb in the game (`parts/chat_throttle.py`) and a
+  adapters: a rate-limited `shout` verb in the game (`kernel/chat_throttle.py`) and a
   login-attempt guard for a practical app (`kernel/login_guard.py`). Cataloged, filed, manifest
   (`docs/hardware/token-bucket.yaml`), pattern doc, and `make loop PART=token-bucket` traces it.
   No new dependencies. Maturity: beta. From the Full-Stack Design Patterns research.
@@ -259,7 +259,7 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
 - **Fuzz finding: a bare `interfaces:` in a manifest YAML** parses to `None` and crashed
   the gate with `TypeError` instead of refusing with `ManifestError`. List fields are now
   validated as lists.
-- **Typed boundary in `parts/loop.py`**: stage functions take `PartManifest | None`
+- **Typed boundary in `kernel/loop.py`**: stage functions take `PartManifest | None`
   (via `TYPE_CHECKING`, keeping lazy imports) instead of `object` + isinstance narrowing.
 
 ### Added
@@ -302,7 +302,7 @@ date-stamped while pre-1.0.
   reworded a networking term to a plain "event loop" for accuracy. Two seeds still ship, so
   "a seed is a game" stays intact.
 - **Proving Ground phases 9-10: the Foundry (human-approved, sandboxed code generation).** The
-  AI-touches-files phases, made safe. `parts/foundry.py` (MOD-10.020): a
+  AI-touches-files phases, made safe. `kernel/foundry.py` (MOD-10.020): a
   `PatchProposal` is a DATA artifact (target, why, part, risk, test, rollback) - creating one
   writes NOTHING, and a human must `approve()` it first (phase 9). Applying an approved
   proposal generates a NEW file into a git-ignored `workspace/` sandbox: it refuses without
@@ -388,7 +388,7 @@ date-stamped while pre-1.0.
   interactivity: a **Refresh** control re-computes the board and swaps the cards grid in place
   (`GET /ui/board`), and clicking a **Blueprint** renders it as an HTML fragment into an
   in-page panel (`GET /ui/blueprint/{id}`, reusing the Blueprint renderer). HTMX is
-  **vendored** (`parts/web/static/htmx.min.js`, served same-origin from `/static/htmx.min.js`)
+  **vendored** (`adapters/web/static/htmx.min.js`, served same-origin from `/static/htmx.min.js`)
   -- no JS build system, no runtime CDN, and no Python dependency. It is pure progressive
   enhancement: the page is fully server-rendered and works with JavaScript disabled (each
   blueprint link is a real `<a href>`). Fragment routes return HTML fragments (no document
@@ -445,7 +445,7 @@ date-stamped while pre-1.0.
   `docs/blueprint_renderer.md`): CodeForge is architecture-first Python; Django/Evennia/React
   stay researched and deferred.
 - **Readiness dashboard (the full-stack proof).** A read-only, server-rendered web page
-  (`parts/dashboard.py`, MOD-10.014) that projects real forge evidence, the
+  (`kernel/dashboard.py`, MOD-10.014) that projects real forge evidence, the
   career board, the QualityGate audit, the hardware store, and the latest `make bench` run,
   onto four cards, with a JSON twin at `GET /api/status` (the seam a future React front end
   consumes). Frameless: stdlib `html.escape` + f-strings, no template engine and no new
@@ -513,13 +513,13 @@ date-stamped while pre-1.0.
   Console room that WIRES every diagnostic program behind one console: `terminal functions`
   (the functions check), `inspect`, `career`, `pioneer`, `pm`, `truth`, `qa`, `docs`. Each
   dispatches to that system's existing renderer (composition, not duplication), framed like
-  a terminal. `parts/terminal.py` + `docs/terminal.md`; the room now points to it. board 86/86.
+  a terminal. `adapters/terminal.py` + `docs/terminal.md`; the room now points to it. board 86/86.
 - **Hardware Store functions check (`functions`).** A live demo of each cataloged reusable
   part, the real call and its real output, so "reusable" is shown, not claimed: `rank-gate`
   refuses a novice and allows an owner, `report-writer` writes "hello world" to a temp file,
   `validated-loader` rejects a bad row and fails loud, `assessment-engine` validates its
   lessons. Parts that need world state cite their test twin (`[tested]`), never a fake demo.
-  `parts/functions.py`, filed in the registry (board 84/84).
+  `kernel/functions.py`, filed in the registry (board 84/84).
 - **Closed three career-board gaps with real artifacts.** Cataloged the ReportWriter as a
   Hardware Store part with a cross-domain reuse map (`catalog/parts.yaml`); wrote a real
   rollback runbook for the live demo (`docs/runbooks/demo-deploy-rollback.md`); added a
@@ -536,7 +536,7 @@ date-stamped while pre-1.0.
   self-audit signal - registry validity · QA board · EvidenceGate truth · doc presence ·
   overclaim scan, plus career + pioneer status - into a single green/yellow/red frame-up.
   Computed live (nothing stored), REUSES the existing gates (no duplication). The single
-  pane of glass over the whole machine. `parts/frameup.py` + `docs/frame_up.md` +
+  pane of glass over the whole machine. `kernel/frameup.py` + `docs/frame_up.md` +
   `tests/test_frameup.py`; filed in the registry (board 81/81). Currently 🟢 GREEN.
 - **Pioneer Mode (`pioneer` command).** A disciplined-Maverick engineering framework -
   *bend convention, not truth/safety/trust* - surfaced in the MUD and codified in docs.
@@ -557,7 +557,7 @@ date-stamped while pre-1.0.
   board in *The Forge Workshop* that maps CodeForge work to real software-career skills -
   each with the exact repo artifact that proves it, and the honest gaps. Grounded in
   BLS/O*NET research. Views: `career` · `career checklist` · `career gaps` · `career
-  evidence` · `career resume` · `career role entry|intermediate|advanced`. `parts/career.py`
+  evidence` · `career resume` · `career role entry|intermediate|advanced`. `kernel/career.py`
   + `data/career/career_evidence_matrix.json` + `docs/{career_evidence_board,resume_mapping}.md`.
   Honesty enforced: `tests/test_career.py` fails if a skill is `proven`/`partial` while its
   cited proof path doesn't exist (no overclaiming). Shipped board: 24 proven · 8 partial ·
@@ -570,7 +570,7 @@ date-stamped while pre-1.0.
   (`@` admin, account/character split, rooms/exits) as shared MUD vocabulary, not copying.
 - **Seed → Cast scaffold (Phase 1).** A **seed pack** is a game's content (`seeds/<name>/`);
   a **cast** is a standalone project poured from the forge - the engine + one seed pack +
-  config, detached into its own repo. `parts/cast.py` + `make cast-plan` PLAN a cast (a dry
+  config, detached into its own repo. `kernel/cast.py` + `make cast-plan` PLAN a cast (a dry
   run listing what it *would* copy and the manifest it *would* write) and write nothing.
   Honest by construction: `engine_strategy: "vendored-whole"` (module-level selection is
   Phase-2 decoupling work, not claimed now), and the never-copy set covers secrets/state/
@@ -639,7 +639,7 @@ date-stamped while pre-1.0.
   Folded into `make security` and CI. Closes the RepoIntegrityRitual's own #1 gap:
   its report went `secret scan: not_configured` → `detected`. The repo scanned clean
   (empty baseline).
-- **RepoIntegrityRitual** (`parts/integrity.py`, `make repo-integrity`): one honest
+- **RepoIntegrityRitual** (`kernel/integrity.py`, `make repo-integrity`): one honest
   repo-health report - code quality (tool detection), security, license/source origin,
   originality awareness, presentation, and a truth/EvidenceGate pass - composed from
   checks the repo already owns, saved dated under `reports/repo_integrity/`.
@@ -693,7 +693,7 @@ date-stamped while pre-1.0.
   the forge) and the project dashboard (`pm status`) prints as a readiness report.
   `make readiness` is the reusable one-button version. `docs/startup_ritual.md`
   documents all six phases (IGNITION · WARDS · READINESS · MIRROR · FORGE · GATE).
-- **PM control panel** (`parts/pm.py`): `pm status` / `pm metrics` - the project
+- **PM control panel** (`kernel/pm.py`): `pm status` / `pm metrics` - the project
   dashboard is *computed* from the registry + QualityGate (part + part + part), not
   stored. `docs/project_management.md` holds the charter, milestone status, backlog,
   risk register, decision log, and one worked DMAIC. Scope control: this prompt's
@@ -706,7 +706,7 @@ date-stamped while pre-1.0.
 - **`docs/safety_qa_system.md`** - the Safety + QA architecture.
 - **`@sg item <pattern>`** - admin (wizard+) item generator on the command spine;
   data-driven patterns (`catalog/items.yaml`), traced to `ITM-*`, refuses the unknown.
-- **Command spine** (`parts/commands.py`): namespaced (`CORE` / `ADMIN @` / `SEED`),
+- **Command spine** (`kernel/commands.py`): namespaced (`CORE` / `ADMIN @` / `SEED`),
   rank-gated `Command` + `CommandSet`; `registry` verbs proven on it.
 - **Classification Registry** (`kernel/registry.py` + `registry/`): designations
   (`TYPE-UM-SEC-NODE-SEQ-REV`), 18 rooms + commands + items filed, schema + rules doc.

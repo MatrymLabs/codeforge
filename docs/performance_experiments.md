@@ -13,7 +13,7 @@ commit de0f8a5. Reproduce with `python -m benchmarks.perf_journeys`.
 
 ## EXP-001 - Cache the parsed Hardware Store catalog
 
-- **Repository Area:** F (Hardware Store / registry). `parts/workshop.py:reuse_search`, `parts/hardware.py:load_catalog`.
+- **Repository Area:** F (Hardware Store / registry). `kernel/workshop.py:reuse_search`, `kernel/hardware.py:load_catalog`.
 - **Observed Problem:** `reuse_search` calls `load_catalog()` on every search, which re-reads and re-parses `catalog/parts.yaml` with `yaml.safe_load` each call.
 - **Evidence of Problem / Profiling:** cProfile of 100 `reuse_search("engine")` calls = 13.97 s, of which **13.82 s (99%) is `yaml.safe_load`** (`reports/performance/profiles/catalog_search.txt`).
 - **Current Baseline:** catalog search median **39 ms**, p95 67 ms (the catalog never changes within a process).
@@ -117,7 +117,7 @@ commit de0f8a5. Reproduce with `python -m benchmarks.perf_journeys`.
   that process (a benchmark, a CLI invocation, a short session).
 - **Evidence / Profiling:** `python -X importtime -c "import forge"` (Windows PC, warm cache):
   our chain 72.5 ms of a 100.5 ms cold start; heaviest command-only subtrees
-  `kernel.evolution.command` 9.0 ms, `parts.frameup` 6.4 ms, `parts.console` 4.3 ms, plus a long
+  `kernel.evolution.command` 9.0 ms, `kernel.frameup` 6.4 ms, `parts.console` 4.3 ms, plus a long
   tail of ~1-2 ms modules.
 - **Hypothesis:** command lambdas resolve module globals at CALL time, so replacing each eager
   import with a module-level wrapper that imports inside its body removes the modules from the

@@ -1,10 +1,10 @@
-"""Test twin for parts/assembly.py -- import discovery and assembly evidence."""
+"""Test twin for kernel/assembly.py -- import discovery and assembly evidence."""
 
 import textwrap
 
 import pytest
 
-from parts.assembly import (
+from kernel.assembly import (
     Assembly,
     AssemblyError,
     assemble,
@@ -12,8 +12,8 @@ from parts.assembly import (
     file_evidence,
     resolve_parts,
 )
-from parts.hardware import Part
-from parts.manifest import PartManifest, find_manifest
+from kernel.hardware import Part
+from kernel.manifest import PartManifest, find_manifest
 
 
 def test_discover_imports_finds_parts_imports(tmp_path):

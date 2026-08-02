@@ -75,7 +75,7 @@ check: lint imports typecheck coverage sast
 # --- Readiness: the global self-audit -- registry validates (gates), then the
 # project dashboard, computed from the registry + QualityGate. Read-only. ---
 readiness:
-	@python3 -c "import sys; from kernel.registry import load_collective, validate, unfiled_modules, untwinned_modules; from parts.coverage import unexercised_capabilities; from parts.pm import pm_status; r=load_collective(); p=validate(r)+['unfiled module (not in the registry): '+m for m in unfiled_modules(r)]+['untested module (no test twin or aggregate): '+m for m in untwinned_modules()]; c=unexercised_capabilities(); print('Registry: CLEAN (no duplicates, no orphans, every module filed and tested)' if not p else 'Registry PROBLEMS:\n  '+'\n  '.join(p)); print('Coverage: CLEAN (every engine capability witnessed by shipped content)' if not c else 'Coverage PROBLEMS:\n  '+'\n  '.join(c)); print(); print(pm_status()); sys.exit(1 if (p or c) else 0)"
+	@python3 -c "import sys; from kernel.registry import load_collective, validate, unfiled_modules, untwinned_modules; from kernel.coverage import unexercised_capabilities; from kernel.pm import pm_status; r=load_collective(); p=validate(r)+['unfiled module (not in the registry): '+m for m in unfiled_modules(r)]+['untested module (no test twin or aggregate): '+m for m in untwinned_modules()]; c=unexercised_capabilities(); print('Registry: CLEAN (no duplicates, no orphans, every module filed and tested)' if not p else 'Registry PROBLEMS:\n  '+'\n  '.join(p)); print('Coverage: CLEAN (every engine capability witnessed by shipped content)' if not c else 'Coverage PROBLEMS:\n  '+'\n  '.join(c)); print(); print(pm_status()); sys.exit(1 if (p or c) else 0)"
 
 # --- ARC verdicts: run the release checks and FILE the runtime dimensions' verdicts as dated
 # evidence under arc-evidence/ (git-ignored, reproducible from the recorded commit), so ARC can
@@ -89,19 +89,19 @@ arc-verdicts:
 # provenance + registry + docs + truth), composed from checks we already own.
 # Detects tools; a missing one is reported not_configured, never faked. ---
 repo-integrity:
-	@python3 -m parts.integrity
+	@python3 -m kernel.integrity
 
 # --- Cast: plan a standalone game project ("cast") poured from a seed pack + the engine.
 # Dry run -- lists what it WOULD copy and the manifest it WOULD write; writes nothing.
 # Usage: make cast-plan TEMPLATE=fantasy_mud NAME=Aethris (see docs/seed_architecture.md). ---
 cast-plan:
-	@python3 -m parts.cast $(or $(TEMPLATE),blank_mud) $(or $(NAME),Demo) $$(git rev-parse --short HEAD 2>/dev/null || echo unknown)
+	@python3 -m kernel.cast $(or $(TEMPLATE),blank_mud) $(or $(NAME),Demo) $$(git rev-parse --short HEAD 2>/dev/null || echo unknown)
 
 # --- Cast (Phase 2): POUR a standalone project to DEST (engine vendored + seed pack + scaffold).
 # Assembles a package; it is not yet detached/proven to boot independently (manifest: generated).
 # Usage: make cast TEMPLATE=blank_mud NAME=Demo DEST=../codeforge-cast-demo ---
 cast:
-	@python3 -m parts.cast generate $(or $(TEMPLATE),blank_mud) $(or $(NAME),Demo) $(or $(DEST),../codeforge-cast-demo) $$(git rev-parse --short HEAD 2>/dev/null || echo unknown)
+	@python3 -m kernel.cast generate $(or $(TEMPLATE),blank_mud) $(or $(NAME),Demo) $(or $(DEST),../codeforge-cast-demo) $$(git rev-parse --short HEAD 2>/dev/null || echo unknown)
 
 # --- Deploy-proof: pour the REAL Aethryn game Seed (whole engine + world), boot it in a fresh
 # subprocess, and prove it serves play commands over its own world - the honest proof the game
@@ -114,13 +114,13 @@ deploy-proof:
 # vendor the surfaces' closure, prove it with the broad harness - and prints the summary.
 # Usage: make forge NAME=SlimGame SURFACES=solo,save DEST=../my-game ---
 forge:
-	@python3 -m parts.cast forge $(or $(TEMPLATE),blank_mud) $(or $(NAME),Demo) $(or $(DEST),../codeforge-forged-game) $(or $(SURFACES),solo,save) $$(git rev-parse --short HEAD 2>/dev/null || echo unknown)
+	@python3 -m kernel.cast forge $(or $(TEMPLATE),blank_mud) $(or $(NAME),Demo) $(or $(DEST),../codeforge-forged-game) $(or $(SURFACES),solo,save) $$(git rev-parse --short HEAD 2>/dev/null || echo unknown)
 
 # --- Cast (Phase D2): pour a SELECTIVE cast - vendor ONLY the target surfaces' module closure,
 # then validate by running every surface command against it. Falls back honestly (not_validated)
 # if the closure is insufficient. Usage: make cast-selective SURFACES=solo,save NAME=Demo DEST=.. ---
 cast-selective:
-	@python3 -m parts.cast generate-selective $(or $(TEMPLATE),blank_mud) $(or $(NAME),Demo) $(or $(DEST),../codeforge-cast-selective) $(or $(SURFACES),solo,save) $$(git rev-parse --short HEAD 2>/dev/null || echo unknown)
+	@python3 -m kernel.cast generate-selective $(or $(TEMPLATE),blank_mud) $(or $(NAME),Demo) $(or $(DEST),../codeforge-cast-selective) $(or $(SURFACES),solo,save) $$(git rev-parse --short HEAD 2>/dev/null || echo unknown)
 
 # --- Cast diff (package-update U1): read-only drift report between a poured cast's vendored engine
 # and this checkout (the target source). Names changed / upstream-only / cast-only engine files, the
@@ -128,49 +128,49 @@ cast-selective:
 # is a separate step. AUDIT=1 adds a pip-audit CVE scan (needs network). Usage:
 # make cast-diff DIR=../codeforge-forged-game SOURCE=. [AUDIT=1] ---
 cast-diff:
-	@python3 -m parts.cast diff $(or $(DIR),../codeforge-forged-game) $(or $(SOURCE),.) $(if $(AUDIT),--audit)
+	@python3 -m kernel.cast diff $(or $(DIR),../codeforge-forged-game) $(or $(SOURCE),.) $(if $(AUDIT),--audit)
 
 # --- Cast update (package-update U2): APPLY an engine update to a poured cast, guarded by the broad
 # harness. Backs up, re-vendors from this checkout, re-validates, rolls back on failure; never
 # commits (the owner commits). Refuses local edits / selective casts unless FORCE=1. Usage:
 # make cast-update DIR=../codeforge-forged-game SOURCE=. [FORCE=1] ---
 cast-update:
-	@python3 -m parts.cast update $(or $(DIR),../codeforge-forged-game) $(or $(SOURCE),.) $(if $(FORCE),--force)
+	@python3 -m kernel.cast update $(or $(DIR),../codeforge-forged-game) $(or $(SOURCE),.) $(if $(FORCE),--force)
 
 # --- Plugins: list the third-party command plugins loaded from plugins/ at boot, and any that were
 # rejected (loud, never silent). The plugin boundary (D3): SEED verbs only, no collision. ---
 plugins:
-	@python3 -c "import forge; from parts.plugins import render_plugins; print(render_plugins(forge.PLUGIN_LOAD))"
+	@python3 -c "import forge; from kernel.plugins import render_plugins; print(render_plugins(forge.PLUGIN_LOAD))"
 
 # --- Coupling: read-only engine coupling report (detachment D1). Traces the runtime module
 # closure per surface and lists what a runtime cast could shed. Changes nothing. ---
 coupling:
-	@python3 -m parts.coupling
+	@python3 -m kernel.coupling
 
 # --- Shelf-pour: pour the Hardware Store shelf as a standalone installable package (renamed off
 # `parts`, deps auto-declared) and PROVE it imports every core with zero engine present. Changes
 # nothing in the repo; writes into DEST (git-ignored). Usage: make shelf-pour DEST=../codeforge-shelf ---
 shelf-pour:
-	@python3 -m parts.shelf_pour $(or $(DEST),workspace/shelf-pour)
+	@python3 -m kernel.shelf_pour $(or $(DEST),workspace/shelf-pour)
 
 # --- Shelf-build: the release-grade proof. Pour, then build the wheel and install it into a FRESH
 # venv -- proving `pip install codeforge-shelf` works for a stranger. Needs network (pip). Then
 # `twine upload` (your PyPI trigger). Usage: make shelf-build DEST=.. WORK=.. ---
 shelf-build:
-	@python3 -m parts.shelf_pour build $(or $(DEST),workspace/shelf-pour) $(or $(WORK),workspace/shelf-build)
+	@python3 -m kernel.shelf_pour build $(or $(DEST),workspace/shelf-pour) $(or $(WORK),workspace/shelf-build)
 
 # --- Cast install-check: the FRESH-INSTALL proof. Creates a clean venv, installs ONLY the cast's
 # declared deps, and boots it there - so the cast runs with zero dependency on CodeForge's env.
 # Needs network (pip). Usage: make cast-install-check DIR=../codeforge-cast-demo WORK=/tmp/ci ---
 cast-install-check:
-	@python3 -m parts.cast install-check $(or $(DIR),../codeforge-cast-demo) $(or $(WORK),/tmp/cast-install-check)
+	@python3 -m kernel.cast install-check $(or $(DIR),../codeforge-cast-demo) $(or $(WORK),/tmp/cast-install-check)
 
 # --- Truth: EvidenceGate -- check the project's claims correspond to reality
 # (overclaims, drift-prone counts, docs, registry, QA board). Exit 1 on any
 # FLAGGED claim, so the ritual and CI fail loud on drift. Same as the in-MUD
 # `truth check`, reachable from a script. ---
 truth:
-	@python3 -m parts.evidence_gate
+	@python3 -m kernel.evidence_gate
 
 # --- Smoke: the whole engine end-to-end over a live socket -- start -> log in
 # -> look -> check -> do -> log out -> bank the forge. Isolated (own port + temp
@@ -249,7 +249,7 @@ addie:
 # --- Bench: measure the engine tick (handle_command) throughput + latency and file a
 # dated performance-evidence report under reports/performance/. Frameless (stdlib). ---
 bench:
-	@python -m parts.bench
+	@python -m kernel.bench
 
 # --- Proto: regenerate the protocol-spine bindings from the ONE .proto (Python + Go). Needs protoc
 # + protoc-gen-go on PATH; the generated code is git-ignored and rebuilt here (ADR-0012). The game
@@ -267,7 +267,7 @@ contracts:
 # --- Trend: measure the engine tick, RECORD its median as a retained Chronicle metric point
 # (chronicle/ledger.jsonl, git-tracked), then render the series over time. `make bench` stays pure. ---
 trend:
-	@python3 -m parts.bench --record $$(git rev-parse --short HEAD 2>/dev/null || echo unknown)
+	@python3 -m kernel.bench --record $$(git rev-parse --short HEAD 2>/dev/null || echo unknown)
 	@python3 -m kernel.chronicle trend engine_tick.median_us
 
 # --- SLO: evaluate the recorded engine-tick SLI against its objective + error budget
@@ -279,7 +279,7 @@ slo:
 # --- Loadtest: drive the tick from many concurrent sessions and file a latency-distribution
 # artifact (p50/p95/p99). Read-only rotation; localhost/in-process only. NOT in make check. ---
 loadtest:
-	@python3 -m parts.loadtest
+	@python3 -m kernel.loadtest
 
 # --- Artifact: stamp a portfolio-artifact repo skeleton (README/ADR/design-doc/api-spec/
 # test-plan/CI/compose) into git-ignored workspace/artifacts/. Structure + boilerplate only. ---
@@ -290,7 +290,7 @@ artifact:
 # ai-eval (eval-regression memory), then show the memory. Network-free; point it at the real
 # ClaudeAdvisor through the same seam to evaluate the LLM. ---
 ai-eval:
-	@python3 -m parts.ai_eval $$(git rev-parse --short HEAD 2>/dev/null || echo unknown)
+	@python3 -m adapters.ai_eval $$(git rev-parse --short HEAD 2>/dev/null || echo unknown)
 	@python3 -m kernel.chronicle evals
 
 # --- Retention doctor (read-only, R1): show what the Chronicle keeps, what is eligible for
@@ -358,7 +358,7 @@ run:
 	python3 forge.py
 
 world:
-	python3 -m parts.catalog
+	python3 -m kernel.catalog
 
 # The Surveyor: read-only validation of the Aethryn world map (duplicate ids, broken region
 # references, canon drift). Exit non-zero on any problem, so it can gate a script.
@@ -368,16 +368,16 @@ world-check:
 # The Assayer: read-only audit of the DESIGNED coin economy (faucets vs sinks) over the
 # assembled Aethryn world, so live-ops can read the balance without instrumenting the server.
 economy-audit:
-	@FORGE_SEED=aethryn python3 -c "import kernel.world.world; from kernel.world.npcs import NPCS; from parts.coin_flow import render_audit; print(render_audit(NPCS))"
+	@FORGE_SEED=aethryn python3 -c "import kernel.world.world; from kernel.world.npcs import NPCS; from kernel.coin_flow import render_audit; print(render_audit(NPCS))"
 
 store:
 	python3 -m kernel.store
 
 hardware:
-	python3 -m parts.hardware
+	python3 -m kernel.hardware
 
 loop:
-	@python3 -m parts.loop trace $(or $(PART),workflow-engine)
+	@python3 -m kernel.loop trace $(or $(PART),workflow-engine)
 
 clean:
 	rm -rf .pytest_cache .ruff_cache .mypy_cache .coverage __pycache__ parts/__pycache__ tests/__pycache__

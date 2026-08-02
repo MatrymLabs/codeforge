@@ -1,6 +1,6 @@
 """CARD: service_breaker -- the practical adapter for the circuit breaker: per-service breakers.
 
-The reverse of parts/relay: the SAME `CircuitBreaker` core, driven by a plain (non-game) registry
+The reverse of kernel/relay: the SAME `CircuitBreaker` core, driven by a plain (non-game) registry
 that keeps ONE breaker per named upstream service, so a broken payment gateway trips independently
 of a slow search service. Its cousins protect any API/DB/RPC dependency from cascading failures.
 The clock is injected so callers (and tests) control the reset timing.

@@ -29,7 +29,7 @@ responsibility** -- the part retries, it does not make an operation safe to repe
 
 ## GAME-TO-PRACTICAL TRANSLATION
 
-- **Game component:** an auto-retried `calibrate` (`parts/calibrate.py`).
+- **Game component:** an auto-retried `calibrate` (`kernel/calibrate.py`).
 - **Core behavior:** try an operation; on a transient failure, back off and try again, up to a budget.
 - **Game-specific presentation:** "Aligned on attempt 3." / "Failed after 4 attempts."
 - **Reusable domain logic:** the whole `RetryPolicy` + `run_with_retries` (game-free).
@@ -42,7 +42,7 @@ responsibility** -- the part retries, it does not make an operation safe to repe
 
 ## Adapters (one core, two lives)
 
-- **Game:** `parts/calibrate.py` -- the `calibrate` verb retries a flaky instrument. The tick is
+- **Game:** `kernel/calibrate.py` -- the `calibrate` verb retries a flaky instrument. The tick is
   synchronous, so it uses a **zero delay** (a real backoff would block every player); the delay
   behavior is proven in the core + practical tests.
 - **Practical:** `kernel/resilient_call.py` -- `ResilientCaller(policy).call(fn)` retries an unreliable
@@ -70,7 +70,7 @@ The manufacturing loop's assembly stage shows that real dependency. The clock is
 trip and recovery are deterministic; a property test proves it opens exactly when a run of
 `threshold` consecutive failures occurs.
 
-- **Game:** `parts/relay.py` -- a `channel` verb draws power through a relay that trips after
+- **Game:** `kernel/relay.py` -- a `channel` verb draws power through a relay that trips after
   repeated surges, then cools and re-tests. Tick-reachable.
 - **Practical:** `kernel/service_breaker.py` -- `ServiceBreakers` keeps one breaker per named upstream
   so a broken payment gateway trips independently of a slow search service.

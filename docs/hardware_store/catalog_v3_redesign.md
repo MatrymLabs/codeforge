@@ -2,7 +2,7 @@
 
 *A Version 3 redesign of the Hardware Store as CodeForge's engineering knowledge base and
 manufacturing inventory. This is the analysis and the doctrine; the safe foundation ships alongside
-it (`catalog/domains.yaml` + `parts/store_index.py`). Every renumbering, schema change, or frozen-
+it (`catalog/domains.yaml` + `kernel/store_index.py`). Every renumbering, schema change, or frozen-
 identifier rename it discusses is a proposal gated on Josh's approval.*
 
 ## 1. Executive Summary
@@ -12,7 +12,7 @@ classification is ad hoc: 31 distinct `category` strings, inconsistently spelled
 `change_management`), with no stable engineering taxonomy and no addressing scheme. V3 fixes the
 *organization* without disturbing the *parts*. The key realization: the four-layer identity model the
 prompt asks for already matches CodeForge's own doctrine - **"labels are identity, numbers are filing
-aids"** (`parts/catalog.py`). So the slug `id` is the permanent identity, a catalog address is a
+aids"** (`kernel/catalog.py`). So the slug `id` is the permanent identity, a catalog address is a
 derived filing aid, and neither the parts nor their tests need to move. The foundation (a 19-domain
 taxonomy and a derive-don't-store addressing + search tool) ships with this report.
 
@@ -49,7 +49,7 @@ the catalog (the theme lives in the game adapter's verb, not the card).
 `Domain.Component` today (`05.003`), extensible to `Domain.System.Component` (`05.01.003`) when a
 domain grows sub-systems - **without renumbering existing parts**, because the ordinal is a display
 filing aid, not identity. Unmapped parts file under `00` (visibly, never hidden). Shipped in
-`parts/store_index.py::addressed`.
+`kernel/store_index.py::addressed`.
 
 ## 6. Recommended Metadata Model
 
@@ -164,7 +164,7 @@ when a part earns them.
 
 ## 22. Low-Risk Migration Plan
 
-1. **[shipped]** `catalog/domains.yaml` + `parts/store_index.py` + the `store` verb - derive
+1. **[shipped]** `catalog/domains.yaml` + `kernel/store_index.py` + the `store` verb - derive
    addresses and search, zero card edits.
 2. Add optional V3 card fields; backfill a part's fields only when its card is next touched.
 3. Blueprint/research cross-reference fields (additive).

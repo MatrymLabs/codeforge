@@ -1,4 +1,4 @@
-"""Test twin for parts/commands.py -- the command spine.
+"""Test twin for kernel/commands.py -- the command spine.
 
 The framework (namespace rules, rank-gated dispatch, seed-verb guard) is tested in
 isolation; the registry command family is proven reachable through the engine tick
@@ -10,11 +10,7 @@ from collections.abc import Iterator
 import pytest
 
 from forge import COMMANDS, handle_command, render_scene
-from kernel.registry import load_collective
-from kernel.scripting import scripting_available
-from kernel.world.session import SESSIONS, Session
-from kernel.world.world import WORLD
-from parts.commands import (
+from kernel.commands import (
     ADMIN,
     CORE,
     SEED,
@@ -24,6 +20,10 @@ from parts.commands import (
     guard_seed_verbs,
     reserved_words,
 )
+from kernel.registry import load_collective
+from kernel.scripting import scripting_available
+from kernel.world.session import SESSIONS, Session
+from kernel.world.world import WORLD
 
 
 def _echo(session: Session, arg: str) -> str:

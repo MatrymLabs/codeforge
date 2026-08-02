@@ -339,7 +339,7 @@ teamwork, encounter knowledge, adaptation, and intelligent decisions** over refl
 think, live enough to feel real.
 
 *(Engine reading: the combat tick is a scheduled, ordered, pure-function advance of encounter state
-(mirroring `parts/bench.py`'s deterministic tick discipline and architecture law 1). Its order is
+(mirroring `kernel/bench.py`'s deterministic tick discipline and architecture law 1). Its order is
 fixed so it is testable; a parity test can pin tick math the way restore-math is pinned today.)*
 
 ---
@@ -352,7 +352,7 @@ grammar spans exploration, combat, making, and governing. Design tenets:
 - **Verbs are the interface.** Short, guessable, classic MUD verbs; the tick routes on the verb.
 - **One clear responsibility per verb**, explicit target grammar (`verb <noun>`, `verb <noun> with
   <noun>`), input validated loudly (a bad target fails with help, never a crash).
-- **Namespaced by authority** (mirrors `parts/commands.py`): **CORE** verbs anyone uses, **`@`-verbs**
+- **Namespaced by authority** (mirrors `kernel/commands.py`): **CORE** verbs anyone uses, **`@`-verbs**
   for Wardens/staff (rank-gated), **Seed** verbs a world may add without colliding.
 - **Accessibility and quality-of-life are first-class**, not add-ons: aliases, macros, autocomplete,
   history, configurable output, screen-reader-friendly text.

@@ -28,7 +28,7 @@ property test can drive any timeline. Bad rate/capacity/cost fail loud (`RateLim
 
 ## GAME-TO-PRACTICAL TRANSLATION
 
-- **Game component:** a rate-limited `shout` (`parts/chat_throttle.py`).
+- **Game component:** a rate-limited `shout` (`kernel/chat_throttle.py`).
 - **Core behavior:** allow an action only if the bucket holds a token; refill over time.
 - **Game-specific presentation:** "Your voice is hoarse. You can shout again in Ns."
 - **Reusable domain logic:** the whole `TokenBucket` (game-free).
@@ -41,7 +41,7 @@ property test can drive any timeline. Bad rate/capacity/cost fail loud (`RateLim
 
 ## Adapters (one core, two lives)
 
-- **Game:** `parts/chat_throttle.py` -- the `shout` verb, a burst of 3 refilling one every 20s.
+- **Game:** `kernel/chat_throttle.py` -- the `shout` verb, a burst of 3 refilling one every 20s.
   Tick-reachable (`handle_command(session, "shout ...")`).
 - **Practical:** `kernel/login_guard.py` -- `LoginGuard.attempt(key)`, a burst of 5 refilling one
   every 30s, per account or IP. A plain function, no game.

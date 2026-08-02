@@ -44,7 +44,7 @@ def test_keys_are_isolated():
 
 def test_one_core_powers_both_the_game_shout_and_the_practical_login_guard():
     # The whole point of the slice: the SAME TokenBucket core drives both adapters.
-    from parts import chat_throttle
+    from kernel import chat_throttle
 
     guard = LoginGuard(clock=FakeClock())
     guard.attempt("eve")

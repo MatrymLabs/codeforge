@@ -1,6 +1,6 @@
 """CARD: release_gate -- the practical adapter for test evidence: a release-readiness gate.
 
-The reverse of parts/world_cert: the SAME `EvidenceLedger` core gates a software release. It expects
+The reverse of kernel/world_cert: the SAME `EvidenceLedger` core gates a release. It expects
 evidence for the release checks (lint, tests, coverage, security) and is ready only when every one
 has PASSED evidence -- a check with no evidence (a step that never ran) can never be reported ready.
 Its cousins are CI gates, regression sign-off, and release checklists.

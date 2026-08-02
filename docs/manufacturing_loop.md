@@ -9,7 +9,7 @@ and the command that proves it.*
 ```
 loop trace workflow-engine     # in-game, from the Workshop
 make loop                      # from the shell (PART=<id> to trace another part)
-python -m parts.loop trace workflow-engine
+python -m kernel.loop trace workflow-engine
 ```
 
 Exit 0 on a PASS verdict, 1 on FAIL. Every run files dated evidence under
@@ -19,9 +19,9 @@ Exit 0 on a PASS verdict, 1 on FAIL. Every run files dated evidence under
 
 | Module | Responsibility |
 |---|---|
-| `parts/manifest.py` | **PartManifest** -- the typed, machine-readable contract for a reusable part. Loaded from `docs/hardware/<part_id>.yaml`, validated fail-loud (`ManifestError`), round-trips (`from_dict(to_dict(m)) == m` is a tested law). |
-| `parts/assembly.py` | **Assembly** -- discovers what composes a part by walking its source's AST for `parts.*` imports (static imports only, stated honestly), resolves them against the Hardware Store catalog, verifies sources and tests exist, and files evidence under `reports/assembly/`. |
-| `parts/loop.py` | **The tracer** -- walks one part through seven stages: manifest, catalog, blueprint (optional), registry, assembly, tests, docs. Each stage returns pass/fail/skip with a reason; the verdict is the conjunction. |
+| `kernel/manifest.py` | **PartManifest** -- the typed, machine-readable contract for a reusable part. Loaded from `docs/hardware/<part_id>.yaml`, validated fail-loud (`ManifestError`), round-trips (`from_dict(to_dict(m)) == m` is a tested law). |
+| `kernel/assembly.py` | **Assembly** -- discovers what composes a part by walking its source's AST for `parts.*` imports (static imports only, stated honestly), resolves them against the Hardware Store catalog, verifies sources and tests exist, and files evidence under `reports/assembly/`. |
+| `kernel/loop.py` | **The tracer** -- walks one part through seven stages: manifest, catalog, blueprint (optional), registry, assembly, tests, docs. Each stage returns pass/fail/skip with a reason; the verdict is the conjunction. |
 
 ## The seven stages
 

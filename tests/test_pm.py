@@ -1,4 +1,4 @@
-"""Test twin for parts/pm.py -- the project control panel.
+"""Test twin for kernel/pm.py -- the project control panel.
 
 The dashboard is DERIVED, not stored: it composes the registry and the QualityGate.
 Acceptance (metrics count the real registry, status recommends a real next action)
@@ -10,8 +10,8 @@ from collections.abc import Iterator
 import pytest
 
 from forge import handle_command
+from kernel.pm import ProjectMetrics, _recommended_next, pm_metrics, pm_status, project_metrics
 from kernel.world.session import SESSIONS, Session
-from parts.pm import ProjectMetrics, _recommended_next, pm_metrics, pm_status, project_metrics
 
 # --- failure/edge branches (the "board is red/green" logic), injected deterministically ---
 

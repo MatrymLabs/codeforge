@@ -1,4 +1,4 @@
-"""Test twin for parts/career.py -- the Career Evidence Sign.
+"""Test twin for kernel/career.py -- the Career Evidence Sign.
 
 The headline test is the EvidenceGate one: the shipped board never marks a skill `proven`
 or `partial` while citing a proof path that does not exist. Acceptance (views render) and
@@ -12,7 +12,7 @@ from pathlib import Path
 
 import pytest
 
-from parts.career import (
+from kernel.career import (
     CareerError,
     career,
     load_board,

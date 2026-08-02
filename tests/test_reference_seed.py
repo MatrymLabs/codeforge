@@ -1,4 +1,4 @@
-"""Test twin for parts/seedlab/reference_seed.py -- the game as a reference Seed (Stage 8).
+"""Test twin for kernel/seedlab/reference_seed.py -- the game as a reference Seed (Stage 8).
 
 Acceptance: the Aethryn game registers idempotently as a Seed with a stable id, is recognizable as
 the reference Seed, appears in the Kernel's list beside engineering Seeds, and survives restart --
@@ -9,8 +9,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from parts.seedlab.kernel import FileSeedStore, InMemorySeedStore, SeedKernel
-from parts.seedlab.reference_seed import (
+from kernel.seedlab.kernel import FileSeedStore, InMemorySeedStore, SeedKernel
+from kernel.seedlab.reference_seed import (
     AETHRYN_SEED_ID,
     ensure_reference_seed,
     is_reference_seed,

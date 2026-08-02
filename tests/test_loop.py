@@ -1,6 +1,6 @@
-"""Test twin for parts/loop.py -- the manufacturing loop tracer."""
+"""Test twin for kernel/loop.py -- the manufacturing loop tracer."""
 
-from parts.loop import TraceReport, main, render_trace, trace
+from kernel.loop import TraceReport, main, render_trace, trace
 
 
 def test_trace_workflow_engine_passes_all_stages():

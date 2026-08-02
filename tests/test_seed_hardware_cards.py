@@ -7,16 +7,16 @@ carries the reuse domains the Hardware Store scores on.
 
 from __future__ import annotations
 
-from parts.hardware import load_catalog, source_gaps
+from kernel.hardware import load_catalog, source_gaps
 
 # The mechanisms harvested from the Seed Platform vertical slice -> their citing source file.
 _SEED_CARDS = {
-    "path-bounded-reader": "parts/seedlab/source_connector.py",
-    "provenance-record": "parts/seedlab/project_model.py",
-    "file-record-store": "parts/seedlab/model_store.py",
-    "lifecycle-state-machine": "parts/seedlab/kernel.py",
-    "controlled-tool-runner": "parts/seedlab/tool_runner.py",
-    "reproducible-generator": "parts/seedlab/cli_generator.py",
+    "path-bounded-reader": "kernel/seedlab/source_connector.py",
+    "provenance-record": "kernel/seedlab/project_model.py",
+    "file-record-store": "kernel/seedlab/model_store.py",
+    "lifecycle-state-machine": "kernel/seedlab/kernel.py",
+    "controlled-tool-runner": "kernel/seedlab/tool_runner.py",
+    "reproducible-generator": "kernel/seedlab/cli_generator.py",
 }
 
 

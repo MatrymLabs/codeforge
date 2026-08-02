@@ -1,4 +1,4 @@
-"""Test twin for parts/seedlab/tool_runner.py -- controlled build/test execution in a source.
+"""Test twin for kernel/seedlab/tool_runner.py -- controlled build/test execution in a source.
 
 Acceptance: an approved profile runs inside the source root (cwd boundary), captures output and exit
 code, redacts secrets, times out a hung command, and persists evidence that survives restart and
@@ -17,9 +17,9 @@ from pathlib import Path
 
 import pytest
 
-from parts.seedlab.project_model import Provenance
-from parts.seedlab.source_connector import LocalSource
-from parts.seedlab.tool_runner import (
+from kernel.seedlab.project_model import Provenance
+from kernel.seedlab.source_connector import LocalSource
+from kernel.seedlab.tool_runner import (
     CommandRefused,
     FileRunLog,
     InMemoryRunLog,
@@ -145,8 +145,8 @@ def test_run_labels_feed_the_hub_facets(tmp_path: Path) -> None:
 
 
 def test_run_lights_up_the_hub_tests_facet(tmp_path: Path) -> None:
-    from parts.seedlab.kernel import InMemorySeedStore, SeedKernel
-    from parts.seedlab.project_hub import ProjectHub, ProjectState
+    from kernel.seedlab.kernel import InMemorySeedStore, SeedKernel
+    from kernel.seedlab.project_hub import ProjectHub, ProjectState
 
     kernel = SeedKernel(InMemorySeedStore(), clock=lambda: _CLOCK)
     kernel.create_seed("Demo", "josh", "a demo", seed_id="seed-1")

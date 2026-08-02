@@ -1,4 +1,4 @@
-"""Test twin for parts/seedlab/source_connector.py -- the safe, read-only local source connector.
+"""Test twin for kernel/seedlab/source_connector.py -- the safe, read-only local source connector.
 
 Acceptance: register a directory as a source (provenance recorded), list/read/search ONLY approved
 files, identify manifests/tests/docs, and read git branch+commit from .git/ files.
@@ -14,8 +14,8 @@ from pathlib import Path
 
 import pytest
 
-from parts.seedlab.project_model import Provenance
-from parts.seedlab.source_connector import (
+from kernel.seedlab.project_model import Provenance
+from kernel.seedlab.source_connector import (
     LocalSource,
     PathBoundaryError,
     ProtectedPathError,
@@ -104,8 +104,8 @@ def test_source_label_is_hub_ready(tmp_path: Path) -> None:
 def test_a_registered_source_lights_up_the_hub_sources_facet(tmp_path: Path) -> None:
     # Stage 3 -> Stage 2 wiring: a registered source's label populates the Project Hub's `sources`
     # facet, turning "none yet" into real data over both the text render and the contract.
-    from parts.seedlab.kernel import InMemorySeedStore, SeedKernel
-    from parts.seedlab.project_hub import ProjectHub, ProjectState
+    from kernel.seedlab.kernel import InMemorySeedStore, SeedKernel
+    from kernel.seedlab.project_hub import ProjectHub, ProjectState
 
     kernel = SeedKernel(InMemorySeedStore(), clock=lambda: "2026-08-01T00:00:00+00:00")
     kernel.create_seed("Demo", "josh", "a demo", seed_id="seed-x")

@@ -1,14 +1,14 @@
-"""Test twin for parts/save.py -- snapshot persistence."""
+"""Test twin for kernel/save.py -- snapshot persistence."""
 
 import copy
 import json
 
 import pytest
 
+from kernel.save import awaken_snapshot, seal_snapshot
 from kernel.world import doors, items
 from kernel.world.doors import unlock
 from kernel.world.items import take
-from parts.save import awaken_snapshot, seal_snapshot
 
 
 @pytest.fixture(autouse=True)

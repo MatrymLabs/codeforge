@@ -27,7 +27,7 @@ bytes are replaced, never fatal; an empty delimiter is refused.
 
 ## GAME-TO-PRACTICAL TRANSLATION
 
-- **Game component:** a bursty `telegraph` (`parts/telegraph.py`).
+- **Game component:** a bursty `telegraph` (`kernel/telegraph.py`).
 - **Core behavior:** reassemble a byte stream into complete messages regardless of chunk boundaries.
 - **Game-specific presentation:** "A telegraph arrives, burst by burst:" with clean reframed lines.
 - **Reusable domain logic:** the whole `StreamFramer` (game-free).
@@ -38,7 +38,7 @@ bytes are replaced, never fatal; an empty delimiter is refused.
 
 ## Adapters (one core, two lives)
 
-- **Game:** `parts/telegraph.py` -- the `telegraph` verb frames a dispatch delivered in awkward
+- **Game:** `kernel/telegraph.py` -- the `telegraph` verb frames a dispatch delivered in awkward
   bursts into whole lines. Tick-reachable.
 - **Practical:** `kernel/record_stream.py` -- a `RecordStream` reads delimited records off a byte
   stream fed chunk by chunk, flushing a trailing partial on close.

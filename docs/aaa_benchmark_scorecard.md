@@ -112,7 +112,7 @@ slices shipped in #709/#711) and authored content density.
    1-to-255 curve; ~1,680 quests are 8 template generators over ~7 authored arcs (wide, not deep).
    Only Veridia (the cradle) meets production density; the other 13 zones sit at baseline.
 3. **No live event-stream telemetry at population.** The economy sink/faucet **macro-model now
-   exists** (corrected 2026-08-01): `parts/coin_flow.py` + `make economy-audit` (#702, #705) audit
+   exists** (corrected 2026-08-01): `kernel/coin_flow.py` + `make economy-audit` (#702, #705) audit
    the designed faucets (foe drops) vs sinks (repair, the fall) and render an inflation **balance
    verdict** -- which measures the economy as INFLATIONARY ~29% (a conservative floor), the very
    "sinks not balanced as a system" this line once flagged. What remains is a *live* event seam:

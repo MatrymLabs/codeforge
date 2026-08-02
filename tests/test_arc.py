@@ -1,12 +1,10 @@
-"""Test twin for parts/arc.py -- ARC composes gate verdicts into one honest readiness report."""
+"""Test twin for kernel/arc.py -- ARC composes gate verdicts into one honest readiness report."""
 
 import pytest
 
 from forge import handle_command
 from kernel import chronicle
-from kernel.arc_ledger import VerdictError, record_verdict
-from kernel.world.session import Session
-from parts.arc import (
+from kernel.arc import (
     BLOCKED,
     DIMENSIONS,
     MISSING,
@@ -18,6 +16,8 @@ from parts.arc import (
     compose,
     filed_review,
 )
+from kernel.arc_ledger import VerdictError, record_verdict
+from kernel.world.session import Session
 
 
 def _file_evidence(root, status=READY, source="test_evidence: ok", commit="testcommit"):

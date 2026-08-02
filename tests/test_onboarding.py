@@ -80,7 +80,7 @@ def test_drive_rejects_an_unavailable_action_then_lets_you_quit():
 
 def test_the_onboard_cli_subcommand_routes_to_drive(monkeypatch):
     import kernel.onboarding as onboarding_mod
-    from parts.cli import main
+    from adapters.cli import main
 
     called = {"n": 0}
     monkeypatch.setattr(onboarding_mod, "drive", lambda: called.__setitem__("n", called["n"] + 1))

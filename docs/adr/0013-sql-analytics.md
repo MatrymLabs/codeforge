@@ -53,5 +53,5 @@ nothing to build.
 - **Costs / risks:** two implementations of each report to keep in step (the parity test enforces it);
   raw SQL must stay dialect-portable (standard SQL only -- the Postgres job is the guard). Bounded by
   the Python reference, which is always correct and always available.
-- **Exit:** delete `parts/analytics.py` and its tests; nothing else depends on it. The persisted data
+- **Exit:** delete `kernel/analytics.py` and its tests; nothing else depends on it. The persisted data
   and the ORM are untouched.

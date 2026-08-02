@@ -90,8 +90,8 @@
             "skill": "Complete a small feature end to end",
             "why_it_matters": "Proof you can finish, not just start.",
             "repo_proof": [
-              "parts/cast.py",
-              "parts/evidence_gate.py",
+              "kernel/cast.py",
+              "kernel/evidence_gate.py",
               "scripts/ritual_fast.sh"
             ],
             "status": "proven",
@@ -215,7 +215,7 @@
             "why_it_matters": "Internal-tools/platform roles are CodeForge's strongest market overlap.",
             "repo_proof": [
               "forge.py",
-              "parts/cast.py"
+              "kernel/cast.py"
             ],
             "status": "proven",
             "next_proof_task": "Point to forge-audit (separate flagship) as the reusable-tool exemplar."
@@ -249,7 +249,7 @@
             "why_it_matters": "Project control read as ownership and follow-through.",
             "repo_proof": [
               "docs/project_management.md",
-              "parts/pm.py"
+              "kernel/pm.py"
             ],
             "status": "proven",
             "next_proof_task": "Keep pm status computed from filed state, never hand-maintained."
@@ -284,7 +284,7 @@
               "parts/reporting.py",
               "tests/test_reporting.py",
               "kernel/shelf/__init__.py",
-              "parts/shelf_boundary.py"
+              "kernel/shelf_boundary.py"
             ],
             "status": "proven",
             "next_proof_task": "Catalog more reusable parts as they mature, each with a reuse map."
@@ -295,7 +295,7 @@
             "why_it_matters": "Full-stack roles want a Python backend plus a real browser surface; a recurring 2026 ask (see docs/research).",
             "repo_proof": [
               "adapters/api.py",
-              "parts/dashboard.py",
+              "kernel/dashboard.py",
               "kernel/blueprint_render.py",
               "docs/dashboard.md"
             ],
@@ -363,7 +363,7 @@
             "why_it_matters": "Observability/diagnostics are the core of SRE.",
             "repo_proof": [
               "scripts/doctor.py",
-              "parts/integrity.py",
+              "kernel/integrity.py",
               "scripts/e2e_smoke.py"
             ],
             "status": "proven",
@@ -391,7 +391,7 @@
             "skill": "Maintain truth between docs and code",
             "why_it_matters": "Trustworthy documentation is a repeated senior/SRE value (DexCare).",
             "repo_proof": [
-              "parts/evidence_gate.py",
+              "kernel/evidence_gate.py",
               "docs/evidence_gate.md"
             ],
             "status": "proven",
@@ -414,9 +414,9 @@
             "why_it_matters": "Platform/lead roles shape how others work.",
             "repo_proof": [
               "docs/seed_architecture.md",
-              "parts/cast.py",
-              "parts/shelf_pour.py",
-              "parts/shelf_boundary.py",
+              "kernel/cast.py",
+              "kernel/shelf_pour.py",
+              "kernel/shelf_boundary.py",
               "tests/test_shelf_pour.py"
             ],
             "status": "proven",

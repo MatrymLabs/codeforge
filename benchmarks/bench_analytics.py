@@ -20,8 +20,7 @@ from sqlalchemy import create_engine, insert
 from sqlalchemy.orm import Session as SqlSession
 from sqlalchemy.pool import StaticPool
 
-from kernel.world.db import ArchiveBase, CharacterRow
-from parts.analytics import (
+from kernel.analytics import (
     leaderboard_py,
     leaderboard_sql,
     population_py,
@@ -30,6 +29,7 @@ from parts.analytics import (
     wealth_py,
     wealth_sql,
 )
+from kernel.world.db import ArchiveBase, CharacterRow
 
 
 def _seed(session: SqlSession, n: int) -> None:

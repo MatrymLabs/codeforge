@@ -18,11 +18,11 @@ exists. Last audited: 2026-07-31. Primary target: Backend / Platform / Systems e
 | Reusable tooling | mid | tools, SWE | Hardware Store, `make deps`, forge-audit | proven | keep | - |
 | Diagnostics/observability | mid | DevOps, QA | `doctor`, `inspect`, `bench`, reports | proven | keep | - |
 | Explain trade-offs | mid-sr | SWE | ADRs, `tooling_strategy.md`, pioneer docs | proven | keep | - |
-| REST API design + docs | mid | backend, full-stack | FastAPI + `/api/status` + `/docs` OpenAPI (`parts/dashboard.py`) | proven | keep | - |
-| Frontend (HTML/CSS/JS) | mid | full-stack | server-rendered dashboard (`parts/dashboard.py`, HTMX, e2e) | proven | keep | - |
+| REST API design + docs | mid | backend, full-stack | FastAPI + `/api/status` + `/docs` OpenAPI (`kernel/dashboard.py`) | proven | keep | - |
+| Frontend (HTML/CSS/JS) | mid | full-stack | server-rendered dashboard (`kernel/dashboard.py`, HTMX, e2e) | proven | keep | - |
 | **React/Next.js + TypeScript** | mid | full-stack | `codeforge-console` (Next.js/React/TS front end over the readiness API) + `saas-starter` React/TS front end | proven | keep | - |
 | Relational DB (PostgreSQL) | mid | backend, full-stack | SQLite default; Postgres seam shipped (`DATABASE_URL`, `psycopg`, Alembic) | proven | keep | - |
-| Accessibility (a11y) | mid | full-stack | dashboard a11y: skip link, aria labels, focus-visible, `lang` (`parts/dashboard.py`) | proven | keep | - |
+| Accessibility (a11y) | mid | full-stack | dashboard a11y: skip link, aria labels, focus-visible, `lang` (`kernel/dashboard.py`) | proven | keep | - |
 | Cloud beyond a demo | mid-sr | DevOps | Render demo only | partial | deferred by design (see DEVELOPMENT_PLAN) | P3 |
 | Mentorship/teaching artifacts | sr | lead | Classroom, `assessment`, docs | partial | more tutorial content | P3 |
 | Collaboration signal (issue->PR->merge) | mid | all | PR flow live; templates added | partial | one linked issue -> PR -> merge | P1 |

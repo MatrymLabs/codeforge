@@ -28,7 +28,7 @@ prove a system is secure or compliant.
 
 ## GAME-TO-PRACTICAL TRANSLATION
 
-- **Game component:** a world-vitals panel (`parts/vitals.py`).
+- **Game component:** a world-vitals panel (`kernel/vitals.py`).
 - **Core behavior:** run subsystem checks and report an honest aggregate status.
 - **Game-specific presentation:** "HEALTH: healthy" with engine / npcs / callings rows.
 - **Reusable domain logic:** the whole `HealthRegistry` (game-free).
@@ -41,7 +41,7 @@ prove a system is secure or compliant.
 
 ## Adapters (one core, two lives)
 
-- **Game:** `parts/vitals.py` -- the `vitals` verb renders a panel of the world's subsystems
+- **Game:** `kernel/vitals.py` -- the `vitals` verb renders a panel of the world's subsystems
   (engine liveness, NPCs and callings loaded from the seed). Tick-reachable.
 - **Practical:** `kernel/service_health.py` -- `ServiceHealth` aggregates dependency checks;
   `ready()` is True only when all are healthy. A `/readyz` probe for any service.

@@ -16,7 +16,7 @@ defend it.
 **Ownership Gate (0-5):** `0 ai_output -> 1 reviewed -> 2 verified -> 3 modified -> 4
 defendable -> 5 extended`. Level 4+ is a portfolio claim and requires a written **Human Keel
 Record** on disk ([keel_records/](keel_records/)); the machine-enforced **KeelGate**
-(`parts/career.py`) refuses any level >= 4 claim without one. AI never assigns ownership on
+(`kernel/career.py`) refuses any level >= 4 claim without one. AI never assigns ownership on
 Josh's behalf.
 
 ## Every AI-drafted change passes the same gates as any other

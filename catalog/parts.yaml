@@ -96,7 +96,7 @@
     general: a sandboxed command relay for any untrusted-caller automation
 - id: assessment-engine
   name: Assessment Engine
-  source: parts/assessment.py
+  source: kernel/assessment.py
   category: learning
   tags:
   - quiz
@@ -1321,7 +1321,7 @@
     general: any system that must move a countable resource between accounts without ever losing or duplicating it
 - id: load-test
   name: Concurrent Load Test
-  source: parts/loadtest.py
+  source: kernel/loadtest.py
   category: observability
   tags:
   - load-test
@@ -2034,7 +2034,7 @@
     general: a dependency-free stand-in for CrossHair diffbehavior on any Python function
 - id: path-bounded-reader
   name: Path-Bounded Source Reader
-  source: parts/seedlab/source_connector.py
+  source: kernel/seedlab/source_connector.py
   category: security
   tags: [path-traversal, sandbox, filesystem, secrets, read-only]
   maturity: prototype
@@ -2052,7 +2052,7 @@
     general: a path-traversal-safe reader for any user-supplied directory
 - id: provenance-record
   name: Provenance Record
-  source: parts/seedlab/project_model.py
+  source: kernel/seedlab/project_model.py
   category: governance
   tags: [provenance, licensing, ownership, ip, fail-loud]
   maturity: prototype
@@ -2070,7 +2070,7 @@
     general: an ownership-and-use record for any external input
 - id: file-record-store
   name: File-Backed Record Store
-  source: parts/seedlab/model_store.py
+  source: kernel/seedlab/model_store.py
   category: persistence
   tags: [persistence, json, atomic-write, restart-recovery, crash-safe]
   maturity: prototype
@@ -2088,7 +2088,7 @@
     general: a dependency-free, restart-safe object store
 - id: lifecycle-state-machine
   name: Lifecycle State Machine
-  source: parts/seedlab/kernel.py
+  source: kernel/seedlab/kernel.py
   category: control-flow
   tags: [state-machine, lifecycle, authorization, audit, transitions]
   maturity: prototype
@@ -2106,7 +2106,7 @@
     general: an authorized, audited state machine for any entity
 - id: controlled-tool-runner
   name: Controlled Tool Runner
-  source: parts/seedlab/tool_runner.py
+  source: kernel/seedlab/tool_runner.py
   category: security
   tags: [subprocess, allowlist, timeout, redaction, control-plane]
   maturity: prototype
@@ -2124,7 +2124,7 @@
     general: a safe allowlisted command runner for any control plane
 - id: reproducible-generator
   name: Reproducible Generator
-  source: parts/seedlab/cli_generator.py
+  source: kernel/seedlab/cli_generator.py
   category: developer-experience
   tags: [codegen, reproducible, checksums, scaffolding, provenance]
   maturity: prototype

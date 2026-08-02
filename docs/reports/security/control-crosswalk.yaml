@@ -97,7 +97,7 @@ controls:
     assurance_profile: B
     implementation: kernel/world/ranks.py
     evidence:
-      - {kind: implementation, path: parts/commands.py}
+      - {kind: implementation, path: kernel/commands.py}
     status: verified_against
     frameworks: {nist_800_53: [AC-3, AC-6], owasp_top10: [A01], owasp_asvs: [access-control]}
     assessment_requirement: independent_assessment_required
@@ -199,9 +199,9 @@ controls:
     control: Safe subprocess execution (fixed argv, no shell, read-only)
     applicability: applicable
     assurance_profile: B
-    implementation: parts/integrity.py  # representative nosec-annotated call site
+    implementation: kernel/integrity.py  # representative nosec-annotated call site
     evidence:
-      - {kind: implementation, path: parts/integrity.py}
+      - {kind: implementation, path: kernel/integrity.py}
     status: verified_against
     frameworks: {nist_800_53: [SI-10], ssdf: [PW.5.1], owasp_top10: [A03]}
     assessment_requirement: independent_assessment_required

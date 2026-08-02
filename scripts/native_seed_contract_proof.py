@@ -1,6 +1,6 @@
 """Cross-repo proof: the engine's workspace GMCP payloads, parsed by the Master Client's parsers.
 
-The engine (`parts/seedlab/workspace_gmcp.py`) emits the Native Seed workspace packages; the client
+The engine (`kernel/seedlab/workspace_gmcp.py`) emits the Native Seed workspace packages; the client
 (`codeforge-client`) parses them. This script proves the two halves agree end-to-end by building
 each payload here and feeding it through the client's own parser code, catching contract drift a
 single-repo test cannot see. It is a MANUAL proof, not a CI gate: CI in either repo is single-repo
@@ -20,12 +20,12 @@ import os
 import sys
 from pathlib import Path
 
-from parts.gmcp import gmcp_frame
-from parts.seedlab import workspace_gmcp as eng
-from parts.seedlab.kernel import InMemorySeedStore, SeedKernel
-from parts.seedlab.project_model import Provenance, SpecSource, extract_model
-from parts.seedlab.source_connector import SourceRecord
-from parts.seedlab.tool_runner import ToolRunResult
+from kernel.gmcp import gmcp_frame
+from kernel.seedlab import workspace_gmcp as eng
+from kernel.seedlab.kernel import InMemorySeedStore, SeedKernel
+from kernel.seedlab.project_model import Provenance, SpecSource, extract_model
+from kernel.seedlab.source_connector import SourceRecord
+from kernel.seedlab.tool_runner import ToolRunResult
 
 _DEFAULT_CLIENT_SRC = Path(__file__).resolve().parents[2] / "codeforge-client" / "src"
 

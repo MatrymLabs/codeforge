@@ -1,7 +1,7 @@
 """Fuzz tests: the command dispatcher on the untrusted player-input boundary.
 
 Every player command is untrusted input (developer-security campaign, Phase 8/13). `CommandSet`
-(parts/commands.py) parses arbitrary text and rank-gates it. This fuzzes the dispatcher with
+(kernel/commands.py) parses arbitrary text and rank-gates it. This fuzzes the dispatcher with
 arbitrary unicode, control characters, ANSI escapes, and overlong strings, asserting two things:
 
   1. it never raises and always returns None or a str (crash-resistance);
@@ -15,8 +15,8 @@ import pytest
 from hypothesis import given, settings
 from hypothesis import strategies as st
 
+from kernel.commands import ADMIN, CORE, Command, CommandSet
 from kernel.world.session import Session
-from parts.commands import ADMIN, CORE, Command, CommandSet
 
 _ADMIN_MARKER = "OWNER-ONLY-RAN"  # the admin handler's output; it must never surface for a player
 

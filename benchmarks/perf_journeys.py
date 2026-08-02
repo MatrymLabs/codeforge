@@ -1,6 +1,6 @@
 """Performance measurement harness for CodeForge's five critical journeys.
 
-MEASUREMENT ONLY -- no optimization. Reuses the frameless method of parts/bench.py (stdlib
+MEASUREMENT ONLY -- no optimization. Reuses the frameless method of kernel/bench.py (stdlib
 time.perf_counter + statistics; a warmup pass; median + distribution). Startup is measured
 COLD (a fresh interpreter per rep); the other four WARM (steady state). Raw per-run stats are
 written to reports/performance/raw/ and a summary is printed and returned.
@@ -68,12 +68,12 @@ def measure_startup(reps: int = 15) -> dict:
 def run() -> dict[str, dict]:
     """Measure all five journeys and return {journey: stats}. Imports the real handlers."""
     from forge import handle_command
+    from kernel.bench import benchmark as command_bench
     from kernel.qualitygate import render_gate_all
+    from kernel.workshop import reuse_search
     from kernel.world import npcs
     from kernel.world.jobs import bind_calling
     from kernel.world.session import Session
-    from parts.bench import benchmark as command_bench
-    from parts.workshop import reuse_search
 
     results: dict[str, dict] = {}
 

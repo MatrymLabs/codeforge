@@ -1,4 +1,4 @@
-"""Test twin for parts/dashboard.py -- the readiness Lens.
+"""Test twin for kernel/dashboard.py -- the readiness Lens.
 
 Acceptance: real cards computed from real repo state, an accessible/escaped HTML projection,
 a JSON twin that mirrors the page, and both routes live on the FastAPI app. Refusal: a source
@@ -9,15 +9,15 @@ import pytest
 from fastapi.testclient import TestClient
 
 from adapters.api import app
-from parts.career import load_board, unproven_claims
-from parts.dashboard import (
+from kernel.career import load_board, unproven_claims
+from kernel.dashboard import (
     Card,
     Snapshot,
     build_snapshot,
     render_page,
     status_payload,
 )
-from parts.hardware import load_catalog
+from kernel.hardware import load_catalog
 
 # --- the snapshot: real data, right shape -----------------------------------
 

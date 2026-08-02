@@ -1,4 +1,4 @@
-"""Test twin for parts/encounter_flush.py -- the trusted boundary (tallies -> Chronicle metrics).
+"""Test twin for kernel/encounter_flush.py -- the trusted boundary (tallies -> Chronicle metrics).
 
 Every test injects a tmp `root`, so the real (git-tracked) chronicle/ ledger is never touched. Pins:
 the flush records one metric per non-zero kind, clears the tallies, no-ops on an empty period, and
@@ -10,10 +10,10 @@ from pathlib import Path
 
 import pytest
 
+from kernel import encounter_flush
 from kernel.chronicle import read, trend
+from kernel.encounter_flush import flush
 from kernel.world import encounter_log
-from parts import encounter_flush
-from parts.encounter_flush import flush
 
 
 @pytest.fixture(autouse=True)

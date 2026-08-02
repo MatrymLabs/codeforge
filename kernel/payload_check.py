@@ -1,6 +1,6 @@
 """CARD: payload_check -- the practical adapter for validation: validate a signup payload.
 
-The reverse of parts/name_check: the SAME `Validator` core with a different rule set, checking a
+The reverse of kernel/name_check: the SAME `Validator` core with a different rule set, checking a
 business payload (an API request body or a form) instead of a game name. It returns every problem at
 once so a caller can show them all, and never touches the input. Its cousins are form validation,
 data-import checks, and business-rule enforcement.

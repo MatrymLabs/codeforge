@@ -26,7 +26,7 @@ is reproducible. Flags **gate features; they are not authorization.**
 
 ## GAME-TO-PRACTICAL TRANSLATION
 
-- **Game component:** an in-world feature panel (`parts/features.py`).
+- **Game component:** an in-world feature panel (`kernel/features.py`).
 - **Core behavior:** register named flags and answer is-this-on at runtime.
 - **Game-specific presentation:** a `features` panel of beta_quests / verbose_combat / debug_mode.
 - **Reusable domain logic:** the whole `FlagRegistry` (game-free).
@@ -39,7 +39,7 @@ is reproducible. Flags **gate features; they are not authorization.**
 
 ## Adapters (one core, two lives)
 
-- **Game:** `parts/features.py` -- the `features` verb shows the world's flags; `feature_on(name)`
+- **Game:** `kernel/features.py` -- the `features` verb shows the world's flags; `feature_on(name)`
   lets other game code gate behavior. Flags default off. Tick-reachable.
 - **Practical:** `kernel/feature_control.py` -- `FeatureControl` where an environment variable
   (`FEATURE_<NAME>`) overrides the default (the 12-factor precedence). A kill switch without a redeploy.

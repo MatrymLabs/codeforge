@@ -19,7 +19,7 @@ from typing import Any
 from pydantic.json_schema import models_json_schema
 
 from adapters.api import BlueprintSummary
-from parts.dashboard import StatusPayload
+from kernel.dashboard import StatusPayload
 
 # Bump on a breaking contract change; consumers pin/vendor against this.
 CONTRACT_VERSION = "1.0.0"
@@ -50,7 +50,7 @@ def build_schema() -> dict[str, Any]:
         "$id": "https://github.com/MatrymLabs/codeforge/blob/main/contracts/readiness.schema.json",
         "x-fleet-core": {
             "version": CONTRACT_VERSION,
-            "source": "codeforge parts/dashboard.py + adapters/api.py",
+            "source": "codeforge kernel/dashboard.py + adapters/api.py",
             "adr": "MatrymLabs/ship docs/adr/0003-fleet-core.md",
         },
         "title": "ReadinessContract",

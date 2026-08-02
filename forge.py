@@ -9,10 +9,31 @@ import re
 from collections.abc import Callable
 
 from kernel.addie import addie
+from kernel.arc import arc
+from kernel.calibrate import calibrate
+from kernel.chat_throttle import shout
+from kernel.classroom import (
+    ask_question,
+    demonstrated,
+    hint,
+    lesson_list,
+    lesson_start,
+    progress,
+    render_achievements,
+    submit_answer,
+    talk_to_codex,
+)
 from kernel.clone_scan import clones
+from kernel.commands import ADMIN, CORE, Command, CommandSet
 from kernel.complexity import complexity
+from kernel.features import features
 from kernel.harvest_lens import harvest
+from kernel.heralds import heralds
 from kernel.learning_record import learnings
+from kernel.logbook import journal
+from kernel.maintenance import maintenance
+from kernel.name_check import name_check
+from kernel.plugins import PluginLoad, load_plugins
 from kernel.registry import (
     registry_find,
     registry_list,
@@ -20,7 +41,13 @@ from kernel.registry import (
     registry_status,
     registry_type,
 )
+from kernel.relay import channel
+from kernel.save import awaken_snapshot, seal_snapshot
 from kernel.shelf.hourglass import WORLD_SANDS
+from kernel.store_index import store
+from kernel.telegraph import telegraph
+from kernel.titles import title
+from kernel.vitals import vitals
 from kernel.world import (
     allocate,
     artifact,
@@ -128,34 +155,7 @@ from kernel.world.world import (
 )
 from kernel.world.zone_story import region_view
 from kernel.world.zones import area_line, tick_zones
-from parts.arc import arc
-from parts.calibrate import calibrate
-from parts.chat_throttle import shout
-from parts.classroom import (
-    ask_question,
-    demonstrated,
-    hint,
-    lesson_list,
-    lesson_start,
-    progress,
-    render_achievements,
-    submit_answer,
-    talk_to_codex,
-)
-from parts.commands import ADMIN, CORE, Command, CommandSet
-from parts.features import features
-from parts.heralds import heralds
-from parts.logbook import journal
-from parts.maintenance import maintenance
-from parts.name_check import name_check
-from parts.plugins import PluginLoad, load_plugins
-from parts.relay import channel
-from parts.save import awaken_snapshot, seal_snapshot
-from parts.store_index import store
-from parts.telegraph import telegraph
-from parts.titles import title
-from parts.vitals import vitals
-from parts.world_cert import certify
+from kernel.world_cert import certify
 
 NAME_RE = re.compile(r"^[a-z][a-z0-9_]{1,15}$")
 
@@ -196,19 +196,19 @@ HELP_TEXT = (
 
 
 def ask_architect(session: Session, prompt: str) -> str:
-    from parts.ai_throttle import ask_architect as run
+    from adapters.ai_throttle import ask_architect as run
 
     return run(session, prompt)
 
 
 def blueprint(arg: str = "") -> str:
-    from parts.blueprint_verb import blueprint as run
+    from adapters.blueprint_verb import blueprint as run
 
     return run(arg)
 
 
 def career(arg: str = "", demonstrated: dict[str, int] | None = None) -> str:
-    from parts.career import career as run
+    from kernel.career import career as run
 
     return run(arg, demonstrated=demonstrated)
 
@@ -241,7 +241,7 @@ def flush_encounters(arg: str) -> str:
     """The trusted boundary, run IN the server process by an owner: aggregate the after-action
     tallies into the Chronicle. Owner-gated on the spine, so only a trusted actor reaches it -- the
     tick never does. An optional arg supplies the commit for provenance (default 'runtime')."""
-    from parts.encounter_flush import flush
+    from kernel.encounter_flush import flush
 
     return flush(arg.strip() or "runtime")
 
@@ -265,37 +265,37 @@ def retention(arg: str = "") -> str:
 
 
 def coupling(arg: str = "") -> str:
-    from parts.coupling import coupling as run
+    from kernel.coupling import coupling as run
 
     return run(arg)
 
 
 def forge_command(session: Session, arg: str) -> str:
-    from parts.foundry import forge_command as run
+    from kernel.foundry import forge_command as run
 
     return run(session, arg)
 
 
 def arch_command(session: Session, arg: str) -> str:
-    from parts.foundry import arch_command as run
+    from kernel.foundry import arch_command as run
 
     return run(session, arg)
 
 
 def inspect(arg: str = "") -> str:
-    from parts.frameup import inspect as run
+    from kernel.frameup import inspect as run
 
     return run(arg)
 
 
 def functions(arg: str = "") -> str:
-    from parts.functions import functions as run
+    from kernel.functions import functions as run
 
     return run(arg)
 
 
 def system_generate(session: Session, arg: str) -> str:
-    from parts.generate import system_generate as run
+    from kernel.generate import system_generate as run
 
     return run(session, arg)
 
@@ -319,13 +319,13 @@ def pioneer(arg: str = "") -> str:
 
 
 def pm_metrics() -> str:
-    from parts.pm import pm_metrics as run
+    from kernel.pm import pm_metrics as run
 
     return run()
 
 
 def pm_status() -> str:
-    from parts.pm import pm_status as run
+    from kernel.pm import pm_status as run
 
     return run()
 
@@ -333,7 +333,7 @@ def pm_status() -> str:
 def _workspace(session: Session, arg: str) -> str:
     """CORE `workspace` (owner): the in-MUD front door to engineering Seeds (the text half of the
     Master-Client workspace surface). Lazy-imported so seedlab stays off the tick's load path."""
-    from parts.seedlab.workspace_verb import workspace_command
+    from kernel.seedlab.workspace_verb import workspace_command
 
     return workspace_command(session, arg)
 
@@ -369,38 +369,38 @@ def regs(arg: str = "") -> str:
 
 
 def terminal(arg: str = "") -> str:
-    from parts.terminal import terminal as run
+    from adapters.terminal import terminal as run
 
     return run(arg)
 
 
 def render_truth() -> str:
-    from parts.evidence_gate import render_truth as run
+    from kernel.evidence_gate import render_truth as run
 
     return run()
 
 
 def catalog_view() -> str:
-    from parts.workshop import catalog_view as run
+    from kernel.workshop import catalog_view as run
 
     return run()
 
 
 def reuse_search(term: str = "") -> str:
-    from parts.workshop import reuse_search as run
+    from kernel.workshop import reuse_search as run
 
     return run(term)
 
 
 def workshop_menu() -> str:
-    from parts.workshop import workshop_menu as run
+    from kernel.workshop import workshop_menu as run
 
     return run()
 
 
 # --- account & identity command handlers (filed on the spine; the tick only routes) ---
 # Extracted verbatim from the legacy if-ladder. The command spine preserves the argument's
-# case (parts/commands.py), so a password parsed from `arg` survives -- Architecture Law 7.
+# case (kernel/commands.py), so a password parsed from `arg` survives -- Architecture Law 7.
 
 
 def _authenticate(session: Session, verb: str, arg: str) -> str:
@@ -2066,7 +2066,7 @@ def _loop_trace_handler(arg: str) -> str:
     part_id = arg.strip()
     if not part_id:
         return "Usage: loop trace <part-id>\n  Example: loop trace workflow-engine"
-    from parts.loop import render_trace, trace
+    from kernel.loop import render_trace, trace
 
     return render_trace(trace(part_id))
 

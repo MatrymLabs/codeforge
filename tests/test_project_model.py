@@ -1,4 +1,4 @@
-"""Test twin for parts/seedlab/project_model.py -- the engineering Seed's first act.
+"""Test twin for kernel/seedlab/project_model.py -- the engineering Seed's first act.
 
 Acceptance: a well-formed spec source yields a model with every named facet and its provenance,
 and renders inspectably. Refusal (fail loud, never model a lie): a missing identity, a non-list
@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import pytest
 
-from parts.seedlab.project_model import (
+from kernel.seedlab.project_model import (
     ProjectSource,
     Provenance,
     SeedLabError,
@@ -75,7 +75,7 @@ def test_new_fields_default_empty():
 
 
 def test_to_dict_from_dict_roundtrips():
-    from parts.seedlab.project_model import ProjectModel
+    from kernel.seedlab.project_model import ProjectModel
 
     m = extract_model(_source())
     rebuilt = ProjectModel.from_dict(m.to_dict())
@@ -83,7 +83,7 @@ def test_to_dict_from_dict_roundtrips():
 
 
 def test_render_shows_interfaces_and_unknowns():
-    from parts.seedlab.project_model import ProjectModel
+    from kernel.seedlab.project_model import ProjectModel
 
     m = ProjectModel(
         identity="X",
@@ -97,7 +97,7 @@ def test_render_shows_interfaces_and_unknowns():
 
 
 def test_from_dict_refuses_a_malformed_model():
-    from parts.seedlab.project_model import ProjectModel
+    from kernel.seedlab.project_model import ProjectModel
 
     with pytest.raises(SeedLabError, match="malformed project model"):
         ProjectModel.from_dict({"entities": ["X"]})  # no identity/provenance

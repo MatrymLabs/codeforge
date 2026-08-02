@@ -28,7 +28,7 @@ _HERE = Path(__file__).resolve()
 _ROOT = _HERE.parent.parent
 sys.path.insert(0, str(_ROOT))
 
-from parts.cast import (  # noqa: E402 -- after sys.path so the script runs from any cwd
+from kernel.cast import (  # noqa: E402 -- after sys.path so the script runs from any cwd
     READY,
     CastError,
     _declared_deps,

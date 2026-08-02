@@ -3,7 +3,7 @@
   "$id": "https://github.com/MatrymLabs/codeforge/blob/main/contracts/readiness.schema.json",
   "x-fleet-core": {
     "version": "1.0.0",
-    "source": "codeforge parts/dashboard.py + adapters/api.py",
+    "source": "codeforge kernel/dashboard.py + adapters/api.py",
     "adr": "MatrymLabs/ship docs/adr/0003-fleet-core.md"
   },
   "title": "ReadinessContract",

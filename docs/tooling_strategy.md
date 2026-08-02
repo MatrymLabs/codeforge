@@ -14,7 +14,7 @@ CodeForge is already a **Phase 3** repo by the roadmap below. The professional d
 and portfolio-proof stacks are integrated and deliberate: Ruff, mypy, pytest + pytest-cov +
 hypothesis, pip-audit, bandit, detect-secrets, a CycloneDX SBOM, CodeQL, and Dependabot, all
 gated through the Make Ritual and GitHub Actions. The CLI is hand-rolled stdlib argv dispatch
-(`parts/cli.py`), not even argparse; content is YAML validated by my own loader gates. So the
+(`adapters/cli.py`), not even argparse; content is YAML validated by my own loader gates. So the
 value of this audit is **not** adding tools. It is (1) documenting the frameless choices so
 they are defensible in an interview, and (2) naming the few genuine gaps. Only one tool is a
 clear `integrate_now` candidate (OpenSSF Scorecard); everything else is already present or is
@@ -26,7 +26,7 @@ clear `integrate_now` candidate (OpenSSF Scorecard); everything else is already 
 
 | Category | Tool(s) present | Config / evidence |
 |---|---|---|
-| CLI | stdlib argv dispatch (no argparse) | `parts/cli.py` |
+| CLI | stdlib argv dispatch (no argparse) | `adapters/cli.py` |
 | Packaging | pyproject + setuptools, pinned deps + `dev` extras | `pyproject.toml` |
 | Lint / format | Ruff (`E,F,I,UP,B,SIM`, line 100) | `[tool.ruff]` |
 | Types | mypy (py313, `warn_unused_ignores`) | `[tool.mypy]` |

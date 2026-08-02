@@ -1,8 +1,8 @@
-"""Test twin for parts/terminal.py -- the in-game computer terminal."""
+"""Test twin for adapters/terminal.py -- the in-game computer terminal."""
 
 from __future__ import annotations
 
-from parts.terminal import _NAMES, _run, terminal
+from adapters.terminal import _NAMES, _run, terminal
 
 
 def test_boot_screen_lists_every_wired_program() -> None:

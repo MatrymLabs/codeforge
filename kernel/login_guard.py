@@ -1,6 +1,6 @@
 """CARD: login_guard -- the practical adapter for the token bucket: rate-limit login attempts.
 
-The reverse of parts/chat_throttle: the SAME `TokenBucket` core, driven by a plain (non-game)
+The reverse of kernel/chat_throttle: the SAME `TokenBucket` core, driven by a plain (non-game)
 function, guarding an account or IP against brute-force login attempts (a burst of 5, refilling one
 every 30 seconds). It returns an allow/deny DECISION with a `retry_after`; it does NOT authenticate
 (password hashing stays in parts/accounts on stdlib pbkdf2) -- this is only the throttle policy. Its

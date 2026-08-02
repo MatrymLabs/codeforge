@@ -1,4 +1,4 @@
-"""Test twin for parts/loadtest.py: the concurrent engine-tick load test.
+"""Test twin for kernel/loadtest.py: the concurrent engine-tick load test.
 
 Acceptance AND refusal cases, with tiny parameters so it rides make check. A load test's own
 correctness is: it runs the requested number of calls across the requested workers, produces an
@@ -10,7 +10,7 @@ from __future__ import annotations
 
 import pytest
 
-from parts import loadtest
+from kernel import loadtest
 
 
 def test_runs_requested_calls_across_workers() -> None:

@@ -25,7 +25,7 @@ can click straight into.
 >
 > | Concern | In the engine |
 > | --- | --- |
-> | Concurrency & networking | threaded TCP gateway + asyncio WebSocket pump ([`adapters/gateway.py`](adapters/gateway.py), [`parts/web_gateway.py`](parts/web_gateway.py)); hand-rolled telnet negotiation ([`parts/telnet_codec.py`](parts/telnet_codec.py)); a `TCP_NODELAY` fix cut per-command latency ~20-40x |
+> | Concurrency & networking | threaded TCP gateway + asyncio WebSocket pump ([`adapters/gateway.py`](adapters/gateway.py), [`adapters/web_gateway.py`](adapters/web_gateway.py)); hand-rolled telnet negotiation ([`parts/telnet_codec.py`](parts/telnet_codec.py)); a `TCP_NODELAY` fix cut per-command latency ~20-40x |
 > | Persistence & data modeling | SQLAlchemy 2.0 typed ORM ([`parts/db.py`](parts/db.py)); a parity test pins derive-on-restore == grow-in-play ([`tests/test_characters.py`](tests/test_characters.py)) |
 > | API surface | FastAPI status/admin behind owner-account Basic auth ([`adapters/api.py`](adapters/api.py)), consumed by a separate typed React client |
 > | Security boundary | salted pbkdf2-sha256 (600k iterations, constant-time compare, never plaintext) ([`parts/accounts.py`](parts/accounts.py)); authorization checked before capability on every admin verb ([`parts/ranks.py`](parts/ranks.py)) |

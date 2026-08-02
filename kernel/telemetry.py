@@ -13,7 +13,7 @@ Char.Quest) have ONE schema, defined once in `proto/telemetry.proto` and compile
 
 The JSON GMCP frames the live client speaks are unchanged: this schema is the typed transport for
 cross-language services (a Go telemetry channel, analytics), proven to carry the very frames
-`parts/gmcp.py` emits. Keep the two in step.
+`kernel/gmcp.py` emits. Keep the two in step.
 
 Inputs:  a frame kind (one of KINDS) + its payload dict (the GMCP shape for that kind).
 Outputs: wire bytes (encode) / the same (kind, payload) back (decode). Unknown kinds fail loud.
@@ -25,7 +25,7 @@ import json
 from collections.abc import Mapping
 from typing import Any
 
-# The four telemetry frames the spine carries, matching parts/gmcp.py's projections.
+# The four telemetry frames the spine carries, matching kernel/gmcp.py's projections.
 KINDS = ("vitals", "room", "target", "quest")
 
 # The GMCP package name each spine kind corresponds to, so a caller can bridge the live GMCP
@@ -44,7 +44,7 @@ class SpineError(ValueError):
 
 def kind_for_package(package: str) -> str | None:
     """Map a GMCP package name (e.g. 'Char.Vitals') to a spine kind, or None if it is not a spine
-    frame. Lets parts/gmcp.py feed its projections through the spine without a second mapping."""
+    frame. Lets kernel/gmcp.py feed its projections through the spine without a second mapping."""
     return _PACKAGE_TO_KIND.get(package)
 
 

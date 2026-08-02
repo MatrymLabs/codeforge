@@ -7,7 +7,7 @@ current state. This is the standard feature-flag pattern (LaunchDarkly-style), r
 the concept -- no code copied.
 
 Framework-free and deterministic: no I/O, no clock. One core, two lives: an in-world feature panel
-in the game (`parts/features`) and an environment-driven kill switch in a practical app
+in the game (`kernel/features`) and an environment-driven kill switch in a practical app
 (`parts/feature_control`).
 
 Provenance: independently_implemented_pattern (feature flags / toggles). No code copied.

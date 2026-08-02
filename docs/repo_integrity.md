@@ -5,7 +5,7 @@
 Run it:
 
 ```bash
-make repo-integrity      # python -m parts.integrity
+make repo-integrity      # python -m kernel.integrity
 ```
 
 It composes the checks CodeForge already owns into one dated report under

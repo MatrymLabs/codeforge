@@ -31,7 +31,7 @@ def test_a_failed_check_blocks_the_release():
 
 
 def test_one_core_powers_both_the_world_cert_and_the_release_gate():
-    import parts.world_cert as game
+    import kernel.world_cert as game
 
     gate = ReleaseGate()
     assert isinstance(gate._ledger, EvidenceLedger)  # the release gate uses the core

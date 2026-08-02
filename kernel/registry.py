@@ -385,7 +385,7 @@ def untwinned_modules(root: Path | None = None) -> list[str]:
 
     The sibling of unfiled_modules: that one enforces 'every module is FILED', this one enforces
     'every module is TESTED'. Aggregate coverage counts (the ship's real, blessed pattern, per
-    parts/functions._test_twin). Empty list == the test-twin convention holds, enforced not hoped.
+    kernel/functions._test_twin). Empty list == the test-twin convention holds, enforced not hoped.
     """
     base = root if root is not None else _ROOT
     tests_dir = base / "tests"

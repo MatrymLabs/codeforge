@@ -1,6 +1,6 @@
 """CARD: arc_ledger -- file and read the runtime dimensions' verdicts as dated evidence.
 
-ARC (parts/arc.py) composes ten review dimensions. Six read filed evidence directly; the four
+ARC (kernel/arc.py) composes ten review dimensions. Six read filed evidence directly; the four
 runtime ones (change, patch, evidence, release) have no verdict on disk until their gate runs. This
 is the seam that lets a gate FILE its verdict (a dated JSON under `arc-evidence/`, git-ignored and
 reproducible from the recorded commit, exactly like `security-evidence/`) and lets ARC READ the

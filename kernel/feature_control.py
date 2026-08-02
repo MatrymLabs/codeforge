@@ -1,6 +1,6 @@
 """CARD: feature_control -- the practical adapter for feature flags: an environment kill switch.
 
-The reverse of parts/features: the SAME `FlagRegistry` core, but an environment variable overrides
+The reverse of kernel/features: the SAME `FlagRegistry` core, but an environment variable overrides
 the registered default (the 12-factor precedence: `FEATURE_<NAME>=true|false` wins). This is how a
 service ships a kill switch or a canary flag without a redeploy. The environment mapping is
 injected, so tests are deterministic (no real os.environ dependency).

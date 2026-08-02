@@ -28,7 +28,7 @@ capabilities, and documented boundaries only.
 
 ## GAME-TO-PRACTICAL TRANSLATION
 
-- **Game component:** pluggable in-world heralds (`parts/heralds.py`).
+- **Game component:** pluggable in-world heralds (`kernel/heralds.py`).
 - **Core behavior:** register named extensions and dispatch to the enabled ones.
 - **Game-specific presentation:** the `heralds` verb shows active proclamations.
 - **Reusable domain logic:** the whole `PluginRegistry` (game-free).
@@ -41,7 +41,7 @@ capabilities, and documented boundaries only.
 
 ## Adapters (one core, two lives)
 
-- **Game:** `parts/heralds.py` -- heralds are plugins that each proclaim a line; `heralds` shows the
+- **Game:** `kernel/heralds.py` -- heralds are plugins that each proclaim a line; `heralds` shows the
   active ones, and one can be disabled without touching the others. Tick-reachable.
 - **Practical:** `kernel/exporters.py` -- an `ExporterHub` registers export providers (json, csv), each
   `serialize`-capable, and dispatches by format name. New formats are added by registration.

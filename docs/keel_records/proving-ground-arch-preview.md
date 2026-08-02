@@ -4,7 +4,7 @@
 AI proposes and Josh approves; **AI does not assign ownership**. The level-4 ownership claim and the
 "what I learned" reflection below are left for Josh to complete when he can defend the design.*
 
-- **Build:** `@arch preview <seed>` (`parts/foundry.preview_seed`) - looking through the arch at a
+- **Build:** `@arch preview <seed>` (`kernel/foundry.preview_seed`) - looking through the arch at a
   built game, read-only, without entering it.
 - **Ownership level claimed:** *(pending Josh's own claim; undeclared until he defends it)*
 
@@ -37,7 +37,7 @@ loop progress without unfreezing that wall.
 
 ## Decision
 Approved (read-only arch preview) over three heavier alternatives. Add `preview_seed(seed_name)` to
-`parts/foundry.py`: it loads a seed's `rooms.yaml`/`npcs.yaml` read-only, finds the START_ROOM
+`kernel/foundry.py`: it loads a seed's `rooms.yaml`/`npcs.yaml` read-only, finds the START_ROOM
 (`next(iter(rooms))`, the engine's own definition), and renders the room you would wake in, its
 exits, the room count, and the inhabitant roster. `arch_command` routes `preview <seed>` to it; bare
 `@arch` still lists forged candidates (behavior preserved).
@@ -51,7 +51,7 @@ exits, the room count, and the inhabitant roster. `arch_command` routes `preview
   documenting the deferred decision.
 
 ## AI contribution
-AI-assisted implementation of `parts/foundry.preview_seed`, the `arch_command` routing, the `@arch`
+AI-assisted implementation of `kernel/foundry.preview_seed`, the `arch_command` routing, the `@arch`
 summary update in `forge.py`, five tests in `tests/test_foundry.py` (acceptance: shows the start
 room/inhabitants of a real seed; refusal: unknown seed, empty name lists installed; a projection
 never swaps the world; owner-gated at the tick), and this record.
@@ -63,7 +63,7 @@ the loop advances by its smallest honest rung, that the frozen world model is no
 the acceptance bar (read-only, owner-gated, honestly labelled).
 
 ## Tests / evidence
-- `parts/foundry.py` + `tests/test_foundry.py` (5 new tests); `make check` green: ruff + mypy
+- `kernel/foundry.py` + `tests/test_foundry.py` (5 new tests); `make check` green: ruff + mypy
   --strict (296 files) + 1462 passed, coverage 93.57% >= 85%.
 - Registry completeness CLEAN (no new module/command; foundry MOD-10.020 and @arch CMD-10.021 already
   filed and twinned).

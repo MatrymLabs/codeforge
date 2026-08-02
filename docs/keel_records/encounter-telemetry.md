@@ -7,7 +7,7 @@ reflection below are left for Josh to complete when he can defend the design to 
 
 - **Build (slice 1):** `kernel/world/encounter_log.py` (a bounded, non-chained after-action log) wired into
   the tick at the four encounter beats, plus a read-only `encounters` verb.
-- **Build (slice 2):** `parts/encounter_flush.py` (the trusted boundary) + the owner-gated
+- **Build (slice 2):** `kernel/encounter_flush.py` (the trusted boundary) + the owner-gated
   `@flush-encounters` verb: aggregate the tallies into the Chronicle as one `metric` per kind.
 - **Ownership level claimed:** *(pending Josh's own claim; undeclared until he defends it)*
 
@@ -40,7 +40,7 @@ store: the poisoning surface the design forbids.
    read-only `encounters` verb renders the ring + tallies. Wired at the four beats: `open_strike` and
    `leash_break` in `aggression.menace`, `fall` in `combat._fall_and_recover`, `defeat` in
    `combat.attack`.
-2. **Retained layer (slice 2):** `parts/encounter_flush.flush()` reads the tallies and records **one
+2. **Retained layer (slice 2):** `kernel/encounter_flush.flush()` reads the tallies and records **one
    aggregate `metric`** per non-zero kind into the Chronicle via the existing `record_metric`/`trend`
    machinery -- never per event, never from the tick. It is reached ONLY through the owner-gated
    `@flush-encounters` verb, run IN the server process where the in-memory tallies live (a separate

@@ -52,9 +52,9 @@ connections (one goroutine per direction) and byte-proxies each straight to the 
 (`adapters/gateway.py`). It never inspects the stream, so telnet/IAC negotiation stays end-to-end and the
 edge is a thin, safe pump that raises the connection ceiling without touching game logic.
 
-- **Reference / fallback:** `parts.edge.EdgeProxy` -- the identical proxy, thread-per-connection.
-- **Selection:** `parts.edge.run_edge` execs `native/edge/codeforge-edge` when built, else runs the
-  reference (`parts.edge.edge_backend()` reports which).
+- **Reference / fallback:** `kernel.edge.EdgeProxy` -- the identical proxy, thread-per-connection.
+- **Selection:** `kernel.edge.run_edge` execs `native/edge/codeforge-edge` when built, else runs the
+  reference (`kernel.edge.edge_backend()` reports which).
 - **Parity:** `tests/test_edge.py::test_go_edge_matches_the_python_reference_byte_for_byte` (runs when
   the binary is built, skips cleanly when it is not).
 - **Evidence:** `benchmarks/bench_edge.py` -- concurrent-connection flood, Go goroutines vs Python
@@ -72,5 +72,5 @@ edge is a thin, safe pump that raises the connection ceiling without touching ga
   surface to keep in step; the binary must be rebuilt on toolchain bumps. All are bounded by the
   fallback: if the edge is absent or broken, clients connect straight to the Python gateway, and the
   Python reference proxy is always there and always tested.
-- **Exit:** delete `native/edge` and the binary branch of `parts.edge.run_edge`; the Python reference
+- **Exit:** delete `native/edge` and the binary branch of `kernel.edge.run_edge`; the Python reference
   proxy becomes the sole implementation with no other change.
