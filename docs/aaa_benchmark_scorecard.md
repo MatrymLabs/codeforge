@@ -74,7 +74,7 @@ would mislead, so the estimate is split by yardstick and by dimension, and every
 | Dimension | vs. AAA graphical MMORPG | vs. flagship commercial text MUD | Basis (measured) |
 |-----------|--------------------------|----------------------------------|------------------|
 | **Engine / architecture** | ~45% | ~70% | Pure-function tick, 5-table persistence, a large module base, a CI-gated suite (count via `pytest --collect-only`), 7 native-accelerator organs. Mature core; missing distributed/sharded serving. |
-| **Combat systems** | ~40% | ~55% | 154 abilities across **10 ability kinds** (strike/heal/brand/daze/weaken/taunt/cleanse/buff + lifesteal `drain` + heal-over-time `regen`), 10 damage types, boss phases + telegraphed specials + afflictions. Party combat shares XP + round-robin loot; the trinity seams now exist (per-NPC threat/aggro table + taunt, ally-targeted heals). A raid bounty scales with the co-located cohort (#711). A **kit-density pass** brought EVERY calling to a full 5-ability kit (all 30 callings, coherent role identities) that wields the deep kinds (DoT/control/lifesteal). Gaps: raid *difficulty*-scaling (reward-scaling done), deeper boss-mechanic variety (3 kinds: strike, mend, vampiric drain). |
+| **Combat systems** | ~40% | ~55% | 154 abilities across **10 ability kinds** (strike/heal/brand/daze/weaken/taunt/cleanse/buff + lifesteal `drain` + heal-over-time `regen`), 10 damage types, boss phases + telegraphed specials + afflictions. Party combat shares XP + round-robin loot; the trinity seams now exist (per-NPC threat/aggro table + taunt, ally-targeted heals). A raid bounty scales with the co-located cohort (#711). A **kit-density pass** brought EVERY calling to a full 5-ability kit (all 30 callings, coherent role identities) that wields the deep kinds (DoT/control/lifesteal). A raid boss now scales its DIFFICULTY with the co-located cohort too (harder blows per extra hero, not just a bigger bounty). Gaps: deeper boss-mechanic variety (3 kinds: strike, mend, vampiric drain), dungeon group mechanics. |
 | **Content scale (world)** | ~15% | ~40% | ~26,800 rooms at default scale (procedural), 45 settlements, 16 dungeons. Authored depth thin (75 hand rooms, 7 authored quests). |
 | **Content scale (items/NPCs)** | ~10% | ~35% | 185 items, 75 authored NPCs + procedural guardians, 38 recipes. Well below launch density. |
 | **Progression / player systems** | ~35% | ~60% | 31 jobs, 6 professions, 4 Orders, level cap 255, ember-coin currency. Broad skeleton, shallow per-system depth. |
@@ -305,7 +305,7 @@ engineering estimates unless a cited benchmark has landed.
 
 | Subsystem | Prototype | Alpha | Launch | Five-Year | Gap Remaining | Priority | Notes |
 |-----------|-----------|-------|--------|-----------|---------------|----------|-------|
-| Party layer | 5-player party (shipped) | party + shared combat | party + 10 raid | party + 20-40 raid | Raid-size cohort + LFG | High | Party + trinity + cohort-scaled raid reward done (#711); remaining: raid difficulty-scaling, LFG, more raid content |
+| Party layer | 5-player party (shipped) | party + shared combat | party + 10 raid | party + 20-40 raid | Raid-size cohort + LFG | High | Party + trinity + cohort-scaled raid reward done (#711); remaining: LFG, more raid content (raid difficulty-scaling done) |
 | Boss mechanics | 4 patterns | 8 | 20 | 40 | Encounter pass-2 staged | High | Composes existing phases/specials/afflictions |
 | Status effects | 8 | 16 | 30 | 50 | Medium | Med | Substrate exists |
 

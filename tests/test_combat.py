@@ -980,6 +980,61 @@ def test_a_raid_bounty_scales_with_the_cohort(monkeypatch):
         party._reset()
 
 
+def test_a_raid_boss_hits_harder_with_a_cohort():
+    # RAID DIFFICULTY scales with the co-located cohort: a solo raider takes the base blow; a band
+    # takes +RAID_DIFFICULTY_PER_MEMBER per extra mate, so a raid demands the trinity, not a zerg.
+    from parts.world import party
+    from parts.world.combat import _resolve_npc_blow
+
+    s = _fighter("vanguard")  # matrym, courtyard, no gear -> DEF 0
+    s.named = True
+    raid_boss = {"name": "a raid boss", "atk": 20, "hp": 9999, "hp_now": 9999, "raid": True}
+    try:
+        s.resources["hp"] = s.resources["hp"].heal(9999)
+        before = s.resources["hp"].current
+        _resolve_npc_blow(s, raid_boss, "hits")
+        solo = before - s.resources["hp"].current
+        assert solo == 20  # solo cohort x1: the base blow (atk 20, DEF 0)
+
+        SESSIONS["bram"] = Session(player_id="bram", location="courtyard")
+        SESSIONS["cleo"] = Session(player_id="cleo", location="courtyard")
+        party.invite("matrym", "bram")
+        party.join("bram", "matrym")
+        party.invite("matrym", "cleo")
+        party.join("cleo", "matrym")
+        assert len(party.members_in_room("matrym", "courtyard")) == 3
+        s.resources["hp"] = s.resources["hp"].heal(9999)
+        before = s.resources["hp"].current
+        _resolve_npc_blow(s, raid_boss, "hits")
+        cohort = before - s.resources["hp"].current
+        assert cohort == 28 and cohort > solo  # 20 * (1 + 2 * 0.20) = 28
+    finally:
+        SESSIONS.pop("bram", None)
+        SESSIONS.pop("cleo", None)
+        party._reset()
+
+
+def test_a_non_raid_boss_ignores_the_cohort():
+    # difficulty-scaling is RAID-only: a plain boss lands the same blow regardless of the cohort.
+    from parts.world import party
+    from parts.world.combat import _resolve_npc_blow
+
+    s = _fighter("vanguard")
+    s.named = True
+    plain_boss = {"name": "a brute", "atk": 20, "hp": 9999, "hp_now": 9999, "tier": "boss"}
+    try:
+        SESSIONS["bram"] = Session(player_id="bram", location="courtyard")
+        party.invite("matrym", "bram")
+        party.join("bram", "matrym")
+        s.resources["hp"] = s.resources["hp"].heal(9999)
+        before = s.resources["hp"].current
+        _resolve_npc_blow(s, plain_boss, "hits")
+        assert before - s.resources["hp"].current == 20  # no raid flag: cohort is ignored
+    finally:
+        SESSIONS.pop("bram", None)
+        party._reset()
+
+
 def test_an_empowered_strike_hits_fifty_percent_harder() -> None:
     # the `buff` ability sets the empowered status; combat.attack reads it for a heavier blow
     s = _fighter("vanguard")  # base strike is 7 (3 + strength 14 // 3)
