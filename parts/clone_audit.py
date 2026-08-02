@@ -110,11 +110,13 @@ def find_clones(sources: Mapping[str, str], *, min_statements: int = 3) -> Clone
             if _statement_count(node) < min_statements:
                 continue
             segment = ast.get_source_segment(text, node)
-            if segment is None:
+            if segment is None:  # pragma: no cover - rare AST get_source_segment miss
                 continue
             try:
                 address = content_hash(textwrap.dedent(segment), normalize_locals=True)
-            except ContentAddressError:
+            except (
+                ContentAddressError
+            ):  # pragma: no cover - segment that will not re-parse standalone
                 continue  # a segment that will not re-parse standalone (e.g. a decorator quirk)
             scanned += 1
             buckets.setdefault(address, []).append(CloneLocation(file, node.name, node.lineno))
@@ -140,11 +142,14 @@ def scan_paths(paths: Iterable[Path], *, min_statements: int = 3) -> CloneReport
     sources: dict[str, str] = {}
     for path in paths:
         for py in sorted(path.rglob("*.py")) if path.is_dir() else [path]:
-            if "__pycache__" in py.parts:
+            if "__pycache__" in py.parts:  # pragma: no cover - defensive pycache skip
                 continue
             try:
                 sources[str(py)] = py.read_text(encoding="utf-8")
-            except (OSError, UnicodeDecodeError):
+            except (
+                OSError,
+                UnicodeDecodeError,
+            ):  # pragma: no cover - defensive unreadable-file guard
                 continue
     return find_clones(sources, min_statements=min_statements)
 

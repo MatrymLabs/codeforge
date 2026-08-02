@@ -127,6 +127,10 @@ class Honesty(unittest.TestCase):
         self.assertIn("clone families", text)
         self.assertIn("scale_up", text)
 
+    def test_render_reports_skipped_files(self):
+        text = render(find_clones({"ok.py": CLONE_A, "bad.py": "def f(:\n"}))
+        self.assertIn("skipped 1 unparsable file", text)
+
 
 class ScanPaths(unittest.TestCase):
     def test_scan_paths_reads_a_real_tree(self):
