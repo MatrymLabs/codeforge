@@ -1,0 +1,42 @@
+# Fleet Ops security-gates GAP for codeforge: adds ONLY what codeforge lacks - Grype CVE scanning
+# (observe) + Cosign SBOM signing. It does NOT duplicate codeforge's existing CodeQL / Scorecard /
+# bandit / detect-secrets / `make sbom`. Reconcile, don't duplicate.
+name: security-gates-gap
+on: [push, pull_request]
+permissions:
+  contents: read
+  security-events: write
+  id-token: write
+jobs:
+  gap:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262  # v4
+      - name: SBOM (Syft, CycloneDX)
+        uses: anchore/sbom-action@e22c389904149dbc22b58101806040fa8d37a610  # v0
+        with:
+          format: cyclonedx-json
+          output-file: sbom.cdx.json
+      - name: CVE scan (Grype) - OBSERVE
+        id: grype
+        uses: anchore/scan-action@64a33b277ea7a1215a3c142735a1091341939ff5  # v4
+        with:
+          path: "."
+          fail-build: false
+          severity-cutoff: critical
+      - name: upload grype SARIF
+        if: always()
+        continue-on-error: true
+        uses: github/codeql-action/upload-sarif@a2983b8bed1923f44751c5c43237f479442827b3  # v3
+        with:
+          sarif_file: ${{ steps.grype.outputs.sarif }}
+      - name: sign the SBOM (Cosign keyless)
+        uses: sigstore/cosign-installer@398d4b0eeef1380460a10c8013a76f728fb906ac  # v3
+      - run: cosign sign-blob --yes sbom.cdx.json --output-signature sbom.cdx.json.sig
+      - name: checker - SBOM is schema-valid CycloneDX
+        run: |
+          python3 - <<'PY'
+          import json,sys
+          s=json.load(open("sbom.cdx.json"))
+          sys.exit(0 if (s.get("bomFormat")=="CycloneDX" and s.get("specVersion") and isinstance(s.get("components"),list)) else 1)
+          PY
