@@ -21,7 +21,7 @@ import ast
 from pathlib import Path
 
 _REPO = Path(__file__).resolve().parent.parent  # this module lives in kernel/, one level down
-PARTS_DIR = _REPO / "parts"  # the engine parts still being migrated (style-guide section 2)
+KERNEL_DIR = _REPO / "kernel"  # the engine core (style-guide section 2 layers)
 SHELF_DIR = _REPO / "kernel" / "shelf"
 WORLD_DIR = _REPO / "kernel" / "world"  # the World Package (Layer 2) is its own subpackage now
 TESTS_DIR = _REPO / "tests"
@@ -84,7 +84,7 @@ def hardware_store_catalog() -> str:
     """Return the two-shelf parts inventory as display text: reusable cores, then engine parts."""
     shelf = _stock(SHELF_DIR)
     # Engine parts = the platform (parts/) + the World Package (kernel/world/), sorted by card.
-    engine = sorted(_stock(PARTS_DIR) + _stock(WORLD_DIR))
+    engine = sorted(_stock(KERNEL_DIR) + _stock(WORLD_DIR))
     lines = ["CODEFORGE HARDWARE STORE", "=" * 24, ""]
     lines += _render(
         "Reusable cores (kernel/shelf/ -- engine-agnostic; poured via `make shelf-pour`):",

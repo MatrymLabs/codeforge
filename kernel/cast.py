@@ -323,10 +323,12 @@ def generate_cast(
     dest.mkdir(parents=True, exist_ok=True)
     # 1. the engine: vendored WHOLE by default, or SELECTIVELY when a module closure is given (D2)
     if modules is None:
-        shutil.copytree(base / "parts", dest / "parts", ignore=ignore)
+        if (base / "parts").is_dir():  # the legacy engine dir (retired in the real repo)
+            shutil.copytree(base / "parts", dest / "parts", ignore=ignore)
         strategy = VENDORED_WHOLE
     else:
-        _vendor_selective(base / "parts", dest / "parts", modules, ignore)
+        if (base / "parts").is_dir():
+            _vendor_selective(base / "parts", dest / "parts", modules, ignore)
         strategy = VENDORED_SELECTIVE
     # The migrated engine layers (style-guide section 2) ride along WHOLE in both strategies:
     # parts/ modules import kernel/adapters freely, so a cut without them cannot boot. Selective

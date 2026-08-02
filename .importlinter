@@ -3,14 +3,21 @@ root_packages =
     kernel
     adapters
     content
-    parts
 
 [importlinter:contract:kernel-purity]
-name = Kernel imports nothing from adapters, content, or parts (one-way dependency direction)
+name = Kernel imports nothing from adapters or content (one-way dependency direction)
 type = forbidden
 source_modules =
     kernel
 forbidden_modules =
     adapters
     content
-    parts
+
+[importlinter:contract:content-is-data]
+name = Content imports no code layer (it is data)
+type = forbidden
+source_modules =
+    content
+forbidden_modules =
+    kernel
+    adapters
