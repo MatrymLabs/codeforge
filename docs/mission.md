@@ -1,16 +1,28 @@
-# The Mission: a complete, working world
+# The Mission: CodeForge as a platform (canonical anchor)
 
-> **We are not building an engine. We are building a working world - a complete, fully-functioning
-> game.** We do not stop until the whole house is built and the mission is done and over, so the
-> owner can finally play the *whole* game - and revise it while beta-testing the finished product.
+> This mirrors the fleet-level canon in the ship's MISSION.md; that file is the ultimate source of truth.
 
-This is the keel-level destination. Everything below the waterline - the tick, the parts, the gates,
-the ethos of [optimization](optimization_ethos.md) and the [human keel](human_keel_doctrine.md) -
-serves it. Those disciplines say *how* we build well. This says *what* we are building toward: not a
-demo, not a showcase of engine features, not a pile of tested parts, but a **finished, playable
-world**.
+> Matrym Labs builds living workshops that turn understanding into software. Through CodeForge, we study how systems work, preserve what we learn as reusable engineering, and grow persistent environments - Seeds - where anyone can design, build, operate, and evolve real products, from persistent worlds to classrooms. Every product we complete makes the next one easier to build.
 
-## What "complete" means
+## Canonical facts
+
+- **Matrym Labs** is the company.
+- **CodeForge** is the language-extensible software-engineering platform.
+- **A Seed** is a persistent MUD-based engineering environment.
+- **The Master Client** is the control center.
+- **The Hardware Store** is reusable engineering memory.
+- **Aethryn** is the flagship game and reference Seed: a product that proves the platform, not the platform's mission.
+- **Mushrooms Level Up Learning** is the flagship educational product.
+
+## Aethryn's product goal (a product goal, not CodeForge's mission)
+
+The older "complete, working world" language is a **product goal for Aethryn** - the flagship game and
+reference Seed that proves CodeForge works end to end - not the company mission of CodeForge itself.
+Aethryn is finished when a player can start at the beginning, play to the end, and find a whole game the
+entire way; CodeForge's mission is the platform above that lets Seeds like Aethryn be built, operated, and
+evolved. The rest of this section describes what "complete" means for Aethryn.
+
+## What "complete" means for Aethryn
 
 A player can start at the beginning, play to the end, and find a whole game the entire way - not a
 tech demo with gaps papered over. Concretely, the house is complete when:

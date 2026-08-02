@@ -1,3 +1,5 @@
+> Superseded - the canonical mission lives in [docs/mission.md](mission.md) (mirrored from the fleet MISSION.md). Retained for context.
+
 # CodeForge Vision Resync
 
 *THE canonical product vision for the whole repository: the single source of truth for what

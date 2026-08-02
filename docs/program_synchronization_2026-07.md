@@ -1,3 +1,5 @@
+> Superseded - the canonical mission lives in [docs/mission.md](mission.md) (mirrored from the fleet MISSION.md). Retained for context.
+
 # CodeForge Program Synchronization (2026-07-27)
 
 > **SUPERSEDED (2026-07-28).** This first synchronization has been refreshed after a nine-PR build

@@ -1,7 +1,7 @@
 # Matrym Optimization Ethos
 
-> The destination this ethos serves is [**The Mission**](mission.md): a complete, working world -
-> a finished, playable game, not an engine. This ethos is *how* we build well toward it.
+> The destination this ethos serves is [**The Mission**](mission.md): a proven, operable product
+> (for Aethryn, a complete working world). This ethos is *how* we build well toward it.
 
 The full ethos. The operating rules are wired into the ship `CLAUDE.md`; this is the durable,
 complete source. Do not merely make lemonade: when CodeForge meets a problem, feature,

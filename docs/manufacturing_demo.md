@@ -1,3 +1,5 @@
+> Superseded - the canonical mission lives in [docs/mission.md](mission.md) (mirrored from the fleet MISSION.md). Retained for context.
+
 # Manufacturing demo: forge a standalone game in one command
 
 CodeForge is a software manufacturing platform with two outputs: an installable **World Package**
