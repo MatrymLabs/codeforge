@@ -1,3 +1,5 @@
+> Superseded - the canonical mission lives in [docs/mission.md](mission.md) (mirrored from the fleet MISSION.md). Retained for context.
+
 # CodeForge Program Synchronization -- Refresh (2026-07-28)
 
 This is the strategic re-synchronization the **Program Vision Reset** prompt asks for, run again after

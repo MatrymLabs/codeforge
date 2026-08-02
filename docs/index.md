@@ -1,7 +1,7 @@
 # CodeForge
 
-A Python-native multiplayer **MUD engine** wrapped in a **self-auditing engineering stack** -
-a portfolio-grade workshop of small, tested, reusable parts.
+A **language-extensible software-engineering platform** wrapped in a **self-auditing engineering
+stack** - a portfolio-grade workshop of small, tested, reusable parts.
 
 Classic MUD soul (rooms, exits, items, locked doors, NPCs, jobs, XP, combat) on a modern body:
 a pure-function engine tick, a threaded TCP gateway, a WebSocket browser gate, account auth

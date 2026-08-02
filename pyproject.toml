@@ -1,7 +1,7 @@
 [project]
 name = "codeforge"
 version = "0.1.0"
-description = "A Python-native modular MUD engine and reusable code workshop."
+description = "A language-extensible software-engineering platform (its flagship Seed is the game Aethryn)."
 requires-python = ">=3.13"
 dependencies = ["pyyaml", "sqlalchemy", "fastapi", "uvicorn", "websockets", "pydantic", "structlog"]
 

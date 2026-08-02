@@ -1,5 +1,5 @@
 site_name: CodeForge
-site_description: A Python-native MUD engine and self-auditing engineering workshop.
+site_description: "CodeForge: a language-extensible software-engineering platform and self-auditing engineering workshop."
 site_url: https://matrymlabs.github.io/codeforge/
 repo_url: https://github.com/MatrymLabs/codeforge
 repo_name: MatrymLabs/codeforge
@@ -46,7 +46,8 @@ nav:
   - Getting started:
       - Run it: RUNNING.md
   - Architecture and decisions:
-      - Product vision (canonical): vision_resync.md
+      - Mission (canonical): mission.md
+      - Product vision (superseded): vision_resync.md
       - Architecture: architecture.md
       - Composition thesis (evidence): composition_thesis.md
       - Concurrency model: concurrency_model.md
