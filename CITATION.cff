@@ -1,8 +1,8 @@
 cff-version: 1.2.0
 message: "If you use CodeForge, please cite it as below."
-title: "CodeForge: a Python-native modular MUD engine and reusable code workshop"
+title: "CodeForge: a language-extensible software-engineering platform"
 abstract: >-
-  CodeForge is a Python-native multiplayer MUD engine built as a portfolio-grade
+  CodeForge is a language-extensible software-engineering platform built as a portfolio-grade
   workshop of small, tested, reusable parts, wrapped in a self-auditing engineering
   stack (classification registry, quality gates, safety review, evidence rituals).
 type: software

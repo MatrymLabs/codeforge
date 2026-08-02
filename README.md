@@ -7,7 +7,9 @@
 [![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/MatrymLabs/codeforge/badge)](https://scorecard.dev/viewer/?uri=github.com/MatrymLabs/codeforge)
 [![Docs](https://img.shields.io/badge/docs-mkdocs--material-teal)](https://matrymlabs.github.io/codeforge/)
 
-**A Python-native multiplayer MUD engine you can play in your browser today, built as a workshop of small, tested, reusable parts.** Under the game, those same parts compose a second output: a Hardware Store of patterns proven in play and translated into real software.
+**Matrym Labs builds living workshops that turn understanding into software. Through CodeForge, we study how systems work, preserve what we learn as reusable engineering, and grow persistent environments - Seeds - where anyone can design, build, operate, and evolve real products, from persistent worlds to classrooms. Every product we complete makes the next one easier to build.** (Canonical mission: [docs/mission.md](docs/mission.md).)
+
+A Python-native platform you can play in your browser today, built as a workshop of small, tested, reusable parts. Under the game, those same parts compose a second output: a Hardware Store of patterns proven in play and translated into real software.
 
 ![The Relighting in aethryn: pick up the first ember to relight it, reforge the broken bridge, then fell the Cinder-Wight to break the cold - the whole arc advances from real actions](docs/demo.gif)
 
@@ -28,10 +30,11 @@ can click straight into.
 > | API surface | FastAPI status/admin behind owner-account Basic auth ([`parts/api.py`](parts/api.py)), consumed by a separate typed React client |
 > | Security boundary | salted pbkdf2-sha256 (600k iterations, constant-time compare, never plaintext) ([`parts/accounts.py`](parts/accounts.py)); authorization checked before capability on every admin verb ([`parts/ranks.py`](parts/ranks.py)) |
 
-> **The vision, honestly labelled:** CodeForge is being assembled as a two-output manufacturing
-> platform - a **World Package** generator (the MUD is the first, and it runs today) and a
-> reusable-parts **Hardware Store** (parts proven in the game, translated to real software:
-> government, finance, compliance, records). The World Package runs today, and the Hardware Store
+> **The vision, honestly labelled:** CodeForge is the **language-extensible software-engineering
+> platform**. A game like **Aethryn** is one kind of **Seed** it produces (a persistent, MUD-based
+> engineering environment), and the **Hardware Store** is its **reusable engineering memory** (parts
+> proven in a Seed, translated to real software: government, finance, compliance, records). A Seed
+> runs today, and the Hardware Store
 > is now **physically real and shipped**: its 27 engine-agnostic cores live in their own package
 > (`parts/shelf/`, a one-way engine -> shelf dependency the build enforces), pour standalone via
 > `make shelf-pour`, and published to PyPI as

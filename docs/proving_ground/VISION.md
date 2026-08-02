@@ -1,3 +1,5 @@
+> Superseded - the canonical mission lives in [docs/mission.md](../mission.md) (mirrored from the fleet MISSION.md). Retained for context.
+
 # CodeForge - the Proving Ground & the Hardware Store
 
 ## Vision
