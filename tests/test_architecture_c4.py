@@ -1,6 +1,6 @@
 """Correspondence test for the C4 model view (docs/architecture_c4.md).
 
-A diagram that names modules is a claim about the code. VeritasGate for the map: every
+A diagram that names modules is a claim about the code. EvidenceGate for the map: every
 module the C4 diagram cites must exist on disk, so a rename that forgets the map turns the
 suite red instead of leaving a stale lie on the page. Acceptance (the shipped map is
 honest) and refusal (a bogus citation is caught) are both pinned.
@@ -15,9 +15,11 @@ _ROOT = Path(__file__).resolve().parent.parent
 _DOC = _ROOT / "docs" / "architecture_c4.md"
 
 # Match only real code paths the map should own: the root tick and any parts/ module, including
-# one subpackage level (parts/world/, parts/shelf/). (A mention like
+# one subpackage level (kernel/world/, kernel/shelf/). (A mention like
 # `tests/test_architecture_c4.py` is intentionally NOT matched.)
-_MODULE_RE = re.compile(r"\b(forge\.py|parts/(?:[a-z_][a-z0-9_]*/)?[a-z_][a-z0-9_]*\.py)\b")
+_MODULE_RE = re.compile(
+    r"\b(forge\.py|(?:parts|kernel|adapters|content)/(?:[a-z_][a-z0-9_]*/)?[a-z_][a-z0-9_]*\.py)\b"
+)
 
 
 def _cited_modules(text: str) -> list[str]:

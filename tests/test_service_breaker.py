@@ -1,9 +1,9 @@
-"""Test twin for parts/service_breaker.py -- the practical adapter + the one-core proof."""
+"""Test twin for kernel/service_breaker.py -- the practical adapter + the one-core proof."""
 
 import pytest
 
-from parts.service_breaker import ServiceBreakers
-from parts.shelf.circuit_breaker import OPEN, CircuitBreaker, CircuitOpen
+from kernel.service_breaker import ServiceBreakers
+from kernel.shelf.circuit_breaker import OPEN, CircuitBreaker, CircuitOpen
 
 
 class FakeClock:
@@ -52,7 +52,7 @@ def test_it_recovers_after_the_reset_timeout():
 
 
 def test_one_core_powers_both_the_game_relay_and_the_practical_service_breaker():
-    import parts.relay as game
+    import kernel.relay as game
 
     sb = ServiceBreakers(clock=FakeClock())
     sb.call("x", lambda: "ok")

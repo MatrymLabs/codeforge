@@ -1,4 +1,4 @@
-"""Test twin for parts/blueprint_ai.py -- the Claude-backed Blueprint drafter.
+"""Test twin for adapters/blueprint_ai.py -- the Claude-backed Blueprint drafter.
 
 Acceptance: a fake client's structured output becomes a validated Blueprint (status forced to
 draft); the `blueprint draft` verb is reachable and honest without a key. Refusal (hostile):
@@ -8,16 +8,16 @@ Blueprint-invalid draft (bad id) fails loud through the same gate a human's woul
 
 import pytest
 
-from forge import handle_command
-from parts.architect import ArchitectError
-from parts.blueprint import Blueprint
-from parts.blueprint_ai import (
+from adapters.architect import ArchitectError
+from adapters.blueprint_ai import (
     BlueprintDraft,
     BlueprintDraftError,
     ClaudeBlueprintDrafter,
     build_claude_drafter,
 )
-from parts.world.session import Session
+from forge import handle_command
+from kernel.blueprint import Blueprint
+from kernel.world.session import Session
 
 _GOOD_DRAFT = BlueprintDraft(
     blueprint_id="ai_idea",

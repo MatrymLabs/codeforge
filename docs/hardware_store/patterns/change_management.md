@@ -18,7 +18,7 @@ Evolution Engine.*
 
 ## The part: `change-ledger`
 
-`parts/change_ledger.py` -- a `ChangeLedger`: `open` a `Change` (id, kind, severity, optional CVEs,
+`kernel/change_ledger.py` -- a `ChangeLedger`: `open` a `Change` (id, kind, severity, optional CVEs,
 components, rollback plan) and `advance` it through a gated lifecycle:
 
 ```
@@ -38,7 +38,7 @@ evidence.
 
 ## GAME-TO-PRACTICAL TRANSLATION
 
-- **Game component:** a world-maintenance log (`parts/maintenance.py`).
+- **Game component:** a world-maintenance log (`kernel/maintenance.py`).
 - **Core behavior:** record a change and drive it through a gated, role-and-evidence lifecycle.
 - **Game-specific presentation:** "World maintenance log:" with each entry's lifecycle state.
 - **Reusable domain logic:** the whole `ChangeLedger` (game-free).
@@ -53,9 +53,9 @@ evidence.
 
 ## Adapters (one core, two lives)
 
-- **Game:** `parts/maintenance.py` -- the `maintenance` verb shows the world's own change log, its
+- **Game:** `kernel/maintenance.py` -- the `maintenance` verb shows the world's own change log, its
   entries sitting at different lifecycle states. Tick-reachable.
-- **Practical:** `parts/patch_tracker.py` -- a `PatchTracker` records dependency bumps and CVE fixes
+- **Practical:** `kernel/patch_tracker.py` -- a `PatchTracker` records dependency bumps and CVE fixes
   and drives them through the same gated lifecycle; a patch cannot reach canary before `pass_tests`.
 
 ## Evidence

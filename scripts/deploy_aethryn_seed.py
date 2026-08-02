@@ -28,7 +28,7 @@ _HERE = Path(__file__).resolve()
 _ROOT = _HERE.parent.parent
 sys.path.insert(0, str(_ROOT))
 
-from parts.cast import (  # noqa: E402 -- after sys.path so the script runs from any cwd
+from kernel.cast import (  # noqa: E402 -- after sys.path so the script runs from any cwd
     READY,
     CastError,
     _declared_deps,
@@ -48,7 +48,7 @@ AETHRYN_CORPUS = ["look", "score", "inventory", "help"]
 # A tiny probe that boots the poured cast's OWN world and reports its scale (room count + spawn),
 # measured from the deployed artifact rather than asserted.
 _SCALE_PROBE = (
-    "import json; import parts.world.world as w; "
+    "import json; import kernel.world.world as w; "
     "print(json.dumps({'rooms': len(w.WORLD), 'start_room': w.START_ROOM}))"
 )
 

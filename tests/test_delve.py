@@ -1,4 +1,4 @@
-"""Test twin for parts/world/delve.py -- dungeon mouths become multi-room delves.
+"""Test twin for kernel/world/delve.py -- dungeon mouths become multi-room delves.
 
 Acceptance: a dungeon config sinks a connected descent of chambers, each with a foe that deepens in
 level, ending in a named non-ambient boss (armory-armed in world assembly), and the mouth opens
@@ -14,8 +14,8 @@ from pathlib import Path
 import pytest
 import yaml
 
-from parts.world.delve import _DEPTH, _VAULT_OFF, generate_delves, load_dungeons, wire_delve_mouths
-from parts.world.seed import SeedError
+from kernel.world.delve import _DEPTH, _VAULT_OFF, generate_delves, load_dungeons, wire_delve_mouths
+from kernel.world.seed import SeedError
 
 _CFG = [
     {
@@ -84,7 +84,7 @@ def test_a_delve_reads_as_a_descent_with_distinct_depth_stages():
 def test_a_delve_inherits_its_biome_note():
     # A dungeon carries the stone-and-air of the Reach it sinks below: a forest delve reads unlike
     # an ice delve, on the same dungeon.
-    from parts.world.delve import _BIOME_DELVE_NOTE
+    from kernel.world.delve import _BIOME_DELVE_NOTE
 
     forest = generate_delves(_CFG)[0]["black_hollow_delve_1"]["desc"]
     assert _BIOME_DELVE_NOTE["wild-forest"] in forest
@@ -94,7 +94,7 @@ def test_a_delve_inherits_its_biome_note():
 
 
 def test_an_unknown_biome_delve_falls_back_to_a_plain_note():
-    from parts.world.delve import _DEFAULT_DELVE_NOTE, _chamber
+    from kernel.world.delve import _DEFAULT_DELVE_NOTE, _chamber
 
     desc = _chamber("Nowhere Deep", 1, "no-such-biome")["desc"]
     assert _DEFAULT_DELVE_NOTE in desc, "an unknown biome still gets a valid note, never a crash"
@@ -126,7 +126,7 @@ def test_wire_delve_mouths_skips_a_missing_mouth_room():
 
 
 def test_load_dungeons_reads_the_shipped_manifest():
-    aethryn = Path(__file__).resolve().parent.parent / "seeds" / "aethryn"
+    aethryn = Path(__file__).resolve().parent.parent / "content" / "seeds" / "aethryn"
     configs = load_dungeons(aethryn / "dungeons.yaml")
     assert configs and all({"room", "name", "zone", "level", "biome"} <= set(c) for c in configs)
 

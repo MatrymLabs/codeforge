@@ -1,4 +1,4 @@
-"""Test twin for parts/world/reputation.py -- a hero's standing with each Order (roadmap #2).
+"""Test twin for kernel/world/reputation.py -- a hero's standing with each Order (roadmap #2).
 
 Acceptance: standing bands into named tiers; `grant` raises/lowers it and spills over the faction
 politics (allies shift the same way, rivals the opposite); swearing an Order earns a starting
@@ -9,9 +9,9 @@ is a clean no-op, and a malformed saved pair is dropped, never a crash.
 from __future__ import annotations
 
 import forge
-from parts.world import reputation
-from parts.world.factions import relations_of
-from parts.world.session import Session
+from kernel.world import reputation
+from kernel.world.factions import relations_of
+from kernel.world.session import Session
 
 
 def _hero(order: str = "") -> Session:
@@ -83,7 +83,7 @@ def test_the_sheet_lists_every_order_with_tier_and_marks_the_sworn():
 
 
 def test_swearing_an_order_earns_a_starting_standing():
-    from parts.world.orders import swear_order
+    from kernel.world.orders import swear_order
 
     s = Session(player_id="rep", location="void", named=True)
     swear_order(s, "making")

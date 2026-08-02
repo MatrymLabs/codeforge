@@ -1,8 +1,8 @@
-"""Test twin for parts/maintenance.py -- the game adapter for the change ledger."""
+"""Test twin for kernel/maintenance.py -- the game adapter for the change ledger."""
 
 from forge import handle_command
-from parts.maintenance import maintenance
-from parts.world.session import Session
+from kernel.maintenance import maintenance
+from kernel.world.session import Session
 
 
 def _player() -> Session:

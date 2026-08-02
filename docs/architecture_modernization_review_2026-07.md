@@ -25,18 +25,18 @@ code anywhere in project source (no C/Rust/Cython/`.so`) except PyYAML's opportu
 
 **Concurrency & networking.** Single process. TCP gateway = thread-per-connection
 (`socketserver.ThreadingTCPServer`), but **all game logic is serialized behind one module-global
-`TICK_LOCK`** (`parts/gateway.py:41`), so `handle_command` runs strictly serially regardless of thread
+`TICK_LOCK`** (`adapters/gateway.py:41`), so `handle_command` runs strictly serially regardless of thread
 or core count. Four drivers funnel through the one `handle_command` "door": TCP telnet
-(`parts/gateway.py`), FastAPI WebSocket (`parts/web_gateway.py`, genuinely asyncio but reuses the same
-sync `TICK_LOCK`), GMCP out-of-band state (`parts/gmcp.py`, diff-pushed), and a FastAPI admin HTTP
-surface (`parts/api.py`, reads SQL only, not live sessions). Good hygiene: `TCP_NODELAY`, line caps,
+(`adapters/gateway.py`), FastAPI WebSocket (`adapters/web_gateway.py`, genuinely asyncio but reuses the same
+sync `TICK_LOCK`), GMCP out-of-band state (`kernel/gmcp.py`, diff-pushed), and a FastAPI admin HTTP
+surface (`adapters/api.py`, reads SQL only, not live sessions). Good hygiene: `TCP_NODELAY`, line caps,
 IAC stripping, idle timeout, per-IP brute-force lockout, a 128-seat `Bulkhead`.
 
 **Simulation / scheduling.** No background clock. The "world beat" is a synchronous suffix appended to
 every player command (`forge.py:1985-1988`: `tick_burns + tick_afflictions + menace + tick_zones +
 tick_gather + tick_climate + _sands_beat`). World time therefore advances per-command, not per
 wall-clock: it runs twice as fast with two active players and freezes when everyone is idle. Timers
-are integer beat-countdowns on a shared `Hourglass` (`parts/shelf/hourglass.py`, capped at 4096) plus
+are integer beat-countdowns on a shared `Hourglass` (`kernel/shelf/hourglass.py`, capped at 4096) plus
 per-Session countdown dicts. No wall-clock timers, no per-entity threads — the whole sim is
 deterministic and replayable from a command sequence.
 
@@ -114,7 +114,7 @@ PySide6/Qt + Textual client, TS/React/Next console, the pytest/ruff/mypy/Hypothe
 | G4 | No world-state persistence (only characters) | `ITEMS/NPCS` in-memory; `quest._RUNS` runtime | **High** (persistent-world gap) |
 | G5 | Per-command O(zones) sweeps; `zone_of` O(zones×rooms); broadcast O(all sessions) | `zones.py:57-62,169-171`; `events.py:56,70,80` | Medium (large-world scale) |
 | G6 | No structured internal event protocol; clients hand-mirror types | text tick + `gmcp.py`; console `lib/types.ts` mirrors Pydantic | Medium |
-| G7 | Observability is HTTP-surface-only; no metrics/traces/alerting; game gateways unlogged | `parts/shelf/observability.py` | Medium (ops/Creator Console) |
+| G7 | Observability is HTTP-surface-only; no metrics/traces/alerting; game gateways unlogged | `kernel/shelf/observability.py` | Medium (ops/Creator Console) |
 | G8 | Client repo weaker than server: no lockfile, no CVE/bandit/secrets/CodeQL, unpinned actions, ships binaries | `codeforge-client` CI | Medium (supply-chain) |
 | G9 | The "million-room / 22 s / 1.9 GB" scale claim is asserted from a manual run, only arithmetically unit-tested | `wildlands.py:36-37`; no gated boot benchmark | Medium (evidence integrity) |
 | G10 | Ephemeral single-container demo; no persistent DB in the demo path, no reverse proxy/autoscale | `render.yaml:19-24` | Low (portfolio-acceptable) |

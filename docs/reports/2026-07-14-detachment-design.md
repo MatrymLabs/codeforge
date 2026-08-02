@@ -37,7 +37,7 @@ mode the single-tick `validate_cast` would never catch.
 Three phases, each smaller and safer than a monolith rewrite; D2 and D3 each need their own keel
 sign-off.
 
-- **D1 - the coupling report (read-only, recommended first).** A `parts/coupling.py` analyzer that
+- **D1 - the coupling report (read-only, recommended first).** A `kernel/coupling.py` analyzer that
   computes the runtime module closure by TRACING imports across a command corpus per surface
   (solo, +save, +multiplayer, +admin), classifies each `parts/` module as **runtime-core /
   surface-optional / dev-only**, and reports the detachable candidates with the coupling that

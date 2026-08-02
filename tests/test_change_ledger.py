@@ -1,13 +1,13 @@
-"""Test twin for parts/change_ledger.py -- a gated change lifecycle composed from five parts."""
+"""Test twin for kernel/change_ledger.py -- a gated change lifecycle composed from five parts."""
 
 import pytest
 from hypothesis import given
 from hypothesis import strategies as st
 
-from parts.change_ledger import ChangeLedger, _arc_clear, _tests_passed
-from parts.shelf.repository import DuplicateKey
-from parts.shelf.statemachine import Fired, Refusal
-from parts.shelf.validation import ValidationFailed
+from kernel.change_ledger import ChangeLedger, _arc_clear, _tests_passed
+from kernel.shelf.repository import DuplicateKey
+from kernel.shelf.statemachine import Fired, Refusal
+from kernel.shelf.validation import ValidationFailed
 
 
 def _ledger() -> ChangeLedger:

@@ -15,7 +15,7 @@ feature-flag part; typed settings already ship as the separate `typed-settings` 
 
 ## The part: `feature-flags`
 
-`parts/shelf/feature_flags.py` -- a `FlagRegistry` of named flags with defaults. `is_on` returns the
+`kernel/shelf/feature_flags.py` -- a `FlagRegistry` of named flags with defaults. `is_on` returns the
 override if set, else the default; `enable`/`disable`/`reset` manage overrides; `retire` removes a
 flag (flag retirement); `snapshot` gives the reproducible current state. An **unknown flag is an
 error, never silently off**, and flags **default off** so beta content never ships on by accident.
@@ -26,7 +26,7 @@ is reproducible. Flags **gate features; they are not authorization.**
 
 ## GAME-TO-PRACTICAL TRANSLATION
 
-- **Game component:** an in-world feature panel (`parts/features.py`).
+- **Game component:** an in-world feature panel (`kernel/features.py`).
 - **Core behavior:** register named flags and answer is-this-on at runtime.
 - **Game-specific presentation:** a `features` panel of beta_quests / verbose_combat / debug_mode.
 - **Reusable domain logic:** the whole `FlagRegistry` (game-free).
@@ -39,9 +39,9 @@ is reproducible. Flags **gate features; they are not authorization.**
 
 ## Adapters (one core, two lives)
 
-- **Game:** `parts/features.py` -- the `features` verb shows the world's flags; `feature_on(name)`
+- **Game:** `kernel/features.py` -- the `features` verb shows the world's flags; `feature_on(name)`
   lets other game code gate behavior. Flags default off. Tick-reachable.
-- **Practical:** `parts/feature_control.py` -- `FeatureControl` where an environment variable
+- **Practical:** `kernel/feature_control.py` -- `FeatureControl` where an environment variable
   (`FEATURE_<NAME>`) overrides the default (the 12-factor precedence). A kill switch without a redeploy.
 
 ## Evidence

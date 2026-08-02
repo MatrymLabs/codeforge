@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import unittest
 
-from parts.shelf.contract import (
+from kernel.shelf.contract import (
     Contract,
     ContractError,
     ContractRegistry,

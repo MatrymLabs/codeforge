@@ -13,14 +13,14 @@ commit de0f8a5. Reproduce with `python -m benchmarks.perf_journeys`.
 
 ## EXP-001 - Cache the parsed Hardware Store catalog
 
-- **Repository Area:** F (Hardware Store / registry). `parts/workshop.py:reuse_search`, `parts/hardware.py:load_catalog`.
+- **Repository Area:** F (Hardware Store / registry). `kernel/workshop.py:reuse_search`, `kernel/hardware.py:load_catalog`.
 - **Observed Problem:** `reuse_search` calls `load_catalog()` on every search, which re-reads and re-parses `catalog/parts.yaml` with `yaml.safe_load` each call.
 - **Evidence of Problem / Profiling:** cProfile of 100 `reuse_search("engine")` calls = 13.97 s, of which **13.82 s (99%) is `yaml.safe_load`** (`reports/performance/profiles/catalog_search.txt`).
 - **Current Baseline:** catalog search median **39 ms**, p95 67 ms (the catalog never changes within a process).
 - **Hypothesis:** memoizing the parsed catalog (parse once per process, or per file-mtime) removes the repeated parse; search drops toward the pure substring cost (< 1 ms).
 - **Proposed Change:** cache `load_catalog()` (e.g. `functools.lru_cache` keyed on path+mtime, or a module-level parsed cache), preserving the loud-fail-on-bad-row behavior.
 - **Alternative Options:** parse at import (like `parts/jobs.py` loads `JOBS`); or an mtime-guarded reload for hot-edit during dev.
-- **Correctness Tests:** assert cached result == freshly parsed result; the existing `test_hardware.py` VeritasGate (every part maps to a domain) still passes; a bad row still fails loud.
+- **Correctness Tests:** assert cached result == freshly parsed result; the existing `test_hardware.py` EvidenceGate (every part maps to a domain) still passes; a bad row still fails loud.
 - **Benchmark Workload:** `reuse_search` and `find_part` over the shipped catalog. Input sizes: current catalog, plus a synthetic large catalog. Warmup 200, reps 2000.
 - **Metrics:** median/p95 latency, `yaml.safe_load` call count, peak memory.
 - **Expected Benefit:** ~40x on catalog/registry search and every `find_part` caller (career board, `catalog`, `reuse`). **Potential Harm:** stale catalog after a live file edit (mitigated by mtime guard).
@@ -40,7 +40,7 @@ commit de0f8a5. Reproduce with `python -m benchmarks.perf_journeys`.
 
 ## EXP-002 - Reduce the QA-gate filesystem `stat` storm
 
-- **Repository Area:** J (QA/Veritas) + F. `parts/qualitygate.py:gate_all` / `run_gate` / `exists`.
+- **Repository Area:** J (QA/Veritas) + F. `kernel/qualitygate.py:gate_all` / `run_gate` / `exists`.
 - **Observed Problem:** `qa gate all` grades every filed object by checking proof-path existence, issuing hundreds of `pathlib.Path.exists()` -> `os.stat` calls per invocation.
 - **Evidence / Profiling:** cProfile of 20 `render_gate_all()` calls = 0.453 s with **8,920 `posix.stat` calls (~446 per gate run)** dominating (`reports/performance/profiles/qa_gate_all.txt`).
 - **Current Baseline:** `qa gate all` median **8.2 ms**, p95 10.1 ms.
@@ -117,7 +117,7 @@ commit de0f8a5. Reproduce with `python -m benchmarks.perf_journeys`.
   that process (a benchmark, a CLI invocation, a short session).
 - **Evidence / Profiling:** `python -X importtime -c "import forge"` (Windows PC, warm cache):
   our chain 72.5 ms of a 100.5 ms cold start; heaviest command-only subtrees
-  `parts.evolution.command` 9.0 ms, `parts.frameup` 6.4 ms, `parts.console` 4.3 ms, plus a long
+  `kernel.evolution.command` 9.0 ms, `kernel.frameup` 6.4 ms, `parts.console` 4.3 ms, plus a long
   tail of ~1-2 ms modules.
 - **Hypothesis:** command lambdas resolve module globals at CALL time, so replacing each eager
   import with a module-level wrapper that imports inside its body removes the modules from the

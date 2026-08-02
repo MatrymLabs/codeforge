@@ -25,9 +25,9 @@ can click straight into.
 >
 > | Concern | In the engine |
 > | --- | --- |
-> | Concurrency & networking | threaded TCP gateway + asyncio WebSocket pump ([`parts/gateway.py`](parts/gateway.py), [`parts/web_gateway.py`](parts/web_gateway.py)); hand-rolled telnet negotiation ([`parts/telnet_codec.py`](parts/telnet_codec.py)); a `TCP_NODELAY` fix cut per-command latency ~20-40x |
+> | Concurrency & networking | threaded TCP gateway + asyncio WebSocket pump ([`adapters/gateway.py`](adapters/gateway.py), [`adapters/web_gateway.py`](adapters/web_gateway.py)); hand-rolled telnet negotiation ([`parts/telnet_codec.py`](parts/telnet_codec.py)); a `TCP_NODELAY` fix cut per-command latency ~20-40x |
 > | Persistence & data modeling | SQLAlchemy 2.0 typed ORM ([`parts/db.py`](parts/db.py)); a parity test pins derive-on-restore == grow-in-play ([`tests/test_characters.py`](tests/test_characters.py)) |
-> | API surface | FastAPI status/admin behind owner-account Basic auth ([`parts/api.py`](parts/api.py)), consumed by a separate typed React client |
+> | API surface | FastAPI status/admin behind owner-account Basic auth ([`adapters/api.py`](adapters/api.py)), consumed by a separate typed React client |
 > | Security boundary | salted pbkdf2-sha256 (600k iterations, constant-time compare, never plaintext) ([`parts/accounts.py`](parts/accounts.py)); authorization checked before capability on every admin verb ([`parts/ranks.py`](parts/ranks.py)) |
 
 > **The vision, honestly labelled:** CodeForge is the **language-extensible software-engineering
@@ -36,7 +36,7 @@ can click straight into.
 > proven in a Seed, translated to real software: government, finance, compliance, records). A Seed
 > runs today, and the Hardware Store
 > is now **physically real and shipped**: its 27 engine-agnostic cores live in their own package
-> (`parts/shelf/`, a one-way engine -> shelf dependency the build enforces), pour standalone via
+> (`kernel/shelf/`, a one-way engine -> shelf dependency the build enforces), pour standalone via
 > `make shelf-pour`, and published to PyPI as
 > [`codeforge-shelf`](https://pypi.org/project/codeforge-shelf/) -- `pip install codeforge-shelf`
 > installs the library and imports it with no game engine present (its 25 shipped test twins pass
@@ -259,7 +259,7 @@ here is real, tested, and reachable in the game; the whole flow runs green end-t
   legal-*awareness* boundary: never legal advice, always "human review required." See
   [docs/legal_policy_awareness.md](docs/legal_policy_awareness.md).
 - **Career evidence** - `career` renders a Career Evidence Sign: real software-career skills
-  mapped to the exact repo artifact that proves each (BLS/O*NET-grounded), VeritasGate-honest
+  mapped to the exact repo artifact that proves each (BLS/O*NET-grounded), EvidenceGate-honest
   (proven only when the artifact exists); `career gaps` lists what's missing. See
   [docs/career_evidence_board.md](docs/career_evidence_board.md) and
   [docs/resume_mapping.md](docs/resume_mapping.md).

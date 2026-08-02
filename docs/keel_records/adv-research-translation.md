@@ -32,7 +32,7 @@ and a source; a working typed genome subsystem with tests; the build composing w
 rather than duplicating them.
 
 ## Decision
-Build the Blueprint Evolution Lab as a staged, human-governed subsystem (`parts/evolution/`):
+Build the Blueprint Evolution Lab as a staged, human-governed subsystem (`kernel/evolution/`):
 typed genotype to phenotype expression, a small candidate population, multi-objective fitness with
 hard gates first, and a counterexample bank. Ship it in reviewable slices, each behind its own PR.
 
@@ -52,7 +52,7 @@ approved each PR, and made the evidence-label calls (what is evidence-backed vs 
 not-recommended). The governance boundary (AI proposes, never promotes) was a human decision.
 
 ## Tests / evidence
-- `parts/evolution/` (11 modules), `tests/test_evolution_*.py` (45 tests), green on `make check`.
+- `kernel/evolution/` (11 modules), `tests/test_evolution_*.py` (45 tests), green on `make check`.
 - `docs/nature_inspired/research_mapping.md` (the mapping, with labels and APA sources).
 - Delivered across PRs #72-76 (genome/gate, bake-off, MUD surface, second subject, cards).
 

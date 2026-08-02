@@ -1,4 +1,4 @@
-"""Test twin for parts/world/character_view.py -- building a sheet from a live job definition.
+"""Test twin for kernel/world/character_view.py -- building a sheet from a live job definition.
 
 Proves the vertical slice: the seeded Engineer becomes a correct CharacterSheet -- player
 level separate from job level, the six attributes and the loadout from the job data, HP/MP
@@ -10,11 +10,11 @@ from __future__ import annotations
 
 import pytest
 
-from parts.world.character_view import build_job_sheet, sheet_from_session
-from parts.world.job_progress import JobProgress
-from parts.world.jobs import bind_calling
-from parts.world.score_sheet import render_score_sheet
-from parts.world.session import Session
+from kernel.world.character_view import build_job_sheet, sheet_from_session
+from kernel.world.job_progress import JobProgress
+from kernel.world.jobs import bind_calling
+from kernel.world.score_sheet import render_score_sheet
+from kernel.world.session import Session
 
 
 def test_the_engineer_builds_a_correct_sheet() -> None:
@@ -72,9 +72,9 @@ def test_a_session_with_no_calling_has_no_sheet() -> None:
 
 
 def test_the_sheet_shows_declared_resistances_and_normal_otherwise() -> None:
-    from parts.world.character_view import sheet_from_session
-    from parts.world.jobs import bind_calling
-    from parts.world.session import Session
+    from kernel.world.character_view import sheet_from_session
+    from kernel.world.jobs import bind_calling
+    from kernel.world.session import Session
 
     s = Session(player_id="matrym")
     bind_calling(s, "engineer")
@@ -89,9 +89,9 @@ def test_the_sheet_shows_declared_resistances_and_normal_otherwise() -> None:
 def test_session_resistance_reads_the_calling_and_defaults_to_normal() -> None:
     """The seam combat reads: a declared resistance is real, an undeclared one (or no calling)
     reads Normal -- the same grid the sheet renders, so a fight never lies about it."""
-    from parts.world.character_view import session_resistance
-    from parts.world.jobs import bind_calling
-    from parts.world.session import Session
+    from kernel.world.character_view import session_resistance
+    from kernel.world.jobs import bind_calling
+    from kernel.world.session import Session
 
     assert session_resistance(Session(player_id="matrym"), "FIR") == "Normal"  # no calling yet
     s = Session(player_id="matrym")
@@ -101,10 +101,10 @@ def test_session_resistance_reads_the_calling_and_defaults_to_normal() -> None:
 
 
 def test_milestone_perks_raise_derived_stats_when_unlocked() -> None:
-    from parts.world.character_view import TP_MILESTONE, perks_unlocked, sheet_from_session
-    from parts.world.job_progress import JobProgress
-    from parts.world.jobs import JOBS, bind_calling
-    from parts.world.session import Session
+    from kernel.world.character_view import TP_MILESTONE, perks_unlocked, sheet_from_session
+    from kernel.world.job_progress import JobProgress
+    from kernel.world.jobs import JOBS, bind_calling
+    from kernel.world.session import Session
 
     s = Session(player_id="matrym")
     bind_calling(s, "engineer")

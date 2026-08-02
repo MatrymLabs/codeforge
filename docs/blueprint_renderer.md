@@ -7,9 +7,9 @@ would build it. It is the first stage of the forge loop the project is growing t
 
 ## The two parts
 
-- **`parts/blueprint.py`** (MOD-10.015) - the model, the fail-loud validator,
+- **`kernel/blueprint.py`** (MOD-10.015) - the model, the fail-loud validator,
   the JSON record + Markdown twin writer, and the `blueprint` tick verb.
-- **`parts/blueprint_render.py`** (MOD-10.016) - the static HTML/CSS renderer.
+- **`kernel/blueprint_render.py`** (MOD-10.016) - the static HTML/CSS renderer.
 
 ## The data contract
 
@@ -23,7 +23,7 @@ A Blueprint is validated at the gate; every gap fails loud, early, and by name:
 | `requirements` | required, a list of non-empty strings, at least one |
 | `tasks` | optional list of strings (a draft may not have tasks yet) |
 | `stack` | optional mapping of `layer -> choice` |
-| `status` | `draft` or `validated` (a VeritasGate label, never inflated) |
+| `status` | `draft` or `validated` (a EvidenceGate label, never inflated) |
 
 The **JSON record is canonical**; the Markdown twin and the HTML page are projections
 (architecture law 1: text never mutates the record). Authored Blueprints live under
@@ -45,7 +45,7 @@ until the tick proves it).
 
 ## Drafting with AI (schema-enforced, honest)
 
-`parts/blueprint_ai.py` turns a freeform idea into a **structured** Blueprint using the
+`adapters/blueprint_ai.py` turns a freeform idea into a **structured** Blueprint using the
 Anthropic Messages API's `messages.parse` with a Pydantic schema (`BlueprintDraft`). The model
 fills a schema; it never emits free prose we parse by hand. The draft is then re-validated
 through the **same loud gate** every human-authored Blueprint passes (`from_dict`), so an
@@ -61,7 +61,7 @@ Claude Architect" message. See `docs/architect_brain.md`.
 ## Why frameless
 
 The renderer uses stdlib `html.escape` + f-strings and inline CSS - no template engine, no
-new dependency (the same approach as `parts/dashboard.py`). This keeps the architecture-first
+new dependency (the same approach as `kernel/dashboard.py`). This keeps the architecture-first
 identity intact (`docs/frameless_python.md`) while proving semantic HTML5 + responsive,
 accessible CSS. Hostile Blueprint text is escaped, never injected (tested).
 

@@ -10,7 +10,7 @@ from __future__ import annotations
 
 import unittest
 
-from parts.shelf.model_extractor import ModelExtractorError, analyze, render
+from kernel.shelf.model_extractor import ModelExtractorError, analyze, render
 
 SAMPLE = """
 from __future__ import annotations

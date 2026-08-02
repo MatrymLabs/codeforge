@@ -29,7 +29,7 @@ visible, preserves an elite baseline, and records why each candidate won or lost
 pinning the gate order and the governance boundary.
 
 ## Decision
-Build `parts/evolution/bakeoff.py` + `fitness.py` + `evaluators.py`: a bounded evaluator swarm
+Build `kernel/evolution/bakeoff.py` + `fitness.py` + `evaluators.py`: a bounded evaluator swarm
 that scores candidates, hard gates first then weighted objectives, and returns a ranked,
 explained result that a human promotes (or does not). No path lets the search promote itself.
 
@@ -50,7 +50,7 @@ for security-sensitive edits, public APIs, persistence, and destructive actions.
 load-bearing calls, and they are his.
 
 ## Tests / evidence
-- `parts/evolution/bakeoff.py`, `fitness.py`, `evaluators.py`; `tests/test_evolution_bakeoff.py`
+- `kernel/evolution/bakeoff.py`, `fitness.py`, `evaluators.py`; `tests/test_evolution_bakeoff.py`
   and the wider evolution suite (45 tests), green on `make check`.
 - Delivered in PR #73 (the candidate bake-off) atop the typed genome (#72).
 

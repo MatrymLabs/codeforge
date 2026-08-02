@@ -5,7 +5,7 @@ maturity: beta
 purpose: >
   Run named health checks and aggregate an honest overall status (worst wins). An UNKNOWN or
   failing check is never reported as healthy; an empty registry is UNKNOWN.
-source: parts/shelf/health.py
+source: kernel/shelf/health.py
 domain: observability
 inputs: >
   named checks (Callable[[], str] returning a status), or bool predicates via healthy_if
@@ -28,5 +28,5 @@ license: MIT
 source_status: original
 owner: MatrymLabs
 adapters:
-  - parts/vitals.py
-  - parts/service_health.py
+  - kernel/vitals.py
+  - kernel/service_health.py

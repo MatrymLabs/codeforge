@@ -9,7 +9,7 @@ files, or touching a terminal. It has two halves that share one responsibility s
   `codeforge-console` / client surface, not in the engine.
 - **Creator Workshop** (inside the game): a protected administrative dimension, represented through
   the game itself, where the world's owner shapes NPCs, quests, items, and difficulty. This lives in
-  the engine (`parts/world/creator_workshop.py`).
+  the engine (`kernel/world/creator_workshop.py`).
 
 This document records the design decisions for the **Creator Workshop foundation** (the barrier and
 its placement). The creation stations and the Console are staged behind it.
@@ -27,7 +27,7 @@ The Workshop is not part of the playable world. The rules are hard:
 ## Design decisions
 
 **The Seed Owner is the `owner` crown.** CodeForge already orders authority `player < wizard <
-owner` (`parts/world/ranks.py`), bootstrapped from the host shell. The Workshop reuses that: the
+owner` (`kernel/world/ranks.py`), bootstrapped from the host shell. The Workshop reuses that: the
 Seed Owner is whoever holds the top crown. A wizard is deliberately *not* enough (the prompt says
 "only the owner"), so the check is `session.rank == "owner"`, not `has_rank(..., "wizard")`.
 
@@ -43,7 +43,7 @@ the barrier, so concealment and access control are independent layers.
 owner slip through. The Workshop's only tie back is a plain `out` exit to the Library.
 
 **Placement is idempotent and seed-agnostic.** `install_workshop(world)` runs during world assembly
-(`parts/world/world.py`), after the seed and the procedural generators, **before** the link audit,
+(`kernel/world/world.py`), after the seed and the procedural generators, **before** the link audit,
 so the canonical rooms pass the same `inspect_world_links` gate as authored ones. It anchors the
 Library to the world's spawn (its first room) with a `library` noun exit, so *every* world, whatever
 its geography, satisfies "walk into the Grand Library."
@@ -136,7 +136,7 @@ Publishing Portal, **publishes** it to the live world or **rolls it back**.
 
 ## The Creator Artifact: the Maker's Signet
 
-The Workshop gathers the maker's tools into one *place*; the **Maker's Signet** (`parts/world/artifact.py`)
+The Workshop gathers the maker's tools into one *place*; the **Maker's Signet** (`kernel/world/artifact.py`)
 carries a window to them *anywhere*. It is the Creator Artifact (Player Experience campaign, Part
 III): a legendary ring the Seed Owner bears, which opens the **Creator Interface** from any room
 (`signet`) and channels the Workshop's read-only tools remotely (`signet survey`, `signet activity`).

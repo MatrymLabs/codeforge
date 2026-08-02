@@ -1,4 +1,4 @@
-"""Test twin for parts/world/armory.py -- the procedural gear factory.
+"""Test twin for kernel/world/armory.py -- the procedural gear factory.
 
 Acceptance: forge_gear composes a valid, level-scaled equippable, and arm_guardians gives every
 generated guardian a themed gear drop (so felling one drops something to wear; combat's affix
@@ -8,8 +8,8 @@ that already drop something are left untouched.
 
 from __future__ import annotations
 
-from parts.world.armory import _FLAVOUR, _SLOTS, arm_guardians, forge_gear
-from parts.world.wildlands import generate_wildlands
+from kernel.world.armory import _FLAVOUR, _SLOTS, arm_guardians, forge_gear
+from kernel.world.wildlands import generate_wildlands
 
 _VALID_MODS = {"ATK", "DEF", "ACC", "EVA"}
 _SLOT_NAMES = {s[0] for s in _SLOTS}
@@ -97,9 +97,9 @@ def test_arm_guardians_leaves_ambient_wildlife_and_armed_foes_alone():
 
 def test_registered_forged_gear_drops_and_the_affix_factory_rolls_it():
     # The full loop: a guardian's forged prototype, registered, clones onto the floor as equippable
-    # gear whose rarity the affix factory has rolled (parts.shelf.affixes). Uses the real drop path.
-    from parts.world import combat, items
-    from parts.world.session import Session
+    # gear whose rarity the affix factory has rolled (kernel.shelf.affixes). Real drop path.
+    from kernel.world import combat, items
+    from kernel.world.session import Session
 
     label, item = forge_gear(40, "FIR", 0)  # a weapon prototype
     items.register_prototypes({label: item})

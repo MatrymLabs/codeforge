@@ -1,4 +1,4 @@
-"""Test twin for parts.telemetry -- the protocol spine (one typed frame contract, two wire codecs).
+"""Test twin for kernel.telemetry -- the protocol spine (one typed frame contract, two wire codecs).
 
 Acceptance: the JSON reference round-trips every frame; the protobuf codec round-trips them too and
 AGREES with JSON (same payload out); and -- the crown jewel -- a frame encoded by the Go binding
@@ -18,7 +18,7 @@ from pathlib import Path
 
 import pytest
 
-from parts.telemetry import (
+from kernel.telemetry import (
     JSON_CODEC,
     KINDS,
     PROTOBUF_CODEC,

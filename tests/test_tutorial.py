@@ -1,4 +1,4 @@
-"""Test twin for parts/world/tutorial.py -- the state-driven onboarding ladder.
+"""Test twin for kernel/world/tutorial.py -- the state-driven onboarding ladder.
 
 Acceptance: next_step names the right next thing at each rung of a new hero's first hour (no calling
 -> untested -> ungeared -> established), from live state; the `tutorial` verb reaches it through
@@ -8,9 +8,9 @@ for an established hero (one who already holds a calling), so a veteran is never
 
 from __future__ import annotations
 
-from parts.world import tutorial
-from parts.world.jobs import bind_calling
-from parts.world.session import Session
+from kernel.world import tutorial
+from kernel.world.jobs import bind_calling
+from kernel.world.session import Session
 
 
 def test_a_hero_with_no_calling_is_told_to_choose_one():

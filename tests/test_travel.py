@@ -1,4 +1,4 @@
-"""Test twin for parts/world/travel.py -- the Waystone network (the economy's coin sink).
+"""Test twin for kernel/world/travel.py -- the Waystone network (the economy's coin sink).
 
 Acceptance: at a waystone, `travel` lists the network + level-scaled fares, and `travel <where>`
 pays the fare and carries you. Refusal: off a waystone, an unknown/same hub, and an empty purse all
@@ -13,9 +13,9 @@ from pathlib import Path
 import pytest
 import yaml
 
-from parts.world import travel as tv
-from parts.world.seed import SeedError
-from parts.world.session import Session
+from kernel.world import travel as tv
+from kernel.world.seed import SeedError
+from kernel.world.session import Session
 
 _STONES = {
     "veridia": {"name": "Veridia", "level": 1},
@@ -58,7 +58,7 @@ def test_off_a_waystone_and_bad_or_same_hub_fail_cleanly():
 
 
 def test_load_waystones_reads_the_shipped_manifest():
-    aethryn = Path(__file__).resolve().parent.parent / "seeds" / "aethryn"
+    aethryn = Path(__file__).resolve().parent.parent / "content" / "seeds" / "aethryn"
     stones = tv.load_waystones(aethryn / "waystones.yaml")
     assert stones and len(stones) == 14  # the 14 zone hubs
     assert all("name" in s and 1 <= s["level"] <= 300 for s in stones.values())

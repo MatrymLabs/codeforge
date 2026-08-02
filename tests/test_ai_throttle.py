@@ -1,4 +1,4 @@
-"""Test twin for parts/ai_throttle.py -- the game adapter: a rate-limited Architect consultation.
+"""Test twin for adapters/ai_throttle.py -- the game adapter: a rate-limited Architect consultation.
 
 Network-free: with no CODEFORGE_ARCHITECT/ANTHROPIC_API_KEY in the env (as in CI), consult()
 resolves the local rule-based guide, so these tests never touch an API. We assert the GATE, not
@@ -7,9 +7,9 @@ the guide's wording.
 
 import pytest
 
+from adapters.ai_throttle import _CAPACITY, ask_architect, reset_ai_throttle
 from forge import handle_command
-from parts.ai_throttle import _CAPACITY, ask_architect, reset_ai_throttle
-from parts.world.session import SESSIONS, Session
+from kernel.world.session import SESSIONS, Session
 
 _THROTTLED = "The Architect is still thinking"
 

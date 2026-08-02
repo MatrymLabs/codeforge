@@ -1,4 +1,4 @@
-"""Test twin for parts/hubble/diagnosis.py -- the diagnostic decision core.
+"""Test twin for kernel/hubble/diagnosis.py -- the diagnostic decision core.
 
 The headline guarantee is the NON-OVERRIDABLE escalation class: a security / sandbox /
 retrieval-grounding failure forces `escalate` even when overall confidence is high. The four
@@ -7,7 +7,7 @@ actions (proceed / revise / escalate / stop) and the visible reasons are pinned 
 
 from __future__ import annotations
 
-from parts.hubble.diagnosis import (
+from kernel.hubble.diagnosis import (
     DiagnosticFinding,
     decide,
     render_decision,

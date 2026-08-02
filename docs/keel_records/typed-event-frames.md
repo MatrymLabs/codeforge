@@ -5,7 +5,7 @@ critical-junction design decision and its first build slice. Per the doctrine, A
 approves; **AI does not assign ownership**. The level-4 ownership claim and the "what I learned"
 reflection below are left for Josh to complete when he can defend the design to an interviewer.*
 
-- **Build:** typed event frames for the room bus (`parts/world/frames.py` + `events.announce_frame`), the
+- **Build:** typed event frames for the room bus (`kernel/world/frames.py` + `events.announce_frame`), the
   `say` verb migrated as the first call site.
 - **Ownership level claimed:** *(pending Josh's own claim; undeclared until he defends it)*
 
@@ -45,7 +45,7 @@ migration path for the next verbs.
 - **Big-bang: migrate every `announce` call site + change the sink signature to accept frames.**
   Rejected: a rewrite of a core system across three transports; large blast radius, against the
   ship's "a refactor is a rename, not a rewrite" rule.
-- **Base the frames on `parts/shelf/signal_bus.py` (the general typed pub/sub).** Considered and deferred:
+- **Base the frames on `kernel/shelf/signal_bus.py` (the general typed pub/sub).** Considered and deferred:
   it would couple the in-world echo bus to the general bus; the two are deliberately distinct today.
   Revisit if a later slice wants routing/subscription semantics.
 - **Render per-recipient inside each sink (push frames all the way to the transport).** Deferred:
@@ -53,7 +53,7 @@ migration path for the next verbs.
   per-viewer seam now with zero transport churn; frames-to-the-sink can come later on evidence.
 
 ## AI contribution
-AI-assisted implementation of `parts/world/frames.py` (`Frame`, `SpeechFrame`, `render_for`, the loud
+AI-assisted implementation of `kernel/world/frames.py` (`Frame`, `SpeechFrame`, `render_for`, the loud
 `__post_init__` validator), `events.announce_frame`, the `say`-verb migration in `forge.py`, the test
 twin `tests/test_frames.py` (acceptance + hostile refusal: empty/blank words, empty speaker, frozen,
 base-frame refusal) and the `announce_frame` delivery test in `tests/test_events.py`, the Classification
@@ -67,7 +67,7 @@ per-recipient frames, the smallest-safe scope, and the acceptance bar (behavior 
 radius minimal).
 
 ## Tests / evidence
-- `parts/world/frames.py` at 100% coverage; `tests/test_frames.py` (7 tests) + the `announce_frame`
+- `kernel/world/frames.py` at 100% coverage; `tests/test_frames.py` (7 tests) + the `announce_frame`
   per-recipient/exclusion test in `tests/test_events.py`; the existing `say` tick test
   (`test_say_is_heard_by_the_room`) passes unchanged, proving behavior preserved through the frame path.
 - `make check` green: ruff + mypy --strict (296 files) + 1457 passed, coverage 93.56% >= 85% gate.

@@ -1,10 +1,10 @@
-"""Test twin for parts/shelf/stats.py -- ported from mk1 test_kernel."""
+"""Test twin for kernel/shelf/stats.py -- ported from mk1 test_kernel."""
 
 from dataclasses import FrozenInstanceError
 
 import pytest
 
-from parts.shelf.stats import ModifierStack, Stat, StatBlock, StatModifier
+from kernel.shelf.stats import ModifierStack, Stat, StatBlock, StatModifier
 
 
 def test_valid_stat_constructs():

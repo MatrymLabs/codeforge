@@ -1,4 +1,4 @@
-"""Test twin for parts/world/wildlands.py -- the deterministic wilderness generator.
+"""Test twin for kernel/world/wildlands.py -- the deterministic wilderness generator.
 
 Acceptance: a config expands into a connected, fully-reachable region of rooms, each with ambient
 life and a metadata area. Refusal: a malformed config fails loud. Regression: branches never
@@ -9,8 +9,8 @@ from collections import deque
 
 import pytest
 
-from parts.world.seed import SeedError
-from parts.world.wildlands import (
+from kernel.world.seed import SeedError
+from kernel.world.wildlands import (
     _BIOME_HERB,
     gatherable_materials,
     generate_wildlands,
@@ -88,7 +88,7 @@ def test_every_biome_pairs_features_and_atmospheres_coprimely():
     # silently collapses. This gate pins gcd(F, A) == 1 per biome, so the CRT multiplier holds.
     from math import gcd
 
-    from parts.world.wildlands import _BIOMES
+    from kernel.world.wildlands import _BIOMES
 
     for biome, d in _BIOMES.items():
         f, a = len(d["features"]), len(d.get("atmospheres", []))
@@ -98,7 +98,7 @@ def test_every_biome_pairs_features_and_atmospheres_coprimely():
 
 def test_a_room_description_carries_both_a_feature_and_an_atmosphere():
     _, rooms, _ = _world_with(_CFG)
-    from parts.world.wildlands import _BIOMES
+    from kernel.world.wildlands import _BIOMES
 
     meadow = _BIOMES["temperate-meadow"]
     a_room = next(iter(rooms.values()))
@@ -142,7 +142,7 @@ def test_attach_room_gains_exactly_one_exit_into_the_region():
     ],
 )
 def test_a_malformed_region_fails_loud(bad, match):
-    from parts.world.wildlands import load_wildlands_config
+    from kernel.world.wildlands import load_wildlands_config
 
     cfg = {k: v for k, v in _CFG.items() if k != "id"}
     cfg.update(bad)
@@ -211,7 +211,7 @@ def test_notables_are_off_by_default_in_a_hand_built_config():
 
 
 def test_the_guardian_count_is_capped_for_a_huge_region():
-    from parts.world.wildlands import _NOTABLE_CAP
+    from kernel.world.wildlands import _NOTABLE_CAP
 
     cfg = dict(_CFG, id="huge_wild", trail_length=_NOTABLE_CAP * 40, notable_every=1)
     _, _, npcs = _world_with(cfg)
@@ -224,7 +224,7 @@ def test_notable_every_defaults_on_and_refuses_a_negative():
 
     import yaml
 
-    from parts.world.wildlands import load_wildlands_config
+    from kernel.world.wildlands import load_wildlands_config
 
     good = {k: v for k, v in _CFG.items() if k != "id"}
     with tempfile.TemporaryDirectory() as d:
@@ -249,7 +249,7 @@ def _write_cfg(tmp_path):
 
 
 def test_wild_scale_multiplies_every_region_trail(monkeypatch, tmp_path):
-    from parts.world.wildlands import load_wildlands_config
+    from kernel.world.wildlands import load_wildlands_config
 
     p = _write_cfg(tmp_path)
     monkeypatch.delenv("CODEFORGE_WILD_SCALE", raising=False)
@@ -261,7 +261,7 @@ def test_wild_scale_multiplies_every_region_trail(monkeypatch, tmp_path):
 
 @pytest.mark.parametrize("bad", ["abc", "0", "0.5", "-3"])
 def test_wild_scale_refuses_a_bad_or_shrinking_value(monkeypatch, tmp_path, bad):
-    from parts.world.wildlands import load_wildlands_config
+    from kernel.world.wildlands import load_wildlands_config
 
     p = _write_cfg(tmp_path)
     monkeypatch.setenv("CODEFORGE_WILD_SCALE", bad)

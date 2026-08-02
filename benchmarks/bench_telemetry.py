@@ -21,7 +21,7 @@ from pathlib import Path
 # same way it does for the server and the tests, not just `parts` (found by the editable install).
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from parts.telemetry import JSON_CODEC, PROTOBUF_CODEC  # noqa: E402
+from kernel.telemetry import JSON_CODEC, PROTOBUF_CODEC  # noqa: E402
 
 FRAMES: dict[str, dict[str, object]] = {
     "vitals": {

@@ -49,8 +49,8 @@ they earn their place (`docs/technology_intake.md`, the `make intake` gate).
 `pip-audit`, `bandit`, Hypothesis (property tests), coverage, pre-commit.
 
 **Server / engine:** the tick is `handle_command(session, text) -> str` in `forge.py` (architecture
-law 4). Threaded TCP telnet gateway with a login front desk (`parts/gateway.py`, GMCP in
-`parts/gmcp.py`); FastAPI admin surface (`parts/api.py`); the world beat is the player's command (no
+law 4). Threaded TCP telnet gateway with a login front desk (`adapters/gateway.py`, GMCP in
+`kernel/gmcp.py`); FastAPI admin surface (`adapters/api.py`); the world beat is the player's command (no
 background threads) driving
 `tick_zones` / `menace` / `tick_gather` / `tick_climate` / the hourglass delay-queue.
 
@@ -60,7 +60,7 @@ character-store, job-progress) with in-memory + SQL adapters. See `docs/database
 `docs/adr/0001-canonical-state.md`, `0002-derive-dont-store.md`, `0004-state-as-data.md`.
 
 **Content:** the world is data -- `seeds/<world>/*.yaml` validated by loader gates in
-`parts/world/seed.py`. **81** `parts/world/*.py` modules; aethryn boots ~53k rooms at demo scale,
+`kernel/world/seed.py`. **81** `kernel/world/*.py` modules; aethryn boots ~53k rooms at demo scale,
 ~1,000,000 at `CODEFORGE_WILD_SCALE=19`.
 
 **Clients (sibling repos):** `../codeforge-client` (terminal-first + native **PySide6/Qt** desktop,

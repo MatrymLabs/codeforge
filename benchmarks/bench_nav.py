@@ -59,7 +59,7 @@ def main() -> None:
     edges = build_edges(n)
     print(f"navigation benchmark -- {n:,} rooms, {len(edges):,} exits\n")
 
-    from parts.world.navigation import BACKEND, PyNavGraph
+    from kernel.world.navigation import BACKEND, PyNavGraph
 
     py = bench_backend("python", PyNavGraph, edges, n)
 

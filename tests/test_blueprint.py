@@ -1,4 +1,4 @@
-"""Test twin for parts/blueprint.py -- the Blueprint model, validator, files, and tick verb.
+"""Test twin for kernel/blueprint.py -- the Blueprint model, validator, files, and tick verb.
 
 Acceptance: a well-formed spec loads, round-trips through JSON, renders Markdown, and files
 its twins; the `blueprint` verb browses and reads plans and is reachable through the engine
@@ -10,11 +10,11 @@ import json
 
 import pytest
 
+from adapters.blueprint_verb import blueprint
 from forge import handle_command
-from parts.blueprint import (
+from kernel.blueprint import (
     Blueprint,
     BlueprintError,
-    blueprint,
     from_dict,
     load_all,
     load_blueprint,
@@ -22,7 +22,7 @@ from parts.blueprint import (
     to_markdown,
     write_blueprint,
 )
-from parts.world.session import Session
+from kernel.world.session import Session
 
 _GOOD = {
     "blueprint_id": "sample_plan",
@@ -100,7 +100,7 @@ def test_load_all_finds_nested_examples(tmp_path):
 
 
 def test_shipped_example_is_valid():
-    # The repo's own example must always pass the gate (VeritasGate on our own artifact).
+    # The repo's own example must always pass the gate (EvidenceGate on our own artifact).
     ids = [b.blueprint_id for b in load_all()]
     assert "npc_combat" in ids
 

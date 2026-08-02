@@ -1,4 +1,4 @@
-"""Test twin for parts/shelf/conditions.py -- the safe condition evaluator (allowlist AST).
+"""Test twin for kernel/shelf/conditions.py -- the safe condition evaluator (allowlist AST).
 
 Acceptance: comparisons, boolean ops, membership, and chained compares evaluate against a context.
 Refusal (the whole point): every escape a malicious seed might try -- calls, attribute walks,
@@ -11,7 +11,7 @@ from __future__ import annotations
 
 import pytest
 
-from parts.shelf.conditions import ConditionError, evaluate, validate
+from kernel.shelf.conditions import ConditionError, evaluate, validate
 
 _CTX = {"level": 10, "rank": "wizard", "inventory": ["ember", "copper_key"], "locked": False}
 

@@ -1,4 +1,4 @@
-"""Test twin for parts/addie.py -- the loop refuses to close on an unlooped cycle.
+"""Test twin for kernel/addie.py -- the loop refuses to close on an unlooped cycle.
 
 Acceptance (a cycle that ran the whole loop passes) AND refusal (each of the four failure modes the
 loop exists to prevent is caught), plus the real seeded ledger. Hostile cases: a major cycle
@@ -11,7 +11,7 @@ from pathlib import Path
 
 import pytest
 
-from parts.addie import (
+from kernel.addie import (
     PHASES,
     SCALES,
     AddieError,
@@ -130,7 +130,7 @@ def test_a_ledger_with_an_unlooped_cycle_reports_fail(tmp_path):
 
 
 def test_main_passes_on_the_seeded_ledger(capsys):
-    from parts import addie
+    from kernel import addie
 
     assert addie.main([]) == 0
     assert "ADDIE loop: PASS" in capsys.readouterr().out
@@ -140,7 +140,7 @@ def test_main_passes_on_the_seeded_ledger(capsys):
 
 
 def test_the_addie_verb_renders_the_loop():
-    from parts.addie import addie
+    from kernel.addie import addie
 
     assert "ADDIE loop:" in addie("")
     assert "ADDIE loop:" in addie("status")
@@ -150,7 +150,7 @@ def test_the_addie_verb_renders_the_loop():
 def test_the_addie_verb_is_reachable_through_the_engine_tick():
     # a feature is not wired until handle_command proves it reachable (the CARD convention)
     from forge import handle_command
-    from parts.world.session import Session
+    from kernel.world.session import Session
 
     out = handle_command(Session(player_id="matrym", location="courtyard"), "addie")
     assert "ADDIE loop:" in out

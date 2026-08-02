@@ -1,4 +1,4 @@
-"""Test twin for parts/world/metrics.py -- the live-ops storage snapshot.
+"""Test twin for kernel/world/metrics.py -- the live-ops storage snapshot.
 
 Acceptance: an empty world reports zeros; after seeding characters (with coin), a guild treasury, an
 auction listing, mail, and a ban, snapshot reports the right counts and the coin-in-circulation sum
@@ -13,8 +13,8 @@ from typing import Any
 
 import pytest
 
-from parts.world import auction_store, bans, bus, guild_store, mail_store, metrics, presence
-from parts.world.characters import put_record
+from kernel.world import auction_store, bans, bus, guild_store, mail_store, metrics, presence
+from kernel.world.characters import put_record
 
 
 @pytest.fixture(autouse=True)

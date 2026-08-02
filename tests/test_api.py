@@ -1,13 +1,13 @@
-"""Test twin for parts/api.py -- the HTTP window, via TestClient."""
+"""Test twin for adapters/api.py -- the HTTP window, via TestClient."""
 
 import pytest
 from fastapi.testclient import TestClient
 
-from parts.api import app, get_login_guard
-from parts.login_guard import LoginGuard
-from parts.world.accounts import adopt, register
-from parts.world.characters import save_character, set_rank
-from parts.world.session import SESSIONS, Session
+from adapters.api import app, get_login_guard
+from kernel.login_guard import LoginGuard
+from kernel.world.accounts import adopt, register
+from kernel.world.characters import save_character, set_rank
+from kernel.world.session import SESSIONS, Session
 
 
 @pytest.fixture(autouse=True)
@@ -73,7 +73,7 @@ def test_blueprints_endpoint_summarizes_filed_plans(client):
     plans = resp.json()
     npc = next(b for b in plans if b["blueprint_id"] == "npc_combat")
     assert npc["title"] == "NPCs that fight back"
-    assert npc["status"] == "validated"  # the feature is fully built in parts/world/combat.py
+    assert npc["status"] == "validated"  # the feature is fully built in kernel/world/combat.py
     assert npc["requirement_count"] >= 1
 
 
@@ -94,7 +94,7 @@ def test_grant_refuses_the_unauthenticated(client):
 
 def test_get_login_guard_returns_the_shared_throttle():
     """The production seam hands back the one shared guard (tests override it for isolation)."""
-    from parts.api import _login_guard, get_login_guard
+    from adapters.api import _login_guard, get_login_guard
 
     assert get_login_guard() is _login_guard
 

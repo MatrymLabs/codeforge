@@ -1,4 +1,4 @@
-"""Test twin for parts/seedlab/kernel.py -- Seed identity + lifecycle.
+"""Test twin for kernel/seedlab/kernel.py -- Seed identity + lifecycle.
 
 Acceptance: a Seed is created with a stable identity, starts/stops through legal moves, renders
 an inspectable status, exposes a structured contract, and -- the load-bearing claim -- its identity
@@ -15,7 +15,7 @@ from pathlib import Path
 
 import pytest
 
-from parts.seedlab.kernel import (
+from kernel.seedlab.kernel import (
     ARCHIVED,
     CREATED,
     RUNNING,

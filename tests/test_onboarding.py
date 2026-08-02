@@ -1,7 +1,7 @@
-"""Test twin for parts/onboarding.py -- the practical adapter + the one-core-two-adapters proof."""
+"""Test twin for kernel/onboarding.py -- the practical adapter + the one-core-two-adapters proof."""
 
-from parts.onboarding import ONBOARDING, available, drive, new_onboarding, run_demo
-from parts.shelf.workflow import WorkflowEngine
+from kernel.onboarding import ONBOARDING, available, drive, new_onboarding, run_demo
+from kernel.shelf.workflow import WorkflowEngine
 
 
 def test_the_onboarding_flow_reaches_active():
@@ -30,7 +30,7 @@ def test_run_demo_is_a_full_non_game_transcript():
 
 def test_one_core_powers_both_the_game_quest_and_the_practical_workflow():
     # The whole point of the vertical slice: the SAME engine class drives both adapters.
-    from parts.world import quest
+    from kernel.world import quest
 
     game_engine = quest._QUESTS["coilward_contract"].engine  # the game quest (the built-in arc)
     assert isinstance(game_engine, WorkflowEngine)
@@ -79,8 +79,8 @@ def test_drive_rejects_an_unavailable_action_then_lets_you_quit():
 
 
 def test_the_onboard_cli_subcommand_routes_to_drive(monkeypatch):
-    import parts.onboarding as onboarding_mod
-    from parts.cli import main
+    import kernel.onboarding as onboarding_mod
+    from adapters.cli import main
 
     called = {"n": 0}
     monkeypatch.setattr(onboarding_mod, "drive", lambda: called.__setitem__("n", called["n"] + 1))

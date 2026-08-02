@@ -10,7 +10,7 @@ Last reviewed: 2026-07-31
 
 ## Why this exists
 
-CodeForge already **measured** its engine tick: `parts/bench.py` drives `handle_command` over a
+CodeForge already **measured** its engine tick: `kernel/bench.py` drives `handle_command` over a
 read-only command rotation and reports a latency distribution, and `make trend` files the median
 of each run into the retained Chronicle as the SLI `engine_tick.median_us`. A measurement is not
 an objective. This document states the objective, the error budget, and the policy when the budget
@@ -57,7 +57,7 @@ The error budget is the complement of the objective:
 error budget = 1 - SLO = 1 - 0.99 = 0.01  (1% of recorded runs may breach the threshold)
 ```
 
-Over `N` recorded runs, the budget permits `N x 0.01` breaches. `parts/slo.py` computes how much
+Over `N` recorded runs, the budget permits `N x 0.01` breaches. `kernel/slo.py` computes how much
 of that budget has been burned:
 
 ```
@@ -119,7 +119,7 @@ make trend               # record one more SLI point, then show the series
 
 ## Provenance
 
-Original implementation (`parts/slo.py`, `catalog/parts.yaml` id `slo-error-budget`). The
+Original implementation (`kernel/slo.py`, `catalog/parts.yaml` id `slo-error-budget`). The
 error-budget formula and the SLI/SLO/error-budget vocabulary are the public Google SRE pattern;
 no code was copied. The Chronicle SLI series and the benchmark it reads are pre-existing CodeForge
 parts. Honest labels throughout: the baseline numbers are measured on one host and compare only

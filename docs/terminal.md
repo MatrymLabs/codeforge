@@ -25,7 +25,7 @@ terminal (how to reach the console: `workshop -> north`; `terminal`, `terminal <
 | `terminal career` | the Career Evidence board |
 | `terminal pioneer` | Pioneer Mode (doctrine, risk ladder, experiments) |
 | `terminal pm` | the project status dashboard |
-| `terminal truth` | VeritasGate: claims vs reality |
+| `terminal truth` | EvidenceGate: claims vs reality |
 | `terminal qa` | the QA board (every filed object graded) |
 | `terminal docs` | the documentation gap check |
 

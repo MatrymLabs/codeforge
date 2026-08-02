@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import unittest
 
-from parts.shelf.sbfl import CAVEAT, SbflError, localize, render
+from kernel.shelf.sbfl import CAVEAT, SbflError, localize, render
 
 # Classic worked example: line "buggy" is executed by every failing test and few passing.
 # t1,t2 fail; t3,t4,t5 pass. "buggy" is in both failing tests + one passing -> most suspicious.

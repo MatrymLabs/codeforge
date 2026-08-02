@@ -10,7 +10,7 @@ from __future__ import annotations
 
 import unittest
 
-from parts.shelf.content_address import (
+from kernel.shelf.content_address import (
     ContentAddressError,
     Store,
     canonicalize,

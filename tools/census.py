@@ -99,9 +99,9 @@ def abilities() -> dict[str, object]:
 
 def systems() -> dict[str, object]:
     """Engine constants read from their modules, so a change at the source shows here."""
-    from parts.world.equipment import SLOTS
-    from parts.world.orders import ORDERS
-    from parts.world.score_sheet_model import RESIST_ORDER
+    from kernel.world.equipment import SLOTS
+    from kernel.world.orders import ORDERS
+    from kernel.world.score_sheet_model import RESIST_ORDER
 
     return {
         "orders_factions": len(ORDERS),

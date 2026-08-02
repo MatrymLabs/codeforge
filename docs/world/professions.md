@@ -2,7 +2,7 @@
 
 *How a hero PRACTICES a trade, as distinct from the calling they FIGHT with. Slice 1b of the
 Crafting Campaign: the framework that turns using slice 1a's material chains into progression. This
-is the design canon behind `seeds/aethryn/professions.yaml` and `parts/world/professions.py`.*
+is the design canon behind `seeds/aethryn/professions.yaml` and `kernel/world/professions.py`.*
 
 ## Calling vs. trade
 

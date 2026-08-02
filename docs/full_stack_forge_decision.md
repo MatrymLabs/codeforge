@@ -19,8 +19,8 @@ CodeForge is already on the hybrid path, not starting from zero:
 - **Custom Python core** (the `handle_command` tick) is the one door. Four thin drivers:
   solo terminal, stdlib TCP gateway, asyncio WebSocket browser gate, and HTTP.
 - **FastAPI is already integrated and ledger-justified** across three surfaces:
-  `parts/api.py` (admin API), `parts/web_gateway.py` (WebSocket play), and
-  `parts/dashboard.py` (the readiness dashboard: `GET /` + `GET /api/status` + `/docs`).
+  `adapters/api.py` (admin API), `adapters/web_gateway.py` (WebSocket play), and
+  `kernel/dashboard.py` (the readiness dashboard: `GET /` + `GET /api/status` + `/docs`).
 - **Persistence:** SQLAlchemy 2.0 / SQLite. **Content:** YAML seeds. Seven runtime deps,
   each justified in `dependency_ledger.toml`. No LLM SDK in the default wheel (an optional
   `ai` extra adds `anthropic`); no template engine.
@@ -38,7 +38,7 @@ CodeForge is already on the hybrid path, not starting from zero:
   custom renderers + (later, only if justified) HTMX for interactivity and a *separate*
   React/TypeScript flagship.
 
-## Tool verdicts (VeritasGate-honest labels)
+## Tool verdicts (EvidenceGate-honest labels)
 
 | Tool | Verdict | Why |
 |---|---|---|

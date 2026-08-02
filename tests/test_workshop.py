@@ -1,4 +1,4 @@
-"""Test twin for parts/workshop.py -- the engineering cockpit (display-only).
+"""Test twin for kernel/workshop.py -- the engineering cockpit (display-only).
 
 Card functions render the menu, the catalog, and a reuse search; the engine-tick
 tests prove the commands are reachable through handle_command (a feature isn't
@@ -7,8 +7,8 @@ wired until the tick proves it)."""
 import pytest
 
 from forge import handle_command
-from parts.workshop import catalog_view, reuse_search, workshop_menu
-from parts.world.session import SESSIONS, Session
+from kernel.workshop import catalog_view, reuse_search, workshop_menu
+from kernel.world.session import SESSIONS, Session
 
 
 @pytest.fixture(autouse=True)

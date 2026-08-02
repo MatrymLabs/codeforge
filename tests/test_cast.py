@@ -1,4 +1,4 @@
-"""Test twin for parts/cast.py -- the seed→cast planner.
+"""Test twin for kernel/cast.py -- the seed→cast planner.
 
 Acceptance (the real templates plan a READY cast) and refusal (unknown/malformed template,
 missing starter pack → loud CastError or BLOCKED) are both pinned, plus the honesty rules:
@@ -14,7 +14,7 @@ from pathlib import Path
 
 import pytest
 
-from parts.cast import (
+from kernel.cast import (
     BLOCKED,
     GENERATED,
     PLANNED,
@@ -40,8 +40,8 @@ def _fixture_engine(root: Path) -> None:
     (root / "parts" / "__pycache__" / "junk.pyc").write_text("cache")
     (root / "forge.py").write_text("# engine\n")
     for pack in ("first-forge", "other-pack"):
-        (root / "seeds" / pack).mkdir(parents=True)
-        (root / "seeds" / pack / "rooms.yaml").write_text("a: {}\n")
+        (root / "content" / "seeds" / pack).mkdir(parents=True)
+        (root / "content" / "seeds" / pack / "rooms.yaml").write_text("a: {}\n")
     tpl = root / "seed_templates" / "blank_mud"
     tpl.mkdir(parents=True)
     (tpl / "template_manifest.json").write_text(
@@ -125,7 +125,7 @@ def test_planning_blocks_when_the_starter_pack_is_missing(tmp_path: Path) -> Non
             }
         )
     )
-    (tmp_path / "seeds").mkdir()  # no 'not-installed' pack inside
+    (tmp_path / "content" / "seeds").mkdir(parents=True)  # no 'not-installed' pack inside
     plan = plan_cast("ghost", "Nowhere", root=tmp_path)
     assert plan.verdict == BLOCKED
     assert any("not installed" in w for w in plan.warnings)
@@ -183,7 +183,7 @@ def test_generate_pours_the_engine_seed_and_scaffold(tmp_path: Path) -> None:
     # engine vendored whole (minus caches), the seed pack, and the fresh scaffold
     assert (out / "parts" / "x.py").is_file() and (out / "forge.py").is_file()
     assert not (out / "parts" / "__pycache__").exists()  # caches never carried
-    assert (out / "seeds" / "first-forge" / "rooms.yaml").is_file()
+    assert (out / "content" / "seeds" / "first-forge" / "rooms.yaml").is_file()
     for scaffold in (
         "cast_manifest.json",
         "README.md",
@@ -199,8 +199,10 @@ def test_generate_carries_only_its_own_seed_pack(tmp_path: Path) -> None:
     _fixture_engine(tmp_path)
     plan = plan_cast("blank_mud", "Solo", commit="c", root=tmp_path)
     out = generate_cast(plan, tmp_path / "out", root=tmp_path)
-    assert (out / "seeds" / "first-forge").is_dir()
-    assert not (out / "seeds" / "other-pack").exists()  # a cast carries only its own game
+    assert (out / "content" / "seeds" / "first-forge").is_dir()
+    assert not (
+        out / "content" / "seeds" / "other-pack"
+    ).exists()  # a cast carries only its own game
 
 
 def test_generate_refuses_a_blocked_plan(tmp_path: Path) -> None:
@@ -234,14 +236,15 @@ def test_generate_via_the_cli(tmp_path: Path) -> None:
 
 def _bootable_stub(cast_dir: Path, ok: bool = True) -> None:
     """A minimal cast dir the validator can boot in a subprocess, without the 122-module engine."""
-    (cast_dir / "parts" / "world").mkdir(parents=True)  # the World Package is a subpackage now
+    (cast_dir / "kernel" / "world").mkdir(parents=True)  # the World Package is a subpackage now
+    (cast_dir / "parts").mkdir()
     (cast_dir / "parts" / "__init__.py").write_text("")
-    (cast_dir / "parts" / "world" / "__init__.py").write_text("")
-    (cast_dir / "parts" / "world" / "session.py").write_text(
+    (cast_dir / "kernel" / "world" / "__init__.py").write_text("")
+    (cast_dir / "kernel" / "world" / "session.py").write_text(
         "class Session:\n    def __init__(self, player_id, location=None, rank=None):\n"
         "        self.player_id = player_id\n"
     )
-    (cast_dir / "parts" / "world" / "world.py").write_text(
+    (cast_dir / "kernel" / "world" / "world.py").write_text(
         "START_ROOM = 'start'\n"
     )  # validate probe needs it
     body = (
@@ -257,7 +260,7 @@ def _bootable_stub(cast_dir: Path, ok: bool = True) -> None:
 
 
 def test_validate_boots_a_working_cast_and_marks_it_validated(tmp_path: Path) -> None:
-    from parts.cast import VALIDATED, validate_cast
+    from kernel.cast import VALIDATED, validate_cast
 
     cast = tmp_path / "cast"
     _bootable_stub(cast, ok=True)
@@ -267,7 +270,7 @@ def test_validate_boots_a_working_cast_and_marks_it_validated(tmp_path: Path) ->
 
 
 def test_validate_reports_a_cast_that_cannot_boot(tmp_path: Path) -> None:
-    from parts.cast import NOT_VALIDATED, validate_cast
+    from kernel.cast import NOT_VALIDATED, validate_cast
 
     cast = tmp_path / "cast"
     _bootable_stub(cast, ok=False)  # forge.handle_command raises
@@ -279,13 +282,13 @@ def test_validate_reports_a_cast_that_cannot_boot(tmp_path: Path) -> None:
 def test_validate_boots_the_casts_own_seed_not_the_engine_default(tmp_path: Path) -> None:
     """Regression: a cast carries ONLY its own world, so the validate probe must boot THAT
     seed (via FORGE_SEED), never the engine default first-forge, which the cast deliberately
-    shed. Here parts/world/world.py refuses any seed but the cast's own -> validate passes only if
+    shed. Here kernel/world/world.py refuses any seed but the cast's own -> validate passes only if
     the probe was launched with FORGE_SEED=aethryn."""
-    from parts.cast import VALIDATED, validate_cast
+    from kernel.cast import VALIDATED, validate_cast
 
     cast = tmp_path / "cast"
     _bootable_stub(cast, ok=True)
-    (cast / "parts" / "world" / "world.py").write_text(
+    (cast / "kernel" / "world" / "world.py").write_text(
         "import os\n"
         "seed = os.environ.get('FORGE_SEED', 'first-forge')\n"
         "assert seed == 'aethryn', 'probe booted the wrong seed: ' + seed\n"
@@ -301,7 +304,7 @@ def test_validate_boots_the_casts_own_seed_not_the_engine_default(tmp_path: Path
 def test_validate_without_a_manifest_boots_on_the_engine_default(tmp_path: Path) -> None:
     """A cast dir with no manifest can't name its seed, so validate degrades gracefully to the
     engine default rather than crashing (exercises the no-manifest branch of the FORGE_SEED pin)."""
-    from parts.cast import validate_cast
+    from kernel.cast import validate_cast
 
     cast = tmp_path / "cast"
     _bootable_stub(cast, ok=True)
@@ -330,7 +333,7 @@ def test_generated_pyproject_declares_dependencies(tmp_path: Path) -> None:
 
 
 def test_declared_deps_reads_the_pyproject(tmp_path: Path) -> None:
-    from parts.cast import _declared_deps
+    from kernel.cast import _declared_deps
 
     (tmp_path / "pyproject.toml").write_text(
         '[project]\ndependencies = ["pyyaml", "pydantic"]\n', encoding="utf-8"
@@ -340,7 +343,7 @@ def test_declared_deps_reads_the_pyproject(tmp_path: Path) -> None:
 
 
 def test_install_check_boots_in_a_fresh_venv(tmp_path: Path) -> None:
-    from parts.cast import install_check
+    from kernel.cast import install_check
 
     _fixture_engine(tmp_path)
     out = generate_cast(
@@ -358,7 +361,7 @@ def test_install_check_boots_in_a_fresh_venv(tmp_path: Path) -> None:
 
 
 def test_install_check_reports_a_failed_step(tmp_path: Path) -> None:
-    from parts.cast import install_check
+    from kernel.cast import install_check
 
     _fixture_engine(tmp_path)
     out = generate_cast(
@@ -376,7 +379,7 @@ def test_install_check_reports_a_failed_step(tmp_path: Path) -> None:
 def test_install_check_without_a_manifest_uses_the_default_boot_probe(tmp_path: Path) -> None:
     """No manifest -> the boot step falls back to the plain probe (engine default seed) instead
     of injecting FORGE_SEED. Covers the no-manifest branch of install_check's seed pin."""
-    from parts.cast import install_check
+    from kernel.cast import install_check
 
     cast_dir = tmp_path / "cast"
     cast_dir.mkdir()
@@ -394,7 +397,7 @@ def test_install_check_without_a_manifest_uses_the_default_boot_probe(tmp_path: 
 
 
 def test_install_check_needs_declared_deps(tmp_path: Path) -> None:
-    from parts.cast import install_check
+    from kernel.cast import install_check
 
     (tmp_path / "cast" / "").mkdir(parents=True, exist_ok=True)
     cast_dir = tmp_path / "cast"
@@ -410,27 +413,29 @@ def _bootable_fixture_engine(root: Path) -> None:
     """A tiny but BOOTABLE engine fixture: forge + world + session that pour_selective validates."""
     _fixture_engine(root)  # parts/(x,__init__), forge.py stub, seeds/first-forge+other, template
     (root / "forge.py").write_text("def handle_command(session, text):\n    return 'ok: ' + text\n")
-    (root / "parts" / "world").mkdir(parents=True)  # the World Package is a subpackage now
-    (root / "parts" / "world" / "__init__.py").write_text("")
-    (root / "parts" / "world" / "session.py").write_text(
+    (root / "kernel" / "world").mkdir(parents=True)  # the World Package is a subpackage now
+    (root / "kernel" / "world" / "__init__.py").write_text("")
+    (root / "kernel" / "world" / "session.py").write_text(
         "class Session:\n"
         "    def __init__(self, player_id, location=None, rank=None):\n        pass\n"
     )
-    (root / "parts" / "world" / "world.py").write_text("START_ROOM = 'start'\n")
+    (root / "kernel" / "world" / "world.py").write_text("START_ROOM = 'start'\n")
 
 
 def _bootable_multiplayer_fixture(root: Path) -> None:
     """The bootable engine plus the multiplayer server tier: importable gateway/web_gateway stubs
     and the `web/` data dir a multiplayer cast must carry (SURFACE_IMPORTS + SURFACE_DATA)."""
     _bootable_fixture_engine(root)
-    (root / "parts" / "gateway.py").write_text("# TCP gateway (server stub)\nPORT = 4000\n")
-    (root / "parts" / "web_gateway.py").write_text("# web gateway (server stub)\nROUTE = '/'\n")
-    (root / "parts" / "web").mkdir()
-    (root / "parts" / "web" / "index.html").write_text("<!doctype html><title>cast</title>\n")
+    (root / "adapters").mkdir()
+    (root / "adapters" / "__init__.py").write_text("")
+    (root / "adapters" / "gateway.py").write_text("# TCP gateway (server stub)\nPORT = 4000\n")
+    (root / "adapters" / "web_gateway.py").write_text("# web gateway (server stub)\nROUTE = '/'\n")
+    (root / "adapters" / "web").mkdir()
+    (root / "adapters" / "web" / "index.html").write_text("<!doctype html><title>cast</title>\n")
 
 
 def test_generate_selective_vendors_only_the_named_modules(tmp_path: Path) -> None:
-    from parts.cast import VENDORED_SELECTIVE
+    from kernel.cast import VENDORED_SELECTIVE
 
     _fixture_engine(tmp_path)
     plan = plan_cast("blank_mud", "Slim", commit="c", root=tmp_path)
@@ -442,7 +447,7 @@ def test_generate_selective_vendors_only_the_named_modules(tmp_path: Path) -> No
 
 
 def test_validate_cast_runs_a_command_corpus(tmp_path: Path) -> None:
-    from parts.cast import validate_cast
+    from kernel.cast import validate_cast
 
     cast = tmp_path / "cast"
     _bootable_stub(cast, ok=True)
@@ -451,7 +456,7 @@ def test_validate_cast_runs_a_command_corpus(tmp_path: Path) -> None:
 
 
 def test_validate_cast_fails_when_a_surface_command_breaks(tmp_path: Path) -> None:
-    from parts.cast import NOT_VALIDATED, validate_cast
+    from kernel.cast import NOT_VALIDATED, validate_cast
 
     cast = tmp_path / "cast"
     _bootable_stub(cast, ok=False)  # handle_command raises -> a wrongly-excluded module would too
@@ -461,10 +466,10 @@ def test_validate_cast_fails_when_a_surface_command_breaks(tmp_path: Path) -> No
 
 
 def test_pour_selective_end_to_end_validates_the_cut(tmp_path: Path) -> None:
-    from parts.cast import VENDORED_SELECTIVE, pour_selective
+    from kernel.cast import VENDORED_SELECTIVE, pour_selective
 
     _bootable_fixture_engine(tmp_path)
-    # a fake tracer: the closure collapses parts.world.* to the "world" subpackage, plus top-level x
+    # a fake tracer: the closure collapses kernel.world.* to "world" subpackage, plus top-level x
     fake = lambda commands: {"world", "x"}  # noqa: E731
     out, ok, detail = pour_selective(
         "blank_mud", "SlimGame", tmp_path / "out", ["solo", "save"], root=tmp_path, tracer=fake
@@ -479,8 +484,8 @@ def test_pour_selective_end_to_end_validates_the_cut(tmp_path: Path) -> None:
 def test_pour_selective_validates_an_admin_cast(tmp_path: Path) -> None:
     # A cast that carries the owner/admin tier: the broad harness must run its @-verbs clean too,
     # not just the solo+save game. Proves the third command-traceable surface end to end.
-    from parts.cast import VENDORED_SELECTIVE, pour_selective
-    from parts.coupling import surface_commands
+    from kernel.cast import VENDORED_SELECTIVE, pour_selective
+    from kernel.coupling import surface_commands
 
     _bootable_fixture_engine(tmp_path)
     surfaces = ["solo", "save", "admin"]
@@ -498,7 +503,7 @@ def test_pour_selective_validates_a_multiplayer_cast(tmp_path: Path) -> None:
     # The import-based server tier: the cut must carry importable gateway/web_gateway + the web/
     # data dir, and validate by IMPORTING the servers (not by tracing commands). The import surface
     # is exercised through the injected `import_tracer`, so no real server is imported here.
-    from parts.cast import VENDORED_SELECTIVE, pour_selective
+    from kernel.cast import VENDORED_SELECTIVE, pour_selective
 
     _bootable_multiplayer_fixture(tmp_path)
     fake_cmd = lambda commands: {"world", "x"}  # noqa: E731
@@ -513,9 +518,9 @@ def test_pour_selective_validates_a_multiplayer_cast(tmp_path: Path) -> None:
         import_tracer=fake_imp,
     )
     assert ok, detail  # the servers imported in the cut and the base commands ran clean
-    assert (out / "parts" / "gateway.py").exists()  # the server modules were vendored
-    assert (out / "parts" / "web_gateway.py").exists()
-    assert (out / "parts" / "web" / "index.html").exists()  # + the declared web data dir
+    assert (out / "adapters" / "gateway.py").exists()  # the server modules were vendored
+    assert (out / "adapters" / "web_gateway.py").exists()
+    assert (out / "adapters" / "web" / "index.html").exists()  # + the declared web data dir
     m = read_manifest(out / "cast_manifest.json")
     assert m.engine_strategy == VENDORED_SELECTIVE and m.status == "validated"
 
@@ -524,7 +529,7 @@ def test_pour_selective_validates_a_multiplayer_cast(tmp_path: Path) -> None:
 
 
 def test_forge_game_end_to_end_reports_a_validated_cut(tmp_path: Path) -> None:
-    from parts.cast import VENDORED_SELECTIVE, forge_game
+    from kernel.cast import VENDORED_SELECTIVE, forge_game
 
     _bootable_fixture_engine(tmp_path)
     fake = lambda commands: {"world", "x"}  # noqa: E731
@@ -539,7 +544,7 @@ def test_forge_game_end_to_end_reports_a_validated_cut(tmp_path: Path) -> None:
 
 
 def test_render_forge_shows_the_manufacturing_summary(tmp_path: Path) -> None:
-    from parts.cast import forge_game, render_forge
+    from kernel.cast import forge_game, render_forge
 
     _bootable_fixture_engine(tmp_path)
     report = forge_game(
@@ -557,7 +562,7 @@ def test_render_forge_shows_the_manufacturing_summary(tmp_path: Path) -> None:
 
 
 def test_validate_cast_import_checks_server_modules(tmp_path: Path) -> None:
-    from parts.cast import validate_cast
+    from kernel.cast import validate_cast
 
     cast = tmp_path / "cast"
     _bootable_stub(cast, ok=True)

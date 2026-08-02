@@ -36,7 +36,7 @@ a connection (telnet `:4000`, WebSocket, or the API). **Doctrine:** every client
 ## Boundary 2 - Privilege boundary (player < wizard < owner)
 
 **Asset:** administrative capability (`@`-verbs, grant, teleport, item generation). **Actor:** a
-player or wizard attempting to act above their rank. **Trust boundary:** `parts/world/ranks.has_rank`,
+player or wizard attempting to act above their rank. **Trust boundary:** `kernel/world/ranks.has_rank`,
 checked in the tick BEFORE any handler runs. This is the #1 OWASP risk (broken access control), so it
 is deliberately tested from the deny side.
 
@@ -44,7 +44,7 @@ is deliberately tested from the deny side.
 |--------|--------|-----------------|
 | **E**levation | a player runs a wizard/owner verb | **P** deny-by-default rank gate; the `@` sigil is reserved for ADMIN by construction. **D** `[SS]`/`[SYSTEM]` security log lines on denials. **T** `test_ranks.py::test_players_are_refused_every_wizard_verb`, `test_commands.py::test_an_admin_command_denies_a_mere_player` |
 | **E**levation | a verb is smuggled past the gate by casing/padding/aliasing | **P** longest-verb-first match on the normalized command; rank checked on the resolved command, not the raw text. **T** `test_fuzz_commands.py::test_case_and_padding_never_smuggle_an_admin_verb_past_the_gate` |
-| **E**levation | a non-owner enters the Creator's Workshop | **P** the Workshop barrier is owner-only and sealed even to wizards; players cannot teleport, a wizard is turned back. **T** `test_ranks.py` (teleport), `parts/world/workshop.py` |
+| **E**levation | a non-owner enters the Creator's Workshop | **P** the Workshop barrier is owner-only and sealed even to wizards; players cannot teleport, a wizard is turned back. **T** `test_ranks.py` (teleport), `kernel/world/workshop.py` |
 | **T**ampering | rank is granted without authority | **P** `grant` is owner-only and persists; AI never assigns rank. **T** `test_ranks.py::test_grant_is_owner_only_and_persists_rank` |
 | **R**epudiation | a privileged action leaves no trace | **D** privileged commands emit a security event (actor, action, outcome) - see `control-crosswalk.yaml` CF-SEC-006. |
 
@@ -54,7 +54,7 @@ across every wizard verb plus under fuzzing.
 ## Boundary 3 - Authentication and session
 
 **Asset:** account credentials + the character behind them. **Actor:** an attacker guessing,
-stuffing, or replaying at the login front desk. **Trust boundary:** `parts/world/accounts` + the
+stuffing, or replaying at the login front desk. **Trust boundary:** `kernel/world/accounts` + the
 gateway login dialogue.
 
 | STRIDE | Threat | Controls + test |

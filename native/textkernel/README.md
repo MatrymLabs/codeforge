@@ -9,11 +9,11 @@ The lowest-level polyglot organ: `PyObject` arguments parsed by hand, a scratch 
 One hot primitive: `levenshtein(a, b) -> int`, the edit distance between two strings. The O(m*n)
 dynamic program is cheap in C and slow in a Python loop, and there is **no stdlib shortcut** for it --
 exactly the shape where hand-written C earns its place. It powers fuzzy matching: the "command not
-found -- did you mean ...?" nudge in the engine tick, via `parts/shelf/textmatch.py`.
+found -- did you mean ...?" nudge in the engine tick, via `kernel/shelf/textmatch.py`.
 
 ## Optional (ADR-0010)
 
-This module is an accelerator. When it is not built, `parts.shelf.textmatch` runs the identical
+This module is an accelerator. When it is not built, `kernel.shelf.textmatch` runs the identical
 pure-Python `levenshtein_py` and the game is unaffected; a parity test pins the two equal and a
 benchmark records the speedup. Nothing in the game hard-depends on a C toolchain.
 

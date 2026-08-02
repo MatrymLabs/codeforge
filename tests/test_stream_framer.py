@@ -1,8 +1,8 @@
-"""Test twin for parts/shelf/stream_framer.py -- frame a byte stream, buffering partials."""
+"""Test twin for kernel/shelf/stream_framer.py -- frame a byte stream, buffering partials."""
 
 import pytest
 
-from parts.shelf.stream_framer import StreamFramer
+from kernel.shelf.stream_framer import StreamFramer
 
 
 def test_multiple_messages_in_one_chunk():

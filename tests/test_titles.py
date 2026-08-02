@@ -1,9 +1,9 @@
-"""Test twin for parts/titles.py -- the game adapter: a sanitized player title."""
+"""Test twin for kernel/titles.py -- the game adapter: a sanitized player title."""
 
 import pytest
 
-from parts.titles import reset_titles, title
-from parts.world.session import SESSIONS, Session
+from kernel.titles import reset_titles, title
+from kernel.world.session import SESSIONS, Session
 
 
 @pytest.fixture(autouse=True)

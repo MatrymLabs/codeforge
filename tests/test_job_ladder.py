@@ -1,4 +1,4 @@
-"""Test twin for parts/world/job_ladder.py -- the playable job roster + each calling's kit.
+"""Test twin for kernel/world/job_ladder.py -- the playable job roster + each calling's kit.
 
 Gates the one job-system invariant: every playable calling is a real job that ships with a real
 ability kit (so a new character can always pick a class and fight), and the module is the single
@@ -10,8 +10,8 @@ from pathlib import Path
 
 import pytest
 
-from parts.world import job_ladder as jl
-from parts.world.seed import SeedError, load_abilities, load_jobs
+from kernel.world import job_ladder as jl
+from kernel.world.seed import SeedError, load_abilities, load_jobs
 
 
 def test_the_roster_is_the_active_seeds_callings_and_every_one_is_armed():
@@ -34,7 +34,7 @@ def test_validate_passes_for_the_shipped_roster():
 
 def test_the_cap_is_the_single_source_of_the_job_level_ceiling():
     assert jl.MAX_JOB_LEVEL == 30
-    from parts.world import progression
+    from kernel.world import progression
 
     assert progression.JP_TRACK[2] == jl.MAX_JOB_LEVEL  # progression reads the cap from here
 
@@ -50,7 +50,7 @@ def test_an_unarmed_calling_fails_loud(monkeypatch):
 
 def test_every_aethryn_calling_ships_a_kit():
     # the flagship: all 30 callings are armed (loaded directly, independent of the booted seed).
-    aethryn = Path(__file__).resolve().parent.parent / "seeds" / "aethryn"
+    aethryn = Path(__file__).resolve().parent.parent / "content" / "seeds" / "aethryn"
     callings = set(load_jobs(aethryn / "jobs.yaml"))
     abilities = load_abilities(aethryn / "abilities.yaml")
     armed = {job for ability in abilities.values() for job in ability["jobs"]}

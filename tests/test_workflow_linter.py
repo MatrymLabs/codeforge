@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import unittest
 
-from parts.shelf.workflow_linter import (
+from kernel.shelf.workflow_linter import (
     Budget,
     WorkflowLintError,
     lint_workflow,

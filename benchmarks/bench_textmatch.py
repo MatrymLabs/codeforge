@@ -16,7 +16,7 @@ import sys
 import time
 from collections.abc import Callable
 
-from parts.shelf.textmatch import TEXTMATCH_BACKEND, closest, levenshtein_py
+from kernel.shelf.textmatch import TEXTMATCH_BACKEND, closest, levenshtein_py
 
 try:  # the C kernel, if built
     import codeforge_textkernel

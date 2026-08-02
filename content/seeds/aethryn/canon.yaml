@@ -1,0 +1,216 @@
+# SEED: aethryn -- canon.yaml  (the world's LOCKED canon: never mutated by generators)
+#
+# This is the single source of established Aethryn canon, encoded as data so the engine and every
+# generator can read it and REFUSE to contradict it (kernel/world/canon.py). It is not lore prose --
+# the readable Lore Bible is docs/aethryn_lore_bible.md; this is the machine-checkable canon.
+#
+# canon_status on each record follows the authority ladder:
+#   CANON_LOCKED   -- may NOT be changed by generators (names, regions, the strike, the Seven Crowns)
+#   CANON_WORKING  -- may be revised later without destructive migration (mythic titles, terminology)
+# (AUTHORED_LOCAL / GENERATED_LOCAL / RUMOR are for content ELSEWHERE, not this file.)
+
+world:
+  id: aethryn
+  display_name: Aethryn
+  canon_status: CANON_LOCKED
+
+# --- The established facts (CANON_LOCKED: generated content may never contradict these) ----------
+facts:
+  - id: fact_advanced_civilization
+    canon_status: CANON_LOCKED
+    text: >-
+      Aethryn once held an extraordinarily advanced civilization to which the gods were openly
+      present, providing abundance, healing, protection, and knowledge until miracles became ordinary
+      and mortals began studying divine acts as reproducible processes.
+  - id: fact_imitation
+    canon_status: CANON_LOCKED
+    text: >-
+      Ancient technology grew so advanced it was indistinguishable from magic; mortals learned to
+      imitate healing, biological creation, weather control, matter shaping, transportation,
+      communication, prophecy, memory preservation, and soul manipulation.
+  - id: fact_netharion
+    canon_status: CANON_LOCKED
+    text: >-
+      The old civilization created Netharion, the first artificial god, proving that divinity could
+      be manufactured rather than inherited or granted by the established gods.
+  - id: fact_the_strike
+    canon_status: CANON_LOCKED
+    text: >-
+      The gods regarded the old civilization as an existential threat and DELIBERATELY fragmented a
+      celestial body, directing its pieces at the great cities. The strike was intentional; the major
+      cities were intentionally targeted; the aim was to end technological and divine parity.
+  - id: fact_withdrawal
+    canon_status: CANON_LOCKED
+    text: >-
+      After the destruction the gods withdrew from open participation in the world. The modern world
+      is at once a world wounded by precise celestial impacts and a world living after its gods left.
+  - id: fact_uneven_survival
+    canon_status: CANON_LOCKED
+    text: >-
+      Ancient technology survives unevenly as ruins, dormant infrastructure, automated facilities,
+      broken constructs, misunderstood relics, sacred machines, hazardous devices, and knowledge
+      fragments. Cultures differ in how much they understand, preserve, recover, or conceal it.
+
+# --- Questions the world keeps OPEN: generated content may raise them only as RUMOR, never answer -
+unresolved_questions:
+  - Whether the gods' fear was justified.
+  - Whether Netharion was benevolent, dangerous, or both.
+  - Whether Netharion survived.
+  - Whether all gods supported the destruction.
+  - Whether some gods still monitor technological progress.
+  - Whether the old civilization was about to damage reality.
+  - Whether the gods acted to preserve creation, preserve their authority, or both.
+
+# --- The Seven Crowns: the old civilization's seven principal centres (CANON_LOCKED sites) --------
+# The collective name a speaker uses reveals their worldview, and each name carries its OWN tier
+# (from the source seed): the neutral/common names are anchored (CANON_LOCKED), while the ideological
+# names are belief, not fact, and are tagged RUMOR (they may be held sincerely but are not canon).
+collective_names:
+  - {id: seven_crowns,     name: The Seven Crowns,     canon_status: CANON_LOCKED, usage: neutral or scholarly}
+  - {id: seven_wounds,     name: The Seven Wounds,     canon_status: CANON_LOCKED, usage: common modern}
+  - {id: seven_blasphemies, name: The Seven Blasphemies, canon_status: RUMOR,      usage: god-loyalist}
+  - {id: murdered_crowns,  name: The Murdered Crowns,  canon_status: RUMOR,        usage: anti-divine or restorationist}
+  - {id: seven_lessons,    name: The Seven Lessons,    canon_status: RUMOR,        usage: penitential}
+  - {id: seven_engines,    name: The Seven Engines,    canon_status: RUMOR,        usage: technical or relic-hunter}
+
+seven_crowns:
+  - id: the_flamewrought_forge
+    map_name: The Flamewrought Forge
+    mythic_title: The Ember Crown
+    region: Ashen Wastes
+    canon_status: CANON_LOCKED
+    ancient_function: >-
+      manufacturing, material shaping, constructs, weapons, large-scale engineering, and
+      abundance-producing machinery.
+    modern_condition: >-
+      ruined industrial systems amid volcanic instability; machines still running obsolete
+      instructions, malformed manufactured objects, ancient production lines.
+  - id: netharions_throne
+    map_name: Netharion's Throne
+    mythic_title: The God-Mirror
+    region: The Voidscar
+    canon_status: CANON_LOCKED
+    ancient_function: >-
+      the creation of Netharion: artificial divinity, divine imitation, soulcraft, belief-powered
+      systems, and research into constructed consciousness.
+    modern_condition: >-
+      the deepest known wound, reality itself damaged, physical and metaphysical laws in conflict,
+      the status of Netharion uncertain. A city-sized apparatus; the gods aimed one of their greatest
+      strikes here.
+  - id: the_spire_nexus
+    map_name: The Spire Nexus
+    mythic_title: The Skychain
+    region: Skyward Spires
+    canon_status: CANON_LOCKED
+    ancient_function: >-
+      aerial transportation, long-distance transit, communication, celestial observation, and global
+      route coordination.
+    modern_condition: >-
+      floating land and broken pathways, suspended structures, transit systems partially still active.
+  - id: the_crystal_labyrinth
+    map_name: The Crystal Labyrinth
+    mythic_title: The Memory Deep
+    region: The Deepreach
+    canon_status: CANON_LOCKED
+    ancient_function: >-
+      archives, preserved memories, artificial intelligences, historical records, and predictive
+      systems.
+    modern_condition: >-
+      underground and fragmented; contradictory records, damaged memory constructs, passages that
+      rearrange or deceive.
+  - id: korvash_crater
+    map_name: Korvash Crater
+    mythic_title: The Measured Throne
+    region: Korvash Highlands
+    canon_status: CANON_LOCKED
+    ancient_function: >-
+      governance, law, resource coordination, administration, and command infrastructure.
+    modern_condition: >-
+      the political centre destroyed to an impact crater; remnants of command and authorization
+      systems, and possible oath, identity, or access-control phenomena.
+  - id: heart_of_xilnath
+    map_name: Heart of Xil'nath
+    mythic_title: The Verdant Loom
+    region: Xil'nath Jungle
+    canon_status: CANON_LOCKED
+    ancient_function: >-
+      healing, agriculture, biological design, ecosystem management, food production, and engineered
+      life.
+    modern_condition: >-
+      runaway biological growth and unstable abundance, artificial and natural ecosystems grown
+      inseparable.
+  - id: the_maelstrom_rise
+    map_name: The Maelstrom Rise
+    mythic_title: The Thousand Doors
+    region: The Shattered Isles
+    canon_status: CANON_LOCKED
+    ancient_function: >-
+      maritime transport, distribution, long-distance gates, and global trade and passage.
+    modern_condition: >-
+      shattered islands and unstable sea routes, storms, and portals that may open to the wrong
+      destination.
+
+# --- The regions: names + threat bands are CANON_LOCKED (a generator may not rename or re-band) ----
+regions:
+  - {id: veridia,           name: Veridia,             threat_min: 1,   threat_max: 30,  canon_status: CANON_LOCKED}
+  - {id: duskwood_vale,     name: Duskwood Vale,       threat_min: 20,  threat_max: 50,  canon_status: CANON_LOCKED}
+  - {id: caeloria,          name: Caeloria,            threat_min: 30,  threat_max: 60,  canon_status: CANON_LOCKED}
+  - {id: eldryn_forest,     name: Eldryn Forest,       threat_min: 50,  threat_max: 80,  canon_status: CANON_LOCKED}
+  - {id: frostspire_peaks,  name: Frostspire Peaks,    threat_min: 60,  threat_max: 90,  canon_status: CANON_LOCKED}
+  - {id: zhaar_desert,      name: Zhaar Desert,        threat_min: 80,  threat_max: 130, canon_status: CANON_LOCKED}
+  - {id: xilnath_jungle,    name: Xil'nath Jungle,     threat_min: 90,  threat_max: 150, canon_status: CANON_LOCKED}
+  - {id: thalorin,          name: Thalorin,            threat_min: 100, threat_max: 140, canon_status: CANON_LOCKED}
+  - {id: ashen_wastes,      name: Ashen Wastes,        threat_min: 120, threat_max: 170, canon_status: CANON_LOCKED}
+  - {id: korvash_highlands, name: Korvash Highlands,   threat_min: 150, threat_max: 200, canon_status: CANON_LOCKED}
+  - {id: shattered_isles,   name: The Shattered Isles, threat_min: 180, threat_max: 230, canon_status: CANON_LOCKED}
+  - {id: skyward_spires,    name: Skyward Spires,      threat_min: 200, threat_max: 250, canon_status: CANON_LOCKED}
+  - {id: the_deepreach,     name: The Deepreach,       threat_min: 100, threat_max: 250, canon_status: CANON_LOCKED}
+  - {id: the_voidscar,      name: The Voidscar,        threat_min: 250, threat_max: 300, canon_status: CANON_LOCKED}
+
+# --- World-scale faction seeds (CANON_WORKING): provisional powers so content can begin. Named ----
+# here so a location or quest can reference a faction and the Surveyor can catch an invalid one.
+# Every faction holds internal disagreement (the seed's rule): none is morally uniform.
+world_factions:
+  - id: veiled_covenant
+    name: The Veiled Covenant
+    canon_status: CANON_WORKING
+    stance: God-loyalist institution; treats the Fall as necessary and regulates temples and relics.
+  - id: crownseekers
+    name: The Crownseekers
+    canon_status: CANON_WORKING
+    stance: Archaeologists, salvagers, and scholars divided over who should recover and own the past.
+  - id: netharian_concord
+    name: The Netharian Concord
+    canon_status: CANON_WORKING
+    stance: Holds that artificial divinity was mortal emancipation; ranges from philosophers to cults.
+  - id: wardens_scars
+    name: Wardens of the Scars
+    canon_status: CANON_WORKING
+    stance: Pragmatic containment order that keeps unstable sites from destroying settlements.
+  - id: ashforged_houses
+    name: The Ashforged Houses
+    canon_status: CANON_WORKING
+    stance: Industrial houses, guilds, and warlords seeking access to Flamewrought production.
+  - id: deep_archive
+    name: The Deep Archive
+    canon_status: CANON_WORKING
+    stance: Memory-keepers of the Crystal Labyrinth who control access to preserved testimony.
+  - id: tidebound_league
+    name: The Tidebound League
+    canon_status: CANON_WORKING
+    stance: Merchants, navigators, privateers, and harbor rulers of the Shattered Isles.
+  - id: greenward_compact
+    name: The Greenward Compact
+    canon_status: CANON_WORKING
+    stance: Stewards protecting the living regions from reckless exploitation.
+
+# --- Named bodies of water (CANON_LOCKED): registered for travel + world adjacency ----------------
+waters:
+  canon_status: CANON_LOCKED
+  names:
+    - The Western Ocean
+    - The Northland Sea
+    - The Central Sea
+    - The Eastern Ocean
+    - The Sundaram Sea
+    - The Southern Ocean

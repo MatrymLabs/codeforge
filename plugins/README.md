@@ -1,14 +1,14 @@
 # Command plugins
 
 Drop a Python module here to add gameplay verbs **without touching the engine**. At boot,
-`parts/plugins.py` scans this directory, imports each module, calls its `register()` hook, and
+`kernel/plugins.py` scans this directory, imports each module, calls its `register()` hook, and
 validates what it returns before anything reaches the command spine.
 
 A plugin is a module exposing `register() -> list[Command]`:
 
 ```python
 # plugins/dancer.py
-from parts.commands import Command
+from kernel.commands import Command
 
 
 def _dance(session, arg):

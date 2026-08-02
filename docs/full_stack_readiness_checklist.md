@@ -1,11 +1,11 @@
 # Full-Stack Readiness Checklist (CodeForge)
 
 *Honest self-assessment against the 2026 research (`docs/research/full_stack_python_requirements.md`).
-`[x]` present, `[~]` partial, `[ ]` planned. VeritasGate labels applied. Last audited: 2026-07-10.*
+`[x]` present, `[~]` partial, `[ ]` planned. EvidenceGate labels applied. Last audited: 2026-07-10.*
 
 ## Backend (strong)
 
-- [x] Backend entry point (`forge.py` tick; `parts/cli.py`; FastAPI admin surface)
+- [x] Backend entry point (`forge.py` tick; `adapters/cli.py`; FastAPI admin surface)
 - [x] Project config (`pyproject.toml`, env-based via `CODEFORGE_DB`, `FGL_REGISTRY`)
 - [x] Error handling (loud validation at boundaries; `SeedError`, gates)
 - [x] Input validation (seed loader gates, rank checks, password parsing rules)
@@ -14,12 +14,12 @@
 - [x] Security boundaries (bandit, Scorecard, CodeQL, secret scan, SBOM)
 - [x] Containerized (Dockerfile, CI docker smoke, live demo)
 - [x] Documented API - FastAPI admin + read-only `GET /api/status`; OpenAPI at `/docs`, linked from the dashboard nav
-- [x] Database - SQLite default via SQLAlchemy (embedded choice); PostgreSQL seam shipped (`DATABASE_URL`, `psycopg` extra, `parts/world/db.py`)
+- [x] Database - SQLite default via SQLAlchemy (embedded choice); PostgreSQL seam shipped (`DATABASE_URL`, `psycopg` extra, `kernel/world/db.py`)
 - [x] Migrations tool (Alembic) - full framework: `migrations/` (env + 3 versioned migrations); `codeforge migrate-db` wraps it
 
 ## Frontend (phase 1 shipped)
 
-- [x] Semantic HTML proof - server-rendered `header/nav/main/section/footer` (`parts/dashboard.py`)
+- [x] Semantic HTML proof - server-rendered `header/nav/main/section/footer` (`kernel/dashboard.py`)
 - [x] CSS layout proof - responsive stylesheet, CSS grid `auto-fit` card board (inline, frameless)
 - [x] Responsive design proof - `minmax(240px,1fr)` grid + viewport meta, reflows on narrow screens
 - [x] Accessibility basics - `lang`, skip link, `aria-label`led regions, `:focus-visible`, text status badges (not color alone)
@@ -32,7 +32,7 @@
 
 - **First proof:** FastAPI **server-rendered** read-only dashboard (semantic HTML + responsive/
   accessible CSS), rendering **real** codeforge data, as an **in-repo add-on module**
-  (`parts/web` dashboard), not MUD-engine core. Preserves frameless-Python identity (no JS
+  (`adapters/web` dashboard), not MUD-engine core. Preserves frameless-Python identity (no JS
   build system) while proving HTML/CSS + backend/frontend separation.
 - **Second flagship (planned, target = full-stack developer):** a separate **Next.js + React +
   TypeScript** app consuming a codeforge JSON API, matching the research's separated

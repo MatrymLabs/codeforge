@@ -8,11 +8,11 @@
 import pytest
 from fastapi.testclient import TestClient
 
-from parts.api import app, get_login_guard
-from parts.login_guard import LoginGuard
-from parts.world.accounts import adopt, register
-from parts.world.characters import save_character, set_rank
-from parts.world.session import SESSIONS, Session
+from adapters.api import app, get_login_guard
+from kernel.login_guard import LoginGuard
+from kernel.world.accounts import adopt, register
+from kernel.world.characters import save_character, set_rank
+from kernel.world.session import SESSIONS, Session
 
 
 @pytest.fixture(autouse=True)

@@ -35,7 +35,7 @@ Nine feature PRs merged green to `main` (each: docs + validation + tests + regis
 **The Crafting Campaign -- COMPLETE (1a-1d):**
 - **#535 (1a)** material library + refinement chains as data (RAW -> REFINED -> COMPONENT -> PRODUCT;
   metal + alchemy chains). `docs/world/crafting_materials.md`.
-- **#536 (1b)** the profession framework (`parts/world/professions.py`, MOD-04.102): 6 trades, skill
+- **#536 (1b)** the profession framework (`kernel/world/professions.py`, MOD-04.102): 6 trades, skill
   by doing, persisted (`characters.professions` column). `docs/world/professions.md`.
 - **#537 (1c)** monster materials -- bestiary drops hide/scale by body-class; leatherworking refines
   them into gear.
@@ -45,12 +45,12 @@ Nine feature PRs merged green to `main` (each: docs + validation + tests + regis
 **The alive-world / encounter wave:**
 - **#539** live dynamic spawning -- wandering pickups (`spawn_pool` items, `zones._spawn_wanderers`,
   first use of `respawn.pick_room`).
-- **#540** faction reputation (`parts/world/reputation.py`, MOD-04.103) -- per-character standing per
+- **#540** faction reputation (`kernel/world/reputation.py`, MOD-04.103) -- per-character standing per
   Order, tiers, faction spillover, `standing` verb, persisted column.
 - **#541** seasonal-gated spawns -- a wanderer's `seasons` gate over `climate`.
-- **#542** player-side status effects (`parts/world/afflictions.py`, MOD-04.104) -- DoT + daze the
+- **#542** player-side status effects (`kernel/world/afflictions.py`, MOD-04.104) -- DoT + daze the
   player suffers, NPC `inflicts` spec.
-- **#543** telegraphed boss specials (`parts/world/boss_specials.py`, MOD-04.105) -- a boss winds up
+- **#543** telegraphed boss specials (`kernel/world/boss_specials.py`, MOD-04.105) -- a boss winds up
   (readable, no blow) then unleashes a heavy hit + guaranteed affliction; composes boss_phases +
   afflictions.
 

@@ -34,7 +34,7 @@ controls:
     control: Deserialization safety on the world-input boundary
     applicability: applicable
     assurance_profile: B
-    implementation: parts/world/seed.py  # _UniqueKeyLoader on a SafeConstructor base
+    implementation: kernel/world/seed.py  # _UniqueKeyLoader on a SafeConstructor base
     evidence:
       - {kind: test, path: tests/test_seed_security.py}
     status: verified_against
@@ -46,7 +46,7 @@ controls:
     control: Fuzzing of the telnet protocol parser (network trust boundary)
     applicability: applicable
     assurance_profile: B
-    implementation: parts/shelf/telnet_codec.py
+    implementation: kernel/shelf/telnet_codec.py
     evidence:
       - {kind: test, path: tests/test_fuzz_telnet.py}
     status: verified_against
@@ -71,7 +71,7 @@ controls:
     control: Password hashing (salted pbkdf2-sha256, constant-time, case-preserving)
     applicability: applicable
     assurance_profile: B
-    implementation: parts/world/accounts.py
+    implementation: kernel/world/accounts.py
     evidence:
       - {kind: test, path: tests/test_accounts.py}
     status: verified_against
@@ -83,9 +83,9 @@ controls:
     control: Online brute-force defence + non-enumerating login refusals
     applicability: applicable
     assurance_profile: B
-    implementation: parts/gateway.py
+    implementation: adapters/gateway.py
     evidence:
-      - {kind: implementation, path: parts/gateway.py}
+      - {kind: implementation, path: adapters/gateway.py}
     status: verified_against
     frameworks: {nist_800_53: [AC-7, IA-5], owasp_top10: [A07]}
     assessment_requirement: independent_assessment_required
@@ -95,9 +95,9 @@ controls:
     control: Server-side authorization (rank-gated @-verbs, namespaced command spine)
     applicability: applicable
     assurance_profile: B
-    implementation: parts/world/ranks.py
+    implementation: kernel/world/ranks.py
     evidence:
-      - {kind: implementation, path: parts/commands.py}
+      - {kind: implementation, path: kernel/commands.py}
     status: verified_against
     frameworks: {nist_800_53: [AC-3, AC-6], owasp_top10: [A01], owasp_asvs: [access-control]}
     assessment_requirement: independent_assessment_required
@@ -188,7 +188,7 @@ controls:
     control: Field sanitization (control-char + log-injection stripping for storage/logs)
     applicability: applicable
     assurance_profile: B
-    implementation: parts/field_sanitizer.py
+    implementation: kernel/field_sanitizer.py
     evidence:
       - {kind: test, path: tests/test_field_sanitizer.py}
     status: verified_against
@@ -199,9 +199,9 @@ controls:
     control: Safe subprocess execution (fixed argv, no shell, read-only)
     applicability: applicable
     assurance_profile: B
-    implementation: parts/integrity.py  # representative nosec-annotated call site
+    implementation: kernel/integrity.py  # representative nosec-annotated call site
     evidence:
-      - {kind: implementation, path: parts/integrity.py}
+      - {kind: implementation, path: kernel/integrity.py}
     status: verified_against
     frameworks: {nist_800_53: [SI-10], ssdf: [PW.5.1], owasp_top10: [A03]}
     assessment_requirement: independent_assessment_required
@@ -211,9 +211,9 @@ controls:
     control: Embedded-script sandbox (Lua instruction budget + whitelisted env)
     applicability: applicable
     assurance_profile: B
-    implementation: parts/scripting.py
+    implementation: kernel/scripting.py
     evidence:
-      - {kind: implementation, path: parts/scripting.py}
+      - {kind: implementation, path: kernel/scripting.py}
     status: verified_against
     frameworks: {nist_800_53: [SC-2, SI-10], ssdf: [PW.5.1], owasp_top10: [A08]}
     assessment_requirement: independent_assessment_required

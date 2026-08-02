@@ -3,7 +3,7 @@
 One behavioral contract, run against BOTH adapters: the pure in-memory store (the contract test) and
 the SQLAlchemy store over the quarantined tmp database (the integration test). Both must satisfy the
 same port, so account-to-character membership can be swapped without touching the domain -- the last
-boundary that makes parts/world/accounts.py framework-free (docs/persistence_ports.md). The
+boundary that makes kernel/world/accounts.py framework-free (docs/persistence_ports.md). The
 end-to-end auth behaviour stays pinned by tests/test_accounts.py; this pins the storage boundary
 and that adopt / account_has_owner / inspect_login run over injected stores with no database.
 """
@@ -12,15 +12,15 @@ from __future__ import annotations
 
 import pytest
 
-from parts.world.accounts import InMemoryAccountCredentialStore
-from parts.world.membership import InMemoryMembershipStore, MembershipStore
-from parts.world.membership_sql import SqlMembershipStore
+from kernel.world.accounts import InMemoryAccountCredentialStore
+from kernel.world.membership import InMemoryMembershipStore, MembershipStore
+from kernel.world.membership_sql import SqlMembershipStore
 
 
 def _sql_world() -> SqlMembershipStore:
     """A real character world in the tmp DB: rowan (no account, player), regent (kingdom, owner)."""
-    from parts.world.characters import save_character
-    from parts.world.session import SESSIONS, Session
+    from kernel.world.characters import save_character
+    from kernel.world.session import SESSIONS, Session
 
     SESSIONS.clear()
     rowan = Session(player_id="rowan", named=True, account="")
@@ -88,7 +88,7 @@ def test_the_in_memory_store_defensively_ignores_retire_on_a_missing_character()
 
 
 def test_adopt_runs_on_an_injected_membership_store():
-    from parts.world.accounts import adopt
+    from kernel.world.accounts import adopt
 
     mem = InMemoryMembershipStore({"rowan": ("", "player")})
     assert "rowan now belongs to matlabs" in adopt("rowan", "matlabs", membership=mem)
@@ -97,7 +97,7 @@ def test_adopt_runs_on_an_injected_membership_store():
 
 
 def test_account_has_owner_runs_on_an_injected_membership_store():
-    from parts.world.accounts import account_has_owner
+    from kernel.world.accounts import account_has_owner
 
     mem = InMemoryMembershipStore({"regent": ("kingdom", "owner"), "peon": ("kingdom", "player")})
     assert account_has_owner("kingdom", membership=mem) is True
@@ -107,8 +107,8 @@ def test_account_has_owner_runs_on_an_injected_membership_store():
 def test_inspect_login_runs_on_injected_credential_and_membership_stores():
     """The full login verdict over pure in-memory stores: account exists, password matches (crypto
     still runs), and the character is seated on that account -- no database at all."""
-    import parts.world.accounts as acc
-    from parts.world.accounts import inspect_login
+    import kernel.world.accounts as acc
+    from kernel.world.accounts import inspect_login
 
     salt = b"\x02" * 16
     cred = InMemoryAccountCredentialStore()

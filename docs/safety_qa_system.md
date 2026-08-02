@@ -36,9 +36,9 @@ hand-writing a bespoke auditor. See it: type `qa gate all` in the MUD.
 
 | Part | File | What it does | Maturity |
 |------|------|--------------|----------|
-| **QualityGate** | `parts/qualitygate.py` | grades one object (purpose · file · tests · docs · maturity-honesty) → `pass \| watch \| fail` | active |
-| **SafetyReview** | `parts/qualitygate.py` | rates risk from type/tags → `low \| medium \| high \| critical`, flags approval | active |
-| **DocumentationImpactSweep** | `parts/qualitygate.py` (`docs_check`) | which key docs exist vs. missing | active |
+| **QualityGate** | `kernel/qualitygate.py` | grades one object (purpose · file · tests · docs · maturity-honesty) → `pass \| watch \| fail` | active |
+| **SafetyReview** | `kernel/qualitygate.py` | rates risk from type/tags → `low \| medium \| high \| critical`, flags approval | active |
+| **DocumentationImpactSweep** | `kernel/qualitygate.py` (`docs_check`) | which key docs exist vs. missing | active |
 | *(planned)* EvidenceLedger | - | dated proof of tests/reviews/approvals | prototype |
 | *(planned)* NonconformanceLog / CorrectiveActionTracker / SafetyHazardLog | - | track QA failures, fixes, hazards | prototype |
 
@@ -86,7 +86,7 @@ the QA verbs alongside every other command.
 - **Built (MVP spine):** QualityGate, SafetyReview, DocumentationImpactSweep, the four
   MUD commands, this doc, and `qa gate all` proven over the real registry.
 - **Next:** EvidenceLedger (save dated gate/review results under `reports/qa/`), and
-  NCR/CAPA/Hazard logs. (Already done: the ritual's global readiness report - `parts/integrity.py`
+  NCR/CAPA/Hazard logs. (Already done: the ritual's global readiness report - `kernel/integrity.py`
   folds `qa gate all` + docs presence into one dated report via `make repo-integrity`; and the
   `MOD` code modules ARE filed in the registry, so the audit already covers code - only `PRT` is
   derive-not-store by design.)

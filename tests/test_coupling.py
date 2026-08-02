@@ -1,4 +1,4 @@
-"""Test twin for parts/coupling.py -- the read-only engine coupling report (detachment D1).
+"""Test twin for kernel/coupling.py -- the read-only engine coupling report (detachment D1).
 
 Acceptance: analyze() classifies modules from injected traces (runtime-core, surface-optional,
 unreached); render shows the counts + the honest "not a confirmed cut" caveat. Refusal: a trace
@@ -8,8 +8,8 @@ trace is exercised by `make coupling` / the verb.
 
 from __future__ import annotations
 
-import parts.coupling as coupling_mod
-from parts.coupling import CouplingError, analyze, render_report
+import kernel.coupling as coupling_mod
+from kernel.coupling import CouplingError, analyze, render_report
 
 
 def _fake_tracer(loaded_by: dict[tuple[str, ...], set[str]]):
@@ -70,7 +70,7 @@ def test_coupling_verb_reachable_through_the_engine_tick(monkeypatch):
     monkeypatch.setattr(coupling_mod, "_all_modules", lambda: ["core", "dev"])
     monkeypatch.setattr(coupling_mod, "_real_tracer", lambda commands: {"core"})
     from forge import handle_command
-    from parts.world.session import Session
+    from kernel.world.session import Session
 
     out = handle_command(Session(player_id="matrym", location="courtyard"), "coupling")
     assert "ENGINE COUPLING REPORT" in out
@@ -80,7 +80,7 @@ def test_coupling_verb_reachable_through_the_engine_tick(monkeypatch):
 
 
 def test_closure_unions_the_surface_traces():
-    from parts.coupling import closure
+    from kernel.coupling import closure
 
     base = tuple(coupling_mod.SURFACES["solo"])
     save = tuple(coupling_mod.SURFACES["solo"] + coupling_mod.SURFACES["save"])
@@ -89,14 +89,14 @@ def test_closure_unions_the_surface_traces():
 
 
 def test_closure_rejects_an_unknown_surface():
-    from parts.coupling import CouplingError, closure
+    from kernel.coupling import CouplingError, closure
 
     with __import__("pytest").raises(CouplingError, match="unknown surface"):
         closure(["nope"], tracer=lambda c: set())
 
 
 def test_surface_commands_gathers_base_plus_each_surface():
-    from parts.coupling import SURFACES, surface_commands
+    from kernel.coupling import SURFACES, surface_commands
 
     cmds = surface_commands(["solo", "save"])
     assert set(SURFACES["solo"]).issubset(cmds)
@@ -107,7 +107,7 @@ def test_surface_commands_gathers_base_plus_each_surface():
 
 
 def test_closure_handles_an_import_surface():
-    from parts.coupling import closure
+    from kernel.coupling import closure
 
     base = tuple(coupling_mod.SURFACES["solo"])
     cmd_tracer = _fake_tracer({base: {"core"}})
@@ -118,9 +118,9 @@ def test_closure_handles_an_import_surface():
 
 
 def test_surface_imports_lists_the_server_modules():
-    from parts.coupling import surface_imports
+    from kernel.coupling import surface_imports
 
-    assert surface_imports(["solo", "multiplayer"]) == ["parts.gateway", "parts.web_gateway"]
+    assert surface_imports(["solo", "multiplayer"]) == ["adapters.gateway", "adapters.web_gateway"]
     assert surface_imports(["solo", "save"]) == []
 
 
@@ -128,7 +128,7 @@ def test_surface_imports_lists_the_server_modules():
 
 
 def test_admin_is_a_known_command_surface():
-    from parts.coupling import SURFACES, surface_commands
+    from kernel.coupling import SURFACES, surface_commands
 
     assert "admin" in SURFACES
     cmds = surface_commands(["admin"])
@@ -137,7 +137,7 @@ def test_admin_is_a_known_command_surface():
 
 
 def test_closure_includes_admin_modules(monkeypatch):
-    from parts.coupling import closure
+    from kernel.coupling import closure
 
     base = tuple(coupling_mod.SURFACES["solo"])
     admin = tuple(coupling_mod.SURFACES["solo"] + coupling_mod.SURFACES["admin"])

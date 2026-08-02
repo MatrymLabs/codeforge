@@ -1,6 +1,6 @@
 """Performance measurement harness for CodeForge's five critical journeys.
 
-MEASUREMENT ONLY -- no optimization. Reuses the frameless method of parts/bench.py (stdlib
+MEASUREMENT ONLY -- no optimization. Reuses the frameless method of kernel/bench.py (stdlib
 time.perf_counter + statistics; a warmup pass; median + distribution). Startup is measured
 COLD (a fresh interpreter per rep); the other four WARM (steady state). Raw per-run stats are
 written to reports/performance/raw/ and a summary is printed and returned.
@@ -68,12 +68,12 @@ def measure_startup(reps: int = 15) -> dict:
 def run() -> dict[str, dict]:
     """Measure all five journeys and return {journey: stats}. Imports the real handlers."""
     from forge import handle_command
-    from parts.bench import benchmark as command_bench
-    from parts.qualitygate import render_gate_all
-    from parts.workshop import reuse_search
-    from parts.world import npcs
-    from parts.world.jobs import bind_calling
-    from parts.world.session import Session
+    from kernel.bench import benchmark as command_bench
+    from kernel.qualitygate import render_gate_all
+    from kernel.workshop import reuse_search
+    from kernel.world import npcs
+    from kernel.world.jobs import bind_calling
+    from kernel.world.session import Session
 
     results: dict[str, dict] = {}
 
@@ -95,7 +95,7 @@ def run() -> dict[str, dict]:
     # 3. one combat sequence (single strike; reset dummy HP per rep so it is comparable) ---
     fighter = Session(player_id="_bench", location="courtyard")
     bind_calling(fighter, "vanguard")
-    from parts.world.npcs import trace_npc
+    from kernel.world.npcs import trace_npc
 
     dummy_id = trace_npc("dummy", "courtyard")
     assert dummy_id is not None, "expected a training dummy in courtyard"
@@ -150,7 +150,7 @@ def write_journeys_report(
     results: dict[str, dict], root: Path | None = None, stamp: str | None = None
 ) -> Path:
     """File the run as dated performance evidence under reports/performance/ (like the tick)."""
-    from parts.shelf.reporting import write_report
+    from kernel.shelf.reporting import write_report
 
     return write_report(
         "performance", render_journeys(results), root=root, stamp=stamp, slug="five-journeys"

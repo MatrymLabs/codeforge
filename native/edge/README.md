@@ -1,11 +1,11 @@
 # codeforge-edge (Go)
 
-A transparent TCP **edge gateway** in front of the Python game gateway (`parts/gateway.py`). It
+A transparent TCP **edge gateway** in front of the Python game gateway (`adapters/gateway.py`). It
 accepts client connections and byte-proxies each straight through to the gateway -- one goroutine per
 direction -- without ever inspecting the stream, so telnet/IAC negotiation stays end-to-end.
 
 This is the **first service organ** (ADR-0011): an out-of-process polyglot component behind a
-Python-first fallback. When this binary is not built, `parts.edge.EdgeProxy` (the identical proxy,
+Python-first fallback. When this binary is not built, `kernel.edge.EdgeProxy` (the identical proxy,
 thread-per-connection) carries the game and `make check` is green. Nothing depends on Go being present.
 
 ## Why Go here
@@ -30,7 +30,7 @@ The binary is git-ignored; `go.mod` is committed. Standard library only, so ther
 
 It prints `READY <bound-addr>` on stdout (machine-readable, resolves `:0` ephemeral ports) and a
 friendly line on stderr. Or launch through Python, which picks this binary when built else the
-reference: `python -m parts.edge --listen 0.0.0.0:4001 --backend 127.0.0.1:4000`.
+reference: `python -m kernel.edge --listen 0.0.0.0:4001 --backend 127.0.0.1:4000`.
 
 ## Test
 

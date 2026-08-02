@@ -1,0 +1,184 @@
+# SEED: aethryn -- authored/moltenhold.yaml  (Moltenhold, the molten capital of the Ashen Wastes, ~L120)
+#
+# The map places Moltenhold as a single hub; this is its polished, LIVED-IN interior at AAA density.
+# It carries the Ashen Wastes' canon identity: the direct remains of the Ember Crown (the Flamewrought
+# Forge), ruined industry where machines still run obsolete instructions and turn out malformed work.
+# Beneath the obsidian city an old-world foundry never stopped, forging to an order no one now living
+# gave. The conflict is ordinary and dangerous (wake the machine for its bounty, or wall it before it
+# finishes); the clue to the larger world is the foundry (Ember Crown manufacturing); the rumour is
+# left unproven. Five subareas, three voices (a watch-captain, a slag-broker, a cinder-marshal) that
+# cross-reference, two dangers, a cinderroot gather node on the cinder flats and a broker who buys its
+# yield (a working economy), and readable foundry lore. Installed by kernel/world/authored_towns.py;
+# its quests are quests/moltenhold_foundry.yaml (a fetch, Warcraft) and quests/moltenhold_flats.yaml
+# (a hunt of a different shape, Making).
+
+rooms:
+  moltenhold_market:
+    name: The Slag Market
+    desc: >-
+      The heart of Moltenhold: an obsidian plaza over a lake of slow fire, its stalls trading
+      salvage, coolant, and forge-iron under a sky the colour of embers. Heat comes up through the
+      stone. Ways lead OUT to the cinder gate, NORTH to the Foundry Watch, WEST to the slagworks, and
+      EAST out onto the cinder flats.
+    exits:
+      out: moltenhold
+      north: moltenhold_watch
+      west: moltenhold_slagworks
+      east: moltenhold_flats
+  moltenhold_slagworks:
+    name: The Slagworks
+    desc: >-
+      Long sheds where the wastes' salvage is broken down and recast, the workers masked against the
+      fumes. Honest, dangerous work at the edge of a dead Crown. The market is back EAST.
+    exits: {east: moltenhold_market}
+  moltenhold_watch:
+    name: The Foundry Watch
+    desc: >-
+      A fortified hall built to WATCH the thing below, not to use it: the Foundry Watch keeps count
+      of what the old machine makes and when, and holds the stair against the day it makes too much.
+      A captain keeps the ledger of castings here. Stairs lead DOWN to the foundry, the market SOUTH.
+    exits: {south: moltenhold_market, down: moltenhold_foundry}
+  moltenhold_foundry:
+    name: The Foundry Floor
+    desc: >-
+      A vast Crown-built hall that never stopped: molten channels, stilled and stirring assembly
+      arms, and half-formed constructs cooling where they fell, each stamped with an instruction no
+      one gave. The heat is a wall. Stairs climb back UP to the watch.
+    exits: {up: moltenhold_watch}
+  moltenhold_flats:
+    name: The Cinder Flats
+    desc: >-
+      The open ash beyond the gate, a black plain where the forge's overflow cools into fields of
+      cinder and the tough red cinderroot pushes up through the crust, cut for fuel by those the heat
+      does not kill. Something big and slag-scaled crosses the flats on the hot wind. The market is
+      back WEST.
+    exits: {west: moltenhold_market}
+    node: cinderroot
+
+hub: {room: moltenhold, keyword: square, entry: moltenhold_market}
+
+npcs:
+  moltenhold_captain:
+    name: Watch-Captain Ordric
+    keywords: [ordric, captain, watch-captain]
+    location: moltenhold_watch
+    dialogue:
+      - >-
+        "You have the look of someone who has fought worse than heat. The foundry below is turning
+        out a casting we do not recognise, and my watch cannot leave the stair. Go down, take the
+        casting-die from the line, and bring it up to me. There is coin in it, and the Watch does not
+        forget a debt."
+    topics:
+      foundry:
+        - >-
+          "It has run since before Moltenhold was raised over it. Ember Crown work, the scholars say.
+          It forges to an order given in an age no one remembers, and it will not be told to stop."
+      constructs:
+        - >-
+          "The line makes them still, malformed and half-cooled, and they walk. We put them down and
+          they are made again. My whole watch is spent on holding a stair. Ask me is that a life."
+      rumor:
+        - >-
+          "They say the foundry is not making at random. They say it is finishing something, one
+          casting at a time, and one day it will be done. Go and look on the line and tell me they lie."
+      ordric:
+        - >-
+          "Captain of the Foundry Watch, and I will die on that stair like the three captains before
+          me. Someone has to stand between a city and a machine that does not sleep."
+    hp: 0
+  moltenhold_broker:
+    name: Slag-Broker Tamsin
+    keywords: [tamsin, broker, slag-broker]
+    location: moltenhold_slagworks
+    dialogue:
+      - >-
+        "Forge-trade, ashwalker? I keep the strong draughts a caster needs and the coolant that keeps
+        a body from cooking. And I buy cinderroot by the bundle to feed the slagworks fires, if you
+        can cut it out on the flats and not burn. The Crown is dead, but its work still pays."
+    topics:
+      trade:
+        - >-
+          "Grand draughts I sell, and coolant, and I buy cinderroot to feed the fires. Cut it EAST on
+          the cinder flats and bring it here. The slagworks never has enough fuel and I never have
+          enough hands."
+      cinderroot:
+        - >-
+          "A red root that grows only where the forge-overflow cools, tough as slag and hot to hold. It
+          burns hotter than good coal, and it is the one thing on the flats worth the walk. Mind the heat."
+      tamsin:
+        - >-
+          "Broker of the slagworks, and I turn the dead Crown's leavings into a living. Someone has to
+          keep the fires fed and the casters paid. It may as well be the one who counts straight."
+    shop:
+      sells: {grand_healing_draught: 95, greater_mana_draught: 62, water_ration: 6}
+      buys: {cinderroot: 10}
+    hp: 0
+  moltenhold_marshal:
+    name: Cinder-Marshal Bex
+    keywords: [bex, marshal, cinder-marshal]
+    location: moltenhold_market
+    dialogue:
+      - >-
+        "You look like you can fight in this heat, which is more than most. A slag-drake has been
+        crossing the cinder flats EAST of the gate, and it has burned two fuel-crews to bone. Go and
+        put it down so my cutters can work the cinderroot again, and Moltenhold will owe you fire and
+        forge both."
+    topics:
+      drake:
+        - >-
+          "A slag-drake, scaled in cooled iron and hot as the foundry within. It hunts the fuel-crews
+          on the flats. Go EAST and end it before there is no one left to cut the cinderroot."
+      flats:
+        - >-
+          "The cinder flats feed the slagworks: cinderroot for the fires, salvage for the casters. But
+          the heat breeds its own monsters out there, and lately they come closer to the gate."
+      bex:
+        - >-
+          "Cinder-Marshal of Moltenhold. I keep the flats worked and my crews alive, in that order,
+          and lately the second is the hard part. Do me this turn and I will not forget it."
+    hp: 0
+  moltenhold_construct:
+    name: a malformed foundry construct
+    keywords: [construct, foundry, malformed]
+    location: moltenhold_foundry
+    dialogue:
+      - The construct turns its half-finished face toward you, molten light bleeding from its seams.
+    aggressive: true
+    hp: 760
+    atk: 54
+    xp: 95
+    level: 115
+    tier: normal
+    attack_element: FIR
+  moltenhold_drake:
+    name: a slag-scaled drake
+    keywords: [slag-drake, drake, slag]
+    location: moltenhold_flats
+    dialogue:
+      - The slag-drake wheels on the hot wind, cooled-iron scales grinding, and opens a furnace mouth.
+    aggressive: true
+    hp: 810
+    atk: 58
+    xp: 100
+    level: 118
+    tier: normal
+    attack_element: FIR
+
+items:
+  moltenhold_casting_die:
+    name: an unknown casting-die
+    keywords: [casting-die, die, casting]
+    location: moltenhold_foundry
+    lore: >-
+      A heavy die of dark Crown-metal, its face cut with a pattern of parts that fit no tool or
+      weapon the wastes have ever known. Warm, and faintly humming, as though the foundry above still
+      counts it among the castings it has yet to finish.
+  moltenhold_forge_tablet:
+    name: a scorched forge-tablet
+    keywords: [forge-tablet, tablet, forge]
+    location: moltenhold_watch
+    lore: >-
+      A slab of Crown-metal the Watch keeps chained in the hall, its face a running tally of castings
+      the foundry has turned out, incised by no hand the Watch has ever seen wield a stylus. The count
+      only grows, and the last captains have added a line of their own beneath it: a guess at how many
+      castings remain before the machine below decides its long work is done.

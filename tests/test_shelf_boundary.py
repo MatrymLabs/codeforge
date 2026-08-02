@@ -1,4 +1,4 @@
-"""Test twin for parts/shelf_boundary.py -- the shelf's one-way-dependency gate.
+"""Test twin for kernel/shelf_boundary.py -- the shelf's one-way-dependency gate.
 
 Acceptance: the real, live shelf imports no engine part (the invariant the whole extraction bought).
 Refusal: a synthetic shelf with a core that reaches into the engine is caught, named, and reported;
@@ -11,7 +11,7 @@ from pathlib import Path
 
 import pytest
 
-from parts.shelf_boundary import (
+from kernel.shelf_boundary import (
     ShelfBoundaryError,
     _parts_imports,
     shelf_boundary_gaps,
@@ -29,7 +29,7 @@ def test_the_live_ritual_line_is_clean() -> None:
 
 
 def _shelf(tmp_path: Path) -> Path:
-    d = tmp_path / "parts" / "shelf"
+    d = tmp_path / "kernel" / "shelf"
     d.mkdir(parents=True)
     (d / "__init__.py").write_text("")
     return d
@@ -38,25 +38,25 @@ def _shelf(tmp_path: Path) -> Path:
 def test_a_core_reaching_into_the_engine_is_caught(tmp_path: Path) -> None:
     shelf = _shelf(tmp_path)
     (shelf / "leaky.py").write_text(
-        "from parts.world.session import SESSIONS\nimport parts.world.db\n"
+        "from kernel.world.session import SESSIONS\nimport kernel.world.db\n"
     )
     violations = shelf_import_violations(shelf)
-    assert violations == {"leaky.py": ["parts.world.db", "parts.world.session"]}
+    assert violations == {"leaky.py": ["kernel.world.db", "kernel.world.session"]}
 
 
 def test_intra_shelf_and_stdlib_imports_are_allowed(tmp_path: Path) -> None:
     shelf = _shelf(tmp_path)
     (shelf / "clean.py").write_text(
-        "import json\nfrom pathlib import Path\nfrom parts.shelf.statemachine import Fired\n"
+        "import json\nfrom pathlib import Path\nfrom kernel.shelf.statemachine import Fired\n"
     )
     assert shelf_import_violations(shelf) == {}
 
 
 def test_the_ritual_line_names_the_offender(tmp_path: Path) -> None:
     shelf = _shelf(tmp_path)
-    (shelf / "leaky.py").write_text("import parts.world.combat\n")
+    (shelf / "leaky.py").write_text("import kernel.world.combat\n")
     lines = shelf_boundary_gaps(tmp_path)
-    assert lines == ["leaky.py: imports engine part(s) parts.world.combat"]
+    assert lines == ["leaky.py: imports engine part(s) kernel.world.combat"]
 
 
 def test_bare_parts_import_counts_as_engine(tmp_path: Path) -> None:
@@ -75,6 +75,6 @@ def test_an_unparseable_core_fails_loud(tmp_path: Path) -> None:
 
 def test_parts_import_extractor_finds_both_forms() -> None:
     mods = _parts_imports(
-        "import parts.world.db\nfrom parts.shelf.retry import run\nfrom parts import x\n", "<t>"
+        "import kernel.world.db\nfrom kernel.dashboard import x\nfrom parts import x\n", "<t>"
     )
-    assert mods == {"parts.world.db", "parts.shelf.retry", "parts"}
+    assert mods == {"kernel.world.db", "kernel.dashboard", "parts"}

@@ -80,7 +80,7 @@
             "why_it_matters": "O*NET lists attention to detail as a top work style for devs, QA, and writers.",
             "repo_proof": [
               "registry/",
-              "parts/qualitygate.py"
+              "kernel/qualitygate.py"
             ],
             "status": "proven",
             "next_proof_task": "Keep the classification registry validating (no orphans/dupes)."
@@ -90,8 +90,8 @@
             "skill": "Complete a small feature end to end",
             "why_it_matters": "Proof you can finish, not just start.",
             "repo_proof": [
-              "parts/cast.py",
-              "parts/veritas.py",
+              "kernel/cast.py",
+              "kernel/evidence_gate.py",
               "scripts/ritual_fast.sh"
             ],
             "status": "proven",
@@ -215,7 +215,7 @@
             "why_it_matters": "Internal-tools/platform roles are CodeForge's strongest market overlap.",
             "repo_proof": [
               "forge.py",
-              "parts/cast.py"
+              "kernel/cast.py"
             ],
             "status": "proven",
             "next_proof_task": "Point to forge-audit (separate flagship) as the reusable-tool exemplar."
@@ -249,7 +249,7 @@
             "why_it_matters": "Project control read as ownership and follow-through.",
             "repo_proof": [
               "docs/project_management.md",
-              "parts/pm.py"
+              "kernel/pm.py"
             ],
             "status": "proven",
             "next_proof_task": "Keep pm status computed from filed state, never hand-maintained."
@@ -283,8 +283,8 @@
               "catalog/parts.yaml",
               "parts/reporting.py",
               "tests/test_reporting.py",
-              "parts/shelf/__init__.py",
-              "parts/shelf_boundary.py"
+              "kernel/shelf/__init__.py",
+              "kernel/shelf_boundary.py"
             ],
             "status": "proven",
             "next_proof_task": "Catalog more reusable parts as they mature, each with a reuse map."
@@ -294,9 +294,9 @@
             "skill": "Build a full-stack web surface (backend API + server-rendered frontend)",
             "why_it_matters": "Full-stack roles want a Python backend plus a real browser surface; a recurring 2026 ask (see docs/research).",
             "repo_proof": [
-              "parts/api.py",
-              "parts/dashboard.py",
-              "parts/blueprint_render.py",
+              "adapters/api.py",
+              "kernel/dashboard.py",
+              "kernel/blueprint_render.py",
               "docs/dashboard.md"
             ],
             "status": "proven",
@@ -352,7 +352,7 @@
             "why_it_matters": "SRE/release roles want gates that prevent unsafe actions.",
             "repo_proof": [
               "scripts/ritual_down.sh",
-              "parts/shelf/console.py"
+              "kernel/shelf/console.py"
             ],
             "status": "proven",
             "next_proof_task": "Keep the allowlisted runner (never raw shell) + push-ready gate documented."
@@ -363,7 +363,7 @@
             "why_it_matters": "Observability/diagnostics are the core of SRE.",
             "repo_proof": [
               "scripts/doctor.py",
-              "parts/integrity.py",
+              "kernel/integrity.py",
               "scripts/e2e_smoke.py"
             ],
             "status": "proven",
@@ -391,8 +391,8 @@
             "skill": "Maintain truth between docs and code",
             "why_it_matters": "Trustworthy documentation is a repeated senior/SRE value (DexCare).",
             "repo_proof": [
-              "parts/veritas.py",
-              "docs/veritas.md"
+              "kernel/evidence_gate.py",
+              "docs/evidence_gate.md"
             ],
             "status": "proven",
             "next_proof_task": "Broaden truth check to more drift-prone claims."
@@ -414,9 +414,9 @@
             "why_it_matters": "Platform/lead roles shape how others work.",
             "repo_proof": [
               "docs/seed_architecture.md",
-              "parts/cast.py",
-              "parts/shelf_pour.py",
-              "parts/shelf_boundary.py",
+              "kernel/cast.py",
+              "kernel/shelf_pour.py",
+              "kernel/shelf_boundary.py",
               "tests/test_shelf_pour.py"
             ],
             "status": "proven",
@@ -470,8 +470,8 @@
             "skill": "Integrate an LLM behind a mockable, schema-enforced boundary",
             "why_it_matters": "AI-assisted engineering is a 2026 differentiator; the hireable skill is a testable, schema-enforced boundary, not a raw API call.",
             "repo_proof": [
-              "parts/architect.py",
-              "parts/blueprint_ai.py",
+              "adapters/architect.py",
+              "adapters/blueprint_ai.py",
               "tests/test_blueprint_ai.py",
               "tests/test_architect.py"
             ],
@@ -496,7 +496,7 @@
             "why_it_matters": "Turning a literature survey into a disciplined, evidence-labeled implementation is a senior differentiator (research-to-architecture), not just consuming papers.",
             "repo_proof": [
               "docs/nature_inspired/research_mapping.md",
-              "parts/evolution/genome.py",
+              "kernel/evolution/genome.py",
               "tests/test_evolution_genome.py"
             ],
             "status": "proven",
@@ -512,9 +512,9 @@
             "skill": "Design an evaluator-guided search with human governance",
             "why_it_matters": "Evolutionary/program-synthesis concepts plus AI governance and human-in-the-loop selection are 2026 differentiators; the hireable skill is a bounded, auditable, human-final design.",
             "repo_proof": [
-              "parts/evolution/bakeoff.py",
-              "parts/evolution/fitness.py",
-              "parts/evolution/evaluators.py",
+              "kernel/evolution/bakeoff.py",
+              "kernel/evolution/fitness.py",
+              "kernel/evolution/evaluators.py",
               "tests/test_evolution_bakeoff.py"
             ],
             "status": "proven",

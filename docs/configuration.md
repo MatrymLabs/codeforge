@@ -35,7 +35,7 @@ uvicorn.run(app, port=settings.port)  # e.g. the `web` entry point uses this
 
 - **Fails loud, early, by name.** A non-numeric or out-of-range `PORT` raises `ConfigError`
   at the catalog, not as a raw crash deep in a driver. `architect_brain` is a typed
-  `Literal`; an odd value normalizes to `local` (mirroring `parts/architect.py`), never a
+  `Literal`; an odd value normalizes to `local` (mirroring `adapters/architect.py`), never a
   crash.
 - **Frozen.** Settings are read once and never mutated in place.
 - **Secrets never printed.** `render()` reports the API key as present/absent, and redacts

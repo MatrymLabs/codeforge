@@ -1,6 +1,6 @@
 """Correspondence test for docs/character_system.md.
 
-VeritasGate for the guide: it must document every job-schema field and every score display
+EvidenceGate for the guide: it must document every job-schema field and every score display
 mode. A new field or mode without a matching doc entry turns the suite red instead of leaving
 the guide quietly incomplete.
 """
@@ -9,8 +9,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from parts.world.score_sheet import _MODES
-from parts.world.seed import Job
+from kernel.world.score_sheet import _MODES
+from kernel.world.seed import Job
 
 _DOC = (Path(__file__).resolve().parent.parent / "docs" / "character_system.md").read_text(
     encoding="utf-8"

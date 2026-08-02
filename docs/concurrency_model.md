@@ -17,13 +17,13 @@ model, and it composes with Architecture Law 1 (state is canonical; text is a pr
 
 Two transports serve players; both funnel through the same door under the same lock:
 
-- **TCP gateway** (`parts/gateway.py`): a `socketserver.ThreadingTCPServer` with
+- **TCP gateway** (`adapters/gateway.py`): a `socketserver.ThreadingTCPServer` with
   `daemon_threads = True`, so each connection gets its own thread (thread-per-connection). Every
-  call to `handle_command` is wrapped `with TICK_LOCK:` (`parts/gateway.py:41` defines it; the tick
+  call to `handle_command` is wrapped `with TICK_LOCK:` (`adapters/gateway.py:41` defines it; the tick
   sites are the login, register, passwd, and main-loop calls). Session lifecycle mutations
   (`SESSIONS[player_id] = session` on entry, `SESSIONS.pop(...)` on exit) are taken under the same
   lock.
-- **Browser gateway** (`parts/web_gateway.py`): FastAPI + WebSocket handlers on a single asyncio
+- **Browser gateway** (`adapters/web_gateway.py`): FastAPI + WebSocket handlers on a single asyncio
   loop. It imports the **same** `TICK_LOCK` from the TCP gateway and acquires it around its own
   `handle_command` calls. One lock, two transports: a TCP thread and the web loop can never mutate
   the world at the same instant.

@@ -1,4 +1,4 @@
-"""Test twin for parts/world/inns.py -- an inn interior and its keeper per settlement.
+"""Test twin for kernel/world/inns.py -- an inn interior and its keeper per settlement.
 
 Acceptance: raise_inns emits one inn room (linked back OUT to the hub) plus a peaceful keeper for
 each settlement; wire_inn_doors opens each town hub's `in` exit into its inn. Refusal / tolerance: a
@@ -7,10 +7,10 @@ hub absent from the world is skipped rather than crashing the boot (mirrors the 
 
 from __future__ import annotations
 
-from parts.world.inns import is_inn_room, raise_inns, rest, wire_inn_doors
-from parts.world.resources import Resource
-from parts.world.seed import Room
-from parts.world.session import Session
+from kernel.world.inns import is_inn_room, raise_inns, rest, wire_inn_doors
+from kernel.world.resources import Resource
+from kernel.world.seed import Room
+from kernel.world.session import Session
 
 _CONFIGS = [
     {"room": "veridia_town", "name": "Veridia", "zone": "veridia", "level": 5},
@@ -113,8 +113,8 @@ def test_the_rest_verb_is_reachable_through_the_tick():
 
 
 def test_a_party_rests_together_at_the_hearth():
-    from parts.world import events, party
-    from parts.world.session import SESSIONS
+    from kernel.world import events, party
+    from kernel.world.session import SESSIONS
 
     try:
         alia = _weary_hero("greenhold_inn")

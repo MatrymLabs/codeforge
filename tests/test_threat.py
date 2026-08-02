@@ -1,4 +1,4 @@
-"""Test twin for parts/world/threat.py -- the per-NPC aggro table (the trinity's tank seam).
+"""Test twin for kernel/world/threat.py -- the per-NPC aggro table (the trinity's tank seam).
 
 Acceptance: damage-shaped threat accrues and reads back; top_target picks the highest-threat hero
 PRESENT, breaks ties stably, and returns None when no present hero has threat; taunt spikes the
@@ -12,8 +12,8 @@ from typing import Any
 
 import pytest
 
-from parts.world import threat
-from parts.world.session import Session
+from kernel.world import threat
+from kernel.world.session import Session
 
 
 @pytest.fixture(autouse=True)

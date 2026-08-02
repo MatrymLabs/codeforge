@@ -29,18 +29,18 @@ preprint** work, and says the distinction matters for roadmap confidence. So do 
 |---|---|---|---|
 | Provenance / SBOM / attestation | Preprint (SoK, OmniBOR) | `make sbom`, dated+hashed evidence bundles, RepoIntegrityRitual | verify attestation before merge (ProvenanceGate, later slice) |
 | Least-privilege CI/runtime | Preprint (Granite) | workflow `permissions:` declared, rank-gate, FailsafeRunner allowlist | permission-budget linter (WorkflowLinter, later) |
-| Executable policy (merge/deploy/tool-use) | Preprint (P2P/Rego) | VeritasGate, QualityGate, SafetyReview, KeelGate | **PolicyGate: one visible merge-eligibility verdict (this slice)** |
+| Executable policy (merge/deploy/tool-use) | Preprint (P2P/Rego) | EvidenceGate, QualityGate, SafetyReview, KeelGate | **PolicyGate: one visible merge-eligibility verdict (this slice)** |
 | Risk-weighted human review | Preprint (agentic-PR study) | PR Risk field, critical-junction rule | **RiskRouter: score by touched surface -> review depth (this slice)** |
 | Dependency admission (anti-hallucination) | Preprint (Spracklen) | `dependency_ledger.toml` + `make deps`, `make audit` (pip-audit) | per-package existence/CVE/license admission (DependencyGate, later) |
 | Secure AI code review | Venue + preprint (SLR; Fu; Yu; Tony) | evaluator swarm (no merge authority), architect AI (mockable) | narrow-context CWE-framed reviewer (later) |
 | Warning-guided repair | Preprint (DeepCode AI Fix) | `make patch` (scan -> fix -> re-verify) | bounded repair loop with human sign-off (later) |
-| Reusable failures | Preprint (adjacent) | **CounterexampleBank already built** (`parts/evolution/counterexamples.py`) | reuse for blocked packages / failed prompts |
+| Reusable failures | Preprint (adjacent) | **CounterexampleBank already built** (`kernel/evolution/counterexamples.py`) | reuse for blocked packages / failed prompts |
 | Red-team the assistant | Venue (garak); preprint (CyberSecEval2) | - | garak/CyberSecEval-style probe suite (later) |
 | Traceability spine | Preprint (workflow-cost studies) | Conventional Commits, branch->PR->CI, classification registry | append-only AuditLedger (later) |
 
 ## This slice (v1): the executable core
 
-`parts/stewardship/`: a typed **ChangeDescriptor** (the assurance facts of a change, read not
+`adapters/stewardship/`: a typed **ChangeDescriptor** (the assurance facts of a change, read not
 re-scanned), a **RiskRouter** (`assess_risk`: score 0-100 from visible factors -> low/medium/high
 tier -> 0/1/2 required approvals), and the **StewardshipGate** (`verify_change`): hard gates first
 (tests pass, no blocking SAST, no secrets, dependencies admitted, AI involvement disclosed), then

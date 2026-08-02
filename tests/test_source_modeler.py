@@ -1,4 +1,4 @@
-"""Test twin for parts/seedlab/source_modeler.py -- extract a ProjectModel from a registered source.
+"""Test twin for kernel/seedlab/source_modeler.py -- extract a ProjectModel from a source.
 
 Acceptance: identity comes from a manifest (else the dir name); entities + interfaces are inferred
 from the layout; provenance links the model to its source; unknowns state what was NOT determined;
@@ -12,12 +12,12 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from parts.seedlab.kernel import InMemorySeedStore, SeedKernel
-from parts.seedlab.model_store import FileModelStore, InMemorySeedModels, model_labels
-from parts.seedlab.project_hub import ProjectHub, ProjectState
-from parts.seedlab.project_model import Provenance
-from parts.seedlab.source_connector import LocalSource, SourceConnectorError
-from parts.seedlab.source_modeler import model_and_store, model_from_source
+from kernel.seedlab.kernel import InMemorySeedStore, SeedKernel
+from kernel.seedlab.model_store import FileModelStore, InMemorySeedModels, model_labels
+from kernel.seedlab.project_hub import ProjectHub, ProjectState
+from kernel.seedlab.project_model import Provenance
+from kernel.seedlab.source_connector import LocalSource, SourceConnectorError
+from kernel.seedlab.source_modeler import model_and_store, model_from_source
 
 
 def _cli_project(tmp_path: Path, *, with_pyproject: bool = True) -> LocalSource:

@@ -1,4 +1,4 @@
-"""Test twin for parts/dashboard.py -- the readiness Lens.
+"""Test twin for kernel/dashboard.py -- the readiness Lens.
 
 Acceptance: real cards computed from real repo state, an accessible/escaped HTML projection,
 a JSON twin that mirrors the page, and both routes live on the FastAPI app. Refusal: a source
@@ -8,16 +8,16 @@ that will not load renders an honest red card, never a 500; hostile card text is
 import pytest
 from fastapi.testclient import TestClient
 
-from parts.api import app
-from parts.career import load_board, unproven_claims
-from parts.dashboard import (
+from adapters.api import app
+from kernel.career import load_board, unproven_claims
+from kernel.dashboard import (
     Card,
     Snapshot,
     build_snapshot,
     render_page,
     status_payload,
 )
-from parts.hardware import load_catalog
+from kernel.hardware import load_catalog
 
 # --- the snapshot: real data, right shape -----------------------------------
 
@@ -33,7 +33,7 @@ def test_career_card_matches_the_real_board():
     proven = sum(1 for s in skills if s["status"] == "proven")
     card = next(c for c in build_snapshot().cards if c.key == "career")
     assert card.headline == f"{proven}/{len(skills)} proven"
-    # VeritasGate: the card's verdict must agree with the real proof-on-disk check.
+    # EvidenceGate: the card's verdict must agree with the real proof-on-disk check.
     assert (card.status == "ok") == (not unproven_claims(board))
 
 
@@ -61,7 +61,7 @@ def test_a_broken_source_renders_a_fail_card_not_a_crash(monkeypatch):
     def boom(*_a, **_k):
         raise RuntimeError("registry gone")
 
-    monkeypatch.setattr("parts.qualitygate.gate_all", boom)
+    monkeypatch.setattr("kernel.qualitygate.gate_all", boom)
     card = next(c for c in build_snapshot().cards if c.key == "qa")
     assert card.status == "fail"
     assert "registry gone" in card.detail

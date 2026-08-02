@@ -14,7 +14,7 @@ CodeForge is already a **Phase 3** repo by the roadmap below. The professional d
 and portfolio-proof stacks are integrated and deliberate: Ruff, mypy, pytest + pytest-cov +
 hypothesis, pip-audit, bandit, detect-secrets, a CycloneDX SBOM, CodeQL, and Dependabot, all
 gated through the Make Ritual and GitHub Actions. The CLI is hand-rolled stdlib argv dispatch
-(`parts/cli.py`), not even argparse; content is YAML validated by my own loader gates. So the
+(`adapters/cli.py`), not even argparse; content is YAML validated by my own loader gates. So the
 value of this audit is **not** adding tools. It is (1) documenting the frameless choices so
 they are defensible in an interview, and (2) naming the few genuine gaps. Only one tool is a
 clear `integrate_now` candidate (OpenSSF Scorecard); everything else is already present or is
@@ -26,7 +26,7 @@ clear `integrate_now` candidate (OpenSSF Scorecard); everything else is already 
 
 | Category | Tool(s) present | Config / evidence |
 |---|---|---|
-| CLI | stdlib argv dispatch (no argparse) | `parts/cli.py` |
+| CLI | stdlib argv dispatch (no argparse) | `adapters/cli.py` |
 | Packaging | pyproject + setuptools, pinned deps + `dev` extras | `pyproject.toml` |
 | Lint / format | Ruff (`E,F,I,UP,B,SIM`, line 100) | `[tool.ruff]` |
 | Types | mypy (py313, `warn_unused_ignores`) | `[tool.mypy]` |
@@ -36,7 +36,7 @@ clear `integrate_now` candidate (OpenSSF Scorecard); everything else is already 
 | CI | GitHub Actions `ci.yml` + `codeql.yml` + docker smoke | `.github/workflows/` |
 | Supply chain | Dependabot, CodeQL, SBOM artifact | `.github/dependabot.yml`, `codeql.yml` |
 | Docs | rich raw Markdown, ADRs, runbooks, postmortems | `docs/` |
-| Data / state | SQLite via SQLAlchemy behind `parts/world/db.py` | `parts/world/db.py` |
+| Data / state | SQLite via SQLAlchemy behind `kernel/world/db.py` | `kernel/world/db.py` |
 
 Runtime dependencies (the shipped wheel), every one justified in `dependency_ledger.toml`:
 `pyyaml`, `sqlalchemy`, `fastapi`, `uvicorn`, `websockets`, `pydantic`, `structlog`. Everything
@@ -163,7 +163,7 @@ PR description or ADR, before it lands:
 If the case is not strong on "need", "skill proven", and "removable", the default is
 `stdlib_first`, `research_only`, or `integrate_later`.
 
-**Enforced, not just documented.** `make deps` (part `parts/dependencies.py`, stdlib
+**Enforced, not just documented.** `make deps` (part `adapters/dependencies.py`, stdlib
 `tomllib` only) reads the declared dependencies from `pyproject.toml` and their
 justifications from `dependency_ledger.toml`, then fails loud on any dependency declared
 without a ledger row (and warns on a stale row). The test twin rides `make check`, so an
@@ -171,7 +171,7 @@ unjustified dependency cannot merge silently. Adding a dependency now means addi
 row here first.
 
 **Admission screen (offline typo-squat / hallucination check).** Before a name is trusted,
-`python -m parts.dependencies screen <name>` screens it for the supply-chain risk that an AI
+`python -m adapters.dependencies screen <name>` screens it for the supply-chain risk that an AI
 assistant confidently invents a plausible-but-wrong package name (a documented, systemic threat).
 A name that is not a valid PEP 503 name, or is one edit from a well-known package while being
 neither that package nor already justified, is flagged. It is offline and stdlib-only (no PyPI
@@ -238,4 +238,4 @@ blocked                  unsafe, unclear, unlicensed, or too risky
 **On the Hardware Store**
 - Could a "tool review" itself become a Hardware Store part (a reusable evaluation checklist)?
 - ~~Could the Dependency Approval Rule be enforced by a small in-repo gate (a `make` target that lints new deps)?~~
-  **Answered:** yes - `make deps` (`parts/dependencies.py`) now enforces the ledger; the test twin rides `make check`.
+  **Answered:** yes - `make deps` (`adapters/dependencies.py`) now enforces the ledger; the test twin rides `make check`.

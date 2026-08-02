@@ -15,7 +15,7 @@ import pytest
 from hypothesis import given, settings
 from hypothesis import strategies as st
 
-from parts.ledger import Ledger, LedgerError
+from kernel.ledger import Ledger, LedgerError
 
 _ACCOUNTS = ["a", "b", "c", "d"]
 

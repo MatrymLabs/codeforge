@@ -10,7 +10,7 @@ from __future__ import annotations
 import unittest
 from dataclasses import dataclass
 
-from parts.shelf.cursor import (
+from kernel.shelf.cursor import (
     MAX_PAGE_SIZE,
     CursorError,
     decode_cursor,

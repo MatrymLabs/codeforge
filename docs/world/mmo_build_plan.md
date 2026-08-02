@@ -27,7 +27,7 @@ original phase order) and the World Bible / Continental Atlas (the canon).
 
 Aethryn scales from a laptop/demo world to a **million-room MMO world** by a single env var, without
 re-authoring the map. `CODEFORGE_WILD_SCALE` (default `1`) multiplies every wildlands region's
-`trail_length` at load (`parts/world/wildlands.py`).
+`trail_length` at load (`kernel/world/wildlands.py`).
 
 - **Shipped size (scale 1):** ~53,500 rooms, ~0.9 s boot, ~100 MB. Safe for CI and the free-tier
   demo, which stay at this size.

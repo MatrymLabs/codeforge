@@ -1,10 +1,10 @@
-"""Test twin for parts/verdicts.py -- the shared readiness verdict vocabulary.
+"""Test twin for kernel/verdicts.py -- the shared readiness verdict vocabulary.
 
 Pins the values and that the gates now share ONE source (no independent re-declaration), so a
 gate and the frame-up that reads its board can never drift apart.
 """
 
-from parts import verdicts
+from kernel import verdicts
 
 
 def test_the_verdict_values() -> None:
@@ -18,9 +18,9 @@ def test_the_verdict_values() -> None:
 
 def test_the_gates_share_the_one_vocabulary() -> None:
     # qualitygate / stewardship / evolution / frameup all bind the SAME constants now.
-    from parts import frameup, qualitygate
-    from parts.evolution import fitness
-    from parts.stewardship import gate
+    from adapters.stewardship import gate
+    from kernel import frameup, qualitygate
+    from kernel.evolution import fitness
 
     assert qualitygate.PASS is verdicts.PASS and qualitygate.FAIL is verdicts.FAIL
     assert qualitygate.WATCH is verdicts.WATCH and qualitygate.NA is verdicts.NA

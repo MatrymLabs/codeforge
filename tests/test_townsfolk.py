@@ -1,4 +1,4 @@
-"""Test twin for parts/world/townsfolk.py -- settlements grow residents + a merchant (the sink).
+"""Test twin for kernel/world/townsfolk.py -- settlements grow residents + a merchant (the sink).
 
 Acceptance: a settlement config grows a crowd of peaceful townsfolk (each a trade with a topic) plus
 one merchant whose shop stocks level-appropriate, real seed consumables. Refusal: a malformed
@@ -13,8 +13,8 @@ from pathlib import Path
 import pytest
 import yaml
 
-from parts.world.seed import SeedError
-from parts.world.townsfolk import (
+from kernel.world.seed import SeedError
+from kernel.world.townsfolk import (
     _FOLK_PER_TOWN,
     load_settlements,
     make_merchant,
@@ -23,7 +23,7 @@ from parts.world.townsfolk import (
 
 _CFG = [{"room": "greenhold", "name": "Greenhold", "zone": "Veridia", "level": 1}]
 # The default test seed is first-forge; these tests exercise the flagship map, so reach it directly.
-_AETHRYN = Path(__file__).resolve().parent.parent / "seeds" / "aethryn"
+_AETHRYN = Path(__file__).resolve().parent.parent / "content" / "seeds" / "aethryn"
 
 
 def test_a_settlement_grows_folk_and_exactly_one_merchant():
@@ -49,7 +49,7 @@ def test_the_merchant_sells_level_appropriate_real_consumables():
 
 def test_the_merchant_wares_are_all_real_seed_prototypes():
     # every draught a merchant stocks must be a real aethryn item, or the boot cross-check fails.
-    from parts.world.seed import load_items
+    from kernel.world.seed import load_items
 
     items = load_items(_AETHRYN / "items.yaml")
     _, merchant = make_merchant(200, "zulkarak", "Zulkarak")

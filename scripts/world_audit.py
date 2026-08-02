@@ -24,8 +24,8 @@ os.environ.setdefault("FORGE_SEED", "aethryn")
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
-from parts.world.world import DIRECTIONS, START_ROOM, WORLD  # noqa: E402
-from parts.world.zones import ZONES  # noqa: E402
+from kernel.world.world import DIRECTIONS, START_ROOM, WORLD  # noqa: E402
+from kernel.world.zones import ZONES  # noqa: E402
 
 CARDINAL = {"north", "south", "east", "west", "up", "down"}
 COMPOUND = {"northeast", "northwest", "southeast", "southwest"}

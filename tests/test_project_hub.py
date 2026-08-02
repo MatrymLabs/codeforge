@@ -1,4 +1,4 @@
-"""Test twin for parts/seedlab/project_hub.py -- the Seed's functional Project Hub.
+"""Test twin for kernel/seedlab/project_hub.py -- the Seed's functional Project Hub.
 
 Acceptance: the Hub loads a created Seed, renders identity/status/purpose + every facet (empty
 reads "none yet", populated reads the values), exposes the directive's verbs (look/show status/
@@ -13,8 +13,8 @@ from __future__ import annotations
 
 import pytest
 
-from parts.seedlab.kernel import InMemorySeedStore, SeedKernel, SeedNotFound
-from parts.seedlab.project_hub import (
+from kernel.seedlab.kernel import InMemorySeedStore, SeedKernel, SeedNotFound
+from kernel.seedlab.project_hub import (
     CONTRACT_VERSION,
     ProjectHub,
     ProjectHubError,

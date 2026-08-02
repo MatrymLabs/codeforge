@@ -1,4 +1,4 @@
-"""Test twin for parts.analytics -- SQL analytics proven equal to their Python reference.
+"""Test twin for kernel.analytics -- SQL analytics proven equal to their Python reference.
 
 Acceptance: on the same seeded archive, each SQL query returns exactly what the Python reference
 computes (leaderboard, population spread, treasury), and the RANK() window function shares a rank on
@@ -20,7 +20,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import Session as SqlSession
 from sqlalchemy.pool import StaticPool
 
-from parts.analytics import (
+from kernel.analytics import (
     Standing,
     WealthStats,
     leaderboard_py,
@@ -31,7 +31,7 @@ from parts.analytics import (
     wealth_py,
     wealth_sql,
 )
-from parts.world.db import ArchiveBase, CharacterRow
+from kernel.world.db import ArchiveBase, CharacterRow
 
 # (name, level, xp, location, coins) -- hostile on purpose: (ashling, borin) tie on (level, xp) and
 # so do (esk, fira); coins include a 0 (borin) so the treasury low is a real zero, not "unset".

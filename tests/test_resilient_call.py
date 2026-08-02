@@ -1,9 +1,9 @@
-"""Test twin for parts/resilient_call.py -- the practical adapter + the one-core proof."""
+"""Test twin for kernel/resilient_call.py -- the practical adapter + the one-core proof."""
 
 import pytest
 
-from parts.resilient_call import ResilientCaller
-from parts.shelf.retry import RetryPolicy
+from kernel.resilient_call import ResilientCaller
+from kernel.shelf.retry import RetryPolicy
 
 
 class NoSleep:
@@ -49,9 +49,9 @@ def test_the_history_resets_between_calls():
 
 def test_one_core_powers_both_the_game_calibrate_and_the_practical_caller():
     # The whole point of the slice: both adapters run through the same run_with_retries core.
-    import parts.calibrate as game
-    import parts.resilient_call as practical
-    from parts.shelf.retry import run_with_retries
+    import kernel.calibrate as game
+    import kernel.resilient_call as practical
+    from kernel.shelf.retry import run_with_retries
 
     assert game.run_with_retries is run_with_retries
     assert practical.run_with_retries is run_with_retries

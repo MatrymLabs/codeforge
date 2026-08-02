@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import unittest
 
-from parts.shelf.call_graph import CallGraphError, analyze, render
+from kernel.shelf.call_graph import CallGraphError, analyze, render
 
 SAMPLE = """
 def public_entry(x):

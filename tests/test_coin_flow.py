@@ -1,4 +1,4 @@
-"""Test twin for parts/world/coin_flow.py -- the designed coin-economy audit.
+"""Test twin for kernel/world/coin_flow.py -- the designed coin-economy audit.
 
 Acceptance: a normal foe mints its level in coins, tier multiplies it, a levelless foe pays
 a token off its xp, and a foe set totals by tier. Refusal/edge: peaceful NPCs mint nothing,
@@ -8,8 +8,8 @@ durability's own knobs, so it can never drift from the live game.
 
 from __future__ import annotations
 
-from parts import coin_flow
-from parts.coin_flow import faucet_breakdown, foe_faucet, render_audit
+from kernel import coin_flow
+from kernel.coin_flow import faucet_breakdown, foe_faucet, render_audit
 
 
 def _foe(hp=20, level=None, tier=None, xp=10, atk=4):
@@ -74,7 +74,7 @@ def test_an_all_peaceful_or_empty_world_is_a_zero_faucet():
 
 
 def test_sink_rates_reuse_the_owning_constants():
-    from parts.world import combat, durability
+    from kernel.world import combat, durability
 
     assert coin_flow.SINK_RATES.repair_cost_per_wear_point == durability.REPAIR_COST_PER_POINT
     assert coin_flow.SINK_RATES.fall_penalty_fraction == combat.DEATH_COIN_PENALTY
@@ -83,7 +83,7 @@ def test_sink_rates_reuse_the_owning_constants():
 
 
 def test_foe_faucet_is_exactly_the_live_combat_drop():
-    from parts.world import combat
+    from kernel.world import combat
 
     foe = _foe(level=7, tier="elite")
     assert foe_faucet(foe) == combat._coin_reward(foe)  # audit == game, always

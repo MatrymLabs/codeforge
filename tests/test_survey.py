@@ -1,4 +1,4 @@
-"""Test twin for parts/world/survey.py -- the Surveyor: read-only Aethryn world validation.
+"""Test twin for kernel/world/survey.py -- the Surveyor: read-only Aethryn world validation.
 
 Acceptance: against the shipped seed every check is CLEAN (no duplicate ids, no broken region
 references, no canon drift), the aggregate `validate` is empty, and the CLI dispatcher routes each
@@ -9,7 +9,7 @@ unknown or not-yet-built subcommand is refused (exit 2) rather than silently fak
 
 from __future__ import annotations
 
-from parts.world import survey
+from kernel.world import survey
 
 # --- Acceptance: the shipped world is internally consistent and faithful to canon ----------------
 

@@ -16,7 +16,7 @@ defend it.
 **Ownership Gate (0-5):** `0 ai_output -> 1 reviewed -> 2 verified -> 3 modified -> 4
 defendable -> 5 extended`. Level 4+ is a portfolio claim and requires a written **Human Keel
 Record** on disk ([keel_records/](keel_records/)); the machine-enforced **KeelGate**
-(`parts/career.py`) refuses any level >= 4 claim without one. AI never assigns ownership on
+(`kernel/career.py`) refuses any level >= 4 claim without one. AI never assigns ownership on
 Josh's behalf.
 
 ## Every AI-drafted change passes the same gates as any other
@@ -33,7 +33,7 @@ and always on:
   row in `dependency_ledger.toml` (`make deps`), plus the blocking runtime CVE gate
   (`make audit-runtime`). This closes the "AI recommended an unsafe or hallucinated package"
   failure mode.
-- **Truth discipline:** VeritasGate (`make truth`) refuses claims that do not correspond to
+- **Truth discipline:** EvidenceGate (`make truth`) refuses claims that do not correspond to
   reality, so AI-written docs cannot drift from the code unwatched.
 
 ## AI code is draft: the security review checklist
@@ -47,7 +47,7 @@ Inspect explicitly for:
 
 - **Insecure defaults / disabled TLS** (`verify=False`, unverified SSL contexts).
 - **Dangerous subprocess** (shell strings, unallowlisted commands; the ship uses the
-  allowlisted `parts/shelf/console.py` runner, never raw shell).
+  allowlisted `kernel/shelf/console.py` runner, never raw shell).
 - **Insecure deserialization** (`pickle`, `yaml.load` without `SafeLoader`, `eval`/`exec`).
 - **Weak authentication / authorization gaps** (a capability reachable before its rank check).
 - **Unsafe package recommendations** (unpinned, low-reputation, or hallucinated dependencies).

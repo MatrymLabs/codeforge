@@ -43,10 +43,10 @@ broadcast.
 
 1. **Isolate sink failures at the bus.** `announce()` now delivers through a
    guard that swallows and **prunes** a raising sink - one bad client can never
-   take down another. (`parts/world/events.py`)
+   take down another. (`kernel/world/events.py`)
 2. **Never leak a session.** `_serve_player` unbinds its session in a `finally`,
    even if the front-desk handshake raises, so a mid-login drop can't linger.
-   (`parts/gateway.py`)
+   (`adapters/gateway.py`)
 3. **Stop manufacturing the landmine.** A health check that *connects* to the
    live gateway spawns a real session; if it disconnects rudely it becomes the
    dead sink. Health is now read from the server's log line, not a socket.

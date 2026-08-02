@@ -1,4 +1,4 @@
-"""Test twin for parts/world/delve_sets.py -- a matched gear set per dungeon, across its delve.
+"""Test twin for kernel/world/delve_sets.py -- a matched gear set per dungeon, across its delve.
 
 Acceptance: each dungeon forges a three-piece set (head/body/arm, distinct slots), one piece hung on
 each delve trash foe as a guaranteed drop, with a set bonus the engine pays only when all three are
@@ -7,9 +7,9 @@ worn. Refusal: a shallow delve (< 2 trash foes) forms no set. Determinism: same 
 
 from __future__ import annotations
 
-from parts.world.delve_sets import SET_PREFIX, forge_delve_sets, is_delve_set_piece
-from parts.world.gearsets import active_set_bonuses
-from parts.world.seed import Npc
+from kernel.world.delve_sets import SET_PREFIX, forge_delve_sets, is_delve_set_piece
+from kernel.world.gearsets import active_set_bonuses
+from kernel.world.seed import Npc
 
 _DUNGEONS = [{"room": "the_black_hollow", "name": "The Black Hollow", "level": 50}]
 

@@ -1,4 +1,4 @@
-"""Test twin for the Stewardship Gate (parts/stewardship/*).
+"""Test twin for the Stewardship Gate (adapters/stewardship/*).
 
 Acceptance: a clean, disclosed, low-risk change is eligible and NOT over-taxed. Refusal (each
 FWA failure mode): failing tests, SAST findings, secrets, an unadmitted dependency, undisclosed
@@ -8,16 +8,16 @@ change touches, and nothing is ever auto-merged.
 
 from __future__ import annotations
 
-from parts.stewardship.change import ChangeDescriptor
-from parts.stewardship.gate import blocking_reasons, render_verdict, verify_change
-from parts.stewardship.risk import assess_risk
+from adapters.stewardship.change import ChangeDescriptor
+from adapters.stewardship.gate import blocking_reasons, render_verdict, verify_change
+from adapters.stewardship.risk import assess_risk
 
 
 def _clean(**over: object) -> ChangeDescriptor:
     base: dict[str, object] = dict(
         change_id="chg-001",
         title="tidy a docstring",
-        files_touched=("parts/world/score_sheet.py",),
+        files_touched=("kernel/world/score_sheet.py",),
         ai_assisted=False,
         tests_passed=True,
         sast_blocking_findings=0,
@@ -70,7 +70,7 @@ def test_risk_tracks_the_security_surface_touched() -> None:
     # A change to auth code + a new dependency, AI-authored, is high risk (report's warning:
     # AI PRs can look small while touching security-critical surfaces).
     risky = _clean(
-        files_touched=("parts/world/accounts.py",),
+        files_touched=("kernel/world/accounts.py",),
         ai_assisted=True,
         dependencies_added=("some-pkg",),
         dependencies_approved=True,
@@ -104,7 +104,7 @@ def test_the_report_shows_checks_risk_and_that_nothing_auto_merges() -> None:
 def test_the_report_lists_the_risk_factors_that_fired() -> None:
     # A risky change renders its visible risk factors (the score never hides its reasons).
     out = render_verdict(
-        verify_change(_clean(files_touched=("parts/world/accounts.py",), human_approvals=1))
+        verify_change(_clean(files_touched=("kernel/world/accounts.py",), human_approvals=1))
     )
     assert "risk: MEDIUM" in out or "risk: HIGH" in out
     assert "security surface" in out  # the factor line is shown

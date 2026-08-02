@@ -1,7 +1,7 @@
-"""Test twin for parts/name_check.py -- the game adapter: validate a proposed name."""
+"""Test twin for kernel/name_check.py -- the game adapter: validate a proposed name."""
 
-from parts.name_check import name_check
-from parts.world.session import SESSIONS, Session
+from kernel.name_check import name_check
+from kernel.world.session import SESSIONS, Session
 
 
 def _player() -> Session:

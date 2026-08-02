@@ -16,9 +16,9 @@ the "what am I getting better at" record behind CodeForge.
 
 | Skill | Evidence in the repo |
 |-------|----------------------|
-| Secure credential handling | `parts/world/accounts.py` - pbkdf2-sha256 (600k iters), per-account salt, constant-time compare, generic (non-enumerating) refusals |
+| Secure credential handling | `kernel/world/accounts.py` - pbkdf2-sha256 (600k iters), per-account salt, constant-time compare, generic (non-enumerating) refusals |
 | Test-first discipline | Every `parts/` card has a test twin; new commands get an engine-tick test; hostile cases (mixed case, mismatches) are required |
-| Protocol-level work | Telnet IAC WILL/WONT ECHO blackout + IAC stripping in `parts/gateway.py` |
+| Protocol-level work | Telnet IAC WILL/WONT ECHO blackout + IAC stripping in `adapters/gateway.py` |
 | Clean architecture | "State is canonical, text is projection"; the engine tick is the only door; drivers are thin (see `docs/architecture.md`, ADRs) |
 | Disciplined git workflow | Branch → `make check` → `--no-ff` merge → `make ship`; Conventional Commits |
 | Operational debugging | Cornered a "ghost server" heisenbug (deploy ≠ restart) - see 2026-07-08 log |

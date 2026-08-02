@@ -1,9 +1,9 @@
-"""Test twin for parts/harvest_lens.py -- detect reusable-pattern candidates in source."""
+"""Test twin for kernel/harvest_lens.py -- detect reusable-pattern candidates in source."""
 
 import pytest
 
 from forge import handle_command
-from parts.harvest_lens import (
+from kernel.harvest_lens import (
     Candidate,
     HarvestError,
     draft_card,
@@ -11,7 +11,7 @@ from parts.harvest_lens import (
     scan_source,
     stocked_signals,
 )
-from parts.world.session import Session
+from kernel.world.session import Session
 
 _SRC = '''
 class RetryPolicy:

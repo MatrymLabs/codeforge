@@ -1,10 +1,10 @@
-"""Test twin for parts/world/score_sheet_model.py -- the score-sheet view model (data only)."""
+"""Test twin for kernel/world/score_sheet_model.py -- the score-sheet view model (data only)."""
 
 import dataclasses
 
 import pytest
 
-from parts.world.score_sheet_model import (
+from kernel.world.score_sheet_model import (
     ATTR_ORDER,
     DERIVED_ORDER,
     RESIST_ORDER,

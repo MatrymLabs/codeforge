@@ -1,4 +1,4 @@
-"""Test twin for parts.world.consumables: quaff a carried consumable for a one-shot restore.
+"""Test twin for kernel.world.consumables: quaff a carried consumable for a one-shot restore.
 
 Acceptance (a healing draught restores HP and is spent) AND refusal (not carried, not drinkable),
 plus engine-tick reachability. The fixture snapshots ITEMS so cloned draughts never leak.
@@ -9,10 +9,10 @@ import copy
 import pytest
 
 import forge  # noqa: F401 -- boot the world before the fixture clones items
-from parts.world import items
-from parts.world.consumables import quaff
-from parts.world.jobs import bind_calling
-from parts.world.session import SESSIONS, Session
+from kernel.world import items
+from kernel.world.consumables import quaff
+from kernel.world.jobs import bind_calling
+from kernel.world.session import SESSIONS, Session
 
 
 @pytest.fixture(autouse=True)

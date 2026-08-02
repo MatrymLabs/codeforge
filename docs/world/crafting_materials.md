@@ -34,7 +34,7 @@ Design rules the chains hold to:
   `herb -> salve` heals 20; the refined `herb -> reagent -> tonic` heals 50. Spending the extra
   step is a choice the numbers reward.
 - **It is all data.** The tiers and chains live in seed YAML, cross-checked against the item
-  registry at boot (`parts.world.seed.load_recipes`). No chain can reference a material that is not
+  registry at boot (`kernel.world.seed.load_recipes`). No chain can reference a material that is not
   a real item. crafting.py did not change; the depth is content.
 
 ## The material library (slice 1a)
@@ -45,7 +45,7 @@ source, so the whole chain is reachable the moment it lands.
 ### Metal chain (Smithing)
 
 The four ore-biomes quarry **raw ore** (`raw_ore`) alongside the ember-shard, the drowned ingot, and
-their herb (`parts.world.wildlands._gather_node`). From there:
+their herb (`kernel.world.wildlands._gather_node`). From there:
 
 | Tier | Item | Recipe | From |
 | --- | --- | --- | --- |
@@ -71,7 +71,7 @@ salve: every forageable herb feeds the refined tier, so no herb is a dead end.
 ## What 1a deliberately does not do (the next tiers)
 
 - **Hide -> leather** and monster materials shipped as **slice 1c**: furred and feathered creatures
-  drop `raw_hide`, scaled and shelled ones drop `chitin_scale` (the `parts.world.bestiary` loot
+  drop `raw_hide`, scaled and shelled ones drop `chitin_scale` (the `kernel.world.bestiary` loot
   tables, by body-class), and Leatherworking refines each into gear (hide -> cured leather -> a hide
   jerkin; chitin -> a hardened plate -> a scaled bracer). The unbodied (elemental/undead/colossus)
   drop no such material -- there is no pelt to take.
@@ -85,7 +85,7 @@ salve: every forageable herb feeds the refined tier, so no herb is a dead end.
   earned. Aethryn gates its master tier (the grand draughts, the forgefire elixir, the reaver's
   blade, and the Reachlord's Signet, which also demands the Making Order). The same `requires` seam
   is where trainer/quest acquisition can later hang; the gate check lives in
-  `parts.world.crafting.locked_reason`.
+  `kernel.world.crafting.locked_reason`.
 
 Every future tier is an extension of this same RAW -> REFINED -> COMPONENT -> PRODUCT spine, and is
 exactly the kind of proven subsystem the Seed Platform will later generalise into a generator.

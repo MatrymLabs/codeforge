@@ -1,9 +1,9 @@
-"""Test twin for parts/calibrate.py -- the game adapter: auto-retried calibration."""
+"""Test twin for kernel/calibrate.py -- the game adapter: auto-retried calibration."""
 
 import pytest
 
-from parts.calibrate import calibrate, set_calibration_rng
-from parts.world.session import SESSIONS, Session
+from kernel.calibrate import calibrate, set_calibration_rng
+from kernel.world.session import SESSIONS, Session
 
 
 @pytest.fixture(autouse=True)

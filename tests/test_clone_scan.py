@@ -1,10 +1,10 @@
-"""Test twin for parts/clone_scan.py -- structural duplicate-logic detection."""
+"""Test twin for kernel/clone_scan.py -- structural duplicate-logic detection."""
 
 import pytest
 
 from forge import handle_command
-from parts.clone_scan import CloneError, find_clones, render, scan_repo, shape
-from parts.world.session import Session
+from kernel.clone_scan import CloneError, find_clones, render, scan_repo, shape
+from kernel.world.session import Session
 
 # Same structure and operators, different names and literals: a type-2 clone.
 _A = """
@@ -73,12 +73,12 @@ def test_clones_verb_is_tick_reachable():
 
 
 def test_clones_verb_accepts_a_min_nodes_arg():
-    from parts.clone_scan import clones
+    from kernel.clone_scan import clones
 
     assert "Clone scan" in clones("500")  # a high bar: valid int, likely no clones
 
 
 def test_clones_verb_rejects_a_bad_arg():
-    from parts.clone_scan import clones
+    from kernel.clone_scan import clones
 
     assert "Usage" in clones("notanumber")

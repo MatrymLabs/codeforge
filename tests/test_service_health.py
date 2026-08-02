@@ -1,7 +1,7 @@
-"""Test twin for parts/service_health.py -- the practical adapter + the one-core proof."""
+"""Test twin for kernel/service_health.py -- the practical adapter + the one-core proof."""
 
-from parts.service_health import ServiceHealth
-from parts.shelf.health import HealthRegistry
+from kernel.service_health import ServiceHealth
+from kernel.shelf.health import HealthRegistry
 
 
 def test_a_service_is_ready_only_when_every_dependency_is_healthy():
@@ -25,7 +25,7 @@ def test_a_raising_dependency_makes_the_service_not_ready():
 
 
 def test_one_core_powers_both_the_game_vitals_and_the_practical_service_health():
-    import parts.vitals as game
+    import kernel.vitals as game
 
     svc = ServiceHealth()
     assert isinstance(svc._registry, HealthRegistry)  # the practical probe uses the core

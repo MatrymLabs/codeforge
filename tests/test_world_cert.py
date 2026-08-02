@@ -1,7 +1,7 @@
-"""Test twin for parts/world_cert.py -- the game adapter: a world-readiness certificate."""
+"""Test twin for kernel/world_cert.py -- the game adapter: a world-readiness certificate."""
 
-from parts.world.session import SESSIONS, Session
-from parts.world_cert import certify
+from kernel.world.session import SESSIONS, Session
+from kernel.world_cert import certify
 
 
 def _player() -> Session:

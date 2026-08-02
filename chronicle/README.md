@@ -6,7 +6,7 @@ are git-ignored, regenerated evidence), the Chronicle is **git-tracked on purpos
 evidence is the whole point (records + safety), and each record is reproducible from the commit
 it cites.
 
-- **Written by** `parts/chronicle.py` (`append()`), only through its validating gate.
+- **Written by** `kernel/chronicle.py` (`append()`), only through its validating gate.
 - **Read by** the `chronicle` verb (read-only view, incl. `chronicle trend <name>`,
   `chronicle provenance <node>`, `chronicle incidents`, and `chronicle evals`) and, from slice 1b,
   ARC's `evidence` dimension.
@@ -17,17 +17,17 @@ it cites.
   `incident` (a FRACAS `{what, severity, corrective_action, status}` record; slice 4 - a blocked
   release opens one automatically), and `ai-eval` (a scored `{subject, score, model, passed}`
   Advisor evaluation; slice 5 - `make ai-eval` scores the offline `LocalArchitect` against a
-  rubric via `parts/ai_eval.py`, tracking AI quality over time). The store now spans the board's
+  rubric via `adapters/ai_eval.py`, tracking AI quality over time). The store now spans the board's
   retain / relate / measure / report gaps.
 - **Integrity:** every record carries a `content_hash` over its fields plus the prior record's
   hash. Any edit to a past record breaks the chain and fails loud on read (`ChronicleError`); a
   dishonest memory is worse than an error.
 
-**Retention (R1, read-only).** `parts/retention.py` + `make retention` (or the `retention` verb)
+**Retention (R1, read-only).** `kernel/retention.py` + `make retention` (or the `retention` verb)
 show a hold-aware retention doctor: what is within its period, what is eligible for review, and
 what a hold protects. Retention here is **disposition, not deletion** - the append-only chain is
 never broken; R1 writes and removes nothing (dry-run only), real marking is owner-gated at R2, and
 any hold wins (federal rule #10). See `docs/reports/2026-07-14-retention-design.md`.
 
-See `docs/reports/2026-07-13-chronicle-design.md` for the design and `parts/chronicle.py` for the
+See `docs/reports/2026-07-13-chronicle-design.md` for the design and `kernel/chronicle.py` for the
 CARD. The `ledger.jsonl` appears here once a gate files its first record (e.g. `make arc-verdicts`).

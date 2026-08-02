@@ -6,7 +6,7 @@ shared rooms) but solo in *purpose* (they shared no cause). The party is the fou
 shared-combat, dungeon, and raid layers build on, and it was the deepest structural gap the AAA
 benchmark scorecard named.
 
-Part: `parts/world/party.py` (MOD-04.111). Verbs: `party` (CMD-04.099), `psay` (CMD-04.100).
+Part: `kernel/world/party.py` (MOD-04.111). Verbs: `party` (CMD-04.099), `psay` (CMD-04.100).
 
 ## Player-facing commands
 
@@ -48,7 +48,7 @@ action while unpartied.
 leadership handoff) and drops their pending invites. It is called from both gateway teardowns (TCP and
 WebSocket), under the same `TICK_LOCK` as the rest of session cleanup, so a party never carries a ghost.
 
-## Shared combat: the reward half (`parts/world/party_rewards.py`, MOD-04.112)
+## Shared combat: the reward half (`kernel/world/party_rewards.py`, MOD-04.112)
 
 Fighting together pays. When a partied hero fells a foe, `party_rewards.share_kill` spreads the kill's
 **advancement** (XP / JP / TP) to every party-mate present in the same room, so grouping is worthwhile
@@ -67,7 +67,7 @@ rather than a way to split one prize thinner. It hangs off combat's single kill/
 - **The killer's own reward is untouched** (awarded by `land_hit` as before); `share_kill` only reaches
   the mates, so the seam adds sharing without double-awarding.
 
-## Mail: the async channel (`parts/world/mail.py` + `mail_store.py`, MOD-04.117/118)
+## Mail: the async channel (`kernel/world/mail.py` + `mail_store.py`, MOD-04.117/118)
 
 Party and guild chat reach whoever is online *now*; **mail** reaches a hero who is offline and waits
 in their inbox until they read it. A letter is a persisted row (the `mail` table, `MailRow`; migration
@@ -81,7 +81,7 @@ one.
   recipient in the store, so no one removes another's mail by guessing an id.
 - **Value-object boundary.** The store returns a `Letter` value object, never an ORM row.
 
-## The guild: a persisted organization (`parts/world/guild.py`, MOD-04.115)
+## The guild: a persisted organization (`kernel/world/guild.py`, MOD-04.115)
 
 The party's durable big sibling. Where a party is a moment (transient), a **guild is a record**: a
 hero's `guild` and `guild_rank` are saved columns on their character (migration `e7a3c1b5f2d8`), so
@@ -99,7 +99,7 @@ the guild survives logout and restart, and its roster names members whether or n
   roster is always consistent. A live session only mirrors the stored fact.
 - **Only the invitation is transient** (in-memory, dropped on logout, like the party's); the
   membership itself persists, which is the whole point.
-### The guild bank (`parts/world/guild_store.py`, MOD-04.116)
+### The guild bank (`kernel/world/guild_store.py`, MOD-04.116)
 
 A guild's shared **treasury**: guild-level coin, persisted in its own `guilds` table (`GuildRow`;
 migration `f1b9d3e6c284`), created when the guild founds and dropped on disband. `guild deposit <n>`
@@ -116,7 +116,7 @@ the per-member columns on characters.
 
 - **Further extensions:** a message of the day, a guild level, guild quests.
 
-## Shared combat: the loot half (`parts/world/party_loot.py`, MOD-04.114)
+## Shared combat: the loot half (`kernel/world/party_loot.py`, MOD-04.114)
 
 The XP half pays everyone; this is the loot half. A solo hero's kill still drops to the floor to be
 taken (unchanged). But when a party fells a foe, each drop is **awarded to a co-located mate by
@@ -129,7 +129,7 @@ call, reading the party's `members_in_room` and moving the drop by carrier-tag r
   looter, or free-for-all would branch here without touching combat.
 - **Solo behavior is untouched** (a lone or alone-here hero's loot falls to the floor, first-come).
 
-## Player trade: the first economy loop (`parts/world/trade.py`, MOD-04.113)
+## Player trade: the first economy loop (`kernel/world/trade.py`, MOD-04.113)
 
 Two co-located heroes can swap goods and coin safely. `trade <player>` proposes; `trade accept` opens
 the window; `trade add <item>` and `trade coins <n>` stake each side; `trade confirm` locks a side, and
@@ -171,7 +171,7 @@ engine-tick reachability of both verbs through `handle_command`.
 ## Friends (the personal roster)
 
 Party, guild, and mail are *shared* channels; a friends list is one hero's own private ledger of
-people worth keeping track of. It is deliberately the smallest social primitive: `parts/world/friends.py`
+people worth keeping track of. It is deliberately the smallest social primitive: `kernel/world/friends.py`
 (MOD-04.119), one comma-joined column on the character row, no new table beyond a column migration.
 
 - **One-directional by design.** Your list is yours. `friend add <player>` puts a name on *your* roster
@@ -203,7 +203,7 @@ reachability of the `friend`/`friends` verbs through `handle_command`.
 
 The widest voice in the social layer. Party reaches your band, guild reaches your order, mail reaches
 one offline hero; `chat <message>` reaches *everyone* online at that moment, the town square of the
-whole world. `parts/world/chat.py` (MOD-04.120), verb `chat` (CMD-04.107).
+whole world. `kernel/world/chat.py` (MOD-04.120), verb `chat` (CMD-04.107).
 
 - **Transient by nature.** A live channel carries a line of text and nothing else; it persists nothing
   and moves no world state. Delivery is `events.announce_to(roster(), exclude=self)`, so offline heroes
@@ -222,7 +222,7 @@ and engine-tick reachability of the `chat` verb through `handle_command`.
 ## Inns (a place for the crowd to gather)
 
 The social layer gives heroes reasons to travel together and shout across the world; inns give them a
-place to do it. `parts/world/inns.py` (MOD-04.121) is a world generator, not a social module, but it
+place to do it. `kernel/world/inns.py` (MOD-04.121) is a world generator, not a social module, but it
 earns a mention here: it is the first *interior* the map's towns have had, and it exists in part
 because the crowd is now real.
 
@@ -246,7 +246,7 @@ tolerance (a hub absent from the world is skipped, not crashed), and determinism
 
 The plaza merchant is the coin *sink* (draughts to buy); the general store is its *source*. Gatherers
 had nowhere to turn ore, shards, and herbs into coin, and crafters had no way to buy a material their
-biome does not yield. `parts/world/stores.py` (MOD-04.122) is both: a second town interior, reached
+biome does not yield. `kernel/world/stores.py` (MOD-04.122) is both: a second town interior, reached
 `market` off the hub and `out` back, keeping a provisioner with a two-way materials shop.
 
 - **Same mould as the inn.** `raise_stores(configs, known_items)` returns (rooms, npcs) and

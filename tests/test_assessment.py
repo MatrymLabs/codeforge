@@ -1,11 +1,11 @@
-"""Test twin for parts/assessment.py -- the AssessmentEngine.
+"""Test twin for kernel/assessment.py -- the AssessmentEngine.
 
 Acceptance: the shipped Python lesson loads and scores. Refusal: a malformed
 bank fails loud rather than serving a broken question."""
 
 import pytest
 
-from parts.assessment import (
+from kernel.assessment import (
     LessonError,
     available_lessons,
     find_lesson,

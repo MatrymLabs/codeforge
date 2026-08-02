@@ -1,0 +1,175 @@
+# SEED: aethryn -- authored/brightwater.yaml  (Brightwater, a river-city of Caeloria, level ~30)
+#
+# The map places Brightwater as a single hub; this is its polished, LIVED-IN interior at AAA density.
+# It carries Caeloria's canon identity: the successor kingdom where law, religion, and relic ownership
+# collide. Under the mill-weirs runs an old-world sluice, a flow-control system no one now fully
+# understands, and the state means to license whatever comes out of it. The conflict is ordinary and
+# political (who owns what the river gives up); the clue to the larger world is the sluice (pre-Fall
+# abundance infrastructure); the rumour is left unproven. Five subareas, three voices (a licensor, a
+# chandler, a river-warden) that cross-reference each other, two dangers, a riverbank gather node and
+# a chandler who buys its yield (a working economy), and readable civic lore. Installed by
+# kernel/world/authored_towns.py; its quests are quests/brightwater_sluice.yaml (a fetch, Knowing) and
+# quests/brightwater_weir.yaml (a hunt of a different shape, Warcraft).
+
+rooms:
+  brightwater_market:
+    name: The Weir Market
+    desc: >-
+      The bright heart of Brightwater: stalls strung along the mill-weirs, the river loud and white
+      over the sluice-gates below. Millers, fishers, and a licence-clerk or two trade over the
+      spray. Ways lead OUT to the river gate, NORTH to the millrace, and WEST to the Licensing Hall.
+    exits: {out: brightwater, north: brightwater_millrace, west: brightwater_hall}
+  brightwater_millrace:
+    name: The Millrace
+    desc: >-
+      A working waterfront of turning wheels and dripping timber, the river driven hard through
+      narrow races. Riverbank meadowfoil grows thick along the wet piling, gathered for the dyers
+      upriver. A worn stair leads DOWN to the old sluice beneath the weirs, WEST run the lower weirs,
+      and the market is back SOUTH.
+    exits: {south: brightwater_market, down: brightwater_sluice, west: brightwater_lowerweir}
+    node: meadowfoil
+  brightwater_hall:
+    name: The Licensing Hall
+    desc: >-
+      A cool stone hall of ledgers and seals, where the state of Caeloria registers every relic the
+      river gives up before a soul may keep it. A licensor keeps the great book here. The market is
+      back EAST.
+    exits: {east: brightwater_market}
+  brightwater_sluice:
+    name: The Old Sluice
+    desc: >-
+      A flooded chamber older than the mills raised over it: pale channels and a bank of seized
+      flow-gates that once ruled the whole river without a hand. Something still ticks behind the
+      water. Stairs climb back UP to the millrace.
+    exits: {up: brightwater_millrace}
+  brightwater_lowerweir:
+    name: The Lower Weirs
+    desc: >-
+      Below the mills the river spreads into flooded lower races, half-wild, where the licence-clerks
+      never come and something long-drowned has made the sunken timber its own. The near water is
+      still, and wrong. The millrace is back EAST.
+    exits: {east: brightwater_millrace}
+
+hub: {room: brightwater, keyword: square, entry: brightwater_market}
+
+npcs:
+  brightwater_licensor:
+    name: Licensor Aldre
+    keywords: [aldre, licensor, clerk]
+    location: brightwater_hall
+    dialogue:
+      - >-
+        "You have the look of someone the river might use. There is a token down in the old sluice,
+        pale metal, older than the city. The state must register it before any hand keeps it. Bring
+        it up to me and there is a fee in it for you, and the law's good favour."
+    topics:
+      sluice:
+        - >-
+          "The old sluice ruled the whole river once, so the ledgers say, without a hand to turn a
+          gate. We license what comes out of it. We do not pretend to understand it."
+      relic:
+        - >-
+          "Everything the river gives up is the state's to register first. That is the law. Whether
+          it is right is a question above a clerk's pay."
+      rumor:
+        - >-
+          "They say the old gates still answer a spoken word, if you knew the right one. They say a
+          great many things in the Weir Market. Go down and see."
+      aldre:
+        - >-
+          "Licensor of Brightwater, third of my line to keep this book. The river gives; the state
+          records; the people grumble. So it has always been."
+    hp: 0
+  brightwater_chandler:
+    name: Chandler Merrow
+    keywords: [merrow, chandler, trader]
+    location: brightwater_market
+    dialogue:
+      - >-
+        "River-trade, traveller? I keep what a body needs off the water: draughts against the chill,
+        a ration for the long races. And I buy riverbank meadowfoil by the armful, if you have the
+        back to gather it along the millrace. Everything the Weir Market needs passes my stall."
+    topics:
+      trade:
+        - >-
+          "I sell draughts and rations, and I buy what the banks give up. Meadowfoil, mostly, for the
+          dyers upriver. Gather it along the millrace and I will weigh it fair."
+      river:
+        - >-
+          "The river gives and the state licenses and the rest of us make a living in between. Honest
+          work, if you do not mind wet boots."
+      merrow:
+        - >-
+          "Chandler of the Weir Market, and my mother before me. I keep folk supplied and my ledger
+          straight. That is the whole of me."
+    shop:
+      sells: {water_ration: 4, healing_draught: 30, mana_draught: 30}
+      buys: {meadowfoil: 6}
+    hp: 0
+  brightwater_warden:
+    name: River-Warden Kess
+    keywords: [kess, warden, river-warden]
+    location: brightwater_market
+    dialogue:
+      - >-
+        "You have the look of someone who has killed worse than a fish. Good. A drowned wyrm has
+        taken the lower weirs, WEST past the millrace, and it will take a fisher next. Put it down and
+        the wardens will call you a friend of the river."
+    topics:
+      wyrm:
+        - >-
+          "A river-wyrm, pale and old and grown bold on drowned men. It lairs in the flooded races
+          below the mills. Go WEST from the millrace and end it before it comes upriver."
+      wardens:
+        - >-
+          "We keep the river's peace where the licence-clerks will not go. Cold work, wet work, and
+          no ledger thanks us for it. Do us this turn and we will not forget it."
+      kess:
+        - >-
+          "River-warden of Brightwater. I mind the water the law forgets. Someone must, or the river
+          minds us."
+    hp: 0
+  brightwater_eels:
+    name: a knot of sluice-eels
+    keywords: [eels, knot, sluice-eels]
+    location: brightwater_sluice
+    dialogue:
+      - The eels coil and snap in the pale flooded channels.
+    aggressive: true
+    hp: 210
+    atk: 19
+    xp: 30
+    level: 28
+    tier: normal
+  brightwater_riverwyrm:
+    name: a drowned river-wyrm
+    keywords: [river-wyrm, wyrm, drowned]
+    location: brightwater_lowerweir
+    dialogue:
+      - The wyrm rises from the sunken timber, water sheeting off its pale coils.
+    aggressive: true
+    hp: 240
+    atk: 22
+    xp: 34
+    level: 29
+    tier: normal
+    attack_element: WTR
+
+items:
+  brightwater_sluice_token:
+    name: a warden's sluice-token
+    keywords: [sluice-token, token, warden]
+    location: brightwater_sluice
+    lore: >-
+      A flat token of pale, untarnished metal, its face worked with channels like a river seen from
+      above. It is warm to the touch though the water is cold, as if some old purpose still runs in
+      it, waiting for a gate to open.
+  brightwater_flood_ledger:
+    name: the Brightwater flood-ledger
+    keywords: [flood-ledger, ledger, flood]
+    location: brightwater_hall
+    lore: >-
+      A civic ledger of every flood the mills have survived, kept in the same careful hand across
+      three centuries. Its later pages note, without comment, that the worst floods slacken the moment
+      the old sluice is worked, as though the buried gates still answer the river, and the town has
+      learned to profit from a thing it will not admit it fails to understand.

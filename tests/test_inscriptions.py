@@ -1,4 +1,4 @@
-"""Test twin for parts/world/inscriptions.py -- readable lore carved into dungeon boss chambers.
+"""Test twin for kernel/world/inscriptions.py -- readable lore carved into dungeon boss chambers.
 
 Acceptance: each dungeon gets one readable, unequippable inscription lying in its boss chamber, its
 words naming the dungeon and the very relic relics.forge_relic makes. Determinism: same dungeon,
@@ -7,14 +7,14 @@ same words. Integration: the words vary across dungeons; the item reads via the 
 
 from __future__ import annotations
 
-from parts.world.delve import boss_chamber
-from parts.world.inscriptions import (
+from kernel.world.delve import boss_chamber
+from kernel.world.inscriptions import (
     INSCRIPTION_PREFIX,
     carve_inscription,
     carve_inscriptions,
     is_inscription,
 )
-from parts.world.relics import forge_relic
+from kernel.world.relics import forge_relic
 
 _DUNGEONS = [
     {"room": "the_black_hollow", "name": "The Black Hollow", "level": 50},

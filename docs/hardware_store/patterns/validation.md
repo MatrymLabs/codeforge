@@ -15,7 +15,7 @@ present, what types they have, and constraints."*
 
 ## The part: `validator`
 
-`parts/shelf/validation.py` -- validate a mapping against a `Validator` (a bundle of small `Rule`
+`kernel/shelf/validation.py` -- validate a mapping against a `Validator` (a bundle of small `Rule`
 callables) and get a `ValidationResult`: `is_valid`, and every `Issue` at once (each tagged with its
 `field` and a readable message). `raise_if_invalid()` is the one loud exit (`ValidationFailed`
 carries the result). Rule builders cover the common cases: `required`, `matches`, `of_type`,
@@ -30,7 +30,7 @@ when invalid, carrying the result.
 
 ## GAME-TO-PRACTICAL TRANSLATION
 
-- **Game component:** a character-name preview (`parts/name_check.py`).
+- **Game component:** a character-name preview (`kernel/name_check.py`).
 - **Core behavior:** check a value against rules; return valid, or a clear list of problems.
 - **Game-specific presentation:** "'admin' won't work: is a reserved name."
 - **Reusable domain logic:** the whole `Validator` + rules (game-free).
@@ -43,9 +43,9 @@ when invalid, carrying the result.
 
 ## Adapters (one core, two lives)
 
-- **Game:** `parts/name_check.py` -- the `namecheck` verb previews whether a proposed character name
+- **Game:** `kernel/name_check.py` -- the `namecheck` verb previews whether a proposed character name
   is valid (required, the name pattern, not a reserved word) and lists why not. Tick-reachable.
-- **Practical:** `parts/payload_check.py` -- `validate_signup(payload)` checks a signup body
+- **Practical:** `kernel/payload_check.py` -- `validate_signup(payload)` checks a signup body
   (username, email, age) with the same core, returning every problem at once.
 
 ## Evidence
@@ -58,13 +58,13 @@ when invalid, carrying the result.
 
 ## The companion part: `sanitizer`
 
-`parts/shelf/sanitizer.py` -- where the validator *checks*, the sanitizer *normalizes*. `sanitize(text,
+`kernel/shelf/sanitizer.py` -- where the validator *checks*, the sanitizer *normalizes*. `sanitize(text,
 rule)` drops control characters, folds every run of whitespace to one space, trims, optionally
 lowercases, and caps the length. It is **deterministic and idempotent** (sanitizing twice equals
 once, a property-tested invariant), and honest about its scope: it normalizes, it is **not** a
 security control (not output-escaping, not crypto). It does neutralize control chars and
-log-injection newlines. Adapters: a sanitized player title in the game (`parts/titles.py`, the
-`title` verb) and a stored/logged field cleaner in a practical app (`parts/field_sanitizer.py`,
+log-injection newlines. Adapters: a sanitized player title in the game (`kernel/titles.py`, the
+`title` verb) and a stored/logged field cleaner in a practical app (`kernel/field_sanitizer.py`,
 `clean_field` / `clean_record`). Trace it: `make loop PART=sanitizer`. Maturity `beta`.
 
 ## Deferred (needs Josh's approval)

@@ -12,11 +12,11 @@ from __future__ import annotations
 import glob
 from pathlib import Path
 
-from parts.shelf.corpus import load_yaml
-from parts.shelf.smell_engine import analyze, smell_ids
+from kernel.shelf.corpus import load_yaml
+from kernel.shelf.smell_engine import analyze, smell_ids
 
 _ROOT = Path(__file__).resolve().parent.parent
-_SHELF = str(_ROOT / "parts" / "shelf" / "*.py")
+_SHELF = str(_ROOT / "kernel" / "shelf" / "*.py")
 _SEED = _ROOT / "data" / "coding_corpus.yaml"
 
 # smells that hide failures or plant latent bugs - the shelf must never carry these

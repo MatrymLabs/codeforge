@@ -69,6 +69,6 @@ uses SQLite via SQLAlchemy, a deliberate embedded choice, see the readiness chec
   semantic HTML + responsive, accessible CSS. Proves HTML/CSS + backend/frontend separation
   without a JS build system or abandoning frameless Python.
 - **Placement:** an in-repo add-on module (portfolio-facing surface), not MUD-engine core.
-- **Data:** real, wired to the actual renderers (truthful, VeritasGate-consistent).
+- **Data:** real, wired to the actual renderers (truthful, EvidenceGate-consistent).
 - **Hiring target:** **full-stack developer**, so a **Next.js/React/TypeScript second
   flagship** (a separate repo consuming a codeforge JSON API) is the planned next phase.

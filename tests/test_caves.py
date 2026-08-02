@@ -1,4 +1,4 @@
-"""Test twin for parts/world/caves.py -- the deterministic cave forge.
+"""Test twin for kernel/world/caves.py -- the deterministic cave forge.
 
 Acceptance: every canon region generates a cave that passes the prompt's cave rules (5-18 rooms, a
 branch, a loop, a landmark, a hazard, a resource, a micro-story, a navigable return route, all
@@ -16,8 +16,8 @@ from pathlib import Path
 
 import pytest
 
-from parts.world import canon, caves
-from parts.world.seed import SeedError
+from kernel.world import canon, caves
+from kernel.world.seed import SeedError
 
 # --- Acceptance: every region forges a valid, self-consistent cave --------------------------------
 
@@ -34,7 +34,7 @@ def test_all_regions_generate_caves_that_pass_their_own_validation():
 
 
 def test_every_cave_satisfies_the_generation_contract():
-    from parts.world import generation_contract as gc
+    from kernel.world import generation_contract as gc
 
     for region in caves.cave_regions():
         for seed in (0, 1, 7, 13):  # includes seed 0 (a real value, not a blank)
@@ -54,7 +54,7 @@ def test_a_cave_carries_its_narrative_and_provenance():
 
 
 def test_archetype_is_one_the_contract_knows():
-    from parts.world import generation_contract as gc
+    from kernel.world import generation_contract as gc
 
     known = set(gc.archetype_shares())
     for region in caves.cave_regions():
@@ -244,7 +244,7 @@ def _valid_area() -> dict:
         "canon_status": "GENERATED_LOCAL",
     }
     # A valid area is also generation-contract-complete: give it every required field.
-    from parts.world import generation_contract as gc
+    from kernel.world import generation_contract as gc
 
     for field in gc.required_area_fields():
         area.setdefault(field, "x")

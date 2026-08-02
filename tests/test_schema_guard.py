@@ -9,8 +9,8 @@ is "a fresh DB is fine" and the refusal case is "a table missing a column fails 
 import pytest
 from sqlalchemy import create_engine, text
 
-from parts.world.db import ArchiveBase, engine_url
-from parts.world.schema_guard import SchemaError, missing_columns, require_current_schema
+from kernel.world.db import ArchiveBase, engine_url
+from kernel.world.schema_guard import SchemaError, missing_columns, require_current_schema
 
 
 def _fresh_engine():

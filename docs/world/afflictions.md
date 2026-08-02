@@ -3,7 +3,7 @@
 *The mirror of the foe-side status effects (`brand` burn, `daze`) a player inflicts: the statuses a
 foe inflicts on the PLAYER. This is the substrate a telegraphed boss special needs to actually
 threaten a hero -- the prerequisite for richer encounter mechanics (roadmap #4). Design canon behind
-`parts/world/afflictions.py`.*
+`kernel/world/afflictions.py`.*
 
 ## Two kinds
 

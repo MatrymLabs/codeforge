@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import unittest
 
-from parts.shelf.repo_analyzer import RepoAnalyzerError, analyze_repo, render
+from kernel.shelf.repo_analyzer import RepoAnalyzerError, analyze_repo, render
 
 # a tiny 4-module package: app -> service -> repo (leaf); util is imported by service
 PKG = {

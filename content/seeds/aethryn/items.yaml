@@ -1,0 +1,1661 @@
+# SEED: aethryn -- items.yaml
+# location is a plain room label; the engine tags it internally.
+
+first_ember:
+  name: the first ember
+  keywords: [ember, first, spark, flame]
+  location: nowhere
+
+forge_wrench:
+  name: a modular forge wrench
+  keywords: [wrench, tool, forge, modular]
+  location: nowhere
+
+warm_cloak:
+  name: a warm traveller's cloak
+  keywords: [cloak, warm, travel]
+  location: nowhere
+
+ember_shard:
+  name: a shard of wild ember
+  keywords: [shard, ember, wild, material]
+  location: nowhere
+  resettable: false
+
+cellar_key:
+  name: a cold iron key
+  keywords: [key, iron, cellar, cold]
+  location: nowhere
+
+cinder_relic:
+  name: the smith's cinder relic
+  keywords: [relic, cinder, smith, forgework]
+  location: nowhere
+
+# Drop-only prototype: the Cinder-Wight's own weapon, never placed on the floor -- it exists only
+# to be dropped when the wight falls (location: nowhere = a template spawned by loot, not seeded).
+# Equippable: felling a boss now yields real gear (slot + flat stat mods), so the climb makes you
+# stronger, not just richer in keepsakes. This hammer is the first weapon the ladder hands you.
+cinder_hammer:
+  name: a hammer of grey cinder
+  keywords: [hammer, cinder, grey hammer]
+  location: nowhere
+  slot: weapon
+  mods: {ATK: 5, DEF: 1}
+
+# Drop-only prototype: the road reaver's blade, spawned only when a reaver falls (location: nowhere).
+reaver_blade:
+  name: a notched reaver's blade
+  keywords: [blade, sword, reaver, notched]
+  location: nowhere
+  slot: weapon
+  mods: {ATK: 9, ACC: 5}  # a step up from the cinder hammer: the road pays in better steel
+
+# A placed lore relic in the capital: the Grand Forge's record of the coast's relighting.
+relighting_record:
+  name: the Grand Forge's relighting record
+  keywords: [record, relighting, ledger, archive]
+  location: nowhere
+  lore: |-
+    THE RELIGHTING OF THE KINDLANDS COAST, as kept by the Grand Forge.
+    When the Unforging cooled the coast to grey, the Concord did not rebuild. It RELIT -- hearth by
+    hearth, room by room, in the old order the makers left. The rule was written first and never
+    since amended: relight nothing you cannot keep warm. A fire you cannot tend is a second
+    unmaking, slower and crueller than the first. The coast you walk was warmed by that patience.
+
+# Drop-only prototypes for the ascent (location: nowhere = spawned by a boss's fall, not placed).
+# The gear ladder fills every slot as you climb: weapon (hammer/blade), body (cindershell), head
+# (wraithlamp), arm (ashlord gauntlet), and two accessories (sigil, keystone).
+warden_sigil:
+  name: the Concord's warden sigil
+  keywords: [sigil, warden, concord, token]
+  location: nowhere
+  slot: accessory_1
+  mods: {DEF: 5, MAG DEF: 5}  # the proven-Forger's ward: it turns a blow and a curse alike
+
+coil_keystone:
+  name: a keystone of the Forgeward Road
+  keywords: [keystone, coil, spiral, stone]
+  location: nowhere
+  slot: accessory_2
+  mods: {ATK: 7, MAG DEF: 6}  # a shard of the Spiral's own Forgework, worn for its edge
+
+# Drop-only prototype: the Hollow Smith's black-iron ingot (a crafting material, not gear).
+hollow_ingot:
+  name: an ingot of hollow black iron
+  keywords: [ingot, iron, hollow, black]
+  location: nowhere
+
+# --- Armor drops that complete the gear ladder (body / head / arm). All drop-only. ---
+cindershell_plate:
+  name: a plate of cindershell
+  keywords: [plate, cindershell, armor, body]
+  location: nowhere
+  slot: body
+  mods: {DEF: 8, EVA: 2}  # the Hollow Smith's dead shell, reforged into armor
+
+wraithlamp_circlet:
+  name: a wraithlamp circlet
+  keywords: [circlet, wraithlamp, crown, head]
+  location: nowhere
+  slot: head
+  mods: {MAG DEF: 8, ACC: 4}  # the Forgewraith's cold light, bound to ward the mind
+
+ashlord_gauntlet:
+  name: the Ashlord's gauntlet
+  keywords: [gauntlet, ashlord, glove, arm]
+  location: nowhere
+  slot: arm
+  mods: {ATK: 9, DEF: 5}  # the Second Coil's prize: a maker's grip turned to war
+
+# The Third Coil's prize: a weapon a full tier above the road's blade (drop-only, Gate-boss loot).
+stormlord_edge:
+  name: the Stormlord's edge
+  keywords: [edge, blade, stormlord, storm]
+  location: nowhere
+  slot: weapon
+  mods: {ATK: 14, ACC: 6}  # the ascent's reward: real power for the higher climb
+
+# Consumables: spend them for a one-shot restore (quaff <item>). Placed on the coast + shop-stocked.
+healing_draught:
+  name: a healing draught
+  keywords: [draught, healing, potion, heal]
+  location: nowhere
+  resettable: false
+  consume: {hp: 30}
+
+mana_draught:
+  name: a mana draught
+  keywords: [draught, mana, potion]
+  location: nowhere
+  resettable: false
+  consume: {mp: 15}
+
+# Drop-only: the Drowned Forgemaster's seal -- the Cinderdeep's bottom-boss reward, a warding relic
+# forged against the cold that never healed (an accessory_2, a defensive alternative to the keystone).
+drowned_seal:
+  name: the Drowned Forgemaster's seal
+  keywords: [seal, drowned, forgemaster, relic]
+  location: nowhere
+  slot: accessory_2
+  mods: {DEF: 6, MAG DEF: 5}
+
+# Drop-only: the Great Spiral's themed Gate-warden weapons, one per elemental Coil (spiral.py drops
+# the matching one, then combat's affix factory rolls a rarity onto it -- varied endgame loot).
+ember_brand:
+  name: an ember brand
+  keywords: [brand, ember, sword, weapon]
+  location: nowhere
+  slot: weapon
+  mods: {ATK: 10, ACC: 4}
+
+rime_edge:
+  name: a rime edge
+  keywords: [rime, edge, blade, weapon]
+  location: nowhere
+  slot: weapon
+  mods: {ATK: 10, EVA: 4}
+
+storm_pike:
+  name: a storm pike
+  keywords: [storm, pike, spear, weapon]
+  location: nowhere
+  slot: weapon
+  mods: {ATK: 11, ACC: 5}
+
+shadow_fang:
+  name: a shadow fang
+  keywords: [shadow, fang, dagger, weapon]
+  location: nowhere
+  slot: weapon
+  mods: {ATK: 12, EVA: 3}
+
+stone_maul:
+  name: a stone maul
+  keywords: [stone, maul, hammer, weapon]
+  location: nowhere
+  slot: weapon
+  mods: {ATK: 13, DEF: 3}
+
+# Drop-only: the Reachwood mini-boss reward -- a charm of woven ember-thorn (an evasion accessory,
+# an early-game alternative to the Concord's warden sigil).
+warden_charm:
+  name: a greenwarden's charm
+  keywords: [charm, greenwarden, thorn, token]
+  location: nowhere
+  slot: accessory_1
+  mods: {DEF: 4, EVA: 4}
+
+# Drop-only: the Ash-Colossus's reward -- a blade of the black glass the Unforging fused (a heavy
+# weapon salvaged from the crater's heart).
+cinderglass_edge:
+  name: a cinderglass edge
+  keywords: [cinderglass, edge, blade, weapon]
+  location: nowhere
+  slot: weapon
+  mods: {ATK: 12, ACC: 4}
+
+# Drop-only: the Drowned Pilot's reward -- a compass of cooling-iron that still points true through
+# brine and dark (an accessory that steadies hand and eye).
+pilots_compass:
+  name: a drowned pilot's compass
+  keywords: [compass, pilot, drowned, token]
+  location: nowhere
+  slot: accessory_1
+  mods: {ACC: 6, EVA: 3}
+
+# Drop-only: the Sunhold Warden's reward -- the sigil of the drowned capital, cold-iron Forgework
+# that never stopped burning (an accessory that wards mind and body against the deep).
+sunhold_sigil:
+  name: the drowned Sunhold's sigil
+  keywords: [sigil, sunhold, drowned, token]
+  location: nowhere
+  slot: accessory_2
+  mods: {DEF: 5, "MAG DEF": 6}
+
+# Drop-only: the Boughwarden's reward -- a living totem of the Heart-Grove, ember-wood that still
+# grows (an accessory that mends and shields, the Verdance's gift to one it spared).
+boughward_totem:
+  name: a boughward totem
+  keywords: [totem, boughward, grove, relic]
+  location: nowhere
+  slot: accessory_1
+  mods: {DEF: 5, EVA: 5}
+
+# Drop-only: the Rime-King's reward -- the Stillheart, an Emberwright relic of unmelting ice that
+# never cooled (a weapon of the frozen golden age; see the Legendary Item Catalog, the Reach-Relics).
+stillheart:
+  name: the Stillheart
+  keywords: [stillheart, ice, blade, relic]
+  location: nowhere
+  slot: weapon
+  mods: {ATK: 15, "MAG DEF": 6}
+
+# Drop-only: the Vent-Lord's reward -- the Vent-Crown, a Reach-Relic of raw Forgework worn straight
+# from the vents (a head-piece of living fire; see the Legendary Item Catalog, the Reach-Relics).
+vent_crown:
+  name: the Vent-Crown
+  keywords: [crown, vent, forge, relic]
+  location: nowhere
+  slot: head
+  mods: {ATK: 8, "MAG DEF": 8}
+
+# Drop-only: the Court-Warden's reward -- the Anchor-Stone, a Reach-Relic that never falls, cut from
+# the Forgework that holds the drifting shards aloft (an accessory; see the Legendary Item Catalog).
+anchor_stone:
+  name: the Anchor-Stone
+  keywords: [anchor, stone, sky, relic]
+  location: nowhere
+  slot: accessory_2
+  mods: {DEF: 7, EVA: 6}
+
+# --- The Emberhide set (Emberreach cradle armor, levels ~1-15). A slot-complete starter kit of hide
+# --- cured over coast-forge embers, dropped by the cradle's beasts so a fresh Forger can outfit
+# --- head/body/arm before leaving the coast. Drop-only prototypes; combat levels + rarity-rolls them.
+emberhide_hood:
+  name: an emberhide hood
+  keywords: [hood, emberhide, hide, cap]
+  location: nowhere
+  slot: head
+  mods: {DEF: 2, EVA: 3}
+
+emberhide_jerkin:
+  name: an emberhide jerkin
+  keywords: [jerkin, emberhide, hide, vest]
+  location: nowhere
+  slot: body
+  mods: {DEF: 4, EVA: 2}
+
+emberhide_wraps:
+  name: a set of emberhide wraps
+  keywords: [wraps, emberhide, hide, bracers]
+  location: nowhere
+  slot: arm
+  mods: {DEF: 3, ATK: 2}
+
+# ============================================================================================
+# REGIONAL ARMOR SETS (Content Manufacturing Campaign, the wide fill). One slot-complete themed
+# set per Reach (head/body/arm), dropped by that Reach's own foes so a Forger re-outfits as they
+# travel. Base mods rise band to band; combat levels + rarity-rolls each drop. Drop-only prototypes.
+# ============================================================================================
+
+# --- Brinescale set: the Quenchmere (drowned archipelago, L18-30). Salvaged plate scaled like a
+# --- tide-crawler's shell, worn by the Merewright wreck-divers against the cold sea. ---
+brinescale_hood:
+  name: a brinescale hood
+  keywords: [hood, brinescale, scale, drowned]
+  location: nowhere
+  slot: head
+  mods: {DEF: 5, "MAG DEF": 5}
+
+brinescale_coat:
+  name: a brinescale coat
+  keywords: [coat, brinescale, scale, drowned]
+  location: nowhere
+  slot: body
+  mods: {DEF: 8, EVA: 3}
+
+brinescale_bracers:
+  name: a pair of brinescale bracers
+  keywords: [bracers, brinescale, scale, drowned]
+  location: nowhere
+  slot: arm
+  mods: {DEF: 6, ACC: 3}
+
+# --- Verdant set: the Verdance (living jungle, L22-32). Living bark-mail the Deeprooted grow rather
+# --- than forge, still green, that closes its own cuts. ---
+verdant_hood:
+  name: a verdant bark-hood
+  keywords: [hood, verdant, bark, grove]
+  location: nowhere
+  slot: head
+  mods: {DEF: 6, EVA: 4}
+
+verdant_mantle:
+  name: a verdant bark-mantle
+  keywords: [mantle, verdant, bark, grove]
+  location: nowhere
+  slot: body
+  mods: {DEF: 9, "MAG DEF": 4}
+
+verdant_vambraces:
+  name: a pair of verdant bark-vambraces
+  keywords: [vambraces, verdant, bark, grove]
+  location: nowhere
+  slot: arm
+  mods: {DEF: 7, ACC: 4}
+
+# --- Rimeplate set: the Rimefall (frozen north, L40-52). Flash-quenched Emberwright plate, cold to
+# --- the touch and unbreaking, cut from the glass-ice of the Rime. ---
+rimeplate_helm:
+  name: a rimeplate helm
+  keywords: [helm, rimeplate, rime, frost]
+  location: nowhere
+  slot: head
+  mods: {DEF: 9, "MAG DEF": 6}
+
+rimeplate_hauberk:
+  name: a rimeplate hauberk
+  keywords: [hauberk, rimeplate, rime, frost]
+  location: nowhere
+  slot: body
+  mods: {DEF: 13, EVA: 4}
+
+rimeplate_gauntlets:
+  name: a pair of rimeplate gauntlets
+  keywords: [gauntlets, rimeplate, rime, frost]
+  location: nowhere
+  slot: arm
+  mods: {DEF: 11, ATK: 5}
+
+# --- Emberforged set: the Kollforge (molten, L50-62). Plate forged at the Anvil-Vents in living
+# --- fire; the Reach already yields the Vent-Crown (head), so this set fills body and arm. ---
+emberforged_plate:
+  name: a suit of emberforged plate
+  keywords: [plate, emberforged, forge, molten]
+  location: nowhere
+  slot: body
+  mods: {DEF: 14, "MAG DEF": 6}
+
+emberforged_gauntlets:
+  name: a pair of emberforged gauntlets
+  keywords: [gauntlets, emberforged, forge, molten]
+  location: nowhere
+  slot: arm
+  mods: {DEF: 11, ATK: 5}
+
+# --- Stormward set: the Sundered Sky (floating shards, L60-72). Sky-Warden plate anchored with the
+# --- same Forgework that holds the shards aloft, light enough to ride the wind. ---
+stormward_helm:
+  name: a stormward helm
+  keywords: [helm, stormward, sky, warden]
+  location: nowhere
+  slot: head
+  mods: {DEF: 12, EVA: 6}
+
+stormward_cuirass:
+  name: a stormward cuirass
+  keywords: [cuirass, stormward, sky, warden]
+  location: nowhere
+  slot: body
+  mods: {DEF: 16, "MAG DEF": 7}
+
+stormward_vambraces:
+  name: a pair of stormward vambraces
+  keywords: [vambraces, stormward, sky, warden]
+  location: nowhere
+  slot: arm
+  mods: {DEF: 13, ACC: 6}
+
+# --- Hollowiron set: the Cinderdeep (downward dungeon, L10-15). Black salvage-iron from the drowned
+# --- making-works; the deep already yields the Cindershell Plate (body), so this fills head and arm. ---
+hollowiron_mask:
+  name: a hollowiron mask
+  keywords: [mask, hollowiron, iron, deep]
+  location: nowhere
+  slot: head
+  mods: {DEF: 6, "MAG DEF": 4}
+
+hollowiron_gauntlets:
+  name: a pair of hollowiron gauntlets
+  keywords: [gauntlets, hollowiron, iron, deep]
+  location: nowhere
+  slot: arm
+  mods: {DEF: 5, ATK: 3}
+
+# --- Signature Reach weapons (Content Manufacturing Campaign). Each weaponless Reach gets a boss-
+# --- dropped showcase weapon scaled to its band, so a Forger can upgrade their blade as they travel
+# --- (Emberreach and Rimefall already ship weapons). Drop-only prototypes; combat levels + rolls. ---
+hollowiron_cleaver:
+  name: a hollowiron cleaver
+  keywords: [cleaver, hollowiron, iron, deep]
+  location: nowhere
+  slot: weapon
+  mods: {ATK: 8, DEF: 2}
+
+tideglass_harpoon:
+  name: a tideglass harpoon
+  keywords: [harpoon, tideglass, brine, drowned]
+  location: nowhere
+  slot: weapon
+  mods: {ATK: 11, ACC: 5}
+
+thornwood_glaive:
+  name: a thornwood glaive
+  keywords: [glaive, thornwood, bough, grove]
+  location: nowhere
+  slot: weapon
+  mods: {ATK: 12, EVA: 4}
+
+ventforge_maul:
+  name: a ventforge maul
+  keywords: [maul, ventforge, forge, molten]
+  location: nowhere
+  slot: weapon
+  mods: {ATK: 16, DEF: 3}
+
+stormcaller_pike:
+  name: a stormcaller pike
+  keywords: [pike, stormcaller, sky, storm]
+  location: nowhere
+  slot: weapon
+  mods: {ATK: 18, ACC: 6}
+
+# --- Exploration treasures (Content Manufacturing Campaign). Unique relics PLACED in the deep and
+# --- off-path terminals, not dropped -- reach the place and the treasure is yours (once; they do not
+# --- resettable-respawn). A cut above the regional accessories, to pay a thorough Forger for the
+# --- effort of getting there. `location: room:<label>` puts them on the ground, found on `look`. ---
+ashglass_charm:
+  name: an ashglass charm
+  keywords: [charm, ashglass, glass, ruin]
+  location: nowhere
+  slot: accessory_1
+  mods: {EVA: 7, ACC: 5}
+
+cinderheart_relic:
+  name: the Cinderheart Relic
+  keywords: [relic, cinderheart, deep, ember]
+  location: nowhere
+  slot: accessory_2
+  mods: {DEF: 8, "MAG DEF": 7}
+
+drowned_pearl:
+  name: a drowned pearl
+  keywords: [pearl, drowned, sunhold, deep]
+  location: nowhere
+  slot: accessory_1
+  mods: {"MAG DEF": 8, EVA: 5}
+
+heartwood_seed:
+  name: a heartwood seed
+  keywords: [seed, heartwood, grove, verdant]
+  location: nowhere
+  slot: accessory_1
+  mods: {DEF: 6, "MAG DEF": 6, EVA: 3}
+
+skyshard_relic:
+  name: the Skyshard Relic
+  keywords: [relic, skyshard, drifting, sky]
+  location: nowhere
+  slot: accessory_2
+  mods: {EVA: 9, ACC: 6}
+
+# --- The consumable ladder (Content Manufacturing Campaign). The coast draughts (hp 30 / mp 15)
+# --- do not carry a Forger through a 1-300 game; add greater and grand tiers plus a both-pools
+# --- elixir, stocked by Reach tier so healing scales with the journey. Drop-only prototypes (shops
+# --- place instances); `quaff <item>` spends one for its restore. ---
+greater_healing_draught:
+  name: a greater healing draught
+  keywords: [draught, greater, healing, potion]
+  location: nowhere
+  consume: {hp: 70}
+
+grand_healing_draught:
+  name: a grand healing draught
+  keywords: [draught, grand, healing, potion]
+  location: nowhere
+  consume: {hp: 150}
+
+greater_mana_draught:
+  name: a greater mana draught
+  keywords: [draught, greater, mana, potion]
+  location: nowhere
+  consume: {mp: 35}
+
+grand_mana_draught:
+  name: a grand mana draught
+  keywords: [draught, grand, mana, potion]
+  location: nowhere
+  consume: {mp: 70}
+
+forgefire_elixir:
+  name: a forgefire elixir
+  keywords: [elixir, forgefire, potion, restorative]
+  location: nowhere
+  consume: {hp: 120, mp: 60}
+
+# --- The legendary capstone (Content Manufacturing Campaign). The Sovereign's Regalia: the reward
+# --- for felling the final boss at the world's ceiling (L300), dropped via spiral.yaml's summit_drop.
+# --- A clear cut above every regional relic -- the one artifact that says the whole road is done. ---
+sovereigns_regalia:
+  name: the Sovereign's Regalia
+  keywords: [regalia, sovereign, crown, relic, legendary]
+  location: nowhere
+  slot: accessory_1
+  mods: {ATK: 9, DEF: 9, "MAG DEF": 6}
+
+# --- Readable lore (Content Manufacturing Campaign): books/records/inscriptions placed in rooms,
+# --- read with `read <item>`. Readable environmental storytelling for a Forger who slows down to
+# --- look. Placed (not drop-only), one per notable place; carried or read in place. ---
+drowned_makers_log:
+  name: a drowned maker's log
+  keywords: [log, book, maker, drowned]
+  location: nowhere
+  lore: |-
+    (waterlogged, the last entries barely legible)
+    ...the sea did not come for us in a day. It came in inches, over a life. We kept working. We told
+    ourselves the Forgework would hold, that a maker does not abandon a making half-done. The tide
+    took the low halls, then the forges, then the light. I write this in the dark, at a cold anvil,
+    still trying to finish a thing the water started. Do not weep for us. Learn the lesson we would
+    not: a work you cannot save is not worth drowning for. Save yourself. Finish something else.
+
+skyborn_inscription:
+  name: a Skyborn inscription
+  keywords: [inscription, stone, skyborn, tablet]
+  location: nowhere
+  lore: |-
+    Cut into the anchor-stone of Highgate, in the plain hand of the first sky-Wardens:
+    WE DID NOT FALL. Remember it, you who come up the ferry frightened. The shards the Unforging tore
+    loose did not fall, and neither did we. We drove anchors into the wind and held. The world came
+    apart and we stayed. Whatever you have lost below, whatever cooled and cracked and sank -- up
+    here the rule is only this: drive your anchor, and hold. The wind is old and it is patient, but
+    so are the Skyborn.
+
+# --- The Reach essences + the Reachlord's Signet (Content Manufacturing Campaign: a completionist
+# --- endgame loop). Each of the five great Reaches' bosses drops a unique essence; collect all five
+# --- (you must best every Reach) and craft the Reachlord's Signet, a legendary that says you
+# --- conquered the whole world across the sea and the sky. Drop-only materials + a craftable relic. ---
+brine_essence:
+  name: an essence of the drowned deep
+  keywords: [essence, brine, drowned, quenchmere]
+  location: nowhere
+
+grove_essence:
+  name: an essence of the living wood
+  keywords: [essence, grove, verdant, verdance]
+  location: nowhere
+
+rime_essence:
+  name: an essence of unmelting ice
+  keywords: [essence, rime, frost, rimefall]
+  location: nowhere
+
+molten_essence:
+  name: an essence of the near Forge
+  keywords: [essence, molten, forge, kollforge]
+  location: nowhere
+
+storm_essence:
+  name: an essence of the tearing sky
+  keywords: [essence, storm, sky, sundered]
+  location: nowhere
+
+reachlord_signet:
+  name: the Reachlord's Signet
+  keywords: [signet, reachlord, ring, relic, legendary]
+  location: nowhere
+  slot: accessory_2
+  mods: {DEF: 8, "MAG DEF": 8, EVA: 5}
+
+# --- More readable lore (Content Manufacturing Campaign): a record placed in each major Reach that
+# --- still lacked one, read with `read <item>`. The world's memory, one place at a time. ---
+kollkin_ledger:
+  name: a Kollkin vent-ledger
+  keywords: [ledger, kollkin, vent, book]
+  location: nowhere
+  lore: |-
+    THE VENT-LEDGER OF EMBERKOLL, names struck through in order.
+    We do not carve headstones in the Kollforge -- the heat would crack them. We keep the ledger.
+    Every name here worked a vent and did not come back up, and beside each, in the same hand, the
+    make they were pouring when the fire took them. Read it and you will see: not one line is blank.
+    Every Forger who died here died mid-making. We tell the apprentices that is not a warning. It is
+    the only honest thing the Kollforge has to promise you: you will not die idle.
+
+silent_anvil_creed:
+  name: the Silent Anvil's creed-stone
+  keywords: [creed, stone, anvil, tablet]
+  location: nowhere
+  lore: |-
+    Cut small into the one warm hearth of Stillhearth, where the Silent Anvil keep their vigil:
+    THE RIMEFALL IS NOT A RUIN. It is a lesson held at the exact moment before it was learned. The
+    golden age froze here mid-gesture, its makers a hand's breadth from a making that would have
+    unmade them, and the ice kept them there so we could stand where they stood and choose the other
+    way. We do not thaw the Rime-King. We keep him. A mistake preserved is a mistake that teaches.
+    A mistake undone is only a mistake waiting to be made again.
+
+deeprooted_growth_song:
+  name: a Deeprooted growth-song
+  keywords: [song, growth, deeprooted, bark]
+  location: nowhere
+  lore: |-
+    Not written but grown, the words raised in living bark on a bough of Highbough, read by touch:
+    WE DO NOT FORGE THE WOOD. WE ASK IT. The lowland makers strike ember into shape and call it
+    making; we grow ours, slow, a conversation across seasons, and what we grow keeps growing after
+    we let go. They think this weakness. Let them. When their forged things cool and crack and are
+    salvage, ours will still be reaching for the light. The patient making is the one that lasts.
+
+# Drop-only: the Brine-Hulk's prize -- a pearl of drowned ember from the Tidecave grotto, an early
+# accessory for a Forger who braved the optional sea-cave (a coast alternative to the warden sigil).
+tidecave_pearl:
+  name: a tidecave pearl
+  keywords: [pearl, tidecave, brine, grotto]
+  location: nowhere
+  slot: accessory_1
+  mods: {DEF: 3, "MAG DEF": 3}
+
+# --- The Deep Reachwood's content (Seed Scale Directive): a gathering node, a hidden treasure + lore,
+# --- and the shrine-keeper's drop, so the expanded forest rewards gathering, exploring, and delving. ---
+reachwood_sap:
+  name: a bead of reachwood sap
+  keywords: [sap, reachwood, bead, material]
+  location: nowhere
+  resettable: false
+
+shrine_ward:
+  name: an old shrine-ward
+  keywords: [ward, shrine, charm, relic]
+  location: nowhere
+  slot: accessory_1
+  mods: {DEF: 3, "MAG DEF": 4}  # the forgotten shrine's blessing, the deep wood's off-path prize
+
+shrine_offering:
+  name: a shrine-offering of old ember
+  keywords: [offering, shrine, ember, cache]
+  location: nowhere
+  lore: |-
+    Left in the moss of the Forgotten Shrine, on a stone worn smooth by hands that are all dust now:
+    an offering of old ember, still faintly warm. No mark says to whom. The Emberwrights raised this
+    ring before the town, before the Concord, before the names we keep -- and left gifts here for a
+    thing they did not write down, and trusted us to leave them be. You are the first in an age to
+    stand here. Take the ember if you must; the forest kept it a long time, and will not miss it now.
+
+# --- The Old Firewatch's content (Seed Scale Doctrine): a lore log + a viewpoint keepsake, the
+# --- reward for climbing to the launch zone's one high place. Placed, findable, one-time. ---
+firewatch_log:
+  name: the last watcher's log
+  keywords: [log, watcher, firewatch, book]
+  location: nowhere
+  lore: |-
+    The last entries of the Old Firewatch's watch-log, the ink gone brown:
+    "Day 400. The coast is relit hearth to hearth, the road runs to the capital, the Wardenmarch holds.
+    From up here you can see it all catch, one fire at a time, the way you light a making from the
+    inside out. They are standing down the watch -- no enemy left to watch for, they say, only the cold.
+    Maybe. But I have kept this hill a long time, and I will tell you what a watcher learns: the world
+    is always larger than the part of it you have lit. Keep climbing. There is always more to see."
+
+firewatch_glass:
+  name: a watcher's far-glass
+  keywords: [glass, far-glass, spyglass, watcher]
+  location: nowhere
+  slot: accessory_2
+  mods: {ACC: 6, EVA: 3}  # the last watcher's kit: it sharpens the eye (a keepsake of the high hill)
+
+# --- The Thorn-Heart's content (Seed Scale Doctrine): the deep warren's reward + a placed cache. ---
+wildember_charm:
+  name: a charm of wild ember
+  keywords: [charm, wildember, ember, thorn]
+  location: nowhere
+  slot: accessory_1
+  mods: {ATK: 4, "MAG DEF": 4}  # cut from the warren's untaken ember-well, the deep warren's prize
+
+wildember_cache:
+  name: a well of untaken wild ember
+  keywords: [well, ember, cache, wild]
+  location: nowhere
+  lore: |-
+    A well of wild ember, welling up bright through the ember-thorn, untaken since before the town.
+    The foresters have a rule older than the Concord: you cut the deadfall, you do not gather the
+    living ember. What wells up wild belongs to the wood, and the wood keeps its debts. The Wight and
+    the horror are the wood collecting. Take from the well if you must, Forger -- but know that the
+    Reachwood remembers a hand that takes more than the wild gives, and the Reachwood is patient.
+
+# --- The Sunken Hold's content (Seed Scale Doctrine): the drowned flagship's cargo + a lost manifest. ---
+tideglass_pendant:
+  name: a tideglass pendant
+  keywords: [pendant, tideglass, hold, relic]
+  location: nowhere
+  slot: accessory_2
+  mods: {"MAG DEF": 5, EVA: 4}  # the flagship's captain's own ward, salvaged from the sunken hold
+
+flagship_manifest:
+  name: the flagship's lost manifest
+  keywords: [manifest, ledger, flagship, book]
+  location: nowhere
+  lore: |-
+    The cargo manifest of the flagship of the first Rekindling, ink run but legible in the drowned
+    dark: hearth-irons, seed-lamps, and the relit ember meant to carry warmth up the whole coast at
+    once. She went down the day the Cooling-Sea rose, the manifest unmarked as delivered. All of it is
+    still here, lashed and lost, a coast's worth of warmth that never arrived. They relit the Kindlands
+    the slow way instead, hearth by hearth, and never knew how close the fast way came to reaching them.
+
+# --- The Sealed Vault's content (Seed Scale Doctrine): what the makers sealed away, and why. ---
+sealed_ember:
+  name: a shard of sealed ember
+  keywords: [ember, sealed, shard, relic]
+  location: nowhere
+  slot: accessory_2
+  mods: {ATK: 5, DEF: 5}  # ember the makers sealed against the unmaking, worn for its stubborn heat
+
+vault_seal_record:
+  name: the vault-sealer's record
+  keywords: [record, seal, vault, book]
+  location: nowhere
+  lore: |-
+    Scratched into the vault door from the inside, in a maker's last steady hand:
+    "We seal what we could not let the Unforging have: a shard of the first ember, from before the
+    First Seed broke, still warm. If you have opened this, then the Rekindling came, and the world was
+    relit, and you are a Forger of an age we did not live to see. Take the ember. It was always meant
+    to be a beginning, not a grave. We only kept it safe until someone came who could carry it forward.
+    That is you. It was always going to be you. Go and make something. That is the whole of the craft."
+
+# --- The Deep Wreckways content (Seed Scale Doctrine): a salvage gather node, the chapel's relic,
+# --- and the drowned chapel's lore. ---
+wreckways_salvage:
+  name: a bundle of wreckways salvage
+  keywords: [salvage, wreckways, bundle, material]
+  location: nowhere
+  resettable: false
+
+chapel_relic:
+  name: a drowned chapel-relic
+  keywords: [relic, chapel, drowned, ward]
+  location: nowhere
+  slot: accessory_1
+  mods: {"MAG DEF": 6, DEF: 3}  # the Merewrights' altar-ward, salvaged from the drowned chapel
+
+chapel_offering:
+  name: the drowned chapel's last offering
+  keywords: [offering, chapel, altar, cache]
+  location: nowhere
+  lore: |-
+    Left on the altar of the drowned chapel, wrapped in oilcloth against a sea that came anyway:
+    the Merewrights of Sunhold prayed here to the making itself, and when the Cooling-Sea rose over
+    the Reach they did not flee - they stayed, and lit the altar-lamp, and asked the craft to hold the
+    water back one more hour, and one more. It did not. But the lamp is still lit, behind the altar,
+    on a seam of ember the sea could not drown. They asked the wrong thing of the making. The making
+    does not hold back the sea. It gives you the hands to build a boat. Take the lamp. Build something.
+
+# --- The Outer Reefs content (Great Creation Campaign): the flats' pearl-gather, the manse's prize,
+# --- and the drowned house's lore. ---
+brine_pearl:
+  name: a brine-pearl
+  keywords: [pearl, brine, flats, material]
+  location: nowhere
+  resettable: false
+
+manse_signet:
+  name: the drowned house's signet
+  keywords: [signet, manse, house, ring]
+  location: nowhere
+  slot: accessory_2
+  mods: {DEF: 5, "MAG DEF": 6}  # the sunken manse's steward-ring, a house's pride cast in salvage-gold
+
+manse_ledger:
+  name: the drowned house's ledger
+  keywords: [ledger, manse, house, book]
+  location: nowhere
+  lore: |-
+    The last ledger of the Merewright house that kept the Sunken Manse, its columns of salvage and
+    salt and coin ruled to the final page: the house was rich, and the house was proud, and when the
+    Cooling-Sea rose over the Quenchmere the house did not flee to the free-port with the common folk.
+    It stayed, and shored its doors, and kept its wealth, and drowned in its own halls counting it.
+    The steward kept the doors then and keeps them now. Take the signet. Wealth you will not spend on
+    a boat is only ballast. The salvagers of Saltmarsh learned that. The house never did.
+# --- The Verdance expansion content (Great Creation Campaign): the understory's gather, the ziggurat
+# --- god's relic, and the readable lore of the shrine and the forgotten people. ---
+glowcap:
+  name: a cluster of glowcap
+  keywords: [glowcap, cap, mushroom, understory]
+  location: nowhere
+  resettable: false
+
+rootpriest_censer:
+  name: the Rootpriest's censer
+  keywords: [censer, rootpriest, ziggurat, relic]
+  location: nowhere
+  slot: accessory_1
+  mods: {"MAG DEF": 8, DEF: 4}  # the undying god's reliquary-censer, torn from the Sunken Ziggurat's crown
+
+bark_testament:
+  name: the testament in the bark
+  keywords: [testament, bark, shrine, tree]
+  location: nowhere
+  lore: |-
+    Not written but grown: the tree's own testament, carved by the slow press of the Deeprooted's
+    reading hands into the living bark of the wild-ember shrine, a warning kept green for an age.
+    Before the Deeprooted came a people of black stone who took the Verdance for a thing to be ruled.
+    They cut the roots to lay their causeways. They caged the wild flame in their ziggurat and called
+    it a god they owned. So the tree closed its hand. Not in a day: over lifetimes, root by root, until
+    the black-stone people were only a shape under the green and their god a thing that ate its own
+    priests to keep from dying. The Deeprooted took the lesson the black-stone people would not: you do
+    not own the flame. You keep it, or it keeps you.
+
+ziggurat_reliquary:
+  name: the choked reliquary
+  keywords: [reliquary, ziggurat, faith, box]
+  location: nowhere
+  lore: |-
+    A reliquary of black stone, its lid grown shut with the root that killed the hand that made it.
+    Inside, in a dead script the tree has nearly closed over: the last rite of the black-stone faith.
+    When the roots came for the city, the priests did not flee. They fed their god instead -- their
+    acolytes first, then each other, then the high priest last of all, each swallowed into the growing
+    thing at the ziggurat's crown so that some part of the faith would endure when the people did not.
+    It worked, after a fashion. The god endured. There was simply no longer anyone left to worship it,
+    and nothing left of it worth worshipping. Endurance is not the same as living. The tree knew that.
+    The priests learned it too late.
+
+# --- The Rimefall expansion content (Great Creation Campaign): the fields' ice-gather, the Frostbound
+# --- Smith's masterwork, and the readable lore of the Silent Anvil and frozen Frosthold. ---
+rime_crystal:
+  name: a shard of rime-crystal
+  keywords: [rime, crystal, shard, fields]
+  location: nowhere
+  resettable: false
+
+frostbound_hammer:
+  name: the Frostbound Smith's hammer
+  keywords: [hammer, frostbound, smith, weapon]
+  location: nowhere
+  slot: weapon
+  mods: {ATK: 22, ACC: 6}  # a golden-age masterwork, torn from the Frozen Forge mid-strike; the best steel in the north
+
+anvil_creed:
+  name: the creed of the Silent Anvil
+  keywords: [creed, anvil, cloister, stone]
+  location: nowhere
+  lore: |-
+    Graven small in the warm stone of the cloister, in a plain hand, the whole rule of the Silent Anvil:
+    "The golden age did not fall. It froze, mid-boast, in the very act of making one thing too many. We
+    do not mourn it. We keep it, so the world can walk through its pride and learn. We Forge nothing.
+    Not because making is wrong, but because knowing when to stop is the harder making, and the age
+    that could not learn it is under the ice for anyone to see. Sweep the rime. It comes back. So do we.
+    Keep the shrine. Do not wake the King. Restraint is the last Forge, and the coldest, and the only one
+    that never has to be undone."
+
+frosthold_daybook:
+  name: the market-master's daybook
+  keywords: [daybook, market, frosthold, ledger]
+  location: nowhere
+  lore: |-
+    A market-master's daybook, frozen open to its last page, the ink stopped mid-word. The entries run
+    ordinary to the very end: glass sold, a festival-day's takings, a note to mend the forge-bellows, a
+    daughter's name and a birthday coming. And then, in the same steady hand, the last line: "Sky went
+    white at noon. The Smith says the pour is good, the best he has ever set. He will not leave it to
+    cool. He says one more strike. He says --" and there the ink stops, and Frosthold with it, a whole
+    city caught between a father's errand and a smith's last blow, kept perfect and kept forever in the
+    one instant it should have stepped back from the heat. The Silent Anvil read this page to their
+    novices. It is the whole of their creed, written by a man who did not know he was writing it.
+
+# --- The Kingsroad Beacon's plaque (Great Creation Campaign): the viewpoint's reward for the climb. ---
+beacon_plaque:
+  name: the beacon's cold plaque
+  keywords: [plaque, beacon, kingsroad, brass]
+  location: nowhere
+  lore: |-
+    A brass plaque at the beacon's foot, green with an age of frost: "KINGSROAD BEACON -- Fourth of the
+    Nine. Lit each dusk, answered north by Frosthold's, answered north again by the Court's, so that on
+    a clear night the whole Kingsroad burned from the sea to the throne, and no traveller in the
+    Rimefall was ever more than a beacon from a warm door." Nine beacons. This is the fourth, and the
+    last that still stands clear of the ice. The other five are somewhere north, under the deep white,
+    lit for a road no one has walked since the sky went white at noon. From here you can see where two
+    of them should be. Neither burns.
+# --- The Kollforge expansion content (Great Creation Campaign): the flats' fire-gather, the drake's
+# --- mantle and Ashkoll's masterbrand, and the readable lore of the Kollkin and the cooled dead. ---
+emberglass:
+  name: a shard of emberglass
+  keywords: [emberglass, glass, shard, flats]
+  location: nowhere
+  resettable: false
+
+drakescale_mantle:
+  name: a mantle of cinder-drake scale
+  keywords: [mantle, drake, scale, cinder]
+  location: nowhere
+  slot: body
+  mods: {DEF: 16, "MAG DEF": 10}  # shed scale of the cinder-gorge drake, fire-proof and forge-warm
+
+ashkoll_masterbrand:
+  name: the Ashkoll masterbrand
+  keywords: [masterbrand, ashkoll, brand, weapon]
+  location: nowhere
+  slot: weapon
+  mods: {ATK: 28, ACC: 5}  # Ashkoll's last and best, forged before the cold; carried up into the light again
+
+kollkin_creed:
+  name: the Kollkin creed
+  keywords: [creed, kollkin, bronze, caldera]
+  location: nowhere
+  lore: |-
+    Struck in bronze at the caldera's lip, in a bold deep hand: "HEAT IS LIFE. A cold land is a corpse,
+    a cold house a grave, a cold hearth a confession. The frozen north keeps its dead and calls it
+    wisdom; the drowned Reaches count their losses and call it peace. We are Kollkin. We keep the fire.
+    We would rather burn out than gutter cold, and rather pour one strike too many than let the caldera
+    fail. Look below at Ashkoll, that let its fire die, and know there is no worse death than the cold.
+    Spend hot. Live hot. When you go, go bright." It is the exact opposite of the Silent Anvil's creed
+    in the frozen north, and both peoples are certain, and both point at each other's dead cities as
+    proof, and neither has noticed that the drowned, the frozen, and the cooled are all just dead.
+
+ashkoll_last_pour:
+  name: the record of the last pour
+  keywords: [record, pour, ashkoll, tablet]
+  location: nowhere
+  lore: |-
+    A work-tablet from Ashkoll's dead forge-square, its cold-scratched tally stopped mid-count. The
+    Vent-master's hand runs steady and proud down the years: caldera strong, pours good, the hottest
+    hold in the Kollforge, a city that would never let its fire fail as the soft southern holds did. And
+    then the entries thin. "Caldera low this season, but it will rise." "Low again. We banked harder."
+    "We pour less to save the heat, but the saving cools it faster." "Cold in the low quarter. We moved
+    the people up." "Cold in the high quarter now." And last, in a hand gone unsteady: "We spent it all
+    keeping warm and now there is nothing left to burn. We were so afraid of the cold that we fed it
+    everything we had. Tell Emberkoll: it is not the cold that kills a hold. It is the fear of it."
+
+# --- The Sundered Sky expansion content (Great Creation Campaign): the shoals' storm-gather, the
+# --- Broken Warden's chain, and the readable lore of the Skyborn and the falling hold. ---
+stormglass:
+  name: a shard of stormglass
+  keywords: [stormglass, storm, shard, shoals]
+  location: nowhere
+  resettable: false
+
+anchor_warden_chain:
+  name: the Broken Warden's chain
+  keywords: [chain, anchor, warden, weapon]
+  location: nowhere
+  slot: weapon
+  mods: {ATK: 32, ACC: 7}  # a length of the snapped anchor-chain, still humming with the hold it can no longer keep
+
+skyborn_creed:
+  name: the Skyborn creed
+  keywords: [creed, skyborn, capstan, drum]
+  location: nowhere
+  lore: |-
+    Cut in a ring around the capstan-drum, worn smooth by a thousand years of hands: "WE NEVER LANDED.
+    The world came apart and the ground fell away and we did not fall with it -- not because we were
+    spared, but because we kept the anchor and each other and did not let go. Let the drowned mourn
+    their sea and the frozen keep their ice and the burned tend their fire. We keep the chain. A home
+    is not a place you stand on. It is a thing you hold, together, in the open air, against the long
+    fall that takes everything that lets go. Mind the capstan. Hold the line. And when your grip fails,
+    as every grip fails, fall slowly, and let someone else take the chain." Of the four peoples' answers
+    to the same broken world, it is the only one that does not point at a corpse to prove itself. The
+    Skyborn simply kept holding on. So far, it has been enough.
+
+falling_hold_manifest:
+  name: the hold's last manifest
+  keywords: [manifest, hold, falling, log]
+  location: nowhere
+  lore: |-
+    An anchor-keeper's manifest from the Falling Hold, its readings logged in a proud steady hand down
+    the generations, and every reading a lie the keepers did not know they told. "Altitude holding.
+    Chain sound. Moored fast, equal to Highgate." Year on year, the same: holding, sound, moored. And
+    only if you read every entry in a row, across the lifetimes, do you see it: the altitude number
+    dropping a hair each generation, so slowly no single keeper could catch it, the whole hold falling
+    at the speed of a life so that no one living ever felt the fall. The last entry is the same as the
+    first: "Altitude holding. Chain sound. Moored fast." It was written the year the floor was already
+    a mile below where the first keeper stood, by a man who died certain he had never moved. Some things
+    do not fall fast enough to notice. That does not mean they are not falling. Read your own manifest
+    twice, Forger. Then go up, while a chain still holds.
+# --- The Cinderwaste content (Great Creation Campaign, Phase I): the waste's survival trade, its
+# --- cinderglass gather, the sealed vault's prize, and the readable lore of the world's hem. ---
+water_ration:
+  name: a water-ration
+  keywords: [water, ration, drink, flask]
+  location: nowhere
+  consume: {hp: 15}  # the Cinderwaste's dearest trade: water, sold at the Salt-Market, drunk against the dry
+
+cinderglass_shard:
+  name: a shard of cinderglass
+  keywords: [cinderglass, glass, shard, cinder]
+  location: nowhere
+  resettable: false
+
+scoured_vault_seal:
+  name: the scoured vault's seal
+  keywords: [seal, vault, scoured, sigil]
+  location: nowhere
+  slot: accessory_1
+  mods: {"MAG DEF": 9, DEF: 5}  # the sigil the last maker died sealing the vault with; carried off the colossus
+
+ashline_marker:
+  name: the last Ashborn marker
+  keywords: [marker, ashline, stone, hem]
+  location: nowhere
+  lore: |-
+    The last salvage-pole the Ashborn drive before the Ashline, a cross-stave hung with the tokens of
+    those who walked past it and did not come back: a child's spoon, a clan-ring, a Forger's cold spark.
+    Carved down the stave, re-cut each time the wind wears it faint: "THE WORLD ENDS HERE. Not in fire,
+    not in flood, but in un-ness -- the place the making stopped and never started again. Do not mistake
+    this for a border. A border has another side. This has only the near side, and us, and the pull. We
+    are the people who live at the hem of the made world and keep each other from stepping off it. That
+    is the whole of the Ashborn faith. There is nothing past the last stone worth the walk, because
+    there is no past the last stone. Step back. Live in the made part. It is enough. It has to be."
+
+vault_testament:
+  name: the sealed maker's testament
+  keywords: [testament, vault, maker, seal]
+  location: nowhere
+  lore: |-
+    Scratched inside the vault door by a hand running out of time: the testament of the scoured hold's
+    last maker. "The Unforging took the east wing between one breath and the next -- I watched a wall
+    become the memory of a wall and then nothing. It is coming through the hold room by room and it does
+    not hurry, because to it there is no time, only the slow forgetting of things that were made. I
+    cannot stop it. I can only seal this one vault so well that the un-ness has to remember, hard, that
+    this room was MADE, and stumble on the remembering. Everything I could not save is a doorway to
+    nothing now. This -- this stays made, because I insisted, with the last making I had, that it must.
+    If you read this, the seal held. Take what is here. And know that the only wall against the unmaking
+    is a made thing that refuses, absolutely, to be unmade. Refuse. It is the only Forge that matters."
+
+# --- The Cinderdeep content (Great Creation Campaign, Phase I): the deep's raw unmade gather, the
+# --- Hollow King's crown, the drowned smith's last work that outlasted the unmaking, and deep-lore. ---
+unmade_ember:
+  name: a bead of unmade Ember
+  keywords: [unmade, ember, bead, cinderdeep]
+  location: nowhere
+  resettable: false
+
+hollow_crown:
+  name: the Hollow Crown
+  keywords: [crown, hollow, king, umbral]
+  location: nowhere
+  slot: head
+  mods: {"MAG DEF": 14, DEF: 8}  # torn off the Hollow King; a circle of pure unmaking that wards the maker who dares wear it
+
+kiln_lastwork:
+  name: the drowned smith's last work
+  keywords: [lastwork, work, kiln, smith]
+  location: nowhere
+  slot: body
+  mods: {DEF: 15, "MAG DEF": 12}  # a mail the master-smith forged so well the unmaking could not break it, only grey it
+  lore: |-
+    The last thing the master-smith of the sunken kiln ever made, cold in the dead furnace where the
+    deep swallowed the town: a coat of Forge-mail, greyed by the unmaking but whole - unmade and yet
+    unbroken, because it was made too well to forget. Where the town's walls thinned to nothing and its
+    people to echoes, this one thing held, for the only reason anything holds against the deep: it was
+    forged by a maker who meant it to last, and meaning, it turns out, is the one material the unmaking
+    cannot dissolve. Wear it down here and the deep will remember, against its will, that some things
+    are made on purpose. Carry it up and it is only good mail. The greyness fades in a world that sets.
+
+cinderdeep_reckoning:
+  name: a Warden's reckoning of the deep
+  keywords: [reckoning, warden, cinderdeep, record]
+  location: nowhere
+  lore: |-
+    A Warden-Concord reckoning-stone, driven into the Greydark's soft floor by some earlier expedition
+    and half-forgotten since: "Let it be recorded, for the Forgers who come after, what the Cinderdeep
+    IS, against the lies the Cinder Mysteries tell of it. It is not the world's grave. It is not its
+    compost. It is the world still coming apart, slowly, at the seam the Unforging opened and no one
+    closed, and it grows downward because unmaking, unlike making, needs no maker - it only needs to be
+    left alone. Every Reach has a mouth into it. Every mouth widens. We do not seal the deep because we
+    cannot; we only mark it, and mark the dead, and teach the living the one truth the deep exists to
+    prove: that a made thing is not permanent, it is DEFENDED, and the day the makers stop defending it
+    is the day it joins the grey. Go down if you must. Come up while you can. And when you are old,
+    remember you were made on purpose, and defend something."
+
+# --- Emberreach City interiors content (Great Creation Campaign, Phase I, Layer 4): the tavern's ale
+# --- and the capital's two readable stones - the First Flame's creed and the world's own case-file. ---
+cinder_ale:
+  name: a tankard of cinder-ale
+  keywords: [ale, cinder, tankard, drink]
+  location: nowhere
+  consume: {hp: 8}  # the Cinder Tankard's brew: warm, cheap, a small mercy sold by the barkeep
+
+first_flame_creed:
+  name: the creed of the First Flame
+  keywords: [creed, flame, church, hearth]
+  location: nowhere
+  lore: |-
+    Graven over the church hearth, in a hand that meant it: "THE WORLD WAS MADE. That is the first
+    article and the last. Not born, not fallen from a god's hand, not eternal - MADE, by makers, out of
+    raw Ember and will, and what was made was unmade at the Unforging, and what was unmade can be Made
+    AGAIN. This is the whole of the First Flame: not that the fire is holy, but that the making is, and
+    the keeping of the fire is only the keeping of the will to make. Do not worship the flame. Tend it.
+    A god you beg. A fire you feed. We are not the children of the world. We are its smiths, and the
+    Rekindling is our second and final chance to prove we learned the first lesson: a made thing lives
+    only as long as someone keeps making it. Keep the flame. Make the world. Do not, this time, let go."
+
+world_casefile:
+  name: the world's own case-file
+  keywords: [casefile, case, file, archive]
+  location: nowhere
+  lore: |-
+    The Grand Archive's founding record, the case-file the Emberwright Rememberers opened on the world
+    itself: "CASE: THE UNFORGING. STATUS: open, and will not close. Known: the world was one Forged
+    supercontinent; it came apart along the cooling-seas into the seven Reaches, tore lands into the
+    sky, dropped others into the Cinderdeep; the makers who did it, the Emberwrights, are gone, and left
+    no confession, only the wound. Unknown, and this is the Archive's whole purpose: WHY. Why the first
+    makers stopped. Why a craft that could build a world was set down, and by hands that knew exactly
+    what they were setting down. Every clue is a Reach. Every Reach is a page. The Forgeward Road runs
+    east to where the answer sank, and a Forger who reads far enough may close the case the makers left
+    open. We do not keep the memory to mourn it. We keep it to solve it. Read on. The next clue is out
+    there, and it is the size of a continent."
+# --- Tidewharf City interiors content (Great Creation Campaign, Phase I, Layer 4): the underhull's
+# --- drowned-hoard, and the free-port's two readable rails - the Merewright creed and a Guild writ. ---
+hull_hoard_ring:
+  name: the hull-wight's hoard-ring
+  keywords: [ring, hoard, hull, wight]
+  location: nowhere
+  slot: accessory_2
+  mods: {DEF: 4, EVA: 5}  # a fortune's worth of drowned salvage fused to one ring, lifted from the underhull
+
+merewright_creed:
+  name: the Merewright creed
+  keywords: [creed, merewright, rail, drowned]
+  location: nowhere
+  lore: |-
+    Scrimshawed down the whale-bone rail of the tide-shrine, in a sailor's close hand: "THE SEA KEEPS.
+    That is our whole faith, and it is kinder than it sounds. When the cooling-seas rose over the
+    Quenchmere they did not destroy the old world, they DROWNED it - and a drowned thing is not a burned
+    thing or an unmade thing. It is kept. Cold, and deep, and lamp-lit, the old Forge-cities stand whole
+    below our keels, and our drowned stand with them, not lost, only deep, waiting in the kept dark. The
+    First Flame folk fear the losing and hold that all must be made again. We do not fear it. We dive to
+    it. Light a lamp for your drowned and know they are down there still, kept perfect by the water that
+    took them, and that the difference between a graveyard and a treasury is only whether you have the
+    nerve to go down and look. We are Merewrights. We always go down and look."
+
+salvage_writ:
+  name: a Salvage Guild writ
+  keywords: [writ, guild, salvage, contract]
+  location: nowhere
+  lore: |-
+    A standard Salvage Guild work-writ, left on the factor's table for any Forger to read before they
+    mark it: "BE IT KNOWN the bearer contracts to open, clear, or lift salvage on the Guild's account,
+    for the Guild's share, at the bearer's risk. The Guild warrants NOTHING of what lies below - not the
+    depth, not the dark, not the drowned that keep it. The Guild notes, without warranting it either,
+    that the drowned Reach holds the largest unbroken Forgework in the world outside the frozen north,
+    and that every fortune in Tidewharf was lifted by someone who read a writ exactly like this one and
+    marked it anyway. The Guild built its hall on a treasure-hull. The Guild does not say how. The Guild
+    suggests the bearer not ask, mark the writ, and go down. The tide waits for no contract." Below, a
+    line for a name, and a great many names already on it, and beside a great many of those, a small
+    inked anchor: the Guild's mark for a Forger who did not come back up.
+
+# --- Mirefast content (Great Creation Campaign, Phase I): the stiltways ember-bloom gather, the
+# --- under-stilt lost hoard, and the Deeprooted teaching-creed grown in the shrine bark. ---
+emberbloom:
+  name: a cluster of ember-bloom
+  keywords: [emberbloom, bloom, ember, stiltways]
+  location: nowhere
+  resettable: false
+
+mirefast_lost_purse:
+  name: the town's lost purse
+  keywords: [purse, lost, mirefast, hoard]
+  location: nowhere
+  slot: accessory_1
+  mods: {EVA: 6, ACC: 4}  # a generation of what the boardwalk dropped, fused in the devourer's gut and won back
+
+deeprooted_creed:
+  name: the Deeprooted teaching-creed
+  keywords: [creed, deeprooted, shrine, bark]
+  location: nowhere
+  lore: |-
+    Grown, not carved, into the living bark of Mirefast's teaching-shrine, in the shaped-branch script
+    the Deeprooted let outsiders learn: "THE WORLD IS ALIVE, and you are not its master. The dry Reaches
+    Forge the world - they take dead Ember and force it to a shape, and call the forcing mastery. We do
+    not. We ask. Wild Ember grows where it wills; the swamp chooses its own channels; the canopy
+    remembers who has cut it. To live in the Verdance is to hold a conversation with a thing far older
+    and larger than you, and the first rule of that conversation is the one the dry world forgets: you
+    are a guest. The First Flame folk say the world was made and can be made again. The frozen north
+    says the making should stop. We say a thing you can only make by killing what was already living
+    was never yours to make. Trade with us, guest. Learn the living faith. And when the swamp asks who
+    you are - and it will - answer honestly, because it can always tell, and it is always listening."
+
+# --- Venthold content (Great Creation Campaign, Phase I): the fortress's vent-forged make (shop), the
+# --- proven Forger's mark (boss), and the Vent-Forge creed struck in living metal. ---
+vent_forged_blade:
+  name: a vent-forged blade
+  keywords: [blade, ventforged, vent, weapon]
+  location: nowhere
+  slot: weapon
+  mods: {ATK: 24, ACC: 5}  # Venthold make: raw vent-Ember worked glowing, an edge the cold forges only dream of
+
+vent_forged_plate:
+  name: vent-forged plate
+  keywords: [plate, ventforged, vent, armor]
+  location: nowhere
+  slot: body
+  mods: {DEF: 20, "MAG DEF": 8}  # fortress steel tempered in living fire; the best body-make in the Kollforge
+
+venthold_mark:
+  name: the mark of Venthold
+  keywords: [mark, venthold, sigil, proven]
+  location: nowhere
+  slot: accessory_2
+  mods: {ATK: 8, ACC: 6}  # the Vent-Forge fortress mark, taken by right off the Crucible-Warden, not granted by rank
+
+ventforge_creed:
+  name: the Vent-Forge creed
+  keywords: [creed, ventforge, hall, metal]
+  location: nowhere
+  lore: |-
+    Struck in living metal on the guildmaster's wall, still warm to the touch: "FEAR IS COWARDICE THAT
+    LEARNED TO DRESS WELL. The Wardens hold the craft should be feared, the Silent Anvil hold it should
+    be stopped, the frozen north keeps its dead as proof. We are the Vent-Forges, and we hold the
+    opposite of all of them: that the only true making is making at the source's edge, where the world
+    is still hot enough to change, and that a Forger who will not work in living fire is not careful, he
+    is finished. The capital calls us reckless. Let them. Reckless is what the cautious call the brave
+    when the brave are proven right. Work the vent. Do not flinch. And when they tell you the world is
+    too dangerous to keep making -- and they will, in the north and the halls and the cold -- remember
+    that everything they are afraid of losing, someone reckless made first, at an edge exactly this hot."
+# --- The Wardenmarch content (Great Creation Campaign, Phase I): the keep's march-steel (shop), the
+# --- cairn-hills charge-crystal gather, the Sentinel's core, and the Old Gate's readable marks. ---
+march_steel_blade:
+  name: a march-steel blade
+  keywords: [blade, march, steel, weapon]
+  location: nowhere
+  slot: weapon
+  mods: {ATK: 10, ACC: 3}  # Concord frontier make: plain, sturdy, and cheap enough that no Forger dies unarmed
+
+march_steel_guard:
+  name: a march-steel guard
+  keywords: [guard, march, steel, armor]
+  location: nowhere
+  slot: body
+  mods: {DEF: 9, EVA: 2}  # the keep's overstock body-armor, plain grey Concord Forgework
+
+charge_crystal:
+  name: a charge-crystal
+  keywords: [charge, crystal, cairn, material]
+  location: nowhere
+  resettable: false
+
+charged_warden_core:
+  name: the fallen Sentinel's core
+  keywords: [core, sentinel, warden, charged]
+  location: nowhere
+  slot: accessory_1
+  mods: {"MAG DEF": 7, DEF: 3}  # the charged heart of a Warden Sentinel that would not abandon its post
+
+old_gate_marks:
+  name: the marks of the Old Gate
+  keywords: [marks, gate, ring, glyphs]
+  location: nowhere
+  lore: |-
+    The marks graven around the Old Gate's ring, in the Emberwright hand the Concord can no longer fully
+    read - but a Forger who has walked far enough begins to make them out: "GATE THE SECOND OF THE NINE.
+    Set here by the makers before the Unforging, to open where a Gate answers a Gate. What lies through
+    is not another place but another WHEN - the Gates did not cross the world, they crossed the making
+    of it, so that a maker could step back to the hour a thing was Forged and mend it at the root." Below,
+    in a later, cruder hand - a Warden's, not a maker's: "We do not open it. We do not know how, and we
+    are glad we do not. A door to the hour of making is a door to the hour of UNmaking, and the last
+    people who could open these Gates used them to break the world. We keep the Gate shut. That is the
+    Concord's whole purpose, and it is enough: not to make, not to unmake, but to KEEP - to hold the old
+    doors closed until someone wiser than the makers comes to say which ought to be opened. No one has."
+
+# --- Cinderhearth interiors content (Great Creation Campaign, Phase I, Layer 4): the coast shrine's
+# --- plain-spoken First Flame words, the faith at its simplest, where the Rekindling began. ---
+coast_shrine_words:
+  name: the words on the shrine-stone
+  keywords: [words, shrine, stone, coast]
+  location: nowhere
+  lore: |-
+    Cut small in the coast shrine-stone, in a plain hand, the First Flame faith in the four lines the
+    fisherfolk teach their children: "The world was Made. / The world was unmade. / The world can be
+    Made again. / You woke with a fire in your hand -- so begin." No church wrote this, no order approved
+    it; a Cinderhearth fisher cut it the year the forge relit, and it has outlasted every grander creed
+    in the capital because it is the only one a cold, frightened, newly-woken Forger actually needs. The
+    grand Church of the First Flame in Emberreach City has a hearth-creed a hundred lines long. This is
+    the same faith, worn down by the sea to the part that floats. Begin, it says. That is all. Begin.
+# --- Quench Harbor interiors content (Great Creation Campaign, Phase I, Layer 4): the ferry-house
+# --- crossing-chart, environmental storytelling for the coast gateway to the drowned Reach. ---
+ferry_crossing_chart:
+  name: the Wreckways crossing-chart
+  keywords: [chart, wreckways, ferry, crossing]
+  location: nowhere
+  lore: |-
+    The Merewright ferry-house's master-chart of the open crossing, inked and re-inked over generations:
+    the lanes west to Tidewharf drawn not between buoys but between the masts of drowned ships, ten
+    thousand of them marked where the Cooling-Sea rose over the Quenchmere and kept it. A margin-note in
+    the ferry-master's hand: "The crossing is where a coast Forger stops being a coast Forger. East of
+    here the world is Emberreach - warm, relit, watched, forgiving. West of here it is the wide Anvil,
+    and the wide Anvil does not forgive, it only pays. Every Reach is reached across this water. Learn
+    it, and the whole world opens. Fear it, and stay on the coast and mend nets, and there is no shame
+    in that either - the nets fed us longer than the forge has. But if you would see the world the
+    makers broke, it starts here, at this bell, on this water. Ring it when you mean it."
+
+# --- The Warmcamp content (Great Creation Campaign, Phase I): the golden age dug from the ice - the
+# --- trader's relic-blade, the sentinel's sealed regalia, and the argument the whole camp is built on. ---
+goldenage_relic_blade:
+  name: a golden-age relic-blade
+  keywords: [blade, relic, goldenage, weapon]
+  location: nowhere
+  slot: weapon
+  mods: {ATK: 20, ACC: 6}  # dug whole from the Rimefall ice: a thousand-year-old make better than any living forge
+
+ice_sealed_regalia:
+  name: the ice-sealed regalia
+  keywords: [regalia, sealed, reliquary, armor]
+  location: nowhere
+  slot: body
+  mods: {DEF: 18, "MAG DEF": 12}  # the golden age's own, kept perfect under the floe and taken off its frozen sentinel
+
+warmcamp_tally:
+  name: the Warmcamp's dig-tally
+  keywords: [tally, warmcamp, dig, ledger]
+  location: nowhere
+  lore: |-
+    A dig-tally hung by the fire, the Warmcamp's running argument written down: one column the diggers
+    keep, of relics thawed and coin earned and mouths fed; another column someone else keeps, unlabeled,
+    of the diggers the ice took -- the shaft-falls, the frost-guards, the ones who woke a sentinel and
+    did not come up. The two columns run about even. Beneath them, in the camp-boss's blunt hand: "The
+    Rimekin say we rob a graveyard. Maybe. But a graveyard that pays its robbers in gold and its
+    faithful in nothing is a graveyard that has picked a side, and it isn't theirs. We dig because the
+    living are worth more than the paused dead, and if that is heresy to the Silent Anvil, let them come
+    warm their pure cold hands at our fire and say it to our faces. They never do. They're never hungry
+    enough to have to mean it." It is the whole quarrel of the frozen north, kept on a nail by a fire.
+# --- Highbough interiors content (Great Creation Campaign, Phase I, Layer 4): the Deeprooted covenant
+# --- grown into the grove-council's heartwood - the living Reach's law, which is not a law. ---
+deeprooted_covenant:
+  name: the Deeprooted covenant
+  keywords: [covenant, deeprooted, council, heartwood]
+  location: nowhere
+  lore: |-
+    Grown into the heartwood of the grove-council hollow, read by running a hand along the living grain:
+    "WE DO NOT RULE. This is the whole covenant of the Deeprooted, and it is harder to keep than any
+    crown's law. A living world cannot be ruled, only heard; a forest remembers the axe longer than the
+    axeman lives; wild Ember grows where it wills and dies in the hand that grips it. So we do not
+    command the Verdance and we do not command each other. We listen -- to the tree, to the swamp, to
+    the moot, to the guest -- and we broker, and we go slow, because the living go slow and the dead go
+    fast and we have chosen the side of the living. The drowned Reaches Forge, the frozen north freezes,
+    the molten Reach burns, and each of them calls us weak for growing instead. Let them. When their
+    made things have drowned and frozen and burned, the tree that grew this hollow will still be growing,
+    and the covenant will still be true: you cannot own what is alive. You can only be worthy of it, and
+    listen, and be a good guest in a house far older than your making. That is not weakness. That is the
+    only strength that has ever lasted."
+
+# --- Remaining capital interiors content (Great Creation Campaign, Phase I, Layer 4): the Gate-Watch
+# --- stone, the Skyborn's charge over the last threshold before the Forgeward Road and the endgame. ---
+gate_watch_stone:
+  name: the Gate-Watch stone
+  keywords: [stone, watch, gate, threshold]
+  location: nowhere
+  lore: |-
+    Graven deep in the watch-stone at the threshold of the Forgeward Road, re-cut by every generation
+    of sky-Wardens who have kept this post: "BEYOND HERE THE ROAD. East it runs, march on march, each
+    deeper and worse than the last, to the Forge at the world's far heart and the Sovereign that keeps
+    it. This is the last threshold of the settled world. The Concord keeps it, and keeps it OPEN,
+    because we have learned that a locked door only teaches people to break doors -- but we keep it
+    WATCHED, so that no Forger walks east unwarned. Know before you go: the Road does not test your
+    strength, it tests whether you know why you are walking it. The Forge at the end can make a world.
+    The last people to reach it unmade one. Walk east if you must, Forger. Reach the Forge's Edge if you
+    can. But carry a reason worth the walking, because the Road strips away every reason that is not
+    true, and a Forger who reaches the Sovereign with an empty reason becomes another thing the Road
+    kept. The watch cannot stop you. It can only ask, one last time, the question the whole world hangs
+    on: not CAN you make a world -- but SHOULD you, and do you know the difference. Go, then. We watched."
+# --- The Rootdeep content (Great Creation Campaign, Phase I): the grave-sap gather, the Rotheart's
+# --- unmade seed, and the lore of the deep that argues with the living Reach over the same dead. ---
+grave_sap:
+  name: a draught of grave-sap
+  keywords: [grave, sap, roots, material]
+  location: nowhere
+  resettable: false
+
+rotheart_seed:
+  name: the Rotheart's seed
+  keywords: [seed, rotheart, unmade, relic]
+  location: nowhere
+  slot: accessory_1
+  mods: {"MAG DEF": 8, DEF: 5}  # a seed of the unmade grove, half-alive and half-unmade, taken off the Rotheart-Warden
+
+rootdeep_witness:
+  name: a Deeprooted witness-stone
+  keywords: [witness, stone, rootdeep, deeprooted]
+  location: nowhere
+  lore: |-
+    A witness-stone the Deeprooted set at the Rootdeep's mouth, grown-script on living bark gone grey
+    at the edges where the deep has begun to eat it: "THE DEEP TAKES OUR DEAD. This is the grief the
+    Verdance does not speak of above, in green Highbough: that our roots run down into the Cinderdeep,
+    and the unmaking drinks from them, and the mire's half-returned dead are caught in the mesh between
+    a Reach that will not let them go and a deep that will not let them rest. We grow. The deep unmakes.
+    And down here, root by root, the two are the same argument, and our dead are the ground it is fought
+    on. We set this stone to witness what Highbough will not look at: that a living world and an unmade
+    one share a border, and the border runs through the grave. Do not pity the grave-kin. Free them, if
+    your fire and your light can. The Boughwarden guards the living heart above. Something guards the
+    rotting one below, and it wears half our face. Go down and see what the Verdance becomes when the
+    deep gets its roots. Then go back up and love the green a little harder, knowing what holds it up."
+
+# --- The Lost Vale content (Great Creation Campaign, Phase I, Layer 5): the ember-mast gather, the
+# --- last-stand standard, and the Heartwood's bark - the world before the makers' first mistake. ---
+ember_mast:
+  name: a fall of ember-mast
+  keywords: [mast, ember, heartwood, vale]
+  location: nowhere
+  resettable: false
+
+hundred_standard:
+  name: the standard of the Hundred
+  keywords: [standard, hundred, cairn, banner]
+  location: nowhere
+  slot: accessory_2
+  mods: {DEF: 5, ACC: 4}  # the last-stand company's banner, kept a thousand seasons past the war it was raised in
+
+heartwood_bark:
+  name: the Heartwood's bark
+  keywords: [bark, heartwood, tree, vale]
+  location: nowhere
+  lore: |-
+    You lay a hand on the Heartwood and the reading comes slow, in growth-rings older than reading: this
+    tree stood before the Emberwrights raised a single Forge-city, before the making of the world was a
+    craft anyone thought to name. It was here for the golden age and did not bow to it. It was here for
+    the Unforging and was not unmade. It is not Forged and cannot be reforged, because it was never made
+    at all - it simply GREW, the one thing in all the Kindlands the makers did not make and the unmaking
+    could not touch. The First Flame folk say the world was Made and can be Made again. The Heartwood is
+    the quiet question under that faith, the one no creed answers: what about the things that were never
+    made, that grew on their own before the first maker lifted the first hammer, and outlasted every
+    made thing since? Maybe the world was not only Made. Maybe some of it was always just growing, and
+    the makers only ever added to a thing already alive, and forgot, in their pride, that they had come
+    late to a world that did not need them. The Heartwood does not say. It only grows. It was growing
+    before the question. It will be growing after. Sit in its shade, Forger, and be, for a moment, a
+    thing that grew instead of a thing that was made. The Reachwood folded a valley closed to keep this.
+    Now you know why.
+
+# --- The Emberdeep content (Great Creation Campaign, Phase I): the Unmade Smith's hammer and the lore
+# --- of the deep where the Forge's fire and the unmaking war instead of cancelling. ---
+unmade_hammer:
+  name: the Unmade Smith's hammer
+  keywords: [hammer, unmade, smith, weapon]
+  location: nowhere
+  slot: weapon
+  mods: {ATK: 30, ACC: 6}  # a hammer that forges and unmakes in the same blow, torn from the Emberdeep's heart
+
+emberdeep_warning:
+  name: a Kollkin warning-brand
+  keywords: [warning, brand, emberdeep, kollkin]
+  location: nowhere
+  lore: |-
+    A warning struck in iron at the Emberdeep's mouth, in the blunt Kollkin hand, the one place the
+    fire-Forgers admit fear: "DO NOT GO DOWN. We are the Kollkin. We fear nothing that burns, because
+    burning is life and we are its smiths. But this is the one deep even we will not work, because down
+    there the Forge's fire and the Cinderdeep's unmaking do not cancel each other as they should -- they
+    WAR, and the war makes things that are neither alive nor dead, that forge and unmake in the same
+    breath, that cannot tell making from unmaking anymore. That is the one horror a Kollkin understands
+    in the gut: not a cold death, not a drowned one, but a fire that forgot what it was for. The Unmade
+    Smith at the bottom was one of us once -- a Forgeborn, living fire, the proudest thing the Vent-Forges
+    ever made. The deep took it and now it hammers nothing, forever, and calls the nothing a masterwork.
+    Go down if you must, Forger. Take its hammer. But know what you are looking at: not the deep's evil,
+    but ours -- the making that would not stop, that burned past every reason, until it could not tell
+    the difference between forging a world and unmaking one. We struck this brand to remember. Remember."
+
+# Biome gather-herbs (MOD-04 wildlands): one crafting material per biome, gathered at wilderness
+# nodes (kernel/world/wildlands._BIOME_HERB) and worked into a herbal salve at the bench (recipes.yaml).
+meadowfoil:
+  name: a sprig of meadowfoil
+  keywords: [meadowfoil, herb, material]
+  location: nowhere
+  resettable: false
+rivercress:
+  name: a handful of rivercress
+  keywords: [rivercress, cress, greens, material]
+  location: nowhere
+  resettable: false
+fernshade:
+  name: a frond of fernshade
+  keywords: [fernshade, herb, material]
+  location: nowhere
+  resettable: false
+moorbell:
+  name: a stem of moorbell
+  keywords: [moorbell, herb, material]
+  location: nowhere
+  resettable: false
+saltkelp:
+  name: a strand of saltkelp
+  keywords: [saltkelp, herb, material]
+  location: nowhere
+  resettable: false
+frostmoss:
+  name: a clump of frostmoss
+  keywords: [frostmoss, herb, material]
+  location: nowhere
+  resettable: false
+cinderroot:
+  name: a knot of cinderroot
+  keywords: [cinderroot, herb, material]
+  location: nowhere
+  resettable: false
+vinesilk:
+  name: a coil of vinesilk
+  keywords: [vinesilk, herb, material]
+  location: nowhere
+  resettable: false
+dustbloom:
+  name: a dustbloom flower
+  keywords: [dustbloom, herb, material]
+  location: nowhere
+  resettable: false
+herbal_salve:
+  name: a herbal salve
+  keywords: [salve, poultice, herbal, heal]
+  location: nowhere
+  resettable: false
+  consume: {hp: 20}
+
+# --- Refinement chains (Crafting Campaign, slice 1a: the material library as data). The world had
+# --- only a raw tier that crafted straight into goods; these add the missing middle: RAW -> REFINED
+# --- -> COMPONENT -> PRODUCT. Two exemplar chains, each rooted in a material that already has a
+# --- source, so nothing here is dead weight. See docs/world/crafting_materials.md for the model. ---
+
+# METAL CHAIN (Smithing): raw ore, quarried from the four ore-biomes (kernel.world.wildlands), is
+# smelted to a wrought ingot, forged to an iron fitting, then assembled into a traveller's buckler.
+raw_ore:
+  name: a chunk of raw ore
+  keywords: [ore, chunk, rock, raw, material]
+  location: nowhere
+  resettable: false
+wrought_ingot:
+  name: a wrought ingot
+  keywords: [ingot, wrought, metal, refined, material]
+  location: nowhere
+  resettable: false
+iron_fitting:
+  name: an iron fitting
+  keywords: [fitting, iron, bracket, component, material]
+  location: nowhere
+  resettable: false
+travelers_buckler:
+  name: a traveller's buckler
+  keywords: [buckler, shield, traveller, guard]
+  location: nowhere
+  slot: arm
+  mods: {DEF: 3, EVA: 1}
+
+# ALCHEMY CHAIN: any biome's gather-herb distills to a shared herbal reagent, brewed with wild
+# ember into a restorative tonic (a mid heal, above the direct herb -> salve, below the greater
+# draught) -- the refinement step earns the better potion.
+herbal_reagent:
+  name: a vial of herbal reagent
+  keywords: [reagent, vial, distillate, herbal, refined, material]
+  location: nowhere
+  resettable: false
+restorative_tonic:
+  name: a restorative tonic
+  keywords: [tonic, restorative, potion, heal]
+  location: nowhere
+  resettable: false
+  consume: {hp: 50}
+
+# --- Monster materials (Crafting Campaign, slice 1c: the hide -> leather chain, sourced from the
+# --- bestiary). Furred and feathered creatures drop a raw hide; scaled and shelled ones drop a
+# --- chitin scale (kernel.world.bestiary loot). Leatherworking refines each into wearable gear, so
+# --- felling the wilds' life feeds the tannery, not just the coin purse. ---
+raw_hide:
+  name: a raw hide
+  keywords: [hide, pelt, raw, material]
+  location: nowhere
+  resettable: false
+cured_leather:
+  name: a bolt of cured leather
+  keywords: [leather, cured, bolt, refined, material]
+  location: nowhere
+  resettable: false
+hide_jerkin:
+  name: a hide jerkin
+  keywords: [jerkin, hide, leather, vest]
+  location: nowhere
+  slot: body
+  mods: {DEF: 4, EVA: 2}
+chitin_scale:
+  name: a chitin scale
+  keywords: [scale, chitin, shell, material]
+  location: nowhere
+  resettable: false
+hardened_scale:
+  name: a hardened scale plate
+  keywords: [scale, hardened, plate, refined, material]
+  location: nowhere
+  resettable: false
+scale_bracer:
+  name: a scaled bracer
+  keywords: [bracer, scale, chitin, guard]
+  location: nowhere
+  slot: arm
+  mods: {DEF: 2, EVA: 3}
+
+# --- Wandering pickups (live dynamic spawning): a rare find that appears at one of several places in
+# --- the wilds on an area reset, not always the same spot, and only some of the time -- so exploring
+# --- the region is rewarded over memorizing one pickup room. location: nowhere (a wanderer appears,
+# --- it is not placed); spawn_pool is its candidate rooms; spawn_chance is its rarity. ---
+wayfarers_tonic:
+  name: a wayfarer's tonic
+  keywords: [tonic, wayfarer, flask, heal]
+  location: nowhere
+  consume: {hp: 40}
+  spawn_pool: [greenhold, elderwatch, riverbend, sunmeadow]
+  spawn_chance: 2
+foragers_flask:
+  name: a forager's flask
+  keywords: [flask, forager, draught, mana]
+  location: nowhere
+  consume: {mp: 20}
+  spawn_pool: [wildgrowth, greenmist, the_great_tree]
+  spawn_chance: 3
+
+# A seasonal wandering find (seasonal-gated spawns): the rimeberry only fruits in the deep cold, so
+# this draught appears in the Frostspire wilds in WINTER alone -- a reason to brave the peaks in the
+# right season (kernel.world.climate gates it; kernel.world.zones spawns it).
+rimeberry_draught:
+  name: a rimeberry draught
+  keywords: [draught, rimeberry, winter, heal]
+  location: nowhere
+  consume: {hp: 45}
+  spawn_pool: [frosthold, winters_grasp, glacial_bastion]
+  spawn_chance: 2
+  seasons: [winter]
+
+# Leg and feet: the two armor slots the armory was missing (itemization depth). A mid pair from the
+# open world, and a raid-tier pair the apex guardians drop -- the top of the gear-slot treadmill.
+ashlord_greaves:
+  name: the Ashlord's greaves
+  keywords: [greaves, legs, leg, ashlord]
+  location: nowhere
+  slot: leg
+  mods: {DEF: 8, MAG DEF: 4}
+
+emberstride_boots:
+  name: emberstride boots
+  keywords: [boots, feet, feet, emberstride]
+  location: nowhere
+  slot: feet
+  mods: {EVA: 6, ACC: 3}
+
+abyssal_legguards:
+  name: the abyssal legguards
+  keywords: [legguards, legs, leg, abyssal]
+  location: nowhere
+  slot: leg
+  mods: {DEF: 22, MAG DEF: 14}
+
+abyssal_sabatons:
+  name: the abyssal sabatons
+  keywords: [sabatons, feet, boots, abyssal]
+  location: nowhere
+  slot: feet
+  mods: {EVA: 18, ACC: 10}

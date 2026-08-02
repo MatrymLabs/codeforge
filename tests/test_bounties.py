@@ -1,6 +1,6 @@
-"""Test twin for parts.world.bounties: the hunt-contract generator (side-content at volume)."""
+"""Test twin for kernel.world.bounties: the hunt-contract generator (side-content at volume)."""
 
-from parts.world.bounties import BOUNTY_PREFIX, generate_bounties, is_bounty
+from kernel.world.bounties import BOUNTY_PREFIX, generate_bounties, is_bounty
 
 
 def _foe(hp=10, level=None, name="a rat"):
@@ -42,9 +42,9 @@ def test_the_flagship_generates_a_real_board_of_contracts():
     # aethryn's combatant foes yield side-quest VOLUME -- the point of the generator.
     from pathlib import Path
 
-    from parts.world.seed import load_npcs
+    from kernel.world.seed import load_npcs
 
-    seeds = Path(__file__).resolve().parent.parent / "seeds"
+    seeds = Path(__file__).resolve().parent.parent / "content" / "seeds"
     board = generate_bounties(load_npcs(seeds / "aethryn" / "npcs.yaml"))
     assert len(board) >= 10 and all(is_bounty(b["id"]) for b in board)
 
@@ -52,10 +52,10 @@ def test_the_flagship_generates_a_real_board_of_contracts():
 def test_contracts_view_lists_a_bounty_and_a_defeat_collects_it(monkeypatch):
     # inject one bounty into the live engine (the test seed has no levelled foes), then prove the
     # board lists it, the story view counts it, and felling the foe collects the contract.
-    from parts.world import quest
-    from parts.world.bounties import _bounty_for
-    from parts.world.jobs import bind_calling
-    from parts.world.session import Session
+    from kernel.world import quest
+    from kernel.world.bounties import _bounty_for
+    from kernel.world.jobs import bind_calling
+    from kernel.world.session import Session
 
     spec = _bounty_for("brawler", {"name": "the brawler", "hp": 30, "level": 5})
     wf, name, xp = quest._from_seed(spec)
@@ -73,7 +73,7 @@ def test_contracts_view_lists_a_bounty_and_a_defeat_collects_it(monkeypatch):
 def test_register_bounties_folds_contracts_into_the_engine_idempotently():
     # world.py calls this once the full foe set (seed + Spiral) is assembled, so bounties cover
     # every combatant foe -- and a second call never duplicates.
-    from parts.world import quest
+    from kernel.world import quest
 
     npcs = {"grumpf": _foe(hp=40, level=12, name="the grumpf")}
     try:

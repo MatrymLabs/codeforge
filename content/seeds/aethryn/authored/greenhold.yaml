@@ -1,0 +1,339 @@
+# SEED: aethryn -- authored/greenhold.yaml  (the hand-authored interior of Greenhold, Veridia's starter town)
+#
+# The map places Greenhold as a single hub room; this is its polished, LIVED-IN interior: a market
+# square, a smithy, a granary and its undercroft, and the green fields beyond, peopled by a keeper, a
+# miller, and a market gossip, with two quests of different shapes (a fetch into the old cistern, a
+# hunt out in the fields), an aggressive foe in each danger-room, readable parish lore, and NPCs whose
+# talk cross-references each other and the town's mysteries. It expands a named location per the seed
+# recipe (a role, subareas, a livelihood, a conflict, a rumour, a clue to the larger world, a
+# revisitable change) at AAA density -- a place, not a signpost. The old-world cistern under the
+# granary is Veridia's canon identity made concrete: ordinary life over forgotten abundance
+# infrastructure, shown through function. Below the undercroft a deep old-world stair drops to THE
+# SOURCE: the region-integrated delve where the cradle's four works (Greenhold's fountain, Riverbend's
+# weir, Elderwatch's beacon, Sunmeadow's sun-channel) are revealed as one machine, guarded by an elite
+# Warden far above the cradle band -- an off-path challenge with a prize above main-path gear (the
+# moltenhold pattern: a town with an internal dungeon). Loaded by kernel/world/authored_towns.py; its
+# quests are seeds/aethryn/quests/greenhold_intro.yaml (the cistern), greenhold_fields.yaml (the beast),
+# and greenhold_source.yaml (the delve to the Reservoir-Heart).
+
+rooms:
+  greenhold_market:
+    name: Greenhold Market Square
+    desc: >-
+      The cobbled heart of Greenhold: stalls of green produce, a stone well, and the smell of fresh
+      bread. Farm-folk haggle over grain and trade the day's gossip, and a miller leans in the sun
+      with a worried look. Ways lead OUT to the town gate, NORTH to the granary, WEST to the smithy,
+      and EAST out to the green fields.
+    exits: {out: greenhold, north: greenhold_granary, west: greenhold_smithy, east: greenhold_fields}
+  greenhold_smithy:
+    name: The Greenhold Smithy
+    desc: >-
+      A low forge where the town's ploughs and horseshoes are mended. The smith works old iron
+      turned up from the fields, some of it stranger and finer than any modern make. The square lies
+      back EAST.
+    exits: {east: greenhold_market}
+  greenhold_granary:
+    name: Greenhold Granary
+    desc: >-
+      A tall stone granary, its bins half-empty this season. A dry channel in the floor once carried
+      clean water up from below; now it only ticks and sighs. Stairs lead DOWN into the undercroft,
+      and the square is back SOUTH.
+    exits: {south: greenhold_market, down: greenhold_undercroft}
+  greenhold_undercroft:
+    name: The Granary Undercroft
+    desc: >-
+      A cold vaulted cellar older than the granary raised over it. A ring of pale, untarnished metal
+      and a seized valve mark an ancient fountain-head, its workings long forgotten. Behind the
+      fountain-head a later crack has opened on a black stair going further DOWN than any cistern
+      needs, cold clean air breathing up from it. Stairs climb back UP.
+    exits: {up: greenhold_granary, down: greenhold_deepstair}
+  greenhold_deepstair:
+    name: The Deep Stair
+    desc: >-
+      A landing on an old-world stair that drops far below the undercroft, cut from the same pale stone
+      as the fountain-head above. A travelling scholar has made a lamplit camp here among his notebooks,
+      unwilling to go lower alone. Four faint conduits run down into the dark past him. The undercroft
+      is back UP; the old works go further DOWN.
+    exits: {up: greenhold_undercroft, down: source_gallery}
+  source_gallery:
+    name: The Gallery of Names
+    desc: >-
+      A long old-world gallery where four conduits run side by side, each graven with a mark worth a
+      scholar's year to read: a fountain, a weir, a beacon, a sun. A tender-automaton walks the gallery
+      still, keeping a watch its makers set and never lifted. The deep stair is back UP; the works go
+      further DOWN. (These foes far outmatch a new hero: come back stronger.)
+    exits: {up: greenhold_deepstair, down: source_channelworks}
+  source_channelworks:
+    name: The Channel-Junction
+    desc: >-
+      The heart-junction of the whole cradle, where one great conduit splits into the four that feed
+      Greenhold, Riverbend, Elderwatch, and Sunmeadow, each gate labelled in the old hand. A sentinel of
+      pale metal holds the split, heavier and quicker than the tender above. A narrow fissure has cracked
+      the NORTH wall into a sealed alcove; the gallery is back UP, and the great work drops DOWN.
+    exits: {up: source_gallery, down: source_heart, north: source_vault}
+  source_vault:
+    name: The Keeper's Vault
+    desc: >-
+      A sealed keeper's cell behind the cracked wall, dry and untouched since the works were young. On a
+      pale stone stand rests a charm left by whoever last tended this place, set down as if they meant to
+      return within the hour and never did. The fissure back to the junction is SOUTH.
+    exits: {south: source_channelworks}
+  source_heart:
+    name: The Reservoir-Heart
+    desc: >-
+      The heart of the Source: a vast domed chamber around a stilled black engine, the reservoir from
+      which all the cradle's old works once drank and by whose clock they kept their gentle order. The
+      Warden of the Source stands over it, the last and greatest of the keepers, and it does not mean to
+      let the sleeping engine be touched. A keystone rests in a cradle at the engine's foot, and a graven
+      master-record rings the dome. The junction is back UP.
+    exits: {up: source_channelworks}
+  greenhold_fields:
+    name: The Green Fields
+    desc: >-
+      Open barley-fields under a wide Veridia sky, the town at your back and the tree-line ahead.
+      Good earth, and quiet, but the near rows are trampled and torn, and something heavy has been at
+      the crop. Pale meadowfoil grows along the field-margins, cut for the Veridia dyers. The market
+      gate is back WEST.
+    exits: {west: greenhold_market}
+    node: meadowfoil
+
+# How the hub connects to the interior: the hub room, the exit keyword to add, and the entry room.
+hub: {room: greenhold, keyword: square, entry: greenhold_market}
+
+# The people of Greenhold: a keeper with an old-world problem, a miller with a plain one, a gossip who
+# ties the town together, and the two dangers that guard their answers.
+npcs:
+  greenhold_keeper:
+    name: Keeper Wenna
+    keywords: [wenna, keeper, granary-keeper]
+    location: greenhold_granary
+    dialogue:
+      - >-
+        "You there, traveller. The old cistern under my granary has failed, and the town grows
+        thirsty. If you have the nerve for the dark, go DOWN and free the valve-key from the
+        fountain-head. Bring it up to me, and Greenhold will owe you a good turn."
+    topics:
+      cistern:
+        - >-
+          "My grandmother said the fountain ran clean without a hand ever touching it. Old-world
+          work. I do not understand it, and I do not fully trust what I cannot understand."
+      rumor:
+        - >-
+          "Folk say the fountain still runs pure, if only someone could wake it. Folk say a great
+          many things. Go down and see for yourself."
+      miller:
+        - >-
+          "Old Harl? He mills what the fields give, when the fields give. He has been sour since
+          something started at his barley. Talk to him if you have a strong arm to spare."
+      wenna:
+        - >-
+          "Keeper of this granary, as my mother was. Someone must mind the grain, and the strange
+          old water beneath it."
+    hp: 0
+  greenhold_miller:
+    name: Miller Harl
+    keywords: [harl, miller]
+    location: greenhold_market
+    dialogue:
+      - >-
+        "You look like you have swung a blade at more than flies. Good. Something has been in my
+        barley three nights running, out EAST in the fields, and it is no fox. Go and put it down
+        before there is nothing left to mill, and I will see you paid in more than bread."
+    topics:
+      beast:
+        - >-
+          "A boar, I reckon, but a big one, and bold. It has torn the near rows to mud. Go out to the
+          fields and end it. A miller with no barley is just a man with a heavy stone."
+      fields:
+        - >-
+          "Best earth in Veridia, those fields, and half of it built over something older, if you
+          believe Wenna. All I know is my grandfather's plough turns up metal that will not rust."
+      harl:
+        - >-
+          "Miller of Greenhold, like my father. I grind what grows and I worry about what does not.
+          Just now I am worrying about a boar."
+    hp: 0
+  greenhold_gossip:
+    name: Old Sabra
+    keywords: [sabra, gossip, woman]
+    location: greenhold_market
+    dialogue:
+      - >-
+        "New face! Sit a moment. Everything worth knowing in Greenhold passes this well, and I have
+        sat by it forty years. Ask me of anyone; I will tell you truer than they would themselves."
+    topics:
+      cistern:
+        - >-
+          "Wenna's water? It has failed before, in my mother's day, and a stranger fixed it then too.
+          Funny how the old fountain only ever wakes for someone from away. Make of that what you like."
+      beast:
+        - >-
+          "Harl's boar. I have seen it, big as a cart and mean with it. And I will tell you a thing:
+          it started at his barley the same week Wenna's fountain went dry. Coincidence, surely. Surely."
+      rumor:
+        - >-
+          "They say the old works under this whole town still run, here and there, and wake things
+          they ought not. But an old woman by a well says a great many things. Sit, and I will say more."
+      sabra:
+        - >-
+          "Old Sabra, who has outlived three husbands and every secret in this town but her own.
+          Someone must remember what Greenhold would rather forget. It may as well be me."
+    hp: 0
+  greenhold_trader:
+    name: Trader Pell
+    keywords: [pell, trader, merchant]
+    location: greenhold_market
+    dialogue:
+      - >-
+        "New face at the well! I keep what a traveller needs: a healing draught, a water-ration for
+        the road. And I buy meadowfoil by the bunch, if you gather it out in the green fields, for the
+        Veridia dyers pay well and so do I. Everything Greenhold spares to sell passes my stall."
+    topics:
+      trade:
+        - >-
+          "Draughts and rations I sell; meadowfoil I buy, cut out EAST in the fields. The dyers
+          upcountry cannot colour a cloth without it, so gather a bunch and I will weigh it fair."
+      pell:
+        - >-
+          "Trader of Greenhold, and I keep the market stocked between harvests. Someone must, or a
+          farm-town has nothing to buy with the coin its barley earns. It may as well be me."
+    shop:
+      sells: {healing_draught: 24, water_ration: 3}
+      buys: {meadowfoil: 5}
+    hp: 0
+  greenhold_vermin:
+    name: a swarm of cellar vermin
+    keywords: [vermin, swarm, rats]
+    location: greenhold_undercroft
+    dialogue:
+      - The vermin bare their teeth and skitter over the cold old stone.
+    aggressive: true
+    hp: 16
+    atk: 4
+    xp: 12
+    level: 3
+    tier: normal
+  greenhold_boar:
+    name: the great field-boar
+    keywords: [boar, field-boar, great-boar]
+    location: greenhold_fields
+    dialogue:
+      - The great boar lifts its scarred head from the ruined barley and lowers its tusks at you.
+    aggressive: true
+    hp: 48
+    atk: 8
+    xp: 22
+    level: 4
+    tier: normal
+  # The deep descent below the undercroft: a scholar who sends you down, and the three keepers of the
+  # Source. These far outmatch the cradle band -- an elite, off-path challenge, not the starter path.
+  source_scholar:
+    name: Scholar Ilric
+    keywords: [ilric, scholar]
+    location: greenhold_deepstair
+    dialogue:
+      - >-
+        "Stand a moment, traveller, and look where you are standing. I have read every parish and grange
+        and watch record in this valley, and they all say the same impossible thing: Greenhold's fountain,
+        Riverbend's weir, Elderwatch's beacon, Sunmeadow's channel, all one machine, and this stair its
+        throat. I am too old and too soft to go DOWN and prove it. You may not be. Reach the heart, end
+        whatever keeps it, and bring the valley the truth of what feeds it. The Knowing owes a debt to those who go and see."
+    topics:
+      source:
+        - >-
+          "Four old works, one heart. The cradle has lived a thousand years on abundance it never built
+          and cannot mend, and here is the well it all drank from. Go down the gallery, past the junction
+          where the four conduits split, to the reservoir-heart. And mind the keepers. The makers set
+          watchers, and the watchers do not know their work is done."
+      warden:
+        - >-
+          "At the heart, if the tales are true, stands the last keeper: a Warden built to guard the
+          reservoir against any hand, friend or thief, and it cannot tell the difference after so long.
+          It will not stand aside. You will have to put it down to stand where it stands. It is no cradle
+          boar, mind. Go strong, or do not go."
+      ilric:
+        - >-
+          "A scholar of the old works, and honest enough to know I am better at reading of them than
+          walking into them. Someone must set down what the valley is truly built on, before the last of
+          it fails and no one left even remembers to be grateful. Go, and I will write down what you find."
+    hp: 0
+  source_tender:
+    name: a gallery tender-automaton
+    keywords: [tender, automaton, tender-automaton]
+    location: source_gallery
+    dialogue:
+      - The tender turns on you with the slow certainty of a thing that has done this a thousand years, pale limbs unfolding.
+    aggressive: true
+    hp: 92
+    atk: 13
+    xp: 40
+    level: 8
+    tier: normal
+  source_sentinel:
+    name: the junction sentinel
+    keywords: [sentinel, junction, junction-sentinel]
+    location: source_channelworks
+    dialogue:
+      - The sentinel steps off the split to bar you, quicker and heavier than the tender, old metal singing as it moves.
+    aggressive: true
+    hp: 124
+    atk: 16
+    xp: 55
+    level: 10
+    tier: normal
+  source_warden:
+    name: the Warden of the Source
+    keywords: [warden, source-warden, keeper]
+    location: source_heart
+    dialogue:
+      - The Warden rises over the stilled engine, vast and pale and terribly patient, and levels a keeper's judgement at you that a thousand years has not softened.
+    aggressive: true
+    hp: 228
+    atk: 22
+    xp: 120
+    level: 14
+    tier: elite
+    attack_element: LGT
+
+# The item the cistern quest turns on, plus a readable parish record for anyone who likes to know a
+# place before they trust it, and the deep Source's rewards and master-record.
+items:
+  greenhold_valve_key:
+    name: a corroded valve-key
+    keywords: [valve-key, valve, key]
+    location: greenhold_undercroft
+    lore: >-
+      A heavy key of pale metal, corroded only where later hands have touched it. It fits the seized
+      fountain-head exactly, as though key and fountain were made in the same breath, in a workshop
+      no one now living in Greenhold could name.
+  greenhold_parish_record:
+    name: the Greenhold parish record
+    keywords: [record, parish-record, book]
+    location: greenhold_market
+    lore: >-
+      A water-stained parish book chained to the market well. Its oldest legible entry, in a hand
+      three centuries dead, reads: "The good water failed again this Spring, and was woken again by a
+      stranger's hand, as the elders say it was in their grandmothers' time. We do not write down how.
+      We only write that Greenhold has never yet gone thirsty, and pray the pattern holds."
+  veridia_source_charm:
+    name: the keeper's charm
+    keywords: [charm, keeper-charm, keeper]
+    location: source_vault
+    slot: accessory_1
+    mods: {DEF: 4, EVA: 4}
+  veridia_source_keystone:
+    name: the heart-keystone of the Source
+    keywords: [keystone, heart-keystone, source]
+    location: source_heart
+    slot: accessory_2
+    mods: {ATK: 6, MAG DEF: 4}
+  veridia_source_record:
+    name: the Source master-record
+    keywords: [master-record, source-record, dome]
+    location: source_heart
+    lore: >-
+      A single unbroken line of the old hand graven around the whole dome, above the stilled engine. It
+      names no king and dates no year. It reads only: "Here the water is kept and measured, and let out
+      by sun and season and need, that the valley above need never thirst, nor flood, nor go dark, nor
+      brown, and never know it is kept at all. Let the keepers hold it gently. Let the valley forget us,
+      and be well." The engine has kept the promise long after the keepers, and the promise, were forgotten.

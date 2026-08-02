@@ -32,7 +32,7 @@ Engineering Impact, Migration Difficulty, Recommended Priority.
 | **Hardware Store** | keep | Catalog of reusable engineering parts | The exemplar: fabrication metaphor, instantly understood | Signature | Perfect (parts + cards) | n/a | - |
 | **Blueprints** | keep | A plan as data before code | Core engineering term AND forge-voiced | Signature | Perfect | n/a | - |
 | **Cards** | keep (say "part card") | One catalog entry for a part | Index-card metaphor fits a parts catalog | Good | Clear | n/a | - |
-| **Gates** | keep | A checkpoint that must pass (QualityGate, VeritasGate) | "Quality gate" is industry-standard AND workshop-apt | Good | Clear | n/a | - |
+| **Gates** | keep | A checkpoint that must pass (QualityGate, EvidenceGate) | "Quality gate" is industry-standard AND workshop-apt | Good | Clear | n/a | - |
 | **Rituals** | **Checklists / Procedures** | Ordered startup/shutdown/integrity routines | "Ritual" is ceremony, not engineering; a checklist is the QA/technical-order voice Josh already uses | Neutral-to-better | Clearer intent | **Medium** (verb/target/doc references, not a data contract) | **P2** |
 | **Doc** | keep ("Docs") | Documentation | Plain and clear | Fine | Clear | n/a | - |
 | **Libraries** | keep | Research Library, Guidance Library | "Library" is universally understood | Good | Clear | n/a | - |

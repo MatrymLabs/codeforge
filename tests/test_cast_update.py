@@ -1,4 +1,4 @@
-"""Test twin for parts/cast_update.py -- the read-only cast drift report (U1 slice 1).
+"""Test twin for kernel/cast_update.py -- the read-only cast drift report (U1 slice 1).
 
 Acceptance: a real engine drift (a changed carried module, an upstream-only file, a cast-only file)
 is named, and the commit delta is reported from an injected source seam (offline). Refusal: a dir
@@ -14,8 +14,8 @@ from pathlib import Path
 
 import pytest
 
-from parts.cast import CastError, CastManifest, main, read_manifest, write_manifest
-from parts.cast_update import (
+from kernel.cast import CastError, CastManifest, main, read_manifest, write_manifest
+from kernel.cast_update import (
     CastDrift,
     UpdateOutcome,
     _commit_present,
@@ -91,8 +91,8 @@ def _poured_cast(
 _BASE = {
     "forge.py": "def handle_command(session, text):\n    return 'ok'\n",
     "parts/__init__.py": "",
-    "parts/world/__init__.py": "",
-    "parts/world/combat.py": "def hit():\n    return 1\n",
+    "kernel/world/__init__.py": "",
+    "kernel/world/combat.py": "def hit():\n    return 1\n",
 }
 
 
@@ -110,10 +110,10 @@ def test_a_changed_upstream_module_is_named(tmp_path: Path) -> None:
     cast, source = tmp_path / "cast", tmp_path / "src"
     _poured_cast(cast, _BASE, commit="aaa111", strategy="vendored-whole")
     bumped = dict(_BASE)
-    bumped["parts/world/combat.py"] = "def hit():\n    return 2\n"  # one-byte fix upstream
+    bumped["kernel/world/combat.py"] = "def hit():\n    return 2\n"  # one-byte fix upstream
     _engine_tree(source, bumped)
     drift = diff_cast(cast, source, resolve_commit=lambda r: "bbb222")
-    assert drift.changed == ["parts/world/combat.py"]
+    assert drift.changed == ["kernel/world/combat.py"]
     assert drift.has_engine_drift
     assert drift.pinned_commit == "aaa111" and drift.target_commit == "bbb222"
 
@@ -138,10 +138,10 @@ def test_a_selective_cast_flags_shed_modules_as_upstream_only(tmp_path: Path) ->
     cast, source = tmp_path / "cast", tmp_path / "src"
     _poured_cast(cast, _BASE, commit="aaa111", strategy="vendored-selective")
     fuller = dict(_BASE)
-    fuller["parts/pm.py"] = "# a dev-tool the game shed\n"
+    fuller["kernel/pm.py"] = "# a dev-tool the game shed\n"
     _engine_tree(source, fuller)
     drift = diff_cast(cast, source, resolve_commit=lambda r: "bbb222")
-    assert drift.upstream_only == ["parts/pm.py"]
+    assert drift.upstream_only == ["kernel/pm.py"]
     assert drift.engine_strategy == "vendored-selective"
 
 
@@ -167,7 +167,7 @@ def test_engine_files_skips_pycache_and_hashes_content(tmp_path: Path) -> None:
     (tmp_path / "parts" / "__pycache__").mkdir()
     (tmp_path / "parts" / "__pycache__" / "cached.py").write_text("x = 1\n")  # a .py in a cache
     files = _engine_files(tmp_path)
-    assert "forge.py" in files and "parts/world/combat.py" in files
+    assert "forge.py" in files and "kernel/world/combat.py" in files
     assert not any("__pycache__" in f for f in files)  # caches never compared, even a .py within
 
 
@@ -179,7 +179,7 @@ def test_engine_files_tolerates_a_missing_forge_or_parts(tmp_path: Path) -> None
 
 def test_resolve_commit_degrades_when_git_cannot_run(tmp_path: Path, monkeypatch) -> None:
     # the git call raising (OSError: no git on PATH) must degrade to 'unknown', never propagate
-    import parts.cast_update as cu
+    import kernel.cast_update as cu
 
     def _boom(*args, **kwargs):
         raise OSError("git not found")
@@ -212,14 +212,14 @@ def test_render_names_every_drift_bucket() -> None:
         pinned_commit="a",
         target_commit="b",
         engine_strategy="vendored-selective",
-        changed=["parts/world/combat.py"],
+        changed=["kernel/world/combat.py"],
         upstream_only=["parts/new_core.py"],
         newly_upstream=["parts/new_core.py"],
         cast_only=["parts/house_rules.py"],
         pin_verifiable=True,
     )
     out = render_drift(drift)
-    assert "parts/world/combat.py" in out  # changed
+    assert "kernel/world/combat.py" in out  # changed
     assert "parts/new_core.py" in out  # newly upstream (split of upstream-only)
     assert "parts/house_rules.py" in out  # cast-only
     assert "Read-only report" in out  # never mistaken for an apply
@@ -231,11 +231,11 @@ def test_render_falls_back_to_raw_upstream_when_pin_unverifiable() -> None:
         pinned_commit="dead",
         target_commit="b",
         engine_strategy="vendored-selective",
-        upstream_only=["parts/pm.py"],
+        upstream_only=["kernel/pm.py"],
         pin_verifiable=False,  # cannot split new-vs-shed without the pin
     )
     out = render_drift(drift)
-    assert "upstream-only (new upstream, or shed" in out and "parts/pm.py" in out
+    assert "upstream-only (new upstream, or shed" in out and "kernel/pm.py" in out
 
 
 def test_cli_diff_prints_a_report(tmp_path, capsys) -> None:
@@ -327,7 +327,7 @@ def test_render_audit_clean_and_with_findings() -> None:
 
 def test_pip_audit_runner_shells_out_and_cleans_up(monkeypatch) -> None:
     # cover the real runner offline: mock subprocess, prove it writes a reqs file and removes it
-    import parts.cast_update as cu
+    import kernel.cast_update as cu
 
     captured: dict[str, list[str]] = {}
 
@@ -347,7 +347,7 @@ def test_pip_audit_runner_shells_out_and_cleans_up(monkeypatch) -> None:
 
 
 def test_cli_diff_audit_flag_runs_the_scan(tmp_path, capsys, monkeypatch) -> None:
-    import parts.cast_update as cu
+    import kernel.cast_update as cu
 
     monkeypatch.setattr(
         cu, "audit_requirements", lambda reqs, **k: ["pyyaml 5.3: PYSEC-1 (fix: 5.4)"]
@@ -368,11 +368,11 @@ def test_upstream_only_splits_into_new_and_shed(tmp_path: Path) -> None:
     cast, source = tmp_path / "cast", tmp_path / "src"
     _poured_cast(cast, _BASE, commit="aaa111", strategy="vendored-selective")
     source_files = dict(_BASE)
-    source_files["parts/pm.py"] = "# a dev-tool shed at pour\n"  # existed at the pin -> shed
+    source_files["kernel/pm.py"] = "# a dev-tool shed at pour\n"  # existed at the pin -> shed
     source_files["parts/brand_new.py"] = "# appeared upstream since pour\n"  # absent at pin -> new
     _engine_tree(source, source_files)
     at_pin = dict(_BASE)
-    at_pin["parts/pm.py"] = (
+    at_pin["kernel/pm.py"] = (
         "# a dev-tool shed at pour\n"  # pm existed at the pin; brand_new did not
     )
     drift = diff_cast(
@@ -382,9 +382,9 @@ def test_upstream_only_splits_into_new_and_shed(tmp_path: Path) -> None:
         commit_present=lambda r, c: True,
         read_at_commit=_pin_reader(at_pin),
     )
-    assert drift.upstream_only == ["parts/brand_new.py", "parts/pm.py"]  # the raw union, sorted
+    assert drift.upstream_only == ["kernel/pm.py", "parts/brand_new.py"]  # the raw union, sorted
     assert drift.newly_upstream == ["parts/brand_new.py"]  # absent at the pin: genuinely new
-    assert drift.shed == ["parts/pm.py"]  # present at the pin: deliberately not carried
+    assert drift.shed == ["kernel/pm.py"]  # present at the pin: deliberately not carried
 
 
 def test_a_whole_cast_has_no_shed_only_new(tmp_path: Path) -> None:
@@ -410,14 +410,14 @@ def test_render_splits_new_from_shed_when_verifiable() -> None:
         pinned_commit="a",
         target_commit="b",
         engine_strategy="vendored-selective",
-        upstream_only=["parts/brand_new.py", "parts/pm.py"],
+        upstream_only=["parts/brand_new.py", "kernel/pm.py"],
         newly_upstream=["parts/brand_new.py"],
-        shed=["parts/pm.py"],
+        shed=["kernel/pm.py"],
         pin_verifiable=True,
     )
     out = render_drift(drift)
     assert "newly upstream since your pin" in out and "parts/brand_new.py" in out
-    assert "shed by this cast" in out and "parts/pm.py" in out
+    assert "shed by this cast" in out and "kernel/pm.py" in out
 
 
 # --- Slice 2: local-edit detection (vendored file vs the source AT THE PIN) --------------------
@@ -426,7 +426,7 @@ def test_render_splits_new_from_shed_when_verifiable() -> None:
 def test_a_locally_edited_file_is_flagged(tmp_path: Path) -> None:
     cast, source = tmp_path / "cast", tmp_path / "src"
     edited = dict(_BASE)
-    edited["parts/world/combat.py"] = "def hit():\n    return 999  # owner tweak after pour\n"
+    edited["kernel/world/combat.py"] = "def hit():\n    return 999  # owner tweak after pour\n"
     _poured_cast(cast, edited, commit="aaa111", strategy="vendored-whole")
     _engine_tree(source, edited)  # target == cast content, so no 'changed'; but the PIN had _BASE
     drift = diff_cast(
@@ -436,7 +436,7 @@ def test_a_locally_edited_file_is_flagged(tmp_path: Path) -> None:
         commit_present=lambda r, c: True,
         read_at_commit=_pin_reader(_BASE),  # the pin's combat.py was the original
     )
-    assert drift.locally_modified == ["parts/world/combat.py"]
+    assert drift.locally_modified == ["kernel/world/combat.py"]
     assert drift.pin_verifiable and not drift.in_sync
 
 
@@ -479,12 +479,12 @@ def test_render_flags_local_edits_as_overwrite_risk() -> None:
         pinned_commit="a",
         target_commit="b",
         engine_strategy="whole",
-        locally_modified=["parts/world/combat.py"],
+        locally_modified=["kernel/world/combat.py"],
         pin_verifiable=True,
     )
     out = render_drift(drift)
     assert "local edits:      1 file(s) modified" in out
-    assert "an update would overwrite these" in out and "parts/world/combat.py" in out
+    assert "an update would overwrite these" in out and "kernel/world/combat.py" in out
 
 
 def test_render_says_when_it_cannot_verify_the_pin() -> None:
@@ -512,7 +512,7 @@ def test_commit_present_and_read_at_commit_on_the_real_repo() -> None:
 
 
 def test_git_history_seams_degrade_when_git_raises(tmp_path: Path, monkeypatch) -> None:
-    import parts.cast_update as cu
+    import kernel.cast_update as cu
 
     monkeypatch.setattr(cu.subprocess, "run", _raise_oserror)
     assert cu._commit_present(tmp_path, "abc1234") is False
@@ -527,9 +527,9 @@ def test_drift_is_a_frozen_report(tmp_path: Path) -> None:
 
 # --- U2: apply an engine update to a poured cast, safely -----------------------------------------
 
-_BUMPED = {**_BASE, "parts/world/combat.py": "def hit():\n    return 2\n"}  # an upstream fix
+_BUMPED = {**_BASE, "kernel/world/combat.py": "def hit():\n    return 2\n"}  # an upstream fix
 _OK = lambda cd: (True, "commands ran clean")  # noqa: E731  a passing validator
-_COMBAT = "parts/world/combat.py"
+_COMBAT = "kernel/world/combat.py"
 
 
 def _whole_cast_with_upstream_fix(tmp_path: Path, *, commit="aaa111", strategy="vendored-whole"):
@@ -711,8 +711,8 @@ def test_update_rolls_back_and_raises_on_an_unexpected_error(tmp_path: Path) -> 
 
 
 def test_update_default_validator_delegates_to_validate_cast(tmp_path: Path, monkeypatch) -> None:
-    # validator=None uses _default_validator, which boots the cast via parts.cast.validate_cast
-    import parts.cast_update as cu
+    # validator=None uses _default_validator, which boots the cast via kernel.cast.validate_cast
+    import kernel.cast_update as cu
 
     monkeypatch.setattr(cu, "validate_cast", lambda cd: (True, "delegated"))
     cast, source = _whole_cast_with_upstream_fix(tmp_path)
@@ -756,7 +756,7 @@ def test_render_update_heads_and_rollback_line() -> None:
 
 
 def test_cli_update_applies_and_returns_zero(tmp_path, capsys, monkeypatch) -> None:
-    import parts.cast_update as cu
+    import kernel.cast_update as cu
 
     monkeypatch.setattr(
         cu,
@@ -768,7 +768,7 @@ def test_cli_update_applies_and_returns_zero(tmp_path, capsys, monkeypatch) -> N
 
 
 def test_cli_update_refusal_returns_nonzero(tmp_path, capsys, monkeypatch) -> None:
-    import parts.cast_update as cu
+    import kernel.cast_update as cu
 
     monkeypatch.setattr(
         cu, "update_cast", lambda c, s, **k: UpdateOutcome(False, "3 local edit(s) ...", "a", "b")
@@ -783,7 +783,7 @@ def test_cli_update_usage_error(capsys) -> None:
 
 
 def test_cli_update_reports_a_cast_error(capsys, monkeypatch) -> None:
-    import parts.cast_update as cu
+    import kernel.cast_update as cu
 
     def _raise(c, s, **k):
         raise CastError("boom")
@@ -795,12 +795,12 @@ def test_cli_update_reports_a_cast_error(capsys, monkeypatch) -> None:
 
 def test_selective_validator_drives_the_surface_corpus(monkeypatch) -> None:
     # the default selective validator boots the cast with the surfaces' commands + server imports
-    import parts.cast_update as cu
-    from parts import coupling
+    import kernel.cast_update as cu
+    from kernel import coupling
 
     calls: dict[str, list[str]] = {}
     monkeypatch.setattr(coupling, "surface_commands", lambda s: ["look"])
-    monkeypatch.setattr(coupling, "surface_imports", lambda s: ["parts.gateway"])
+    monkeypatch.setattr(coupling, "surface_imports", lambda s: ["adapters.gateway"])
 
     def _fake_validate(cd, *, commands, imports):
         calls["commands"], calls["imports"] = commands, imports
@@ -808,14 +808,14 @@ def test_selective_validator_drives_the_surface_corpus(monkeypatch) -> None:
 
     monkeypatch.setattr(cu, "validate_cast", _fake_validate)
     ok, detail = cu._selective_validator(["solo"])(Path("/nonexistent"))
-    assert ok and calls["commands"] == ["look"] and calls["imports"] == ["parts.gateway"]
+    assert ok and calls["commands"] == ["look"] and calls["imports"] == ["adapters.gateway"]
 
 
 def test_update_noop_for_a_current_selective_cast(tmp_path: Path) -> None:
     # a selective cast that only "lacks" its shed modules is in sync -> a no-op, not a re-vendor
     cast, source = tmp_path / "cast", tmp_path / "src"
     _poured_cast(cast, _BASE, commit="aaa111", strategy="vendored-selective", surfaces=["solo"])
-    fuller = {**_BASE, "parts/pm.py": "# a shed dev-tool the source still has\n"}
+    fuller = {**_BASE, "kernel/pm.py": "# a shed dev-tool the source still has\n"}
     _engine_tree(source, fuller)
     outcome = update_cast(
         cast,

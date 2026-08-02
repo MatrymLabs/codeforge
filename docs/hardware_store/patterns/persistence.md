@@ -15,7 +15,7 @@ for CodeForge" (section 5, Persistence / Repository Pattern), which cites Fowler
 
 ## The part: `repository`
 
-`parts/shelf/repository.py` -- `Repository[E, K]` is a typed, `@runtime_checkable` **Protocol** (the
+`kernel/shelf/repository.py` -- `Repository[E, K]` is a typed, `@runtime_checkable` **Protocol** (the
 replaceable storage boundary: `add`, `get`, `require`, `update`, `remove`, `list`, `count`).
 `InMemoryRepository[E, K]` is the dependency-free, dict-backed implementation. It is
 **identity-agnostic**: entities need no base class and no `.id`; an injected `key_of` reads each
@@ -29,7 +29,7 @@ asset registry) does not change.
 
 ## GAME-TO-PRACTICAL TRANSLATION
 
-- **Game component:** a per-player logbook (`parts/logbook.py`).
+- **Game component:** a per-player logbook (`kernel/logbook.py`).
 - **Core behavior:** store and retrieve entities by identity, behind a collection interface.
 - **Game-specific presentation:** "Logged (#3): ..." / a numbered listing.
 - **Reusable domain logic:** the whole `Repository` + `InMemoryRepository` (game-free).
@@ -42,9 +42,9 @@ asset registry) does not change.
 
 ## Adapters (one core, two lives)
 
-- **Game:** `parts/logbook.py` -- the `journal` verb records numbered entries into a per-player
+- **Game:** `kernel/logbook.py` -- the `journal` verb records numbered entries into a per-player
   repository and lists them. Tick-reachable.
-- **Practical:** `parts/asset_registry.py` -- `AssetRegistry` registers, finds, updates, and retires
+- **Practical:** `kernel/asset_registry.py` -- `AssetRegistry` registers, finds, updates, and retires
   assets by id, storage-agnostic (any `Repository` works). Cousins: stock control, a document registry.
 
 ## Evidence
@@ -57,7 +57,7 @@ asset registry) does not change.
 
 ## The part: `cache-aside`
 
-`parts/shelf/cache_aside.py` -- the read-path companion to the repository: read a value fast without
+`kernel/shelf/cache_aside.py` -- the read-path companion to the repository: read a value fast without
 re-hitting the source of truth every time, while bounding how stale that value can get. On a read,
 `get(key, loader)` returns the cached value if it is a hit within its TTL; on a miss or an expired
 entry it calls `loader` (the source of truth), stores the result with a fresh expiry, and returns

@@ -1,9 +1,9 @@
-"""Test twin for parts/features.py -- the game adapter: an in-world feature panel."""
+"""Test twin for kernel/features.py -- the game adapter: an in-world feature panel."""
 
 import pytest
 
-from parts.features import _REGISTRY, feature_on, features, reset_features
-from parts.world.session import SESSIONS, Session
+from kernel.features import _REGISTRY, feature_on, features, reset_features
+from kernel.world.session import SESSIONS, Session
 
 
 @pytest.fixture(autouse=True)

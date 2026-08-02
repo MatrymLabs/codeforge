@@ -4,7 +4,7 @@
  * One hot primitive: Levenshtein edit distance between two strings. The O(m*n) dynamic program is
  * cheap in C but expensive in a Python loop, and there is no stdlib shortcut for it -- exactly the
  * shape where hand-written C earns its place. It powers fuzzy matching ("command not found -- did
- * you mean ...?"), proven equal to the pure-Python fallback in parts/shelf/textmatch.py.
+ * you mean ...?"), proven equal to the pure-Python fallback in kernel/shelf/textmatch.py.
  *
  * This is the lowest-level polyglot organ: PyObject arguments parsed by hand, a scratch row managed
  * with PyMem, code points read with the Unicode API, and an int built back for Python. It is OPTIONAL

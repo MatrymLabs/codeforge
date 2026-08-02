@@ -1,9 +1,9 @@
-"""Test twin for parts/heralds.py -- the game adapter: pluggable in-world heralds."""
+"""Test twin for kernel/heralds.py -- the game adapter: pluggable in-world heralds."""
 
 import pytest
 
-from parts.heralds import _REGISTRY, heralds, reset_heralds
-from parts.world.session import SESSIONS, Session
+from kernel.heralds import _REGISTRY, heralds, reset_heralds
+from kernel.world.session import SESSIONS, Session
 
 
 @pytest.fixture(autouse=True)

@@ -1,4 +1,4 @@
-"""Test twin for parts/world/creator_workshop.py -- the Creator's Workshop barrier.
+"""Test twin for kernel/world/creator_workshop.py -- the Creator's Workshop barrier.
 
 Gates the prompt's absolutes: every world carries a discoverable Grand Library and a CONCEALED
 Creator's Door onto an isolated Workshop instance; ONLY the authenticated Seed Owner crosses, and
@@ -10,12 +10,12 @@ handle_command proves it): acceptance (owner enters) and refusal (player and wiz
 import pytest
 
 from forge import handle_command
-from parts.world import creator_workshop as cw
-from parts.world import events
-from parts.world.items import ITEMS, items_in
-from parts.world.npcs import NPCS, npcs_in, reindex_npcs
-from parts.world.session import SESSIONS, Session
-from parts.world.world import WORLD, render_room
+from kernel.world import creator_workshop as cw
+from kernel.world import events
+from kernel.world.items import ITEMS, items_in
+from kernel.world.npcs import NPCS, npcs_in, reindex_npcs
+from kernel.world.session import SESSIONS, Session
+from kernel.world.world import WORLD, render_room
 
 
 @pytest.fixture(autouse=True)

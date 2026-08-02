@@ -5,7 +5,7 @@
     "status": "active",
     "function": "List the whole collective registry, grouped by type.",
     "label": "registry",
-    "file": "parts/registry.py",
+    "file": "kernel/registry.py",
     "type": "CMD",
     "domain": "10",
     "docs": "docs/classification/CLASSIFICATION_SYSTEM.md",
@@ -31,7 +31,7 @@
     "status": "active",
     "function": "Show one designation's full record card.",
     "label": "registry show",
-    "file": "parts/registry.py",
+    "file": "kernel/registry.py",
     "type": "CMD",
     "domain": "10",
     "docs": "docs/classification/CLASSIFICATION_SYSTEM.md",
@@ -57,7 +57,7 @@
     "status": "active",
     "function": "Search the registry by designation, name, label, function, or tag.",
     "label": "registry find",
-    "file": "parts/registry.py",
+    "file": "kernel/registry.py",
     "type": "CMD",
     "domain": "10",
     "docs": "docs/classification/CLASSIFICATION_SYSTEM.md",
@@ -83,7 +83,7 @@
     "status": "active",
     "function": "List every designation of one type (RM, NPC, CMD...).",
     "label": "registry type",
-    "file": "parts/registry.py",
+    "file": "kernel/registry.py",
     "type": "CMD",
     "domain": "10",
     "docs": "docs/classification/CLASSIFICATION_SYSTEM.md",
@@ -109,7 +109,7 @@
     "status": "active",
     "function": "List every designation with one status (active, prototype...).",
     "label": "registry status",
-    "file": "parts/registry.py",
+    "file": "kernel/registry.py",
     "type": "CMD",
     "domain": "10",
     "docs": "docs/classification/CLASSIFICATION_SYSTEM.md",
@@ -135,7 +135,7 @@
     "status": "active",
     "function": "System-generate a filed item pattern into the world (wizard+).",
     "label": "@sg",
-    "file": "parts/generate.py",
+    "file": "kernel/generate.py",
     "type": "CMD",
     "domain": "04",
     "docs": "docs/naming_glossary.md",
@@ -162,7 +162,7 @@
     "status": "active",
     "function": "Grade one filed object against the readiness checklist.",
     "label": "qa gate",
-    "file": "parts/qualitygate.py",
+    "file": "kernel/qualitygate.py",
     "type": "CMD",
     "domain": "10",
     "docs": "docs/safety_qa_system.md",
@@ -189,7 +189,7 @@
     "status": "active",
     "function": "Grade every filed object (the registry self-audit).",
     "label": "qa gate all",
-    "file": "parts/qualitygate.py",
+    "file": "kernel/qualitygate.py",
     "type": "CMD",
     "domain": "10",
     "docs": "docs/safety_qa_system.md",
@@ -216,7 +216,7 @@
     "status": "active",
     "function": "Rate one object's risk (readiness, not compliance).",
     "label": "safety review",
-    "file": "parts/qualitygate.py",
+    "file": "kernel/qualitygate.py",
     "type": "CMD",
     "domain": "10",
     "docs": "docs/safety_qa_system.md",
@@ -243,7 +243,7 @@
     "status": "active",
     "function": "Sweep the key documentation files for gaps.",
     "label": "docs check",
-    "file": "parts/qualitygate.py",
+    "file": "kernel/qualitygate.py",
     "type": "CMD",
     "domain": "10",
     "docs": "docs/safety_qa_system.md",
@@ -270,7 +270,7 @@
     "status": "active",
     "function": "Project status dashboard, computed from the registry + QualityGate.",
     "label": "pm status",
-    "file": "parts/pm.py",
+    "file": "kernel/pm.py",
     "type": "CMD",
     "domain": "10",
     "docs": "docs/project_management.md",
@@ -296,7 +296,7 @@
     "status": "active",
     "function": "Project metrics: objects filed, QA readiness, docs gaps.",
     "label": "pm metrics",
-    "file": "parts/pm.py",
+    "file": "kernel/pm.py",
     "type": "CMD",
     "domain": "10",
     "docs": "docs/project_management.md",
@@ -322,7 +322,7 @@
     "status": "active",
     "function": "Legal/policy awareness over tracked sources (never legal advice).",
     "label": "law",
-    "file": "parts/law.py",
+    "file": "kernel/law.py",
     "type": "CMD",
     "domain": "06",
     "docs": "docs/legal_policy_awareness.md",
@@ -347,20 +347,20 @@
     "designation": "CMD-10.012",
     "name": "`truth check`",
     "status": "active",
-    "function": "VeritasGate: check that the project's claims match reality.",
+    "function": "EvidenceGate: check that the project's claims match reality.",
     "label": "truth check",
-    "file": "parts/veritas.py",
+    "file": "kernel/evidence_gate.py",
     "type": "CMD",
     "domain": "10",
-    "docs": "docs/veritas.md",
-    "tests": "tests/test_veritas.py",
+    "docs": "docs/evidence_gate.md",
+    "tests": "tests/test_evidence_gate.py",
     "depends_on": [],
     "related": [],
     "reuse": "the claims-vs-reality gate; composes with any repo's docs+registry",
     "tags": [
       "command",
       "truth",
-      "veritas"
+      "evidence_gate"
     ],
     "notes": "",
     "superseded_by": "",
@@ -376,7 +376,7 @@
     "status": "active",
     "function": "Career Evidence Sign: map CodeForge work to job-ready skills with repo proof.",
     "label": "career",
-    "file": "parts/career.py",
+    "file": "kernel/career.py",
     "type": "CMD",
     "domain": "10",
     "docs": "docs/career_evidence_board.md",
@@ -403,7 +403,7 @@
     "status": "active",
     "function": "Pioneer Mode: bold-but-honest engineering framework (doctrine, risk ladder, experiments).",
     "label": "pioneer",
-    "file": "parts/pioneer.py",
+    "file": "kernel/pioneer.py",
     "type": "CMD",
     "domain": "10",
     "docs": "docs/pioneer_mode.md",
@@ -429,7 +429,7 @@
     "status": "active",
     "function": "Inspect the forge: on-demand green/yellow/red frame-up composed from the project's gates.",
     "label": "inspect",
-    "file": "parts/frameup.py",
+    "file": "kernel/frameup.py",
     "type": "CMD",
     "domain": "10",
     "docs": "docs/frame_up.md",
@@ -456,7 +456,7 @@
     "status": "active",
     "function": "Hardware Store functions check: run a live demo of each reusable part.",
     "label": "functions",
-    "file": "parts/functions.py",
+    "file": "kernel/functions.py",
     "type": "CMD",
     "domain": "05",
     "docs": "catalog/README.md",
@@ -484,7 +484,7 @@
     "status": "active",
     "function": "The in-game computer: one console to run every diagnostic program.",
     "label": "terminal",
-    "file": "parts/terminal.py",
+    "file": "adapters/terminal.py",
     "type": "CMD",
     "domain": "01",
     "docs": "docs/terminal.md",
@@ -512,7 +512,7 @@
     "status": "active",
     "function": "Blueprint: browse, read, or render a forged plan (idea -> spec -> HTML).",
     "label": "blueprint",
-    "file": "parts/blueprint.py",
+    "file": "kernel/blueprint.py",
     "type": "CMD",
     "domain": "10",
     "docs": "docs/blueprint_renderer.md",
@@ -539,7 +539,7 @@
     "status": "active",
     "function": "the Foundry: propose a part skeleton, approve, and generate it into the sandbox (owner-only).",
     "label": "@forge",
-    "file": "parts/foundry.py",
+    "file": "kernel/foundry.py",
     "type": "CMD",
     "domain": "10",
     "docs": "docs/proving_ground/SAFETY.md",
@@ -567,7 +567,7 @@
     "status": "active",
     "function": "step through the arch into the Proving Ground: review the Foundry's forged candidates (owner, read-only).",
     "label": "@arch",
-    "file": "parts/foundry.py",
+    "file": "kernel/foundry.py",
     "type": "CMD",
     "domain": "10",
     "docs": "docs/proving_ground/VISION.md",
@@ -594,7 +594,7 @@
     "status": "active",
     "function": "Blueprint Evolution Lab, read-only: list and show recorded candidate bake-off runs. Never executes a run or promotes a candidate.",
     "label": "evolution",
-    "file": "parts/evolution/command.py",
+    "file": "kernel/evolution/command.py",
     "type": "CMD",
     "domain": "10",
     "docs": "docs/nature_inspired/research_mapping.md",
@@ -622,7 +622,7 @@
     "status": "active",
     "function": "Trace a part through every manufacturing stage and file evidence.",
     "label": "loop trace",
-    "file": "parts/loop.py",
+    "file": "kernel/loop.py",
     "type": "CMD",
     "domain": "05",
     "docs": "docs/manufacturing_loop.md",
@@ -651,7 +651,7 @@
     "status": "active",
     "function": "Manufacturing loop commands (usage hint).",
     "label": "loop",
-    "file": "parts/loop.py",
+    "file": "kernel/loop.py",
     "type": "CMD",
     "domain": "05",
     "docs": "docs/manufacturing_loop.md",
@@ -679,7 +679,7 @@
     "status": "active",
     "function": "The Chronicle, read-only: show the ship's filed memory (newest first), optionally one kind. Never mutates the store.",
     "label": "chronicle",
-    "file": "parts/chronicle.py",
+    "file": "kernel/chronicle.py",
     "type": "CMD",
     "domain": "10",
     "docs": "docs/reports/2026-07-13-chronicle-design.md",
@@ -707,7 +707,7 @@
     "status": "active",
     "function": "Retention doctor, read-only: show what the Chronicle keeps, what is eligible for review, and what a hold protects. Never disposes or removes.",
     "label": "retention",
-    "file": "parts/retention.py",
+    "file": "kernel/retention.py",
     "type": "CMD",
     "domain": "10",
     "docs": "docs/reports/2026-07-14-retention-design.md",
@@ -735,7 +735,7 @@
     "status": "active",
     "function": "Engine coupling report, read-only: trace the runtime module closure and list what a runtime cast could shed. Changes nothing (detachment D1).",
     "label": "coupling",
-    "file": "parts/coupling.py",
+    "file": "kernel/coupling.py",
     "type": "CMD",
     "domain": "10",
     "docs": "docs/reports/2026-07-14-detachment-design.md",
@@ -2125,7 +2125,7 @@
     "tags": [
       "command"
     ],
-    "notes": "parts/world/items.read_item: show a lore item's readable text (inventory or room).",
+    "notes": "kernel/world/items.read_item: show a lore item's readable text (inventory or room).",
     "superseded_by": "",
     "aliases": [],
     "created": "2026-07-26",
@@ -2408,7 +2408,7 @@
     "tags": [
       "command"
     ],
-    "notes": "CORE verb firing a job's usable ability (parts/world/abilities). A strike reuses combat.land_hit; a heal restores HP; each spends MP. Tick-reachable; refuses no-calling / unknown / wrong-job / no-MP / bad-target.",
+    "notes": "CORE verb firing a job's usable ability (kernel/world/abilities). A strike reuses combat.land_hit; a heal restores HP; each spends MP. Tick-reachable; refuses no-calling / unknown / wrong-job / no-MP / bad-target.",
     "superseded_by": "",
     "aliases": [],
     "created": "2026-07-23",
@@ -2433,7 +2433,7 @@
     "tags": [
       "command"
     ],
-    "notes": "Read-only CORE verb listing a calling's moveset (parts/world/abilities.render_abilities). Tick-reachable; never mutates.",
+    "notes": "Read-only CORE verb listing a calling's moveset (kernel/world/abilities.render_abilities). Tick-reachable; never mutates.",
     "superseded_by": "",
     "aliases": [],
     "created": "2026-07-23",
@@ -2459,7 +2459,7 @@
     "tags": [
       "command"
     ],
-    "notes": "Owner-gated ADMIN verb (the trusted boundary run IN the server process, where the encounter tallies live). Aggregates parts/encounter_log tallies into the Chronicle via parts/encounter_flush; the tick never reaches it. Slice 2 of encounter telemetry (Convergence Review 2026-07-17).",
+    "notes": "Owner-gated ADMIN verb (the trusted boundary run IN the server process, where the encounter tallies live). Aggregates parts/encounter_log tallies into the Chronicle via kernel/encounter_flush; the tick never reaches it. Slice 2 of encounter telemetry (Convergence Review 2026-07-17).",
     "superseded_by": "",
     "aliases": [],
     "created": "2026-07-17",
@@ -2484,7 +2484,7 @@
     "tags": [
       "command"
     ],
-    "notes": "The Orders faction join verb (parts/world/orders.swear_order): lists the Row when bare, swears a named hero to an Order and persists it. Refuses unnamed / unknown Order.",
+    "notes": "The Orders faction join verb (kernel/world/orders.swear_order): lists the Row when bare, swears a named hero to an Order and persists it. Refuses unnamed / unknown Order.",
     "superseded_by": "",
     "aliases": [],
     "created": "2026-07-24",
@@ -2534,7 +2534,7 @@
     "tags": [
       "command"
     ],
-    "notes": "The shop economy verb (parts/world/shop). Finds the merchant in the player's room.",
+    "notes": "The shop economy verb (kernel/world/shop). Finds the merchant in the player's room.",
     "superseded_by": "",
     "aliases": [],
     "created": "2026-07-24",
@@ -2559,7 +2559,7 @@
     "tags": [
       "command"
     ],
-    "notes": "The shop economy verb (parts/world/shop). Finds the merchant in the player's room.",
+    "notes": "The shop economy verb (kernel/world/shop). Finds the merchant in the player's room.",
     "superseded_by": "",
     "aliases": [],
     "created": "2026-07-24",
@@ -2584,7 +2584,7 @@
     "tags": [
       "command"
     ],
-    "notes": "The shop economy verb (parts/world/shop). Finds the merchant in the player's room.",
+    "notes": "The shop economy verb (kernel/world/shop). Finds the merchant in the player's room.",
     "superseded_by": "",
     "aliases": [],
     "created": "2026-07-24",
@@ -2609,7 +2609,7 @@
     "tags": [
       "command"
     ],
-    "notes": "parts/world/consumables.quaff: spend a carried consumable, restore hp/mp.",
+    "notes": "kernel/world/consumables.quaff: spend a carried consumable, restore hp/mp.",
     "superseded_by": "",
     "aliases": [],
     "created": "2026-07-24",
@@ -2634,7 +2634,7 @@
     "tags": [
       "command"
     ],
-    "notes": "parts/world/npcs.ask: topic-based conversation over Npc.topics (keyword -> reply lines). Bare `ask <npc>` lists topics. Backward-compatible with `talk` (no-topics NPC has nothing to ask).",
+    "notes": "kernel/world/npcs.ask: topic-based conversation over Npc.topics (keyword -> reply lines). Bare `ask <npc>` lists topics. Backward-compatible with `talk` (no-topics NPC has nothing to ask).",
     "superseded_by": "",
     "aliases": [],
     "created": "2026-07-24",
@@ -3136,7 +3136,7 @@
     "tags": [
       "command"
     ],
-    "notes": "_party_cmd dispatches to parts.world.party (invite/join/leave/disband/roster). The first shared-purpose multiplayer verb; foundation for shared combat + dungeons + raids.",
+    "notes": "_party_cmd dispatches to kernel.world.party (invite/join/leave/disband/roster). The first shared-purpose multiplayer verb; foundation for shared combat + dungeons + raids.",
     "superseded_by": "",
     "aliases": [],
     "created": "2026-07-28",
@@ -3189,7 +3189,7 @@
     "tags": [
       "command"
     ],
-    "notes": "_trade_cmd dispatches to parts.world.trade (propose/accept/add/coins/confirm/cancel/render). The first player economy verb; atomic swap on per-player inventory.",
+    "notes": "_trade_cmd dispatches to kernel.world.trade (propose/accept/add/coins/confirm/cancel/render). The first player economy verb; atomic swap on per-player inventory.",
     "superseded_by": "",
     "aliases": [],
     "created": "2026-07-28",
@@ -3214,7 +3214,7 @@
     "tags": [
       "command"
     ],
-    "notes": "_guild_cmd dispatches to parts.world.guild (found/invite/accept/promote/leave/disband/roster). The persisted social pillar; membership survives logout.",
+    "notes": "_guild_cmd dispatches to kernel.world.guild (found/invite/accept/promote/leave/disband/roster). The persisted social pillar; membership survives logout.",
     "superseded_by": "",
     "aliases": [],
     "created": "2026-07-28",
@@ -3264,7 +3264,7 @@
     "tags": [
       "command"
     ],
-    "notes": "_mail_cmd dispatches to parts.world.mail (inbox/send/read/delete). The async social channel, reaching offline heroes.",
+    "notes": "_mail_cmd dispatches to kernel.world.mail (inbox/send/read/delete). The async social channel, reaching offline heroes.",
     "superseded_by": "",
     "aliases": [],
     "created": "2026-07-28",
@@ -3276,7 +3276,7 @@
     "status": "active",
     "function": "run a sandboxed Lua snippet from in-game (owner): a deny-by-default scripting console.",
     "label": "@script",
-    "file": "parts/scripting.py",
+    "file": "kernel/scripting.py",
     "type": "CMD",
     "domain": "10",
     "docs": "docs/adr/0014-embedded-scripting.md",
@@ -3291,7 +3291,7 @@
       "admin",
       "polyglot"
     ],
-    "notes": "ADMIN verb, min_rank owner. Runs Lua in parts.scripting.LuaSandbox (no os/io/require; loops bounded). Needs the [lua] extra; says so cleanly when absent. Polyglot organ 7 (embedded scripting, ADR-0014).",
+    "notes": "ADMIN verb, min_rank owner. Runs Lua in kernel.scripting.LuaSandbox (no os/io/require; loops bounded). Needs the [lua] extra; says so cleanly when absent. Polyglot organ 7 (embedded scripting, ADR-0014).",
     "superseded_by": "",
     "aliases": [],
     "created": "2026-07-28",
@@ -3316,7 +3316,7 @@
     "tags": [
       "command"
     ],
-    "notes": "_friend_cmd dispatches to parts.world.friends (list/add/remove). Personal, one-directional roster with online status.",
+    "notes": "_friend_cmd dispatches to kernel.world.friends (list/add/remove). Personal, one-directional roster with online status.",
     "superseded_by": "",
     "aliases": [],
     "created": "2026-07-29",
@@ -3366,7 +3366,7 @@
     "tags": [
       "command"
     ],
-    "notes": "Routes to parts.world.chat.world_say. The world-wide live channel; the spine preserves the message case.",
+    "notes": "Routes to kernel.world.chat.world_say. The world-wide live channel; the spine preserves the message case.",
     "superseded_by": "",
     "aliases": [],
     "created": "2026-07-29",
@@ -3391,7 +3391,7 @@
     "tags": [
       "command"
     ],
-    "notes": "Routes to parts.world.inns.rest. Restores every session resource to maximum, but only in an inn interior (is_inn_room); refused elsewhere. Reuses combat's heal-to-max idiom; moves no world state.",
+    "notes": "Routes to kernel.world.inns.rest. Restores every session resource to maximum, but only in an inn interior (is_inn_room); refused elsewhere. Reuses combat's heal-to-max idiom; moves no world state.",
     "superseded_by": "",
     "aliases": [],
     "created": "2026-07-29",
@@ -3416,7 +3416,7 @@
     "tags": [
       "command"
     ],
-    "notes": "_maintenance_cmd toggles parts.world.maintenance_mode and broadcasts. Owner-gated ADMIN verb. Non-staff logins refused at the front desk while on. Distinct from the CORE `maintenance` change-log verb.",
+    "notes": "_maintenance_cmd toggles kernel.world.maintenance_mode and broadcasts. Owner-gated ADMIN verb. Non-staff logins refused at the front desk while on. Distinct from the CORE `maintenance` change-log verb.",
     "superseded_by": "",
     "aliases": [],
     "created": "2026-07-29",
@@ -3441,7 +3441,7 @@
     "tags": [
       "command"
     ],
-    "notes": "_bank_cmd dispatches to parts.world.bank (render/deposit/withdraw). A deposited item leaves the world into storage until withdrawn; survives logout via the loose_items table.",
+    "notes": "_bank_cmd dispatches to kernel.world.bank (render/deposit/withdraw). A deposited item leaves the world into storage until withdrawn; survives logout via the loose_items table.",
     "superseded_by": "",
     "aliases": [],
     "created": "2026-07-29",
@@ -3466,7 +3466,7 @@
     "tags": [
       "command"
     ],
-    "notes": "_auction_cmd dispatches to parts.world.auction (browse/list_item/buy). Listing escrows an item out of the world; buying pays the seller and re-clones it to the buyer; unsold items are mailed back on expiry.",
+    "notes": "_auction_cmd dispatches to kernel.world.auction (browse/list_item/buy). Listing escrows an item out of the world; buying pays the seller and re-clones it to the buyer; unsold items are mailed back on expiry.",
     "superseded_by": "",
     "aliases": [],
     "created": "2026-07-29",
@@ -3516,7 +3516,7 @@
     "tags": [
       "command"
     ],
-    "notes": "Moderation verb over parts.world.bans; audited.",
+    "notes": "Moderation verb over kernel.world.bans; audited.",
     "superseded_by": "",
     "aliases": [],
     "created": "2026-07-29",
@@ -3541,7 +3541,7 @@
     "tags": [
       "command"
     ],
-    "notes": "Moderation verb over parts.world.bans; audited.",
+    "notes": "Moderation verb over kernel.world.bans; audited.",
     "superseded_by": "",
     "aliases": [],
     "created": "2026-07-29",
@@ -3566,7 +3566,7 @@
     "tags": [
       "command"
     ],
-    "notes": "Moderation verb over parts.world.bans; audited.",
+    "notes": "Moderation verb over kernel.world.bans; audited.",
     "superseded_by": "",
     "aliases": [],
     "created": "2026-07-29",
@@ -3591,7 +3591,7 @@
     "tags": [
       "command"
     ],
-    "notes": "_metrics_cmd renders parts.world.metrics.snapshot for a live admin.",
+    "notes": "_metrics_cmd renders kernel.world.metrics.snapshot for a live admin.",
     "superseded_by": "",
     "aliases": [],
     "created": "2026-07-29",
@@ -3616,7 +3616,7 @@
     "tags": [
       "command"
     ],
-    "notes": "Routes to parts.world.durability.repair_session: fully repairs all equipped gear for coins (REPAIR_COST_PER_POINT per point of wear), the economy's coin sink against inflation. Refuses loud (charges nothing) when the purse is short or nothing is worn. Distinct from CMD-04.050 'repair' (the Engineer's field self-heal).",
+    "notes": "Routes to kernel.world.durability.repair_session: fully repairs all equipped gear for coins (REPAIR_COST_PER_POINT per point of wear), the economy's coin sink against inflation. Refuses loud (charges nothing) when the purse is short or nothing is worn. Distinct from CMD-04.050 'repair' (the Engineer's field self-heal).",
     "superseded_by": "",
     "aliases": [],
     "created": "2026-07-30",
@@ -3641,7 +3641,7 @@
     "tags": [
       "command"
     ],
-    "notes": "Routes to parts.world.tutorial.next_step: the state-driven onboarding ladder. Any hero can call it at any stage; a brand-new hero is also nudged toward it on first login (gateway greeting).",
+    "notes": "Routes to kernel.world.tutorial.next_step: the state-driven onboarding ladder. Any hero can call it at any stage; a brand-new hero is also nudged toward it on first login (gateway greeting).",
     "superseded_by": "",
     "aliases": [],
     "created": "2026-07-30",
@@ -3687,7 +3687,7 @@
     "tags": [
       "command"
     ],
-    "notes": "CORE verb over the FTS5 world search index (parts/world/search.py); R&D Technology Admission T-AP-05.",
+    "notes": "CORE verb over the FTS5 world search index (kernel/world/search.py); R&D Technology Admission T-AP-05.",
     "superseded_by": "",
     "aliases": [],
     "created": "2026-08-01",
@@ -3699,7 +3699,7 @@
     "status": "active",
     "function": "engineering workspaces (Seeds): an owner lists/creates/inspects/starts/stops a Seed, connects a local source and models it, and lists its models -- from inside the running MUD (workspace list|create <name> [purpose]|status <id>|start|stop <id>|connect <id> <path>|model <id>)",
     "label": "workspace",
-    "file": "parts/seedlab/workspace_verb.py",
+    "file": "kernel/seedlab/workspace_verb.py",
     "type": "CMD",
     "domain": "10",
     "docs": "docs/seed_platform/RECENTERING.md",
@@ -3710,7 +3710,7 @@
     "tags": [
       "command"
     ],
-    "notes": "CORE owner-gated verb over the Seed Kernel (MOD-10.060 workspace_verb); the in-MUD text half of the workspace surface (GMCP half: parts/seedlab/workspace_gmcp.py). THE SEED IS THE MUD, reachable in-world.",
+    "notes": "CORE owner-gated verb over the Seed Kernel (MOD-10.060 workspace_verb); the in-MUD text half of the workspace surface (GMCP half: kernel/seedlab/workspace_gmcp.py). THE SEED IS THE MUD, reachable in-world.",
     "superseded_by": "",
     "aliases": [],
     "created": "2026-08-01",

@@ -51,24 +51,24 @@ stdlib_alternative = "sqlite3 (stdlib) is the default backend and needs no drive
 removable = "Yes; it is an optional extra. codeforge core runs on SQLite without psycopg; the db seam (parts/db.py) chooses the backend from DATABASE_URL."
 
 [runtime.anthropic]
-why = "Optional (extra 'ai'): the Claude-backed Architect brain, behind the Advisor seam in parts/architect.py. Not installed by default; one API key away from live."
+why = "Optional (extra 'ai'): the Claude-backed Architect brain, behind the Advisor seam in adapters/architect.py. Not installed by default; one API key away from live."
 stdlib_alternative = "None; there is no stdlib LLM client, and the wire protocol is a vendor API. The seam (Advisor protocol) keeps it swappable and testable with a fake."
 removable = "Yes; it is an optional extra. The local rule-based Architect is the default and needs no dependency, so codeforge core runs without anthropic."
 
 [runtime.lupa]
-why = "Optional (extra 'lua'): embeds the Lua runtime so parts/scripting.py can run sandboxed user/creator scripts (the owner @script console). Not installed by default; it bundles Lua, so nothing else is needed."
+why = "Optional (extra 'lua'): embeds the Lua runtime so kernel/scripting.py can run sandboxed user/creator scripts (the owner @script console). Not installed by default; it bundles Lua, so nothing else is needed."
 stdlib_alternative = "None; there is no stdlib scripting-language sandbox, and a hand-rolled interpreter would be a worse, less-safe reimplementation of a proven embedded language."
-removable = "Yes; it is an optional extra. Absent, scripting_available() is False and the game runs untouched; delete parts/scripting.py + the @script command to remove it entirely (ADR-0014)."
+removable = "Yes; it is an optional extra. Absent, scripting_available() is False and the game runs untouched; delete kernel/scripting.py + the @script command to remove it entirely (ADR-0014)."
 
 [runtime.crosshair-tool]
-why = "Optional (extra 'verify'): the deep behavioral-equivalence gate (parts/verify_smt.py) drives CrossHair's symbolic diff_behavior to prove a code transform preserved behavior. Admitted via Track-T T-EXP-08 / CAND-06: it caught a rare-input divergence the stdlib sampler called PRESERVED even at 5000 samples. Not installed by default; the stdlib sampler (transform_verifier) remains the always-available default and CI runs without it (the symbolic tests skip)."
+why = "Optional (extra 'verify'): the deep behavioral-equivalence gate (kernel/verify_smt.py) drives CrossHair's symbolic diff_behavior to prove a code transform preserved behavior. Admitted via Track-T T-EXP-08 / CAND-06: it caught a rare-input divergence the stdlib sampler called PRESERVED even at 5000 samples. Not installed by default; the stdlib sampler (transform_verifier) remains the always-available default and CI runs without it (the symbolic tests skip)."
 stdlib_alternative = "The stdlib sampler (transform_verifier) is the zero-dependency default and stays in place; it just cannot catch rare-input divergences. There is no stdlib concolic/SMT engine, and hand-rolling one would be a worse reimplementation of a proven tool (z3-backed)."
-removable = "Yes; it is an optional extra. Absent, the deep gate fails loud with an install hint and the sampler default is untouched; delete parts/verify_smt.py + the 'verify' extra to remove it entirely."
+removable = "Yes; it is an optional extra. Absent, the deep gate fails loud with an install hint and the sampler default is untouched; delete kernel/verify_smt.py + the 'verify' extra to remove it entirely."
 
 [runtime.libcst]
-why = "Optional (extra 'refactor'): the verifier-gated codemod tool (parts/refactor.py) uses LibCST's ScopeProvider to rename a local/parameter scope-correctly (the binding + its uses only, never a same-named global or another function's binding) and re-emit losslessly (comments/formatting preserved). This is the roadmapped consumer of the verifier gate (content_address -> transform_verifier -> verify_smt). Not installed by default; absent, refactor_available() is False and the tool fails loud."
+why = "Optional (extra 'refactor'): the verifier-gated codemod tool (kernel/refactor.py) uses LibCST's ScopeProvider to rename a local/parameter scope-correctly (the binding + its uses only, never a same-named global or another function's binding) and re-emit losslessly (comments/formatting preserved). This is the roadmapped consumer of the verifier gate (content_address -> transform_verifier -> verify_smt). Not installed by default; absent, refactor_available() is False and the tool fails loud."
 stdlib_alternative = "stdlib ast is LOSSY (ast.unparse drops comments/formatting/parentheses) and has no scope-aware rename; a hand-rolled lossless CST + scope resolver would be a worse reimplementation of LibCST. The stdlib is kept for the analysis view (content_address) but cannot do a fidelity-preserving codemod."
-removable = "Yes; it is an optional extra. Absent, the refactor tool is unavailable and the rest of the fleet is untouched; delete parts/refactor.py + the 'refactor' extra to remove it entirely."
+removable = "Yes; it is an optional extra. Absent, the refactor tool is unavailable and the rest of the fleet is untouched; delete kernel/refactor.py + the 'refactor' extra to remove it entirely."
 
 # ----- dev dependencies (quality gates, never shipped) --------------------------------
 
@@ -146,3 +146,8 @@ removable = "Yes; docs-build only. The repo and its Markdown docs work without t
 why = "End-to-end browser tests for the live HTMX dashboard (e2e/), driving real Chromium against the running app. Test tooling; never imported by the app or the main suite."
 stdlib_alternative = "None; there is no stdlib headless browser. Route-level tests (httpx TestClient) cover the API, but only a browser proves the HTMX behavior end to end."
 removable = "Yes; test-only, isolated in e2e/ and its own CI job. `make check` and the app run without it."
+
+[dev."import-linter"]
+why = "Enforces the style-guide section-2 dependency direction (kernel imports nothing from adapters/content/parts); the `imports` step in make check gates on it."
+stdlib_alternative = "None; a custom AST import-graph check is possible but import-linter is the standard, tested tool."
+removable = "Yes; dev-time only. The contracts move with it if ever replaced."

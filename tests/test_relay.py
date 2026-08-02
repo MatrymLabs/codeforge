@@ -1,9 +1,9 @@
-"""Test twin for parts/relay.py -- the game adapter: a circuit-broken power relay."""
+"""Test twin for kernel/relay.py -- the game adapter: a circuit-broken power relay."""
 
 import pytest
 
-from parts.relay import channel, reset_relay
-from parts.world.session import SESSIONS, Session
+from kernel.relay import channel, reset_relay
+from kernel.world.session import SESSIONS, Session
 
 
 @pytest.fixture(autouse=True)

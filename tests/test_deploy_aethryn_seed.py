@@ -16,7 +16,7 @@ from pathlib import Path
 
 import pytest
 
-from parts.cast import CastError, plan_cast
+from kernel.cast import CastError, plan_cast
 from scripts.deploy_aethryn_seed import (
     AETHRYN_SEED,
     FLAGSHIP_TEMPLATE,

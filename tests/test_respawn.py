@@ -1,4 +1,4 @@
-"""Test twin for parts/world/respawn.py -- the respawn-policy catalog and dynamic-spawn primitive.
+"""Test twin for kernel/world/respawn.py -- the respawn-policy catalog and dynamic-spawn primitive.
 
 Acceptance: pick_room draws a site from a pool (uniform or weighted), seedably and safely on an
 empty pool. Governance: the catalog is well-formed and every policy still points at a real behavior,
@@ -12,7 +12,7 @@ import random
 
 import pytest
 
-from parts.world.respawn import CATALOG, pick_room, policy, render_policies
+from kernel.world.respawn import CATALOG, pick_room, policy, render_policies
 
 
 def test_pick_room_draws_a_candidate_seedably():

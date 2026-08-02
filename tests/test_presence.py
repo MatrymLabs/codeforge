@@ -1,4 +1,4 @@
-"""Test twin for parts/world/presence.py -- the live roster carried on the bus (Phase 4).
+"""Test twin for kernel/world/presence.py -- the live roster carried on the bus (Phase 4).
 
 Acceptance: marking a hero online adds them, offline removes them, and the roster reflects it across
 the bus; count() matches. Cross-process readiness: a SECOND subscriber on the same bus sees the same
@@ -13,7 +13,7 @@ from typing import Any
 
 import pytest
 
-from parts.world import bus, presence
+from kernel.world import bus, presence
 
 
 @pytest.fixture(autouse=True)

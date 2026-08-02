@@ -1,4 +1,4 @@
-"""Test twin for parts/world/broker.py -- the stdlib pub/sub broker behind the bus seam (Phase 4).
+"""Test twin for kernel/world/broker.py -- the stdlib pub/sub broker behind the bus seam (Phase 4).
 
 Acceptance: encode/decode round-trips a frame; the Broker fans a publish to every subscriber of a
 topic (including the sender, whose own delivery handler needs it); unsub and drop stop delivery;
@@ -11,7 +11,7 @@ from __future__ import annotations
 
 import pytest
 
-from parts.world.broker import (
+from kernel.world.broker import (
     Broker,
     BrokerProtocolError,
     decode_frame,

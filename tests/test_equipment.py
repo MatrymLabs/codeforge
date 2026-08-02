@@ -1,4 +1,4 @@
-"""Test twin for parts/world/equipment.py -- gear into slots, modifiers into derived stats.
+"""Test twin for kernel/world/equipment.py -- gear into slots, modifiers into derived stats.
 
 Acceptance: a carried equippable item goes into its slot, its modifiers raise the derived
 stats through the ModifierStack, and the sheet shows it; unequip reverses it. Refusal: a
@@ -13,12 +13,12 @@ import copy
 import pytest
 
 from forge import handle_command
-from parts.world import items
-from parts.world.character_view import sheet_from_session
-from parts.world.equipment import apply_equipment, equip, equipped_loadout, unequip
-from parts.world.jobs import bind_calling
-from parts.world.seed import SeedError, load_items
-from parts.world.session import Session
+from kernel.world import items
+from kernel.world.character_view import sheet_from_session
+from kernel.world.equipment import apply_equipment, equip, equipped_loadout, unequip
+from kernel.world.jobs import bind_calling
+from kernel.world.seed import SeedError, load_items
+from kernel.world.session import Session
 
 
 @pytest.fixture(autouse=True)
@@ -128,8 +128,8 @@ def test_apply_stat_modifiers_clamps_an_out_of_range_derived_stat() -> None:
     """derived_stats documents it can return a negative/oversized value on hostile attributes;
     the next stage must clamp it into the Stat's own [0, 9999] bounds, not raise. (Not reachable
     in normal play - attributes start at 0 - but the two pure functions must not disagree.)"""
-    from parts.world.derived import derived_stats
-    from parts.world.equipment import StatModifier, apply_stat_modifiers
+    from kernel.world.derived import derived_stats
+    from kernel.world.equipment import StatModifier, apply_stat_modifiers
 
     base = derived_stats({"strength": -50}, 0)  # yields a negative ATK
     out = apply_stat_modifiers(base, {"ATK": [StatModifier("sword", flat=5)]})
@@ -140,13 +140,13 @@ def test_apply_stat_modifiers_clamps_an_out_of_range_derived_stat() -> None:
 
 
 def test_item_power_sums_an_items_mods() -> None:
-    from parts.world.equipment import item_power
+    from kernel.world.equipment import item_power
 
     assert item_power("forge_wrench") == 9  # ATK 6 + ACC 3
 
 
 def test_gear_score_is_zero_ungeared_and_sums_worn_power() -> None:
-    from parts.world.equipment import gear_score
+    from kernel.world.equipment import gear_score
 
     s = _engineer_with_wrench()
     assert gear_score(s) == 0  # nothing worn yet
@@ -155,7 +155,7 @@ def test_gear_score_is_zero_ungeared_and_sums_worn_power() -> None:
 
 
 def test_the_score_sheet_shows_the_gear_score_when_geared() -> None:
-    from parts.world.score_sheet import render_score_sheet
+    from kernel.world.score_sheet import render_score_sheet
 
     s = _engineer_with_wrench()
     equip(s, "wrench")
@@ -166,7 +166,7 @@ def test_the_score_sheet_shows_the_gear_score_when_geared() -> None:
 
 
 def test_an_ungeared_sheet_hides_the_gear_score() -> None:
-    from parts.world.score_sheet import render_score_sheet
+    from kernel.world.score_sheet import render_score_sheet
 
     s = Session(player_id="matrym", location="workshop")
     bind_calling(s, "engineer")
@@ -191,7 +191,7 @@ def test_leg_and_feet_gear_equips_into_its_slots() -> None:
 
 
 def test_leg_and_feet_gear_counts_toward_the_gear_score() -> None:
-    from parts.world.equipment import gear_score
+    from kernel.world.equipment import gear_score
 
     s = Session(player_id="matrym", location="workshop")
     bind_calling(s, "engineer")
@@ -203,7 +203,7 @@ def test_leg_and_feet_gear_counts_toward_the_gear_score() -> None:
 
 
 def test_the_score_sheet_shows_the_leg_and_feet_slots() -> None:
-    from parts.world.score_sheet import render_score_sheet
+    from kernel.world.score_sheet import render_score_sheet
 
     s = Session(player_id="matrym", location="workshop")
     bind_calling(s, "engineer")

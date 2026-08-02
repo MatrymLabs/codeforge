@@ -16,11 +16,11 @@ real and roughly balanced.
 
 - **Wealth is created** by effort: felling a foe drops coin scaled to its level and tier
   (`combat._coin_reward`), and selling gathered/looted goods to a merchant pays out. A harder foe,
-  fought up, pays more (`parts/shelf/reward_curve`); a gray foe pays nothing, so grinding trivial
+  fought up, pays more (`kernel/shelf/reward_curve`); a gray foe pays nothing, so grinding trivial
   kills is not a wealth strategy.
 - **Wealth is destroyed** by spending. Two live sinks today: the **settlement merchant**
-  (`parts/world/townsfolk`, one per town, level-banded draughts, buy-back always below sell) and the
-  **Waystone network** (`parts/world/travel`) — the largest sink by design. Fast-travel between the
+  (`kernel/world/townsfolk`, one per town, level-banded draughts, buy-back always below sell) and the
+  **Waystone network** (`kernel/world/travel`) — the largest sink by design. Fast-travel between the
   14 zone hubs costs a fare that scales with the *destination's* level band (`fare(level)`), so every
   time a traveller skips the road, coin drains back out; a hop to the starter valley is a handful of
   cinders, a leap to the endgame a small fortune. Danger, not cost, gates the far zones. Repairs,
@@ -30,7 +30,7 @@ real and roughly balanced.
   rate that scales with their level band. The currency's tiers only change how a balance *reads*;
   they neither create nor destroy value.
 - **Player effort is rewarded** proportionally: level-scaled kill rewards, level-banded gear from
-  named guardians (`parts/world/armory`), and hunt bounties (`parts/world/quest.register_bounties`)
+  named guardians (`kernel/world/armory`), and hunt bounties (`kernel/world/quest.register_bounties`)
   all pay more for harder, deeper content, so progress up the world is progress in wealth.
 - **New players enter** at the base tier (cinders and sparks) with a starter town's affordable
   draughts; **veterans stay engaged** at the top tiers (embers and forgemarks) with deep-world gear,
@@ -44,7 +44,7 @@ VIII), so a seed can dial economic complexity to its deployment tier.
 ## Part II: the currency system
 
 Aethryn does not use gold/silver/copper. Its coin is struck from **cooled ember**, in four tiers
-that scale from a beginner's pocket to a legendary hoard (`parts/world/coinage.py`):
+that scale from a beginner's pocket to a legendary hoard (`kernel/world/coinage.py`):
 
 | Tier | Symbol | Worth | Who deals in it |
 |---|---|---|---|

@@ -20,9 +20,9 @@ import yaml
 from hypothesis import HealthCheck, given, settings
 from hypothesis import strategies as st
 
-from parts.hardware import CatalogError, _parse_catalog
-from parts.manifest import ManifestError, from_dict
-from parts.world.seed import SeedError, load_rooms
+from kernel.hardware import CatalogError, _parse_catalog
+from kernel.manifest import ManifestError, from_dict
+from kernel.world.seed import SeedError, load_rooms
 
 # YAML-representable junk: scalars, lists, and dicts, recursively (depth-capped).
 _scalars = (

@@ -1,8 +1,8 @@
-"""Test twin for parts/store.py -- the two-shelf hardware store inventory."""
+"""Test twin for kernel/store.py -- the two-shelf hardware store inventory."""
 
 from pathlib import Path
 
-from parts.store import hardware_store_catalog, inspect_card, public_interface
+from kernel.store import hardware_store_catalog, inspect_card, public_interface
 
 
 def test_store_stocks_every_built_engine_card():
@@ -14,7 +14,7 @@ def test_store_stocks_every_built_engine_card():
 def test_store_lists_the_reusable_shelf_cores_and_their_interface():
     out = hardware_store_catalog()
     # the physically-extracted cores are back in the catalog, under the reusable section
-    assert "Reusable cores (parts/shelf/" in out and "Engine parts (parts/" in out
+    assert "Reusable cores (kernel/shelf/" in out and "Engine parts (parts/" in out
     assert "token_bucket" in out and "retry" in out
     # the shelf section shows each core's public interface (a real spec sheet)
     assert "TokenBucket" in out and "-> " in out

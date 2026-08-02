@@ -5,7 +5,7 @@ maturity: beta
 purpose: >
   Validate a mapping against composable rules and collect every issue at once, each tagged with its
   field and a readable message; raise_if_invalid is the one loud exit.
-source: parts/shelf/validation.py
+source: kernel/shelf/validation.py
 domain: validation
 inputs: >
   a Validator built from rules (required, matches, in_range, of_type, one_of, max_length) + a
@@ -30,5 +30,5 @@ license: MIT
 source_status: original
 owner: MatrymLabs
 adapters:
-  - parts/name_check.py
-  - parts/payload_check.py
+  - kernel/name_check.py
+  - kernel/payload_check.py

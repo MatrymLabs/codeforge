@@ -1,18 +1,18 @@
-"""Test twin for parts/architect.py -- the advisory Architect NPC.
+"""Test twin for adapters/architect.py -- the advisory Architect NPC.
 
 It navigates: given a question, it points at the right command or catalog part.
 The brain is a swappable seam, so a fake proves the interface without a network."""
 
 import pytest
 
-from forge import handle_command
-from parts.architect import (
+from adapters.architect import (
     ArchitectError,
     ClaudeAdvisor,
     build_claude_advisor,
     consult,
 )
-from parts.world.session import SESSIONS, Session
+from forge import handle_command
+from kernel.world.session import SESSIONS, Session
 
 # --- a fake Anthropic client: the same shape the SDK exposes, no network -----
 

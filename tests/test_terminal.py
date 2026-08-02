@@ -1,8 +1,8 @@
-"""Test twin for parts/terminal.py -- the in-game computer terminal."""
+"""Test twin for adapters/terminal.py -- the in-game computer terminal."""
 
 from __future__ import annotations
 
-from parts.terminal import _NAMES, _run, terminal
+from adapters.terminal import _NAMES, _run, terminal
 
 
 def test_boot_screen_lists_every_wired_program() -> None:
@@ -52,7 +52,7 @@ def test_unknown_program_is_reported_not_run() -> None:
 
 def test_terminal_is_reachable_through_the_engine_tick() -> None:
     from forge import handle_command
-    from parts.world.session import Session
+    from kernel.world.session import Session
 
     out = handle_command(Session(player_id="term"), "terminal")
     assert "Programs" in out and "diagnostic console" in out

@@ -16,11 +16,11 @@ from pathlib import Path
 
 import pytest
 
-from parts.world import crafting, items
-from parts.world.seed import load_items, load_professions, load_recipes
-from parts.world.session import Session
+from kernel.world import crafting, items
+from kernel.world.seed import load_items, load_professions, load_recipes
+from kernel.world.session import Session
 
-_AETHRYN = Path(__file__).resolve().parent.parent / "seeds" / "aethryn"
+_AETHRYN = Path(__file__).resolve().parent.parent / "content" / "seeds" / "aethryn"
 
 # The two exemplar chains slice 1a ships, lowest tier first. Each is (base_material, *steps) where a
 # step is (recipe_label, output_prototype). A step's output must be an input of the next step, and
@@ -84,7 +84,7 @@ def test_every_refinement_link_references_a_real_item(aethryn):
 def test_every_recipe_gate_names_a_real_trade_and_order(aethryn):
     """A gated recipe (slice 1d) must require a real CRAFT profession and/or a real Order, else a
     maker could never earn it."""
-    from parts.world.orders import ORDERS
+    from kernel.world.orders import ORDERS
 
     profs = load_professions(_AETHRYN / "professions.yaml")
     craft_trades = {p for p in profs if profs[p]["kind"] == "craft"}

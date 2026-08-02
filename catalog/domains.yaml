@@ -4,7 +4,7 @@
 # framework, or where they happened to be implemented. Each existing catalog `category` maps to
 # exactly one domain here. A part's numeric catalog address (domain.ordinal) is a computed FILING
 # AID for display; the part's slug `id` remains its permanent IDENTITY. Labels are identity, numbers
-# are filing aids (parts/catalog.py). Add a domain only when a category needs a home; never renumber.
+# are filing aids (kernel/catalog.py). Add a domain only when a category needs a home; never renumber.
 domains:
   - code: "01"
     name: Validation

@@ -1,4 +1,4 @@
-"""Test twin for parts/retention.py -- hold-aware retention analysis (read-only R1).
+"""Test twin for kernel/retention.py -- hold-aware retention analysis (read-only R1).
 
 Acceptance: age is computed from the record stamp; a record past its kind's period is eligible; a
 hold covers by 'all' / kind / 'subject:<prefix>'; plan() partitions active / hold-blocked /
@@ -14,8 +14,8 @@ from pathlib import Path
 
 import pytest
 
-from parts.chronicle import Record, record_incident, record_metric
-from parts.retention import (
+from kernel.chronicle import Record, record_incident, record_metric
+from kernel.retention import (
     DEFAULT_POLICY,
     Hold,
     RetentionError,
@@ -155,7 +155,7 @@ def test_load_policy_fails_loud_when_a_provided_path_is_missing(tmp_path: Path) 
 
 def test_retention_verb_reachable_through_the_engine_tick() -> None:
     from forge import handle_command
-    from parts.world.session import Session
+    from kernel.world.session import Session
 
     out = handle_command(Session(player_id="matrym", location="courtyard"), "retention")
     assert "RETENTION DOCTOR" in out  # read-only doctor over the (empty in tests) Chronicle

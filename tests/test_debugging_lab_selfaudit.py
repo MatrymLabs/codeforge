@@ -9,7 +9,7 @@ caveat.
 
 from __future__ import annotations
 
-from parts.shelf import ddmin, profile_hotspots, sbfl
+from kernel.shelf import ddmin, profile_hotspots, sbfl
 
 
 def test_sbfl_localizes_the_planted_fault() -> None:

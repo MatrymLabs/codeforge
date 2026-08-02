@@ -1,4 +1,4 @@
-"""Test twin for parts/artifact_forge.py: the portfolio-artifact scaffold generator.
+"""Test twin for kernel/artifact_forge.py: the portfolio-artifact scaffold generator.
 
 Acceptance AND refusal cases. Everything materializes into a tmp dir, so no test writes into the
 repo. Hostile cases: an unsafe slug, an unknown kind, a path-traversal key, and a refused overwrite
@@ -12,7 +12,7 @@ from pathlib import Path
 import pytest
 import yaml
 
-from parts import artifact_forge as af
+from kernel import artifact_forge as af
 
 # --- Planning (pure, no filesystem) ----------------------------------------------------------
 

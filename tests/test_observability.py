@@ -1,4 +1,4 @@
-"""Test twin for parts/shelf/observability.py -- structured logs + Prometheus /metrics.
+"""Test twin for kernel/shelf/observability.py -- structured logs + Prometheus /metrics.
 
 Acceptance: the metrics registry renders valid Prometheus exposition; the middleware records
 a request by method/route/status; /metrics serves it with the right content type; the logger
@@ -9,9 +9,9 @@ registry is thread-safe-shaped and resettable.
 import pytest
 from fastapi.testclient import TestClient
 
-from parts.api import app
-from parts.shelf.observability import METRICS, Metrics, configure_logging, get_logger
-from parts.shelf.trace import parse_traceparent, start_trace
+from adapters.api import app
+from kernel.shelf.observability import METRICS, Metrics, configure_logging, get_logger
+from kernel.shelf.trace import parse_traceparent, start_trace
 
 
 @pytest.fixture(autouse=True)

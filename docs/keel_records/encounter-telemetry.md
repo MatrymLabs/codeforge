@@ -5,9 +5,9 @@ critical-junction design decision and its build slice. Per the doctrine, AI prop
 approves; **AI does not assign ownership**. The level-4 ownership claim and the "what I learned"
 reflection below are left for Josh to complete when he can defend the design to an interviewer.*
 
-- **Build (slice 1):** `parts/world/encounter_log.py` (a bounded, non-chained after-action log) wired into
+- **Build (slice 1):** `kernel/world/encounter_log.py` (a bounded, non-chained after-action log) wired into
   the tick at the four encounter beats, plus a read-only `encounters` verb.
-- **Build (slice 2):** `parts/encounter_flush.py` (the trusted boundary) + the owner-gated
+- **Build (slice 2):** `kernel/encounter_flush.py` (the trusted boundary) + the owner-gated
   `@flush-encounters` verb: aggregate the tallies into the Chronicle as one `metric` per kind.
 - **Ownership level claimed:** *(pending Josh's own claim; undeclared until he defends it)*
 
@@ -17,7 +17,7 @@ was "capable core, orphaned last inch"): make combat encounters visible and reta
 proactive behavior is not just felt but recorded and trendable.
 
 ## Problem
-The Chronicle (`parts/chronicle`) is tamper-evident precisely because **every append comes from a
+The Chronicle (`kernel/chronicle`) is tamper-evident precisely because **every append comes from a
 trusted (owner/CI) actor** (`arc_ledger.emit`, `bench --record`, `ai_eval`); there is no
 player-reachable append path, and the Security seat praised exactly that. But encounters happen on
 the **player tick** (`menace`, `_fall_and_recover`, `attack`). A per-encounter write from
@@ -34,13 +34,13 @@ store: the poisoning surface the design forbids.
 - Behavior preserved: recording is additive; no existing render or state changes.
 
 ## Decision (two layers, split at the trust boundary)
-1. **Live layer (slice 1, this record):** `parts/world/encounter_log.py` -- a `CAP`-bounded in-memory ring
+1. **Live layer (slice 1, this record):** `kernel/world/encounter_log.py` -- a `CAP`-bounded in-memory ring
    of recent encounters plus running tallies by kind, written from the tick via `witness(kind, who)`.
    It is **not** the Chronicle: no hash chain, no evidence claim, no import of `chronicle`. A
    read-only `encounters` verb renders the ring + tallies. Wired at the four beats: `open_strike` and
    `leash_break` in `aggression.menace`, `fall` in `combat._fall_and_recover`, `defeat` in
    `combat.attack`.
-2. **Retained layer (slice 2):** `parts/encounter_flush.flush()` reads the tallies and records **one
+2. **Retained layer (slice 2):** `kernel/encounter_flush.flush()` reads the tallies and records **one
    aggregate `metric`** per non-zero kind into the Chronicle via the existing `record_metric`/`trend`
    machinery -- never per event, never from the tick. It is reached ONLY through the owner-gated
    `@flush-encounters` verb, run IN the server process where the in-memory tallies live (a separate

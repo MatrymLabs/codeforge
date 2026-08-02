@@ -30,7 +30,7 @@ treats them.
 
 ## This slice (v1): differential diagnosis before intervention
 
-`parts/hubble/diagnosis.py`: `DiagnosticFinding[]` across dimensions (static / security /
+`kernel/hubble/diagnosis.py`: `DiagnosticFinding[]` across dimensions (static / security /
 dependency / sandbox / retrieval-grounding) -> `decide()` -> a `DiagnosticDecision` with
 confidence and a recommended action (`proceed` / `revise` / `escalate` / `stop`), reasons visible.
 

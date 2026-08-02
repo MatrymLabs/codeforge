@@ -17,7 +17,7 @@ philosophy are the same philosophy, read twice.*
 > reshape it. In the **engine**, the Forge is CodeForge and a Forger is a builder who authors
 > content and parts. Ember is raw potential in the story and unshaped world-data in the code. A
 > Seed is a forged world-in-potential and a `seeds/*.yaml` pack. A Blueprint is a smith's schema
-> and a `parts/blueprint.py` artifact. The Great Chronicle is the world's memory and the
+> and a `kernel/blueprint.py` artifact. The Great Chronicle is the world's memory and the
 > `chronicle/` ledger. The Wardens who keep the Gates are the rank system and the operations
 > roles. This correspondence is deliberate and load-bearing: **every mechanic exists because the
 > world supports it, and every subsystem can become a reusable CodeForge component** precisely
@@ -339,7 +339,7 @@ teamwork, encounter knowledge, adaptation, and intelligent decisions** over refl
 think, live enough to feel real.
 
 *(Engine reading: the combat tick is a scheduled, ordered, pure-function advance of encounter state
-(mirroring `parts/bench.py`'s deterministic tick discipline and architecture law 1). Its order is
+(mirroring `kernel/bench.py`'s deterministic tick discipline and architecture law 1). Its order is
 fixed so it is testable; a parity test can pin tick math the way restore-math is pinned today.)*
 
 ---
@@ -352,7 +352,7 @@ grammar spans exploration, combat, making, and governing. Design tenets:
 - **Verbs are the interface.** Short, guessable, classic MUD verbs; the tick routes on the verb.
 - **One clear responsibility per verb**, explicit target grammar (`verb <noun>`, `verb <noun> with
   <noun>`), input validated loudly (a bad target fails with help, never a crash).
-- **Namespaced by authority** (mirrors `parts/commands.py`): **CORE** verbs anyone uses, **`@`-verbs**
+- **Namespaced by authority** (mirrors `kernel/commands.py`): **CORE** verbs anyone uses, **`@`-verbs**
   for Wardens/staff (rank-gated), **Seed** verbs a world may add without colliding.
 - **Accessibility and quality-of-life are first-class**, not add-ons: aliases, macros, autocomplete,
   history, configurable output, screen-reader-friendly text.
@@ -383,7 +383,7 @@ Everything an item can be, grounded in the Forge economy so each type has a make
   (common → rare → unique → legendary), and **randomized loot** rolled within honest bounds.
 
 *(Engine reading: an item is validated data with a frozen `lowercase_snake_case` label and a
-`display_name()` for render; a Blueprint item is the in-world twin of a `parts/blueprint.py` schema;
+`display_name()` for render; a Blueprint item is the in-world twin of a `kernel/blueprint.py` schema;
 "masterwork" is a quality tier, not a hard-coded value.)*
 
 ---
@@ -451,8 +451,8 @@ Quests are layered so there is always something at the player's scale:
 - **Player-driven content**: Forgers who reach high rank can *author* quests, rooms, and areas (the
   builder endgame), turning players into content-makers.
 
-*(Engine reading: a quest is a `parts/shelf/workflow.py` state machine, exactly the vertical slice already
-built (`parts/world/quest.py`). A dynamic quest is a workflow seeded with world state; player-authored
+*(Engine reading: a quest is a `kernel/shelf/workflow.py` state machine, exactly the vertical slice already
+built (`kernel/world/quest.py`). A dynamic quest is a workflow seeded with world state; player-authored
 content is the builder tools writing Seed data.)*
 
 ---
@@ -697,6 +697,6 @@ Forgers who reshape the world, which is exactly what a CodeForge builder does to
 flagship world proves the flagship engine, because they were designed as the same idea, told twice.
 
 *This bible is design, not engine. It is realized as data in `seeds/*.yaml`; the engine that runs it
-stays genre-neutral and reusable. See `docs/vision_resync.md` (the platform), `parts/world/quest.py` and
-`parts/shelf/workflow.py` (quests as the reference vertical slice), and `chronicle/README.md` (the world's
+stays genre-neutral and reusable. See `docs/vision_resync.md` (the platform), `kernel/world/quest.py` and
+`kernel/shelf/workflow.py` (quests as the reference vertical slice), and `chronicle/README.md` (the world's
 memory made literal).*

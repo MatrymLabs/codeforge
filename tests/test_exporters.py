@@ -1,11 +1,11 @@
-"""Test twin for parts/exporters.py -- the practical adapter + the one-core proof."""
+"""Test twin for kernel/exporters.py -- the practical adapter + the one-core proof."""
 
 import json
 
 import pytest
 
-from parts.exporters import CsvExporter, ExporterHub, default_hub
-from parts.shelf.plugin_registry import PluginError, PluginRegistry
+from kernel.exporters import CsvExporter, ExporterHub, default_hub
+from kernel.shelf.plugin_registry import PluginError, PluginRegistry
 
 
 def test_the_default_hub_exports_json_and_csv():
@@ -28,7 +28,7 @@ def test_a_new_exporter_can_be_registered():
 
 
 def test_one_core_powers_both_the_game_heralds_and_the_practical_exporters():
-    import parts.heralds as game
+    import kernel.heralds as game
 
     hub = ExporterHub()
     assert isinstance(hub._registry, PluginRegistry)  # the exporter hub uses the core

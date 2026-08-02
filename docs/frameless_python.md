@@ -29,14 +29,14 @@ What CodeForge is **not defined by** any one tool:
 
 | Concern | How CodeForge does it | Standard-library / own-architecture proof |
 |---|---|---|
-| CLI parsing | hand-rolled argv dispatch, no argparse framework | `parts/cli.py` |
-| Config / content | YAML seeds validated by my own loader gates | `parts/world/seed.py` |
-| State | SQLite via SQLAlchemy (a data tool, behind my own `parts/world/db.py`) | `parts/world/db.py` |
-| Events | my own in-process event bus | `parts/world/events.py` |
+| CLI parsing | hand-rolled argv dispatch, no argparse framework | `adapters/cli.py` |
+| Config / content | YAML seeds validated by my own loader gates | `kernel/world/seed.py` |
+| State | SQLite via SQLAlchemy (a data tool, behind my own `kernel/world/db.py`) | `kernel/world/db.py` |
+| Events | my own in-process event bus | `kernel/world/events.py` |
 | Reports | my own `ReportWriter`, plain Markdown | `parts/reporting.py` |
-| Classification | my own registry + designations, not a plugin framework | `parts/registry.py` |
+| Classification | my own registry + designations, not a plugin framework | `kernel/registry.py` |
 | Task running | Make + shell, the Ritual | `Makefile` |
-| Diagnostics UI | plain-text renders, deterministic and testable, no TUI library | `parts/terminal.py`, `parts/frameup.py` |
+| Diagnostics UI | plain-text renders, deterministic and testable, no TUI library | `adapters/terminal.py`, `kernel/frameup.py` |
 
 The tools that *are* present (Ruff, mypy, pytest, pip-audit, bandit, detect-secrets,
 cyclonedx, CodeQL, Dependabot) are **dev-time and CI-time quality gates**, not the runtime

@@ -1,4 +1,4 @@
-"""Test twin for parts/qualitygate.py -- the Safety + QA spine.
+"""Test twin for kernel/qualitygate.py -- the Safety + QA spine.
 
 Acceptance (a complete object passes, the self-audit runs over the real registry,
 an admin object is rated higher risk) and refusal (a built object missing its file
@@ -11,7 +11,7 @@ from pathlib import Path
 import pytest
 
 from forge import handle_command
-from parts.qualitygate import (
+from kernel.qualitygate import (
     FAIL,
     PASS,
     docs_check,
@@ -19,8 +19,8 @@ from parts.qualitygate import (
     run_gate,
     safety_review,
 )
-from parts.registry import Designation
-from parts.world.session import SESSIONS, Session
+from kernel.registry import Designation
+from kernel.world.session import SESSIONS, Session
 
 
 def _rec(designation: str = "PRT-05.001", **over: object) -> Designation:
@@ -30,7 +30,7 @@ def _rec(designation: str = "PRT-05.001", **over: object) -> Designation:
         status="active",
         function="does a thing",
         label="thing",
-        file="parts/registry.py",  # a real file, so QG02 passes
+        file="kernel/registry.py",  # a real file, so QG02 passes
         tests="tests/test_registry.py",  # a real test, so QG03 passes
     )
     base.update(over)
@@ -50,7 +50,7 @@ def test_run_gate_honors_the_shared_stat_cache() -> None:
     # EXP-002: run_gate reads path existence from the shared memo instead of re-stat'ing.
     # Pre-seed the cache with a lie (the real file DOES exist) and prove the gate trusts it,
     # which proves the memo is consulted and duplicate stats are eliminated.
-    rec = _rec()  # file=parts/registry.py, tests=tests/test_registry.py (both real)
+    rec = _rec()  # file=kernel/registry.py, tests=tests/test_registry.py (both real)
     cache = {rec.file: False, rec.tests: False}
     result = run_gate(rec, stat_cache=cache)
     qg02 = next(c for c in result.checks if c.check_id == "QG02")
@@ -107,7 +107,7 @@ def test_the_shipped_board_has_no_failures() -> None:
     # The growth gate (hard bar): no filed object may be `active` without a file + tests
     # -- that would be a FAIL. A missing docs link is only a soft `watch`. So a red board
     # means an untested/unfiled active object slipped in; CI must catch it here.
-    from parts.registry import load_collective
+    from kernel.registry import load_collective
 
     fails = [r.designation for r in gate_all(load_collective()) if r.verdict == FAIL]
     assert not fails, f"QA board has failures (untested/unfiled active objects): {fails}"
@@ -137,7 +137,7 @@ def test_safety_review_flags_item_and_prototype_branches() -> None:
 
 
 def test_render_paths_handle_an_unknown_designation() -> None:
-    from parts.qualitygate import render_gate, render_safety
+    from kernel.qualitygate import render_gate, render_safety
 
     assert "No object" in render_gate("RM-09.999")
     assert "No object" in render_safety("RM-09.999")

@@ -10,15 +10,15 @@ dependencies = ["pyyaml", "sqlalchemy", "fastapi", "uvicorn", "websockets", "pyd
 # every non-dev extra into the runtime set, so `anthropic` is justified in the ledger.
 ai = ["anthropic>=0.120.2"]
 postgres = ["psycopg[binary]>=3.3.4"]
-# Embedded Lua scripting (the sandboxed @script console; parts.scripting). Optional: absent -> the
+# Embedded Lua scripting (the sandboxed @script console; kernel.scripting). Optional: absent -> the
 # feature reports itself unavailable and the game is untouched (ADR-0014). lupa bundles the runtime.
 lua = ["lupa>=2.8"]
-# The deep behavioral-equivalence verifier (parts.verify_smt). Optional: absent -> the deep gate
+# The deep behavioral-equivalence verifier (kernel.verify_smt). Optional: absent -> the deep gate
 # fails loud with an install hint and the stdlib sampler (transform_verifier) remains the default;
 # CI runs without it (the symbolic tests skip). Admitted via Track-T T-EXP-08 / CAND-06. crosshair
 # pulls z3-solver (which ships an aarch64 wheel).
 verify = ["crosshair-tool>=0.0.109"]
-# Verifier-gated Python codemods (parts.refactor: scope-correct rename). Optional: absent -> the
+# Verifier-gated Python codemods (kernel.refactor: scope-correct rename). Optional: absent -> the
 # tool reports refactor_available() False and fails loud with an install hint; nothing else is
 # affected. LibCST is the only lossless scope-aware codemod path (stdlib ast is lossy). deep=True
 # additionally uses the [verify] extra. CI runs without it (the scope-correctness tests skip).
@@ -30,6 +30,7 @@ dev = [
     "ruff==0.16.0",
     "mypy",
     "types-PyYAML",
+    "import-linter",  # style-guide section 2: enforce the kernel/adapters/content dependency direction
     "pytest",
     "pytest-cov",
     "pytest-xdist",
@@ -45,20 +46,24 @@ dev = [
 ]
 
 [project.scripts]
-codeforge = "parts.cli:main"
-spark = "parts.cli:spark"
+codeforge = "adapters.cli:main"
+spark = "adapters.cli:spark"
 
 [build-system]
 requires = ["setuptools>=83.0.0"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
-packages = ["parts", "parts.evolution", "parts.stewardship", "parts.hubble", "parts.shelf", "parts.world"]
+# Style-guide section 2: modules are migrating from parts/ into the kernel/adapters/content layers.
+packages = [
+    "kernel", "kernel.evolution", "kernel.hubble", "kernel.shelf", "kernel.world",
+    "adapters", "adapters.stewardship", "content",
+]
 py-modules = ["forge"]
 
 [tool.setuptools.package-data]
 # The browser gate serves this page; it must ship inside the installed wheel.
-parts = ["web/*.html"]
+adapters = ["web/*.html"]
 
 [tool.ruff]
 line-length = 100
@@ -75,7 +80,7 @@ warn_unused_ignores = true
 # The typecheck scope, declared here so it is the single source of truth: the Makefile,
 # any IDE, and external auditors all see the same set. `e2e/` is deliberately excluded
 # (it carries a second conftest.py; a whole-tree `mypy .` would collide on the basename).
-files = ["parts", "tests", "forge.py"]
+files = ["kernel", "adapters", "content", "tests", "forge.py"]
 
 # anthropic is an optional 'ai' extra (the Claude Architect brain), not installed in the
 # dev/CI venv; it is lazy-imported behind the Advisor seam. Don't require its stubs here.

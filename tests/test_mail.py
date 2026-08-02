@@ -1,4 +1,4 @@
-"""Test twin for parts/world/mail.py -- asynchronous letters between heroes.
+"""Test twin for kernel/world/mail.py -- asynchronous letters between heroes.
 
 Acceptance: a letter to a real hero is sent and lands in their inbox; the inbox lists newest-first
 with unread marked; read shows the body and clears the unread mark; delete discards it; an online
@@ -12,11 +12,11 @@ import copy
 
 import pytest
 
-from parts.world import events, mail, mail_store
-from parts.world import items as _items
-from parts.world.character_store import CharacterRecord
-from parts.world.characters import _default_store, save_character
-from parts.world.session import SESSIONS, Session
+from kernel.world import events, mail, mail_store
+from kernel.world import items as _items
+from kernel.world.character_store import CharacterRecord
+from kernel.world.characters import _default_store, save_character
+from kernel.world.session import SESSIONS, Session
 
 
 @pytest.fixture(autouse=True)
@@ -139,7 +139,7 @@ def test_the_mail_verb_is_reachable():
 
 # --- item attachments (mail gift / mail claim) --------------------------------------------------
 def test_gift_mails_a_carried_item_and_claim_brings_it_back():
-    from parts.world.items import carrier, items_in, prototype_of
+    from kernel.world.items import carrier, items_in, prototype_of
 
     try:
         alia = _sender("alia")
@@ -162,7 +162,7 @@ def test_gift_mails_a_carried_item_and_claim_brings_it_back():
 
 
 def test_gift_refuses_a_bad_target_uncarried_or_worn_item():
-    from parts.world.items import carrier
+    from kernel.world.items import carrier
 
     try:
         alia = _sender("alia")

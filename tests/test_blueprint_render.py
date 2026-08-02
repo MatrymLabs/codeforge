@@ -1,12 +1,12 @@
-"""Test twin for parts/blueprint_render.py -- the static HTML projection.
+"""Test twin for kernel/blueprint_render.py -- the static HTML projection.
 
 Acceptance: a Blueprint renders to a semantic, accessible HTML document carrying its real
 content, and files to reports/blueprints/. Refusal: hostile Blueprint text is HTML-escaped,
 never injected.
 """
 
-from parts.blueprint import from_dict
-from parts.blueprint_render import render_fragment, render_html, write_html
+from kernel.blueprint import from_dict
+from kernel.blueprint_render import render_fragment, render_html, write_html
 
 _BP = from_dict(
     {

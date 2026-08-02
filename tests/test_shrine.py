@@ -1,4 +1,4 @@
-"""Test twin for parts/world/shrine.py -- pray at a wayshrine for a rest boon.
+"""Test twin for kernel/world/shrine.py -- pray at a wayshrine for a rest boon.
 
 Acceptance: a room with a shrine restores a share of the pilgrim's pools to `pray`, then the shrine
 falls quiet until its cooldown ticks out; a room without a shrine (and a pilgrim already whole) fail
@@ -11,10 +11,10 @@ from __future__ import annotations
 import pytest
 
 import forge
-from parts.world import shrine
-from parts.world.resources import Resource
-from parts.world.session import SESSIONS, Session
-from parts.world.world import WORLD
+from kernel.world import shrine
+from kernel.world.resources import Resource
+from kernel.world.session import SESSIONS, Session
+from kernel.world.world import WORLD
 
 
 @pytest.fixture(autouse=True)
@@ -82,7 +82,7 @@ def test_pray_is_reachable_through_the_engine_tick():
 
 
 def test_the_wildlands_seeds_exactly_one_wayshrine_per_region():
-    from parts.world.wildlands import generate_wildlands
+    from kernel.world.wildlands import generate_wildlands
 
     cfg = {
         "id": "probe_wild",

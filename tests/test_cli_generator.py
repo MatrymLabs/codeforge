@@ -1,4 +1,4 @@
-"""Test twin for parts/seedlab/cli_generator.py -- generate a runnable CLI target from a model.
+"""Test twin for kernel/seedlab/cli_generator.py -- generate a runnable CLI target from a model.
 
 Acceptance: generation emits a runnable layout with checksums + provenance; it is reproducible (same
 model -> same manifest hash); the generated target RUNS (`--version`) and its generated TESTS PASS
@@ -14,7 +14,7 @@ from pathlib import Path
 
 import pytest
 
-from parts.seedlab.cli_generator import (
+from kernel.seedlab.cli_generator import (
     GeneratedArtifact,
     GeneratorError,
     generate_cli,
@@ -23,8 +23,8 @@ from parts.seedlab.cli_generator import (
     validate_runs,
     validate_tests,
 )
-from parts.seedlab.project_model import ProjectModel, Provenance
-from parts.seedlab.source_connector import LocalSource
+from kernel.seedlab.project_model import ProjectModel, Provenance
+from kernel.seedlab.source_connector import LocalSource
 
 
 def _model(
@@ -79,7 +79,7 @@ def test_identity_with_symbols_yields_a_valid_package(tmp_path: Path) -> None:
 
 def test_full_flow_from_a_source(tmp_path: Path) -> None:
     # Stage 4 -> 6: model a real source, then generate + run a CLI from that model.
-    from parts.seedlab.source_modeler import model_from_source
+    from kernel.seedlab.source_modeler import model_from_source
 
     src_root = tmp_path / "proj"
     (src_root / "widget").mkdir(parents=True)

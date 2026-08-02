@@ -1,4 +1,4 @@
-"""Test twin for parts/integrity.py -- the RepoIntegrityRitual.
+"""Test twin for kernel/integrity.py -- the RepoIntegrityRitual.
 
 Integrity-first: the report must be HONEST. These pin that tool detection reflects
 reality (injectable `which`), that a missing secret-scanner is reported
@@ -13,7 +13,7 @@ from pathlib import Path
 
 import pytest
 
-from parts.integrity import (
+from kernel.integrity import (
     build_report,
     career_currency_gaps,
     forward_claims,
@@ -206,7 +206,7 @@ def test_save_report_writes_a_dated_file(tmp_path: Path):
 
 
 def test_run_repo_integrity_writes_a_real_report():
-    from parts.integrity import run_repo_integrity
+    from kernel.integrity import run_repo_integrity
 
     path = run_repo_integrity()  # builds + saves under reports/repo_integrity/ (gitignored)
     assert path.exists()

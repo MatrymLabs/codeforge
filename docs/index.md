@@ -31,7 +31,7 @@ management, safety/QA, and truth/evidence discipline. Each system is real and te
   a [Claude-backed Architect](architect_brain.md) that is an API key away.
 - **The data layer.** [SQLite by default, PostgreSQL for production](database.md), with
   Alembic migrations and [typed configuration](configuration.md).
-- **The audit stack.** [Frame-up](frame_up.md), [VeritasGate](veritas.md),
+- **The audit stack.** [Frame-up](frame_up.md), [EvidenceGate](evidence_gate.md),
   [Safety and QA](safety_qa_system.md), and [repo integrity](repo_integrity.md) - the machine
   grades itself.
 - **The evidence.** A [career board](career_evidence_board.md) maps the work to job-ready

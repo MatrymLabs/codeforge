@@ -1,6 +1,6 @@
 # The Architect's brain (an API key away from live)
 
-The Architect NPC (`parts/architect.py`) answers Workshop questions through a **seam** - the
+The Architect NPC (`adapters/architect.py`) answers Workshop questions through a **seam** - the
 `Advisor` protocol (`advise(prompt) -> str`). Two brains implement it behind the *same*
 interface, so callers (`consult`, the `ai` verb) never change:
 
@@ -21,7 +21,7 @@ export CODEFORGE_ARCHITECT=claude    # opt in; default is the local guide
 
 With `CODEFORGE_ARCHITECT` unset (or not `claude`), the Architect stays local. If Claude is
 requested but the key or package is missing, `consult` falls back to the local guide **and
-says so** in a one-line note - the gap is surfaced, never hidden (VeritasGate).
+says so** in a one-line note - the gap is surfaced, never hidden (EvidenceGate).
 
 ## Why it is safe by construction
 

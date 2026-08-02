@@ -5,7 +5,7 @@ maturity: beta
 purpose: >
   Normalize untrusted text deterministically and idempotently: drop control characters, fold
   whitespace, trim, optionally lowercase, and cap the length.
-source: parts/shelf/sanitizer.py
+source: kernel/shelf/sanitizer.py
 domain: validation
 inputs: >
   a string + a SanitizeRule (strip_controls, collapse_whitespace, trim, lowercase, max_length)
@@ -25,5 +25,5 @@ license: MIT
 source_status: original
 owner: MatrymLabs
 adapters:
-  - parts/titles.py
-  - parts/field_sanitizer.py
+  - kernel/titles.py
+  - kernel/field_sanitizer.py

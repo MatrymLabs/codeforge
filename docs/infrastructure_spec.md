@@ -32,18 +32,18 @@ These are not aspirations; they are already enforced in code and every subsystem
 
 1. **The server is authoritative; clients are presentation.** No gameplay state lives only on a
    client. A client renders projections (text, GMCP frames) of canonical server state and sends
-   intents; it never owns truth. (EXISTS: `parts/gmcp.py` frames are read-only projections;
+   intents; it never owns truth. (EXISTS: `kernel/gmcp.py` frames are read-only projections;
    mutations only through the tick.)
 2. **State is canonical; text is a projection.** Renderers and broadcasts never mutate world state;
    only validated engine logic does. (EXISTS: architecture law 1.)
 3. **The world is data.** Content lives in `seeds/*.yaml`, validated by loader gates in
-   `parts/world/seed.py`; it is never hard-coded in Python. (EXISTS.)
+   `kernel/world/seed.py`; it is never hard-coded in Python. (EXISTS.)
 4. **The tick is the only door.** `handle_command(session, text) -> str` in `forge.py` is the single
    mutation entry point; every driver (TCP, web, future gateways) is a thin caller. (EXISTS.)
-5. **Authorization before capability.** `@`-verbs check rank via `parts/world/ranks.py` before any
+5. **Authorization before capability.** `@`-verbs check rank via `kernel/world/ranks.py` before any
    code runs; HTTP admin mutations require owner-account auth. (EXISTS.)
 6. **Derive, don't store.** Records persist minimal canonical facts; stats/resources recompute on
-   restore, pinned by a parity test. (EXISTS: `parts/world/characters.py`.)
+   restore, pinned by a parity test. (EXISTS: `kernel/world/characters.py`.)
 7. **Persistence is a port, not a framework leak.** Storage sits behind the `CharacterStore` Python
    contract with SQL and in-memory adapters. (EXISTS: `docs/persistence_ports.md`.)
 
@@ -61,13 +61,13 @@ describes how it decomposes into services without rewriting the core.
 |-----------|--------|-------------------------------|
 | **Game loop / tick** | EXISTS | `forge.handle_command(session, text) -> str`. Pure-function, command-driven (one command = one tick), synchronous under a global lock. There is no free-running frame loop; the "loop" is the stream of player commands plus the world beat. |
 | **Tick / world beat** | EXISTS | A monotonic `beat` counter advanced inside the tick (`forge.py`: `tick_climate` / `tick_gather` / `_sands_beat`). Time-based systems (climate `climate.py`, afflictions/daze, aggression, respawn, self-closing doors) derive from the beat rather than wall-clock threads. |
-| **Command dispatcher** | EXISTS | The command spine: `parts/commands.py` (`Command` / `CommandSet`), namespaced `CORE` / `ADMIN @` / `SEED`, longest-verb-first match, rank-gated, argument case preserved (architecture law 7). |
-| **Event bus** | EXISTS | `parts/world/events.py`: room-scoped `announce` / `announce_frame`, set-scoped `announce_to`, world-wide `broadcast`, and the typed GMCP push channel `push_gmcp` / `push_channel` (frames to a player set). Delivery is per-sink, dead sinks pruned. |
-| **Session manager** | EXISTS | `parts/world/session.py`: `SESSIONS: dict[player_id, Session]`, `roster()`. A `Session` is per-connection live state; identity is a lowercase label, renamed on login (`rename_echo` / `rename_gmcp`). |
+| **Command dispatcher** | EXISTS | The command spine: `kernel/commands.py` (`Command` / `CommandSet`), namespaced `CORE` / `ADMIN @` / `SEED`, longest-verb-first match, rank-gated, argument case preserved (architecture law 7). |
+| **Event bus** | EXISTS | `kernel/world/events.py`: room-scoped `announce` / `announce_frame`, set-scoped `announce_to`, world-wide `broadcast`, and the typed GMCP push channel `push_gmcp` / `push_channel` (frames to a player set). Delivery is per-sink, dead sinks pruned. |
+| **Session manager** | EXISTS | `kernel/world/session.py`: `SESSIONS: dict[player_id, Session]`, `roster()`. A `Session` is per-connection live state; identity is a lowercase label, renamed on login (`rename_echo` / `rename_gmcp`). |
 | **Scheduler** | EXISTS | The beat is a cooperative scheduler for periodic world logic (respawns, reclose, climate); a general timed-job queue (`scheduler.py`, MOD-04.126, #594) rides the beat for one-shot/recurring jobs (e.g. the auction expiry sweep). |
-| **Login / world / auth / character services** | PARTIAL | All exist as *modules in one process*: login dialogue in the gateway front desk, auth in `parts/world/accounts.py`, character persistence behind the `CharacterStore` port. They are not yet separate *services* (§11). |
-| **HTTP admin driver** | EXISTS | `parts/api.py` (FastAPI): a separate driver that reads **canonical storage** (SQL + seeds), not live sessions, because separate processes share databases, not memory. Owner-auth on mutations. |
-| **Read-only web Lens** | EXISTS | `parts/dashboard.py`: server-rendered HTML + JSON twin projecting real state (career board, QA gate, hardware store, perf run); frameless, fails honest. |
+| **Login / world / auth / character services** | PARTIAL | All exist as *modules in one process*: login dialogue in the gateway front desk, auth in `kernel/world/accounts.py`, character persistence behind the `CharacterStore` port. They are not yet separate *services* (§11). |
+| **HTTP admin driver** | EXISTS | `adapters/api.py` (FastAPI): a separate driver that reads **canonical storage** (SQL + seeds), not live sessions, because separate processes share databases, not memory. Owner-auth on mutations. |
+| **Read-only web Lens** | EXISTS | `kernel/dashboard.py`: server-rendered HTML + JSON twin projecting real state (career board, QA gate, hardware store, perf run); frameless, fails honest. |
 | **Message queue** | DEFERRED | Not needed in-process. Becomes the inter-service spine at Launch (§11). |
 | **Plugin architecture** | DESIGNED | See §2.3. |
 | **Hot reload** | DESIGNED | See §2.5. |
@@ -84,7 +84,7 @@ Target boundaries (module → future service):
 
 - **Auth Service** ← `accounts.py` (credential verify, salted pbkdf2).
 - **Character Service** ← `characters.py` + the `CharacterStore` port (load/save canonical facts).
-- **World Server** ← `forge.py` tick + `parts/world/*` (the authoritative simulation).
+- **World Server** ← `forge.py` tick + `kernel/world/*` (the authoritative simulation).
 - **Session/Gateway** ← `gateway.py` / `web_gateway.py` (connection lifecycle, protocol).
 - **Admin/Ops** ← `api.py` + `dashboard.py`.
 
@@ -93,7 +93,7 @@ Target boundaries (module → future service):
 Two extension mechanisms already exist and generalise into the plugin contract:
 - **The command spine** - new verbs register as `Command` objects in a `CommandSet` with a namespace
   and rank; a "plugin" is a module that registers verbs + world data through the loader gates.
-- **The Hardware Store shelf** (`parts/shelf/*`) - reusable, tested parts with cards.
+- **The Hardware Store shelf** (`kernel/shelf/*`) - reusable, tested parts with cards.
 
 Spec: a plugin is a Python package that (a) declares its `Command`s and namespaces, (b) contributes
 seed data through the validated loaders (never raw Python content), (c) registers event listeners on
@@ -126,13 +126,13 @@ Two tiers, both server-authoritative:
 
 ### 3.1 Current (EXISTS)
 
-- **Transport:** threaded TCP (`parts/gateway.py`, `ThreadingTCPServer`, thread-per-connection under
-  one `TICK_LOCK`) + an async web gateway (`parts/web_gateway.py`). `TCP_NODELAY` set (Nagle off) so
+- **Transport:** threaded TCP (`adapters/gateway.py`, `ThreadingTCPServer`, thread-per-connection under
+  one `TICK_LOCK`) + an async web gateway (`adapters/web_gateway.py`). `TCP_NODELAY` set (Nagle off) so
   each interactive line flushes without the ~40 ms delayed-ACK stall.
 - **Protocol:** line-based text in, sanitized text out (control chars stripped). **Telnet** option
   negotiation (RFC 854/857) for password blackout (`IAC WILL/WONT ECHO`), codec in
-  `parts/shelf/telnet_codec.py`.
-- **Structured channel:** **GMCP** (telnet option 201, `parts/gmcp.py`): offered on connect; a
+  `kernel/shelf/telnet_codec.py`.
+- **Structured channel:** **GMCP** (telnet option 201, `kernel/gmcp.py`): offered on connect; a
   capable client enables it and receives `Char.Vitals/Room.Info/Target/Quest/Items/Skills/Resists/
   Party/Guild/Mail/Friends` frames and `Comm.Channel` chat, emit-on-change plus a live push channel.
   A raw `nc` never negotiates and stays plain text.
@@ -140,7 +140,7 @@ Two tiers, both server-authoritative:
   (`bind_echo` + `bind_gmcp`) → play → teardown (save, leave party/trade/guild, `unbind_*`, drop
   session), all under the lock.
 - **Rate limiting / flood protection:** a per-address login-failure ledger with a cooldown window
-  (`gateway.py`), a concurrent-connection **bulkhead** (`parts/shelf/bulkhead.py`, reject overflow
+  (`gateway.py`), a concurrent-connection **bulkhead** (`kernel/shelf/bulkhead.py`, reject overflow
   fast), a max-line-bytes cap (a newline-less flood cannot be an unbounded read), and an idle
   timeout.
 - **Reconnect/heartbeat:** the client owns reconnect with backoff + a circuit breaker
@@ -274,7 +274,7 @@ Architecture law 2: the world is data. Placement guide:
 | Belongs in | What | Status |
 |------------|------|--------|
 | **YAML seeds** (`seeds/<world>/*.yaml`) | Rooms, NPCs, items, abilities, recipes, quests, settlements, doors, zones - the authored/validated world | EXISTS |
-| **Generated data** | Procedural rooms/foes/loot from generators (`parts/world/*` generators), emitted deterministically | EXISTS |
+| **Generated data** | Procedural rooms/foes/loot from generators (`kernel/world/*` generators), emitted deterministically | EXISTS |
 | **SQL database** | Mutable per-player and per-world runtime state (§4) | EXISTS |
 | **Config** (env / `.env.example`, TOML) | Deployment knobs (DB path, scale, ports); secrets never committed | EXISTS |
 | **Markdown** | Docs, ADRs, this spec | EXISTS |
@@ -303,7 +303,7 @@ part.** Never hard-code content in Python; a loader gate must validate it and fa
 
 ## 9. Logging & observability
 
-- **Structured logging (PARTIAL):** the observability shelf part (`parts/shelf/observability.py`)
+- **Structured logging (PARTIAL):** the observability shelf part (`kernel/shelf/observability.py`)
   exists; the gateway now emits structured JSON lifecycle events (`gateway_start`/`connection_open`/
   `connection_close`/`gateway_stop`, #601). Still to standardise: correlation ids per session/command
   fleet-wide.
@@ -360,8 +360,8 @@ rewrite: the tick, spine, bus, and port are unchanged.
 ### 11.3 Launch - the shared bus (the one true seam) - BUILT
 The single architectural investment that unlocks multi-process: **a shared live-state bus** so a
 second process (a second gateway, the admin service) sees live rosters and can push to sessions it
-does not own. **This is built** (Phase 4, #602-#605): a `MessageBus` seam (`parts/world/bus.py`) with
-an in-process default and a **stdlib socket broker** (`parts/world/broker.py` + `socket_bus.py`) as
+does not own. **This is built** (Phase 4, #602-#605): a `MessageBus` seam (`kernel/world/bus.py`) with
+an in-process default and a **stdlib socket broker** (`kernel/world/broker.py` + `socket_bus.py`) as
 its network backing - no Redis dependency, and the seam keeps a Redis/queue adapter open behind the
 same Protocol if scale ever demands it. The **event bus + push channel now publish onto it**, so
 presence and membership-scoped delivery (party/guild/broadcast/chat) already cross processes. What
@@ -421,7 +421,7 @@ only net-new backbone piece is the shared bus (§11.3); everything else is a con
 ## 14. Hardware Store integration
 
 Every persistent system should be inspectable and reusable, not a hidden implementation detail. The
-Hardware Store (`parts/shelf/*`, catalogued with cards + test twins) already holds infrastructure
+Hardware Store (`kernel/shelf/*`, catalogued with cards + test twins) already holds infrastructure
 parts: the **bulkhead** (connection cap), **token-bucket** throttle, **circuit-breaker**,
 **telnet-codec**, **observability**, **cohort** (transient group), **feature-flags**, **repository**
 patterns. The doctrine for this spec:

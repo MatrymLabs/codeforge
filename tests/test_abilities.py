@@ -1,4 +1,4 @@
-"""Test twin for parts/world/abilities.py + seed.load_abilities -- usable combat moves.
+"""Test twin for kernel/world/abilities.py + seed.load_abilities -- usable combat moves.
 
 Acceptance: a job wields its abilities (a strike scales on a stat and reuses the combat defeat path;
 a heal restores HP), each spends MP, and `use`/`skills` are reachable through the engine tick.
@@ -15,10 +15,10 @@ from pathlib import Path
 import pytest
 
 import forge
-from parts.world import npcs
-from parts.world.abilities import abilities_for, render_abilities, use_ability
-from parts.world.seed import Npc, SeedError, load_abilities
-from parts.world.session import SESSIONS, Session
+from kernel.world import npcs
+from kernel.world.abilities import abilities_for, render_abilities, use_ability
+from kernel.world.seed import Npc, SeedError, load_abilities
+from kernel.world.session import SESSIONS, Session
 
 
 @pytest.fixture(autouse=True)
@@ -94,7 +94,7 @@ def test_a_drain_never_overheals_past_the_maximum() -> None:
 
 # --- regen: a woven heal-over-time that mends across the world beats -----------------------------
 def test_a_regen_ability_mends_over_the_world_beat() -> None:
-    from parts.world.afflictions import tick_regens
+    from kernel.world.afflictions import tick_regens
 
     s = _at_dummy("artificer")
     s.resources["hp"] = s.resources["hp"].damage(30)  # take a wound the HoT can mend
@@ -270,7 +270,7 @@ def _abilities_file(tmp_path: Path, body: str) -> Path:
 
 def test_every_shipped_seed_abilities_file_loads() -> None:
     # every seeds/<world>/abilities.yaml is valid data (fails loud here, not at a player's boot)
-    seeds = Path(__file__).resolve().parent.parent / "seeds"
+    seeds = Path(__file__).resolve().parent.parent / "content" / "seeds"
     files = sorted(seeds.glob("*/abilities.yaml"))
     assert files  # at least first-forge ships one
     for f in files:
@@ -278,9 +278,9 @@ def test_every_shipped_seed_abilities_file_loads() -> None:
 
 
 def test_aethryn_ships_a_moveset_for_each_calling() -> None:
-    from parts.world.seed import load_jobs
+    from kernel.world.seed import load_jobs
 
-    seeds = Path(__file__).resolve().parent.parent / "seeds"
+    seeds = Path(__file__).resolve().parent.parent / "content" / "seeds"
     ab = load_abilities(seeds / "aethryn" / "abilities.yaml")
     wielders = {job for a in ab.values() for job in a["jobs"]}
     callings = set(load_jobs(seeds / "aethryn" / "jobs.yaml"))  # loader drops 'template'
@@ -343,8 +343,8 @@ def test_load_abilities_refuses_a_malformed_ability(tmp_path: Path, body: str, m
 
 
 def test_a_subjob_lends_its_kit_so_switching_opens_a_new_moveset() -> None:
-    from parts.world.abilities import abilities_for_session
-    from parts.world.jobs import set_secondary
+    from kernel.world.abilities import abilities_for_session
+    from kernel.world.jobs import set_secondary
 
     s = _at_dummy("vanguard")
     # primary only: the vanguard's own kit (a strike + the taunt), before any subjob is lent
@@ -359,7 +359,7 @@ def test_a_subjob_lends_its_kit_so_switching_opens_a_new_moveset() -> None:
 
 
 def test_a_subjob_ability_is_wieldable_not_refused_by_calling() -> None:
-    from parts.world.jobs import set_secondary
+    from kernel.world.jobs import set_secondary
 
     s = _at_dummy("vanguard")
     assert "cannot wield" in use_ability(s, "arcane bolt on dummy")  # refused before a subjob
@@ -369,7 +369,7 @@ def test_a_subjob_ability_is_wieldable_not_refused_by_calling() -> None:
 
 
 def test_render_abilities_marks_the_subjob_moves() -> None:
-    from parts.world.jobs import set_secondary
+    from kernel.world.jobs import set_secondary
 
     s = _at_dummy("vanguard")
     set_secondary(s, "scholar")
@@ -437,7 +437,7 @@ def _durable_foe(resistances: dict[str, str] | None = None) -> Npc:
 def test_a_typed_strike_tears_into_a_weak_foe(monkeypatch) -> None:
     """An ability's element meets the foe's resistance grid: a Weak foe takes +50% (freeze the fire
     creature, don't burn it). This is the mirror of a foe's typed blow vs the player's grid."""
-    from parts.world.abilities import ABILITIES
+    from kernel.world.abilities import ABILITIES
 
     s = _at_dummy("engineer")
     foe = _durable_foe()
@@ -452,7 +452,7 @@ def test_a_typed_strike_tears_into_a_weak_foe(monkeypatch) -> None:
 
 
 def test_a_typed_strike_is_nullified_by_an_immune_foe(monkeypatch) -> None:
-    from parts.world.abilities import ABILITIES
+    from kernel.world.abilities import ABILITIES
 
     s = _at_dummy("engineer")
     foe = _durable_foe({"FIR": "Immune"})
@@ -473,7 +473,7 @@ def test_an_untyped_strike_ignores_a_foes_resistance() -> None:
 
 
 def test_a_typed_brand_is_refused_by_an_immune_foe(monkeypatch) -> None:
-    from parts.world.abilities import ABILITIES
+    from kernel.world.abilities import ABILITIES
 
     s = _at_dummy("scholar")  # the scholar wields Corrode (a brand)
     foe = _durable_foe({"FIR": "Immune"})
@@ -500,8 +500,8 @@ def test_load_abilities_accepts_a_typed_ability(tmp_path: Path) -> None:
 def test_a_cooldown_locks_the_ability_until_a_landed_strike_thaws_it(monkeypatch) -> None:
     """The cadence gate: a cooldown'd ability locks after use, is refused while recovering, and
     thaws as the combat clock advances (a landed strike -- basic attack -- ages every cooldown)."""
-    from parts.world.abilities import ABILITIES
-    from parts.world.combat import attack
+    from kernel.world.abilities import ABILITIES
+    from kernel.world.combat import attack
 
     s = _at_dummy("engineer")  # the engineer wields Power Strike (a strike)
     monkeypatch.setitem(ABILITIES["power_strike"], "cooldown", 2)
@@ -529,7 +529,7 @@ def test_a_no_cooldown_ability_never_locks() -> None:
 
 
 def test_skills_shows_a_cooldown_and_its_live_recovery(monkeypatch) -> None:
-    from parts.world.abilities import ABILITIES
+    from kernel.world.abilities import ABILITIES
 
     s = _at_dummy("engineer")
     monkeypatch.setitem(ABILITIES["power_strike"], "cooldown", 3)
@@ -541,7 +541,7 @@ def test_skills_shows_a_cooldown_and_its_live_recovery(monkeypatch) -> None:
 def test_the_aethryn_seed_arms_a_rotation() -> None:
     # aethryn (the flagship) gives powerful moves real cooldowns while light strikes stay filler.
     ab = load_abilities(
-        Path(__file__).resolve().parent.parent / "seeds" / "aethryn" / "abilities.yaml"
+        Path(__file__).resolve().parent.parent / "content" / "seeds" / "aethryn" / "abilities.yaml"
     )
     assert any(a.get("cooldown", 0) > 0 for a in ab.values())  # a rotation exists
     assert any(a.get("cooldown", 0) == 0 for a in ab.values())  # spammable filler remains
@@ -569,7 +569,7 @@ def _aggressor(label: str = "reaver", location: str = "courtyard", atk: int = 5)
 
 
 def test_a_taunt_forces_the_foe_onto_the_wielder() -> None:
-    from parts.world import threat
+    from kernel.world import threat
 
     threat._reset()
     tank = _seated("vanguard", "bram")
@@ -593,7 +593,7 @@ def test_a_taunt_needs_a_present_foe() -> None:
 
 
 def test_a_heal_generates_threat_on_engaged_foes() -> None:
-    from parts.world import threat
+    from kernel.world import threat
 
     threat._reset()
     healer = _seated("scholar", "cleo")

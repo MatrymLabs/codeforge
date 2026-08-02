@@ -1,4 +1,4 @@
-"""Test twin for parts/world/allocate.py -- spend the attribute points a level-up grants.
+"""Test twin for kernel/world/allocate.py -- spend the attribute points a level-up grants.
 
 Acceptance: points are earned by level and derived (earned - spent), a spend raises the attribute
 (and HP/MP for stamina/magic), and the allocation persists through the StatBlock and a save/restore.
@@ -10,8 +10,8 @@ from __future__ import annotations
 import pytest
 
 import forge
-from parts.world import allocate
-from parts.world.session import SESSIONS, Session
+from kernel.world import allocate
+from kernel.world.session import SESSIONS, Session
 
 
 @pytest.fixture(autouse=True)
@@ -86,7 +86,7 @@ def test_the_allocation_persists_through_serialize_and_restore():
 
 
 def test_allocation_survives_a_character_restore_folded_into_stats():
-    from parts.world.characters import restore_character
+    from kernel.world.characters import restore_character
 
     casefile = {
         "job": "vanguard",

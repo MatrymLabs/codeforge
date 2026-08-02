@@ -5,7 +5,7 @@ For the background and citations behind these recommendations, see
 [`mud-security-best-practices.md`](mud-security-best-practices.md).
 
 **Threat model:** a long-running, stateful, line-oriented TCP/telnet server,
-LAN-only by design (`parts/gateway.py` docstring). SQLite persistence, a
+LAN-only by design (`adapters/gateway.py` docstring). SQLite persistence, a
 FastAPI admin surface. The realistic adversaries are a malicious LAN client
 and, if ever exposed, the open internet.
 
@@ -13,7 +13,7 @@ and, if ever exposed, the open internet.
 ✅ done · 🔨 in progress · 📋 planned · 🧭 deferred (needs infra/deploy decisions)
 
 ## Authentication & credentials
-- ✅ **pbkdf2-sha256, per-account salt, constant-time compare** (`parts/world/accounts.py`).
+- ✅ **pbkdf2-sha256, per-account salt, constant-time compare** (`kernel/world/accounts.py`).
 - ✅ **Generic login refusals** - no user-enumeration oracle.
 - ✅ **Password floor raised to 8** (`MIN_PASSWORD_LEN`, NIST SP 800-63B).
   Was 4 (trivially brute-forceable).
@@ -39,10 +39,10 @@ and, if ever exposed, the open internet.
   (chat) with raw ESC sequences could corrupt or spoof other terminals.
 - ✅ **Read/idle timeouts** - see DoS section below.
 - ✅ **Input line-length cap** - `MAX_LINE_BYTES = 4096` bounds `readline`
-  (`parts/gateway.py:34`), so a single no-newline flood is not an unbounded read.
+  (`adapters/gateway.py:34`), so a single no-newline flood is not an unbounded read.
 
 ## Authorization & privilege separation
-- ✅ `@`-verbs check rank before running (`parts/world/ranks.py`; architecture law #5).
+- ✅ `@`-verbs check rank before running (`kernel/world/ranks.py`; architecture law #5).
 - ✅ No `eval`/`exec` verb exposed (the classic MUD escalation vector).
 - 📋 **Audit-log privileged actions** (actor + target + verb).
 

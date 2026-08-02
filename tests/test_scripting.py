@@ -1,4 +1,4 @@
-"""Test twin for parts.scripting -- the sandboxed Lua interpreter. The SAFETY suite is the evidence.
+"""Test twin for kernel.scripting -- the sandboxed Lua interpreter. The SAFETY suite is evidence.
 
 Acceptance: a safe script computes a value and emit()s output. Refusal (the whole point): every
 dangerous capability -- os, io, require, load, dofile, package, debug -- is unreachable; a runaway
@@ -14,7 +14,7 @@ from __future__ import annotations
 
 import pytest
 
-from parts.scripting import LuaSandbox, ScriptError, ScriptResult, scripting_available
+from kernel.scripting import LuaSandbox, ScriptError, ScriptResult, scripting_available
 
 _needs_lua = pytest.mark.skipif(
     not scripting_available(), reason="Lua runtime not installed (the [lua] extra)"

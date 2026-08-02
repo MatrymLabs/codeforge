@@ -27,7 +27,7 @@ pack as the cited external source; keep `canon.yaml` as the on-disk, test-gated 
 
 ```
 aethryn_world_seed.json + AETHRYN_WORLD_BIBLE.md   (external source, v0.1)
-      -> seeds/aethryn/canon.yaml                  (machine-checkable snapshot; parts/world/canon.py gates it)
+      -> seeds/aethryn/canon.yaml                  (machine-checkable snapshot; kernel/world/canon.py gates it)
       -> docs/aethryn_lore_bible.md                (the readable companion)
       -> docs/aethryn_seed_reconciliation.md       (this file: crosswalk + coverage)
 ```
@@ -40,7 +40,7 @@ files as a legacy alternate, not current canon.
 
 ## Canon tier crosswalk
 
-The seed labels every record C0 to C4. This repo's `parts/world/canon.py` uses `CANON_STATUSES`.
+The seed labels every record C0 to C4. This repo's `kernel/world/canon.py` uses `CANON_STATUSES`.
 They line up like this:
 
 | Seed tier | Meaning | This repo's `canon_status` |
@@ -56,7 +56,7 @@ edited; C4 is allowed to conflict because it is belief, not fact.
 
 ## Coverage matrix (built vs. gaps)
 
-Checked against `seeds/aethryn/` and `parts/world/` on the day this doc landed.
+Checked against `seeds/aethryn/` and `kernel/world/` on the day this doc landed.
 
 ### Built and faithful to the source
 - **14 regions**: names and threat bands **all match** the seed (Veridia 1-30 through The Voidscar
@@ -72,7 +72,7 @@ Checked against `seeds/aethryn/` and `parts/world/` on the day this doc landed.
   the Scars, Ashforged Houses, Deep Archive, Tidebound League, Greenward Compact) live in
   `canon.yaml` as `world_factions` (CANON_WORKING / C2), validated by `canon.py`. The Surveyor's
   `faction_references` check (folded into `world validate`) catches any location that names an
-  unknown faction. (Distinct from the legacy `parts/world/factions.py`, which models the game's
+  unknown faction. (Distinct from the legacy `kernel/world/factions.py`, which models the game's
   Orders and their standings, not these world powers.)
 - **Collective-term tiers.** `canon.yaml`'s `collective_names` carries each of the six names for the
   Seven Crowns with its own tier and worldview: Seven Crowns and Seven Wounds are `CANON_LOCKED`
@@ -80,18 +80,18 @@ Checked against `seeds/aethryn/` and `parts/world/` on the day this doc landed.
   Validated by `canon.py` (`collective_names`).
 - **The region adjacency graph.** `seeds/aethryn/world_graph.yaml` encodes every region's land
   neighbours and bordering seas from the seed's `adjacent_regions` / `water_edges`;
-  `parts/world/worldgraph.py` validates it against canon and computes reachability. All 14 regions
+  `kernel/world/worldgraph.py` validates it against canon and computes reachability. All 14 regions
   are reachable from the spawn by land or sea. This powers `world find-unreachable`, `world inspect`,
   and `world graph`, and folds reachability into `world validate`.
 - **The generation contract, as data.** `seeds/aethryn/generation_contract.yaml` encodes the seed's
   GENERATION_CONTRACT: the 16 `required_area_fields`, the historical layers, the minor-area archetype
   mix (35 / 20 / 20 / 15 / 10), the dungeon grammar, and the forbidden changes.
-  `parts/world/generation_contract.py` validates it and exposes the checks (`missing_fields` for one
+  `kernel/world/generation_contract.py` validates it and exposes the checks (`missing_fields` for one
   area, `distribution_gaps` for a batch). **The cave forge is contract-compliant**: every generated
   cave carries all 16 required fields (identity, historical layer, livelihood, conflict, world-clue,
   provenance, ...), composed deterministically, and its `_validation_report` fails if any is missing.
-- **The generator half of the brief**: the deterministic cave forge (`parts/world/caves.py`), the
-  area bench (`parts/world/area_store.py`), and the read-only validators (`parts/world/survey.py`,
+- **The generator half of the brief**: the deterministic cave forge (`kernel/world/caves.py`), the
+  area bench (`kernel/world/area_store.py`), and the read-only validators (`kernel/world/survey.py`,
   the `world` CLI). Generated content is stamped `GENERATED_LOCAL` (C3) and may raise a forbidden
   topic only as a `RUMOR` (C4).
 

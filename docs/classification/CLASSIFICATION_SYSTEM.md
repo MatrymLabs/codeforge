@@ -193,7 +193,7 @@ in-code annotations. The bridge is one line, both directions:
 ## Implementation staircase (each step ships green)
 
 - **Phase 1 - rules & schema.** *(this document + `designation.schema.json`)*
-- **Phase 2 - the registry card.** `parts/registry.py`: `Designation` dataclass,
+- **Phase 2 - the registry card.** `kernel/registry.py`: `Designation` dataclass,
   `load_registry`, `mint_designation`, `validate` + a test twin. No wiring yet.
 - **Phase 3 - file the 16 starter rooms.** First real data.
 - **Phase 4 - NPCs & items.**

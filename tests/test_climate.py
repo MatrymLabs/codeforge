@@ -1,4 +1,4 @@
-"""Test twin for parts/world/climate.py -- the world's season and weather on the beat.
+"""Test twin for kernel/world/climate.py -- the world's season and weather on the beat.
 
 Acceptance: season wheels through the year and weather shifts within a season, both derived PURELY
 from the beat (same beat, same sky). The `weather` view and the tick compose; the tick is silent.
@@ -6,8 +6,8 @@ from the beat (same beat, same sky). The `weather` view and the tick compose; th
 
 from __future__ import annotations
 
-from parts.world import climate
-from parts.world.climate import SEASONS, climate_line, season_of, weather_of
+from kernel.world import climate
+from kernel.world.climate import SEASONS, climate_line, season_of, weather_of
 
 
 def test_season_wheels_through_the_year():
@@ -19,7 +19,7 @@ def test_season_wheels_through_the_year():
 
 
 def test_weather_belongs_to_its_season_and_holds_then_shifts():
-    from parts.world.climate import _WEATHER
+    from kernel.world.climate import _WEATHER
 
     for beat in (0, 7, 45, 120):
         assert weather_of(beat) in _WEATHER[season_of(beat)], "weather fits its season"

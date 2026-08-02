@@ -1,4 +1,4 @@
-"""Test twin for parts/ledger.py: the double-entry ledger.
+"""Test twin for kernel/ledger.py: the double-entry ledger.
 
 Acceptance AND refusal cases. The headline guarantee -- money is conserved, total debits always
 equal total credits -- is pinned here on worked examples and, exhaustively, by the Hypothesis
@@ -11,7 +11,7 @@ from __future__ import annotations
 
 import pytest
 
-from parts.ledger import Account, Ledger, LedgerError, Transfer
+from kernel.ledger import Account, Ledger, LedgerError, Transfer
 
 
 def _funded_ledger() -> Ledger:

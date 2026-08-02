@@ -37,7 +37,7 @@ artifacts already existed, so only the Learning Record was genuinely missing.
 When a recurring pattern appears (repeated validation, state transitions, command routing, retry,
 parsing, adapters, report generation, event handling, health checks, utilities, workflow), **do not
 immediately refactor**. Instead: document it, compare it against existing cards, and decide -
-reuse / extend / become v2 / become a new card. The **Harvest Lens** (`parts/harvest_lens.py`)
+reuse / extend / become v2 / become a new card. The **Harvest Lens** (`kernel/harvest_lens.py`)
 automates the discovery; a human makes the decision with evidence.
 
 ## Improvement proposals
@@ -103,10 +103,10 @@ Learning Record). What the code-learning literature says, and how it shapes the 
 
 Named gaps the research surfaced, now **shipped** (the `holistic-code-analysis-2026` Learning Record):
 
-1. **Holistic quality metrics** - `parts/complexity.py` (the `complexity` verb): McCabe cyclomatic
+1. **Holistic quality metrics** - `kernel/complexity.py` (the `complexity` verb): McCabe cyclomatic
    complexity per function from the AST, flagging hot-spots - the Analyze station's third fold. No
    new dependency.
-2. **Clone / near-duplicate detection** - `parts/clone_scan.py` (the `clones` verb): structural AST
+2. **Clone / near-duplicate detection** - `kernel/clone_scan.py` (the `clones` verb): structural AST
    shape hashing that finds duplicated logic the Harvest Lens's name/docstring signals cannot. On its
    first live run it caught a real duplication (`blueprint.load_all` vs `learning_record.load_all`)
    that passing tests never flagged.

@@ -152,7 +152,7 @@ def aethryn_journey() -> None:
     env = {**os.environ, "CODEFORGE_DB": str(db), "FORGE_SEED": "aethryn", "PYTHONUNBUFFERED": "1"}
     t0 = time.monotonic()
     server = subprocess.Popen(
-        [sys.executable, "-c", f"from parts.gateway import serve; serve(port={AETHRYN_PORT})"],
+        [sys.executable, "-c", f"from adapters.gateway import serve; serve(port={AETHRYN_PORT})"],
         cwd=ROOT,
         env=env,
         stdout=subprocess.PIPE,
@@ -216,7 +216,11 @@ def multiplayer_journey() -> None:
     env = {**os.environ, "CODEFORGE_DB": str(db), "PYTHONUNBUFFERED": "1"}
     t0 = time.monotonic()
     server = subprocess.Popen(
-        [sys.executable, "-c", f"from parts.gateway import serve; serve(port={MULTIPLAYER_PORT})"],
+        [
+            sys.executable,
+            "-c",
+            f"from adapters.gateway import serve; serve(port={MULTIPLAYER_PORT})",
+        ],
         cwd=ROOT,
         env=env,
         stdout=subprocess.PIPE,
@@ -283,7 +287,7 @@ def _forgeward_hubs() -> list[tuple[str, str]]:
     zones the flagship grows."""
     import yaml
 
-    ae = ROOT / "seeds" / "aethryn"
+    ae = ROOT / "content" / "seeds" / "aethryn"
     zones = yaml.safe_load((ae / "zones.yaml").read_text(encoding="utf-8"))
     stones = yaml.safe_load((ae / "waystones.yaml").read_text(encoding="utf-8"))
     ordered = sorted(
@@ -299,8 +303,8 @@ def _forgeward_hubs() -> list[tuple[str, str]]:
 
 def spine_journey() -> None:
     """A fourth leg: WALK THE WHOLE CAMPAIGN. The Forgeward Road is the main-road quest whose beats
-    are ARRIVING at each zone hub in level order (parts.world.spine); the Waystone network is how
-    you cross the world (parts.world.travel). This carries a provisioned hero hub-to-hub over the
+    are ARRIVING at each zone hub in level order (kernel.world.spine); the Waystone network is how
+    you cross the world (kernel.world.travel). This carries a provisioned hero hub-to-hub over the
     gateway across every zone, proving the campaign advances one leg per arrival all the way to the
     shipped endgame (the Voidscar) -- the create -> zones -> endgame through-line, live end to end.
 
@@ -313,7 +317,7 @@ def spine_journey() -> None:
     env = {**os.environ, "CODEFORGE_DB": str(db), "FORGE_SEED": "aethryn", "PYTHONUNBUFFERED": "1"}
     t0 = time.monotonic()
     server = subprocess.Popen(
-        [sys.executable, "-c", f"from parts.gateway import serve; serve(port={SPINE_PORT})"],
+        [sys.executable, "-c", f"from adapters.gateway import serve; serve(port={SPINE_PORT})"],
         cwd=ROOT,
         env=env,
         stdout=subprocess.PIPE,
@@ -340,7 +344,7 @@ def spine_journey() -> None:
             [
                 sys.executable,
                 "-c",
-                "from parts.world.characters import _default_store; "
+                "from kernel.world.characters import _default_store; "
                 "print(_default_store().add_coins('wayfarer', 100_000_000))",
             ],
             cwd=ROOT,
@@ -396,7 +400,7 @@ def main() -> int:
     # --- START THE RITUAL (essence): an isolated forge lights -----------------
     t0 = time.monotonic()
     server = subprocess.Popen(
-        [sys.executable, "-c", f"from parts.gateway import serve; serve(port={PORT})"],
+        [sys.executable, "-c", f"from adapters.gateway import serve; serve(port={PORT})"],
         cwd=ROOT,
         env=env,
         stdout=subprocess.PIPE,
@@ -477,7 +481,7 @@ def main() -> int:
             [
                 sys.executable,
                 "-c",
-                "import sys, parts.world.characters as c; print(c.set_rank(sys.argv[1], sys.argv[2]))",  # noqa: E501
+                "import sys, kernel.world.characters as c; print(c.set_rank(sys.argv[1], sys.argv[2]))",  # noqa: E501
                 "scout",
                 "owner",
             ],

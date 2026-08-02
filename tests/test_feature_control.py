@@ -1,9 +1,9 @@
-"""Test twin for parts/feature_control.py -- the practical adapter + the one-core proof."""
+"""Test twin for kernel/feature_control.py -- the practical adapter + the one-core proof."""
 
 import pytest
 
-from parts.feature_control import FeatureControl
-from parts.shelf.feature_flags import FeatureFlagError, FlagRegistry
+from kernel.feature_control import FeatureControl
+from kernel.shelf.feature_flags import FeatureFlagError, FlagRegistry
 
 
 def test_the_registered_default_governs_without_an_env_override():
@@ -30,7 +30,7 @@ def test_an_unknown_flag_is_an_error():
 
 
 def test_one_core_powers_both_the_game_panel_and_the_practical_control():
-    import parts.features as game
+    import kernel.features as game
 
     fc = FeatureControl(env={})
     assert isinstance(fc._registry, FlagRegistry)  # the practical control uses the core

@@ -1,4 +1,4 @@
-"""Test twin for parts/world/cull.py -- zone-scoped 'fell N of a kind' contracts at volume.
+"""Test twin for kernel/world/cull.py -- zone-scoped 'fell N of a kind' contracts at volume.
 
 Acceptance: each zone posts one cull per creature-type of its biome per count-tier, modeled as an
 N-step chain that walks to done one kill at a time. Distinctness: a cull listens on `<zone>|<kind>`,
@@ -7,8 +7,8 @@ so a kill in one zone never advances another zone's board. Refusal: a biome-less
 
 from __future__ import annotations
 
-from parts.world.bestiary import cullable_types
-from parts.world.cull import (
+from kernel.world.bestiary import cullable_types
+from kernel.world.cull import (
     CULL_PREFIX,
     generate_culls,
     is_cull,
@@ -69,7 +69,7 @@ def test_a_biomeless_zone_posts_nothing_and_forging_is_deterministic():
 def test_the_board_reads_varied_not_a_thousand_clones():
     # The mechanic is fixed, but presentation must vary: across a zone's kinds the contract framings
     # differ (not all "Cull the X"), tiers get distinct words, and the close is region-toned.
-    from parts.world.cull import generate_culls
+    from kernel.world.cull import generate_culls
 
     culls = generate_culls(_ZONES)
     # name reads "<tier-phrase> <framing>: the <kind>-kind of <zone>", e.g. "A great Purge: ...".
@@ -83,7 +83,7 @@ def test_the_board_reads_varied_not_a_thousand_clones():
 
 
 def test_the_flavour_is_deterministic():
-    from parts.world.cull import generate_culls
+    from kernel.world.cull import generate_culls
 
     a = {(c["id"], c["name"]) for c in generate_culls(_ZONES)}
     b = {(c["id"], c["name"]) for c in generate_culls(_ZONES)}

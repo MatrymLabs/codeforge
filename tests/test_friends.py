@@ -1,4 +1,4 @@
-"""Test twin for parts/world/friends.py -- a hero's personal friends list.
+"""Test twin for kernel/world/friends.py -- a hero's personal friends list.
 
 Acceptance: a real hero is added and appears on the list; render marks who is online; remove drops a
 name; the list survives a save + restore. Refusal: a missing name, yourself, an unknown hero, a
@@ -8,15 +8,15 @@ someone does NOT add you to their list. Real store, quarantined to tmp by confte
 
 from __future__ import annotations
 
-from parts.world import events, friends
-from parts.world.character_store import CharacterRecord
-from parts.world.characters import (
+from kernel.world import events, friends
+from kernel.world.character_store import CharacterRecord
+from kernel.world.characters import (
     _default_store,
     load_character,
     restore_character,
     save_character,
 )
-from parts.world.session import SESSIONS, Session
+from kernel.world.session import SESSIONS, Session
 
 
 def _hero(name: str = "alia") -> Session:

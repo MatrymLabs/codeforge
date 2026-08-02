@@ -5,7 +5,7 @@ maturity: beta
 purpose: >
   Drive any lifecycle defined as data: role-gated moves between states, a recorded
   history trail, and named effects the caller applies.
-source: parts/shelf/workflow.py
+source: kernel/shelf/workflow.py
 domain: orchestration
 inputs: >
   a workflow definition (states, steps with roles/guards/effects, terminal states)
@@ -19,7 +19,7 @@ interfaces:
   - WorkflowEngine.advance
   - WorkflowEngine.is_done
 dependencies:
-  - parts.shelf.statemachine
+  - kernel.shelf.statemachine
 security: >
   never mutates world state; effects are names the caller applies;
   role gating refuses before firing
@@ -31,5 +31,5 @@ license: MIT
 source_status: original
 owner: MatrymLabs
 adapters:
-  - parts/world/quest.py
-  - parts/onboarding.py
+  - kernel/world/quest.py
+  - kernel/onboarding.py

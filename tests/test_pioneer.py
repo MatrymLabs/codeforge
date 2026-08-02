@@ -1,4 +1,4 @@
-"""Test twin for parts/pioneer.py -- Pioneer Mode surfaced in the MUD."""
+"""Test twin for kernel/pioneer.py -- Pioneer Mode surfaced in the MUD."""
 
 from __future__ import annotations
 
@@ -7,7 +7,7 @@ from pathlib import Path
 
 import pytest
 
-from parts.pioneer import (
+from kernel.pioneer import (
     PioneerError,
     load_ladder,
     pioneer,
@@ -71,7 +71,7 @@ def test_pioneer_dispatch_routes_each_view() -> None:
 
 def test_pioneer_is_reachable_through_the_engine_tick() -> None:
     from forge import handle_command
-    from parts.world.session import Session
+    from kernel.world.session import Session
 
     out = handle_command(Session(player_id="pio"), "pioneer risks")
     assert "risk ladder" in out

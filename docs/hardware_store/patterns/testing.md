@@ -15,7 +15,7 @@ Patterns for CodeForge" (section 19, Testing Harnesses) and the Software Parts d
 
 ## The part: `test-evidence`
 
-`parts/shelf/test_evidence.py` -- an `EvidenceLedger`: `expect` the checks you require, `record` each
+`kernel/shelf/test_evidence.py` -- an `EvidenceLedger`: `expect` the checks you require, `record` each
 outcome (with the ledger's environment and commit), and ask `passed()`. The **load-bearing rules**: an
 expected-but-unrecorded check is `MISSING` (a step that never ran can never be a pass), a runner
 `ERROR` is **distinct** from a test `FAILED`, and `passed()` is true only when there is at least one
@@ -27,7 +27,7 @@ list everything not passed.
 
 ## GAME-TO-PRACTICAL TRANSLATION
 
-- **Game component:** a world-readiness certificate (`parts/world_cert.py`).
+- **Game component:** a world-readiness certificate (`kernel/world_cert.py`).
 - **Core behavior:** record check outcomes and report an honest overall verdict.
 - **Game-specific presentation:** "EVIDENCE: PASS" with per-check rows.
 - **Reusable domain logic:** the whole `EvidenceLedger` (game-free).
@@ -39,9 +39,9 @@ list everything not passed.
 
 ## Adapters (one core, two lives)
 
-- **Game:** `parts/world_cert.py` -- the `certify` verb records evidence for the world's readiness
+- **Game:** `kernel/world_cert.py` -- the `certify` verb records evidence for the world's readiness
   checks (NPCs and callings loaded) and reports whether it is certified. Tick-reachable.
-- **Practical:** `parts/release_gate.py` -- a `ReleaseGate` expects lint/tests/coverage/security
+- **Practical:** `kernel/release_gate.py` -- a `ReleaseGate` expects lint/tests/coverage/security
   evidence and is ready only when all have PASSED; a step that never ran blocks the release.
 
 ## Evidence

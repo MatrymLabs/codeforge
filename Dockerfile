@@ -8,8 +8,9 @@ WORKDIR /app
 # Package source, then install (the console scripts `spark`/`codeforge` land on PATH).
 COPY pyproject.toml README.md LICENSE ./
 COPY forge.py ./
-COPY parts/ parts/
-COPY seeds/ seeds/
+COPY kernel/ kernel/
+COPY adapters/ adapters/
+COPY content/ content/
 RUN pip install --no-cache-dir .
 
 # Never run a network service as root -- even a toy one. A FIXED numeric UID (not just a name) lets
@@ -22,7 +23,7 @@ USER 10001
 # a volume carries it across containers:
 #   docker run -p 4000:4000 -v codeforge_data:/data codeforge
 # Boot a different game with:  -e FORGE_SEED=sword-art-online
-ENV CODEFORGE_SEEDS_ROOT=/app/seeds \
+ENV CODEFORGE_SEEDS_ROOT=/app/content/seeds \
     CODEFORGE_DB=/data/codeforge.db
 
 EXPOSE 4000

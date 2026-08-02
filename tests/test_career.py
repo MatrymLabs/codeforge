@@ -1,6 +1,6 @@
-"""Test twin for parts/career.py -- the Career Evidence Sign.
+"""Test twin for kernel/career.py -- the Career Evidence Sign.
 
-The headline test is the VeritasGate one: the shipped board never marks a skill `proven`
+The headline test is the EvidenceGate one: the shipped board never marks a skill `proven`
 or `partial` while citing a proof path that does not exist. Acceptance (views render) and
 refusal (malformed matrix fails loud) are pinned too.
 """
@@ -12,7 +12,7 @@ from pathlib import Path
 
 import pytest
 
-from parts.career import (
+from kernel.career import (
     CareerError,
     career,
     load_board,
@@ -32,7 +32,7 @@ def test_the_shipped_board_loads() -> None:
 
 
 def test_no_proven_or_partial_skill_cites_a_missing_artifact() -> None:
-    # VeritasGate: every claim of evidence must point to a real file/dir on disk.
+    # EvidenceGate: every claim of evidence must point to a real file/dir on disk.
     board = load_board()
     violations = unproven_claims(board)
     assert not violations, "Career board overclaims (proof path does not exist):\n" + "\n".join(
@@ -266,7 +266,7 @@ def test_career_dispatch_routes_each_view() -> None:
 def test_career_is_reachable_through_the_engine_tick() -> None:
     # A feature isn't wired until handle_command proves a player can reach it.
     from forge import handle_command
-    from parts.world.session import Session
+    from kernel.world.session import Session
 
     out = handle_command(Session(player_id="career_tick"), "career gaps")
     assert "GAPS" in out

@@ -1,4 +1,4 @@
-"""Test twin for parts/generate.py -- @sg, the system item generator.
+"""Test twin for kernel/generate.py -- @sg, the system item generator.
 
 Acceptance (a known pattern spawns, a second spawn gets a unique instance, the
 wizard command reaches it through the tick) and refusal (unknown pattern conjures
@@ -10,9 +10,9 @@ from collections.abc import Iterator
 import pytest
 
 from forge import handle_command
-from parts.generate import generate_item, load_patterns, system_generate
-from parts.world.items import ITEMS
-from parts.world.session import SESSIONS, Session
+from kernel.generate import generate_item, load_patterns, system_generate
+from kernel.world.items import ITEMS
+from kernel.world.session import SESSIONS, Session
 
 _PATTERNS = {
     "excalibur": {"name": "Excalibur, the drawn blade", "keywords": ["excalibur", "sword"]},

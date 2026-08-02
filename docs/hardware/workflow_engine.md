@@ -12,16 +12,16 @@ one core part proven in the game and reused in a practical application. Part Man
 | **version** | 0.1 (beta) |
 | **maturity** | `beta` (demonstrated in two contexts; not yet stable, not yet persistent) |
 | **purpose** | Drive any lifecycle defined as data: role-gated moves between states, a recorded history trail, and named effects the caller applies. |
-| **source** | `parts/shelf/workflow.py` (built on the pure FSM `parts/shelf/statemachine.py`) |
+| **source** | `kernel/shelf/workflow.py` (built on the pure FSM `kernel/shelf/statemachine.py`) |
 | **domain** | orchestration |
 | **inputs** | a workflow definition (states, steps with roles/guards/effects, terminal states) + an `Instance` + an event + an actor role |
 | **outputs** | a `Fired(dst, effect)` or `Refusal(reason)`; a mutated local `Instance` with history |
 | **interfaces** | `build_workflow(...)`, `WorkflowEngine.open/actions/advance/is_done` |
-| **dependencies** | `parts.shelf.statemachine` (internal, stdlib-only) |
+| **dependencies** | `kernel.shelf.statemachine` (internal, stdlib-only) |
 | **security** | never mutates world state; effects are names the caller applies; role gating refuses before firing |
 | **tests** | `tests/test_workflow.py` (core), `tests/test_quest.py` (game), `tests/test_onboarding.py` (practical + one-core proof) |
 | **license** | MIT · **source_status** original · **owner** MatrymLabs |
-| **adapters** | MUD command adapter (`parts/world/quest.py`), plain-function adapter (`parts/onboarding.py`); a web/API adapter is a later slice |
+| **adapters** | MUD command adapter (`kernel/world/quest.py`), plain-function adapter (`kernel/onboarding.py`); a web/API adapter is a later slice |
 
 ## Core behavior (domain logic, game-free)
 
@@ -31,13 +31,13 @@ It renders nothing and mutates no world state, honoring the architecture laws.
 
 ## Game demonstration
 
-`parts/world/quest.py` -- the **Coilward Contract**: a player walks `offered -> accepted -> underway ->
+`kernel/world/quest.py` -- the **Coilward Contract**: a player walks `offered -> accepted -> underway ->
 done` with the `quest` MUD verb; finishing fires the `award_xp` effect. Reachable through the
 engine tick (`handle_command(session, "quest ...")`).
 
 ## Practical translation
 
-`parts/onboarding.py` -- **employee onboarding**: the *same* `WorkflowEngine`, driven through a
+`kernel/onboarding.py` -- **employee onboarding**: the *same* `WorkflowEngine`, driven through a
 plain function interface, role-gated so only the employee submits paperwork, only HR completes
 orientation, and only a manager activates. Its cousins are approval, case, incident, and project
 workflows.

@@ -1,4 +1,4 @@
-"""Test twin for parts/world/factions.py -- the standing between the Orders (faction conflicts).
+"""Test twin for kernel/world/factions.py -- the standing between the Orders (faction conflicts).
 
 Acceptance: two Orders stand self/allied/rival/neutral, symmetrically; each Order reports its allies
 and rivals; the politics render for a sworn hero. Composes with the real Orders, never a second set.
@@ -6,8 +6,8 @@ and rivals; the politics render for a sworn hero. Composes with the real Orders,
 
 from __future__ import annotations
 
-from parts.world.factions import relations_of, render_factions, stance
-from parts.world.orders import ORDERS
+from kernel.world.factions import relations_of, render_factions, stance
+from kernel.world.orders import ORDERS
 
 
 def test_stance_is_self_allied_rival_or_neutral_and_symmetric():

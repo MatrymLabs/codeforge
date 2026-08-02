@@ -1,4 +1,4 @@
-"""Test twin for parts/gateway.py -- the front desk, over real sockets."""
+"""Test twin for adapters/gateway.py -- the front desk, over real sockets."""
 
 import copy
 import socket
@@ -9,14 +9,14 @@ import time
 
 import pytest
 
-import parts.gateway as gateway
-from parts.gateway import ForgeGateServer, _GateHandler, _sanitize
-from parts.shelf.bulkhead import Bulkhead
-from parts.world import doors, items, npcs
-from parts.world.accounts import adopt
-from parts.world.accounts import register as register_account
-from parts.world.characters import save_character
-from parts.world.session import SESSIONS, Session
+import adapters.gateway as gateway
+from adapters.gateway import ForgeGateServer, _GateHandler, _sanitize
+from kernel.shelf.bulkhead import Bulkhead
+from kernel.world import doors, items, npcs
+from kernel.world.accounts import adopt
+from kernel.world.accounts import register as register_account
+from kernel.world.characters import save_character
+from kernel.world.session import SESSIONS, Session
 
 
 @pytest.fixture(autouse=True)
@@ -270,7 +270,7 @@ def _login(srv: ForgeGateServer, char="matrym", account="matlabs", pw="swordfish
 def test_passwd_flow_rotates_the_secret_with_blackout(server):
     """Bare 'passwd' in-world triggers the three-prompt dialogue, each
     prompt echo-blacked-out; the new secret then opens the door."""
-    from parts.world.accounts import account_password_ok
+    from kernel.world.accounts import account_password_ok
 
     _saved_account()
     sock = _login(server)
@@ -290,7 +290,7 @@ def test_passwd_flow_rotates_the_secret_with_blackout(server):
 
 
 def test_passwd_flow_rejects_a_mismatch_over_the_wire(server):
-    from parts.world.accounts import account_password_ok
+    from kernel.world.accounts import account_password_ok
 
     _saved_account()
     sock = _login(server)
@@ -442,7 +442,7 @@ _DO_GMCP = bytes([255, 253, 201])  # IAC DO GMCP (a client enabling GMCP)
 
 def _saved_hero_with_calling(char="mira", account="mlabs", pw="swordfish", job="vanguard"):
     """A saved character that has taken a calling, so vitals actually derive on restore."""
-    from parts.world.jobs import bind_calling
+    from kernel.world.jobs import bind_calling
 
     hero = Session(player_id=char, location="courtyard", named=True, account=account)
     bind_calling(hero, job)
@@ -492,8 +492,8 @@ def test_a_gmcp_client_is_announced_the_seed_on_enabling_gmcp(server):
 def test_a_gmcp_client_receives_char_items_for_equipped_gear(server):
     """An equipped hero's loadout is pushed as Char.Items on entry, so the client can draw the
     inventory panel from data - a frame we emit because we own the engine, not a MUD standard."""
-    from parts.world.items import clone
-    from parts.world.jobs import bind_calling
+    from kernel.world.items import clone
+    from kernel.world.jobs import bind_calling
 
     hero = Session(player_id="mira", location="courtyard", named=True, account="mlabs")
     bind_calling(hero, "vanguard")
@@ -518,7 +518,7 @@ def test_a_gmcp_client_receives_char_items_for_equipped_gear(server):
 def test_a_gmcp_client_receives_char_skills_for_the_wieldable_kit(server):
     """A calling's kit is pushed as Char.Skills on entry, so a client's co-pilot can recommend a
     specific move for a foe's weakness - a frame we emit because we own the engine."""
-    from parts.world.jobs import bind_calling
+    from kernel.world.jobs import bind_calling
 
     hero = Session(player_id="tovi", location="courtyard", named=True, account="mlabs")
     bind_calling(hero, "vanguard")  # wields Power Strike
@@ -547,7 +547,7 @@ def test_a_gmcp_client_receives_char_skills_for_the_wieldable_kit(server):
 def test_a_gmcp_client_receives_char_resists_for_the_defensive_grid(server):
     """An engineer's non-normal resistances are pushed as Char.Resists, so a client can warn when a
     foe's element hits a weakness - the defensive mirror of the foe's profile in Char.Target."""
-    from parts.world.jobs import bind_calling
+    from kernel.world.jobs import bind_calling
 
     hero = Session(player_id="vess", location="courtyard", named=True, account="mlabs")
     bind_calling(hero, "engineer")  # declares LGT: Weak, ERT: Resist

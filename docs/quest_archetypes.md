@@ -5,7 +5,7 @@ takes the world's own content (its zones, biomes, creatures, foes, settlements, 
 and produces many quests of one shape. This document is the **library** those generators belong to:
 the catalog of archetypes, what each is for, and the roadmap of the ones still to build.
 
-The code catalog lives in `parts/world/quest_archetypes.py` (MOD-04.095). Each archetype there
+The code catalog lives in `kernel/world/quest_archetypes.py` (MOD-04.095). Each archetype there
 carries the same design fields listed below, beside the predicate that recognises a live quest as a
 member, so the doc and the code cannot drift. `classify(quest_id)` maps any quest to its archetype,
 and the test twin proves **every** quest a booted world posts classifies to exactly one archetype
@@ -46,7 +46,7 @@ rewards, replay value, and scope** -- read `CATALOG` in the module for the full 
 
 Every zone already carries its story across six generators -- a tale (`storyline`), a dungeon and its
 named `warden`, a surface `landmark`, a depths `inscription`, and a board of `cull` / `forage`
-contracts. `parts/world/zone_story.py` (MOD-04.098) is the framework that gathers those pieces from
+contracts. `kernel/world/zone_story.py` (MOD-04.098) is the framework that gathers those pieces from
 the **live world** into one `ZoneStory` and renders a dossier -- the history, dangers, and
 opportunities of a place at a glance. It is read-only and derived: a zone's story is exactly the sum
 of its filed content, never a second source of truth.
@@ -85,12 +85,12 @@ existing systems (never replacing canonical content).
 
 ## Adding an archetype
 
-1. Write a generator in `parts/world/<name>.py`: a pure function from world data to a list of
+1. Write a generator in `kernel/world/<name>.py`: a pure function from world data to a list of
    `QuestSpec`, with an `is_<name>(quest_id)` predicate and (for "do N here") a zone-scoped trigger.
 2. If it needs a new world-event trigger, add it to `seed.QuestStep` and `quest._TRIGGER_KEYS`, and
    fire it from the action that should advance it (combat, gather, movement, ...).
 3. Register it in `world.py` (fold it into the engine after the world is assembled).
-4. Add a record to `CATALOG` in `parts/world/quest_archetypes.py` and a row above here.
+4. Add a record to `CATALOG` in `kernel/world/quest_archetypes.py` and a row above here.
 5. File its MOD designation, add it to the world-boundary closure, and write its test twin.
 
 The completeness test then guarantees the new archetype's quests are recognised -- and that nothing

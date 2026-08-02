@@ -1,13 +1,13 @@
-"""Test twin for parts/world/quest.py -- the game adapter: a quest driven by the Workflow Engine."""
+"""Test twin for kernel/world/quest.py - the game adapter: a quest driven by the Workflow Engine."""
 
 import copy
 
 import pytest
 
-from parts.world import items
-from parts.world.jobs import bind_calling
-from parts.world.quest import quest_view, reset_quests
-from parts.world.session import SESSIONS, Session
+from kernel.world import items
+from kernel.world.jobs import bind_calling
+from kernel.world.quest import quest_view, reset_quests
+from kernel.world.session import SESSIONS, Session
 
 
 @pytest.fixture(autouse=True)
@@ -89,13 +89,13 @@ def test_open_door_effect_reforges_a_barrier():
     applies it). Proven against the default seed's oak_door standing in for aethryn's bridge."""
     import copy
 
-    from parts.world import doors
-    from parts.world.quest import _apply_effect
+    from kernel.world import doors
+    from kernel.world.quest import _apply_effect
 
     snap = copy.deepcopy(doors.DOORS)
     try:
         doors.DOORS["oak_door"]["locked"] = True
-        from parts.world.quest import _QUESTS
+        from kernel.world.quest import _QUESTS
 
         quest = next(iter(_QUESTS.values()))
         _apply_effect(quest, "open_door:oak_door", _player())
@@ -108,7 +108,7 @@ def test_open_door_effect_reforges_a_barrier():
 def test_a_quest_derives_its_triggers_from_the_spec_steps():
     """Each step's on_take/on_enter/on_defeat becomes a (kind, label) -> event trigger on the quest;
     a step with no trigger contributes nothing."""
-    from parts.world.quest import _from_seed, _Quest
+    from kernel.world.quest import _from_seed, _Quest
 
     spec = {
         "id": "x",
@@ -136,7 +136,7 @@ def test_a_quest_derives_its_triggers_from_the_spec_steps():
 def test_on_event_advances_the_arc_when_a_world_action_triggers_a_step(monkeypatch):
     """A world action (defeat/take/enter) can fire a quest step. Routed here onto the built-in
     quest's first event so the behavior is pinned without depending on the aethryn seed."""
-    import parts.world.quest as quest_mod
+    import kernel.world.quest as quest_mod
 
     qid = next(iter(quest_mod._QUESTS))
     monkeypatch.setitem(quest_mod._QUESTS[qid].triggers, ("defeat", "warren_boss"), "accept")
@@ -147,7 +147,7 @@ def test_on_event_advances_the_arc_when_a_world_action_triggers_a_step(monkeypat
 
 
 def test_on_event_is_none_for_an_untriggered_action():
-    from parts.world.quest import on_event
+    from kernel.world.quest import on_event
 
     assert on_event(_player(), "defeat", "some_random_rat") is None  # triggers no step
     assert on_event(_player(), "take", "a_pebble") is None
@@ -155,7 +155,7 @@ def test_on_event_is_none_for_an_untriggered_action():
 
 def test_on_event_is_none_when_the_step_is_not_reachable_yet(monkeypatch):
     """Firing a trigger before the arc reaches that beat completes nothing (the move is refused)."""
-    import parts.world.quest as quest_mod
+    import kernel.world.quest as quest_mod
 
     qid = next(iter(quest_mod._QUESTS))
     monkeypatch.setitem(quest_mod._QUESTS[qid].triggers, ("enter", "deep_vault"), "finish")
@@ -165,7 +165,7 @@ def test_on_event_is_none_when_the_step_is_not_reachable_yet(monkeypatch):
 
 def test_taking_an_item_surfaces_a_triggered_quest_line(monkeypatch):
     """The take tick rides the quest hook: picking up a triggering item advances the arc."""
-    import parts.world.quest as quest_mod
+    import kernel.world.quest as quest_mod
     from forge import handle_command
 
     monkeypatch.setattr(
@@ -181,7 +181,7 @@ def test_taking_an_item_surfaces_a_triggered_quest_line(monkeypatch):
 
 def test_entering_a_room_surfaces_a_triggered_quest_line(monkeypatch):
     """The movement tick rides the quest hook: entering a triggering room advances the arc."""
-    import parts.world.quest as quest_mod
+    import kernel.world.quest as quest_mod
     from forge import handle_command
 
     monkeypatch.setattr(
@@ -197,8 +197,8 @@ def test_entering_a_room_surfaces_a_triggered_quest_line(monkeypatch):
 
 def test_apply_effect_is_inert_without_a_calling_or_a_known_effect():
     """award_xp needs a calling (stats) to grant; an unrecognized effect does nothing, quietly."""
-    from parts.world.quest import _QUESTS, _apply_effect
-    from parts.world.session import Session
+    from kernel.world.quest import _QUESTS, _apply_effect
+    from kernel.world.session import Session
 
     quest = next(iter(_QUESTS.values()))
     rookie = Session(player_id="rookie")  # no calling -> stats is None
@@ -210,7 +210,7 @@ def test_a_seed_quest_spec_builds_a_named_workflow():
     """A seed can ship its own arc as data; _from_seed turns that spec into the live workflow,
     carrying the seed's name and XP reward (proven here since the default test seed uses the
     built-in fallback)."""
-    from parts.world.quest import _from_seed
+    from kernel.world.quest import _from_seed
 
     spec = {
         "id": "test_arc",
@@ -231,9 +231,9 @@ def test_aethryn_relighting_arc_self_completes_from_natural_play():
     # from a real world action (a natural trigger), and it ends on felling the boss with a reward.
     from pathlib import Path
 
-    from parts.world.seed import load_quest
+    from kernel.world.seed import load_quest
 
-    seeds = Path(__file__).resolve().parent.parent / "seeds"
+    seeds = Path(__file__).resolve().parent.parent / "content" / "seeds"
     spec = load_quest(seeds / "aethryn" / "quest.yaml")
     assert spec is not None and spec["name"] == "The Endless Journey"
     for step in spec["steps"]:
@@ -249,7 +249,7 @@ def test_aethryn_relighting_arc_self_completes_from_natural_play():
 def test_save_state_reports_a_quest_state_map_and_empty_before_any_run():
     import json
 
-    from parts.world.quest import _QUESTS, save_state
+    from kernel.world.quest import _QUESTS, save_state
 
     reset_quests()
     assert save_state("nobody") == ""  # no run yet -> empty (a fresh character stores nothing)
@@ -262,7 +262,7 @@ def test_save_state_reports_a_quest_state_map_and_empty_before_any_run():
 def test_restore_state_seeds_the_runs_so_stories_survive_a_restart():
     import json
 
-    from parts.world.quest import _QUESTS, restore_state, save_state
+    from kernel.world.quest import _QUESTS, restore_state, save_state
 
     reset_quests()
     primary = next(iter(_QUESTS))
@@ -274,7 +274,7 @@ def test_restore_state_honors_a_legacy_bare_state_string():
     """A single-quest-era value (a bare state, not JSON) is matched to the primary quest."""
     import json
 
-    from parts.world.quest import _QUESTS, restore_state, save_state
+    from kernel.world.quest import _QUESTS, restore_state, save_state
 
     reset_quests()
     primary = next(iter(_QUESTS))
@@ -283,7 +283,7 @@ def test_restore_state_honors_a_legacy_bare_state_string():
 
 
 def test_restore_state_ignores_an_unknown_quest_or_state():
-    from parts.world.quest import restore_state, save_state
+    from kernel.world.quest import restore_state, save_state
 
     reset_quests()
     restore_state("hero", '{"ghost_quest": "somewhere"}')  # unknown quest id
@@ -294,8 +294,8 @@ def test_restore_state_ignores_an_unknown_quest_or_state():
 def test_grant_rep_effect_earns_standing_with_an_order():
     """A quest step's grant_rep effect earns reputation with an Order (roadmap #2: the faction web
     that gates content). Chained effects (';'-joined) all apply, in order."""
-    from parts.world.quest import _QUESTS, _apply_effect
-    from parts.world.reputation import standing_of
+    from kernel.world.quest import _QUESTS, _apply_effect
+    from kernel.world.reputation import standing_of
 
     quest = next(iter(_QUESTS.values()))
     s = _player()

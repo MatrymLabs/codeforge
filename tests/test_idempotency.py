@@ -1,4 +1,4 @@
-"""Test twin for parts/shelf/idempotency.py: the idempotency-key store (Stripe semantics).
+"""Test twin for kernel/shelf/idempotency.py: the idempotency-key store (Stripe semantics).
 
 Acceptance AND refusal cases, with hostile data: case-sensitive keys, a mismatched fingerprint
 under a reused key, empty inputs, and a factory that raises (so a retry re-runs, never caches a
@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import pytest
 
-from parts.shelf.idempotency import (
+from kernel.shelf.idempotency import (
     IdempotencyConflict,
     IdempotencyError,
     IdempotencyStore,

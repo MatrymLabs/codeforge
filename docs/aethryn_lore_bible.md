@@ -3,7 +3,7 @@
 *The concise, authoritative canon of Aethryn: only what is **established** (CANON_LOCKED) and
 **working** (CANON_WORKING). Generated content and local authored lore build on top of this and may
 never contradict it. The machine-checkable form of this canon is `seeds/aethryn/canon.yaml`, enforced
-by `parts/world/canon.py` (`check-canon`); this file is the readable companion.*
+by `kernel/world/canon.py` (`check-canon`); this file is the readable companion.*
 
 > **Source and reconciliation.** This canon derives from the external **Aethryn Coding Seed v0.1**
 > pack (its world bible + `aethryn_world_seed.json`). For the tier crosswalk (the pack's C0 to C4

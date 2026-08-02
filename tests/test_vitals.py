@@ -1,7 +1,7 @@
-"""Test twin for parts/vitals.py -- the game adapter: a world-vitals health panel."""
+"""Test twin for kernel/vitals.py -- the game adapter: a world-vitals health panel."""
 
-from parts.vitals import vitals
-from parts.world.session import SESSIONS, Session
+from kernel.vitals import vitals
+from kernel.world.session import SESSIONS, Session
 
 
 def _player() -> Session:

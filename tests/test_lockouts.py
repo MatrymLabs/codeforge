@@ -1,4 +1,4 @@
-"""Test twin for parts/world/lockouts.py -- daily reset markers (the endgame cap).
+"""Test twin for kernel/world/lockouts.py -- daily reset markers (the endgame cap).
 
 Acceptance: the first claim of a key on a day succeeds and stamps it; a second claim the same day is
 refused; a new day clears the way to claim again; is_locked reads the mark; serialize/deserialize
@@ -8,8 +8,8 @@ lockout never locks a hero out), and a non-dict payload is rejected.
 
 from __future__ import annotations
 
-from parts.world import lockouts
-from parts.world.session import Session
+from kernel.world import lockouts
+from kernel.world.session import Session
 
 
 def test_the_first_claim_of_the_day_succeeds_then_is_refused():

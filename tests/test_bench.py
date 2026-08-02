@@ -1,4 +1,4 @@
-"""Test twin for parts/bench.py -- the engine-tick benchmark.
+"""Test twin for kernel/bench.py -- the engine-tick benchmark.
 
 Acceptance: a small run measures a sane distribution and files a report. Refusal: a
 nonsensical request (zero iterations, negative warmup, empty rotation) fails loud rather
@@ -12,9 +12,9 @@ from types import SimpleNamespace
 
 import pytest
 
-import parts.bench as bench_mod
-from parts import chronicle
-from parts.bench import (
+import kernel.bench as bench_mod
+from kernel import chronicle
+from kernel.bench import (
     BenchError,
     benchmark,
     main,
@@ -64,7 +64,7 @@ def test_report_is_filed_as_dated_evidence(tmp_path: Path) -> None:
 
 
 def test_bench_reachable_through_the_terminal() -> None:
-    from parts.terminal import terminal
+    from adapters.terminal import terminal
 
     out = terminal("bench")
     assert "ENGINE TICK BENCHMARK" in out

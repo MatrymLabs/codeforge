@@ -26,7 +26,7 @@ connects the stations is being assembled one vertical slice at a time.
 
 The layer boundary was conceptual for most of the repo's life; **Layer 3 is now physical**. Every
 reusable, engine-agnostic core -- 27 across six families (resilience, FSM, data, wire, input
-hardening, observability, config, infra) -- lives in its own package, `parts/shelf/`, with the
+hardening, observability, config, infra) -- lives in its own package, `kernel/shelf/`, with the
 dependency arrow pointing one way: engine -> shelf, never the reverse. The remaining cataloged parts
 import engine modules (`session`, `verdicts`, `hardware`, ...), so they are correctly Layer 1/2, not
 relocatable Layer-3 cores. Full Layer-2 optionality (a world carrying only what it runs) is already
@@ -42,7 +42,7 @@ Idea -> Intake -> Requirements -> Search Existing Parts -> Blueprint -> Select M
 ```
 
 **Most stations already exist** (Blueprint, Search, Test, Diagnose, Catalog, Package-plan,
-Deploy, Monitor, Improve). The **connective tissue** now exists too: `parts/forge_line.py` (the
+Deploy, Monitor, Improve). The **connective tissue** now exists too: `kernel/forge_line.py` (the
 `line` runner) runs the loop end to end for a single built part, station by station, and reports a
 verdict at each stop (read-and-verify only; the ASSEMBLE stop is a dry-run). Generating a *brand-new*
 part through the full loop is the deeper next slice; the spine itself is executed.
@@ -71,9 +71,9 @@ part through the full loop is the deeper next slice; the spine itself is execute
   product, its game/practical adapters, a demonstrated game<->practical translation, and package
   export/detachment are ALREADY BUILT - see staircase steps 2 and 4 below, not planned.)
 - **Done (this campaign):** the physical Hardware Store extraction -- all 27 engine-agnostic
-  reusable cores now live in `parts/shelf/` (six families, six merged stages), each behind a green
+  reusable cores now live in `kernel/shelf/` (six families, six merged stages), each behind a green
   gate, one-way engine -> shelf dependency. Layer 3 is physical. AND the physical Layer-1/2 split:
-  the 33-module World Package now lives in `parts/world/` (a real subpackage), the platform imports
+  the 33-module World Package now lives in `kernel/world/` (a real subpackage), the platform imports
   it but never the reverse, and `world_boundary` enforces that one-way arrow in the integrity
   ritual. Layers 1, 2, and 3 are all physical now.
 - **Deferred (relative to the spine):** plugin system, configurable-rules language, package-update
@@ -91,15 +91,15 @@ removed: the rule is "don't preserve merely because it exists," and equally "don
 ## Highest architectural risks
 
 1. ~~**No connected manufacturing spine** - the vision's heart is unexecuted.~~ **CLOSED:**
-   `parts/forge_line.py` runs the loop end to end in both directions -- `run_line` inspects a built
+   `kernel/forge_line.py` runs the loop end to end in both directions -- `run_line` inspects a built
    part station by station, and `forge_new` generates a brand-new part's scaffold through the loop
    into the git-ignored sandbox. The heart executes.
 2. **Monolithic engine** ("vendored-whole") - **the Hardware Store is now physically separated:**
    `cast`/`forge` pour a *vendored-selective* package (proven), AND every engine-agnostic reusable
-   core is physically extracted into `parts/shelf/` (27 cores, six families, one-way dependency).
+   core is physically extracted into `kernel/shelf/` (27 cores, six families, one-way dependency).
    What remains one package is the platform/world engine itself (Layer 1/2), but its separation is
    now real and ENFORCED: the World Package (Layer 2) imports the manufacturing platform (Layer 1)
-   zero times, and `parts/world_boundary` (wired into the repo-integrity ritual) fails if a game
+   zero times, and `kernel/world_boundary` (wired into the repo-integrity ritual) fails if a game
    module ever reaches into the dev-tools -- so a world stays shippable without the workshop. Only
    the physical dir reorg (a structural-tidiness-only migration) is deferred; the boundary is held.
 3. ~~**World is content-driven, not manifest/config-driven**~~ **MOSTLY ADDRESSED:** a typed
@@ -126,12 +126,12 @@ The proof that makes the whole vision legible without finishing the platform:
 > GitHub.**
 
 - **Reusable core:** a config-driven `WorkflowEngine` (states, guarded transitions, roles) built
-  on the existing, already-tested pure FSM (`parts/shelf/statemachine.py`). Because the core exists,
+  on the existing, already-tested pure FSM (`kernel/shelf/statemachine.py`). Because the core exists,
   the slice is genuinely finishable.
 - **Game adapter:** a **Quest** (regional quest progression) via MUD commands. This also fills a
   real gap: the World Package has **no quests today**.
 - **Practical adapter:** an **onboarding / approval checklist** driven by the *same* engine
-  through a non-game interface - now shipped as the **`codeforge onboard`** CLI (`parts/onboarding`),
+  through a non-game interface - now shipped as the **`codeforge onboard`** CLI (`kernel/onboarding`),
   the practical cousin of the MUD `quest` verb.
 - One core, two adapters, two interfaces (MUD + CLI): the two-way translation thesis, demonstrated
   and runnable end to end.
@@ -141,7 +141,7 @@ The proof that makes the whole vision legible without finishing the platform:
 0. **Vision + repo alignment** (this doc). Done.
 1. Manufacturing core: Blueprint `product_type`, Part Manifest, assembly evidence. Done.
 2. **First reusable vertical slice** (the Workflow Engine, above). **Done** - one `WorkflowEngine`
-   core (`parts/shelf/workflow`), the game `quest` adapter (MUD), and the practical `onboarding` adapter
+   core (`kernel/shelf/workflow`), the game `quest` adapter (MUD), and the practical `onboarding` adapter
    now runnable through the **`codeforge onboard`** CLI; cataloged in the Hardware Store
    (`docs/hardware/workflow_engine.*`), `loop trace workflow-engine` = PASS.
 3. **Minimal World Package: one region + identity + commands + the quest system + admin + tests. Next.**
@@ -155,7 +155,7 @@ The proof that makes the whole vision legible without finishing the platform:
    command must run. Verified live across surface tiers: **solo+save** carries 70 of 128 modules
    (16 commands clean); **+admin** (the owner @-verb tier) carries 74 (21 commands clean, incl. the
    @-verbs) and has an end-to-end regression test (`test_pour_selective_validates_an_admin_cast`);
-   **+multiplayer** carries 78 and its `parts/web/` data dir (the import-based server tier: gateway +
+   **+multiplayer** carries 78 and its `adapters/web/` data dir (the import-based server tier: gateway +
    web_gateway import in the cut) and now also has an end-to-end regression test
    (`test_pour_selective_validates_a_multiplayer_cast`, via an injected `import_tracer` seam). So a
    package *assembles*, *runs*, *runs in isolation*, and is *selectively detached with an end-to-end

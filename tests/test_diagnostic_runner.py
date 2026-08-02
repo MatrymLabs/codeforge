@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import unittest
 
-from parts.shelf.diagnostic_runner import (
+from kernel.shelf.diagnostic_runner import (
     ESCALATE,
     PROCEED,
     REVISE,

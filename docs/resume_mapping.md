@@ -32,8 +32,8 @@ docs**. Lead with these three, in your own words:
 | Technical documentation | `docs/` (ADRs, architecture, ritual, debugging case study) |
 | Reusable-part cataloging | `catalog/`, the hardware store |
 | Software architecture / decisions | `docs/adr/`, `docs/architecture.md`, `docs/seed_architecture.md` |
-| QA & safety thinking | QualityGate, VeritasGate, allowlisted console (never raw shell) |
-| Truth between docs & code | `truth check` (VeritasGate), this evidence board |
+| QA & safety thinking | QualityGate, EvidenceGate, allowlisted console (never raw shell) |
+| Truth between docs & code | `truth check` (EvidenceGate), this evidence board |
 | AI-assisted development, reviewed | `docs/AI_WORKFLOW.md` - AI as force multiplier, gated by tests |
 
 ## Target role clusters (from current public postings)
@@ -48,5 +48,5 @@ docs**. Lead with these three, in your own words:
 
 In the MUD, `career` (in The Forge Workshop) renders this board live from
 `data/career/career_evidence_matrix.json`. `career gaps` shows exactly what to build next.
-The board obeys VeritasGate: a skill is only `proven` when a cited repo artifact actually
+The board obeys EvidenceGate: a skill is only `proven` when a cited repo artifact actually
 exists - so it can name its own gaps honestly. **Readiness, never certification.**

@@ -16,7 +16,7 @@ import pytest
 from hypothesis import given, settings
 from hypothesis import strategies as st
 
-from parts.shelf.telnet_codec import IAC, SB, SE, escape_iac, read_negotiation, strip_iac
+from kernel.shelf.telnet_codec import IAC, SB, SE, escape_iac, read_negotiation, strip_iac
 
 # Arbitrary bytes, plus an IAC-heavy strategy so hostile telnet framing (IAC, SB, SE, the WILL/WONT/
 # DO/DONT verbs) appears often, not once in 256 -- the sequences a fuzzer must actually reach.

@@ -1,4 +1,4 @@
-"""Test twin for parts/world/area_store.py -- the bench where generated areas wait for publication.
+"""Test twin for kernel/world/area_store.py -- the bench where generated areas wait for publication.
 
 Acceptance: an area generated for (region, seed) saves, reloads identically, previews with its
 provenance, and promotes GENERATED_LOCAL -> AUTHORED_LOCAL (version bumped); export writes a
@@ -16,8 +16,8 @@ from pathlib import Path
 
 import pytest
 
-from parts.world import area_store
-from parts.world.seed import SeedError
+from kernel.world import area_store
+from kernel.world.seed import SeedError
 
 # --- Acceptance: the generate -> preview -> promote -> export lifecycle ---------------------------
 

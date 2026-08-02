@@ -21,8 +21,8 @@ is the subsystem-level audit behind it.
 | **web_gateway / `_pump`** | Driver | The browser gate: play over a WebSocket; `_pump` is its single outbound mouth. |
 | **the doorman** (`_turnaway_ledger`, `_gate_is_barred`, `_log_turnaway`) | Security | Per-address login rate-limiting at the front desk - who has been turned away, and whether the gate is barred. |
 | **echo sink / `bind_echo` / `announce`** | Event bus | Each player binds a sink that delivers room events to them; `announce` fans an event out to everyone else present. |
-| **Frame** (`parts/world/frames.py`: `SpeechFrame`, `StrikeFrame`) | Event bus | Typed, per-recipient event frames on the room bus - a structured payload (who did what) rendered per listener, where a bare broadcast string is too flat. |
-| **menace / aggression** (`parts/world/aggression.py`) | Game AI | Proactive NPCs that strike on the world's beat: a seed-flagged hostile opens combat first, leashed and telegraphed, driven by the tick (no background thread). |
+| **Frame** (`kernel/world/frames.py`: `SpeechFrame`, `StrikeFrame`) | Event bus | Typed, per-recipient event frames on the room bus - a structured payload (who did what) rendered per listener, where a bare broadcast string is too flat. |
+| **menace / aggression** (`kernel/world/aggression.py`) | Game AI | Proactive NPCs that strike on the world's beat: a seed-flagged hostile opens combat first, leashed and telegraphed, driven by the tick (no background thread). |
 | **`reforge_secret`** | Account | Re-hash an account's password (self-service `passwd`) - forge the secret anew. |
 | **Archive / `open_archive_session`** | Persistence | The canonical store (SQLite) where character case files are kept and restored. |
 | **`render_scene` / `render_room`** | Projection | Turn canonical state into the text a player sees. Projections never mutate state. |
@@ -35,15 +35,15 @@ engine. Each maps to a real, tested module - the metaphor stays in the code; the
 
 | Name | Kind | Plain-English meaning |
 |------|------|-----------------------|
-| **Designation / Classification Registry** (`parts/registry.py`) | Filing | Every object gets a unique designation `TYPE-DD.NNN`, keyed to its frozen runtime label - a hidden filing system beneath the fantasy. Additive metadata, never a rename. |
-| **CommandSet / the command spine** (`parts/commands.py`) | Dispatch | Namespaced, rank-gated verbs: `CORE` bare words the engine owns, `ADMIN` under the reserved `@` sigil, `SEED` verbs each game owns. A seed can never shadow a reserved word. |
-| **FailsafeRunner** (`parts/shelf/console.py`) | Safety | The safe command console: an allowlist runs only vetted checks - never raw shell. |
-| **QualityGate / SafetyReview** (`parts/qualitygate.py`) | Readiness | Grade a filed object (purpose · file · tests · docs · maturity) → `pass\|watch\|fail`; rate its risk. Readiness, never compliance. |
-| **ProjectControl / `pm status`** (`parts/pm.py`) | PM | The project dashboard, *computed* from the registry + QualityGate - no stored copy to drift. |
-| **the Archivist / `library`** (`parts/library.py`) | Library | Read the guidance library's preserved documents, read-only. |
-| **`@sg` / the generator** (`parts/generate.py`) | Admin | System item generation from filed data patterns (wizard+); refuses to conjure the unknown. |
-| **Foundry** (`parts/foundry.py`: `@forge` / `@arch`) | Workshop | Propose a change, gate it on human approval, then generate under guard - the owner-only build layer where parts are scaffolded and `@arch` previews a built game read-only. |
-| **the awareness lens / `law`** (`parts/law.py`) | Compliance-aware | Renders tracked sources through a legal-*awareness* boundary - never legal advice, always "human review required." |
+| **Designation / Classification Registry** (`kernel/registry.py`) | Filing | Every object gets a unique designation `TYPE-DD.NNN`, keyed to its frozen runtime label - a hidden filing system beneath the fantasy. Additive metadata, never a rename. |
+| **CommandSet / the command spine** (`kernel/commands.py`) | Dispatch | Namespaced, rank-gated verbs: `CORE` bare words the engine owns, `ADMIN` under the reserved `@` sigil, `SEED` verbs each game owns. A seed can never shadow a reserved word. |
+| **FailsafeRunner** (`kernel/shelf/console.py`) | Safety | The safe command console: an allowlist runs only vetted checks - never raw shell. |
+| **QualityGate / SafetyReview** (`kernel/qualitygate.py`) | Readiness | Grade a filed object (purpose · file · tests · docs · maturity) → `pass\|watch\|fail`; rate its risk. Readiness, never compliance. |
+| **ProjectControl / `pm status`** (`kernel/pm.py`) | PM | The project dashboard, *computed* from the registry + QualityGate - no stored copy to drift. |
+| **the Archivist / `library`** (`kernel/library.py`) | Library | Read the guidance library's preserved documents, read-only. |
+| **`@sg` / the generator** (`kernel/generate.py`) | Admin | System item generation from filed data patterns (wizard+); refuses to conjure the unknown. |
+| **Foundry** (`kernel/foundry.py`: `@forge` / `@arch`) | Workshop | Propose a change, gate it on human approval, then generate under guard - the owner-only build layer where parts are scaffolded and `@arch` previews a built game read-only. |
+| **the awareness lens / `law`** (`kernel/law.py`) | Compliance-aware | Renders tracked sources through a legal-*awareness* boundary - never legal advice, always "human review required." |
 
 ## The two rules that keep it honest
 

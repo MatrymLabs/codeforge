@@ -12,7 +12,7 @@ so that class of mistake is caught before merge, not after.*
 
 ## Summary
 
-A change to `parts/integrity.py` merged to `main` and turned CI **red**: bandit's `B105`
+A change to `kernel/integrity.py` merged to `main` and turned CI **red**: bandit's `B105`
 (hardcoded-password) check fired on a dictionary literal `{"pass": 0, ...}`, reading the
 key `"pass"` as a password. The pre-merge check passed locally because the **local gate
 did not run bandit** - CI's `make security` did.

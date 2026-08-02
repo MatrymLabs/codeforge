@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import unittest
 
-from parts.shelf.hotspots import (
+from kernel.shelf.hotspots import (
     CAVEAT,
     HotspotError,
     churn_from_log,

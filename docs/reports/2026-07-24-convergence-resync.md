@@ -53,7 +53,7 @@ thousands of items). Two honest tracks close the gap:
   this session): subjob ability-lending, resistances-in-combat and the reaction/movement slots,
   crafting/recipes, consumables + a use-item verb, item rarity/tiers/affixes + loot tables,
   branching dialogue trees, non-linear/branching quests + faction consequences.
-- **Track B - content at scale via generation** (the lever proven by `parts/world/spiral.py`,
+- **Track B - content at scale via generation** (the lever proven by `kernel/world/spiral.py`,
   which built 25 Coils to L255 from a config): procedural/authored **content factories** - a job
   factory that realizes the 20-job design and beyond, an item factory (rarity + affixes + loot
   tables), a quest/encounter generator, more hand-authored zones and dialogue where hand-craft

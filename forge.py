@@ -8,11 +8,11 @@ terminal driver around it -- a socket gateway will be another.
 import re
 from collections.abc import Callable
 
-from parts.addie import addie
-from parts.arc import arc
-from parts.calibrate import calibrate
-from parts.chat_throttle import shout
-from parts.classroom import (
+from kernel.addie import addie
+from kernel.arc import arc
+from kernel.calibrate import calibrate
+from kernel.chat_throttle import shout
+from kernel.classroom import (
     ask_question,
     demonstrated,
     hint,
@@ -23,32 +23,32 @@ from parts.classroom import (
     submit_answer,
     talk_to_codex,
 )
-from parts.clone_scan import clones
-from parts.commands import ADMIN, CORE, Command, CommandSet
-from parts.complexity import complexity
-from parts.features import features
-from parts.harvest_lens import harvest
-from parts.heralds import heralds
-from parts.learning_record import learnings
-from parts.logbook import journal
-from parts.maintenance import maintenance
-from parts.name_check import name_check
-from parts.plugins import PluginLoad, load_plugins
-from parts.registry import (
+from kernel.clone_scan import clones
+from kernel.commands import ADMIN, CORE, Command, CommandSet
+from kernel.complexity import complexity
+from kernel.features import features
+from kernel.harvest_lens import harvest
+from kernel.heralds import heralds
+from kernel.learning_record import learnings
+from kernel.logbook import journal
+from kernel.maintenance import maintenance
+from kernel.name_check import name_check
+from kernel.plugins import PluginLoad, load_plugins
+from kernel.registry import (
     registry_find,
     registry_list,
     registry_show,
     registry_status,
     registry_type,
 )
-from parts.relay import channel
-from parts.save import awaken_snapshot, seal_snapshot
-from parts.shelf.hourglass import WORLD_SANDS
-from parts.store_index import store
-from parts.telegraph import telegraph
-from parts.titles import title
-from parts.vitals import vitals
-from parts.world import (
+from kernel.relay import channel
+from kernel.save import awaken_snapshot, seal_snapshot
+from kernel.shelf.hourglass import WORLD_SANDS
+from kernel.store_index import store
+from kernel.telegraph import telegraph
+from kernel.titles import title
+from kernel.vitals import vitals
+from kernel.world import (
     allocate,
     artifact,
     creator_workshop,
@@ -59,20 +59,20 @@ from parts.world import (
     scheduler,
     shrine,
 )
-from parts.world import auction as auction_mod
-from parts.world import bank as bank_mod
-from parts.world import chat as chat_mod
-from parts.world import durability as durability_mod
-from parts.world import feats as feats_mod
-from parts.world import friends as friends_mod
-from parts.world import guild as guild_mod
-from parts.world import inns as inns_mod
-from parts.world import mail as mail_mod
-from parts.world import trade as trade_mod
-from parts.world import travel as travel_net
-from parts.world import tutorial as tutorial_mod
-from parts.world.abilities import render_abilities, use_ability
-from parts.world.accounts import (
+from kernel.world import auction as auction_mod
+from kernel.world import bank as bank_mod
+from kernel.world import chat as chat_mod
+from kernel.world import durability as durability_mod
+from kernel.world import feats as feats_mod
+from kernel.world import friends as friends_mod
+from kernel.world import guild as guild_mod
+from kernel.world import inns as inns_mod
+from kernel.world import mail as mail_mod
+from kernel.world import trade as trade_mod
+from kernel.world import travel as travel_net
+from kernel.world import tutorial as tutorial_mod
+from kernel.world.abilities import render_abilities, use_ability
+from kernel.world.accounts import (
     has_password,
     inspect_login,
     parse_handle,
@@ -80,22 +80,22 @@ from parts.world.accounts import (
     set_password,
     verify_password,
 )
-from parts.world.accounts import register as register_account
-from parts.world.afflictions import tick_afflictions, tick_regens
-from parts.world.aggression import menace
-from parts.world.character_view import sheet_from_session
-from parts.world.characters import load_character, restore_character, save_character
-from parts.world.chime import chime
-from parts.world.climate import tick_climate, weather_view
-from parts.world.coinage import purse
-from parts.world.combat import attack, examine_foe, tick_burns
-from parts.world.condition import render_condition
-from parts.world.consumables import quaff
-from parts.world.crafting import craft
-from parts.world.doors import reclose, unlock
-from parts.world.engineer import deploy_barrier, diagnostic_scan, field_repair
-from parts.world.equipment import equip, unequip
-from parts.world.events import (
+from kernel.world.accounts import register as register_account
+from kernel.world.afflictions import tick_afflictions, tick_regens
+from kernel.world.aggression import menace
+from kernel.world.character_view import sheet_from_session
+from kernel.world.characters import load_character, restore_character, save_character
+from kernel.world.chime import chime
+from kernel.world.climate import tick_climate, weather_view
+from kernel.world.coinage import purse
+from kernel.world.combat import attack, examine_foe, tick_burns
+from kernel.world.condition import render_condition
+from kernel.world.consumables import quaff
+from kernel.world.crafting import craft
+from kernel.world.doors import reclose, unlock
+from kernel.world.engineer import deploy_barrier, diagnostic_scan, field_repair
+from kernel.world.equipment import equip, unequip
+from kernel.world.events import (
     announce,
     announce_frame,
     bind_echo,
@@ -104,9 +104,9 @@ from parts.world.events import (
     rename_gmcp,
     unbind_echo,
 )
-from parts.world.factions import render_factions
-from parts.world.frames import SpeechFrame
-from parts.world.items import (
+from kernel.world.factions import render_factions
+from kernel.world.frames import SpeechFrame
+from kernel.world.items import (
     carrier,
     drop,
     inventory_text,
@@ -116,36 +116,36 @@ from parts.world.items import (
     take,
     trace_item,
 )
-from parts.world.jobs import JOBS, bind_calling, calling_index, set_secondary
-from parts.world.npcs import ask, room_npcs_text, talk, trace_npc
-from parts.world.orders import swear_order
-from parts.world.party import (
+from kernel.world.jobs import JOBS, bind_calling, calling_index, set_secondary
+from kernel.world.npcs import ask, room_npcs_text, talk, trace_npc
+from kernel.world.orders import swear_order
+from kernel.world.party import (
     disband as party_disband,
 )
-from parts.world.party import (
+from kernel.world.party import (
     invite as party_invite,
 )
-from parts.world.party import (
+from kernel.world.party import (
     join as party_join,
 )
-from parts.world.party import (
+from kernel.world.party import (
     leave as party_leave,
 )
-from parts.world.party import (
+from kernel.world.party import (
     party_say,
     render_party,
 )
-from parts.world.professions import render_professions
-from parts.world.quest import contracts_view, quest_view
-from parts.world.ranks import wizard_command
-from parts.world.reputation import render_standing
-from parts.world.roaming import roam
-from parts.world.score_sheet import render_score_sheet
-from parts.world.search import world_search
-from parts.world.seed import load_splash
-from parts.world.session import SESSIONS, Session, display_name, roster
-from parts.world.shop import buy, render_shop, sell
-from parts.world.world import (
+from kernel.world.professions import render_professions
+from kernel.world.quest import contracts_view, quest_view
+from kernel.world.ranks import wizard_command
+from kernel.world.reputation import render_standing
+from kernel.world.roaming import roam
+from kernel.world.score_sheet import render_score_sheet
+from kernel.world.search import world_search
+from kernel.world.seed import load_splash
+from kernel.world.session import SESSIONS, Session, display_name, roster
+from kernel.world.shop import buy, render_shop, sell
+from kernel.world.world import (
     DIRECTIONS,
     WAYSTONES,
     WORLD,
@@ -153,9 +153,9 @@ from parts.world.world import (
     render_room,
     resolve_move,
 )
-from parts.world.zone_story import region_view
-from parts.world.zones import area_line, tick_zones
-from parts.world_cert import certify
+from kernel.world.zone_story import region_view
+from kernel.world.zones import area_line, tick_zones
+from kernel.world_cert import certify
 
 NAME_RE = re.compile(r"^[a-z][a-z0-9_]{1,15}$")
 
@@ -196,43 +196,43 @@ HELP_TEXT = (
 
 
 def ask_architect(session: Session, prompt: str) -> str:
-    from parts.ai_throttle import ask_architect as run
+    from adapters.ai_throttle import ask_architect as run
 
     return run(session, prompt)
 
 
 def blueprint(arg: str = "") -> str:
-    from parts.blueprint import blueprint as run
+    from adapters.blueprint_verb import blueprint as run
 
     return run(arg)
 
 
 def career(arg: str = "", demonstrated: dict[str, int] | None = None) -> str:
-    from parts.career import career as run
+    from kernel.career import career as run
 
     return run(arg, demonstrated=demonstrated)
 
 
 def console_menu() -> str:
-    from parts.shelf.console import console_menu as run
+    from kernel.shelf.console import console_menu as run
 
     return run()
 
 
 def diagnostics_view() -> str:
-    from parts.shelf.console import diagnostics_view as run
+    from kernel.shelf.console import diagnostics_view as run
 
     return run()
 
 
 def run_view(name: str) -> str:
-    from parts.shelf.console import run_view as run
+    from kernel.shelf.console import run_view as run
 
     return run(name)
 
 
 def after_action() -> str:
-    from parts.world.encounter_log import render_recent
+    from kernel.world.encounter_log import render_recent
 
     return render_recent()
 
@@ -241,91 +241,91 @@ def flush_encounters(arg: str) -> str:
     """The trusted boundary, run IN the server process by an owner: aggregate the after-action
     tallies into the Chronicle. Owner-gated on the spine, so only a trusted actor reaches it -- the
     tick never does. An optional arg supplies the commit for provenance (default 'runtime')."""
-    from parts.encounter_flush import flush
+    from kernel.encounter_flush import flush
 
     return flush(arg.strip() or "runtime")
 
 
 def evolution(arg: str = "") -> str:
-    from parts.evolution.command import evolution as run
+    from kernel.evolution.command import evolution as run
 
     return run(arg)
 
 
 def chronicle(arg: str = "") -> str:
-    from parts.chronicle import chronicle as run
+    from kernel.chronicle import chronicle as run
 
     return run(arg)
 
 
 def retention(arg: str = "") -> str:
-    from parts.retention import retention as run
+    from kernel.retention import retention as run
 
     return run(arg)
 
 
 def coupling(arg: str = "") -> str:
-    from parts.coupling import coupling as run
+    from kernel.coupling import coupling as run
 
     return run(arg)
 
 
 def forge_command(session: Session, arg: str) -> str:
-    from parts.foundry import forge_command as run
+    from kernel.foundry import forge_command as run
 
     return run(session, arg)
 
 
 def arch_command(session: Session, arg: str) -> str:
-    from parts.foundry import arch_command as run
+    from kernel.foundry import arch_command as run
 
     return run(session, arg)
 
 
 def inspect(arg: str = "") -> str:
-    from parts.frameup import inspect as run
+    from kernel.frameup import inspect as run
 
     return run(arg)
 
 
 def functions(arg: str = "") -> str:
-    from parts.functions import functions as run
+    from kernel.functions import functions as run
 
     return run(arg)
 
 
 def system_generate(session: Session, arg: str) -> str:
-    from parts.generate import system_generate as run
+    from kernel.generate import system_generate as run
 
     return run(session, arg)
 
 
 def law(arg: str = "") -> str:
-    from parts.law import law as run
+    from kernel.law import law as run
 
     return run(arg)
 
 
 def library(arg: str = "") -> str:
-    from parts.library import library as run
+    from kernel.library import library as run
 
     return run(arg)
 
 
 def pioneer(arg: str = "") -> str:
-    from parts.pioneer import pioneer as run
+    from kernel.pioneer import pioneer as run
 
     return run(arg)
 
 
 def pm_metrics() -> str:
-    from parts.pm import pm_metrics as run
+    from kernel.pm import pm_metrics as run
 
     return run()
 
 
 def pm_status() -> str:
-    from parts.pm import pm_status as run
+    from kernel.pm import pm_status as run
 
     return run()
 
@@ -333,74 +333,74 @@ def pm_status() -> str:
 def _workspace(session: Session, arg: str) -> str:
     """CORE `workspace` (owner): the in-MUD front door to engineering Seeds (the text half of the
     Master-Client workspace surface). Lazy-imported so seedlab stays off the tick's load path."""
-    from parts.seedlab.workspace_verb import workspace_command
+    from kernel.seedlab.workspace_verb import workspace_command
 
     return workspace_command(session, arg)
 
 
 def docs_check() -> str:
-    from parts.qualitygate import docs_check as run
+    from kernel.qualitygate import docs_check as run
 
     return run()
 
 
 def render_gate(arg: str) -> str:
-    from parts.qualitygate import render_gate as run
+    from kernel.qualitygate import render_gate as run
 
     return run(arg)
 
 
 def render_gate_all() -> str:
-    from parts.qualitygate import render_gate_all as run
+    from kernel.qualitygate import render_gate_all as run
 
     return run()
 
 
 def render_safety(arg: str) -> str:
-    from parts.qualitygate import render_safety as run
+    from kernel.qualitygate import render_safety as run
 
     return run(arg)
 
 
 def regs(arg: str = "") -> str:
-    from parts.regulations import regs as run
+    from kernel.regulations import regs as run
 
     return run(arg)
 
 
 def terminal(arg: str = "") -> str:
-    from parts.terminal import terminal as run
+    from adapters.terminal import terminal as run
 
     return run(arg)
 
 
 def render_truth() -> str:
-    from parts.veritas import render_truth as run
+    from kernel.evidence_gate import render_truth as run
 
     return run()
 
 
 def catalog_view() -> str:
-    from parts.workshop import catalog_view as run
+    from kernel.workshop import catalog_view as run
 
     return run()
 
 
 def reuse_search(term: str = "") -> str:
-    from parts.workshop import reuse_search as run
+    from kernel.workshop import reuse_search as run
 
     return run(term)
 
 
 def workshop_menu() -> str:
-    from parts.workshop import workshop_menu as run
+    from kernel.workshop import workshop_menu as run
 
     return run()
 
 
 # --- account & identity command handlers (filed on the spine; the tick only routes) ---
 # Extracted verbatim from the legacy if-ladder. The command spine preserves the argument's
-# case (parts/commands.py), so a password parsed from `arg` survives -- Architecture Law 7.
+# case (kernel/commands.py), so a password parsed from `arg` survives -- Architecture Law 7.
 
 
 def _authenticate(session: Session, verb: str, arg: str) -> str:
@@ -558,9 +558,9 @@ PLUGIN_LOAD: PluginLoad | None = None
 def _script_command(session: Session, arg: str) -> str:
     """Owner-only sandboxed Lua console: run a snippet, show its emit() output + return value.
 
-    The safety boundary is parts.scripting.LuaSandbox (no os/io/require; loops bounded), so even the
+    The safety boundary is kernel.scripting.LuaSandbox (no os/io/require; loops bounded), so the
     owner's console cannot reach the host. When the [lua] extra is absent, it says so cleanly."""
-    from parts.scripting import LuaSandbox, ScriptError, scripting_available
+    from kernel.scripting import LuaSandbox, ScriptError, scripting_available
 
     code = arg.strip()
     if not code:
@@ -805,7 +805,7 @@ def _build_commands() -> CommandSet:
         Command(
             "truth check",
             "CMD-10.012",
-            "VeritasGate: check that the project's claims match reality",
+            "EvidenceGate: check that the project's claims match reality",
             lambda _s, _a: render_truth(),
             namespace=CORE,
         )
@@ -2066,7 +2066,7 @@ def _loop_trace_handler(arg: str) -> str:
     part_id = arg.strip()
     if not part_id:
         return "Usage: loop trace <part-id>\n  Example: loop trace workflow-engine"
-    from parts.loop import render_trace, trace
+    from kernel.loop import render_trace, trace
 
     return render_trace(trace(part_id))
 
@@ -2127,7 +2127,7 @@ def _cross_workshop_barrier(session: Session, word: str) -> str | None:
     Only the authenticated Seed Owner crosses; everyone else (including a player who guesses the
     door) meets the exact barrier refusal. The crossing is UNOBSERVABLE -- no leave/arrive is
     announced to the Library -- so players can never see the owner slip through
-    (parts.world.workshop)."""
+    (kernel.world.workshop)."""
     dest = creator_workshop.door_destination(session.location, word)
     if dest is None:
         return None
@@ -2232,7 +2232,7 @@ def _ask_cmd(session: Session, arg: str) -> str:
 
 def _party_cmd(session: Session, arg: str) -> str:
     """The `party` verb: form and command a fellowship. The spine preserves argument case, so a
-    player name arrives as typed and is lowered to its label inside `parts.world.party`. Bare
+    player name arrives as typed and is lowered to its label inside `kernel.world.party`. Bare
     `party` shows the roster; `party invite <player>`, `party join <player>`, `party leave`,
     `party disband`. Party chat is the separate `psay` verb (which keeps its message case)."""
     me = session.player_id
@@ -2279,7 +2279,7 @@ def _mail_cmd(session: Session, arg: str) -> str:
 def _ban_cmd(session: Session, arg: str) -> str:
     """`@ban <player> <reason>`: bar a character from the world (wizard+), audited. If online they
     drop on their next command. A ban outranks maintenance and even a wizard's rank."""
-    from parts.world import audit, bans
+    from kernel.world import audit, bans
 
     parts_ = arg.split(maxsplit=1)
     name = parts_[0].strip().lower() if parts_ else ""
@@ -2296,7 +2296,7 @@ def _ban_cmd(session: Session, arg: str) -> str:
 
 def _unban_cmd(session: Session, arg: str) -> str:
     """`@unban <player>`: lift a ban (wizard+), audited."""
-    from parts.world import audit, bans
+    from kernel.world import audit, bans
 
     name = arg.strip().lower()
     if not name:
@@ -2309,7 +2309,7 @@ def _unban_cmd(session: Session, arg: str) -> str:
 
 def _bans_cmd(_session: Session, _arg: str) -> str:
     """`@bans`: the moderation roster of banned characters (wizard+)."""
-    from parts.world import bans
+    from kernel.world import bans
 
     rows = bans.all_bans()
     if not rows:
@@ -2322,7 +2322,7 @@ def _bans_cmd(_session: Session, _arg: str) -> str:
 
 def _metrics_cmd(_session: Session, _arg: str) -> str:
     """`@metrics`: a live-ops snapshot from storage (population + economy health) (owner)."""
-    from parts.world import metrics
+    from kernel.world import metrics
 
     return metrics.render()
 
@@ -2330,7 +2330,7 @@ def _metrics_cmd(_session: Session, _arg: str) -> str:
 def _audit_cmd(_session: Session, arg: str) -> str:
     """`@audit [verify]`: the tamper-evident admin/economy log (owner). Bare shows recent entries;
     `@audit verify` checks the hash chain end to end."""
-    from parts.world import audit
+    from kernel.world import audit
 
     if arg.strip().lower() == "verify":
         return "Audit log: chain intact." if audit.verify() else "Audit log: CHAIN BROKEN."
@@ -2530,8 +2530,8 @@ def _did_you_mean(session: Session, routed_signal: str) -> str:
     """A gentle nudge on an unknown command: the nearest reachable spine verb, but only on a genuine
     near-miss (edit distance <= 2), so a real typo gets help and pure nonsense just gets 'Huh?'.
 
-    Uses the textmatch shelf part (parts.shelf.textmatch), C-accelerated when built (ADR-0010)."""
-    from parts.shelf.textmatch import closest
+    Uses the textmatch shelf part (kernel.shelf.textmatch), C-accelerated when built (ADR-0010)."""
+    from kernel.shelf.textmatch import closest
 
     typed = routed_signal.split(" ", 1)[0]
     if not typed:
@@ -2558,7 +2558,7 @@ def _route(session: Session, true_signal: str, routed_signal: str) -> str:
     # ("ne", "northwest") are already movement verbs; this catches the named thresholds a seed
     # keys by their destination. Real verbs win (the spine ran first), so an exit never shadows one.
     if " " not in routed_signal:
-        # The concealed Creator's Door is named, never listed (parts.world.workshop): try it before
+        # The concealed Creator's Door is named, never listed (kernel.world.workshop): try it before
         # the visible exits, so a bare `door` in the Grand Library meets the barrier or crosses it.
         crossed = _cross_workshop_barrier(session, routed_signal)
         if crossed is not None:
@@ -2576,8 +2576,8 @@ def handle_command(session: Session, signal: str) -> str:
     from it. Lowercasing a password destroys it.
 
     After the player's command resolves, the world takes its beat: any aggressive
-    NPC sharing the room strikes (parts.world.aggression.menace) and every area advances its
-    reset clock (parts.world.zones.tick_zones). The player's command is the only clock the world
+    NPC sharing the room strikes (kernel.world.aggression.menace) and every area advances its
+    reset clock (kernel.world.zones.tick_zones). The player's command is the only clock the world
     has -- no background thread, the tick stays the one door."""
     true_signal = signal.strip()
     routed_signal = true_signal.lower()
@@ -2596,7 +2596,7 @@ def handle_command(session: Session, signal: str) -> str:
 def _sands_beat(session: Session) -> str:
     """Advance the shared world timer one beat and apply any deferred effects that came due.
 
-    The player's command is the only clock: this drains parts.shelf.hourglass.WORLD_SANDS as before
+    The player's command is the only clock: this drains kernel.shelf.hourglass.WORLD_SANDS as before
     menace and tick_zones ride the beat, with no background thread. Returns any line the acting
     player should see because they are in the affected room (else '')."""
     lines: list[str] = []

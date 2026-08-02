@@ -1,4 +1,4 @@
-"""Test twin for parts/refactor.py. Without LibCST (CI): the behavioural gate is exercised
+"""Test twin for kernel/refactor.py. Without LibCST (CI): the behavioural gate is exercised
 via a monkeypatched scoped_rename - a clean transform is applied, a behaviour-changing one
 is REFUSED with a counterexample. With the [refactor] extra installed: scope-correctness
 (the binding + its uses rename, globals and other scopes do not), plus the refusals
@@ -12,7 +12,7 @@ from __future__ import annotations
 import unittest
 from unittest.mock import patch
 
-from parts.refactor import (
+from kernel.refactor import (
     RefactorError,
     RefactorResult,
     refactor_available,
@@ -42,7 +42,7 @@ class BehaviouralGate(unittest.TestCase):
 
     def test_clean_transform_is_applied(self):
         same = "def g(x: int) -> int:\n    return x * 2 + 1\n"
-        with patch("parts.refactor.scoped_rename", return_value=same):
+        with patch("kernel.refactor.scoped_rename", return_value=same):
             r = verified_rename(same, "g", "x", "y")
         self.assertTrue(r.applied)
         self.assertEqual(r.verdict, "preserved")
@@ -51,7 +51,7 @@ class BehaviouralGate(unittest.TestCase):
     def test_behaviour_changing_transform_is_refused(self):
         before = "def g(x: int) -> int:\n    return x * 2\n"
         broken = "def g(x: int) -> int:\n    return x * 3\n"  # a codemod bug a gate must catch
-        with patch("parts.refactor.scoped_rename", return_value=broken):
+        with patch("kernel.refactor.scoped_rename", return_value=broken):
             r = verified_rename(before, "g", "x", "y", samples=500)
         self.assertFalse(r.applied)
         self.assertEqual(r.verdict, "broken")

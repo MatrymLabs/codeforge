@@ -15,7 +15,7 @@ doc covers the retry/backoff part; the circuit breaker is a later slice in the s
 
 ## The part: `retry-policy`
 
-`parts/shelf/retry.py` -- a frozen `RetryPolicy(max_attempts, base_delay, factor, max_delay, retry_on)`
+`kernel/shelf/retry.py` -- a frozen `RetryPolicy(max_attempts, base_delay, factor, max_delay, retry_on)`
 with `is_transient(exc)` and `delay_for(attempt)` (capped exponential backoff), and
 `run_with_retries(fn, policy, *, sleep, on_retry)`. It **retries transient failures**, **re-raises a
 permanent one immediately**, and after the last attempt **re-raises the final failure (never
@@ -29,7 +29,7 @@ responsibility** -- the part retries, it does not make an operation safe to repe
 
 ## GAME-TO-PRACTICAL TRANSLATION
 
-- **Game component:** an auto-retried `calibrate` (`parts/calibrate.py`).
+- **Game component:** an auto-retried `calibrate` (`kernel/calibrate.py`).
 - **Core behavior:** try an operation; on a transient failure, back off and try again, up to a budget.
 - **Game-specific presentation:** "Aligned on attempt 3." / "Failed after 4 attempts."
 - **Reusable domain logic:** the whole `RetryPolicy` + `run_with_retries` (game-free).
@@ -42,10 +42,10 @@ responsibility** -- the part retries, it does not make an operation safe to repe
 
 ## Adapters (one core, two lives)
 
-- **Game:** `parts/calibrate.py` -- the `calibrate` verb retries a flaky instrument. The tick is
+- **Game:** `kernel/calibrate.py` -- the `calibrate` verb retries a flaky instrument. The tick is
   synchronous, so it uses a **zero delay** (a real backoff would block every player); the delay
   behavior is proven in the core + practical tests.
-- **Practical:** `parts/resilient_call.py` -- `ResilientCaller(policy).call(fn)` retries an unreliable
+- **Practical:** `kernel/resilient_call.py` -- `ResilientCaller(policy).call(fn)` retries an unreliable
   callable and keeps an `Attempt` **history** (the audit trail resilience needs).
 
 ## Evidence
@@ -58,28 +58,28 @@ responsibility** -- the part retries, it does not make an operation safe to repe
 
 ## The part: `circuit-breaker`
 
-`parts/shelf/circuit_breaker.py` -- the other half of the resilience family. It guards calls to a flaky
+`kernel/shelf/circuit_breaker.py` -- the other half of the resilience family. It guards calls to a flaky
 dependency: **CLOSED** it passes calls and counts consecutive failures; at a threshold it trips to
 **OPEN** and rejects calls immediately (`CircuitOpen`, no waiting on a dead service); after a reset
 timeout it moves to **HALF_OPEN** and lets one probe through -- success closes it, failure re-opens
 it. Provenance: `independently_implemented_pattern` (Azure resilience pattern; no code copied).
 
 **Composition, not reinvention:** the three-state lifecycle IS a state machine, so the breaker is
-built ON the Hardware Store's own `state-machine` part (`parts/shelf/statemachine`) -- a part from a part.
+built ON the Hardware Store's own `state-machine` part (`kernel/shelf/statemachine`) -- a part from a part.
 The manufacturing loop's assembly stage shows that real dependency. The clock is injected, so the
 trip and recovery are deterministic; a property test proves it opens exactly when a run of
 `threshold` consecutive failures occurs.
 
-- **Game:** `parts/relay.py` -- a `channel` verb draws power through a relay that trips after
+- **Game:** `kernel/relay.py` -- a `channel` verb draws power through a relay that trips after
   repeated surges, then cools and re-tests. Tick-reachable.
-- **Practical:** `parts/service_breaker.py` -- `ServiceBreakers` keeps one breaker per named upstream
+- **Practical:** `kernel/service_breaker.py` -- `ServiceBreakers` keeps one breaker per named upstream
   so a broken payment gateway trips independently of a slow search service.
 - Evidence: `tests/test_circuit_breaker.py`, `tests/test_relay.py`, `tests/test_service_breaker.py`;
   manifest `docs/hardware/circuit-breaker.yaml`; `make loop PART=circuit-breaker`. Maturity `beta`.
 
 ## The part: `deadline`
 
-`parts/shelf/deadline.py` -- the timeout primitive of the resilience family, sized for a single-threaded
+`kernel/shelf/deadline.py` -- the timeout primitive of the resilience family, sized for a single-threaded
 engine. A hard timeout interrupts a thread; a `Deadline(seconds, clock=...)` interrupts nothing. It
 is a budget you POLL -- `remaining()`, `expired()`, or `check()` (which raises `DeadlineExceeded`) --
 between steps, so a long job yields the moment its budget is spent. The clock is injected (default
@@ -102,7 +102,7 @@ construction (`DeadlineError`).
 
 ## The part: `bulkhead`
 
-`parts/shelf/bulkhead.py` -- the concurrency-cap of the resilience family, and the one shelf-mate that is
+`kernel/shelf/bulkhead.py` -- the concurrency-cap of the resilience family, and the one shelf-mate that is
 **thread-safe by design**. A `Bulkhead(limit)` admits at most `limit` operations through a section at
 once and rejects the overflow immediately (`BulkheadFull`), so a flood backed up behind one slow
 dependency is contained in its compartment instead of consuming every worker (a ship's watertight
@@ -128,7 +128,7 @@ work raises; a limit < 1 or a bool/non-int fails loud at construction.
 
 ## The part: `idempotency-key`
 
-`parts/shelf/idempotency.py` -- retry-safety for the family: the part that makes it safe to *repeat*
+`kernel/shelf/idempotency.py` -- retry-safety for the family: the part that makes it safe to *repeat*
 an operation, not just to slow, bound, or abandon one. An `IdempotencyStore` runs an operation at
 most once per idempotency key and replays its stored result on retry, so a network retry, a
 double-click, or an at-least-once redelivery cannot apply it twice. `store.remember(key, fingerprint,
@@ -150,7 +150,7 @@ case-sensitive.
   processing of an at-least-once queue or webhook, a submit-once guard on a filing.
 - **Composition:** it closes the loop with `retry` -- retry makes a failed call happen *again*;
   idempotency makes that repeat *safe*. It is the correctness half of the double-entry ledger's
-  transfer path (`parts/ledger.py`).
+  transfer path (`kernel/ledger.py`).
 - **Honest limit:** in-memory and single-process (the tick is single-threaded, so no lock is taken). A
   networked deployment fronts the same contract with a durable, UNIQUE-indexed table (and a row lock or
   an upsert) to make check-run-store atomic across processes.
@@ -158,7 +158,7 @@ case-sensitive.
 
 ## The part: `dead-letter-queue`
 
-`parts/shelf/dead_letter.py` -- the last part in the at-least-once family, and the recovery half of
+`kernel/shelf/dead_letter.py` -- the last part in the at-least-once family, and the recovery half of
 message processing. `retry` makes a failed call happen again; `idempotency-key` makes that repeat
 safe; but some messages fail *permanently* (a poison payload, a downstream that stays down). A
 `DeadLetterQueue` is the third answer: `bury(message, reason, attempts)` sets the exhausted message

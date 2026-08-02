@@ -10,7 +10,7 @@ from __future__ import annotations
 
 import unittest
 
-from parts.shelf.cross_module import CrossModuleError, analyze_repo, render
+from kernel.shelf.cross_module import CrossModuleError, analyze_repo, render
 
 # pkg.api uses helper.build (from-import) and util.clamp (module-alias); orphan is unused
 PKG = {
