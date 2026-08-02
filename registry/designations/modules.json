@@ -2316,6 +2316,27 @@
   "updated": "2026-08-02"
  },
  {
+  "designation": "MOD-10.071",
+  "name": "bench_protocol",
+  "status": "active",
+  "function": "noise-controlled measurement + Cliff's-delta effect-size verdict (a gain inside noise is not a gain)",
+  "label": "bench_protocol",
+  "file": "kernel/bench_protocol.py",
+  "type": "MOD",
+  "domain": "10",
+  "docs": "",
+  "tests": "tests/test_bench_protocol.py",
+  "depends_on": [],
+  "related": [],
+  "reuse": "turn any before/after timing into an honest verdict (verified/likely/neutral/regression/inconclusive) with an effect size, not a bare median ratio",
+  "tags": ["module"],
+  "notes": "RD-2026-0002 #16. Implements the optimization-ethos rule the fleet only asserted: warm-up/cool-down, randomized interleaving, injected-timer measure, Cliff's-delta effect size, and a governor/pin attestation. Clean-room from the EASE-2025 noise-control protocol. Provenance: original.",
+  "superseded_by": "",
+  "aliases": [],
+  "created": "2026-08-02",
+  "updated": "2026-08-02"
+ },
+ {
   "designation": "MOD-10.022",
   "name": "verdicts",
   "status": "active",
