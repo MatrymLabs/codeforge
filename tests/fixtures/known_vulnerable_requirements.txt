@@ -1,0 +1,5 @@
+# CVE-gate canary fixture (RD-2026-0002 finding #1). NOT installed - only fed to `pip-audit -r`
+# by `make gate-canary` in CI, which asserts the CVE gate BLOCKS on a known-vulnerable pin.
+# jinja2 2.11.2 carries multiple real advisories (PYSEC-2021-66 + others). If pip-audit ever
+# stops flagging this, the gate canary goes red - proof the CVE gate still has teeth.
+jinja2==2.11.2

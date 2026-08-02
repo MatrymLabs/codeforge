@@ -203,6 +203,21 @@ audit-runtime:
 	@uv export --no-dev --no-emit-project --format requirements-txt > runtime-requirements.txt
 	pip-audit -r runtime-requirements.txt
 
+# --- Gate canary (RD-2026-0002 #1): prove the CVE gate BLOCKS on a real defect. A gate never
+# tested against a known-vulnerable input is faith, not evidence. Feeds pip-audit a fixture that
+# pins a package with real advisories and asserts a NON-ZERO exit; if the gate ever goes toothless
+# (or pip-audit silently no-ops), this fails LOUD. Needs the online advisory DB, so it is a CI
+# step, not a pytest (the secret-gate canary lives offline in tests/test_gate_canaries.py). ---
+.PHONY: gate-canary
+gate-canary:
+	@echo "→ CVE gate canary: pip-audit must BLOCK on a known-vulnerable pin..."
+	@if pip-audit -r tests/fixtures/known_vulnerable_requirements.txt >/dev/null 2>&1; then \
+		echo "GATE CANARY FAILED: pip-audit did NOT flag a known-vulnerable package - the CVE gate is toothless"; \
+		exit 1; \
+	else \
+		echo "  ok: the CVE gate flags the known-vulnerable fixture (has teeth)"; \
+	fi
+
 # --- SBOM: a CycloneDX software bill of materials (SSDF supply-chain evidence).
 # Generated from the installed environment; the output is git-ignored (reproducible
 # from the recorded commit), the README/CI advertise that it is produced. ---
@@ -314,6 +329,14 @@ patch:
 	-pip-audit --fix --skip-editable
 	@echo "→ re-verifying the patched environment..."
 	$(MAKE) check
+	@# Evidence honesty (RD-2026-0002 #1/#3): the scan step is fail-open (best-effort, needs
+	@# network), so DON'T let a silent scan failure pass as a clean day - the daily ritual must
+	@# not quietly stop producing evidence. Fail loud if today's audit file is missing/empty.
+	@test -s "security-evidence/$$(date -u +%Y-%m-%d)-pip-audit.json" || { \
+		echo "PATCH RITUAL WARNING: no CVE evidence written today (scan failed or was offline)."; \
+		echo "  the exposure window is now UNMEASURED - run 'make audit-runtime' before relying on it."; \
+		exit 1; \
+	}
 	@echo "✓ security patch cycle complete (evidence: security-evidence/)"
 
 # --- Daily ritual: apply security patches (+re-verify), then check federal
