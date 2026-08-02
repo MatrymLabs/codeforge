@@ -40,8 +40,8 @@ def _fixture_engine(root: Path) -> None:
     (root / "parts" / "__pycache__" / "junk.pyc").write_text("cache")
     (root / "forge.py").write_text("# engine\n")
     for pack in ("first-forge", "other-pack"):
-        (root / "seeds" / pack).mkdir(parents=True)
-        (root / "seeds" / pack / "rooms.yaml").write_text("a: {}\n")
+        (root / "content" / "seeds" / pack).mkdir(parents=True)
+        (root / "content" / "seeds" / pack / "rooms.yaml").write_text("a: {}\n")
     tpl = root / "seed_templates" / "blank_mud"
     tpl.mkdir(parents=True)
     (tpl / "template_manifest.json").write_text(
@@ -125,7 +125,7 @@ def test_planning_blocks_when_the_starter_pack_is_missing(tmp_path: Path) -> Non
             }
         )
     )
-    (tmp_path / "seeds").mkdir()  # no 'not-installed' pack inside
+    (tmp_path / "content" / "seeds").mkdir(parents=True)  # no 'not-installed' pack inside
     plan = plan_cast("ghost", "Nowhere", root=tmp_path)
     assert plan.verdict == BLOCKED
     assert any("not installed" in w for w in plan.warnings)
@@ -183,7 +183,7 @@ def test_generate_pours_the_engine_seed_and_scaffold(tmp_path: Path) -> None:
     # engine vendored whole (minus caches), the seed pack, and the fresh scaffold
     assert (out / "parts" / "x.py").is_file() and (out / "forge.py").is_file()
     assert not (out / "parts" / "__pycache__").exists()  # caches never carried
-    assert (out / "seeds" / "first-forge" / "rooms.yaml").is_file()
+    assert (out / "content" / "seeds" / "first-forge" / "rooms.yaml").is_file()
     for scaffold in (
         "cast_manifest.json",
         "README.md",
@@ -199,8 +199,10 @@ def test_generate_carries_only_its_own_seed_pack(tmp_path: Path) -> None:
     _fixture_engine(tmp_path)
     plan = plan_cast("blank_mud", "Solo", commit="c", root=tmp_path)
     out = generate_cast(plan, tmp_path / "out", root=tmp_path)
-    assert (out / "seeds" / "first-forge").is_dir()
-    assert not (out / "seeds" / "other-pack").exists()  # a cast carries only its own game
+    assert (out / "content" / "seeds" / "first-forge").is_dir()
+    assert not (
+        out / "content" / "seeds" / "other-pack"
+    ).exists()  # a cast carries only its own game
 
 
 def test_generate_refuses_a_blocked_plan(tmp_path: Path) -> None:

@@ -37,7 +37,7 @@ from kernel.world.score_sheet_model import RESIST_ORDER  # the canonical element
 # Default: the repo's seeds/ dir. CODEFORGE_SEEDS_ROOT overrides it for installed /
 # containerized deploys where the package lives apart from the seed files.
 _default_seeds_root = (
-    Path(__file__).resolve().parent.parent.parent / "seeds"
+    Path(__file__).resolve().parent.parent.parent / "content" / "seeds"
 )  # kernel/world/ -> repo root
 SEEDS_ROOT = Path(os.environ.get("CODEFORGE_SEEDS_ROOT", str(_default_seeds_root)))
 DEFAULT_SEED = "first-forge"

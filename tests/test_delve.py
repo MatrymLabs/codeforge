@@ -126,7 +126,7 @@ def test_wire_delve_mouths_skips_a_missing_mouth_room():
 
 
 def test_load_dungeons_reads_the_shipped_manifest():
-    aethryn = Path(__file__).resolve().parent.parent / "seeds" / "aethryn"
+    aethryn = Path(__file__).resolve().parent.parent / "content" / "seeds" / "aethryn"
     configs = load_dungeons(aethryn / "dungeons.yaml")
     assert configs and all({"room", "name", "zone", "level", "biome"} <= set(c) for c in configs)
 

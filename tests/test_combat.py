@@ -420,7 +420,7 @@ def test_load_npcs_refuses_a_lethal_peaceful_foe(tmp_path):
 
 
 def test_the_aethryn_boss_is_lethal():
-    seeds = Path(__file__).resolve().parent.parent / "seeds"
+    seeds = Path(__file__).resolve().parent.parent / "content" / "seeds"
     aethryn_npcs = load_npcs(seeds / "aethryn" / "npcs.yaml")
     assert aethryn_npcs["netharions_throne_guardian"].get("lethal") is True  # a real boss
     assert aethryn_npcs["veridia_warden"].get("lethal") is not True  # a townsfolk is not lethal

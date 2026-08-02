@@ -50,7 +50,7 @@ def test_an_unarmed_calling_fails_loud(monkeypatch):
 
 def test_every_aethryn_calling_ships_a_kit():
     # the flagship: all 30 callings are armed (loaded directly, independent of the booted seed).
-    aethryn = Path(__file__).resolve().parent.parent / "seeds" / "aethryn"
+    aethryn = Path(__file__).resolve().parent.parent / "content" / "seeds" / "aethryn"
     callings = set(load_jobs(aethryn / "jobs.yaml"))
     abilities = load_abilities(aethryn / "abilities.yaml")
     armed = {job for ability in abilities.values() for job in ability["jobs"]}
