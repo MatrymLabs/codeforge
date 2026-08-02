@@ -1,7 +1,7 @@
-"""Test twin for parts/service_health.py -- the practical adapter + the one-core proof."""
+"""Test twin for kernel/service_health.py -- the practical adapter + the one-core proof."""
 
+from kernel.service_health import ServiceHealth
 from kernel.shelf.health import HealthRegistry
-from parts.service_health import ServiceHealth
 
 
 def test_a_service_is_ready_only_when_every_dependency_is_healthy():

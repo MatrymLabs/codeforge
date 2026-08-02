@@ -26,4 +26,4 @@ source_status: original
 owner: MatrymLabs
 adapters:
   - parts/titles.py
-  - parts/field_sanitizer.py
+  - kernel/field_sanitizer.py

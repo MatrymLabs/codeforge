@@ -43,7 +43,7 @@ prove a system is secure or compliant.
 
 - **Game:** `parts/vitals.py` -- the `vitals` verb renders a panel of the world's subsystems
   (engine liveness, NPCs and callings loaded from the seed). Tick-reachable.
-- **Practical:** `parts/service_health.py` -- `ServiceHealth` aggregates dependency checks;
+- **Practical:** `kernel/service_health.py` -- `ServiceHealth` aggregates dependency checks;
   `ready()` is True only when all are healthy. A `/readyz` probe for any service.
 
 ## Evidence

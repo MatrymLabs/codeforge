@@ -161,8 +161,8 @@ def verified_rename(
     outcome, cex, notes = verdict.outcome, verdict.counterexample, list(verdict.notes)
 
     if deep and outcome is Outcome.PRESERVED:  # pragma: no cover - needs the [verify] extra
-        from parts.verify_smt import Outcome as SmtOutcome
-        from parts.verify_smt import verify_transform_smt
+        from kernel.verify_smt import Outcome as SmtOutcome
+        from kernel.verify_smt import verify_transform_smt
 
         smt = verify_transform_smt(source, new_source, func_name)
         notes.append(f"deep gate (crosshair): {smt.outcome.value}")

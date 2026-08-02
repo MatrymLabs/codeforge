@@ -26,4 +26,4 @@ source_status: original
 owner: MatrymLabs
 adapters:
   - parts/chat_throttle.py
-  - parts/login_guard.py
+  - kernel/login_guard.py

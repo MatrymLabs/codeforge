@@ -13,7 +13,7 @@ postgres = ["psycopg[binary]>=3.3.4"]
 # Embedded Lua scripting (the sandboxed @script console; parts.scripting). Optional: absent -> the
 # feature reports itself unavailable and the game is untouched (ADR-0014). lupa bundles the runtime.
 lua = ["lupa>=2.8"]
-# The deep behavioral-equivalence verifier (parts.verify_smt). Optional: absent -> the deep gate
+# The deep behavioral-equivalence verifier (kernel.verify_smt). Optional: absent -> the deep gate
 # fails loud with an install hint and the stdlib sampler (transform_verifier) remains the default;
 # CI runs without it (the symbolic tests skip). Admitted via Track-T T-EXP-08 / CAND-06. crosshair
 # pulls z3-solver (which ships an aarch64 wheel).

@@ -45,7 +45,7 @@ when invalid, carrying the result.
 
 - **Game:** `parts/name_check.py` -- the `namecheck` verb previews whether a proposed character name
   is valid (required, the name pattern, not a reserved word) and lists why not. Tick-reachable.
-- **Practical:** `parts/payload_check.py` -- `validate_signup(payload)` checks a signup body
+- **Practical:** `kernel/payload_check.py` -- `validate_signup(payload)` checks a signup body
   (username, email, age) with the same core, returning every problem at once.
 
 ## Evidence
@@ -64,7 +64,7 @@ lowercases, and caps the length. It is **deterministic and idempotent** (sanitiz
 once, a property-tested invariant), and honest about its scope: it normalizes, it is **not** a
 security control (not output-escaping, not crypto). It does neutralize control chars and
 log-injection newlines. Adapters: a sanitized player title in the game (`parts/titles.py`, the
-`title` verb) and a stored/logged field cleaner in a practical app (`parts/field_sanitizer.py`,
+`title` verb) and a stored/logged field cleaner in a practical app (`kernel/field_sanitizer.py`,
 `clean_field` / `clean_record`). Trace it: `make loop PART=sanitizer`. Maturity `beta`.
 
 ## Deferred (needs Josh's approval)

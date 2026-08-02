@@ -93,7 +93,7 @@ integrity ritual already reports drift, so let evidence, not opinion, drive any 
 
 ## 10. Recommended New Subsystems
 
-- **Harvest Lens** (`parts/harvest_lens.py`, shipped in this change) - scans source for reusable-
+- **Harvest Lens** (`kernel/harvest_lens.py`, shipped in this change) - scans source for reusable-
   pattern candidates not yet in the Hardware Store and drafts candidate cards. It automates the
   gap-analysis loop we have been running by hand (it is how `stream-framer` and `typed-event-bus`
   were found). *As code is written, the store learns.*

@@ -13,9 +13,9 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
+from kernel.verdicts import FAIL, PASS
 from parts.stewardship.change import ChangeDescriptor
 from parts.stewardship.risk import RiskAssessment, assess_risk
-from parts.verdicts import FAIL, PASS
 
 
 @dataclass(frozen=True)

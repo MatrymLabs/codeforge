@@ -90,7 +90,7 @@ taxonomy in `catalog/domains.yaml`, manifests in `docs/hardware/`, pattern docs 
 
 ## 11. Recommended Pattern Capture Workflow
 
-Already built: the **Harvest Lens** (`parts/harvest_lens.py`, the `harvest` verb) scans source for
+Already built: the **Harvest Lens** (`kernel/harvest_lens.py`, the `harvest` verb) scans source for
 reusable-pattern signals not yet stocked and drafts candidate cards. Nothing is stocked
 automatically; every candidate needs evidence (core + two adapters + tests + provenance). This closes
 the loop the prompt asks for: as CodeForge writes code, the store proposes what it could preserve.

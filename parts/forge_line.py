@@ -23,11 +23,11 @@ from dataclasses import dataclass
 from datetime import date
 from pathlib import Path
 
+from kernel import clone_scan, complexity
 from kernel.shelf.reporting import write_report
+from kernel.verdicts import FAIL, NA, PASS, WATCH
 from parts import (
     blueprint,
-    clone_scan,
-    complexity,
     foundry,
     hardware,
     manifest,
@@ -35,7 +35,6 @@ from parts import (
     registry,
     store_index,
 )
-from parts.verdicts import FAIL, NA, PASS, WATCH
 
 _ROOT = Path(__file__).resolve().parent.parent
 _DEFAULT_PART = "token-bucket"

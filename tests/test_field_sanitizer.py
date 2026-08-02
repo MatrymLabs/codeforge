@@ -1,6 +1,6 @@
-"""Test twin for parts/field_sanitizer.py -- the practical adapter + the one-core proof."""
+"""Test twin for kernel/field_sanitizer.py -- the practical adapter + the one-core proof."""
 
-from parts.field_sanitizer import clean_field, clean_record
+from kernel.field_sanitizer import clean_field, clean_record
 
 
 def test_clean_field_strips_controls_and_caps():
@@ -22,7 +22,7 @@ def test_clean_record_sanitizes_strings_and_passes_other_types():
 
 
 def test_one_core_powers_both_the_game_title_and_the_practical_field():
-    import parts.field_sanitizer as practical
+    import kernel.field_sanitizer as practical
     import parts.titles as game
     from kernel.shelf.sanitizer import sanitize
 

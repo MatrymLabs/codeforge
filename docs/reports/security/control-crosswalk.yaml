@@ -188,7 +188,7 @@ controls:
     control: Field sanitization (control-char + log-injection stripping for storage/logs)
     applicability: applicable
     assurance_profile: B
-    implementation: parts/field_sanitizer.py
+    implementation: kernel/field_sanitizer.py
     evidence:
       - {kind: test, path: tests/test_field_sanitizer.py}
     status: verified_against

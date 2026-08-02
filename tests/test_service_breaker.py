@@ -1,9 +1,9 @@
-"""Test twin for parts/service_breaker.py -- the practical adapter + the one-core proof."""
+"""Test twin for kernel/service_breaker.py -- the practical adapter + the one-core proof."""
 
 import pytest
 
+from kernel.service_breaker import ServiceBreakers
 from kernel.shelf.circuit_breaker import OPEN, CircuitBreaker, CircuitOpen
-from parts.service_breaker import ServiceBreakers
 
 
 class FakeClock:

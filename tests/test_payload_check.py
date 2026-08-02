@@ -1,7 +1,7 @@
-"""Test twin for parts/payload_check.py -- the practical adapter + the one-core proof."""
+"""Test twin for kernel/payload_check.py -- the practical adapter + the one-core proof."""
 
+from kernel.payload_check import validate_signup
 from kernel.shelf.validation import Validator
-from parts.payload_check import validate_signup
 
 
 def test_a_valid_signup_passes():
@@ -21,8 +21,8 @@ def test_a_missing_required_field_is_caught():
 
 
 def test_one_core_powers_both_the_game_name_check_and_the_practical_payload_check():
+    import kernel.payload_check as practical
     import parts.name_check as game
-    import parts.payload_check as practical
 
     assert isinstance(game._VALIDATOR, Validator)
     assert isinstance(practical.SIGNUP, Validator)

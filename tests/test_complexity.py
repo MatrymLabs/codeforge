@@ -1,11 +1,11 @@
-"""Test twin for parts/complexity.py -- cyclomatic complexity, the Analyze third fold."""
+"""Test twin for kernel/complexity.py -- cyclomatic complexity, the Analyze third fold."""
 
 import ast
 
 import pytest
 
 from forge import handle_command
-from parts.complexity import (
+from kernel.complexity import (
     ComplexityError,
     complexity,
     complexity_of,
@@ -75,7 +75,7 @@ def test_bad_source_fails_loud():
 
 def test_render_empty_and_findings():
     assert "lean" in render([], threshold=10)
-    from parts.complexity import FunctionComplexity
+    from kernel.complexity import FunctionComplexity
 
     out = render([("x.py", FunctionComplexity("f", 12, 3))], threshold=10)
     assert "f" in out and "12" in out

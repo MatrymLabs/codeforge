@@ -29,4 +29,4 @@ source_status: original
 owner: MatrymLabs
 adapters:
   - parts/relay.py
-  - parts/service_breaker.py
+  - kernel/service_breaker.py

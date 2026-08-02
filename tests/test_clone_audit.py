@@ -1,4 +1,4 @@
-"""Test twin for parts/clone_audit.py. Functions that are structurally identical modulo local
+"""Test twin for kernel/clone_audit.py. Functions that are structurally identical modulo local
 names land in one family; genuinely different functions do not; trivial stubs are filtered;
 unparsable files are skipped (not fatal); bad parameters are refused; the caveat rides on the
 report and render.
@@ -10,7 +10,7 @@ from __future__ import annotations
 
 import unittest
 
-from parts.clone_audit import (
+from kernel.clone_audit import (
     CAVEAT,
     CloneAuditError,
     CloneReport,

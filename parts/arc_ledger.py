@@ -23,8 +23,8 @@ from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
 
-from parts.verdicts import ARC_STATUSES as _STATUSES
-from parts.verdicts import BLOCKED
+from kernel.verdicts import ARC_STATUSES as _STATUSES
+from kernel.verdicts import BLOCKED
 
 # The four runtime dimensions ARC reads through this ledger; statuses come from verdicts.py (the
 # one home for the ARC readiness tier), so this module and arc.py can never drift apart.

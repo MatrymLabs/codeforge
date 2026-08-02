@@ -31,4 +31,4 @@ source_status: original
 owner: MatrymLabs
 adapters:
   - parts/name_check.py
-  - parts/payload_check.py
+  - kernel/payload_check.py

@@ -1,7 +1,7 @@
-"""Test twin for parts/login_guard.py -- the practical adapter + the one-core-two-adapters proof."""
+"""Test twin for kernel/login_guard.py -- the practical adapter + one-core-two-adapters proof."""
 
+from kernel.login_guard import LoginGuard
 from kernel.shelf.token_bucket import TokenBucket
-from parts.login_guard import LoginGuard
 
 
 class FakeClock:
@@ -65,7 +65,7 @@ def _stub_session():
 
 def test_the_bucket_map_is_bounded_against_a_flood_of_keys(monkeypatch):
     # A flood of distinct keys (IPs/accounts) must not grow the bucket map without bound.
-    from parts import login_guard
+    from kernel import login_guard
 
     monkeypatch.setattr(login_guard, "_MAX_KEYS", 3)
     guard = login_guard.LoginGuard()

@@ -41,7 +41,7 @@ is reproducible. Flags **gate features; they are not authorization.**
 
 - **Game:** `parts/features.py` -- the `features` verb shows the world's flags; `feature_on(name)`
   lets other game code gate behavior. Flags default off. Tick-reachable.
-- **Practical:** `parts/feature_control.py` -- `FeatureControl` where an environment variable
+- **Practical:** `kernel/feature_control.py` -- `FeatureControl` where an environment variable
   (`FEATURE_<NAME>`) overrides the default (the 12-factor precedence). A kill switch without a redeploy.
 
 ## Evidence
