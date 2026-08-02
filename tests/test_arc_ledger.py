@@ -1,4 +1,4 @@
-"""Test twin for parts/arc_ledger.py -- file/read runtime ARC verdicts, and the evidence driver.
+"""Test twin for kernel/arc_ledger.py -- file/read runtime ARC verdicts, and the evidence driver.
 
 Acceptance: a filed verdict round-trips and the newest wins; the driver files release+evidence from
 real check outcomes. Refusal: an absent dir reads as None (-> MISSING), and a bad status / unknown
@@ -9,7 +9,7 @@ from datetime import UTC, datetime
 
 import pytest
 
-from parts.arc_ledger import VerdictError, emit, read_latest, record_verdict
+from kernel.arc_ledger import VerdictError, emit, read_latest, record_verdict
 
 
 def test_record_then_read_round_trips(tmp_path):
@@ -124,7 +124,7 @@ def test_console_runner_maps_an_allowlisted_result_to_a_bool(monkeypatch):
     # The default runner is the safe console runner; here we prove the mapping without a subprocess.
     from types import SimpleNamespace
 
-    import parts.arc_ledger as mod
+    import kernel.arc_ledger as mod
 
     monkeypatch.setattr(
         "kernel.shelf.console.run",
@@ -135,7 +135,7 @@ def test_console_runner_maps_an_allowlisted_result_to_a_bool(monkeypatch):
 
 
 def test_main_usage_is_refused_without_the_emit_verb(capsys):
-    from parts.arc_ledger import main
+    from kernel.arc_ledger import main
 
     assert main([]) == 2
     assert main(["wibble"]) == 2
@@ -143,7 +143,7 @@ def test_main_usage_is_refused_without_the_emit_verb(capsys):
 
 
 def test_main_emit_files_and_reports(monkeypatch, capsys, tmp_path):
-    import parts.arc_ledger as mod
+    import kernel.arc_ledger as mod
 
     monkeypatch.setattr(mod, "emit", lambda commit: [tmp_path / "2026-07-13-release.json"])
     assert mod.main(["emit", "abc123"]) == 0

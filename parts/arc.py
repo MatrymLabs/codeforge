@@ -27,7 +27,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from parts import arc_ledger
+from kernel import arc_ledger
 
 if TYPE_CHECKING:
     from kernel.chronicle import Record

@@ -1,4 +1,4 @@
-"""Test twin for parts/retention.py -- hold-aware retention analysis (read-only R1).
+"""Test twin for kernel/retention.py -- hold-aware retention analysis (read-only R1).
 
 Acceptance: age is computed from the record stamp; a record past its kind's period is eligible; a
 hold covers by 'all' / kind / 'subject:<prefix>'; plan() partitions active / hold-blocked /
@@ -15,7 +15,7 @@ from pathlib import Path
 import pytest
 
 from kernel.chronicle import Record, record_incident, record_metric
-from parts.retention import (
+from kernel.retention import (
     DEFAULT_POLICY,
     Hold,
     RetentionError,

@@ -1,8 +1,8 @@
-"""Test twin for parts/store.py -- the two-shelf hardware store inventory."""
+"""Test twin for kernel/store.py -- the two-shelf hardware store inventory."""
 
 from pathlib import Path
 
-from parts.store import hardware_store_catalog, inspect_card, public_interface
+from kernel.store import hardware_store_catalog, inspect_card, public_interface
 
 
 def test_store_stocks_every_built_engine_card():

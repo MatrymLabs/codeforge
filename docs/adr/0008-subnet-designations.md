@@ -18,7 +18,7 @@ The Classification Registry filed every object with a "Borg"/Unimatrix designati
 
 Evidence that shaped the design (from a full blast-radius audit):
 - All 188 filed rows use `S01/N001/R0` uniformly, so sector/node/revision carry no information.
-- The engine (`parts/registry.py`) re-derives structural fields from the designation string in
+- The engine (`kernel/registry.py`) re-derives structural fields from the designation string in
   `__post_init__`, so the string is the only load-bearing part of a row.
 - The catalog's `domain.ordinal` is an **alphabetical, non-stable display aid**; the registry's
   sequence is a **stable minted integer**. Identity is the frozen `label`, never the address.

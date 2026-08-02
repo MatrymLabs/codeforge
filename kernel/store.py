@@ -20,10 +20,11 @@ the store has zero side effects (no seed load, no world boot).
 import ast
 from pathlib import Path
 
-PARTS_DIR = Path(__file__).resolve().parent
-SHELF_DIR = PARTS_DIR.parent / "kernel" / "shelf"
+_REPO = Path(__file__).resolve().parent.parent  # this module lives in kernel/, one level down
+PARTS_DIR = _REPO / "parts"  # the engine parts still being migrated (style-guide section 2)
+SHELF_DIR = _REPO / "kernel" / "shelf"
 WORLD_DIR = PARTS_DIR / "world"  # the World Package (Layer 2) is its own subpackage now
-TESTS_DIR = PARTS_DIR.parent / "tests"
+TESTS_DIR = _REPO / "tests"
 
 _CARD_WIDTH = 17
 

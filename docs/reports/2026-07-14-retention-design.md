@@ -59,7 +59,7 @@ a separate, higher-bar action (see Alternatives).
 
 **Slice R1 - the retention overlay, read-only + a dry-run, no destruction.**
 
-- `parts/retention.py`: load + validate a retention policy and a hold registry (stdlib/YAML,
+- `kernel/retention.py`: load + validate a retention policy and a hold registry (stdlib/YAML,
   fail-loud); `eligible(records, today)` returns records past retention; `held(record)` returns
   the blocking hold or None; `dispose(..., dry_run=True)` returns the disposition *plan* without
   writing anything.
@@ -130,7 +130,7 @@ No calendar ever deletes anything on its own.
   Chronicle *is*. Mitigated by R1 being **read-only** (visibility + dry-run) and R2 being
   append-only (markers, not deletes). No physical destruction without a later, separate keel
   decision (R4).
-- **Rollback:** R1 is additive and inert (delete `parts/retention.py` and the policy files).
+- **Rollback:** R1 is additive and inert (delete `kernel/retention.py` and the policy files).
   R2 markers are append-only records; "un-dispositioning" is just not writing (or a later
   reinstatement marker). No data is ever lost to roll back *from*.
 - **Cost:** R1 is a bounded part + test twin + a doctor view, comparable to a Chronicle slice.

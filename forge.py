@@ -13,6 +13,13 @@ from kernel.clone_scan import clones
 from kernel.complexity import complexity
 from kernel.harvest_lens import harvest
 from kernel.learning_record import learnings
+from kernel.registry import (
+    registry_find,
+    registry_list,
+    registry_show,
+    registry_status,
+    registry_type,
+)
 from kernel.shelf.hourglass import WORLD_SANDS
 from parts.arc import arc
 from parts.calibrate import calibrate
@@ -35,13 +42,6 @@ from parts.logbook import journal
 from parts.maintenance import maintenance
 from parts.name_check import name_check
 from parts.plugins import PluginLoad, load_plugins
-from parts.registry import (
-    registry_find,
-    registry_list,
-    registry_show,
-    registry_status,
-    registry_type,
-)
 from parts.relay import channel
 from parts.save import awaken_snapshot, seal_snapshot
 from parts.store_index import store
@@ -259,7 +259,7 @@ def chronicle(arg: str = "") -> str:
 
 
 def retention(arg: str = "") -> str:
-    from parts.retention import retention as run
+    from kernel.retention import retention as run
 
     return run(arg)
 
@@ -301,7 +301,7 @@ def system_generate(session: Session, arg: str) -> str:
 
 
 def law(arg: str = "") -> str:
-    from parts.law import law as run
+    from kernel.law import law as run
 
     return run(arg)
 

@@ -84,7 +84,7 @@ def _stage_blueprint(part_id: str, root: Path) -> StageResult:
 
 def _stage_registry(part_id: str, root: Path, manifest: PartManifest | None) -> StageResult:
     """Stage 4: check if the part has a filed designation in the registry."""
-    from parts.registry import load_collective
+    from kernel.registry import load_collective
 
     registry_dir = root / "registry" / "designations"
     collective = load_collective(registry_dir)

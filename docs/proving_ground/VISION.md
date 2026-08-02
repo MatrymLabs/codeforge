@@ -22,7 +22,7 @@ CodeForge is two products sharing one engine.
 > not be automated blindly.
 
 This is not a departure from today's CodeForge - it is its next spiral. The engine,
-the tick, the seed-driven world, the control-panel `make`, and `parts/store.py`
+the tick, the seed-driven world, the control-panel `make`, and `kernel/store.py`
 (already labeled *"the hardware store"*) are the seed of it.
 
 ## Architecture map (layers)

@@ -48,7 +48,7 @@ flowchart TB
 
     subgraph subsystems["Subsystems (parts/*)"]
         seedloader["Seed loader<br/>parts/world/seed.py"]
-        registry["Classification registry<br/>parts/registry.py"]
+        registry["Classification registry<br/>kernel/registry.py"]
         ranks["Authorization / ranks<br/>parts/world/ranks.py"]
         events["Event bus<br/>parts/world/events.py"]
         quality["Safety + QualityGate<br/>parts/qualitygate.py"]
@@ -80,7 +80,7 @@ flowchart TB
 | Terminal loop | solo local driver | `parts/terminal.py` |
 | Web admin | rank-gated FastAPI admin surface | `parts/api.py` |
 | Seed loader | validate and load the world from data, failing loud at the gate | `parts/world/seed.py` |
-| Classification registry | file every object and module (the tech-order index) | `parts/registry.py` |
+| Classification registry | file every object and module (the tech-order index) | `kernel/registry.py` |
 | Authorization | rank checks before capability | `parts/world/ranks.py` |
 | Event bus | per-player echo sinks and room broadcasts | `parts/world/events.py` |
 | Safety + QualityGate | readiness gates before risky actions | `parts/qualitygate.py` |

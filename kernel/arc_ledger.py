@@ -208,12 +208,12 @@ def emit(commit: str, *, root: Path | None = None, runner=None) -> list[Path]:
 
 
 def main(argv: list[str] | None = None) -> int:
-    """`python -m parts.arc_ledger emit <commit>`: file the runtime verdicts (human-run)."""
+    """`python -m kernel.arc_ledger emit <commit>`: file the runtime verdicts (human-run)."""
     import sys
 
     args = list(sys.argv[1:] if argv is None else argv)
     if not args or args[0] != "emit":
-        print("usage: python -m parts.arc_ledger emit <commit>")
+        print("usage: python -m kernel.arc_ledger emit <commit>")
         return 2
     commit = args[1] if len(args) > 1 else "unknown"
     for path in emit(commit):

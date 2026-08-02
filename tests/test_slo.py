@@ -1,4 +1,4 @@
-"""Test twin for parts/slo.py: the engine-tick SLO + error-budget evaluator.
+"""Test twin for kernel/slo.py: the engine-tick SLO + error-budget evaluator.
 
 Acceptance AND refusal cases. Every SLI series is seeded into a tmp Chronicle root, so these
 tests never touch the real ledger. Hostile/near-miss data is deliberate: values exactly at the
@@ -11,8 +11,7 @@ from pathlib import Path
 
 import pytest
 
-from kernel import chronicle
-from parts import slo
+from kernel import chronicle, slo
 
 
 def _seed(root: Path, values: list[float]) -> None:

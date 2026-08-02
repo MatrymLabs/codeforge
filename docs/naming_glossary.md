@@ -35,7 +35,7 @@ engine. Each maps to a real, tested module - the metaphor stays in the code; the
 
 | Name | Kind | Plain-English meaning |
 |------|------|-----------------------|
-| **Designation / Classification Registry** (`parts/registry.py`) | Filing | Every object gets a unique designation `TYPE-DD.NNN`, keyed to its frozen runtime label - a hidden filing system beneath the fantasy. Additive metadata, never a rename. |
+| **Designation / Classification Registry** (`kernel/registry.py`) | Filing | Every object gets a unique designation `TYPE-DD.NNN`, keyed to its frozen runtime label - a hidden filing system beneath the fantasy. Additive metadata, never a rename. |
 | **CommandSet / the command spine** (`parts/commands.py`) | Dispatch | Namespaced, rank-gated verbs: `CORE` bare words the engine owns, `ADMIN` under the reserved `@` sigil, `SEED` verbs each game owns. A seed can never shadow a reserved word. |
 | **FailsafeRunner** (`kernel/shelf/console.py`) | Safety | The safe command console: an allowlist runs only vetted checks - never raw shell. |
 | **QualityGate / SafetyReview** (`parts/qualitygate.py`) | Readiness | Grade a filed object (purpose · file · tests · docs · maturity) → `pass\|watch\|fail`; rate its risk. Readiness, never compliance. |
@@ -43,7 +43,7 @@ engine. Each maps to a real, tested module - the metaphor stays in the code; the
 | **the Archivist / `library`** (`kernel/library.py`) | Library | Read the guidance library's preserved documents, read-only. |
 | **`@sg` / the generator** (`parts/generate.py`) | Admin | System item generation from filed data patterns (wizard+); refuses to conjure the unknown. |
 | **Foundry** (`parts/foundry.py`: `@forge` / `@arch`) | Workshop | Propose a change, gate it on human approval, then generate under guard - the owner-only build layer where parts are scaffolded and `@arch` previews a built game read-only. |
-| **the awareness lens / `law`** (`parts/law.py`) | Compliance-aware | Renders tracked sources through a legal-*awareness* boundary - never legal advice, always "human review required." |
+| **the awareness lens / `law`** (`kernel/law.py`) | Compliance-aware | Renders tracked sources through a legal-*awareness* boundary - never legal advice, always "human review required." |
 
 ## The two rules that keep it honest
 

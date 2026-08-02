@@ -18,7 +18,7 @@ Evolution Engine.*
 
 ## The part: `change-ledger`
 
-`parts/change_ledger.py` -- a `ChangeLedger`: `open` a `Change` (id, kind, severity, optional CVEs,
+`kernel/change_ledger.py` -- a `ChangeLedger`: `open` a `Change` (id, kind, severity, optional CVEs,
 components, rollback plan) and `advance` it through a gated lifecycle:
 
 ```

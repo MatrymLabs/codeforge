@@ -60,7 +60,7 @@ Above the game, a second set of parts plugs together - each new layer reads the 
 below it, so capability compounds without a bespoke rewrite:
 
 ```
-Classification Registry   registry/*.json + parts/registry.py
+Classification Registry   registry/*.json + kernel/registry.py
    filing: every object -> a designation (TYPE-DD.NNN) keyed to its label
         |
 Command spine             parts/commands.py

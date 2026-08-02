@@ -21,7 +21,7 @@ from typing import Any
 
 from kernel.shelf import loader_cache
 
-_ROOT = Path(__file__).resolve().parent.parent  # the repo root (parts/ -> root)
+_ROOT = Path(__file__).resolve().parent.parent  # the repo root (kernel/ -> root)
 REGISTRY_DIR = _ROOT / "registry" / "designations"
 
 TYPES = (

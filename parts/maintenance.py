@@ -8,7 +8,7 @@ practical app (parts/patch_tracker); only the adapter differs.
 
 from __future__ import annotations
 
-from parts.change_ledger import ChangeLedger
+from kernel.change_ledger import ChangeLedger
 from parts.world.session import Session
 
 
