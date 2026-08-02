@@ -32,7 +32,7 @@ imports:  ## Enforce the style-guide section-2 dependency direction (import-lint
 	lint-imports
 
 typecheck:
-	mypy parts kernel adapters content tests forge.py
+	mypy kernel adapters content tests forge.py
 
 test:
 	pytest -m "not property and not fuzz"
@@ -61,7 +61,7 @@ mutation:
 # CI's secret-scan step, because check did not run it. pip-audit stays out (needs network; CI's
 # blocking audit-runtime gate and `make doctor` cover it).
 sast:
-	bandit -c pyproject.toml -r parts forge.py -q
+	bandit -c pyproject.toml -r kernel adapters content forge.py -q
 	bandit -c pyproject.toml -r . -q --severity-level medium --exclude ./.venv,./.git
 	@git ls-files | grep -vFx 'chronicle/ledger.jsonl' | xargs detect-secrets-hook --baseline .secrets.baseline
 
@@ -188,7 +188,7 @@ evolution:
 # data. The suite is ~95% of check's runtime, so this is the one real speed lever. The
 # inner-loop `test`/`property` targets stay serial for readable, debuggable output.
 coverage:
-	pytest -n auto --cov=parts --cov=forge --cov-branch --cov-report=term-missing --cov-report=xml --cov-fail-under=85
+	pytest -n auto --cov=kernel --cov=adapters --cov=content --cov=forge --cov-branch --cov-report=term-missing --cov-report=xml --cov-fail-under=85
 
 audit:
 	pip-audit --skip-editable
@@ -217,7 +217,7 @@ sbom:
 # flagship's own gate catches whole-repo medium issues -- e.g. a hardcoded /tmp in a test -- before
 # the proof-tool does). Both must pass.
 security:
-	bandit -c pyproject.toml -r parts forge.py -q
+	bandit -c pyproject.toml -r kernel adapters content forge.py -q
 	bandit -c pyproject.toml -r . -q --severity-level medium --exclude ./.venv,./.git
 	pip-audit --skip-editable
 	@git ls-files | grep -vFx 'chronicle/ledger.jsonl' | xargs detect-secrets-hook --baseline .secrets.baseline
@@ -380,7 +380,7 @@ loop:
 	@python3 -m kernel.loop trace $(or $(PART),workflow-engine)
 
 clean:
-	rm -rf .pytest_cache .ruff_cache .mypy_cache .coverage __pycache__ parts/__pycache__ tests/__pycache__
+	rm -rf .pytest_cache .ruff_cache .mypy_cache .coverage __pycache__ kernel/__pycache__ adapters/__pycache__ tests/__pycache__
 
 serve:
 	codeforge serve

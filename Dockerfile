@@ -8,7 +8,6 @@ WORKDIR /app
 # Package source, then install (the console scripts `spark`/`codeforge` land on PATH).
 COPY pyproject.toml README.md LICENSE ./
 COPY forge.py ./
-COPY parts/ parts/
 COPY kernel/ kernel/
 COPY adapters/ adapters/
 COPY content/ content/

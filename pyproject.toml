@@ -56,8 +56,8 @@ build-backend = "setuptools.build_meta"
 [tool.setuptools]
 # Style-guide section 2: modules are migrating from parts/ into the kernel/adapters/content layers.
 packages = [
-    "parts", "kernel.evolution", "adapters.stewardship", "kernel.hubble", "kernel.world",
-    "kernel", "kernel.shelf", "adapters", "content",
+    "kernel", "kernel.evolution", "kernel.hubble", "kernel.shelf", "kernel.world",
+    "adapters", "adapters.stewardship", "content",
 ]
 py-modules = ["forge"]
 
@@ -80,7 +80,7 @@ warn_unused_ignores = true
 # The typecheck scope, declared here so it is the single source of truth: the Makefile,
 # any IDE, and external auditors all see the same set. `e2e/` is deliberately excluded
 # (it carries a second conftest.py; a whole-tree `mypy .` would collide on the basename).
-files = ["parts", "kernel", "adapters", "content", "tests", "forge.py"]
+files = ["kernel", "adapters", "content", "tests", "forge.py"]
 
 # anthropic is an optional 'ai' extra (the Claude Architect brain), not installed in the
 # dev/CI venv; it is lazy-imported behind the Advisor seam. Don't require its stubs here.
