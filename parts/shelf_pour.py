@@ -72,11 +72,21 @@ def _reaches_engine(source: str, where: str) -> bool:
     return False
 
 
-def _third_party(files: list[Path], *, exclude: Collection[str] = frozenset()) -> list[str]:
-    """The third-party top-level packages a set of files import (non-stdlib, non-`parts`, sorted).
+# Import name -> PyPI distribution name, for the packages whose import label differs from the
+# name you `pip install`. Emitting the import name breaks `pip install .[extra]` (there is no
+# `yaml` distribution - it is `pyyaml`). Extend as new such packages enter the shelf.
+_DISTRIBUTION_NAME = {
+    "yaml": "pyyaml",
+}
 
-    Detected from the AST so the declared deps stay honest as the code changes. `exclude` drops
-    packages already declared elsewhere (e.g. runtime deps, when computing the extra TEST deps)."""
+
+def _third_party(files: list[Path], *, exclude: Collection[str] = frozenset()) -> list[str]:
+    """The third-party distributions a set of files import (non-stdlib, non-`parts`, sorted).
+
+    Detected from the AST so the declared deps stay honest as the code changes. Import names are
+    mapped to their PyPI distribution names (`yaml` -> `pyyaml`) so the poured pyproject installs.
+    `exclude` drops packages already declared elsewhere (e.g. runtime deps, when computing the
+    extra TEST deps)."""
     stdlib = set(sys.stdlib_module_names)
     deps: set[str] = set()
     for py in files:
@@ -100,7 +110,7 @@ def _third_party(files: list[Path], *, exclude: Collection[str] = frozenset()) -
                     and not name.startswith("codeforge_")
                     and name not in exclude
                 ):
-                    deps.add(name)
+                    deps.add(_DISTRIBUTION_NAME.get(name, name))
     return sorted(deps)
 
 
