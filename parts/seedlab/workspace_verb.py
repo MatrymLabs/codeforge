@@ -9,10 +9,14 @@ running world. "THE SEED IS THE MUD" made walkable: `workspace list`, `workspace
 Owner-gated at the command spine; the Kernel re-checks ownership on every mutation, so an owner can
 only start/stop a workspace they own. Persistence is file-backed under $SEEDLAB_HOME. The Kernel and
 model store are injectable, so the dispatch tests without touching disk. The only game-world
-coupling is reading the caller's identity and pushing a live `Project.Status` GMCP frame to them
-(injectable, defaults to the same `push_gmcp` bus the social events ride) when a subcommand
-resolves a workspace, so a Native-Seed client's Project Hub updates the instant an owner inspects
-or changes a workspace. Status: PROTOTYPED (see docs/seed_platform/RECENTERING.md).
+coupling is reading the caller's identity and pushing live workspace GMCP frames to them
+(injectable, defaults to the same `push_gmcp` bus the social events ride) whenever a subcommand
+resolves that state: `Project.Status` when a workspace is inspected or its lifecycle changes,
+`Source.Tree` + `Model.Schema` when a source is connected and modeled, and `Model.Schema` when
+models are inspected. So a Native-Seed client's Engineering Workspace (Project Hub, Source Explorer,
+Model view) updates the instant an owner acts. `Build.Report` is NOT pushed here: no subcommand runs
+tools yet, so there is no run state to project (No Vision Theater - it lands when a build/run verb
+does). Status: PROTOTYPED (see docs/seed_platform/RECENTERING.md).
 """
 
 from __future__ import annotations
@@ -29,8 +33,15 @@ from parts.seedlab.kernel import (
     SeedRecord,
     render_status,
 )
-from parts.seedlab.model_store import FileModelStore, ModelStore, model_labels
-from parts.seedlab.workspace_gmcp import PROJECT_STATUS_PACKAGE, project_status
+from parts.seedlab.model_store import FileModelStore, ModelStore, model_label
+from parts.seedlab.workspace_gmcp import (
+    MODEL_SCHEMA_PACKAGE,
+    PROJECT_STATUS_PACKAGE,
+    SOURCE_TREE_PACKAGE,
+    model_schema,
+    project_status,
+    source_tree,
+)
 
 _USAGE = (
     "workspace commands: list | create <name> [purpose] | status <id> | "
@@ -50,15 +61,21 @@ def _default_push(player_id: str, package: str, data: object) -> None:
     push_gmcp([player_id], package, data)
 
 
-def _emit_project_status(session: Any, record: SeedRecord, push: GmcpPush) -> None:
-    """Project one workspace's status into a live `Project.Status` frame for the acting owner, so
-    the client's Project Hub reflects a workspace the instant it is inspected or its lifecycle
-    changes. A session with no player id (a bare test session, a plain-text caller) is a no-op;
-    `push_gmcp` itself already skips a player with no GMCP sink, so a text client never sees one."""
+def _push_frame(session: Any, push: GmcpPush, package: str, payload: dict[str, object]) -> None:
+    """Push one workspace GMCP frame to the acting owner, if they have a player id. A session with
+    no player id (a bare test session, a plain-text caller) is a no-op; `push_gmcp` itself already
+    skips a player with no GMCP sink, so a text client never sees one."""
     player_id = getattr(session, "player_id", "")
     if not player_id:
         return
-    push(player_id, PROJECT_STATUS_PACKAGE, project_status(record))
+    push(player_id, package, payload)
+
+
+def _emit_project_status(session: Any, record: SeedRecord, push: GmcpPush) -> None:
+    """Project one workspace's status into a live `Project.Status` frame for the acting owner, so
+    the client's Project Hub reflects a workspace the instant it is inspected or its lifecycle
+    changes."""
+    _push_frame(session, push, PROJECT_STATUS_PACKAGE, project_status(record))
 
 
 def _home() -> Path:
@@ -91,8 +108,9 @@ def workspace_command(
 ) -> str:
     """Dispatch a `workspace` subcommand over the Seed Kernel; returns a text projection for the
     tick. Owner-gated at the spine; the Kernel authorizes each mutation by the acting owner. When a
-    subcommand resolves a workspace (inspect it, or change its lifecycle), it also pushes a live
-    `Project.Status` GMCP frame to the caller so a Native-Seed client's Project Hub stays fresh."""
+    subcommand resolves workspace state, it also pushes the matching live GMCP frame(s) to the
+    caller so a Native-Seed client's Engineering Workspace stays fresh: `Project.Status` on
+    inspect/lifecycle, `Source.Tree` + `Model.Schema` on connect, `Model.Schema` on model."""
     kernel = kernel or _default_kernel()
     push = gmcp_push or _default_push
     actor = _actor(session)
@@ -147,21 +165,27 @@ def workspace_command(
         if not rest:
             return "usage: workspace model <seed_id>"
         try:
-            kernel.get(rest[0])  # confirm the workspace exists first
+            record = kernel.get(rest[0])  # confirm the workspace exists first
         except SeedKernelError as exc:
             return f"workspace: {exc}"
         store = model_store or FileModelStore(_home() / "models")
-        labels = model_labels(store, rest[0])
-        if not labels:
+        models = store.all_for_seed(rest[0])
+        if not models:
             return f"No models for {rest[0]} yet (connect a source and model it)."
-        return "Models:\n" + "\n".join(f"  - {label}" for label in labels)
+        # Inspecting the model resolves real extracted state, so push a live `Model.Schema` frame
+        # (the latest model) to refresh the client's Model view, mirroring how `status` refreshes
+        # the Project Hub.
+        _push_frame(
+            session, push, MODEL_SCHEMA_PACKAGE, model_schema(models[-1], seed=record.identity.name)
+        )
+        return "Models:\n" + "\n".join(f"  - {model_label(m)}" for m in models)
 
     if sub == "connect":
         if len(rest) < 2:
             return "usage: workspace connect <seed_id> <path>"
         seed_id, path = rest[0], " ".join(rest[1:])
         try:
-            kernel.get(seed_id)  # the workspace must exist
+            record = kernel.get(seed_id)  # the workspace must exist
         except SeedKernelError as exc:
             return f"workspace: {exc}"
         # If an operator set an allowed-sources base, refuse a path outside it (defence in depth on
@@ -185,6 +209,18 @@ def workspace_command(
             model = model_and_store(store, seed_id, source)
         except (SourceConnectorError, SeedLabError) as exc:
             return f"workspace: {exc}"
+        # Connecting resolves a real source AND a fresh model, so push both live frames: the
+        # client's Source Explorer and Model view light up the instant an owner connects a
+        # project. `register` snapshots the source's git head + approved-file count; the file
+        # list is the connector's already-approved relpaths.
+        seed_name = record.identity.name
+        _push_frame(
+            session,
+            push,
+            SOURCE_TREE_PACKAGE,
+            source_tree(source.register(), source.list_files(), seed=seed_name),
+        )
+        _push_frame(session, push, MODEL_SCHEMA_PACKAGE, model_schema(model, seed=seed_name))
         return (
             f"Connected {path} to {seed_id} and modeled it: {model.identity} "
             f"({len(model.entities)} entities, {len(model.unknowns)} unknowns). "

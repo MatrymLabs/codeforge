@@ -149,6 +149,77 @@ def test_connect_models_a_source_in_world(tmp_path: Path) -> None:
     assert "gizmo" in workspace_command(_owner(), f"model {sid}", kernel=k, model_store=store)
 
 
+def test_connect_pushes_source_tree_and_model_schema(tmp_path: Path) -> None:
+    # Connect resolves a real source AND a fresh model, so it lights up both the Source Explorer
+    # and the Model view: one Source.Tree frame and one Model.Schema frame, to the acting owner.
+    k = _kernel()
+    workspace_command(_owner(), "create Proj a demo", kernel=k)
+    sid = k.list_seeds()[0].identity.seed_id
+    store = InMemorySeedModels()
+    frames, push = _capture()
+    workspace_command(
+        _owner(),
+        f"connect {sid} {_source_dir(tmp_path)}",
+        kernel=k,
+        model_store=store,
+        gmcp_push=push,
+    )
+    by_package = {pkg: data for _pid, pkg, data in frames}
+    assert set(by_package) == {"Source.Tree", "Model.Schema"}
+    tree = by_package["Source.Tree"]
+    assert isinstance(tree, dict) and tree["seed"] == "Proj"  # labelled by the seed's name
+    assert tree["repository"] == "gizmo"
+    files = tree["files"]
+    assert isinstance(files, list) and any(e["path"].endswith("__init__.py") for e in files)
+    schema = by_package["Model.Schema"]
+    assert isinstance(schema, dict) and schema["seed"] == "Proj" and "entities" in schema
+
+
+def test_model_inspect_pushes_a_live_model_schema(tmp_path: Path) -> None:
+    # Inspecting a modelled workspace refreshes the client's Model view with the latest schema.
+    k = _kernel()
+    workspace_command(_owner(), "create Proj a demo", kernel=k)
+    sid = k.list_seeds()[0].identity.seed_id
+    store = InMemorySeedModels()
+    model_and_store(
+        store, sid, LocalSource(_source_dir(tmp_path), Provenance("gizmo-src", owner="owner"))
+    )
+    frames, push = _capture()
+    workspace_command(_owner(), f"model {sid}", kernel=k, model_store=store, gmcp_push=push)
+    assert len(frames) == 1
+    _pid, package, data = frames[0]
+    assert package == "Model.Schema"
+    assert isinstance(data, dict) and data["seed"] == "Proj"
+
+
+def test_model_with_no_models_pushes_nothing() -> None:
+    # No Vision Theater: an empty model store lights up nothing (the Model view must not fabricate).
+    k = _kernel()
+    workspace_command(_owner(), "create Proj a demo", kernel=k)
+    sid = k.list_seeds()[0].identity.seed_id
+    frames, push = _capture()
+    out = workspace_command(
+        _owner(), f"model {sid}", kernel=k, model_store=InMemorySeedModels(), gmcp_push=push
+    )
+    assert "No models" in out and frames == []
+
+
+def test_connect_to_a_bad_path_pushes_nothing(tmp_path: Path) -> None:
+    # A refused connect (no such dir) resolves no source, so it must push no frame.
+    k = _kernel()
+    workspace_command(_owner(), "create Proj a demo", kernel=k)
+    sid = k.list_seeds()[0].identity.seed_id
+    frames, push = _capture()
+    out = workspace_command(
+        _owner(),
+        f"connect {sid} {tmp_path / 'no-such-dir'}",
+        kernel=k,
+        model_store=InMemorySeedModels(),
+        gmcp_push=push,
+    )
+    assert "workspace:" in out and frames == []
+
+
 def test_connect_needs_a_seed_and_path() -> None:
     assert "usage: workspace connect" in workspace_command(
         _owner(), "connect only-one", kernel=_kernel()
