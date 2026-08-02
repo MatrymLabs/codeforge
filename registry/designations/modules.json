@@ -7959,6 +7959,29 @@
     "updated": "2026-08-01"
   },
   {
+    "designation": "MOD-10.064",
+    "name": "refactor",
+    "status": "active",
+    "function": "scope-correct, verifier-gated Python codemods: rename a local/param via LibCST's ScopeProvider (binding + uses only, globals/other-scopes untouched, lossless re-emit), then REFUSE to emit unless the behavioural gate (transform_verifier sampler, + verify_smt deep on deep=True) says PRESERVED; the roadmapped consumer of the verifier gate",
+    "label": "refactor",
+    "file": "parts/refactor.py",
+    "type": "MOD",
+    "domain": "10",
+    "docs": "labs/technology/reports/EXP-08-crosshair.md",
+    "tests": "tests/test_refactor.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "the corpus's generate->apply->verify spine as a real tool; composes content_address + transform_verifier + verify_smt",
+    "notes": "The refactor tool (RACK BUILD-REFACTOR-TOOL). LibCST is the OPTIONAL [refactor] extra (only lossless scope-aware codemod path; stdlib ast is lossy). Lazy-imported; absent, refactor_available() is False and it fails loud. NOT a shelf part (parts/, not parts/shelf/) - the poured store stays portable. CI runs without libcst (scope tests skip; the behavioural-gate refusal path is covered via a mocked scoped_rename). deep=True adds the [verify]/crosshair gate. Runs on the aarch64 Pi / Py3.13 (libcst 1.9.0).",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-08-01",
+    "updated": "2026-08-01"
+  },
+  {
     "designation": "MOD-05.022",
     "name": "corpus",
     "status": "active",
