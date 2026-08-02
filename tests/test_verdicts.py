@@ -4,7 +4,7 @@ Pins the values and that the gates now share ONE source (no independent re-decla
 gate and the frame-up that reads its board can never drift apart.
 """
 
-from parts import verdicts
+from kernel import verdicts
 
 
 def test_the_verdict_values() -> None:
