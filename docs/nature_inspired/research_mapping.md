@@ -19,7 +19,7 @@ inside CodeForge.*
 | Nature-inspired mechanism | CodeForge translation | Label | Feasibility / Evidence (report) | Existing system it composes with | Source |
 |---|---|---|---|---|---|
 | Candidate populations (keep 3-5 variants alive, archive elites) | A small `Candidate` population per genome; elite baseline preserved; never auto-promote | **Evidence-backed** | High / High - Build now | Blueprint, Registry, reports/ | Romera-Paredes et al. (2024, *Nature*) |
-| Genotype -> phenotype separation | `BlueprintGenome` (typed genotype) expresses into code/tests/config/docs (phenotype) | **Evidence-backed** | High / High - Build now | `parts/blueprint.py` (the seed) | Pantridge & Helmuth (2023, GECCO) |
+| Genotype -> phenotype separation | `BlueprintGenome` (typed genotype) expresses into code/tests/config/docs (phenotype) | **Evidence-backed** | High / High - Build now | `kernel/blueprint.py` (the seed) | Pantridge & Helmuth (2023, GECCO) |
 | Type-safe mutation operators | A registry of explicit, auditable operators; **v1 applies none autonomously** | **Evidence-backed** | High / High - Build now (design only in v1) | (new) | Pantridge & Helmuth (2023, GECCO) |
 | Multi-objective fitness | Hard gates first (correctness/security/tests/policy), then weighted objectives, every metric visible | **Evidence-backed** | High / High - Build now | EvidenceGate, QualityGate, SafetyReview | Solovyeva et al. (2025) |
 | Counterexample bank | Every failure -> normalized signature -> regression test -> permanent fitness knowledge | **Evidence-backed** | High / Medium-high - Build now | reports/, Classroom (lessons) | Helmuth et al. (2024) |

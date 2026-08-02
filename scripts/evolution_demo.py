@@ -8,16 +8,16 @@ promoted: the run ends `human_decision_required` and Josh selects the elite via 
 
 from __future__ import annotations
 
-from parts import blueprint as bp
-from parts.evolution.bakeoff import (
+from kernel import blueprint as bp
+from kernel.evolution.bakeoff import (
     build_score_sheet_pairs,
     build_slugify_pairs,
     render_run,
     run_bakeoff,
 )
-from parts.evolution.genome import BlueprintGenome
-from parts.evolution.store import write_run
-from parts.evolution.subjects import SLUGIFY_INPUTS, slugify_oracle
+from kernel.evolution.genome import BlueprintGenome
+from kernel.evolution.store import write_run
+from kernel.evolution.subjects import SLUGIFY_INPUTS, slugify_oracle
 
 
 def _genome(genome_id: str, title: str, intent: str, purpose: str) -> BlueprintGenome:

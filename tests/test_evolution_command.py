@@ -10,11 +10,11 @@ from pathlib import Path
 
 import pytest
 
-from parts import blueprint as bp
-from parts.evolution import store
-from parts.evolution.bakeoff import build_score_sheet_pairs, run_bakeoff
-from parts.evolution.command import evolution
-from parts.evolution.genome import BlueprintGenome
+from kernel import blueprint as bp
+from kernel.evolution import store
+from kernel.evolution.bakeoff import build_score_sheet_pairs, run_bakeoff
+from kernel.evolution.command import evolution
+from kernel.evolution.genome import BlueprintGenome
 
 
 def _run():

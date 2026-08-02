@@ -3,7 +3,7 @@
 The AI force-multiplier, made honest. Given a plain-English idea, a Claude-backed drafter
 returns a STRUCTURED Blueprint (schema-enforced JSON via the Anthropic Messages API's
 `messages.parse`), which is then re-validated through the same loud gate every human-authored
-Blueprint passes (`parts.blueprint.from_dict`). The model fills a schema; it never emits free
+Blueprint passes (`kernel.blueprint.from_dict`). The model fills a schema; it never emits free
 prose we parse by hand, and its output is always a Tier-4 DRAFT for a human to review.
 
 Same seam discipline as the Architect (`parts/architect.py`): the Anthropic client is
@@ -17,8 +17,8 @@ from typing import Any, Protocol
 
 from pydantic import BaseModel
 
+from kernel.blueprint import Blueprint, BlueprintError, from_dict
 from parts.architect import CLAUDE_MODEL, anthropic_client
-from parts.blueprint import Blueprint, BlueprintError, from_dict
 
 _DRAFT_SYSTEM = (
     "You are a senior software architect who treats security as a first-class design concern. "

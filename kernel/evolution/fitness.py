@@ -11,9 +11,9 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 
+from kernel.evolution.evaluators import EvaluatorResult
 from kernel.verdicts import FAIL as _FAIL
 from kernel.verdicts import PASS as _PASS
-from parts.evolution.evaluators import EvaluatorResult
 
 # The weighted objectives and their weights (v1 defaults; visible and documented on purpose).
 WEIGHTS: tuple[tuple[str, float], ...] = (

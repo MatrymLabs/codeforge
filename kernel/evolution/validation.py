@@ -13,7 +13,7 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass
 
-from parts.evolution.genome import (
+from kernel.evolution.genome import (
     APPROVAL_POLICIES,
     EXPRESSION_TARGETS,
     GENOME_STATUSES,

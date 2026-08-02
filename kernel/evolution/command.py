@@ -8,7 +8,7 @@ is the read-only surface: list runs, show one run's report, explain the doctrine
 
 from __future__ import annotations
 
-from parts.evolution import store
+from kernel.evolution import store
 
 _EXPLAIN = (
     "THE BLUEPRINT EVOLUTION LAB (nature-inspired, human-governed)\n"

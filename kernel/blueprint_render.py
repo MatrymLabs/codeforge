@@ -12,7 +12,7 @@ from __future__ import annotations
 import html
 from pathlib import Path
 
-from parts.blueprint import Blueprint
+from kernel.blueprint import Blueprint
 
 _STYLE = """
 :root { color-scheme: light dark; --bg:#0d1117; --panel:#161b22; --edge:#30363d;

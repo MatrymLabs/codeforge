@@ -202,7 +202,7 @@ def ask_architect(session: Session, prompt: str) -> str:
 
 
 def blueprint(arg: str = "") -> str:
-    from parts.blueprint import blueprint as run
+    from parts.blueprint_verb import blueprint as run
 
     return run(arg)
 
@@ -247,7 +247,7 @@ def flush_encounters(arg: str) -> str:
 
 
 def evolution(arg: str = "") -> str:
-    from parts.evolution.command import evolution as run
+    from kernel.evolution.command import evolution as run
 
     return run(arg)
 

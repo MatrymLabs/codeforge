@@ -70,7 +70,7 @@ def _stage_catalog(part_id: str, root: Path) -> StageResult:
 
 def _stage_blueprint(part_id: str, root: Path) -> StageResult:
     """Stage 3: check if a Blueprint exists for this part."""
-    from parts.blueprint import load_all
+    from kernel.blueprint import load_all
 
     blueprints = load_all(root=root)
     # blueprint_id uses underscores, part_id uses dashes

@@ -16,7 +16,7 @@ import time
 from dataclasses import dataclass, field
 from typing import Any
 
-from parts.evolution.subjects import Subject
+from kernel.evolution.subjects import Subject
 
 _PASS, _FAIL, _WARN = "pass", "fail", "warn"
 

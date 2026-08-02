@@ -2,7 +2,7 @@
 
 Genotype/phenotype separation (Pantridge & Helmuth, 2023): the genome carries design INTENT
 and CONSTRAINTS as typed, inspectable data, kept separate from any emitted code (the
-phenotype). It COMPOSES the existing human-authored Blueprint (`parts/blueprint.py`, the seed:
+phenotype). It COMPOSES the existing human-authored Blueprint (`kernel/blueprint.py`, the seed:
 intent, requirements, tasks) and adds the machine-evolution fields the evolutionary literature
 needs. State is the JSON; this model never emits code and never mutates the world.
 
@@ -15,7 +15,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any
 
-from parts import blueprint as bp
+from kernel import blueprint as bp
 
 # The evolution status ladder (elite-baseline preservation, per the report). A genome is never
 # promoted up this ladder automatically; promotion past `qualified` is a human decision.

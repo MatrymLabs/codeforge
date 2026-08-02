@@ -1,4 +1,4 @@
-"""Test twin for parts/evolution/mutation.py.
+"""Test twin for kernel/evolution/mutation.py.
 
 The propose-only generative step for the Blueprint Evolution Lab (HC-13). Pins the KEEL first:
 every proposal is propose_only + human_required + status candidate, never autonomous, never
@@ -11,9 +11,9 @@ from __future__ import annotations
 import unittest
 from dataclasses import replace
 
-from parts.evolution import mutation
-from parts.evolution.genome import BlueprintGenome, from_dict
-from parts.evolution.validation import validate_genome
+from kernel.evolution import mutation
+from kernel.evolution.genome import BlueprintGenome, from_dict
+from kernel.evolution.validation import validate_genome
 
 
 def _genome(

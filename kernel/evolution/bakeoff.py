@@ -14,12 +14,12 @@ import inspect
 from dataclasses import dataclass, field
 from typing import Any
 
-from parts.evolution.candidate import Candidate
-from parts.evolution.counterexamples import Counterexample, CounterexampleBank
-from parts.evolution.evaluators import EvaluatorResult, run_evaluators
-from parts.evolution.fitness import WEIGHTS, FitnessResult, _Entry, aggregate_fitness
-from parts.evolution.genome import BlueprintGenome
-from parts.evolution.subjects import (
+from kernel.evolution.candidate import Candidate
+from kernel.evolution.counterexamples import Counterexample, CounterexampleBank
+from kernel.evolution.evaluators import EvaluatorResult, run_evaluators
+from kernel.evolution.fitness import WEIGHTS, FitnessResult, _Entry, aggregate_fitness
+from kernel.evolution.genome import BlueprintGenome
+from kernel.evolution.subjects import (
     ORACLE_INPUTS,
     Subject,
     candidate_extensible,
@@ -30,7 +30,7 @@ from parts.evolution.subjects import (
     slug_minimal,
     slug_performance,
 )
-from parts.evolution.validation import validate_genome
+from kernel.evolution.validation import validate_genome
 
 MAX_CANDIDATES = 3  # v1 cost limit (per the report); raising it later needs evidence.
 
