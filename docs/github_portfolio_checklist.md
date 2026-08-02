@@ -1,7 +1,7 @@
 # GitHub Portfolio Checklist (CodeForge)
 
 *Honest self-assessment against the 2026 research (`docs/research/github_portfolio_requirements.md`).
-`[x]` = verified present; `[~]` = partial; `[ ]` = missing/planned. VeritasGate rule: no box
+`[x]` = verified present; `[~]` = partial; `[ ]` = missing/planned. EvidenceGate rule: no box
 is checked unless the artifact exists. Last audited: 2026-07-10.*
 
 - [x] Clear repo name (`codeforge`)

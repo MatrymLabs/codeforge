@@ -58,7 +58,7 @@ def test_inspect_command_renders_the_frameup() -> None:
 
 
 def test_inspect_subviews_reuse_each_system_renderer() -> None:
-    assert "truth check" in inspect("truth")  # VeritasGate renderer
+    assert "truth check" in inspect("truth")  # EvidenceGate renderer
     assert inspect("qa").strip() != ""  # the QA board renderer
     assert inspect("pm").strip() != ""  # pm status renderer
     assert "Unknown inspect view" in inspect("nonsense")

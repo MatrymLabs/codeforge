@@ -1,6 +1,6 @@
 """Correspondence test for docs/character_system.md.
 
-VeritasGate for the guide: it must document every job-schema field and every score display
+EvidenceGate for the guide: it must document every job-schema field and every score display
 mode. A new field or mode without a matching doc entry turns the suite red instead of leaving
 the guide quietly incomplete.
 """

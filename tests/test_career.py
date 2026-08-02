@@ -1,6 +1,6 @@
 """Test twin for parts/career.py -- the Career Evidence Sign.
 
-The headline test is the VeritasGate one: the shipped board never marks a skill `proven`
+The headline test is the EvidenceGate one: the shipped board never marks a skill `proven`
 or `partial` while citing a proof path that does not exist. Acceptance (views render) and
 refusal (malformed matrix fails loud) are pinned too.
 """
@@ -32,7 +32,7 @@ def test_the_shipped_board_loads() -> None:
 
 
 def test_no_proven_or_partial_skill_cites_a_missing_artifact() -> None:
-    # VeritasGate: every claim of evidence must point to a real file/dir on disk.
+    # EvidenceGate: every claim of evidence must point to a real file/dir on disk.
     board = load_board()
     violations = unproven_claims(board)
     assert not violations, "Career board overclaims (proof path does not exist):\n" + "\n".join(

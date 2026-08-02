@@ -455,7 +455,7 @@ date-stamped while pre-1.0.
   cases (routes, real-data binding, HTML escaping, honest-failure). See `docs/dashboard.md`.
 - **Portfolio readiness scaffolding.** Captured the 2026 hiring/portfolio/full-stack research
   under docs/research/, added an honest hiring_requirement_matrix, github_portfolio_checklist,
-  and full_stack_readiness_checklist (VeritasGate-labeled), and added GitHub issue templates
+  and full_stack_readiness_checklist (EvidenceGate-labeled), and added GitHub issue templates
   (bug + feature + config). Sets up the frontend proof: a FastAPI server-rendered dashboard
   (real data) as the first full-stack artifact, with a Next.js/TS second flagship planned.
 - **Performance evidence (`make bench`).** A frameless (stdlib time+statistics) benchmark of
@@ -533,7 +533,7 @@ date-stamped while pre-1.0.
   `inspect save`. New **`docs/README.md`** maps every doc for navigation. The standalone
   `qa gate all` / `truth check` / `pm status` commands still work.
 - **`inspect` - inspect the forge (on-demand frame-up).** One command that composes every
-  self-audit signal - registry validity · QA board · VeritasGate truth · doc presence ·
+  self-audit signal - registry validity · QA board · EvidenceGate truth · doc presence ·
   overclaim scan, plus career + pioneer status - into a single green/yellow/red frame-up.
   Computed live (nothing stored), REUSES the existing gates (no duplication). The single
   pane of glass over the whole machine. `parts/frameup.py` + `docs/frame_up.md` +
@@ -553,7 +553,7 @@ date-stamped while pre-1.0.
   rules it produced. Flipped the Career board's `adv.runbook.postmortem` skill from
   `missing` → `proven` (board now 25 proven · 8 partial · 1 missing); the honesty test
   confirms every cited artifact exists.
-- **Career Evidence Sign (`career` command).** A data-driven, VeritasGate-honest proof
+- **Career Evidence Sign (`career` command).** A data-driven, EvidenceGate-honest proof
   board in *The Forge Workshop* that maps CodeForge work to real software-career skills -
   each with the exact repo artifact that proves it, and the honest gaps. Grounded in
   BLS/O*NET research. Views: `career` · `career checklist` · `career gaps` · `career
@@ -599,7 +599,7 @@ date-stamped while pre-1.0.
 - **The ritual now asserts what CI asserts, and banks evidence.** IGNITION added the
   coverage-threshold gate (parity with CI); new VERITAS (`truth check`) and SMOKE
   (end-to-end) phases GATE before the forge lights; every run writes a dated after-action
-  record under `reports/ritual/`. `make truth` exposes VeritasGate to scripts/CI.
+  record under `reports/ritual/`. `make truth` exposes EvidenceGate to scripts/CI.
 - **The board is green, and it's now a growth gate.** Linked every filed object to its
   real documentation (a doc page for modules/commands, a seed/inline note for
   rooms/items) - `qa gate all` → **72/72 pass**, `pm status` → **GREEN** (closes
@@ -641,7 +641,7 @@ date-stamped while pre-1.0.
   (empty baseline).
 - **RepoIntegrityRitual** (`parts/integrity.py`, `make repo-integrity`): one honest
   repo-health report - code quality (tool detection), security, license/source origin,
-  originality awareness, presentation, and a truth/VeritasGate pass - composed from
+  originality awareness, presentation, and a truth/EvidenceGate pass - composed from
   checks the repo already owns, saved dated under `reports/repo_integrity/`.
   Integrity-first: a missing tool is reported `not_configured` (never faked), it never
   uploads code to a third party, and it states plainly that it does **not** prove legal

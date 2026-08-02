@@ -6,7 +6,7 @@ evidence. Bend convention - not truth, not safety, not trust.*
 Pioneer Mode is not permission to be sloppy. It's a way to take **calculated risks** with
 the instruments still on: understand the mission, tell a real constraint from a habit,
 run the smallest bold experiment, and leave a trail of evidence. It gives the existing
-safety systems (VeritasGate, QualityGate, SafetyReview, the Ritual) **bold direction** -
+safety systems (EvidenceGate, QualityGate, SafetyReview, the Ritual) **bold direction** -
 it does not replace them.
 
 ## The doctrine

@@ -1134,15 +1134,15 @@
   },
   {
     "designation": "MOD-10.006",
-    "name": "veritas",
+    "name": "evidence_gate",
     "status": "active",
-    "function": "VeritasGate: check that CodeForge's claims match reality",
-    "label": "veritas",
-    "file": "parts/veritas.py",
+    "function": "EvidenceGate: check that CodeForge's claims match reality",
+    "label": "evidence_gate",
+    "file": "parts/evidence_gate.py",
     "type": "MOD",
     "domain": "10",
-    "docs": "docs/veritas.md",
-    "tests": "tests/test_veritas.py",
+    "docs": "docs/evidence_gate.md",
+    "tests": "tests/test_evidence_gate.py",
     "depends_on": [],
     "related": [],
     "reuse": "",
@@ -1188,7 +1188,7 @@
     "designation": "MOD-10.008",
     "name": "career",
     "status": "active",
-    "function": "Career Evidence Sign renderer: data-driven skills-to-proof board (VeritasGate-honest).",
+    "function": "Career Evidence Sign renderer: data-driven skills-to-proof board (EvidenceGate-honest).",
     "label": "career",
     "file": "parts/career.py",
     "type": "MOD",
@@ -3656,7 +3656,7 @@
     "related": [
       "blueprint",
       "harvest_lens",
-      "veritas"
+      "evidence_gate"
     ],
     "reuse": "preserve institutional knowledge: capture why an improvement was made and what to learn",
     "tags": [

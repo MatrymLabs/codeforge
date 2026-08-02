@@ -1,8 +1,8 @@
 """CARD: world_boundary -- prove the World Package (Layer 2) imports no platform (Layer 1) module.
 
 The game world -- rooms, combat, jobs, progression, accounts -- is Layer 2: the runtime a shipped
-game actually needs. The manufacturing platform (Layer 1: blueprint, cast, veritas, pm, career, the
-assurance stack) is built ON the world (it imports the world to catalog, serve, and audit it), but
+game actually needs. The manufacturing platform (Layer 1: blueprint, cast, evidence_gate, pm,
+career, the assurance stack) is built ON the world (it imports the world to catalog and audit it),
 the world must NOT depend on the platform -- so a game can ship without the dev-tools workshop.
 `cast` already pours a world standalone; this Lens keeps the World Package's import graph free of
 the platform, so that independence is enforced, not merely current. A violation re-couples the game

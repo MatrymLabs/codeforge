@@ -20,7 +20,7 @@ commit de0f8a5. Reproduce with `python -m benchmarks.perf_journeys`.
 - **Hypothesis:** memoizing the parsed catalog (parse once per process, or per file-mtime) removes the repeated parse; search drops toward the pure substring cost (< 1 ms).
 - **Proposed Change:** cache `load_catalog()` (e.g. `functools.lru_cache` keyed on path+mtime, or a module-level parsed cache), preserving the loud-fail-on-bad-row behavior.
 - **Alternative Options:** parse at import (like `parts/jobs.py` loads `JOBS`); or an mtime-guarded reload for hot-edit during dev.
-- **Correctness Tests:** assert cached result == freshly parsed result; the existing `test_hardware.py` VeritasGate (every part maps to a domain) still passes; a bad row still fails loud.
+- **Correctness Tests:** assert cached result == freshly parsed result; the existing `test_hardware.py` EvidenceGate (every part maps to a domain) still passes; a bad row still fails loud.
 - **Benchmark Workload:** `reuse_search` and `find_part` over the shipped catalog. Input sizes: current catalog, plus a synthetic large catalog. Warmup 200, reps 2000.
 - **Metrics:** median/p95 latency, `yaml.safe_load` call count, peak memory.
 - **Expected Benefit:** ~40x on catalog/registry search and every `find_part` caller (career board, `catalog`, `reuse`). **Potential Harm:** stale catalog after a live file edit (mitigated by mtime guard).

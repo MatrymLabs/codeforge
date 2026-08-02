@@ -14,7 +14,7 @@ end.
 | 1 | **IGNITION** | **hard** | `make check` - lint · types · the full suite **with coverage** in one run (pytest `--cov` + threshold). One suite run, not two. Parity with CI. A red gate stops the ritual. |
 | 2 | **WARDS** | **hard (SAST + secrets)** | `bandit` (SAST) and `detect-secrets` GATE the forge - it never lights on a known SAST finding or a committed secret; `pip-audit` runs and **warns** (network best-effort - recover CVEs with `make patch`). |
 | 3 | **READINESS** | **hard (registry)** | `make readiness` - the classification registry validates (no duplicates, no orphans) and gates; the project dashboard (`pm status`) prints as an informational readiness report. `watch` ≠ `fail`. |
-| 4 | **VERITAS** | **hard (claims)** | `make truth` - VeritasGate reads the project's own claims back against the code; a FLAGGED claim (overclaim, drift-prone count, missing doc, broken registry/board) gates. *No claim without correspondence.* |
+| 4 | **VERITAS** | **hard (claims)** | `make truth` - EvidenceGate reads the project's own claims back against the code; a FLAGGED claim (overclaim, drift-prone count, missing doc, broken registry/board) gates. *No claim without correspondence.* |
 | 5 | **MIRROR** | soft | Sync with GitHub - fast-forward what's behind, name what's ahead. Never force, never silently push. |
 | 6 | **SMOKE** | **hard (acceptance)** | `make smoke` - the whole engine end to end over a live socket (log in · look · do · log out) *before* the door opens to a human. Its timing is banked as performance evidence. |
 | 7 | **THE FORGE** | - | Light the multiplayer gateway on `:4000` and wait for it to announce itself. |

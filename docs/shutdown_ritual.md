@@ -44,5 +44,5 @@ choice loud. Block conditions:
 ## Related
 
 - [The Startup Ritual](startup_ritual.md) - the mirror ceremony (and its fast/standard modes).
-- [VeritasGate](veritas.md) - the `truth check` the shutdown gate will consult.
+- [EvidenceGate](veritas.md) - the `truth check` the shutdown gate will consult.
 - [Repo integrity](repo_integrity.md) - the composite health report.

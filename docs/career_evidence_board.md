@@ -23,7 +23,7 @@ The board is data-driven: `data/career/career_evidence_matrix.json` holds levels
 roles → skills, each with `status`, `repo_proof[]`, `why_it_matters`, and `next_proof_task`.
 `parts/career.py` loads and renders it; `docs/resume_mapping.md` is the prose companion.
 
-## The honesty rule (VeritasGate)
+## The honesty rule (EvidenceGate)
 
 A skill is only `proven` or `partial` if at least one cited `repo_proof` path **actually
 exists on disk**. `tests/test_career.py` enforces this - mark something proven without the

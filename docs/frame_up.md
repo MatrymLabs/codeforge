@@ -36,7 +36,7 @@ and rolls them into one verdict:
 |--------|--------|-----------|
 | Classification registry | `validate(load_collective())` | no duplicates/orphans |
 | Quality gate (QA board) | `gate_all()` | all `pass` (any `watch` → yellow, any `fail` → red) |
-| VeritasGate (truth) | `truth_checks()` | every claim verified |
+| EvidenceGate (truth) | `truth_checks()` | every claim verified |
 | Documentation | `presence_gaps()` | key docs present |
 | Overclaim scan | `overclaim_hits()` | no unqualified compliance/production claims |
 | Career board *(info)* | `career.load_board()` | always shown; gaps are honest, not failures |

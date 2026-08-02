@@ -33,7 +33,7 @@ and always on:
   row in `dependency_ledger.toml` (`make deps`), plus the blocking runtime CVE gate
   (`make audit-runtime`). This closes the "AI recommended an unsafe or hallucinated package"
   failure mode.
-- **Truth discipline:** VeritasGate (`make truth`) refuses claims that do not correspond to
+- **Truth discipline:** EvidenceGate (`make truth`) refuses claims that do not correspond to
   reality, so AI-written docs cannot drift from the code unwatched.
 
 ## AI code is draft: the security review checklist

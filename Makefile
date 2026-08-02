@@ -162,12 +162,12 @@ shelf-build:
 cast-install-check:
 	@python3 -m parts.cast install-check $(or $(DIR),../codeforge-cast-demo) $(or $(WORK),/tmp/cast-install-check)
 
-# --- Truth: VeritasGate -- check the project's claims correspond to reality
+# --- Truth: EvidenceGate -- check the project's claims correspond to reality
 # (overclaims, drift-prone counts, docs, registry, QA board). Exit 1 on any
 # FLAGGED claim, so the ritual and CI fail loud on drift. Same as the in-MUD
 # `truth check`, reachable from a script. ---
 truth:
-	@python3 -m parts.veritas
+	@python3 -m parts.evidence_gate
 
 # --- Smoke: the whole engine end-to-end over a live socket -- start -> log in
 # -> look -> check -> do -> log out -> bank the forge. Isolated (own port + temp
