@@ -498,7 +498,7 @@
     general: any slotted-attachment model whose parts modify a computed value
 - id: blueprint-genome
   name: Blueprint Genome
-  source: kernel/evolution/genome.py
+  source: parts/evolution/genome.py
   category: modeling
   tags:
   - typed-model
@@ -522,7 +522,7 @@
     general: any typed IR that separates intent from emitted output
 - id: constraint-gate
   name: Constraint Gate
-  source: kernel/evolution/validation.py
+  source: parts/evolution/validation.py
   category: validation
   tags:
   - constraints
@@ -545,7 +545,7 @@
     general: a per-rule, fail-loud validator that explains every refusal
 - id: counterexample-bank
   name: Counterexample Bank
-  source: kernel/evolution/counterexamples.py
+  source: parts/evolution/counterexamples.py
   category: quality
   tags:
   - regression
@@ -567,7 +567,7 @@
     general: a normalize-and-dedup store for any recurring failure signal
 - id: fitness-aggregator
   name: Fitness Aggregator
-  source: kernel/evolution/fitness.py
+  source: parts/evolution/fitness.py
   category: decision
   tags:
   - multi-objective
@@ -589,7 +589,7 @@
     general: rank candidates by hard gates then transparent weighted objectives
 - id: evaluator-swarm
   name: Evaluator Swarm
-  source: kernel/evolution/evaluators.py
+  source: parts/evolution/evaluators.py
   category: quality
   tags:
   - evaluation
@@ -611,7 +611,7 @@
     general: an advisory multi-evaluator layer with no merge authority
 - id: evolution-lab
   name: Blueprint Evolution Lab
-  source: kernel/evolution/bakeoff.py
+  source: parts/evolution/bakeoff.py
   category: search
   tags:
   - evolutionary
