@@ -30,7 +30,7 @@ from kernel.world.session import Session
 from kernel.world.spine import forge_spine
 from kernel.world.travel import travel
 
-_AETHRYN = Path(__file__).resolve().parent.parent / "seeds" / "aethryn"
+_AETHRYN = Path(__file__).resolve().parent.parent / "content" / "seeds" / "aethryn"
 
 
 def _real_zones() -> list[dict[str, Any]]:

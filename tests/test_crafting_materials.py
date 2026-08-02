@@ -20,7 +20,7 @@ from kernel.world import crafting, items
 from kernel.world.seed import load_items, load_professions, load_recipes
 from kernel.world.session import Session
 
-_AETHRYN = Path(__file__).resolve().parent.parent / "seeds" / "aethryn"
+_AETHRYN = Path(__file__).resolve().parent.parent / "content" / "seeds" / "aethryn"
 
 # The two exemplar chains slice 1a ships, lowest tier first. Each is (base_material, *steps) where a
 # step is (recipe_label, output_prototype). A step's output must be an input of the next step, and

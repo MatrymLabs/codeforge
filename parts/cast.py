@@ -32,7 +32,7 @@ from pathlib import Path
 
 _ROOT = Path(__file__).resolve().parent.parent
 TEMPLATES_ROOT = _ROOT / "seed_templates"
-SEEDS_ROOT = _ROOT / "seeds"
+SEEDS_ROOT = _ROOT / "content" / "seeds"
 
 PLANNED = "planned"
 READY = "ready"
@@ -153,7 +153,7 @@ def plan_cast(
     starter = tpl["starter_seed_pack"]
 
     warnings: list[str] = []
-    seeds_root = (base / "seeds") if root else SEEDS_ROOT
+    seeds_root = (base / "content" / "seeds") if root else SEEDS_ROOT
     pack_present = (seeds_root / starter).is_dir()
     if not pack_present:
         warnings.append(
@@ -332,13 +332,17 @@ def generate_cast(
     # parts/ modules import kernel/adapters freely, so a cut without them cannot boot. Selective
     # detachment (D2) still sheds only un-migrated parts/ modules. Copy-if-exists, so a minimal
     # fixture engine (parts-only) still pours.
+    ignore_content = shutil.ignore_patterns("__pycache__", "*.pyc", "seeds")
     for layer in ("kernel", "adapters", "content"):
         layer_src = base / layer
         if layer_src.is_dir():
-            shutil.copytree(layer_src, dest / layer, ignore=ignore)
+            layer_ignore = ignore_content if layer == "content" else ignore
+            shutil.copytree(layer_src, dest / layer, ignore=layer_ignore)
     shutil.copy2(base / "forge.py", dest / "forge.py")
     # 2. only this cast's OWN seed pack (never the other games)
-    shutil.copytree(base / "seeds" / starter, dest / "seeds" / starter, ignore=ignore)
+    shutil.copytree(
+        base / "content" / "seeds" / starter, dest / "content" / "seeds" / starter, ignore=ignore
+    )
     # 3. the fresh scaffold + manifest, marked generated (record the surfaces of a selective cut,
     #    so `cast update` can recompute the closure later without re-guessing what the cast was for)
     generated = replace(

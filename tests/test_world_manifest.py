@@ -91,7 +91,7 @@ def test_a_manifestless_seed_is_derived_not_missing() -> None:
 
 
 def _seed_with_world(tmp_path, start_room: str) -> None:
-    seed = tmp_path / "seeds" / "demo-world"
+    seed = tmp_path / "content" / "seeds" / "demo-world"
     seed.mkdir(parents=True)
     (seed / "world.yaml").write_text(
         f"world_id: demo-world\ntitle: Demo\nstart_room: {start_room}\n"
@@ -112,7 +112,7 @@ def test_check_world_is_clean_when_the_spawn_matches(tmp_path, monkeypatch) -> N
 
 
 def test_check_world_skips_a_derived_manifest(tmp_path) -> None:
-    (tmp_path / "seeds" / "bare").mkdir(
+    (tmp_path / "content" / "seeds" / "bare").mkdir(
         parents=True
     )  # no world.yaml -> derived, nothing to reconcile
     assert check_world("bare", root=tmp_path) == []

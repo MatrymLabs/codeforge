@@ -457,10 +457,13 @@ def _apply_update(
                 shutil.copytree(source_root / "parts", cast_dir / "parts", ignore=ignore)
         else:
             _vendor_selective(source_root / "parts", cast_dir / "parts", modules, ignore)
-        # the migrated layers ride along whole in both strategies (cf. generate_cast)
+        # the migrated layers ride along whole in both strategies (cf. generate_cast); the
+        # content layer's seeds/ is EXCLUDED - a cast carries only its own game's pack
+        ignore_content = shutil.ignore_patterns("__pycache__", "*.pyc", "seeds")
         for layer in ("kernel", "adapters", "content"):
             if (source_root / layer).is_dir():
-                shutil.copytree(source_root / layer, cast_dir / layer, ignore=ignore)
+                layer_ignore = ignore_content if layer == "content" else ignore
+                shutil.copytree(source_root / layer, cast_dir / layer, ignore=layer_ignore)
         shutil.copy2(source_root / "forge.py", cast_dir / "forge.py")
         revendored = len(_engine_files(cast_dir))
 

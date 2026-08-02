@@ -44,7 +44,7 @@ def test_the_flagship_generates_a_real_board_of_contracts():
 
     from kernel.world.seed import load_npcs
 
-    seeds = Path(__file__).resolve().parent.parent / "seeds"
+    seeds = Path(__file__).resolve().parent.parent / "content" / "seeds"
     board = generate_bounties(load_npcs(seeds / "aethryn" / "npcs.yaml"))
     assert len(board) >= 10 and all(is_bounty(b["id"]) for b in board)
 

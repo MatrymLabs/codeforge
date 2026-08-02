@@ -233,7 +233,7 @@ def test_aethryn_relighting_arc_self_completes_from_natural_play():
 
     from kernel.world.seed import load_quest
 
-    seeds = Path(__file__).resolve().parent.parent / "seeds"
+    seeds = Path(__file__).resolve().parent.parent / "content" / "seeds"
     spec = load_quest(seeds / "aethryn" / "quest.yaml")
     assert spec is not None and spec["name"] == "The Endless Journey"
     for step in spec["steps"]:

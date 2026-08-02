@@ -18,7 +18,7 @@ import pytest
 
 from tools.emit_map_world import emit
 
-_AETHRYN = Path(__file__).resolve().parent.parent / "seeds" / "aethryn"
+_AETHRYN = Path(__file__).resolve().parent.parent / "content" / "seeds" / "aethryn"
 _GENERATED = ("rooms", "npcs", "zones", "wildlands", "settlements", "dungeons", "waystones")
 
 

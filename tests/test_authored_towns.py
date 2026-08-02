@@ -19,7 +19,7 @@ import pytest
 from kernel.world import authored_towns as towns
 from kernel.world.seed import Room, SeedError, load_rooms
 
-_AETHRYN = Path(__file__).resolve().parent.parent / "seeds" / "aethryn"
+_AETHRYN = Path(__file__).resolve().parent.parent / "content" / "seeds" / "aethryn"
 _AUTHORED = _AETHRYN / "authored"
 _GH = _AUTHORED / "greenhold.yaml"
 

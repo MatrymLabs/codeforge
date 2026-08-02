@@ -114,7 +114,7 @@ def to_markdown(manifest: WorldManifest) -> str:
 
 
 def _seeds_root(root: Path | None) -> Path:
-    return (root if root is not None else _ROOT) / "seeds"
+    return (root if root is not None else _ROOT) / "content" / "seeds"
 
 
 def _first_room(seed_dir: Path) -> str:

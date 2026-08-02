@@ -37,7 +37,7 @@ selects which world the engine boots.
 
 def _seeds_available() -> list[str]:
     """List installed games without importing the world (keeps env-before-import clean)."""
-    root = Path(__file__).resolve().parent.parent / "seeds"
+    root = Path(__file__).resolve().parent.parent / "content" / "seeds"
     if not root.is_dir():
         return []
     return sorted(p.name for p in root.iterdir() if (p / "rooms.yaml").is_file())
