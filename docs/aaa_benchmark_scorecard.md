@@ -75,7 +75,7 @@ would mislead, so the estimate is split by yardstick and by dimension, and every
 |-----------|--------------------------|----------------------------------|------------------|
 | **Engine / architecture** | ~45% | ~70% | Pure-function tick, 5-table persistence, a large module base, a CI-gated suite (count via `pytest --collect-only`), 7 native-accelerator organs. Mature core; missing distributed/sharded serving. |
 | **Combat systems** | ~40% | ~55% | 154 abilities across **10 ability kinds** (strike/heal/brand/daze/weaken/taunt/cleanse/buff + lifesteal `drain` + heal-over-time `regen`), 10 damage types, boss phases + telegraphed specials + afflictions. Party combat shares XP + round-robin loot; the trinity seams now exist (per-NPC threat/aggro table + taunt, ally-targeted heals). A raid bounty scales with the co-located cohort (#711). A **kit-density pass** brought EVERY calling to a full 5-ability kit (all 30 callings, coherent role identities) that wields the deep kinds (DoT/control/lifesteal). A raid boss now scales its DIFFICULTY with the co-located cohort too (harder blows per extra hero, not just a bigger bounty). Gaps: deeper boss-mechanic variety (3 kinds: strike, mend, vampiric drain), dungeon group mechanics. |
-| **Content scale (world)** | ~15% | ~40% | ~26,800 rooms at default scale (procedural), 45 settlements, 16 dungeons. Authored depth thin (75 hand rooms, 7 authored quests). |
+| **Content scale (world)** | ~15% | ~40% | ~26,800 rooms at default scale (procedural), 45 settlements, 18 dungeons. Authored depth thin (77 hand rooms, 34 authored quests). |
 | **Content scale (items/NPCs)** | ~10% | ~35% | 185 items, 75 authored NPCs + procedural guardians, 38 recipes. Well below launch density. |
 | **Progression / player systems** | ~35% | ~60% | 31 jobs, 6 professions, 4 Orders, level cap 255, ember-coin currency. Broad skeleton, shallow per-system depth. |
 | **Social / multiplayer** | ~38% | ~20% | Shipped: party (max 5, shared XP + round-robin loot), atomic player trade, persisted guilds (ranks + chat + coin treasury + item vault), async mail with attachments, friends, world chat, and a raid reward that scales with the co-located cohort (#711). Gaps: no LFG/matchmaking, no housing. (nudged up: item vault + mail attachments + cohort scaling shipped) |
@@ -178,7 +178,7 @@ engineering estimates unless a cited benchmark has landed.
 | Rooms | Engine: generator scales one seed 1x to ~1M (`CODEFORGE_WILD_SCALE`) | ~26,811 at default scale (75 authored + 26,736 generated) | [Pass 2] | [Pass 2] (DikuMUD-era worlds often 5k-15k rooms) | Current: **Measured** | census |
 | Regions / zones | Data-driven zones | 14 zones, 14 wildlands regions | [Pass 2] | [Pass 2] | Measured | census |
 | Settlements (cities/villages) | Seed-defined | 45 settlements | [Pass 2] | [Pass 2] | Measured | census |
-| Dungeons | Seed-defined | 16 dungeons | [Pass 2] | [Pass 2] | Measured | census |
+| Dungeons | Seed-defined | 18 dungeons | [Pass 2] | [Pass 2] | Measured | census |
 | Raids | Not modelled as a distinct tier | 0 | [Pass 2] | [Pass 2] | Measured | census |
 | Fast-travel nodes | Waystone network | 14 waystones | [Pass 2] | [Pass 2] | Measured | census |
 | Max exits per room | 6 cardinal + up/down (data) | same | [Pass 2] | ~6-10 (Diku dirs) | Measured | world.py DIRECTIONS |
