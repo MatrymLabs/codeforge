@@ -7,11 +7,7 @@ with zero dungeons or quests must appear in its `thin_on` list, so under-built z
 
 from __future__ import annotations
 
-import sys
-from pathlib import Path
-
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "tools"))
-import zone_density  # noqa: E402
+from tools import zone_density
 
 
 def test_audits_every_zone():
