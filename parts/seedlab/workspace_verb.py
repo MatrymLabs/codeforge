@@ -8,23 +8,57 @@ running world. "THE SEED IS THE MUD" made walkable: `workspace list`, `workspace
 
 Owner-gated at the command spine; the Kernel re-checks ownership on every mutation, so an owner can
 only start/stop a workspace they own. Persistence is file-backed under $SEEDLAB_HOME. The Kernel and
-model store are injectable, so the dispatch tests without touching disk. No game-world coupling
-beyond reading the caller's identity. Status: PROTOTYPED (see docs/seed_platform/RECENTERING.md).
+model store are injectable, so the dispatch tests without touching disk. The only game-world
+coupling is reading the caller's identity and pushing a live `Project.Status` GMCP frame to them
+(injectable, defaults to the same `push_gmcp` bus the social events ride) when a subcommand
+resolves a workspace, so a Native-Seed client's Project Hub updates the instant an owner inspects
+or changes a workspace. Status: PROTOTYPED (see docs/seed_platform/RECENTERING.md).
 """
 
 from __future__ import annotations
 
 import os
+from collections.abc import Callable
 from pathlib import Path
 from typing import Any
 
-from parts.seedlab.kernel import FileSeedStore, SeedKernel, SeedKernelError, render_status
+from parts.seedlab.kernel import (
+    FileSeedStore,
+    SeedKernel,
+    SeedKernelError,
+    SeedRecord,
+    render_status,
+)
 from parts.seedlab.model_store import FileModelStore, ModelStore, model_labels
+from parts.seedlab.workspace_gmcp import PROJECT_STATUS_PACKAGE, project_status
 
 _USAGE = (
     "workspace commands: list | create <name> [purpose] | status <id> | "
     "start <id> | stop <id> | connect <id> <path> | model <id>"
 )
+
+#: How the verb pushes a live GMCP frame to the acting owner: (player_id, package, data). The
+#: default rides the same bus the social events use (parts.world.events.push_gmcp), so a Native-
+#: Seed client's Engineering Workspace updates the instant an owner inspects or changes a
+#: workspace. Tests inject a fake to capture the pushes without touching the bus.
+GmcpPush = Callable[[str, str, object], None]
+
+
+def _default_push(player_id: str, package: str, data: object) -> None:
+    from parts.world.events import push_gmcp
+
+    push_gmcp([player_id], package, data)
+
+
+def _emit_project_status(session: Any, record: SeedRecord, push: GmcpPush) -> None:
+    """Project one workspace's status into a live `Project.Status` frame for the acting owner, so
+    the client's Project Hub reflects a workspace the instant it is inspected or its lifecycle
+    changes. A session with no player id (a bare test session, a plain-text caller) is a no-op;
+    `push_gmcp` itself already skips a player with no GMCP sink, so a text client never sees one."""
+    player_id = getattr(session, "player_id", "")
+    if not player_id:
+        return
+    push(player_id, PROJECT_STATUS_PACKAGE, project_status(record))
 
 
 def _home() -> Path:
@@ -53,10 +87,14 @@ def workspace_command(
     *,
     kernel: SeedKernel | None = None,
     model_store: ModelStore | None = None,
+    gmcp_push: GmcpPush | None = None,
 ) -> str:
     """Dispatch a `workspace` subcommand over the Seed Kernel; returns a text projection for the
-    tick. Owner-gated at the spine; the Kernel authorizes each mutation by the acting owner."""
+    tick. Owner-gated at the spine; the Kernel authorizes each mutation by the acting owner. When a
+    subcommand resolves a workspace (inspect it, or change its lifecycle), it also pushes a live
+    `Project.Status` GMCP frame to the caller so a Native-Seed client's Project Hub stays fresh."""
     kernel = kernel or _default_kernel()
+    push = gmcp_push or _default_push
     actor = _actor(session)
     parts = (arg or "").split()
     sub = parts[0].lower() if parts else "list"
@@ -82,15 +120,18 @@ def workspace_command(
             record = kernel.create_seed(name, actor, purpose)
         except SeedKernelError as exc:
             return f"workspace: {exc}"
+        _emit_project_status(session, record, push)
         return f"Created workspace {record.identity.seed_id} (owner: {actor}, status: CREATED)."
 
     if sub in ("status", "show", "enter"):
         if not rest:
             return f"usage: workspace {sub} <seed_id>"
         try:
-            return render_status(kernel.get(rest[0]))
+            record = kernel.get(rest[0])
         except SeedKernelError as exc:
             return f"workspace: {exc}"
+        _emit_project_status(session, record, push)
+        return render_status(record)
 
     if sub in ("start", "stop", "archive"):
         if not rest:
@@ -99,6 +140,7 @@ def workspace_command(
             record = getattr(kernel, sub)(rest[0], actor)
         except SeedKernelError as exc:
             return f"workspace: {exc}"
+        _emit_project_status(session, record, push)
         return f"{rest[0]} -> {record.status.upper()}"
 
     if sub == "model":
