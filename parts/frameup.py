@@ -15,11 +15,11 @@ from collections import Counter
 from dataclasses import dataclass
 from pathlib import Path
 
+from parts.evidence_gate import VERIFIED, truth_checks
 from parts.integrity import overclaim_hits, presence_gaps
 from parts.qualitygate import gate_all
 from parts.registry import load_collective, validate
 from parts.verdicts import FAIL, PASS, WATCH
-from parts.evidence_gate import VERIFIED, truth_checks
 
 _ROOT = Path(__file__).resolve().parent.parent
 
