@@ -66,7 +66,7 @@ nav:
       - Performance: performance.md
   - Self-audit systems:
       - Frame-up: frame_up.md
-      - VeritasGate (truth): veritas.md
+      - EvidenceGate (truth): evidence_gate.md
       - Safety and QA: safety_qa_system.md
       - Repo integrity: repo_integrity.md
       - Project management: project_management.md

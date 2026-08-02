@@ -19,7 +19,7 @@ def test_the_real_repo_frames_up_with_every_system() -> None:
     systems = {f.system for f in frames}
     assert "classification registry" in systems
     assert "quality gate (QA board)" in systems
-    assert "veritasgate (truth)" in systems
+    assert "evidencegate (truth)" in systems
     assert "career board" in systems
     assert "pioneer mode" in systems
 

@@ -90,7 +90,7 @@ def frame_up(root: Path | None = None) -> list[SystemFrame]:
     checks = truth_checks(base)
     flagged = [c for c in checks if c.status != VERIFIED]
     truth = SystemFrame(
-        "veritasgate (truth)",
+        "evidencegate (truth)",
         GREEN if not flagged else RED,
         "all claims verified"
         if not flagged
