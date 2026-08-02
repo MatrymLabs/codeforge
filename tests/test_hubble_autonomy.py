@@ -25,6 +25,12 @@ class MaxAllowed(unittest.TestCase):
         mode, _ = a.max_allowed({"production_without_tested_rollback"})
         self.assertEqual(mode, a.ASSISTANT)
 
+    def test_two_equal_caps_are_both_recorded(self):
+        # security_sensitive + database_migration both cap at reviewer -> both reasons listed
+        mode, reasons = a.max_allowed({"security_sensitive", "database_migration"})
+        self.assertEqual(mode, a.REVIEWER)
+        self.assertEqual(len(reasons), 2)
+
     def test_lowest_cap_wins_under_conflict(self):
         # reviewer-cap + assistant-cap both active -> assistant (the safe default)
         mode, reasons = a.max_allowed({"security_sensitive", "production_without_tested_rollback"})

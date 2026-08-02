@@ -50,6 +50,16 @@ class FilesystemResolver(unittest.TestCase):
             self.assertFalse(resolve(g.Claim("missing sym", "m.py", "nope")))
             self.assertFalse(resolve(g.Claim("missing file", "gone.py")))
 
+    def test_existing_file_without_a_named_symbol_resolves(self):
+        with tempfile.TemporaryDirectory() as d:
+            (Path(d) / "m.py").write_text("x = 1\n", "utf-8")
+            self.assertTrue(g.filesystem_resolver(d)(g.Claim("just the file", "m.py")))
+
+    def test_an_unparseable_file_does_not_resolve_a_symbol(self):
+        with tempfile.TemporaryDirectory() as d:
+            (Path(d) / "m.py").write_text("def broken(:\n", "utf-8")
+            self.assertFalse(g.filesystem_resolver(d)(g.Claim("c", "m.py", "broken")))
+
     def test_symbol_in_a_comment_does_not_count(self):
         with tempfile.TemporaryDirectory() as d:
             (Path(d) / "m.py").write_text("# ghost_fn is only mentioned here\nx = 1\n", "utf-8")

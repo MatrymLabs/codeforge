@@ -83,6 +83,17 @@ class Refusal(unittest.TestCase):
         with self.assertRaises(inc.IncidentError):
             inc.from_dict({"severity": "sev1_critical", "type": "outage", "summary": "x"})
 
+    def test_from_dict_on_a_non_mapping_fails_loud(self):
+        with self.assertRaises(inc.IncidentError):
+            inc.from_dict(["not", "a", "dict"])
+
+    def test_from_dict_defaults_absent_lists_to_empty(self):
+        i = inc.from_dict(
+            {"incident_id": "X", "severity": "sev4_low", "type": "outage", "summary": "s"}
+        )
+        self.assertEqual(i.root_causes, ())
+        self.assertEqual(i.follow_up_checks, ())
+
 
 if __name__ == "__main__":
     unittest.main()
