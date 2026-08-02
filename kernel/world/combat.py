@@ -109,9 +109,8 @@ def _death_gear_toll(session: Session) -> int:
 
     worn = 0
     for iid in session.equipped.values():
-        if durability.is_gear(iid):
-            durability.wear(iid, DEATH_DURABILITY_TOLL)
-            worn += 1
+        durability.wear(iid, DEATH_DURABILITY_TOLL)  # a clean no-op on any non-gear id
+        worn += 1
     return worn
 
 
