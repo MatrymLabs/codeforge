@@ -94,7 +94,7 @@ def serve(port=8000):
         httpd.serve_forever()
 '''
 
-_MAIN_BODY = '''
+_MAIN_BODY = """
 
 def main(argv=None):
     parser = argparse.ArgumentParser(prog=PROG, description=SERVICE)
@@ -117,7 +117,7 @@ def main(argv=None):
 
 if __name__ == "__main__":
     raise SystemExit(main())
-'''
+"""
 
 
 def _emit_files(model: ProjectModel, package: str, name: str) -> dict[str, str]:
@@ -136,11 +136,10 @@ def _emit_files(model: ProjectModel, package: str, name: str) -> dict[str, str]:
         f'"""{model.identity} -- run the generated web API."""\n\n'
         "import argparse\n\n"
         f"from {package}.app import ROUTES, SERVICE, __version__, build_app, serve\n\n"
-        f"PROG = {json.dumps(name)}\n"
-        + _MAIN_BODY
+        f"PROG = {json.dumps(name)}\n" + _MAIN_BODY
     )
 
-    test_py = f'''from {package}.app import ROUTES, build_app
+    test_py = f"""from {package}.app import ROUTES, build_app
 
 
 def _call(path):
@@ -173,7 +172,7 @@ def test_a_route_responds():
 def test_an_unknown_path_is_404():
     status, body = _call("/nope")
     assert status.startswith("404") and body["error"] == "not found"
-'''
+"""
 
     conftest_py = (
         "import os\nimport sys\n\nsys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))\n"
