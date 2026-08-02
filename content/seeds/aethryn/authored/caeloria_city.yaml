@@ -1,0 +1,193 @@
+# SEED: aethryn -- authored/caeloria_city.yaml  (Caeloria City, the heartland capital, ~L30)
+#
+# Caeloria's canon: the heartland kingdom of golden plains and the high road, ruled from gold-crowned
+# towers at the centre of the world. Its Order is KNOWING -- the capital keeps the realm's records,
+# its law, and its long memory, and a scholar-clerk here would rather settle a thing with a ledger
+# than a blade. The conflict is a quiet, bureaucratic one (a page of the heartland's charter has gone
+# missing from the archive, and without it a season's judgements cannot be sealed); the clue to the
+# wider world is the charter itself (the written spine that holds the realm together while the reaches
+# fray); the remainder is left open (who took the page, and why, is never proven). A bare map hub
+# becomes the living capital an interviewer walking the road would expect at the centre of a kingdom.
+# Installed by kernel/world/authored_towns.py; its quest is quests/caeloria_charter.yaml.
+
+rooms:
+  caeloria_plaza:
+    name: The Gold Court Plaza
+    desc: >-
+      A broad plaza of pale flagstone beneath the gold-crowned towers of the heartland capital, the
+      high road running in through the great gate and out again to the reaches. Heralds cry the day's
+      judgements from the steps, clerks hurry with sealed ledgers, and the fountain at the centre runs
+      clear and cold. Ways lead OUT to the high road, NORTH to the high court, EAST to the market,
+      WEST to the royal archive, and UP the stair to the high wall.
+    exits:
+      out: caeloria_city
+      north: caeloria_court
+      east: caeloria_market
+      west: caeloria_archive
+      up: caeloria_wall
+  caeloria_court:
+    name: The High Court
+    desc: >-
+      A hall of golden stone where the heartland's law is spoken and sealed, its high seat empty but
+      its benches never idle. The realm is governed here by record and rubric, not by the sword; a
+      long shelf of the season's judgements waits to be sealed, and one cradle on it sits conspicuously
+      empty. The plaza is back SOUTH.
+    exits: {south: caeloria_plaza}
+  caeloria_archive:
+    name: The Royal Archive
+    desc: >-
+      A cool vaulted archive where the heartland keeps its memory: the charter of the realm, the tax
+      rolls, the treaties with reaches that no longer answer. A Knowing-order archivist tends the
+      stacks, and frets. Dust motes turn in the shafts of light between the shelves. The plaza is back
+      EAST.
+    exits: {east: caeloria_plaza}
+  caeloria_market:
+    name: The Heartland Market
+    desc: >-
+      The richest market on the central plains, its stalls piled with the harvest of a hundred farms
+      and the goods the high road brings from every reach. A merchant of the guild keeps a steady
+      stall here, and buys plainscraft off any gatherer who works the golden fields. The plaza is
+      back WEST.
+    exits: {west: caeloria_plaza}
+  caeloria_wall:
+    name: The High Wall
+    desc: >-
+      The capital's western wall, where a watch keeps the road and reads the weather off the golden
+      plains. From here the whole heartland lies open: the farms, the far towers of Brightwater, the
+      grey edge of the reaches where the map stops being sure of itself. A stair descends back DOWN
+      to the plaza.
+    exits: {down: caeloria_plaza}
+
+hub: {room: caeloria_city, keyword: gates, entry: caeloria_plaza}
+
+npcs:
+  caeloria_herald:
+    name: Herald Alcuin
+    keywords: [alcuin, herald]
+    location: caeloria_plaza
+    dialogue:
+      - >-
+        "Welcome to the Gold Court, traveller. Whatever your business, it will be written down; that
+        is how the heartland has held while the reaches frayed. Mind the fountain, and the clerks."
+    topics:
+      capital:
+        - >-
+          "Caeloria is the centre and the record of the realm. We do not rule the reaches with an army,
+          we rule them with a ledger: what is owed, what is owned, what was promised. Take the ledger
+          away and the kingdom is just a lot of far towns who have forgotten why they answer to us."
+      charter:
+        - >-
+          "The charter is the heartland's spine, the written word that says who we are. The archivist
+          will tell you a page of it has gone missing from the vault, and she is not wrong to fret. A
+          realm that loses its own record is a realm that has started, quietly, to end."
+      knowing:
+        - >-
+          "The Order of Knowing keeps this place: the archive, the court, the long memory. It is
+          unglamorous work, and it is the only thing standing between the heartland and the grey."
+      alcuin:
+        - >-
+          "Herald of the Gold Court, and the loudest voice in a city of quiet clerks. Someone must say
+          the day's judgements aloud, or the plains would never know the law had spoken."
+    hp: 0
+  caeloria_archivist:
+    name: Archivist Meridia
+    keywords: [meridia, archivist]
+    location: caeloria_archive
+    dialogue:
+      - >-
+        "You have careful hands, I think. Good. A page of the heartland charter has been worked loose
+        and carried off, and without it the season's judgements cannot be sealed. I believe it was
+        taken to the high court and never returned. Find the ledger-key it hides behind, bring it to
+        me, and do not read what is not yours to read."
+    topics:
+      archive:
+        - >-
+          "Everything the realm has promised is in this room. The tax rolls, the treaties, the charter
+          itself. It is not gold that holds a kingdom, traveller, it is the writing down of things. I
+          keep the writing. It is a heavier trust than it sounds."
+      charter:
+        - >-
+          "A page is missing, the twelfth, the one that names the reaches bound to the crown. Someone
+          carried it to the court and left the ledger-key that unlocks its cradle behind. Bring me the
+          key and I can seal the season; leave it lost and a year of judgements go unwritten."
+      herald:
+        - >-
+          "Alcuin cries the law from the steps, and I keep the law in the vault. He is the voice and I
+          am the memory. He would tell you the memory matters more, and for once he would be right."
+      meridia:
+        - >-
+          "Archivist of Caeloria, keeper of the charter. I have read every treaty the crown ever
+          signed, and I can tell you which reaches meant it. Fewer than you would hope."
+    hp: 0
+  caeloria_merchant:
+    name: Guild-Merchant Tovin
+    keywords: [tovin, merchant, guild-merchant]
+    location: caeloria_market
+    dialogue:
+      - >-
+        "The heartland market, traveller, where every road ends and every purse opens. I keep the
+        draughts a body needs to walk the high road, and I buy meadowfoil off any gatherer who works
+        the golden fields, for the capital's apothecaries. Trade fair and trade often."
+    topics:
+      trade:
+        - >-
+          "Draughts I sell, healing and mana both, for the road is long between the reaches. Meadowfoil
+          I buy, the golden-field herb the apothecaries distil into the very draughts I sell. Bring a
+          bundle and I will pay guild rates, which is to say honestly, which is rarer than you'd think."
+      road:
+        - >-
+          "Every road in the world runs through Caeloria in the end, which is why the market is rich and
+          the archive is nervous. Goods come easy; it is the writing-down of who owns them that is hard."
+      tovin:
+        - >-
+          "Guild-Merchant of the heartland, and the only honest stall in a market of a hundred. Ask the
+          archivist; she keeps the record of every fair I ever paid. It is a short and blameless scroll."
+    shop:
+      sells: {healing_draught: 24, mana_draught: 24}
+      buys: {meadowfoil: 6}
+    hp: 0
+  caeloria_watch:
+    name: Wall-Watch Orin
+    keywords: [orin, watch, wall-watch]
+    location: caeloria_wall
+    dialogue:
+      - >-
+        "Come up and look, traveller. The whole heartland from one wall: the farms, Brightwater's
+        towers, and out past them the grey where the map goes uncertain. I keep the road and read the
+        weather. Both have been strange of late."
+    topics:
+      plains:
+        - >-
+          "The golden plains feed the realm and the high road binds it, and from up here you can see
+          both at once. It is a good thing to guard. I have stood this wall twelve years and never
+          tired of the view, only of the wind."
+      reaches:
+        - >-
+          "Out past the farms the reaches begin, and the further you go the less the charter holds. The
+          archivist frets over a missing page; up here I watch the edge it names go quiet. The two
+          worries are the same worry, if you ask a wall-watch, which no one does."
+      orin:
+        - >-
+          "Wall-Watch of Caeloria, keeper of the western road. Someone must actually LOOK at the plains
+          while the clerks look at their ledgers. Between us we keep the heartland whole."
+    hp: 0
+
+items:
+  caeloria_ledger_key:
+    name: a brass ledger-key
+    keywords: [ledger-key, key, brass]
+    location: caeloria_court
+    lore: >-
+      A small brass key on a frayed court-ribbon, warm from a hand that held it too long. It unlocks
+      the cradle in the archive where the twelfth charter-page is kept, the page that names the reaches
+      bound to the crown. Someone carried it here to the court and left it behind a shelf of unsealed
+      judgements, whether by theft or by a clerk's tired mistake the record does not say.
+  caeloria_charter_seal:
+    name: the great seal of the heartland
+    keywords: [seal, great-seal, charter]
+    location: caeloria_archive
+    lore: >-
+      The heavy gold matrix that presses the crown's mark into every sealed judgement: a crowned tower
+      over a field of grain, the whole realm in one small device. "By this seal the heartland speaks,"
+      reads the rubric cut around its rim, "and while the seal holds, the reaches answer. Guard the
+      seal. Guard the charter. A kingdom is only the sum of what it has written down and can still prove."
