@@ -235,6 +235,7 @@ def test_generate_via_the_cli(tmp_path: Path) -> None:
 def _bootable_stub(cast_dir: Path, ok: bool = True) -> None:
     """A minimal cast dir the validator can boot in a subprocess, without the 122-module engine."""
     (cast_dir / "kernel" / "world").mkdir(parents=True)  # the World Package is a subpackage now
+    (cast_dir / "parts").mkdir()
     (cast_dir / "parts" / "__init__.py").write_text("")
     (cast_dir / "kernel" / "world" / "__init__.py").write_text("")
     (cast_dir / "kernel" / "world" / "session.py").write_text(

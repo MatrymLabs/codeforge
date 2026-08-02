@@ -60,19 +60,20 @@ def _parts_imports(source: str, where: str) -> set[str]:
             names = [a.name for a in node.names]
         for name in names:
             if name == "kernel.shelf" or name.startswith("kernel.shelf."):
-                found.add("shelf")  # Layer 3, the Hardware Store (moved out of parts/)
+                found.add("shelf")  # Layer 3, the Hardware Store
                 continue
-            if not name.startswith("parts"):
-                continue
-            parts = name.split(".")
-            if len(parts) < 2:
-                continue
-            if parts[1] == "world":
+            if name == "kernel.world" or name.startswith("kernel.world."):
+                bits = name.split(".")
                 found.add(
-                    parts[2] if len(parts) >= 3 else "world"
+                    bits[2] if len(bits) >= 3 else "world"
                 )  # unwrap to the intra-world module
-            else:
-                found.add(parts[1])
+                continue
+            if not name.startswith(("parts", "kernel", "adapters", "content")):
+                continue
+            bits = name.split(".")
+            if len(bits) < 2:
+                continue
+            found.add(bits[1])  # any other internal reach is a platform module
     return found
 
 

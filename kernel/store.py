@@ -23,7 +23,7 @@ from pathlib import Path
 _REPO = Path(__file__).resolve().parent.parent  # this module lives in kernel/, one level down
 PARTS_DIR = _REPO / "parts"  # the engine parts still being migrated (style-guide section 2)
 SHELF_DIR = _REPO / "kernel" / "shelf"
-WORLD_DIR = PARTS_DIR / "world"  # the World Package (Layer 2) is its own subpackage now
+WORLD_DIR = _REPO / "kernel" / "world"  # the World Package (Layer 2) is its own subpackage now
 TESTS_DIR = _REPO / "tests"
 
 _CARD_WIDTH = 17

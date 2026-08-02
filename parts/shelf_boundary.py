@@ -29,13 +29,19 @@ def _parts_imports(source: str, where: str) -> set[str]:
     except SyntaxError as exc:
         raise ShelfBoundaryError(f"cannot parse {where}: {exc}") from exc
     found: set[str] = set()
+    roots = ("parts", "kernel", "adapters", "content")
+    prefixes = tuple(r + "." for r in roots)
+
+    def _internal(name: str) -> bool:
+        return name in roots or name.startswith(prefixes)
+
     for node in ast.walk(tree):
         if isinstance(node, ast.ImportFrom):
-            if node.module and (node.module == "parts" or node.module.startswith("parts.")):
+            if node.module and _internal(node.module):
                 found.add(node.module)
         elif isinstance(node, ast.Import):
             for alias in node.names:
-                if alias.name == "parts" or alias.name.startswith("parts."):
+                if _internal(alias.name):
                     found.add(alias.name)
     return found
 

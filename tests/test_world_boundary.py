@@ -148,10 +148,10 @@ def test_world_modules_is_the_real_closure_of_the_game_seed() -> None:
         out: set[str] = set()
         for n in ast.walk(ast.parse(f.read_text(encoding="utf-8"))):
             names = []
-            if isinstance(n, ast.ImportFrom) and n.module and n.module.startswith("parts."):
+            if isinstance(n, ast.ImportFrom) and n.module and n.module.startswith("kernel."):
                 names = [n.module]
             elif isinstance(n, ast.Import):
-                names = [a.name for a in n.names if a.name.startswith("parts.")]
+                names = [a.name for a in n.names if a.name.startswith("kernel.")]
             for name in names:
                 comps = name.split(".")
                 if len(comps) >= 3 and comps[1] == "world":
