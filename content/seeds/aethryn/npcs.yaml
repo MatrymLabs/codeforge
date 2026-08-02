@@ -40,6 +40,22 @@ sunmeadow_folk:
     - "Sunmeadow keeps to itself, traveller, but you are welcome to pass through."
   wander: true  # ambient: strolls the town on the beat (world life)
 
+the_sunken_barrow_guardian:
+  name: the guardian of The Sunken Barrow
+  keywords: [guardian, the]
+  location: the_sunken_barrow
+  dialogue:
+    - The guardian bars the way into The Sunken Barrow.
+  hp: 300
+  atk: 27
+  aggressive: true
+  attack_element: DRK
+  level: 30
+  tier: boss
+  lethal: true
+  drops: [greater_healing_draught]
+  loot: {ember_shard: 5, nothing: 2}
+
 duskwood_vale_warden:
   name: a warden of Duskwood Vale
   keywords: [warden, Duskwood, Vale]
@@ -171,6 +187,22 @@ the_great_tree_folk:
   location: the_great_tree
   dialogue:
     - "The Great Tree keeps to itself, traveller, but you are welcome to pass through."
+
+rotwood_deep_guardian:
+  name: the guardian of Rotwood Deep
+  keywords: [guardian, rotwood]
+  location: rotwood_deep
+  dialogue:
+    - The guardian bars the way into Rotwood Deep.
+  hp: 600
+  atk: 52
+  aggressive: true
+  attack_element: DRK
+  level: 80
+  tier: boss
+  lethal: true
+  drops: [greater_healing_draught]
+  loot: {ember_shard: 5, nothing: 2}
 
 frostspire_peaks_warden:
   name: a warden of Frostspire Peaks
