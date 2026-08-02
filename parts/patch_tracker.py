@@ -8,7 +8,7 @@ trains, and any governed software-change record.
 
 from __future__ import annotations
 
-from parts.change_ledger import Change, ChangeLedger
+from kernel.change_ledger import Change, ChangeLedger
 
 
 class PatchTracker:

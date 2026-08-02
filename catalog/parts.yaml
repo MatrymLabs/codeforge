@@ -980,7 +980,7 @@
     government: does a system security plan address every required control family; which families are unaddressed
 - id: change-ledger
   name: Change Ledger
-  source: parts/change_ledger.py
+  source: kernel/change_ledger.py
   category: change_management
   tags:
   - change
@@ -1252,7 +1252,7 @@
     general: any transient membership group where a member reaches their group in one lookup and the map must never claim one member for two groups
 - id: slo-error-budget
   name: SLO + Error Budget
-  source: parts/slo.py
+  source: kernel/slo.py
   category: observability
   tags:
   - slo

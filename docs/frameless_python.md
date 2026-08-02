@@ -34,7 +34,7 @@ What CodeForge is **not defined by** any one tool:
 | State | SQLite via SQLAlchemy (a data tool, behind my own `parts/world/db.py`) | `parts/world/db.py` |
 | Events | my own in-process event bus | `parts/world/events.py` |
 | Reports | my own `ReportWriter`, plain Markdown | `parts/reporting.py` |
-| Classification | my own registry + designations, not a plugin framework | `parts/registry.py` |
+| Classification | my own registry + designations, not a plugin framework | `kernel/registry.py` |
 | Task running | Make + shell, the Ritual | `Makefile` |
 | Diagnostics UI | plain-text renders, deterministic and testable, no TUI library | `parts/terminal.py`, `parts/frameup.py` |
 

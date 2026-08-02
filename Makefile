@@ -75,14 +75,14 @@ check: lint imports typecheck coverage sast
 # --- Readiness: the global self-audit -- registry validates (gates), then the
 # project dashboard, computed from the registry + QualityGate. Read-only. ---
 readiness:
-	@python3 -c "import sys; from parts.registry import load_collective, validate, unfiled_modules, untwinned_modules; from parts.coverage import unexercised_capabilities; from parts.pm import pm_status; r=load_collective(); p=validate(r)+['unfiled module (not in the registry): '+m for m in unfiled_modules(r)]+['untested module (no test twin or aggregate): '+m for m in untwinned_modules()]; c=unexercised_capabilities(); print('Registry: CLEAN (no duplicates, no orphans, every module filed and tested)' if not p else 'Registry PROBLEMS:\n  '+'\n  '.join(p)); print('Coverage: CLEAN (every engine capability witnessed by shipped content)' if not c else 'Coverage PROBLEMS:\n  '+'\n  '.join(c)); print(); print(pm_status()); sys.exit(1 if (p or c) else 0)"
+	@python3 -c "import sys; from kernel.registry import load_collective, validate, unfiled_modules, untwinned_modules; from parts.coverage import unexercised_capabilities; from parts.pm import pm_status; r=load_collective(); p=validate(r)+['unfiled module (not in the registry): '+m for m in unfiled_modules(r)]+['untested module (no test twin or aggregate): '+m for m in untwinned_modules()]; c=unexercised_capabilities(); print('Registry: CLEAN (no duplicates, no orphans, every module filed and tested)' if not p else 'Registry PROBLEMS:\n  '+'\n  '.join(p)); print('Coverage: CLEAN (every engine capability witnessed by shipped content)' if not c else 'Coverage PROBLEMS:\n  '+'\n  '.join(c)); print(); print(pm_status()); sys.exit(1 if (p or c) else 0)"
 
 # --- ARC verdicts: run the release checks and FILE the runtime dimensions' verdicts as dated
 # evidence under arc-evidence/ (git-ignored, reproducible from the recorded commit), so ARC can
 # compose release + evidence from real outcomes. Human-run, not on the inner loop; ARC only READS
 # what this files (`arc status`). change/patch have no store yet and stay honestly MISSING. ---
 arc-verdicts:
-	@python3 -m parts.arc_ledger emit $$(git rev-parse --short HEAD 2>/dev/null || echo unknown)
+	@python3 -m kernel.arc_ledger emit $$(git rev-parse --short HEAD 2>/dev/null || echo unknown)
 	@echo "✓ ARC verdicts filed -> arc-evidence/ (see: arc status)"
 
 # --- Repo integrity: one honest repo-health report (code quality + security +
@@ -274,7 +274,7 @@ trend:
 # (docs/reports/slo/engine-tick-slo.md). Read-only over the Chronicle; exits 1 on a breach so a
 # pipeline can act. NOT in `make check` (the SLI is host-relative and sparse). ---
 slo:
-	@python3 -m parts.slo
+	@python3 -m kernel.slo
 
 # --- Loadtest: drive the tick from many concurrent sessions and file a latency-distribution
 # artifact (p50/p95/p99). Read-only rotation; localhost/in-process only. NOT in make check. ---
@@ -296,7 +296,7 @@ ai-eval:
 # --- Retention doctor (read-only, R1): show what the Chronicle keeps, what is eligible for
 # review, and what a hold protects. Disposition is not deletion; R1 writes and removes nothing. ---
 retention:
-	@python3 -m parts.retention
+	@python3 -m kernel.retention
 
 # --- Doctor: run the gates read-only, stop at the first failure, prescribe the fix ---
 doctor:
@@ -371,7 +371,7 @@ economy-audit:
 	@FORGE_SEED=aethryn python3 -c "import parts.world.world; from parts.world.npcs import NPCS; from parts.coin_flow import render_audit; print(render_audit(NPCS))"
 
 store:
-	python3 -m parts.store
+	python3 -m kernel.store
 
 hardware:
 	python3 -m parts.hardware

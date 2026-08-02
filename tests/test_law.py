@@ -1,4 +1,4 @@
-"""Test twin for parts/law.py -- legal/policy AWARENESS (never legal advice).
+"""Test twin for kernel/law.py -- legal/policy AWARENESS (never legal advice).
 
 The hard boundary is the point: every view carries the disclaimer and ends with
 "No legal conclusion. Human review required." Acceptance (index + detail render the
@@ -12,7 +12,7 @@ from pathlib import Path
 import pytest
 
 from forge import handle_command
-from parts.law import law, law_detail, law_index
+from kernel.law import law, law_detail, law_index
 from parts.world.session import SESSIONS, Session
 
 # ruff: noqa: E501  (the CSV fixture below has inherently long data lines)
@@ -65,7 +65,7 @@ def fresh() -> Iterator[None]:
 
 def test_law_reachable_through_the_tick(reg: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     # REGISTRY_PATH is read at call time, so the tick honors this repoint.
-    monkeypatch.setattr("parts.law.REGISTRY_PATH", reg)
+    monkeypatch.setattr("kernel.law.REGISTRY_PATH", reg)
     session = Session(player_id="counsel")
     SESSIONS["counsel"] = session
     out = handle_command(session, "law")

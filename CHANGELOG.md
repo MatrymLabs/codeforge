@@ -142,7 +142,7 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
   (identified -> triaged -> approved -> building -> testing -> canary -> deployed -> verified ->
   closed, plus reject and rollback edges); a change **cannot reach canary until its test evidence
   passes**. Not reinvented: **assembled from five parts already on the shelf** (repository + workflow
-  + statemachine + validation + test-evidence), no code copied. One core (`parts/change_ledger.py`),
+  + statemachine + validation + test-evidence), no code copied. One core (`kernel/change_ledger.py`),
   two adapters: a world-`maintenance` log in the game (`parts/maintenance.py`) and a dependency/CVE
   `PatchTracker` for a practical app (`parts/patch_tracker.py`). Cataloged, filed, manifest, new
   change-management pattern doc. No new dependencies. Maturity: beta.
@@ -255,7 +255,7 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
 - **Fuzz finding: platform-default file encoding.** Nine gate call sites read files with
   `read_text()` and no encoding, crashing with `UnicodeDecodeError` on Windows (cp1252)
   for any non-Latin content. All now read explicit UTF-8; repaired a real Windows test
-  failure in `parts/store.py`'s card reader.
+  failure in `kernel/store.py`'s card reader.
 - **Fuzz finding: a bare `interfaces:` in a manifest YAML** parses to `None` and crashed
   the gate with `TypeError` instead of refusing with `ManifestError`. List fields are now
   validated as lists.
@@ -708,7 +708,7 @@ date-stamped while pre-1.0.
   data-driven patterns (`catalog/items.yaml`), traced to `ITM-*`, refuses the unknown.
 - **Command spine** (`parts/commands.py`): namespaced (`CORE` / `ADMIN @` / `SEED`),
   rank-gated `Command` + `CommandSet`; `registry` verbs proven on it.
-- **Classification Registry** (`parts/registry.py` + `registry/`): designations
+- **Classification Registry** (`kernel/registry.py` + `registry/`): designations
   (`TYPE-UM-SEC-NODE-SEQ-REV`), 18 rooms + commands + items filed, schema + rules doc.
 - **In-game Library** (`kernel/library.py`): `library` / `library <id>` read FGL's
   document store read-only; the Archivist NPC.

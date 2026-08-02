@@ -15,7 +15,7 @@ from typing import Any
 
 import yaml
 
-from parts.registry import load_collective
+from kernel.registry import load_collective
 from parts.world.events import announce
 from parts.world.items import ITEMS
 from parts.world.seed import Item

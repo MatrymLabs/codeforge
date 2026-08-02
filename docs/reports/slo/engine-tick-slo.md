@@ -57,7 +57,7 @@ The error budget is the complement of the objective:
 error budget = 1 - SLO = 1 - 0.99 = 0.01  (1% of recorded runs may breach the threshold)
 ```
 
-Over `N` recorded runs, the budget permits `N x 0.01` breaches. `parts/slo.py` computes how much
+Over `N` recorded runs, the budget permits `N x 0.01` breaches. `kernel/slo.py` computes how much
 of that budget has been burned:
 
 ```
@@ -119,7 +119,7 @@ make trend               # record one more SLI point, then show the series
 
 ## Provenance
 
-Original implementation (`parts/slo.py`, `catalog/parts.yaml` id `slo-error-budget`). The
+Original implementation (`kernel/slo.py`, `catalog/parts.yaml` id `slo-error-budget`). The
 error-budget formula and the SLI/SLO/error-budget vocabulary are the public Google SRE pattern;
 no code was copied. The Chronicle SLI series and the benchmark it reads are pre-existing CodeForge
 parts. Honest labels throughout: the baseline numbers are measured on one host and compare only

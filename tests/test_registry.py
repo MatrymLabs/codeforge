@@ -1,4 +1,4 @@
-"""Test twin for parts/registry.py -- the Classification Registry filing engine.
+"""Test twin for kernel/registry.py -- the Classification Registry filing engine.
 
 Acceptance (valid records load, mint returns the next free id, a clean collective
 validates) and refusal (malformed designation, bad status, missing field, unknown
@@ -12,7 +12,7 @@ import pytest
 from hypothesis import given
 from hypothesis import strategies as st
 
-from parts.registry import (
+from kernel.registry import (
     DESIGNATION_RE,
     Designation,
     RegistryError,
@@ -298,13 +298,13 @@ def test_mint_always_fills_the_lowest_gap(used_sequences):
 def test_every_module_is_tested_by_a_twin_or_an_aggregate():
     # The test-twin convention, enforced: every parts module has a 1:1 twin OR is imported by
     # some test (an aggregate twin). Sibling of the unfiled-modules completeness gate.
-    from parts.registry import untwinned_modules
+    from kernel.registry import untwinned_modules
 
     assert untwinned_modules() == []
 
 
 def test_untwinned_modules_flags_a_module_no_test_touches(tmp_path):
-    from parts.registry import untwinned_modules
+    from kernel.registry import untwinned_modules
 
     (tmp_path / "parts").mkdir()
     (tmp_path / "parts" / "lonely.py").write_text("x = 1\n")

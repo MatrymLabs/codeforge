@@ -12,7 +12,7 @@ It measures a real CodeForge workload, not a synthetic one, and it claims nothin
 measure. Honest about Python: the tick is CPU-bound and the GIL serializes bytecode, so this does
 not show linear speedup and is not meant to -- it shows how latency and throughput behave when
 `concurrency` connections contend for one interpreter, which is exactly the threaded gateway's
-condition. The result feeds the engine-tick SLO (`parts/slo.py`): `compare_to_slo` reports whether
+condition. The result feeds the engine-tick SLO (`kernel/slo.py`): `compare_to_slo` reports whether
 p50 under load still meets the objective, closing the loop from measurement to objective to budget.
 
 Frameless: stdlib `threading`, `time`, `statistics`. In-process and localhost-only -- it drives the
@@ -147,7 +147,7 @@ def compare_to_slo(result: LoadResult) -> str:
     does not record into that series (different measurement conditions); it answers "does the
     objective still hold under load?" as supporting evidence for the SLO doc.
     """
-    from parts import slo
+    from kernel import slo
 
     threshold = slo.DEFAULT_THRESHOLD_US
     verdict = "within" if result.p50_us <= threshold else "OVER"

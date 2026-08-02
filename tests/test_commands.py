@@ -10,6 +10,7 @@ from collections.abc import Iterator
 import pytest
 
 from forge import COMMANDS, handle_command, render_scene
+from kernel.registry import load_collective
 from kernel.scripting import scripting_available
 from parts.commands import (
     ADMIN,
@@ -21,7 +22,6 @@ from parts.commands import (
     guard_seed_verbs,
     reserved_words,
 )
-from parts.registry import load_collective
 from parts.world.session import SESSIONS, Session
 from parts.world.world import WORLD
 

@@ -66,9 +66,9 @@ stdlib_alternative = "The stdlib sampler (transform_verifier) is the zero-depend
 removable = "Yes; it is an optional extra. Absent, the deep gate fails loud with an install hint and the sampler default is untouched; delete kernel/verify_smt.py + the 'verify' extra to remove it entirely."
 
 [runtime.libcst]
-why = "Optional (extra 'refactor'): the verifier-gated codemod tool (parts/refactor.py) uses LibCST's ScopeProvider to rename a local/parameter scope-correctly (the binding + its uses only, never a same-named global or another function's binding) and re-emit losslessly (comments/formatting preserved). This is the roadmapped consumer of the verifier gate (content_address -> transform_verifier -> verify_smt). Not installed by default; absent, refactor_available() is False and the tool fails loud."
+why = "Optional (extra 'refactor'): the verifier-gated codemod tool (kernel/refactor.py) uses LibCST's ScopeProvider to rename a local/parameter scope-correctly (the binding + its uses only, never a same-named global or another function's binding) and re-emit losslessly (comments/formatting preserved). This is the roadmapped consumer of the verifier gate (content_address -> transform_verifier -> verify_smt). Not installed by default; absent, refactor_available() is False and the tool fails loud."
 stdlib_alternative = "stdlib ast is LOSSY (ast.unparse drops comments/formatting/parentheses) and has no scope-aware rename; a hand-rolled lossless CST + scope resolver would be a worse reimplementation of LibCST. The stdlib is kept for the analysis view (content_address) but cannot do a fidelity-preserving codemod."
-removable = "Yes; it is an optional extra. Absent, the refactor tool is unavailable and the rest of the fleet is untouched; delete parts/refactor.py + the 'refactor' extra to remove it entirely."
+removable = "Yes; it is an optional extra. Absent, the refactor tool is unavailable and the rest of the fleet is untouched; delete kernel/refactor.py + the 'refactor' extra to remove it entirely."
 
 # ----- dev dependencies (quality gates, never shipped) --------------------------------
 

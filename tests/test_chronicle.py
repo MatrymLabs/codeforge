@@ -453,7 +453,7 @@ def test_chronicle_evals_verb() -> None:
 
 
 def test_emit_opens_a_fracas_incident_on_a_blocked_release(tmp_path: Path) -> None:
-    from parts.arc_ledger import emit
+    from kernel.arc_ledger import emit
 
     emit("badsha", root=tmp_path, runner=lambda check: check != "security")  # security fails
     opened = incidents("open", root=tmp_path)
@@ -463,14 +463,14 @@ def test_emit_opens_a_fracas_incident_on_a_blocked_release(tmp_path: Path) -> No
 
 
 def test_a_ready_release_files_no_incident(tmp_path: Path) -> None:
-    from parts.arc_ledger import emit
+    from kernel.arc_ledger import emit
 
     emit("goodsha", root=tmp_path, runner=lambda check: True)
     assert incidents(root=tmp_path) == []  # no failure -> no FRACAS noise
 
 
 def test_emit_retains_its_evidence_verdict_in_the_chronicle(tmp_path: Path) -> None:
-    from parts.arc_ledger import emit
+    from kernel.arc_ledger import emit
 
     emit("abc123", root=tmp_path, runner=lambda check: True)  # injected runner: no subprocess
     latest = read_latest("evidence", root=tmp_path)
@@ -481,7 +481,7 @@ def test_emit_retains_its_evidence_verdict_in_the_chronicle(tmp_path: Path) -> N
 
 
 def test_emit_records_the_gate_runs_provenance_edges(tmp_path: Path) -> None:
-    from parts.arc_ledger import emit
+    from kernel.arc_ledger import emit
 
     emit("sha9", root=tmp_path, runner=lambda check: True)
     around = provenance("evidence:sha9", root=tmp_path)

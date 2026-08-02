@@ -10,8 +10,8 @@ docs/project_management.md.
 
 from dataclasses import dataclass, field
 
+from kernel.registry import load_collective
 from parts.qualitygate import FAIL, PASS, gate_all
-from parts.registry import load_collective
 
 
 @dataclass

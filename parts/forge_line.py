@@ -23,7 +23,7 @@ from dataclasses import dataclass
 from datetime import date
 from pathlib import Path
 
-from kernel import clone_scan, complexity
+from kernel import clone_scan, complexity, registry
 from kernel.shelf.reporting import write_report
 from kernel.verdicts import FAIL, NA, PASS, WATCH
 from parts import (
@@ -32,7 +32,6 @@ from parts import (
     hardware,
     manifest,
     qualitygate,
-    registry,
     store_index,
 )
 

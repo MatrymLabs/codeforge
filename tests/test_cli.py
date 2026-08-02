@@ -138,9 +138,9 @@ def test_passwd_refuses_a_mismatch_and_wrong_arity(capsys, monkeypatch):
 # --- refactor verb: verifier-gated safe rename. LibCST (the [refactor] extra) is absent in CI,
 # so the library calls are stubbed here to test the CLI's OWN logic -- dispatch, dry-run vs
 # --apply, the refusal path, and the missing-dependency guard -- with acceptance AND refusal
-# cases. parts/refactor.py is proven separately by its own test twin. ---
+# cases. kernel/refactor.py is proven separately by its own test twin. ---
 def _stub_refactor(monkeypatch, result=None, error=None, available=True):
-    import parts.refactor as rf
+    import kernel.refactor as rf
 
     monkeypatch.setattr(rf, "refactor_available", lambda: available)
     if error is not None:
@@ -154,7 +154,7 @@ def _stub_refactor(monkeypatch, result=None, error=None, available=True):
 
 
 def test_refactor_dry_run_previews_and_writes_nothing(tmp_path, capsys, monkeypatch):
-    from parts.refactor import RefactorResult
+    from kernel.refactor import RefactorResult
 
     src = "def f(a):\n    x = a\n    return x\n"
     mod = tmp_path / "m.py"
@@ -171,7 +171,7 @@ def test_refactor_dry_run_previews_and_writes_nothing(tmp_path, capsys, monkeypa
 
 
 def test_refactor_apply_writes_a_preserved_rename(tmp_path, capsys, monkeypatch):
-    from parts.refactor import RefactorResult
+    from kernel.refactor import RefactorResult
 
     src = "def f(a):\n    x = a\n    return x\n"
     mod = tmp_path / "m.py"
@@ -189,7 +189,7 @@ def test_refactor_apply_writes_a_preserved_rename(tmp_path, capsys, monkeypatch)
 def test_refactor_refuses_a_behaviour_changing_rename_even_with_apply(
     tmp_path, capsys, monkeypatch
 ):
-    from parts.refactor import RefactorResult
+    from kernel.refactor import RefactorResult
 
     src = "def f(a):\n    x = a\n    return x\n"
     mod = tmp_path / "m.py"
@@ -218,7 +218,7 @@ def test_refactor_needs_the_libcst_extra(tmp_path, capsys, monkeypatch):
 
 
 def test_refactor_bad_target_is_refused_loud(tmp_path, capsys, monkeypatch):
-    from parts.refactor import RefactorError
+    from kernel.refactor import RefactorError
 
     mod = tmp_path / "m.py"
     mod.write_text("def f():\n    return 1\n")

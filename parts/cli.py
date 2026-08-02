@@ -169,7 +169,7 @@ def _cmd_refactor(args: list[str]) -> int:
     import argparse
     import difflib
 
-    from parts.refactor import RefactorError, refactor_available, verified_rename
+    from kernel.refactor import RefactorError, refactor_available, verified_rename
 
     parser = argparse.ArgumentParser(
         prog="codeforge refactor",
