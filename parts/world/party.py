@@ -17,7 +17,7 @@ this transient primitive.
 
 from __future__ import annotations
 
-from parts.shelf.cohort import Cohort, CohortRegistry
+from kernel.shelf.cohort import Cohort, CohortRegistry
 from parts.world.events import announce_to, push_channel, push_gmcp
 from parts.world.session import SESSIONS, display_name
 
@@ -25,7 +25,7 @@ from parts.world.session import SESSIONS, display_name
 #: would be a separate, larger cohort, not a bigger party.
 MAX_PARTY = 5
 
-# Membership is the Hardware Store's transient cohort primitive (parts/shelf/cohort): party bolts
+# Membership is the Hardware Store's transient cohort primitive (kernel/shelf/cohort): party bolts
 # invites, chat, and logout cleanup onto it. `_REGISTRY` owns who is banded with whom; `_INVITES`
 # maps an invited player id to the set of inviter ids who have a pending offer out to them.
 _REGISTRY = CohortRegistry(MAX_PARTY)

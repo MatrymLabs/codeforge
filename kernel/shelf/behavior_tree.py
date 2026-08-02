@@ -3,7 +3,7 @@
 The first rung of the R&D AI / Orchestration Lab, and the game-dev survey's top
 reverse-engineering opportunity (flagged twice): the decision architecture that is the AAA
 NPC-AI workhorse AND the shape LLM-agent/workflow orchestration is rediscovering. CodeForge
-already has the FSM half (parts/shelf/statemachine); this is the Behavior Tree half.
+already has the FSM half (kernel/shelf/statemachine); this is the Behavior Tree half.
 
 A behavior tree ticks from the root each step (reactive): composites route control by their
 children's returned Status, so priorities are re-checked every tick (a higher-priority

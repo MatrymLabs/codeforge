@@ -7,7 +7,7 @@ the session. The score sheet itself lives in score_sheet/character_view --
 this card only assembles the character; the sheet is its projection.
 """
 
-from parts.shelf.stats import Stat, StatBlock
+from kernel.shelf.stats import Stat, StatBlock
 from parts.world.job_progress import JobProgress
 from parts.world.resources import Resource
 from parts.world.seed import SEED_DIR, load_jobs

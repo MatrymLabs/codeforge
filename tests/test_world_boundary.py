@@ -175,7 +175,7 @@ def test_a_world_module_reaching_into_the_platform_is_caught(tmp_path: Path) -> 
     world.mkdir(parents=True)
     # 'combat' is a World module; make it import the platform (cast, pm) + the shelf (allowed)
     (world / "combat.py").write_text(
-        "from parts.cast import pour_shelf\nfrom parts.shelf.retry import run\nimport parts.pm\n"
+        "from parts.cast import pour_shelf\nfrom kernel.shelf.retry import run\nimport parts.pm\n"
     )
     violations = world_import_violations(tmp_path)
     assert violations == {"combat": ["cast", "pm"]}  # shelf import is not a violation
@@ -185,7 +185,7 @@ def test_intra_world_and_shelf_imports_are_allowed(tmp_path: Path) -> None:
     world = tmp_path / "parts" / "world"
     world.mkdir(parents=True)
     (world / "combat.py").write_text(
-        "from parts.world.world import WORLD\nfrom parts.shelf.statemachine import Fired\n"
+        "from parts.world.world import WORLD\nfrom kernel.shelf.statemachine import Fired\n"
         "import json\n"
     )
     assert world_import_violations(tmp_path) == {}
@@ -206,7 +206,7 @@ def test_is_platform_classifies_correctly() -> None:
 
 def test_parts_import_extractor_handles_world_shelf_and_platform() -> None:
     mods = _parts_imports(
-        "import parts.cast\nfrom parts.shelf.retry import run\n"
+        "import parts.cast\nfrom kernel.shelf.retry import run\n"
         "from parts.world.combat import hit\n",
         "<t>",
     )

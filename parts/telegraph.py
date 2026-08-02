@@ -7,7 +7,7 @@ lines. The SAME framer core reads a byte-stream of records in a practical app (p
 
 from __future__ import annotations
 
-from parts.shelf.stream_framer import StreamFramer
+from kernel.shelf.stream_framer import StreamFramer
 from parts.world.session import Session
 
 # A dispatch delivered in awkward bursts: line breaks fall mid-burst, and the last line arrives

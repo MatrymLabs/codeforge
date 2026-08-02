@@ -10,7 +10,7 @@ from __future__ import annotations
 
 import unittest
 
-from parts.shelf.probabilistic import (
+from kernel.shelf.probabilistic import (
     BloomFilter,
     CountMinSketch,
     HyperLogLog,

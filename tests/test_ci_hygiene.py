@@ -1,4 +1,4 @@
-"""Real consumer of parts/shelf/workflow_linter (MOD-05.017): guard codeforge's OWN CI hygiene.
+"""Real consumer of kernel/shelf/workflow_linter (MOD-05.017): guard codeforge's OWN CI hygiene.
 
 The Workflow Linter is not just a Hardware Store part - it watches this repo. This test lints every
 one of codeforge's GitHub Actions workflows and fails on any HIGH finding (a `write-all` permission
@@ -14,7 +14,7 @@ from pathlib import Path
 
 import yaml
 
-from parts.shelf.workflow_linter import lint_workflow
+from kernel.shelf.workflow_linter import lint_workflow
 
 _WORKFLOWS = str(Path(__file__).resolve().parent.parent / ".github" / "workflows" / "*.yml")
 

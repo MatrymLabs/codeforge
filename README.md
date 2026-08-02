@@ -36,7 +36,7 @@ can click straight into.
 > proven in a Seed, translated to real software: government, finance, compliance, records). A Seed
 > runs today, and the Hardware Store
 > is now **physically real and shipped**: its 27 engine-agnostic cores live in their own package
-> (`parts/shelf/`, a one-way engine -> shelf dependency the build enforces), pour standalone via
+> (`kernel/shelf/`, a one-way engine -> shelf dependency the build enforces), pour standalone via
 > `make shelf-pour`, and published to PyPI as
 > [`codeforge-shelf`](https://pypi.org/project/codeforge-shelf/) -- `pip install codeforge-shelf`
 > installs the library and imports it with no game engine present (its 25 shipped test twins pass

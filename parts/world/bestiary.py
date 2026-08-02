@@ -308,7 +308,7 @@ def _ambient_loot(cls_name: str, biome: str, tier: str = "normal") -> dict[str, 
     """A common creature's weighted loot: ember-shards, its class's monster material (hide/chitin,
     if any), the biome's signature SPOIL (the same herb its nodes yield and its town vendor buys, so
     a kill feeds the local crafting economy), and a chance of nothing. An ELITE is worth the harder
-    fight: it never drops nothing and its materials weigh heavier (parts.shelf.weighted_table).
+    fight: it never drops nothing and its materials weigh heavier (kernel.shelf.weighted_table).
 
     The biome spoil is resolved through wildlands.biome_spoil (the single source of truth for a
     biome's herb); the import is local to avoid a cycle (wildlands imports this module)."""

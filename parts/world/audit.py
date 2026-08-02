@@ -2,7 +2,7 @@
 
 Phase 3 observability. Significant actions (an owner granting a rank, an auction sale, a ban) are
 appended here as an evidence record, so a live server can be held accountable and an incident
-reconstructed. The log is a hash-chained JSONL ledger (parts.shelf.hashchain): each entry seals a
+reconstructed. The log is a hash-chained JSONL ledger (kernel.shelf.hashchain): each entry seals a
 sha256 over its own payload AND the previous entry's hash, so any later edit, reorder, or removal of
 a PAST record is caught the next time the log is read. Integrity, not authenticity: it proves the
 history was not altered, not who altered it.
@@ -19,7 +19,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-from parts.shelf import hashchain
+from kernel.shelf import hashchain
 from parts.world.paths import resolved_path
 
 

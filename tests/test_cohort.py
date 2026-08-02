@@ -1,4 +1,4 @@
-"""Test twin for parts/shelf/cohort.py -- the transient membership-group primitive.
+"""Test twin for kernel/shelf/cohort.py -- the transient membership-group primitive.
 
 Acceptance: form a group, admit members up to the cap, read a member's group, leave with leadership
 handoff, disband. Refusal (the map invariant): admitting a member already in a group or to a full
@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import pytest
 
-from parts.shelf.cohort import Cohort, CohortError, CohortRegistry
+from kernel.shelf.cohort import Cohort, CohortError, CohortRegistry
 
 
 def test_form_then_add_builds_a_group_led_by_the_founder():

@@ -7,7 +7,7 @@ so the honest paths are all executed, not just asserted in passing.
 
 from __future__ import annotations
 
-from parts.shelf import (
+from kernel.shelf import (
     api_diff,
     call_graph,
     cli_surface,

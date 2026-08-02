@@ -28,8 +28,11 @@ lint:
 	ruff format --check .
 	ruff check .
 
+imports:  ## Enforce the style-guide section-2 dependency direction (import-linter).
+	lint-imports
+
 typecheck:
-	mypy parts tests forge.py
+	mypy parts kernel adapters content tests forge.py
 
 test:
 	pytest -m "not property and not fuzz"
@@ -67,7 +70,7 @@ sast:
 # suite run instead of two. `sast` mirrors CI's offline security steps so a green local
 # check cannot fail CI's bandit/secret scan. `test`/`property` remain as fast, focused,
 # no-coverage targets for the inner dev loop; `make ritual-fast` is the ~1s preflight.
-check: lint typecheck coverage sast
+check: lint imports typecheck coverage sast
 
 # --- Readiness: the global self-audit -- registry validates (gates), then the
 # project dashboard, computed from the registry + QualityGate. Read-only. ---

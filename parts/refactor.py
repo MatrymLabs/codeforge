@@ -33,7 +33,7 @@ import importlib.util
 from dataclasses import dataclass
 from typing import Any
 
-from parts.shelf.transform_verifier import Outcome, verify_transform
+from kernel.shelf.transform_verifier import Outcome, verify_transform
 
 __all__ = [
     "RefactorError",

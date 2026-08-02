@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import unittest
 
-from parts.shelf.repo_report import RepoReport, render, synthesize
+from kernel.shelf.repo_report import RepoReport, render, synthesize
 
 # a small but full-featured package: architecture (a->b->c), a data model + FSM, a CLI
 PKG = {

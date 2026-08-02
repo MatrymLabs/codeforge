@@ -10,7 +10,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from parts.shelf.signal_bus import Signal, SignalBus
+from kernel.shelf.signal_bus import Signal, SignalBus
 from parts.world.session import Session
 
 

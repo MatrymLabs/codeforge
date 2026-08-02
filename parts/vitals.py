@@ -2,13 +2,13 @@
 
 A player (or operator) runs `vitals` to see a green/amber/red panel of the world's subsystems: the
 engine liveness, whether NPCs and callings loaded from the seed. Each is a check in a
-`HealthRegistry` (parts/shelf/health). The SAME registry core backs a service-readiness probe in a
+`HealthRegistry` (kernel/shelf/health). The SAME registry core backs a service-readiness probe in a
 practical app (parts/service_health); only the adapter differs.
 """
 
 from __future__ import annotations
 
-from parts.shelf.health import HEALTHY, HealthRegistry, healthy_if
+from kernel.shelf.health import HEALTHY, HealthRegistry, healthy_if
 from parts.world.jobs import JOBS
 from parts.world.npcs import NPCS
 from parts.world.session import Session

@@ -11,7 +11,7 @@ so behavior is uniform and the gate is already armed before the brain ever goes 
 
 from __future__ import annotations
 
-from parts.shelf.token_bucket import Clock, TokenBucket
+from kernel.shelf.token_bucket import Clock, TokenBucket
 from parts.world.session import Session
 
 # A consultation is expensive (a live model call), so the bucket is stingier than chat: a burst of

@@ -12,7 +12,7 @@ from __future__ import annotations
 import unittest
 from dataclasses import FrozenInstanceError
 
-from parts.shelf.transform_verifier import (
+from kernel.shelf.transform_verifier import (
     CAVEAT,
     Outcome,
     TransformVerifierError,

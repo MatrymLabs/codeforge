@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import unittest
 
-from parts.shelf.risk_router import (
+from kernel.shelf.risk_router import (
     CRITICAL,
     HIGH,
     LOW,

@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import unittest
 
-from parts.shelf.outbox import (
+from kernel.shelf.outbox import (
     DEAD,
     PENDING,
     SENT,

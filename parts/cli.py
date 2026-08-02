@@ -110,7 +110,7 @@ def _cmd_api(args: list[str]) -> int:
     import uvicorn
 
     from parts.api import app
-    from parts.shelf.config import Settings
+    from kernel.shelf.config import Settings
 
     # Honor $PORT like the web command does; Settings types + validates it.
     uvicorn.run(app, host="0.0.0.0", port=Settings.load().port)
@@ -120,7 +120,7 @@ def _cmd_api(args: list[str]) -> int:
 def _cmd_web(args: list[str]) -> int:
     import uvicorn
 
-    from parts.shelf.config import Settings
+    from kernel.shelf.config import Settings
     from parts.web_gateway import app as web_app
 
     # Hosts (Render/Fly) hand us the port on $PORT; Settings types + validates it.

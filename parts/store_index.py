@@ -17,7 +17,7 @@ from typing import Any
 import yaml
 
 from parts.hardware import Part, load_catalog
-from parts.shelf import loader_cache
+from kernel.shelf import loader_cache
 from parts.world.paths import resolved_path
 
 _UNFILED = "00"

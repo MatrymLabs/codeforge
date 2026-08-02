@@ -1,4 +1,4 @@
-"""Test twin for parts/shelf/repository.py -- the in-memory Repository and its Protocol boundary."""
+"""Test twin for kernel/shelf/repository.py -- the in-memory Repository and its Protocol boundary."""
 
 from dataclasses import dataclass
 
@@ -6,7 +6,7 @@ import pytest
 from hypothesis import given
 from hypothesis import strategies as st
 
-from parts.shelf.repository import (
+from kernel.shelf.repository import (
     DuplicateKey,
     InMemoryRepository,
     NotFound,

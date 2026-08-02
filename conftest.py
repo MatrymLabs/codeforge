@@ -24,7 +24,7 @@ def _isolated_database(tmp_path, monkeypatch):
       process. The tests still prove hash/verify/rotate LOGIC, just not the 600k
       strength (that's a production config, not a behavior).
     """
-    from parts.shelf import loader_cache
+    from kernel.shelf import loader_cache
     from parts.world import accounts, db
     from parts.world.session import SESSIONS
 

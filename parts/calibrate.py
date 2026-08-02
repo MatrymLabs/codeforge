@@ -13,7 +13,7 @@ from __future__ import annotations
 import random
 from collections.abc import Callable
 
-from parts.shelf.retry import RetryPolicy, run_with_retries
+from kernel.shelf.retry import RetryPolicy, run_with_retries
 from parts.world.session import Session
 
 _POLICY = RetryPolicy(max_attempts=4, base_delay=0.0)  # zero delay: never block the tick

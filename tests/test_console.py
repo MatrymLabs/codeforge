@@ -1,4 +1,4 @@
-"""Test twin for parts/shelf/console.py -- the FailsafeRunner.
+"""Test twin for kernel/shelf/console.py -- the FailsafeRunner.
 
 The safety properties are the point: only allowlisted commands run, timeouts kill
 hung ones, output is capped, and nothing is ever shell-parsed. Fakes are injected
@@ -10,7 +10,7 @@ import sys
 import pytest
 
 from forge import handle_command
-from parts.shelf.console import CommandRefused, console_menu, run, run_view
+from kernel.shelf.console import CommandRefused, console_menu, run, run_view
 from parts.world.session import SESSIONS, Session
 
 

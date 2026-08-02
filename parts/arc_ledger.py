@@ -145,7 +145,7 @@ _CHECK_CMDS: dict[str, list[str]] = {
 
 def _console_runner(check: str) -> bool:
     """Default runner: run one allowlisted check via the safe console runner; True iff it passed."""
-    from parts.shelf import console  # lazy: keep this module's import path light for arc.py
+    from kernel.shelf import console  # lazy: keep this module's import path light for arc.py
 
     return console.run(check, allowlist=_CHECK_CMDS).ok
 
@@ -159,7 +159,7 @@ def emit(commit: str, *, root: Path | None = None, runner=None) -> list[Path]:
     and stay MISSING by absence (honest, not fabricated).
     """
     from parts.release_gate import ReleaseGate
-    from parts.shelf.test_evidence import FAILED, PASSED, EvidenceLedger
+    from kernel.shelf.test_evidence import FAILED, PASSED, EvidenceLedger
 
     run_check = runner if runner is not None else _console_runner
     lint_ok = run_check("lint")

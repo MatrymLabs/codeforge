@@ -11,7 +11,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from parts.shelf.repository import InMemoryRepository, Repository
+from kernel.shelf.repository import InMemoryRepository, Repository
 
 
 @dataclass(frozen=True)

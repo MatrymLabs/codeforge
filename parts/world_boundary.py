@@ -11,7 +11,7 @@ to the workshop and quietly breaks the "two outputs" separation.
 The World Package is a physical directory (`parts/world/`), the way the Hardware Store shelf is a
 directory. WORLD_MODULES is discovered from that directory -- the world IS its folder, so the set
 cannot drift from a hand-maintained list. A game module may import other world modules
-(`parts.world.*`) and the shelf (Layer 3, `parts.shelf.*`); importing anything else in `parts/` is a
+(`parts.world.*`) and the shelf (Layer 3, `kernel.shelf.*`); importing anything else in `parts/` is a
 platform reach. Reads and reports; it mutates nothing. Empty list == the boundary holds.
 """
 
@@ -46,7 +46,7 @@ class WorldBoundaryError(ValueError):
 
 def _parts_imports(source: str, where: str) -> set[str]:
     """The world-relative name of every `parts.*` import: `parts.world.X` -> 'X' (the intra-world
-    module), `parts.shelf.*` -> 'shelf', any other `parts.Y` -> 'Y' (a platform reach)."""
+    module), `kernel.shelf.*` -> 'shelf', any other `parts.Y` -> 'Y' (a platform reach)."""
     try:
         tree = ast.parse(source, filename=where)
     except SyntaxError as exc:

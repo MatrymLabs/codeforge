@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import unittest
 
-from parts.shelf.precondition import (
+from kernel.shelf.precondition import (
     ETag,
     PreconditionError,
     PreconditionFailed,

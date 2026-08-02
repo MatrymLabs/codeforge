@@ -112,7 +112,7 @@ def test_authored_towns_compose_into_the_real_aethryn_map():
 def _walk_quest(quest_file: str):
     """Load an authored town's quest and walk enter -> take -> enter to done; return the final
     Fired outcome. Every authored town's arc uses the same natural-trigger shape."""
-    from parts.shelf.workflow import Fired, Instance, WorkflowEngine
+    from kernel.shelf.workflow import Fired, Instance, WorkflowEngine
     from parts.world.quest import _from_seed
     from parts.world.seed import load_quest
 
@@ -136,7 +136,7 @@ def test_the_granary_quest_still_walks_to_done_and_rewards():
 
 def test_greenholds_second_quest_is_a_hunt_of_a_different_shape():
     # The field-beast quest is enter -> DEFEAT (a hunt), not a fetch: quest variety.
-    from parts.shelf.workflow import Fired, Instance, WorkflowEngine
+    from kernel.shelf.workflow import Fired, Instance, WorkflowEngine
     from parts.world.quest import _from_seed
     from parts.world.seed import load_quest
 
@@ -188,7 +188,7 @@ def test_the_ravenwatch_quest_walks_and_grants_knowing():
 
 
 def test_ravenwatch_has_a_second_quest_of_a_hunt_shape():
-    from parts.shelf.workflow import Fired, Instance, WorkflowEngine
+    from kernel.shelf.workflow import Fired, Instance, WorkflowEngine
     from parts.world.quest import _from_seed
     from parts.world.seed import load_quest
 
@@ -206,7 +206,7 @@ def test_ravenwatch_has_a_second_quest_of_a_hunt_shape():
 def _walk_hunt(quest_file: str, order: str, reward: int) -> None:
     """Walk an authored town's HUNT-shape side quest: enter -> defeat -> done. Asserts the shape (a
     defeat, no fetch), the reward, and the granted Order. The second-quest twin of _walk_quest."""
-    from parts.shelf.workflow import Fired, Instance, WorkflowEngine
+    from kernel.shelf.workflow import Fired, Instance, WorkflowEngine
     from parts.world.quest import _from_seed
     from parts.world.seed import load_quest
 

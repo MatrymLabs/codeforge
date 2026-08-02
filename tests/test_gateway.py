@@ -11,7 +11,7 @@ import pytest
 
 import parts.gateway as gateway
 from parts.gateway import ForgeGateServer, _GateHandler, _sanitize
-from parts.shelf.bulkhead import Bulkhead
+from kernel.shelf.bulkhead import Bulkhead
 from parts.world import doors, items, npcs
 from parts.world.accounts import adopt
 from parts.world.accounts import register as register_account

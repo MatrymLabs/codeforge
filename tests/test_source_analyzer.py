@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import unittest
 
-from parts.shelf.source_analyzer import AnalyzerError, analyze, render
+from kernel.shelf.source_analyzer import AnalyzerError, analyze, render
 
 SAMPLE = '''"""A tiny ledger module.
 

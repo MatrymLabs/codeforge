@@ -1,7 +1,7 @@
 """CARD: bounties -- generate hunt-contracts from the world's foes (side-content, at volume).
 
 Hand-authoring hundreds of side-quests is the AAA content mountain; this is the generation lever
-(compare parts.world.spiral for the world, parts.shelf.affixes for loot) pointed at quests. Every
+(compare parts.world.spiral for the world, kernel.shelf.affixes for loot) pointed at quests. Every
 combatant, levelled foe becomes a one-step BOUNTY: "fell it, collect the reward." Deterministic --
 the same seed foes yield the same board -- and the output is real, trackable quests on the multi-
 quest engine, not flavour text. It reaches side-quest VOLUME; it is systemic, not hand-crafted.

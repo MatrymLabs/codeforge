@@ -26,7 +26,7 @@ connects the stations is being assembled one vertical slice at a time.
 
 The layer boundary was conceptual for most of the repo's life; **Layer 3 is now physical**. Every
 reusable, engine-agnostic core -- 27 across six families (resilience, FSM, data, wire, input
-hardening, observability, config, infra) -- lives in its own package, `parts/shelf/`, with the
+hardening, observability, config, infra) -- lives in its own package, `kernel/shelf/`, with the
 dependency arrow pointing one way: engine -> shelf, never the reverse. The remaining cataloged parts
 import engine modules (`session`, `verdicts`, `hardware`, ...), so they are correctly Layer 1/2, not
 relocatable Layer-3 cores. Full Layer-2 optionality (a world carrying only what it runs) is already
@@ -71,7 +71,7 @@ part through the full loop is the deeper next slice; the spine itself is execute
   product, its game/practical adapters, a demonstrated game<->practical translation, and package
   export/detachment are ALREADY BUILT - see staircase steps 2 and 4 below, not planned.)
 - **Done (this campaign):** the physical Hardware Store extraction -- all 27 engine-agnostic
-  reusable cores now live in `parts/shelf/` (six families, six merged stages), each behind a green
+  reusable cores now live in `kernel/shelf/` (six families, six merged stages), each behind a green
   gate, one-way engine -> shelf dependency. Layer 3 is physical. AND the physical Layer-1/2 split:
   the 33-module World Package now lives in `parts/world/` (a real subpackage), the platform imports
   it but never the reverse, and `world_boundary` enforces that one-way arrow in the integrity
@@ -96,7 +96,7 @@ removed: the rule is "don't preserve merely because it exists," and equally "don
    into the git-ignored sandbox. The heart executes.
 2. **Monolithic engine** ("vendored-whole") - **the Hardware Store is now physically separated:**
    `cast`/`forge` pour a *vendored-selective* package (proven), AND every engine-agnostic reusable
-   core is physically extracted into `parts/shelf/` (27 cores, six families, one-way dependency).
+   core is physically extracted into `kernel/shelf/` (27 cores, six families, one-way dependency).
    What remains one package is the platform/world engine itself (Layer 1/2), but its separation is
    now real and ENFORCED: the World Package (Layer 2) imports the manufacturing platform (Layer 1)
    zero times, and `parts/world_boundary` (wired into the repo-integrity ritual) fails if a game
@@ -126,7 +126,7 @@ The proof that makes the whole vision legible without finishing the platform:
 > GitHub.**
 
 - **Reusable core:** a config-driven `WorkflowEngine` (states, guarded transitions, roles) built
-  on the existing, already-tested pure FSM (`parts/shelf/statemachine.py`). Because the core exists,
+  on the existing, already-tested pure FSM (`kernel/shelf/statemachine.py`). Because the core exists,
   the slice is genuinely finishable.
 - **Game adapter:** a **Quest** (regional quest progression) via MUD commands. This also fills a
   real gap: the World Package has **no quests today**.
@@ -141,7 +141,7 @@ The proof that makes the whole vision legible without finishing the platform:
 0. **Vision + repo alignment** (this doc). Done.
 1. Manufacturing core: Blueprint `product_type`, Part Manifest, assembly evidence. Done.
 2. **First reusable vertical slice** (the Workflow Engine, above). **Done** - one `WorkflowEngine`
-   core (`parts/shelf/workflow`), the game `quest` adapter (MUD), and the practical `onboarding` adapter
+   core (`kernel/shelf/workflow`), the game `quest` adapter (MUD), and the practical `onboarding` adapter
    now runnable through the **`codeforge onboard`** CLI; cataloged in the Hardware Store
    (`docs/hardware/workflow_engine.*`), `loop trace workflow-engine` = PASS.
 3. **Minimal World Package: one region + identity + commands + the quest system + admin + tests. Next.**

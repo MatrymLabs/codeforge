@@ -31,7 +31,7 @@ from dataclasses import asdict, dataclass
 from datetime import UTC, datetime
 from pathlib import Path
 
-from parts.shelf import hashchain
+from kernel.shelf import hashchain
 
 # The record kinds the Chronicle understands. Slices added, in order: `evidence` (1), `metric`
 # (2), `edge` (3), `incident` (4), `ai-eval` (5), `counterexample` (6). A record with any other
@@ -81,7 +81,7 @@ class Record:
 
 def _digest(kind: str, payload: dict, commit: str, recorded_utc: str, prior_hash: str) -> str:
     """A deterministic sha256 over a record's content, via the ship's one canonical content hash
-    (`parts/shelf/hashchain`), so the Chronicle and the general ledger never drift to other hashing.
+    (`kernel/shelf/hashchain`), so the Chronicle and the general ledger never drift to other hashing.
     The field set and canonicalization are unchanged, so on-disk hashes are byte-for-byte stable."""
     return hashchain.content_hash(
         {

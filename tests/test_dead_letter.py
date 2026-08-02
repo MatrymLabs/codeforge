@@ -1,4 +1,4 @@
-"""Test twin for parts/shelf/dead_letter.py: the dead-letter queue.
+"""Test twin for kernel/shelf/dead_letter.py: the dead-letter queue.
 
 Acceptance AND refusal cases, plus a composition test that connects a real producer and consumer:
 a flaky handler wrapped with retry that buries a permanently-failing message, then recovers it on
@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import pytest
 
-from parts.shelf.dead_letter import DeadLetterError, DeadLetterQueue
+from kernel.shelf.dead_letter import DeadLetterError, DeadLetterQueue
 
 # --- Acceptance ------------------------------------------------------------------------------
 

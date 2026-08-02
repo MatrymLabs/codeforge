@@ -10,8 +10,8 @@ from __future__ import annotations
 
 import pathlib
 
-from parts.shelf import behavior_tree as bt
-from parts.shelf import content_address, file_plan, hotspots
+from kernel.shelf import behavior_tree as bt
+from kernel.shelf import content_address, file_plan, hotspots
 
 _SHELF = pathlib.Path(__file__).resolve().parent.parent / "parts" / "shelf"
 

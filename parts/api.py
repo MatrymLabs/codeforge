@@ -21,9 +21,9 @@ from sqlalchemy import select
 from parts.blueprint import load_all as load_blueprints
 from parts.dashboard import router as dashboard_router
 from parts.login_guard import LoginGuard
-from parts.shelf import cursor as cursor_part
-from parts.shelf import precondition as precond
-from parts.shelf.observability import install_observability
+from kernel.shelf import cursor as cursor_part
+from kernel.shelf import precondition as precond
+from kernel.shelf.observability import install_observability
 from parts.world.accounts import account_has_owner, account_password_ok
 from parts.world.characters import set_rank
 from parts.world.db import CharacterRow, open_archive_session

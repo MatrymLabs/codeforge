@@ -7,7 +7,7 @@ no-failure cases, the profile zero-time note and empty render) so every path run
 
 from __future__ import annotations
 
-from parts.shelf import ddmin, profile_hotspots, sbfl
+from kernel.shelf import ddmin, profile_hotspots, sbfl
 
 
 def test_ddmin_degenerate_oracle_is_reported_not_1_minimal() -> None:

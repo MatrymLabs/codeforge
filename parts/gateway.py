@@ -41,8 +41,8 @@ from parts.gmcp import (
     target_report,
     vitals_report,
 )
-from parts.shelf.bulkhead import Bulkhead, BulkheadFull
-from parts.shelf.telnet_codec import IAC, WILL, WONT, strip_iac
+from kernel.shelf.bulkhead import Bulkhead, BulkheadFull
+from kernel.shelf.telnet_codec import IAC, WILL, WONT, strip_iac
 from parts.world import bans, guild, maintenance_mode, party, presence, trade, tutorial
 from parts.world.accounts import password_fixable
 from parts.world.characters import save_all, save_character
@@ -144,7 +144,7 @@ _REGISTER_TRIES = 3
 
 
 # --- telnet option negotiation (RFC 854/857): the password blackout ---
-# The Telnet wire codec (command bytes, IAC stripping) lives in parts.shelf.telnet_codec; the
+# The Telnet wire codec (command bytes, IAC stripping) lives in kernel.shelf.telnet_codec; the
 # gate is a consumer of it. `_strip_telnet` is a local alias for the codec's `strip_iac` so callers
 # (and the test twin) that reference it stay stable.
 ECHO_OPT = 1

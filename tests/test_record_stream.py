@@ -1,7 +1,7 @@
 """Test twin for parts/record_stream.py -- the practical adapter for the stream framer."""
 
 from parts.record_stream import RecordStream
-from parts.shelf.stream_framer import StreamFramer
+from kernel.shelf.stream_framer import StreamFramer
 
 
 def test_consume_collects_records_across_chunks():

@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import unittest
 
-from parts.shelf.cli_surface import CliSurfaceError, analyze, render
+from kernel.shelf.cli_surface import CliSurfaceError, analyze, render
 
 SAMPLE = """
 import argparse

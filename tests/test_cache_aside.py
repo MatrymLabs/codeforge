@@ -1,4 +1,4 @@
-"""Test twin for parts/shelf/cache_aside.py: the cache-aside (TTL) cache.
+"""Test twin for kernel/shelf/cache_aside.py: the cache-aside (TTL) cache.
 
 Acceptance AND refusal cases. TTL expiry is tested deterministically with a fake clock (never a
 real sleep). Hostile cases: an expired entry, an exact-boundary expiry, a loader that raises (must
@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import pytest
 
-from parts.shelf.cache_aside import CacheAside, CacheError
+from kernel.shelf.cache_aside import CacheAside, CacheError
 
 
 class _Clock:

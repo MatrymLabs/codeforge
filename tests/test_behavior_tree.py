@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import unittest
 
-from parts.shelf.behavior_tree import (
+from kernel.shelf.behavior_tree import (
     Action,
     AlwaysFail,
     BehaviorTreeError,

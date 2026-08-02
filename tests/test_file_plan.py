@@ -11,7 +11,7 @@ import pathlib
 import tempfile
 import unittest
 
-from parts.shelf.file_plan import FilePlanError, FilePlanRule, check, render, scan
+from kernel.shelf.file_plan import FilePlanError, FilePlanRule, check, render, scan
 
 CANONICAL = {
     "README.md",

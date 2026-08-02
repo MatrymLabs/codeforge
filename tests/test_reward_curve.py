@@ -1,4 +1,4 @@
-"""Test twin for parts/shelf/reward_curve.py -- the challenge-scaled reward engine.
+"""Test twin for kernel/shelf/reward_curve.py -- the challenge-scaled reward engine.
 
 The curve IS the contract (a locked design), so the boundaries are pinned exactly: the full band,
 the capped bonus for fighting up, the linear taper to zero for grays, the three tiers, and the 10:1
@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import pytest
 
-from parts.shelf.reward_curve import (
+from kernel.shelf.reward_curve import (
     BONUS_CAP,
     RewardError,
     clamp_level,

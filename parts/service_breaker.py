@@ -10,7 +10,7 @@ from __future__ import annotations
 
 from collections.abc import Callable
 
-from parts.shelf.circuit_breaker import CircuitBreaker, Clock
+from kernel.shelf.circuit_breaker import CircuitBreaker, Clock
 
 
 class ServiceBreakers:

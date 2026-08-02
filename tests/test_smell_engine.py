@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import unittest
 
-from parts.shelf.smell_engine import SmellError, Thresholds, analyze, smell_ids
+from kernel.shelf.smell_engine import SmellError, Thresholds, analyze, smell_ids
 
 
 def ids(source: str, **kw) -> set[str]:

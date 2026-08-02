@@ -8,7 +8,7 @@ throttles login attempts in a practical app (parts/login_guard); only the adapte
 
 from __future__ import annotations
 
-from parts.shelf.token_bucket import Clock, TokenBucket
+from kernel.shelf.token_bucket import Clock, TokenBucket
 from parts.world.events import announce
 from parts.world.session import Session, display_name
 

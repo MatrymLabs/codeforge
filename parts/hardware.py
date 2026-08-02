@@ -18,7 +18,7 @@ from typing import Any
 
 import yaml
 
-from parts.shelf import loader_cache
+from kernel.shelf import loader_cache
 from parts.world.paths import resolved_path
 
 _REQUIRED = ("id", "name", "source", "category", "purpose", "maturity", "risk", "reuse")
@@ -143,7 +143,7 @@ def load_catalog(path: Path | None = None) -> list[Part]:
     """Load and validate the catalog. A missing catalog is empty, not an error.
 
     Parsed once and reused until `catalog/parts.yaml` changes on disk, via the shared
-    mtime-guarded loader cache (EXP-001; the pattern now lives in `parts/shelf/loader_cache.py`).
+    mtime-guarded loader cache (EXP-001; the pattern now lives in `kernel/shelf/loader_cache.py`).
     """
     source = path or _default_catalog_path()
     if not source.exists():
@@ -187,13 +187,13 @@ def uncataloged_cores(root: Path | None = None, path: Path | None = None) -> lis
     genuinely reusable part nobody filed. Returns each such core's name; an empty list means the
     shelf and the catalog agree. Reads and reports; mutates nothing."""
     base = root if root is not None else Path(__file__).resolve().parent.parent
-    cataloged = {part.source for part in load_catalog(path)}  # e.g. "parts/shelf/retry.py"
+    cataloged = {part.source for part in load_catalog(path)}  # e.g. "kernel/shelf/retry.py"
     shelf = base / "parts" / "shelf"
     return [
         core.stem
         for core in sorted(shelf.glob("*.py"))
         if core.name != "__init__.py"
-        and f"parts/shelf/{core.name}" not in cataloged
+        and f"kernel/shelf/{core.name}" not in cataloged
         and core.stem not in _LOCAL_ONLY_CORES
     ]
 

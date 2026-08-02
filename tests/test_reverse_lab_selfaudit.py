@@ -14,7 +14,7 @@ from __future__ import annotations
 
 import pathlib
 
-from parts.shelf import repo_report
+from kernel.shelf import repo_report
 
 _SHELF = pathlib.Path(__file__).resolve().parent.parent / "parts" / "shelf"
 _LAB_MODULES = (
@@ -33,13 +33,13 @@ _LAB_MODULES = (
 def _lab_package() -> dict[str, str]:
     """Load the Lab shelf modules as a {dotted_name: source} package."""
     return {
-        f"parts.shelf.{name}": (_SHELF / f"{name}.py").read_text(encoding="utf-8")
+        f"kernel.shelf.{name}": (_SHELF / f"{name}.py").read_text(encoding="utf-8")
         for name in _LAB_MODULES
     }
 
 
 def test_lab_reverse_engineers_itself() -> None:
-    report = repo_report.synthesize(_lab_package(), package="parts.shelf.reverse")
+    report = repo_report.synthesize(_lab_package(), package="kernel.shelf.reverse")
     assert report.module_count == len(_LAB_MODULES)
     # the unifier imports the single-snapshot rungs, so those rungs are the real hubs
     assert any("cross_module" in h or "call_graph" in h for h in report.hubs)
@@ -48,7 +48,7 @@ def test_lab_reverse_engineers_itself() -> None:
 
 
 def test_overall_confidence_is_the_weakest_rung() -> None:
-    report = repo_report.synthesize(_lab_package(), package="parts.shelf.reverse")
+    report = repo_report.synthesize(_lab_package(), package="kernel.shelf.reverse")
     assert report.rung_confidence, "every rung must report a confidence"
     assert report.overall_confidence == min(report.rung_confidence.values())
     assert 0.0 < report.overall_confidence <= 1.0
@@ -63,7 +63,7 @@ def test_render_is_a_full_one_pass_report() -> None:
 
 def test_a_single_broken_module_never_aborts_the_audit() -> None:
     pkg = _lab_package()
-    pkg["parts.shelf.reverse.broken"] = "def oops(:\n    pass\n"
+    pkg["kernel.shelf.reverse.broken"] = "def oops(:\n    pass\n"
     report = repo_report.synthesize(pkg, package="lab")
     # honesty: a blind spot lowers confidence but the report still lands
     assert report.module_count == len(_LAB_MODULES) + 1

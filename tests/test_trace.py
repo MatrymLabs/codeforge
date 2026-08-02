@@ -11,7 +11,7 @@ import re
 import unittest
 from dataclasses import FrozenInstanceError
 
-from parts.shelf.trace import (
+from kernel.shelf.trace import (
     FLAG_SAMPLED,
     Trace,
     TraceError,

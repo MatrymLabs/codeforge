@@ -16,7 +16,7 @@ real and roughly balanced.
 
 - **Wealth is created** by effort: felling a foe drops coin scaled to its level and tier
   (`combat._coin_reward`), and selling gathered/looted goods to a merchant pays out. A harder foe,
-  fought up, pays more (`parts/shelf/reward_curve`); a gray foe pays nothing, so grinding trivial
+  fought up, pays more (`kernel/shelf/reward_curve`); a gray foe pays nothing, so grinding trivial
   kills is not a wealth strategy.
 - **Wealth is destroyed** by spending. Two live sinks today: the **settlement merchant**
   (`parts/world/townsfolk`, one per town, level-banded draughts, buy-back always below sell) and the

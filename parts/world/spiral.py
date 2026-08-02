@@ -23,7 +23,7 @@ from typing import Any
 
 import yaml
 
-from parts.shelf.reward_curve import LEVEL_MAX
+from kernel.shelf.reward_curve import LEVEL_MAX
 from parts.world.seed import Npc, Room, SeedError, Zone
 
 # Stable labels for the far end of the road + its Sovereign, so a capstone quest can name them no

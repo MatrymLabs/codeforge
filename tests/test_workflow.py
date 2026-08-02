@@ -1,11 +1,11 @@
-"""Test twin for parts/shelf/workflow.py -- the config-driven workflow engine (roles + history)."""
+"""Test twin for kernel/shelf/workflow.py -- the config-driven workflow engine (roles + history)."""
 
 import pytest
 from hypothesis import given
 from hypothesis import strategies as st
 
-from parts.shelf.statemachine import Fired, Refusal
-from parts.shelf.workflow import (
+from kernel.shelf.statemachine import Fired, Refusal
+from kernel.shelf.workflow import (
     ANY_ROLE,
     Step,
     WorkflowEngine,

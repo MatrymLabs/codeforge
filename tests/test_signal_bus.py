@@ -1,8 +1,8 @@
-"""Test twin for parts/shelf/signal_bus.py -- a typed signal bus."""
+"""Test twin for kernel/shelf/signal_bus.py -- a typed signal bus."""
 
 from dataclasses import dataclass
 
-from parts.shelf.signal_bus import Signal, SignalBus
+from kernel.shelf.signal_bus import Signal, SignalBus
 
 
 @dataclass(frozen=True)

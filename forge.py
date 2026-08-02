@@ -43,7 +43,7 @@ from parts.registry import (
 )
 from parts.relay import channel
 from parts.save import awaken_snapshot, seal_snapshot
-from parts.shelf.hourglass import WORLD_SANDS
+from kernel.shelf.hourglass import WORLD_SANDS
 from parts.store_index import store
 from parts.telegraph import telegraph
 from parts.titles import title
@@ -214,19 +214,19 @@ def career(arg: str = "", demonstrated: dict[str, int] | None = None) -> str:
 
 
 def console_menu() -> str:
-    from parts.shelf.console import console_menu as run
+    from kernel.shelf.console import console_menu as run
 
     return run()
 
 
 def diagnostics_view() -> str:
-    from parts.shelf.console import diagnostics_view as run
+    from kernel.shelf.console import diagnostics_view as run
 
     return run()
 
 
 def run_view(name: str) -> str:
-    from parts.shelf.console import run_view as run
+    from kernel.shelf.console import run_view as run
 
     return run(name)
 
@@ -2530,8 +2530,8 @@ def _did_you_mean(session: Session, routed_signal: str) -> str:
     """A gentle nudge on an unknown command: the nearest reachable spine verb, but only on a genuine
     near-miss (edit distance <= 2), so a real typo gets help and pure nonsense just gets 'Huh?'.
 
-    Uses the textmatch shelf part (parts.shelf.textmatch), C-accelerated when built (ADR-0010)."""
-    from parts.shelf.textmatch import closest
+    Uses the textmatch shelf part (kernel.shelf.textmatch), C-accelerated when built (ADR-0010)."""
+    from kernel.shelf.textmatch import closest
 
     typed = routed_signal.split(" ", 1)[0]
     if not typed:
@@ -2596,7 +2596,7 @@ def handle_command(session: Session, signal: str) -> str:
 def _sands_beat(session: Session) -> str:
     """Advance the shared world timer one beat and apply any deferred effects that came due.
 
-    The player's command is the only clock: this drains parts.shelf.hourglass.WORLD_SANDS as before
+    The player's command is the only clock: this drains kernel.shelf.hourglass.WORLD_SANDS as before
     menace and tick_zones ride the beat, with no background thread. Returns any line the acting
     player should see because they are in the affected room (else '')."""
     lines: list[str] = []

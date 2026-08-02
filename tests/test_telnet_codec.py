@@ -5,7 +5,7 @@ frame glued to input, an unterminated frame, a truncated negotiation, and a near
 all be handled without corrupting a command line or raising.
 """
 
-from parts.shelf.telnet_codec import (
+from kernel.shelf.telnet_codec import (
     DO,
     DONT,
     IAC,

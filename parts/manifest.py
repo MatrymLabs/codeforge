@@ -18,7 +18,7 @@ from typing import Any
 import yaml
 
 from parts.registry import load_collective
-from parts.shelf import loader_cache
+from kernel.shelf import loader_cache
 from parts.store_index import display_designation
 
 _REQUIRED = ("part_id", "name", "version", "maturity", "purpose", "source", "domain")

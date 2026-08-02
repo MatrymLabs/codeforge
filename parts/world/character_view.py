@@ -13,7 +13,7 @@ pretend they exist.
 
 from __future__ import annotations
 
-from parts.shelf.stats import StatModifier
+from kernel.shelf.stats import StatModifier
 from parts.world.derived import derived_stats
 from parts.world.equipment import (
     apply_stat_modifiers,
