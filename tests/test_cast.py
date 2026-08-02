@@ -429,7 +429,7 @@ def _bootable_multiplayer_fixture(root: Path) -> None:
     (root / "adapters").mkdir()
     (root / "adapters" / "__init__.py").write_text("")
     (root / "adapters" / "gateway.py").write_text("# TCP gateway (server stub)\nPORT = 4000\n")
-    (root / "parts" / "web_gateway.py").write_text("# web gateway (server stub)\nROUTE = '/'\n")
+    (root / "adapters" / "web_gateway.py").write_text("# web gateway (server stub)\nROUTE = '/'\n")
     (root / "adapters" / "web").mkdir()
     (root / "adapters" / "web" / "index.html").write_text("<!doctype html><title>cast</title>\n")
 
@@ -519,7 +519,7 @@ def test_pour_selective_validates_a_multiplayer_cast(tmp_path: Path) -> None:
     )
     assert ok, detail  # the servers imported in the cut and the base commands ran clean
     assert (out / "adapters" / "gateway.py").exists()  # the server modules were vendored
-    assert (out / "parts" / "web_gateway.py").exists()
+    assert (out / "adapters" / "web_gateway.py").exists()
     assert (out / "adapters" / "web" / "index.html").exists()  # + the declared web data dir
     m = read_manifest(out / "cast_manifest.json")
     assert m.engine_strategy == VENDORED_SELECTIVE and m.status == "validated"

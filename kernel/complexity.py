@@ -84,13 +84,14 @@ def scan_source(source: str) -> list[FunctionComplexity]:
 def scan_repo(
     threshold: int = DEFAULT_THRESHOLD, root: Path | None = None
 ) -> list[tuple[str, FunctionComplexity]]:
-    """Every function in the parts library at or above `threshold`, most complex first."""
+    """Every function across the engine layers at or above `threshold`, most complex first."""
     base = root if root is not None else Path(__file__).resolve().parent.parent
     hot: list[tuple[str, FunctionComplexity]] = []
-    for path in sorted((base / "parts").glob("*.py")):
-        for fc in scan_source(path.read_text(encoding="utf-8")):
-            if fc.complexity >= threshold:
-                hot.append((path.name, fc))
+    for layer in ("parts", "kernel", "adapters", "content"):
+        for path in sorted((base / layer).glob("*.py")):
+            for fc in scan_source(path.read_text(encoding="utf-8")):
+                if fc.complexity >= threshold:
+                    hot.append((path.name, fc))
     return sorted(hot, key=lambda item: -item[1].complexity)
 
 

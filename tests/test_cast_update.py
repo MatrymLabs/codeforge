@@ -382,7 +382,7 @@ def test_upstream_only_splits_into_new_and_shed(tmp_path: Path) -> None:
         commit_present=lambda r, c: True,
         read_at_commit=_pin_reader(at_pin),
     )
-    assert drift.upstream_only == ["parts/brand_new.py", "kernel/pm.py"]  # the raw union, sorted
+    assert drift.upstream_only == ["kernel/pm.py", "parts/brand_new.py"]  # the raw union, sorted
     assert drift.newly_upstream == ["parts/brand_new.py"]  # absent at the pin: genuinely new
     assert drift.shed == ["kernel/pm.py"]  # present at the pin: deliberately not carried
 

@@ -25,7 +25,7 @@ from pydantic import BaseModel
 # htmx is vendored (no CDN at runtime, no JS build, no Python dependency): read once and
 # served same-origin from /static/htmx.min.js. It only ENHANCES a page that already works
 # server-rendered without JavaScript (progressive enhancement).
-_STATIC = Path(__file__).resolve().parent / "web" / "static"
+_STATIC = Path(__file__).resolve().parent.parent / "adapters" / "web" / "static"
 _HTMX_JS = (_STATIC / "htmx.min.js").read_text(encoding="utf-8")
 
 # --- the snapshot: canonical data projected to one shape ---------------------
