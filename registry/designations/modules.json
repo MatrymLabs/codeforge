@@ -8694,5 +8694,33 @@
   "aliases": [],
   "created": "2026-08-02",
   "updated": "2026-08-02"
+ },
+ {
+  "designation": "MOD-10.073",
+  "name": "web_api_generator",
+  "status": "active",
+  "function": "generate a small, runnable stdlib web API from a validated ProjectModel (the 2nd target generator)",
+  "label": "web_api_generator",
+  "file": "kernel/seedlab/web_api_generator.py",
+  "type": "MOD",
+  "domain": "10",
+  "docs": "docs/seed_platform/RECENTERING.md",
+  "tests": "tests/test_web_api_generator.py",
+  "depends_on": [],
+  "related": [
+   "cli_generator",
+   "project_model",
+   "tool_runner",
+   "source_connector"
+  ],
+  "reuse": "The SECOND Seed-Platform TARGET GENERATOR (after cli_generator MOD-10.058): proof the generation pipeline generalizes beyond one target family. generate_web_api(model, dest) emits a stdlib-only runnable WSGI web service from a ProjectModel: build_app() returns a pure WSGI callable (routes = / , /health, one /<action> per model action, JSON responses), serve(port) runs it on wsgiref, a --check CLI mode builds the app + lists routes without binding a port, plus a generated pytest suite that calls the WSGI app directly (no socket). Reproducible + sha256-checksummed + provenance-stamped (reuses cli_generator's GeneratedArtifact + helpers, no duplication). validate_runs (--check) and validate_tests (pytest) prove it RUNS and its tests PASS through the Stage-5 tool_runner. rollback removes the tree.",
+  "notes": "Directive: no universal generation claim until tested target generators exist -- this is the second, so generation is proven, not asserted. stdlib-only (no framework dep) so the generated target installs + runs anywhere Python does, and self-validates in a gate with no network. No kernel/world/ coupling. PROTOTYPED (docs/seed_platform/RECENTERING.md).",
+  "tags": [
+   "module"
+  ],
+  "superseded_by": "",
+  "aliases": [],
+  "created": "2026-08-02",
+  "updated": "2026-08-02"
  }
 ]
