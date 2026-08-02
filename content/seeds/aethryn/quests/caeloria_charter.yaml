@@ -1,0 +1,24 @@
+# SEED: aethryn -- quests/caeloria_charter.yaml  (Caeloria City's quest: The Twelfth Page)
+# Auto-loaded. Local need (a lost ledger-key keeps the charter sealed away), world echo (the written
+# spine that holds the realm while the reaches fray), a cost (a walk to the court and back), a result
+# (the season's judgements can be sealed), an unresolved remainder (who took the page is never proven).
+# Natural triggers: ENTER the archive -> TAKE the ledger-key from the court -> ENTER the archive.
+# Rewards XP + Knowing standing (the heartland capital keeps the realm by record, not by the sword).
+id: caeloria_charter
+name: The Twelfth Page
+start: offered
+reward_xp: 46
+steps:
+  - {state: offered, event: enter, to: accepted, on_enter: caeloria_archive}
+  - {state: accepted, event: take, to: recovered, on_take: caeloria_ledger_key}
+  - state: recovered
+    event: enter
+    to: done
+    on_enter: caeloria_archive
+    effect: "award_xp;grant_rep:knowing:28"
+terminal: [done]
+labels:
+  offered: "In Caeloria City, the archivist frets over a page of the heartland charter. Step into the royal archive and hear her."
+  accepted: "The ledger-key that unlocks the charter's cradle was carried to the high court. Take it up from behind the unsealed judgements."
+  recovered: "Carry the brass ledger-key back to Archivist Meridia in the royal archive."
+  done: "*** The ledger-key is back in Meridia's hand, the twelfth charter-page is sealed again, and the heartland's season of judgements can be written. Who carried the key to the court, the record does not say. ***"

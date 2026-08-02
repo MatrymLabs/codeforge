@@ -187,6 +187,13 @@ def test_the_ravenwatch_quest_walks_and_grants_knowing():
     assert reward == 32 and "grant_rep:knowing" in (finish.effect or "")
 
 
+def test_the_caeloria_charter_quest_walks_and_grants_knowing():
+    # K4: the newly-authored heartland capital's quest reaches its terminal state and pays the
+    # Knowing standing its labels promise -- the town is wired, not just present.
+    finish, reward = _walk_quest("caeloria_charter.yaml")
+    assert reward == 46 and "grant_rep:knowing" in (finish.effect or "")
+
+
 def test_ravenwatch_has_a_second_quest_of_a_hunt_shape():
     from kernel.shelf.workflow import Fired, Instance, WorkflowEngine
     from kernel.world.quest import _from_seed
