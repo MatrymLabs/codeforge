@@ -17,6 +17,7 @@ training_dummy:
     - '"..." The dummy says nothing. It is, after all, a dummy.'
   hp: 20
   xp: 30
+  reassembles: true  # an endless sparring partner: it stands right back up, never dies (mortality)
 
 professor_codex:
   name: Professor Codex

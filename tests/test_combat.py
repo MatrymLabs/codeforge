@@ -122,6 +122,7 @@ def _spawn_hostile(
     atk: int = 5,
     hp: int = 50,
     lethal: bool = False,
+    reassembles: bool = False,
 ):
     """Place a fighting NPC in a room. Written to both aliased registries; the fixture cleans up."""
     hostile: Npc = {
@@ -137,6 +138,8 @@ def _spawn_hostile(
     }
     if lethal:
         hostile["lethal"] = True
+    if reassembles:
+        hostile["reassembles"] = True
     npcs.NPCS[label] = hostile  # combat.py's NPCS alias sees this (same object, no rebinds)
     npcs.reindex_npcs()
     return label
@@ -321,7 +324,7 @@ def test_a_drop_of_an_unknown_prototype_is_skipped_not_a_crash():
         npcs.NPCS["gremlin"] = gremlin
         out = attack(s, "gremlin")  # unknown prototype -> no drop line, no crash
         assert "drops to the ground" not in out
-        assert "reassembles" in out  # the defeat still resolved cleanly
+        assert "collapses" in out  # the defeat still resolved cleanly
     finally:
         items.ITEMS.clear()
         items.ITEMS.update(items_snap)
@@ -387,7 +390,7 @@ def test_a_loot_roll_can_come_up_nothing(monkeypatch):
         monkeypatch.setattr(combat, "_LOOT_RNG", _Rng(6))  # roll 6 -> the last entry (nothing)
         out = attack(s, "goblin")
         assert "drops to the ground" not in out
-        assert "reassembles" in out  # the defeat still resolved
+        assert "collapses" in out  # the defeat still resolved
     finally:
         items.ITEMS.clear()
         items.ITEMS.update(snap)
@@ -775,7 +778,7 @@ def test_a_reassembling_foe_quenches_its_burn():
     from kernel.world.combat import apply_burn, attack, strike_power
 
     s = _fighter()
-    npc = npcs.NPCS[_spawn_hostile("brute", atk=0, hp=strike_power(s))]  # dies to one strike
+    npc = npcs.NPCS[_spawn_hostile("brute", atk=0, hp=strike_power(s), reassembles=True)]
     apply_burn(npc, damage=4)
     attack(s, "brute")  # the strike fells it -> it reassembles
     assert "burn" not in npc  # the burn is quenched on reassemble
@@ -785,7 +788,7 @@ def test_a_reassembling_foe_shakes_off_its_daze():
     from kernel.world.combat import apply_daze, attack, strike_power
 
     s = _fighter()
-    npc = npcs.NPCS[_spawn_hostile("brute", atk=0, hp=strike_power(s))]  # dies to one strike
+    npc = npcs.NPCS[_spawn_hostile("brute", atk=0, hp=strike_power(s), reassembles=True)]
     apply_daze(npc, 3)
     attack(s, "brute")  # felled -> reassembles whole
     assert "dazed" not in npc  # the daze is shaken off on reassemble
@@ -820,7 +823,7 @@ def test_a_reassembling_foe_recovers_its_full_strength():
     from kernel.world.combat import apply_weaken, attack, strike_power
 
     s = _fighter()
-    npc = npcs.NPCS[_spawn_hostile("brute", atk=0, hp=strike_power(s))]  # dies to one strike
+    npc = npcs.NPCS[_spawn_hostile("brute", atk=0, hp=strike_power(s), reassembles=True)]
     apply_weaken(npc, 3)
     attack(s, "brute")  # felled -> reassembles whole
     assert "weakened" not in npc  # the weaken clears on reassemble
@@ -856,6 +859,15 @@ def _fell(s: Session, kw: str) -> str:
     return out
 
 
+def _respawn(label: str) -> None:
+    """Model a mortal foe's respawn timer elapsing (kernel.world.mortality): it is back at full
+    health, present again, ready to fight. Direct unit tests call attack() without running the tick,
+    so the world beat never advances to revive it on its own -- this stands in for that passage."""
+    npc = npcs.NPCS[label]
+    npc.pop("dead_until", None)
+    npc["hp_now"] = npc["hp"]
+
+
 def test_first_boss_kill_of_the_day_pays_a_daily_bounty(monkeypatch):
     from kernel.world import lockouts
 
@@ -864,7 +876,8 @@ def test_first_boss_kill_of_the_day_pays_a_daily_bounty(monkeypatch):
     _spawn_boss()
     first = _fell(s, "warlord")
     assert "Daily bounty!" in first  # the day's first kill pays extra
-    # the boss reassembles and is still farmable, but a second kill the SAME day pays base only
+    # the boss dies and respawns on its timer; a second kill the SAME day still pays base only
+    _respawn("warlord")
     second = _fell(s, "warlord")
     assert "Daily bounty!" not in second
     assert "You find" in second  # base coins still drop
@@ -877,6 +890,7 @@ def test_a_new_day_reopens_the_boss_bounty(monkeypatch):
     _spawn_boss()
     monkeypatch.setattr(lockouts, "today_utc", lambda: "2026-07-29")
     assert "Daily bounty!" in _fell(s, "warlord")
+    _respawn("warlord")  # a day passed: the boss has respawned
     monkeypatch.setattr(lockouts, "today_utc", lambda: "2026-07-30")
     assert "Daily bounty!" in _fell(s, "warlord")  # the date rolled: the bounty returns
 
@@ -920,6 +934,7 @@ def test_first_raid_kill_of_the_week_pays_a_weekly_bounty(monkeypatch):
     _spawn_raid()
     first = _fell(s, "abyssal")
     assert "Weekly raid bounty!" in first  # the week's first kill pays the marquee reward
+    _respawn("abyssal")  # the raid boss respawns on its timer
     second = _fell(s, "abyssal")
     assert "Weekly raid bounty!" not in second  # farmable, but the bounty is once a week
     assert "You find" in second  # base coins still drop
@@ -932,6 +947,7 @@ def test_a_new_week_reopens_the_raid_bounty(monkeypatch):
     _spawn_raid()
     monkeypatch.setattr(lockouts, "this_week_utc", lambda: "2026-W31")
     assert "Weekly raid bounty!" in _fell(s, "abyssal")
+    _respawn("abyssal")  # a week passed: the raid boss has respawned
     monkeypatch.setattr(lockouts, "this_week_utc", lambda: "2026-W32")
     assert "Weekly raid bounty!" in _fell(s, "abyssal")  # the week rolled: the raid resets
 

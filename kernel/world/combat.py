@@ -6,9 +6,11 @@ a module-level RNG the test suite installs NEUTRAL (always a normal hit) so ever
 the twin still holds, and variance tests force an outcome. A defeated foe's WEIGHTED loot roll
 (`_roll_loot`, kernel.shelf.weighted_table) draws from a second seedable RNG, `_LOOT_RNG`. A fall
 carries a modest, reversible stake (`_death_toll`): carried coins scatter and a non-lethal fall
-wakes at half health -- defeat costs something, so it is no longer consequence-free. The dummy
-reassembles on
-defeat -- it is a training dummy; collapsing is its job. A landed strike advances the combat clock
+wakes at half health -- defeat costs something, so it is no longer consequence-free. A felled foe's
+fate is the mortality card's call (`kernel.world.mortality`): a mortal world foe DIES and respawns
+on a tier timer (a cleared room stays cleared for a while), while the training dummy and anything a
+seed marks `reassembles` stands right back up -- collapsing is its job. A landed strike advances
+the combat clock
 (`combat_clock`), so cooldowns thaw and statuses age as rounds pass. When a foe falls,
 combat hands the reward to the leveling engine (`progression_awards`) rather than climbing
 the curves itself: damage, timing, and progression are separate responsibilities.
@@ -477,15 +479,16 @@ def land_hit(session: Session, npc: Npc, nid: str, dmg: int) -> tuple[bool, str]
         session.aggro_beats[nid] = 0  # the player answered the foe: re-engage its leash from zero
     if npc["hp_now"] > 0:
         return (False, "")
-    threat.clear(nid)  # a felled foe reassembles with no grudge -- the aggro table resets
-    npc["hp_now"] = npc["hp"]  # the dummy reassembles at full health
-    npc.pop("burn", None)  # a reassembled foe is whole again -- any burn is quenched
-    npc.pop("dazed", None)  # ...and shakes off any daze
-    npc.pop("charging", None)  # ...and abandons any wind-up (a boss special resets on recovery)
-    npc.pop("weakened", None)  # ...and recovers its full strength
+    threat.clear(nid)  # a felled foe holds no grudge -- the aggro table resets
+    # A mortal world foe DIES and respawns on a tier timer (it drops from the room until then); the
+    # training dummy and anything a seed marks `reassembles` stands right back up. Statuses clear
+    # either way. This is the keel-approved "a cleared room stays cleared for a while" behaviour.
+    from kernel.world import climate, mortality
+
+    mortality.fell(npc, climate.now())
     announce(
         session.location,
-        f"{sentence_case(npc['name'])} collapses -- then reassembles itself.",
+        f"{sentence_case(npc['name'])} {mortality.defeat_clause(npc)}.",
         exclude=session.player_id,
     )
     witness("defeat", npc["name"], "fell in combat")
@@ -587,7 +590,9 @@ def attack(session: Session, word: str) -> str:
         # counter, so it strikes exactly once per tick -- never both counter and open-strike.
         counter = "" if npc.get("aggressive") else _counter_attack(session, npc)
         return f"{struck} ({npc['hp_now']}/{npc['hp']}){counter}"
-    return f"{struck} It collapses -- then reassembles itself.\n{tail}"
+    from kernel.world import mortality
+
+    return f"{struck} It {mortality.defeat_clause(npc)}.\n{tail}"
 
 
 BURN_TICKS = 3  # how many world beats a `brand` burn lasts before it burns out

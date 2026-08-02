@@ -20,7 +20,7 @@ A move with no cooldown stays MP-limited only.
 
 from __future__ import annotations
 
-from kernel.world import combat, threat
+from kernel.world import combat, mortality, threat
 from kernel.world.events import announce, announce_to
 from kernel.world.npcs import NPCS, trace_npc
 from kernel.world.seed import SEED_DIR, Ability, Npc, load_abilities
@@ -374,7 +374,7 @@ def _channel_offense(
         )
         if defeated:
             return (
-                f"You drain {npc['name']} with {move}; it collapses -- then reassembles itself. "
+                f"You drain {npc['name']} with {move}; it {mortality.defeat_clause(npc)}. "
                 f"You recover {drained} HP.\n{tail}"
             )
         bar = f"{npc['hp_now']}/{npc['hp']}"
@@ -397,4 +397,4 @@ def _channel_offense(
     if not defeated:
         bar = f"{npc['hp_now']}/{npc['hp']}"
         return f"You unleash {move} on {npc['name']} for {dmg}.{note} ({bar})"
-    return f"You unleash {move} on {npc['name']}; it collapses -- then reassembles itself.\n{tail}"
+    return f"You unleash {move} on {npc['name']}; it {mortality.defeat_clause(npc)}.\n{tail}"
