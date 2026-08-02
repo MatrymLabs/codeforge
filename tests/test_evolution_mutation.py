@@ -197,8 +197,11 @@ class FailClosedGuards(unittest.TestCase):
 
     def test_harden_skips_a_dep_already_prohibited(self):
         both = BlueprintGenome(
-            genome_id="g", seed=_genome().seed, purpose="p",
-            allowed_dependencies=("x",), prohibited_dependencies=("x",),
+            genome_id="g",
+            seed=_genome().seed,
+            purpose="p",
+            allowed_dependencies=("x",),
+            prohibited_dependencies=("x",),
         )
         self.assertEqual(mutation.harden_dependency(both), [])
 
