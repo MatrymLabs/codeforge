@@ -30,12 +30,11 @@ _BASELINE = _REPO_ROOT / ".secrets.baseline"
 # NOT the canonical AKIA...EXAMPLE doc key (which detect-secrets deliberately allowlists).
 # The `pragma: allowlist secret` comments tell THIS repo's own detect-secrets gate that the
 # planted values are an intentional test fixture (else the canary trips the very gate it proves -
-# which it did on first CI run, a nice confirmation the gate has teeth). The tmp file the test
-# writes carries NO pragma, so the canary still catches it there.
-_PLANTED_SECRET = (
-    'aws_secret_access_key = "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY123abc"\n'  # pragma: allowlist secret
-    'rsa = "-----BEGIN RSA PRIVATE KEY-----\\nMIIEpAIBAAKCAQEA0planted"\n'  # pragma: allowlist secret
-)
+# which it did on the first CI run, a nice confirmation the gate has teeth). The tmp file the
+# test writes carries NO pragma, so the canary still catches it there.
+_AWS = "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY123abc"  # pragma: allowlist secret
+_KEY = "-----BEGIN RSA PRIVATE KEY-----\\nMIIEpAIBAAKCAQEA0planted"  # pragma: allowlist secret
+_PLANTED_SECRET = f'aws_secret_access_key = "{_AWS}"\nrsa = "{_KEY}"\n'
 
 
 def _hook_available() -> bool:
