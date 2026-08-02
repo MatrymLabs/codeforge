@@ -7982,6 +7982,29 @@
     "updated": "2026-08-01"
   },
   {
+    "designation": "MOD-10.065",
+    "name": "clone_audit",
+    "status": "active",
+    "function": "the 'find' front-end of the parts factory: scan a Python tree, content-address every function (via content_address, normalize_locals) and report FAMILIES of structurally-identical clones (copy-paste, even with renamed locals) - suggest-only inputs for a verified extract/rename",
+    "label": "clone_audit",
+    "file": "parts/clone_audit.py",
+    "type": "MOD",
+    "domain": "10",
+    "docs": "docs/hardware_store/patterns/framing.md",
+    "tests": "tests/test_clone_audit.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "the discovery step of the generate->apply->verify factory; composes content_address (MOD-05.084) and feeds the refactor tool (MOD-10.064)",
+    "notes": "Clean-room stdlib (ast, textwrap) + content_address; NO new dependency. STRUCTURAL match, suggest-only (honest caveat inherited from content_address). Trivial functions filtered by a statement-count floor; unparsable files skipped, never fatal. Dogfooded on codeforge/parts: 1649 functions / 327 files -> 2 real clone families (ai_throttle vs chat_throttle).",
+    "tags": [
+      "module"
+    ],
+    "superseded_by": "",
+    "aliases": [],
+    "created": "2026-08-01",
+    "updated": "2026-08-01"
+  },
+  {
     "designation": "MOD-05.022",
     "name": "corpus",
     "status": "active",
