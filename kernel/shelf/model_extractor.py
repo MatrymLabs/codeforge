@@ -69,6 +69,9 @@ class ModelReport:
     entities: tuple[str, ...] = ()
     relationships: tuple[Relationship, ...] = ()
     state_machines: tuple[StateMachine, ...] = ()
+    #: (entity, its annotated field names) per entity, in declaration order - the per-entity
+    #: detail a schema renderer needs (added for AP-08; empty for pre-existing callers).
+    entity_fields: tuple[tuple[str, tuple[str, ...]], ...] = ()
     unknowns: tuple[str, ...] = field(default_factory=tuple)
     confidence: float = 1.0
 
@@ -174,17 +177,22 @@ def analyze(source: str, *, module: str = "") -> ModelReport:
 
     entity_set = set(entities)
 
-    # pass 2: relationships from entity field annotations + inheritance
+    # pass 2: relationships from entity field annotations + inheritance, and the per-entity
+    # field lists themselves (the schema detail AP-08 consumes)
     relationships: list[Relationship] = []
+    entity_fields: list[tuple[str, tuple[str, ...]]] = []
     for cls in entity_defs:
         for base in _base_names(cls):
             if base in entity_set:
                 relationships.append(Relationship(cls.name, base, "(base)", "inheritance"))
+        cls_fields: list[str] = []
         for stmt in cls.body:
             if isinstance(stmt, ast.AnnAssign) and isinstance(stmt.target, ast.Name):
+                cls_fields.append(stmt.target.id)
                 for name, kind in _referenced_names(stmt.annotation):
                     if name in entity_set and name != cls.name:
                         relationships.append(Relationship(cls.name, name, stmt.target.id, kind))
+        entity_fields.append((cls.name, tuple(cls_fields)))
 
     # pass 3: state machines - observed member assignments per enum
     setters = _enclosing_setters(tree)
@@ -219,6 +227,7 @@ def analyze(source: str, *, module: str = "") -> ModelReport:
         entities=tuple(entities),
         relationships=tuple(relationships),
         state_machines=tuple(state_machines),
+        entity_fields=tuple(entity_fields),
         unknowns=tuple(unknowns),
         confidence=confidence,
     )

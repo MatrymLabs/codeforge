@@ -69,6 +69,9 @@ class ProjectModel:
     inputs: list[str] = field(default_factory=list)
     outputs: list[str] = field(default_factory=list)
     interfaces: list[str] = field(default_factory=list)
+    #: Per-entity annotated-field names (AP-08: filled when code analysis ran; empty when the
+    #: model came from layout inference or an older persisted record).
+    entity_fields: dict[str, list[str]] = field(default_factory=dict)
     # What the extractor could NOT determine, stated plainly. The directive's rule: never claim
     # complete automated understanding; mark inferred/uncertain fields.
     unknowns: list[str] = field(default_factory=list)
@@ -91,6 +94,9 @@ class ProjectModel:
                 inputs=list(data.get("inputs", [])),
                 outputs=list(data.get("outputs", [])),
                 interfaces=list(data.get("interfaces", [])),
+                entity_fields={
+                    str(k): list(v) for k, v in dict(data.get("entity_fields", {})).items()
+                },
                 unknowns=list(data.get("unknowns", [])),
             )
         except (KeyError, TypeError) as exc:

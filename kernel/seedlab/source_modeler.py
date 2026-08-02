@@ -6,7 +6,10 @@ a machine-readable model the Seed can inspect and the Master Client can render. 
 the connector approves (manifests + file layout) and derives what it safely can:
 
   * identity   -- from a manifest (`pyproject.toml` / `package.json`), else the directory name.
-  * entities   -- inferred from top-level packages and module names (NOT from code analysis).
+  * entities   -- CODE-FIRST (AP-08): real classes with their annotated FIELDS, relationships,
+                  and enum state sets via the shelf `model_extractor` over each approved .py file;
+                  layout inference (package/module names) remains only as the honest FALLBACK when
+                  no parseable Python entity exists, and is marked as such in `unknowns`.
   * interfaces -- detected entry points (declared scripts, `__main__.py`/`cli.py`, the manifests).
   * provenance -- carried straight from the source (the model is linked to its source evidence).
 
@@ -23,8 +26,9 @@ import tomllib
 from pathlib import Path
 
 from kernel.seedlab.model_store import ModelStore, model_id_for
-from kernel.seedlab.project_model import ProjectModel
+from kernel.seedlab.project_model import ProjectModel, Relationship
 from kernel.seedlab.source_connector import LocalSource, SourceConnectorError
+from kernel.shelf.model_extractor import ModelExtractorError, analyze
 
 # Filenames that signal a runnable entry point (an interface a target could expose).
 _ENTRY_POINTS = ("__main__.py", "cli.py", "main.py")
@@ -91,21 +95,77 @@ def _infer_interfaces(source: LocalSource, files: list[str]) -> list[str]:
     return sorted(interfaces)
 
 
+#: Bound on how many Python files the code-first pass reads (the connector already bounds WHAT
+#: may be read; this bounds HOW MUCH, so a giant repo cannot stall the modeler).
+_CODE_SCAN_CAP = 200
+
+
+def _extract_from_code(
+    source: LocalSource, files: list[str]
+) -> tuple[list[str], dict[str, list[str]], list[Relationship], list[str], list[str]]:
+    """The AP-08 code-first pass: run the shelf model_extractor over each approved .py file and
+    aggregate (entities, entity_fields, relationships, states, notes). Empty entities == nothing
+    parseable found (the caller falls back to layout inference, honestly marked)."""
+    entities: list[str] = []
+    entity_fields: dict[str, list[str]] = {}
+    relationships: list[Relationship] = []
+    states: list[str] = []
+    notes: list[str] = []
+    py_files = [f for f in files if f.endswith(".py") and not f.split("/")[-1].startswith("test_")]
+    if len(py_files) > _CODE_SCAN_CAP:
+        notes.append(f"code scan capped at {_CODE_SCAN_CAP} of {len(py_files)} python files")
+        py_files = py_files[:_CODE_SCAN_CAP]
+    for rel in py_files:
+        try:
+            report = analyze(source.read(rel), module=rel)
+        except (SourceConnectorError, ModelExtractorError):
+            notes.append(f"unparseable or unreadable python skipped: {rel}")
+            continue
+        for name in report.entities:
+            if name not in entity_fields:
+                entities.append(name)
+        for name, fields in report.entity_fields:
+            entity_fields.setdefault(name, list(fields))
+        for edge in report.relationships:
+            relationships.append(Relationship(edge.source, f"{edge.kind}:{edge.via}", edge.target))
+        for machine in report.state_machines:
+            states.extend(f"{machine.enum}.{state}" for state in machine.states)
+        notes.extend(f"{rel}: {note}" for note in report.unknowns)
+    return entities, entity_fields, relationships, states, notes
+
+
 def model_from_source(source: LocalSource, *, identity: str | None = None) -> ProjectModel:
     """Extract a ProjectModel from a registered source. Fills what is safely derivable and lists
     everything else in `unknowns` -- the model never overstates what it understands."""
     files = source.list_files()
     ident, ident_note = _resolve_identity(source, files, identity)
-    unknowns = [
-        ident_note,
-        "entities inferred from file/directory names, not from code analysis",
-        "relationships, states, actions, inputs, and outputs are not inferred "
-        "(no behavioral analysis performed)",
-    ]
+    entities, entity_fields, relationships, states, notes = _extract_from_code(source, files)
+    if entities:
+        unknowns = [
+            ident_note,
+            "entities, fields, relationships, and states extracted from code (shelf "
+            "model_extractor); actions, inputs, and outputs are not inferred",
+            *notes,
+        ]
+    else:
+        entities = _infer_entities(files)
+        entity_fields = {}
+        relationships, states = [], []
+        unknowns = [
+            ident_note,
+            "no parseable python entities found: entities inferred from file/directory "
+            "names, not from code analysis",
+            "relationships, states, actions, inputs, and outputs are not inferred "
+            "(no behavioral analysis performed)",
+            *notes,
+        ]
     return ProjectModel(
         identity=ident,
         provenance=source.provenance,
-        entities=_infer_entities(files),
+        entities=entities,
+        entity_fields=entity_fields,
+        relationships=relationships,
+        states=sorted(set(states)),
         interfaces=_infer_interfaces(source, files),
         unknowns=unknowns,
     )
