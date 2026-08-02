@@ -28,9 +28,13 @@ _BASELINE = _REPO_ROOT / ".secrets.baseline"
 
 # A planted secret the scanner MUST flag: a high-entropy AWS-style secret + a private-key header.
 # NOT the canonical AKIA...EXAMPLE doc key (which detect-secrets deliberately allowlists).
+# The `pragma: allowlist secret` comments tell THIS repo's own detect-secrets gate that the
+# planted values are an intentional test fixture (else the canary trips the very gate it proves -
+# which it did on first CI run, a nice confirmation the gate has teeth). The tmp file the test
+# writes carries NO pragma, so the canary still catches it there.
 _PLANTED_SECRET = (
-    'aws_secret_access_key = "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY123abc"\n'
-    'rsa = "-----BEGIN RSA PRIVATE KEY-----\\nMIIEpAIBAAKCAQEA0planted"\n'
+    'aws_secret_access_key = "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY123abc"\n'  # pragma: allowlist secret
+    'rsa = "-----BEGIN RSA PRIVATE KEY-----\\nMIIEpAIBAAKCAQEA0planted"\n'  # pragma: allowlist secret
 )
 
 
