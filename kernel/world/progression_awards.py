@@ -8,6 +8,10 @@ progression curves as law, ascends resources on a level-up, and persists a named
 `award_xp` climbs player levels (and refills/grows HP/MP via `_ascend_resources`); `award_jp`
 climbs the ACTIVE job's level; `award_tp` fills the active job's milestone track. Depends only on
 progression/jobs/resources/session -- no combat internals -- so it composes cleanly.
+
+The one deliberate exception to "never drains" is `apply_xp_debt` (K5): a LETHAL death sets a hero
+back by a fraction of the progress they have earned INTO their current level -- never below the
+level's floor, so a death costs progress but NEVER a level. It is the only path that reduces XP.
 """
 
 from dataclasses import replace
@@ -60,6 +64,23 @@ def award_xp(session: Session, amount: int) -> str:
             exclude=session.player_id,
         )
     return "\n".join(lines)
+
+
+# K5: a lethal death costs this fraction of the XP earned INTO the current level (a tuning knob).
+XP_DEBT_FRACTION = 0.10
+
+
+def apply_xp_debt(session: Session, fraction: float = XP_DEBT_FRACTION) -> int:
+    """Set a hero back by `fraction` of the XP they have earned INTO their CURRENT level, floored at
+    the level's threshold so a death NEVER drops a level -- only progress toward the next one. The
+    single deliberate drain (see the card); returns the XP lost (0 at the floor or fraction 0).
+    Reversible by design: what a death costs, play re-earns."""
+    fraction = min(1.0, max(0.0, fraction))
+    floor = 0 if session.level <= 1 else (get_next_level_threshold(session.level - 1) or 0)
+    progress = max(0, session.xp - floor)
+    lost = int(progress * fraction)
+    session.xp -= lost
+    return lost
 
 
 def award_jp(session: Session, amount: int) -> str:

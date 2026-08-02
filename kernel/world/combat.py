@@ -262,11 +262,15 @@ def _fall_and_recover(session: Session, npc: Npc) -> str:
 
 def _fall_to_death(session: Session, npc: Npc) -> str:
     """A LETHAL foe (a boss) fells the player: no in-place failsafe. The player wakes at their start
-    room at full health, and the foe recovers -- the fight is earned again. Levels are kept."""
+    room at full health, and the foe recovers -- the fight is earned again. A real death carries
+    real, reversible stakes: scattered coins, battered gear (K2), and XP progress toward the next
+    level (K5) -- but NEVER a level: the hero keeps every level they earned."""
+    from kernel.world.progression_awards import apply_xp_debt
     from kernel.world.world import START_ROOM  # lazy: world binds seed state at import
 
     lost = _death_toll(session)
     battered = _death_gear_toll(session)  # K2: a real death batters your gear (mend it)
+    debt = apply_xp_debt(session)  # K5: a real death costs progress toward the next level
     session.location = START_ROOM
     hp = session.resources["hp"]
     session.resources["hp"] = hp.heal(hp.maximum)
@@ -275,9 +279,10 @@ def _fall_to_death(session: Session, npc: Npc) -> str:
     foe = sentence_case(npc["name"])
     toll = f" {purse(lost)} scatters from your purse." if lost else ""
     gear = f" Your gear is battered in the fall ({battered} worn; MEND it)." if battered else ""
+    xp = f" The fall sets your progress back {debt} XP (your level holds)." if debt else ""
     return (
         f"{foe} fells you. Darkness takes you -- and you wake where your road "
-        f"began, whole but shaken.{toll}{gear} It still waits below."
+        f"began, whole but shaken.{toll}{gear}{xp} It still waits below."
     )
 
 

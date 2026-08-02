@@ -1107,6 +1107,29 @@ def test_a_bare_hero_takes_no_gear_toll_on_a_lethal_death():
     assert "battered in the fall" not in out  # no gear, no gear message
 
 
+def test_a_lethal_death_sets_xp_progress_back_without_de_leveling():
+    from kernel.world.progression_awards import award_xp
+
+    s = _fighter()
+    award_xp(s, 100)  # level 2 (needs 75), 25 XP into the level
+    assert s.level == 2
+    _spawn_hostile(atk=9999, hp=50, lethal=True)
+    out = attack(s, "brawler")
+    assert "sets your progress back" in out  # the fall names the XP stake
+    assert s.level == 2  # the LEVEL holds
+    assert 75 <= s.xp < 100  # lost progress, never below the level's floor
+
+
+def test_the_training_ground_failsafe_costs_no_xp():
+    from kernel.world.progression_awards import award_xp
+
+    s = _fighter()
+    award_xp(s, 100)
+    _spawn_hostile(atk=9999, hp=50)  # NON-lethal: the failsafe, not a real death
+    attack(s, "brawler")
+    assert s.xp == 100  # the gentle failsafe never costs progress
+
+
 def test_a_recleared_boss_is_acknowledged_not_silently_farmed(monkeypatch):
     from kernel.world import lockouts
 
