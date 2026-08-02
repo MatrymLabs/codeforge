@@ -20,15 +20,15 @@ def test_discover_imports_finds_parts_imports(tmp_path):
     src = tmp_path / "example.py"
     src.write_text(
         textwrap.dedent("""\
-        from parts.shelf.statemachine import Fired
-        from parts.shelf.workflow import WorkflowEngine
+        from kernel.shelf.statemachine import Fired
+        from kernel.shelf.workflow import WorkflowEngine
         import os
         import parts.world.events
     """)
     )
     imports = discover_imports(src)
-    assert "parts.shelf.statemachine" in imports
-    assert "parts.shelf.workflow" in imports
+    assert "kernel.shelf.statemachine" in imports
+    assert "kernel.shelf.workflow" in imports
     assert "parts.world.events" in imports
     assert "os" not in imports
 
@@ -44,7 +44,7 @@ def test_resolve_parts_matches_catalog_entries():
         Part(
             id="state-machine",
             name="SM",
-            source="parts/shelf/statemachine.py",
+            source="kernel/shelf/statemachine.py",
             category="c",
             purpose="p",
             maturity="shipped",
@@ -52,7 +52,7 @@ def test_resolve_parts_matches_catalog_entries():
             reuse={"g": "x"},
         ),
     ]
-    imports = ["parts.shelf.statemachine", "parts.unknown"]
+    imports = ["kernel.shelf.statemachine", "parts.unknown"]
     resolved = resolve_parts(imports, catalog)
     assert "state-machine" in resolved
     assert len(resolved) == 1
@@ -66,7 +66,7 @@ def test_assemble_workflow_engine_produces_a_valid_assembly():
     assert isinstance(asm, Assembly)
     assert asm.part_id == "workflow-engine"
     assert len(asm.source_files) >= 3  # workflow.py, quest.py, onboarding.py
-    assert "parts.shelf.statemachine" in asm.discovered_imports
+    assert "kernel.shelf.statemachine" in asm.discovered_imports
     assert len(asm.test_files) == 3
 
 

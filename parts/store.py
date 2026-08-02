@@ -5,7 +5,7 @@ declares 'CARD: <name> -- <purpose>' as the first line of its
 docstring. Docs derived from source never go stale.
 
 Two shelves, one store (since the physical extraction):
-- parts/shelf/ holds the REUSABLE cores (engine-agnostic Layer 3; poured
+- kernel/shelf/ holds the REUSABLE cores (engine-agnostic Layer 3; poured
   standalone via `make shelf-pour`). These are the actual Hardware Store.
 - parts/       holds the ENGINE parts (the platform + world). They import
   the shelf, never the reverse.
@@ -21,7 +21,7 @@ import ast
 from pathlib import Path
 
 PARTS_DIR = Path(__file__).resolve().parent
-SHELF_DIR = PARTS_DIR / "shelf"
+SHELF_DIR = PARTS_DIR.parent / "kernel" / "shelf"
 WORLD_DIR = PARTS_DIR / "world"  # the World Package (Layer 2) is its own subpackage now
 TESTS_DIR = PARTS_DIR.parent / "tests"
 
@@ -86,7 +86,7 @@ def hardware_store_catalog() -> str:
     engine = sorted(_stock(PARTS_DIR) + _stock(WORLD_DIR))
     lines = ["CODEFORGE HARDWARE STORE", "=" * 24, ""]
     lines += _render(
-        "Reusable cores (parts/shelf/ -- engine-agnostic; poured via `make shelf-pour`):",
+        "Reusable cores (kernel/shelf/ -- engine-agnostic; poured via `make shelf-pour`):",
         shelf,
         show_interface=True,
     )

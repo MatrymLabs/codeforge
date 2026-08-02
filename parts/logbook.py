@@ -1,7 +1,7 @@
 """CARD: logbook -- the game adapter for the repository: a player's numbered logbook.
 
 A player keeps a personal logbook: `journal <text>` records a numbered entry, `journal` lists them.
-Each player's entries live in a `Repository` (parts/shelf/repository), so the adapter never
+Each player's entries live in a `Repository` (kernel/shelf/repository), so the adapter never
 touches raw storage. The SAME repository core backs a records/asset registry in a practical app
 (parts/asset_registry); only the adapter differs.
 """
@@ -10,7 +10,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from parts.shelf.repository import InMemoryRepository
+from kernel.shelf.repository import InMemoryRepository
 from parts.world.session import Session
 
 

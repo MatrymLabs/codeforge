@@ -283,8 +283,8 @@ language = "c"
 license = "MIT"
 provenance_status = "verified (in-tree source; standard library <Python.h> only)"
 proposed_role = "native accelerator for Levenshtein edit distance (the fuzzy-match hot path)"
-proposed_boundary = "a narrow C function levenshtein(a, b) -> int; parts.shelf.textmatch imports it opportunistically and falls back to identical pure Python"
-existing_codeforge_equivalent = "levenshtein_py in parts.shelf.textmatch (the fallback + reference)"
+proposed_boundary = "a narrow C function levenshtein(a, b) -> int; kernel.shelf.textmatch imports it opportunistically and falls back to identical pure Python"
+existing_codeforge_equivalent = "levenshtein_py in kernel.shelf.textmatch (the fallback + reference)"
 capability_gap = "~53x faster edit distance; the raw Python/C API as the lowest-level polyglot showcase"
 decision = "approved"
 reviewer = "Josh"
@@ -296,9 +296,9 @@ security_review = "no network, no I/O; parses two str via PyArg_ParseTuple (non-
 license_review = "MIT; the CPython headers are PSF-licensed and compatible"
 compatibility = "CPython 3.13 (cp313); a C11 compiler + Python dev headers to build"
 testing_strategy = "the pure-Python reference is always tested; a parity + property test compares C vs Python when built; benchmarks/bench_textmatch.py records the speedup"
-failure_strategy = "optional -- when the compiled module is absent, parts.shelf.textmatch uses the identical levenshtein_py, so the game is green with no C toolchain"
+failure_strategy = "optional -- when the compiled module is absent, kernel.shelf.textmatch uses the identical levenshtein_py, so the game is green with no C toolchain"
 upgrade_strategy = "rebuild the extension on a CPython minor bump; re-run the parity test"
-removal_strategy = "delete native/textkernel and the try-import in parts.shelf.textmatch; the pure-Python fallback remains"
+removal_strategy = "delete native/textkernel and the try-import in kernel.shelf.textmatch; the pure-Python fallback remains"
 
 # ----- approved: the C toolchain (build-only) ------------------------------------------
 [tech.c_toolchain]

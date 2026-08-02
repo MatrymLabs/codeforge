@@ -8,7 +8,7 @@ data-import checks, and business-rule enforcement.
 
 from __future__ import annotations
 
-from parts.shelf.validation import (
+from kernel.shelf.validation import (
     Data,
     ValidationResult,
     Validator,

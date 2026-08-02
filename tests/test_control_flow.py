@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import unittest
 
-from parts.shelf.control_flow import ControlFlowError, analyze, render
+from kernel.shelf.control_flow import ControlFlowError, analyze, render
 
 SAMPLE = """
 def linear(a):

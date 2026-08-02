@@ -1,10 +1,10 @@
-"""Test twin for parts.shelf.affixes: the deterministic loot factory (rarity + affixes)."""
+"""Test twin for kernel.shelf.affixes: the deterministic loot factory (rarity + affixes)."""
 
 from random import Random
 
 import pytest
 
-from parts.shelf.affixes import Rolled, roll
+from kernel.shelf.affixes import Rolled, roll
 
 # The five derived combat stats affixes may target (mirrored locally so this stays an ENGINE-FREE
 # shelf twin -- it must not import parts.world, or the pour would hold its test back).

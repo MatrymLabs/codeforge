@@ -4,8 +4,8 @@ import json
 
 import pytest
 
+from kernel.shelf.plugin_registry import PluginError, PluginRegistry
 from parts.exporters import CsvExporter, ExporterHub, default_hub
-from parts.shelf.plugin_registry import PluginError, PluginRegistry
 
 
 def test_the_default_hub_exports_json_and_csv():

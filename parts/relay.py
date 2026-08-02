@@ -11,7 +11,7 @@ from __future__ import annotations
 import random
 from collections.abc import Callable
 
-from parts.shelf.circuit_breaker import CircuitBreaker, CircuitOpen, Clock
+from kernel.shelf.circuit_breaker import CircuitBreaker, CircuitOpen, Clock
 from parts.world.session import Session
 
 _THRESHOLD = 3

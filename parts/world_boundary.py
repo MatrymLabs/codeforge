@@ -11,8 +11,8 @@ to the workshop and quietly breaks the "two outputs" separation.
 The World Package is a physical directory (`parts/world/`), the way the Hardware Store shelf is a
 directory. WORLD_MODULES is discovered from that directory -- the world IS its folder, so the set
 cannot drift from a hand-maintained list. A game module may import other world modules
-(`parts.world.*`) and the shelf (Layer 3, `parts.shelf.*`); importing anything else in `parts/` is a
-platform reach. Reads and reports; it mutates nothing. Empty list == the boundary holds.
+(`parts.world.*`) and the shelf (Layer 3, `kernel.shelf.*`); importing anything else in `parts/`
+is a platform reach. Reads and reports; it mutates nothing. Empty list == the boundary holds.
 """
 
 from __future__ import annotations
@@ -46,7 +46,7 @@ class WorldBoundaryError(ValueError):
 
 def _parts_imports(source: str, where: str) -> set[str]:
     """The world-relative name of every `parts.*` import: `parts.world.X` -> 'X' (the intra-world
-    module), `parts.shelf.*` -> 'shelf', any other `parts.Y` -> 'Y' (a platform reach)."""
+    module), `kernel.shelf.*` -> 'shelf', any other `parts.Y` -> 'Y' (a platform reach)."""
     try:
         tree = ast.parse(source, filename=where)
     except SyntaxError as exc:
@@ -54,17 +54,20 @@ def _parts_imports(source: str, where: str) -> set[str]:
     found: set[str] = set()
     for node in ast.walk(tree):
         names: list[str] = []
-        if isinstance(node, ast.ImportFrom) and node.module and node.module.startswith("parts"):
+        if isinstance(node, ast.ImportFrom) and node.module:
             names = [node.module]
         elif isinstance(node, ast.Import):
-            names = [a.name for a in node.names if a.name.startswith("parts")]
+            names = [a.name for a in node.names]
         for name in names:
+            if name == "kernel.shelf" or name.startswith("kernel.shelf."):
+                found.add("shelf")  # Layer 3, the Hardware Store (moved out of parts/)
+                continue
+            if not name.startswith("parts"):
+                continue
             parts = name.split(".")
             if len(parts) < 2:
                 continue
-            if parts[1] == "shelf":
-                found.add("shelf")
-            elif parts[1] == "world":
+            if parts[1] == "world":
                 found.add(
                     parts[2] if len(parts) >= 3 else "world"
                 )  # unwrap to the intra-world module

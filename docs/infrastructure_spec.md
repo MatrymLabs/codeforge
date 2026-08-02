@@ -93,7 +93,7 @@ Target boundaries (module → future service):
 Two extension mechanisms already exist and generalise into the plugin contract:
 - **The command spine** - new verbs register as `Command` objects in a `CommandSet` with a namespace
   and rank; a "plugin" is a module that registers verbs + world data through the loader gates.
-- **The Hardware Store shelf** (`parts/shelf/*`) - reusable, tested parts with cards.
+- **The Hardware Store shelf** (`kernel/shelf/*`) - reusable, tested parts with cards.
 
 Spec: a plugin is a Python package that (a) declares its `Command`s and namespaces, (b) contributes
 seed data through the validated loaders (never raw Python content), (c) registers event listeners on
@@ -131,7 +131,7 @@ Two tiers, both server-authoritative:
   each interactive line flushes without the ~40 ms delayed-ACK stall.
 - **Protocol:** line-based text in, sanitized text out (control chars stripped). **Telnet** option
   negotiation (RFC 854/857) for password blackout (`IAC WILL/WONT ECHO`), codec in
-  `parts/shelf/telnet_codec.py`.
+  `kernel/shelf/telnet_codec.py`.
 - **Structured channel:** **GMCP** (telnet option 201, `parts/gmcp.py`): offered on connect; a
   capable client enables it and receives `Char.Vitals/Room.Info/Target/Quest/Items/Skills/Resists/
   Party/Guild/Mail/Friends` frames and `Comm.Channel` chat, emit-on-change plus a live push channel.
@@ -140,7 +140,7 @@ Two tiers, both server-authoritative:
   (`bind_echo` + `bind_gmcp`) → play → teardown (save, leave party/trade/guild, `unbind_*`, drop
   session), all under the lock.
 - **Rate limiting / flood protection:** a per-address login-failure ledger with a cooldown window
-  (`gateway.py`), a concurrent-connection **bulkhead** (`parts/shelf/bulkhead.py`, reject overflow
+  (`gateway.py`), a concurrent-connection **bulkhead** (`kernel/shelf/bulkhead.py`, reject overflow
   fast), a max-line-bytes cap (a newline-less flood cannot be an unbounded read), and an idle
   timeout.
 - **Reconnect/heartbeat:** the client owns reconnect with backoff + a circuit breaker
@@ -303,7 +303,7 @@ part.** Never hard-code content in Python; a loader gate must validate it and fa
 
 ## 9. Logging & observability
 
-- **Structured logging (PARTIAL):** the observability shelf part (`parts/shelf/observability.py`)
+- **Structured logging (PARTIAL):** the observability shelf part (`kernel/shelf/observability.py`)
   exists; the gateway now emits structured JSON lifecycle events (`gateway_start`/`connection_open`/
   `connection_close`/`gateway_stop`, #601). Still to standardise: correlation ids per session/command
   fleet-wide.
@@ -421,7 +421,7 @@ only net-new backbone piece is the shared bus (§11.3); everything else is a con
 ## 14. Hardware Store integration
 
 Every persistent system should be inspectable and reusable, not a hidden implementation detail. The
-Hardware Store (`parts/shelf/*`, catalogued with cards + test twins) already holds infrastructure
+Hardware Store (`kernel/shelf/*`, catalogued with cards + test twins) already holds infrastructure
 parts: the **bulkhead** (connection cap), **token-bucket** throttle, **circuit-breaker**,
 **telnet-codec**, **observability**, **cohort** (transient group), **feature-flags**, **repository**
 patterns. The doctrine for this spec:

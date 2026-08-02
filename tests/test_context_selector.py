@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import unittest
 
-from parts.shelf.context_selector import ContextError, Item, Selection, score, select
+from kernel.shelf.context_selector import ContextError, Item, Selection, score, select
 
 WEIGHTS = {"name_match": 2.0, "centrality": 1.0, "recency": 0.5}
 

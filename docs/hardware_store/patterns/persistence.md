@@ -15,7 +15,7 @@ for CodeForge" (section 5, Persistence / Repository Pattern), which cites Fowler
 
 ## The part: `repository`
 
-`parts/shelf/repository.py` -- `Repository[E, K]` is a typed, `@runtime_checkable` **Protocol** (the
+`kernel/shelf/repository.py` -- `Repository[E, K]` is a typed, `@runtime_checkable` **Protocol** (the
 replaceable storage boundary: `add`, `get`, `require`, `update`, `remove`, `list`, `count`).
 `InMemoryRepository[E, K]` is the dependency-free, dict-backed implementation. It is
 **identity-agnostic**: entities need no base class and no `.id`; an injected `key_of` reads each
@@ -57,7 +57,7 @@ asset registry) does not change.
 
 ## The part: `cache-aside`
 
-`parts/shelf/cache_aside.py` -- the read-path companion to the repository: read a value fast without
+`kernel/shelf/cache_aside.py` -- the read-path companion to the repository: read a value fast without
 re-hitting the source of truth every time, while bounding how stale that value can get. On a read,
 `get(key, loader)` returns the cached value if it is a hit within its TTL; on a miss or an expired
 entry it calls `loader` (the source of truth), stores the result with a fresh expiry, and returns

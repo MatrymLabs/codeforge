@@ -9,7 +9,7 @@ modifier math; the score sheet only projects the result.
 
 from __future__ import annotations
 
-from parts.shelf.stats import ModifierStack, Stat, StatModifier
+from kernel.shelf.stats import ModifierStack, Stat, StatModifier
 
 # import the MODULES, not their globals: tests swap items.ITEMS / gearsets.SETS
 from parts.world import gearsets, items

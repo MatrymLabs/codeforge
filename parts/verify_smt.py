@@ -10,7 +10,7 @@ needles the sampler cannot. Proven in the Track-T proving ground (T-EXP-08 / CAN
 caught a rare-input divergence the sampler called PRESERVED even at 5000 samples.
 
 It is NOT a shelf part: CrossHair is a heavy OPTIONAL dependency (the `[verify]` extra), so
-this lives outside `parts/shelf/` (the poured Hardware Store stays portable and zero-dep).
+this lives outside `kernel/shelf/` (the poured Hardware Store stays portable and zero-dep).
 CrossHair is lazy-imported; if it is absent, this fails loud with a clear install hint and
 nothing else in the fleet is affected - the stdlib sampler remains the always-available
 default. The intended consumer is the roadmapped refactor tool: run the fast sampler on

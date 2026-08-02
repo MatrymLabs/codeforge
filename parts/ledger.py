@@ -36,7 +36,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 
-from parts.shelf.idempotency import IdempotencyStore
+from kernel.shelf.idempotency import IdempotencyStore
 
 
 class LedgerError(ValueError):

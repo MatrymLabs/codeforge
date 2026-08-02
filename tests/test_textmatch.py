@@ -1,4 +1,4 @@
-"""Test twin for parts.shelf.textmatch -- edit distance + nearest candidate, C equal to Python.
+"""Test twin for kernel.shelf.textmatch -- edit distance + nearest candidate, C equal to Python.
 
 Acceptance: the reference computes known distances (symmetric, unicode-correct); the active backend
 agrees with the reference; and closest() picks the nearest candidate with a deterministic tie-break.
@@ -14,7 +14,7 @@ import pytest
 from hypothesis import given
 from hypothesis import strategies as st
 
-from parts.shelf.textmatch import TEXTMATCH_BACKEND, closest, levenshtein, levenshtein_py
+from kernel.shelf.textmatch import TEXTMATCH_BACKEND, closest, levenshtein, levenshtein_py
 
 _HAS_KERNEL = TEXTMATCH_BACKEND == "c"
 
@@ -52,7 +52,7 @@ def test_non_str_input_fails_loud():
         levenshtein_py(None, "b")  # not two str
 
 
-@pytest.mark.skipif(not _HAS_KERNEL, reason="C kernel not built (parts.shelf.textmatch)")
+@pytest.mark.skipif(not _HAS_KERNEL, reason="C kernel not built (kernel.shelf.textmatch)")
 @given(st.text(max_size=40), st.text(max_size=40))
 def test_c_kernel_equals_the_python_reference_on_random_text(a, b):
     import codeforge_textkernel

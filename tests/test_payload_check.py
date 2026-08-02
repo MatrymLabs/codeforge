@@ -1,7 +1,7 @@
 """Test twin for parts/payload_check.py -- the practical adapter + the one-core proof."""
 
+from kernel.shelf.validation import Validator
 from parts.payload_check import validate_signup
-from parts.shelf.validation import Validator
 
 
 def test_a_valid_signup_passes():

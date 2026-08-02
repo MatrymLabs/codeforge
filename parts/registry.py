@@ -19,7 +19,7 @@ from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any
 
-from parts.shelf import loader_cache
+from kernel.shelf import loader_cache
 
 _ROOT = Path(__file__).resolve().parent.parent  # the repo root (parts/ -> root)
 REGISTRY_DIR = _ROOT / "registry" / "designations"
@@ -337,6 +337,21 @@ def validate(
     return problems
 
 
+#: The package roots the registry files code modules from. During the style-guide section-2
+#: migration these are parts/ (legacy) plus the kernel/adapters/content layers modules move into.
+_MODULE_ROOTS = ("parts", "kernel", "adapters", "content")
+
+
+def _module_paths(base: Path) -> list[Path]:
+    """Every importable module (top-level + one subpackage deep) across the registry's roots."""
+    paths: list[Path] = []
+    for name in _MODULE_ROOTS:
+        root = base / name
+        if root.is_dir():
+            paths += sorted(root.glob("*.py")) + sorted(root.glob("*/*.py"))
+    return paths
+
+
 def unfiled_modules(
     records: list[Designation] | None = None, root: Path | None = None
 ) -> list[str]:
@@ -350,10 +365,9 @@ def unfiled_modules(
     base = root if root is not None else _ROOT
     recs = records if records is not None else load_collective()
     filed = {r.file for r in recs if r.file}
-    parts_dir = base / "parts"
-    if not parts_dir.is_dir():
+    modules = _module_paths(base)
+    if not modules:
         return []
-    modules = sorted(parts_dir.glob("*.py")) + sorted(parts_dir.glob("*/*.py"))
     unfiled: list[str] = []
     for path in modules:
         if path.name == "__init__.py" or "__pycache__" in path.parts:
@@ -374,15 +388,14 @@ def untwinned_modules(root: Path | None = None) -> list[str]:
     parts/functions._test_twin). Empty list == the test-twin convention holds, enforced not hoped.
     """
     base = root if root is not None else _ROOT
-    parts_dir = base / "parts"
     tests_dir = base / "tests"
-    if not parts_dir.is_dir() or not tests_dir.is_dir():
+    modules = _module_paths(base)
+    if not modules or not tests_dir.is_dir():
         return []
     test_texts = [
         p.read_text(encoding="utf-8", errors="ignore") for p in tests_dir.rglob("test_*.py")
     ]
     untwinned: list[str] = []
-    modules = sorted(parts_dir.glob("*.py")) + sorted(parts_dir.glob("*/*.py"))
     for path in modules:
         if path.name == "__init__.py" or "__pycache__" in path.parts:
             continue

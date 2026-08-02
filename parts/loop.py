@@ -150,8 +150,8 @@ def _stage_docs(part_id: str, root: Path) -> StageResult:
 
 def trace(part_id: str, root: Path | None = None, stamp: str | None = None) -> TraceReport:
     """Trace one part through every manufacturing stage and file the evidence report."""
+    from kernel.shelf.reporting import write_report
     from parts.assembly import file_evidence
-    from parts.shelf.reporting import write_report
 
     base = root or _ROOT
     tag = stamp or date.today().isoformat()

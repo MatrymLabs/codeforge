@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import unittest
 
-from parts.shelf.api_diff import ApiDiffError, diff, render
+from kernel.shelf.api_diff import ApiDiffError, diff, render
 
 BASE = """
 def keep(a, b):

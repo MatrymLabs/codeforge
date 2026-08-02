@@ -26,8 +26,8 @@ from typing import Any, NotRequired, TypedDict
 
 import yaml
 
-from parts.shelf.conditions import ConditionError, validate
-from parts.shelf.reward_curve import LEVEL_MAX, LEVEL_MIN, TIER_MULTIPLIERS
+from kernel.shelf.conditions import ConditionError, validate
+from kernel.shelf.reward_curve import LEVEL_MAX, LEVEL_MIN, TIER_MULTIPLIERS
 from parts.world.score_sheet_model import RESIST_ORDER  # the canonical element/status codes
 
 # A seed IS a game. The engine loads one seed pack at startup; swap the seed and
@@ -128,7 +128,7 @@ class Item(TypedDict):
     # {hp: 20, mp: 10}. `quaff <item>` spends the item and restores those pools. Optional -- a bare
     # item is not consumable. Only `hp`/`mp` are honoured; a positive int each. Validated at load.
     consume: NotRequired[dict[str, int]]
-    # The rarity tier a levelled drop rolled (parts.shelf.affixes): common/uncommon/rare/epic/
+    # The rarity tier a levelled drop rolled (kernel.shelf.affixes): common/uncommon/rare/epic/
     # legendary. Set when combat rolls affixes onto an instance; absent (read as "common") on a
     # base seed item. A client colours the loadout by it; readers use `.get("rarity", "common")`.
     rarity: NotRequired[str]
@@ -176,7 +176,7 @@ class Npc(TypedDict):
     # so a town feels lived-in. Must be non-aggressive (a foe cannot wander out of a fight).
     wander: NotRequired[bool]
     # Optional: a level (1-300) and tier (normal/elite/boss) that scale the kill reward through the
-    # challenge curve (parts.shelf.reward_curve): fighting up pays more, grays pay nothing. A foe
+    # challenge curve (kernel.shelf.reward_curve): fighting up pays more, grays pay nothing. A foe
     # WITHOUT a level keeps its flat `xp` award (the tutorial default). Validated at load.
     level: NotRequired[int]
     tier: NotRequired[str]
@@ -251,7 +251,7 @@ class Door(TypedDict):
     # it this many beats later (0/absent = stays open once unlocked). Quest-opened doors never
     # set this, so a reforged bridge stays reforged.
     recloses_after: NotRequired[int]
-    # Optional: a safe condition (parts.shelf.conditions) gating the unlock, evaluated against the
+    # Optional: a safe condition (kernel.shelf.conditions) gating the unlock, evaluated against the
     # actor's state (level, rank). Validated at load; a door with a requires the actor doesn't meet
     # stays barred even with the key. Absent = no extra gate.
     requires: NotRequired[str]

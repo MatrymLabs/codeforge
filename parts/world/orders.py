@@ -11,7 +11,7 @@ Only a NAMED hero may swear (an Order must persist, so there must be a record to
 
 from __future__ import annotations
 
-from parts.shelf.stats import StatModifier
+from kernel.shelf.stats import StatModifier
 from parts.world.session import Session, display_name
 
 # Each Order grants a small, permanent combat perk: flat modifiers on the derived stats, folded into

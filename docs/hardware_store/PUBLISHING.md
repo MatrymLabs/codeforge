@@ -1,6 +1,6 @@
 # Publishing `codeforge-shelf`
 
-The Hardware Store shelf (`parts/shelf/`) is poured into a standalone, release-ready package by
+The Hardware Store shelf (`kernel/shelf/`) is poured into a standalone, release-ready package by
 `parts/shelf_pour.py`. Everything up to the irreversible publish is automated and gated; the final
 publish is a human trigger (it claims a public name and exposes a public artifact).
 

@@ -1,6 +1,6 @@
 """CARD: quest -- the game adapter for the Workflow Engine: a seed's quests as workflows.
 
-A quest is a workflow (`parts/shelf/workflow`) whose states a player walks with the `quest` verb.
+A quest is a workflow (`kernel/shelf/workflow`) whose states a player walks with the `quest` verb.
 It proves the reusable core lives in the game: the SAME `WorkflowEngine` that drives a business
 onboarding checklist (`parts/onboarding`) drives these quests -- only the effect differs (here, a
 completed contract awards XP). The arcs are DATA: a seed ships `quest.yaml` (its primary arc) and
@@ -16,8 +16,8 @@ from __future__ import annotations
 import json
 from collections.abc import Callable
 
-from parts.shelf.statemachine import Fired
-from parts.shelf.workflow import Instance, Step, Workflow, WorkflowEngine, build_workflow
+from kernel.shelf.statemachine import Fired
+from kernel.shelf.workflow import Instance, Step, Workflow, WorkflowEngine, build_workflow
 from parts.world.seed import SEED_DIR, Npc, QuestSpec, load_quest
 from parts.world.session import Session
 

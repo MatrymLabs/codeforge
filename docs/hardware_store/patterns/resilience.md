@@ -15,7 +15,7 @@ doc covers the retry/backoff part; the circuit breaker is a later slice in the s
 
 ## The part: `retry-policy`
 
-`parts/shelf/retry.py` -- a frozen `RetryPolicy(max_attempts, base_delay, factor, max_delay, retry_on)`
+`kernel/shelf/retry.py` -- a frozen `RetryPolicy(max_attempts, base_delay, factor, max_delay, retry_on)`
 with `is_transient(exc)` and `delay_for(attempt)` (capped exponential backoff), and
 `run_with_retries(fn, policy, *, sleep, on_retry)`. It **retries transient failures**, **re-raises a
 permanent one immediately**, and after the last attempt **re-raises the final failure (never
@@ -58,14 +58,14 @@ responsibility** -- the part retries, it does not make an operation safe to repe
 
 ## The part: `circuit-breaker`
 
-`parts/shelf/circuit_breaker.py` -- the other half of the resilience family. It guards calls to a flaky
+`kernel/shelf/circuit_breaker.py` -- the other half of the resilience family. It guards calls to a flaky
 dependency: **CLOSED** it passes calls and counts consecutive failures; at a threshold it trips to
 **OPEN** and rejects calls immediately (`CircuitOpen`, no waiting on a dead service); after a reset
 timeout it moves to **HALF_OPEN** and lets one probe through -- success closes it, failure re-opens
 it. Provenance: `independently_implemented_pattern` (Azure resilience pattern; no code copied).
 
 **Composition, not reinvention:** the three-state lifecycle IS a state machine, so the breaker is
-built ON the Hardware Store's own `state-machine` part (`parts/shelf/statemachine`) -- a part from a part.
+built ON the Hardware Store's own `state-machine` part (`kernel/shelf/statemachine`) -- a part from a part.
 The manufacturing loop's assembly stage shows that real dependency. The clock is injected, so the
 trip and recovery are deterministic; a property test proves it opens exactly when a run of
 `threshold` consecutive failures occurs.
@@ -79,7 +79,7 @@ trip and recovery are deterministic; a property test proves it opens exactly whe
 
 ## The part: `deadline`
 
-`parts/shelf/deadline.py` -- the timeout primitive of the resilience family, sized for a single-threaded
+`kernel/shelf/deadline.py` -- the timeout primitive of the resilience family, sized for a single-threaded
 engine. A hard timeout interrupts a thread; a `Deadline(seconds, clock=...)` interrupts nothing. It
 is a budget you POLL -- `remaining()`, `expired()`, or `check()` (which raises `DeadlineExceeded`) --
 between steps, so a long job yields the moment its budget is spent. The clock is injected (default
@@ -102,7 +102,7 @@ construction (`DeadlineError`).
 
 ## The part: `bulkhead`
 
-`parts/shelf/bulkhead.py` -- the concurrency-cap of the resilience family, and the one shelf-mate that is
+`kernel/shelf/bulkhead.py` -- the concurrency-cap of the resilience family, and the one shelf-mate that is
 **thread-safe by design**. A `Bulkhead(limit)` admits at most `limit` operations through a section at
 once and rejects the overflow immediately (`BulkheadFull`), so a flood backed up behind one slow
 dependency is contained in its compartment instead of consuming every worker (a ship's watertight
@@ -128,7 +128,7 @@ work raises; a limit < 1 or a bool/non-int fails loud at construction.
 
 ## The part: `idempotency-key`
 
-`parts/shelf/idempotency.py` -- retry-safety for the family: the part that makes it safe to *repeat*
+`kernel/shelf/idempotency.py` -- retry-safety for the family: the part that makes it safe to *repeat*
 an operation, not just to slow, bound, or abandon one. An `IdempotencyStore` runs an operation at
 most once per idempotency key and replays its stored result on retry, so a network retry, a
 double-click, or an at-least-once redelivery cannot apply it twice. `store.remember(key, fingerprint,
@@ -158,7 +158,7 @@ case-sensitive.
 
 ## The part: `dead-letter-queue`
 
-`parts/shelf/dead_letter.py` -- the last part in the at-least-once family, and the recovery half of
+`kernel/shelf/dead_letter.py` -- the last part in the at-least-once family, and the recovery half of
 message processing. `retry` makes a failed call happen again; `idempotency-key` makes that repeat
 safe; but some messages fail *permanently* (a poison payload, a downstream that stays down). A
 `DeadLetterQueue` is the third answer: `bury(message, reason, attempts)` sets the exhausted message

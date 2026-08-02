@@ -4,7 +4,7 @@ Assembly card: npcs (targets) + stats (damage). Damage MATH is deterministic; th
 blow is its VARIANCE -- a rare miss, a rare crit, an occasional glance -- drawn from `_COMBAT_RNG`,
 a module-level RNG the test suite installs NEUTRAL (always a normal hit) so every exact number in
 the twin still holds, and variance tests force an outcome. A defeated foe's WEIGHTED loot roll
-(`_roll_loot`, parts.shelf.weighted_table) draws from a second seedable RNG, `_LOOT_RNG`. A fall now
+(`_roll_loot`, kernel.shelf.weighted_table) draws from a second seedable RNG, `_LOOT_RNG`. A fall
 carries a modest, reversible stake (`_death_toll`): carried coins scatter and a non-lethal fall
 wakes at half health -- defeat costs something, so it is no longer consequence-free. The dummy
 reassembles on
@@ -21,9 +21,9 @@ restores them in place -- a fight never leaves anyone in a broken state.
 
 import random
 
-from parts.shelf import affixes
-from parts.shelf.reward_curve import jp_for_kill, xp_for_kill
-from parts.shelf.weighted_table import WeightedTable
+from kernel.shelf import affixes
+from kernel.shelf.reward_curve import jp_for_kill, xp_for_kill
+from kernel.shelf.weighted_table import WeightedTable
 from parts.world import items, threat
 from parts.world.boss_phases import boss_phase
 from parts.world.coinage import purse
@@ -634,7 +634,7 @@ def _spawn_loot(session: Session, prototype: str, level: int = 0) -> str:
     original), announce it, and return the line -- or '' if the prototype is unknown or at its
     instance ceiling (skipped, never a crash). The shared spawn used by drops and the loot roll.
 
-    An EQUIPPABLE drop from a levelled foe runs through the affix factory (parts.shelf.affixes): it
+    An EQUIPPABLE drop from a levelled foe runs through the affix factory (kernel.shelf.affixes): it
     rolls a rarity + named affixes onto the instance, so one base weapon falls as a spread of gear
     ('a Cruel notched blade of the Bear [rare]'). Non-gear and levelless drops are unchanged."""
     try:

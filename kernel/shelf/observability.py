@@ -23,7 +23,7 @@ from typing import TYPE_CHECKING
 import structlog
 from fastapi.responses import Response
 
-from parts.shelf import trace as trace_ctx
+from kernel.shelf import trace as trace_ctx
 
 if TYPE_CHECKING:
     from fastapi import FastAPI, Request

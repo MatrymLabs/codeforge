@@ -72,7 +72,7 @@
     general: typed config loading with early, loud validation
 - id: safe-runner
   name: Failsafe Runner
-  source: parts/shelf/console.py
+  source: kernel/shelf/console.py
   category: security
   tags:
   - allowlist
@@ -145,7 +145,7 @@
     general: the seed of a repo auditor (see the forge-audit backlog item)
 - id: report-writer
   name: Report Writer
-  source: parts/shelf/reporting.py
+  source: kernel/shelf/reporting.py
   category: evidence
   tags:
   - reporting
@@ -195,7 +195,7 @@
     general: any REST API contract a front end or partner consumes
 - id: observability
   name: Observability Middleware
-  source: parts/shelf/observability.py
+  source: kernel/shelf/observability.py
   category: observability
   tags:
   - observability
@@ -299,7 +299,7 @@
     general: any data-to-HTML view without a front-end toolchain
 - id: typed-settings
   name: Typed Settings Catalog
-  source: parts/shelf/config.py
+  source: kernel/shelf/config.py
   category: configuration
   tags:
   - config
@@ -324,7 +324,7 @@
     general: 12-factor environment configuration for any service
 - id: state-machine
   name: State Machine
-  source: parts/shelf/statemachine.py
+  source: kernel/shelf/statemachine.py
   category: control-flow
   tags:
   - fsm
@@ -449,7 +449,7 @@
     general: any named countdown that expires and reports readiness
 - id: modifier-stack
   name: Modifier Stack
-  source: parts/shelf/stats.py
+  source: kernel/shelf/stats.py
   category: rules-engine
   tags:
   - modifiers
@@ -633,7 +633,7 @@
     general: 'a human-governed bake-off: candidates in, ranked evidence out, human decides'
 - id: workflow-engine
   name: Workflow Engine
-  source: parts/shelf/workflow.py
+  source: kernel/shelf/workflow.py
   category: orchestration
   tags:
   - workflow
@@ -658,7 +658,7 @@
     general: onboarding, task, incident, or project workflow from one config-driven engine
 - id: token-bucket
   name: Token Bucket
-  source: parts/shelf/token_bucket.py
+  source: kernel/shelf/token_bucket.py
   category: rate-limiting
   tags:
   - rate-limit
@@ -683,7 +683,7 @@
     general: 'any ''N per window with bursts'' limiter: APIs, email sends, job submission'
 - id: retry-policy
   name: Retry Policy
-  source: parts/shelf/retry.py
+  source: kernel/shelf/retry.py
   category: resilience
   tags:
   - retry
@@ -708,7 +708,7 @@
     general: resilient API/DB/network calls with a bounded, backed-off attempt budget
 - id: circuit-breaker
   name: Circuit Breaker
-  source: parts/shelf/circuit_breaker.py
+  source: kernel/shelf/circuit_breaker.py
   category: resilience
   tags:
   - circuit-breaker
@@ -733,7 +733,7 @@
     general: wrap any unreliable API/DB/RPC call to fail fast and self-heal
 - id: deadline
   name: Deadline
-  source: parts/shelf/deadline.py
+  source: kernel/shelf/deadline.py
   category: resilience
   tags:
   - deadline
@@ -757,7 +757,7 @@
     general: 'any long span whose caller must stay responsive: poll the budget between steps'
 - id: bulkhead
   name: Bulkhead
-  source: parts/shelf/bulkhead.py
+  source: kernel/shelf/bulkhead.py
   category: resilience
   tags:
   - bulkhead
@@ -782,7 +782,7 @@
     general: any thread pool / concurrent fan-out that must stay within a hard in-flight limit
 - id: repository
   name: Repository
-  source: parts/shelf/repository.py
+  source: kernel/shelf/repository.py
   category: persistence
   tags:
   - repository
@@ -807,7 +807,7 @@
     general: any CRUD collection with a swappable in-memory or database backend
 - id: health-registry
   name: Health Registry
-  source: parts/shelf/health.py
+  source: kernel/shelf/health.py
   category: observability
   tags:
   - health-check
@@ -832,7 +832,7 @@
     general: a /healthz or /readyz probe aggregating dependency checks for any service
 - id: validator
   name: Validator
-  source: parts/shelf/validation.py
+  source: kernel/shelf/validation.py
   category: validation
   tags:
   - validation
@@ -857,7 +857,7 @@
     general: API payload, config, form, and data-import validation
 - id: feature-flags
   name: Feature Flags
-  source: parts/shelf/feature_flags.py
+  source: kernel/shelf/feature_flags.py
   category: configuration
   tags:
   - feature-flag
@@ -882,7 +882,7 @@
     general: A/B tests, canary releases, and operational on/off switches
 - id: test-evidence
   name: Test Evidence
-  source: parts/shelf/test_evidence.py
+  source: kernel/shelf/test_evidence.py
   category: testing
   tags:
   - evidence
@@ -907,7 +907,7 @@
     general: CI release gates, regression sign-off, and readiness checklists
 - id: plugin-registry
   name: Plugin Registry
-  source: parts/shelf/plugin_registry.py
+  source: kernel/shelf/plugin_registry.py
   category: plugins
   tags:
   - plugin
@@ -932,7 +932,7 @@
     general: exporters, notification providers, storage backends, and integrations
 - id: sanitizer
   name: Input Sanitizer
-  source: parts/shelf/sanitizer.py
+  source: kernel/shelf/sanitizer.py
   category: validation
   tags:
   - sanitize
@@ -957,7 +957,7 @@
     general: normalize any user input before validation, storage, or display
 - id: completeness
   name: Completeness Coverage
-  source: parts/shelf/completeness.py
+  source: kernel/shelf/completeness.py
   category: content-schema
   tags:
   - coverage
@@ -1005,7 +1005,7 @@
     general: 'any governed change record: dependency bumps, releases, config changes'
 - id: stream-framer
   name: Stream Framer
-  source: parts/shelf/stream_framer.py
+  source: kernel/shelf/stream_framer.py
   category: parsing
   tags:
   - framing
@@ -1030,7 +1030,7 @@
     general: any socket/pipe/protocol reader that must not split a message across reads
 - id: typed-event-bus
   name: Typed Signal Bus
-  source: parts/shelf/signal_bus.py
+  source: kernel/shelf/signal_bus.py
   category: eventing
   tags:
   - events
@@ -1055,7 +1055,7 @@
     general: 'any decoupled notification: one publisher, many independent subscribers'
 - id: loader-cache
   name: Loader Cache
-  source: parts/shelf/loader_cache.py
+  source: kernel/shelf/loader_cache.py
   category: caching
   tags:
   - cache
@@ -1079,7 +1079,7 @@
     general: any app that parses the same config/data file many times per run
 - id: record-loader
   name: Record Loader
-  source: parts/shelf/record_loader.py
+  source: kernel/shelf/record_loader.py
   category: persistence
   tags:
   - json
@@ -1103,7 +1103,7 @@
     general: any 'read validated JSON records from a dir, refuse a bad one' loader
 - id: hash-chained-ledger
   name: Hash-Chained Ledger
-  source: parts/shelf/hashchain.py
+  source: kernel/shelf/hashchain.py
   category: data-integrity
   tags:
   - audit
@@ -1130,7 +1130,7 @@
     compliance: ai-log-triage records every triage decision on this pattern for AU-family audit integrity (GET /audit) - fails loud on tampering
     general: a dependency-free append-only event store that proves its own history was not rewritten
 - id: telnet-codec
-  source: parts/shelf/telnet_codec.py
+  source: kernel/shelf/telnet_codec.py
   name: Telnet Codec
   category: parsing
   tags:
@@ -1183,7 +1183,7 @@
     compliance: a cadence tracker - flag a grouped resource 'due for review' after N beats/events, mirroring the guidance library's stale-past-cadence doctor
 - id: delay-queue
   name: Hourglass
-  source: parts/shelf/hourglass.py
+  source: kernel/shelf/hourglass.py
   category: scheduling
   tags:
   - timer
@@ -1208,7 +1208,7 @@
     records: decrement a review or retention countdown each processing cycle and fire the follow-up when it comes due
 - id: weighted-table
   name: Weighted Table
-  source: parts/shelf/weighted_table.py
+  source: kernel/shelf/weighted_table.py
   category: sampling
   tags:
   - loot
@@ -1232,7 +1232,7 @@
     finance: sample a transaction/account population by weighted stratum for a reproducible audit spot-check
 - id: cohort
   name: Cohort Registry
-  source: parts/shelf/cohort.py
+  source: kernel/shelf/cohort.py
   category: coordination
   tags:
   - group
@@ -1275,7 +1275,7 @@
     general: wrap any recorded latency/availability SLI in an SRE-style objective + error budget for any service
 - id: idempotency-key
   name: Idempotency Key Store
-  source: parts/shelf/idempotency.py
+  source: kernel/shelf/idempotency.py
   category: resilience
   tags:
   - idempotency
@@ -1367,7 +1367,7 @@
     general: a repo-skeleton generator that turns documented layout conventions into a one-command scaffold
 - id: dead-letter-queue
   name: Dead-Letter Queue
-  source: parts/shelf/dead_letter.py
+  source: kernel/shelf/dead_letter.py
   category: resilience
   tags:
   - dead-letter
@@ -1390,7 +1390,7 @@
     general: the third answer for a failed message after retry + idempotency; the at-least-once consumer''s safety net
 - id: cache-aside
   name: Cache-Aside (TTL)
-  source: parts/shelf/cache_aside.py
+  source: kernel/shelf/cache_aside.py
   category: performance
   tags:
   - cache
@@ -1414,7 +1414,7 @@
 
 - id: trace-context
   name: Trace Context
-  source: parts/shelf/trace.py
+  source: kernel/shelf/trace.py
   category: observability
   tags:
   - tracing
@@ -1439,7 +1439,7 @@
     general: end-to-end request correlation across any multi-hop system
 - id: precondition-guard
   name: Precondition Guard
-  source: parts/shelf/precondition.py
+  source: kernel/shelf/precondition.py
   category: data-integrity
   tags:
   - optimistic-concurrency
@@ -1464,7 +1464,7 @@
     general: optimistic concurrency for any REST resource via ETag/If-Match
 - id: keyset-cursor
   name: Keyset Cursor
-  source: parts/shelf/cursor.py
+  source: kernel/shelf/cursor.py
   category: api
   tags:
   - pagination
@@ -1489,7 +1489,7 @@
     general: keyset pagination for any large, ordered list API
 - id: transactional-outbox
   name: Transactional Outbox
-  source: parts/shelf/outbox.py
+  source: kernel/shelf/outbox.py
   category: messaging
   tags:
   - outbox
@@ -1515,7 +1515,7 @@
 
 - id: contract-jig
   name: Contract Jig
-  source: parts/shelf/contract.py
+  source: kernel/shelf/contract.py
   category: testing
   tags:
   - contract-testing
@@ -1540,7 +1540,7 @@
     general: consumer-driven contract testing for any client<->server boundary
 - id: job-queue
   name: Job Queue
-  source: parts/shelf/jobqueue.py
+  source: kernel/shelf/jobqueue.py
   category: messaging
   tags:
   - work-queue
@@ -1566,7 +1566,7 @@
 
 - id: workflow-linter
   name: Workflow Linter
-  source: parts/shelf/workflow_linter.py
+  source: kernel/shelf/workflow_linter.py
   category: security
   tags: [ci, supply-chain, github-actions, least-privilege, static-analysis]
   maturity: beta
@@ -1586,7 +1586,7 @@
     general: a CI supply-chain linter for any GitHub Actions repo
 - id: diagnostic-runner
   name: Diagnostic Runner
-  source: parts/shelf/diagnostic_runner.py
+  source: kernel/shelf/diagnostic_runner.py
   category: resilience
   tags: [decision, escalation, evidence, safety, ai-assisted-delivery]
   maturity: beta
@@ -1606,7 +1606,7 @@
     general: any decision point that must not let a good score bury a critical failure
 - id: risk-router
   name: Risk Router
-  source: parts/shelf/risk_router.py
+  source: kernel/shelf/risk_router.py
   category: governance
   tags: [review, risk-scoring, routing, change-management, governance]
   maturity: beta
@@ -1626,7 +1626,7 @@
     general: PR/change triage for any review process
 - id: checklist-gate
   name: Checklist Gate
-  source: parts/shelf/checklist_gate.py
+  source: kernel/shelf/checklist_gate.py
   category: validation
   tags: [safety, pre-flight, attestation, checklist, irreversible-action]
   maturity: beta
@@ -1646,7 +1646,7 @@
     general: a pre-action attestation gate before any irreversible operation
 - id: context-selector
   name: Context Selector
-  source: parts/shelf/context_selector.py
+  source: kernel/shelf/context_selector.py
   category: ai
   tags: [context, relevance, budget, llm, retrieval]
   maturity: beta
@@ -1667,7 +1667,7 @@
 
 - id: coding-corpus
   name: Coding Corpus
-  source: parts/shelf/corpus.py
+  source: kernel/shelf/corpus.py
   category: reference
   tags: [knowledge, patterns, smells, security-rules, translation-matrix]
   maturity: beta
@@ -1687,7 +1687,7 @@
     general: normalize any pattern/rule catalog into one detection+transformation record
 - id: smell-engine
   name: Smell Engine
-  source: parts/shelf/smell_engine.py
+  source: kernel/shelf/smell_engine.py
   category: quality
   tags: [code-smells, ast, refactoring, static-analysis, maintainability]
   maturity: beta
@@ -1708,7 +1708,7 @@
 
 - id: source-analyzer
   name: Source Analyzer
-  source: parts/shelf/source_analyzer.py
+  source: kernel/shelf/source_analyzer.py
   category: analysis
   tags: [reverse-engineering, ast, static-analysis, architecture]
   maturity: beta
@@ -1726,7 +1726,7 @@
     general: an ast-based single-module reverse-engineering tool
 - id: repo-analyzer
   name: Repo Analyzer
-  source: parts/shelf/repo_analyzer.py
+  source: kernel/shelf/repo_analyzer.py
   category: analysis
   tags: [reverse-engineering, ast, import-graph, cycles]
   maturity: beta
@@ -1744,7 +1744,7 @@
     general: package import-graph + cycle detection
 - id: model-extractor
   name: Model Extractor
-  source: parts/shelf/model_extractor.py
+  source: kernel/shelf/model_extractor.py
   category: analysis
   tags: [reverse-engineering, ast, data-model, state-machine]
   maturity: beta
@@ -1762,7 +1762,7 @@
     general: entity/relationship + Enum-FSM extraction
 - id: api-diff
   name: API Diff
-  source: parts/shelf/api_diff.py
+  source: kernel/shelf/api_diff.py
   category: analysis
   tags: [reverse-engineering, ast, breaking-change, semver]
   maturity: beta
@@ -1780,7 +1780,7 @@
     general: a breaking-change detector between two versions
 - id: call-graph
   name: Call Graph
-  source: parts/shelf/call_graph.py
+  source: kernel/shelf/call_graph.py
   category: analysis
   tags: [reverse-engineering, ast, dead-code, call-graph]
   maturity: beta
@@ -1798,7 +1798,7 @@
     general: intra-module call graph + dead-code finder
 - id: cross-module
   name: Cross-Module Usage
-  source: parts/shelf/cross_module.py
+  source: kernel/shelf/cross_module.py
   category: analysis
   tags: [reverse-engineering, ast, api, usage-graph]
   maturity: beta
@@ -1816,7 +1816,7 @@
     general: package-wide symbol usage graph
 - id: control-flow
   name: Control Flow
-  source: parts/shelf/control_flow.py
+  source: kernel/shelf/control_flow.py
   category: analysis
   tags: [reverse-engineering, ast, complexity, maintainability]
   maturity: beta
@@ -1834,7 +1834,7 @@
     general: per-function control-flow profiler
 - id: cli-surface
   name: CLI Surface
-  source: parts/shelf/cli_surface.py
+  source: kernel/shelf/cli_surface.py
   category: analysis
   tags: [reverse-engineering, ast, cli, argparse]
   maturity: beta
@@ -1852,7 +1852,7 @@
     general: argparse + env-var surface extractor
 - id: repo-report
   name: Repo Report
-  source: parts/shelf/repo_report.py
+  source: kernel/shelf/repo_report.py
   category: analysis
   tags: [reverse-engineering, ast, synthesis]
   maturity: beta
@@ -1871,7 +1871,7 @@
 
 - id: sbfl
   name: SBFL
-  source: parts/shelf/sbfl.py
+  source: kernel/shelf/sbfl.py
   category: analysis
   tags: [fault-localization, debugging, testing, coverage, suggest-only]
   maturity: beta
@@ -1889,7 +1889,7 @@
     general: a coverage-driven suspiciousness ranker for any Python suite
 - id: ddmin
   name: Delta Debugging
-  source: parts/shelf/ddmin.py
+  source: kernel/shelf/ddmin.py
   category: analysis
   tags: [delta-debugging, debugging, minimization, testing, deterministic]
   maturity: beta
@@ -1907,7 +1907,7 @@
     general: a deterministic input minimizer for any failing predicate
 - id: profile_hotspots
   name: Profile Hotspots
-  source: parts/shelf/profile_hotspots.py
+  source: kernel/shelf/profile_hotspots.py
   category: observability
   tags: [profiling, optimization, cprofile, hotspots, performance]
   maturity: beta
@@ -1926,7 +1926,7 @@
 
 - id: content-address
   name: Content Address
-  source: parts/shelf/content_address.py
+  source: kernel/shelf/content_address.py
   category: analysis
   tags: [content-addressing, ast, parts-factory, clone-detection, unison]
   maturity: beta
@@ -1944,7 +1944,7 @@
     general: an ast content-addresser for any Python corpus
 - id: file-plan
   name: File Plan
-  source: parts/shelf/file_plan.py
+  source: kernel/shelf/file_plan.py
   category: analysis
   tags: [structure-linter, repo-health, governance, file-plan, forge-audit]
   maturity: beta
@@ -1962,7 +1962,7 @@
     general: a repolinter-style structure linter (repolinter is archived)
 - id: hotspots
   name: Hotspots
-  source: parts/shelf/hotspots.py
+  source: kernel/shelf/hotspots.py
   category: observability
   tags: [churn, complexity, technical-debt, codescene, refactoring]
   maturity: beta
@@ -1980,7 +1980,7 @@
     general: a license-free churn x complexity hotspot ranker
 - id: behavior-tree
   name: Behavior Tree
-  source: parts/shelf/behavior_tree.py
+  source: kernel/shelf/behavior_tree.py
   category: orchestration
   tags: [behavior-tree, npc-ai, agent-orchestration, decision, game-ai]
   maturity: beta
@@ -1998,7 +1998,7 @@
     general: a domain-neutral behavior tree for AI + workflow orchestration
 - id: probabilistic
   name: Probabilistic Structures
-  source: parts/shelf/probabilistic.py
+  source: kernel/shelf/probabilistic.py
   category: sampling
   tags: [bloom-filter, hyperloglog, count-min, probabilistic, cardinality, membership]
   maturity: beta
@@ -2016,7 +2016,7 @@
     general: members-and-counts at scale for any Python corpus
 - id: transform-verifier
   name: Transform Verifier
-  source: parts/shelf/transform_verifier.py
+  source: kernel/shelf/transform_verifier.py
   category: validation
   tags: [verifier-gate, behavioral-equivalence, differential-testing, codemod, refactor-safety]
   maturity: beta
@@ -2112,7 +2112,7 @@
   maturity: prototype
   source_status: original
   license: MIT
-  influence: the Seed Platform directive - Stage 5 build/test orchestration; reuses the FailsafeRunner pattern (parts/shelf/console.py)
+  influence: the Seed Platform directive - Stage 5 build/test orchestration; reuses the FailsafeRunner pattern (kernel/shelf/console.py)
   experimental: 'run inside a container or namespace with resource limits (cgroups) for real isolation. Traded away (v1): OS sandboxing, kept an allowlisted, cwd-bounded, redacted runner.'
   risk: low
   purpose: 'Run an allowlisted command (a fixed, shell-free argv, never user-interpolated) inside a bounded working directory, under a timeout and output cap, with captured output secret-redacted; an unlisted command is refused and never executes, and a non-zero exit is a result, not a crash.'

@@ -1,0 +1,16 @@
+[importlinter]
+root_packages =
+    kernel
+    adapters
+    content
+    parts
+
+[importlinter:contract:kernel-purity]
+name = Kernel imports nothing from adapters, content, or parts (one-way dependency direction)
+type = forbidden
+source_modules =
+    kernel
+forbidden_modules =
+    adapters
+    content
+    parts

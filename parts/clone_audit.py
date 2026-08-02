@@ -26,7 +26,7 @@ from collections.abc import Iterable, Mapping
 from dataclasses import dataclass
 from pathlib import Path
 
-from parts.shelf.content_address import ContentAddressError, content_hash
+from kernel.shelf.content_address import ContentAddressError, content_hash
 
 __all__ = [
     "CloneAuditError",

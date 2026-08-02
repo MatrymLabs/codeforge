@@ -1,4 +1,4 @@
-"""Test twin for parts.shelf.completeness: the category-coverage / gap-report instrument.
+"""Test twin for kernel.shelf.completeness: the category-coverage / gap-report instrument.
 
 Acceptance (a complete collection reports no gaps; a partial one names exactly what is missing;
 extras are surfaced, not hidden) AND refusal (an empty requirement fails loud, not a vacuous pass).
@@ -6,7 +6,7 @@ extras are surfaced, not hidden) AND refusal (an empty requirement fails loud, n
 
 import pytest
 
-from parts.shelf.completeness import Coverage, CoverageError, coverage
+from kernel.shelf.completeness import Coverage, CoverageError, coverage
 
 
 def test_a_collection_that_covers_every_required_category_is_complete():

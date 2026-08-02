@@ -1,4 +1,4 @@
-"""Test twin for parts/shelf/hashchain.py -- the general tamper-evident append-only ledger.
+"""Test twin for kernel/shelf/hashchain.py -- the general tamper-evident append-only ledger.
 
 Acceptance: records append and read back in order; each link chains to its predecessor; empty and
 missing stores read clean. Refusal (the whole point of a tamper-evident log): an edited payload, a
@@ -12,7 +12,7 @@ from pathlib import Path
 
 import pytest
 
-from parts.shelf.hashchain import GENESIS, HashChainError, append, content_hash, read, verify
+from kernel.shelf.hashchain import GENESIS, HashChainError, append, content_hash, read, verify
 
 
 def _ledger(root: Path) -> Path:

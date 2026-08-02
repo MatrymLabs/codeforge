@@ -1,8 +1,8 @@
 """Test twin for parts/patch_tracker.py -- the practical adapter for the change ledger."""
 
+from kernel.shelf.statemachine import Fired, Refusal
 from parts.change_ledger import ChangeLedger
 from parts.patch_tracker import PatchTracker
-from parts.shelf.statemachine import Fired, Refusal
 
 
 def _walk_to_verified(tracker: PatchTracker, patch_id: str) -> None:

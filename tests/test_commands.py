@@ -250,7 +250,7 @@ def test_unknown_word_naming_no_exit_still_huhs(_named_exits: None) -> None:
 
 
 def test_a_near_miss_command_suggests_the_nearest_spine_verb() -> None:
-    # The "did you mean ...?" nudge, reachable through the tick (parts.shelf.textmatch).
+    # The "did you mean ...?" nudge, reachable through the tick (kernel.shelf.textmatch).
     session = _walker("forge")
     verbs = {c.verb.split(" ", 1)[0].lower() for c in COMMANDS.available_to(session)}
     target = next(v for v in sorted(verbs, key=len, reverse=True) if len(v) >= 5)

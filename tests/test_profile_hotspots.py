@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import unittest
 
-from parts.shelf.profile_hotspots import CAVEAT, ProfileError, analyze, profile_call, render
+from kernel.shelf.profile_hotspots import CAVEAT, ProfileError, analyze, profile_call, render
 
 # a synthetic pstats mapping: {(file, line, func): (cc, nc, tottime, cumtime, callers)}
 STATS: dict[tuple[str, int, str], tuple[int, int, float, float, dict[object, object]]] = {

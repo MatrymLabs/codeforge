@@ -24,7 +24,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 
-from parts.shelf import (
+from kernel.shelf import (
     call_graph,
     cli_surface,
     control_flow,

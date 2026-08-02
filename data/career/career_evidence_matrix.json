@@ -283,7 +283,7 @@
               "catalog/parts.yaml",
               "parts/reporting.py",
               "tests/test_reporting.py",
-              "parts/shelf/__init__.py",
+              "kernel/shelf/__init__.py",
               "parts/shelf_boundary.py"
             ],
             "status": "proven",
@@ -352,7 +352,7 @@
             "why_it_matters": "SRE/release roles want gates that prevent unsafe actions.",
             "repo_proof": [
               "scripts/ritual_down.sh",
-              "parts/shelf/console.py"
+              "kernel/shelf/console.py"
             ],
             "status": "proven",
             "next_proof_task": "Keep the allowlisted runner (never raw shell) + push-ready gate documented."

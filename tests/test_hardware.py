@@ -177,7 +177,7 @@ def test_the_catalog_is_parsed_once_and_cached(tmp_path):
 
 
 def test_cached_result_equals_a_fresh_parse(tmp_path):
-    from parts.shelf import loader_cache
+    from kernel.shelf import loader_cache
 
     path = _write(tmp_path, _one_part("alpha"))
     cached = load_catalog(path)
@@ -232,14 +232,14 @@ def test_every_shelf_core_is_cataloged_or_declared_local_only():
 
 
 def test_uncataloged_cores_flags_a_core_no_card_covers_and_excuses_local_only(tmp_path):
-    shelf = tmp_path / "parts" / "shelf"
+    shelf = tmp_path / "kernel" / "shelf"
     shelf.mkdir(parents=True)
     (shelf / "__init__.py").write_text("")
     (shelf / "widget.py").write_text("x = 1\n")  # a reusable core no catalog card covers
     (shelf / "affixes.py").write_text("x = 1\n")  # a declared local-only core (allowlisted)
     cat = _write(
         tmp_path,
-        "- id: other\n  name: O\n  source: parts/shelf/other.py\n  category: c\n"
+        "- id: other\n  name: O\n  source: kernel/shelf/other.py\n  category: c\n"
         "  maturity: beta\n  risk: low\n  reuse: {game: y}\n  purpose: p\n",
     )
     gaps = uncataloged_cores(root=tmp_path, path=cat)

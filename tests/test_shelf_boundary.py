@@ -29,7 +29,7 @@ def test_the_live_ritual_line_is_clean() -> None:
 
 
 def _shelf(tmp_path: Path) -> Path:
-    d = tmp_path / "parts" / "shelf"
+    d = tmp_path / "kernel" / "shelf"
     d.mkdir(parents=True)
     (d / "__init__.py").write_text("")
     return d
@@ -47,7 +47,7 @@ def test_a_core_reaching_into_the_engine_is_caught(tmp_path: Path) -> None:
 def test_intra_shelf_and_stdlib_imports_are_allowed(tmp_path: Path) -> None:
     shelf = _shelf(tmp_path)
     (shelf / "clean.py").write_text(
-        "import json\nfrom pathlib import Path\nfrom parts.shelf.statemachine import Fired\n"
+        "import json\nfrom pathlib import Path\nfrom kernel.shelf.statemachine import Fired\n"
     )
     assert shelf_import_violations(shelf) == {}
 
@@ -75,6 +75,6 @@ def test_an_unparseable_core_fails_loud(tmp_path: Path) -> None:
 
 def test_parts_import_extractor_finds_both_forms() -> None:
     mods = _parts_imports(
-        "import parts.world.db\nfrom parts.shelf.retry import run\nfrom parts import x\n", "<t>"
+        "import parts.world.db\nfrom parts.chronicle import log\nfrom parts import x\n", "<t>"
     )
-    assert mods == {"parts.world.db", "parts.shelf.retry", "parts"}
+    assert mods == {"parts.world.db", "parts.chronicle", "parts"}

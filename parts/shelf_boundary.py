@@ -1,6 +1,6 @@
 """CARD: shelf_boundary -- prove the Hardware Store shelf imports no engine part.
 
-The shelf (`parts/shelf/`) is Layer 3: reusable, engine-agnostic cores. Their whole value is that
+The shelf (`kernel/shelf/`) is Layer 3: reusable, engine-agnostic cores. Their whole value is that
 the dependency arrow points ONE way -- the engine (`parts/`) may import the shelf, but a shelf core
 must never reach back into the engine (only stdlib + other shelf cores). That invariant was true the
 day the cores were extracted; this Lens keeps it true, by reading every shelf module's AST and
@@ -42,15 +42,15 @@ def _parts_imports(source: str, where: str) -> set[str]:
 
 def _is_engine(module: str) -> bool:
     """True if a `parts.*` module is an ENGINE module, i.e. not the shelf itself or a shelf core."""
-    return module != "parts.shelf" and not module.startswith("parts.shelf.")
+    return module != "kernel.shelf" and not module.startswith("kernel.shelf.")
 
 
 def shelf_import_violations(shelf_dir: Path | None = None) -> dict[str, list[str]]:
     """Map each shelf module to the engine `parts.*` modules it wrongly imports (empty == clean).
 
-    A shelf core may import stdlib and other shelf cores (`parts.shelf.*`); importing any other
+    A shelf core may import stdlib and other shelf cores (`kernel.shelf.*`); importing any other
     `parts.*` module is a boundary violation, because it re-couples the core to the engine."""
-    base = shelf_dir if shelf_dir is not None else _ROOT / "parts" / "shelf"
+    base = shelf_dir if shelf_dir is not None else _ROOT / "kernel" / "shelf"
     violations: dict[str, list[str]] = {}
     for module in sorted(base.glob("*.py")):
         if module.name == "__init__.py":
@@ -71,7 +71,7 @@ def shelf_boundary_gaps(root: Path | None = None) -> list[str]:
     The ritual-facing shape: one line per offending shelf core, so a regression that re-couples the
     shelf to the engine is surfaced in `make repo-integrity`, not discovered later."""
     base = root if root is not None else _ROOT
-    violations = shelf_import_violations(base / "parts" / "shelf")
+    violations = shelf_import_violations(base / "kernel" / "shelf")
     return [
         f"{name}: imports engine part(s) {', '.join(mods)}" for name, mods in violations.items()
     ]

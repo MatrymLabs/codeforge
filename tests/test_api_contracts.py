@@ -1,6 +1,6 @@
 """Consumer-driven contract tests: the client's expected API shapes, verified against the LIVE api.
 
-This is the real CONSUMER of parts/shelf/contract.py (MOD-05.015). Each contract is what a client
+This is the real CONSUMER of kernel/shelf/contract.py (MOD-05.015). Each contract is what a client
 (the Master Client) reads from a codeforge endpoint; the provider-side test fetches the real
 response via TestClient and fails if a field the client depends on was dropped or retyped -- a
 breaking API change caught in CI, not at runtime. Extra provider fields are tolerated (tolerant
@@ -10,8 +10,8 @@ reader).
 import pytest
 from fastapi.testclient import TestClient
 
+from kernel.shelf.contract import Contract, ContractRegistry, Field, verify_all
 from parts.api import app
-from parts.shelf.contract import Contract, ContractRegistry, Field, verify_all
 
 # The shapes the Master Client depends on (declared by the consumer, verified by the provider).
 BLUEPRINT_ITEM = Contract(

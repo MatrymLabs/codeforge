@@ -11,7 +11,7 @@ small, inspectable schema:
 `forge_gear` returns one base prototype (name, slot, level-scaled mods); `arm_guardians` gives every
 generated GUARDIAN a themed gear drop and returns the prototypes to merge into the item table. The
 base is only the floor: on defeat, a levelled foe's equippable drop runs the affix factory
-(parts.shelf.affixes), which rolls a rarity + named affixes on top, so one forged blade falls as a
+(kernel.shelf.affixes), which rolls a rarity + named affixes on top, so one forged blade falls as a
 whole spread of gear ("a Cruel ember-forged warblade of the Bear [rare]").
 
 Deterministic and pure (no randomness at generation; the affix roll is the only chance, at drop

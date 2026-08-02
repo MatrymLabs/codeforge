@@ -5,7 +5,7 @@ package (`codeforge_shelf`, no `parts` engine anywhere), auto-detects the third-
 actually import, and writes a `pyproject.toml` that declares them. The result is the vision's second
 output made concrete: a Software Hardware Store you can pip-install and import with zero CodeForge
 engine present. Because the poured package is renamed, `verify_pour` can prove it in a subprocess
-that genuinely cannot reach the engine (importing `parts.shelf` would find the repo;
+that genuinely cannot reach the engine (importing `kernel.shelf` would find the repo;
 `codeforge_shelf` can only be the poured copy).
 
 Reads the shelf; writes only inside the destination dir. No engine state is touched.
@@ -23,7 +23,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 _ROOT = Path(__file__).resolve().parent.parent
-_SOURCE_PKG = "parts.shelf"
+_SOURCE_PKG = "kernel.shelf"
 PACKAGE = (
     "codeforge_shelf"  # the poured top-level package: deliberately NOT `parts`, so it isolates
 )
@@ -67,7 +67,7 @@ def _reaches_engine(source: str, where: str) -> bool:
         elif isinstance(node, ast.Import):
             mods = [a.name for a in node.names]
         for m in mods:
-            if (m == "parts" or m.startswith("parts.")) and not m.startswith("parts.shelf"):
+            if (m == "parts" or m.startswith("parts.")) and not m.startswith("kernel.shelf"):
                 return True
     return False
 
@@ -109,7 +109,7 @@ def shelf_third_party_deps(shelf_dir: Path | None = None) -> list[str]:
 
     A pour must declare these or the poured package will not import; detected from the AST so the
     list stays honest as cores change (today: fastapi, pydantic, structlog -- from 2 cores)."""
-    base = shelf_dir if shelf_dir is not None else _ROOT / "parts" / "shelf"
+    base = shelf_dir if shelf_dir is not None else _ROOT / "kernel" / "shelf"
     return _third_party(_core_files(base))
 
 
@@ -120,7 +120,7 @@ def poolable_twins(
 
     A twin is poolable if it reaches no engine part (so it runs against the poured package); a twin
     that imports the engine (an integration test) is held back -- named, not dropped silently."""
-    shelf = shelf_dir if shelf_dir is not None else _ROOT / "parts" / "shelf"
+    shelf = shelf_dir if shelf_dir is not None else _ROOT / "kernel" / "shelf"
     tests = tests_dir if tests_dir is not None else _ROOT / "tests"
     poolable: list[Path] = []
     held: list[str] = []
@@ -136,7 +136,7 @@ def poolable_twins(
 
 
 def _rewrite(source: str) -> str:
-    """Rebind a core from `parts.shelf` to the poured package name (`codeforge_shelf`)."""
+    """Rebind a core from `kernel.shelf` to the poured package name (`codeforge_shelf`)."""
     return re.sub(rf"\b{re.escape(_SOURCE_PKG)}\b", PACKAGE, source)
 
 
@@ -330,7 +330,7 @@ def _readme(cores: list[str], deps: list[str], n_tests: int, held: list[str]) ->
         f"{held_note}\n"
         "## Provenance\n\n"
         f"Generated from [CodeForge]({_HOMEPAGE}) by its `parts/shelf_pour.py`, which vendors the\n"
-        "engine-agnostic parts of `parts/shelf/` under a fresh package name and proves they\n"
+        "engine-agnostic parts of `kernel/shelf/` under a fresh package name and proves they\n"
         "import and test standalone. Re-poured, never hand-edited.\n"
     )
 
@@ -371,7 +371,7 @@ def pour_shelf(dest: Path, *, shelf_dir: Path | None = None) -> PouredShelf:
     Writes `dest/codeforge_shelf/<core>.py` (imports rebound off `parts`), a `pyproject.toml` that
     declares the auto-detected deps, and a README. Returns a PouredShelf record. Writes only under
     `dest`; reads the live shelf read-only."""
-    src = shelf_dir if shelf_dir is not None else _ROOT / "parts" / "shelf"
+    src = shelf_dir if shelf_dir is not None else _ROOT / "kernel" / "shelf"
     tests_src = shelf_dir.parent.parent / "tests" if shelf_dir is not None else _ROOT / "tests"
     cores = _core_files(src)
     if not cores:

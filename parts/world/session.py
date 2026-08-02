@@ -11,7 +11,7 @@ its own Session pointed at the same world.
 
 from dataclasses import dataclass, field
 
-from parts.shelf.stats import StatBlock
+from kernel.shelf.stats import StatBlock
 from parts.world.job_progress import JobProgress
 from parts.world.resources import Resource
 

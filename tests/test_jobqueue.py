@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import unittest
 
-from parts.shelf.jobqueue import (
+from kernel.shelf.jobqueue import (
     AVAILABLE,
     CLAIMED,
     DEAD,

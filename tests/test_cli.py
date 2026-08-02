@@ -32,7 +32,7 @@ def test_api_command_serves_on_the_configured_port(monkeypatch):
     # The `api` command must honor the configured port, not a hardcoded 8000.
     import uvicorn
 
-    from parts.shelf import config
+    from kernel.shelf import config
 
     calls: dict = {}
     monkeypatch.setattr(uvicorn, "run", lambda app, **kw: calls.update(kw))
@@ -93,7 +93,7 @@ def test_onboard_dispatches_to_the_workflow(monkeypatch):
 def test_web_serves_on_the_configured_port(monkeypatch):
     import uvicorn
 
-    from parts.shelf import config
+    from kernel.shelf import config
 
     calls: dict = {}
     monkeypatch.setattr(uvicorn, "run", lambda app, **kw: calls.update(kw))

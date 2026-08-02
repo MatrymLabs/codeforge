@@ -33,14 +33,14 @@ def test_pour_produces_the_standalone_package(tmp_path: Path) -> None:
     # Tie the guard to the live shelf: every core on disk is poured and none is dropped. A hardcoded
     # floor once claimed a stale "27-core shelf" and drifted 11 cores below reality; a set equality
     # tracks the shelf exactly, so it can never silently undercount again.
-    live_cores = {p.stem for p in _core_files(_ROOT / "parts" / "shelf")}
+    live_cores = {p.stem for p in _core_files(_ROOT / "kernel" / "shelf")}
     assert set(poured.cores) == live_cores
     pkg = tmp_path / PACKAGE
     assert (pkg / "__init__.py").exists()
     assert (tmp_path / "pyproject.toml").exists() and (tmp_path / "README.md").exists()
     # no engine reference survives the rename: the poured package is truly `parts`-free
     for core in poured.cores:
-        assert "parts.shelf" not in (pkg / f"{core}.py").read_text(encoding="utf-8")
+        assert "kernel.shelf" not in (pkg / f"{core}.py").read_text(encoding="utf-8")
 
 
 def test_the_poured_shelf_imports_standalone(tmp_path: Path) -> None:
@@ -88,8 +88,8 @@ def test_verify_on_a_missing_pour_is_honest(tmp_path: Path) -> None:
 
 
 def test_rewrite_rebinds_the_package_off_parts() -> None:
-    out = _rewrite("from parts.shelf.retry import run\nimport parts.shelf.statemachine\n")
-    assert "parts.shelf" not in out
+    out = _rewrite("from kernel.shelf.retry import run\nimport kernel.shelf.statemachine\n")
+    assert "kernel.shelf" not in out
     assert f"from {PACKAGE}.retry import run" in out
 
 
@@ -278,8 +278,8 @@ def test_dep_detection_fails_loud_on_an_unparseable_core(tmp_path: Path) -> None
 
 
 def _fake_repo(tmp_path: Path) -> tuple[Path, Path]:
-    """A synthetic root with parts/shelf/ + tests/, matching pour_shelf's default layout."""
-    shelf = tmp_path / "parts" / "shelf"
+    """A synthetic root with kernel/shelf/ + tests/, matching pour_shelf's default layout."""
+    shelf = tmp_path / "kernel" / "shelf"
     tests = tmp_path / "tests"
     shelf.mkdir(parents=True)
     tests.mkdir()

@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import unittest
 
-from parts.shelf.ddmin import DeltaError, ddmin, minimize_lines, minimize_string, render
+from kernel.shelf.ddmin import DeltaError, ddmin, minimize_lines, minimize_string, render
 
 
 class Minimization(unittest.TestCase):
