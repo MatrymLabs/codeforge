@@ -50,3 +50,12 @@ jobs:
           subject-name: ${{ env.IMAGE }}
           subject-digest: ${{ steps.push.outputs.digest }}
           push-to-registry: true
+
+      # VERIFY the attestation we just wrote (RD-2026-0002 #2): a signed-but-never-verified
+      # attestation is "documentation without teeth". Pin the exact repo so a substituted image
+      # (built elsewhere, or not from this repo) fails the release. This closes the loop the
+      # comment above only promised a consumer "can" run.
+      - name: Verify build provenance (teeth on the attestation)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh attestation verify "oci://${IMAGE}@${{ steps.push.outputs.digest }}" --repo "${GITHUB_REPOSITORY}"

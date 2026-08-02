@@ -68,6 +68,12 @@ jobs:
       - name: Runtime dependency CVE gate
         run: make audit-runtime
 
+      # Gate canary (RD-2026-0002 #1): prove the CVE gate BLOCKS on a real defect, so a future
+      # weakening of it turns THIS step red. A gate never tested against a known-vulnerable input
+      # is faith, not evidence (DoD secure-coding doc: "known-vulnerable fixture").
+      - name: CVE gate canary (must block on a known-vulnerable pin)
+        run: make gate-canary
+
       # Informational, non-blocking: pip-audit scans the WHOLE environment, so an
       # unrelated CVE in build tooling (pip/setuptools) surfaces without turning the
       # build red. Review its output; the runtime gate above is what blocks.
