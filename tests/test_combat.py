@@ -1071,6 +1071,55 @@ def test_a_landed_strike_wears_the_equipped_weapon():
     assert durability.current(s.equipped["weapon"]) == durability.MAX - 1  # the strike dulled it
 
 
+# --- K2: a lethal death batters worn gear; the training-ground failsafe stays gentle -------------
+
+
+def test_a_lethal_death_batters_worn_gear():
+    from kernel.world import durability, items
+    from kernel.world.combat import DEATH_DURABILITY_TOLL
+
+    s = _fighter()
+    s.equipped["weapon"] = items.clone("forge_wrench", items.carrier("matrym"))
+    _spawn_hostile(atk=9999, hp=50, lethal=True)  # a real boss: its blow fells the hero
+    out = attack(s, "brawler")
+    assert "battered in the fall" in out  # the fall message names the gear stake
+    # the strike itself dulled the weapon 1 point before the counter fell the hero; the death toll
+    # adds DEATH_DURABILITY_TOLL more on top of that.
+    assert durability.current(s.equipped["weapon"]) == durability.MAX - 1 - DEATH_DURABILITY_TOLL
+
+
+def test_the_training_ground_failsafe_does_not_batter_gear():
+    from kernel.world import durability, items
+
+    s = _fighter()  # a vanguard: no Engineer reaction, so a huge counter triggers the failsafe
+    s.equipped["weapon"] = items.clone("forge_wrench", items.carrier("matrym"))
+    _spawn_hostile(atk=9999, hp=50)  # NON-lethal: the training-ground failsafe catches the fall
+    out = attack(s, "brawler")
+    assert "wake at half health" in out  # the gentle failsafe fired
+    # only the normal strike-wear (1 point) landed; the failsafe added NO death gear toll (else -11)
+    assert durability.current(s.equipped["weapon"]) == durability.MAX - 1
+
+
+def test_a_bare_hero_takes_no_gear_toll_on_a_lethal_death():
+    s = _fighter()  # nothing equipped
+    _spawn_hostile(atk=9999, hp=50, lethal=True)
+    out = attack(s, "brawler")
+    assert "battered in the fall" not in out  # no gear, no gear message
+
+
+def test_a_recleared_boss_is_acknowledged_not_silently_farmed(monkeypatch):
+    from kernel.world import lockouts
+
+    monkeypatch.setattr(lockouts, "today_utc", lambda: "2026-07-29")
+    s = _fighter()
+    _spawn_boss()
+    assert "Daily bounty!" in _fell(s, "warlord")  # first clear pays the bounty
+    _respawn("warlord")
+    second = _fell(s, "warlord")
+    assert "already cleared today" in second  # the clear is surfaced, not silent
+    assert "Daily bounty!" not in second  # but the bounty does not repeat
+
+
 def test_a_landed_blow_wears_the_equipped_body_armor():
     from kernel.world import durability, items
     from kernel.world.aggression import menace

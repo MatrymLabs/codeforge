@@ -86,6 +86,11 @@ DAMAGE_BASE = 3  # damage dealt = DAMAGE_BASE + strength // 3
 # the coin toll too. The knobs are named so the balance is one edit, not a hunt.
 DEATH_COIN_PENALTY = 0.10  # a tenth of carried coins scatter when you fall
 DEATH_HP_FRACTION = 0.5  # a non-lethal fall wakes you at this fraction of full health
+# K2: a LETHAL death (a real boss, not the training-ground failsafe) also batters your worn gear.
+# Dying to a boss is no longer a free trip home + full heal: your gear takes wear you must mend, a
+# reversible stake that feeds the same coin sink as combat durability (kernel.world.durability). The
+# training-ground failsafe stays gentle (no gear toll) so a new hero learning to fight is not taxed.
+DEATH_DURABILITY_TOLL = 10  # points of wear each worn piece takes on a lethal death (a tuning knob)
 
 
 def _death_toll(session: Session) -> int:
@@ -94,6 +99,20 @@ def _death_toll(session: Session) -> int:
     lost = int(session.coins * DEATH_COIN_PENALTY)
     session.coins -= lost
     return lost
+
+
+def _death_gear_toll(session: Session) -> int:
+    """Batter the hero's WORN gear on a lethal death: each equipped piece takes a
+    DEATH_DURABILITY_TOLL of wear (reversible via `mend`). Returns how many pieces were worn.
+    A bare hero (nothing equipped) takes no toll; broken-to-zero pieces floor, never go negative."""
+    from kernel.world import durability
+
+    worn = 0
+    for iid in session.equipped.values():
+        if durability.is_gear(iid):
+            durability.wear(iid, DEATH_DURABILITY_TOLL)
+            worn += 1
+    return worn
 
 
 # Readable names for the element/status codes a foe's blow may carry (seed RESIST_ORDER codes).
@@ -248,6 +267,7 @@ def _fall_to_death(session: Session, npc: Npc) -> str:
     from kernel.world.world import START_ROOM  # lazy: world binds seed state at import
 
     lost = _death_toll(session)
+    battered = _death_gear_toll(session)  # K2: a real death batters your gear (mend it)
     session.location = START_ROOM
     hp = session.resources["hp"]
     session.resources["hp"] = hp.heal(hp.maximum)
@@ -255,9 +275,10 @@ def _fall_to_death(session: Session, npc: Npc) -> str:
     witness("fall", npc["name"], "felled the player, who woke where their road began")
     foe = sentence_case(npc["name"])
     toll = f" {purse(lost)} scatters from your purse." if lost else ""
+    gear = f" Your gear is battered in the fall ({battered} worn; MEND it)." if battered else ""
     return (
         f"{foe} fells you. Darkness takes you -- and you wake where your road "
-        f"began, whole but shaken.{toll} It still waits below."
+        f"began, whole but shaken.{toll}{gear} It still waits below."
     )
 
 
@@ -411,9 +432,10 @@ def _coin_reward(npc: Npc) -> int:
 
 
 # The first kill of a boss each PERIOD pays this multiple of its coin drop as a bounty, then nothing
-# extra until the period rolls. The foe stays farmable (it reassembles), but infinite farming no
-# longer pays infinite reward -- the endgame's reason to return (kernel.world.lockouts). A raid is a
-# weekly cadence and pays far more than a daily boss (a party's marquee objective, not a solo lap).
+# extra until the period rolls. The foe stays farmable (after K1 it dies and respawns on its timer),
+# but infinite farming no longer pays infinite reward -- the endgame's reason to return
+# (kernel.world.lockouts). A raid is a weekly cadence and pays far more than a daily boss (a party's
+# marquee objective, not a solo lap).
 BOSS_BOUNTY_MULT = 5
 RAID_BOUNTY_MULT = 20
 RAID_COHORT_MIN = (
@@ -443,7 +465,10 @@ def _kill_bounty(session: Session, npc: Npc, nid: str) -> str:
     else:
         return ""
     if not lockouts.claim(session, key, period):
-        return ""  # already claimed this period: the base drop stands, the bounty does not repeat
+        # Already cleared this period: no repeat bounty, but ACKNOWLEDGE the clear so the endgame
+        # reads as completed, not silently farmed. The base drop still stands (this rides on top).
+        span = "this week" if npc.get("raid") else "today"
+        return f"({sentence_case(npc['name'])} is already cleared {span}; felled for the drop.)"
     bonus = _coin_reward(npc) * mult
     cohort_note = ""
     if npc.get("raid"):
