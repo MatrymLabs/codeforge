@@ -2128,6 +2128,29 @@
   "updated": "2026-08-02"
  },
  {
+  "designation": "MOD-01.014",
+  "name": "evolution_emitter",
+  "status": "active",
+  "function": "express a validated genome into a reviewable phenotype scaffold (propose-only)",
+  "label": "evolution_emitter",
+  "file": "kernel/evolution/emitter.py",
+  "type": "MOD",
+  "domain": "01",
+  "docs": "docs/nature_inspired/research_mapping.md",
+  "tests": "tests/test_evolution_emitter.py",
+  "depends_on": [],
+  "related": [],
+  "reuse": "turn a typed design record into a parseable code/test/config/doc scaffold a human fills in",
+  "tags": [
+   "module"
+  ],
+  "notes": "RD-2026-0002 #10, the lab's missing genotype->phenotype rung. Runs validate_genome FIRST (fail-closed); emits interfaces->def stubs + test_obligations->test stubs, every body raises NotImplementedError and every header stamps human_required (propose-only, keel intact); emitted Python is guaranteed to parse. Provenance: original.",
+  "superseded_by": "",
+  "aliases": [],
+  "created": "2026-08-02",
+  "updated": "2026-08-02"
+ },
+ {
   "designation": "MOD-06.002",
   "name": "stewardship_change",
   "status": "active",
