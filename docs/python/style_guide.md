@@ -52,11 +52,12 @@ class Verdict(StrEnum):
     FAIL = "fail"
     HUMAN_DECISION_REQUIRED = "human_decision_required"
 
+
 @dataclass(frozen=True, slots=True)
 class GateResult:
     verdict: Verdict
-    evidence: tuple[str, ...]      # what was observed
-    reasoning: str                 # the deduction
+    evidence: tuple[str, ...]  # what was observed
+    reasoning: str  # the deduction
 ```
 
 A function that decides something important returns *why* it decided. Eliminate the impossible; whatever remains must be logged.
@@ -99,8 +100,12 @@ Each project maintains a `vocabulary.py` (or `vocabulary/` package): the single 
 
 ```python
 # vocabulary.py - the canonical grammar of this project.
-class Calling(StrEnum): ...        # combat identity - never "class" or "job"
-class Profession(StrEnum): ...     # crafting/gathering - never "trade"
+class Calling(StrEnum): ...  # combat identity - never "class" or "job"
+
+
+class Profession(StrEnum): ...  # crafting/gathering - never "trade"
+
+
 SeedId = NewType("SeedId", str)
 ```
 
