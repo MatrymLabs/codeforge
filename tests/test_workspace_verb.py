@@ -308,3 +308,106 @@ def test_create_persists_across_the_tick(tmp_path: Path, monkeypatch) -> None:
 
     handle_command(_owner(), "workspace create ProjX a demo")
     assert "ProjX" in handle_command(_owner(), "workspace list")  # persisted via the file store
+
+
+# --- run/report: tool-run evidence lights the 4th panel (Build.Report) ---------------------------
+_ECHO = {"say-ok": ["python", "-c", "print('tooling ok')"]}
+
+
+def _runnable(tmp_path: Path) -> tuple[SeedKernel, str, Path]:
+    k = _kernel()
+    workspace_command(_owner(), "create Proj a demo", kernel=k)
+    sid = k.list_seeds()[0].identity.seed_id
+    return k, sid, _source_dir(tmp_path)
+
+
+def test_run_records_evidence_and_pushes_build_report(tmp_path: Path) -> None:
+    from kernel.seedlab.tool_runner import InMemoryRunLog
+
+    k, sid, src = _runnable(tmp_path)
+    log = InMemoryRunLog()
+    frames, push = _capture()
+    out = workspace_command(
+        _owner(), f"run {sid} {src} say-ok", kernel=k, run_log=log, allowlist=_ECHO, gmcp_push=push
+    )
+    assert "OK" in out and "say-ok" in out  # the run's human view
+    assert len(log.for_seed(sid)) == 1 and log.for_seed(sid)[0].ok  # evidence recorded
+    by_pkg = {pkg: data for _pid, pkg, data in frames}
+    report = by_pkg["Build.Report"]  # the 4th panel's package, live
+    assert isinstance(report, dict) and report["seed"] == "Proj" and report["ok"] is True
+    assert report["steps"] and report["steps"][0]["status"] == "passed"
+
+
+def test_run_refuses_an_unlisted_profile_and_pushes_nothing(tmp_path: Path) -> None:
+    from kernel.seedlab.tool_runner import InMemoryRunLog
+
+    k, sid, src = _runnable(tmp_path)
+    log = InMemoryRunLog()
+    frames, push = _capture()
+    out = workspace_command(
+        _owner(), f"run {sid} {src} rm-rf", kernel=k, run_log=log, allowlist=_ECHO, gmcp_push=push
+    )
+    assert "not an approved command profile" in out
+    assert log.for_seed(sid) == [] and frames == []  # nothing ran, nothing pushed
+
+
+def test_run_respects_the_allowed_sources_root(tmp_path: Path, monkeypatch) -> None:
+    from kernel.seedlab.tool_runner import InMemoryRunLog
+
+    k, sid, _src = _runnable(tmp_path / "inside")
+    outside = _source_dir(tmp_path / "outside", "sneaky")
+    monkeypatch.setenv("SEEDLAB_SOURCES", str(tmp_path / "inside"))
+    out = workspace_command(
+        _owner(), f"run {sid} {outside} say-ok", kernel=k, run_log=InMemoryRunLog(), allowlist=_ECHO
+    )
+    assert "outside the allowed sources root" in out
+
+
+def test_run_usage_and_unknown_seed_are_clean(tmp_path: Path) -> None:
+    assert "usage: workspace run" in workspace_command(_owner(), "run only two", kernel=_kernel())
+    out = workspace_command(
+        _owner(), f"run nope {tmp_path} say-ok", kernel=_kernel(), allowlist=_ECHO
+    )
+    assert "workspace:" in out
+
+
+def test_report_replays_the_recorded_runs_and_pushes(tmp_path: Path) -> None:
+    from kernel.seedlab.tool_runner import InMemoryRunLog
+
+    k, sid, src = _runnable(tmp_path)
+    log = InMemoryRunLog()
+    workspace_command(_owner(), f"run {sid} {src} say-ok", kernel=k, run_log=log, allowlist=_ECHO)
+    frames, push = _capture()
+    out = workspace_command(_owner(), f"report {sid}", kernel=k, run_log=log, gmcp_push=push)
+    assert "1 run(s), 1 ok" in out
+    assert [pkg for _p, pkg, _d in frames] == ["Build.Report"]  # inspect resolves state -> re-push
+
+
+def test_report_with_no_runs_is_honest_and_pushes_nothing(tmp_path: Path) -> None:
+    from kernel.seedlab.tool_runner import InMemoryRunLog
+
+    k, sid, _ = _runnable(tmp_path)
+    frames, push = _capture()
+    out = workspace_command(
+        _owner(), f"report {sid}", kernel=k, run_log=InMemoryRunLog(), gmcp_push=push
+    )
+    assert "No tool runs" in out and frames == []
+
+
+def test_report_reachable_through_the_tick(tmp_path: Path, monkeypatch) -> None:
+    # A feature is not wired until handle_command proves it (the engine-tick law).
+    monkeypatch.setenv("SEEDLAB_HOME", str(tmp_path / "lab"))
+    from forge import handle_command
+
+    s = _owner()
+    handle_command(s, "workspace create TickProj proves reachability")
+    out = handle_command(s, "workspace report " + _tick_seed_id(tmp_path))
+    assert "No tool runs" in out or "workspace:" in out
+
+
+def _tick_seed_id(tmp_path: Path) -> str:
+    from kernel.seedlab.kernel import FileSeedStore, SeedKernel
+
+    k = SeedKernel(FileSeedStore(tmp_path / "lab" / "seeds"))
+    seeds = [r for r in k.list_seeds() if r.identity.name == "TickProj"]
+    return seeds[0].identity.seed_id if seeds else "unknown"
