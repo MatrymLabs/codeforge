@@ -21,8 +21,8 @@ from kernel.blueprint import (
     to_markdown,
     write_blueprint,
 )
+from kernel.world.session import Session
 from parts.blueprint_verb import blueprint
-from parts.world.session import Session
 
 _GOOD = {
     "blueprint_id": "sample_plan",

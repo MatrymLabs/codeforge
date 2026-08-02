@@ -1,4 +1,4 @@
-"""Test twin for parts/world/gather.py -- harvest crafting materials from the wilds.
+"""Test twin for kernel/world/gather.py -- harvest crafting materials from the wilds.
 
 Acceptance: a room with a node yields its material to `gather`, then the node renews after a
 cooldown; a room without a node (and an unknown material) fail cleanly. Integration: the wildlands
@@ -10,9 +10,9 @@ from __future__ import annotations
 import pytest
 
 import forge
-from parts.world import gather, items
-from parts.world.session import SESSIONS, Session
-from parts.world.world import WORLD
+from kernel.world import gather, items
+from kernel.world.session import SESSIONS, Session
+from kernel.world.world import WORLD
 
 
 @pytest.fixture(autouse=True)
@@ -71,8 +71,8 @@ def test_a_node_shows_on_look():
 def test_the_wildlands_seed_nodes_that_feed_real_recipes():
     from pathlib import Path
 
-    from parts.world.seed import load_recipes
-    from parts.world.wildlands import _gather_node
+    from kernel.world.seed import load_recipes
+    from kernel.world.wildlands import _gather_node
 
     # every material the generator seeds must be a real crafting input, or the loop is dead.
     seeded = {_gather_node("wild-forest", i) for i in range(30)} | {

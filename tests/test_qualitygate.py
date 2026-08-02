@@ -20,7 +20,7 @@ from kernel.qualitygate import (
     safety_review,
 )
 from kernel.registry import Designation
-from parts.world.session import SESSIONS, Session
+from kernel.world.session import SESSIONS, Session
 
 
 def _rec(designation: str = "PRT-05.001", **over: object) -> Designation:

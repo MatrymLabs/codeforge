@@ -12,7 +12,7 @@ from adapters.architect import (
     consult,
 )
 from forge import handle_command
-from parts.world.session import SESSIONS, Session
+from kernel.world.session import SESSIONS, Session
 
 # --- a fake Anthropic client: the same shape the SDK exposes, no network -----
 

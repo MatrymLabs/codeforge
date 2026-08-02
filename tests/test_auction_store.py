@@ -1,4 +1,4 @@
-"""Test twin for parts/world/auction_store.py -- the escrowed-listing adapter.
+"""Test twin for kernel/world/auction_store.py -- the escrowed-listing adapter.
 
 Acceptance: a created listing appears in active() and get() with its item snapshot, price, and
 seller; buy() removes and returns it. Refusal: buy() succeeds exactly once (a second returns None,
@@ -8,7 +8,7 @@ quarantined to tmp by conftest.
 
 from __future__ import annotations
 
-from parts.world import auction_store
+from kernel.world import auction_store
 
 
 def _snap(name: str = "a wrench", rarity: str = "common", mods: dict | None = None) -> dict:

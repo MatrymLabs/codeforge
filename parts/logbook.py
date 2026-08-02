@@ -11,7 +11,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from kernel.shelf.repository import InMemoryRepository
-from parts.world.session import Session
+from kernel.world.session import Session
 
 
 @dataclass(frozen=True)

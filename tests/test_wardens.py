@@ -1,4 +1,4 @@
-"""Test twin for parts/world/wardens.py -- naming each dungeon's deep boss for its dungeon.
+"""Test twin for kernel/world/wardens.py -- naming each dungeon's deep boss for its dungeon.
 
 Acceptance: each deep boss is renamed to a titled warden of its dungeon, nameable by title or its
 dungeon word, stats untouched. Refusal: a dungeon with no deep boss is skipped. Determinism holds.
@@ -6,8 +6,8 @@ dungeon word, stats untouched. Refusal: a dungeon with no deep boss is skipped. 
 
 from __future__ import annotations
 
-from parts.world.seed import Npc
-from parts.world.wardens import DEEP_BOSS_SUFFIX, name_wardens
+from kernel.world.seed import Npc
+from kernel.world.wardens import DEEP_BOSS_SUFFIX, name_wardens
 
 _DUNGEONS = [
     {"room": "the_black_hollow", "name": "The Black Hollow", "level": 50},

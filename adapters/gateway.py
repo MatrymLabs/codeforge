@@ -26,6 +26,14 @@ import structlog
 from forge import handle_command, render_scene
 from kernel.shelf.bulkhead import Bulkhead, BulkheadFull
 from kernel.shelf.telnet_codec import IAC, WILL, WONT, strip_iac
+from kernel.world import bans, guild, maintenance_mode, party, presence, trade, tutorial
+from kernel.world.accounts import password_fixable
+from kernel.world.characters import save_all, save_character
+from kernel.world.events import SHUTDOWN, bind_echo, bind_gmcp, unbind_echo, unbind_gmcp
+from kernel.world.ranks import has_rank
+from kernel.world.seed import SEED_NAME, load_splash
+from kernel.world.session import SESSIONS, Session
+from kernel.world.socket_bus import maybe_wire_broker
 from parts.gmcp import (
     GMCP_OPT,
     enables_gmcp,
@@ -43,14 +51,6 @@ from parts.gmcp import (
     target_report,
     vitals_report,
 )
-from parts.world import bans, guild, maintenance_mode, party, presence, trade, tutorial
-from parts.world.accounts import password_fixable
-from parts.world.characters import save_all, save_character
-from parts.world.events import SHUTDOWN, bind_echo, bind_gmcp, unbind_echo, unbind_gmcp
-from parts.world.ranks import has_rank
-from parts.world.seed import SEED_NAME, load_splash
-from parts.world.session import SESSIONS, Session
-from parts.world.socket_bus import maybe_wire_broker
 
 TICK_LOCK = threading.Lock()
 _counter_lock = threading.Lock()
@@ -524,7 +524,7 @@ class _GateHandler(socketserver.StreamRequestHandler):
 def serve(host: str = "0.0.0.0", port: int = 4000) -> None:
     # Power-on check: refuse to serve on a database whose columns are behind the models, rather
     # than crash the first login on `no such column`. Read-only; it names the fix, never migrates.
-    from parts.world.schema_guard import SchemaError, require_current_schema
+    from kernel.world.schema_guard import SchemaError, require_current_schema
 
     try:
         require_current_schema()

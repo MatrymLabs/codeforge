@@ -30,7 +30,7 @@ license: MIT
 source_status: original
 owner: MatrymLabs
 adapters:
-  - parts/world/party.py  # the game's party bolts invites + chat + logout cleanup onto this core
+  - kernel/world/party.py  # the game's party bolts invites + chat + logout cleanup onto this core
 provenance: >
   independently_implemented_pattern (transient membership group), harvested from the game's
   party / shared-reward / loot systems. No code copied.

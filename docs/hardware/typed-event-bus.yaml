@@ -28,5 +28,5 @@ license: MIT
 source_status: original
 owner: MatrymLabs
 adapters:
-  - parts/world/chime.py
+  - kernel/world/chime.py
   - kernel/notifier.py

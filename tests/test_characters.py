@@ -1,19 +1,19 @@
-"""Test twin for parts/world/characters.py -- restart survival."""
+"""Test twin for kernel/world/characters.py -- restart survival."""
 
 import copy
 
 import pytest
 
-from parts.world import items, npcs
-from parts.world.characters import (
+from kernel.world import items, npcs
+from kernel.world.characters import (
     load_character,
     restore_character,
     save_all,
     save_character,
 )
-from parts.world.combat import award_xp
-from parts.world.jobs import bind_calling
-from parts.world.session import SESSIONS, Session
+from kernel.world.combat import award_xp
+from kernel.world.jobs import bind_calling
+from kernel.world.session import SESSIONS, Session
 
 
 @pytest.fixture(autouse=True)
@@ -83,7 +83,7 @@ def test_save_and_load_roundtrip():
 def test_profession_practice_survives_a_save_and_restore(monkeypatch):
     """A maker's trade skill is a persisted character fact: it must ride through save -> load ->
     restore. (Patch the trade registry so 'mining' is known under the test seed.)"""
-    from parts.world import professions
+    from kernel.world import professions
 
     monkeypatch.setattr(
         professions,
@@ -172,8 +172,8 @@ def test_name_command_restores_a_saved_hero():
 
 def test_equipped_gear_persists_across_a_save_and_restore():
     """Worn gear survives logout: it is stored by prototype and re-cloned + re-equipped on login."""
-    from parts.world.equipment import equip
-    from parts.world.items import carrier, clone, prototype_of
+    from kernel.world.equipment import equip
+    from kernel.world.items import carrier, clone, prototype_of
 
     s = _hero()
     clone("forge_wrench", carrier("matrym"))
@@ -205,7 +205,7 @@ def test_quest_progress_persists_across_a_save_and_restore():
     """A story-in-progress survives logout: the quest state saves with the character and reseeds."""
     import json
 
-    from parts.world.quest import quest_view, reset_quests, save_state
+    from kernel.world.quest import quest_view, reset_quests, save_state
 
     reset_quests()
     s = _hero()
@@ -222,8 +222,8 @@ def test_quest_progress_persists_across_a_save_and_restore():
 
 def test_affixed_gear_keeps_its_rarity_across_a_save_and_restore():
     """A rolled legendary survives logout with its name, mods, AND rarity tier."""
-    from parts.world.equipment import equip
-    from parts.world.items import ITEMS, carrier, clone
+    from kernel.world.equipment import equip
+    from kernel.world.items import ITEMS, carrier, clone
 
     s = _hero()
     iid = clone("forge_wrench", carrier("matrym"))
@@ -243,7 +243,7 @@ def test_affixed_gear_keeps_its_rarity_across_a_save_and_restore():
 def test_restoring_pre_rarity_dict_gear_applies_no_rarity():
     """Gear saved before the rarity field (a dict with name/mods but no 'rarity') restores fine and
     simply carries no rarity - the backward-compatible path."""
-    from parts.world.items import ITEMS
+    from kernel.world.items import ITEMS
 
     s = _hero()
     restore_character(
@@ -273,7 +273,7 @@ def test_the_legacy_bare_prototype_gear_format_still_restores():
         "equipped_gear": '{"weapon": "forge_wrench"}',  # the pre-affix-persistence format
     }
     restore_character(fresh, casefile)
-    from parts.world.items import ITEMS, prototype_of
+    from kernel.world.items import ITEMS, prototype_of
 
     assert prototype_of(fresh.equipped["weapon"]) == "forge_wrench"
     assert ITEMS[fresh.equipped["weapon"]]["name"]  # a real base clone, no override
@@ -364,7 +364,7 @@ def test_a_reconnect_does_not_duplicate_the_bag():
 
 
 def test_equipped_gear_is_not_also_stored_as_a_loose_item():
-    from parts.world.loose_store import load as load_loose
+    from kernel.world.loose_store import load as load_loose
 
     hero = _hero()
     iid = items.clone("forge_wrench", items.carrier("matrym"))

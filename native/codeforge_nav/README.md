@@ -2,7 +2,7 @@
 
 The first native organ of CodeForge's polyglot build. Rust used exactly where memory-safe systems
 speed helps — bulk graph traversal at world scale — behind a narrow FFI, with a **pure-Python
-fallback** (`parts/world/navigation.py`) kept in lockstep by a parity test.
+fallback** (`kernel/world/navigation.py`) kept in lockstep by a parity test.
 
 CodeForge's world is a directed graph: rooms are nodes, exits are edges. This crate answers the
 spatial questions fast:

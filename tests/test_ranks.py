@@ -1,12 +1,12 @@
-"""Test twin for parts/world/ranks.py -- authority checked before power."""
+"""Test twin for kernel/world/ranks.py -- authority checked before power."""
 
 import pytest
 
 from forge import handle_command
-from parts.world import events
-from parts.world.events import bind_echo, unbind_echo
-from parts.world.ranks import has_rank
-from parts.world.session import SESSIONS, Session
+from kernel.world import events
+from kernel.world.events import bind_echo, unbind_echo
+from kernel.world.ranks import has_rank
+from kernel.world.session import SESSIONS, Session
 
 
 @pytest.fixture(autouse=True)

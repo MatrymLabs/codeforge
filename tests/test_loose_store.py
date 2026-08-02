@@ -1,4 +1,4 @@
-"""Test twin for parts/world/loose_store.py -- the stored-loose-inventory adapter.
+"""Test twin for kernel/world/loose_store.py -- the stored-loose-inventory adapter.
 
 Acceptance: a saved bag loads back (prototype + rolled name/mods/rarity intact); save REPLACES the
 whole bag, not appends. Refusal: a stranger's bag is empty, and save is scoped to its owner,
@@ -7,7 +7,7 @@ so emptying one hero's bag never touches another's. Real table, quarantined to t
 
 from __future__ import annotations
 
-from parts.world import loose_store
+from kernel.world import loose_store
 
 
 def _snap(prototype: str, name: str, mods: dict | None = None, rarity: str = "common") -> dict:

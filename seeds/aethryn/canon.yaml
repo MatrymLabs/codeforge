@@ -1,7 +1,7 @@
 # SEED: aethryn -- canon.yaml  (the world's LOCKED canon: never mutated by generators)
 #
 # This is the single source of established Aethryn canon, encoded as data so the engine and every
-# generator can read it and REFUSE to contradict it (parts/world/canon.py). It is not lore prose --
+# generator can read it and REFUSE to contradict it (kernel/world/canon.py). It is not lore prose --
 # the readable Lore Bible is docs/aethryn_lore_bible.md; this is the machine-checkable canon.
 #
 # canon_status on each record follows the authority ladder:

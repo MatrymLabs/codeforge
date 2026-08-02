@@ -1,4 +1,4 @@
-"""Test twin for parts/world/boss_phases.py -- a wounded boss enrages and hits harder.
+"""Test twin for kernel/world/boss_phases.py -- a wounded boss enrages and hits harder.
 
 Acceptance: a boss-tier foe at or below the enrage threshold scales its blow up and announces once;
 a non-boss, or a boss above the line, is untouched (normal combat stays byte-identical). The flag
@@ -7,14 +7,14 @@ self-heals when the boss recovers above the line, so a rematch re-announces.
 
 from __future__ import annotations
 
-from parts.world.boss_phases import (
+from kernel.world.boss_phases import (
     ENRAGE_AT,
     ENRAGE_MULT,
     boss_phase,
     is_boss,
     is_enraged,
 )
-from parts.world.seed import Npc
+from kernel.world.seed import Npc
 
 
 def _boss(hp: int, hp_now: int) -> Npc:

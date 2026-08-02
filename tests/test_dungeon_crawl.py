@@ -1,4 +1,4 @@
-"""Test twin for parts/world/dungeon_crawl.py -- 'descend to the heart of a dungeon' contracts.
+"""Test twin for kernel/world/dungeon_crawl.py -- 'descend to the heart of a dungeon' contracts.
 
 Acceptance: each dungeon posts one two-beat descent -- cross the mouth, then reach the deep boss's
 chamber for the reward. It targets the delve's own geography. Refusal: no dungeons, no crawls.
@@ -6,8 +6,8 @@ chamber for the reward. It targets the delve's own geography. Refusal: no dungeo
 
 from __future__ import annotations
 
-from parts.world.delve import boss_chamber
-from parts.world.dungeon_crawl import CRAWL_PREFIX, generate_crawls, is_dungeon_crawl
+from kernel.world.delve import boss_chamber
+from kernel.world.dungeon_crawl import CRAWL_PREFIX, generate_crawls, is_dungeon_crawl
 
 _DUNGEONS = [
     {"room": "the_black_hollow", "name": "The Black Hollow", "level": 50},

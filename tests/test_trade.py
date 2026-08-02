@@ -1,4 +1,4 @@
-"""Test twin for parts/world/trade.py -- the atomic player-to-player swap.
+"""Test twin for kernel/world/trade.py -- the atomic player-to-player swap.
 
 Acceptance: propose + accept opens a trade; staking items and coin then confirming BOTH sides moves
 everything at once (items change carrier, coin transfers); the roster renders both sides. Refusal /
@@ -10,9 +10,9 @@ goods moved, since nothing moves until the atomic seal.
 
 from __future__ import annotations
 
-from parts.world import events, items, trade
-from parts.world.items import carrier
-from parts.world.session import SESSIONS, Session
+from kernel.world import events, items, trade
+from kernel.world.items import carrier
+from kernel.world.session import SESSIONS, Session
 
 
 def _hero(name: str, room: str = "market", coins: int = 0) -> Session:

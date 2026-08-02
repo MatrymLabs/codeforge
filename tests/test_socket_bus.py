@@ -1,4 +1,4 @@
-"""Test twin for parts/world/socket_bus.py -- the network MessageBus adapter (Phase 4).
+"""Test twin for kernel/world/socket_bus.py -- the network MessageBus adapter (Phase 4).
 
 The end-to-end proof that the seam reaches across processes. Two SocketBus clients on one Broker
 stand in for two gateways: one publishes a cohort message, the other's handler receives it. A
@@ -17,8 +17,8 @@ import time
 from collections.abc import Callable
 from typing import Any
 
-from parts.world.broker import Broker, BrokerProtocolError, _SocketClient, decode_frame
-from parts.world.socket_bus import SocketBus
+from kernel.world.broker import Broker, BrokerProtocolError, _SocketClient, decode_frame
+from kernel.world.socket_bus import SocketBus
 
 
 def _pump(broker: Broker, broker_sock: socket.socket) -> None:
@@ -111,7 +111,7 @@ def test_close_is_idempotent():
 
 
 def test_set_bus_injects_the_adapter_and_the_real_bus_drives_it():
-    from parts.world import bus as busmod
+    from kernel.world import bus as busmod
 
     broker = Broker()
     sbus = _wire(broker)
@@ -128,8 +128,8 @@ def test_set_bus_injects_the_adapter_and_the_real_bus_drives_it():
 
 
 def test_maybe_wire_broker_is_a_noop_when_unset():
-    from parts.world import bus as busmod
-    from parts.world.socket_bus import maybe_wire_broker
+    from kernel.world import bus as busmod
+    from kernel.world.socket_bus import maybe_wire_broker
 
     before = busmod.get_bus()
     assert maybe_wire_broker({}) is None  # env not set
@@ -138,9 +138,9 @@ def test_maybe_wire_broker_is_a_noop_when_unset():
 
 
 def test_maybe_wire_broker_connects_and_injects_when_set():
-    from parts.world import bus as busmod
-    from parts.world.broker import serve
-    from parts.world.socket_bus import maybe_wire_broker
+    from kernel.world import bus as busmod
+    from kernel.world.broker import serve
+    from kernel.world.socket_bus import maybe_wire_broker
 
     server = serve("127.0.0.1", 0)
     host, port = server.server_address
@@ -159,8 +159,8 @@ def test_maybe_wire_broker_connects_and_injects_when_set():
 
 def test_serve_and_connect_deliver_across_the_daemon():
     # The one loopback test: a real broker daemon on an ephemeral port, two clients over connect().
-    from parts.world.broker import serve
-    from parts.world.socket_bus import connect
+    from kernel.world.broker import serve
+    from kernel.world.socket_bus import connect
 
     server = serve("127.0.0.1", 0)
     host, port = server.server_address

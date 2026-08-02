@@ -60,7 +60,7 @@ character-store, job-progress) with in-memory + SQL adapters. See `docs/database
 `docs/adr/0001-canonical-state.md`, `0002-derive-dont-store.md`, `0004-state-as-data.md`.
 
 **Content:** the world is data -- `seeds/<world>/*.yaml` validated by loader gates in
-`parts/world/seed.py`. **81** `parts/world/*.py` modules; aethryn boots ~53k rooms at demo scale,
+`kernel/world/seed.py`. **81** `kernel/world/*.py` modules; aethryn boots ~53k rooms at demo scale,
 ~1,000,000 at `CODEFORGE_WILD_SCALE=19`.
 
 **Clients (sibling repos):** `../codeforge-client` (terminal-first + native **PySide6/Qt** desktop,

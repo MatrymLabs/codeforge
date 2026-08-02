@@ -14,7 +14,7 @@ import random
 from collections.abc import Callable
 
 from kernel.shelf.retry import RetryPolicy, run_with_retries
-from parts.world.session import Session
+from kernel.world.session import Session
 
 _POLICY = RetryPolicy(max_attempts=4, base_delay=0.0)  # zero delay: never block the tick
 _rng_override: Callable[[], float] | None = None

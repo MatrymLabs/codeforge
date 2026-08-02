@@ -19,8 +19,8 @@ _REPO = Path(__file__).resolve().parent.parent
 # Runs INSIDE the aethryn subprocess. Any failed assert exits non-zero; the parent checks that.
 _PLAYTHROUGH = r"""
 import forge
-from parts.world.session import Session
-from parts.world.world import START_ROOM, WORLD
+from kernel.world.session import Session
+from kernel.world.world import START_ROOM, WORLD
 
 s = Session(player_id="hero", location=START_ROOM)
 s.named = True  # a proven hero (so an Order can be sworn)

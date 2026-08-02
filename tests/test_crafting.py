@@ -1,4 +1,4 @@
-"""Test twin for parts/world/crafting.py -- the maker's loop: `craft <recipe>`.
+"""Test twin for kernel/world/crafting.py -- the maker's loop: `craft <recipe>`.
 
 Acceptance: a recipe consumes its material inputs from the inventory and mints its output; a bare
 `craft` lists what you can make; the verb is reachable through the engine tick. Refusal: an unknown
@@ -10,8 +10,8 @@ from __future__ import annotations
 
 import pytest
 
-from parts.world import crafting, items
-from parts.world.session import Session
+from kernel.world import crafting, items
+from kernel.world.session import Session
 
 # A recipe over first-forge items (the test seed): two forge wrenches make a healing draught.
 _RECIPES = {
@@ -114,7 +114,7 @@ def test_an_open_recipe_has_no_lock():
 
 
 def test_a_gated_recipe_is_locked_until_the_profession_level(monkeypatch):
-    from parts.world import professions
+    from kernel.world import professions
 
     monkeypatch.setattr(professions, "PROFESSIONS", _ALCHEMY)
     monkeypatch.setattr(crafting, "RECIPES", _GATED)
@@ -148,7 +148,7 @@ def test_an_order_gated_recipe_needs_the_sworn_order():
 
 
 def test_the_recipe_sheet_marks_a_locked_recipe(monkeypatch):
-    from parts.world import professions
+    from kernel.world import professions
 
     monkeypatch.setattr(professions, "PROFESSIONS", _ALCHEMY)
     monkeypatch.setattr(crafting, "RECIPES", _GATED)
@@ -157,7 +157,7 @@ def test_the_recipe_sheet_marks_a_locked_recipe(monkeypatch):
 
 
 def test_load_recipes_accepts_a_valid_gate(tmp_path):
-    from parts.world.seed import load_recipes
+    from kernel.world.seed import load_recipes
 
     p = tmp_path / "recipes.yaml"
     p.write_text(
@@ -173,7 +173,7 @@ def test_load_recipes_accepts_a_valid_gate(tmp_path):
 
 
 def test_load_recipes_rejects_an_unknown_gate_key(tmp_path):
-    from parts.world.seed import SeedError, load_recipes
+    from kernel.world.seed import SeedError, load_recipes
 
     p = tmp_path / "recipes.yaml"
     p.write_text("r:\n  makes: x\n  inputs: {y: 1}\n  requires: {level_up: 3}\n", encoding="utf-8")
@@ -182,7 +182,7 @@ def test_load_recipes_rejects_an_unknown_gate_key(tmp_path):
 
 
 def test_load_recipes_rejects_a_profession_gate_without_a_positive_level(tmp_path):
-    from parts.world.seed import SeedError, load_recipes
+    from kernel.world.seed import SeedError, load_recipes
 
     p = tmp_path / "recipes.yaml"
     p.write_text(
@@ -193,7 +193,7 @@ def test_load_recipes_rejects_a_profession_gate_without_a_positive_level(tmp_pat
 
 
 def test_load_recipes_rejects_a_non_string_profession(tmp_path):
-    from parts.world.seed import SeedError, load_recipes
+    from kernel.world.seed import SeedError, load_recipes
 
     p = tmp_path / "recipes.yaml"
     p.write_text(
@@ -205,7 +205,7 @@ def test_load_recipes_rejects_a_non_string_profession(tmp_path):
 
 
 def test_load_recipes_rejects_a_non_string_order(tmp_path):
-    from parts.world.seed import SeedError, load_recipes
+    from kernel.world.seed import SeedError, load_recipes
 
     p = tmp_path / "recipes.yaml"
     p.write_text("r:\n  makes: x\n  inputs: {y: 1}\n  requires: {order: 3}\n", encoding="utf-8")
@@ -214,7 +214,7 @@ def test_load_recipes_rejects_a_non_string_order(tmp_path):
 
 
 def test_load_recipes_accepts_an_order_only_gate(tmp_path):
-    from parts.world.seed import load_recipes
+    from kernel.world.seed import load_recipes
 
     p = tmp_path / "recipes.yaml"
     p.write_text(
@@ -251,7 +251,7 @@ def test_a_standing_gate_needs_the_reputation_tier(monkeypatch):
 
 
 def test_load_recipes_accepts_a_standing_gate(tmp_path):
-    from parts.world.seed import load_recipes
+    from kernel.world.seed import load_recipes
 
     p = tmp_path / "recipes.yaml"
     p.write_text(
@@ -262,7 +262,7 @@ def test_load_recipes_accepts_a_standing_gate(tmp_path):
 
 
 def test_load_recipes_rejects_a_standing_without_an_order(tmp_path):
-    from parts.world.seed import SeedError, load_recipes
+    from kernel.world.seed import SeedError, load_recipes
 
     p = tmp_path / "recipes.yaml"
     p.write_text(
@@ -273,7 +273,7 @@ def test_load_recipes_rejects_a_standing_without_an_order(tmp_path):
 
 
 def test_load_recipes_rejects_a_non_positive_standing(tmp_path):
-    from parts.world.seed import SeedError, load_recipes
+    from kernel.world.seed import SeedError, load_recipes
 
     p = tmp_path / "recipes.yaml"
     p.write_text(

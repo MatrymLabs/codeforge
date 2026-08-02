@@ -1,4 +1,4 @@
-"""Test twin for parts/world/durability.py -- gear wears and breaks; repair is the coin sink.
+"""Test twin for kernel/world/durability.py -- gear wears and breaks; repair is the coin sink.
 
 Acceptance: a gear piece reads full until worn, wears (floored at 0), breaks at 0, and repairs to
 full; repair_cost/repair_session charge coins per point and mend everything worn. Consequence: a
@@ -13,11 +13,11 @@ import copy
 
 import pytest
 
-from parts.world import durability, items
-from parts.world.characters import reclone_item, snapshot_item
-from parts.world.equipment import equip, gear_score
-from parts.world.jobs import bind_calling
-from parts.world.session import Session
+from kernel.world import durability, items
+from kernel.world.characters import reclone_item, snapshot_item
+from kernel.world.equipment import equip, gear_score
+from kernel.world.jobs import bind_calling
+from kernel.world.session import Session
 
 
 @pytest.fixture(autouse=True)

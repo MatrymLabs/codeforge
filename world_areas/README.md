@@ -1,7 +1,7 @@
 # world_areas -- the area bench
 
 Generated areas wait here between generation and publication. Each is one JSON file written by the
-`world` developer tool (`parts/world/area_store.py`):
+`world` developer tool (`kernel/world/area_store.py`):
 
 ```
 python -m tools.world generate-area veridia --seed 7   # forge a cave, save it here, preview it

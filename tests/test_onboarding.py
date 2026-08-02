@@ -30,7 +30,7 @@ def test_run_demo_is_a_full_non_game_transcript():
 
 def test_one_core_powers_both_the_game_quest_and_the_practical_workflow():
     # The whole point of the vertical slice: the SAME engine class drives both adapters.
-    from parts.world import quest
+    from kernel.world import quest
 
     game_engine = quest._QUESTS["coilward_contract"].engine  # the game quest (the built-in arc)
     assert isinstance(game_engine, WorkflowEngine)

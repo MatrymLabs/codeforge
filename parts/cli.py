@@ -90,7 +90,7 @@ def _cmd_grant(args: list[str]) -> int:
     if len(args) != 3:
         print(USAGE)
         return 1
-    from parts.world.characters import set_rank
+    from kernel.world.characters import set_rank
 
     print(set_rank(args[1], args[2]))
     return 0
@@ -100,7 +100,7 @@ def _cmd_migrate(args: list[str]) -> int:
     if len(args) != 3:
         print(USAGE)
         return 1
-    from parts.world.accounts import migrate
+    from kernel.world.accounts import migrate
 
     print(migrate(args[1], args[2]))
     return 0
@@ -129,7 +129,7 @@ def _cmd_web(args: list[str]) -> int:
 
 
 def _cmd_migrate_db(args: list[str]) -> int:
-    from parts.world.accounts import import_legacy_json
+    from kernel.world.accounts import import_legacy_json
 
     print(import_legacy_json())
     return 0
@@ -141,7 +141,7 @@ def _cmd_passwd(args: list[str]) -> int:
         return 1
     import getpass
 
-    from parts.world.accounts import rotate_account_secret
+    from kernel.world.accounts import rotate_account_secret
 
     pw = getpass.getpass(f"New password for {args[1]}: ")
     again = getpass.getpass("Type it again: ")

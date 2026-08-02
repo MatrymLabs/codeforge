@@ -15,8 +15,8 @@ import pytest
 from hypothesis import given, settings
 from hypothesis import strategies as st
 
+from kernel.world.session import Session
 from parts.commands import ADMIN, CORE, Command, CommandSet
-from parts.world.session import Session
 
 _ADMIN_MARKER = "OWNER-ONLY-RAN"  # the admin handler's output; it must never surface for a player
 

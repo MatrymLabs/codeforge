@@ -1,4 +1,4 @@
-"""Test twin for parts/world/rumors.py -- town gossip that points at real nearby content.
+"""Test twin for kernel/world/rumors.py -- town gossip that points at real nearby content.
 
 Acceptance: a resident of a dungeon-bearing zone gains a `rumor` topic (and a woven greeting) naming
 that zone's dungeon and the relic it guards. Refusal: a town in a dungeonless zone is left silent;
@@ -7,9 +7,9 @@ merchants keep to their wares. Determinism: the relic named is the one relics.fo
 
 from __future__ import annotations
 
-from parts.world.relics import forge_relic
-from parts.world.rumors import seed_rumors
-from parts.world.seed import Npc
+from kernel.world.relics import forge_relic
+from kernel.world.rumors import seed_rumors
+from kernel.world.seed import Npc
 
 _ZONES = [
     {"name": "Duskwood Vale", "rooms": ["ravenwatch", "the_black_hollow"], "level_max": 50},

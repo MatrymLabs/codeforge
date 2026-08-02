@@ -1,4 +1,4 @@
-"""Test twin for parts/world/audit.py -- the tamper-evident admin/economy log.
+"""Test twin for kernel/world/audit.py -- the tamper-evident admin/economy log.
 
 Acceptance: record appends an entry that tail reads back with its who/what/detail; verify passes
 on a clean chain and fails once a past record is tampered. Refusal: an unwritable audit path is
@@ -7,7 +7,7 @@ swallowed (logging must never abort the action it records). The path is quaranti
 
 from __future__ import annotations
 
-from parts.world import audit
+from kernel.world import audit
 
 
 def test_record_and_tail_round_trip_an_entry():

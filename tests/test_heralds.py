@@ -2,8 +2,8 @@
 
 import pytest
 
+from kernel.world.session import SESSIONS, Session
 from parts.heralds import _REGISTRY, heralds, reset_heralds
-from parts.world.session import SESSIONS, Session
 
 
 @pytest.fixture(autouse=True)

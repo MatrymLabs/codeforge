@@ -9,7 +9,7 @@
 # archive; the rumour is left unproven. Five subareas, three voices (an archivist, a terrace-keeper, a
 # delve-warden) that cross-reference, two dangers, a glowcap gather node on the fungal terraces and a
 # keeper who buys its yield (a working economy), and readable archive lore. Installed by
-# parts/world/authored_towns.py; its quests are quests/lumengrotto_archive.yaml (a fetch, Knowing) and
+# kernel/world/authored_towns.py; its quests are quests/lumengrotto_archive.yaml (a fetch, Knowing) and
 # quests/lumengrotto_gallery.yaml (a hunt of a different shape, Gathering).
 
 rooms:

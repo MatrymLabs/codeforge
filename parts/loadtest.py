@@ -88,7 +88,7 @@ def run_load(
         raise LoadError("rotation must name at least one command")
 
     from forge import handle_command  # lazy: the tick is the top; parts do not import it eagerly
-    from parts.world.session import Session
+    from kernel.world.session import Session
 
     # Warm up single-threaded so first-call import/cache building never races across the workers.
     warm = Session(player_id="_load_warm")

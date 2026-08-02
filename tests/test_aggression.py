@@ -1,4 +1,4 @@
-"""Test twin for parts/world/aggression.py -- proactive NPCs that strike on the world beat.
+"""Test twin for kernel/world/aggression.py -- proactive NPCs that strike on the world beat.
 
 Acceptance: an aggressive NPC sharing the player's room opens with a strike each tick,
 reachable through the engine tick (handle_command), and lands exactly one blow per beat
@@ -11,18 +11,18 @@ import copy
 
 import pytest
 
-from parts.world import npcs
-from parts.world.aggression import LEASH, menace
-from parts.world.combat import open_strike
-from parts.world.jobs import bind_calling
-from parts.world.seed import Npc
-from parts.world.session import SESSIONS, Session
+from kernel.world import npcs
+from kernel.world.aggression import LEASH, menace
+from kernel.world.combat import open_strike
+from kernel.world.jobs import bind_calling
+from kernel.world.seed import Npc
+from kernel.world.session import SESSIONS, Session
 
 
 @pytest.fixture(autouse=True)
 def fresh_world():
     # Restore in place (clear + update, never rebind): aggression/combat hold
-    # `from parts.world.npcs import NPCS`, so rebinding npcs.NPCS would strand that alias.
+    # `from kernel.world.npcs import NPCS`, so rebinding npcs.NPCS would strand that alias.
     npcs_snap = copy.deepcopy(npcs.NPCS)
     SESSIONS.clear()
     yield
@@ -136,7 +136,7 @@ def test_answering_a_foe_re_engages_the_leash():
 def test_a_dazed_foe_skips_its_strike_and_the_daze_wears_off():
     """Crowd control: a dazed aggressive foe does not strike on the beat, the player takes no hit,
     and the daze counts down and clears - then it resumes its assault."""
-    from parts.world.combat import apply_daze
+    from kernel.world.combat import apply_daze
 
     s = _fighter()
     foe = npcs.NPCS[_spawn_aggressor(atk=8, hp=50)]
@@ -160,7 +160,7 @@ def test_a_dazed_foe_skips_its_strike_and_the_daze_wears_off():
 def test_a_dazed_foe_does_not_press_the_leash():
     """While it reels, an aggressive foe does not advance its leash, so daze buys real respite, not
     just a skipped beat that still counts toward breaking off."""
-    from parts.world.combat import apply_daze
+    from kernel.world.combat import apply_daze
 
     s = _fighter()
     label = _spawn_aggressor(atk=8, hp=50)
@@ -227,8 +227,8 @@ def test_open_strike_from_a_passive_npc_lands_nothing():
 
 
 def test_a_foe_strikes_the_top_threat_hero_not_the_actor():
-    from parts.world import threat
-    from parts.world.events import bind_echo, unbind_echo
+    from kernel.world import threat
+    from kernel.world.events import bind_echo, unbind_echo
 
     threat._reset()
     actor = _fighter(job="scholar")  # matrym: low threat, whose beat this is
@@ -254,9 +254,9 @@ def test_a_foe_strikes_the_top_threat_hero_not_the_actor():
 def test_damage_through_combat_draws_the_foe_onto_the_damager():
     # End to end: a hero who hurts the foe (land_hit -> threat.add) becomes its target on the beat,
     # even though a different hero's tick drives the world.
-    from parts.world import threat
-    from parts.world.combat import attack
-    from parts.world.events import bind_echo, unbind_echo
+    from kernel.world import threat
+    from kernel.world.combat import attack
+    from kernel.world.events import bind_echo, unbind_echo
 
     threat._reset()
     actor = _fighter(job="scholar")  # never attacks

@@ -45,12 +45,12 @@ Engine metrics use the command noted at each row (for example, test count is
 
 > **Re-baseline note (2026-07-31).** Several systems this scorecard first listed as
 > *absent/blocking* have since shipped and are verified in code. Retired from the gap and
-> risk lists this pass: loose-item persistence (`parts/world/loose_store.py`, `loose_items`
-> table), the combat trinity seams (`parts/world/threat.py` + ally-targeted heals in
-> `parts/world/abilities.py`), daily/weekly lockouts (`parts/world/lockouts.py`), the
-> auction house (`parts/world/auction.py`, `auction_listings` table), the durability/repair
-> coin sink (`parts/world/durability.py`), the guild item-vault (`parts/world/guild.py`),
-> and mail attachments (`parts/world/mail.py`). Measured counts and the DB-table list were
+> risk lists this pass: loose-item persistence (`kernel/world/loose_store.py`, `loose_items`
+> table), the combat trinity seams (`kernel/world/threat.py` + ally-targeted heals in
+> `kernel/world/abilities.py`), daily/weekly lockouts (`kernel/world/lockouts.py`), the
+> auction house (`kernel/world/auction.py`, `auction_listings` table), the durability/repair
+> coin sink (`kernel/world/durability.py`), the guild item-vault (`kernel/world/guild.py`),
+> and mail attachments (`kernel/world/mail.py`). Measured counts and the DB-table list were
 > refreshed from `python tools/census.py`. The completion estimates below are still
 > Low-confidence engineering estimates; the three dimensions whose substrate materially grew
 > (combat, social, economy) were nudged up this pass and are flagged.

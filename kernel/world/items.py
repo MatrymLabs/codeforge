@@ -1,0 +1,200 @@
+"""CARD: items -- objects, containment, take/drop/inventory.
+
+Design rule: an item stores its own location. Nothing else does.
+Locations are tagged strings: "room:library" (a room) or "player:<id>" (one hero's hands, via
+`carrier(player_id)`). The per-player carrier tag is what keeps two logged-in heroes from sharing
+one inventory: containment is a query (`items_in`), so the carrier MUST be unique per hero. The bare
+"player" tag is a legacy shared bucket still accepted by `clone` for tests; the game never uses it.
+Items are born from the seed (seeds/first-forge/items.yaml).
+Functions RETURN text; the game loop decides what to print.
+"""
+
+import copy
+
+from kernel.world.seed import SEED_DIR, Item, load_items
+
+ITEMS: dict[str, Item] = load_items(SEED_DIR / "items.yaml")
+
+# Prototypes: the seed templates, captured pristine at load. A seed label is a PROTOTYPE (a
+# template); runtime items are INSTANCES cloned from it. Keeping the templates apart from the
+# live instances lets clone() mint a fresh one even after every instance has left play -- the
+# spawn primitive repop, loot, and @sg all build on. Instancing generalizes what @sg already
+# did (mint a unique label); a seed-placed item is simply its own first instance.
+PROTOTYPES: dict[str, Item] = {label: copy.deepcopy(item) for label, item in ITEMS.items()}
+
+
+# Hard ceiling on how many live instances one prototype may have at once. Persisting clones means
+# they can accumulate across save/load, so an unbounded spawner is a growth/DoS risk; clone()
+# refuses past this ceiling. A gameplay-tuned per-prototype cap (the Diku "max exists" rule) is a
+# spawn-policy concern for a later slice; this is the safety ceiling beneath it.
+MAX_INSTANCES_PER_PROTOTYPE = 256
+
+
+class ItemError(ValueError):
+    """A bad item operation (e.g. cloning an unknown prototype): fail loud."""
+
+
+def register_prototypes(new: dict[str, Item]) -> None:
+    """Register GENERATED item prototypes into the live table AND the prototype registry, so a foe's
+    drop can be cloned from them. PROTOTYPES is snapshotted at this module's import; a generator
+    forges gear during world assembly (kernel.world.armory) runs later, so its prototypes must be
+    registered here rather than only appended to ITEMS -- otherwise clone() cannot find them."""
+    for label, item in new.items():
+        ITEMS[label] = item
+        PROTOTYPES[label] = copy.deepcopy(item)
+
+
+def prototype_of(iid: str) -> str:
+    """The prototype label an item is an instance of (its own id if it declares none). Callers
+    match items by prototype -- a door's key, a quest's pickup -- so a clone counts as the real
+    thing."""
+    item = ITEMS.get(iid)
+    return item.get("prototype", iid) if item else iid
+
+
+def count_instances(prototype: str) -> int:
+    """How many live items are instances of this prototype (the seed item counts as one)."""
+    return sum(1 for iid in ITEMS if prototype_of(iid) == prototype)
+
+
+def is_clone(iid: str) -> bool:
+    """True if this item is a SPAWNED instance of a seed prototype -- not the seed item itself,
+    and not an @sg runtime creation (whose prototype is its own, unseeded label)."""
+    proto = prototype_of(iid)
+    return iid != proto and proto in PROTOTYPES
+
+
+def drop_clones() -> None:
+    """Remove every spawned instance of a seed prototype (keep the seed items and @sg creations).
+    Used on restore so the snapshot's clone set is authoritative and stale clones never pile up."""
+    for iid in [iid for iid in ITEMS if is_clone(iid)]:
+        del ITEMS[iid]
+
+
+def restore_instance(iid: str, prototype: str, location: str) -> None:
+    """Rebuild a persisted instance at its EXACT id (so clones round-trip through save/load).
+    `location` is the already-tagged string as stored. Fails loud on an unknown prototype."""
+    template = PROTOTYPES.get(prototype)
+    if template is None:
+        raise ItemError(f"cannot restore instance {iid!r}: unknown prototype {prototype!r}")
+    ITEMS[iid] = Item(
+        name=template["name"],
+        keywords=list(template["keywords"]),
+        location=location,
+        slot=template["slot"],
+        mods=dict(template["mods"]),
+        prototype=prototype,
+    )
+
+
+def _mint_instance_id(prototype: str) -> str:
+    """A fresh, unique instance id for a prototype: the clean label for the first, then
+    `<prototype>_2`, `_3`, ... so cloning a prototype twice yields two distinct instances."""
+    if prototype not in ITEMS:
+        return prototype  # the first instance keeps the clean label
+    n = 2
+    while f"{prototype}_{n}" in ITEMS:
+        n += 1
+    return f"{prototype}_{n}"
+
+
+def clone(prototype: str, location: str) -> str:
+    """Mint a new INSTANCE of a prototype item at a location; returns its instance id. This is the
+    spawn primitive: repop, loot drops, and system generation all place fresh instances this way.
+    `location` may be a room label, a tagged `room:<label>`, or `player`. Raises ItemError on an
+    unknown prototype (fail loud, never spawn a ghost)."""
+    template = PROTOTYPES.get(prototype)
+    if template is None:
+        raise ItemError(f"unknown item prototype {prototype!r}; cannot clone it")
+    if count_instances(prototype) >= MAX_INSTANCES_PER_PROTOTYPE:
+        raise ItemError(
+            f"prototype {prototype!r} is at its instance ceiling ({MAX_INSTANCES_PER_PROTOTYPE}); "
+            "refusing to spawn more (bounds runaway growth)"
+        )
+    iid = _mint_instance_id(prototype)
+    # A carrier tag ("player:<id>", or the legacy shared "player") passes through unchanged; any
+    # other value is a room. This is what lets an item be minted straight into one hero's hands.
+    if location == "player" or location.startswith("player:"):
+        tagged = location
+    else:
+        tagged = f"room:{location.removeprefix('room:')}"
+    ITEMS[iid] = Item(
+        name=template["name"],
+        keywords=list(template["keywords"]),
+        location=tagged,
+        slot=template["slot"],
+        mods=dict(template["mods"]),
+        prototype=prototype,
+    )
+    if template.get("consume"):  # a cloned potion keeps its one-shot effect
+        ITEMS[iid]["consume"] = dict(template["consume"])
+    return iid
+
+
+def items_in(location: str) -> list[str]:
+    """All item ids currently at a location. Containment is a query."""
+    return [iid for iid, item in ITEMS.items() if item["location"] == location]
+
+
+def trace_item(word: str, location: str) -> str | None:
+    """Match a player's word against keywords of items at a location."""
+    for iid in items_in(location):
+        if word in ITEMS[iid]["keywords"]:
+            return iid
+    return None
+
+
+def carrier(player_id: str) -> str:
+    """The inventory-location tag for one hero's hands. A per-player tag (not a shared "player"
+    bucket) is what keeps two logged-in heroes from carrying the same items: containment is a query
+    (`items_in`), so the carrier must be unique per hero or their bags bleed together."""
+    return f"player:{player_id}"
+
+
+def take(word: str, room_id: str, owner: str) -> str:
+    iid = trace_item(word, f"room:{room_id}")
+    if iid is None:
+        return "You don't see that here."
+    ITEMS[iid]["location"] = owner
+    return f"You take {ITEMS[iid]['name']}."
+
+
+def drop(word: str, room_id: str, owner: str) -> str:
+    iid = trace_item(word, owner)
+    if iid is None:
+        return "You aren't carrying that."
+    ITEMS[iid]["location"] = f"room:{room_id}"
+    return f"You drop {ITEMS[iid]['name']}."
+
+
+def read_item(word: str, room_id: str, owner: str) -> str:
+    """`read <item>`: show an item's readable lore. Looks in your hands first, then the room, so a
+    lore book you carry or an inscription in the room both read. Refuses loud on a miss, and says so
+    plainly when a thing carries no writing (a sword is not a story)."""
+    if not word.strip():
+        return "Read what?"
+    word = word.strip().lower()
+    iid = trace_item(word, owner) or trace_item(word, f"room:{room_id}")
+    if iid is None:
+        return "You don't see that to read."
+    item = ITEMS[iid]
+    lore = item.get("lore")
+    if not lore:
+        return f"There is nothing written on {item['name']}."
+    return f"You read {item['name']}:\n{lore}"
+
+
+def inventory_text(owner: str) -> str:
+    carried = items_in(owner)
+    if not carried:
+        return "You are carrying nothing."
+    lines = "\n".join(f"  {ITEMS[iid]['name']}" for iid in carried)
+    return f"You are carrying:\n{lines}"
+
+
+def room_items_text(room_id: str) -> str:
+    """Extra line(s) for room rendering. Empty string if nothing here."""
+    here = items_in(f"room:{room_id}")
+    if not here:
+        return ""
+    return "\n".join(f"You see {ITEMS[iid]['name']} here." for iid in here)

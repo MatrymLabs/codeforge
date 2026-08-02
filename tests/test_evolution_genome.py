@@ -32,8 +32,8 @@ def _genome(**over: object) -> BlueprintGenome:
         purpose="Evolve a readable, fast score-sheet renderer.",
         interfaces=("render_score_sheet(sheet, mode) -> str",),
         invariants=("mutates nothing", "computes no formulas"),
-        allowed_dependencies=("parts.world.score_sheet",),
-        prohibited_dependencies=("parts.world.db",),
+        allowed_dependencies=("kernel.world.score_sheet",),
+        prohibited_dependencies=("kernel.world.db",),
         resource_budgets=(("render_us", "50"),),
         test_obligations=("golden snapshot pins the format",),
         documentation_obligations=("CARD docstring",),
@@ -81,7 +81,7 @@ def test_a_bad_seed_fails_loud() -> None:
 def test_an_illegal_dependency_combination_is_blocked() -> None:
     # DNA-like constraint: a dependency cannot be both allowed and prohibited.
     genome = _genome(
-        allowed_dependencies=("parts.world.db",), prohibited_dependencies=("parts.world.db",)
+        allowed_dependencies=("kernel.world.db",), prohibited_dependencies=("kernel.world.db",)
     )
     results = {r.rule_id: r for r in check_constraints(genome)}
     assert results["GEN07"].blocking

@@ -7,9 +7,9 @@ tests, and removable without touching the domain.
 
 ## The rule it enforces
 
-A domain module in `parts/world/` describes the *game*, not the *database*. When SQLAlchemy `select`,
+A domain module in `kernel/world/` describes the *game*, not the *database*. When SQLAlchemy `select`,
 sessions, and ORM rows appear inside a domain module, the framework has leaked past its seam
-(`parts/world/db.py`): the module can no longer be read, tested, or reused without the framework, and
+(`kernel/world/db.py`): the module can no longer be read, tested, or reused without the framework, and
 the game's rules are tangled with one storage technology.
 
 The fix is a **port and adapter**:
@@ -25,16 +25,16 @@ The domain imports the port. It never imports the framework.
 
 ## The worked example: job progression
 
-Before, `parts/world/job_progress.py` held both the `JobProgress` value object *and* the SQLAlchemy
+Before, `kernel/world/job_progress.py` held both the `JobProgress` value object *and* the SQLAlchemy
 queries. After:
 
 | Piece | Lives in | Knows about |
 | --- | --- | --- |
-| `JobProgress` (value object) | `parts/world/job_progress.py` | nothing but itself |
-| `JobProgressStore` (the port) | `parts/world/job_progress.py` | the domain contract only |
-| `InMemoryJobProgressStore` | `parts/world/job_progress.py` | plain dicts |
-| `SqlJobProgressStore` (the adapter) | `parts/world/job_progress_sql.py` | SQLAlchemy + `parts/world/db.py` |
-| `load_job_progress` / `save_job_progress` | `parts/world/job_progress.py` | delegate to a store (SQL by default) |
+| `JobProgress` (value object) | `kernel/world/job_progress.py` | nothing but itself |
+| `JobProgressStore` (the port) | `kernel/world/job_progress.py` | the domain contract only |
+| `InMemoryJobProgressStore` | `kernel/world/job_progress.py` | plain dicts |
+| `SqlJobProgressStore` (the adapter) | `kernel/world/job_progress_sql.py` | SQLAlchemy + `kernel/world/db.py` |
+| `load_job_progress` / `save_job_progress` | `kernel/world/job_progress.py` | delegate to a store (SQL by default) |
 
 `job_progress.py` now imports no framework. `SqlJobProgressStore` still imports SQLAlchemy **lazily,
 inside its methods**, so `import forge` never pays the ~400ms ORM import for the value object alone
@@ -43,7 +43,7 @@ inside its methods**, so `import forge` never pays the ~400ms ORM import for the
 ## Why the wrappers stayed
 
 `load_job_progress(name)` and `save_job_progress(name, records)` are unchanged for every existing
-caller (`parts/world/characters.py`). They now take an optional `store=` argument and default to the
+caller (`kernel/world/characters.py`). They now take an optional `store=` argument and default to the
 SQL adapter, so behaviour is identical in production and injectable in a test. **Behaviour preserved;
 only the seam moved.**
 
@@ -65,7 +65,7 @@ doctrine requires: the framework is a plugged-in adapter, not a load-bearing par
 ## Batch 2: the account-credential seam (auth, extra care)
 
 The second boundary is auth-critical, so it was extracted with a tighter scope than job progression.
-`parts/world/accounts.py` mixed **stdlib crypto** (salted pbkdf2, constant-time compare, a
+`kernel/world/accounts.py` mixed **stdlib crypto** (salted pbkdf2, constant-time compare, a
 missing-principal timing decoy, generic refusals - already framework-free) with **SQLAlchemy
 `AccountRow` access**. Only the second thing is a leak.
 
@@ -80,7 +80,7 @@ call stays in `accounts.py`, still hit by the timing-spy tests that hook `accoun
 | `create(account, salt_hex, hash_hex)` | insert a new account (caller confirmed it is new) |
 | `set_secret(account, salt_hex, hash_hex)` | rotate an existing account; missing is a no-op |
 
-`SqlAccountCredentialStore` (in `parts/world/accounts_sql.py`, MOD-04.063) is the only place that
+`SqlAccountCredentialStore` (in `kernel/world/accounts_sql.py`, MOD-04.063) is the only place that
 touches the `accounts` table; `InMemoryAccountCredentialStore` is a dict. Every AccountRow access
 (`register`, `inspect_login`, `rotate_account_secret`, `reforge_secret`, `migrate`,
 `import_legacy_json`, `account_password_ok`) now runs through the port. The public signatures gained
@@ -102,13 +102,13 @@ per-character password onto an account (`retire_v1_and_set_account`), and the ow
 account *credential*, and distinct again from a character's gameplay columns (which stay with
 `characters.py` - a larger seam, not this batch).
 
-The port is `MembershipStore` (in `parts/world/membership.py`); the adapter is `SqlMembershipStore`
-(in `parts/world/membership_sql.py`, MOD-04.065), the only place those columns are touched for auth.
+The port is `MembershipStore` (in `kernel/world/membership.py`); the adapter is `SqlMembershipStore`
+(in `kernel/world/membership_sql.py`, MOD-04.065), the only place those columns are touched for auth.
 The in-memory adapter is seeded with the characters that exist (`name -> (account, rank)`), so the
 contract runs without a database. `inspect_login`, `adopt`, `migrate`, `account_has_owner`, and
 `import_legacy_json` now take a trailing optional `membership=` and route through the port.
 
-The payoff: **`parts/world/accounts.py` now imports no ORM row at all.** Credentials sit behind
+The payoff: **`kernel/world/accounts.py` now imports no ORM row at all.** Credentials sit behind
 `AccountCredentialStore`, membership behind `MembershipStore`; the module holds only crypto policy and
 composition. `tests/test_membership_store.py` runs the contract against both adapters and proves
 `adopt`/`account_has_owner`/`inspect_login` run over injected in-memory stores with no database. The
@@ -116,10 +116,10 @@ composition. `tests/test_membership_store.py` runs the contract against both ada
 
 ## Batch 4: the character-persistence seam (the keel)
 
-The core character persistence in `parts/world/characters.py` (`load_character`, `put_record`,
+The core character persistence in `kernel/world/characters.py` (`load_character`, `put_record`,
 `save_character`, `set_rank`) is the central saved-state model - a keel-level change, done with Josh's
-explicit go-ahead. The port is `CharacterStore` (in `parts/world/character_store.py`); the adapter is
-`SqlCharacterStore` (in `parts/world/character_store_sql.py`, MOD-04.067), the only place the
+explicit go-ahead. The port is `CharacterStore` (in `kernel/world/character_store.py`); the adapter is
+`SqlCharacterStore` (in `kernel/world/character_store_sql.py`, MOD-04.067), the only place the
 `characters` table is read or written for a hero's row. `characters.py` now builds a
 `CharacterRecord` from a Session or a casefile and reads it back - it touches no ORM.
 
@@ -136,13 +136,13 @@ test pins it directly on both adapters (`test_upsert_gameplay_saves_state_but_ne
 and again through the public doors. The `restore_character` door was already framework-free (it works
 on a casefile and a Session), so it is unchanged.
 
-With this, every domain module in `parts/world/` is framework-free; SQLAlchemy lives only in `db.py`,
+With this, every domain module in `kernel/world/` is framework-free; SQLAlchemy lives only in `db.py`,
 the `*_sql.py` adapters, and `schema_guard.py` (a schema diagnostic that is *about* the database and so
 legitimately holds it).
 
 ## The template for the next boundary
 
-1. Find a framework leaking into a `parts/world/` domain module.
+1. Find a framework leaking into a `kernel/world/` domain module.
 2. Name a narrow `Protocol` the domain owns (the port).
 3. Move the framework code into a new `*_sql.py` (or `*_<tech>.py`) adapter that implements the port.
 4. Add a pure in-memory adapter.
@@ -152,4 +152,4 @@ legitimately holds it).
    it automatically.
 8. Run `make check` and ARC. Present evidence. Then, and only then, extract the next boundary.
 
-The next obvious candidate is `parts/world/accounts.py` (auth-critical - a heavier, later batch).
+The next obvious candidate is `kernel/world/accounts.py` (auth-critical - a heavier, later batch).

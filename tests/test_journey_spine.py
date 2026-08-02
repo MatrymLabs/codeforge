@@ -1,8 +1,8 @@
 """End-to-end JOURNEY gate: the Forgeward Road spine, walked to the endgame via waystone travel.
 
 The keel mission is a world that plays end to end. The engine had the two halves but not the seam
-between them: the campaign SPINE (`parts/world/spine.py`) is a main-road quest whose beats fire on
-ENTERING each zone hub in level order, and the WAYSTONE network (`parts/world/travel.py`) is how a
+between them: the campaign SPINE (`kernel/world/spine.py`) is a main-road quest whose beats fire on
+ENTERING each zone hub in level order, and the WAYSTONE network (`kernel/world/travel.py`) is how a
 player crosses a million-room world -- yet `travel()` teleported the player without firing the
 `on_enter` beat, so the main road never advanced when you crossed the world the intended way. The
 through-line was dark exactly where a real playthrough lives.
@@ -23,11 +23,11 @@ import copy
 
 import pytest
 
-from parts.world import quest as questmod
-from parts.world.jobs import bind_calling
-from parts.world.session import Session
-from parts.world.spine import forge_spine
-from parts.world.travel import travel
+from kernel.world import quest as questmod
+from kernel.world.jobs import bind_calling
+from kernel.world.session import Session
+from kernel.world.spine import forge_spine
+from kernel.world.travel import travel
 
 # A four-zone world in level order -- the aethryn shape in miniature. Each zone's hub room is also
 # its waystone, exactly as the real seed emits it (waystones.yaml keys == zone hub room-ids).

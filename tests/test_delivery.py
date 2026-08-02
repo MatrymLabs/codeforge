@@ -1,4 +1,4 @@
-"""Test twin for parts/world/delivery.py -- 'carry a parcel from town A to town B' contracts.
+"""Test twin for kernel/world/delivery.py -- 'carry a parcel from town A to town B' contracts.
 
 Acceptance: each settlement consigns a parcel to its level-adjacent trade-partner; the quest is a
 two-beat arc (take the parcel, then arrive at the destination) and the generator mints the parcel
@@ -7,7 +7,7 @@ item at the source. Refusal: fewer than two settlements route nothing. Determini
 
 from __future__ import annotations
 
-from parts.world.delivery import (
+from kernel.world.delivery import (
     DELIVERY_PREFIX,
     PARCEL_PREFIX,
     generate_deliveries,

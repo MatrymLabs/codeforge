@@ -8,7 +8,7 @@
 # city; the rumour is left unproven. Five subareas, three voices (a guild-master, a caravan-broker, a
 # caravan-captain) that cross-reference, two dangers, a dustbloom gather node out on the dig-dunes and
 # a broker who buys its yield (a working economy), and readable dig lore. Installed by
-# parts/world/authored_towns.py; its quests are quests/sunscar_charter.yaml (a fetch, Gathering) and
+# kernel/world/authored_towns.py; its quests are quests/sunscar_charter.yaml (a fetch, Gathering) and
 # quests/sunscar_dunes.yaml (a hunt of a different shape, Warcraft).
 
 rooms:

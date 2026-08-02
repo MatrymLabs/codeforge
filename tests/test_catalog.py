@@ -1,7 +1,7 @@
 """Test twin for parts/catalog.py -- the numbered filing view."""
 
+from kernel.world.seed import Item, Npc, Room
 from parts.catalog import room_catalog
-from parts.world.seed import Item, Npc, Room
 
 
 def test_catalog_numbers_rooms_alphabetically():

@@ -125,7 +125,7 @@ dustbloom_salve:
 # --- takes a lower tier and mints the next, so a maker climbs RAW -> REFINED -> COMPONENT ->
 # --- PRODUCT rather than crafting raw materials straight into gear. See
 # --- docs/world/crafting_materials.md. Every input/output is cross-checked against items.yaml at
-# --- boot (parts.world.seed.load_recipes), so a chain can never reference a material that isn't real.
+# --- boot (kernel.world.seed.load_recipes), so a chain can never reference a material that isn't real.
 
 # METAL CHAIN: raw ore -> wrought ingot -> iron fitting -> a traveller's buckler.
 smelt_wrought_ingot:

@@ -11,21 +11,21 @@ from __future__ import annotations
 
 import pytest
 
-from parts.world.job_progress import (
+from kernel.world.job_progress import (
     InMemoryJobProgressStore,
     JobProgress,
     JobProgressStore,
     load_job_progress,
     save_job_progress,
 )
-from parts.world.job_progress_sql import SqlJobProgressStore
+from kernel.world.job_progress_sql import SqlJobProgressStore
 
 
 def _sql_store():
     """The SQL adapter over the tmp DB. The character FK must exist before job rows save, so a bare
     named character is persisted first (save_character writes the CharacterRow the FK needs)."""
-    from parts.world.characters import save_character
-    from parts.world.session import Session
+    from kernel.world.characters import save_character
+    from kernel.world.session import Session
 
     hero = Session(player_id="rowan", named=True, account="acct")
     save_character(hero)  # creates the character row the job_progress FK needs

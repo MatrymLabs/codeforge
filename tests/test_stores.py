@@ -1,4 +1,4 @@
-"""Test twin for parts/world/stores.py -- a general store (materials market) per settlement.
+"""Test twin for kernel/world/stores.py -- a general store (materials market) per settlement.
 
 Acceptance: raise_stores emits one store room (linked back OUT to the hub) plus a provisioner with a
 two-way materials shop (buys raw stock, sells it on at a spread) for every settlement;
@@ -9,8 +9,8 @@ absent from the world is skipped rather than crashing the boot.
 
 from __future__ import annotations
 
-from parts.world.seed import Room
-from parts.world.stores import raise_stores, wire_store_doors
+from kernel.world.seed import Room
+from kernel.world.stores import raise_stores, wire_store_doors
 
 _CONFIGS = [
     {"room": "veridia_town", "name": "Veridia", "zone": "veridia", "level": 5},

@@ -16,6 +16,6 @@ classifiers = [
 
 [tool.maturin]
 # Builds the Rust cdylib into an importable Python extension module `codeforge_nav`.
-# CodeForge imports it opportunistically (parts.world.navigation) and falls back to a pure-Python
+# CodeForge imports it opportunistically (kernel.world.navigation) and falls back to a pure-Python
 # implementation when the compiled wheel is absent, so the game never hard-depends on the native build.
 strip = true

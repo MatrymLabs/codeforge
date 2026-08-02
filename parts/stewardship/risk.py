@@ -17,8 +17,8 @@ from parts.stewardship.change import ChangeDescriptor
 # risk tier (and thus the required review depth): auth/authz, persistence, secrets/config, CI
 # workflows, and the network gateways.
 SECURITY_SURFACES: dict[str, tuple[str, ...]] = {
-    "auth/authorization": ("parts/world/accounts.py", "parts/world/ranks.py"),
-    "persistence": ("parts/world/db.py", "migrations/"),
+    "auth/authorization": ("kernel/world/accounts.py", "kernel/world/ranks.py"),
+    "persistence": ("kernel/world/db.py", "migrations/"),
     "secrets/config": (".env", ".secrets.baseline", "pyproject.toml"),
     "ci/workflows": (".github/workflows/",),
     "network/gateway": ("adapters/gateway.py", "parts/web_gateway.py", "adapters/api.py"),

@@ -10,8 +10,8 @@ from collections.abc import Iterator
 import pytest
 
 from forge import handle_command
+from kernel.world.session import SESSIONS, Session
 from parts.pm import ProjectMetrics, _recommended_next, pm_metrics, pm_status, project_metrics
-from parts.world.session import SESSIONS, Session
 
 # --- failure/edge branches (the "board is red/green" logic), injected deterministically ---
 

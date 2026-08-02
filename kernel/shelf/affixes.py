@@ -3,7 +3,7 @@
 A base weapon or piece of armour is a fixed prototype; this turns each DROP of it into a varied
 instance -- a rarity tier that scales the base mods, plus prefix/suffix affixes that add more -- so
 "a notched blade" can fall as "a Cruel notched blade of the Bear [rare]". It is the item-side of the
-generation lever (compare parts.world.spiral for the world side): one base yields a spread of gear.
+generation lever (compare kernel.world.spiral for the world side): one base yields a spread of gear.
 
 Pure + deterministic given an injected `random.Random` (like kernel.shelf.weighted_table); loot
 is reproducible in tests. It knows nothing about the game -- inputs are a name, a mods map, a level,
@@ -25,7 +25,7 @@ _RARITIES: tuple[tuple[str, int, float, int], ...] = (
 )
 
 # Affix name -> (derived stat it boosts, base amount before the level bonus). Prefixes lead the
-# name, suffixes trail it. All target the five derived combat stats (parts.world.stat_rules).
+# name, suffixes trail it. All target the five derived combat stats (kernel.world.stat_rules).
 _PREFIXES: tuple[tuple[str, str, int], ...] = (
     ("Cruel", "ATK", 3),
     ("Keen", "ACC", 3),

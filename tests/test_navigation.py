@@ -1,4 +1,4 @@
-"""Test twin for parts/world/navigation.py -- the world-graph kernel (Python + Rust parity).
+"""Test twin for kernel/world/navigation.py -- the world-graph kernel (Python + Rust parity).
 
 The pure-Python `PyNavGraph` is the reference and is always tested. When the native Rust kernel
 `codeforge_nav` is built (native/codeforge_nav via maturin), a PARITY test pins it to identical
@@ -13,8 +13,8 @@ import importlib.util
 
 import pytest
 
-from parts.world import navigation
-from parts.world.navigation import BACKEND, NavGraph, PyNavGraph
+from kernel.world import navigation
+from kernel.world.navigation import BACKEND, NavGraph, PyNavGraph
 
 _HAS_RUST = importlib.util.find_spec("codeforge_nav") is not None
 
@@ -78,7 +78,7 @@ def test_world_navgraph_is_cached_between_calls():
 
 
 def test_world_navgraph_rebuilds_when_the_world_is_swapped(monkeypatch):
-    import parts.world.world as world_mod
+    import kernel.world.world as world_mod
 
     first = navigation.world_navgraph()
     mini = {
@@ -118,8 +118,8 @@ def test_rust_matches_the_python_reference():
 
 def test_route_command_is_reachable_through_the_tick():
     import forge
-    from parts.world.session import Session
-    from parts.world.world import START_ROOM
+    from kernel.world.session import Session
+    from kernel.world.world import START_ROOM
 
     out = forge.handle_command(Session(player_id="walker", location=START_ROOM), "route")
     assert "Route to where" in out  # the verb is wired into the engine tick
@@ -127,8 +127,8 @@ def test_route_command_is_reachable_through_the_tick():
 
 def test_route_finds_a_path_between_two_real_rooms():
     import forge
-    from parts.world.session import Session
-    from parts.world.world import WORLD
+    from kernel.world.session import Session
+    from kernel.world.world import WORLD
 
     start = next(r for r, room in WORLD.items() if room.get("exits"))
     dest = WORLD[start]["exits"][next(iter(WORLD[start]["exits"]))]  # a direct neighbour
@@ -138,7 +138,7 @@ def test_route_finds_a_path_between_two_real_rooms():
 
 # --- route command edge cases (over a small monkeypatched world) --------------------------------
 def _mini_world(monkeypatch):
-    import parts.world.world as world_mod
+    import kernel.world.world as world_mod
 
     world = {
         "a": {"name": "A", "desc": "", "exits": {"north": "b"}},
@@ -148,24 +148,24 @@ def _mini_world(monkeypatch):
 
 
 def test_route_refuses_an_unknown_target(monkeypatch):
-    from parts.world.session import Session
-    from parts.world.travel import route
+    from kernel.world.session import Session
+    from kernel.world.travel import route
 
     _mini_world(monkeypatch)
     assert "no room called 'zzz'" in route(Session(player_id="w", location="a"), "zzz")
 
 
 def test_route_notices_you_are_already_there(monkeypatch):
-    from parts.world.session import Session
-    from parts.world.travel import route
+    from kernel.world.session import Session
+    from kernel.world.travel import route
 
     _mini_world(monkeypatch)
     assert "already there" in route(Session(player_id="w", location="a"), "a")
 
 
 def test_route_reports_no_path_on_foot(monkeypatch):
-    from parts.world.session import Session
-    from parts.world.travel import route
+    from kernel.world.session import Session
+    from kernel.world.travel import route
 
     _mini_world(monkeypatch)
     # b -> a has no directed path (a->b only)
@@ -173,8 +173,8 @@ def test_route_reports_no_path_on_foot(monkeypatch):
 
 
 def test_route_needs_a_destination(monkeypatch):
-    from parts.world.session import Session
-    from parts.world.travel import route
+    from kernel.world.session import Session
+    from kernel.world.travel import route
 
     _mini_world(monkeypatch)
     assert "Route to where" in route(Session(player_id="w", location="a"), "")

@@ -69,11 +69,11 @@ def run() -> dict[str, dict]:
     """Measure all five journeys and return {journey: stats}. Imports the real handlers."""
     from forge import handle_command
     from kernel.qualitygate import render_gate_all
+    from kernel.world import npcs
+    from kernel.world.jobs import bind_calling
+    from kernel.world.session import Session
     from parts.bench import benchmark as command_bench
     from parts.workshop import reuse_search
-    from parts.world import npcs
-    from parts.world.jobs import bind_calling
-    from parts.world.session import Session
 
     results: dict[str, dict] = {}
 
@@ -95,7 +95,7 @@ def run() -> dict[str, dict]:
     # 3. one combat sequence (single strike; reset dummy HP per rep so it is comparable) ---
     fighter = Session(player_id="_bench", location="courtyard")
     bind_calling(fighter, "vanguard")
-    from parts.world.npcs import trace_npc
+    from kernel.world.npcs import trace_npc
 
     dummy_id = trace_npc("dummy", "courtyard")
     assert dummy_id is not None, "expected a training dummy in courtyard"

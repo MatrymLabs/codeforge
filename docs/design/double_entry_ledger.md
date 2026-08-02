@@ -12,8 +12,8 @@ Part: `kernel/ledger.py` (MOD-10.048) · Consumes: `kernel/shelf/idempotency.py`
 ## Context and problem
 
 CodeForge's game economy is **single-entry**: a character's coins are one persisted integer
-(`parts/world/coinage.py`), mutated by a delta at each sink or source
-(`parts/world/character_store.py`). Single-entry is simple and it is what the game needs today, but
+(`kernel/world/coinage.py`), mutated by a delta at each sink or source
+(`kernel/world/character_store.py`). Single-entry is simple and it is what the game needs today, but
 it has a structural weakness a hiring manager recognizes instantly: **nothing enforces that money is
 conserved.** A bug that adds coins on one side without subtracting on the other silently mints
 currency; a crash between the two halves of a trade silently destroys it. The books can drift, and

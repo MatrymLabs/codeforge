@@ -1,6 +1,6 @@
 """Property tests: the economy's money-integrity invariants under the atomic player trade.
 
-The player-to-player trade (parts/world/trade.py) MOVES currency and items, so it is an economy
+The player-to-player trade (kernel/world/trade.py) MOVES currency and items, so it is an economy
 security boundary: a bug here is coin or item duplication or destruction. Hypothesis pins the
 invariants across hundreds of generated offers, not a handful of examples (Phase 9/12 of the
 developer-security campaign, economy + duplication testing):
@@ -20,9 +20,9 @@ import pytest
 from hypothesis import given, settings
 from hypothesis import strategies as st
 
-from parts.world import events, items, trade
-from parts.world.items import carrier, items_in
-from parts.world.session import SESSIONS, Session
+from kernel.world import events, items, trade
+from kernel.world.items import carrier, items_in
+from kernel.world.session import SESSIONS, Session
 
 _A, _B = "alia", "bram"
 

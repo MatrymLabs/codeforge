@@ -10,9 +10,9 @@ from collections.abc import Iterator
 import pytest
 
 from forge import handle_command
+from kernel.world.items import ITEMS
+from kernel.world.session import SESSIONS, Session
 from parts.generate import generate_item, load_patterns, system_generate
-from parts.world.items import ITEMS
-from parts.world.session import SESSIONS, Session
 
 _PATTERNS = {
     "excalibur": {"name": "Excalibur, the drawn blade", "keywords": ["excalibur", "sword"]},

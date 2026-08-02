@@ -1,4 +1,4 @@
-"""Test twin for parts/world/zone_story.py -- the Zone Story Framework.
+"""Test twin for kernel/world/zone_story.py -- the Zone Story Framework.
 
 Acceptance: a zone's story composes its filed pieces (place, tale, warden, lore, work) and renders
 a dossier; the `region` view names the player's zone or the wilds. Completeness (governance):
@@ -7,8 +7,8 @@ on the live world, a dungeon zone reports its full depths (a warden implies its 
 
 from __future__ import annotations
 
-from parts.world.session import Session
-from parts.world.zone_story import ZoneStory, assemble, region_view, render
+from kernel.world.session import Session
+from kernel.world.zone_story import ZoneStory, assemble, region_view, render
 
 _FULL = ZoneStory(
     label="vale",
@@ -53,7 +53,7 @@ def test_assemble_returns_none_for_an_unknown_zone():
 
 
 def test_a_dungeon_zone_on_the_live_world_reports_its_full_depths():
-    from parts.world.zones import ZONES
+    from kernel.world.zones import ZONES
 
     for label in ZONES:
         story = assemble(label)

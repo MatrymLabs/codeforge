@@ -1,4 +1,4 @@
-"""Test twin for parts/world/chat.py -- the world channel.
+"""Test twin for kernel/world/chat.py -- the world channel.
 
 Acceptance: a named hero's line reaches every OTHER online hero (not an echo of itself), and the
 speaker gets a 'You:' confirmation. Refusal / safety: an empty message and a speaker not yet in the
@@ -7,8 +7,8 @@ world (unnamed, still at the login desk) are both refused, and nothing is broadc
 
 from __future__ import annotations
 
-from parts.world import chat, events
-from parts.world.session import SESSIONS, Session
+from kernel.world import chat, events
+from kernel.world.session import SESSIONS, Session
 
 
 def _hero(name: str, *, named: bool = True) -> Session:

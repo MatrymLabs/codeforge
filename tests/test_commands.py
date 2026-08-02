@@ -12,6 +12,8 @@ import pytest
 from forge import COMMANDS, handle_command, render_scene
 from kernel.registry import load_collective
 from kernel.scripting import scripting_available
+from kernel.world.session import SESSIONS, Session
+from kernel.world.world import WORLD
 from parts.commands import (
     ADMIN,
     CORE,
@@ -22,8 +24,6 @@ from parts.commands import (
     guard_seed_verbs,
     reserved_words,
 )
-from parts.world.session import SESSIONS, Session
-from parts.world.world import WORLD
 
 
 def _echo(session: Session, arg: str) -> str:
@@ -323,7 +323,7 @@ def test_clones_lens_reachable_through_the_spine() -> None:
 
 
 def test_barrier_alias_deploys_through_the_spine() -> None:
-    from parts.world.jobs import bind_calling
+    from kernel.world.jobs import bind_calling
 
     session = _player()
     bind_calling(session, "engineer")  # deploy_barrier needs the Engineer's kit
@@ -331,7 +331,7 @@ def test_barrier_alias_deploys_through_the_spine() -> None:
 
 
 def test_secondary_alias_sets_a_subjob_through_the_spine() -> None:
-    from parts.world.jobs import bind_calling
+    from kernel.world.jobs import bind_calling
 
     session = _player()
     bind_calling(session, "engineer")  # a primary is required first
@@ -341,7 +341,7 @@ def test_secondary_alias_sets_a_subjob_through_the_spine() -> None:
 def test_two_word_ability_aliases_dispatch_through_the_spine() -> None:
     # "field repair" and "deploy barrier" are multi-word verbs (longest-first match); each shares
     # its one-word form's designation and reaches the same Engineer handler.
-    from parts.world.jobs import bind_calling
+    from kernel.world.jobs import bind_calling
 
     session = _player()
     bind_calling(session, "engineer")
@@ -373,7 +373,7 @@ def test_save_and_load_round_trip_through_the_spine() -> None:
 
 def test_score_with_a_bad_mode_surfaces_the_error() -> None:
     # The ValueError branch of _score_cmd: the renderer rejects an unknown mode, surfaced as text.
-    from parts.world.jobs import bind_calling
+    from kernel.world.jobs import bind_calling
 
     session = _player()
     bind_calling(session, "engineer")

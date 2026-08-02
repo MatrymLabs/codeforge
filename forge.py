@@ -21,6 +21,113 @@ from kernel.registry import (
     registry_type,
 )
 from kernel.shelf.hourglass import WORLD_SANDS
+from kernel.world import (
+    allocate,
+    artifact,
+    creator_workshop,
+    gather,
+    maintenance_mode,
+    presence,
+    quest,
+    scheduler,
+    shrine,
+)
+from kernel.world import auction as auction_mod
+from kernel.world import bank as bank_mod
+from kernel.world import chat as chat_mod
+from kernel.world import durability as durability_mod
+from kernel.world import feats as feats_mod
+from kernel.world import friends as friends_mod
+from kernel.world import guild as guild_mod
+from kernel.world import inns as inns_mod
+from kernel.world import mail as mail_mod
+from kernel.world import trade as trade_mod
+from kernel.world import travel as travel_net
+from kernel.world import tutorial as tutorial_mod
+from kernel.world.abilities import render_abilities, use_ability
+from kernel.world.accounts import (
+    has_password,
+    inspect_login,
+    parse_handle,
+    reforge_secret,
+    set_password,
+    verify_password,
+)
+from kernel.world.accounts import register as register_account
+from kernel.world.afflictions import tick_afflictions, tick_regens
+from kernel.world.aggression import menace
+from kernel.world.character_view import sheet_from_session
+from kernel.world.characters import load_character, restore_character, save_character
+from kernel.world.chime import chime
+from kernel.world.climate import tick_climate, weather_view
+from kernel.world.coinage import purse
+from kernel.world.combat import attack, examine_foe, tick_burns
+from kernel.world.condition import render_condition
+from kernel.world.consumables import quaff
+from kernel.world.crafting import craft
+from kernel.world.doors import reclose, unlock
+from kernel.world.engineer import deploy_barrier, diagnostic_scan, field_repair
+from kernel.world.equipment import equip, unequip
+from kernel.world.events import (
+    announce,
+    announce_frame,
+    bind_echo,
+    broadcast,
+    rename_echo,
+    rename_gmcp,
+    unbind_echo,
+)
+from kernel.world.factions import render_factions
+from kernel.world.frames import SpeechFrame
+from kernel.world.items import (
+    carrier,
+    drop,
+    inventory_text,
+    prototype_of,
+    read_item,
+    room_items_text,
+    take,
+    trace_item,
+)
+from kernel.world.jobs import JOBS, bind_calling, calling_index, set_secondary
+from kernel.world.npcs import ask, room_npcs_text, talk, trace_npc
+from kernel.world.orders import swear_order
+from kernel.world.party import (
+    disband as party_disband,
+)
+from kernel.world.party import (
+    invite as party_invite,
+)
+from kernel.world.party import (
+    join as party_join,
+)
+from kernel.world.party import (
+    leave as party_leave,
+)
+from kernel.world.party import (
+    party_say,
+    render_party,
+)
+from kernel.world.professions import render_professions
+from kernel.world.quest import contracts_view, quest_view
+from kernel.world.ranks import wizard_command
+from kernel.world.reputation import render_standing
+from kernel.world.roaming import roam
+from kernel.world.score_sheet import render_score_sheet
+from kernel.world.search import world_search
+from kernel.world.seed import load_splash
+from kernel.world.session import SESSIONS, Session, display_name, roster
+from kernel.world.shop import buy, render_shop, sell
+from kernel.world.world import (
+    DIRECTIONS,
+    WAYSTONES,
+    WORLD,
+    dynamic_capability,
+    render_room,
+    resolve_move,
+)
+from kernel.world.zone_story import region_view
+from kernel.world.zones import area_line, tick_zones
 from parts.arc import arc
 from parts.calibrate import calibrate
 from parts.chat_throttle import shout
@@ -48,113 +155,6 @@ from parts.store_index import store
 from parts.telegraph import telegraph
 from parts.titles import title
 from parts.vitals import vitals
-from parts.world import (
-    allocate,
-    artifact,
-    creator_workshop,
-    gather,
-    maintenance_mode,
-    presence,
-    quest,
-    scheduler,
-    shrine,
-)
-from parts.world import auction as auction_mod
-from parts.world import bank as bank_mod
-from parts.world import chat as chat_mod
-from parts.world import durability as durability_mod
-from parts.world import feats as feats_mod
-from parts.world import friends as friends_mod
-from parts.world import guild as guild_mod
-from parts.world import inns as inns_mod
-from parts.world import mail as mail_mod
-from parts.world import trade as trade_mod
-from parts.world import travel as travel_net
-from parts.world import tutorial as tutorial_mod
-from parts.world.abilities import render_abilities, use_ability
-from parts.world.accounts import (
-    has_password,
-    inspect_login,
-    parse_handle,
-    reforge_secret,
-    set_password,
-    verify_password,
-)
-from parts.world.accounts import register as register_account
-from parts.world.afflictions import tick_afflictions, tick_regens
-from parts.world.aggression import menace
-from parts.world.character_view import sheet_from_session
-from parts.world.characters import load_character, restore_character, save_character
-from parts.world.chime import chime
-from parts.world.climate import tick_climate, weather_view
-from parts.world.coinage import purse
-from parts.world.combat import attack, examine_foe, tick_burns
-from parts.world.condition import render_condition
-from parts.world.consumables import quaff
-from parts.world.crafting import craft
-from parts.world.doors import reclose, unlock
-from parts.world.engineer import deploy_barrier, diagnostic_scan, field_repair
-from parts.world.equipment import equip, unequip
-from parts.world.events import (
-    announce,
-    announce_frame,
-    bind_echo,
-    broadcast,
-    rename_echo,
-    rename_gmcp,
-    unbind_echo,
-)
-from parts.world.factions import render_factions
-from parts.world.frames import SpeechFrame
-from parts.world.items import (
-    carrier,
-    drop,
-    inventory_text,
-    prototype_of,
-    read_item,
-    room_items_text,
-    take,
-    trace_item,
-)
-from parts.world.jobs import JOBS, bind_calling, calling_index, set_secondary
-from parts.world.npcs import ask, room_npcs_text, talk, trace_npc
-from parts.world.orders import swear_order
-from parts.world.party import (
-    disband as party_disband,
-)
-from parts.world.party import (
-    invite as party_invite,
-)
-from parts.world.party import (
-    join as party_join,
-)
-from parts.world.party import (
-    leave as party_leave,
-)
-from parts.world.party import (
-    party_say,
-    render_party,
-)
-from parts.world.professions import render_professions
-from parts.world.quest import contracts_view, quest_view
-from parts.world.ranks import wizard_command
-from parts.world.reputation import render_standing
-from parts.world.roaming import roam
-from parts.world.score_sheet import render_score_sheet
-from parts.world.search import world_search
-from parts.world.seed import load_splash
-from parts.world.session import SESSIONS, Session, display_name, roster
-from parts.world.shop import buy, render_shop, sell
-from parts.world.world import (
-    DIRECTIONS,
-    WAYSTONES,
-    WORLD,
-    dynamic_capability,
-    render_room,
-    resolve_move,
-)
-from parts.world.zone_story import region_view
-from parts.world.zones import area_line, tick_zones
 from parts.world_cert import certify
 
 NAME_RE = re.compile(r"^[a-z][a-z0-9_]{1,15}$")
@@ -232,7 +232,7 @@ def run_view(name: str) -> str:
 
 
 def after_action() -> str:
-    from parts.world.encounter_log import render_recent
+    from kernel.world.encounter_log import render_recent
 
     return render_recent()
 
@@ -2127,7 +2127,7 @@ def _cross_workshop_barrier(session: Session, word: str) -> str | None:
     Only the authenticated Seed Owner crosses; everyone else (including a player who guesses the
     door) meets the exact barrier refusal. The crossing is UNOBSERVABLE -- no leave/arrive is
     announced to the Library -- so players can never see the owner slip through
-    (parts.world.workshop)."""
+    (kernel.world.workshop)."""
     dest = creator_workshop.door_destination(session.location, word)
     if dest is None:
         return None
@@ -2232,7 +2232,7 @@ def _ask_cmd(session: Session, arg: str) -> str:
 
 def _party_cmd(session: Session, arg: str) -> str:
     """The `party` verb: form and command a fellowship. The spine preserves argument case, so a
-    player name arrives as typed and is lowered to its label inside `parts.world.party`. Bare
+    player name arrives as typed and is lowered to its label inside `kernel.world.party`. Bare
     `party` shows the roster; `party invite <player>`, `party join <player>`, `party leave`,
     `party disband`. Party chat is the separate `psay` verb (which keeps its message case)."""
     me = session.player_id
@@ -2279,7 +2279,7 @@ def _mail_cmd(session: Session, arg: str) -> str:
 def _ban_cmd(session: Session, arg: str) -> str:
     """`@ban <player> <reason>`: bar a character from the world (wizard+), audited. If online they
     drop on their next command. A ban outranks maintenance and even a wizard's rank."""
-    from parts.world import audit, bans
+    from kernel.world import audit, bans
 
     parts_ = arg.split(maxsplit=1)
     name = parts_[0].strip().lower() if parts_ else ""
@@ -2296,7 +2296,7 @@ def _ban_cmd(session: Session, arg: str) -> str:
 
 def _unban_cmd(session: Session, arg: str) -> str:
     """`@unban <player>`: lift a ban (wizard+), audited."""
-    from parts.world import audit, bans
+    from kernel.world import audit, bans
 
     name = arg.strip().lower()
     if not name:
@@ -2309,7 +2309,7 @@ def _unban_cmd(session: Session, arg: str) -> str:
 
 def _bans_cmd(_session: Session, _arg: str) -> str:
     """`@bans`: the moderation roster of banned characters (wizard+)."""
-    from parts.world import bans
+    from kernel.world import bans
 
     rows = bans.all_bans()
     if not rows:
@@ -2322,7 +2322,7 @@ def _bans_cmd(_session: Session, _arg: str) -> str:
 
 def _metrics_cmd(_session: Session, _arg: str) -> str:
     """`@metrics`: a live-ops snapshot from storage (population + economy health) (owner)."""
-    from parts.world import metrics
+    from kernel.world import metrics
 
     return metrics.render()
 
@@ -2330,7 +2330,7 @@ def _metrics_cmd(_session: Session, _arg: str) -> str:
 def _audit_cmd(_session: Session, arg: str) -> str:
     """`@audit [verify]`: the tamper-evident admin/economy log (owner). Bare shows recent entries;
     `@audit verify` checks the hash chain end to end."""
-    from parts.world import audit
+    from kernel.world import audit
 
     if arg.strip().lower() == "verify":
         return "Audit log: chain intact." if audit.verify() else "Audit log: CHAIN BROKEN."
@@ -2558,7 +2558,7 @@ def _route(session: Session, true_signal: str, routed_signal: str) -> str:
     # ("ne", "northwest") are already movement verbs; this catches the named thresholds a seed
     # keys by their destination. Real verbs win (the spine ran first), so an exit never shadows one.
     if " " not in routed_signal:
-        # The concealed Creator's Door is named, never listed (parts.world.workshop): try it before
+        # The concealed Creator's Door is named, never listed (kernel.world.workshop): try it before
         # the visible exits, so a bare `door` in the Grand Library meets the barrier or crosses it.
         crossed = _cross_workshop_barrier(session, routed_signal)
         if crossed is not None:
@@ -2576,8 +2576,8 @@ def handle_command(session: Session, signal: str) -> str:
     from it. Lowercasing a password destroys it.
 
     After the player's command resolves, the world takes its beat: any aggressive
-    NPC sharing the room strikes (parts.world.aggression.menace) and every area advances its
-    reset clock (parts.world.zones.tick_zones). The player's command is the only clock the world
+    NPC sharing the room strikes (kernel.world.aggression.menace) and every area advances its
+    reset clock (kernel.world.zones.tick_zones). The player's command is the only clock the world
     has -- no background thread, the tick stays the one door."""
     true_signal = signal.strip()
     routed_signal = true_signal.lower()

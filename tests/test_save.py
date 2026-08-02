@@ -5,10 +5,10 @@ import json
 
 import pytest
 
+from kernel.world import doors, items
+from kernel.world.doors import unlock
+from kernel.world.items import take
 from parts.save import awaken_snapshot, seal_snapshot
-from parts.world import doors, items
-from parts.world.doors import unlock
-from parts.world.items import take
 
 
 @pytest.fixture(autouse=True)

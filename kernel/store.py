@@ -83,7 +83,7 @@ def _render(
 def hardware_store_catalog() -> str:
     """Return the two-shelf parts inventory as display text: reusable cores, then engine parts."""
     shelf = _stock(SHELF_DIR)
-    # Engine parts = the platform (parts/) + the World Package (parts/world/), sorted by card.
+    # Engine parts = the platform (parts/) + the World Package (kernel/world/), sorted by card.
     engine = sorted(_stock(PARTS_DIR) + _stock(WORLD_DIR))
     lines = ["CODEFORGE HARDWARE STORE", "=" * 24, ""]
     lines += _render(

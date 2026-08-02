@@ -2,7 +2,7 @@
 
 *The encounter mechanic the status system was built for (roadmap #4): a boss attack you can SEE
 coming and answer. Composes three shipped systems -- `boss_phases` (the enrage), `afflictions` (the
-consequence), and a wind-up telegraph. Design canon behind `parts/world/boss_specials.py`.*
+consequence), and a wind-up telegraph. Design canon behind `kernel/world/boss_specials.py`.*
 
 ## The loop
 

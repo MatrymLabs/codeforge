@@ -1,4 +1,4 @@
-"""Test twin for parts/world/authored_towns.py -- the hand-authored settlement pipeline.
+"""Test twin for kernel/world/authored_towns.py -- the hand-authored settlement pipeline.
 
 Acceptance: the pipeline discovers every authored town file, and for each builds its interior
 (subareas + residents + items) as records that compose onto the REAL generated aethryn map -- the
@@ -16,8 +16,8 @@ from pathlib import Path
 
 import pytest
 
-from parts.world import authored_towns as towns
-from parts.world.seed import Room, SeedError, load_rooms
+from kernel.world import authored_towns as towns
+from kernel.world.seed import Room, SeedError, load_rooms
 
 _AETHRYN = Path(__file__).resolve().parent.parent / "seeds" / "aethryn"
 _AUTHORED = _AETHRYN / "authored"
@@ -113,8 +113,8 @@ def _walk_quest(quest_file: str):
     """Load an authored town's quest and walk enter -> take -> enter to done; return the final
     Fired outcome. Every authored town's arc uses the same natural-trigger shape."""
     from kernel.shelf.workflow import Fired, Instance, WorkflowEngine
-    from parts.world.quest import _from_seed
-    from parts.world.seed import load_quest
+    from kernel.world.quest import _from_seed
+    from kernel.world.seed import load_quest
 
     spec = load_quest(_AETHRYN / "quests" / quest_file)
     assert spec is not None
@@ -137,8 +137,8 @@ def test_the_granary_quest_still_walks_to_done_and_rewards():
 def test_greenholds_second_quest_is_a_hunt_of_a_different_shape():
     # The field-beast quest is enter -> DEFEAT (a hunt), not a fetch: quest variety.
     from kernel.shelf.workflow import Fired, Instance, WorkflowEngine
-    from parts.world.quest import _from_seed
-    from parts.world.seed import load_quest
+    from kernel.world.quest import _from_seed
+    from kernel.world.seed import load_quest
 
     spec = load_quest(_AETHRYN / "quests" / "greenhold_fields.yaml")
     assert spec is not None and spec["name"] == "The Field-Beast"
@@ -189,8 +189,8 @@ def test_the_ravenwatch_quest_walks_and_grants_knowing():
 
 def test_ravenwatch_has_a_second_quest_of_a_hunt_shape():
     from kernel.shelf.workflow import Fired, Instance, WorkflowEngine
-    from parts.world.quest import _from_seed
-    from parts.world.seed import load_quest
+    from kernel.world.quest import _from_seed
+    from kernel.world.seed import load_quest
 
     spec = load_quest(_AETHRYN / "quests" / "ravenwatch_hollow.yaml")
     assert spec is not None and spec["name"] == "The Hollow Man"
@@ -207,8 +207,8 @@ def _walk_hunt(quest_file: str, order: str, reward: int) -> None:
     """Walk an authored town's HUNT-shape side quest: enter -> defeat -> done. Asserts the shape (a
     defeat, no fetch), the reward, and the granted Order. The second-quest twin of _walk_quest."""
     from kernel.shelf.workflow import Fired, Instance, WorkflowEngine
-    from parts.world.quest import _from_seed
-    from parts.world.seed import load_quest
+    from kernel.world.quest import _from_seed
+    from kernel.world.seed import load_quest
 
     spec = load_quest(_AETHRYN / "quests" / quest_file)
     assert spec is not None and spec["reward_xp"] == reward
@@ -423,8 +423,8 @@ def test_every_canon_region_has_an_authored_town():
     # The content spine: a hand-authored place in every one of the fourteen reaches.
     import yaml
 
-    from parts.world import canon
-    from parts.world.seed import _UniqueKeyLoader
+    from kernel.world import canon
+    from kernel.world.seed import _UniqueKeyLoader
 
     settlements = yaml.load(
         (_AETHRYN / "settlements.yaml").read_text(encoding="utf-8"), Loader=_UniqueKeyLoader
@@ -440,7 +440,7 @@ def test_every_canon_region_has_an_authored_town():
 
 def test_the_four_orders_are_each_granted_by_an_authored_quest():
     # Across the authored towns, every Order is earnable, so the reputation web is reachable.
-    from parts.world.seed import load_quest
+    from kernel.world.seed import load_quest
 
     effects = " ".join(
         step.get("effect", "")

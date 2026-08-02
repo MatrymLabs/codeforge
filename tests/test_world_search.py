@@ -1,4 +1,4 @@
-"""Test twin for parts/world/search.py + the CORE `search` verb.
+"""Test twin for kernel/world/search.py + the CORE `search` verb.
 
 Acceptance: the index finds rooms/items/NPCs by relevance and the verb is reachable through the
 engine tick. Refusal/robustness: an empty query and a no-match query answer cleanly, and a query
@@ -6,8 +6,8 @@ with FTS5 punctuation cannot inject (tokens are sanitized).
 """
 
 from forge import handle_command
-from parts.world import search as world_search_mod
-from parts.world.session import Session
+from kernel.world import search as world_search_mod
+from kernel.world.session import Session
 
 
 def setup_function() -> None:

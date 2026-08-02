@@ -23,7 +23,7 @@ the ledger exactly as it was. Amounts are non-negative integers in the smallest 
 money is not a float), so this composes directly with the game's integer coinage.
 
 This is an ORIGINAL, self-contained part. It does not touch the game's canonical single-entry
-economy (`parts/world/coinage.py`); wiring it in as an audit mirror or the system of record is a
+economy (`kernel/world/coinage.py`); wiring it in as an audit mirror or the system of record is a
 separate, human-approved decision (see docs/design/double_entry_ledger.md).
 
 Provenance: original implementation. The double-entry account/transfer schema and the

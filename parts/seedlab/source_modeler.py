@@ -12,7 +12,7 @@ the connector approves (manifests + file layout) and derives what it safely can:
 
 Everything it could not determine (relationships, states, actions, inputs, outputs, and the basis of
 each inference) is listed in `unknowns`. The directive's rule is explicit: never claim complete
-automated understanding. `model_and_store` extracts and persists in one call. No `parts/world/`
+automated understanding. `model_and_store` extracts and persists in one call. No `kernel/world/`
 coupling. Status: PROTOTYPED (see docs/seed_platform/RECENTERING.md).
 """
 

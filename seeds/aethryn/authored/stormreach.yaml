@@ -7,7 +7,7 @@
 # (salvage rights to a newly-opened facility); the clue to the larger world is the drowned gate; the
 # rumour is left unproven. Five subareas, three voices (a league-captain, a dive-broker, a reef-warden)
 # that cross-reference, two dangers, a saltkelp gather node off the wreck docks and a broker who buys
-# its yield (a working economy), and readable salvage lore. Installed by parts/world/authored_towns.py;
+# its yield (a working economy), and readable salvage lore. Installed by kernel/world/authored_towns.py;
 # its quests are quests/stormreach_gate.yaml (a fetch, Gathering) and quests/stormreach_reef.yaml (a
 # hunt of a different shape, Warcraft).
 

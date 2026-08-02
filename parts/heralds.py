@@ -11,7 +11,7 @@ from __future__ import annotations
 from collections.abc import Callable
 
 from kernel.shelf.plugin_registry import PluginInfo, PluginRegistry
-from parts.world.session import Session
+from kernel.world.session import Session
 
 Herald = Callable[[], str]
 

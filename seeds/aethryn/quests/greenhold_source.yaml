@@ -1,6 +1,6 @@
 # SEED: aethryn -- quests/greenhold_source.yaml  (Greenhold's delve quest: The Heart of the Cradle)
 #
-# Auto-loaded by parts/world/quest.py from seeds/aethryn/quests/. The cradle's capstone, a DELVE that
+# Auto-loaded by kernel/world/quest.py from seeds/aethryn/quests/. The cradle's capstone, a DELVE that
 # ties the four settlement stories together: Greenhold's fountain, Riverbend's weir, Elderwatch's beacon,
 # and Sunmeadow's sun-channel all point here, to the one machine's heart, reached by the deep old-world
 # stair below Greenhold's undercroft. Scholar Ilric on the deep stair sends you down; the quest arms when

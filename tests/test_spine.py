@@ -1,4 +1,4 @@
-"""Test twin for parts/world/spine.py -- the world's main-road campaign quest.
+"""Test twin for kernel/world/spine.py -- the world's main-road campaign quest.
 
 Acceptance: the spine chains the zones in level order, one beat per arrival, from the starting band
 to the endgame, with a reward on the final leg. Refusal: a world with fewer than two zones lays no
@@ -7,7 +7,7 @@ road. Determinism: the same zones always lay the same road.
 
 from __future__ import annotations
 
-from parts.world.spine import SPINE_ID, forge_spine, is_spine
+from kernel.world.spine import SPINE_ID, forge_spine, is_spine
 
 _ZONES = [
     {

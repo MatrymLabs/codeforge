@@ -1,4 +1,4 @@
-"""Test twin for parts/world/afflictions.py -- harmful statuses the PLAYER suffers (roadmap #4).
+"""Test twin for kernel/world/afflictions.py -- harmful statuses the PLAYER suffers (roadmap #4).
 
 Acceptance: a damage-over-time saps the player each world beat, ages, and expires; a daze blocks
 offensive actions and wears off; an NPC's `inflicts` blow lays one on a hit (seeded roll); the beat
@@ -11,10 +11,10 @@ from __future__ import annotations
 import pytest
 
 import forge
-from parts.world import afflictions, combat
-from parts.world.abilities import use_ability
-from parts.world.resources import Resource
-from parts.world.session import SESSIONS, Session
+from kernel.world import afflictions, combat
+from kernel.world.abilities import use_ability
+from kernel.world.resources import Resource
+from kernel.world.session import SESSIONS, Session
 
 
 def _hurtable(hp: int = 100, maximum: int = 100) -> Session:
@@ -110,7 +110,7 @@ def test_apply_daze_never_shortens_an_existing_stun():
 
 def test_a_dazed_player_cannot_strike_or_channel():
     s = SESSIONS["matrym"] = Session(player_id="matrym", location="courtyard")
-    from parts.world.jobs import bind_calling
+    from kernel.world.jobs import bind_calling
 
     bind_calling(s, "vanguard")
     afflictions.apply_daze(s, 1)
@@ -150,7 +150,7 @@ def test_an_inflicting_npc_blow_afflicts_the_player(monkeypatch):
     """Integration: a hostile foe carrying `inflicts` lays the affliction when its blow lands."""
     monkeypatch.setattr(afflictions, "_AFFLICT_RNG", _Hit())
     s = SESSIONS["matrym"] = Session(player_id="matrym", location="courtyard")
-    from parts.world.jobs import bind_calling
+    from kernel.world.jobs import bind_calling
 
     bind_calling(s, "vanguard")
     foe = {
@@ -187,7 +187,7 @@ def test_the_beat_ages_afflictions():
 
 # --- seed validation: an NPC's inflicts spec fails loud on misuse ------------------------------
 def _npc_yaml(tmp_path, body: str):
-    from parts.world.seed import load_npcs
+    from kernel.world.seed import load_npcs
 
     path = tmp_path / "npcs.yaml"
     path.write_text(body)
@@ -195,7 +195,7 @@ def _npc_yaml(tmp_path, body: str):
 
 
 def test_inflicts_must_name_a_status(tmp_path):
-    from parts.world.seed import SeedError
+    from kernel.world.seed import SeedError
 
     load = _npc_yaml(tmp_path, "boss:\n  location: a\n  hp: 10\n  inflicts: {chance: 2}\n")
     with pytest.raises(SeedError, match="inflicts.status"):
@@ -203,7 +203,7 @@ def test_inflicts_must_name_a_status(tmp_path):
 
 
 def test_inflicts_rejects_an_unknown_key(tmp_path):
-    from parts.world.seed import SeedError
+    from kernel.world.seed import SeedError
 
     load = _npc_yaml(
         tmp_path, "boss:\n  location: a\n  hp: 10\n  inflicts: {status: venom, dot: 5}\n"
@@ -213,7 +213,7 @@ def test_inflicts_rejects_an_unknown_key(tmp_path):
 
 
 def test_inflicts_rejects_a_non_positive_number(tmp_path):
-    from parts.world.seed import SeedError
+    from kernel.world.seed import SeedError
 
     load = _npc_yaml(
         tmp_path, "boss:\n  location: a\n  hp: 10\n  inflicts: {status: venom, damage: 0}\n"
@@ -223,7 +223,7 @@ def test_inflicts_rejects_a_non_positive_number(tmp_path):
 
 
 def test_a_valid_inflicts_loads(tmp_path):
-    from parts.world.seed import load_npcs
+    from kernel.world.seed import load_npcs
 
     path = tmp_path / "npcs.yaml"
     path.write_text(
@@ -235,7 +235,7 @@ def test_a_valid_inflicts_loads(tmp_path):
 
 # --- seed validation: a boss's `special` (the telegraphed-unleash mechanic) -----------------------
 def test_a_mend_special_loads(tmp_path):
-    from parts.world.seed import load_npcs
+    from kernel.world.seed import load_npcs
 
     path = tmp_path / "npcs.yaml"
     path.write_text("boss:\n  location: a\n  hp: 10\n  special: {kind: mend, heal: 40}\n")
@@ -243,7 +243,7 @@ def test_a_mend_special_loads(tmp_path):
 
 
 def test_special_rejects_an_unknown_kind(tmp_path):
-    from parts.world.seed import SeedError
+    from kernel.world.seed import SeedError
 
     load = _npc_yaml(tmp_path, "boss:\n  location: a\n  hp: 10\n  special: {kind: explode}\n")
     with pytest.raises(SeedError, match="special.kind"):
@@ -251,7 +251,7 @@ def test_special_rejects_an_unknown_kind(tmp_path):
 
 
 def test_special_rejects_an_unknown_key(tmp_path):
-    from parts.world.seed import SeedError
+    from kernel.world.seed import SeedError
 
     load = _npc_yaml(tmp_path, "boss:\n  location: a\n  hp: 10\n  special: {summon: 3}\n")
     with pytest.raises(SeedError, match="special"):
@@ -259,7 +259,7 @@ def test_special_rejects_an_unknown_key(tmp_path):
 
 
 def test_special_rejects_a_non_positive_heal(tmp_path):
-    from parts.world.seed import SeedError
+    from kernel.world.seed import SeedError
 
     load = _npc_yaml(tmp_path, "boss:\n  location: a\n  hp: 10\n  special: {kind: mend, heal: 0}\n")
     with pytest.raises(SeedError, match="special.heal"):
@@ -284,7 +284,7 @@ def test_cleanse_of_a_clean_hero_returns_nothing():
 
 
 def test_cleanse_ability_purges_an_afflicted_ally_and_spends_mp():
-    from parts.world.jobs import bind_calling
+    from kernel.world.jobs import bind_calling
 
     healer = Session(player_id="cleo", location="void")
     bind_calling(healer, "scholar")
@@ -304,7 +304,7 @@ def test_cleanse_ability_purges_an_afflicted_ally_and_spends_mp():
 
 
 def test_cleanse_on_a_clean_ally_spends_no_mp():
-    from parts.world.jobs import bind_calling
+    from kernel.world.jobs import bind_calling
 
     healer = Session(player_id="cleo", location="void")
     bind_calling(healer, "scholar")
@@ -319,7 +319,7 @@ def test_cleanse_on_a_clean_ally_spends_no_mp():
 
 
 def test_cleanse_ability_on_self_shakes_off_the_affliction():
-    from parts.world.jobs import bind_calling
+    from kernel.world.jobs import bind_calling
 
     healer = Session(player_id="cleo", location="void")
     bind_calling(healer, "scholar")
@@ -334,7 +334,7 @@ def test_cleanse_ability_on_self_shakes_off_the_affliction():
 
 
 def test_cleanse_ability_on_an_absent_ally_fails_loud():
-    from parts.world.jobs import bind_calling
+    from kernel.world.jobs import bind_calling
 
     healer = Session(player_id="cleo", location="void")
     bind_calling(healer, "scholar")

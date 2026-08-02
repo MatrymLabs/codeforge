@@ -7,7 +7,7 @@ import pytest
 from kernel.shelf.affixes import Rolled, roll
 
 # The five derived combat stats affixes may target (mirrored locally so this stays an ENGINE-FREE
-# shelf twin -- it must not import parts.world, or the pour would hold its test back).
+# shelf twin -- it must not import kernel.world, or the pour would hold its test back).
 DERIVED_STATS = ("ATK", "DEF", "EVA", "MAG DEF", "ACC")
 
 

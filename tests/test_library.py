@@ -13,7 +13,7 @@ import pytest
 
 from forge import handle_command
 from kernel.library import library, library_index, library_read
-from parts.world.session import SESSIONS, Session
+from kernel.world.session import SESSIONS, Session
 
 
 @pytest.fixture

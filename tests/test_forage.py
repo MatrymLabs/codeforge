@@ -1,4 +1,4 @@
-"""Test twin for parts/world/forage.py -- zone-scoped 'gather N of a material' contracts.
+"""Test twin for kernel/world/forage.py -- zone-scoped 'gather N of a material' contracts.
 
 Acceptance: each zone posts one forage per material its biome yields per count-tier, an N-step chain
 that walks to done one harvest at a time. Distinctness: it listens on `<zone>|<mat>`, the same scope
@@ -7,8 +7,8 @@ the gather action fires, so a harvest in one zone never fills another. Refusal: 
 
 from __future__ import annotations
 
-from parts.world.cull import scope_key
-from parts.world.forage import FORAGE_PREFIX, generate_forages, is_forage
+from kernel.world.cull import scope_key
+from kernel.world.forage import FORAGE_PREFIX, generate_forages, is_forage
 
 _ZONES = [
     # temperate meadow yields ember_shard only; glacier-waste is an ore biome (+ hollow_ingot)
@@ -24,7 +24,7 @@ _ZONES = [
 
 
 def test_each_zone_posts_a_forage_per_material_per_tier():
-    from parts.world.wildlands import gatherable_materials
+    from kernel.world.wildlands import gatherable_materials
 
     forages = generate_forages(_ZONES)
     assert all(is_forage(q["id"]) for q in forages)
@@ -59,7 +59,7 @@ def test_a_biomeless_zone_posts_nothing_and_forging_is_deterministic():
 
 
 def test_the_forage_board_reads_varied():
-    from parts.world.forage import generate_forages
+    from kernel.world.forage import generate_forages
 
     forages = generate_forages(_ZONES)
     framings = {f["name"].split(":")[0].split(" ")[-1] for f in forages}
@@ -71,7 +71,7 @@ def test_the_forage_board_reads_varied():
 
 
 def test_the_forage_flavour_is_deterministic():
-    from parts.world.forage import generate_forages
+    from kernel.world.forage import generate_forages
 
     a = {(f["id"], f["name"]) for f in generate_forages(_ZONES)}
     b = {(f["id"], f["name"]) for f in generate_forages(_ZONES)}

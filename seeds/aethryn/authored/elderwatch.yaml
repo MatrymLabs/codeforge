@@ -8,7 +8,7 @@
 # named location per the seed recipe (a role, subareas, a livelihood, a conflict, a rumour, a clue to
 # the larger world, a revisitable change) at AAA density -- a place, not a signpost. The beacon-chain
 # is Veridia's canon identity made concrete: ordinary folk keeping watch over old-world signal works
-# that once lit themselves, shown through function. Loaded by parts/world/authored_towns.py; its
+# that once lit themselves, shown through function. Loaded by kernel/world/authored_towns.py; its
 # quests are seeds/aethryn/quests/elderwatch_beacon.yaml (the dark beacon) and elderwatch_tower.yaml
 # (the long view). The tower is Veridia's scenic viewpoint; the beacon-walk offers meadowfoil, which
 # Greenhold's Trader Pell buys -- gather here, sell a town over.

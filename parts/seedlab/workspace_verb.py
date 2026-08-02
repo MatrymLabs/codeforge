@@ -49,14 +49,14 @@ _USAGE = (
 )
 
 #: How the verb pushes a live GMCP frame to the acting owner: (player_id, package, data). The
-#: default rides the same bus the social events use (parts.world.events.push_gmcp), so a Native-
+#: default rides the same bus the social events use (kernel.world.events.push_gmcp), so a Native-
 #: Seed client's Engineering Workspace updates the instant an owner inspects or changes a
 #: workspace. Tests inject a fake to capture the pushes without touching the bus.
 GmcpPush = Callable[[str, str, object], None]
 
 
 def _default_push(player_id: str, package: str, data: object) -> None:
-    from parts.world.events import push_gmcp
+    from kernel.world.events import push_gmcp
 
     push_gmcp([player_id], package, data)
 

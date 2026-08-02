@@ -12,12 +12,12 @@ from __future__ import annotations
 
 import pytest
 
-from parts.world.character_store import (
+from kernel.world.character_store import (
     CharacterRecord,
     CharacterStore,
     InMemoryCharacterStore,
 )
-from parts.world.character_store_sql import SqlCharacterStore
+from kernel.world.character_store_sql import SqlCharacterStore
 
 
 @pytest.fixture(params=["memory", "sql"])
@@ -94,8 +94,8 @@ def test_both_adapters_satisfy_the_port():
 def test_the_character_doors_run_on_an_injected_store():
     """load_character / put_record / save_character / set_rank over a pure in-memory store, and the
     merge-save law holds through the public doors too: a save never wipes a stored password."""
-    from parts.world.characters import load_character, put_record, save_character, set_rank
-    from parts.world.session import Session
+    from kernel.world.characters import load_character, put_record, save_character, set_rank
+    from kernel.world.session import Session
 
     mem = InMemoryCharacterStore()
     put_record("matrym", {"level": 2, "auth": {"salt": "aa11", "hash": "beefcafe"}}, store=mem)

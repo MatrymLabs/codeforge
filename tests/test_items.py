@@ -1,11 +1,11 @@
-"""Test twin for parts/world/items.py -- containment and item commands."""
+"""Test twin for kernel/world/items.py -- containment and item commands."""
 
 import copy
 
 import pytest
 
-from parts.world import items
-from parts.world.items import carrier, drop, inventory_text, items_in, read_item, take
+from kernel.world import items
+from kernel.world.items import carrier, drop, inventory_text, items_in, read_item, take
 
 _ME = carrier("hero")  # one hero's per-player inventory tag
 

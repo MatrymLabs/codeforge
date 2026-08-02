@@ -1,4 +1,4 @@
-"""Test twin for parts/world/scheduler.py -- the beat-driven timed-job registry.
+"""Test twin for kernel/world/scheduler.py -- the beat-driven timed-job registry.
 
 Acceptance: a one-shot fires exactly once when its due beat arrives (not before) and is then gone; a
 recurring job fires every interval and re-arms. Refusal: a job that raises is dropped rather than
@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import pytest
 
-from parts.world import scheduler
+from kernel.world import scheduler
 
 
 @pytest.fixture(autouse=True)
