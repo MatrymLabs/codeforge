@@ -54,17 +54,20 @@ def _parts_imports(source: str, where: str) -> set[str]:
     found: set[str] = set()
     for node in ast.walk(tree):
         names: list[str] = []
-        if isinstance(node, ast.ImportFrom) and node.module and node.module.startswith("parts"):
+        if isinstance(node, ast.ImportFrom) and node.module:
             names = [node.module]
         elif isinstance(node, ast.Import):
-            names = [a.name for a in node.names if a.name.startswith("parts")]
+            names = [a.name for a in node.names]
         for name in names:
+            if name == "kernel.shelf" or name.startswith("kernel.shelf."):
+                found.add("shelf")  # Layer 3, the Hardware Store (moved out of parts/)
+                continue
+            if not name.startswith("parts"):
+                continue
             parts = name.split(".")
             if len(parts) < 2:
                 continue
-            if parts[1] == "shelf":
-                found.add("shelf")
-            elif parts[1] == "world":
+            if parts[1] == "world":
                 found.add(
                     parts[2] if len(parts) >= 3 else "world"
                 )  # unwrap to the intra-world module

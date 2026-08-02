@@ -21,7 +21,7 @@ import ast
 from pathlib import Path
 
 PARTS_DIR = Path(__file__).resolve().parent
-SHELF_DIR = PARTS_DIR / "shelf"
+SHELF_DIR = PARTS_DIR.parent / "kernel" / "shelf"
 WORLD_DIR = PARTS_DIR / "world"  # the World Package (Layer 2) is its own subpackage now
 TESTS_DIR = PARTS_DIR.parent / "tests"
 

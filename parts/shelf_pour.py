@@ -109,7 +109,7 @@ def shelf_third_party_deps(shelf_dir: Path | None = None) -> list[str]:
 
     A pour must declare these or the poured package will not import; detected from the AST so the
     list stays honest as cores change (today: fastapi, pydantic, structlog -- from 2 cores)."""
-    base = shelf_dir if shelf_dir is not None else _ROOT / "parts" / "shelf"
+    base = shelf_dir if shelf_dir is not None else _ROOT / "kernel" / "shelf"
     return _third_party(_core_files(base))
 
 
@@ -120,7 +120,7 @@ def poolable_twins(
 
     A twin is poolable if it reaches no engine part (so it runs against the poured package); a twin
     that imports the engine (an integration test) is held back -- named, not dropped silently."""
-    shelf = shelf_dir if shelf_dir is not None else _ROOT / "parts" / "shelf"
+    shelf = shelf_dir if shelf_dir is not None else _ROOT / "kernel" / "shelf"
     tests = tests_dir if tests_dir is not None else _ROOT / "tests"
     poolable: list[Path] = []
     held: list[str] = []
@@ -371,7 +371,7 @@ def pour_shelf(dest: Path, *, shelf_dir: Path | None = None) -> PouredShelf:
     Writes `dest/codeforge_shelf/<core>.py` (imports rebound off `parts`), a `pyproject.toml` that
     declares the auto-detected deps, and a README. Returns a PouredShelf record. Writes only under
     `dest`; reads the live shelf read-only."""
-    src = shelf_dir if shelf_dir is not None else _ROOT / "parts" / "shelf"
+    src = shelf_dir if shelf_dir is not None else _ROOT / "kernel" / "shelf"
     tests_src = shelf_dir.parent.parent / "tests" if shelf_dir is not None else _ROOT / "tests"
     cores = _core_files(src)
     if not cores:

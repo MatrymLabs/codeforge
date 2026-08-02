@@ -46,7 +46,7 @@ controls:
     control: Fuzzing of the telnet protocol parser (network trust boundary)
     applicability: applicable
     assurance_profile: B
-    implementation: parts/shelf/telnet_codec.py
+    implementation: kernel/shelf/telnet_codec.py
     evidence:
       - {kind: test, path: tests/test_fuzz_telnet.py}
     status: verified_against
