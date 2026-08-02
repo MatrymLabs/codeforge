@@ -28,7 +28,7 @@ Originality Awareness:
 Professional Presentation:
 - key files:  all present
 
-Truth / VeritasGate:
+Truth / EvidenceGate:
 - registry validates:   yes
 - QA readiness:         271 pass, 0 watch, 0 fail
 - overclaim scan:       none found

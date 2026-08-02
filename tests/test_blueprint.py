@@ -100,7 +100,7 @@ def test_load_all_finds_nested_examples(tmp_path):
 
 
 def test_shipped_example_is_valid():
-    # The repo's own example must always pass the gate (VeritasGate on our own artifact).
+    # The repo's own example must always pass the gate (EvidenceGate on our own artifact).
     ids = [b.blueprint_id for b in load_all()]
     assert "npc_combat" in ids
 

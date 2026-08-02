@@ -63,7 +63,7 @@ for tiny gains.
 Immediate function -> adjacent CodeForge uses -> cross-domain uses (game, business, education,
 government, finance, records, security, automation, portfolio) -> automation potential ->
 efficiency potential (time, effort, latency, risk) -> integration points (Ritual, Hardware
-Store, Registry, Blueprint, Seed generator, VeritasGate, Safety/QA, Project Control, Career
+Store, Registry, Blueprint, Seed generator, EvidenceGate, Safety/QA, Project Control, Career
 Evidence Board, Classroom, Library, client control panel, reports) -> proof (tests,
 benchmarks, docs, evidence).
 

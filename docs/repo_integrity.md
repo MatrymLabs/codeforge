@@ -11,7 +11,7 @@ make repo-integrity      # python -m parts.integrity
 It composes the checks CodeForge already owns into one dated report under
 `reports/repo_integrity/` (git-ignored generated evidence), covering: code quality,
 security, license/source origin, originality awareness, professional presentation,
-and a truth/VeritasGate pass.
+and a truth/EvidenceGate pass.
 
 ## What it can and cannot prove
 
@@ -21,7 +21,7 @@ and a truth/VeritasGate pass.
 5. license/source scans · 6. documentation review · 7. truth review · 8. **human judgment.**
 
 > Similarity is a signal. License metadata is evidence. Tests prove behavior.
-> Documentation proves intent. VeritasGate keeps the claims honest.
+> Documentation proves intent. EvidenceGate keeps the claims honest.
 
 Hard boundaries (integrity-first):
 
@@ -41,7 +41,7 @@ Hard boundaries (integrity-first):
 | License / source origin | the hardware catalog's `source_status` / `license` / `influence` |
 | Originality awareness | catalog provenance; states the "not universal originality" limit |
 | Presentation | presence of README · LICENSE · CHANGELOG · SECURITY · CONTRIBUTING · docs |
-| Truth / VeritasGate | registry `validate()` · `qa gate` readiness · README overclaim scan |
+| Truth / EvidenceGate | registry `validate()` · `qa gate` readiness · README overclaim scan |
 
 ## The gap it surfaced - now closed
 

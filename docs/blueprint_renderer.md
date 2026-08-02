@@ -23,7 +23,7 @@ A Blueprint is validated at the gate; every gap fails loud, early, and by name:
 | `requirements` | required, a list of non-empty strings, at least one |
 | `tasks` | optional list of strings (a draft may not have tasks yet) |
 | `stack` | optional mapping of `layer -> choice` |
-| `status` | `draft` or `validated` (a VeritasGate label, never inflated) |
+| `status` | `draft` or `validated` (a EvidenceGate label, never inflated) |
 
 The **JSON record is canonical**; the Markdown twin and the HTML page are projections
 (architecture law 1: text never mutates the record). Authored Blueprints live under

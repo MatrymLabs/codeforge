@@ -194,12 +194,12 @@ def test_intra_world_and_shelf_imports_are_allowed(tmp_path: Path) -> None:
 def test_the_ritual_line_names_the_offender(tmp_path: Path) -> None:
     world = tmp_path / "parts" / "world"
     world.mkdir(parents=True)
-    (world / "jobs.py").write_text("import parts.veritas\n")
-    assert world_boundary_gaps(tmp_path) == ["jobs: imports platform part(s) veritas"]
+    (world / "jobs.py").write_text("import parts.evidence_gate\n")
+    assert world_boundary_gaps(tmp_path) == ["jobs: imports platform part(s) evidence_gate"]
 
 
 def test_is_platform_classifies_correctly() -> None:
-    assert _is_platform("cast") and _is_platform("veritas")  # dev-tools
+    assert _is_platform("cast") and _is_platform("evidence_gate")  # dev-tools
     assert not _is_platform("shelf")  # Layer 3
     assert not _is_platform("combat")  # a World module
 

@@ -4,7 +4,7 @@ A disciplined pioneer challenges assumptions and proves unconventional solutions
 evidence -- bend convention, not truth/safety/trust. This command renders the framework
 (doctrine, the Maverick Filter, the risk ladder, the constraint-review template) from
 data/pioneer/risk_ladder.json, and lists the filed experiments in docs/pioneer_experiments/.
-It gives the existing gates (VeritasGate, QualityGate, the Ritual) bold direction; it does
+It gives the existing gates (EvidenceGate, QualityGate, the Ritual) bold direction; it does
 not replace them. See docs/pioneer_mode.md.
 """
 

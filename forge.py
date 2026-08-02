@@ -375,7 +375,7 @@ def terminal(arg: str = "") -> str:
 
 
 def render_truth() -> str:
-    from parts.veritas import render_truth as run
+    from parts.evidence_gate import render_truth as run
 
     return run()
 
@@ -805,7 +805,7 @@ def _build_commands() -> CommandSet:
         Command(
             "truth check",
             "CMD-10.012",
-            "VeritasGate: check that the project's claims match reality",
+            "EvidenceGate: check that the project's claims match reality",
             lambda _s, _a: render_truth(),
             namespace=CORE,
         )

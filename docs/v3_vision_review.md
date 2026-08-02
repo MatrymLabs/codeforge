@@ -59,7 +59,7 @@ and docstring gain the engineering meaning), except where a symbol is purely int
 
 | Thematic name | What it is | Engineering alias (document, don't rename) |
 |---|---|---|
-| `veritas` / VeritasGate | claims-match-reality audit | **consistency-audit gate** |
+| `veritas` / EvidenceGate | claims-match-reality audit | **consistency-audit gate** |
 | `frameup` | on-demand whole-system inspection | **system inspector / self-report** |
 | `hubble` | observation/diagnosis subpackage | **diagnostics-observation** |
 | `foundry` | approval-gated guarded code generation | **guarded generator** |

@@ -1,4 +1,4 @@
-"""CARD: veritas -- VeritasGate: check that CodeForge's claims match reality.
+"""CARD: evidence_gate -- EvidenceGate: check that CodeForge's claims match reality.
 
 No claim without correspondence. `truth check` composes the truth-relevant signals --
 an overclaim scan, drift-prone hardcoded claims, documentation presence, registry
@@ -139,7 +139,7 @@ def render_truth(checks: list[TruthCheck] | None = None) -> str:
     """
     checks = truth_checks() if checks is None else checks
     flagged = [c for c in checks if c.status != VERIFIED]
-    lines = ["VeritasGate: truth check", "", "No claim without correspondence.", ""]
+    lines = ["EvidenceGate: truth check", "", "No claim without correspondence.", ""]
     for c in checks:
         lines.append(f"  [{c.status:8}] {c.claim}")
         lines.append(f"             {c.evidence}")
@@ -159,7 +159,7 @@ def render_truth(checks: list[TruthCheck] | None = None) -> str:
 
 
 def main() -> int:
-    """CLI entry (`python -m parts.veritas`, `make truth`): render the audit and GATE.
+    """CLI entry (`python -m parts.evidence_gate`, `make truth`): render the audit and GATE.
 
     Exit 0 when every claim corresponds to reality; exit 1 the moment one is FLAGGED, so
     the ritual and CI can fail loud on a claim that has drifted from the code.

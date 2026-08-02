@@ -1,7 +1,7 @@
 # PerformanceGate (draft schema)
 
 *Measurement, not mythology.* A draft gate that will eventually compose with the Ritual,
-QualityGate, SafetyReview, EvidenceLedger, and VeritasGate. This document is the **schema**;
+QualityGate, SafetyReview, EvidenceLedger, and EvidenceGate. This document is the **schema**;
 wiring it into a `parts/` module (with a test twin) is a later, approval-gated step.
 
 ## Doctrine

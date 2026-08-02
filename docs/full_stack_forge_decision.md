@@ -38,7 +38,7 @@ CodeForge is already on the hybrid path, not starting from zero:
   custom renderers + (later, only if justified) HTMX for interactivity and a *separate*
   React/TypeScript flagship.
 
-## Tool verdicts (VeritasGate-honest labels)
+## Tool verdicts (EvidenceGate-honest labels)
 
 | Tool | Verdict | Why |
 |---|---|---|

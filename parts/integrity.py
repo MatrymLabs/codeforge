@@ -45,7 +45,7 @@ _TOOLS = (
     "scancode",
 )
 _PRESENCE = ("README.md", "LICENSE", "CHANGELOG.md", "SECURITY.md", "CONTRIBUTING.md", "docs")
-# Words that would overclaim if unqualified -- the VeritasGate red flags.
+# Words that would overclaim if unqualified -- the EvidenceGate red flags.
 _OVERCLAIM = (
     "production-ready",
     "fully compliant",
@@ -377,7 +377,7 @@ def _report_lines(
         "Professional Presentation:",
         f"- key files:  {'all present' if not data.gaps else 'MISSING: ' + ', '.join(data.gaps)}",
         "",
-        "Truth / VeritasGate:",
+        "Truth / EvidenceGate:",
         f"- registry validates:   {reg_line}",
         f"- QA readiness:         {qa_line}",
         f"- overclaim scan:       {overclaim_line}",

@@ -91,7 +91,7 @@
             "why_it_matters": "Proof you can finish, not just start.",
             "repo_proof": [
               "parts/cast.py",
-              "parts/veritas.py",
+              "parts/evidence_gate.py",
               "scripts/ritual_fast.sh"
             ],
             "status": "proven",
@@ -391,8 +391,8 @@
             "skill": "Maintain truth between docs and code",
             "why_it_matters": "Trustworthy documentation is a repeated senior/SRE value (DexCare).",
             "repo_proof": [
-              "parts/veritas.py",
-              "docs/veritas.md"
+              "parts/evidence_gate.py",
+              "docs/evidence_gate.md"
             ],
             "status": "proven",
             "next_proof_task": "Broaden truth check to more drift-prone claims."

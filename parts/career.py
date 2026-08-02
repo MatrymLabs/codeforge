@@ -5,7 +5,7 @@ BLS/O*NET research) and renders, per level, each skill with the exact repo artif
 proves it -- and the honest gaps. It never says "job-ready"; it says "here is the skill,
 here is the proof, here is what is missing."
 
-VeritasGate rule, enforced here: a skill marked `proven` or `partial` must cite at least
+EvidenceGate rule, enforced here: a skill marked `proven` or `partial` must cite at least
 one repo path that actually exists. `unproven_claims()` finds violations; the test twin
 pins that the shipped board has none, so the sign cannot quietly overclaim.
 
@@ -38,7 +38,7 @@ _GLYPH = {
     NEEDS_UPDATE: "[!]",
     HUMAN_REVIEW: "[?]",
 }
-# Statuses that CLAIM evidence -- they must cite a real artifact (VeritasGate).
+# Statuses that CLAIM evidence -- they must cite a real artifact (EvidenceGate).
 _CLAIMS_EVIDENCE = (PROVEN, PARTIAL)
 _LEVELS = ("entry", "intermediate", "advanced")
 
@@ -118,7 +118,7 @@ def ownership_name(level: int) -> str:
 
 
 def unproven_claims(board: dict, root: Path | None = None) -> list[str]:
-    """VeritasGate: proven/partial skills whose cited proof paths do NOT exist on disk.
+    """EvidenceGate: proven/partial skills whose cited proof paths do NOT exist on disk.
     An empty list means every claim of evidence points to a real artifact."""
     base = root or _ROOT
     bad: list[str] = []

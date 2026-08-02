@@ -17,7 +17,7 @@ _PROGRAMS: list[tuple[str, str]] = [
     ("career", "Career Evidence board - skills mapped to repo proof"),
     ("pioneer", "Pioneer Mode - doctrine, risk ladder, experiments"),
     ("pm", "Project status dashboard (computed live)"),
-    ("truth", "VeritasGate - the project's claims vs reality"),
+    ("truth", "EvidenceGate - the project's claims vs reality"),
     ("qa", "QA board - every filed object graded"),
     ("docs", "Documentation gap check"),
     ("deps", "Dependency gate - every dependency justified (frameless Python)"),
@@ -71,7 +71,7 @@ def _run(name: str) -> str:
 
         return pm_status()
     if name == "truth":
-        from parts.veritas import render_truth
+        from parts.evidence_gate import render_truth
 
         return render_truth()
     if name == "qa":

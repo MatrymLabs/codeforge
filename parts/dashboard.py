@@ -73,7 +73,7 @@ def _career_card(root: Path) -> Card:
     for s in skills:
         counts[s["status"]] = counts.get(s["status"], 0) + 1
     proven = counts.get("proven", 0)
-    unbacked = unproven_claims(board, root)  # VeritasGate: every claim must cite a real artifact
+    unbacked = unproven_claims(board, root)  # EvidenceGate: every claim must cite a real artifact
     status = _FAIL if unbacked else _OK
     detail = (
         "every cited proof exists on disk"

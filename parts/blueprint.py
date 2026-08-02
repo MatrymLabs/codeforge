@@ -43,7 +43,7 @@ class Blueprint:
     security: tuple[str, ...]
     tasks: tuple[str, ...] = ()
     stack: tuple[tuple[str, str], ...] = ()  # (layer, choice) pairs; a plan may not have chosen yet
-    status: str = "draft"  # draft | validated -- a VeritasGate label, never inflated
+    status: str = "draft"  # draft | validated -- a EvidenceGate label, never inflated
 
 
 def _clean_list(raw: Any, field: str, bp_id: str) -> tuple[str, ...]:

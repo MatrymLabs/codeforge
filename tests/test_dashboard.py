@@ -33,7 +33,7 @@ def test_career_card_matches_the_real_board():
     proven = sum(1 for s in skills if s["status"] == "proven")
     card = next(c for c in build_snapshot().cards if c.key == "career")
     assert card.headline == f"{proven}/{len(skills)} proven"
-    # VeritasGate: the card's verdict must agree with the real proof-on-disk check.
+    # EvidenceGate: the card's verdict must agree with the real proof-on-disk check.
     assert (card.status == "ok") == (not unproven_claims(board))
 
 

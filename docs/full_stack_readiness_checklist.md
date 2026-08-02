@@ -1,7 +1,7 @@
 # Full-Stack Readiness Checklist (CodeForge)
 
 *Honest self-assessment against the 2026 research (`docs/research/full_stack_python_requirements.md`).
-`[x]` present, `[~]` partial, `[ ]` planned. VeritasGate labels applied. Last audited: 2026-07-10.*
+`[x]` present, `[~]` partial, `[ ]` planned. EvidenceGate labels applied. Last audited: 2026-07-10.*
 
 ## Backend (strong)
 

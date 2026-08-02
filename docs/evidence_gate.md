@@ -1,4 +1,4 @@
-# VeritasGate - `truth check`
+# EvidenceGate - `truth check`
 
 *No claim without correspondence.* The intellect must conform to the thing; the README
 must conform to the code; the claim must conform to the evidence.

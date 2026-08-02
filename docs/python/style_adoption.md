@@ -23,7 +23,7 @@ engineering baseline (toolchain, testing layers) and sits *under* this guide.
 | §1.3 Deduction has a Watson | STAGED (go-forward) | An `INFER` obligates a falsifying test or an explicit `UNVERIFIED` escalation in the same change. |
 | §2 kernel/adapters/content + import-linter | **HELD (keel junction)** | codeforge uses `parts/` (a flat, tested part catalog), not `kernel/adapters/content`. Restructuring is a core-architecture change under the human-keel replacement threshold. Not adopted; owner decision required. See below. |
 | §3 `vocabulary.py` per project | STAGED | No `vocabulary.py` today; domain nouns live across `parts/`. A vocabulary module is a candidate build, not yet made. |
-| §3 Deprecated-vocabulary ban | **HELD (owner call)** | `parts/veritas.py` and the VeritasGate naming (and the "assimilation" campaign language) predate this ban. The rename is reserved as the owner's decision (see the nomenclature work). New code introduces none of the deprecated terms. |
+| §3 Deprecated-vocabulary ban | **HELD (owner call)** | `parts/evidence_gate.py` and the EvidenceGate naming (and the "assimilation" campaign language) predate this ban. The rename is reserved as the owner's decision (see the nomenclature work). New code introduces none of the deprecated terms. |
 | §4 Professional baseline | MET | Ruff (line length 100), mypy, pytest (strict), branch coverage gate, per-module custom exceptions, Conventional Commits, Google-style docstrings. Evidenced in `standards.md`. |
 | §4 Per-project exception root | PARTIAL | Exceptions are per-module (`BuildError`, `LibraryError`, ...) rather than one project root. Consistent and typed; a single root is a possible future consolidation, not required. |
 | §5 Flourish budget | MET (by habit) | codeforge already carries one domain motif (the forge/spiral voice) in internal names; public surfaces stay professional. |
@@ -38,7 +38,7 @@ engineering baseline (toolchain, testing layers) and sits *under* this guide.
    one-way dependencies) is already substantially honored by `parts/` and the engine-tick law;
    the *directory shape* is the open question. Not started.
 
-2. **Deprecated-vocabulary rename (§3).** Retiring `Veritas`/VeritasGate and the assimilation
+2. **Deprecated-vocabulary rename (§3).** Retiring `Veritas`/EvidenceGate and the assimilation
    language touches ~28 files plus a persisted part name. It is reserved as the owner's call
    because it changes established identifiers. New code uses only canonical vocabulary.
 

@@ -1,7 +1,7 @@
 """CARD: frameup -- inspect the forge: an on-demand frame-up of the whole machine.
 
 Composes the self-audit signals the project already produces -- registry validity, the QA
-board, VeritasGate truth, documentation presence, the overclaim scan, plus the career and
+board, EvidenceGate truth, documentation presence, the overclaim scan, plus the career and
 pioneer systems -- into one green/yellow/red frame-up. It STORES nothing (computes from
 filed state, like `pm status`) and REUSES the existing gates rather than duplicating them.
 
@@ -19,7 +19,7 @@ from parts.integrity import overclaim_hits, presence_gaps
 from parts.qualitygate import gate_all
 from parts.registry import load_collective, validate
 from parts.verdicts import FAIL, PASS, WATCH
-from parts.veritas import VERIFIED, truth_checks
+from parts.evidence_gate import VERIFIED, truth_checks
 
 _ROOT = Path(__file__).resolve().parent.parent
 
@@ -168,7 +168,7 @@ def inspect(arg: str = "") -> str:
 
         return render_gate_all()
     if a == "truth":
-        from parts.veritas import render_truth
+        from parts.evidence_gate import render_truth
 
         return render_truth()
     if a == "pm":

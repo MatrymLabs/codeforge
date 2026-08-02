@@ -1,7 +1,7 @@
 """Honesty gate for the security control crosswalk (docs/reports/security/control-crosswalk.yaml).
 
 A control-to-framework crosswalk is only worth anything if it cannot rot into fiction or drift into
-an overclaim. This is the VeritasGate for it (the same "every claim cites a source that exists" rule
+an overclaim. This is the EvidenceGate for it (the same "every claim cites a source that exists" rule
 the repo applies elsewhere): every cited path must exist on disk, every control carries an allowed
 (non-compliance) status, and the file must state plainly that it is NOT a compliance claim.
 

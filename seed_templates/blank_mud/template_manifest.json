@@ -16,7 +16,7 @@
     "ritual": "slim",
     "registry": true,
     "qa": true,
-    "veritas": true
+    "evidence_gate": true
   },
   "status": "prototype"
 }

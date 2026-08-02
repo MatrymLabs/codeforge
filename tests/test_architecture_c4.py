@@ -1,6 +1,6 @@
 """Correspondence test for the C4 model view (docs/architecture_c4.md).
 
-A diagram that names modules is a claim about the code. VeritasGate for the map: every
+A diagram that names modules is a claim about the code. EvidenceGate for the map: every
 module the C4 diagram cites must exist on disk, so a rename that forgets the map turns the
 suite red instead of leaving a stale lie on the page. Acceptance (the shipped map is
 honest) and refusal (a bogus citation is caught) are both pinned.

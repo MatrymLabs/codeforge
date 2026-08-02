@@ -1,7 +1,7 @@
 # Hiring Requirement Matrix (CodeForge)
 
 *Maps 2026 hiring requirements (`docs/research/`) to concrete repo evidence. Status:
-proven / partial / missing / planned. VeritasGate: "proven" requires a cited artifact that
+proven / partial / missing / planned. EvidenceGate: "proven" requires a cited artifact that
 exists. Last audited: 2026-07-31. Primary target: Backend / Platform / Systems engineer
 (full-stack breadth is demonstrated and kept current, but backend/platform is the aim).*
 

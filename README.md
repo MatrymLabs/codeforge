@@ -256,7 +256,7 @@ here is real, tested, and reachable in the game; the whole flow runs green end-t
   legal-*awareness* boundary: never legal advice, always "human review required." See
   [docs/legal_policy_awareness.md](docs/legal_policy_awareness.md).
 - **Career evidence** - `career` renders a Career Evidence Sign: real software-career skills
-  mapped to the exact repo artifact that proves each (BLS/O*NET-grounded), VeritasGate-honest
+  mapped to the exact repo artifact that proves each (BLS/O*NET-grounded), EvidenceGate-honest
   (proven only when the artifact exists); `career gaps` lists what's missing. See
   [docs/career_evidence_board.md](docs/career_evidence_board.md) and
   [docs/resume_mapping.md](docs/resume_mapping.md).

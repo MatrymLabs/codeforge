@@ -1,4 +1,4 @@
-"""Test twin for parts/veritas.py -- VeritasGate (`truth check`).
+"""Test twin for parts/evidence_gate.py -- EvidenceGate (`truth check`).
 
 Acceptance (the real repo's claims verify) and refusal (a planted overclaim, a
 hardcoded count, and a missing doc are FLAGGED, not hidden) are both pinned; the
@@ -11,15 +11,15 @@ from pathlib import Path
 import pytest
 
 from forge import handle_command
-from parts.veritas import FLAGGED, VERIFIED, main, render_truth, truth_checks
+from parts.evidence_gate import FLAGGED, VERIFIED, main, render_truth, truth_checks
 from parts.world.session import SESSIONS, Session
 
 
 def test_the_real_repo_passes_its_own_truth_checks() -> None:
-    # every claim VeritasGate makes about this repo must currently hold
+    # every claim EvidenceGate makes about this repo must currently hold
     checks = truth_checks()
     flagged = [c.claim for c in checks if c.status != VERIFIED]
-    assert not flagged, f"VeritasGate flagged real claims: {flagged}"
+    assert not flagged, f"EvidenceGate flagged real claims: {flagged}"
 
 
 def test_render_reports_the_overall_verdict() -> None:
@@ -29,16 +29,16 @@ def test_render_reports_the_overall_verdict() -> None:
 
 
 def test_truth_cli_exits_zero_when_the_repo_is_honest(capsys) -> None:
-    # `make truth` / `python -m parts.veritas`: the gate the ritual and CI call.
+    # `make truth` / `python -m parts.evidence_gate`: the gate the ritual and CI call.
     code = main()
     out = capsys.readouterr().out
     assert code == 0  # the real repo currently verifies
-    assert "VeritasGate" in out
+    assert "EvidenceGate" in out
 
 
 def test_truth_cli_exits_one_when_a_claim_is_flagged(monkeypatch, capsys) -> None:
     # A FLAGGED claim must fail the gate loud (exit 1), never pass silently.
-    from parts import veritas as v
+    from parts import evidence_gate as v
 
     flagged = [v.TruthCheck("some claim", FLAGGED, "does not correspond")]
     monkeypatch.setattr(v, "truth_checks", lambda: flagged)
@@ -61,7 +61,7 @@ def test_a_planted_overclaim_and_hardcoded_count_are_flagged(tmp_path: Path) -> 
 def test_a_hardcoded_test_count_in_living_docs_is_flagged_but_snapshots_are_exempt(
     tmp_path: Path,
 ) -> None:
-    from parts.veritas import _hardcoded_counts
+    from parts.evidence_gate import _hardcoded_counts
 
     (tmp_path / "README.md").write_text("a clean readme with no counts")
     docs = tmp_path / "docs"
@@ -84,8 +84,8 @@ def fresh() -> Iterator[None]:
 
 
 def test_truth_check_reachable_through_the_tick() -> None:
-    session = Session(player_id="veritas")
-    SESSIONS["veritas"] = session
+    session = Session(player_id="evidence_gate")
+    SESSIONS["evidence_gate"] = session
     out = handle_command(session, "truth check")
-    assert "VeritasGate" in out
+    assert "EvidenceGate" in out
     assert "Verdict:" in out
