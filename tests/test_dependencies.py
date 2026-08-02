@@ -1,4 +1,4 @@
-"""Test twin for parts/dependencies.py -- the dependency gate.
+"""Test twin for adapters/dependencies.py -- the dependency gate.
 
 Acceptance: the real repo is clean (every declared dependency is justified). Refusal:
 an unjustified dependency fails, an incomplete ledger row fails loud, a stale row warns,
@@ -12,7 +12,7 @@ from pathlib import Path
 
 import pytest
 
-from parts.dependencies import (
+from adapters.dependencies import (
     POPULAR_PACKAGES,
     LedgerError,
     _canonical,
@@ -156,7 +156,7 @@ def test_edit_distance_is_capped_and_correct() -> None:
 
 
 def test_screen_uses_the_real_ledger_and_clears_our_own_deps() -> None:
-    from parts.dependencies import screen_name
+    from adapters.dependencies import screen_name
 
     # every real declared dep is justified (trusted), so none trips the screen
     assert screen_name("sqlalchemy") == []

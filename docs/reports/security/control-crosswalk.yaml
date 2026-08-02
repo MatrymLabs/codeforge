@@ -83,9 +83,9 @@ controls:
     control: Online brute-force defence + non-enumerating login refusals
     applicability: applicable
     assurance_profile: B
-    implementation: parts/gateway.py
+    implementation: adapters/gateway.py
     evidence:
-      - {kind: implementation, path: parts/gateway.py}
+      - {kind: implementation, path: adapters/gateway.py}
     status: verified_against
     frameworks: {nist_800_53: [AC-7, IA-5], owasp_top10: [A07]}
     assessment_requirement: independent_assessment_required

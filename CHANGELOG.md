@@ -364,7 +364,7 @@ date-stamped while pre-1.0.
   module), `docs/observability.md`, 7 test cases (exposition rendering, label escaping,
   middleware records by template, endpoint content type), and an honest advanced career-board
   skill (structured logs + metrics).
-- **AI Blueprint drafter (schema-enforced, mockable).** `parts/blueprint_ai.py`
+- **AI Blueprint drafter (schema-enforced, mockable).** `adapters/blueprint_ai.py`
   (MOD-10.018) turns a freeform idea into a structured Blueprint using the
   Anthropic Messages API's `messages.parse` with a Pydantic schema (`BlueprintDraft`), then
   re-validates it through the same loud gate a human's Blueprint passes (`from_dict`) and
@@ -372,7 +372,7 @@ date-stamped while pre-1.0.
   tick verb; offline it returns an honest "needs the Claude Architect" message. Same seam as
   the Architect: the Anthropic client is injected (tests use a fake, CI never touches the
   network), codeforge core never imports `anthropic`, one API key away. Factored a shared
-  `anthropic_client()` out of `parts/architect.py` (behavior unchanged). Adds 9 test cases
+  `anthropic_client()` out of `adapters/architect.py` (behavior unchanged). Adds 9 test cases
   (structured draft -> validated Blueprint, empty-idea no-call, None output, schema-valid but
   Blueprint-invalid draft, key-absent refusal, offline verb) and an honest advanced
   career-board skill (LLM behind a mockable, schema-enforced boundary).
@@ -490,7 +490,7 @@ date-stamped while pre-1.0.
   and what that trade would cost. Shows the frameless choice was deliberate, not naive.
 - **Dependency gate (`make deps`) + SHA-pinned Actions.** The Dependency Approval Rule is
   now machine-checkable: `dependency_ledger.toml` justifies every dependency and
-  `parts/dependencies.py` (stdlib `tomllib`) fails loud on any unjustified one; the test
+  `adapters/dependencies.py` (stdlib `tomllib`) fails loud on any unjustified one; the test
   twin rides `make check`. All GitHub Actions are pinned to full commit SHA (Dependabot
   maintains them), lifting the OpenSSF Scorecard Pinned-Dependencies check. Filed as
   MOD-10.012.
@@ -698,7 +698,7 @@ date-stamped while pre-1.0.
   stored. `docs/project_management.md` holds the charter, milestone status, backlog,
   risk register, decision log, and one worked DMAIC. Scope control: this prompt's
   full PMO + Lean-Six-Sigma/ADDIE systems were *deferred as backlog*, not built.
-- **Safety + QA spine** (`parts/qualitygate.py`): `QualityGate` grades any filed
+- **Safety + QA spine** (`kernel/qualitygate.py`): `QualityGate` grades any filed
   object (purpose · file · tests · docs · maturity-honesty → `pass|watch|fail`),
   `SafetyReview` rates risk, `DocumentationImpactSweep` sweeps the key docs. New
   read-only MUD commands `qa gate [all|<id>]`, `safety review <id>`, `docs check`.

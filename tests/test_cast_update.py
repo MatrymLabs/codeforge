@@ -800,7 +800,7 @@ def test_selective_validator_drives_the_surface_corpus(monkeypatch) -> None:
 
     calls: dict[str, list[str]] = {}
     monkeypatch.setattr(coupling, "surface_commands", lambda s: ["look"])
-    monkeypatch.setattr(coupling, "surface_imports", lambda s: ["parts.gateway"])
+    monkeypatch.setattr(coupling, "surface_imports", lambda s: ["adapters.gateway"])
 
     def _fake_validate(cd, *, commands, imports):
         calls["commands"], calls["imports"] = commands, imports
@@ -808,7 +808,7 @@ def test_selective_validator_drives_the_surface_corpus(monkeypatch) -> None:
 
     monkeypatch.setattr(cu, "validate_cast", _fake_validate)
     ok, detail = cu._selective_validator(["solo"])(Path("/nonexistent"))
-    assert ok and calls["commands"] == ["look"] and calls["imports"] == ["parts.gateway"]
+    assert ok and calls["commands"] == ["look"] and calls["imports"] == ["adapters.gateway"]
 
 
 def test_update_noop_for_a_current_selective_cast(tmp_path: Path) -> None:

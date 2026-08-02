@@ -11,10 +11,10 @@ import re
 from dataclasses import dataclass
 from pathlib import Path
 
+from kernel.qualitygate import FAIL, gate_all
 from kernel.registry import load_collective, validate
 from parts.hardware import source_gaps, uncataloged_cores
 from parts.integrity import overclaim_hits, presence_gaps
-from parts.qualitygate import FAIL, gate_all
 
 _ROOT = Path(__file__).resolve().parent.parent
 

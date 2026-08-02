@@ -30,10 +30,10 @@ def _free_port() -> int:
 
 @pytest.fixture(scope="session")
 def base_url():
-    """Serve parts.api.app on a background uvicorn thread; yield its URL."""
+    """Serve adapters.api.app on a background uvicorn thread; yield its URL."""
     import uvicorn
 
-    from parts.api import app
+    from adapters.api import app
 
     class _ThreadedServer(uvicorn.Server):
         def install_signal_handlers(self) -> None:  # don't hijack signals off the main thread

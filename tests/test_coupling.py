@@ -120,7 +120,7 @@ def test_closure_handles_an_import_surface():
 def test_surface_imports_lists_the_server_modules():
     from parts.coupling import surface_imports
 
-    assert surface_imports(["solo", "multiplayer"]) == ["parts.gateway", "parts.web_gateway"]
+    assert surface_imports(["solo", "multiplayer"]) == ["adapters.gateway", "parts.web_gateway"]
     assert surface_imports(["solo", "save"]) == []
 
 

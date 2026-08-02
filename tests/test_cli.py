@@ -56,7 +56,7 @@ def test_a_valid_seed_sets_the_env_before_dispatch(monkeypatch):
     import os
 
     monkeypatch.setattr("parts.cli._seeds_available", lambda: ["alpha", "beta"])
-    monkeypatch.setattr("parts.gateway.serve", lambda: None)
+    monkeypatch.setattr("adapters.gateway.serve", lambda: None)
     monkeypatch.setenv("FORGE_SEED", "unset")  # tracked by monkeypatch -> restored after the test
     assert main(["--seed", "beta", "serve"]) == 0  # env must be set before the world imports
     assert os.environ["FORGE_SEED"] == "beta"
@@ -64,14 +64,14 @@ def test_a_valid_seed_sets_the_env_before_dispatch(monkeypatch):
 
 def test_no_args_defaults_to_serve(monkeypatch):
     calls: list[int] = []
-    monkeypatch.setattr("parts.gateway.serve", lambda: calls.append(1))
+    monkeypatch.setattr("adapters.gateway.serve", lambda: calls.append(1))
     assert main([]) == 0  # bare `codeforge` ignites the server
     assert calls == [1]
 
 
 def test_serve_dispatches_to_the_gateway(monkeypatch):
     calls: list[int] = []
-    monkeypatch.setattr("parts.gateway.serve", lambda: calls.append(1))
+    monkeypatch.setattr("adapters.gateway.serve", lambda: calls.append(1))
     assert main(["serve"]) == 0
     assert calls == [1]
 

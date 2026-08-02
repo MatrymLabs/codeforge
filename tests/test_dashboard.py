@@ -8,7 +8,7 @@ that will not load renders an honest red card, never a 500; hostile card text is
 import pytest
 from fastapi.testclient import TestClient
 
-from parts.api import app
+from adapters.api import app
 from parts.career import load_board, unproven_claims
 from parts.dashboard import (
     Card,
@@ -61,7 +61,7 @@ def test_a_broken_source_renders_a_fail_card_not_a_crash(monkeypatch):
     def boom(*_a, **_k):
         raise RuntimeError("registry gone")
 
-    monkeypatch.setattr("parts.qualitygate.gate_all", boom)
+    monkeypatch.setattr("kernel.qualitygate.gate_all", boom)
     card = next(c for c in build_snapshot().cards if c.key == "qa")
     assert card.status == "fail"
     assert "registry gone" in card.detail

@@ -66,7 +66,7 @@ Classification Registry   registry/*.json + kernel/registry.py
 Command spine             parts/commands.py
    namespaced verbs (CORE bare / ADMIN '@' / SEED), rank-gated; verbs filed as CMD-*
         |
-QualityGate + SafetyReview  parts/qualitygate.py
+QualityGate + SafetyReview  kernel/qualitygate.py
    `qa gate all` READS the registry and grades each object -> part + part = a self-audit
         |
 Project control            parts/pm.py

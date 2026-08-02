@@ -1,4 +1,4 @@
-"""Test twin for parts/qualitygate.py -- the Safety + QA spine.
+"""Test twin for kernel/qualitygate.py -- the Safety + QA spine.
 
 Acceptance (a complete object passes, the self-audit runs over the real registry,
 an admin object is rated higher risk) and refusal (a built object missing its file
@@ -11,8 +11,7 @@ from pathlib import Path
 import pytest
 
 from forge import handle_command
-from kernel.registry import Designation
-from parts.qualitygate import (
+from kernel.qualitygate import (
     FAIL,
     PASS,
     docs_check,
@@ -20,6 +19,7 @@ from parts.qualitygate import (
     run_gate,
     safety_review,
 )
+from kernel.registry import Designation
 from parts.world.session import SESSIONS, Session
 
 
@@ -137,7 +137,7 @@ def test_safety_review_flags_item_and_prototype_branches() -> None:
 
 
 def test_render_paths_handle_an_unknown_designation() -> None:
-    from parts.qualitygate import render_gate, render_safety
+    from kernel.qualitygate import render_gate, render_safety
 
     assert "No object" in render_gate("RM-09.999")
     assert "No object" in render_safety("RM-09.999")

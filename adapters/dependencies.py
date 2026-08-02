@@ -244,7 +244,7 @@ def render_dependencies(pyproject: Path = _PYPROJECT, ledger: Path = _LEDGER) ->
 
 def main(argv: list[str] | None = None) -> int:
     """`make deps`: print the gate verdict; exit non-zero if any dependency is unjustified.
-    `python -m parts.dependencies screen <name>`: run the offline admission screen on one name."""
+    `python -m adapters.dependencies screen <name>`: run the admission screen on one name."""
     import sys
 
     args = list(sys.argv[1:] if argv is None else argv)

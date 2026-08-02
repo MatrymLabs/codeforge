@@ -72,7 +72,7 @@ def test_the_offline_sample_scores_the_local_architect(tmp_path: Path) -> None:
     # The canned SAMPLE, scored against the offline LocalArchitect (no network), records a real
     # reproducible score. (main() itself writes to the real store, so we drive evaluate directly
     # with a tmp root rather than call it here.)
-    from parts.architect import LocalArchitect
+    from adapters.architect import LocalArchitect
 
     subject, prompt, required = SAMPLE
     rec = evaluate(

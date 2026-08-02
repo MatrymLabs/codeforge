@@ -163,7 +163,7 @@ PR description or ADR, before it lands:
 If the case is not strong on "need", "skill proven", and "removable", the default is
 `stdlib_first`, `research_only`, or `integrate_later`.
 
-**Enforced, not just documented.** `make deps` (part `parts/dependencies.py`, stdlib
+**Enforced, not just documented.** `make deps` (part `adapters/dependencies.py`, stdlib
 `tomllib` only) reads the declared dependencies from `pyproject.toml` and their
 justifications from `dependency_ledger.toml`, then fails loud on any dependency declared
 without a ledger row (and warns on a stale row). The test twin rides `make check`, so an
@@ -171,7 +171,7 @@ unjustified dependency cannot merge silently. Adding a dependency now means addi
 row here first.
 
 **Admission screen (offline typo-squat / hallucination check).** Before a name is trusted,
-`python -m parts.dependencies screen <name>` screens it for the supply-chain risk that an AI
+`python -m adapters.dependencies screen <name>` screens it for the supply-chain risk that an AI
 assistant confidently invents a plausible-but-wrong package name (a documented, systemic threat).
 A name that is not a valid PEP 503 name, or is one edit from a well-known package while being
 neither that package nor already justified, is flagged. It is offline and stdlib-only (no PyPI
@@ -238,4 +238,4 @@ blocked                  unsafe, unclear, unlicensed, or too risky
 **On the Hardware Store**
 - Could a "tool review" itself become a Hardware Store part (a reusable evaluation checklist)?
 - ~~Could the Dependency Approval Rule be enforced by a small in-repo gate (a `make` target that lints new deps)?~~
-  **Answered:** yes - `make deps` (`parts/dependencies.py`) now enforces the ledger; the test twin rides `make check`.
+  **Answered:** yes - `make deps` (`adapters/dependencies.py`) now enforces the ledger; the test twin rides `make check`.

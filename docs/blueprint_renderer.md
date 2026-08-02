@@ -45,7 +45,7 @@ until the tick proves it).
 
 ## Drafting with AI (schema-enforced, honest)
 
-`parts/blueprint_ai.py` turns a freeform idea into a **structured** Blueprint using the
+`adapters/blueprint_ai.py` turns a freeform idea into a **structured** Blueprint using the
 Anthropic Messages API's `messages.parse` with a Pydantic schema (`BlueprintDraft`). The model
 fills a schema; it never emits free prose we parse by hand. The draft is then re-validated
 through the **same loud gate** every human-authored Blueprint passes (`from_dict`), so an

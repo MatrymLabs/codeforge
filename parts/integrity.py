@@ -23,10 +23,10 @@ from dataclasses import dataclass
 from datetime import date
 from pathlib import Path
 
+from kernel.qualitygate import gate_all
 from kernel.registry import load_collective, unfiled_modules, validate
 from kernel.world_boundary import world_boundary_gaps
 from parts.hardware import load_catalog
-from parts.qualitygate import gate_all
 from parts.shelf_boundary import shelf_boundary_gaps
 
 _ROOT = Path(__file__).resolve().parent.parent

@@ -64,7 +64,7 @@ _SERVER_ENTRYPOINTS = ("gateway", "web_gateway")
 # Import-based surfaces: not command-traceable (they are servers). Their closure is what IMPORTING
 # these modules loads, and their validation is that those modules import in the cut.
 SURFACE_IMPORTS: dict[str, tuple[str, ...]] = {
-    "multiplayer": ("parts.gateway", "parts.web_gateway"),
+    "multiplayer": ("adapters.gateway", "parts.web_gateway"),
 }
 # Data dependencies a surface needs beyond its module closure - non-module dirs under parts/ that
 # a module reads at runtime (import tracing cannot discover these). e.g. web_gateway reads the

@@ -2,7 +2,7 @@
 
 This is the Python-first reference (ADR-0010) for the polyglot edge organ: a byte-transparent proxy
 that accepts client connections and pumps every byte, both directions, straight through to the game
-gateway (parts/gateway.py). It never inspects the stream, so telnet/IAC negotiation stays end-to-end
+gateway (adapters/gateway.py). It never inspects the stream, so telnet negotiation stays end-to-end
 and the edge stays a thin, safe pump: it raises the connection ceiling without touching game logic.
 
 The optional Go accelerator (native/edge, one goroutine per direction instead of a thread) is the

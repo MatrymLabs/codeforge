@@ -17,7 +17,9 @@ _DOC = _ROOT / "docs" / "architecture_c4.md"
 # Match only real code paths the map should own: the root tick and any parts/ module, including
 # one subpackage level (parts/world/, kernel/shelf/). (A mention like
 # `tests/test_architecture_c4.py` is intentionally NOT matched.)
-_MODULE_RE = re.compile(r"\b(forge\.py|parts/(?:[a-z_][a-z0-9_]*/)?[a-z_][a-z0-9_]*\.py)\b")
+_MODULE_RE = re.compile(
+    r"\b(forge\.py|(?:parts|kernel|adapters|content)/(?:[a-z_][a-z0-9_]*/)?[a-z_][a-z0-9_]*\.py)\b"
+)
 
 
 def _cited_modules(text: str) -> list[str]:

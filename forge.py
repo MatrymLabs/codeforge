@@ -339,25 +339,25 @@ def _workspace(session: Session, arg: str) -> str:
 
 
 def docs_check() -> str:
-    from parts.qualitygate import docs_check as run
+    from kernel.qualitygate import docs_check as run
 
     return run()
 
 
 def render_gate(arg: str) -> str:
-    from parts.qualitygate import render_gate as run
+    from kernel.qualitygate import render_gate as run
 
     return run(arg)
 
 
 def render_gate_all() -> str:
-    from parts.qualitygate import render_gate_all as run
+    from kernel.qualitygate import render_gate_all as run
 
     return run()
 
 
 def render_safety(arg: str) -> str:
-    from parts.qualitygate import render_safety as run
+    from kernel.qualitygate import render_safety as run
 
     return run(arg)
 

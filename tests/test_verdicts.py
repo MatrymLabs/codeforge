@@ -18,8 +18,9 @@ def test_the_verdict_values() -> None:
 
 def test_the_gates_share_the_one_vocabulary() -> None:
     # qualitygate / stewardship / evolution / frameup all bind the SAME constants now.
+    from kernel import qualitygate
     from kernel.evolution import fitness
-    from parts import frameup, qualitygate
+    from parts import frameup
     from parts.stewardship import gate
 
     assert qualitygate.PASS is verdicts.PASS and qualitygate.FAIL is verdicts.FAIL

@@ -152,7 +152,7 @@ def aethryn_journey() -> None:
     env = {**os.environ, "CODEFORGE_DB": str(db), "FORGE_SEED": "aethryn", "PYTHONUNBUFFERED": "1"}
     t0 = time.monotonic()
     server = subprocess.Popen(
-        [sys.executable, "-c", f"from parts.gateway import serve; serve(port={AETHRYN_PORT})"],
+        [sys.executable, "-c", f"from adapters.gateway import serve; serve(port={AETHRYN_PORT})"],
         cwd=ROOT,
         env=env,
         stdout=subprocess.PIPE,
@@ -216,7 +216,11 @@ def multiplayer_journey() -> None:
     env = {**os.environ, "CODEFORGE_DB": str(db), "PYTHONUNBUFFERED": "1"}
     t0 = time.monotonic()
     server = subprocess.Popen(
-        [sys.executable, "-c", f"from parts.gateway import serve; serve(port={MULTIPLAYER_PORT})"],
+        [
+            sys.executable,
+            "-c",
+            f"from adapters.gateway import serve; serve(port={MULTIPLAYER_PORT})",
+        ],
         cwd=ROOT,
         env=env,
         stdout=subprocess.PIPE,
@@ -313,7 +317,7 @@ def spine_journey() -> None:
     env = {**os.environ, "CODEFORGE_DB": str(db), "FORGE_SEED": "aethryn", "PYTHONUNBUFFERED": "1"}
     t0 = time.monotonic()
     server = subprocess.Popen(
-        [sys.executable, "-c", f"from parts.gateway import serve; serve(port={SPINE_PORT})"],
+        [sys.executable, "-c", f"from adapters.gateway import serve; serve(port={SPINE_PORT})"],
         cwd=ROOT,
         env=env,
         stdout=subprocess.PIPE,
@@ -396,7 +400,7 @@ def main() -> int:
     # --- START THE RITUAL (essence): an isolated forge lights -----------------
     t0 = time.monotonic()
     server = subprocess.Popen(
-        [sys.executable, "-c", f"from parts.gateway import serve; serve(port={PORT})"],
+        [sys.executable, "-c", f"from adapters.gateway import serve; serve(port={PORT})"],
         cwd=ROOT,
         env=env,
         stdout=subprocess.PIPE,

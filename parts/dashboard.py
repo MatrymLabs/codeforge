@@ -7,7 +7,7 @@ plus a JSON twin. Frameless by design: stdlib `html.escape` and f-strings, no te
 page and the API, so the two surfaces can never disagree. Every card fails HONEST: a source
 that will not load renders a red "fail" card carrying the error, never a 500 and never a lie.
 
-Wired into the FastAPI app (`parts/api.py`): `GET /` serves the page, `GET /api/status`
+Wired into the FastAPI app (`adapters/api.py`): `GET /` serves the page, `GET /api/status`
 serves the same data as JSON -- the seam a future React/TypeScript front end would consume.
 """
 
@@ -86,7 +86,7 @@ def _career_card(root: Path) -> Card:
 
 def _qa_card(root: Path) -> Card:
     """QualityGate self-audit over every filed object: pass / watch / fail."""
-    from parts.qualitygate import gate_all
+    from kernel.qualitygate import gate_all
 
     results = gate_all(root=root)
     tally: dict[str, int] = {}

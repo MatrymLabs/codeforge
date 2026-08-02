@@ -1,6 +1,6 @@
 # The Architect's brain (an API key away from live)
 
-The Architect NPC (`parts/architect.py`) answers Workshop questions through a **seam** - the
+The Architect NPC (`adapters/architect.py`) answers Workshop questions through a **seam** - the
 `Advisor` protocol (`advise(prompt) -> str`). Two brains implement it behind the *same*
 interface, so callers (`consult`, the `ai` verb) never change:
 

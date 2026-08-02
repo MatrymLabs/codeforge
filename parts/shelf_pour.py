@@ -67,7 +67,9 @@ def _reaches_engine(source: str, where: str) -> bool:
         elif isinstance(node, ast.Import):
             mods = [a.name for a in node.names]
         for m in mods:
-            if (m == "parts" or m.startswith("parts.")) and not m.startswith("kernel.shelf"):
+            engine_roots = ("parts", "adapters", "content", "kernel")
+            is_engine = m in engine_roots or m.startswith(tuple(r + "." for r in engine_roots))
+            if is_engine and not (m == "kernel.shelf" or m.startswith("kernel.shelf.")):
                 return True
     return False
 
