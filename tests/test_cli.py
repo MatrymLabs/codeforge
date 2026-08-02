@@ -133,3 +133,105 @@ def test_passwd_refuses_a_mismatch_and_wrong_arity(capsys, monkeypatch):
     assert main(["passwd", "matlabs"]) == 1  # the two entries differ
     assert "Mismatch" in capsys.readouterr().out
     assert main(["passwd"]) == 1  # wrong arity -> usage
+
+
+# --- refactor verb: verifier-gated safe rename. LibCST (the [refactor] extra) is absent in CI,
+# so the library calls are stubbed here to test the CLI's OWN logic -- dispatch, dry-run vs
+# --apply, the refusal path, and the missing-dependency guard -- with acceptance AND refusal
+# cases. parts/refactor.py is proven separately by its own test twin. ---
+def _stub_refactor(monkeypatch, result=None, error=None, available=True):
+    import parts.refactor as rf
+
+    monkeypatch.setattr(rf, "refactor_available", lambda: available)
+    if error is not None:
+
+        def _boom(*a, **k):
+            raise error
+
+        monkeypatch.setattr(rf, "verified_rename", _boom)
+    elif result is not None:
+        monkeypatch.setattr(rf, "verified_rename", lambda *a, **k: result)
+
+
+def test_refactor_dry_run_previews_and_writes_nothing(tmp_path, capsys, monkeypatch):
+    from parts.refactor import RefactorResult
+
+    src = "def f(a):\n    x = a\n    return x\n"
+    mod = tmp_path / "m.py"
+    mod.write_text(src)
+    renamed = "def f(a):\n    y = a\n    return y\n"
+    _stub_refactor(
+        monkeypatch,
+        result=RefactorResult(applied=True, source=renamed, func_name="f", verdict="preserved"),
+    )
+    assert main(["refactor", str(mod), "f", "x", "y"]) == 0
+    out = capsys.readouterr().out
+    assert "dry-run" in out and "+    y = a" in out  # a diff was shown, not written
+    assert mod.read_text() == src  # the file is untouched without --apply
+
+
+def test_refactor_apply_writes_a_preserved_rename(tmp_path, capsys, monkeypatch):
+    from parts.refactor import RefactorResult
+
+    src = "def f(a):\n    x = a\n    return x\n"
+    mod = tmp_path / "m.py"
+    mod.write_text(src)
+    renamed = "def f(a):\n    y = a\n    return y\n"
+    _stub_refactor(
+        monkeypatch,
+        result=RefactorResult(applied=True, source=renamed, func_name="f", verdict="preserved"),
+    )
+    assert main(["refactor", str(mod), "f", "x", "y", "--apply"]) == 0
+    assert mod.read_text() == renamed
+    assert "applied" in capsys.readouterr().out
+
+
+def test_refactor_refuses_a_behaviour_changing_rename_even_with_apply(
+    tmp_path, capsys, monkeypatch
+):
+    from parts.refactor import RefactorResult
+
+    src = "def f(a):\n    x = a\n    return x\n"
+    mod = tmp_path / "m.py"
+    mod.write_text(src)
+    refused = RefactorResult(
+        applied=False,
+        source=src,
+        func_name="f",
+        verdict="broken",
+        counterexample={"a": 0},
+        notes=("refused: the rename did not preserve behaviour",),
+    )
+    _stub_refactor(monkeypatch, result=refused)
+    assert main(["refactor", str(mod), "f", "x", "y", "--apply"]) == 1  # --apply, yet refused
+    assert mod.read_text() == src  # a refused transform is NEVER written
+    out = capsys.readouterr().out
+    assert "REFUSED" in out and "counterexample" in out
+
+
+def test_refactor_needs_the_libcst_extra(tmp_path, capsys, monkeypatch):
+    mod = tmp_path / "m.py"
+    mod.write_text("def f():\n    return 1\n")
+    _stub_refactor(monkeypatch, available=False)
+    assert main(["refactor", str(mod), "f", "x", "y"]) == 2
+    assert "codeforge[refactor]" in capsys.readouterr().err
+
+
+def test_refactor_bad_target_is_refused_loud(tmp_path, capsys, monkeypatch):
+    from parts.refactor import RefactorError
+
+    mod = tmp_path / "m.py"
+    mod.write_text("def f():\n    return 1\n")
+    _stub_refactor(monkeypatch, error=RefactorError("'x' is not a local or parameter of 'f'"))
+    assert main(["refactor", str(mod), "f", "x", "y"]) == 2
+    assert "refused" in capsys.readouterr().err
+
+
+def test_refactor_missing_file_exits_two(capsys, monkeypatch):
+    _stub_refactor(monkeypatch)  # dependency present; the read is what fails
+    assert main(["refactor", "/no/such/file.py", "f", "x", "y"]) == 2
+    assert "cannot read" in capsys.readouterr().err
+
+
+def test_refactor_missing_args_is_a_usage_error(capsys):
+    assert main(["refactor"]) == 2  # argparse: too few positionals, routed to exit code 2
