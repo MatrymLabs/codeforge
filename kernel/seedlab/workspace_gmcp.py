@@ -110,13 +110,16 @@ def source_tree(source: SourceRecord, files: list[str], *, seed: str) -> dict[st
 
 
 def model_schema(model: ProjectModel, *, seed: str | None = None) -> dict[str, object]:
-    """The `Model.Schema` payload for an extracted project model: its entities. The seedlab model
-    records entity NAMES (not yet their fields - that is a later extractor stage), so each entity is
-    emitted with an empty field list; the client renders "Entity (0 fields)" honestly until the
-    richer extractor lands. `seed` labels the project (defaults to the model's own identity)."""
+    """The `Model.Schema` payload for an extracted project model: its entities WITH their fields
+    (AP-08: the code-first extractor fills `entity_fields`; a layout-inferred or older model has
+    none, and the client renders "Entity (0 fields)" honestly). `seed` labels the project
+    (defaults to the model's own identity)."""
     return {
         "seed": seed or model.identity,
-        "entities": [{"name": name, "fields": []} for name in model.entities],
+        "entities": [
+            {"name": name, "fields": list(model.entity_fields.get(name, []))}
+            for name in model.entities
+        ],
     }
 
 
