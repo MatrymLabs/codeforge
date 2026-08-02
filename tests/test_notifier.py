@@ -1,7 +1,7 @@
 """Test twin for parts/notifier.py -- the practical adapter for the signal bus."""
 
-from parts.notifier import Notifier, OrderPlaced
 from kernel.shelf.signal_bus import SignalBus
+from parts.notifier import Notifier, OrderPlaced
 
 
 def test_a_placed_order_fans_out_to_handlers():

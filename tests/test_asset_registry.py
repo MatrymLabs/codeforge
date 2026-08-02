@@ -2,8 +2,8 @@
 
 import pytest
 
-from parts.asset_registry import Asset, AssetRegistry
 from kernel.shelf.repository import DuplicateKey, InMemoryRepository, NotFound
+from parts.asset_registry import Asset, AssetRegistry
 
 
 def test_register_find_and_list():

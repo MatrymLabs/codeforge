@@ -2,8 +2,8 @@
 
 import pytest
 
-from parts.service_breaker import ServiceBreakers
 from kernel.shelf.circuit_breaker import OPEN, CircuitBreaker, CircuitOpen
+from parts.service_breaker import ServiceBreakers
 
 
 class FakeClock:

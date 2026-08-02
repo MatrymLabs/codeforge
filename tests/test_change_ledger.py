@@ -4,10 +4,10 @@ import pytest
 from hypothesis import given
 from hypothesis import strategies as st
 
-from parts.change_ledger import ChangeLedger, _arc_clear, _tests_passed
 from kernel.shelf.repository import DuplicateKey
 from kernel.shelf.statemachine import Fired, Refusal
 from kernel.shelf.validation import ValidationFailed
+from parts.change_ledger import ChangeLedger, _arc_clear, _tests_passed
 
 
 def _ledger() -> ChangeLedger:

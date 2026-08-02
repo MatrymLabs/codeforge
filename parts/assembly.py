@@ -16,9 +16,9 @@ from dataclasses import dataclass
 from datetime import date
 from pathlib import Path
 
+from kernel.shelf.reporting import write_report
 from parts.hardware import Part, load_catalog
 from parts.manifest import PartManifest
-from kernel.shelf.reporting import write_report
 
 _ROOT = Path(__file__).resolve().parent.parent
 

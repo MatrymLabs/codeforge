@@ -2,8 +2,8 @@
 
 import pytest
 
-from parts.feature_control import FeatureControl
 from kernel.shelf.feature_flags import FeatureFlagError, FlagRegistry
+from parts.feature_control import FeatureControl
 
 
 def test_the_registered_default_governs_without_an_env_override():

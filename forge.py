@@ -8,6 +8,7 @@ terminal driver around it -- a socket gateway will be another.
 import re
 from collections.abc import Callable
 
+from kernel.shelf.hourglass import WORLD_SANDS
 from parts.addie import addie
 from parts.arc import arc
 from parts.calibrate import calibrate
@@ -43,7 +44,6 @@ from parts.registry import (
 )
 from parts.relay import channel
 from parts.save import awaken_snapshot, seal_snapshot
-from kernel.shelf.hourglass import WORLD_SANDS
 from parts.store_index import store
 from parts.telegraph import telegraph
 from parts.titles import title

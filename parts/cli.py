@@ -109,8 +109,8 @@ def _cmd_migrate(args: list[str]) -> int:
 def _cmd_api(args: list[str]) -> int:
     import uvicorn
 
-    from parts.api import app
     from kernel.shelf.config import Settings
+    from parts.api import app
 
     # Honor $PORT like the web command does; Settings types + validates it.
     uvicorn.run(app, host="0.0.0.0", port=Settings.load().port)

@@ -2,8 +2,8 @@
 
 import pytest
 
-from parts.resilient_call import ResilientCaller
 from kernel.shelf.retry import RetryPolicy
+from parts.resilient_call import ResilientCaller
 
 
 class NoSleep:

@@ -24,6 +24,8 @@ import time
 import structlog
 
 from forge import handle_command, render_scene
+from kernel.shelf.bulkhead import Bulkhead, BulkheadFull
+from kernel.shelf.telnet_codec import IAC, WILL, WONT, strip_iac
 from parts.gmcp import (
     GMCP_OPT,
     enables_gmcp,
@@ -41,8 +43,6 @@ from parts.gmcp import (
     target_report,
     vitals_report,
 )
-from kernel.shelf.bulkhead import Bulkhead, BulkheadFull
-from kernel.shelf.telnet_codec import IAC, WILL, WONT, strip_iac
 from parts.world import bans, guild, maintenance_mode, party, presence, trade, tutorial
 from parts.world.accounts import password_fixable
 from parts.world.characters import save_all, save_character
