@@ -89,7 +89,18 @@ def travel(session: Session, arg: str, stones: dict[str, dict[str, Any]]) -> str
 
         save_character(session)
     name = stones[dest]["name"]
-    return f"The ember-stone flares. You are carried to the {name} waystone. ({purse(cost)} spent.)"
+    arrival = (
+        f"The ember-stone flares. You are carried to the {name} waystone. ({purse(cost)} spent.)"
+    )
+    # Arriving at a hub IS an entry: fire the same `enter` quest trigger that walking does (the
+    # movement hook in forge.py), so the Forgeward Road spine -- and errands / deliveries whose
+    # beat is reaching a hub -- advance when you cross the world the intended way, not only on
+    # foot. Without it, waystone travel teleported past every on_enter beat and the main road
+    # never ticked. The lazy import breaks the quest <-> travel cycle.
+    from parts.world.quest import on_event
+
+    beat = on_event(session, "enter", dest)
+    return f"{arrival}\n{beat}" if beat else arrival
 
 
 def _network(session: Session, stones: dict[str, dict[str, Any]]) -> str:
