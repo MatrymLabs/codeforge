@@ -32,6 +32,7 @@ ROOT = Path(__file__).resolve().parent.parent
 PORT = 4071  # a spare port, off the real :4000
 AETHRYN_PORT = 4072  # the flagship-seed leg runs on its own spare port
 MULTIPLAYER_PORT = 4073  # the two-player leg runs on its own spare port
+SPINE_PORT = 4074  # the full-campaign walk (Forgeward Road) runs on its own spare port
 HOST = "127.0.0.1"
 IAC_WILL_ECHO = bytes([255, 251, 1])  # telnet negotiation before a password prompt
 # The engine's command prompt is always line-anchored ("\r\n> " / "\n> "). Match on
@@ -275,6 +276,119 @@ def multiplayer_journey() -> None:
             server.kill()
 
 
+def _forgeward_hubs() -> list[tuple[str, str]]:
+    """The zone hubs on the Forgeward Road, in the spine's own order (level_min then level_max),
+    each paired with its waystone display name. Read from the same seed files the live server forges
+    spine + network from (zones.yaml / waystones.yaml), so the walk matches the server however many
+    zones the flagship grows."""
+    import yaml
+
+    ae = ROOT / "seeds" / "aethryn"
+    zones = yaml.safe_load((ae / "zones.yaml").read_text(encoding="utf-8"))
+    stones = yaml.safe_load((ae / "waystones.yaml").read_text(encoding="utf-8"))
+    ordered = sorted(
+        (z for z in zones.values() if z.get("rooms")),
+        key=lambda z: (int(z.get("level_min") or 1), int(z.get("level_max") or 1)),
+    )
+    hubs: list[tuple[str, str]] = []
+    for zone in ordered:
+        room = str(zone["rooms"][0])
+        hubs.append((room, str(stones.get(room, {}).get("name", room))))
+    return hubs
+
+
+def spine_journey() -> None:
+    """A fourth leg: WALK THE WHOLE CAMPAIGN. The Forgeward Road is the main-road quest whose beats
+    are ARRIVING at each zone hub in level order (parts.world.spine); the Waystone network is how
+    you cross the world (parts.world.travel). This carries a provisioned hero hub-to-hub over the
+    gateway across every zone, proving the campaign advances one leg per arrival all the way to the
+    shipped endgame (the Voidscar) -- the create -> zones -> endgame through-line, live end to end.
+
+    The hero is provisioned (coins for fares + a calling) from the host shell, the same way `grant`
+    reaches the store: this is a fair smoke of the ROAD (does the through-line connect over the real
+    gateway), not a solo of the endgame (survivability/economy balance is a separate concern).
+    """
+    hubs = _forgeward_hubs()
+    db = Path(tempfile.mkdtemp(prefix="cf-e2e-spine-")) / "spine.db"
+    env = {**os.environ, "CODEFORGE_DB": str(db), "FORGE_SEED": "aethryn", "PYTHONUNBUFFERED": "1"}
+    t0 = time.monotonic()
+    server = subprocess.Popen(
+        [sys.executable, "-c", f"from parts.gateway import serve; serve(port={SPINE_PORT})"],
+        cwd=ROOT,
+        env=env,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+    )
+    try:
+        assert server.stdout is not None
+        boot = time.monotonic()
+        while time.monotonic() - boot < 30:  # the flagship seed is larger; allow more boot time
+            if server.poll() is not None:
+                raise SystemExit("spine server exited during boot")
+            if "listening on" in server.stdout.readline().decode(errors="ignore"):
+                break
+        results.append(("SPINE boot (flagship seed)", True, (time.monotonic() - t0) * 1000, ""))
+
+        # Register the wayfarer, then provision coins for every fare from the host shell (the same
+        # store `grant` uses) -- so the smoke proves the ROAD, not a coin grind.
+        s = connect(SPINE_PORT)
+        register(s, "wayfarer@aethryn")
+        s.sendall(b"quit\n")
+        time.sleep(0.7)  # let the disconnect-save settle before we touch the record
+        s.close()
+        prov = subprocess.run(
+            [
+                sys.executable,
+                "-c",
+                "from parts.world.characters import _default_store; "
+                "print(_default_store().add_coins('wayfarer', 100_000_000))",
+            ],
+            cwd=ROOT,
+            env=env,
+            capture_output=True,
+            text=True,
+        )
+        results.append(
+            (
+                "SPINE provision fares (host-shell coin grant)",
+                "True" in prov.stdout,
+                0.0,
+                "" if "True" in prov.stdout else (prov.stderr or prov.stdout)[:100],
+            )
+        )
+
+        s = connect(SPINE_PORT)
+        login(s, "wayfarer@aethryn", "lumos_1234", new=False)
+        step("SPINE calling", s, "job vanguard", ["Vanguard"])
+
+        # Walk the road: from the second hub onward, each arrival is a spine beat. Intermediate legs
+        # say "the road runs on"; the final hub fires the endgame terminal ("...yours to roam").
+        last = len(hubs) - 1
+        out = ""
+        for i in range(1, len(hubs)):
+            room, name = hubs[i]
+            expect = ["carried to the", name]
+            if i < last:
+                expect.append("road runs on")  # the spine ticked this leg on arrival
+            out = step(f"SPINE leg {i}/{last}: travel {name}", s, f"travel {room}", expect)
+        results.append(
+            (
+                "SPINE endgame: walked the Forgeward Road to the Voidscar",
+                "yours to roam" in out.lower(),
+                0.0,
+                "" if "yours to roam" in out.lower() else out[:120].replace("\n", " | "),
+            )
+        )
+        step("SPINE logout", s, "quit", ["world dims"])
+        s.close()
+    finally:
+        server.terminate()
+        try:
+            server.wait(timeout=5)
+        except subprocess.TimeoutExpired:
+            server.kill()
+
+
 def main() -> int:
     db = Path(tempfile.mkdtemp(prefix="cf-e2e-")) / "e2e.db"
     env = {**os.environ, "CODEFORGE_DB": str(db), "PYTHONUNBUFFERED": "1"}
@@ -400,6 +514,9 @@ def main() -> int:
 
     # --- THIRD LEG: two players share a world (the MMO spine) ------------------
     multiplayer_journey()
+
+    # --- FOURTH LEG: walk the whole campaign, valley to endgame (the Forgeward Road) ---
+    spine_journey()
 
     # --- report ---------------------------------------------------------------
     passed = sum(1 for _, ok, _, _ in results if ok)
