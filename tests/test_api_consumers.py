@@ -8,8 +8,8 @@
 import pytest
 from fastapi.testclient import TestClient
 
+from adapters.api import app, get_login_guard
 from kernel.login_guard import LoginGuard
-from parts.api import app, get_login_guard
 from parts.world.accounts import adopt, register
 from parts.world.characters import save_character, set_rank
 from parts.world.session import SESSIONS, Session

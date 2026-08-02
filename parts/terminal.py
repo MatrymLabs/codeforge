@@ -75,15 +75,15 @@ def _run(name: str) -> str:
 
         return render_truth()
     if name == "qa":
-        from parts.qualitygate import render_gate_all
+        from kernel.qualitygate import render_gate_all
 
         return render_gate_all()
     if name == "docs":
-        from parts.qualitygate import docs_check
+        from kernel.qualitygate import docs_check
 
         return docs_check()
     if name == "deps":
-        from parts.dependencies import render_dependencies
+        from adapters.dependencies import render_dependencies
 
         return render_dependencies()
     if name == "bench":

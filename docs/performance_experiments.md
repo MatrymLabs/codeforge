@@ -40,7 +40,7 @@ commit de0f8a5. Reproduce with `python -m benchmarks.perf_journeys`.
 
 ## EXP-002 - Reduce the QA-gate filesystem `stat` storm
 
-- **Repository Area:** J (QA/Veritas) + F. `parts/qualitygate.py:gate_all` / `run_gate` / `exists`.
+- **Repository Area:** J (QA/Veritas) + F. `kernel/qualitygate.py:gate_all` / `run_gate` / `exists`.
 - **Observed Problem:** `qa gate all` grades every filed object by checking proof-path existence, issuing hundreds of `pathlib.Path.exists()` -> `os.stat` calls per invocation.
 - **Evidence / Profiling:** cProfile of 20 `render_gate_all()` calls = 0.453 s with **8,920 `posix.stat` calls (~446 per gate run)** dominating (`reports/performance/profiles/qa_gate_all.txt`).
 - **Current Baseline:** `qa gate all` median **8.2 ms**, p95 10.1 ms.

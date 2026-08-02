@@ -49,8 +49,8 @@ they earn their place (`docs/technology_intake.md`, the `make intake` gate).
 `pip-audit`, `bandit`, Hypothesis (property tests), coverage, pre-commit.
 
 **Server / engine:** the tick is `handle_command(session, text) -> str` in `forge.py` (architecture
-law 4). Threaded TCP telnet gateway with a login front desk (`parts/gateway.py`, GMCP in
-`parts/gmcp.py`); FastAPI admin surface (`parts/api.py`); the world beat is the player's command (no
+law 4). Threaded TCP telnet gateway with a login front desk (`adapters/gateway.py`, GMCP in
+`parts/gmcp.py`); FastAPI admin surface (`adapters/api.py`); the world beat is the player's command (no
 background threads) driving
 `tick_zones` / `menace` / `tick_gather` / `tick_climate` / the hourglass delay-queue.
 

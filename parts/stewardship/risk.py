@@ -21,7 +21,7 @@ SECURITY_SURFACES: dict[str, tuple[str, ...]] = {
     "persistence": ("parts/world/db.py", "migrations/"),
     "secrets/config": (".env", ".secrets.baseline", "pyproject.toml"),
     "ci/workflows": (".github/workflows/",),
-    "network/gateway": ("parts/gateway.py", "parts/web_gateway.py", "parts/api.py"),
+    "network/gateway": ("adapters/gateway.py", "parts/web_gateway.py", "adapters/api.py"),
 }
 
 # Review depth by risk tier: low-risk work is NOT taxed (0 extra approvals); high-risk work is

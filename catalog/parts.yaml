@@ -170,7 +170,7 @@
     general: any project's dated report/evidence writer - stop reinventing the mkdir+path
 - id: typed-contract
   name: Typed API Contract
-  source: parts/api.py
+  source: adapters/api.py
   category: api
   tags:
   - api
@@ -221,7 +221,7 @@
     general: drop-in telemetry for any FastAPI/ASGI service
 - id: ai-boundary
   name: Mockable AI Boundary
-  source: parts/architect.py
+  source: adapters/architect.py
   category: ai
   tags:
   - ai

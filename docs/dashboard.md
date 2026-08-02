@@ -74,6 +74,6 @@ dedicated, non-required CI job.
 ## What it does NOT do (scope discipline)
 
 It is read-only, unauthenticated, and additive: it mounts on the existing admin API
-(`parts/api.py`) and touches no MUD-engine core. Mutations still live behind the
+(`adapters/api.py`) and touches no MUD-engine core. Mutations still live behind the
 owner-authenticated `@`-verbs and `POST /admin/*`. A browser/E2E test layer and the
 React/TypeScript front end are the next phase, tracked in the full-stack readiness checklist.

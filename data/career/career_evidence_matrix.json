@@ -80,7 +80,7 @@
             "why_it_matters": "O*NET lists attention to detail as a top work style for devs, QA, and writers.",
             "repo_proof": [
               "registry/",
-              "parts/qualitygate.py"
+              "kernel/qualitygate.py"
             ],
             "status": "proven",
             "next_proof_task": "Keep the classification registry validating (no orphans/dupes)."
@@ -294,7 +294,7 @@
             "skill": "Build a full-stack web surface (backend API + server-rendered frontend)",
             "why_it_matters": "Full-stack roles want a Python backend plus a real browser surface; a recurring 2026 ask (see docs/research).",
             "repo_proof": [
-              "parts/api.py",
+              "adapters/api.py",
               "parts/dashboard.py",
               "kernel/blueprint_render.py",
               "docs/dashboard.md"
@@ -470,8 +470,8 @@
             "skill": "Integrate an LLM behind a mockable, schema-enforced boundary",
             "why_it_matters": "AI-assisted engineering is a 2026 differentiator; the hireable skill is a testable, schema-enforced boundary, not a raw API call.",
             "repo_proof": [
-              "parts/architect.py",
-              "parts/blueprint_ai.py",
+              "adapters/architect.py",
+              "adapters/blueprint_ai.py",
               "tests/test_blueprint_ai.py",
               "tests/test_architect.py"
             ],

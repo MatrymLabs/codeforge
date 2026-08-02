@@ -24,14 +24,14 @@ from fastapi.responses import HTMLResponse
 from starlette.middleware.base import RequestResponseEndpoint
 from starlette.responses import Response
 
-from forge import handle_command, render_scene
-from parts.gateway import (
+from adapters.gateway import (
     IDLE_TIMEOUT,
     MAX_CONNECTIONS,
     TICK_LOCK,
     _next_player_id,
     _sanitize,
 )
+from forge import handle_command, render_scene
 from parts.world import guild, party, trade
 from parts.world.accounts import password_fixable
 from parts.world.characters import save_character

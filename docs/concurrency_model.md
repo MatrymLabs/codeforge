@@ -17,9 +17,9 @@ model, and it composes with Architecture Law 1 (state is canonical; text is a pr
 
 Two transports serve players; both funnel through the same door under the same lock:
 
-- **TCP gateway** (`parts/gateway.py`): a `socketserver.ThreadingTCPServer` with
+- **TCP gateway** (`adapters/gateway.py`): a `socketserver.ThreadingTCPServer` with
   `daemon_threads = True`, so each connection gets its own thread (thread-per-connection). Every
-  call to `handle_command` is wrapped `with TICK_LOCK:` (`parts/gateway.py:41` defines it; the tick
+  call to `handle_command` is wrapped `with TICK_LOCK:` (`adapters/gateway.py:41` defines it; the tick
   sites are the login, register, passwd, and main-loop calls). Session lifecycle mutations
   (`SESSIONS[player_id] = session` on entry, `SESSIONS.pop(...)` on exit) are taken under the same
   lock.

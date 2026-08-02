@@ -36,9 +36,9 @@ hand-writing a bespoke auditor. See it: type `qa gate all` in the MUD.
 
 | Part | File | What it does | Maturity |
 |------|------|--------------|----------|
-| **QualityGate** | `parts/qualitygate.py` | grades one object (purpose · file · tests · docs · maturity-honesty) → `pass \| watch \| fail` | active |
-| **SafetyReview** | `parts/qualitygate.py` | rates risk from type/tags → `low \| medium \| high \| critical`, flags approval | active |
-| **DocumentationImpactSweep** | `parts/qualitygate.py` (`docs_check`) | which key docs exist vs. missing | active |
+| **QualityGate** | `kernel/qualitygate.py` | grades one object (purpose · file · tests · docs · maturity-honesty) → `pass \| watch \| fail` | active |
+| **SafetyReview** | `kernel/qualitygate.py` | rates risk from type/tags → `low \| medium \| high \| critical`, flags approval | active |
+| **DocumentationImpactSweep** | `kernel/qualitygate.py` (`docs_check`) | which key docs exist vs. missing | active |
 | *(planned)* EvidenceLedger | - | dated proof of tests/reviews/approvals | prototype |
 | *(planned)* NonconformanceLog / CorrectiveActionTracker / SafetyHazardLog | - | track QA failures, fixes, hazards | prototype |
 

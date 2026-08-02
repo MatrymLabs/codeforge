@@ -6,7 +6,7 @@ returns a STRUCTURED Blueprint (schema-enforced JSON via the Anthropic Messages 
 Blueprint passes (`kernel.blueprint.from_dict`). The model fills a schema; it never emits free
 prose we parse by hand, and its output is always a Tier-4 DRAFT for a human to review.
 
-Same seam discipline as the Architect (`parts/architect.py`): the Anthropic client is
+Same seam discipline as the Architect (`adapters/architect.py`): the Anthropic client is
 INJECTED, so tests use a fake and never touch the network; codeforge core never imports
 `anthropic`; the feature is one API key away and dormant by default.
 """
@@ -17,8 +17,8 @@ from typing import Any, Protocol
 
 from pydantic import BaseModel
 
+from adapters.architect import CLAUDE_MODEL, anthropic_client
 from kernel.blueprint import Blueprint, BlueprintError, from_dict
-from parts.architect import CLAUDE_MODEL, anthropic_client
 
 _DRAFT_SYSTEM = (
     "You are a senior software architect who treats security as a first-class design concern. "

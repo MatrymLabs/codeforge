@@ -1,4 +1,4 @@
-"""Test twin for parts/gateway.py -- the front desk, over real sockets."""
+"""Test twin for adapters/gateway.py -- the front desk, over real sockets."""
 
 import copy
 import socket
@@ -9,9 +9,9 @@ import time
 
 import pytest
 
-import parts.gateway as gateway
+import adapters.gateway as gateway
+from adapters.gateway import ForgeGateServer, _GateHandler, _sanitize
 from kernel.shelf.bulkhead import Bulkhead
-from parts.gateway import ForgeGateServer, _GateHandler, _sanitize
 from parts.world import doors, items, npcs
 from parts.world.accounts import adopt
 from parts.world.accounts import register as register_account

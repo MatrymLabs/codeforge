@@ -1,10 +1,10 @@
-"""Test twin for parts/api.py -- the HTTP window, via TestClient."""
+"""Test twin for adapters/api.py -- the HTTP window, via TestClient."""
 
 import pytest
 from fastapi.testclient import TestClient
 
+from adapters.api import app, get_login_guard
 from kernel.login_guard import LoginGuard
-from parts.api import app, get_login_guard
 from parts.world.accounts import adopt, register
 from parts.world.characters import save_character, set_rank
 from parts.world.session import SESSIONS, Session
@@ -94,7 +94,7 @@ def test_grant_refuses_the_unauthenticated(client):
 
 def test_get_login_guard_returns_the_shared_throttle():
     """The production seam hands back the one shared guard (tests override it for isolation)."""
-    from parts.api import _login_guard, get_login_guard
+    from adapters.api import _login_guard, get_login_guard
 
     assert get_login_guard() is _login_guard
 

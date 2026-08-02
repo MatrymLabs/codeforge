@@ -15,11 +15,11 @@ from collections import Counter
 from dataclasses import dataclass
 from pathlib import Path
 
+from kernel.qualitygate import gate_all
 from kernel.registry import load_collective, validate
 from kernel.verdicts import FAIL, PASS, WATCH
 from parts.evidence_gate import VERIFIED, truth_checks
 from parts.integrity import overclaim_hits, presence_gaps
-from parts.qualitygate import gate_all
 
 _ROOT = Path(__file__).resolve().parent.parent
 
@@ -164,7 +164,7 @@ def inspect(arg: str = "") -> str:
     if a in ("", "forge", "the forge"):
         return render_frameup()
     if a == "qa":
-        from parts.qualitygate import render_gate_all
+        from kernel.qualitygate import render_gate_all
 
         return render_gate_all()
     if a == "truth":

@@ -51,7 +51,7 @@ stdlib_alternative = "sqlite3 (stdlib) is the default backend and needs no drive
 removable = "Yes; it is an optional extra. codeforge core runs on SQLite without psycopg; the db seam (parts/db.py) chooses the backend from DATABASE_URL."
 
 [runtime.anthropic]
-why = "Optional (extra 'ai'): the Claude-backed Architect brain, behind the Advisor seam in parts/architect.py. Not installed by default; one API key away from live."
+why = "Optional (extra 'ai'): the Claude-backed Architect brain, behind the Advisor seam in adapters/architect.py. Not installed by default; one API key away from live."
 stdlib_alternative = "None; there is no stdlib LLM client, and the wire protocol is a vendor API. The seam (Advisor protocol) keeps it swappable and testable with a fake."
 removable = "Yes; it is an optional extra. The local rule-based Architect is the default and needs no dependency, so codeforge core runs without anthropic."
 

@@ -50,8 +50,8 @@ def blueprint(arg: str = "", root: Path | None = None) -> str:
     if sub == "draft":
         if not rest:
             return "Describe the idea: blueprint draft <what you want to build>"
-        from parts.architect import ArchitectError
-        from parts.blueprint_ai import BlueprintDraftError, build_claude_drafter
+        from adapters.architect import ArchitectError
+        from adapters.blueprint_ai import BlueprintDraftError, build_claude_drafter
 
         try:
             drafter = build_claude_drafter()

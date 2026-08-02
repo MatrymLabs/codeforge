@@ -49,7 +49,7 @@ accelerator *safe* -- fallback, parity, evidence, governance, isolation -- is un
 
 `codeforge-edge` (Go, standard library only) -- a **transparent TCP edge gateway**: it accepts client
 connections (one goroutine per direction) and byte-proxies each straight to the Python gateway
-(`parts/gateway.py`). It never inspects the stream, so telnet/IAC negotiation stays end-to-end and the
+(`adapters/gateway.py`). It never inspects the stream, so telnet/IAC negotiation stays end-to-end and the
 edge is a thin, safe pump that raises the connection ceiling without touching game logic.
 
 - **Reference / fallback:** `parts.edge.EdgeProxy` -- the identical proxy, thread-per-connection.

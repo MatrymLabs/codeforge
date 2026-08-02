@@ -68,8 +68,8 @@ def measure_startup(reps: int = 15) -> dict:
 def run() -> dict[str, dict]:
     """Measure all five journeys and return {journey: stats}. Imports the real handlers."""
     from forge import handle_command
+    from kernel.qualitygate import render_gate_all
     from parts.bench import benchmark as command_bench
-    from parts.qualitygate import render_gate_all
     from parts.workshop import reuse_search
     from parts.world import npcs
     from parts.world.jobs import bind_calling

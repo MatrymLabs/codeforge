@@ -4,7 +4,7 @@ Closes the "AI evaluated once" gap: an AI/Advisor output gets a reproducible sco
 `ai-eval` Chronicle record, so quality is tracked over time (MLOps eval-regression memory) instead
 of judged once and forgotten.
 
-The Advisor is a seam (`parts.architect.Advisor`): the offline `LocalArchitect` scores with no
+The Advisor is a seam (`adapters.architect.Advisor`): the offline `LocalArchitect` scores with no
 network, and a real `ClaudeAdvisor` (one API key away) evaluates the LLM through the SAME path -
 tests and CI never touch the network. The rubric is an honest keyword-coverage score (the fraction
 of required keywords present), deterministic and clearly not a claim of semantic grading.
@@ -16,8 +16,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from adapters.architect import CLAUDE_MODEL, Advisor
 from kernel.chronicle import Record, record_ai_eval
-from parts.architect import CLAUDE_MODEL, Advisor
 
 
 class AiEvalError(ValueError):
@@ -61,7 +61,7 @@ def main(argv: list[str] | None = None) -> int:
     """`make ai-eval`: run the sample eval against the offline LocalArchitect and record it."""
     import sys
 
-    from parts.architect import LocalArchitect
+    from adapters.architect import LocalArchitect
 
     args = list(sys.argv[1:] if argv is None else argv)
     commit = args[0] if args else "unknown"

@@ -66,7 +66,7 @@ describes how it decomposes into services without rewriting the core.
 | **Session manager** | EXISTS | `parts/world/session.py`: `SESSIONS: dict[player_id, Session]`, `roster()`. A `Session` is per-connection live state; identity is a lowercase label, renamed on login (`rename_echo` / `rename_gmcp`). |
 | **Scheduler** | EXISTS | The beat is a cooperative scheduler for periodic world logic (respawns, reclose, climate); a general timed-job queue (`scheduler.py`, MOD-04.126, #594) rides the beat for one-shot/recurring jobs (e.g. the auction expiry sweep). |
 | **Login / world / auth / character services** | PARTIAL | All exist as *modules in one process*: login dialogue in the gateway front desk, auth in `parts/world/accounts.py`, character persistence behind the `CharacterStore` port. They are not yet separate *services* (§11). |
-| **HTTP admin driver** | EXISTS | `parts/api.py` (FastAPI): a separate driver that reads **canonical storage** (SQL + seeds), not live sessions, because separate processes share databases, not memory. Owner-auth on mutations. |
+| **HTTP admin driver** | EXISTS | `adapters/api.py` (FastAPI): a separate driver that reads **canonical storage** (SQL + seeds), not live sessions, because separate processes share databases, not memory. Owner-auth on mutations. |
 | **Read-only web Lens** | EXISTS | `parts/dashboard.py`: server-rendered HTML + JSON twin projecting real state (career board, QA gate, hardware store, perf run); frameless, fails honest. |
 | **Message queue** | DEFERRED | Not needed in-process. Becomes the inter-service spine at Launch (§11). |
 | **Plugin architecture** | DESIGNED | See §2.3. |
@@ -126,7 +126,7 @@ Two tiers, both server-authoritative:
 
 ### 3.1 Current (EXISTS)
 
-- **Transport:** threaded TCP (`parts/gateway.py`, `ThreadingTCPServer`, thread-per-connection under
+- **Transport:** threaded TCP (`adapters/gateway.py`, `ThreadingTCPServer`, thread-per-connection under
   one `TICK_LOCK`) + an async web gateway (`parts/web_gateway.py`). `TCP_NODELAY` set (Nagle off) so
   each interactive line flushes without the ~40 ms delayed-ACK stall.
 - **Protocol:** line-based text in, sanitized text out (control chars stripped). **Telnet** option

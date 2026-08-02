@@ -231,7 +231,7 @@ secrets:
 # dependency_ledger.toml (the Dependency Approval Rule, frameless Python). Fails loud
 # on an unjustified dependency; warns on a stale ledger row. Stdlib only (tomllib). ---
 deps:
-	@python -m parts.dependencies
+	@python -m adapters.dependencies
 
 # --- Intake: the Technology Intake Office (docs/technology_intake.md). Controlled adoption,
 # Python-native: fails loud if any onboarding record is incomplete (an approved technology

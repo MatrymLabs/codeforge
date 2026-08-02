@@ -66,7 +66,7 @@ def _cmd_seeds(args: list[str]) -> int:
 
 
 def _cmd_serve(args: list[str]) -> int:
-    from parts.gateway import serve
+    from adapters.gateway import serve
 
     serve()
     return 0
@@ -109,8 +109,8 @@ def _cmd_migrate(args: list[str]) -> int:
 def _cmd_api(args: list[str]) -> int:
     import uvicorn
 
+    from adapters.api import app
     from kernel.shelf.config import Settings
-    from parts.api import app
 
     # Honor $PORT like the web command does; Settings types + validates it.
     uvicorn.run(app, host="0.0.0.0", port=Settings.load().port)
@@ -282,6 +282,6 @@ def main(argv: list[str] | None = None) -> int:
 
 def spark() -> None:
     """Every world begins as one."""
-    from parts.gateway import serve
+    from adapters.gateway import serve
 
     serve()

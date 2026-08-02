@@ -61,5 +61,5 @@ The intake ledger (`intake_ledger.toml`) records every onboarded technology as a
 is **incomplete** (an approved technology missing a requirement) or **inconsistent** (an unknown
 classification/decision, a non-Python `NATIVE_PYTHON` row, or an external role with no boundary), so
 a technology cannot be adopted without a complete, consistent onboarding record. This is the sibling
-of the Dependency Approval Rule (`docs/tooling_strategy.md`, `parts/dependencies.py`): that gate
+of the Dependency Approval Rule (`docs/tooling_strategy.md`, `adapters/dependencies.py`): that gate
 justifies every *Python package*; this one onboards *any technology*.

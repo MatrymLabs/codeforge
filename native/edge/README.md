@@ -1,6 +1,6 @@
 # codeforge-edge (Go)
 
-A transparent TCP **edge gateway** in front of the Python game gateway (`parts/gateway.py`). It
+A transparent TCP **edge gateway** in front of the Python game gateway (`adapters/gateway.py`). It
 accepts client connections and byte-proxies each straight through to the gateway -- one goroutine per
 direction -- without ever inspecting the stream, so telnet/IAC negotiation stays end-to-end.
 
