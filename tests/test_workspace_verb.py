@@ -18,7 +18,7 @@ from parts.seedlab.model_store import InMemorySeedModels
 from parts.seedlab.project_model import Provenance
 from parts.seedlab.source_connector import LocalSource
 from parts.seedlab.source_modeler import model_and_store
-from parts.seedlab.workspace_verb import workspace_command
+from parts.seedlab.workspace_verb import GmcpPush, workspace_command
 from parts.world.session import Session
 
 
@@ -57,6 +57,59 @@ def test_create_needs_a_name() -> None:
 
 def test_status_of_an_unknown_workspace_is_clean() -> None:
     assert "workspace: no Seed" in workspace_command(_owner(), "status nope", kernel=_kernel())
+
+
+# --- live GMCP push: the client's Project Hub updates when a workspace is resolved ----------------
+def _capture() -> tuple[list[tuple[str, str, object]], GmcpPush]:
+    """A fake gmcp_push that records (player_id, package, data) instead of touching the bus."""
+    frames: list[tuple[str, str, object]] = []
+
+    def push(player_id: str, package: str, data: object) -> None:
+        frames.append((player_id, package, data))
+
+    return frames, push
+
+
+def test_status_pushes_a_live_project_status_frame() -> None:
+    k = _kernel()
+    workspace_command(_owner(), "create MyProj tracks tasks", kernel=k)
+    sid = k.list_seeds()[0].identity.seed_id
+    frames, push = _capture()
+    workspace_command(_owner(), f"status {sid}", kernel=k, gmcp_push=push)
+    assert len(frames) == 1
+    player_id, package, data = frames[0]
+    assert player_id == "owner"  # pushed to the acting owner's channel
+    assert package == "Project.Status"
+    assert isinstance(data, dict) and data["seed"] == "MyProj"  # the resolved workspace
+
+
+def test_lifecycle_changes_push_the_new_status() -> None:
+    # create -> start -> stop each resolves a record, so each pushes the updated Project.Status.
+    k = _kernel()
+    frames, push = _capture()
+    workspace_command(_owner(), "create Widget a demo", kernel=k, gmcp_push=push)
+    sid = k.list_seeds()[0].identity.seed_id
+    workspace_command(_owner(), f"start {sid}", kernel=k, gmcp_push=push)
+    workspace_command(_owner(), f"stop {sid}", kernel=k, gmcp_push=push)
+    phases = [data["phase"] for _pid, _pkg, data in frames]  # type: ignore[index]
+    assert phases == ["created", "running", "stopped"]  # one live frame per lifecycle step
+
+
+def test_an_unknown_workspace_pushes_nothing() -> None:
+    # a refused lookup never fabricates a frame: the Project Hub must not light up on a bad id.
+    frames, push = _capture()
+    workspace_command(_owner(), "status nope", kernel=_kernel(), gmcp_push=push)
+    assert frames == []
+
+
+def test_a_session_without_a_player_id_pushes_nothing() -> None:
+    # a bare/plain-text session has no GMCP channel, so the verb pushes nothing (and never crashes).
+    k = _kernel()
+    workspace_command(_owner(), "create P a demo", kernel=k)
+    sid = k.list_seeds()[0].identity.seed_id
+    frames, push = _capture()
+    workspace_command(Session(player_id=""), f"status {sid}", kernel=k, gmcp_push=push)
+    assert frames == []
 
 
 def test_model_subcommand_empty_then_populated(tmp_path: Path) -> None:
