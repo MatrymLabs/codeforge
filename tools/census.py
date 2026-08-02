@@ -22,7 +22,7 @@ from pathlib import Path
 
 import yaml
 
-SEED = Path(__file__).resolve().parent.parent / "seeds" / "aethryn"
+SEED = Path(__file__).resolve().parent.parent / "content" / "seeds" / "aethryn"
 
 
 def _load(name: str) -> dict:
@@ -35,6 +35,12 @@ def _load(name: str) -> dict:
 
 def _count(name: str) -> int:
     return len(_load(name))
+
+
+def _count_dir(subdir: str) -> int:
+    """Count the seed files in a seed sub-directory (e.g. the authored quests in quests/)."""
+    d = SEED / subdir
+    return len(list(d.glob("*.yaml"))) if d.is_dir() else 0
 
 
 def world_scale() -> dict[str, int]:
@@ -115,13 +121,16 @@ def engine() -> dict[str, object]:
     """Cheap engine metrics measured from the tree (LOC, module counts). Test count is measured
     separately via `pytest --collect-only`, recorded in the scorecard with its command."""
     root = Path(__file__).resolve().parent.parent
-    parts = root / "parts"
-    py = list(parts.rglob("*.py")) + [root / "forge.py"]
+    # The section-2 restructure retired parts/ into kernel/ (engine + world + shelf) + adapters/
+    # (the drivers). Measure the engine over both, so the count reflects the current layout.
+    kernel = root / "kernel"
+    adapters = root / "adapters"
+    py = list(kernel.rglob("*.py")) + list(adapters.rglob("*.py")) + [root / "forge.py"]
     loc = sum(len(p.read_text(encoding="utf-8").splitlines()) for p in py if p.is_file())
     return {
-        "engine_modules": len(list(parts.glob("*.py"))),
-        "world_modules": len(list((parts / "world").glob("*.py"))),
-        "shelf_parts": len(list((parts / "shelf").glob("*.py"))),
+        "engine_modules": len(list(kernel.glob("*.py"))) + len(list(adapters.glob("*.py"))),
+        "world_modules": len(list((kernel / "world").glob("*.py"))),
+        "shelf_parts": len(list((kernel / "shelf").glob("*.py"))),
         "engine_python_loc": loc,
     }
 
@@ -136,7 +145,7 @@ def main() -> None:
         "settlements": _count("settlements.yaml"),
         "dungeons": _count("dungeons.yaml"),
         "waystones_fast_travel": _count("waystones.yaml"),
-        "authored_quests": _count("quest.yaml"),
+        "authored_quests": _count_dir("quests"),
     }
     report: dict[str, dict[str, object]] = {
         "world_scale": world_scale(),

@@ -1,6 +1,6 @@
 """CARD: delve -- expand the map's dungeon mouths into multi-room delves with a boss ladder.
 
-The map marks 16 dungeons, but each shipped as a single room with one guardian at the mouth -- a
+The map marks its dungeons, but each shipped as a single room with one guardian at the mouth -- a
 door, not a dungeon. This is the world-generation lever (rooms via wildlands, creatures via
 bestiary, gear via armory) pointed at DUNGEONS: it reads a compact manifest (dungeons.yaml, one row
 per mouth: name, zone, level, biome) and sinks a DESCENT below each mouth -- a chain of chambers,
