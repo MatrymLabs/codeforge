@@ -52,6 +52,12 @@ ZONES = [
                 "town",
                 "a hamlet of hayfields and beehives on the sunniest downs in Veridia",
             ),
+            (
+                "the_sunken_barrow",
+                "The Sunken Barrow",
+                "dungeon",
+                "a grassed-over barrow at the valley's edge, its fallen stones the mouth of a dark stair down",
+            ),
         ],
     ),
     (
@@ -159,6 +165,12 @@ ZONES = [
                 "The Great Tree",
                 "landmark",
                 "the heart of Eldryn Forest, a tree said to be older than the oldest kingdom",
+            ),
+            (
+                "rotwood_deep",
+                "Rotwood Deep",
+                "dungeon",
+                "a root-choked deep beneath the ancient forest, where the wood's old rot has grown teeth",
             ),
         ],
     ),
@@ -733,7 +745,7 @@ def emit(out_root: Path | None = None) -> None:
     root = (
         out_root
         if out_root is not None
-        else Path(__file__).resolve().parent.parent / "seeds" / "aethryn"
+        else Path(__file__).resolve().parent.parent / "content" / "seeds" / "aethryn"
     )
     root.mkdir(parents=True, exist_ok=True)
     (root / "rooms.yaml").write_text("\n".join(rooms) + "\n")

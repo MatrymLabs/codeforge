@@ -2,7 +2,7 @@
 
 veridia_zone:
   name: Veridia
-  rooms: [veridia, greenhold, elderwatch, riverbend, sunmeadow]
+  rooms: [veridia, greenhold, elderwatch, riverbend, sunmeadow, the_sunken_barrow]
   reset_mode: empty_only
   beats_between: 14
   region: "Veridia"
@@ -32,7 +32,7 @@ caeloria_zone:
 
 eldryn_forest_zone:
   name: Eldryn Forest
-  rooms: [eldryn_forest, eldryn_city, wildgrowth, greenmist, the_great_tree]
+  rooms: [eldryn_forest, eldryn_city, wildgrowth, greenmist, the_great_tree, rotwood_deep]
   reset_mode: empty_only
   beats_between: 14
   region: "Eldryn Forest"

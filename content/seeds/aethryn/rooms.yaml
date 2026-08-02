@@ -5,7 +5,7 @@
 veridia:
   name: Veridia
   desc: |-
-    The Veridia zone (levels 1-30): green starter valleys of rivers and open road, where every journey begins. Within its bounds lie Greenhold, Elderwatch, Riverbend, Sunmeadow. Roads and routes run on to the neighbouring lands.
+    The Veridia zone (levels 1-30): green starter valleys of rivers and open road, where every journey begins. Within its bounds lie Greenhold, Elderwatch, Riverbend, Sunmeadow, The Sunken Barrow. Roads and routes run on to the neighbouring lands.
   exits:
     east: caeloria
     south: duskwood_vale
@@ -14,6 +14,7 @@ veridia:
     elderwatch: elderwatch
     riverbend: riverbend
     sunmeadow: sunmeadow
+    the: the_sunken_barrow
 
 greenhold:
   name: Greenhold
@@ -40,6 +41,13 @@ sunmeadow:
   name: Sunmeadow
   desc: |-
     A hamlet of hayfields and beehives on the sunniest downs in veridia. It lies within Veridia (levels 1-30); the zone road runs back out to the wider land.
+  exits:
+    out: veridia
+
+the_sunken_barrow:
+  name: The Sunken Barrow
+  desc: |-
+    A grassed-over barrow at the valley's edge, its fallen stones the mouth of a dark stair down. It lies within Veridia (levels 1-30); the zone road runs back out to the wider land.
   exits:
     out: veridia
 
@@ -137,7 +145,7 @@ starfall_temple:
 eldryn_forest:
   name: Eldryn Forest
   desc: |-
-    The Eldryn Forest zone (levels 50-80): an ancient forest kingdom grown around a tree older than any crown. Within its bounds lie Eldryn City, Wildgrowth, Greenmist, The Great Tree. Roads and routes run on to the neighbouring lands.
+    The Eldryn Forest zone (levels 50-80): an ancient forest kingdom grown around a tree older than any crown. Within its bounds lie Eldryn City, Wildgrowth, Greenmist, The Great Tree, Rotwood Deep. Roads and routes run on to the neighbouring lands.
   exits:
     north: caeloria
     west: zhaar_desert
@@ -147,6 +155,7 @@ eldryn_forest:
     wildgrowth: wildgrowth
     greenmist: greenmist
     the: the_great_tree
+    rotwood: rotwood_deep
 
 eldryn_city:
   name: Eldryn City
@@ -173,6 +182,13 @@ the_great_tree:
   name: The Great Tree
   desc: |-
     The heart of eldryn forest, a tree said to be older than the oldest kingdom. It lies within Eldryn Forest (levels 50-80); the zone road runs back out to the wider land.
+  exits:
+    out: eldryn_forest
+
+rotwood_deep:
+  name: Rotwood Deep
+  desc: |-
+    A root-choked deep beneath the ancient forest, where the wood's old rot has grown teeth. It lies within Eldryn Forest (levels 50-80); the zone road runs back out to the wider land.
   exits:
     out: eldryn_forest
 
