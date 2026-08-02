@@ -18,6 +18,11 @@ lua = ["lupa>=2.8"]
 # CI runs without it (the symbolic tests skip). Admitted via Track-T T-EXP-08 / CAND-06. crosshair
 # pulls z3-solver (which ships an aarch64 wheel).
 verify = ["crosshair-tool>=0.0.109"]
+# Verifier-gated Python codemods (parts.refactor: scope-correct rename). Optional: absent -> the
+# tool reports refactor_available() False and fails loud with an install hint; nothing else is
+# affected. LibCST is the only lossless scope-aware codemod path (stdlib ast is lossy). deep=True
+# additionally uses the [verify] extra. CI runs without it (the scope-correctness tests skip).
+refactor = ["libcst>=1.8.6"]
 dev = [
     # Pinned: `ruff format --check` is a hard gate, so it must be reproducible. Unpinned, CI installs
     # the latest ruff and local lags -- a minor bump (0.15 -> 0.16) reformatted and reddened CI once.
