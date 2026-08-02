@@ -2103,6 +2103,31 @@
     "updated": "2026-07-11"
   },
   {
+    "designation": "MOD-01.013",
+    "name": "evolution_mutation",
+    "status": "active",
+    "function": "propose new candidate genomes by typed operators (propose-only; AI proposes, Josh approves)",
+    "label": "evolution_mutation",
+    "file": "parts/evolution/mutation.py",
+    "type": "MOD",
+    "domain": "01",
+    "docs": "docs/nature_inspired/research_mapping.md",
+    "tests": "tests/test_evolution_mutation.py",
+    "depends_on": [],
+    "related": [],
+    "reuse": "",
+    "tags": [
+      "module"
+    ],
+    "notes": "HC-13 generative step under the keel: propose_only mutation_policy; every proposal passes the KeelGate and stays human_required.",
+    "superseded_by": "",
+    "aliases": [
+      "MOD-UM01-S01-N001-013-R0"
+    ],
+    "created": "2026-08-02",
+    "updated": "2026-08-02"
+  },
+  {
     "designation": "MOD-06.002",
     "name": "stewardship_change",
     "status": "active",

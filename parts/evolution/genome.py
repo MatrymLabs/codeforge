@@ -33,9 +33,11 @@ GENOME_STATUSES = (
 # Where a genome is allowed to express (the phenotype artifact kinds). Kept small in v1.
 EXPRESSION_TARGETS = ("code", "tests", "config", "docs")
 
-# v1 governance: a genome may never declare autonomous mutation or self-approval. These are the
-# only values the KeelGate (validation.py) accepts until Josh approves a wider policy.
-MUTATION_POLICIES = ("manual_only",)  # no autonomous mutation in v1
+# Governance: a genome may never declare autonomous mutation or self-approval. These are the
+# only values the KeelGate (validation.py) accepts. `propose_only` (added when Josh opened HC-13)
+# lets `evolution.mutation` DERIVE new candidate genomes for the SAME human-approved bake-off - it
+# proposes, it never promotes. `autonomous` is deliberately still absent: AI does not self-approve.
+MUTATION_POLICIES = ("manual_only", "propose_only")  # no autonomous mutation, ever
 APPROVAL_POLICIES = ("human_required",)  # Josh promotes, always
 
 
