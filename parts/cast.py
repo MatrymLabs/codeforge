@@ -328,6 +328,14 @@ def generate_cast(
     else:
         _vendor_selective(base / "parts", dest / "parts", modules, ignore)
         strategy = VENDORED_SELECTIVE
+    # The migrated engine layers (style-guide section 2) ride along WHOLE in both strategies:
+    # parts/ modules import kernel/adapters freely, so a cut without them cannot boot. Selective
+    # detachment (D2) still sheds only un-migrated parts/ modules. Copy-if-exists, so a minimal
+    # fixture engine (parts-only) still pours.
+    for layer in ("kernel", "adapters", "content"):
+        layer_src = base / layer
+        if layer_src.is_dir():
+            shutil.copytree(layer_src, dest / layer, ignore=ignore)
     shutil.copy2(base / "forge.py", dest / "forge.py")
     # 2. only this cast's OWN seed pack (never the other games)
     shutil.copytree(base / "seeds" / starter, dest / "seeds" / starter, ignore=ignore)
