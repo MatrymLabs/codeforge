@@ -8,6 +8,9 @@ terminal driver around it -- a socket gateway will be another.
 import re
 from collections.abc import Callable
 
+from kernel.clone_scan import clones
+from kernel.complexity import complexity
+from kernel.harvest_lens import harvest
 from kernel.shelf.hourglass import WORLD_SANDS
 from parts.addie import addie
 from parts.arc import arc
@@ -24,11 +27,8 @@ from parts.classroom import (
     submit_answer,
     talk_to_codex,
 )
-from parts.clone_scan import clones
 from parts.commands import ADMIN, CORE, Command, CommandSet
-from parts.complexity import complexity
 from parts.features import features
-from parts.harvest_lens import harvest
 from parts.heralds import heralds
 from parts.learning_record import learnings
 from parts.logbook import journal

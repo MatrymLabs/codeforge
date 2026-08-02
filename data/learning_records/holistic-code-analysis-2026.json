@@ -2,7 +2,7 @@
   "record_id": "holistic-code-analysis-2026",
   "title": "Grounding the Analyze station: complexity and clone detection find what tests miss",
   "date": "2026-07-12",
-  "what_changed": "Added two stdlib-ast static-analysis tools that ground the loop's Analyze station in the research's 'third fold': parts/complexity.py (McCabe cyclomatic complexity per function, the `complexity` verb) and parts/clone_scan.py (AST-shape structural clone detection, the `clones` verb). Both are read-only meta-tools filed UM10, wired to the tick, no catalog card (like the Harvest Lens).",
+  "what_changed": "Added two stdlib-ast static-analysis tools that ground the loop's Analyze station in the research's 'third fold': kernel/complexity.py (McCabe cyclomatic complexity per function, the `complexity` verb) and kernel/clone_scan.py (AST-shape structural clone detection, the `clones` verb). Both are read-only meta-tools filed UM10, wired to the tick, no catalog card (like the Harvest Lens).",
   "why": "The code-learning research (Szych & Schwerk 2026) showed that 'passing tests = good' is false: many maintainability defects are caught only by static metrics and human review. CodeForge's gate measured correctness, lint, types, and coverage - but never complexity or duplication. This closes the two named gaps from the code-learning-research-2026 record.",
   "evidence": [
     "make check green: 1104 passed, 93.90% coverage; both new tools 100% covered; no new dependency (stdlib ast)",

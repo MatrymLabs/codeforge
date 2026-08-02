@@ -12,8 +12,8 @@ from pathlib import Path
 
 import pytest
 
+from kernel.verdicts import FAIL, NA, PASS, WATCH
 from parts.forge_line import forge_new, render_line, run_line
-from parts.verdicts import FAIL, NA, PASS, WATCH
 
 _STATIONS = [
     "SEARCH",

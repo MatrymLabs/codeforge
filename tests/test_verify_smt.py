@@ -1,4 +1,4 @@
-"""Test twin for parts/verify_smt.py. Without the optional crosshair-tool (CI), it covers
+"""Test twin for kernel/verify_smt.py. Without the optional crosshair-tool (CI), it covers
 the parse/refusal paths and the loud "dependency absent" contract; with crosshair installed,
 it proves a rare-input divergence BROKEN (the needle the sampler misses) and a rename
 PRESERVED. The symbolic cases skip when the extra is not installed, so CI stays green.
@@ -12,7 +12,7 @@ import importlib.util
 import unittest
 from dataclasses import FrozenInstanceError
 
-from parts.verify_smt import Outcome, SmtVerdict, VerifySmtError, verify_transform_smt
+from kernel.verify_smt import Outcome, SmtVerdict, VerifySmtError, verify_transform_smt
 
 _HAS_CROSSHAIR = importlib.util.find_spec("crosshair") is not None
 

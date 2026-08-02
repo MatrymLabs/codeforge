@@ -43,7 +43,7 @@ property test can drive any timeline. Bad rate/capacity/cost fail loud (`RateLim
 
 - **Game:** `parts/chat_throttle.py` -- the `shout` verb, a burst of 3 refilling one every 20s.
   Tick-reachable (`handle_command(session, "shout ...")`).
-- **Practical:** `parts/login_guard.py` -- `LoginGuard.attempt(key)`, a burst of 5 refilling one
+- **Practical:** `kernel/login_guard.py` -- `LoginGuard.attempt(key)`, a burst of 5 refilling one
   every 30s, per account or IP. A plain function, no game.
 
 ## Evidence

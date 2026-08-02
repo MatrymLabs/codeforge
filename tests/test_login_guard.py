@@ -1,7 +1,7 @@
-"""Test twin for parts/login_guard.py -- the practical adapter + the one-core-two-adapters proof."""
+"""Test twin for kernel/login_guard.py -- the practical adapter + the one-core-two-adapters proof."""
 
+from kernel.login_guard import LoginGuard
 from kernel.shelf.token_bucket import TokenBucket
-from parts.login_guard import LoginGuard
 
 
 class FakeClock:

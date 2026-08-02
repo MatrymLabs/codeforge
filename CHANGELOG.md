@@ -83,8 +83,8 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
 - **Holistic code analysis: complexity + clone detection (the Analyze third fold).** Grounds the
   continuous-improvement loop's Analyze station in the code-learning research ("passing tests = good"
   is false; add static metrics). Two stdlib-`ast` read-only tools, no new dependency: **complexity**
-  (`parts/complexity.py`, the `complexity` verb) computes McCabe cyclomatic complexity per function
-  and flags hot-spots; **clone_scan** (`parts/clone_scan.py`, the `clones` verb) fingerprints each
+  (`kernel/complexity.py`, the `complexity` verb) computes McCabe cyclomatic complexity per function
+  and flags hot-spots; **clone_scan** (`kernel/clone_scan.py`, the `clones` verb) fingerprints each
   function by AST shape and finds duplicated logic the Harvest Lens's name/docstring signals miss. On
   their first live run they flagged real hot-spots (`integrity.build_report` at 26) and a real
   duplication (`blueprint.load_all` vs `learning_record.load_all`) that passing tests never caught.
@@ -114,7 +114,7 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
   settled vision: the codebase is already strongly engineering-first, so V3 is synchronization, not
   redesign (engineering aliases for thematic names, ARC as the single review umbrella, no risky
   re-packaging or frozen-identifier renames). It recommends one new subsystem, shipped here: the
-  **Harvest Lens** (`parts/harvest_lens.py`, the `harvest` verb) automates the Hardware Store gap
+  **Harvest Lens** (`kernel/harvest_lens.py`, the `harvest` verb) automates the Hardware Store gap
   analysis, scanning source with `ast` for reusable-pattern signals not yet stocked and drafting
   candidate cards. Reads only, never files. It already surfaces a real `cache` pattern recurring
   across the parts library with no card. Filed UM10-024. No new dependencies.
@@ -152,7 +152,7 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
   it is not a security control, though it does neutralize control chars and log-injection newlines.
   One core (`parts/sanitizer.py`), two adapters: a sanitized player `title` in the game
   (`parts/titles.py`) and a stored/logged field cleaner for a practical app
-  (`parts/field_sanitizer.py`). Cataloged, filed, manifest, validation pattern doc extended. No new
+  (`kernel/field_sanitizer.py`). Cataloged, filed, manifest, validation pattern doc extended. No new
   dependencies. Maturity: beta.
 - **Hardware Store part: Plugin Registry (`plugin-registry`).** Extend behavior by EXPLICIT
   registration, never by loading arbitrary code: a generic `PluginRegistry[P]` that validates plugin
@@ -175,7 +175,7 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
   and retirement; an unknown flag is an error (never silently off) and flags default off. One core
   (`parts/feature_flags.py`), two adapters: an in-world `features` panel in the game
   (`parts/features.py`) and an environment kill switch for a practical app
-  (`parts/feature_control.py`, `FEATURE_<NAME>` overrides the default). Property test pins both paths
+  (`kernel/feature_control.py`, `FEATURE_<NAME>` overrides the default). Property test pins both paths
   and the override precedence. Cataloged, filed, manifest, configuration pattern doc. No new
   dependencies. Maturity: beta.
 - **Hardware Store part: the Validator (`validator`).** Validate a mapping against composable rules
@@ -184,14 +184,14 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
   `of_type`, `one_of`, `max_length`), with `required` kept separate from format so an empty field
   reports once. One core (`parts/validation.py`), two adapters: a `namecheck` name preview in the
   game (`parts/name_check.py`) and a signup-payload validator for a practical app
-  (`parts/payload_check.py`). Property test pins that a valid value passes and issues never exceed
+  (`kernel/payload_check.py`). Property test pins that a valid value passes and issues never exceed
   rules. Cataloged, filed, manifest, validation pattern doc. No new dependencies. Maturity: beta.
 - **Hardware Store part: the Health Registry (`health-registry`).** Run named health checks and
   aggregate an honest overall status (worst wins). The load-bearing rule: an UNKNOWN or failing
   check is never reported healthy, and an empty registry is UNKNOWN. A raising check is contained
   (never crashes the report). One core (`parts/health.py`), two adapters: a `vitals` world-health
   panel in the game (`parts/vitals.py`) and a `ServiceHealth` readiness probe for a practical app
-  (`parts/service_health.py`). A property test pins that overall is healthy iff every check is.
+  (`kernel/service_health.py`). A property test pins that overall is healthy iff every check is.
   Cataloged, filed, manifest, observability pattern doc. No new dependencies. Maturity: beta.
 - **Hardware Store part: the Repository (`repository`).** The Repository pattern (Fowler),
   independently implemented: `Repository[E, K]` is a typed, runtime-checkable **Protocol** (the
@@ -209,7 +209,7 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
   injected clock; a property test proves it opens exactly on a run of `threshold` failures. One core
   (`parts/circuit_breaker.py`), two adapters: a `channel` verb on a flaky relay in the game
   (`parts/relay.py`) and a per-service `ServiceBreakers` registry for a practical app
-  (`parts/service_breaker.py`). Cataloged, filed, manifest, resilience pattern doc. No new
+  (`kernel/service_breaker.py`). Cataloged, filed, manifest, resilience pattern doc. No new
   dependencies. Maturity: beta.
 - **Hardware Store part: the Retry Policy (`retry-policy`).** Retry with exponential backoff,
   independently implemented, framework-free and DETERMINISTIC via an injected sleep: it retries
@@ -217,7 +217,7 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
   swallowed). A property test pins the invariants (calls never exceed the budget; one backoff
   between tries). One core (`parts/retry.py`), two adapters: an auto-retried `calibrate` verb in
   the game (`parts/calibrate.py`) and a `ResilientCaller` with an attempt audit trail for a
-  practical app (`parts/resilient_call.py`). Cataloged, filed, manifest, pattern doc
+  practical app (`kernel/resilient_call.py`). Cataloged, filed, manifest, pattern doc
   (`docs/hardware_store/patterns/resilience.md`); `make loop PART=retry-policy` traces it. No new
   dependencies. Maturity: beta.
 - **Hardware Store part: the Token Bucket rate limiter (`token-bucket`).** A framework-free,
@@ -225,7 +225,7 @@ pre-1.0. Readiness language only - no compliance/OSHA/legal claims.
   INJECTED clock, so tests pin exact behavior and a property test proves the conservation law
   (consumed never exceeds `capacity + rate*elapsed`). One core (`parts/token_bucket.py`), two
   adapters: a rate-limited `shout` verb in the game (`parts/chat_throttle.py`) and a
-  login-attempt guard for a practical app (`parts/login_guard.py`). Cataloged, filed, manifest
+  login-attempt guard for a practical app (`kernel/login_guard.py`). Cataloged, filed, manifest
   (`docs/hardware/token-bucket.yaml`), pattern doc, and `make loop PART=token-bucket` traces it.
   No new dependencies. Maturity: beta. From the Full-Stack Design Patterns research.
 - **Fuzz lane for trust-boundary gates (`make fuzz`).** Hypothesis-driven hostile-input

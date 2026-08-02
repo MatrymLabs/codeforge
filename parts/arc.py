@@ -34,8 +34,8 @@ if TYPE_CHECKING:
 
 # Per-dimension status, from the one shared home (verdicts.py); re-exported so callers/tests can
 # still `from parts.arc import READY, ...`. MISSING = no wired source / never ran: never a pass.
-from parts.verdicts import ARC_STATUSES as _DIM_STATUSES
-from parts.verdicts import BLOCKED, MISSING, READY, WATCHLIST
+from kernel.verdicts import ARC_STATUSES as _DIM_STATUSES
+from kernel.verdicts import BLOCKED, MISSING, READY, WATCHLIST
 
 # The review dimensions ARC composes: the ten assurance/readiness gates, plus the Control axis
 # read from the Chronicle (incidents + ai-eval regressions).

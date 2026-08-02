@@ -1,4 +1,4 @@
-"""Test twin for parts/verdicts.py -- the shared readiness verdict vocabulary.
+"""Test twin for kernel/verdicts.py -- the shared readiness verdict vocabulary.
 
 Pins the values and that the gates now share ONE source (no independent re-declaration), so a
 gate and the frame-up that reads its board can never drift apart.

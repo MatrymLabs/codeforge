@@ -28,4 +28,4 @@ source_status: original
 owner: MatrymLabs
 adapters:
   - parts/calibrate.py
-  - parts/resilient_call.py
+  - kernel/resilient_call.py

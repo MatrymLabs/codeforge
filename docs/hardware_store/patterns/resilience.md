@@ -45,7 +45,7 @@ responsibility** -- the part retries, it does not make an operation safe to repe
 - **Game:** `parts/calibrate.py` -- the `calibrate` verb retries a flaky instrument. The tick is
   synchronous, so it uses a **zero delay** (a real backoff would block every player); the delay
   behavior is proven in the core + practical tests.
-- **Practical:** `parts/resilient_call.py` -- `ResilientCaller(policy).call(fn)` retries an unreliable
+- **Practical:** `kernel/resilient_call.py` -- `ResilientCaller(policy).call(fn)` retries an unreliable
   callable and keeps an `Attempt` **history** (the audit trail resilience needs).
 
 ## Evidence
@@ -72,7 +72,7 @@ trip and recovery are deterministic; a property test proves it opens exactly whe
 
 - **Game:** `parts/relay.py` -- a `channel` verb draws power through a relay that trips after
   repeated surges, then cools and re-tests. Tick-reachable.
-- **Practical:** `parts/service_breaker.py` -- `ServiceBreakers` keeps one breaker per named upstream
+- **Practical:** `kernel/service_breaker.py` -- `ServiceBreakers` keeps one breaker per named upstream
   so a broken payment gateway trips independently of a slow search service.
 - Evidence: `tests/test_circuit_breaker.py`, `tests/test_relay.py`, `tests/test_service_breaker.py`;
   manifest `docs/hardware/circuit-breaker.yaml`; `make loop PART=circuit-breaker`. Maturity `beta`.

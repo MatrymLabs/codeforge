@@ -30,4 +30,4 @@ source_status: original
 owner: MatrymLabs
 adapters:
   - parts/features.py
-  - parts/feature_control.py
+  - kernel/feature_control.py

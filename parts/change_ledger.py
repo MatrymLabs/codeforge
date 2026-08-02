@@ -24,7 +24,7 @@ from kernel.shelf.repository import InMemoryRepository
 from kernel.shelf.test_evidence import PASSED, EvidenceLedger
 from kernel.shelf.validation import Data, Validator, one_of, required
 from kernel.shelf.workflow import ANY_ROLE, Instance, Step, WorkflowEngine, build_workflow
-from parts.verdicts import BLOCKED, READY, WATCHLIST
+from kernel.verdicts import BLOCKED, READY, WATCHLIST
 
 KINDS = ("dependency", "security", "config", "migration", "version")
 SEVERITIES = ("low", "medium", "high", "critical")

@@ -10,8 +10,8 @@ evidence paths. OSHA-informed, never OSHA-certified; maturity is never assumed.
 from dataclasses import dataclass, field
 from pathlib import Path
 
+from kernel.verdicts import FAIL, NA, PASS, WATCH
 from parts.registry import Designation, load_collective
-from parts.verdicts import FAIL, NA, PASS, WATCH
 
 _ROOT = Path(__file__).resolve().parent.parent
 
