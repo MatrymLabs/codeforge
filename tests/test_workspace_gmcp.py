@@ -11,22 +11,27 @@ an honest ok verdict but empty test/artifact seams, never a fabricated count).
 
 from __future__ import annotations
 
+import json
+
 import pytest
 
 from kernel.gmcp import gmcp_frame
-from kernel.seedlab.kernel import InMemorySeedStore, SeedKernel
+from kernel.seedlab.kernel import InMemorySeedStore, SeedKernel, SeedKernelError
 from kernel.seedlab.project_model import Provenance, SpecSource, extract_model
 from kernel.seedlab.source_connector import SourceRecord
 from kernel.seedlab.tool_runner import ToolRunResult
 from kernel.seedlab.workspace_gmcp import (
+    ARCHITECTURE_MAP_PACKAGE,
     BUILD_REPORT_PACKAGE,
     MODEL_SCHEMA_PACKAGE,
     PROJECT_STATUS_PACKAGE,
     SOURCE_TREE_PACKAGE,
     SeedCreateRequest,
     WorkspaceContractError,
+    architecture_map,
     build_report,
     create_from_request,
+    load_module_designations,
     model_schema,
     parse_seed_create,
     project_status,
@@ -299,3 +304,100 @@ def test_workspace_packages_adds_build_report_only_when_runs_happened() -> None:
     names = [p for p, _ in withruns]
     assert names == [PROJECT_STATUS_PACKAGE, BUILD_REPORT_PACKAGE]
     assert withruns[-1][1]["seed"] == record.identity.name
+
+
+# --- Architecture.Map: the classification registry projected into a module map --------------------
+
+
+def _modules() -> list[dict[str, object]]:
+    return [
+        {
+            "designation": "MOD-04.001",
+            "name": "accounts",
+            "domain": "04",
+            "function": "logins",
+            "file": "kernel/world/accounts.py",
+            "status": "active",
+        },
+        {
+            "designation": "MOD-10.067",
+            "name": "posture",
+            "domain": "10",
+            "function": "kpi scorecard",
+            "file": "kernel/posture.py",
+            "status": "active",
+        },
+        {
+            "designation": "MOD-04.002",
+            "name": "combat",
+            "domain": "04",
+        },  # sparse: some fields absent
+    ]
+
+
+def test_architecture_map_groups_by_domain_and_counts() -> None:
+    payload = architecture_map(_modules())
+    assert payload["module_count"] == 3
+    assert payload["source"] == "registry/designations/modules.json"
+    assert payload["domains"] == [{"domain": "04", "count": 2}, {"domain": "10", "count": 1}]
+
+
+def test_architecture_map_sorts_modules_by_designation() -> None:
+    payload = architecture_map(_modules())
+    modules = payload["modules"]
+    assert isinstance(modules, list)
+    designations = [m["designation"] for m in modules]
+    assert designations == ["MOD-04.001", "MOD-04.002", "MOD-10.067"]  # sorted, stable
+
+
+def test_architecture_map_omits_a_field_the_record_lacks_never_invents_it() -> None:
+    payload = architecture_map(_modules())
+    modules = payload["modules"]
+    assert isinstance(modules, list)
+    sparse = next(m for m in modules if m["designation"] == "MOD-04.002")
+    assert "function" not in sparse and "file" not in sparse  # absent, not a fabricated blank
+    assert sparse["domain"] == "04"
+
+
+def test_architecture_map_labels_the_seed_when_given() -> None:
+    payload = architecture_map(_modules(), seed="Codeforge")
+    assert payload["seed"] == "Codeforge"
+    assert "seed" not in architecture_map(_modules())  # unlabeled when not given
+
+
+def test_architecture_map_frames_as_gmcp() -> None:
+    frame = gmcp_frame(ARCHITECTURE_MAP_PACKAGE, architecture_map(_modules(), seed="s"))
+    assert isinstance(frame, bytes)
+    assert b"Architecture.Map" in frame
+
+
+def test_workspace_packages_adds_the_architecture_map_only_when_modules_given() -> None:
+    kernel = _kernel()
+    record = _seed(kernel)
+    assert ARCHITECTURE_MAP_PACKAGE not in [p for p, _ in workspace_packages(record)]
+    withmods = workspace_packages(record, modules=_modules())
+    assert [p for p, _ in withmods] == [PROJECT_STATUS_PACKAGE, ARCHITECTURE_MAP_PACKAGE]
+
+
+def test_load_module_designations_reads_a_registry_and_skips_non_dicts(tmp_path) -> None:
+    registry = tmp_path / "modules.json"
+    registry.write_text(
+        json.dumps([{"designation": "MOD-01.001", "name": "x"}, "not-a-record"]), encoding="utf-8"
+    )
+    loaded = load_module_designations(registry)
+    assert loaded == [{"designation": "MOD-01.001", "name": "x"}]  # the stray string is dropped
+
+
+def test_load_module_designations_fails_loud_on_a_non_list_registry(tmp_path) -> None:
+    registry = tmp_path / "bad.json"
+    registry.write_text(json.dumps({"not": "a list"}), encoding="utf-8")
+    with pytest.raises(SeedKernelError, match="not a JSON list"):
+        load_module_designations(registry)
+
+
+def test_load_the_real_registry_projects_a_map() -> None:
+    # the shipped registry loads and projects (proves the default path resolves from the repo root).
+    payload = architecture_map(load_module_designations())
+    count = payload["module_count"]
+    assert isinstance(count, int) and count > 0
+    assert payload["domains"]  # at least one domain grouped
