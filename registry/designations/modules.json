@@ -8743,5 +8743,32 @@
   "aliases": [],
   "created": "2026-08-02",
   "updated": "2026-08-02"
+ },
+ {
+  "designation": "MOD-10.074",
+  "name": "backup",
+  "status": "active",
+  "function": "snapshot a Seed's persisted state to a portable, hash-verified archive and restore (or roll back) from it, so a Seed survives loss (a deleted/corrupted store or a bad change), not just restart; verify returns an integrity verdict (intact/corrupt/missing), and restore reinstates the snapshot THROUGH the Kernel so the write stays owner-authorized and audited",
+  "label": "backup",
+  "file": "kernel/seedlab/backup.py",
+  "type": "MOD",
+  "domain": "10",
+  "docs": "docs/seed_platform/RECENTERING.md",
+  "tests": "tests/test_seed_backup.py",
+  "depends_on": [
+   "MOD-10.052"
+  ],
+  "related": [
+   "MOD-10.056"
+  ],
+  "reuse": "The Seed Platform's backup manager: closes the create -> operate -> backup -> restore -> roll back lifecycle the platform requires of every Seed feature. SeedBackups.backup(record) writes a schema-versioned wrapper with a sha256 over the canonical record bytes (mirrors FileSeedStore's write-temp-then-replace durability); verify() re-hashes to report intact/corrupt/missing; load_record() refuses anything but intact; the module-level restore(kernel, backups, ...) composes load + kernel.reinstate so rollback is owner-authorized + audited. A generic snapshot/verify/restore mechanism -- extraction candidate for the Hardware Store (route via R&D Factory).",
+  "notes": "Slice C of the Stream-1 engine directive: prove restart/recovery is real, not claimed. Domain-neutral (grammar before worlds): no kernel/world/ import. Adds SeedKernel.reinstate as the sole sanctioned path back to an earlier state (a backup manager cannot smuggle state past the control plane). PROTOTYPED (docs/seed_platform/RECENTERING.md).",
+  "tags": [
+   "module"
+  ],
+  "superseded_by": "",
+  "aliases": [],
+  "created": "2026-08-02",
+  "updated": "2026-08-02"
  }
 ]

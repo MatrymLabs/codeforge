@@ -281,6 +281,29 @@ class SeedKernel:
         nothing (records are never destroyed by a calendar)."""
         return self._transition(seed_id, actor, ARCHIVED, "archived")
 
+    def reinstate(self, record: SeedRecord, actor: str, *, detail: str = "") -> SeedRecord:
+        """Server-authoritative restore/rollback: write a prior `record` back into the store as the
+        Seed's current state, authorized and audited. This is the ONLY sanctioned path back to an
+        earlier state, so a backup manager cannot smuggle state past the control plane. Least
+        privilege: the actor must own the Seed as it stands now (a restore over an existing Seed is
+        checked against the CURRENT owner, not the snapshot's), and a restore may never change a
+        Seed's owner. Appends a `reinstated` audit event so the rollback is itself traceable."""
+        seed_id = record.identity.seed_id
+        current = self._store.load(seed_id)
+        if current is not None:
+            self._authorize(current, actor)
+            if record.identity.owner != current.identity.owner:
+                raise SeedAuthError(f"a restore cannot change the owner of Seed {seed_id!r}")
+        else:
+            self._authorize(record, actor)
+        now = self._clock()
+        reinstated = replace(
+            record,
+            audit=record.audit + (AuditEvent(now, actor, "reinstated", detail),),
+        )
+        self._store.save(reinstated)
+        return reinstated
+
     # --- internals -----------------------------------------------------------------------------
     def _transition(
         self,
