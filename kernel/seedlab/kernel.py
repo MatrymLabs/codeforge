@@ -293,9 +293,7 @@ class SeedKernel:
         if current is not None:
             self._authorize(current, actor)
             if record.identity.owner != current.identity.owner:
-                raise SeedAuthError(
-                    f"a restore cannot change the owner of Seed {seed_id!r}"
-                )
+                raise SeedAuthError(f"a restore cannot change the owner of Seed {seed_id!r}")
         else:
             self._authorize(record, actor)
         now = self._clock()
