@@ -66,8 +66,8 @@ def test_identity_level_and_job_appear_in_the_header() -> None:
 
 def test_resources_and_progression_render() -> None:
     out = render_score_sheet(_matrym())
-    assert "HP   142 / 142" in out
-    assert "MP   38 / 38" in out
+    assert "142/142" in out  # now rendered as a health_bar meter
+    assert "38/38" in out  # MP now a health_bar meter
     assert "XP   4,820" in out and "JP   1,150" in out  # thousands separators
 
 

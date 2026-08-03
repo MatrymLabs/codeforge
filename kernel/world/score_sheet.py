@@ -14,6 +14,7 @@ content is pinned by focused field tests. Formulas live elsewhere -- this part o
 
 from __future__ import annotations
 
+from kernel.shelf.health_bar import bar
 from kernel.world.score_sheet_model import ATTR_ORDER, RESIST_ORDER, CharacterSheet
 
 _WIDTH = 70  # the frame width
@@ -61,12 +62,20 @@ def _header(sheet: CharacterSheet) -> str:
     return _fit(f"{left}{' ' * pad}{right}", _WIDTH)
 
 
+def _meter(current: int, maximum: int) -> str:
+    """A visual resource meter via the health_bar shelf part, with an honest text fallback when the
+    pool is degenerate (max <= 0 or an out-of-range value the bar would refuse)."""
+    if maximum > 0 and 0 <= current <= maximum:
+        return bar(current, maximum, width=10)
+    return f"{current} / {maximum}"
+
+
 def _resource_lefts(sheet: CharacterSheet) -> list[str]:
-    lines = [f" HP   {sheet.hp[0]} / {sheet.hp[1]}"]
+    lines = [f" HP  {_meter(sheet.hp[0], sheet.hp[1])}"]
     if sheet.mp is not None:
-        lines.append(f" MP   {sheet.mp[0]} / {sheet.mp[1]}")
+        lines.append(f" MP  {_meter(sheet.mp[0], sheet.mp[1])}")
     if sheet.power is not None:
-        lines.append(f" PC   {sheet.power[0]} / {sheet.power[1]}")  # Power Cells
+        lines.append(f" PC  {_meter(sheet.power[0], sheet.power[1])}")  # Power Cells
     lines.append(f" Race : {sheet.race}")
     if sheet.guild:
         lines.append(f" Guild : {sheet.guild}")
