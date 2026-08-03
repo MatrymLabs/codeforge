@@ -12,8 +12,10 @@ Account auth (salted pbkdf2) gates entry at the login front desk.
 
 Beyond the game, this server also serves the engineering-workspace surface over GMCP, additively
 and orthogonally to the game path: once an OWNER logs in, their Native-Seed client is pushed the
-creation `Form.Schema`, and an inbound `Seed.Create` / `Form.Submit` frame mints a real Seed
-(owner-gated, mirroring the in-MUD `workspace` verb) and pushes its `workspace_packages` back.
+creation `Form.Schema` plus the reference Seed's read-only workspace (its `Architecture.Map` and
+`Blueprint.List`, real engine state, so the Master Client's panels light up from the running
+server), and an inbound `Seed.Create` / `Form.Submit` frame mints a real Seed (owner-gated,
+mirroring the in-MUD `workspace` verb) and pushes its `workspace_packages` back.
 Seedlab is lazy-imported inside the handlers (off the game load path) and its mutations serialized
 under `SEEDLAB_LOCK`; nothing here touches the tick, `_push_state`, or the front desk.
 """
@@ -349,6 +351,37 @@ class _GateHandler(socketserver.StreamRequestHandler):
             return
         self._send_gmcp(FORM_SCHEMA_PACKAGE, form_schema(definition, seed=SEED_NAME))
 
+    def _push_reference_workspace(self) -> None:
+        """Push the reference engineering Seed's READ-ONLY workspace to a logged-in owner's client,
+        so the Master Client's read panels light up from the RUNNING server (not just a fixture):
+        its own module map (`Architecture.Map`, the classification registry) and its filed
+        Blueprints (`Blueprint.List`). Real engine state, parameter-free, owner-gated by the caller;
+        additive and optional (a game client ignores them). A missing or broken source is logged and
+        skipped, never a crash. `Deploy.Manifest` (needs a chosen tier) and `Research.Findings` (a
+        per-Seed manifest) are request-driven, not auto-pushed."""
+        from kernel.blueprint import load_all
+        from kernel.seedlab.kernel import SeedKernelError
+        from kernel.seedlab.workspace_gmcp import (
+            ARCHITECTURE_MAP_PACKAGE,
+            BLUEPRINT_LIST_PACKAGE,
+            architecture_map,
+            blueprint_list,
+            load_module_designations,
+        )
+
+        try:
+            modules = load_module_designations()
+        except (OSError, ValueError, SeedKernelError) as exc:
+            _LOG.warning("workspace_architecture_unavailable", error=str(exc))
+        else:
+            self._send_gmcp(ARCHITECTURE_MAP_PACKAGE, architecture_map(modules, seed=SEED_NAME))
+        try:
+            blueprints = load_all()
+        except (OSError, ValueError) as exc:
+            _LOG.warning("workspace_blueprints_unavailable", error=str(exc))
+        else:
+            self._send_gmcp(BLUEPRINT_LIST_PACKAGE, blueprint_list(blueprints, seed=SEED_NAME))
+
     def _send_gmcp(self, package: str, data: object) -> None:
         """Push one GMCP frame, only to a client that enabled GMCP (never to a plain-text nc)."""
         if not self._gmcp_enabled:
@@ -580,6 +613,7 @@ class _GateHandler(socketserver.StreamRequestHandler):
             self._session = session
             if has_rank(session, "owner"):
                 self._push_workspace_form()
+                self._push_reference_workspace()
             presence.mark_online(
                 session.player_id, session.location
             )  # joins the shared roster + room
