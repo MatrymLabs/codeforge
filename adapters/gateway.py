@@ -16,7 +16,8 @@ creation `Form.Schema` plus the reference Seed's read-only workspace (its `Archi
 `Blueprint.List`, real engine state, so the Master Client's panels light up from the running
 server), an inbound `Seed.Create` / `Form.Submit` frame mints a real Seed (owner-gated, mirroring
 the in-MUD `workspace` verb) and pushes its `workspace_packages` back, and a `Workspace.Request`
-frame serves the reference Seed's `Deploy.Manifest` for a requested tier.
+frame serves the reference Seed's `Deploy.Manifest` (for a requested tier) plus its
+`Research.Findings` when a research manifest is mounted (`SEEDLAB_RESEARCH`).
 Seedlab is lazy-imported inside the handlers (off the game load path) and its mutations serialized
 under `SEEDLAB_LOCK`; nothing here touches the tick, `_push_state`, or the front desk.
 """
@@ -359,7 +360,7 @@ class _GateHandler(socketserver.StreamRequestHandler):
                 )
             return
         if name == WORKSPACE_REQUEST_PACKAGE:
-            self._serve_deploy_manifest(payload)
+            self._serve_requested_workspace(payload)
             return
         owner = session.account or session.player_id
         with SEEDLAB_LOCK:
@@ -376,13 +377,28 @@ class _GateHandler(socketserver.StreamRequestHandler):
                 for pkg, data in workspace_packages(record):
                     self._send_gmcp(pkg, data)
 
-    def _serve_deploy_manifest(self, payload: object) -> None:
-        """Serve the reference Seed's `Deploy.Manifest` for the tier a client requested (default
-        `prototype`) -- the one workspace panel that cannot auto-push on login, because it needs a
-        chosen tier. Owner-gated by the caller. An unknown tier is an honest no-op (the client
-        picked a tier the engine does not model); the sizing itself is real (`compile_manifest`)."""
+    def _serve_requested_workspace(self, payload: object) -> None:
+        """Serve the requestable read panels for the reference Seed on a `Workspace.Request`: its
+        `Deploy.Manifest` (for the tier the client picked, default `prototype`) and, WHEN a research
+        manifest is mounted, its `Research.Findings`. Owner-gated by the caller. Both are honest
+        about absence: an unknown tier serves no manifest, and an unmounted or unreadable research
+        source serves no findings (the panel stays empty rather than showing invented research).
+
+        The research source is a MOUNT, like the Federal Guidance Library: `SEEDLAB_RESEARCH` (or,
+        by default, `$SEEDLAB_HOME/research.json`) points at a JSON list of finding records. The
+        engine never vendors research; a deployment mounts it, and an absent mount is a legible
+        empty panel, not a fabricated one."""
+        from pathlib import Path
+
         from kernel.seed_package import SeedPackageError, compile_manifest
-        from kernel.seedlab.workspace_gmcp import DEPLOY_MANIFEST_PACKAGE, deploy_manifest
+        from kernel.seedlab.kernel import SeedKernelError
+        from kernel.seedlab.workspace_gmcp import (
+            DEPLOY_MANIFEST_PACKAGE,
+            RESEARCH_FINDINGS_PACKAGE,
+            deploy_manifest,
+            load_research_findings,
+            research_findings,
+        )
 
         tier_id = "prototype"
         if isinstance(payload, dict):
@@ -393,8 +409,18 @@ class _GateHandler(socketserver.StreamRequestHandler):
             manifest = compile_manifest(SEED_NAME, tier_id)
         except SeedPackageError as exc:
             _LOG.warning("workspace_deploy_unavailable", tier=tier_id, error=str(exc))
-            return
-        self._send_gmcp(DEPLOY_MANIFEST_PACKAGE, deploy_manifest(manifest, seed=SEED_NAME))
+        else:
+            self._send_gmcp(DEPLOY_MANIFEST_PACKAGE, deploy_manifest(manifest, seed=SEED_NAME))
+
+        research_path = Path(
+            os.environ.get("SEEDLAB_RESEARCH")
+            or Path(os.environ.get("SEEDLAB_HOME", ".seedlab")) / "research.json"
+        )
+        try:
+            findings = load_research_findings(research_path)
+        except (OSError, ValueError, SeedKernelError):
+            return  # no research mounted (or unreadable): the panel stays honestly empty
+        self._send_gmcp(RESEARCH_FINDINGS_PACKAGE, research_findings(findings, seed=SEED_NAME))
 
     def _workspace_kernel(self) -> "SeedKernel":
         """A Kernel over the file-backed seedlab store at `$SEEDLAB_HOME/seeds` (default
