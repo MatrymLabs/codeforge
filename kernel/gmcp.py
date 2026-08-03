@@ -39,6 +39,7 @@ __all__ = [
     "gmcp_frame",
     "items_report",
     "quest_report",
+    "read_gmcp_package",
     "resists_report",
     "room_report",
     "seed_hello",
@@ -90,6 +91,64 @@ def enables_gmcp(data: bytes) -> bool | None:
     and receives no binary GMCP noise.
     """
     return read_negotiation(data, GMCP_OPT)
+
+
+def _find_gmcp_sb(data: bytes) -> int | None:
+    """The index just past an `IAC SB GMCP` marker in `data`, or None when no GMCP subnegotiation
+    begins in the chunk."""
+    for i in range(len(data) - 2):
+        if data[i] == IAC and data[i + 1] == SB and data[i + 2] == GMCP_OPT:
+            return i + 3
+    return None
+
+
+def read_gmcp_package(data: bytes) -> tuple[str, object] | None:
+    """Read one inbound GMCP data package from raw client bytes: the inverse of `gmcp_frame`.
+
+    Scans for a complete `IAC SB GMCP <package> <json> IAC SE` subnegotiation, un-escapes doubled
+    IAC bytes in the body, and splits it into the package name and its decoded JSON payload. Returns
+    `(package, payload)` (payload is None for a body-less package), or None when the chunk holds no
+    complete, well-formed GMCP data frame (no frame, unterminated, empty name, or unparseable JSON).
+    A TOTAL parser: it never raises on untrusted wire bytes, so a malformed frame is simply ignored.
+
+    The gateway's `strip_iac` DISCARDS subnegotiation frames (so they never reach the tick), so an
+    inbound GMCP package must be read from the raw line with this before the line is stripped.
+    """
+    start = _find_gmcp_sb(data)
+    if start is None:
+        return None
+    body = bytearray()
+    i = start
+    terminated = False
+    while i < len(data):
+        if data[i] == IAC:
+            if i + 1 >= len(data):
+                return None  # truncated escape / negotiation split across reads
+            nxt = data[i + 1]
+            if nxt == IAC:  # an escaped literal 255 in the body
+                body.append(IAC)
+                i += 2
+                continue
+            if nxt == SE:  # IAC SE: end of the subnegotiation
+                terminated = True
+                break
+            return None  # any other IAC command inside a GMCP body: malformed
+        body.append(data[i])
+        i += 1
+    if not terminated:
+        return None  # never reached IAC SE
+    text = bytes(body).decode("utf-8", errors="ignore").strip()
+    if not text:
+        return None
+    package, _, payload_text = text.partition(" ")
+    if not package:
+        return None
+    if not payload_text:
+        return (package, None)
+    try:
+        return (package, json.loads(payload_text))
+    except json.JSONDecodeError:
+        return None
 
 
 def vitals_report(session: Session) -> dict[str, int] | None:

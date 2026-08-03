@@ -160,6 +160,21 @@ class SeedSpec:
         }
 
 
+def load_definition(path: Path | None = None) -> FormDefinition:
+    """Load the Engineering Form CATALOG (a `FormDefinition`) from the data file, failing loud if it
+    is absent or malformed. The public loader for callers that project the Form directly (the
+    workspace GMCP `form_schema` / `create_from_form_submit`) rather than walking it through an
+    `EngineeringForm`. Path resolved at call time so a test can point at a fixture."""
+    catalog_path = path or _default_catalog_path()
+    try:
+        raw = json.loads(catalog_path.read_text(encoding="utf-8"))
+    except FileNotFoundError as exc:
+        raise FormError(f"no Engineering Form catalog at {catalog_path}") from exc
+    except json.JSONDecodeError as exc:
+        raise FormError(f"unreadable Form catalog {catalog_path}: {exc}") from exc
+    return FormDefinition.from_dict(raw)
+
+
 class EngineeringForm:
     """Walks the catalog for one product type and validates answers into a SeedSpec. Domain-neutral:
     the same instance builds a game spec and a classroom spec, selecting different modules from data
@@ -172,14 +187,7 @@ class EngineeringForm:
     def load(cls, path: Path | None = None) -> EngineeringForm:
         """Load the Form from the data catalog (default: the shipped file), failing loud if absent
         or malformed -- an empty Form would be a silent hole in the platform's front door."""
-        catalog_path = path or _default_catalog_path()
-        try:
-            raw = json.loads(catalog_path.read_text(encoding="utf-8"))
-        except FileNotFoundError as exc:
-            raise FormError(f"no Engineering Form catalog at {catalog_path}") from exc
-        except json.JSONDecodeError as exc:
-            raise FormError(f"unreadable Form catalog {catalog_path}: {exc}") from exc
-        return cls(FormDefinition.from_dict(raw))
+        return cls(load_definition(path))
 
     def product_types(self) -> list[ProductType]:
         """Every product type the Form can build, for a chooser to render."""

@@ -670,3 +670,93 @@ def test_the_gateway_emits_structured_lifecycle_events():
 def test_configure_logging_is_idempotent():
     gateway._configure_logging()
     gateway._configure_logging()  # a second call must not raise
+
+
+# --- the additive engineering-workspace wire (owner creates a Seed over GMCP) ---------------------
+
+_PW_PROMPT = b"Password: " + bytes([255, 251, 1])
+
+
+def _saved_owner(char="wren", account="forge", pw="swordfish"):
+    """A saved OWNER-ranked account: the in-MUD `workspace` verb and the gateway wire are both
+    owner-gated (authorization before capability)."""
+    hero = Session(player_id=char, location="courtyard", named=True, account=account)
+    hero.rank = "owner"
+    SESSIONS[char] = hero
+    save_character(hero)
+    SESSIONS.clear()
+    register_account(f"{account}_seed", account, pw)
+    adopt(char, account)
+
+
+def _login_gmcp(srv, char, account, pw="swordfish"):
+    """Connect with GMCP enabled and clear the front desk; returns (sock, bytes seen up to the
+    first prompt) so a test can assert what was pushed on entry."""
+    sock = _connect(srv)
+    sock.sendall(_DO_GMCP)
+    _read_until(sock, b"NEW: ")
+    _line(sock, f"{char}@{account}")
+    _read_until_raw(sock, _PW_PROMPT)
+    _line(sock, pw)
+    return sock, _read_until_raw(sock, b"> ")
+
+
+def test_an_owner_login_pushes_the_creation_form_over_gmcp(server, tmp_path, monkeypatch):
+    monkeypatch.setenv("SEEDLAB_HOME", str(tmp_path))
+    _saved_owner()
+    sock, out = _login_gmcp(server, "wren", "forge")
+    assert _SB_GMCP in out and b"Form.Schema" in out  # the Wizard's creation Form, as data
+    assert b"product_types" in out  # the Form projects its product types
+    sock.close()
+
+
+def test_an_owner_creates_a_seed_over_gmcp_and_gets_its_workspace(server, tmp_path, monkeypatch):
+    from kernel.gmcp import gmcp_frame
+
+    monkeypatch.setenv("SEEDLAB_HOME", str(tmp_path))
+    _saved_owner()
+    sock, _ = _login_gmcp(server, "wren", "forge")
+    submit = {
+        "product_type": "training",
+        "answers": {
+            "name": "Onboarding",
+            "purpose": "train new hires",  # owner is injected server-side (authenticated account)
+            "scenarios": "server outage drill",
+            "competencies": "incident response",
+            "certification": True,
+        },
+    }
+    sock.sendall(gmcp_frame("Form.Submit", submit) + b"\n")  # a newline gives readline its boundary
+    out = _read_until_raw(sock, b"> ")
+    assert b"Seed.Created" in out and b'"ok":true' in out  # the engine minted the Seed
+    assert b"Project.Status" in out and b"Onboarding" in out  # its workspace was pushed back
+    assert list((tmp_path / "seeds").glob("*.json"))  # and it persisted to the file store
+    sock.close()
+
+
+def test_seed_create_over_gmcp_mints_a_seed(server, tmp_path, monkeypatch):
+    from kernel.gmcp import gmcp_frame
+
+    monkeypatch.setenv("SEEDLAB_HOME", str(tmp_path))
+    _saved_owner()
+    sock, _ = _login_gmcp(server, "wren", "forge")
+    sock.sendall(gmcp_frame("Seed.Create", {"name": "toolkit", "kind": "engineering"}) + b"\n")
+    out = _read_until_raw(sock, b"> ")
+    assert b"Seed.Created" in out and b'"ok":true' in out and b"Project.Status" in out
+    sock.close()
+
+
+def test_a_non_owner_is_refused_seed_creation_over_gmcp(server, tmp_path, monkeypatch):
+    from kernel.gmcp import gmcp_frame
+
+    monkeypatch.setenv("SEEDLAB_HOME", str(tmp_path))
+    _saved_account()  # a default player-rank account (matrym@matlabs)
+    sock, out = _login_gmcp(server, "matrym", "matlabs")
+    assert b"Form.Schema" not in out  # the creation Form is owner-gated: a player never sees it
+    sock.sendall(gmcp_frame("Seed.Create", {"name": "sneaky", "kind": "engineering"}) + b"\n")
+    reply = _read_until_raw(sock, b"> ")
+    assert b"Seed.Created" in reply and b'"ok":false' in reply  # refused, honestly
+    assert b"requires owner rank" in reply
+    assert b"Project.Status" not in reply  # nothing was created or served
+    assert not list((tmp_path / "seeds").glob("*.json"))  # no Seed on disk
+    sock.close()

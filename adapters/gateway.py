@@ -9,6 +9,13 @@ Security: plaintext by default (the compatibility transport for a home
 LAN). Set CODEFORGE_TLS_CERT + CODEFORGE_TLS_KEY to serve over TLS for an
 internet-facing deployment; the message layer is identical behind either.
 Account auth (salted pbkdf2) gates entry at the login front desk.
+
+Beyond the game, this server also serves the engineering-workspace surface over GMCP, additively
+and orthogonally to the game path: once an OWNER logs in, their Native-Seed client is pushed the
+creation `Form.Schema`, and an inbound `Seed.Create` / `Form.Submit` frame mints a real Seed
+(owner-gated, mirroring the in-MUD `workspace` verb) and pushes its `workspace_packages` back.
+Seedlab is lazy-imported inside the handlers (off the game load path) and its mutations serialized
+under `SEEDLAB_LOCK`; nothing here touches the tick, `_push_state`, or the front desk.
 """
 
 import contextlib
@@ -20,6 +27,7 @@ import ssl
 import sys
 import threading
 import time
+from typing import TYPE_CHECKING
 
 import structlog
 
@@ -34,6 +42,7 @@ from kernel.gmcp import (
     mail_report,
     party_report,
     quest_report,
+    read_gmcp_package,
     resists_report,
     room_report,
     seed_hello,
@@ -52,7 +61,14 @@ from kernel.world.seed import SEED_NAME, load_splash
 from kernel.world.session import SESSIONS, Session
 from kernel.world.socket_bus import maybe_wire_broker
 
+if TYPE_CHECKING:
+    from kernel.seedlab.kernel import SeedKernel
+
 TICK_LOCK = threading.Lock()
+# Serializes seedlab (engineering-workspace) mutations across connection threads. The seedlab Kernel
+# and its file store carry no lock of their own, so two connections minting/mutating Seeds could
+# lost-update; this guards the additive workspace wire without touching the game tick's TICK_LOCK.
+SEEDLAB_LOCK = threading.Lock()
 _counter_lock = threading.Lock()
 _counter = 0
 
@@ -223,6 +239,10 @@ class _GateHandler(socketserver.StreamRequestHandler):
         self._seed_announced = (
             False  # Native Seed handshake: Seed.Hello is sent once on GMCP enable
         )
+        # The authenticated session, set once the front desk lets a player in. None while at the
+        # login desk, which GATES the additive engineering-workspace wire: no inbound Seed.Create /
+        # Form.Submit is dispatched until a real account is behind the connection.
+        self._session: Session | None = None
         self._last_vitals: dict[str, int] | None = None
         self._last_room: dict[str, object] | None = None
         self._last_target: dict[str, object] = {}  # {} means "no foe"; clears the client's tracker
@@ -248,6 +268,86 @@ class _GateHandler(socketserver.StreamRequestHandler):
         if self._gmcp_enabled and not self._seed_announced:
             self._seed_announced = True
             self._send_gmcp("Seed.Hello", seed_hello(SEED_NAME))
+        # Additive engineering-workspace wire: a logged-in owner's client can create a Seed and get
+        # its workspace pushed back, all over GMCP. Only after the front desk (self._session set),
+        # and orthogonal to the game path -- a non-workspace frame is ignored here.
+        if self._session is not None:
+            self._handle_workspace_gmcp(raw)
+
+    def _handle_workspace_gmcp(self, raw: bytes) -> None:
+        """Dispatch an inbound engineering-workspace GMCP package on an authenticated connection:
+        `Seed.Create` / `Form.Submit` create a Seed and push its workspace. Authorization before
+        capability (architecture law 5): creation is OWNER-gated, mirroring the in-MUD `workspace`
+        verb's `min_rank='owner'`; a non-owner gets an honest `ok:false` verdict and no Seed. Any
+        other inbound package (or none) is ignored, so the game path is never touched.
+
+        Read at the line boundary, the same as GMCP negotiation: a client's frame is processed when
+        the next line is read. (A bare out-of-band frame with no following newline waits for the
+        next line; giving the read loop its own subnegotiation reader is a documented follow-up.)"""
+        package = read_gmcp_package(raw)
+        if package is None:
+            return  # the common case: a normal command line carries no GMCP data frame
+        from kernel.seedlab.workspace_gmcp import (
+            FORM_SUBMIT_PACKAGE,
+            SEED_CREATE_PACKAGE,
+            SEED_CREATED_PACKAGE,
+            create_from_form_submit,
+            create_from_request,
+            seed_created,
+            workspace_packages,
+        )
+
+        name, payload = package
+        if name not in (SEED_CREATE_PACKAGE, FORM_SUBMIT_PACKAGE):
+            return
+        session = self._session
+        assert session is not None  # dispatch is only reached once the front desk set it
+        if not has_rank(session, "owner"):
+            self._send_gmcp(
+                SEED_CREATED_PACKAGE,
+                seed_created("", False, reason="creating a workspace requires owner rank"),
+            )
+            return
+        owner = session.account or session.player_id
+        with SEEDLAB_LOCK:
+            kernel = self._workspace_kernel()
+            if name == SEED_CREATE_PACKAGE:
+                verdict = create_from_request(kernel, payload, owner=owner)
+            else:
+                from kernel.seedlab.form import load_definition
+
+                verdict = create_from_form_submit(kernel, load_definition(), payload, owner=owner)
+            self._send_gmcp(SEED_CREATED_PACKAGE, verdict)
+            if verdict.get("ok"):
+                record = kernel.get(str(verdict.get("id", "")))
+                for pkg, data in workspace_packages(record):
+                    self._send_gmcp(pkg, data)
+
+    def _workspace_kernel(self) -> "SeedKernel":
+        """A Kernel over the file-backed seedlab store at `$SEEDLAB_HOME/seeds` (default
+        `.seedlab/seeds`), the same store the in-MUD `workspace` verb uses. Read at call time so a
+        test can point `SEEDLAB_HOME` at a tmp dir; lazy-imported so seedlab stays off the gateway's
+        load path (the game path never imports it)."""
+        from pathlib import Path
+
+        from kernel.seedlab.kernel import FileSeedStore, SeedKernel
+
+        root = Path(os.environ.get("SEEDLAB_HOME", ".seedlab")) / "seeds"
+        return SeedKernel(FileSeedStore(root))
+
+    def _push_workspace_form(self) -> None:
+        """Push the engineering creation Form (`Form.Schema`) to a logged-in owner's Native-Seed
+        client, so its Seed Creation Wizard can render. Owner-gated by the caller; additive and
+        optional (a game client ignores the package). A missing catalog is logged, never a crash."""
+        from kernel.seedlab.form import FormError, load_definition
+        from kernel.seedlab.workspace_gmcp import FORM_SCHEMA_PACKAGE, form_schema
+
+        try:
+            definition = load_definition()
+        except FormError as exc:
+            _LOG.warning("workspace_form_unavailable", error=str(exc))
+            return
+        self._send_gmcp(FORM_SCHEMA_PACKAGE, form_schema(definition, seed=SEED_NAME))
 
     def _send_gmcp(self, package: str, data: object) -> None:
         """Push one GMCP frame, only to a client that enabled GMCP (never to a plain-text nc)."""
@@ -474,6 +574,12 @@ class _GateHandler(socketserver.StreamRequestHandler):
             entered = self._front_desk(session)
             if not entered:
                 return
+            # The account is now authenticated: open the additive engineering-workspace wire for
+            # this connection, and (for an owner) push the creation Form so their Native-Seed
+            # client's Wizard can render. Orthogonal to the game path below.
+            self._session = session
+            if has_rank(session, "owner"):
+                self._push_workspace_form()
             presence.mark_online(
                 session.player_id, session.location
             )  # joins the shared roster + room
