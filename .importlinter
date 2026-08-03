@@ -29,3 +29,11 @@ source_modules =
     kernel.seedlab
 forbidden_modules =
     kernel.world
+
+[importlinter:contract:platform-imports-no-domain-module]
+name = Seed Kernel imports no domain module (domains register themselves; the platform never imports one)
+type = forbidden
+source_modules =
+    kernel.seedlab
+forbidden_modules =
+    kernel.domains
