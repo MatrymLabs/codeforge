@@ -197,3 +197,118 @@ def test_a_choice_question_without_choices_is_refused() -> None:
 def test_load_refuses_a_missing_catalog(tmp_path: Path) -> None:
     with pytest.raises(FormError, match="no Engineering Form catalog"):
         EngineeringForm.load(tmp_path / "absent.json")
+
+
+# --- coercion + catalog-shape edge cases (every question kind, every failure branch) ------------
+
+_KINDS_CATALOG = {
+    "schema": 1,
+    "common_question_ids": ["name", "owner", "purpose"],  # the identity fields every Seed carries
+    "questions": {
+        "name": {"prompt": "Name?", "kind": "text"},
+        "owner": {"prompt": "Owner?", "kind": "text"},
+        "purpose": {"prompt": "Purpose?", "kind": "text"},
+        "size": {"prompt": "Size?", "kind": "number"},
+        "flag": {"prompt": "Flag?", "kind": "bool"},
+        "tags": {"prompt": "Tags?", "kind": "multi", "choices": ["a", "b"]},
+        "note": {"prompt": "Note?", "kind": "text", "required": False},
+    },
+    "product_types": {
+        "thing": {
+            "name": "Thing",
+            "question_ids": ["size", "flag", "tags", "note"],
+            "domain_modules": [],
+        }
+    },
+}
+
+
+def _kinds_form() -> EngineeringForm:
+    return EngineeringForm(FormDefinition.from_dict(_KINDS_CATALOG))
+
+
+def _answers(**over: object) -> dict[str, object]:
+    base: dict[str, object] = {
+        "name": "n",
+        "owner": "o",
+        "purpose": "p",
+        "size": 5,
+        "flag": True,
+        "tags": ["a"],
+    }
+    base.update(over)
+    return base
+
+
+def test_number_answers_coerce_to_int_and_float() -> None:
+    assert _kinds_form().build_spec("thing", _answers(size="5")).answers["size"] == 5
+    assert _kinds_form().build_spec("thing", _answers(size="1.5")).answers["size"] == 1.5
+
+
+def test_a_non_numeric_number_answer_is_refused() -> None:
+    with pytest.raises(FormError, match="expected a number"):
+        _kinds_form().build_spec("thing", _answers(size="abc"))
+
+
+def test_an_empty_required_text_answer_is_refused() -> None:
+    with pytest.raises(FormError, match="non-empty"):
+        _kinds_form().build_spec("thing", _answers(name=""))
+
+
+def test_a_false_bool_token_coerces_to_false() -> None:
+    assert _kinds_form().build_spec("thing", _answers(flag="no")).answers["flag"] is False
+
+
+def test_a_non_list_multi_answer_is_refused() -> None:
+    with pytest.raises(FormError, match="expected a list"):
+        _kinds_form().build_spec("thing", _answers(tags="a"))
+
+
+def test_an_empty_required_multi_answer_is_refused() -> None:
+    with pytest.raises(FormError, match="at least one"):
+        _kinds_form().build_spec("thing", _answers(tags=[]))
+
+
+def test_an_out_of_range_multi_choice_is_refused() -> None:
+    with pytest.raises(FormError, match="not valid choice"):
+        _kinds_form().build_spec("thing", _answers(tags=["z"]))
+
+
+def test_an_optional_question_may_be_omitted() -> None:
+    spec = _kinds_form().build_spec("thing", _answers())  # no "note"
+    assert "note" not in spec.answers
+
+
+def test_an_unknown_question_kind_is_refused() -> None:
+    with pytest.raises(FormError, match="unknown kind"):
+        Question(id="q", prompt="?", kind="rune")
+
+
+def test_from_dict_refuses_a_non_mapping_catalog() -> None:
+    with pytest.raises(FormError, match="must be a mapping"):
+        FormDefinition.from_dict("not a catalog")
+
+
+def test_from_dict_refuses_a_malformed_catalog_shape() -> None:
+    # missing common_question_ids -> a KeyError inside the parse, surfaced as a malformed catalog
+    with pytest.raises(FormError, match="malformed catalog"):
+        FormDefinition.from_dict(
+            {
+                "questions": {"name": {"prompt": "?", "kind": "text"}},
+                "product_types": {
+                    "x": {"name": "X", "question_ids": ["name"], "domain_modules": []}
+                },
+            }
+        )
+
+
+def test_load_refuses_unreadable_json(tmp_path: Path) -> None:
+    bad = tmp_path / "bad.json"
+    bad.write_text("{not json", encoding="utf-8")
+    with pytest.raises(FormError, match="unreadable Form catalog"):
+        EngineeringForm.load(bad)
+
+
+def test_an_unparseable_bool_answer_is_refused() -> None:
+    with pytest.raises(FormError, match="yes/no"):
+        _kinds_form().build_spec("thing", _answers(flag="maybe"))
