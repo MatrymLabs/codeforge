@@ -27,6 +27,7 @@ tests -- there is nothing to verify). Status: PROTOTYPED (see docs/seed_platform
 
 from __future__ import annotations
 
+import shutil
 from collections.abc import Callable
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -114,6 +115,14 @@ def _write(target_dir: Path, files: TargetFiles) -> None:
         path.write_text(text, encoding="utf-8")
 
 
+def _clear_bytecode(root: Path) -> None:
+    """Remove stale __pycache__ so each iteration's FRESH source is what runs. Rewriting a .py file
+    within one filesystem-mtime tick can otherwise leave Python reading the previous iteration's
+    cached bytecode (a coarse-mtime CI filesystem made the loop see stale code)."""
+    for cache in root.rglob("__pycache__"):
+        shutil.rmtree(cache, ignore_errors=True)
+
+
 def synthesize(
     goal: str,
     tests: TargetFiles,
@@ -146,6 +155,7 @@ def synthesize(
         attempts += 1
         files = implementer.implement(goal, tests, feedback)
         _write(workdir, files)
+        _clear_bytecode(workdir)  # the runner must see this iteration's code, never a stale .pyc
         last_run = run(workdir)
         if last_run.ok:
             break
