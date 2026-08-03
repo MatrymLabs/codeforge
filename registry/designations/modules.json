@@ -2360,6 +2360,27 @@
   "updated": "2026-08-02"
  },
  {
+  "designation": "MOD-10.074",
+  "name": "bench_control",
+  "status": "active",
+  "function": "pin the process to a quiet core (stdlib sched_setaffinity) and drive an effect-size A/B, so a verdict names the conditions it was measured under",
+  "label": "bench_control",
+  "file": "kernel/bench_control.py",
+  "type": "MOD",
+  "domain": "10",
+  "docs": "",
+  "tests": "tests/test_bench_control.py",
+  "depends_on": ["bench_protocol"],
+  "related": ["bench_protocol"],
+  "reuse": "run any before/after bench on a pinned quiet core with a seeded interleave, and get an honest verdict PLUS the control conditions actually achieved (pinned? governor fixed?) - the missing 'control the machine' half of bench_protocol",
+  "tags": ["module"],
+  "notes": "New tool + method (R&D bench run 2026-08-02): closes bench_protocol's named gap - it READS the governor/pin but does not SET them. Uses os.sched_setaffinity (stdlib, no dependency, no taskset subprocess) to actually pin; honest when the OS refuses (EPERM -> pinned=False, not a crash) and when the governor is uncontrolled (ondemand -> defensible=no). Proven live on the C text kernel vs pure-Python (VERIFIED_IMPROVEMENT, d=1.0, x0.026) via benchmarks/bench_controlled.py. Provenance: original.",
+  "superseded_by": "",
+  "aliases": [],
+  "created": "2026-08-02",
+  "updated": "2026-08-02"
+ },
+ {
   "designation": "MOD-10.072",
   "name": "advisory_ledger",
   "status": "active",
