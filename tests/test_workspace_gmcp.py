@@ -25,6 +25,7 @@ from kernel.seedlab.workspace_gmcp import (
     BUILD_REPORT_PACKAGE,
     MODEL_SCHEMA_PACKAGE,
     PROJECT_STATUS_PACKAGE,
+    RESEARCH_FINDINGS_PACKAGE,
     SOURCE_TREE_PACKAGE,
     SeedCreateRequest,
     WorkspaceContractError,
@@ -32,9 +33,11 @@ from kernel.seedlab.workspace_gmcp import (
     build_report,
     create_from_request,
     load_module_designations,
+    load_research_findings,
     model_schema,
     parse_seed_create,
     project_status,
+    research_findings,
     seed_created,
     source_tree,
     workspace_packages,
@@ -401,3 +404,97 @@ def test_load_the_real_registry_projects_a_map() -> None:
     count = payload["module_count"]
     assert isinstance(count, int) and count > 0
     assert payload["domains"]  # at least one domain grouped
+
+
+# --- Research.Findings: the R&D Factory + FGL provenance projected into a finding list ------------
+
+
+def _findings() -> list[dict[str, object]]:
+    return [
+        {
+            "id": "EXP-05",
+            "title": "FTS5 world search",
+            "question": "Does an FTS5 index beat a linear room scan at scale?",
+            "status": "complete",
+            "verdict": "verified improvement",
+            "source": "rd/labs/algorithms",
+            "evidence": "rd/evidence/EXP-05/benchmark.json",
+            "summary": "80-129x faster world search",
+        },
+        {
+            "id": "EXP-31",
+            "title": "Probabilistic structures",
+            "verdict": "hardware store part",
+        },  # sparse: some fields absent
+        {
+            "id": "EXP-24",
+            "verdict": "verified improvement",
+        },
+    ]
+
+
+def test_research_findings_groups_by_verdict_and_counts() -> None:
+    payload = research_findings(_findings())
+    assert payload["finding_count"] == 3
+    assert payload["verdicts"] == [
+        {"verdict": "hardware store part", "count": 1},
+        {"verdict": "verified improvement", "count": 2},
+    ]
+
+
+def test_research_findings_sorts_by_id() -> None:
+    payload = research_findings(_findings())
+    findings = payload["findings"]
+    assert isinstance(findings, list)
+    assert [f["id"] for f in findings] == ["EXP-05", "EXP-24", "EXP-31"]  # sorted, stable
+
+
+def test_research_findings_omits_a_field_the_record_lacks_never_invents_it() -> None:
+    payload = research_findings(_findings())
+    findings = payload["findings"]
+    assert isinstance(findings, list)
+    sparse = next(f for f in findings if f["id"] == "EXP-31")
+    assert "question" not in sparse and "evidence" not in sparse  # absent, not a fabricated blank
+    assert sparse["verdict"] == "hardware store part"
+
+
+def test_research_findings_labels_the_seed_when_given() -> None:
+    payload = research_findings(_findings(), seed="Aethryn")
+    assert payload["seed"] == "Aethryn"
+    assert "seed" not in research_findings(_findings())  # unlabeled when not given
+
+
+def test_research_findings_empty_surface_is_honest() -> None:
+    payload = research_findings([])
+    assert payload["finding_count"] == 0
+    assert payload["verdicts"] == [] and payload["findings"] == []
+
+
+def test_research_findings_frames_as_gmcp() -> None:
+    frame = gmcp_frame(RESEARCH_FINDINGS_PACKAGE, research_findings(_findings(), seed="s"))
+    assert isinstance(frame, bytes)
+    assert b"Research.Findings" in frame
+
+
+def test_workspace_packages_adds_research_only_when_findings_given() -> None:
+    kernel = _kernel()
+    record = _seed(kernel)
+    assert RESEARCH_FINDINGS_PACKAGE not in [p for p, _ in workspace_packages(record)]
+    withresearch = workspace_packages(record, findings=_findings())
+    assert [p for p, _ in withresearch] == [PROJECT_STATUS_PACKAGE, RESEARCH_FINDINGS_PACKAGE]
+
+
+def test_load_research_findings_reads_a_manifest_and_skips_non_dicts(tmp_path) -> None:
+    manifest = tmp_path / "experiments.json"
+    manifest.write_text(
+        json.dumps([{"id": "EXP-01", "verdict": "neutral"}, "not-a-record"]), encoding="utf-8"
+    )
+    loaded = load_research_findings(manifest)
+    assert loaded == [{"id": "EXP-01", "verdict": "neutral"}]  # the stray string is dropped
+
+
+def test_load_research_findings_fails_loud_on_a_non_list_manifest(tmp_path) -> None:
+    manifest = tmp_path / "bad.json"
+    manifest.write_text(json.dumps({"not": "a list"}), encoding="utf-8")
+    with pytest.raises(SeedKernelError, match="not a JSON list"):
+        load_research_findings(manifest)
