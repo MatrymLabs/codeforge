@@ -13,10 +13,17 @@ systemic (an assistant confidently invents `reqeusts` or `python-dateutils`). A 
 valid package name, or is one edit from a well-known package while being neither that package nor
 already justified, is flagged. Offline and stdlib-only (no PyPI call, so it never touches the
 network in a test); it screens the name, human judgement admits the dependency.
+
+The screen has a second, BEHAVIORAL half (`screen-source <path>`): the name check catches a
+hallucinated/typo-squat name, but a real package can carry a malicious install hook - setup.py runs
+with the installer's privileges. `install_hook_concerns` statically screens install-time code (by
+AST, offline, never executed) for the attack primitives: phoning home, spawning a shell, dynamic
+eval/exec, and the decode-then-execute obfuscation shape. Propose-only: it flags for human review.
 """
 
 from __future__ import annotations
 
+import ast
 import re
 import tomllib
 from dataclasses import dataclass
@@ -123,6 +130,94 @@ def screen_name(name: str, ledger: Path = _LEDGER) -> list[str]:
     """Screen a proposed dependency name against the trusted (justified) set + the popular set."""
     trusted = frozenset(read_ledger(ledger))
     return admission_concerns(name, trusted=trusted)
+
+
+# --- behavioral admission screen: what does the package DO when it is installed? -----------------
+# The name screen catches a hallucinated/typo-squat NAME; this catches malicious BEHAVIOR in the
+# install-time code. setup.py runs with the installer's privileges, so a package that phones home,
+# spawns a shell, or decodes-and-executes a payload during install is the supply-chain attack shape.
+# Screened by static AST, OFFLINE, and NEVER executed - reading the code is the whole point.
+_NETWORK_MODULES = frozenset(
+    {"socket", "urllib", "http", "ftplib", "telnetlib", "smtplib", "requests", "httpx", "aiohttp"}
+)
+_PROCESS_MODULES = frozenset({"subprocess", "pty"})
+_DECODE_MODULES = frozenset({"base64", "marshal", "zlib", "binascii", "codecs"})
+_EXEC_BUILTINS = frozenset({"eval", "exec", "compile", "__import__"})
+_PROCESS_CALLS = frozenset(
+    {"os.system", "os.popen", "os.execv", "os.execve", "os.execvp", "os.spawnv", "os.spawnl"}
+)
+
+
+def _dotted(node: ast.expr) -> str:
+    """Best-effort dotted name for a call target: `os.system`, `subprocess.run`, or bare `exec`."""
+    parts: list[str] = []
+    while isinstance(node, ast.Attribute):
+        parts.append(node.attr)
+        node = node.value
+    if isinstance(node, ast.Name):
+        parts.append(node.id)
+    return ".".join(reversed(parts))
+
+
+def install_hook_concerns(source: str) -> list[str]:
+    """Statically screen install-time Python (a setup.py's source) for supply-chain-attack behavior.
+
+    Offline and stdlib-only: parses `source` with `ast` and NEVER executes it. Flags install-time
+    network access, shell/process execution, dynamic code execution (eval/exec/compile), and the
+    decode-then-execute obfuscation pattern - the primitives a malicious package uses to run a
+    payload the moment it is installed. Returns the concerns (empty == clean); an unparseable script
+    is itself a concern (it cannot be screened safely). Propose-only: the verdict informs a human,
+    it admits nothing.
+    """
+    try:
+        tree = ast.parse(source)
+    except SyntaxError as exc:
+        return [
+            f"install script does not parse as Python ({exc.msg}); cannot be screened safely - "
+            f"treat as suspicious"
+        ]
+    imported: set[str] = set()
+    calls: set[str] = set()
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Import):
+            imported.update(alias.name.split(".")[0] for alias in node.names)
+        elif isinstance(node, ast.ImportFrom) and node.module:
+            imported.add(node.module.split(".")[0])
+        elif isinstance(node, ast.Call):
+            calls.add(_dotted(node.func))
+    concerns: list[str] = []
+    if net := sorted(imported & _NETWORK_MODULES):
+        concerns.append(
+            f"install-time network access (imports {', '.join(net)}): a package should not phone "
+            f"home when it is installed"
+        )
+    proc = sorted(imported & _PROCESS_MODULES) + sorted(c for c in calls if c in _PROCESS_CALLS)
+    if proc:
+        concerns.append(
+            f"install-time process/shell execution ({', '.join(proc)}): the setup script spawns "
+            f"commands - confirm it is benign (e.g. a git version) and not a dropper"
+        )
+    if execs := sorted(c for c in calls if c.rsplit(".", 1)[-1] in _EXEC_BUILTINS):
+        concerns.append(
+            f"dynamic code execution at install time ({', '.join(execs)}): eval/exec/compile runs "
+            f"code that static review cannot see"
+        )
+        if decode := sorted(imported & _DECODE_MODULES):
+            concerns.append(
+                f"obfuscated payload: decode ({', '.join(decode)}) feeding dynamic execution - the "
+                f"classic hidden install-hook shape"
+            )
+    return concerns
+
+
+def screen_source(path: Path) -> list[str]:
+    """Screen a package's install-time code at `path` (a setup.py file, or a directory containing
+    one). Offline: reads the source and screens it via `install_hook_concerns`, never running it.
+    A missing file raises loud (a screen you cannot perform must not read as 'clean')."""
+    path = Path(path)
+    if path.is_dir():
+        path = path / "setup.py"
+    return install_hook_concerns(path.read_text(encoding="utf-8", errors="replace"))
 
 
 class LedgerError(RuntimeError):
@@ -244,10 +339,27 @@ def render_dependencies(pyproject: Path = _PYPROJECT, ledger: Path = _LEDGER) ->
 
 def main(argv: list[str] | None = None) -> int:
     """`make deps`: print the gate verdict; exit non-zero if any dependency is unjustified.
-    `python -m adapters.dependencies screen <name>`: run the admission screen on one name."""
+    `python -m adapters.dependencies screen <name>`: run the name admission screen.
+    `... screen-source <path>`: run the behavioral install-hook screen on a setup.py."""
     import sys
 
     args = list(sys.argv[1:] if argv is None else argv)
+    if len(args) >= 2 and args[0] == "screen-source":
+        try:
+            concerns = screen_source(Path(args[1]))
+        except OSError as exc:
+            print(f"behavioral screen: {exc}")
+            return 2
+        if not concerns:
+            print(
+                f"behavioral screen: {args[1]} shows no install-time danger "
+                f"(no network / shell / eval / decode-exec)."
+            )
+            return 0
+        print(f"behavioral screen: {args[1]} has concerns (human review before trusting):")
+        for concern in concerns:
+            print(f"  - {concern}")
+        return 1
     if len(args) >= 2 and args[0] == "screen":
         try:
             concerns = screen_name(args[1])
