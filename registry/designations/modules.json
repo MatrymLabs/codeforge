@@ -9317,5 +9317,29 @@
   "aliases": [],
   "created": "2026-08-03",
   "updated": "2026-08-03"
+ },
+ {
+  "designation": "MOD-10.089",
+  "name": "journey_form",
+  "status": "active",
+  "function": "the last link that closes Form->Spec->Seed: journey_from_form(seed_spec) turns a validated `journey` Engineering-Form SeedSpec into a GameSpec (via journey_region MOD-10.088), so a filled Form becomes a playable, durable, recoverable game; refuses a non-journey spec or a single_session (instanced) tier -- enforcing founder ruling J3 (one integrated persistent world, no instancing)",
+  "label": "journey_form",
+  "file": "kernel/domains/journey_form.py",
+  "type": "MOD",
+  "domain": "10",
+  "docs": "docs/seed_platform/RECENTERING.md",
+  "tests": "tests/test_journey_form.py",
+  "depends_on": ["MOD-10.088"],
+  "related": [
+   "MOD-10.085",
+   "MOD-10.087"
+  ],
+  "reuse": "The Form->journey adapter: the Ludii-trick binding between the Engineering Form (kernel/seedlab/form.py, which walks the DATA catalog data/seedlab/engineering_form.json and emits a validated SeedSpec) and the journey generator. Proven END TO END: EngineeringForm.build_spec('journey', answers) -> journey_from_form -> journey_region -> game_linker link -> game_session operate_and_recover -> RESUMED. Enforces J3: single_session (instanced) tier refused; only persistent regions generated. Grammar before worlds: kernel/domains may read the neutral platform's SeedSpec (domains->seedlab allowed); the platform imports no domain (import-linter 4 contracts kept). Adds a `journey` product type + persistence_tier/region/waypoints questions to the Form catalog (data, not code).",
+  "notes": "Closes the game pipeline front-door: Form -> Spec -> Seed. The Form's required-answer gate catches empty answers before the bridge; a non-empty-but-label-less waypoints string surfaces as JourneyError. PROTOTYPED.",
+  "tags": ["module"],
+  "superseded_by": "",
+  "aliases": [],
+  "created": "2026-08-03",
+  "updated": "2026-08-03"
  }
 ]
