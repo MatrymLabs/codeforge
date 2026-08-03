@@ -9401,5 +9401,32 @@
   "aliases": [],
   "created": "2026-08-03",
   "updated": "2026-08-03"
+ },
+ {
+  "designation": "MOD-10.083",
+  "name": "synthesis_ai",
+  "status": "active",
+  "function": "the real Claude Implementer for the reverse-TDD harness: ClaudeImplementer.implement(goal, tests, feedback) fills a structured file schema via the Messages API's messages.parse and returns TargetFiles (source only), plugging into the synthesis Implementer seam; build_claude_implementer() is one API key away",
+  "label": "synthesis_ai",
+  "file": "adapters/synthesis_ai.py",
+  "type": "MOD",
+  "domain": "10",
+  "docs": "docs/seed_platform/RECENTERING.md",
+  "tests": "tests/test_synthesis_ai.py",
+  "depends_on": [
+   "MOD-10.082",
+   "MOD-09.001"
+  ],
+  "related": [
+   "MOD-10.018",
+   "MOD-10.058"
+  ],
+  "reuse": "Slice 2 of NORTH_STAR Priority #3: the production brain behind the synthesis harness's Implementer seam. Same seam discipline as the Architect and Blueprint drafter (injected Anthropic client, [ai] extra, mockable, CI network-free): codeforge core never imports anthropic. Schema-enforced structured output (messages.parse) so the model emits typed files, never prose we parse by hand. Integrity guard: any returned file whose path is a fixed spec test is DROPPED so the implementer cannot rewrite the tests to fake green.",
+  "notes": "Reuses adapters/architect.py (CLAUDE_MODEL, anthropic_client) and the pydantic structured-output pattern from adapters/blueprint_ai.py (MOD-10.018). Plugs into synthesis (MOD-10.082). Dormant by default; one API key away.",
+  "tags": ["module"],
+  "superseded_by": "",
+  "aliases": [],
+  "created": "2026-08-03",
+  "updated": "2026-08-03"
  }
 ]
