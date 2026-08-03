@@ -1,8 +1,8 @@
 ======================================================================
  Matrym                                 PLvl 12   Job: Engineer (Lv 9)
 ======================================================================
- HP   142 / 142             |   XP   4,820  (next PLvl @ 5,400)
- MP   38 / 38               |   JP   1,150  (Engineer)
+ HP  [##########] 142/142   |   XP   4,820  (next PLvl @ 5,400)
+ MP  [##########] 38/38     |   JP   1,150  (Engineer)
  Race : Human               |   TP (Engineer)   340 / 500
  Guild : The Forgebound     |   TP (Secondary)   90 / 500
  Engineer Rank : Builder II |
