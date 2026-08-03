@@ -327,3 +327,49 @@ def test_host_refuses_a_bad_waypoint(capsys, tmp_path):
 
 def test_host_requires_its_arguments(capsys):
     assert main(["host"]) == 2  # argparse: --region / --waypoints are required
+
+
+def test_host_verify_recovery_proves_the_seed_is_restorable(capsys, tmp_path):
+    code = main(
+        [
+            "host",
+            "--region",
+            "veridia",
+            "--waypoints",
+            "greenhold, summit",
+            "--seed-root",
+            str(tmp_path),
+            "--verify-recovery",
+        ]
+    )
+    out = capsys.readouterr().out
+    assert code == 0 and "HOSTABLE" in out
+    assert "RECOVERED" in out and "survive backup" in out  # install AND restorability proven
+
+
+def test_host_verify_recovery_fails_loud_when_the_seed_is_corrupted(capsys, tmp_path, monkeypatch):
+    # If the installed seed does not survive backup + restore, the command fails loud (exit 1),
+    # never a false success. Force a CORRUPTED verdict at the recovery seam.
+    import kernel.domains.hosted_recovery as hr
+    from kernel.domains.game_lifecycle import CORRUPTED
+    from kernel.domains.hosted_recovery import HostedRecoveryReport
+
+    monkeypatch.setattr(
+        hr,
+        "verify_seed_recovery",
+        lambda name, root, snap: HostedRecoveryReport(CORRUPTED, name, detail="bytes changed: x"),
+    )
+    code = main(
+        [
+            "host",
+            "--region",
+            "veridia",
+            "--waypoints",
+            "greenhold",
+            "--seed-root",
+            str(tmp_path),
+            "--verify-recovery",
+        ]
+    )
+    assert code == 1
+    assert "CORRUPTED" in capsys.readouterr().err  # the failed proof is surfaced, not hidden
