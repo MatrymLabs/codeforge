@@ -122,17 +122,23 @@ def _sha256(text: str) -> str:
     return hashlib.sha256(text.encode("utf-8")).hexdigest()
 
 
-def _dump(data: Any) -> str:
-    """Deterministic YAML: sorted keys, block style -- same spec yields byte-identical output."""
+def _dump(data: Any, *, sort_keys: bool = True) -> str:
+    """Deterministic YAML block style -- same spec yields byte-identical output. `sort_keys` off
+    preserves a caller's chosen order (rooms emit the start FIRST; the rest stay alphabetical)."""
     import yaml  # a real dep (the loaders use it); imported here to keep the module light
 
-    return yaml.safe_dump(data, sort_keys=True, allow_unicode=True, default_flow_style=False)
+    return yaml.safe_dump(data, sort_keys=sort_keys, allow_unicode=True, default_flow_style=False)
 
 
 def _rooms_yaml(spec: GameSpec) -> str:
-    """Render the region as `rooms.yaml` the engine's loader accepts (only set fields emitted)."""
+    """Render the region as `rooms.yaml` the engine's loader accepts (only set fields emitted). The
+    START room is emitted FIRST so the seed spawns there: the engine's spawn is the first room in
+    rooms.yaml (world.START_ROOM = next(iter(WORLD))), so a bootable seed must list start first."""
+    by_label = {room.label: room for room in spec.rooms}
+    ordered = [spec.start, *sorted(label for label in by_label if label != spec.start)]
     body: dict[str, Any] = {}
-    for room in spec.rooms:
+    for label in ordered:
+        room = by_label[label]
         fields: dict[str, Any] = {}
         if room.name:
             fields["name"] = room.name
@@ -140,8 +146,8 @@ def _rooms_yaml(spec: GameSpec) -> str:
             fields["desc"] = room.desc
         if room.exits:
             fields["exits"] = dict(room.exits)
-        body[room.label] = fields or None  # a bare label is a valid room
-    return _dump(body)
+        body[label] = fields or None  # a bare label is a valid room
+    return _dump(body, sort_keys=False)  # preserve start-first ordering
 
 
 def _quest_yaml(quest: QuestArc) -> str:
