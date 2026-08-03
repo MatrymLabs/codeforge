@@ -20,6 +20,7 @@ USAGE = """codeforge -- hardware-store counter for the world engine
   codeforge play                       solo terminal session
   codeforge play --seed <game>         boot a different game (see: codeforge seeds)
   codeforge onboard                    run the onboarding workflow (same engine as the game quest)
+  codeforge journey --region R --waypoints a,b,c   generate + prove a playable journey region
   codeforge seeds                      list installed games (seeds)
   codeforge grant <name> <rank>        host-shell authority (player/wizard/owner)
   codeforge migrate <char> <account>   move a v1 password onto an account
@@ -241,12 +242,57 @@ def _cmd_refactor(args: list[str]) -> int:
     return 0
 
 
+def _cmd_journey(args: list[str]) -> int:
+    """Generate, link, and PROVE a waypoint-journey game region end to end: the whole pipeline
+    (Form-grade intent -> generate -> link -> operate -> recover) as one real operation. Writes
+    playable seed content to `--dest` and reports whether a live player can travel it and it
+    survives a restart. No decorative rooms: the command performs the real operation."""
+    import argparse
+
+    parser = argparse.ArgumentParser(
+        prog="codeforge journey",
+        description="Generate a waypoint journey, write it as seed content, and prove it plays.",
+    )
+    parser.add_argument("--region", required=True, help="the region name")
+    parser.add_argument(
+        "--waypoints", required=True, help="comma-separated snake_case room labels, in order"
+    )
+    parser.add_argument("--dest", default="journey_out", help="where to write the seed content")
+    try:
+        ns = parser.parse_args(args[1:])
+    except SystemExit as exc:  # argparse exits on -h / bad args; route it through our exit code
+        return int(exc.code or 0)
+
+    from kernel.domains.game_session import RESUMED, operate_and_recover
+    from kernel.domains.journey import JourneyError, journey_region
+
+    waypoints = [w.strip() for w in ns.waypoints.split(",") if w.strip()]
+    try:
+        spec = journey_region(ns.region, waypoints)
+    except JourneyError as exc:
+        print(f"refused: {exc}", file=sys.stderr)
+        return 2
+
+    dest = Path(ns.dest)
+    report = operate_and_recover(spec, dest)
+    if report.verdict == RESUMED:
+        print(
+            f"RESUMED: '{report.region}' -- {len(waypoints)} waypoint(s); "
+            f"quest '{report.quest_id}' reaches '{report.terminal}'."
+        )
+        print(f"  playable seed content written to {dest}")
+        return 0
+    print(f"{report.verdict.upper()}: {report.detail}", file=sys.stderr)
+    return 1
+
+
 # Verb -> handler. The strings are the frozen public CLI surface; order is display order only.
 _DISPATCH: dict[str, Command] = {
     "seeds": _cmd_seeds,
     "serve": _cmd_serve,
     "play": _cmd_play,
     "onboard": _cmd_onboard,
+    "journey": _cmd_journey,
     "grant": _cmd_grant,
     "migrate": _cmd_migrate,
     "api": _cmd_api,

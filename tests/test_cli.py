@@ -237,3 +237,38 @@ def test_refactor_missing_file_exits_two(capsys, monkeypatch):
 
 def test_refactor_missing_args_is_a_usage_error(capsys):
     assert main(["refactor"]) == 2  # argparse: too few positionals, routed to exit code 2
+
+
+# --- journey: the whole game pipeline as one real CLI operation (Prime Law 3, no decorative rooms)
+
+
+def test_journey_generates_and_proves_a_playable_region(capsys, tmp_path):
+    code = main(
+        [
+            "journey",
+            "--region",
+            "veridia",
+            "--waypoints",
+            "greenhold, summit",
+            "--dest",
+            str(tmp_path),
+        ]
+    )
+    out = capsys.readouterr().out
+    assert code == 0 and "RESUMED" in out and "veridia" in out
+    # It wrote real, bootable seed content -- not just a description.
+    assert (tmp_path / "rooms.yaml").exists() and (tmp_path / "quest.yaml").exists()
+
+
+def test_journey_refuses_a_bad_waypoint(capsys, tmp_path):
+    code = main(
+        ["journey", "--region", "veridia", "--waypoints", "Bad Label", "--dest", str(tmp_path)]
+    )
+    assert code == 2
+    assert (
+        "refused" in capsys.readouterr().err
+    )  # a non-snake_case label fails loud, never a fake pass
+
+
+def test_journey_requires_its_arguments(capsys):
+    assert main(["journey"]) == 2  # argparse: --region / --waypoints are required
