@@ -64,6 +64,10 @@ RESEARCH_FINDINGS_PACKAGE = "Research.Findings"
 FORM_SCHEMA_PACKAGE = "Form.Schema"
 #: A client's completed Form answers (client -> engine); the `Seed.Created` verdict is the reply.
 FORM_SUBMIT_PACKAGE = "Form.Submit"
+#: A client's request to be served a workspace (client -> engine); an optional `{"tier": id}` picks
+#: the deployment tier for the reply's `Deploy.Manifest`. Read-only: it triggers a projection, never
+#: a mutation.
+WORKSPACE_REQUEST_PACKAGE = "Workspace.Request"
 #: A Seed's filed Blueprints (planning specs) -> the client's Blueprint Panel (core/blueprint.py).
 BLUEPRINT_LIST_PACKAGE = "Blueprint.List"
 #: A Seed's deployment-sizing manifest (tier + derived world sizing) -> the client's Deployment

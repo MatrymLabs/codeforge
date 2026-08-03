@@ -14,8 +14,9 @@ Beyond the game, this server also serves the engineering-workspace surface over 
 and orthogonally to the game path: once an OWNER logs in, their Native-Seed client is pushed the
 creation `Form.Schema` plus the reference Seed's read-only workspace (its `Architecture.Map` and
 `Blueprint.List`, real engine state, so the Master Client's panels light up from the running
-server), and an inbound `Seed.Create` / `Form.Submit` frame mints a real Seed (owner-gated,
-mirroring the in-MUD `workspace` verb) and pushes its `workspace_packages` back.
+server), an inbound `Seed.Create` / `Form.Submit` frame mints a real Seed (owner-gated, mirroring
+the in-MUD `workspace` verb) and pushes its `workspace_packages` back, and a `Workspace.Request`
+frame serves the reference Seed's `Deploy.Manifest` for a requested tier.
 Seedlab is lazy-imported inside the handlers (off the game load path) and its mutations serialized
 under `SEEDLAB_LOCK`; nothing here touches the tick, `_push_state`, or the front desk.
 """
@@ -317,10 +318,13 @@ class _GateHandler(socketserver.StreamRequestHandler):
 
     def _handle_workspace_gmcp(self, raw: bytes) -> None:
         """Dispatch an inbound engineering-workspace GMCP package on an authenticated connection:
-        `Seed.Create` / `Form.Submit` create a Seed and push its workspace. Authorization before
-        capability (architecture law 5): creation is OWNER-gated, mirroring the in-MUD `workspace`
-        verb's `min_rank='owner'`; a non-owner gets an honest `ok:false` verdict and no Seed. Any
-        other inbound package (or none) is ignored, so the game path is never touched.
+        `Seed.Create` / `Form.Submit` create a Seed and push its workspace; `Workspace.Request`
+        serves the reference Seed's `Deploy.Manifest` for a requested tier (a read, no mutation).
+        Authorization before capability (architecture law 5): the whole surface is OWNER-gated,
+        mirroring the in-MUD `workspace` verb's `min_rank='owner'` -- a non-owner's create request
+        gets an honest `ok:false` verdict, and a non-owner's read request is silently ignored (there
+        is nothing to serve). Any other inbound package (or none) is ignored, so the game path is
+        never touched.
 
         The read loop (`_read_message`) recognizes a standalone GMCP subnegotiation, so a bare
         out-of-band frame (no trailing newline) is dispatched here the instant it arrives, not only
@@ -332,6 +336,7 @@ class _GateHandler(socketserver.StreamRequestHandler):
             FORM_SUBMIT_PACKAGE,
             SEED_CREATE_PACKAGE,
             SEED_CREATED_PACKAGE,
+            WORKSPACE_REQUEST_PACKAGE,
             create_from_form_submit,
             create_from_request,
             seed_created,
@@ -339,15 +344,22 @@ class _GateHandler(socketserver.StreamRequestHandler):
         )
 
         name, payload = package
-        if name not in (SEED_CREATE_PACKAGE, FORM_SUBMIT_PACKAGE):
+        create_packages = (SEED_CREATE_PACKAGE, FORM_SUBMIT_PACKAGE)
+        if name not in (*create_packages, WORKSPACE_REQUEST_PACKAGE):
             return
         session = self._session
         assert session is not None  # dispatch is only reached once the front desk set it
         if not has_rank(session, "owner"):
-            self._send_gmcp(
-                SEED_CREATED_PACKAGE,
-                seed_created("", False, reason="creating a workspace requires owner rank"),
-            )
+            if (
+                name in create_packages
+            ):  # a create is refused with a verdict; a read is just ignored
+                self._send_gmcp(
+                    SEED_CREATED_PACKAGE,
+                    seed_created("", False, reason="creating a workspace requires owner rank"),
+                )
+            return
+        if name == WORKSPACE_REQUEST_PACKAGE:
+            self._serve_deploy_manifest(payload)
             return
         owner = session.account or session.player_id
         with SEEDLAB_LOCK:
@@ -363,6 +375,26 @@ class _GateHandler(socketserver.StreamRequestHandler):
                 record = kernel.get(str(verdict.get("id", "")))
                 for pkg, data in workspace_packages(record):
                     self._send_gmcp(pkg, data)
+
+    def _serve_deploy_manifest(self, payload: object) -> None:
+        """Serve the reference Seed's `Deploy.Manifest` for the tier a client requested (default
+        `prototype`) -- the one workspace panel that cannot auto-push on login, because it needs a
+        chosen tier. Owner-gated by the caller. An unknown tier is an honest no-op (the client
+        picked a tier the engine does not model); the sizing itself is real (`compile_manifest`)."""
+        from kernel.seed_package import SeedPackageError, compile_manifest
+        from kernel.seedlab.workspace_gmcp import DEPLOY_MANIFEST_PACKAGE, deploy_manifest
+
+        tier_id = "prototype"
+        if isinstance(payload, dict):
+            requested = payload.get("tier")
+            if isinstance(requested, str) and requested.strip():
+                tier_id = requested.strip()
+        try:
+            manifest = compile_manifest(SEED_NAME, tier_id)
+        except SeedPackageError as exc:
+            _LOG.warning("workspace_deploy_unavailable", tier=tier_id, error=str(exc))
+            return
+        self._send_gmcp(DEPLOY_MANIFEST_PACKAGE, deploy_manifest(manifest, seed=SEED_NAME))
 
     def _workspace_kernel(self) -> "SeedKernel":
         """A Kernel over the file-backed seedlab store at `$SEEDLAB_HOME/seeds` (default
