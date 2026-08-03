@@ -2032,6 +2032,24 @@
     security: catch a transform (human or LLM) that silently changed behavior
     compliance: an auditable pre/post-transform evidence record with an honest caveat
     general: a dependency-free stand-in for CrossHair diffbehavior on any Python function
+- id: mutation-kpi
+  name: Mutation-Score Evidence KPI
+  source: kernel/shelf/mutation_kpi.py
+  category: validation
+  tags: [mutation-testing, evidence, kpi, posture, test-quality]
+  maturity: beta
+  source_status: original
+  license: MIT
+  influence: the R&D field report RD-2026-0003 (Closing the Five Capability Gaps; claim #2; the report's #1 acquirer signal - mutation score proves tests bite where coverage cannot; clean-room stdlib)
+  experimental: 'wire a mutation_kill_rate KpiSpec into kernel/posture.py fed by a recorded `make mutation` result (the gated posture consumer). Traded away (v1): a live cosmic-ray invocation, keeping a tool-agnostic core + a text adapter so mutation stays off the fast PR path.'
+  risk: low
+  purpose: 'Turn a mutation-testing run into a tracked evidence KPI in the posture MEASURED / NOT_COMPUTABLE honesty shape: MEASURED kill-rate vs a target, or NOT_COMPUTABLE (no run / stale / zero mutants) naming the exact action that would make it measurable - never a faked zero. Tool-agnostic core over a structured MutationResult, plus a cosmic-ray cr-report/cr-rate adapter (format verified-real). Incomplete mutants excluded from the denominator; incoherent counts fail loud.'
+  reuse:
+    game: track whether the engine's test suite actually bites, not just its line coverage
+    education: teach mutation testing and why coverage theater does not prove tests catch bugs
+    security: surface a thin test suite around a security-critical module as measured evidence
+    compliance: an acquirer-facing, anti-gaming test-quality KPI with honest not-computable states
+    general: normalize any mutation tool's output (cosmic-ray/mutmut/PIT/Stryker) into one KPI
 - id: path-bounded-reader
   name: Path-Bounded Source Reader
   source: kernel/seedlab/source_connector.py
