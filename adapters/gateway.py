@@ -29,7 +29,7 @@ import ssl
 import sys
 import threading
 import time
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol
 
 import structlog
 
@@ -53,7 +53,7 @@ from kernel.gmcp import (
     vitals_report,
 )
 from kernel.shelf.bulkhead import Bulkhead, BulkheadFull
-from kernel.shelf.telnet_codec import IAC, WILL, WONT, strip_iac
+from kernel.shelf.telnet_codec import IAC, SE, WILL, WONT, strip_iac
 from kernel.world import bans, guild, maintenance_mode, party, presence, trade, tutorial
 from kernel.world.accounts import password_fixable
 from kernel.world.characters import save_all, save_character
@@ -225,6 +225,45 @@ class ForgeGateServer(socketserver.ThreadingTCPServer):
         return sock, addr
 
 
+class _ByteReader(Protocol):
+    """Just enough of a binary stream for `_read_message`: read exactly `size` bytes (the buffered
+    `rfile` and an in-memory `BytesIO` both satisfy it, so the reader is testable off a socket)."""
+
+    def read(self, size: int, /) -> bytes: ...
+
+
+def _read_message(reader: _ByteReader, max_bytes: int) -> tuple[bytes, bool]:
+    """Read one client MESSAGE: a newline-terminated line, OR a complete standalone GMCP
+    subnegotiation frame (`IAC SB GMCP ... IAC SE`), whichever completes first. Returns
+    `(raw_bytes, is_frame)`.
+
+    This lets an out-of-band GMCP frame -- which carries NO trailing newline -- be processed the
+    instant it arrives, instead of waiting for the next line the user types (the engineering-
+    workspace wire's `Form.Submit` is exactly such a bare frame). A line still comes back whole at
+    its newline, with any IAC negotiation the client glued before the text left intact for the
+    caller's codec (exactly as `readline` delivered it). Only a GMCP frame that stands alone (its
+    `IAC SE` reached before any newline) returns early as a frame; a bare non-GMCP subnegotiation is
+    read through as before, and EOF or the size cap returns whatever was read, as a line."""
+    buf = bytearray()
+    while len(buf) < max_bytes:
+        chunk = reader.read(1)
+        if not chunk:
+            return bytes(buf), False  # EOF: hand back whatever we have (a line, maybe empty)
+        buf += chunk
+        if chunk == b"\n":
+            return bytes(buf), False  # a complete line
+        # A GMCP subnegotiation closes on IAC SE. If what we have is now a complete GMCP frame with
+        # no newline, it is a standalone out-of-band package -- return it now, not at the next line.
+        if (
+            chunk == bytes([SE])
+            and len(buf) >= 2
+            and buf[-2] == IAC
+            and read_gmcp_package(bytes(buf)) is not None
+        ):
+            return bytes(buf), True
+    return bytes(buf), False  # hit the cap: treat as a line (the tick parses what it can)
+
+
 class _GateHandler(socketserver.StreamRequestHandler):
     timeout = IDLE_TIMEOUT  # StreamRequestHandler applies this to the socket
 
@@ -283,9 +322,9 @@ class _GateHandler(socketserver.StreamRequestHandler):
         verb's `min_rank='owner'`; a non-owner gets an honest `ok:false` verdict and no Seed. Any
         other inbound package (or none) is ignored, so the game path is never touched.
 
-        Read at the line boundary, the same as GMCP negotiation: a client's frame is processed when
-        the next line is read. (A bare out-of-band frame with no following newline waits for the
-        next line; giving the read loop its own subnegotiation reader is a documented follow-up.)"""
+        The read loop (`_read_message`) recognizes a standalone GMCP subnegotiation, so a bare
+        out-of-band frame (no trailing newline) is dispatched here the instant it arrives, not only
+        at the next line boundary."""
         package = read_gmcp_package(raw)
         if package is None:
             return  # the common case: a normal command line carries no GMCP data frame
@@ -619,20 +658,29 @@ class _GateHandler(socketserver.StreamRequestHandler):
             )  # joins the shared roster + room
             last_room = session.location  # track moves so the cross-process room view stays current
             self._push_state(session)  # first frames: the scene they logged into
+            need_prompt = True
             while session.alive:
-                self.wfile.write(b"> ")
+                if need_prompt:
+                    self.wfile.write(b"> ")
                 try:
-                    line = self.rfile.readline(MAX_LINE_BYTES)
+                    message, is_frame = _read_message(self.rfile, MAX_LINE_BYTES)
                 except OSError:
                     break  # idle timeout or broken pipe -> disconnect
-                if not line:
+                if not message:
                     break  # client hung up
-                self._note_gmcp(line)  # a client can enable/disable GMCP mid-session
+                self._note_gmcp(message)  # negotiation + the engineering-workspace wire
+                if is_frame:
+                    # A standalone out-of-band GMCP frame: handled by _note_gmcp, it is not a game
+                    # command, and it did not consume the prompt already on screen -- so process the
+                    # next input without reprinting "> ".
+                    need_prompt = False
+                    continue
+                need_prompt = True
                 # Strip mid-session IAC negotiation (window-size, terminal-type, GMCP frames a
                 # client glues to input) before the tick reads it -- the same codec the login
                 # prompts (`_ask_line`/`_ask_secret`) already run. Without it, a client's answering
                 # IAC bytes leak into the command line as decoded garbage and route to "Huh?".
-                text = _strip_telnet(line).decode("utf-8", errors="ignore")
+                text = _strip_telnet(message).decode("utf-8", errors="ignore")
                 if text.strip().lower() == "passwd":
                     self._passwd(session)  # multi-prompt dialogue with echo blackout
                     continue
