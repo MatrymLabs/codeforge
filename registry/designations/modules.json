@@ -9433,7 +9433,7 @@
   "designation": "MOD-10.085",
   "name": "game_linker",
   "status": "active",
-  "function": "the game domain's Spec->persistent-world Linker: link_region(spec, dest) emits a GameSpec's region as canonical rooms.yaml seed content (deterministic + checksummed), and validate_region(linked) judges it by loading through the real kernel.world.seed.load_rooms plus a reachability walk -- returning a verdict word (linked / unreachable / refused), never a bare bool; the missing bridge from seedlab to a runnable, persistent (non-instanced) world",
+  "function": "the game domain's Spec->persistent-world Linker: link_region(spec, dest) emits a GameSpec's region as canonical rooms.yaml seed content (deterministic + checksummed), and validate_region(linked) judges it by loading through the real kernel.world.seed.load_rooms/load_quest (rooms + an optional quest arc) plus reachability (rooms from start; quest terminal from quest start) and rooms<->quest on_enter integrity -- returning a verdict word (linked / unreachable / refused), never a bare bool; the missing bridge from seedlab to a runnable, persistent (non-instanced) world",
   "label": "game_linker",
   "file": "kernel/domains/game_linker.py",
   "type": "MOD",

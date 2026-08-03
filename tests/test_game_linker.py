@@ -25,12 +25,14 @@ from kernel.domains.game_linker import (
     UNREACHABLE,
     GameLinkError,
     GameSpec,
+    QuestArc,
+    QuestStep,
     RoomSpec,
     link_and_validate,
     link_region,
     validate_region,
 )
-from kernel.world.seed import load_rooms
+from kernel.world.seed import load_quest, load_rooms
 
 # A small, valid region: gate -> yard -> hall, all reachable from `gate`.
 _GOOD = GameSpec(
@@ -122,3 +124,99 @@ def test_empty_region_name_is_refused_loud(tmp_path: Path) -> None:
 def test_validate_can_run_standalone_on_a_linked_artifact(tmp_path: Path) -> None:
     linked = link_region(_GOOD, tmp_path)
     assert validate_region(linked).verdict == LINKED
+
+
+# --- sub-slice 2: a region WITH a quest arc, validated through the real load_quest ----------------
+
+# A rooms-and-quest region: two rooms, and an arc that ends when the player enters `greenhold`.
+_QUEST = QuestArc(
+    id="first_road",
+    start="offered",
+    steps=(
+        QuestStep(state="offered", event="accept", to="accepted"),
+        QuestStep(
+            state="accepted", event="enter", to="done", on_enter="greenhold", effect="award_xp"
+        ),
+    ),
+    terminal=("done",),
+    labels={"offered": "Accept the road.", "done": "*** The journey has begun. ***"},
+    name="The First Road",
+    reward_xp=60,
+)
+_WITH_QUEST = GameSpec(
+    region="veridia",
+    start="gate",
+    rooms=(
+        RoomSpec(label="gate", exits={"north": "greenhold"}),
+        RoomSpec(label="greenhold", exits={"south": "gate"}),
+    ),
+    quest=_QUEST,
+)
+
+
+def test_a_region_with_a_valid_quest_links(tmp_path: Path) -> None:
+    linked, verdict = link_and_validate(_WITH_QUEST, tmp_path)
+    assert verdict.verdict == LINKED and verdict.quest is True
+    assert linked.has_quest is True and "quest.yaml" in linked.files
+    # The emitted quest is real seed content: the ENGINE'S own load_quest accepts it directly.
+    quest = load_quest(tmp_path / "quest.yaml")
+    assert quest is not None and quest["id"] == "first_road" and quest["terminal"] == ["done"]
+
+
+def test_quest_emit_is_deterministic(tmp_path: Path) -> None:
+    a = link_region(_WITH_QUEST, tmp_path / "a")
+    b = link_region(_WITH_QUEST, tmp_path / "b")
+    assert a.checksums == b.checksums  # same spec (rooms + quest) -> byte-identical
+
+
+def test_no_quest_still_links_rooms_only(tmp_path: Path) -> None:
+    linked, verdict = link_and_validate(_GOOD, tmp_path)  # _GOOD has no quest
+    assert verdict.verdict == LINKED and verdict.quest is False
+    assert linked.has_quest is False and "quest.yaml" not in linked.files
+    assert not (tmp_path / "quest.yaml").exists()
+
+
+def test_a_malformed_quest_is_refused_loud(tmp_path: Path) -> None:
+    # An empty-steps quest: load_quest rejects it ("steps must be non-empty") -> REFUSED.
+    spec = GameSpec(
+        region="r",
+        start="gate",
+        rooms=(RoomSpec(label="gate"),),
+        quest=QuestArc(id="broken", start="offered", steps=()),
+    )
+    _, verdict = link_and_validate(spec, tmp_path)
+    assert verdict.verdict == REFUSED and "quest" in verdict.error
+
+
+def test_a_quest_on_enter_to_a_missing_room_is_refused(tmp_path: Path) -> None:
+    # The step fires on entering `ghost_room`, which is not a room here: broken cross-link.
+    spec = GameSpec(
+        region="r",
+        start="gate",
+        rooms=(RoomSpec(label="gate"),),
+        quest=QuestArc(
+            id="q",
+            start="offered",
+            steps=(QuestStep(state="offered", event="enter", to="done", on_enter="ghost_room"),),
+            terminal=("done",),
+        ),
+    )
+    _, verdict = link_and_validate(spec, tmp_path)
+    assert verdict.verdict == REFUSED and "ghost_room" in verdict.error
+
+
+def test_a_quest_with_an_unreachable_terminal_is_flagged(tmp_path: Path) -> None:
+    # `done` is a declared terminal but no transition reaches it from the start: incompletable.
+    spec = GameSpec(
+        region="r",
+        start="gate",
+        rooms=(RoomSpec(label="gate"),),
+        quest=QuestArc(
+            id="q",
+            start="offered",
+            steps=(QuestStep(state="offered", event="accept", to="accepted"),),
+            terminal=("done",),
+        ),
+    )
+    _, verdict = link_and_validate(spec, tmp_path)
+    assert verdict.verdict == UNREACHABLE and verdict.unreachable == ("done",)
