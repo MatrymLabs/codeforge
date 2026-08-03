@@ -2204,24 +2204,6 @@
     security: avoid a partial-file read of a credential or policy file while it is being rewritten
     general: any durable file store that persists records and must never expose a torn write
 
-- id: modifier-stack
-  name: Modifier Stack
-  source: kernel/shelf/modifier_stack.py
-  category: quality
-  tags: [rpg, modifiers, stats, buffs, game-math]
-  maturity: beta
-  source_status: original
-  influence: 'Evennia contrib rpg/buffs BuffHandler (BSD-3-Clause, reverse-engineered clean-room)'
-  license: MIT
-  experimental: 'add lifecycle hooks (at_apply/at_tick/at_expire) and event triggers at adoption. Traded away (v1): the object-mounted handler + real-time timers, keeping the pure fold.'
-  risk: low
-  purpose: 'Fold add/multiply modifiers (with sources, stacking, and conditions) onto a base stat.'
-  reuse:
-    game: the equipment/buff/status modifier stack for any derived value, with a Breakdown for provenance
-    education: teach the pattern with a real, tested, reusable implementation
-    security: the equipment/buff/status modifier stack for any derived value, with a Breakdown for provenance
-    general: the equipment/buff/status modifier stack for any derived value, with a Breakdown for provenance
-
 - id: table
   name: Table
   source: kernel/shelf/table.py
@@ -2240,60 +2222,6 @@
     security: aligned tables for any listing verb (who, inventory, shop, auction, bank, pm status)
     general: aligned tables for any listing verb (who, inventory, shop, auction, bank, pm status)
 
-- id: color
-  name: Color
-  source: kernel/shelf/color.py
-  category: presentation
-  tags: [ansi, color, markup, terminal, ui]
-  maturity: beta
-  source_status: original
-  influence: 'Evennia utils/ansi.py + hex_colors.py (BSD-3-Clause, reverse-engineered clean-room)'
-  license: MIT
-  experimental: 'add 24-bit truecolor |#RRGGBB passthrough and named-color aliases. Traded away (v1): xterm-256 cube only, no 24-bit yet.'
-  risk: low
-  purpose: 'An ANSI color-markup renderer: tags to escape codes, with a safe strip for no-color clients.'
-  reuse:
-    game: in-game color for any renderer plus a strip for logs and monochrome clients
-    education: teach the pattern with a real, tested, reusable implementation
-    security: in-game color for any renderer plus a strip for logs and monochrome clients
-    general: in-game color for any renderer plus a strip for logs and monochrome clients
-
-- id: lock-expr
-  name: Lock Expr
-  source: kernel/shelf/lock_expr.py
-  category: security
-  tags: [access-control, dsl, parser, authorization, seeds]
-  maturity: beta
-  source_status: original
-  influence: 'Evennia locks/lockhandler.py + lockfuncs.py (BSD-3-Clause, reverse-engineered clean-room)'
-  license: MIT
-  experimental: 'add per-func result caching and a lint pass over authored lock strings. Traded away (v1): Evennia''s built-in lockfunc library, keeping the parser + injected funcs.'
-  risk: low
-  purpose: 'A data-defined composable access-control mini-language (rank(x) OR haskey(y)), no eval.'
-  reuse:
-    game: declare authorization AS DATA in seeds; gate any verb, exit, or container by an expression
-    education: teach the pattern with a real, tested, reusable implementation
-    security: declare authorization AS DATA in seeds; gate any verb, exit, or container by an expression
-    general: declare authorization AS DATA in seeds; gate any verb, exit, or container by an expression
-
-- id: menu
-  name: Menu
-  source: kernel/shelf/menu.py
-  category: quality
-  tags: [menu, dialog, state-machine, ui, flow]
-  maturity: beta
-  source_status: original
-  influence: 'Evennia utils/evmenu.py (BSD-3-Clause, reverse-engineered clean-room)'
-  license: MIT
-  experimental: 'add per-option conditions and a tick-bound driver. Traded away (v1): evmenu''s inline-python nodes, keeping a pure declarative graph.'
-  risk: low
-  purpose: 'A branching interactive-menu state machine (a pure validated node graph, no I/O).'
-  reuse:
-    game: NPC dialog trees, shop flows, character creation, any staged prompt sequence
-    education: teach the pattern with a real, tested, reusable implementation
-    security: NPC dialog trees, shop flows, character creation, any staged prompt sequence
-    general: NPC dialog trees, shop flows, character creation, any staged prompt sequence
-
 - id: help-index
   name: Help Index
   source: kernel/shelf/help_index.py
@@ -2311,42 +2239,6 @@
     education: teach the pattern with a real, tested, reusable implementation
     security: per-command and topic help auto-built from the command spine; replaces a static help blob
     general: per-command and topic help auto-built from the command spine; replaces a static help blob
-
-- id: gametime
-  name: Gametime
-  source: kernel/shelf/gametime.py
-  category: simulation
-  tags: [time, calendar, day-night, simulation, beat]
-  maturity: beta
-  source_status: original
-  influence: 'Evennia utils/gametime.py + contrib custom_gametime (BSD-3-Clause, reverse-engineered clean-room)'
-  license: MIT
-  experimental: 'add real-time to game-time mapping and configurable phase bands. Traded away (v1): Evennia''s Django-settings coupling, keeping a pure Calendar dataclass.'
-  risk: low
-  purpose: 'A day/night and named-calendar layer over a monotonic beat counter (pure stamp(beat)).'
-  reuse:
-    game: hour and season-gated spawns, shops, and lighting; a pure game clock
-    education: teach the pattern with a real, tested, reusable implementation
-    security: hour and season-gated spawns, shops, and lighting; a pure game clock
-    general: hour and season-gated spawns, shops, and lighting; a pure game clock
-
-- id: proto-inherit
-  name: Proto Inherit
-  source: kernel/shelf/proto_inherit.py
-  category: content
-  tags: [prototypes, inheritance, diff, content, seeds]
-  maturity: beta
-  source_status: original
-  influence: 'Evennia prototypes/spawner.py (BSD-3-Clause, reverse-engineered clean-room)'
-  license: MIT
-  experimental: 'add per-key list-merge modes for attrs/tags. Traded away (v1): Evennia''s in-data protfunc callables (fights world-is-data), keeping declarative merge + diff.'
-  risk: low
-  purpose: 'Multi-parent prototype inheritance plus a prototype-diff for pushing template edits to instances.'
-  reuse:
-    game: compose seed templates from parents; re-apply an edited template to spawned instances
-    education: teach the pattern with a real, tested, reusable implementation
-    security: compose seed templates from parents; re-apply an edited template to spawned instances
-    general: compose seed templates from parents; re-apply an edited template to spawned instances
 
 - id: target-disambig
   name: Target Disambig
@@ -2383,78 +2275,6 @@
     education: teach the pattern with a real, tested, reusable implementation
     security: visual HP/MP/XP/progress meters in any verb; composes with the color part
     general: visual HP/MP/XP/progress meters in any verb; composes with the color part
-
-- id: gauge-drift
-  name: Gauge Drift
-  source: kernel/shelf/gauge_drift.py
-  category: quality
-  tags: [gauge, drift, resources, game-math, time]
-  maturity: beta
-  source_status: original
-  influence: 'Evennia contrib rpg/traits CounterTrait (BSD-3-Clause, reverse-engineered clean-room)'
-  license: MIT
-  experimental: 'add multiple concurrent drift sources on one gauge. Traded away (v1): Evennia''s full trait taxonomy, keeping the counter/gauge drift.'
-  risk: low
-  purpose: 'A bounded gauge that drifts toward a target at a rate over elapsed beats.'
-  reuse:
-    game: regenerating pools (stamina, mana) and thirst/fatigue-style meters that change over time
-    education: teach the pattern with a real, tested, reusable implementation
-    security: regenerating pools (stamina, mana) and thirst/fatigue-style meters that change over time
-    general: regenerating pools (stamina, mana) and thirst/fatigue-style meters that change over time
-
-- id: ondemand-stage
-  name: Ondemand Stage
-  source: kernel/shelf/ondemand_stage.py
-  category: quality
-  tags: [scale, lazy, staging, time, derive]
-  maturity: beta
-  source_status: original
-  influence: 'Evennia scripts/ondemandhandler (BSD-3-Clause, reverse-engineered clean-room)'
-  license: MIT
-  experimental: 'add per-stage transition hooks. Traded away (v1): Evennia''s handler registry, keeping a pure stage function.'
-  risk: low
-  purpose: 'Derive a time-staged state only when observed (no background ticking) - derive-don''t-store at scale.'
-  reuse:
-    game: crop growth, decay, and respawn timers computed lazily on look, at 1M-room scale
-    education: teach the pattern with a real, tested, reusable implementation
-    security: crop growth, decay, and respawn timers computed lazily on look, at 1M-room scale
-    general: crop growth, decay, and respawn timers computed lazily on look, at 1M-room scale
-
-- id: pager
-  name: Pager
-  source: kernel/shelf/pager.py
-  category: presentation
-  tags: [pager, pagination, output, ui, text]
-  maturity: beta
-  source_status: original
-  influence: 'Evennia utils/evmore.py (BSD-3-Clause, reverse-engineered clean-room)'
-  license: MIT
-  experimental: 'add a session-stateful pager driver with a [more] prompt. Traded away (v1): interactive prompt handling, keeping the pure split.'
-  risk: low
-  purpose: 'Paginate long output into fixed-height pages (optional width wrapping first).'
-  reuse:
-    game: page long help, who, or world dumps for a client with no scrollback
-    education: teach the pattern with a real, tested, reusable implementation
-    security: page long help, who, or world dumps for a client with no scrollback
-    general: page long help, who, or world dumps for a client with no scrollback
-
-- id: line-editor
-  name: Line Editor
-  source: kernel/shelf/line_editor.py
-  category: quality
-  tags: [editor, buffer, text, ui, composition]
-  maturity: beta
-  source_status: original
-  influence: 'Evennia utils/eveditor.py (BSD-3-Clause, reverse-engineered clean-room)'
-  license: MIT
-  experimental: 'add search/replace-range and a save/abort driver. Traded away (v1): eveditor''s full command set, keeping the core buffer ops.'
-  risk: low
-  purpose: 'An in-game multi-line buffer editor (frozen, copy-on-write): append/insert/delete/replace.'
-  reuse:
-    game: compose mail, room and item descriptions, and board posts in-game
-    education: teach the pattern with a real, tested, reusable implementation
-    security: compose mail, room and item descriptions, and board posts in-game
-    general: compose mail, room and item descriptions, and board posts in-game
 
 - id: minimap
   name: Minimap
