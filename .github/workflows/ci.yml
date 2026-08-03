@@ -393,8 +393,25 @@ jobs:
       - name: Install codeforge (so kernel.shelf_pour imports)
         run: pip install -e ".[dev]"
 
-      - name: Clone the published Hardware Store
-        run: git clone --depth 1 https://github.com/MatrymLabs/codeforge-shelf.git /tmp/codeforge-shelf
+      - name: Clone the published Hardware Store (private mirror)
+        env:
+          SHELF_READ_TOKEN: ${{ secrets.SHELF_READ_TOKEN }}
+        run: |
+          # codeforge-shelf is a private mirror; the clone needs a read token. When the secret is
+          # absent (e.g. a fork PR), skip rather than hard-fail: this gate is advisory by design
+          # (see the comment above) and a genuine drift still fails the assert step below.
+          if [ -z "$SHELF_READ_TOKEN" ]; then
+            echo "::warning::SHELF_READ_TOKEN not set; skipping the shelf-drift check (advisory gate)."
+            exit 0
+          fi
+          git clone --depth 1 \
+            "https://x-access-token:${SHELF_READ_TOKEN}@github.com/MatrymLabs/codeforge-shelf.git" \
+            /tmp/codeforge-shelf
 
       - name: Assert the pour is in sync (no drift)
-        run: python -m kernel.shelf_pour --drift /tmp/codeforge-shelf
+        run: |
+          if [ ! -d /tmp/codeforge-shelf/.git ]; then
+            echo "::warning::mirror not cloned (no token); skipping drift assertion (advisory gate)."
+            exit 0
+          fi
+          python -m kernel.shelf_pour --drift /tmp/codeforge-shelf
