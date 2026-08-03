@@ -1,0 +1,38 @@
+# Consume-first gate: fail a PR that reimplements a capability the Matrym Labs
+# Hardware Store already catalogs, unless a logged store-search or a DECISION:
+# override resolves it. See https://github.com/MatrymLabs/hardware-store
+# (docs/STREAM_INTEGRATION.md). Bump STORE_VERSION to adopt a newer catalog.
+name: consume-first
+
+on:
+  pull_request:
+
+env:
+  STORE_VERSION: v0.2.0
+
+jobs:
+  consume-first:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: install the Hardware Store tool (pinned)
+        run: pip install "matrym-hardware-store @ git+https://github.com/MatrymLabs/hardware-store@${STORE_VERSION}"
+      - name: fetch the catalog index at the same pin
+        run: curl -sSfL "https://raw.githubusercontent.com/MatrymLabs/hardware-store/${STORE_VERSION}/registry.json" -o store-registry.json
+      - name: compute changed files
+        id: diff
+        run: |
+          base="${{ github.event.pull_request.base.sha }}"
+          echo "files=$(git diff --name-only "$base"...HEAD -- '*.py' | tr '\n' ' ')" >> "$GITHUB_OUTPUT"
+      - name: consume-first gate
+        run: |
+          store-consume-first \
+            --registry store-registry.json \
+            --search-log .hardware-store/search_log.jsonl \
+            --repo "${{ github.event.repository.name }}" \
+            --changed ${{ steps.diff.outputs.files }}
