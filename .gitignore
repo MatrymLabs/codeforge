@@ -69,3 +69,6 @@ native/textkernel/*.egg-info/
 
 # Runtime audit ledger (tamper-evident admin/economy log; reproducible, not tracked)
 audit.jsonl
+
+# Hypothesis local example cache (the COMMITTED corpus lives in tests/corpora/, tracked)
+.hypothesis/
