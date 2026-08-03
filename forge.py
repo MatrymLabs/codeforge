@@ -7,6 +7,10 @@ terminal driver around it -- a socket gateway will be another.
 
 import re
 from collections.abc import Callable
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from kernel.seedlab.provision import DomainModuleRegistry
 
 from kernel.addie import addie
 from kernel.arc import arc
@@ -343,6 +347,24 @@ def _workspace(session: Session, arg: str) -> str:
         push_gmcp([player_id], package, data)
 
     return workspace_command(session, arg, gmcp_push=push)
+
+
+def domain_registry() -> "DomainModuleRegistry":
+    """The composition root for domain modules: the tick (a world-aware layer) registers every
+    domain module a Seed provisioned here could load. The game module belongs here because it binds
+    to the game world; the domain-neutral platform never imports it (an import-linter contract holds
+    the line). A Seed still loads ONLY the modules it selected -- registering a module here just
+    makes it available, so a classroom that selected `education` never loads `game` even though both
+    sit in this registry."""
+    from kernel.domains.education import EducationModule
+    from kernel.domains.game import register_game_module
+    from kernel.seedlab.domain import register_module
+    from kernel.seedlab.provision import DomainModuleRegistry
+
+    registry = DomainModuleRegistry()
+    register_game_module(registry)  # the world-dependent module, bound at the tick
+    register_module(registry, EducationModule())  # the stdlib module, available alongside it
+    return registry
 
 
 def docs_check() -> str:
