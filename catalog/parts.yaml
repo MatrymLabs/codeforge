@@ -2293,3 +2293,21 @@
     education: teach BFS + 2D grid layout with a real, tested renderer
     security: none
     general: an ASCII map renderer for any directed room/node graph with cardinal edges
+
+- id: recognition
+  name: Recognition
+  source: kernel/shelf/recognition.py
+  category: presentation
+  tags: [rp, recognition, sdesc, naming, aliases]
+  maturity: beta
+  source_status: original
+  influence: 'Evennia rpg/rpsystem sdesc+recog core (BSD-3-Clause, reverse-engineered clean-room)'
+  license: MIT
+  experimental: 'add the emote-parse DSL (per-observer name substitution inside a pose) and masks. Traded away (v1): the 1693-line rpsystem breadth, keeping the sdesc + per-observer recog + resolve core.'
+  risk: low
+  purpose: 'Per-observer name resolution: an observer sees a short-description for strangers and a personal recog alias once they recognize a target. Frozen copy-on-write Book; a projection never mutates state.'
+  reuse:
+    game: personal aliases / RP recognition shown per-viewer in a room render
+    education: teach per-observer projection (state canonical, text a projection)
+    security: none
+    general: a per-observer name-resolution layer for any actor-to-actor naming

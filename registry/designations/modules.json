@@ -9294,5 +9294,28 @@
   "aliases": [],
   "created": "2026-08-03",
   "updated": "2026-08-03"
+ },
+ {
+  "designation": "MOD-05.108",
+  "name": "recognition",
+  "status": "active",
+  "function": "per-observer name resolution: a short-description for strangers, a personal recog alias once an observer recognizes a target",
+  "label": "recognition",
+  "file": "kernel/shelf/recognition.py",
+  "type": "MOD",
+  "domain": "05",
+  "docs": "",
+  "tests": "tests/test_recognition.py",
+  "depends_on": [],
+  "related": [],
+  "reuse": "personal aliases / RP recognition for any actor-to-actor naming; the seam for viewer-relative names in a render",
+  "tags": [
+   "module"
+  ],
+  "notes": "RD-2026-0007 Evennia total-harvest. Clean-room (pattern-not-code) of Evennia rpg/rpsystem sdesc+recog core (BSD-3-Clause). Consumed by the `recog` verb (CMD-04.116). Provenance: original.",
+  "superseded_by": "",
+  "aliases": [],
+  "created": "2026-08-03",
+  "updated": "2026-08-03"
  }
 ]

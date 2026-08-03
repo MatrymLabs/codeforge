@@ -3740,5 +3740,30 @@
   "aliases": [],
   "created": "2026-08-03",
   "updated": "2026-08-03"
+ },
+ {
+  "designation": "CMD-04.116",
+  "name": "recog",
+  "status": "active",
+  "function": "privately name someone here (recog <who> as <name>)",
+  "label": "recog",
+  "file": "forge.py",
+  "type": "CMD",
+  "domain": "04",
+  "docs": "",
+  "tests": "tests/test_recog_verb.py",
+  "depends_on": [
+   "MOD-05.108"
+  ],
+  "related": [],
+  "reuse": "",
+  "tags": [
+   "command"
+  ],
+  "notes": "RD-2026-0007 Evennia harvest: consumer of the recognition part (MOD-05.108). Per-viewer personal aliases shown in render_scene.",
+  "superseded_by": "",
+  "aliases": [],
+  "created": "2026-08-03",
+  "updated": "2026-08-03"
  }
 ]

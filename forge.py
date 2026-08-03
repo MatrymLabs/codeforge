@@ -47,7 +47,7 @@ from kernel.registry import (
 )
 from kernel.relay import channel
 from kernel.save import awaken_snapshot, seal_snapshot
-from kernel.shelf import help_index, minimap, target_disambig
+from kernel.shelf import help_index, minimap, recognition, target_disambig
 from kernel.shelf.hourglass import WORLD_SANDS
 from kernel.store_index import store
 from kernel.telegraph import telegraph
@@ -715,6 +715,15 @@ def _build_commands() -> CommandSet:
             "CMD-04.115",
             "render a minimap of the nearby world",
             lambda s, _a: _world_minimap(s.location),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "recog",
+            "CMD-04.116",
+            "privately name someone here (recog <who> as <name>)",
+            _recog_cmd,
             namespace=CORE,
         )
     )
@@ -2168,6 +2177,69 @@ def _loop_trace_handler(arg: str) -> str:
 _DYNAMIC_PANELS = {"arc": lambda: arc("status")}
 
 
+# --- Recognition: personal per-viewer aliases (consumer of the recognition shelf part MOD-05.108).
+# The canonical recog state is a frozen recognition.Book; a projection (render) never mutates it.
+# In-memory for now (resets on restart) - a persistent recog store is the gated follow-up.
+_RECOG: recognition.Book = recognition.Book()
+
+
+def _players_in_room(location: str) -> set[str]:
+    """Every player id present in `location` (local sessions + the shared roster)."""
+    return {pid for pid, s in SESSIONS.items() if s.location == location} | presence.in_room(
+        location
+    )
+
+
+def _find_actor(location: str, word: str) -> str | None:
+    """Resolve `word` to a player id in `location` by id or (case-insensitive) display name."""
+    want = word.strip().lower()
+    for pid in _players_in_room(location):
+        if pid.lower() == want or display_name(pid).lower() == want:
+            return pid
+    return None
+
+
+def _recognized_name(viewer: str, target: str) -> str:
+    """The name `viewer` sees for `target`: their personal recog alias if set, else the real name.
+
+    Reads the recog Book directly (no validation) so a viewerless render is always safe."""
+    alias = _RECOG.recogs.get(viewer, {}).get(target)
+    return alias if alias is not None else display_name(target)
+
+
+def _recog_cmd(session: Session, arg: str) -> str:
+    """`recog` (list) | `recog <someone here> as <name>` | `recog forget <someone>`."""
+    global _RECOG
+    viewer = session.player_id
+    text = arg.strip()
+    if not text:
+        mine = _RECOG.recogs.get(viewer, {})
+        if not mine:
+            return "You have given no one a personal name. Try: recog <someone here> as <name>."
+        lines = [f"  {display_name(t)} -> {a}" for t, a in sorted(mine.items())]
+        return "You privately know:\n" + "\n".join(lines)
+    if text.lower().startswith("forget "):
+        pid = _find_actor(session.location, text[7:])
+        if pid is None:
+            return f"You see no one called '{text[7:].strip()}' here."
+        _RECOG = _RECOG.forget(viewer, pid)
+        return f"You let go of your private name for {display_name(pid)}."
+    parts = re.split(r"\s+as\s+", text, maxsplit=1, flags=re.IGNORECASE)
+    if len(parts) != 2:
+        return "Usage: recog <someone here> as <name>  |  recog forget <someone>  |  recog"
+    target_word, alias = parts[0].strip(), parts[1].strip()
+    pid = _find_actor(session.location, target_word)
+    if pid is None:
+        return f"You see no one called '{target_word}' here."
+    if pid == viewer:
+        return "You already know who you are."
+    try:
+        _RECOG = _RECOG.with_recog(viewer, pid, alias)
+    except recognition.RecognitionError as exc:
+        return f"That name will not stick: {exc}"
+    return f"From now on you see {display_name(pid)} as {alias}."
+
+
 def render_scene(location: str, viewer: str = "") -> str:
     """The full projection of a room: place, things, people, players."""
     scene = [render_room(location)]
@@ -2195,7 +2267,7 @@ def render_scene(location: str, viewer: str = "") -> str:
     local = {pid for pid, s in SESSIONS.items() if s.location == location}
     others = (local | presence.in_room(location)) - {viewer}
     for pid in sorted(others):
-        scene.append(f"{display_name(pid)} is here.")
+        scene.append(f"{_recognized_name(viewer, pid)} is here.")
     return "\n".join(scene)
 
 
