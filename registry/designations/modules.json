@@ -8745,7 +8745,7 @@
   "updated": "2026-08-02"
  },
  {
-  "designation": "MOD-10.074",
+  "designation": "MOD-10.076",
   "name": "backup",
   "status": "active",
   "function": "snapshot a Seed's persisted state to a portable, hash-verified archive and restore (or roll back) from it, so a Seed survives loss (a deleted/corrupted store or a bad change), not just restart; verify returns an integrity verdict (intact/corrupt/missing), and restore reinstates the snapshot THROUGH the Kernel so the write stays owner-authorized and audited",
