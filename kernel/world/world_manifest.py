@@ -9,7 +9,8 @@ still described by a DERIVED manifest (declared=False) so every world is legible
 
 It reads and validates; it never mutates a seed. The engine still spawns at the first room in
 rooms.yaml -- the manifest's start_room is the DECLARED spawn, and `check_world` reports when the
-two disagree, so a stale manifest is caught, not trusted.
+two disagree, so a stale manifest is caught, not trusted. `audit_worlds` runs that reconciliation
+over EVERY installed seed at once, so a shipped world with a broken identity fails loud in CI.
 """
 
 from __future__ import annotations
@@ -190,3 +191,27 @@ def check_world(seed_name: str, root: Path | None = None) -> list[str]:
             f"'{real_spawn}' (the engine spawns at the first room; update world.yaml)"
         ]
     return []
+
+
+def audit_worlds(root: Path | None = None) -> dict[str, list[str]]:
+    """Reconcile EVERY installed World Package against the engine's identity gates: for each seed
+    under content/seeds/, its manifest must build (a valid declared world.yaml, or a derived one)
+    AND its declared spawn must match the seed's real first room. Returns seed_name -> problems, an
+    empty list meaning hostable. A standing guarantee that every SHIPPED world boots with a
+    consistent identity -- surfaced in CI, not at a player's spawn. Reads only; never mutates a
+    seed."""
+    seeds_root = _seeds_root(root)
+    if not seeds_root.is_dir():
+        return {}
+    report: dict[str, list[str]] = {}
+    for seed_dir in sorted(seeds_root.iterdir()):
+        if not (seed_dir / "rooms.yaml").is_file():
+            continue  # a directory without rooms.yaml is not a bootable seed
+        name = seed_dir.name
+        try:
+            describe_world(name, root)
+        except WorldManifestError as exc:
+            report[name] = [f"{name}: invalid manifest: {exc}"]
+        else:
+            report[name] = check_world(name, root)
+    return report
