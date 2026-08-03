@@ -1,6 +1,18 @@
 from pathlib import Path
 
 import pytest
+from hypothesis import settings
+from hypothesis.database import DirectoryBasedExampleDatabase
+
+# Hypothesis corpus persistence (AP-08 / RD-2026-0002 #22). A falsifying example Hypothesis
+# finds is written to a COMMITTED directory, so it replays on every other machine and CI run
+# instead of only where it was found. `tests/corpora/` is git-tracked; commit a new example
+# alongside the fix that provoked it. This is settings config, not a fixture, so it does not
+# touch the DB-quarantine fixture below.
+_CORPORA = Path(__file__).parent / "tests" / "corpora"
+_CORPORA.mkdir(exist_ok=True)
+settings.register_profile("ci", database=DirectoryBasedExampleDatabase(str(_CORPORA)))
+settings.load_profile("ci")
 
 
 class _NeutralRng:
