@@ -231,21 +231,21 @@ def test_a_seed_minted_directly_has_empty_product_fields() -> None:
 def test_an_old_record_without_the_new_fields_still_loads() -> None:
     # Backward compatibility: a record persisted before product_type/domain_modules existed loads
     # with the defaults, and a JSON list for domain_modules is coerced to a tuple.
-    legacy = {
-        "identity": {
-            "seed_id": "seed-legacy",
-            "name": "Old",
-            "owner": "josh",
-            "purpose": "p",
-            "version": "0.1.0",
-            "created_at": "2026-08-01T00:00:00+00:00",
-        },
-        "status": CREATED,
+    legacy_identity = {
+        "seed_id": "seed-legacy",
+        "name": "Old",
+        "owner": "josh",
+        "purpose": "p",
+        "version": "0.1.0",
+        "created_at": "2026-08-01T00:00:00+00:00",
     }
-    record = SeedRecord.from_dict(legacy)
+    record = SeedRecord.from_dict({"identity": legacy_identity, "status": CREATED})
     assert record.identity.product_type == "" and record.identity.domain_modules == ()
     # And a record whose domain_modules persisted as a JSON list rebuilds as a tuple.
     modern = SeedRecord.from_dict(
-        {**legacy, "identity": {**legacy["identity"], "domain_modules": ["education", "extra"]}}
+        {
+            "identity": {**legacy_identity, "domain_modules": ["education", "extra"]},
+            "status": CREATED,
+        }
     )
     assert modern.identity.domain_modules == ("education", "extra")
