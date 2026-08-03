@@ -12,6 +12,7 @@ on:
     - cron: "23 6 * * 1"  # weekly sweep (Monday), catches newly-published queries
 
 permissions:
+  actions: read  # required: the analyze step reads the workflow run (get-a-workflow-run) and the `actions` language scans workflows; without it CodeQL 403s after exporting SARIF
   contents: read
   security-events: write
 
