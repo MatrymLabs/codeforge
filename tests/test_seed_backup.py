@@ -159,3 +159,63 @@ def test_restore_of_missing_backup_is_refused(tmp_path: Path) -> None:
     kernel.create_seed("Present", "josh", "", seed_id="seed-07")
     with pytest.raises(BackupError):
         restore(kernel, backups, "seed-07", "bk-nope", "josh")
+
+
+# --- integrity edge cases: honest verdicts on damaged snapshots, and the default clock -----------
+
+
+def test_default_clock_is_used_when_none_injected(tmp_path: Path) -> None:
+    """With no clock injected, SeedBackups uses wall time; the snapshot is still INTACT + restorable
+    (the id embeds a real timestamp, so we don't assert on it)."""
+    kernel = _kernel(tmp_path)
+    backups = SeedBackups(tmp_path / "backups")  # default clock (_utcnow)
+    record = kernel.create_seed("Clocked", "josh", "", seed_id="seed-08")
+    ref = backups.backup(record)
+    assert backups.verify("seed-08", ref.backup_id) == INTACT
+
+
+def test_list_backups_skips_an_unparseable_wrapper(tmp_path: Path) -> None:
+    kernel = _kernel(tmp_path)
+    backups = _backups(tmp_path)
+    record = kernel.create_seed("Mixed", "josh", "", seed_id="seed-09")
+    good = backups.backup(record)
+    # drop a junk file that matches the glob but is not valid JSON: it must be skipped, not crash.
+    (Path(good.path).parent / "bk-junk.json").write_text("{not json", encoding="utf-8")
+    ids = [r.backup_id for r in backups.list_backups("seed-09")]
+    assert ids == [good.backup_id]
+
+
+def test_verify_raises_on_an_unreadable_wrapper(tmp_path: Path) -> None:
+    kernel = _kernel(tmp_path)
+    backups = _backups(tmp_path)
+    record = kernel.create_seed("Unreadable", "josh", "", seed_id="seed-10")
+    ref = backups.backup(record)
+    Path(ref.path).write_text("{not json", encoding="utf-8")  # corrupt the very JSON
+    with pytest.raises(BackupError, match="unreadable backup"):
+        backups.verify("seed-10", ref.backup_id)
+
+
+def test_verify_raises_on_a_non_object_wrapper(tmp_path: Path) -> None:
+    kernel = _kernel(tmp_path)
+    backups = _backups(tmp_path)
+    record = kernel.create_seed("Array", "josh", "", seed_id="seed-11")
+    ref = backups.backup(record)
+    Path(ref.path).write_text("[]", encoding="utf-8")  # valid JSON, wrong shape
+    with pytest.raises(BackupError, match="not an object"):
+        backups.verify("seed-11", ref.backup_id)
+
+
+def test_verify_reports_corrupt_when_the_record_shape_is_malformed(tmp_path: Path) -> None:
+    """A wrapper that parses but whose `record` is not a valid SeedRecord verifies CORRUPT (not a
+    crash): the snapshot is untrustworthy, so it is refused, not restored."""
+    kernel = _kernel(tmp_path)
+    backups = _backups(tmp_path)
+    record = kernel.create_seed("Malformed", "josh", "", seed_id="seed-12")
+    ref = backups.backup(record)
+    import json
+
+    Path(ref.path).write_text(
+        json.dumps({"sha256": "deadbeef", "record": {"status": "created"}}),  # no identity
+        encoding="utf-8",
+    )
+    assert backups.verify("seed-12", ref.backup_id) == CORRUPT
