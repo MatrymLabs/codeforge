@@ -943,3 +943,42 @@ def test_a_non_owner_workspace_request_is_silently_ignored(server, tmp_path, mon
         b"Deploy.Manifest" not in out
     )  # owner-gated: a player gets no workspace, no verdict noise
     sock.close()
+
+
+# --- Research.Findings served from a MOUNTED manifest on a Workspace.Request (the FGL pattern) ----
+
+
+def test_a_mounted_research_manifest_is_served_on_a_workspace_request(
+    server, tmp_path, monkeypatch
+):
+    import json as _json
+
+    from kernel.gmcp import gmcp_frame
+
+    monkeypatch.setenv("SEEDLAB_HOME", str(tmp_path))
+    (tmp_path / "research.json").write_text(
+        _json.dumps([{"id": "EXP-05", "title": "FTS5", "verdict": "verified improvement"}]),
+        encoding="utf-8",
+    )
+    _saved_owner()
+    sock, _ = _login_gmcp(server, "wren", "forge")
+    sock.sendall(gmcp_frame("Workspace.Request", {}))
+    out = _read_until_in(sock, b"Research.Findings")
+    assert (
+        b"Research.Findings" in out and b"EXP-05" in out
+    )  # the mounted research, served on request
+    sock.close()
+
+
+def test_an_unmounted_research_source_serves_no_findings(server, tmp_path, monkeypatch):
+    from kernel.gmcp import gmcp_frame
+
+    monkeypatch.setenv("SEEDLAB_HOME", str(tmp_path))  # no research.json mounted here
+    _saved_owner()
+    sock, _ = _login_gmcp(server, "wren", "forge")
+    sock.sendall(gmcp_frame("Workspace.Request", {"tier": "prototype"}))
+    sock.sendall(b"look\n")  # a boundary so we capture the whole response
+    out = _read_until_raw(sock, b"> ")
+    assert b"Deploy.Manifest" in out  # deploy is still served
+    assert b"Research.Findings" not in out  # honest: no mount, no findings, an empty panel
+    sock.close()
