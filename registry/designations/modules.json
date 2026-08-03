@@ -8770,5 +8770,30 @@
   "aliases": [],
   "created": "2026-08-02",
   "updated": "2026-08-02"
+ },
+ {
+  "designation": "MOD-10.075",
+  "name": "form",
+  "status": "active",
+  "function": "the Engineering Form: turn intent into a validated, machine-readable SeedSpec. One domain-neutral engine walks a DATA catalog (data/seedlab/engineering_form.json) of common + per-product-type questions (adaptive via applies_when) and emits a SeedSpec carrying the product type, identity, selected domain_modules, and validated answers -- an MMORPG spec selects the game module, a classroom spec selects education and never game",
+  "label": "form",
+  "file": "kernel/seedlab/form.py",
+  "type": "MOD",
+  "domain": "10",
+  "docs": "docs/seed_platform/RECENTERING.md",
+  "tests": "tests/test_form.py",
+  "depends_on": [],
+  "related": [
+   "MOD-10.052"
+  ],
+  "reuse": "Slice B of the Stream-1 engine directive, schema-first: new product types are DATA (a catalog entry), never a code fork. Fails loud on an unknown product type, a missing required answer, an out-of-range choice, an answer outside the chosen product type, or a dangling catalog reference. The SeedSpec is the seam that drives kernel configuration + domain-module selection + (later) Hardware Store matching. Grammar before worlds enforced by construction: the education product type simply never lists the game module.",
+  "notes": "Domain-neutral: no kernel/world/ import; the engine knows nothing about combat, lessons, or certificates -- only the catalog does. Catalog path is injectable (tests pass a definition directly). PROTOTYPED (docs/seed_platform/RECENTERING.md).",
+  "tags": [
+   "module"
+  ],
+  "superseded_by": "",
+  "aliases": [],
+  "created": "2026-08-02",
+  "updated": "2026-08-02"
  }
 ]
