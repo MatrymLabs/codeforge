@@ -16,6 +16,7 @@ import json
 import pytest
 
 from kernel.gmcp import gmcp_frame
+from kernel.seedlab.form import FormDefinition
 from kernel.seedlab.kernel import InMemorySeedStore, SeedKernel, SeedKernelError
 from kernel.seedlab.project_model import Provenance, SpecSource, extract_model
 from kernel.seedlab.source_connector import SourceRecord
@@ -23,6 +24,8 @@ from kernel.seedlab.tool_runner import ToolRunResult
 from kernel.seedlab.workspace_gmcp import (
     ARCHITECTURE_MAP_PACKAGE,
     BUILD_REPORT_PACKAGE,
+    FORM_SCHEMA_PACKAGE,
+    FORM_SUBMIT_PACKAGE,
     MODEL_SCHEMA_PACKAGE,
     PROJECT_STATUS_PACKAGE,
     RESEARCH_FINDINGS_PACKAGE,
@@ -31,10 +34,13 @@ from kernel.seedlab.workspace_gmcp import (
     WorkspaceContractError,
     architecture_map,
     build_report,
+    create_from_form_submit,
     create_from_request,
+    form_schema,
     load_module_designations,
     load_research_findings,
     model_schema,
+    parse_form_submit,
     parse_seed_create,
     project_status,
     research_findings,
@@ -498,3 +504,195 @@ def test_load_research_findings_fails_loud_on_a_non_list_manifest(tmp_path) -> N
     manifest.write_text(json.dumps({"not": "a list"}), encoding="utf-8")
     with pytest.raises(SeedKernelError, match="not a JSON list"):
         load_research_findings(manifest)
+
+
+# --- Form.Schema + Form.Submit: the Seed Creation Wizard (CR-0002) -------------------------------
+
+_FORM_CATALOG = {
+    "common_question_ids": ["name", "owner", "purpose"],
+    "questions": {
+        "name": {"prompt": "What is this Seed called?", "kind": "text"},
+        "owner": {"prompt": "Who owns it (account)?", "kind": "text"},
+        "purpose": {"prompt": "In one line, what is it for?", "kind": "text"},
+        "world_scale": {"prompt": "World scale?", "kind": "choice", "choices": ["small", "large"]},
+        "combat": {"prompt": "Does it have combat?", "kind": "bool"},
+        "pvp": {
+            "prompt": "PvP ruleset?",
+            "kind": "choice",
+            "choices": ["none", "open"],
+            "applies_when": {"combat": True},
+        },
+    },
+    "product_types": {
+        "game": {
+            "name": "Game world",
+            "description": "a playable world",
+            "question_ids": ["world_scale", "combat", "pvp"],
+            "domain_modules": ["game", "economy"],
+        },
+        "education": {
+            "name": "Education",
+            "description": "a classroom",
+            "question_ids": ["world_scale"],
+            "domain_modules": ["education"],
+        },
+    },
+}
+
+
+def _form_def() -> FormDefinition:
+    return FormDefinition.from_dict(_FORM_CATALOG)
+
+
+def test_form_schema_projects_the_catalog() -> None:
+    payload = form_schema(_form_def())
+    assert payload["schema"] == 1  # the Form's real wire version, so a client reads it knowingly
+    assert payload["common_question_ids"] == ["name", "owner", "purpose"]
+    questions = payload["questions"]
+    assert isinstance(questions, dict)
+    assert set(questions) == {"name", "owner", "purpose", "world_scale", "combat", "pvp"}
+    types = payload["product_types"]
+    assert isinstance(types, list)
+    assert [pt["id"] for pt in types] == ["game", "education"]  # catalog order preserved
+    game = next(pt for pt in types if pt["id"] == "game")
+    assert game["domain_modules"] == ["game", "economy"] and game["name"] == "Game world"
+
+
+def test_form_schema_question_carries_choices_and_applies_when() -> None:
+    questions = form_schema(_form_def())["questions"]
+    assert isinstance(questions, dict)
+    pvp = questions["pvp"]
+    assert pvp["kind"] == "choice" and pvp["choices"] == ["none", "open"]
+    assert pvp["applies_when"] == {"combat": True}  # an object the client reads as a branch trigger
+    assert pvp["required"] is True
+
+
+def test_form_schema_omits_choices_and_applies_when_for_a_plain_text_question() -> None:
+    questions = form_schema(_form_def())["questions"]
+    assert isinstance(questions, dict)
+    name = questions["name"]
+    assert name["kind"] == "text"
+    assert "choices" not in name and "applies_when" not in name  # absent, not a fabricated blank
+
+
+def test_form_schema_labels_the_seed_when_given() -> None:
+    assert form_schema(_form_def(), seed="codeforge")["seed"] == "codeforge"
+    assert "seed" not in form_schema(_form_def())  # unlabeled when not given
+
+
+def test_form_schema_frames_as_gmcp() -> None:
+    frame = gmcp_frame(FORM_SCHEMA_PACKAGE, form_schema(_form_def(), seed="s"))
+    assert isinstance(frame, bytes)
+    assert b"Form.Schema" in frame
+    assert FORM_SUBMIT_PACKAGE == "Form.Submit"  # the client -> engine reply direction's name
+
+
+def test_form_schema_projection_matches_the_engine_form() -> None:
+    # The projected question_ids of every product type must resolve in the projected question bank,
+    # so the client renders exactly the set the engine's own EngineeringForm would walk.
+    definition = _form_def()
+    payload = form_schema(definition)
+    questions = payload["questions"]
+    types = payload["product_types"]
+    assert isinstance(questions, dict) and isinstance(types, list)
+    common = payload["common_question_ids"]
+    assert isinstance(common, list)
+    for pt in types:
+        for qid in [*common, *pt["question_ids"]]:
+            assert qid in questions  # no dangling reference the client could not render
+
+
+# --- the submit round-trip ---
+
+
+def test_parse_form_submit_validates_a_good_frame() -> None:
+    request = parse_form_submit({"product_type": "game", "answers": {"name": "arena"}})
+    assert request.product_type == "game" and request.answers == {"name": "arena"}
+
+
+def test_parse_form_submit_allows_an_empty_answers_map() -> None:
+    # the Form re-validates and fails on a missing required answer; an empty map is a valid SHAPE
+    assert parse_form_submit({"product_type": "game"}).answers == {}
+
+
+@pytest.mark.parametrize(
+    "bad",
+    [
+        ["not", "an", "object"],
+        {"answers": {"name": "x"}},  # no product_type
+        {"product_type": "  "},  # blank product_type
+        {"product_type": "game", "answers": ["not", "a", "map"]},  # answers not an object
+    ],
+)
+def test_parse_form_submit_fails_loud_on_a_malformed_frame(bad) -> None:
+    with pytest.raises(WorkspaceContractError):
+        parse_form_submit(bad)
+
+
+def _game_answers() -> dict[str, object]:
+    return {
+        "name": "Arena",
+        "purpose": "a pvp world",
+        "world_scale": "large",
+        "combat": True,
+        "pvp": "open",
+    }
+
+
+def test_create_from_form_submit_mints_a_seed_with_the_forms_verdict() -> None:
+    kernel = _kernel()
+    verdict = create_from_form_submit(
+        kernel, _form_def(), {"product_type": "game", "answers": _game_answers()}, owner="josh"
+    )
+    assert verdict["ok"] is True and verdict["name"] == "Arena"
+    record = kernel.get(str(verdict["id"]))
+    assert record.identity.product_type == "game"
+    assert record.identity.domain_modules == ("game", "economy")  # the Form's selection lands
+
+
+def test_create_from_form_submit_overrides_owner_with_the_authenticated_account() -> None:
+    kernel = _kernel()
+    # a client cannot mint under another account by typing a name in the owner box
+    answers = {**_game_answers(), "owner": "someone_else"}
+    verdict = create_from_form_submit(
+        kernel, _form_def(), {"product_type": "game", "answers": answers}, owner="josh"
+    )
+    assert verdict["ok"] is True
+    assert kernel.get(str(verdict["id"])).identity.owner == "josh"  # authenticated owner wins
+
+
+def test_create_from_form_submit_refuses_a_missing_required_answer() -> None:
+    kernel = _kernel()
+    partial = {"name": "Arena", "purpose": "p"}  # no world_scale/combat -> Form fails loud
+    verdict = create_from_form_submit(
+        kernel, _form_def(), {"product_type": "game", "answers": partial}, owner="josh"
+    )
+    assert verdict["ok"] is False and "required" in str(verdict["reason"])
+    assert verdict["name"] == "Arena"  # the honest verdict still names what was attempted
+
+
+def test_create_from_form_submit_refuses_a_malformed_frame() -> None:
+    kernel = _kernel()
+    verdict = create_from_form_submit(kernel, _form_def(), "not-an-object", owner="josh")
+    assert verdict["ok"] is False and "object" in str(verdict["reason"])
+
+
+def test_create_from_form_submit_refuses_an_out_of_range_choice() -> None:
+    kernel = _kernel()
+    answers = {**_game_answers(), "world_scale": "galactic"}  # not a choice
+    verdict = create_from_form_submit(
+        kernel, _form_def(), {"product_type": "game", "answers": answers}, owner="josh"
+    )
+    assert verdict["ok"] is False and "world_scale" in str(verdict["reason"])
+
+
+def test_create_from_form_submit_refuses_a_duplicate_name() -> None:
+    # a fixed minter forces both submits onto one id, so the Kernel refuses the second, honestly
+    kernel = SeedKernel(
+        InMemorySeedStore(), clock=lambda: next(_CLOCK), id_minter=lambda name: "seed-dupe"
+    )
+    frame = {"product_type": "game", "answers": _game_answers()}
+    first = create_from_form_submit(kernel, _form_def(), frame, owner="josh")
+    assert first["ok"] is True
+    second = create_from_form_submit(kernel, _form_def(), frame, owner="josh")
+    assert second["ok"] is False and "already exists" in str(second["reason"])
