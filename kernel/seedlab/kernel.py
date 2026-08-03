@@ -32,6 +32,8 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Protocol, runtime_checkable
 
+from kernel.shelf.atomic_write import atomic_write_text
+
 # --- lifecycle states + the only legal transitions between them --------------------------------
 CREATED = "created"
 RUNNING = "running"
@@ -190,11 +192,10 @@ class FileSeedStore:
         return self.root / f"{seed_id}.json"
 
     def save(self, record: SeedRecord) -> None:
-        # Write-to-temp-then-replace so a crash mid-write never leaves a half-written record.
-        target = self._path(record.identity.seed_id)
-        tmp = target.with_suffix(".json.tmp")
-        tmp.write_text(json.dumps(record.to_dict(), indent=2), encoding="utf-8")
-        tmp.replace(target)
+        # Durable atomic write via the shared shelf primitive (no partial record on a crash).
+        atomic_write_text(
+            self._path(record.identity.seed_id), json.dumps(record.to_dict(), indent=2)
+        )
 
     def load(self, seed_id: str) -> SeedRecord | None:
         path = self._path(seed_id)
