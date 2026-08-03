@@ -8999,5 +8999,33 @@
   "aliases": [],
   "created": "2026-08-03",
   "updated": "2026-08-03"
+ },
+ {
+  "designation": "MOD-10.082",
+  "name": "synthesis",
+  "status": "active",
+  "function": "the reverse-TDD generation harness (NORTH_STAR Gap 1): synthesize(goal, tests, implementer, run=, workdir=, scorer=) drives spec-derived tests to green by iterating an Implementer (feeds each red run's output back), then gates on a MutationScorer; returns a SynthesisResult with a verdict word (verified / tests_too_weak / red_budget_exhausted / refused), never a bare bool; pytest_runner() is the real tool_runner-backed test seam",
+  "label": "synthesis",
+  "file": "kernel/seedlab/synthesis.py",
+  "type": "MOD",
+  "domain": "10",
+  "docs": "docs/seed_platform/RECENTERING.md",
+  "tests": "tests/test_synthesis.py",
+  "depends_on": [
+   "MOD-10.057"
+  ],
+  "related": [
+   "MOD-10.058",
+   "MOD-05.090"
+  ],
+  "reuse": "The missing middle of business-logic generation: the existing target generators run generate->emit-tests->run->green but emit ok-stubs + self-affirming tests; this harness makes the tests come from a behavioral SPEC and drives an Implementer until they pass, then a mutation gate proves the tests BITE. Domain-neutral (grammar before worlds): knows only TargetFiles + seams (Implementer / TestRun / MutationScorer), nothing of CLIs or games. Every boundary is a seam so the whole loop is provable offline with fakes (proven end-to-end over REAL code via the real pytest runner: a wrong-then-right implementer converges to verified). The real Claude Implementer follows adapters/architect.py (Advisor pattern, [ai] extra) and is the next slice; wiring into cli_generator (spec-derived CLI acceptance cases -> synthesize) is Slice 2.",
+  "notes": "Slice 1 of NORTH_STAR Priority #3. Reuses tool_runner (MOD-10.057) for sandboxed test runs and mutation_kpi (MOD-05.090) as the gate backend. No kernel/world/ import. PROTOTYPED.",
+  "tags": [
+   "module"
+  ],
+  "superseded_by": "",
+  "aliases": [],
+  "created": "2026-08-03",
+  "updated": "2026-08-03"
  }
 ]
