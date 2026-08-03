@@ -8643,6 +8643,29 @@
   "updated": "2026-08-01"
  },
  {
+  "designation": "MOD-05.090",
+  "name": "mutation_kpi",
+  "status": "active",
+  "function": "normalize a mutation-testing run into a posture-style evidence KPI (MEASURED kill-rate vs a target, or NOT_COMPUTABLE with the enabling action; never a faked zero) - tool-agnostic core plus a cosmic-ray cr-report/cr-rate adapter",
+  "label": "mutation_kpi",
+  "file": "kernel/shelf/mutation_kpi.py",
+  "type": "MOD",
+  "domain": "05",
+  "docs": "docs/hardware_store/patterns/framing.md",
+  "tests": "tests/test_mutation_kpi.py",
+  "depends_on": [],
+  "related": [],
+  "reuse": "make the mutation score tracked evidence; the gated posture.py mutation_kill_rate KPI consumer; any acquirer-facing test-quality signal",
+  "tags": [
+   "module"
+  ],
+  "notes": "R&D field report RD-2026-0003 claim #2 (Five Capability Gaps; the report's #1 acquirer signal - mutation score proves tests bite); clean-room stdlib; posture.py consumer is the gated follow-up.",
+  "superseded_by": "",
+  "aliases": [],
+  "created": "2026-08-02",
+  "updated": "2026-08-02"
+ },
+ {
   "designation": "MOD-10.066",
   "name": "blueprint_verb",
   "status": "active",
