@@ -141,6 +141,27 @@ def main() -> int:
             f"modules={parsed_arch.module_count}",
         )
 
+    # Research.Findings is the newest package (CR-0001). Same additive rule: prove it only when the
+    # client checkout already carries the parser, so this proof stays green against an older client.
+    findings = [
+        {"id": "EXP-05", "verdict": "verified improvement", "source": "rd/labs/algorithms"},
+        {"id": "EXP-31", "verdict": "hardware store part"},
+    ]
+    research = eng.research_findings(findings, seed="Job Tracker")
+    try:
+        from codeforge.mudclient.core import research as cli_research
+    except ImportError:
+        checks.append(("Research.Findings", True, "SKIP: client parser absent (additive contract)"))
+    else:
+        parsed_research = cli_research.parse_research_findings(research)
+        record_check(
+            "Research.Findings",
+            eng.RESEARCH_FINDINGS_PACKAGE,
+            cli_research.RESEARCH_FINDINGS_PACKAGE,
+            parsed_research.finding_count == len(findings),
+            f"findings={parsed_research.finding_count}",
+        )
+
     for pkg, payload in eng.workspace_packages(
         record,
         source=source_record,
@@ -148,6 +169,7 @@ def main() -> int:
         model=project_model,
         runs=runs,
         modules=modules,
+        findings=findings,
     ):
         frame = gmcp_frame(pkg, payload)
         checks.append(

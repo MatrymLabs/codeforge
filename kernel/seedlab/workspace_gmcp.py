@@ -53,6 +53,8 @@ SEED_CREATED_PACKAGE = "Seed.Created"
 BUILD_REPORT_PACKAGE = "Build.Report"
 #: An engineering Seed's module map -> the client's Architecture Explorer (core/architecture.py).
 ARCHITECTURE_MAP_PACKAGE = "Architecture.Map"
+#: An engineering Seed's body of research -> the client's Research Explorer (core/research.py).
+RESEARCH_FINDINGS_PACKAGE = "Research.Findings"
 
 #: The kinds of Seed a client may ask to create (matches the client's SEED_KINDS).
 SEED_KINDS = ("engineering", "game")
@@ -226,6 +228,60 @@ def load_module_designations(path: Path | str | None = None) -> list[dict[str, o
     return [module for module in data if isinstance(module, dict)]
 
 
+# --- the research surface: the R&D Factory + FGL provenance -> the Research Explorer -------------
+
+#: The finding fields the projection carries, in render order. Only these leave the engine (No
+#: Vision Theater): a research record may hold more, but the panel renders the source -> claim ->
+#: evidence -> verdict trace. `id` anchors a finding; a field the record lacks is absent, not blank.
+_FINDING_FIELDS = ("id", "title", "question", "status", "verdict", "source", "evidence", "summary")
+
+
+def research_findings(
+    findings: Sequence[Mapping[str, object]], *, seed: str | None = None
+) -> dict[str, object]:
+    """The `Research.Findings` payload for an engineering Seed: a projection of its body of research
+    (R&D Factory experiments + FGL provenance) into a verdict-grouped finding list the client's
+    Research Explorer renders.
+
+    Each finding contributes the renderable subset of its record (`_FINDING_FIELDS`); a field the
+    record lacks is absent, never invented (same law as `architecture_map`). `verdicts` is the
+    finding count per Verdict-Gate label, sorted, so the client groups without re-counting (mirrors
+    `Architecture.Map.domains`). Findings sort by `id` so the list is stable. The Seed owns its
+    verdict vocabulary; the engine does not enumerate it. Pure and offline: it shapes the list it is
+    given, never reads research state or assigns a verdict."""
+    projected: list[dict[str, object]] = []
+    verdicts: Counter[str] = Counter()
+    for finding in findings:
+        entry = {field: finding[field] for field in _FINDING_FIELDS if field in finding}
+        projected.append(entry)
+        verdict = finding.get("verdict")
+        if isinstance(verdict, str) and verdict.strip():
+            verdicts[verdict] += 1
+    projected.sort(key=lambda entry: str(entry.get("id", "")))
+    payload: dict[str, object] = {
+        "finding_count": len(projected),
+        "verdicts": [{"verdict": name, "count": n} for name, n in sorted(verdicts.items())],
+        "findings": projected,
+    }
+    if seed is not None:
+        payload["seed"] = seed
+    return payload
+
+
+def load_research_findings(path: Path | str) -> list[dict[str, object]]:
+    """Read a Seed's research manifest (a JSON list of finding records) for `research_findings`.
+
+    Unlike the repo-global module registry, a research surface is per-Seed, so the path is explicit:
+    a Seed points at its own manifest (e.g. an R&D Factory export). A manifest that is not a JSON
+    list fails loud (a silently empty research surface would be a lie); a stray non-dict entry is
+    skipped. The read is call-time so a test can point it at a fixture."""
+    manifest = Path(path)
+    data = json.loads(manifest.read_text(encoding="utf-8"))
+    if not isinstance(data, list):
+        raise SeedKernelError(f"research manifest {manifest} is not a JSON list")
+    return [finding for finding in data if isinstance(finding, dict)]
+
+
 # --- the create round-trip: a client request becomes a real Seed --------------------------------
 
 
@@ -304,12 +360,14 @@ def workspace_packages(
     runs: Sequence[ToolRunResult] | None = None,
     branch: str | None = None,
     modules: Sequence[Mapping[str, object]] | None = None,
+    findings: Sequence[Mapping[str, object]] | None = None,
 ) -> list[tuple[str, dict[str, object]]]:
     """The (package, payload) pairs a gateway emits for an engineering Seed: always its Project
     Status, plus a Source Tree when a source is registered, a Model Schema when a model is
-    extracted, a Build Report when tool runs have happened, and an Architecture Map when a module
-    registry is supplied. The one call a live driver would loop over to push the workspace; each
-    pair frames with `kernel.gmcp.gmcp_frame`."""
+    extracted, a Build Report when tool runs have happened, an Architecture Map when a module
+    registry is supplied, and a Research Findings package when the Seed has research to report. The
+    one call a live driver would loop over to push the workspace; each pair frames with
+    `kernel.gmcp.gmcp_frame`."""
     seed = record.identity.name
     packages: list[tuple[str, dict[str, object]]] = [
         (PROJECT_STATUS_PACKAGE, project_status(record, branch=branch or _source_branch(source)))
@@ -322,6 +380,8 @@ def workspace_packages(
         packages.append((BUILD_REPORT_PACKAGE, build_report(runs, seed=seed)))
     if modules is not None:
         packages.append((ARCHITECTURE_MAP_PACKAGE, architecture_map(modules, seed=seed)))
+    if findings is not None:
+        packages.append((RESEARCH_FINDINGS_PACKAGE, research_findings(findings, seed=seed)))
     return packages
 
 
