@@ -272,3 +272,58 @@ def test_journey_refuses_a_bad_waypoint(capsys, tmp_path):
 
 def test_journey_requires_its_arguments(capsys):
     assert main(["journey"]) == 2  # argparse: --region / --waypoints are required
+
+
+# --- host: install a journey as a bootable World Package (North Star #5), one real CLI operation
+
+
+def test_host_installs_a_bootable_world_package(capsys, tmp_path):
+    code = main(
+        [
+            "host",
+            "--region",
+            "veridia",
+            "--waypoints",
+            "greenhold, summit",
+            "--seed-root",
+            str(tmp_path),
+        ]
+    )
+    out = capsys.readouterr().out
+    assert code == 0 and "HOSTABLE" in out and "veridia" in out
+    # It installed a REAL seed the server can boot -- rooms + quest + a world.yaml manifest.
+    seed_dir = tmp_path / "content" / "seeds" / "veridia"
+    for f in ("rooms.yaml", "quest.yaml", "world.yaml"):
+        assert (seed_dir / f).exists()
+
+
+def test_host_surfaces_an_unhostable_world(capsys, tmp_path):
+    # An explicit --name that is not a valid world_id is caught by the engine's manifest gate:
+    # UNHOSTABLE, the problem surfaced on stderr, never a false HOSTABLE.
+    code = main(
+        [
+            "host",
+            "--region",
+            "veridia",
+            "--waypoints",
+            "gate",
+            "--seed-root",
+            str(tmp_path),
+            "--name",
+            "Bad_ID",
+        ]
+    )
+    assert code == 1
+    assert "UNHOSTABLE" in capsys.readouterr().err
+
+
+def test_host_refuses_a_bad_waypoint(capsys, tmp_path):
+    code = main(
+        ["host", "--region", "veridia", "--waypoints", "Bad Label", "--seed-root", str(tmp_path)]
+    )
+    assert code == 2
+    assert "refused" in capsys.readouterr().err  # a non-snake_case label fails loud
+
+
+def test_host_requires_its_arguments(capsys):
+    assert main(["host"]) == 2  # argparse: --region / --waypoints are required
