@@ -9270,5 +9270,29 @@
   "aliases": [],
   "created": "2026-08-03",
   "updated": "2026-08-03"
+ },
+ {
+  "designation": "MOD-10.088",
+  "name": "journey",
+  "status": "active",
+  "function": "the first content GENERATOR for the game pipeline: journey_region(region, waypoints) turns a compact intent (an ordered list of waypoint room labels) into a full GameSpec -- a linear region (start + a room per waypoint, linked north/south) and a travel-driven QuestArc whose steps fire on entering each waypoint and complete at the last -- deterministic + pure; fails loud (JourneyError) on no waypoints / duplicate / non-snake_case label",
+  "label": "journey",
+  "file": "kernel/domains/journey.py",
+  "type": "MOD",
+  "domain": "10",
+  "docs": "docs/seed_platform/RECENTERING.md",
+  "tests": "tests/test_journey.py",
+  "depends_on": ["MOD-10.085"],
+  "related": [
+   "MOD-10.087",
+   "MOD-10.086"
+  ],
+  "reuse": "The authoring layer above the Linker: derives a GameSpec from a one-line journey intent, so a whole playable, durable, recoverable region comes from a short description (the Oregon-Trail archetype, generated). Proven end to end: a generated journey LINKS (game_linker MOD-10.085) and OPERATES-AND-RESUMES (game_session MOD-10.087). Pure + deterministic (same waypoints -> byte-identical linked content); knows only game_linker's spec dataclasses, no world/engine. The natural consumer of a future Form->journey-answers bridge (the Ludii-trick step). Grammar before worlds: kernel/domains; kernel/seedlab imports neither.",
+  "notes": "First game content generator. Generated specs are built to pass the Linker's gates (reachable rooms, reachable quest terminal, on_enter names real rooms) and be travel-operable. Next: a Form(SeedSpec journey answers) -> journey_region bridge to close Form->Spec->Seed. PROTOTYPED.",
+  "tags": ["module"],
+  "superseded_by": "",
+  "aliases": [],
+  "created": "2026-08-03",
+  "updated": "2026-08-03"
  }
 ]
