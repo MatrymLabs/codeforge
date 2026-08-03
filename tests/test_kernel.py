@@ -206,3 +206,46 @@ def test_reinstate_cannot_change_a_seeds_owner() -> None:
     forged = SeedRecord(identity=replace(record.identity, owner="mallory"))
     with pytest.raises(SeedAuthError, match="owner"):
         kernel.reinstate(forged, "josh")
+
+
+def test_create_seed_carries_product_type_and_modules() -> None:
+    k = _kernel()
+    record = k.create_seed(
+        "Classroom",
+        "josh",
+        "learn",
+        seed_id="seed-pt",
+        product_type="education",
+        domain_modules=("education",),
+    )
+    assert record.identity.product_type == "education"
+    assert record.identity.domain_modules == ("education",)
+
+
+def test_a_seed_minted_directly_has_empty_product_fields() -> None:
+    # A Seed created without a Form (the game reference Seed, a bare CLI create) is still valid.
+    record = _seed(_kernel())
+    assert record.identity.product_type == "" and record.identity.domain_modules == ()
+
+
+def test_an_old_record_without_the_new_fields_still_loads() -> None:
+    # Backward compatibility: a record persisted before product_type/domain_modules existed loads
+    # with the defaults, and a JSON list for domain_modules is coerced to a tuple.
+    legacy = {
+        "identity": {
+            "seed_id": "seed-legacy",
+            "name": "Old",
+            "owner": "josh",
+            "purpose": "p",
+            "version": "0.1.0",
+            "created_at": "2026-08-01T00:00:00+00:00",
+        },
+        "status": CREATED,
+    }
+    record = SeedRecord.from_dict(legacy)
+    assert record.identity.product_type == "" and record.identity.domain_modules == ()
+    # And a record whose domain_modules persisted as a JSON list rebuilds as a tuple.
+    modern = SeedRecord.from_dict(
+        {**legacy, "identity": {**legacy["identity"], "domain_modules": ["education", "extra"]}}
+    )
+    assert modern.identity.domain_modules == ("education", "extra")
