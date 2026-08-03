@@ -33,14 +33,21 @@ _CATALOG = {
         "owner": {"prompt": "Owner?", "kind": "text"},
         "purpose": {"prompt": "Purpose?", "kind": "text"},
         "combat": {"prompt": "Combat?", "kind": "bool"},
-        "pvp": {"prompt": "PvP?", "kind": "choice", "choices": ["none", "open"],
-                "applies_when": {"combat": True}},
+        "pvp": {
+            "prompt": "PvP?",
+            "kind": "choice",
+            "choices": ["none", "open"],
+            "applies_when": {"combat": True},
+        },
         "roles": {"prompt": "Roles?", "kind": "multi", "choices": ["teacher", "parent", "student"]},
     },
     "product_types": {
         "mmorpg": {"name": "MMORPG", "question_ids": ["combat", "pvp"], "domain_modules": ["game"]},
-        "education": {"name": "Education", "question_ids": ["roles"],
-                      "domain_modules": ["education"]},
+        "education": {
+            "name": "Education",
+            "question_ids": ["roles"],
+            "domain_modules": ["education"],
+        },
     },
 }
 
@@ -66,8 +73,12 @@ def test_the_same_engine_builds_a_game_spec_and_selects_the_game_module() -> Non
 def test_the_same_engine_builds_a_classroom_spec_and_selects_education() -> None:
     spec = _form().build_spec(
         "education",
-        {"name": "Grade 3 Science", "owner": "ms_frizzle", "purpose": "cells",
-         "roles": ["teacher", "student"]},
+        {
+            "name": "Grade 3 Science",
+            "owner": "ms_frizzle",
+            "purpose": "cells",
+            "roles": ["teacher", "student"],
+        },
     )
     assert spec.product_type == "education"
     assert spec.domain_modules == ("education",)
