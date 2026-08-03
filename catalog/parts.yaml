@@ -1706,6 +1706,27 @@
     compliance: a maintainability signal with a named, sourced remediation
     general: an ast-based Python code-smell detector for any codebase
 
+- id: type-smell
+  name: Type Smell
+  source: kernel/shelf/type_smell.py
+  category: quality
+  tags: [type-hints, ast, static-analysis, maintainability, mypy]
+  maturity: beta
+  source_status: original
+  influence: 'Python Coding Practices survey (RD-2026-0001); Magalhaes & Montandon 2026, "Understanding Type Hints in Python Libraries and Frameworks" (ICPC)'
+  license: MIT
+  experimental: 'resolve imported aliases and honor `if TYPE_CHECKING` for cross-module type inference, and encode the detectors as TYPE_SMELL.* records in the coding corpus so the lens and corpus stay in sync. Traded away (v1): the auto-fix half - it detects and suggests, never rewrites a signature; and cross-module resolution, keeping the honest single-module syntactic scope.'
+  risk: low
+  purpose: 'Detect risky type-related practices via the stdlib ast - a public function left untyped (UNTYPED_PUBLIC_API) or half-typed (PARTIAL_ANNOTATION), `Any` on a public boundary (ANY_ON_PUBLIC), and one parameter name carrying two different types across a module (INCONSISTENT_PARAM_TYPE). The type-hygiene sibling of the Fowler smell engine, catching what mypy is partly blind to (Any is a mypy-approved opt-out; mypy never checks one-name-two-types across functions). Single-module, syntactic scope; it SUGGESTS, it never rewrites.
+
+    '
+  reuse:
+    game: a type-hygiene line in a `make smells` / qa maintainability report
+    education: show why a half-typed public signature is a latent defect, not just a style nit
+    security: an untyped boundary is where unvalidated values slip past a contract
+    compliance: a typed-contract coverage signal with a named remediation
+    general: an ast-based Python type-smell detector for any codebase
+
 - id: source-analyzer
   name: Source Analyzer
   source: kernel/shelf/source_analyzer.py
