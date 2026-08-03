@@ -209,6 +209,39 @@ def main() -> int:
             f"product_types={pt_ids} active_pvp={'pvp' in active_ids}",
         )
 
+    # Blueprint.List is the planning surface (CR-0003): the engine projects a Seed's filed
+    # Blueprints, the client parses them. Same additive rule - prove it only when the client
+    # checkout carries the parser, so this proof stays green against an older client.
+    from kernel.blueprint import from_dict as make_blueprint
+
+    blueprints = [
+        make_blueprint(
+            {
+                "blueprint_id": "zone_scheduler",
+                "title": "Zone Scheduler",
+                "intent": "Reset zones on a cadence.",
+                "requirements": ["Deterministic order."],
+                "security": ["Authz: owner-only trigger."],
+                "status": "validated",
+            }
+        )
+    ]
+    blueprint_pkg = eng.blueprint_list(blueprints, seed="Job Tracker")
+    try:
+        from codeforge.mudclient.core import blueprint as cli_blueprint
+    except ImportError:
+        checks.append(("Blueprint.List", True, "SKIP: client parser absent (additive contract)"))
+    else:
+        parsed_bp = cli_blueprint.parse_blueprint_list(blueprint_pkg)
+        record_check(
+            "Blueprint.List",
+            eng.BLUEPRINT_LIST_PACKAGE,
+            cli_blueprint.BLUEPRINT_LIST_PACKAGE,
+            parsed_bp.blueprint_count == len(blueprints)
+            and [b.blueprint_id for b in parsed_bp.blueprints] == ["zone_scheduler"],
+            f"blueprints={parsed_bp.blueprint_count}",
+        )
+
     for pkg, payload in eng.workspace_packages(
         record,
         source=source_record,

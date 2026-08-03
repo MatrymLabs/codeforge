@@ -15,6 +15,7 @@ import json
 
 import pytest
 
+from kernel.blueprint import from_dict as make_blueprint
 from kernel.gmcp import gmcp_frame
 from kernel.seedlab.form import FormDefinition
 from kernel.seedlab.kernel import InMemorySeedStore, SeedKernel, SeedKernelError
@@ -23,6 +24,7 @@ from kernel.seedlab.source_connector import SourceRecord
 from kernel.seedlab.tool_runner import ToolRunResult
 from kernel.seedlab.workspace_gmcp import (
     ARCHITECTURE_MAP_PACKAGE,
+    BLUEPRINT_LIST_PACKAGE,
     BUILD_REPORT_PACKAGE,
     FORM_SCHEMA_PACKAGE,
     FORM_SUBMIT_PACKAGE,
@@ -33,6 +35,7 @@ from kernel.seedlab.workspace_gmcp import (
     SeedCreateRequest,
     WorkspaceContractError,
     architecture_map,
+    blueprint_list,
     build_report,
     create_from_form_submit,
     create_from_request,
@@ -696,3 +699,102 @@ def test_create_from_form_submit_refuses_a_duplicate_name() -> None:
     assert first["ok"] is True
     second = create_from_form_submit(kernel, _form_def(), frame, owner="josh")
     assert second["ok"] is False and "already exists" in str(second["reason"])
+
+
+# --- Blueprint.List: filed Blueprints -> the client's Blueprint Panel (CR-0003) ------------------
+
+
+def _blueprints() -> list:
+    return [
+        make_blueprint(
+            {
+                "blueprint_id": "zone_scheduler",
+                "title": "Zone Scheduler",
+                "intent": "Reset zones on a cadence.",
+                "requirements": ["Deterministic order.", "Idempotent resets."],
+                "security": ["Threat: a runaway reset loop.", "Authz: owner-only trigger."],
+                "tasks": ["Model the schedule.", "Wire the tick."],
+                "stack": {"engine": "custom Python", "tests": "pytest"},
+                "status": "validated",
+            }
+        ),
+        make_blueprint(
+            {
+                "blueprint_id": "arc",
+                "title": "ARC",
+                "intent": "Compose the readiness gates.",
+                "requirements": ["Each gate is independent."],
+                "security": ["Trust boundary: the gate inputs."],
+                "status": "draft",  # tasks/stack omitted -> default empty, honestly
+            }
+        ),
+    ]
+
+
+def test_blueprint_list_projects_the_canonical_records() -> None:
+    payload = blueprint_list(_blueprints())
+    assert payload["blueprint_count"] == 2
+    blueprints = payload["blueprints"]
+    assert isinstance(blueprints, list)
+    arc = next(b for b in blueprints if b["blueprint_id"] == "arc")
+    assert arc["title"] == "ARC" and arc["status"] == "draft"
+    assert arc["requirements"] == ["Each gate is independent."]
+    assert arc["tasks"] == [] and arc["stack"] == {}  # omitted -> empty, never invented
+
+
+def test_blueprint_list_groups_by_status_and_counts() -> None:
+    payload = blueprint_list(_blueprints())
+    assert payload["statuses"] == [
+        {"status": "draft", "count": 1},
+        {"status": "validated", "count": 1},
+    ]
+
+
+def test_blueprint_list_sorts_by_id() -> None:
+    payload = blueprint_list(_blueprints())
+    blueprints = payload["blueprints"]
+    assert isinstance(blueprints, list)
+    assert [b["blueprint_id"] for b in blueprints] == ["arc", "zone_scheduler"]  # sorted, stable
+
+
+def test_blueprint_list_projects_only_real_fields_no_compile_progress() -> None:
+    # A Blueprint is a static validated spec: the projection must carry ONLY its authored fields,
+    # never a fabricated "compile progress" / phase / steps-executed the engine does not track.
+    payload = blueprint_list(_blueprints())
+    blueprints = payload["blueprints"]
+    assert isinstance(blueprints, list)
+    assert set(blueprints[0]) == {
+        "blueprint_id",
+        "title",
+        "intent",
+        "requirements",
+        "security",
+        "tasks",
+        "stack",
+        "status",
+    }
+
+
+def test_blueprint_list_labels_the_seed_when_given() -> None:
+    assert blueprint_list(_blueprints(), seed="Aethryn")["seed"] == "Aethryn"
+    assert "seed" not in blueprint_list(_blueprints())  # unlabeled when not given
+
+
+def test_blueprint_list_empty_is_honest() -> None:
+    payload = blueprint_list([])
+    assert payload["blueprint_count"] == 0
+    assert payload["statuses"] == [] and payload["blueprints"] == []
+
+
+def test_blueprint_list_frames_as_gmcp() -> None:
+    frame = gmcp_frame(BLUEPRINT_LIST_PACKAGE, blueprint_list(_blueprints(), seed="s"))
+    assert isinstance(frame, bytes)
+    assert b"Blueprint.List" in frame
+
+
+def test_workspace_packages_adds_blueprints_only_when_given() -> None:
+    kernel = _kernel()
+    record = _seed(kernel)
+    assert BLUEPRINT_LIST_PACKAGE not in [p for p, _ in workspace_packages(record)]
+    withbp = workspace_packages(record, blueprints=_blueprints())
+    assert [p for p, _ in withbp] == [PROJECT_STATUS_PACKAGE, BLUEPRINT_LIST_PACKAGE]

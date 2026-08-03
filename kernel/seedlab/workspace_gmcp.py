@@ -33,6 +33,8 @@ from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from pathlib import Path, PurePath
 
+from kernel.blueprint import Blueprint
+from kernel.blueprint import to_dict as blueprint_record
 from kernel.seedlab.form import _SPEC_SCHEMA as FORM_SPEC_SCHEMA
 from kernel.seedlab.form import EngineeringForm, FormDefinition, FormError
 from kernel.seedlab.kernel import SeedKernel, SeedKernelError, SeedRecord
@@ -61,6 +63,8 @@ RESEARCH_FINDINGS_PACKAGE = "Research.Findings"
 FORM_SCHEMA_PACKAGE = "Form.Schema"
 #: A client's completed Form answers (client -> engine); the `Seed.Created` verdict is the reply.
 FORM_SUBMIT_PACKAGE = "Form.Submit"
+#: A Seed's filed Blueprints (planning specs) -> the client's Blueprint Panel (core/blueprint.py).
+BLUEPRINT_LIST_PACKAGE = "Blueprint.List"
 
 #: The kinds of Seed a client may ask to create (matches the client's SEED_KINDS).
 SEED_KINDS = ("engineering", "game")
@@ -354,6 +358,34 @@ def create_from_request(kernel: SeedKernel, data: object, *, owner: str) -> dict
     return seed_created(record.identity.name, True, seed_id=record.identity.seed_id)
 
 
+# --- the planning surface: filed Blueprints -> the client's Blueprint Panel ---------------------
+
+
+def blueprint_list(
+    blueprints: Sequence[Blueprint], *, seed: str | None = None
+) -> dict[str, object]:
+    """The `Blueprint.List` payload for an engineering Seed: a projection of its filed Blueprints
+    (planning specs) into a status-grouped list the client's Blueprint Panel renders.
+
+    Each Blueprint contributes its canonical record (`kernel.blueprint.to_dict`: blueprint_id,
+    title, intent, requirements, security, tasks, stack, status) - the real authored fields and
+    only those. A Blueprint is a STATIC validated spec, not a live compilation, so this projects no
+    "compile progress", phase, or step-execution state: none exists, and inventing it would be
+    Vision Theater. `statuses` is the Blueprint count per status label, sorted, so the client groups
+    without re-counting (mirrors `Architecture.Map.domains`). Blueprints sort by id for a stable
+    list. Pure and offline: it shapes the list it is given, never reads or writes a Blueprint."""
+    ordered = sorted(blueprints, key=lambda bp: bp.blueprint_id)
+    statuses: Counter[str] = Counter(bp.status for bp in blueprints)
+    payload: dict[str, object] = {
+        "blueprint_count": len(ordered),
+        "statuses": [{"status": name, "count": n} for name, n in sorted(statuses.items())],
+        "blueprints": [blueprint_record(bp) for bp in ordered],
+    }
+    if seed is not None:
+        payload["seed"] = seed
+    return payload
+
+
 # --- the creation Form: the Engineering Form -> the client's Seed Creation Wizard ---------------
 
 
@@ -481,13 +513,14 @@ def workspace_packages(
     branch: str | None = None,
     modules: Sequence[Mapping[str, object]] | None = None,
     findings: Sequence[Mapping[str, object]] | None = None,
+    blueprints: Sequence[Blueprint] | None = None,
 ) -> list[tuple[str, dict[str, object]]]:
     """The (package, payload) pairs a gateway emits for an engineering Seed: always its Project
     Status, plus a Source Tree when a source is registered, a Model Schema when a model is
     extracted, a Build Report when tool runs have happened, an Architecture Map when a module
-    registry is supplied, and a Research Findings package when the Seed has research to report. The
-    one call a live driver would loop over to push the workspace; each pair frames with
-    `kernel.gmcp.gmcp_frame`."""
+    registry is supplied, a Research Findings package when the Seed has research to report, and a
+    Blueprint List when the Seed has filed Blueprints. The one call a live driver would loop over to
+    push the workspace; each pair frames with `kernel.gmcp.gmcp_frame`."""
     seed = record.identity.name
     packages: list[tuple[str, dict[str, object]]] = [
         (PROJECT_STATUS_PACKAGE, project_status(record, branch=branch or _source_branch(source)))
@@ -502,6 +535,8 @@ def workspace_packages(
         packages.append((ARCHITECTURE_MAP_PACKAGE, architecture_map(modules, seed=seed)))
     if findings is not None:
         packages.append((RESEARCH_FINDINGS_PACKAGE, research_findings(findings, seed=seed)))
+    if blueprints is not None:
+        packages.append((BLUEPRINT_LIST_PACKAGE, blueprint_list(blueprints, seed=seed)))
     return packages
 
 
