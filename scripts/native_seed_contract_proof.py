@@ -242,6 +242,28 @@ def main() -> int:
             f"blueprints={parsed_bp.blueprint_count}",
         )
 
+    # Deploy.Manifest is the deployment-sizing surface (CR-0004): the engine projects a Seed's
+    # compiled BuildManifest, the client parses it. Same additive rule - prove it only when the
+    # client checkout carries the parser, so this proof stays green against an older client.
+    from kernel.seed_package import compile_manifest
+
+    manifest_pkg = eng.deploy_manifest(
+        compile_manifest("Job Tracker", "prototype"), seed="Job Tracker"
+    )
+    try:
+        from codeforge.mudclient.core import deploy as cli_deploy
+    except ImportError:
+        checks.append(("Deploy.Manifest", True, "SKIP: client parser absent (additive contract)"))
+    else:
+        parsed_deploy = cli_deploy.parse_deploy_manifest(manifest_pkg)
+        record_check(
+            "Deploy.Manifest",
+            eng.DEPLOY_MANIFEST_PACKAGE,
+            cli_deploy.DEPLOY_MANIFEST_PACKAGE,
+            parsed_deploy.tier_id == "prototype" and parsed_deploy.sizing.target_players == 500,
+            f"tier={parsed_deploy.tier_id} players={parsed_deploy.sizing.target_players}",
+        )
+
     for pkg, payload in eng.workspace_packages(
         record,
         source=source_record,

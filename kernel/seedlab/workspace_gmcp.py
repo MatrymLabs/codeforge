@@ -30,11 +30,12 @@ from __future__ import annotations
 import json
 from collections import Counter
 from collections.abc import Mapping, Sequence
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 from pathlib import Path, PurePath
 
 from kernel.blueprint import Blueprint
 from kernel.blueprint import to_dict as blueprint_record
+from kernel.seed_package import BuildManifest
 from kernel.seedlab.form import _SPEC_SCHEMA as FORM_SPEC_SCHEMA
 from kernel.seedlab.form import EngineeringForm, FormDefinition, FormError
 from kernel.seedlab.kernel import SeedKernel, SeedKernelError, SeedRecord
@@ -65,6 +66,9 @@ FORM_SCHEMA_PACKAGE = "Form.Schema"
 FORM_SUBMIT_PACKAGE = "Form.Submit"
 #: A Seed's filed Blueprints (planning specs) -> the client's Blueprint Panel (core/blueprint.py).
 BLUEPRINT_LIST_PACKAGE = "Blueprint.List"
+#: A Seed's deployment-sizing manifest (tier + derived world sizing) -> the client's Deployment
+#: Panel (core/deploy.py). Read-only: the honest sizing/hardware read, NOT a live cloud deploy.
+DEPLOY_MANIFEST_PACKAGE = "Deploy.Manifest"
 
 #: The kinds of Seed a client may ask to create (matches the client's SEED_KINDS).
 SEED_KINDS = ("engineering", "game")
@@ -386,6 +390,34 @@ def blueprint_list(
     return payload
 
 
+# --- the deployment surface: the sizing manifest -> the client's Deployment Panel ---------------
+
+
+def deploy_manifest(manifest: BuildManifest, *, seed: str | None = None) -> dict[str, object]:
+    """The `Deploy.Manifest` payload for an engineering Seed: a read-only projection of its
+    deployment-sizing manifest (`kernel/seed_package.py::BuildManifest`) - the chosen deployment
+    tier, the derived world sizing every downstream generator sizes itself from, and the HONEST
+    hardware read (fits one host, or shard across N).
+
+    This is deployment SIZING, not a live cloud deploy: it carries only what `compile_manifest`
+    actually derives (all real, nothing authored by hand and nothing invented - No Vision Theater).
+    `sizing` is the manifest's own field set (`asdict`) plus the human storage string the client
+    would otherwise re-derive. Pure and offline: it shapes the manifest it is given."""
+    sizing = asdict(manifest.sizing)
+    sizing["storage_human"] = manifest.sizing.storage_human
+    payload: dict[str, object] = {
+        "schema": manifest.schema_version,
+        "project": manifest.project,
+        "tier_id": manifest.tier_id,
+        "tier_name": manifest.tier_name,
+        "hardware": manifest.hardware,
+        "sizing": sizing,
+    }
+    if seed is not None:
+        payload["seed"] = seed
+    return payload
+
+
 # --- the creation Form: the Engineering Form -> the client's Seed Creation Wizard ---------------
 
 
@@ -514,13 +546,15 @@ def workspace_packages(
     modules: Sequence[Mapping[str, object]] | None = None,
     findings: Sequence[Mapping[str, object]] | None = None,
     blueprints: Sequence[Blueprint] | None = None,
+    manifest: BuildManifest | None = None,
 ) -> list[tuple[str, dict[str, object]]]:
     """The (package, payload) pairs a gateway emits for an engineering Seed: always its Project
     Status, plus a Source Tree when a source is registered, a Model Schema when a model is
     extracted, a Build Report when tool runs have happened, an Architecture Map when a module
     registry is supplied, a Research Findings package when the Seed has research to report, and a
-    Blueprint List when the Seed has filed Blueprints. The one call a live driver would loop over to
-    push the workspace; each pair frames with `kernel.gmcp.gmcp_frame`."""
+    Blueprint List when the Seed has filed Blueprints, and a Deploy Manifest when a deployment-
+    sizing manifest is supplied. The one call a live driver would loop over to push the workspace;
+    each pair frames with `kernel.gmcp.gmcp_frame`."""
     seed = record.identity.name
     packages: list[tuple[str, dict[str, object]]] = [
         (PROJECT_STATUS_PACKAGE, project_status(record, branch=branch or _source_branch(source)))
@@ -537,6 +571,8 @@ def workspace_packages(
         packages.append((RESEARCH_FINDINGS_PACKAGE, research_findings(findings, seed=seed)))
     if blueprints is not None:
         packages.append((BLUEPRINT_LIST_PACKAGE, blueprint_list(blueprints, seed=seed)))
+    if manifest is not None:
+        packages.append((DEPLOY_MANIFEST_PACKAGE, deploy_manifest(manifest, seed=seed)))
     return packages
 
 

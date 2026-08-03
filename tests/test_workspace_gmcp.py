@@ -17,6 +17,7 @@ import pytest
 
 from kernel.blueprint import from_dict as make_blueprint
 from kernel.gmcp import gmcp_frame
+from kernel.seed_package import compile_manifest
 from kernel.seedlab.form import FormDefinition
 from kernel.seedlab.kernel import InMemorySeedStore, SeedKernel, SeedKernelError
 from kernel.seedlab.project_model import Provenance, SpecSource, extract_model
@@ -26,6 +27,7 @@ from kernel.seedlab.workspace_gmcp import (
     ARCHITECTURE_MAP_PACKAGE,
     BLUEPRINT_LIST_PACKAGE,
     BUILD_REPORT_PACKAGE,
+    DEPLOY_MANIFEST_PACKAGE,
     FORM_SCHEMA_PACKAGE,
     FORM_SUBMIT_PACKAGE,
     MODEL_SCHEMA_PACKAGE,
@@ -39,6 +41,7 @@ from kernel.seedlab.workspace_gmcp import (
     build_report,
     create_from_form_submit,
     create_from_request,
+    deploy_manifest,
     form_schema,
     load_module_designations,
     load_research_findings,
@@ -798,3 +801,62 @@ def test_workspace_packages_adds_blueprints_only_when_given() -> None:
     assert BLUEPRINT_LIST_PACKAGE not in [p for p, _ in workspace_packages(record)]
     withbp = workspace_packages(record, blueprints=_blueprints())
     assert [p for p, _ in withbp] == [PROJECT_STATUS_PACKAGE, BLUEPRINT_LIST_PACKAGE]
+
+
+# --- Deploy.Manifest: the sizing manifest -> the client's Deployment Panel (CR-0004) --------------
+
+
+def test_deploy_manifest_projects_the_real_sizing():
+    manifest = compile_manifest("Aethryn", "prototype")
+    payload = deploy_manifest(manifest)
+    assert payload["project"] == "Aethryn"
+    assert payload["tier_id"] == "prototype" and payload["tier_name"] == "Prototype"
+    assert isinstance(payload["hardware"], str) and payload["hardware"]  # the honest hardware read
+    sizing = payload["sizing"]
+    assert isinstance(sizing, dict)
+    assert sizing["target_players"] == 500 and sizing["rooms"] > 0  # real derived counts
+    assert isinstance(sizing["storage_human"], str)  # the human storage string, for the panel
+
+
+def test_deploy_manifest_carries_only_the_real_manifest_fields():
+    # No Vision Theater: the projection is the manifest's own derived fields, never an invented
+    # "deploy status" / "url" / "health" the engine lacks (this is sizing, not a live deploy).
+    payload = deploy_manifest(compile_manifest("Aethryn", "prototype"))
+    assert set(payload) == {"schema", "project", "tier_id", "tier_name", "hardware", "sizing"}
+    sizing = payload["sizing"]
+    assert isinstance(sizing, dict)
+    assert set(sizing) == {
+        "target_players",
+        "rooms",
+        "zones",
+        "regions",
+        "settlements",
+        "dungeons",
+        "bosses",
+        "npcs",
+        "monsters",
+        "quests",
+        "crafting_recipes",
+        "storage_bytes",
+        "storage_human",
+    }
+
+
+def test_deploy_manifest_labels_the_seed_when_given():
+    manifest = compile_manifest("Aethryn", "prototype")
+    assert deploy_manifest(manifest, seed="Aethryn")["seed"] == "Aethryn"
+    assert "seed" not in deploy_manifest(manifest)  # unlabeled when not given
+
+
+def test_deploy_manifest_frames_as_gmcp():
+    frame = gmcp_frame(DEPLOY_MANIFEST_PACKAGE, deploy_manifest(compile_manifest("s", "prototype")))
+    assert isinstance(frame, bytes)
+    assert b"Deploy.Manifest" in frame
+
+
+def test_workspace_packages_adds_the_manifest_only_when_given():
+    kernel = _kernel()
+    record = _seed(kernel)
+    assert DEPLOY_MANIFEST_PACKAGE not in [p for p, _ in workspace_packages(record)]
+    withdeploy = workspace_packages(record, manifest=compile_manifest("s", "prototype"))
+    assert [p for p, _ in withdeploy] == [PROJECT_STATUS_PACKAGE, DEPLOY_MANIFEST_PACKAGE]
