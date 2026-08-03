@@ -47,7 +47,7 @@ from kernel.registry import (
 )
 from kernel.relay import channel
 from kernel.save import awaken_snapshot, seal_snapshot
-from kernel.shelf import minimap, target_disambig
+from kernel.shelf import help_index, minimap, target_disambig
 from kernel.shelf.hourglass import WORLD_SANDS
 from kernel.store_index import store
 from kernel.telegraph import telegraph
@@ -627,6 +627,37 @@ def _script_command(session: Session, arg: str) -> str:
     if result.value is not None:
         lines.append(f"=> {result.value}")
     return "\n".join(lines) if lines else "(no output)"
+
+
+def _help_cmd(session: Session, arg: str) -> str:
+    """Help derived from the command spine (consumer of the help_index shelf part MOD-05.xxx).
+
+    Replaces the old static HELP_TEXT blob that ignored its argument. `help` lists the verbs this
+    player can use (grouped by namespace); `help <command>` explains one; `help <word>` searches.
+    The index is built per call from the commands available to this session, so it always reflects
+    what the caller may actually run and their rank."""
+    entries = [
+        help_index.HelpEntry(name=c.verb, purpose=c.summary, namespace=c.namespace)
+        for c in COMMANDS.available_to(session)
+    ]
+    index = help_index.HelpIndex.build(entries)
+    query = arg.strip()
+    if not query:
+        return (
+            f"{HELP_TEXT}\n\nType 'help <command>' for one verb, or 'help <word>' to search.\n\n"
+            f"{index.overview()}"
+        )
+    try:
+        return index.render_topic(query.lower())
+    except help_index.HelpError:
+        hits = index.search(query)
+        if hits:
+            return (
+                f"Commands matching '{query}': "
+                + ", ".join(hits)
+                + "\nType 'help <command>' for details."
+            )
+        return f"No help for '{query}'. Type 'help' for the command list."
 
 
 def _build_commands() -> CommandSet:
@@ -2090,8 +2121,8 @@ def _build_commands() -> CommandSet:
         Command(
             "help",
             "CMD-04.065",
-            "the command help text",
-            lambda _s, _a: HELP_TEXT,
+            "help from the command spine: help, help <command>, or help <word>",
+            _help_cmd,
             namespace=CORE,
         )
     )
