@@ -23,7 +23,11 @@
 
     "scenarios": {"prompt": "Training scenario(s)?", "kind": "text", "required": true},
     "competencies": {"prompt": "Competencies covered?", "kind": "text", "required": true},
-    "certification": {"prompt": "Issue a completion certificate?", "kind": "bool", "required": true}
+    "certification": {"prompt": "Issue a completion certificate?", "kind": "bool", "required": true},
+
+    "persistence_tier": {"prompt": "Persistence tier? (single_session = a personal instance within the world; persistent = a shared region)", "kind": "choice", "choices": ["single_session", "persistent"], "required": true},
+    "region": {"prompt": "Region name for the journey?", "kind": "text", "required": true},
+    "waypoints": {"prompt": "Waypoints, in order (comma-separated snake_case room labels)?", "kind": "text", "required": true}
   },
   "product_types": {
     "mmorpg": {
@@ -43,6 +47,12 @@
       "description": "A scenario-based training course with competencies and certification.",
       "question_ids": ["scenarios", "competencies", "certification"],
       "domain_modules": ["training"]
+    },
+    "journey": {
+      "name": "Journey",
+      "description": "A waypoint journey (Oregon-Trail style): a linear region + a travel-driven quest, in the persistent world.",
+      "question_ids": ["persistence_tier", "region", "waypoints"],
+      "domain_modules": ["game"]
     }
   }
 }
