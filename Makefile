@@ -50,11 +50,15 @@ fuzz:
 # tree would burden every CI install for a tool CI never runs), so it is installed just-in-time.
 # Scoped by cosmic-ray.toml (hashchain by default). Prints the surviving-mutant rate; a survivor is
 # a mutation the tests did not catch -- investigate it (a real gap) or confirm it is equivalent.
+# The final step RECORDS the run to security-evidence/mutation-latest.json so kernel/posture.py can
+# read it as the mutation_kill_rate KPI (MEASURED, or NOT_COMPUTABLE + stale past its freshness
+# window). This keeps mutation off the PR path while still turning its number into tracked evidence.
 mutation:
 	@command -v cosmic-ray >/dev/null 2>&1 || { echo "cosmic-ray not installed -- run: pip install cosmic-ray"; exit 1; }
 	cosmic-ray init cosmic-ray.toml .cosmic-ray-session.sqlite
 	cosmic-ray exec cosmic-ray.toml .cosmic-ray-session.sqlite
 	cr-rate .cosmic-ray-session.sqlite
+	cr-report .cosmic-ray-session.sqlite | python -m kernel.mutation_recorder
 
 # Offline SAST for the pre-commit gate: bandit + the secret scan (both local, no network).
 # This is the local/CI parity fix: SRI hashes once passed `make check` locally and then failed

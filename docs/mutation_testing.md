@@ -48,3 +48,18 @@ The survivors are the next real work: each is a mutation of the ledger that its 
 not catch. Some will be equivalent (e.g. a changed constant with no behavioural effect); the rest
 name concrete cases to add. Killing them - and extending the config to more modules - is the
 follow-on the tool now makes visible. The value is not the number; it is the *named* gaps.
+
+## Recorded as a KPI (AP-09)
+
+`make mutation` records its run to `security-evidence/mutation-latest.json` (the last run wins).
+`kernel/posture.py` reads that file as the **`mutation_kill_rate`** KPI in the same
+MEASURED / NOT_COMPUTABLE honesty shape as the rest of the posture scorecard:
+
+- a fresh recorded run -> **MEASURED** (and it breaches the target if kill rate < 70%);
+- no run, a stale run (older than the 30-day freshness window), or zero mutants ->
+  **NOT_COMPUTABLE**, naming `make mutation` as the store that would light it up - never a faked 0.
+
+The pure normalizer + cosmic-ray parser is the Hardware Store part `kernel/shelf/mutation_kpi.py`
+(HC-29); the disk recorder + loader is `kernel/mutation_recorder.py`. Mutation stays **off** the PR
+path: the KPI reads the last recorded run and reports it stale once past the window, so the number
+becomes tracked evidence without ever slowing the fast lane.
