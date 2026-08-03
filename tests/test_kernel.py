@@ -11,6 +11,7 @@ raises rather than loading a lie.
 
 from __future__ import annotations
 
+from dataclasses import replace
 from pathlib import Path
 
 import pytest
@@ -176,3 +177,32 @@ def test_render_status_is_pure_text() -> None:
         audit=(AuditEvent("2026-08-01T00:00:00+00:00", "josh", "created", "hi"),),
     )
     assert isinstance(render_status(record), str)
+
+
+def test_reinstate_writes_a_prior_record_and_audits(tmp_path: Path) -> None:
+    """The server-authoritative restore primitive: an owner reinstates a prior record as current,
+    and the write is audited (`reinstated`) so a rollback is itself traceable."""
+    kernel = _kernel(FileSeedStore(tmp_path / "seeds"))
+    snapshot = _seed(kernel, owner="josh")  # a CREATED record to reinstate later
+    kernel.start(snapshot.identity.seed_id, "josh")  # move current state forward
+    reinstated = kernel.reinstate(snapshot, "josh", detail="rollback")
+    assert reinstated.status == CREATED
+    assert reinstated.audit[-1].action == "reinstated"
+    assert kernel.get(snapshot.identity.seed_id).status == CREATED
+
+
+def test_a_non_owner_cannot_reinstate() -> None:
+    kernel = _kernel()
+    record = _seed(kernel, owner="josh")
+    with pytest.raises(SeedAuthError):
+        kernel.reinstate(record, "mallory")
+
+
+def test_reinstate_cannot_change_a_seeds_owner() -> None:
+    """A restore may recover state, never quietly transfer a Seed: reinstating a record whose owner
+    differs from the current owner is refused even for the current owner."""
+    kernel = _kernel()
+    record = _seed(kernel, owner="josh")
+    forged = SeedRecord(identity=replace(record.identity, owner="mallory"))
+    with pytest.raises(SeedAuthError, match="owner"):
+        kernel.reinstate(forged, "josh")
