@@ -220,3 +220,19 @@ def test_a_quest_with_an_unreachable_terminal_is_flagged(tmp_path: Path) -> None
     )
     _, verdict = link_and_validate(spec, tmp_path)
     assert verdict.verdict == UNREACHABLE and verdict.unreachable == ("done",)
+
+
+def test_the_start_room_is_emitted_first_so_the_seed_spawns_there(tmp_path: Path) -> None:
+    # The engine spawns at the first room in rooms.yaml (world.START_ROOM); so the Linker must emit
+    # the declared start FIRST, even when it is not alphabetically first.
+    spec = GameSpec(
+        region="r",
+        start="trailhead",
+        rooms=(
+            RoomSpec(label="trailhead", exits={"north": "alpha"}),
+            RoomSpec(label="alpha", exits={"south": "trailhead"}),
+        ),
+    )
+    link_region(spec, tmp_path)
+    rooms = load_rooms(tmp_path / "rooms.yaml")
+    assert next(iter(rooms)) == "trailhead"  # start first, not "alpha" (alphabetical)

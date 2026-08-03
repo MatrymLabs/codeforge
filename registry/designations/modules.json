@@ -9341,5 +9341,29 @@
   "aliases": [],
   "created": "2026-08-03",
   "updated": "2026-08-03"
+ },
+ {
+  "designation": "MOD-10.090",
+  "name": "hosted_world",
+  "status": "active",
+  "function": "the engine side of North Star #5 (one small hosted world): install_world(spec, seed_root) turns a generated region into a bootable World Package -- links it as a seed under content/seeds/<name>/ (rooms+quest, start-first so the seed spawns at the declared start) and writes a world.yaml MANIFEST (world_id/title/start_room/version), validated through the engine's own world_manifest.describe_world gate; verdict hostable / unhostable / refused, never a false hostable",
+  "label": "hosted_world",
+  "file": "kernel/domains/hosted_world.py",
+  "type": "MOD",
+  "domain": "10",
+  "docs": "docs/seed_platform/RECENTERING.md",
+  "tests": "tests/test_hosted_world.py",
+  "depends_on": ["MOD-10.085"],
+  "related": [
+   "MOD-10.086",
+   "MOD-10.088"
+  ],
+  "reuse": "Makes a generated region a REAL seed the server can boot (North Star #5, engine side). Composes game_linker (MOD-10.085) with kernel.world.world_manifest (describe_world/check_world), the engine's OWN identity gate. Needed the game_linker start-first emit fix (a linked region must spawn at its declared start, since the engine spawns at the first room in rooms.yaml). READINESS not deployment: the live cloud deploy is a founder-gated action; this proves a world is ready to host (bootable + identified + restorable via game_lifecycle). Grammar before worlds: kernel/domains; kernel/seedlab imports neither.",
+  "notes": "Also fixed game_linker._rooms_yaml to emit the start room FIRST (bootability correctness). The check_world spawn-consistency gate can't fail for install's own output (guaranteed by construction), so the module gates on describe_world and the test proves check_world clean. PROTOTYPED.",
+  "tags": ["module"],
+  "superseded_by": "",
+  "aliases": [],
+  "created": "2026-08-03",
+  "updated": "2026-08-03"
  }
 ]
