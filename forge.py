@@ -136,7 +136,7 @@ from kernel.world.party import (
     render_party,
 )
 from kernel.world.professions import render_professions
-from kernel.world.quest import contracts_view, quest_view
+from kernel.world.quest import contracts_view, quest_view, tick_quests
 from kernel.world.ranks import wizard_command
 from kernel.world.reputation import render_standing
 from kernel.world.roaming import roam
@@ -2587,7 +2587,7 @@ def handle_command(session: Session, signal: str) -> str:
         f"{tick_burns(session)}{tick_afflictions(session)}{tick_regens(session)}"
         f"{menace(session)}{roam(session)}"
         f"{tick_zones(session)}{gather.tick_gather(session)}{shrine.tick_shrines(session)}"
-        f"{tick_climate(session)}"
+        f"{tick_climate(session)}{tick_quests(session)}"
         f"{scheduler.tick(session)}{_sands_beat(session)}"
     )
     return f"{response}{beat}"

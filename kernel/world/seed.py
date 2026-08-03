@@ -399,6 +399,12 @@ class QuestSpec(TypedDict):
     steps: list[QuestStep]
     terminal: list[str]
     labels: dict[str, str]
+    # Optional: a TIMED quest. `deadline` beats after it leaves its start state (is accepted), the
+    # run must reach a terminal or it falls to `fail` (a terminal in `terminal`, whose label is the
+    # timeout message). Both are required together; the clock only runs while the player is online
+    # (kernel.world.quest.tick_quests). Absent = an untimed quest, the default.
+    deadline: NotRequired[int]
+    fail: NotRequired[str]
 
 
 # Zone reset modes: how eager an area is to refill on the world beat. `never` groups rooms
@@ -1105,15 +1111,31 @@ def load_quest(path: Path) -> QuestSpec | None:
     labels = data.get("labels", {})
     if not isinstance(terminal, list) or not isinstance(labels, dict):
         raise SeedError(f"{path}: 'terminal' must be a list and 'labels' a mapping")
-    return QuestSpec(
+    clean_terminal = [str(t) for t in terminal]
+    spec = QuestSpec(
         id=str(data["id"]),
         name=str(data.get("name", _phrase(str(data["id"])).title())),
         start=str(data["start"]),
         reward_xp=reward,
         steps=clean_steps,
-        terminal=[str(t) for t in terminal],
+        terminal=clean_terminal,
         labels={str(k): str(v) for k, v in labels.items()},
     )
+    # Optional TIMED quest: `deadline` (positive int beats) + `fail` (a terminal state). Both or
+    # neither, and `fail` must be a declared terminal -- a quest that can time out must have somewhere
+    # to fall. Refuse a half-specified timer loud rather than ship a clock that goes nowhere.
+    deadline = data.get("deadline")
+    fail = data.get("fail")
+    if deadline is not None or fail is not None:
+        if deadline is None or fail is None:
+            raise SeedError(f"{path}: a timed quest needs BOTH 'deadline' and 'fail'")
+        if not isinstance(deadline, int) or isinstance(deadline, bool) or deadline <= 0:
+            raise SeedError(f"{path}: 'deadline' must be a positive integer (beats)")
+        if str(fail) not in clean_terminal:
+            raise SeedError(f"{path}: 'fail' state {fail!r} must be one of 'terminal' {clean_terminal}")
+        spec["deadline"] = deadline
+        spec["fail"] = str(fail)
+    return spec
 
 
 def load_doors(path: Path) -> dict[str, Door]:

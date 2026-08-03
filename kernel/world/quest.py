@@ -82,6 +82,10 @@ class _Quest:
         self.xp = xp
         self.engine = WorkflowEngine(workflow)
         self.events = {event for (_state, event) in workflow.roles}  # every event this quest knows
+        # TIMED quest: `deadline` beats after acceptance to reach a terminal, else fall to `fail_state`
+        # (both loader-enforced together). None = an untimed quest. See tick_quests.
+        self.deadline = spec.get("deadline") if spec else None
+        self.fail_state = spec.get("fail") if spec else None
         # (kind, target label) -> the event that world action fires in THIS quest.
         self.triggers: dict[tuple[str, str], str] = {}
         for step in spec["steps"] if spec else []:
@@ -228,6 +232,41 @@ def _fold_in(specs: list[QuestSpec]) -> None:
 
 
 _RUNS: dict[str, dict[str, Instance]] = {}  # player_id -> {quest_id: their run of that quest}
+# TIMED quests: player_id -> {quest_id: the world beat the run is DUE}. Armed lazily on the first
+# beat a timed run is active past its start, and consumed when it expires or the quest finishes.
+# In-memory by design: the clock only runs while the player is online, so a logout pauses it (v1).
+_deadlines: dict[str, dict[str, int]] = {}
+
+
+def tick_quests(session: Session) -> str:
+    """Advance TIMED quests on the world beat. Arm a newly-accepted timed run's clock, fail one whose
+    deadline has passed (it falls to the quest's `fail` terminal), and drop the clock of a finished
+    one. Untimed quests are untouched; the clock only runs while the player is online. Returns any
+    timeout line to append to the beat (empty when nothing expired)."""
+    from kernel.world.climate import now
+
+    runs = _RUNS.get(session.player_id)
+    if not runs:
+        return ""
+    beat = now()
+    due = _deadlines.setdefault(session.player_id, {})
+    lines: list[str] = []
+    for qid, run in runs.items():
+        quest = _QUESTS.get(qid)
+        if quest is None or quest.deadline is None:
+            continue
+        if quest.engine.is_done(run):
+            due.pop(qid, None)  # a finished quest stops its clock
+        elif run.state == quest.workflow.machine.start:
+            continue  # not yet accepted -- the clock has not started
+        elif qid not in due:
+            due[qid] = beat + quest.deadline  # arm on the first beat it is active past start
+        elif beat >= due[qid]:
+            assert quest.fail_state is not None  # loader pairs deadline with a terminal `fail`
+            run.state = quest.fail_state  # a declared terminal: the run is now failed and done
+            due.pop(qid, None)
+            lines.append(_line(quest, run))
+    return ("\n" + "\n".join(lines)) if lines else ""
 
 
 def _run(player_id: str, quest_id: str) -> Instance:
@@ -491,3 +530,4 @@ def restore_state(player_id: str, raw: str) -> None:
 def reset_quests() -> None:
     """Test hook: clear all in-flight quest runs."""
     _RUNS.clear()
+    _deadlines.clear()
