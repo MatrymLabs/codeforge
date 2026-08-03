@@ -27,9 +27,11 @@ is through an injected `SeedKernel` (a test injects an in-memory store); nothing
 
 from __future__ import annotations
 
-from collections.abc import Sequence
+import json
+from collections import Counter
+from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
-from pathlib import PurePath
+from pathlib import Path, PurePath
 
 from kernel.seedlab.kernel import SeedKernel, SeedKernelError, SeedRecord
 from kernel.seedlab.project_model import ProjectModel
@@ -49,6 +51,8 @@ SEED_CREATE_PACKAGE = "Seed.Create"
 SEED_CREATED_PACKAGE = "Seed.Created"
 #: An engineering Seed's build/test run -> the client's Build Report (core/build.py).
 BUILD_REPORT_PACKAGE = "Build.Report"
+#: An engineering Seed's module map -> the client's Architecture Explorer (core/architecture.py).
+ARCHITECTURE_MAP_PACKAGE = "Architecture.Map"
 
 #: The kinds of Seed a client may ask to create (matches the client's SEED_KINDS).
 SEED_KINDS = ("engineering", "game")
@@ -169,6 +173,59 @@ def _run_step(run: ToolRunResult) -> dict[str, str]:
     return {"name": run.profile or run.kind or "run", "status": status}
 
 
+# --- the module map: the classification registry -> the client's Architecture Explorer ----------
+
+#: The classification registry an engineering Seed's module map projects (the repo's own filing).
+_MODULES_REGISTRY = (
+    Path(__file__).resolve().parents[2] / "registry" / "designations" / "modules.json"
+)
+
+#: The module fields the map projects, in render order. Only these leave the engine (No Vision
+#: Theater): the registry carries 19 fields per module, but the map shows the renderable subset.
+_MODULE_FIELDS = ("designation", "name", "domain", "function", "file", "status")
+
+
+def architecture_map(
+    modules: Sequence[Mapping[str, object]], *, seed: str | None = None
+) -> dict[str, object]:
+    """The `Architecture.Map` payload for an engineering Seed: a projection of the classification
+    registry (the repo's module filing) into a domain-grouped module map the client's Architecture
+    Explorer renders.
+
+    Each module contributes the renderable subset of its registry record (`_MODULE_FIELDS`); a field
+    the record lacks is simply absent, never invented. `domains` is the module count per domain,
+    sorted, so the client can group without re-counting. `depends_on`/`related` edges are a seam
+    left open on purpose (most records carry none today); when the registry fills them, the map can
+    carry them, and the shape does not change. Pure and offline: it shapes the list it is given."""
+    projected: list[dict[str, object]] = []
+    domains: Counter[str] = Counter()
+    for module in modules:
+        entry = {field: module[field] for field in _MODULE_FIELDS if field in module}
+        projected.append(entry)
+        domains[str(module.get("domain", "unknown"))] += 1
+    projected.sort(key=lambda entry: str(entry.get("designation", "")))
+    payload: dict[str, object] = {
+        "source": "registry/designations/modules.json",
+        "module_count": len(projected),
+        "domains": [{"domain": name, "count": n} for name, n in sorted(domains.items())],
+        "modules": projected,
+    }
+    if seed is not None:
+        payload["seed"] = seed
+    return payload
+
+
+def load_module_designations(path: Path | str | None = None) -> list[dict[str, object]]:
+    """Read the classification registry's module records for `architecture_map`. The default path is
+    resolved at CALL time (not import time) so a test can point it at a fixture. A registry that is
+    absent or is not a JSON list fails loud (a silently empty map would be a lie)."""
+    registry = Path(path) if path is not None else _MODULES_REGISTRY
+    data = json.loads(registry.read_text(encoding="utf-8"))
+    if not isinstance(data, list):
+        raise SeedKernelError(f"module registry {registry} is not a JSON list")
+    return [module for module in data if isinstance(module, dict)]
+
+
 # --- the create round-trip: a client request becomes a real Seed --------------------------------
 
 
@@ -246,11 +303,13 @@ def workspace_packages(
     model: ProjectModel | None = None,
     runs: Sequence[ToolRunResult] | None = None,
     branch: str | None = None,
+    modules: Sequence[Mapping[str, object]] | None = None,
 ) -> list[tuple[str, dict[str, object]]]:
     """The (package, payload) pairs a gateway emits for an engineering Seed: always its Project
     Status, plus a Source Tree when a source is registered, a Model Schema when a model is
-    extracted, and a Build Report when tool runs have happened. The one call a live driver would
-    loop over to push the workspace; each pair frames with `kernel.gmcp.gmcp_frame`."""
+    extracted, a Build Report when tool runs have happened, and an Architecture Map when a module
+    registry is supplied. The one call a live driver would loop over to push the workspace; each
+    pair frames with `kernel.gmcp.gmcp_frame`."""
     seed = record.identity.name
     packages: list[tuple[str, dict[str, object]]] = [
         (PROJECT_STATUS_PACKAGE, project_status(record, branch=branch or _source_branch(source)))
@@ -261,6 +320,8 @@ def workspace_packages(
         packages.append((MODEL_SCHEMA_PACKAGE, model_schema(model, seed=seed)))
     if runs:
         packages.append((BUILD_REPORT_PACKAGE, build_report(runs, seed=seed)))
+    if modules is not None:
+        packages.append((ARCHITECTURE_MAP_PACKAGE, architecture_map(modules, seed=seed)))
     return packages
 
 

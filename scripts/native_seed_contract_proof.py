@@ -122,8 +122,32 @@ def main() -> int:
         f"ok={parsed_report.ok} steps={[(s.name, s.status) for s in parsed_report.steps]}",
     )
 
+    # Architecture.Map is newer than the other four packages. Prove it only when the client checkout
+    # already carries the parser, so this proof stays green against an older client (the contract is
+    # additive, and an old client simply does not consume the new package).
+    modules = eng.load_module_designations()[:5]
+    arch = eng.architecture_map(modules, seed="Job Tracker")
+    try:
+        from codeforge.mudclient.core import architecture as cli_arch
+    except ImportError:
+        checks.append(("Architecture.Map", True, "SKIP: client parser absent (additive contract)"))
+    else:
+        parsed_arch = cli_arch.parse_architecture_map(arch)
+        record_check(
+            "Architecture.Map",
+            eng.ARCHITECTURE_MAP_PACKAGE,
+            cli_arch.ARCHITECTURE_MAP_PACKAGE,
+            parsed_arch.module_count == len(modules),
+            f"modules={parsed_arch.module_count}",
+        )
+
     for pkg, payload in eng.workspace_packages(
-        record, source=source_record, files=["src/app.py"], model=project_model, runs=runs
+        record,
+        source=source_record,
+        files=["src/app.py"],
+        model=project_model,
+        runs=runs,
+        modules=modules,
     ):
         frame = gmcp_frame(pkg, payload)
         checks.append(
