@@ -395,23 +395,28 @@ jobs:
 
       - name: Clone the published Hardware Store (private mirror)
         env:
-          SHELF_READ_TOKEN: ${{ secrets.SHELF_READ_TOKEN }}
+          DEPLOY_KEY: ${{ secrets.SHELF_DEPLOY_KEY }}
         run: |
-          # codeforge-shelf is a private mirror; the clone needs a read token. When the secret is
-          # absent (e.g. a fork PR), skip rather than hard-fail: this gate is advisory by design
-          # (see the comment above) and a genuine drift still fails the assert step below.
-          if [ -z "$SHELF_READ_TOKEN" ]; then
-            echo "::warning::SHELF_READ_TOKEN not set; skipping the shelf-drift check (advisory gate)."
+          # codeforge-shelf is a private mirror. Reuse the same least-privilege ed25519 deploy key
+          # that shelf-sync.yml already provisions (SHELF_DEPLOY_KEY) to SSH-clone it read-only.
+          # When the secret is absent (e.g. a fork PR), skip rather than hard-fail: this gate is
+          # advisory by design (see the comment above) and a genuine drift still fails the assert
+          # step below.
+          if [ -z "$DEPLOY_KEY" ]; then
+            echo "::warning::SHELF_DEPLOY_KEY not set; skipping the shelf-drift check (advisory gate)."
             exit 0
           fi
-          git clone --depth 1 \
-            "https://x-access-token:${SHELF_READ_TOKEN}@github.com/MatrymLabs/codeforge-shelf.git" \
-            /tmp/codeforge-shelf
+          mkdir -p ~/.ssh && chmod 700 ~/.ssh
+          printf '%s\n' "$DEPLOY_KEY" > ~/.ssh/shelf_key
+          chmod 600 ~/.ssh/shelf_key
+          ssh-keyscan -t ed25519 github.com >> ~/.ssh/known_hosts 2>/dev/null
+          export GIT_SSH_COMMAND="ssh -i ~/.ssh/shelf_key -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes"
+          git clone --depth 1 git@github.com:MatrymLabs/codeforge-shelf.git /tmp/codeforge-shelf
 
       - name: Assert the pour is in sync (no drift)
         run: |
           if [ ! -d /tmp/codeforge-shelf/.git ]; then
-            echo "::warning::mirror not cloned (no token); skipping drift assertion (advisory gate)."
+            echo "::warning::mirror not cloned (no deploy key); skipping drift assertion (advisory gate)."
             exit 0
           fi
           python -m kernel.shelf_pour --drift /tmp/codeforge-shelf
