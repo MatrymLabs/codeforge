@@ -9372,5 +9372,34 @@
   "aliases": [],
   "created": "2026-08-03",
   "updated": "2026-08-03"
+ },
+ {
+  "designation": "MOD-10.084",
+  "name": "cli_synthesis",
+  "status": "active",
+  "function": "bind the CLI target to the reverse-TDD harness: CliAcceptanceCase (argv -> expected stdout/exit) + cli_acceptance_tests(model, cases) (spec-derived, biting, NOT self-affirming) + cli_goal(model, cases) + synthesize_cli(model, cases, implementer, workdir=, run=, scorer=) which composes acceptance tests -> synthesize and returns a SynthesisResult verdict, upgrading the CLI target from scaffold to VERIFIED logic",
+  "label": "cli_synthesis",
+  "file": "kernel/seedlab/cli_synthesis.py",
+  "type": "MOD",
+  "domain": "10",
+  "docs": "docs/seed_platform/RECENTERING.md",
+  "tests": "tests/test_cli_synthesis.py",
+  "depends_on": [
+   "MOD-10.082",
+   "MOD-10.058"
+  ],
+  "related": [
+   "MOD-10.083",
+   "MOD-05.090"
+  ],
+  "reuse": "Slice 3 of NORTH_STAR Priority #3: the CLI binding of the synthesis harness. The scaffold generator (cli_generator MOD-10.058) emits a '<cmd>: ok' stub with a self-affirming exit-code test; this module derives BITING tests from behavioral acceptance cases (argv -> expected stdout/exit) and drives an injected Implementer (the real Claude one is synthesis_ai MOD-10.083) until a cli.py satisfies them. Because the cases are independent, a hard-coded stub fails them -- proving the suite verifies real logic. Domain-neutral within the platform: no kernel/world/ or kernel/domains/ import. Proven offline (fakes) and end-to-end over the real pytest runner (a correct implementer reaches VERIFIED; the scaffold stub reaches RED_BUDGET_EXHAUSTED).",
+  "notes": "Composes cli_generator (MOD-10.058, GeneratorError + ProjectModel) with synthesis (MOD-10.082). The Implementer is injected; run defaults to the harness's pytest_runner. PROTOTYPED.",
+  "tags": [
+   "module"
+  ],
+  "superseded_by": "",
+  "aliases": [],
+  "created": "2026-08-03",
+  "updated": "2026-08-03"
  }
 ]
