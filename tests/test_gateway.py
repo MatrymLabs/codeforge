@@ -882,3 +882,64 @@ def test_a_bare_out_of_band_form_submit_is_served_without_a_newline(server, tmp_
     assert b"Seed.Created" in out and b'"ok":true' in out  # the engine minted it, no newline needed
     assert b"Project.Status" in out and b"OOB" in out  # its workspace pushed back
     sock.close()
+
+
+# --- Workspace.Request: pull the reference Seed's Deploy.Manifest on demand (a chosen tier) -------
+
+
+def test_an_owner_workspace_request_serves_the_deploy_manifest(server, tmp_path, monkeypatch):
+    from kernel.gmcp import gmcp_frame
+
+    monkeypatch.setenv("SEEDLAB_HOME", str(tmp_path))
+    _saved_owner()
+    sock, _ = _login_gmcp(server, "wren", "forge")
+    sock.sendall(
+        gmcp_frame("Workspace.Request", {"tier": "prototype"})
+    )  # a bare out-of-band request
+    out = _read_until_in(sock, b"Deploy.Manifest")
+    assert b"Deploy.Manifest" in out and b"prototype" in out  # the deploy panel's data, on demand
+    assert b"target_players" in out  # the real derived sizing
+    sock.close()
+
+
+def test_a_workspace_request_defaults_the_tier_when_none_is_given(server, tmp_path, monkeypatch):
+    from kernel.gmcp import gmcp_frame
+
+    monkeypatch.setenv("SEEDLAB_HOME", str(tmp_path))
+    _saved_owner()
+    sock, _ = _login_gmcp(server, "wren", "forge")
+    sock.sendall(gmcp_frame("Workspace.Request", {}))  # no tier -> the default (prototype)
+    out = _read_until_in(sock, b"Deploy.Manifest")
+    assert b"Deploy.Manifest" in out and b"prototype" in out
+    sock.close()
+
+
+def test_an_unknown_tier_is_an_honest_no_op(server, tmp_path, monkeypatch):
+    from kernel.gmcp import gmcp_frame
+
+    monkeypatch.setenv("SEEDLAB_HOME", str(tmp_path))
+    _saved_owner()
+    sock, _ = _login_gmcp(server, "wren", "forge")
+    # a valid ping so the read has something to stop on, then the bad request should add nothing
+    sock.sendall(gmcp_frame("Workspace.Request", {"tier": "galactic"}))  # not a modelled tier
+    sock.sendall(b"look\n")
+    out = _read_until_raw(sock, b"> ")
+    assert (
+        b"Deploy.Manifest" not in out
+    )  # a tier the engine does not model serves nothing, honestly
+    sock.close()
+
+
+def test_a_non_owner_workspace_request_is_silently_ignored(server, tmp_path, monkeypatch):
+    from kernel.gmcp import gmcp_frame
+
+    monkeypatch.setenv("SEEDLAB_HOME", str(tmp_path))
+    _saved_account()  # a player-rank account
+    sock, _ = _login_gmcp(server, "matrym", "matlabs")
+    sock.sendall(gmcp_frame("Workspace.Request", {"tier": "prototype"}))
+    sock.sendall(b"look\n")
+    out = _read_until_raw(sock, b"> ")
+    assert (
+        b"Deploy.Manifest" not in out
+    )  # owner-gated: a player gets no workspace, no verdict noise
+    sock.close()
