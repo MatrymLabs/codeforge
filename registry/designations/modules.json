@@ -9452,5 +9452,29 @@
   "aliases": [],
   "created": "2026-08-03",
   "updated": "2026-08-03"
+ },
+ {
+  "designation": "MOD-10.086",
+  "name": "game_lifecycle",
+  "status": "active",
+  "function": "prove a linked game region survives create->backup->restore->verify: snapshot(linked) fingerprints the emitted files (sha256), verify_recovery(linked, snap) re-reads them from disk, re-hashes against the backup and re-validates through the real loader, and prove_lifecycle(spec, dest) runs the whole loop -- verdict word recovered / corrupted / refused, never a false recovered; North Star #4 (state surviving restart) for the generated world content",
+  "label": "game_lifecycle",
+  "file": "kernel/domains/game_lifecycle.py",
+  "type": "MOD",
+  "domain": "10",
+  "docs": "docs/seed_platform/RECENTERING.md",
+  "tests": "tests/test_game_lifecycle.py",
+  "depends_on": ["MOD-10.085"],
+  "related": [
+   "MOD-10.076",
+   "MOD-05.092"
+  ],
+  "reuse": "Sub-slice 3 of the game-module Linker (Rung 1): proves a generated region is not just emitted but DURABLE. Composes game_linker (MOD-10.085) with the engine's own loaders; mirrors backup.py's (MOD-10.076) hash-verified survive-loss philosophy at the generated-content level. Grammar before worlds: kernel/domains (world-aware); kernel/seedlab imports no world/domain. Scope stated honestly: proves world-content durability; persisting a LIVE player's in-flight quest progress across restart (the global quest registry has no clean per-region teardown) is deferred, not faked.",
+  "notes": "CREATE->BACKUP->RESTORE->VERIFY over game_linker output; re-reads + re-hashes + re-validates. The 'byte-intact but no longer a valid world' branch is covered. PROTOTYPED.",
+  "tags": ["module"],
+  "superseded_by": "",
+  "aliases": [],
+  "created": "2026-08-03",
+  "updated": "2026-08-03"
  }
 ]
