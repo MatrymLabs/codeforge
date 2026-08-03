@@ -11,6 +11,7 @@ Functions RETURN text; the game loop decides what to print.
 
 import copy
 
+from kernel.shelf import target_disambig
 from kernel.world.seed import SEED_DIR, Item, load_items
 
 ITEMS: dict[str, Item] = load_items(SEED_DIR / "items.yaml")
@@ -136,12 +137,35 @@ def items_in(location: str) -> list[str]:
     return [iid for iid, item in ITEMS.items() if item["location"] == location]
 
 
+def trace_all_items(word: str, location: str) -> list[str]:
+    """Every item id at a location whose keywords include `word`, in containment order.
+
+    The one source of truth for keyword matching: `trace_item` returns the first of these, and
+    numbered-target disambiguation ("2-sword") needs the whole list to pick the Nth.
+    """
+    return [iid for iid in items_in(location) if word in ITEMS[iid]["keywords"]]
+
+
 def trace_item(word: str, location: str) -> str | None:
-    """Match a player's word against keywords of items at a location."""
-    for iid in items_in(location):
-        if word in ITEMS[iid]["keywords"]:
-            return iid
-    return None
+    """Match a player's word against keywords of items at a location (the FIRST such item)."""
+    matches = trace_all_items(word, location)
+    return matches[0] if matches else None
+
+
+def resolve_item_target(token: str, location: str) -> str | None:
+    """Resolve a possibly-numbered target token ("sword", "2-sword", "sword-2") to one item id.
+
+    Splits any 1-based ordinal off the token (via the target_disambig shelf part), filters the
+    location to items sharing the parsed name, then picks the Nth. A bare name is ordinal 1, so
+    behavior is identical to `trace_item` for the common case. Returns None when nothing matches
+    the name; raises target_disambig.TargetError when the ordinal overshoots how many are here (so
+    the caller can report an honest count) or the token is malformed.
+    """
+    ordinal, name = target_disambig.parse_target(token)
+    matches = trace_all_items(name, location)
+    if not matches:
+        return None
+    return target_disambig.pick(matches, ordinal)
 
 
 def carrier(player_id: str) -> str:
@@ -151,8 +175,12 @@ def carrier(player_id: str) -> str:
     return f"player:{player_id}"
 
 
-def take(word: str, room_id: str, owner: str) -> str:
-    iid = trace_item(word, f"room:{room_id}")
+def take(token: str, room_id: str, owner: str) -> str:
+    """Pick up an item by name or numbered token ("2-sword" for the second of several)."""
+    try:
+        iid = resolve_item_target(token, f"room:{room_id}")
+    except target_disambig.TargetError as exc:
+        return f"You don't see that here ({exc})."
     if iid is None:
         return "You don't see that here."
     ITEMS[iid]["location"] = owner

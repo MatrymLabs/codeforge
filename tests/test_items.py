@@ -138,3 +138,79 @@ def test_two_heroes_do_not_share_one_inventory():
     take("gem", "forge", alia)  # alia picks it up
     assert items_in(alia) == ["gem"] and items_in(bram) == []  # bram's bag is untouched
     assert "a gem" in inventory_text(alia) and inventory_text(bram) == "You are carrying nothing."
+
+
+# --- numbered-target disambiguation (target_disambig shelf-part consumer) ------------------------
+def _two_keys() -> tuple[str, str]:
+    """Two identical items (both answer to 'key') in one room, so 'key' alone is ambiguous."""
+    first = items.clone("copper_key", "forge")
+    second = items.clone("copper_key", "forge")
+    return first, second
+
+
+def test_trace_all_items_returns_every_match_in_order():
+    first, second = _two_keys()
+    assert items.trace_all_items("key", "room:forge") == [first, second]
+    # trace_item still returns just the first, unchanged
+    assert items.trace_item("key", "room:forge") == first
+
+
+def test_bare_name_resolves_to_the_first_match():
+    first, _second = _two_keys()
+    # a plain name is ordinal 1: identical to the old first-match behavior
+    assert items.resolve_item_target("key", "room:forge") == first
+
+
+def test_ordinal_picks_the_nth_identical_item():
+    first, second = _two_keys()
+    assert items.resolve_item_target("2-key", "room:forge") == second
+    assert items.resolve_item_target("key-2", "room:forge") == second  # trailing ordinal too
+    assert items.resolve_item_target("1-key", "room:forge") == first
+
+
+def test_take_can_reach_the_second_identical_item():
+    """The defect this fixes: first-match-only trace made a second identical item un-takeable."""
+    first, second = _two_keys()
+    result = take("2-key", "forge", _ME)
+    assert "take" in result
+    assert items.ITEMS[second]["location"] == _ME  # the SECOND moved
+    assert items.ITEMS[first]["location"] == "room:forge"  # the first stayed
+
+
+def test_take_overshoot_is_refused_with_an_honest_count():
+    _two_keys()
+    result = take("3-key", "forge", _ME)
+    assert result == "You don't see that here (no target #3: only 2 here)."
+
+
+def test_resolve_unknown_name_is_none_not_an_error():
+    _two_keys()
+    assert items.resolve_item_target("2-dagger", "room:forge") is None
+
+
+def test_a_hyphenated_keyword_is_not_mistaken_for_an_ordinal():
+    """A hyphen that is not a numeric ordinal ('war-hammer') stays part of the name."""
+    items.ITEMS["wh"] = {
+        "name": "a war-hammer",
+        "keywords": ["war-hammer"],
+        "location": "room:forge",
+        "slot": "weapon",
+        "mods": {},
+    }
+    assert items.resolve_item_target("war-hammer", "room:forge") == "wh"
+
+
+def test_take_ordinal_reaches_through_the_engine_tick():
+    """A verb is not wired until handle_command proves it reachable: the `take 2-<kw>` ordinal path
+    must survive the tick, not just a direct call to take()."""
+    from forge import handle_command
+    from kernel.world.session import Session
+
+    room = "forge"
+    first = items.clone("copper_key", room)
+    second = items.clone("copper_key", room)
+    session = Session(player_id="ticker", location=room)
+    out = handle_command(session, "take 2-key")
+    assert "take" in out.lower()
+    assert items.ITEMS[second]["location"] == carrier("ticker")  # the second one moved
+    assert items.ITEMS[first]["location"] == f"room:{room}"  # the first stayed put
