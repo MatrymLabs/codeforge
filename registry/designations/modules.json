@@ -8951,5 +8951,30 @@
   "aliases": [],
   "created": "2026-08-03",
   "updated": "2026-08-03"
+ },
+ {
+  "designation": "MOD-05.091",
+  "name": "type_smell",
+  "status": "active",
+  "function": "detect risky type-related practices (type smells) in Python via ast - untyped/partial public signatures, Any on a public boundary, and one parameter name carrying two different types across a module",
+  "label": "type_smell",
+  "file": "kernel/shelf/type_smell.py",
+  "type": "MOD",
+  "domain": "05",
+  "docs": "docs/hardware_store/patterns/validation.md",
+  "tests": "tests/test_type_smell.py",
+  "depends_on": [],
+  "related": [
+   "MOD-05.023"
+  ],
+  "reuse": "the type-hygiene sibling of the Fowler smell engine (MOD-05.023); the same analyze(source) -> findings shape over any Python codebase; suggestion-only",
+  "tags": [
+   "module"
+  ],
+  "notes": "R&D RD-2026-0001 (Python Coding Practices survey; Magalhaes & Montandon 2026, ICPC). Genuinely-new lens (fleet-searched): smell_engine covers structural/Fowler smells, this covers TYPE hygiene, which mypy is partly blind to (Any is a mypy-approved opt-out; mypy never checks one-name-two-types across functions). Clean-room stdlib ast; single-module, syntactic scope; SUGGEST-ONLY. Real consumer: test_type_hygiene.py gates the shelf's public surfaces against incomplete type contracts. Provenance: original.",
+  "superseded_by": "",
+  "aliases": [],
+  "created": "2026-08-03",
+  "updated": "2026-08-03"
  }
 ]
