@@ -194,6 +194,33 @@ def test_the_caeloria_charter_quest_walks_and_grants_knowing():
     assert reward == 46 and "grant_rep:knowing" in (finish.effect or "")
 
 
+# Authoring campaign, batch 1: each newly-authored settlement's quest walks to done and pays the
+# standing its labels promise -- the town is wired, not just present (the "prove it plays" rule).
+def test_the_moonshade_quest_walks_and_grants_knowing():
+    finish, reward = _walk_quest("moonshade_vigil.yaml")
+    assert reward == 34 and "grant_rep:knowing" in (finish.effect or "")
+
+
+def test_the_twilight_grove_quest_walks_and_grants_knowing():
+    finish, reward = _walk_quest("twilight_grove_vigil.yaml")
+    assert reward == 34 and "grant_rep:knowing" in (finish.effect or "")
+
+
+def test_the_silverwatch_quest_walks_and_grants_knowing():
+    finish, reward = _walk_quest("silverwatch_tally.yaml")
+    assert reward == 44 and "grant_rep:knowing" in (finish.effect or "")
+
+
+def test_the_westgate_quest_walks_and_grants_knowing():
+    finish, reward = _walk_quest("westgate_writ.yaml")
+    assert reward == 44 and "grant_rep:knowing" in (finish.effect or "")
+
+
+def test_the_eldryn_city_quest_walks_and_grants_gathering():
+    finish, reward = _walk_quest("eldryn_city_blight.yaml")
+    assert reward == 60 and "grant_rep:gathering" in (finish.effect or "")
+
+
 def test_ravenwatch_has_a_second_quest_of_a_hunt_shape():
     from kernel.shelf.workflow import Fired, Instance, WorkflowEngine
     from kernel.world.quest import _from_seed

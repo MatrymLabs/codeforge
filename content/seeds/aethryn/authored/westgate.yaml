@@ -1,0 +1,225 @@
+# SEED: aethryn -- authored/westgate.yaml  (Westgate, the western gate-town of Caeloria, ~L30)
+#
+# Caeloria's canon: the heartland kingdom of golden plains and the high road, ruled by RECORD not the
+# sword; its Order is KNOWING. Westgate is where Veridia's road climbs out of the starter valley and
+# meets the heartland, the threshold customs-town every traveller must clear. Its work is the toll and
+# the tally: who came up the road, what they carried, whether the register can account for it. The
+# conflict is a paperwork one with a chill under it (a sealed writ came up from the frayed reaches and
+# was set down unlisted, and the tollkeeper cannot close his register with a gap in it); the clue to
+# the wider world is the road itself (what comes UP it from the fraying reaches, sooner than the map
+# says it should); the remainder is left open (who sent the writ, and why, is never proven). A bare
+# map hub becomes the living gate-town an interviewer walking in from Veridia would expect at the
+# heartland's western door. Installed by kernel/world/authored_towns.py; its quest is
+# quests/westgate_writ.yaml.
+
+rooms:
+  westgate_gatehouse:
+    name: The Western Gate
+    desc: >-
+      The great customs-gate of the heartland, where Veridia's road climbs up out of the starter
+      valley and every traveller must clear the toll before the golden plains will have them. Wardens
+      wave carts through, clerks stamp writs, and the whole press of the frayed reaches funnels into
+      one guarded arch. Ways lead OUT to the valley road, NORTH into the toll house, WEST onto the
+      western road itself, UP the stair to the watch tower, and EAST to the caravan yard.
+    exits:
+      out: westgate
+      north: westgate_tollhouse
+      west: westgate_road
+      up: westgate_watchtower
+      east: westgate_yard
+  westgate_tollhouse:
+    name: The Toll House
+    desc: >-
+      A cramped office of ledgers and lamp-oil where Westgate does its real work: the road-register,
+      one line per traveller, kept in the Knowing way so the heartland always knows who came up the
+      road and what rode with them. A tollkeeper works the register here and frets over a gap in it.
+      The gate is back SOUTH.
+    exits: {south: westgate_gatehouse}
+  westgate_watchtower:
+    name: The Watch Tower
+    desc: >-
+      The tower over the gate, where a road-warden keeps the western watch and reads the weather off
+      the plains. From here the road runs back down to Veridia and out the other way into the grey
+      edge of the reaches, where the map stops being sure of itself and lately something moves that the
+      register cannot name. The gate is back DOWN.
+    exits: {down: westgate_gatehouse}
+  westgate_road:
+    name: The Western Road
+    desc: >-
+      The high road itself, just outside the gate's light, running west into the fraying reaches. This
+      is where Westgate ends and the uncertain country begins; the last milestone leans here, and the
+      traffic that comes UP the road after dark is not always traffic anyone sent. Travellers hurry the
+      last stretch to the arch. The gate is back EAST.
+    exits: {east: westgate_gatehouse}
+  westgate_yard:
+    name: The Caravan Yard
+    desc: >-
+      A wide dusty yard of picketed mules, tented stalls, and travellers waiting out their toll, the
+      caravanserai of the western gate where the roads of two lands unload their news. Caravan-masters
+      swap rumours of the reaches over cold tea, and everyone here is passing through. The gate is back
+      WEST.
+    exits: {west: westgate_gatehouse}
+
+hub: {room: westgate, keyword: gate, entry: westgate_gatehouse}
+
+npcs:
+  westgate_tollkeeper:
+    name: Tollkeeper Cassian
+    keywords: [cassian, tollkeeper, keeper]
+    location: westgate_tollhouse
+    dialogue:
+      - >-
+        "You have a clerk's patience about you, I think. Good. A sealed writ came up the road last
+        night from the reaches, and whoever carried it set it down on the western road and never
+        cleared the toll, so my register has a gap and a gap I cannot close. Go out to the road, take
+        the writ up, and bring it here. The heartland does not sleep easy on an unlisted line."
+    topics:
+      register:
+        - >-
+          "One line per traveller, that is the whole of Westgate. Who came up the road, what they
+          carried, whether it squares. Rule the reaches with a ledger, the capital says, and the ledger
+          starts here at the door. A gap in my register is a hole in the heartland's memory, and I do
+          not care to be the man who let one in."
+      road:
+        - >-
+          "Everything the reaches send comes up this road and through my toll, and mostly it is grain
+          carts and pilgrims and the odd runaway. Lately it is other things, and they come UP the road,
+          which is backwards. Ask the warden in the tower; she watches the grey longer than I do."
+      knowing:
+        - >-
+          "The Order of Knowing keeps this gate the same as it keeps the capital: by writing the truth
+          down and being able to prove it later. Cassian the tollkeeper is a small clerk on a large
+          road, but a realm is only the sum of its cleared lines. Mine will square before I sleep."
+      cassian:
+        - >-
+          "Tollkeeper of Westgate, and the man who tells the heartland who is coming. Marla sells the
+          travellers what the road costs them; I write down that they passed. Between the two of us,
+          nobody crosses into Caeloria unaccounted. Nobody is supposed to."
+    hp: 0
+  westgate_warden:
+    name: Road-Warden Vela
+    keywords: [vela, warden, road-warden]
+    location: westgate_watchtower
+    dialogue:
+      - >-
+        "Come up and look west, traveller. Veridia's road behind us, and ahead the grey where the
+        reaches fray and the map gives up. I keep the watch and I read the road, and I will tell you
+        plainly what Cassian will only write in the margin: the traffic is coming the wrong way lately,
+        up the road and toward us, and none of it clears the toll."
+    topics:
+      reaches:
+        - >-
+          "The reaches are fraying, further out every season, and the road is the last thing that still
+          reaches them. What frays does not stay put. It walks, and it walks toward the light, which is
+          us. Cassian counts it as a gap in his register. I count it as a thing on my road."
+      watch:
+        - >-
+          "I read weather and I read the road, and the two are the same reading out here. A cold that
+          the season did not order, a milestone that was not leaning yesterday, a writ nobody signed.
+          The tower sees it first. The toll house writes it down. Between us Westgate stays honest."
+      tollkeeper:
+        - >-
+          "Cassian keeps the register and I keep the road, and he frets over his unlisted line the way
+          I fret over the grey. Same worry, two desks. He wants the writ accounted; I want to know what
+          hand set it down and did not stay to be counted. Bring it in and maybe we both learn."
+      vela:
+        - >-
+          "Road-Warden of Westgate, keeper of the western watch. Someone must actually LOOK at the
+          reaches while the clerks look at their ledgers. I have stood this tower nine years, and the
+          grey has never been this close to the door before."
+    hp: 0
+  westgate_caravanmaster:
+    name: Caravan-Master Dorn
+    keywords: [dorn, caravan-master, master]
+    location: westgate_yard
+    dialogue:
+      - >-
+        "Sit, share the tea, it is terrible and it is hot. I run mules between Veridia and the
+        heartland, up this road and back, and I have run it long enough to know when the road has gone
+        wrong. It has. My drivers will not take the last stretch after dark now, and my drivers are not
+        men who scare for a rumour."
+    topics:
+      caravans:
+        - >-
+          "Grain up, cloth and coin down, and news both ways, that is the caravan trade and Westgate is
+          the pinch it all squeezes through. Every road in Veridia ends at this gate, and everything the
+          heartland sends the valley starts here. Rich work, when the road behaves. It is not behaving."
+      road:
+        - >-
+          "The last mile past the milestone, that is the stretch my drivers refuse now. Warden Vela says
+          the reaches are walking up toward us; I only know a driver came in white last week over a writ
+          he swears set itself down on the road. Cassian has it logged as a gap. I have it logged as the
+          reason I am hiring guards."
+      dorn:
+        - >-
+          "Caravan-Master, and the man who actually moves what the tollkeeper counts and the warden
+          watches. Twenty years up and down this road. I have seen it busy and I have seen it lean, but
+          I have never before seen it send things back that nobody sent out."
+    hp: 0
+  westgate_provisioner:
+    name: Provisioner Marla
+    keywords: [marla, provisioner, trader]
+    location: westgate_gatehouse
+    dialogue:
+      - >-
+        "Clear the toll and stock up, traveller, the plains are wide and the reaches are worse. I keep
+        the draughts a body needs to walk the high road either way, and I buy meadowfoil off any
+        gatherer who works the golden fields, for the heartland's apothecaries. Trade fair and mind the
+        western road after dark."
+    topics:
+      trade:
+        - >-
+          "Draughts I sell, healing and mana both, for the road is long and hard whichever way you turn
+          off my counter. Meadowfoil I buy, the golden-field herb the apothecaries distil into the very
+          draughts I sell. Bring a bundle and I will pay honest gate rates, which up here counts as
+          generous."
+      road:
+        - >-
+          "I stand at the arch and I see every face that comes up the road, and I will tell you the
+          faces have changed. Thinner. More of them looking back the way they came. Cassian logs them,
+          Vela watches the grey they came out of, and I just sell them what the next mile costs."
+      marla:
+        - >-
+          "Provisioner of the western gate, and the last honest counter before the plains or the first
+          before the reaches, depending which way you are walking. Ask Cassian; he has my name in his
+          register more times than any traveller. Somebody has to keep the gate in draughts."
+    shop:
+      sells: {healing_draught: 24, mana_draught: 24}
+      buys: {meadowfoil: 6}
+    hp: 0
+  westgate_stray:
+    name: a reach-frayed wanderer
+    keywords: [wanderer, stray, reach-frayed]
+    location: westgate_road
+    dialogue:
+      - The wanderer comes up the road out of the grey, walking toward the gate, wearing a face the register never took down.
+    aggressive: true
+    hp: 185
+    atk: 19
+    xp: 44
+    level: 29
+    tier: normal
+    attack_element: DRK
+
+items:
+  westgate_writ:
+    name: a sealed writ
+    keywords: [writ, sealed-writ, seal]
+    location: westgate_road
+    lore: >-
+      A folded writ of stiff reach-paper, its wax seal unbroken and its sender's mark pressed into it
+      too faintly to read, cold though the night is warm. It was carried up the road out of the fraying
+      reaches and set down at the milestone by a hand that did not stay to clear the toll. The Knowing
+      way is to log every line and prove it later; this one has no line, and the tollkeeper cannot close
+      his register until it does. What the seal holds, and who meant it to come up the road unlisted,
+      the writ does not say and will not say until a hand that has the right to it breaks the wax.
+  westgate_milestone:
+    name: the leaning milestone
+    keywords: [milestone, stone, marker]
+    location: westgate_tollhouse
+    lore: >-
+      The old boundary-stone of Westgate, hauled in from the western road when it would not stop
+      leaning, its cut rubric worn but legible: "Here the valley ends and the heartland begins. Clear
+      the toll. State your road. Be counted." Below, a warden's later hand has scratched a second line
+      that no clerk has yet dared to sand away: "The road runs both ways, and lately the reaches count
+      us."

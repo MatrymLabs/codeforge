@@ -1,0 +1,226 @@
+# SEED: aethryn -- authored/twilight_grove.yaml  (Twilight Grove, a grove-village of Duskwood Vale, ~L20)
+#
+# Duskwood's canon identity: a folkloric frontier of grief, memory, and ambiguous supernatural
+# danger, where some sites preserve the emotional or mnemonic consequences of the Fall. Twilight
+# Grove is a hidden grove-village where the dusk never quite lifts, and its people like it that way:
+# in permanent half-light nothing has to be looked at too closely, and no grief has to be finished.
+# The conflict is small and sad (a mourning-lantern has been carried into the grief-hollow and its
+# light is failing); the clue to the wider world is the grove itself (a place that keeps the dusk of
+# the dead the way a barrow keeps their last thought); the rumour is left unproven.
+# Installed by kernel/world/authored_towns.py; its quest is quests/twilight_grove_vigil.yaml.
+
+rooms:
+  twilight_grove_commons:
+    name: The Dusk Commons
+    desc: >-
+      A close ring of turf and lantern-poles under trees that hold the light of a sunset long past,
+      so it is always the blue hour here and never quite night. Folk move soft between the poles,
+      trading in whispers and hooded charms, and no one hurries, because in the grove there is
+      nothing the dark is coming for. Ways lead OUT to the wood road, NORTH to the twilit hearth,
+      WEST to the duskwell, and EAST to the fading veil where the poles run out.
+    exits:
+      out: twilight_grove
+      north: twilight_grove_hearth
+      west: twilight_grove_well
+      east: twilight_grove_veil
+  twilight_grove_hearth:
+    name: The Twilit Hearth
+    desc: >-
+      A long turf-roofed hall lit low by a hearth kept deliberately dim, where the lantern-keeper
+      trims the wicks that hold the grove in its everlasting dusk. Mourning-lanterns hang in rows
+      from the beams, each one lit for a name, and the keeper tends them the way a shepherd tends a
+      flock that will not scatter. The commons is back SOUTH.
+    exits: {south: twilight_grove_commons}
+  twilight_grove_well:
+    name: The Duskwell
+    desc: >-
+      A moss-lipped well at the grove's western edge whose water shows you the sky at the hour you
+      first grieved, and never any other. A dusk-trader keeps a stall by the winch, selling the
+      draughts a body needs to walk the half-lit wood and buying fernshade off any forager who cuts
+      it in the shade. Folk come to look into the water and go away quiet. The commons is back EAST.
+    exits: {east: twilight_grove_commons}
+  twilight_grove_veil:
+    name: The Fading Veil
+    desc: >-
+      Where the lantern-poles run out and the everlasting dusk begins to thin toward a colder dark,
+      a watcher keeps a lonely vigil at the last lit pole. Beyond it the trees lose their held light
+      one by one, and the air tastes of a grief that was never anyone's here. A path leads DOWN into
+      the grief-hollow where the dusk fails altogether; the commons is back WEST.
+    exits: {west: twilight_grove_commons, down: twilight_grove_hollow}
+  twilight_grove_hollow:
+    name: The Grief-Hollow
+    desc: >-
+      A sunken bowl of black trees where the grove's dusk gutters out and true night pools like cold
+      water, the one place the lantern-light will not reach. Something grief-shaped keeps the hollow,
+      wearing a sorrow that outlived whoever first felt it, and a mourning-lantern lies half-drowned
+      in the dark where someone carried it and did not carry it back. The path climbs UP to the veil.
+    exits: {up: twilight_grove_veil}
+
+hub: {room: twilight_grove, keyword: grove, entry: twilight_grove_commons}
+
+npcs:
+  twilight_grove_keeper:
+    name: Lantern-Keeper Sable
+    keywords: [sable, keeper, lantern-keeper]
+    location: twilight_grove_hearth
+    dialogue:
+      - >-
+        "Softly, stranger, the wicks startle. I keep the grove in its dusk, one lantern for each name
+        we are not done grieving, and I am short one tonight. A mourning-lantern was carried down into
+        the grief-hollow and never carried back, and its light is failing there in the true dark. Go
+        down, lift it gently, and bring it up to me. Do not put it out, whatever asks you to."
+    topics:
+      dusk:
+        - >-
+          "We keep the grove half-lit on purpose. In full day a grief has to be looked at and finished,
+          and in full night it has to be feared, but in the dusk it can just be kept, the way Wren keeps
+          her stall and I keep my wicks. That is the whole craft of Twilight Grove: nothing has to end here."
+      lantern:
+        - >-
+          "Each lantern is a name we are still mourning, and while its wick burns the name is kept, not
+          gone. The one lost in the hollow is an old one, older than most of us, and if it goes dark down
+          there the grief it holds will have nowhere to be but loose in the wood. Ask Vesper what loose grief does."
+      hollow:
+        - >-
+          "Down past the veil the dusk fails and the true dark pools, and something keeps house there
+          that is only a sorrow that forgot it was ever a person. Vesper watches it from the last pole.
+          I would not send you down for less than a lantern, and I am sorry that I must."
+      sable:
+        - >-
+          "Lantern-Keeper of the grove, and I have trimmed these wicks so long I have forgotten which
+          name is mine. That is no tragedy here. In Twilight Grove the keeping is the point, not the ending."
+    hp: 0
+  twilight_grove_trader:
+    name: Dusk-Trader Wren
+    keywords: [wren, trader, dusk-trader]
+    location: twilight_grove_well
+    dialogue:
+      - >-
+        "Come look in the well first, then trade, everyone does. I keep the draughts a body needs to
+        walk the half-lit wood and come back the same body, and I buy fernshade off any forager brave
+        enough to cut it in the grove-shade, for Sable's wicks and the widows' charms. Buy quiet, we
+        keep quiet here."
+    topics:
+      trade:
+        - >-
+          "Draughts I sell, healing and mana both, for the grief-hollow is a long walk down and a
+          worse walk up. Fernshade I buy, cut in the grove's held shade, for it burns slow and sad and
+          keeps a lantern lit the way nothing brighter can. Bring a bundle by the dusk-light, which is
+          the only light we have."
+      well:
+        - >-
+          "The duskwell shows you the sky of the hour you first grieved, and only that hour, forever.
+          Cruel, folk say, but they come back to look. Sable says the grove keeps the dusk of the living
+          the way the hollow keeps the dusk of the dead. She is not wrong, and I sell them both draughts."
+      hollow:
+        - >-
+          "I do not go east past the last pole. Vesper keeps that watch and welcome to it. The dusk
+          fails down there and my draughts are for walking the grove, not for whatever wears sorrow in
+          the dark. If Sable sends you down for her lantern, take two healing draughts, not one."
+      wren:
+        - >-
+          "Dusk-Trader of the grove, and the only stall for a day's walk that will still be here at the
+          same dim hour tomorrow. Ask Grandmother Ivorn how long I have kept it. She has watched me not
+          age in this light for longer than she will say."
+    shop:
+      sells: {healing_draught: 22, mana_draught: 22}
+      buys: {fernshade: 5}
+    hp: 0
+  twilight_grove_elder:
+    name: Grandmother Ivorn
+    keywords: [ivorn, grandmother, elder]
+    location: twilight_grove_commons
+    dialogue:
+      - >-
+        "Sit under a pole a while, child, there is no hurry in the grove and never has been. I have
+        watched a hundred griefs come in out of the wood and settle into the dusk and never leave,
+        and I am one of them myself. It is not so bad a fate as the daylight makes it sound."
+    topics:
+      grove:
+        - >-
+          "Folk find Twilight Grove when they are done being able to bear the sun on a grief. The dusk
+          holds them soft, and they stay, and they thin, and one day they are just another shape at the
+          edge of the light. We do not call it dying. We call it keeping. Sable would say the same of her lanterns."
+      grief:
+        - >-
+          "Grief is the only weather in Duskwood, and here we do not wait it out, we live in it. But a
+          grief kept too long forgets whose it was, and then it is not kept, it is loose. The thing in
+          the hollow is a grief no one keeps anymore. That is the only difference between it and me."
+      vesper:
+        - >-
+          "Vesper watches the veil so the loose grief in the hollow does not wander up among the poles.
+          A hard vigil for a young one, but someone must, since the dusk will not hold what has forgotten
+          its own name. Take them a kind word when you pass. They hear little else out there."
+      ivorn:
+        - >-
+          "Grandmother, they call me, though I have outlived being anyone's grandmother by more years
+          than the well would show you. I keep the commons company and the newcomers calm. Someone must
+          teach them that staying is allowed here. Wren teaches them what a draught costs; I teach them what dusk is for."
+    hp: 0
+  twilight_grove_watcher:
+    name: Vesper of the Veil
+    keywords: [vesper, watcher, veil]
+    location: twilight_grove_veil
+    dialogue:
+      - >-
+        "Stand at the pole with me, but do not step past it. I keep the last light between the grove
+        and what the hollow lost, and I have kept it long enough to know the difference between a grief
+        that is mourned and a grief that is only loose. If Sable sent you for her lantern, go quick, and
+        come back before the dark learns your face."
+    topics:
+      veil:
+        - >-
+          "The veil is only the place where Sable's lanterns give out and the true dark begins. I keep
+          the last pole lit so the loose grief in the hollow cannot follow the light up to the commons.
+          Grandmother Ivorn says I am guarding the grove from what the grove will one day become. She is unkind, and right."
+      grief:
+        - >-
+          "A grief mourned stays a person's, and heals, or keeps, which is the grove's word for the same
+          thing. A grief loose forgets whose it was and puts on whatever face is near. What keeps the
+          hollow is that, and only that: sorrow that outlived the one who owned it. It is not evil. It is just lost."
+      lantern:
+        - >-
+          "Sable's mourning-lantern went down with someone who wanted to grieve close to the dark, and
+          the dark kept the lantern and let the mourner go, which is its way. If its wick fails, the grief
+          it held comes loose too, and I have one more thing to watch. Fetch it up. That is a kindness to all of us."
+      vesper:
+        - >-
+          "Watcher of the veil, and younger than this vigil deserves. Someone must stand where the light
+          ends and not be afraid of what stands on the other side, because it was one of us once. Ask
+          Ivorn. She knew its name, before it forgot its own."
+    hp: 0
+  twilight_grove_sorrow:
+    name: a grief-shaped thing
+    keywords: [grief, sorrow, thing, shape]
+    location: twilight_grove_hollow
+    dialogue:
+      - The shape rises out of the true dark wearing a sorrow that is almost a face, and reaches for you as if it half-remembers being held.
+    aggressive: true
+    hp: 145
+    atk: 16
+    xp: 26
+    level: 19
+    tier: normal
+    attack_element: DRK
+
+items:
+  twilight_grove_dusklamp:
+    name: a failing mourning-lantern
+    keywords: [lantern, mourning-lantern, dusklamp, lamp]
+    location: twilight_grove_hollow
+    lore: >-
+      A small horn lantern half-drowned in the hollow's dark, its fernshade wick burned down to a slow
+      blue ember that is somehow still lit. Lift it and you feel the grief it was set to keep: an old
+      sorrow, patient and kind, still faithfully mourning a name even here where the name is lost. The
+      lantern-keeper trims such wicks so the mourning need never finish. Let this one go dark and the
+      grief it holds will have nowhere left to be but loose among the black trees.
+  twilight_grove_memory_stone:
+    name: a duskwell memory-stone
+    keywords: [stone, memory-stone, duskwell, memory]
+    location: twilight_grove_well
+    lore: >-
+      A flat grey stone the grievers of the grove drop into the duskwell, one for each hour they cannot
+      leave behind, so the well shows only that hour forever. Hold it and it is faintly warm, the way
+      the barrows of Ravenwatch are said to be warm, as if a place could keep the last dusk of a life
+      the way a barrow keeps its last thought. Cut into its face is the grove's only rubric: "Here we do
+      not finish grieving. We keep it lit. A grief mourned is kept; a grief loose walks. Trim the wick."
