@@ -8052,7 +8052,7 @@
   "designation": "MOD-10.060",
   "name": "workspace_verb",
   "status": "active",
-  "function": "The in-MUD `workspace` verb (text half of the workspace surface): an owner lists/creates/inspects/starts/stops engineering Seeds and lists their models from inside the running MUD, over the Seed Kernel + model store; owner-gated at the command spine, Kernel-authorized per mutation, file-backed under $SEEDLAB_HOME",
+  "function": "The in-MUD `workspace` verb (text half of the workspace surface): an owner lists/creates/inspects/starts/stops engineering Seeds, lists their models, connects+models sources, runs allowlisted tools, and backs up / lists backups / restores (rolls back) a Seed from inside the running MUD, over the Seed Kernel + model store + backup manager; owner-gated at the command spine, Kernel-authorized per mutation (restore routed through Kernel.reinstate), file-backed under $SEEDLAB_HOME",
   "label": "workspace_verb",
   "file": "kernel/seedlab/workspace_verb.py",
   "type": "MOD",
@@ -8061,7 +8061,8 @@
   "tests": "tests/test_workspace_verb.py",
   "depends_on": [
    "MOD-10.052",
-   "MOD-10.056"
+   "MOD-10.056",
+   "MOD-10.076"
   ],
   "related": [
    "MOD-10.053"
