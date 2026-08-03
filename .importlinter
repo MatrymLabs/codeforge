@@ -21,3 +21,11 @@ source_modules =
 forbidden_modules =
     kernel
     adapters
+
+[importlinter:contract:grammar-before-worlds]
+name = Seed Kernel imports no game module (grammar before worlds; the platform is domain-neutral)
+type = forbidden
+source_modules =
+    kernel.seedlab
+forbidden_modules =
+    kernel.world
