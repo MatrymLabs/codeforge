@@ -8976,5 +8976,28 @@
   "aliases": [],
   "created": "2026-08-03",
   "updated": "2026-08-03"
+ },
+ {
+  "designation": "MOD-05.092",
+  "name": "atomic_write",
+  "status": "active",
+  "function": "the Hardware Store atomic file-write primitive: atomic_write_text/atomic_write_bytes write full contents to a temp sibling in the target's own directory then os.replace (atomic same-filesystem rename), so a reader or a crash never sees a half-written/truncated file; temp cleaned up on failure; opt-in fsync for power-loss durability",
+  "label": "atomic_write",
+  "file": "kernel/shelf/atomic_write.py",
+  "type": "MOD",
+  "domain": "05",
+  "docs": "catalog/parts.yaml",
+  "tests": "tests/test_atomic_write.py",
+  "depends_on": [],
+  "related": [],
+  "reuse": "Extracted on its THIRD real occurrence (second-consumer pull gate well cleared): the Seed store (kernel/seedlab/kernel.py), the model store (kernel/seedlab/model_store.py), and the backup manager (kernel/seedlab/backup.py) each independently re-derived tmp.write + tmp.replace; all three now consume this one certified primitive. Engine-free (stdlib), so it pours to the codeforge-shelf mirror and runs with no engine present. Catalogued as parts.yaml id atomic-write (persistence).",
+  "notes": "Priority-2 Hardware Store cycle (NORTH_STAR standing priorities): first parts through the full loop. Honest scope: guarantees ATOMICITY (no partial file), not fsync-durability unless asked. Clean-room (POSIX rename semantics, not copied code). Awaiting the R&D verdict + founder certification. PROTOTYPED.",
+  "tags": [
+   "module"
+  ],
+  "superseded_by": "",
+  "aliases": [],
+  "created": "2026-08-03",
+  "updated": "2026-08-03"
  }
 ]
