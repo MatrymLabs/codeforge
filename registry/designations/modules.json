@@ -8845,5 +8845,56 @@
   "aliases": [],
   "created": "2026-08-03",
   "updated": "2026-08-03"
+ },
+ {
+  "designation": "MOD-10.078",
+  "name": "domain",
+  "status": "active",
+  "function": "the neutral contract a domain module satisfies (DomainModule: a stable lowercase name matching SeedIdentity.domain_modules, a display title, and honest capabilities) plus register_module(registry, module) which files a module under its own name; the platform depends on this seam, never on a concrete domain module (grammar before worlds)",
+  "label": "domain",
+  "file": "kernel/seedlab/domain.py",
+  "type": "MOD",
+  "domain": "10",
+  "docs": "docs/seed_platform/RECENTERING.md",
+  "tests": "tests/test_domain.py",
+  "depends_on": [
+   "MOD-10.077"
+  ],
+  "related": [],
+  "reuse": "The seam between the domain-neutral Seed platform and the optional per-Seed domain modules: the platform resolves a module out of a DomainModuleRegistry (kernel/seedlab/provision.py) it was handed, it never imports one. Enforced by the import-linter contract platform-imports-no-domain-module (kernel.seedlab forbidden from kernel.domains), proven non-vacuous.",
+  "notes": "Slice: the first real domain module. Domain-neutral: no kernel/world/ and no kernel/domains/ import. PROTOTYPED (docs/seed_platform/RECENTERING.md).",
+  "tags": [
+   "module"
+  ],
+  "superseded_by": "",
+  "aliases": [],
+  "created": "2026-08-03",
+  "updated": "2026-08-03"
+ },
+ {
+  "designation": "MOD-10.079",
+  "name": "education",
+  "status": "active",
+  "function": "the FIRST real domain module: a minimal Education module (name education, capability lessons) satisfying the DomainModule contract, with a LessonBook (add + list, insertion order, fail loud on a duplicate or non-snake_case id or blank title); proves a Seed can LOAD a domain module, not just record that it selected one",
+  "label": "education",
+  "file": "kernel/domains/education.py",
+  "type": "MOD",
+  "domain": "10",
+  "docs": "docs/seed_platform/RECENTERING.md",
+  "tests": "tests/test_education.py",
+  "depends_on": [],
+  "related": [
+   "MOD-10.078",
+   "MOD-10.077"
+  ],
+  "reuse": "The first concrete domain module and the proof of the whole domain-module mechanism end to end: an education SeedSpec provisions and resolves to this LIVE module (its lesson book is reachable + mutable). Grammar before worlds from the module side: stdlib-only, imports NO game world; an education Seed loads exactly this and never combat, and an education-only registry can never resolve a game Seed's module (fails loud). Lives in the new kernel/domains/ domain layer, which the platform is forbidden to import.",
+  "notes": "Deliberately minimal (lessons are the seed of education; assessments/roles/paths are later honest slices). First module under kernel/domains/. PROTOTYPED (docs/seed_platform/RECENTERING.md).",
+  "tags": [
+   "module"
+  ],
+  "superseded_by": "",
+  "aliases": [],
+  "created": "2026-08-03",
+  "updated": "2026-08-03"
  }
 ]
