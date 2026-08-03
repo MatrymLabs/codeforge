@@ -332,10 +332,17 @@ def pm_status() -> str:
 
 def _workspace(session: Session, arg: str) -> str:
     """CORE `workspace` (owner): the in-MUD front door to engineering Seeds (the text half of the
-    Master-Client workspace surface). Lazy-imported so seedlab stays off the tick's load path."""
+    Master-Client workspace surface). Lazy-imported so seedlab stays off the tick's load path. The
+    game world owns the GMCP bus (grammar before worlds keeps it out of the platform verb), so the
+    tick injects the real transport here: seedlab pushes (player_id, package, data), we fan it onto
+    kernel.world.events.push_gmcp."""
     from kernel.seedlab.workspace_verb import workspace_command
+    from kernel.world.events import push_gmcp
 
-    return workspace_command(session, arg)
+    def push(player_id: str, package: str, data: object) -> None:
+        push_gmcp([player_id], package, data)
+
+    return workspace_command(session, arg, gmcp_push=push)
 
 
 def docs_check() -> str:

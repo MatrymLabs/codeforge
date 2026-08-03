@@ -10,10 +10,12 @@ Build Report), and `workspace report <id>`.
 
 Owner-gated at the command spine; the Kernel re-checks ownership on every mutation, so an owner can
 only start/stop a workspace they own. Persistence is file-backed under $SEEDLAB_HOME. The Kernel and
-model store are injectable, so the dispatch tests without touching disk. The only game-world
-coupling is reading the caller's identity and pushing live workspace GMCP frames to them
-(injectable, defaults to the same `push_gmcp` bus the social events ride) whenever a subcommand
-resolves that state: `Project.Status` when a workspace is inspected or its lifecycle changes,
+model store are injectable, so the dispatch tests without touching disk. Grammar before worlds: this
+platform verb imports NO game module. Live workspace GMCP frames ride an INJECTED transport
+(`gmcp_push`); the game tick wires the real `kernel.world.events.push_gmcp` when it dispatches this
+verb, and with no transport injected (plain text, tests) a frame is simply dropped. Frames fire
+whenever a subcommand resolves that state: `Project.Status` when a workspace is inspected or its
+lifecycle changes,
 `Source.Tree` + `Model.Schema` when a source is connected and modeled, and `Model.Schema` when
 models are inspected, and `Build.Report` when `run` records an allowlisted tool run (or `report`
 replays the recorded runs). So a Native-Seed client's WHOLE Engineering Workspace - Project Hub,
@@ -53,17 +55,18 @@ _USAGE = (
     "run <id> <path> <profile> | report <id>"
 )
 
-#: How the verb pushes a live GMCP frame to the acting owner: (player_id, package, data). The
-#: default rides the same bus the social events use (kernel.world.events.push_gmcp), so a Native-
-#: Seed client's Engineering Workspace updates the instant an owner inspects or changes a
-#: workspace. Tests inject a fake to capture the pushes without touching the bus.
+#: How the verb pushes a live GMCP frame to the acting owner: (player_id, package, data). The Seed
+#: Kernel is domain-neutral (grammar before worlds), so it owns no game bus and imports no game
+#: module: the game tick injects the real transport (kernel.world.events.push_gmcp) when it wires
+#: this verb. Tests inject a fake to capture the pushes; a caller with no transport drops the frame.
 GmcpPush = Callable[[str, str, object], None]
 
 
-def _default_push(player_id: str, package: str, data: object) -> None:
-    from kernel.world.events import push_gmcp
-
-    push_gmcp([player_id], package, data)
+def _drop_frame(player_id: str, package: str, data: object) -> None:
+    """Default transport: drop the frame. A domain-neutral platform verb cannot reach into the game
+    world for a bus, so with no transport injected (plain-text caller, tests) the frame is a no-op;
+    a text client has no GMCP sink anyway. The game tick supplies the real push at dispatch."""
+    return None
 
 
 def _push_frame(session: Any, push: GmcpPush, package: str, payload: dict[str, object]) -> None:
@@ -121,7 +124,7 @@ def workspace_command(
     `Build.Report` on run/report (the tool-run state the 4th client panel renders). `run_log` and
     `allowlist` are injectable seams (tests never shell a real tool or touch the real log)."""
     kernel = kernel or _default_kernel()
-    push = gmcp_push or _default_push
+    push = gmcp_push or _drop_frame
     actor = _actor(session)
     parts = (arg or "").split()
     sub = parts[0].lower() if parts else "list"
