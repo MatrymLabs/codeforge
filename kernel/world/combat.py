@@ -23,7 +23,7 @@ restores them in place -- a fight never leaves anyone in a broken state.
 
 import random
 
-from kernel.shelf import affixes
+from kernel.shelf import affixes, target_disambig
 from kernel.shelf.reward_curve import jp_for_kill, xp_for_kill
 from kernel.shelf.weighted_table import WeightedTable
 from kernel.world import items, threat
@@ -34,7 +34,7 @@ from kernel.world.encounter_log import witness
 from kernel.world.engineer import emergency_repair
 from kernel.world.events import announce, announce_frame
 from kernel.world.frames import StrikeFrame
-from kernel.world.npcs import NPCS, npcs_in, trace_npc
+from kernel.world.npcs import NPCS, npcs_in, resolve_npc_target, trace_npc
 from kernel.world.progression_awards import award_jp, award_tp, award_xp
 from kernel.world.seed import Npc
 from kernel.world.session import Session, display_name, sentence_case
@@ -580,7 +580,10 @@ def attack(session: Session, word: str) -> str:
 
     if is_dazed(session):
         return "You are dazed and cannot strike -- it will pass."
-    nid = trace_npc(word, session.location)
+    try:
+        nid = resolve_npc_target(word, session.location)  # "2-goblin" strikes the second of several
+    except target_disambig.TargetError as exc:
+        return f"There is no one like that here ({exc})."
     if nid is None:
         return "There is no one like that here."
     npc = NPCS[nid]

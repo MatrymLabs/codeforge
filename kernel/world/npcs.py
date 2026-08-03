@@ -7,6 +7,7 @@ MUD-IL shape: verb=talk, direct_object=npc.
 
 import contextlib
 
+from kernel.shelf import target_disambig
 from kernel.world.seed import SEED_DIR, Npc, load_npcs
 from kernel.world.session import sentence_case
 
@@ -83,12 +84,34 @@ def npcs_in(room_id: str) -> list[str]:
     return [nid for nid in members if not is_dead(NPCS[nid], beat)]
 
 
+def trace_all_npcs(word: str, room_id: str) -> list[str]:
+    """Every NPC id in this room whose keywords include `word`, in spawn order.
+
+    The one source of truth for NPC keyword matching: `trace_npc` returns the first of these, and
+    numbered-target disambiguation ("2-goblin") needs the whole list to strike the Nth of several.
+    """
+    return [nid for nid in npcs_in(room_id) if word in NPCS[nid]["keywords"]]
+
+
 def trace_npc(word: str, room_id: str) -> str | None:
-    """Match a player's word against keywords of NPCs in this room."""
-    for nid in npcs_in(room_id):
-        if word in NPCS[nid]["keywords"]:
-            return nid
-    return None
+    """Match a player's word against keywords of NPCs in this room (the FIRST such NPC)."""
+    matches = trace_all_npcs(word, room_id)
+    return matches[0] if matches else None
+
+
+def resolve_npc_target(token: str, room_id: str) -> str | None:
+    """Resolve a possibly-numbered target token ("goblin", "2-goblin") to one NPC id in a room.
+
+    Splits any 1-based ordinal off the token (via the target_disambig shelf part), filters the room
+    to NPCs sharing the parsed name, then picks the Nth. A bare name is ordinal 1, so behavior is
+    identical to `trace_npc` for the common case. Returns None when nothing matches the name; raises
+    target_disambig.TargetError when the ordinal overshoots the count or the token is malformed.
+    """
+    ordinal, name = target_disambig.parse_target(token)
+    matches = trace_all_npcs(name, room_id)
+    if not matches:
+        return None
+    return target_disambig.pick(matches, ordinal)
 
 
 def talk(word: str, room_id: str) -> str:

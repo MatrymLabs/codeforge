@@ -47,7 +47,7 @@ from kernel.registry import (
 )
 from kernel.relay import channel
 from kernel.save import awaken_snapshot, seal_snapshot
-from kernel.shelf import minimap
+from kernel.shelf import minimap, target_disambig
 from kernel.shelf.hourglass import WORLD_SANDS
 from kernel.store_index import store
 from kernel.telegraph import telegraph
@@ -117,9 +117,9 @@ from kernel.world.items import (
     inventory_text,
     prototype_of,
     read_item,
+    resolve_item_target,
     room_items_text,
     take,
-    trace_item,
 )
 from kernel.world.jobs import JOBS, bind_calling, calling_index, set_secondary
 from kernel.world.npcs import ask, room_npcs_text, talk, trace_npc
@@ -2243,7 +2243,12 @@ def _job_cmd(session: Session, arg: str) -> str:
 def _take_cmd(session: Session, arg: str) -> str:
     """Pick up an item; announce it, and let a pickup advance the arc."""
     word = arg.lower()
-    picked = trace_item(word, f"room:{session.location}")  # label, captured before it moves
+    try:
+        # the CHOSEN item (honors a "2-sword" ordinal), captured before it moves so the quest hook
+        # fires on the item actually taken, not merely the first keyword match.
+        picked = resolve_item_target(word, f"room:{session.location}")
+    except target_disambig.TargetError:
+        picked = None
     verdict = take(word, session.location, carrier(session.player_id))
     if verdict.startswith("You take"):
         announce(
