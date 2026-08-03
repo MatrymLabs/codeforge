@@ -18,6 +18,7 @@ from kernel.gmcp import (
     mail_report,
     party_report,
     quest_report,
+    read_gmcp_package,
     resists_report,
     room_report,
     seed_hello,
@@ -396,3 +397,53 @@ def test_seed_hello_takes_the_seed_id_it_is_given():
 def test_seed_hello_frames_as_a_gmcp_message():
     frame = gmcp_frame("Seed.Hello", seed_hello("aethryn"))
     assert b"Seed.Hello" in frame and frame.startswith(bytes([255, 250, GMCP_OPT]))
+
+
+# --- read_gmcp_package: the inverse of gmcp_frame (inbound client frames) ----
+
+
+def test_read_round_trips_a_framed_package():
+    frame = gmcp_frame("Form.Submit", {"product_type": "game", "answers": {"name": "Arena"}})
+    assert read_gmcp_package(frame) == (
+        "Form.Submit",
+        {"product_type": "game", "answers": {"name": "Arena"}},
+    )
+
+
+def test_read_handles_a_body_less_package():
+    assert read_gmcp_package(gmcp_frame("Core.Ping", None)) == ("Core.Ping", None)
+
+
+def test_read_collapses_a_doubled_iac_in_the_body_without_desyncing():
+    # A literal 0xFF on the wire is doubled by escape_iac; the reader must collapse 255 255 -> 255
+    # (not read the second 255 as a command) so the rest of the body still parses. The lone 0xFF is
+    # then dropped on utf-8 decode (a safe, total treatment of an invalid byte in untrusted input).
+    raw = bytes([IAC, SB, GMCP_OPT]) + escape_iac(b"Core.Ping\xff") + bytes([IAC, SE])
+    assert read_gmcp_package(raw) == ("Core.Ping", None)  # the doubled byte did not break the frame
+
+
+def test_read_finds_a_frame_glued_to_other_bytes():
+    frame = gmcp_frame("Seed.Create", {"name": "x", "kind": "game"})
+    raw = (
+        bytes([IAC, DO, GMCP_OPT]) + frame + b"\n"
+    )  # negotiation + frame + newline, as on the wire
+    assert read_gmcp_package(raw) == ("Seed.Create", {"name": "x", "kind": "game"})
+
+
+def test_read_returns_none_when_there_is_no_frame():
+    assert read_gmcp_package(b"just a plain command line\n") is None
+
+
+def test_read_returns_none_on_an_unterminated_frame():
+    raw = bytes([IAC, SB, GMCP_OPT]) + b'Seed.Create {"name":"x"}'  # no IAC SE
+    assert read_gmcp_package(raw) is None
+
+
+def test_read_returns_none_on_unparseable_json():
+    raw = bytes([IAC, SB, GMCP_OPT]) + b"Seed.Create {not json}" + bytes([IAC, SE])
+    assert read_gmcp_package(raw) is None  # a total parser: malformed body is ignored, never raises
+
+
+def test_read_returns_none_on_an_empty_package_name():
+    raw = bytes([IAC, SB, GMCP_OPT]) + bytes([IAC, SE])  # empty body
+    assert read_gmcp_package(raw) is None
