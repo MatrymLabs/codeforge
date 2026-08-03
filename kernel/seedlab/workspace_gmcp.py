@@ -33,6 +33,8 @@ from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from pathlib import Path, PurePath
 
+from kernel.seedlab.form import _SPEC_SCHEMA as FORM_SPEC_SCHEMA
+from kernel.seedlab.form import EngineeringForm, FormDefinition, FormError
 from kernel.seedlab.kernel import SeedKernel, SeedKernelError, SeedRecord
 from kernel.seedlab.project_model import ProjectModel
 from kernel.seedlab.source_connector import SourceRecord
@@ -55,6 +57,10 @@ BUILD_REPORT_PACKAGE = "Build.Report"
 ARCHITECTURE_MAP_PACKAGE = "Architecture.Map"
 #: An engineering Seed's body of research -> the client's Research Explorer (core/research.py).
 RESEARCH_FINDINGS_PACKAGE = "Research.Findings"
+#: The Engineering Form projected -> the client's Seed Creation Wizard (core/form.py).
+FORM_SCHEMA_PACKAGE = "Form.Schema"
+#: A client's completed Form answers (client -> engine); the `Seed.Created` verdict is the reply.
+FORM_SUBMIT_PACKAGE = "Form.Submit"
 
 #: The kinds of Seed a client may ask to create (matches the client's SEED_KINDS).
 SEED_KINDS = ("engineering", "game")
@@ -345,6 +351,120 @@ def create_from_request(kernel: SeedKernel, data: object, *, owner: str) -> dict
         record = kernel.create_seed(request.name, owner, purpose)
     except SeedKernelError as exc:
         return seed_created(request.name, False, reason=str(exc))
+    return seed_created(record.identity.name, True, seed_id=record.identity.seed_id)
+
+
+# --- the creation Form: the Engineering Form -> the client's Seed Creation Wizard ---------------
+
+
+def form_schema(definition: FormDefinition, *, seed: str | None = None) -> dict[str, object]:
+    """The `Form.Schema` payload for the creation Wizard: a read-only projection of the Engineering
+    Form catalog (`kernel/seedlab/form.py` + `data/seedlab/engineering_form.json`) so the client can
+    render the adaptive question set for each product type.
+
+    Each question carries its `prompt`, `kind`, and `required`; `choices` and `applies_when` only
+    when the question has them (a text question has neither, and an absent field is a default, never
+    an invented one - the same No Vision Theater law as the other builders). Product types keep the
+    catalog's order (a dict preserves insertion order), so the client renders them as filed. The
+    `schema` is the Form's real wire version, so a client reads (or refuses) it knowingly. Pure and
+    offline: it shapes the definition it is given, never loads or mutates one."""
+    questions: dict[str, dict[str, object]] = {}
+    for qid, question in definition.questions.items():
+        entry: dict[str, object] = {
+            "prompt": question.prompt,
+            "kind": question.kind,
+            "required": question.required,
+        }
+        if question.choices:
+            entry["choices"] = list(question.choices)
+        if question.applies_when:
+            entry["applies_when"] = {key: value for key, value in question.applies_when}
+        questions[qid] = entry
+    product_types = [
+        {
+            "id": pt.id,
+            "name": pt.name,
+            "description": pt.description,
+            "question_ids": list(pt.question_ids),
+            "domain_modules": list(pt.domain_modules),
+        }
+        for pt in definition.product_types.values()
+    ]
+    payload: dict[str, object] = {
+        "schema": FORM_SPEC_SCHEMA,
+        "common_question_ids": list(definition.common_question_ids),
+        "questions": questions,
+        "product_types": product_types,
+    }
+    if seed is not None:
+        payload["seed"] = seed
+    return payload
+
+
+@dataclass(frozen=True)
+class FormSubmitRequest:
+    """A validated `Form.Submit` request from a client: the chosen `product_type` and the `answers`
+    map. The engine does not trust the wire, so this is the checked shape a raw frame is parsed into
+    before the Engineering Form (which re-validates authoritatively) ever sees it."""
+
+    product_type: str
+    answers: dict[str, object]
+
+
+def parse_form_submit(data: object) -> FormSubmitRequest:
+    """Parse an untrusted `Form.Submit` frame into a validated request, or fail loud
+    (`WorkspaceContractError`).
+
+    The frame must be an object naming a non-empty `product_type` and an `answers` object (an empty
+    answers map is allowed - the Form re-validates and fails on any missing required answer). The
+    engine re-checks the shape the client already checked (defense in depth)."""
+    if not isinstance(data, dict):
+        raise WorkspaceContractError("Form.Submit: payload must be an object")
+    product_type = data.get("product_type")
+    if not isinstance(product_type, str) or not product_type.strip():
+        raise WorkspaceContractError("Form.Submit: 'product_type' must be a non-empty string")
+    answers = data.get("answers", {})
+    if not isinstance(answers, dict):
+        raise WorkspaceContractError("Form.Submit: 'answers' must be an object")
+    return FormSubmitRequest(product_type=product_type.strip(), answers=dict(answers))
+
+
+def create_from_form_submit(
+    kernel: SeedKernel, definition: FormDefinition, data: object, *, owner: str
+) -> dict[str, object]:
+    """Turn a client's `Form.Submit` frame into a real Seed and return the `Seed.Created` verdict.
+
+    Parse + validate the untrusted frame, validate its answers through the Engineering Form (which
+    owns the authoritative check, including the adaptive `applies_when` branch and every choice
+    range), then mint a Seed through the Kernel carrying the Form's product type and selected domain
+    modules. A bad frame, a failed Form validation, or any Kernel refusal becomes an honest
+    `ok:false` verdict - the engine never crashes on client input, and never claims a Seed it did
+    not create.
+
+    The engine is authoritative on identity: the authenticated `owner` is the Seed's true owner, so
+    the client's `owner` answer is OVERRIDDEN (never trusted) before the Form validates - a client
+    cannot mint a Seed under another account by typing a name in a box."""
+    try:
+        request = parse_form_submit(data)
+    except WorkspaceContractError as exc:
+        return seed_created("", False, reason=str(exc))
+    answers = {**request.answers, "owner": owner}
+    try:
+        spec = EngineeringForm(definition).build_spec(request.product_type, answers)
+    except FormError as exc:
+        claimed = request.answers.get("name")
+        name = claimed if isinstance(claimed, str) else ""
+        return seed_created(name, False, reason=str(exc))
+    try:
+        record = kernel.create_seed(
+            spec.name,
+            owner,
+            spec.purpose,
+            product_type=spec.product_type,
+            domain_modules=spec.domain_modules,
+        )
+    except SeedKernelError as exc:
+        return seed_created(spec.name, False, reason=str(exc))
     return seed_created(record.identity.name, True, seed_id=record.identity.seed_id)
 
 

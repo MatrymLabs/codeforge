@@ -162,6 +162,53 @@ def main() -> int:
             f"findings={parsed_research.finding_count}",
         )
 
+    # Form.Schema is the creation front door (CR-0002): the engine projects the Engineering Form,
+    # the client parses it into a FormSchema. Same additive rule - prove it only when the client
+    # checkout carries the parser, so this proof stays green against an older client.
+    from kernel.seedlab.form import FormDefinition
+
+    form_def = FormDefinition.from_dict(
+        {
+            "common_question_ids": ["name", "owner", "purpose"],
+            "questions": {
+                "name": {"prompt": "What is this Seed called?", "kind": "text"},
+                "owner": {"prompt": "Who owns it (account)?", "kind": "text"},
+                "purpose": {"prompt": "In one line, what is it for?", "kind": "text"},
+                "combat": {"prompt": "Combat?", "kind": "bool"},
+                "pvp": {
+                    "prompt": "PvP?",
+                    "kind": "choice",
+                    "choices": ["none", "open"],
+                    "applies_when": {"combat": True},
+                },
+            },
+            "product_types": {
+                "game": {
+                    "name": "Game world",
+                    "question_ids": ["combat", "pvp"],
+                    "domain_modules": ["game"],
+                },
+            },
+        }
+    )
+    form = eng.form_schema(form_def, seed="Job Tracker")
+    try:
+        from codeforge.mudclient.core import form as cli_form
+    except ImportError:
+        checks.append(("Form.Schema", True, "SKIP: client parser absent (additive contract)"))
+    else:
+        parsed_form = cli_form.parse_form_schema(form)
+        active = cli_form.active_questions(parsed_form, "game", {"combat": True})
+        active_ids = [q.id for q in active]
+        pt_ids = [p.id for p in parsed_form.product_types]
+        record_check(
+            "Form.Schema",
+            eng.FORM_SCHEMA_PACKAGE,
+            cli_form.FORM_SCHEMA_PACKAGE,
+            pt_ids == ["game"] and "pvp" in active_ids,
+            f"product_types={pt_ids} active_pvp={'pvp' in active_ids}",
+        )
+
     for pkg, payload in eng.workspace_packages(
         record,
         source=source_record,
