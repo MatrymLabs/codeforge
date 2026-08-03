@@ -1,0 +1,24 @@
+# SEED: aethryn -- quests/moonshade_vigil.yaml  (Moonshade's quest: The Unlit Vigil)
+# Auto-loaded. Local need (a vigil-lantern gone dark in the deep well), world echo (a place that keeps
+# the drowned of the Fall in memory, mnemonic scars of the collapse), a cost (the deep well and its
+# drowned mourner), a result (the vigil relit and the name kept), an unresolved remainder (whether the
+# soul it watched still waits below). Natural triggers: ENTER the shrine -> TAKE the lantern -> ENTER
+# the shrine. Rewards XP + Knowing standing.
+id: moonshade_vigil
+name: The Unlit Vigil
+start: offered
+reward_xp: 34
+steps:
+  - {state: offered, event: enter, to: accepted, on_enter: moonshade_shrine}
+  - {state: accepted, event: take, to: recovered, on_take: moonshade_moon_lantern}
+  - state: recovered
+    event: enter
+    to: done
+    on_enter: moonshade_shrine
+    effect: "award_xp;grant_rep:knowing:20"
+terminal: [done]
+labels:
+  offered: "In Moonshade the folk keep their drowned in memory by lantern-light. Step into the moonwell shrine and hear the keeper."
+  accepted: "Descend into the deep well and take up the drowned vigil-lantern (mind the water, and do not look too long)."
+  recovered: "Carry the dark lantern back UP to Keeper Sela in the shrine, that she may light it again."
+  done: "*** The vigil-lantern burns once more on the well's rim and its name is kept another season. Whether the soul it watched is still waiting below, the black water will not say. ***"

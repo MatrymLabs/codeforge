@@ -1,0 +1,26 @@
+# SEED: aethryn -- quests/westgate_writ.yaml  (Westgate's quest: The Unlisted Line)
+# Auto-loaded. Local need (a sealed writ came up the road unaccounted and the tollkeeper cannot close
+# his register with a gap in it), world echo (what comes UP the road from the fraying reaches, sooner
+# and stranger than the map says), a cost (a walk out to the western road and back), a result (the
+# register squares and the line is logged), an unresolved remainder (who sent the writ, and why it
+# came unlisted, is never proven). Natural triggers: ENTER the toll house -> TAKE the sealed writ from
+# the western road -> ENTER the toll house. Rewards XP + Knowing standing (Westgate keeps the
+# heartland's western door by record, not by the sword).
+id: westgate_writ
+name: The Unlisted Line
+start: offered
+reward_xp: 44
+steps:
+  - {state: offered, event: enter, to: accepted, on_enter: westgate_tollhouse}
+  - {state: accepted, event: take, to: recovered, on_take: westgate_writ}
+  - state: recovered
+    event: enter
+    to: done
+    on_enter: westgate_tollhouse
+    effect: "award_xp;grant_rep:knowing:26"
+terminal: [done]
+labels:
+  offered: "In Westgate, the tollkeeper cannot close his road-register over an unlisted writ. Step into the toll house and hear him."
+  accepted: "A sealed writ came up the road from the reaches and was set down at the milestone unaccounted. Take it up from the western road."
+  recovered: "Carry the sealed writ back to Tollkeeper Cassian in the toll house."
+  done: "*** The sealed writ is on Cassian's desk and the unlisted line is written at last, so the register squares and the heartland knows one more thing that came up the road. What the wax holds, and who sent it up unlisted from the fraying reaches, the record does not say. ***"

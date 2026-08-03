@@ -1,0 +1,224 @@
+# SEED: aethryn -- authored/eldryn_city.yaml  (Eldryn City, the forest capital, ~L50)
+#
+# Eldryn's canon: an ancient forest kingdom grown around a tree older than any crown, where it is
+# never quite certain whether the growth is wholly natural or old-world ecology still running. Its
+# Order is GATHERING -- the capital does not rule the wood, it tends it; a grove-keeper here would
+# sooner nurse a sick root than fell a sound one, and the halls themselves are grown INTO living
+# trunks the size of towers rather than cut from them. The conflict is a slow, arboreal one (a
+# blight has crept into the deep roots beneath the capital, and the wardens cannot yet name it);
+# the clue to the wider world is the blight itself (a sickness rising in the oldest roots of the
+# realm, where the forest's memory is deepest); the remainder is left open (what the rot is, and
+# whether the Great Tree can be saved, is never proven). A bare map hub becomes the living seat of
+# a forest kingdom an interviewer walking the green road would expect. Installed by
+# kernel/world/authored_towns.py; its quest is quests/eldryn_city_blight.yaml.
+
+rooms:
+  eldryn_city_court:
+    name: The Heartwood Court
+    desc: >-
+      The grown heart of the forest capital, a court not built but coaxed: a ring of living trunks
+      the girth of towers, their bark carved smooth into arch and gallery, their canopy laced
+      overhead into a green vault that lets the light down in coins. The Great Tree stands at the
+      centre, older than any crown, and the grove-keepers move quietly beneath it as though in a
+      hall that might be listening. Ways lead OUT to the green road, UP the stair of woven boughs to
+      the high canopy, NORTH to the wardens' hall in the northern trunk, EAST to the gatherers'
+      market, and DOWN into the deep roots below the city.
+    exits:
+      out: eldryn_city
+      up: eldryn_city_canopy
+      north: eldryn_city_wardenhall
+      east: eldryn_city_market
+      down: eldryn_city_roots
+  eldryn_city_canopy:
+    name: The High Canopy
+    desc: >-
+      A gallery grown high in the crown of the capital, where walkways of living branch knit the
+      great trunks together and the whole forest kingdom lies open below: the green road threading
+      out, the far lodges of Wildgrowth, and beyond them the deep wood where the map stops being
+      certain what grows. A canopy-watch keeps the height and reads the health of the leaves. The
+      stair of boughs descends back DOWN to the court.
+    exits: {down: eldryn_city_court}
+  eldryn_city_wardenhall:
+    name: The Grove-Wardens' Hall
+    desc: >-
+      The hall of the forest compact, grown into the northern trunk, its walls a single living wall
+      of heartwood that the wardens tend and never cut. Here the pact between the capital and the
+      old wood is kept, and the tally of the deep is read. A grove-warden sits with a bark-slate
+      across her knees, and frets over what rises in the roots. The court is back SOUTH.
+    exits: {south: eldryn_city_court}
+  eldryn_city_market:
+    name: The Gatherers' Market
+    desc: >-
+      A market that grew rather than was raised: stalls set in the hollows of buttress roots, hung
+      with drying herb and honey and the day's forage from a hundred leagues of wood. A forage-broker
+      keeps a steady stall here, and buys fernshade off any gatherer with the arms to work the deep
+      wood, for the capital's healers. The court is back WEST.
+    exits: {west: eldryn_city_court}
+  eldryn_city_roots:
+    name: The Deep Roots
+    desc: >-
+      A cavern of vast pale roots older than the forest above, laid in channels too even to be wild,
+      where the Great Tree drinks and the capital's memory runs deepest. Sap moves in them like slow
+      blood, and here, close, the air tastes wrong: a grey rot has crept into the oldest of them, and
+      the sap where it spreads runs dark and still. Something the wardens cannot yet name tends this
+      place now. Stairs climb back UP to the court.
+    exits: {up: eldryn_city_court}
+
+hub: {room: eldryn_city, keyword: grove, entry: eldryn_city_court}
+
+npcs:
+  eldryn_city_speaker:
+    name: Speaker Aelith
+    keywords: [aelith, speaker]
+    location: eldryn_city_court
+    dialogue:
+      - >-
+        "Walk softly under the Great Tree, traveller. This is Eldryn City, the seat of the forest,
+        and we do not rule the wood here so much as answer to it. Whatever your business, do not lay
+        an axe to a living trunk, and the capital will hold you a friend."
+    topics:
+      capital:
+        - >-
+          "Eldryn City is the oldest thing with a name in the realm. We did not build these halls,
+          we asked the trees to make them, and the trees, being old and patient, agreed. A crown can
+          be melted down; a grown capital only ever grows on. That is the whole of our strength."
+      tree:
+        - >-
+          "The Great Tree at the court's heart is older than any crown ever forged, and the whole
+          city is its household. While it stands green, the forest kingdom stands. So you will
+          understand why the warden's face is grey these days, and why mine is too."
+      blight:
+        - >-
+          "A sickness has come into the deep roots below us, a grey rot in the oldest wood. We are
+          gatherers, not soldiers; we tend, we do not cut, and a thing you cannot cut is a hard
+          enemy for such as us. Go down to the warden if you would help. Go carefully."
+      aelith:
+        - >-
+          "Speaker for the Great Tree, which cannot speak for itself, or perhaps speaks too slowly
+          for a short-lived ear to hear. Someone must stand at its foot and answer for the forest.
+          The lot fell to me, and I have not tired of it in ninety years."
+    hp: 0
+  eldryn_city_warden:
+    name: Grove-Warden Thessaly
+    keywords: [thessaly, warden, grove-warden]
+    location: eldryn_city_wardenhall
+    dialogue:
+      - >-
+        "You have the sense not to trample what you cannot name, I hope. A rot has taken the deep
+        roots below the court, and my wardens will not touch it, for a gatherer's hands are for
+        tending, not for sickness. Go DOWN, draw a sample of the blighted heartsap, and bring it up
+        to me. The forest-folk pay their debts in more than coin."
+    topics:
+      roots:
+        - >-
+          "The deep roots are laid too straight to be wild, and they hold the memory of the whole
+          forest. My grandmother read them and said they remember every hand that ever tended them.
+          Now something is rotting that memory from below, and I cannot yet say what."
+      blight:
+        - >-
+          "A grey rot, creeping up from the oldest roots where the Great Tree drinks. The sap runs
+          dark where it spreads and the wood goes cold. If it reaches the heartwood the capital
+          itself sickens. Bring me a clean sample and the healers may yet learn to name it."
+      gathering:
+        - >-
+          "The Order of Gathering keeps this place: we tend the wood, we do not master it. It is
+          slow work and thankless, and it is the only reason a forest older than kings still lets a
+          city live in its crown. We keep the pact. We do not win; we only keep."
+      thessaly:
+        - >-
+          "Warden of the grove, keeper of the pact between Eldryn City and the wood. The Speaker
+          answers for the Tree; I answer for its roots. Just now the roots are the harder charge,
+          and the ones that keep me from sleep."
+    hp: 0
+  eldryn_city_broker:
+    name: Forage-Broker Corwin
+    keywords: [corwin, broker, forager, forage-broker]
+    location: eldryn_city_market
+    dialogue:
+      - >-
+        "Forage-trade, walker? I keep what the deep wood costs a body: draughts for the long green
+        road, and I buy fernshade by the bundle for the capital's healers, if you have the arms to
+        gather it out in the wood. The Eldryn gives freely to those who ask, and dear to those who
+        take."
+    topics:
+      trade:
+        - >-
+          "Draughts I sell, healing and mana both; fernshade I buy. Gather it where the thorn keeps
+          the light thin and the healers upcity will bless your name and I will fill your purse.
+          Both are worth having, and the healers need it more than ever, with the roots as they are."
+      fernshade:
+        - >-
+          "A pale leaf that only grows where the shade lies deep, and the deep wood of the Eldryn is
+          thick with it. The healers cannot work a single tonic without it, and just now they are
+          working every hour, trying to physic a rot no draught has ever met."
+      corwin:
+        - >-
+          "Broker of the Gatherers' Market. I turn what the wood gives into what the city needs, and
+          take my cut in the middle. An honest trade, and a warm hollow to do it in. Ask the warden
+          if I deal fair; she will grumble that I do."
+    shop:
+      sells: {healing_draught: 26, mana_draught: 26}
+      buys: {fernshade: 7}
+    hp: 0
+  eldryn_city_canopist:
+    name: Canopy-Watch Naevele
+    keywords: [naevele, watch, canopy-watch, canopist]
+    location: eldryn_city_canopy
+    dialogue:
+      - >-
+        "Come UP and look, traveller. The whole forest kingdom from one bough: the green road, the
+        far lodges, and out past them the deep wood where the leaves are the honest tongue of the
+        realm. I keep the height and read the health of the canopy. It has been reading strange of
+        late."
+    topics:
+      canopy:
+        - >-
+          "A forest tells the truth in its leaves before it tells it anywhere else. From up here I
+          read the whole crown of the capital at a glance, and lately I do not like the reading:
+          patches gone dull and early-brown, high in trunks whose roots I am told run deepest."
+      blight:
+        - >-
+          "The warden watches the rot climb up from the roots; I watch it show in the leaves from
+          above. The two of us are reading the same wound from its two ends. When the browning
+          reaches the Great Tree's own crown, we will have run out of time to name the thing."
+      naevele:
+        - >-
+          "Canopy-watch of Eldryn City, keeper of the high boughs. Someone must actually LOOK at the
+          forest from above while the wardens read its roots from below. Between us we keep the whole
+          of it in sight, which is more than the wood does for itself."
+    hp: 0
+  eldryn_city_rot:
+    name: a shambling root-blight
+    keywords: [root-blight, blight, rot]
+    location: eldryn_city_roots
+    dialogue:
+      - The dark sap gathers and rises, a shambling mass of rotted root that turns its grey face toward you.
+    aggressive: true
+    hp: 430
+    atk: 36
+    xp: 60
+    level: 50
+    tier: normal
+    attack_element: PSN
+
+items:
+  eldryn_city_heartsap:
+    name: a phial of blighted heartsap
+    keywords: [heartsap, sap, phial]
+    location: eldryn_city_roots
+    lore: >-
+      A slender phial of sap drawn from the deep roots where the grey rot has taken hold, dark and
+      still where a healthy root would run clear and slow. Held to the coin-light of the canopy it
+      shows a thing that should not be in living wood: a fine grey thread laced all through it, too
+      even to be chance, as though the rot were not a sickness at all but a pattern, drawn into the
+      oldest roots of the realm by a hand the wardens cannot name.
+  eldryn_city_barkslate:
+    name: the wardens' bark-slate
+    keywords: [bark-slate, slate, tally]
+    location: eldryn_city_wardenhall
+    lore: >-
+      A broad slab of living bark the wardens have read for longer than the city has kept records,
+      its surface marked with a growing tally that no hand seems to cut: new lines rise in it season
+      by season, as if the wood itself keeps the count and the wardens only read what the roots have
+      already chosen to record. Near the newest edge the lines run crooked and grey for the first
+      time in the slate's long memory, and no warden living knows what the crooked lines mean.

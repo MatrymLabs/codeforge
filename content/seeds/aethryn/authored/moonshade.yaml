@@ -1,0 +1,211 @@
+# SEED: aethryn -- authored/moonshade.yaml  (Moonshade, a moonlit glade-town of Duskwood Vale, ~L20)
+#
+# Duskwood's canon identity: a folkloric frontier of memory, grief, and ambiguous supernatural
+# danger, where some sites preserve the emotional or mnemonic consequences of the collapse.
+# Moonshade is a glade-town that trades by lantern after dark, its folk keeping a moonwell where the
+# drowned of the Fall are remembered. The conflict is ordinary and sad (a mourner's lantern has gone
+# out down in the deep well, and an unkept vigil is a soul let wander); the clue to the larger world
+# is the well itself (a place that keeps the drowned in memory); the rumour is left unproven.
+# Installed by kernel/world/authored_towns.py; its quest is quests/moonshade_vigil.yaml.
+
+rooms:
+  moonshade_glade:
+    name: The Lantern Glade
+    desc: >-
+      A ring of pale birches around a moonlit clearing, its market waking only after dusk when the
+      Duskwood folk hang their lanterns and trade in low voices, one eye on the dark. They set out
+      wares and pack them fast, and lately they pack them faster. Ways lead OUT to the forest road,
+      NORTH to the moonwell shrine, WEST to the warm lantern hall, and EAST into the silvered thicket.
+    exits:
+      out: moonshade
+      north: moonshade_shrine
+      west: moonshade_lanternhall
+      east: moonshade_thicket
+  moonshade_lanternhall:
+    name: The Lantern Hall
+    desc: >-
+      A long timber hall lit end to end with hanging lamps, where the town gathers when the glade
+      goes cold and no lantern is ever allowed to gutter out. It is warmer and brighter than any one
+      room in Duskwood has a right to be, and everyone here knows exactly why. The glade is back EAST.
+    exits: {east: moonshade_glade}
+  moonshade_shrine:
+    name: The Moonwell Shrine
+    desc: >-
+      A quiet shrine of grey stone built over an old well, its rim worn smooth by the hands of
+      mourners who lower a lit lantern each night and draw up nothing. Here the drowned of the Fall
+      are kept in memory, name by name. A keeper tends the roll of the drowned. Worn steps descend
+      DOWN into the deep well; the glade is back SOUTH.
+    exits: {south: moonshade_glade, down: moonshade_deepwell}
+  moonshade_deepwell:
+    name: The Deep Well
+    desc: >-
+      A cold shaft of black water far below the shrine, its walls hung with the drowned lanterns of a
+      hundred vigils, most long dark. The folk say the well does not hold water so much as grief, and
+      that a face rises in it if you look too long, wearing sorrow that was yours before you had it.
+      A mourner's lantern has gone out here and been left behind. The steps climb back UP.
+    exits: {up: moonshade_shrine}
+  moonshade_thicket:
+    name: The Silvered Thicket
+    desc: >-
+      The birches crowd close and the moonlight turns their leaves to grey coins, and it is here the
+      townsfolk stop walking once the lanterns are hung. Something drowned-looking moves between the
+      trunks after dark, wearing a familiar face and asking to be let in. The lit glade is back WEST.
+    exits: {west: moonshade_glade}
+
+hub: {room: moonshade, keyword: glade, entry: moonshade_glade}
+
+npcs:
+  moonshade_keeper:
+    name: Keeper Sela
+    keywords: [sela, keeper]
+    location: moonshade_shrine
+    dialogue:
+      - >-
+        "Gently, stranger, and speak low near the well. A mourner's lantern went out down in the deep
+        water and was left behind, and an unlit vigil is a soul we have stopped remembering, which in
+        Duskwood is a soul let loose to wander. Go down, take up the dark lantern, and bring it to me
+        that I may light it again. Do not look too long into the water. The face there is not for you."
+    topics:
+      moonwell:
+        - >-
+          "We do not draw water from this well. We lower a lit lantern down to the drowned each night
+          and draw the dark one up, so that every soul the Fall took to the water is kept in memory.
+          A vigil unlit is a name forgotten, and a forgotten name in the Vale does not rest, it walks."
+      thicket:
+        - >-
+          "The Lampwright will tell you the lanterns are only to trade by. They are not. Something out
+          in the silvered thicket wears a drowned face and asks to be let in by a name you loved, and
+          the lit hall is the one door in Duskwood it cannot open. Keep to the light, and lock early."
+      fall:
+        - >-
+          "When the Fall came the Vale did not burn, it drowned, in grief if not in water. The well
+          remembers the ones it took. Some of what walks the thicket now is only that sorrow, risen
+          and forgetting it is dead. Warden Mabb in Ravenwatch keeps her barrows the same way we keep our well."
+      sela:
+        - >-
+          "Keeper of the moonwell, and of the roll of the drowned. Someone must remember them by name
+          or the Vale remembers them wrong. It is quiet work, and lantern-oil, and it does not end."
+    hp: 0
+  moonshade_lampwright:
+    name: the Lampwright Corin
+    keywords: [corin, lampwright]
+    location: moonshade_lanternhall
+    dialogue:
+      - >-
+        "Stand near a lamp, friend, and mind you never let one gutter in my hall. I keep every flame
+        in Moonshade burning, from the market lanterns to the vigil-light Keeper Sela lowers down the
+        well. It is the whole of my trade, and in Duskwood it is more than a trade. Warm yourself, but leave the wicks be."
+    topics:
+      lanterns:
+        - >-
+          "A lantern in Moonshade is not for seeing by. It is for being seen by, so the drowned know
+          the living from the far shore and do not mistake us for their own. Let a flame go out and
+          you have opened a door. That is why the Keeper frets so over the one gone dark down the well."
+      well:
+        - >-
+          "Sela lowers a lit lamp to the drowned each night and I keep the oil for it. One went out
+          down there and stayed, and now she cannot close the vigil. Fetch it up for her. A dark
+          lantern in that well is a wick I cannot reach, and it keeps me awake, which lamps should not do."
+      thicket:
+        - >-
+          "I do not go east past the glade once the lamps are hung, and neither should you. The night-
+          trader Bram will sell you a draught for the road; he will not sell you a reason to walk the
+          thicket after dark. There isn't one. Something out there knows my name, and I never told it."
+      corin:
+        - >-
+          "Lampwright of Moonshade, keeper of every flame the town owns. Someone must tend the light
+          so the rest can sleep behind it. I sleep badly, so that others may sleep at all. Fair trade."
+    hp: 0
+  moonshade_trader:
+    name: Night-Trader Bram
+    keywords: [bram, trader, night-trader]
+    location: moonshade_glade
+    dialogue:
+      - >-
+        "Trade quick, the glade market keeps short hours. I sell the draughts a body needs to walk
+        Duskwood and come home, and I buy fernshade off any forager brave enough to cut it in the
+        shade, for the Keeper's vigil-oil and the grief-charms folk hang on their doors. Buy, and be
+        under a lamp by full dark. I am not being colourful."
+    topics:
+      trade:
+        - >-
+          "Draughts I sell, healing and mana both, and charms against the dark. Fernshade I buy, cut
+          in the deep Duskwood shade, for it feeds the vigil-lamp Sela lowers down the well and the
+          charms Corin swears by. Bring a bundle by moonrise and I will pay honest, which is rare after dark."
+      night:
+        - >-
+          "We trade by lantern because the Vale is not safe to be seen in unlit, and we pack up early
+          because the thicket wakes early. Something out east wears a drowned face and calls folk by
+          name. I keep my stall between two lamps and my door locked, and I have grown old doing it."
+      bram:
+        - >-
+          "Night-trader of Moonshade, and the last stall to close in the glade. Someone must sell the
+          living what they need to outlast the drowned. Ask the Keeper what fernshade is really for;
+          she will tell you it is for remembering, and she will not be joking."
+    shop:
+      sells: {healing_draught: 22, mana_draught: 22}
+      buys: {fernshade: 5}
+    hp: 0
+  moonshade_bellringer:
+    name: the Bell-Ringer Idris
+    keywords: [idris, bell-ringer, ringer]
+    location: moonshade_lanternhall
+    dialogue:
+      - >-
+        "I ring the mourning-bell for Moonshade, one toll for each name the well keeps, every night at
+        moonrise. Sit by me while I count them. The bell is how the living tell the drowned we have not
+        forgotten, and forgetting, in the Vale, is the only death that lasts."
+    topics:
+      bell:
+        - >-
+          "One toll for each drowned name on the Keeper's roll, so the well hears it is still
+          remembered and stays a well and not a door. When Sela loses a vigil-lamp I ring the name
+          twice, to make up the dark. Lately I have been ringing a great many names twice, and my arms know it."
+      drowned:
+        - >-
+          "They are not gone, only under. The well keeps their grief and the bell keeps their names,
+          and between us we keep them from rising wrong. The thing in the thicket is one we lost the
+          count of, once, years back. I do not let myself lose count anymore. You can hear why."
+      keeper:
+        - >-
+          "Sela lowers the light and I ring the names, the vigil and the toll, one hand and the other.
+          She will tell you memory is quiet work. She is right, and yet I am the loudest thing in
+          Duskwood after dark, on purpose, so no drowned soul out there ever thinks itself unheard."
+      idris:
+        - >-
+          "Bell-Ringer of Moonshade, and the town's loud grief. Someone must say aloud that the dead
+          are missed, or the quiet convinces them otherwise. I have a strong arm and a longer memory. Both ache."
+    hp: 0
+  moonshade_drowned:
+    name: a drowned mourner
+    keywords: [drowned, mourner, thing]
+    location: moonshade_deepwell
+    dialogue:
+      - The drowned mourner rises through the black water, wearing a face that is almost one you knew, and reaches up as if to be lifted out.
+    aggressive: true
+    hp: 140
+    atk: 16
+    xp: 26
+    level: 19
+    tier: normal
+    attack_element: DRK
+
+items:
+  moonshade_moon_lantern:
+    name: a drowned vigil-lantern
+    keywords: [lantern, vigil-lantern, drowned]
+    location: moonshade_deepwell
+    lore: >-
+      A small brass lantern hauled up cold and dark from the deep well, its glass beaded with water
+      that will not dry and its wick drowned but whole. Hold it and you feel the shape of the vigil it
+      kept: a name lowered into the dark each night and answered, until one night it was not. The
+      Keeper can light it again. Whether the soul it watched over is still down there waiting, the well does not say.
+  moonshade_drowned_roll:
+    name: the roll of the drowned
+    keywords: [roll, drowned-roll, list]
+    location: moonshade_shrine
+    lore: >-
+      A long vellum scroll kept dry under the shrine's eave, every line a name the well took in the
+      Fall and the date it was last remembered aloud. The Keeper's rubric runs down the margin: "We do
+      not carve them their deaths, only that they drowned remembered and by whom. A name unlit walks.
+      A name kept rests. Lower the light, ring the bell, do not lose the count." The last few lines are fresh ink.

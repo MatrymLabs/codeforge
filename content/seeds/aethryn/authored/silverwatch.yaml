@@ -1,0 +1,205 @@
+# SEED: aethryn -- authored/silverwatch.yaml  (Silverwatch, a silver-mining town of Caeloria, ~L30)
+#
+# Caeloria's canon: the heartland kingdom of golden plains and the high road, ruled by RECORD, not the
+# sword; its Order is KNOWING. Silverwatch sits on the plains' southern edge, a working silver-mining
+# town of scales and assays and ledgers, honest and a little weary: nothing leaves the town unweighed
+# and unproven. The conflict is ordinary and clerical (a tally-book was carried down into the deep
+# workings and never brought back, and without it the season's assay cannot be sealed); the clue to
+# the wider world is what the book records (the reaches beyond the plains have gone quiet, order by
+# cancelled order, and only the ledger noticed); the remainder is left open (why the reaches fell
+# silent, and who carried the book below, is never proven). A bare map hub becomes the living mining
+# town an interviewer walking the southern road would expect.
+# Installed by kernel/world/authored_towns.py; its quest is quests/silverwatch_tally.yaml.
+
+rooms:
+  silverwatch_square:
+    name: The Weigh-Square
+    desc: >-
+      A working square of grey flagstone on the plains' southern edge, silver-dust ground into every
+      seam of it, the great scale-beam of the town weigh-house creaking over the trade. Miners come up
+      grey and go home greyer, and a clerk tallies every ingot before it leaves. Ways lead OUT to the
+      plains road, NORTH to the assay office, EAST to the tally-hall, and WEST to the mine-head.
+    exits:
+      out: silverwatch
+      north: silverwatch_assay
+      east: silverwatch_tally
+      west: silverwatch_headframe
+  silverwatch_assay:
+    name: The Assay Office
+    desc: >-
+      A cramped office of scarred oak benches where the assayer proves every load, cupel and acid and
+      flame telling true silver from fool's shine. Nothing leaves Silverwatch unweighed and unproven,
+      for a town that trades on trust cannot afford a false ingot. The square is back SOUTH.
+    exits: {south: silverwatch_square}
+  silverwatch_tally:
+    name: The Tally-Hall
+    desc: >-
+      A long hall of ledgers and lamp-oil where the Knowing-order clerks keep the town's whole
+      reckoning: every ingot mined, every crate shipped, every reach that once ordered silver and every
+      reach that has quietly stopped. A clerk keeps the great tally-book here, and frets over its gaps.
+      The square is back WEST.
+    exits: {west: silverwatch_square}
+  silverwatch_headframe:
+    name: The Mine-Head
+    desc: >-
+      The pithead where the great timber headframe stands over the shaft, its wheel turning, cages
+      rattling miners down into the dark and silver up into the light. A weary shift rests here between
+      descents, grey to the elbows. A cage drops DOWN into the deep workings; the square is back EAST.
+    exits: {down: silverwatch_deep, east: silverwatch_square}
+  silverwatch_deep:
+    name: The Deep Workings
+    desc: >-
+      A low silver-veined gallery far under the plains, timber groaning overhead, lamplight catching
+      bright threads of ore in the black rock. The air is close and old and tastes of coin. Something
+      shifted off down an unlit drift when your lamp swung its shadows. A ladder climbs back UP to the
+      mine-head.
+    exits: {up: silverwatch_headframe}
+
+hub: {room: silverwatch, keyword: square, entry: silverwatch_square}
+
+npcs:
+  silverwatch_weighmaster:
+    name: Weighmaster Doria
+    keywords: [doria, weighmaster, master]
+    location: silverwatch_square
+    dialogue:
+      - >-
+        "Set your load on the beam, traveller, and I will give you an honest figure, which is the only
+        kind Silverwatch keeps. I sell the draughts a body needs to work a deep shift and walk home, and
+        I buy meadowfoil off any gatherer who cuts it on the plains, for the miners' salves. Trade fair."
+    topics:
+      trade:
+        - >-
+          "Draughts I sell, healing and mana both, for the deep is hard on a body and the plains road is
+          long. Meadowfoil I buy, the golden-field herb, boiled down into the salve that keeps a miner's
+          hands from cracking. Bring a bundle and I will pay a fair weight, weighed on my own honest beam."
+      silver:
+        - >-
+          "This whole town is one long argument about weight, traveller. What the vein gives, what the
+          assayer proves, what the ledger says was shipped. The metal is easy; it is the reckoning of it
+          that keeps the clerks up late. Ask Sennic in the tally-hall how much sleep an honest column costs."
+      doria:
+        - >-
+          "Weighmaster of Silverwatch, and the beam behind me has not lied in forty years, which is more
+          than I can say for the men who load it. Assayer Halden proves the silver true; I only prove it heavy."
+    shop:
+      sells: {healing_draught: 24, mana_draught: 24}
+      buys: {meadowfoil: 6}
+    hp: 0
+  silverwatch_assayer:
+    name: Assayer Halden
+    keywords: [halden, assayer]
+    location: silverwatch_assay
+    dialogue:
+      - >-
+        "Careful past the cupels, they are hot. Every ingot that leaves this town passes my flame first,
+        so that a Silverwatch mark on the silver means the silver is true. It is slow, thankless work,
+        and it is the only reason anyone still buys from us. Truth is the town's real ore."
+    topics:
+      assay:
+        - >-
+          "To assay a thing is to prove it, not to trust it. I burn away the fool's shine and weigh what
+          is left, and I write the true measure down for the tally-hall. Doria weighs it; I prove it; Sennic
+          records it. Between the three of us a bar of Silverwatch silver is worth exactly what it says."
+      reaches:
+        - >-
+          "It is not the silver that troubles me, it is who has stopped asking for it. We assayed loads for
+          six reaches when I came here. Now four of those marks never come back stamped RECEIVED. Sennic keeps
+          the count in the deep tally. Silver does not lie, but a ledger of silence tells you something is wrong."
+      halden:
+        - >-
+          "Assayer of Silverwatch, keeper of the flame. Anyone can dig a shining rock out of the dark. It
+          takes a proving to know whether it is worth carrying up. Ask the clerk; the proving is the whole town."
+    hp: 0
+  silverwatch_clerk:
+    name: Tally-Clerk Sennic
+    keywords: [sennic, clerk, tally-clerk]
+    location: silverwatch_tally
+    dialogue:
+      - >-
+        "You have a steady hand, I think, and I have a lost column. The deep tally-book, the one that
+        records what each reach ordered and what it paid, was carried down into the workings on the last
+        shift and never came back up. Without it the season's assay cannot be sealed. Go down, bring it
+        up to me, and mind the unlit drifts. Bring me the book, not a hero's tale."
+    topics:
+      tally:
+        - >-
+          "A mining town is only as honest as its ledgers, and the deep tally is the honest one: every
+          reach that ordered silver, every crate we shipped, every payment that came back. It went below on
+          the last shift and stayed there. Until it is on my desk, I cannot close the season, and a town that
+          cannot close its season is a town that has started to forget what it is owed."
+      reaches:
+        - >-
+          "Read the tally and you see it plain, where Halden only smells it. Order by order, the reaches
+          beyond the plains have gone quiet. Grey Marsh stopped in spring. The Ridge in summer. No fire, no
+          war, no word, only a column that stops. The heartland rules by record, and the record has gone silent
+          at the edges. That frightens me more than any collapsed drift."
+      knowing:
+        - >-
+          "I am of the Order of Knowing, same as the archivists of the capital, only my charter is silver
+          and theirs is the realm. We keep the count. It is unglamorous, and it is the thread that holds the
+          plains together while the reaches fray off the far end of the ledger."
+      sennic:
+        - >-
+          "Tally-Clerk of Silverwatch, keeper of the deep book. Doria weighs, Halden proves, and I remember.
+          Take my memory away down a black drift and the whole honest town is just men and a hole in the ground."
+    hp: 0
+  silverwatch_miner:
+    name: Old Bracken the miner
+    keywords: [bracken, miner, old]
+    location: silverwatch_headframe
+    dialogue:
+      - >-
+        "Rest a moment before you take the cage down, stranger. The deep is old, older than the town, and
+        it does not care how honest your ledgers are. I have worked this shaft thirty years and I still take
+        my lamp seriously. So should you."
+    topics:
+      deep:
+        - >-
+          "The workings run further than the maps say, down past the good silver into drifts nobody cut.
+          Last shift, young Sennic sent his precious tally-book below to count a fresh vein, and it did not
+          come back, and neither did the counter for a good long while. There is more than ore down there in the dark."
+      silence:
+        - >-
+          "The clerk talks of reaches going quiet like it is a column of numbers. Down the deep it feels less
+          tidy than that. The old drifts have gone quiet too, quieter than rock should be. Halden would tell me
+          to prove it before I say it. I cannot prove a silence. I only know I stopped whistling down there."
+      bracken:
+        - >-
+          "Old Bracken, they call me, and old I am, and above ground I intend to stay from here on. Someone
+          has to sit at the mine-head and tell the young ones which drifts to leave alone. Leave the unlit ones alone."
+    hp: 0
+  silverwatch_delver:
+    name: a hollow delver
+    keywords: [delver, hollow, thing]
+    location: silverwatch_deep
+    dialogue:
+      - The delver unfolds from a seam of black rock, silver-blind eyes turning, mouthing a tally-count that has no end.
+    aggressive: true
+    hp: 190
+    atk: 19
+    xp: 40
+    level: 29
+    tier: normal
+    attack_element: DRK
+
+items:
+  silverwatch_tally_book:
+    name: the deep tally-book
+    keywords: [tally-book, book, tally, ledger]
+    location: silverwatch_deep
+    lore: >-
+      A heavy ledger bound in grey mine-leather, its pages damp from the deep and ruled in the clerk's
+      patient hand: every reach that ordered Silverwatch silver, every crate shipped, every payment
+      returned. The last columns are the strange ones. Order after order from the reaches beyond the
+      plains is entered, shipped, and then never marked RECEIVED, the tally trailing off into blank
+      ruled lines, as though the far end of the world had simply stopped writing back.
+  silverwatch_assay_mark:
+    name: a Silverwatch assay-mark
+    keywords: [assay-mark, mark, stamp, die]
+    location: silverwatch_assay
+    lore: >-
+      The iron die the assayer strikes into every proven bar: a scale-beam over a silver vein, and cut
+      around the rim the town's plain rubric. "Weighed true, proved true, recorded true," it reads. "A
+      mark is a promise, and a promise is only worth the record that keeps it. Prove the silver. Keep the
+      ledger. A town that trades on trust dies the day it stops writing down what it is owed."
