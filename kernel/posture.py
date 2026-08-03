@@ -23,6 +23,10 @@ import json
 from dataclasses import dataclass, field
 from datetime import date
 from pathlib import Path
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:  # pure type import; the shelf part is loaded lazily where it is actually used
+    from kernel.shelf.mutation_kpi import MutationResult
 
 MEASURED = "measured"
 NOT_COMPUTABLE = "not_computable"
@@ -71,6 +75,7 @@ class PostureEvidence:
     expired_exceptions: int | None = None  # pip-audit --ignore-vuln entries past their review date
     sbom_present: bool | None = None  # a CycloneDX SBOM exists for the release
     scan_cadence_days: int = 1  # the freshness target (daily ritual)
+    mutation_result: MutationResult | None = None  # last recorded `make mutation` run (or None)
 
 
 # The catalog: every KPI carries scope/source/target/owner so a value is never context-free.
@@ -122,6 +127,14 @@ KPI_CATALOG: tuple[KpiSpec, ...] = (
         "the CycloneDX SBOM (make sbom)",
         "present",
         "Security Lead",
+    ),
+    KpiSpec(
+        "mutation_kill_rate",
+        "would our tests notice if the code were wrong (not just: did the line run)?",
+        "modules enrolled in cosmic-ray.toml; incomplete mutants excluded from the denominator",
+        "a recorded `make mutation` run (security-evidence/mutation-latest.json)",
+        ">= 70% killed (the field report's per-suite floor)",
+        "codeforge maintainer",
     ),
 )
 
@@ -232,6 +245,24 @@ def compute(evidence: PostureEvidence, today: date) -> list[Kpi]:
                 breaches=not evidence.sbom_present,
             )
         )
+
+    # Mutation kill rate: delegate the honesty logic to the shelf part (lazy import keeps posture
+    # loadable even if the shelf part is absent, mirroring the advisory_ledger seam below).
+    from kernel.shelf.mutation_kpi import mutation_score_kpi
+
+    mkpi = mutation_score_kpi(evidence.mutation_result, today)
+    if mkpi.measured:
+        assert mkpi.kill_rate is not None  # measured => a rate exists
+        out.append(
+            _measured(
+                "mutation_kill_rate",
+                round(mkpi.kill_rate, 3),
+                mkpi.detail,
+                breaches=mkpi.breaches_target,
+            )
+        )
+    else:
+        out.append(_not_computable("mutation_kill_rate", mkpi.detail))
     return out
 
 
@@ -272,17 +303,31 @@ def load_evidence(
     *,
     cadence_days: int = 1,
     advisory_ledger_path: Path | str | None = None,
+    mutation_evidence_path: Path | str | None = None,
 ) -> PostureEvidence:
     """Read the newest pip-audit json from security-evidence/ into PostureEvidence (real-use layer).
 
     An empty/absent store is HONEST evidence (latest_scan_date=None -> freshness not_computable),
     not an error - a fleet that has not scanned recently should read that way, not green. When an
     advisory_ledger (kernel.advisory_ledger) is supplied, its first_seen/resolved history lights up
-    the oldest-advisory and MTTR KPIs that are otherwise NOT_COMPUTABLE."""
+    the oldest-advisory and MTTR KPIs that are otherwise NOT_COMPUTABLE. The last recorded
+    `make mutation` run (security-evidence/mutation-latest.json by default) lights up the
+    mutation-kill-rate KPI the same way - independent of any pip-audit scan."""
     root = Path(security_evidence_dir)
+
+    # Mutation evidence is independent of the pip-audit scan, so load it before the no-scan return.
+    from kernel import mutation_recorder
+
+    mpath = (
+        Path(mutation_evidence_path)
+        if mutation_evidence_path is not None
+        else root / "mutation-latest.json"
+    )
+    mutation_result = mutation_recorder.load(mpath)
+
     scans = sorted(root.glob("*-pip-audit.json")) if root.exists() else []
     if not scans:
-        return PostureEvidence(scan_cadence_days=cadence_days)
+        return PostureEvidence(scan_cadence_days=cadence_days, mutation_result=mutation_result)
     newest = scans[-1]
     try:
         data = json.loads(newest.read_text("utf-8"))
@@ -313,6 +358,7 @@ def load_evidence(
         oldest_advisory_first_seen=oldest_first_seen,
         remediation_days=remediation,
         scan_cadence_days=cadence_days,
+        mutation_result=mutation_result,
     )
 
 

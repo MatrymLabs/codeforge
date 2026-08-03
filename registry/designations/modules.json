@@ -8896,5 +8896,32 @@
   "aliases": [],
   "created": "2026-08-03",
   "updated": "2026-08-03"
+ },
+ {
+  "designation": "MOD-10.080",
+  "name": "mutation_recorder",
+  "status": "active",
+  "function": "persist one `make mutation` run to security-evidence/mutation-latest.json so posture reads it as the mutation_kill_rate KPI (record/load + a `python -m` cr-report recorder); the codeforge I/O seam around the pure shelf part MOD-05.090",
+  "label": "mutation_recorder",
+  "file": "kernel/mutation_recorder.py",
+  "type": "MOD",
+  "domain": "10",
+  "docs": "docs/mutation_testing.md",
+  "tests": "tests/test_mutation_recorder.py",
+  "depends_on": [
+   "MOD-05.090"
+  ],
+  "related": [
+   "MOD-10.067"
+  ],
+  "reuse": "the disk-recorder + loader pattern that turns any on-demand tool run into freshness-gated evidence a KPI catalog can read",
+  "tags": [
+   "module"
+  ],
+  "notes": "AP-09 follow-up (RD-2026-0003). Keeps the shelf part MOD-05.090 pure (no filesystem, travels to codeforge-shelf); the repo-anchored path, JSON format, and CLI live here. `make mutation` pipes cr-report through it; posture.load_evidence reads it (independent of any pip-audit scan). Dogfood: the real 122/179 baseline -> MEASURED 68%, honestly breaches the 70% floor. Provenance: original.",
+  "superseded_by": "",
+  "aliases": [],
+  "created": "2026-08-03",
+  "updated": "2026-08-03"
  }
 ]

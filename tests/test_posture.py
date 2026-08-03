@@ -146,5 +146,60 @@ class LoadAndRender(unittest.TestCase):
         self.assertIn("NOT COMPUTABLE", out)
 
 
+class MutationKillRate(unittest.TestCase):
+    """The AP-09 KPI: a mutation score is MEASURED from a fresh recorded run, NOT_COMPUTABLE (never
+    a faked zero) when there is no run or it is stale, and it breaches the 70% floor honestly."""
+
+    def _run(self, killed: int, survived: int, run_date: date):
+        from kernel.shelf.mutation_kpi import MutationResult
+
+        return MutationResult(
+            total=killed + survived, killed=killed, survived=survived, run_date=run_date
+        )
+
+    def test_measured_and_breaches_below_the_floor(self):
+        # the real fleet baseline: 122/179 killed = 68%, honestly under the 70% target
+        ev = p.PostureEvidence(mutation_result=self._run(122, 57, _TODAY))
+        mut = next(k for k in p.compute(ev, _TODAY) if k.spec.id == "mutation_kill_rate")
+        self.assertEqual(mut.status, p.MEASURED)
+        self.assertEqual(mut.value, 0.682)
+        self.assertTrue(mut.breaches_target)
+
+    def test_measured_and_passes_above_the_floor(self):
+        ev = p.PostureEvidence(mutation_result=self._run(150, 29, _TODAY))
+        mut = next(k for k in p.compute(ev, _TODAY) if k.spec.id == "mutation_kill_rate")
+        self.assertEqual(mut.status, p.MEASURED)
+        self.assertFalse(mut.breaches_target)
+
+    def test_no_run_is_not_computable_and_names_the_recorder(self):
+        mut = next(
+            k for k in p.compute(p.PostureEvidence(), _TODAY) if k.spec.id == "mutation_kill_rate"
+        )
+        self.assertEqual(mut.status, p.NOT_COMPUTABLE)
+        self.assertIsNone(mut.value)
+        self.assertIn("make mutation", mut.detail)
+
+    def test_stale_run_is_not_computable(self):
+        from datetime import timedelta
+
+        ev = p.PostureEvidence(mutation_result=self._run(150, 29, _TODAY - timedelta(days=45)))
+        mut = next(k for k in p.compute(ev, _TODAY) if k.spec.id == "mutation_kill_rate")
+        self.assertEqual(mut.status, p.NOT_COMPUTABLE)
+        self.assertIn("stale", mut.detail)
+
+    def test_load_evidence_reads_a_recorded_run_from_the_dir(self):
+        import tempfile
+        from pathlib import Path
+
+        from kernel import mutation_recorder as mr
+
+        with tempfile.TemporaryDirectory() as d:
+            mr.record(self._run(122, 57, _TODAY), Path(d) / "mutation-latest.json")
+            ev = p.load_evidence(d, _TODAY)  # no pip-audit scan present; mutation still lights up
+            self.assertIsNotNone(ev.mutation_result)
+            mut = next(k for k in p.compute(ev, _TODAY) if k.spec.id == "mutation_kill_rate")
+            self.assertEqual(mut.status, p.MEASURED)
+
+
 if __name__ == "__main__":
     unittest.main()
