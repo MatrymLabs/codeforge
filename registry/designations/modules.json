@@ -9428,5 +9428,29 @@
   "aliases": [],
   "created": "2026-08-03",
   "updated": "2026-08-03"
+ },
+ {
+  "designation": "MOD-10.085",
+  "name": "game_linker",
+  "status": "active",
+  "function": "the game domain's Spec->persistent-world Linker: link_region(spec, dest) emits a GameSpec's region as canonical rooms.yaml seed content (deterministic + checksummed), and validate_region(linked) judges it by loading through the real kernel.world.seed.load_rooms plus a reachability walk -- returning a verdict word (linked / unreachable / refused), never a bare bool; the missing bridge from seedlab to a runnable, persistent (non-instanced) world",
+  "label": "game_linker",
+  "file": "kernel/domains/game_linker.py",
+  "type": "MOD",
+  "domain": "10",
+  "docs": "docs/seed_platform/RECENTERING.md",
+  "tests": "tests/test_game_linker.py",
+  "depends_on": ["MOD-10.081"],
+  "related": [
+   "MOD-10.058",
+   "MOD-10.077"
+  ],
+  "reuse": "First slice of the game pipeline under J3 (one integrated persistent MMORPG, not instanced): the missing seedlab->game bridge. Reuses the CLI generator's emit-then-validate-by-running discipline (cli_generator MOD-10.058) but the target is a game world and the validator is the engine's own world loader (load_rooms), so the emitted content is real, bootable, restart-surviving seed content. Grammar before worlds: lives in kernel/domains (world-aware) which the neutral platform is forbidden to import; a classroom Seed never loads it.",
+  "notes": "Reuses kernel/world/seed.load_rooms (real loader + its gates: label format, dupes, dangling exits) and adds reachability from the start room. Composes with the game DomainModule (MOD-10.081). Next sub-slices: quest arc via load_quest, then create->operate->backup->restore->verify lifecycle proof. PROTOTYPED.",
+  "tags": ["module"],
+  "superseded_by": "",
+  "aliases": [],
+  "created": "2026-08-03",
+  "updated": "2026-08-03"
  }
 ]
