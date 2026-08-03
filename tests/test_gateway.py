@@ -780,3 +780,105 @@ def test_a_non_owner_is_refused_seed_creation_over_gmcp(server, tmp_path, monkey
     assert b"Project.Status" not in reply  # nothing was created or served
     assert not list((tmp_path / "seeds").glob("*.json"))  # no Seed on disk
     sock.close()
+
+
+# --- _read_message: the out-of-band subnegotiation reader (bare GMCP frames, no newline) ----------
+
+
+def _read_until_in(sock: socket.socket, marker: bytes, limit: int = 25) -> bytes:
+    """Read until `marker` appears anywhere in the stream (a GMCP frame ends in IAC SE, not the
+    marker, so `endswith` will not do)."""
+    data = b""
+    for _ in range(limit):
+        chunk = sock.recv(4096)
+        if not chunk:
+            break
+        data += chunk
+        if marker in data:
+            break
+    return data
+
+
+def test_read_message_returns_a_line_at_the_newline():
+    import io
+
+    from adapters.gateway import _read_message
+
+    assert _read_message(io.BytesIO(b"look\nmore"), 1024) == (b"look\n", False)
+
+
+def test_read_message_returns_a_bare_gmcp_frame_before_any_newline():
+    import io
+
+    from adapters.gateway import _read_message
+    from kernel.gmcp import gmcp_frame
+
+    frame = gmcp_frame("Form.Submit", {"product_type": "training", "answers": {}})
+    reader = io.BytesIO(frame + b"look\n")  # a bare out-of-band frame, THEN a command line
+    assert _read_message(reader, 1024) == (
+        frame,
+        True,
+    )  # the frame returns first (no newline waited)
+    assert _read_message(reader, 1024) == (b"look\n", False)  # then the command line
+
+
+def test_read_message_keeps_glued_negotiation_inside_the_line():
+    import io
+
+    from adapters.gateway import _read_message
+
+    line = bytes([255, 253, 201]) + b"mira@mlabs\n"  # IAC DO GMCP glued before the login line
+    assert _read_message(io.BytesIO(line), 1024) == (line, False)  # whole line, negotiation intact
+
+
+def test_read_message_does_not_early_return_on_a_non_gmcp_subnegotiation():
+    import io
+
+    from adapters.gateway import _read_message
+
+    naws = bytes([255, 250, 31, 0, 80, 0, 24, 255, 240])  # IAC SB NAWS ... IAC SE (option 31)
+    reader = io.BytesIO(naws + b"look\n")
+    # NAWS is not GMCP, so it is read through to the newline as a line (as before), never a frame
+    assert _read_message(reader, 1024) == (naws + b"look\n", False)
+
+
+def test_read_message_at_eof_returns_what_it_has_as_a_line():
+    import io
+
+    from adapters.gateway import _read_message
+
+    assert _read_message(io.BytesIO(b"partial"), 1024) == (b"partial", False)  # no newline, EOF
+
+
+def test_read_message_respects_the_size_cap():
+    import io
+
+    from adapters.gateway import _read_message
+
+    msg, is_frame = _read_message(io.BytesIO(b"x" * 100), 10)
+    assert (
+        len(msg) == 10 and is_frame is False
+    )  # a flood with no newline is capped, treated as line
+
+
+def test_a_bare_out_of_band_form_submit_is_served_without_a_newline(server, tmp_path, monkeypatch):
+    from kernel.gmcp import gmcp_frame
+
+    monkeypatch.setenv("SEEDLAB_HOME", str(tmp_path))
+    _saved_owner()
+    sock, _ = _login_gmcp(server, "wren", "forge")
+    submit = {
+        "product_type": "training",
+        "answers": {
+            "name": "OOB",
+            "purpose": "prove out-of-band",
+            "scenarios": "drill",
+            "competencies": "response",
+            "certification": True,
+        },
+    }
+    sock.sendall(gmcp_frame("Form.Submit", submit))  # NO trailing newline: a true out-of-band frame
+    out = _read_until_in(sock, b"Project.Status")
+    assert b"Seed.Created" in out and b'"ok":true' in out  # the engine minted it, no newline needed
+    assert b"Project.Status" in out and b"OOB" in out  # its workspace pushed back
+    sock.close()
