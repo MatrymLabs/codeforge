@@ -2456,3 +2456,20 @@
     security: compose mail, room and item descriptions, and board posts in-game
     general: compose mail, room and item descriptions, and board posts in-game
 
+- id: minimap
+  name: Minimap
+  source: kernel/shelf/minimap.py
+  category: presentation
+  tags: [map, ascii, rendering, navigation, grid]
+  maturity: beta
+  source_status: original
+  influence: 'Evennia contrib grid/ingame_map_display (BSD-3-Clause, reverse-engineered clean-room)'
+  license: MIT
+  experimental: 'add diagonal (ne/nw/se/sw) placement and up/down layer markers on the plane. Traded away (v1): non-Euclidean exit handling, keeping a clean cardinal BFS layout with a footer note for u/d.'
+  risk: low
+  purpose: 'Render a small ASCII minimap of nearby rooms from a room+exit graph: BFS out to a radius over cardinal exits, place rooms on a 2D grid, paint the center and connectors. Fails loud on a dangling exit or a missing center.'
+  reuse:
+    game: an in-game `map` verb over the world graph
+    education: teach BFS + 2D grid layout with a real, tested renderer
+    security: none
+    general: an ASCII map renderer for any directed room/node graph with cardinal edges

@@ -9349,5 +9349,28 @@
   "aliases": [],
   "created": "2026-08-03",
   "updated": "2026-08-03"
+ },
+ {
+  "designation": "MOD-05.107",
+  "name": "minimap",
+  "status": "active",
+  "function": "render a small ASCII minimap of nearby rooms from a room+exit graph (BFS to a radius, cardinal layout)",
+  "label": "minimap",
+  "file": "kernel/shelf/minimap.py",
+  "type": "MOD",
+  "domain": "05",
+  "docs": "",
+  "tests": "tests/test_minimap.py",
+  "depends_on": [],
+  "related": [],
+  "reuse": "a `map` verb over any room graph; a client minimap feed; any grid-walk-from-a-center render",
+  "tags": [
+   "module"
+  ],
+  "notes": "RD-2026-0007 Evennia total-harvest. Clean-room reconstruction (pattern-not-code) of Evennia contrib grid/ingame_map_display (BSD-3-Clause); no code copied. Consumed by the `map` verb (CMD-04.115). Provenance: original.",
+  "superseded_by": "",
+  "aliases": [],
+  "created": "2026-08-03",
+  "updated": "2026-08-03"
  }
 ]
