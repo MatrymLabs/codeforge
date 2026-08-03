@@ -8923,5 +8923,33 @@
   "aliases": [],
   "created": "2026-08-03",
   "updated": "2026-08-03"
+ },
+ {
+  "designation": "MOD-10.081",
+  "name": "game",
+  "status": "active",
+  "function": "the game domain module (symmetric to education): GameModule satisfies the DomainModule contract (name game, title Aethryn) and each advertised capability (combat/items/callings/npcs/quests/progression/mortality) binds to a REAL kernel/world subsystem via subsystem() (lazy import, fail loud on an unknown capability); register_game_module files it into a DomainModuleRegistry at the composition root",
+  "label": "game",
+  "file": "kernel/domains/game.py",
+  "type": "MOD",
+  "domain": "10",
+  "docs": "docs/seed_platform/RECENTERING.md",
+  "tests": "tests/test_game.py",
+  "depends_on": [
+   "MOD-10.078"
+  ],
+  "related": [
+   "MOD-10.079",
+   "MOD-10.077"
+  ],
+  "reuse": "The case that legitimately DEPENDS on the game world (a domain module may touch its own domain), proving the mechanism symmetric to the stdlib education module. The domain-neutral platform still never imports it (import-linter platform-imports-no-domain-module holds); the game world is pulled only lazily via subsystem(), so registering the module does not load the world graph. Composition root = forge.py domain_registry() (the tick, already world-aware) which registers game + education; a Seed still loads ONLY the modules it selected, so a classroom that selected education never loads game even when both are available.",
+  "notes": "Grammar before worlds from the game side: a game Seed loads combat, a classroom never resolves game. Capabilities map to real kernel/world modules (proven importable by the twin). First world-dependent domain module under kernel/domains/. PROTOTYPED (docs/seed_platform/RECENTERING.md).",
+  "tags": [
+   "module"
+  ],
+  "superseded_by": "",
+  "aliases": [],
+  "created": "2026-08-03",
+  "updated": "2026-08-03"
  }
 ]
