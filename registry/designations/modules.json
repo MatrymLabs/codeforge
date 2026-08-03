@@ -8819,5 +8819,31 @@
   "aliases": [],
   "created": "2026-08-02",
   "updated": "2026-08-02"
+ },
+ {
+  "designation": "MOD-10.077",
+  "name": "provision",
+  "status": "active",
+  "function": "the seam from the Engineering Form to a live Seed: seed_from_spec(kernel, spec) creates a real Seed and records the spec's product_type + selected domain_modules on the Seed's identity (persisted, survives restart); a DomainModuleRegistry maps a module name to its loader; resolve_modules/provision resolve a spec's selected modules against the registry, failing loud (DomainModuleError) if any selected module is not registered, and provision refuses BEFORE creating a half-provisioned Seed",
+  "label": "provision",
+  "file": "kernel/seedlab/provision.py",
+  "type": "MOD",
+  "domain": "10",
+  "docs": "docs/seed_platform/RECENTERING.md",
+  "tests": "tests/test_provision.py",
+  "depends_on": [
+   "MOD-10.052",
+   "MOD-10.075"
+  ],
+  "related": [],
+  "reuse": "Closes the intent -> Seed pipeline: Engineering Form (MOD-10.075) emits a SeedSpec, this turns it into a live Seed via the Kernel (MOD-10.052) and resolves its domain modules. Grammar before worlds by construction and honesty: an education Seed resolves only modules registered under its own names and can never resolve to the game module; a selected module that does not exist is refused, never fake-loaded. Additive persistence change: SeedIdentity gains product_type + domain_modules with back-compat defaults (an old record loads; a JSON list coerces to a tuple).",
+  "notes": "Slice: SeedSpec -> create_seed + domain-module loading (the Stream-1 engine capstone). Domain-neutral: knows module NAMES, not their content; no kernel/world/ import. The DomainModuleRegistry is the seam a future real module loader plugs into; no domain modules ship yet, so provision fails loud until they are registered (honest). PROTOTYPED (docs/seed_platform/RECENTERING.md).",
+  "tags": [
+   "module"
+  ],
+  "superseded_by": "",
+  "aliases": [],
+  "created": "2026-08-03",
+  "updated": "2026-08-03"
  }
 ]
