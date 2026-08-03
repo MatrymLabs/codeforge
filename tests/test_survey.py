@@ -47,7 +47,7 @@ def test_run_routes_each_real_subcommand_to_a_clean_exit():
 def test_run_list_regions_shows_all_fourteen_with_threat_bands():
     code, text = survey.run(["list-regions"])
     assert code == 0
-    assert "Veridia" in text and "threat 250-300" in text  # first + last band present
+    assert "Veridia" in text and "250-300" in text  # first + last band present
 
 
 def test_run_list_locations_reports_a_count_and_names():

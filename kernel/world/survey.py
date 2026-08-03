@@ -18,6 +18,7 @@ from typing import Any
 
 import yaml
 
+from kernel.shelf import table
 from kernel.world import canon, worldgraph
 from kernel.world.seed import SeedError, _UniqueKeyLoader
 
@@ -127,20 +128,30 @@ def validate() -> list[str]:
 
 
 def _format_regions() -> str:
-    lines = ["Regions (canon-locked):"]
-    for r in canon.regions():
-        lines.append(f"  {r['id']:<18} {r['name']:<20} threat {r['threat_min']}-{r['threat_max']}")
-    return "\n".join(lines)
+    rows = [[r["id"], r["name"], f"{r['threat_min']}-{r['threat_max']}"] for r in canon.regions()]
+    if not rows:
+        return "Regions (canon-locked): none"
+    grid = table.render(rows, headers=["id", "name", "threat"], border=False)
+    return "Regions (canon-locked):\n" + grid
 
 
 def _format_locations() -> str:
     locs = sorted(locations(), key=lambda loc: (loc["zone"], loc.get("level", 0), loc["id"]))
-    lines = [f"Locations ({len(locs)} placed):"]
-    for loc in locs:
-        kind = loc["source"].removesuffix(".yaml")
-        level = loc.get("level", "?")
-        lines.append(f"  {loc['id']:<22} {loc['name']:<24} {loc['zone']:<18} L{level} [{kind}]")
-    return "\n".join(lines)
+    rows = [
+        [
+            loc["id"],
+            loc["name"],
+            loc["zone"],
+            f"L{loc.get('level', '?')}",
+            loc["source"].removesuffix(".yaml"),
+        ]
+        for loc in locs
+    ]
+    header = f"Locations ({len(locs)} placed):"
+    if not rows:
+        return header + " none"
+    grid = table.render(rows, headers=["id", "name", "zone", "level", "kind"], border=False)
+    return header + "\n" + grid
 
 
 def _verdict(label: str, violations: list[str]) -> tuple[int, str]:
