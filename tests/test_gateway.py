@@ -710,6 +710,26 @@ def test_an_owner_login_pushes_the_creation_form_over_gmcp(server, tmp_path, mon
     sock.close()
 
 
+def test_an_owner_login_serves_the_reference_read_workspace(server, tmp_path, monkeypatch):
+    monkeypatch.setenv("SEEDLAB_HOME", str(tmp_path))
+    _saved_owner()
+    sock, out = _login_gmcp(server, "wren", "forge")
+    # the reference Seed's REAL read panels light up from the running server, not just a fixture
+    assert b"Architecture.Map" in out and b"module_count" in out  # the engine's own module registry
+    assert b"Blueprint.List" in out and b"blueprint_count" in out  # its filed Blueprints
+    sock.close()
+
+
+def test_a_non_owner_login_gets_no_workspace_packages(server, tmp_path, monkeypatch):
+    monkeypatch.setenv("SEEDLAB_HOME", str(tmp_path))
+    _saved_account()  # a default player-rank account
+    sock, out = _login_gmcp(server, "matrym", "matlabs")
+    # the workspace surface is owner-gated: a player sees neither the Form nor the read panels
+    assert b"Form.Schema" not in out
+    assert b"Architecture.Map" not in out and b"Blueprint.List" not in out
+    sock.close()
+
+
 def test_an_owner_creates_a_seed_over_gmcp_and_gets_its_workspace(server, tmp_path, monkeypatch):
     from kernel.gmcp import gmcp_frame
 
