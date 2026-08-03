@@ -47,6 +47,7 @@ from kernel.registry import (
 )
 from kernel.relay import channel
 from kernel.save import awaken_snapshot, seal_snapshot
+from kernel.shelf import minimap
 from kernel.shelf.hourglass import WORLD_SANDS
 from kernel.store_index import store
 from kernel.telegraph import telegraph
@@ -160,6 +161,28 @@ from kernel.world.world import (
 from kernel.world.zone_story import region_view
 from kernel.world.zones import area_line, tick_zones
 from kernel.world_cert import certify
+
+# Word-direction -> minimap cardinal token (the world uses "north", minimap draws on n/s/e/w/u/d).
+_MAP_DIRS = {"north": "n", "south": "s", "east": "e", "west": "w", "up": "u", "down": "d"}
+
+
+def _world_minimap(location: str) -> str:
+    """Project the live world graph around `location` into an ASCII minimap (cardinal exits only).
+
+    Consumer of the harvested minimap part (MOD-05.107): builds a {room -> {dir: neighbour}} graph
+    from WORLD, keeping only cardinal exits to real rooms (no dangling), and renders radius 2."""
+    graph: dict[str, dict[str, str]] = {}
+    for rid, room in WORLD.items():
+        nbrs: dict[str, str] = {}
+        for direction, dest in room.get("exits", {}).items():
+            token = _MAP_DIRS.get(direction)
+            if token and dest in WORLD:
+                nbrs[token] = dest
+        graph[rid] = nbrs
+    if location not in graph:
+        return "You are nowhere the map can chart."
+    return minimap.render(graph, location, radius=2)
+
 
 NAME_RE = re.compile(r"^[a-z][a-z0-9_]{1,15}$")
 
@@ -652,6 +675,15 @@ def _build_commands() -> CommandSet:
             "CMD-10.005",
             "filter by status",
             lambda _s, arg: registry_status(arg),
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "map",
+            "CMD-04.115",
+            "render a minimap of the nearby world",
+            lambda s, _a: _world_minimap(s.location),
             namespace=CORE,
         )
     )

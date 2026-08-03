@@ -3715,5 +3715,30 @@
     "aliases": [],
     "created": "2026-08-01",
     "updated": "2026-08-01"
-  }
+  },
+ {
+  "designation": "CMD-04.115",
+  "name": "map",
+  "status": "active",
+  "function": "render a minimap of the nearby world",
+  "label": "map",
+  "file": "forge.py",
+  "type": "CMD",
+  "domain": "04",
+  "docs": "",
+  "tests": "tests/test_map_verb.py",
+  "depends_on": [
+   "MOD-05.107"
+  ],
+  "related": [],
+  "reuse": "",
+  "tags": [
+   "command"
+  ],
+  "notes": "RD-2026-0007 Evennia harvest wave 2: consumer of the minimap part (MOD-05.107); renders the world graph around the player as an ASCII minimap.",
+  "superseded_by": "",
+  "aliases": [],
+  "created": "2026-08-03",
+  "updated": "2026-08-03"
+ }
 ]
