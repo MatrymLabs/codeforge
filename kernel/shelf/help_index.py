@@ -20,10 +20,12 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass, field
 
-# A canonical lowercase_snake_case label: starts with a letter, then letters,
-# digits, or single underscores. Identity strings on the ship are frozen in
-# this shape (see the Labels convention), so help entries must honor it.
-_SNAKE_CASE = re.compile(r"^[a-z][a-z0-9]*(_[a-z0-9]+)*$")
+# A command NAME as it appears on the spine: an optional ADMIN "@" sigil, then one or more lowercase
+# words (letters, digits, underscores, hyphens) separated by single spaces. This accepts the real
+# verb grammar (look, registry show, @sg, pm status, qa gate all, @flush-encounters, docs check)
+# while still rejecting uppercase, a leading digit, or stray symbols. Kept permissive-but-shaped so
+# the index stays a general command/topic index, not a codeforge-specific one.
+_COMMAND_NAME = re.compile(r"^@?[a-z][a-z0-9_-]*( [a-z0-9][a-z0-9_-]*)*$")
 
 
 class HelpError(ValueError):
@@ -38,7 +40,7 @@ class HelpError(ValueError):
 class HelpEntry:
     """One command's help record, harvested from command-spine metadata.
 
-    name: the frozen lowercase_snake_case command label.
+    name: the command name/verb as it appears on the spine.
     purpose: the one-line CARD-style summary.
     namespace: the spine namespace ("core" / "admin" / "seed").
     body: optional longer help text; empty when the command has none.
@@ -62,13 +64,13 @@ class HelpIndex:
 
         Inputs: a list of HelpEntry.
         Output: a HelpIndex.
-        Raises HelpError on a non-snake-case name or a duplicate name, so a
+        Raises HelpError on an invalid command name or a duplicate name, so a
         malformed command table shouts at construction, not at lookup.
         """
         table: dict[str, HelpEntry] = {}
         for entry in entries:
-            if not _SNAKE_CASE.match(entry.name):
-                raise HelpError(f"help entry name is not lowercase_snake_case: {entry.name!r}")
+            if not _COMMAND_NAME.match(entry.name):
+                raise HelpError(f"help entry name is not a valid command name: {entry.name!r}")
             if entry.name in table:
                 raise HelpError(f"duplicate help entry name: {entry.name!r}")
             table[entry.name] = entry

@@ -91,10 +91,25 @@ class HostileTests(unittest.TestCase):
             )
         self.assertIn("duplicate", str(ctx.exception))
 
-    def test_non_snake_case_name_fails_loud(self) -> None:
-        for bad in ["Look", "go-fast", "two words", "_lead", "trail_", "up__down"]:
+    def test_invalid_command_name_fails_loud(self) -> None:
+        for bad in ["Look", "_lead", "1cmd", "cmd!", "", " look", "look ", "two  words", "@Admin"]:
             with self.subTest(bad=bad), self.assertRaises(HelpError):
                 HelpIndex.build([HelpEntry(bad, "x", "core")])
+
+    def test_real_verb_grammar_is_accepted(self) -> None:
+        # the spine's real verbs: single, multi-word, @-sigiled, hyphenated
+        good_names = [
+            "look",
+            "registry show",
+            "@sg",
+            "pm status",
+            "qa gate all",
+            "@flush-encounters",
+        ]
+        for good in good_names:
+            with self.subTest(good=good):
+                idx = HelpIndex.build([HelpEntry(good, "does a thing", "core")])
+                self.assertEqual(idx.topic(good).name, good)
 
     def test_empty_query_fails_loud(self) -> None:
         with self.assertRaises(HelpError):
