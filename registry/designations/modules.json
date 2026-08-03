@@ -9246,5 +9246,29 @@
   "aliases": [],
   "created": "2026-08-03",
   "updated": "2026-08-03"
+ },
+ {
+  "designation": "MOD-10.087",
+  "name": "game_session",
+  "status": "active",
+  "function": "prove a linked region's quest can be OPERATED by a live player and RESUMED after a restart: operate_and_recover(spec, dest) registers the region's quest, travels the objective rooms (firing on_event) to a terminal, backs up the player's save_state + location, simulates a restart (unregister -> reset -> re-register -> restore_state), and verifies the resume -- verdict word resumed / inoperable / refused, never a false resumed; always unregisters so no global state leaks",
+  "label": "game_session",
+  "file": "kernel/domains/game_session.py",
+  "type": "MOD",
+  "domain": "10",
+  "docs": "docs/seed_platform/RECENTERING.md",
+  "tests": "tests/test_game_session.py",
+  "depends_on": ["MOD-10.085"],
+  "related": [
+   "MOD-10.086",
+   "MOD-01.001"
+  ],
+  "reuse": "The operate+recover half of the game lifecycle that game_lifecycle (MOD-10.086) deferred. Composes the REAL quest engine (register_specs/unregister_specs/on_event/save_state/restore_state/reset_quests) into a full create->operate->backup->restore->verify loop with a live player, on a linked region, WITHOUT leaking global quest state (the new quest.unregister_specs teardown makes this clean). Travel-driven quests (steps fire on room entry) complete via on_event; a quest needing a manual step is honestly INOPERABLE. Grammar before worlds: kernel/domains (world-aware); kernel/seedlab imports no world/domain. Advances NORTH_STAR #4 (state surviving restart) to the RUNNING half; a step toward #5 (one hosted world).",
+  "notes": "Requires quest.unregister_specs (the clean per-region teardown). The engine already persists quest progress + location across restart via characters.py; this proves it for the Linker's dynamically-loaded regions. PROTOTYPED.",
+  "tags": ["module"],
+  "superseded_by": "",
+  "aliases": [],
+  "created": "2026-08-03",
+  "updated": "2026-08-03"
  }
 ]
