@@ -308,3 +308,39 @@ def test_grant_rep_effect_earns_standing_with_an_order():
     xp_before = s2.xp
     _apply_effect(quest, "award_xp;grant_rep:making:40", s2)
     assert s2.xp > xp_before and standing_of(s2, "making") == 40
+
+
+# --- unregister_specs: the clean per-region teardown (load quests, then UNLOAD them) --------------
+
+
+def test_register_then_unregister_round_trips():
+    """A dynamically-registered quest fires while loaded, and is fully gone after unload: no route,
+    no run, no registry entry -- so a persistent world can swap regions in and out cleanly."""
+    from kernel.world.quest import on_event, register_specs, save_state, unregister_specs
+    from kernel.world.session import Session
+
+    spec = {
+        "id": "unreg_probe",
+        "name": "Unreg Probe",
+        "start": "a",
+        "reward_xp": 0,
+        "steps": [{"state": "a", "event": "go", "to": "b", "on_enter": "room_x"}],
+        "terminal": ["b"],
+        "labels": {},
+    }
+    sess = Session(player_id="unreg_tester")
+    try:
+        register_specs([spec])
+        assert on_event(sess, "enter", "room_x") is not None  # loaded: the enter fires it
+        unregister_specs(["unreg_probe"])
+        assert on_event(sess, "enter", "room_x") is None  # unloaded: no route left
+        assert "unreg_probe" not in save_state(sess.player_id)  # its run was cleared
+    finally:
+        unregister_specs(["unreg_probe"])  # idempotent cleanup even if an assert failed
+
+
+def test_unregister_unknown_id_is_a_noop():
+    """Unloading an id the engine never knew changes nothing and never raises (idempotent)."""
+    from kernel.world.quest import unregister_specs
+
+    unregister_specs(["does_not_exist_anywhere"])  # must not raise
