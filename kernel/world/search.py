@@ -65,6 +65,7 @@ class _WorldIndex:
     def __init__(self, corpus: list[tuple[str, str, str]], *, allow_fts: bool = True) -> None:
         self._names = {doc_id: name for doc_id, name, _ in corpus}
         self._con = sqlite3.connect(":memory:")
+        self._closed = False
         self._fts = allow_fts
         try:
             if not allow_fts:
@@ -101,6 +102,16 @@ class _WorldIndex:
         found.sort(key=lambda f: (-f.score, f.doc_id))
         return found[:limit]
 
+    def close(self) -> None:
+        """Close the in-memory SQLite connection held by the search index."""
+        if not self._closed:
+            self._con.close()
+            self._closed = True
+
+    def __del__(self) -> None:
+        if not getattr(self, "_closed", True):
+            self.close()
+
 
 _index: _WorldIndex | None = None
 _sentinel: tuple[int, int, int] = (-1, -1, -1)
@@ -111,6 +122,8 @@ def _get_index() -> _WorldIndex:
     global _index, _sentinel
     sig = (len(WORLD), len(ITEMS), len(NPCS))
     if _index is None or sig != _sentinel:
+        if _index is not None:
+            _index.close()
         _index = _WorldIndex(_corpus())
         _sentinel = sig
     return _index
@@ -119,6 +132,8 @@ def _get_index() -> _WorldIndex:
 def reset() -> None:
     """Drop the cached index (for tests or after a reseed)."""
     global _index, _sentinel
+    if _index is not None:
+        _index.close()
     _index = None
     _sentinel = (-1, -1, -1)
 

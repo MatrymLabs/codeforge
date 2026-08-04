@@ -41,13 +41,13 @@ from kernel.world.session import Session, display_name, sentence_case
 
 # Loot-only randomness. A defeated foe's WEIGHTED loot table rolls here. A module-level RNG so tests
 # seed or replace it for exact draws.
-_LOOT_RNG = random.Random()  # nosec B311 -- game loot, not security; seeded for tests, not secrecy
+_LOOT_RNG = random.Random()  # nosec B311
 
 # Combat variance -- the ONE die on a blow. Damage MATH stays deterministic; this rolls whether a
 # blow whiffs, glances, crits, or lands normally. The test suite installs a NEUTRAL RNG (always a
 # normal hit, note below) so exact-number assertions hold; variance tests force an outcome. Live
 # play is stochastic -- fights breathe instead of reading off a table.
-_COMBAT_RNG = random.Random()  # nosec B311 -- game feel, not security; neutralized in tests
+_COMBAT_RNG = random.Random()  # nosec B311
 
 MISS_CHANCE = 0.05  # a blow goes wide: 0 damage
 CRIT_CHANCE = 0.10  # a critical strike: CRIT_MULT times damage
