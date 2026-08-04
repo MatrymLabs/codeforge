@@ -1,0 +1,15 @@
+# SEED: aethryn -- campaign.yaml
+# One campaign-wide contract for the complete level 1-300 content spine. The actual content remains
+# data-driven in zones/dungeons/settlements/quests and procedural generators; this file states the
+# promises CI and world boot must enforce across the whole campaign.
+id: aethryn
+name: "Aethryn: The Long Forge"
+level_cap: 300
+checkpoints: [1, 10, 20, 30, 50, 60, 80, 90, 100, 130, 150, 170, 200, 230, 250, 275, 300]
+minimums:
+  zones: 14
+  dungeons: 1
+  settlements: 2
+  combatants: 1
+  npcs: 2
+  quests: 1

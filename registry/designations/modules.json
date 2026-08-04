@@ -9572,6 +9572,27 @@
   "tags": ["module"],
   "superseded_by": "",
   "aliases": [],
+ "created": "2026-08-04",
+ "updated": "2026-08-04"
+ },
+ {
+  "designation": "MOD-04.156",
+  "name": "campaign",
+  "status": "active",
+  "function": "validate one assembled seed campaign from level 1 through its level-300 content cap",
+  "label": "campaign",
+  "file": "kernel/world/campaign.py",
+  "type": "MOD",
+  "domain": "04",
+  "docs": "docs/architecture.md",
+  "tests": "tests/test_campaign.py",
+  "depends_on": ["MOD-04.018", "MOD-04.022", "MOD-04.029"],
+  "related": ["MOD-04.088", "MOD-04.089", "MOD-04.090"],
+  "reuse": "The campaign-wide content contract: load a seed's level cap, checkpoints, and per-zone minimums, then census and validate the assembled zones, dungeons, settlements, NPCs, combatants, and registered quests. It measures the live generated result rather than maintaining a second content database.",
+  "notes": "Aethryn's level 1-300 gate; fails world boot/CI if any declared zone loses its complete content shape or if a checkpoint falls outside the assembled level bands.",
+  "tags": ["module"],
+  "superseded_by": "",
+  "aliases": [],
   "created": "2026-08-04",
   "updated": "2026-08-04"
  }
