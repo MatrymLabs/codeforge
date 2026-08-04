@@ -11,7 +11,9 @@ that owns an owner-ranked character -- authorization before
 capability, same law as the @-verbs.
 """
 
-from typing import Annotated
+import os
+from pathlib import Path
+from typing import Annotated, Any
 
 from fastapi import Depends, FastAPI, Header, HTTPException, Request, Response
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
@@ -21,6 +23,13 @@ from sqlalchemy import select
 from kernel.blueprint import load_all as load_blueprints
 from kernel.dashboard import router as dashboard_router
 from kernel.login_guard import LoginGuard
+from kernel.seedlab.artifact_store import FileArtifactStore
+from kernel.seedlab.kernel import FileSeedStore, SeedKernel, SeedKernelError
+from kernel.seedlab.model_store import FileModelStore
+from kernel.seedlab.tool_runner import FileRunLog
+from kernel.seedlab.workspace_contract import (
+    build_workspace_contract,
+)
 from kernel.shelf import cursor as cursor_part
 from kernel.shelf import precondition as precond
 from kernel.shelf.observability import install_observability
@@ -110,6 +119,39 @@ class BlueprintSummary(BaseModel):
     requirement_count: int
 
 
+class WorkspaceSeedSummary(BaseModel):
+    id: str
+    name: str
+    owner: str
+    status: str
+    purpose: str
+
+
+class WorkspacePackageSummary(BaseModel):
+    package: str
+    payload: dict[str, Any]
+
+
+class WorkspaceStateSummary(BaseModel):
+    seed_id: str
+    sources: list[str]
+    connectors: list[str]
+    models: list[str]
+    builds: list[str]
+    tests: list[str]
+    targets: list[str]
+    risks: list[str]
+    decisions: list[str]
+
+
+class WorkspaceContractPayload(BaseModel):
+    contract_version: str
+    seed: WorkspaceSeedSummary
+    project: dict[str, Any]
+    project_state: WorkspaceStateSummary
+    packages: list[WorkspacePackageSummary]
+
+
 @app.get("/health")
 def health() -> dict[str, str]:
     return {"status": "alive", "engine": "codeforge"}
@@ -128,6 +170,26 @@ def _character_etag(row: CharacterRow) -> precond.ETag:
     """A content ETag over the hero's mutable state (no version column needed)."""
     state = f"{row.name}|{row.job}|{row.level}|{row.rank}|{row.location}".encode()
     return precond.etag_for_payload(state)
+
+
+def _seedlab_home() -> Path:
+    return Path(os.environ.get("SEEDLAB_HOME", ".seedlab"))
+
+
+def _seedlab_kernel() -> SeedKernel:
+    return SeedKernel(FileSeedStore(_seedlab_home() / "seeds"))
+
+
+def _seedlab_model_store() -> FileModelStore:
+    return FileModelStore(_seedlab_home() / "models")
+
+
+def _seedlab_run_log() -> FileRunLog:
+    return FileRunLog(_seedlab_home() / "runs")
+
+
+def _seedlab_artifact_store() -> FileArtifactStore:
+    return FileArtifactStore(_seedlab_home() / "artifacts")
 
 
 @app.get("/characters", response_model=list[Hero])
@@ -187,6 +249,25 @@ def rooms() -> list[Room]:
         Room(label=label, name=room["name"], exits=dict(room["exits"]))
         for label, room in WORLD.items()
     ]
+
+
+@app.get("/api/seedlab/workspaces/{seed_id}")
+def seedlab_workspace(seed_id: str) -> dict[str, object]:
+    """The structured SeedLab workspace contract a client can render."""
+    kernel = _seedlab_kernel()
+    try:
+        kernel.get(seed_id)
+    except SeedKernelError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+    models = _seedlab_model_store().all_for_seed(seed_id)
+    contract = build_workspace_contract(
+        seed_id,
+        root=_seedlab_home(),
+        model=models[-1] if models else None,
+        runs=_seedlab_run_log().for_seed(seed_id),
+        artifacts=_seedlab_artifact_store().all_for_seed(seed_id),
+    )
+    return contract.to_dict()
 
 
 @app.get("/api/blueprints", response_model=list[BlueprintSummary])

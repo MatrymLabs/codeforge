@@ -8,6 +8,7 @@ Handlers import lazily: `codeforge grant` should not have to load
 the entire world to edit one archive casefile.
 """
 
+import json
 import os
 import sys
 from collections.abc import Callable
@@ -28,6 +29,8 @@ USAGE = """codeforge -- hardware-store counter for the world engine
   codeforge migrate-db                 import legacy JSON saves into SQLite
   codeforge passwd <account>           rotate an account password (prompted)
   codeforge refactor <f> <fn> <o> <n>  verifier-gated safe rename (dry-run; --apply to write)
+  codeforge seedlab proof             run the SeedLab platform proof and write a report artifact
+  codeforge seedlab audit             write the SeedLab module audit artifact
   codeforge api                        serve the HTTP admin API on port 8000
   codeforge web                        serve the browser gate (WebSocket play) on $PORT
   codeforge help                       this text
@@ -243,6 +246,71 @@ def _cmd_refactor(args: list[str]) -> int:
     return 0
 
 
+def _cmd_seedlab(args: list[str]) -> int:
+    """SeedLab proof and audit commands: repeatable report artifacts for the platform layer."""
+    import argparse
+
+    parser = argparse.ArgumentParser(
+        prog="codeforge seedlab",
+        description="Run SeedLab proofs and audits, writing stable JSON report artifacts.",
+    )
+    sub = parser.add_subparsers(dest="subcommand", required=True)
+
+    proof = sub.add_parser("proof", help="run the local platform proof and write a report")
+    proof.add_argument(
+        "--root",
+        default=".seedlab/proof",
+        help="directory used for the durable proof stores (default: .seedlab/proof)",
+    )
+    proof.add_argument(
+        "--report",
+        default="reports/seedlab-platform-proof.json",
+        help=(
+            "where to write the JSON report artifact (default: reports/seedlab-platform-proof.json)"
+        ),
+    )
+    proof.add_argument(
+        "--owner",
+        default="josh",
+        help="owner recorded on the created Seed (default: josh)",
+    )
+
+    audit = sub.add_parser("audit", help="write a SeedLab module audit report")
+    audit.add_argument(
+        "--report",
+        default="reports/seedlab-module-audit.json",
+        help="where to write the JSON audit artifact (default: reports/seedlab-module-audit.json)",
+    )
+
+    try:
+        ns = parser.parse_args(args[1:])
+    except SystemExit as exc:
+        return int(exc.code or 0)
+
+    from kernel.seedlab.audit import audit_seedlab_modules, render_seedlab_audit
+    from kernel.seedlab.platform_proof import run_first_platform_proof
+
+    if ns.subcommand == "proof":
+        result = run_first_platform_proof(Path(ns.root), owner=ns.owner)
+        report = result.to_dict()
+        report["module_audit"] = audit_seedlab_modules().to_dict()
+        report_path = Path(ns.report)
+        report_path.parent.mkdir(parents=True, exist_ok=True)
+        report_path.write_text(json.dumps(report, indent=2), encoding="utf-8")
+        print(f"proof complete: {result.seed_id}")
+        print(f"report written: {report_path}")
+        print(result.hub_text)
+        return 0
+
+    audit_report = audit_seedlab_modules()
+    report_path = Path(ns.report)
+    report_path.parent.mkdir(parents=True, exist_ok=True)
+    report_path.write_text(json.dumps(audit_report.to_dict(), indent=2), encoding="utf-8")
+    print(render_seedlab_audit(audit_report))
+    print(f"audit written: {report_path}")
+    return 0
+
+
 def _cmd_journey(args: list[str]) -> int:
     """Generate, link, and PROVE a waypoint-journey game region end to end: the whole pipeline
     (Form-grade intent -> generate -> link -> operate -> recover) as one real operation. Writes
@@ -372,6 +440,7 @@ _DISPATCH: dict[str, Command] = {
     "migrate-db": _cmd_migrate_db,
     "passwd": _cmd_passwd,
     "refactor": _cmd_refactor,
+    "seedlab": _cmd_seedlab,
 }
 
 

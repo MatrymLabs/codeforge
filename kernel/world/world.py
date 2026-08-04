@@ -8,6 +8,7 @@ from itertools import zip_longest
 
 from kernel.world.armory import arm_guardians
 from kernel.world.authored_towns import install_authored_towns
+from kernel.world.campaign import validate as validate_campaign
 from kernel.world.creator_workshop import install_workshop
 from kernel.world.delve import generate_delves, load_dungeons, wire_delve_mouths
 from kernel.world.delve_sets import forge_delve_sets
@@ -204,7 +205,8 @@ if _settlements:
 # grouping), so the story arcs thread the same rooms the reset areas do.
 from kernel.world.seed import load_zones  # noqa: E402 -- WORLD must exist for the room gate
 
-_story_zones = [dict(z) for z in load_zones(SEED_DIR / "zones.yaml", set(WORLD)).values()]
+_story_zone_map = load_zones(SEED_DIR / "zones.yaml", set(WORLD))
+_story_zones = [dict(z, label=label) for label, z in _story_zone_map.items()]
 if _settlements and _dungeons:
     register_storylines(_story_zones, _settlements, _dungeons)
 
@@ -248,6 +250,20 @@ if _dungeons is not None:
 # the zones in level order, giving the sprawling world a through-line (kernel.world.spine). It lives
 # in the `quest` log, not the notice board -- the spine the side-content hangs on.
 register_spine(_story_zones)
+
+# Campaign-wide content gate: Aethryn's zones, dungeons, enemies, NPCs, and quests are generated
+# from several independent seams, so validate the assembled result as one level 1-300 product after
+# all registrations are complete. Other seeds simply omit campaign.yaml and remain unchanged.
+from kernel.world.quest import all_ids as all_quest_ids  # noqa: E402
+
+validate_campaign(
+    SEED_DIR / "campaign.yaml",
+    _story_zones,
+    _dungeons or [],
+    _settlements or [],
+    NPCS,
+    all_quest_ids(),
+)
 
 # Living rumours: give each town resident gossip that NAMES the zone's dungeon and the relic it
 # guards (kernel.world.rumors), so plaza becomes a signpost toward content, not just flavour. The

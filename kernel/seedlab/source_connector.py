@@ -232,3 +232,30 @@ def source_label(record: SourceRecord) -> str:
     where = record.branch or "no-vcs"
     at = f"@{record.commit}" if record.commit else ""
     return f"local:{record.source_id} ({record.file_count} files, {where}{at})"
+
+
+def source_connector_label(record: SourceRecord) -> str:
+    """The one-line entry a source contributes to the Hub's `connectors` facet."""
+    where = record.branch or "no-vcs"
+    at = f"@{record.commit}" if record.commit else ""
+    prov = record.provenance
+    return (
+        f"connector:local-source:{record.source_id} "
+        f"({prov.owner}, {prov.visibility}, {record.file_count} files, {where}{at})"
+    )
+
+
+def source_connection(record: SourceRecord) -> dict[str, object]:
+    """The structured connector surface for a registered local source."""
+    prov = record.provenance
+    return {
+        "source_id": record.source_id,
+        "owner": prov.owner,
+        "license": prov.license,
+        "visibility": prov.visibility,
+        "allowed_use": prov.allowed_use,
+        "root": record.root,
+        "file_count": record.file_count,
+        "branch": record.branch,
+        "commit": record.commit,
+    }

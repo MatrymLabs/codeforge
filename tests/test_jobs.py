@@ -3,7 +3,7 @@
 import pytest
 
 from forge import handle_command
-from kernel.world.jobs import JOBS, bind_calling, calling_index
+from kernel.world.jobs import JOBS, bind_calling, calling_index, character_creation_menu
 from kernel.world.session import Session
 
 
@@ -36,6 +36,13 @@ def test_calling_index_aligns_names_even_with_a_long_label(monkeypatch: pytest.M
     rows = [ln for ln in calling_index().splitlines() if " -- " in ln]
     name_columns = {ln.index(job["name"]) for ln, job in zip(rows, fake.values(), strict=True)}
     assert len(name_columns) == 1  # every calling's name starts at the same column
+
+
+def test_character_creation_menu_is_seed_data_driven():
+    menu = character_creation_menu()
+    assert "CHARACTER CREATION" in menu
+    assert "vanguard" in menu and "Vanguard" in menu
+    assert "Enter a calling name" in menu
 
 
 def test_unknown_calling_is_refused():

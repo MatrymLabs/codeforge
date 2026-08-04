@@ -178,6 +178,7 @@ def _forgive_address(ip: str) -> None:
 # an existing account) is a fixable typo, not a login attack, so it re-prompts in
 # place instead of dropping to the top and burning a door attempt.
 _REGISTER_TRIES = 3
+_AETHRYN_CREATION_TRIES = 3
 
 
 # --- telnet option negotiation (RFC 854/857): the password blackout ---
@@ -644,6 +645,22 @@ class _GateHandler(socketserver.StreamRequestHandler):
         if handle is None:
             return None
         handle = handle.strip()
+        initial_calling: str | None = None
+        if SEED_NAME == "aethryn":
+            from kernel.world.jobs import calling_label, character_creation_menu
+
+            self._send(character_creation_menu())
+            for _ in range(_AETHRYN_CREATION_TRIES):
+                choice = self._ask("Calling (name):")
+                if choice is None:
+                    return None
+                initial_calling = calling_label(choice)
+                if initial_calling is not None:
+                    break
+                self._send("That calling is not available. Choose one from the menu.")
+            if initial_calling is None:
+                self._send("Character creation cancelled. Reconnect to try again.")
+                return None
         response = ""
         for attempt in range(_REGISTER_TRIES):
             secret = self._ask_secret("Choose a password:")
@@ -653,6 +670,11 @@ class _GateHandler(socketserver.StreamRequestHandler):
                 response = handle_command(session, f"register {handle} {secret.strip()}")
             last_try = attempt == _REGISTER_TRIES - 1
             if not password_fixable(response) or last_try:
+                if response.startswith("Welcome,") and initial_calling is not None:
+                    with TICK_LOCK:
+                        chosen = handle_command(session, f"job {initial_calling}")
+                        save_character(session)
+                    response = f"{response}\n{chosen}"
                 return response  # success, a handle problem, or out of tries
             self._send(response)  # a fixable password: nudge, then re-ask in place
         return response

@@ -31,6 +31,26 @@ def calling_index() -> str:
     return "\n".join(lines)
 
 
+def character_creation_menu() -> str:
+    """Render the first-time character menu from the active seed's calling pack."""
+    lines = [
+        "=== CHARACTER CREATION ===",
+        "Choose your calling. This shapes your starting stats and abilities.",
+        "",
+    ]
+    width = max((len(label) for label in JOBS), default=0)
+    for label, job in JOBS.items():
+        lines.append(f"  {label:<{width}}  {job['name']} -- {job['description']}")
+    lines.extend(("", "Enter a calling name to continue (for example: vanguard)."))
+    return "\n".join(lines)
+
+
+def calling_label(word: str) -> str | None:
+    """Return the canonical calling label for a creation-menu answer, or None if unknown."""
+    label = word.strip().lower()
+    return label if label in JOBS else None
+
+
 def build_stats(job_label: str, allocated: dict[str, int]) -> StatBlock:
     """A job's StatBlock with the character's ALLOCATED attribute points folded onto the base. The
     allocation is character-level, so it applies whatever job is worn; an empty allocation gives the
