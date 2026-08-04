@@ -122,6 +122,14 @@ def test_the_full_direction_vocabulary_appears() -> None:
     assert {"ford river", "cross bridge", "climb", "descend"} <= keys  # named
 
 
+def test_a_road_is_described_as_followable() -> None:
+    # a road strip through a field: the road cell says where the trail runs on, so it is followable
+    cells = {(x, 0): Cell("plain") for x in range(5)}
+    cells[(1, 0)] = cells[(2, 0)] = cells[(3, 0)] = Cell("road")
+    rooms = build_field("r", cells)
+    assert "the road runs on" in rooms["r_2_0"]["desc"]
+
+
 def test_descriptions_are_terrain_driven_not_identical() -> None:
     rooms = _demo_field()
     # a field cell beside the river mentions the water; a deep-plain cell does not

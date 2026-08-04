@@ -16,6 +16,7 @@ from kernel.worldgen import (
     Landmark,
     RegionSpec,
     WorldgenError,
+    _road_between,
     _trace_river,
     generate_region,
 )
@@ -48,6 +49,68 @@ def test_a_river_region_is_world_shaped_and_crossable() -> None:
         k for r in region.rooms.values() for k in r["exits"] if k in ("ford river", "cross bridge")
     }
     assert crossings
+
+
+# --- the mixture: roads (trails) thread the open fields ------------------------------------------
+
+
+def test_roads_thread_the_field_between_landmarks() -> None:
+    # a living world mixes trail and field: a ROAD connects the landmarks, THROUGH open country that
+    # stays world-shaped (you can follow the road or roam off it).
+    region = generate_region(RegionSpec("vale", 24, 18, seed=7, landmarks=(_TOWN, _KEEP)))
+    assert region.topology.verdict == WORLD_SHAPED  # still open, not a corridor
+    road_rooms = [rid for rid, r in region.rooms.items() if "the road runs on" in r["desc"]]
+    assert road_rooms  # a trail exists in the field
+    # the road actually connects the two landmarks (a road-cell path spans them)
+    road_cells = {
+        tuple(int(p) for p in rid.split("_")[1:3])
+        for rid in region.rooms
+        if "road" in region.rooms[rid]["desc"][:40]
+    }
+    assert _TOWN.at in road_cells or any(
+        abs(_TOWN.at[0] - c[0]) + abs(_TOWN.at[1] - c[1]) <= 1 for c in road_cells
+    )
+
+
+def test_a_road_crosses_a_river_at_its_ford_not_over_it() -> None:
+    # a road between banks routes THROUGH the ford (a passable crossing), never paving the river.
+    region = generate_region(
+        RegionSpec(
+            "vale",
+            24,
+            18,
+            seed=1,
+            river_source=(12, 16),
+            landmarks=(Landmark((3, 8), "West End", "town"), Landmark((20, 8), "East End", "town")),
+        )
+    )
+    assert region.topology.verdict == WORLD_SHAPED  # the road found a crossing; still world-shaped
+    crossings = {
+        k for r in region.rooms.values() for k in r["exits"] if k in ("ford river", "cross bridge")
+    }
+    assert crossings
+
+
+def test_road_between_returns_empty_when_blocked() -> None:
+    assert _road_between((0, 0), (5, 5), {(0, 0)}) == []  # endpoint on a wall
+    assert _road_between((0, 0), (2, 0), {(0, 0), (2, 0)}) == []  # no path (a gap between)
+
+
+def test_paving_a_road_leaves_a_crossing_unpaved() -> None:
+    from kernel.worldgen import _pave_roads
+
+    cells = {(x, 0): Cell("plain") for x in range(5)}
+    cells[(2, 0)] = Cell("ford")  # a crossing on the road's path
+    _pave_roads(cells, (Landmark((0, 0), "A", "town"), Landmark((4, 0), "B", "town")))
+    assert cells[(2, 0)].terrain == "ford"  # the ford is used, never paved over
+    assert cells[(1, 0)].terrain == "road"  # but the plain around it becomes road
+
+
+def test_roads_can_be_turned_off_for_a_pure_wild_zone() -> None:
+    region = generate_region(
+        RegionSpec("wild", 24, 18, seed=7, roads=False, landmarks=(_TOWN, _KEEP))
+    )
+    assert not any("the road runs on" in r["desc"] for r in region.rooms.values())
 
 
 # --- the SABOTAGE: a corridor must be caught -----------------------------------------------------

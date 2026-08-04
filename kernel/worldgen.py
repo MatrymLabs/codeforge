@@ -56,6 +56,7 @@ class RegionSpec:
     landmarks: tuple[Landmark, ...] = ()
     river_source: tuple[int, int] | None = None
     crossings: tuple[tuple[int, int, str], ...] = ()
+    roads: bool = True  # thread a road between the landmarks -- a trail THROUGH the open field
     corridor: bool = False  # SABOTAGE: force a 1-wide linear chain so the gate can be tested
 
 
@@ -153,6 +154,52 @@ def _terrain(
     return cells
 
 
+def _road_between(
+    a: tuple[int, int], b: tuple[int, int], passable: set[tuple[int, int]]
+) -> list[tuple[int, int]]:
+    """The shortest walkable path from a to b over passable cells (BFS). This becomes a road: a
+    deliberate TRAIL through the open field, so a living world mixes routes to follow with space to
+    roam. Empty if either end is a wall or no path exists."""
+    from collections import deque
+
+    if a not in passable or b not in passable:
+        return []
+    prev: dict[tuple[int, int], tuple[int, int] | None] = {a: None}
+    queue = deque([a])
+    while queue:
+        cur = queue.popleft()
+        if cur == b:
+            break
+        for dx, dy in _ORTHO:
+            nxt = (cur[0] + dx, cur[1] + dy)
+            if nxt in passable and nxt not in prev:
+                prev[nxt] = cur
+                queue.append(nxt)
+    if b not in prev:
+        return []
+    path: list[tuple[int, int]] = []
+    step: tuple[int, int] | None = b
+    while step is not None:
+        path.append(step)
+        step = prev[step]
+    return path[::-1]
+
+
+def _pave_roads(cells: dict[tuple[int, int], Cell], landmarks: tuple[Landmark, ...]) -> None:
+    """Lay roads between consecutive landmarks, in place: mark the path cells `road` (a river is
+    crossed at its existing ford/bridge, never paved over). The open terrain around the road is
+    untouched -- the trail is one path THROUGH the field."""
+    passable = {
+        xy for xy, c in cells.items() if c.terrain not in ("river", "water", "cliff", "wall")
+    }
+    anchors = [lm.at for lm in landmarks]
+    for a, b in zip(anchors, anchors[1:], strict=False):
+        for xy in _road_between(a, b, passable):
+            c = cells[xy]
+            if c.terrain in ("plain", "meadow", "forest", "hill"):
+                cells[xy] = Cell("road", c.elevation)
+
+
 def _reachable(exits: dict[str, dict[str, str]], start: str) -> set[str]:
     seen = {start}
     stack = [start]
@@ -207,6 +254,8 @@ def generate_region(spec: RegionSpec) -> Region:
                 crossmap = {river[len(river) // 3]: "ford", river[2 * len(river) // 3]: "bridge"}
         river_set = set(river) - set(crossmap)  # a crossing overrides the river channel
         cells = _terrain(hm, river_set, crossmap, spec.width, spec.height)
+        if spec.roads and len(spec.landmarks) >= 2:
+            _pave_roads(cells, spec.landmarks)  # trails threading the field between living places
         declared = _declared_crossings(spec.name, cells, crossmap)
 
     stacks = [

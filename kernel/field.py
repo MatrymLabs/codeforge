@@ -106,14 +106,24 @@ def _describe(cell: Cell, neighbours: dict[str, Cell]) -> str:
         "bridge": "A timber bridge carries the road over the running water",
     }.get(cell.terrain, f"{cell.terrain.capitalize()} stretches around you")
     features: list[str] = []
+    # if this is a road/crossing, say where the road runs on -- so a player can FOLLOW the trail
+    # through the open field (the mixture of trail and field a living world wants), not just wander.
+    if cell.terrain in ("road", "ford", "bridge"):
+        run = [d for d in ("north", "south", "east", "west") if _is_road(neighbours.get(d))]
+        if run:
+            features.append(f"the road runs on {' and '.join(run)}")
     for d in ("north", "east", "south", "west"):
         nb = neighbours.get(d)
         if nb and nb.terrain in ("river", "water"):
             features.append(f"water runs to the {d}")
         elif nb and nb.terrain == "hill":
             features.append(f"hills rise to the {d}")
-    tail = f"; {', '.join(features[:2])}." if features else "."
+    tail = f"; {', '.join(features[:3])}." if features else "."
     return f"{base}{tail}"
+
+
+def _is_road(cell: Cell | None) -> bool:
+    return cell is not None and cell.terrain in ("road", "ford", "bridge")
 
 
 def build_field(
