@@ -48,13 +48,24 @@ the_sunken_barrow_guardian:
     - The guardian bars the way into The Sunken Barrow.
   hp: 300
   atk: 27
-  aggressive: true
   attack_element: DRK
   level: 30
   tier: boss
   lethal: true
   drops: [greater_healing_draught]
   loot: {ember_shard: 5, nothing: 2}
+
+the_sunken_barrow_prey:
+  name: a barrow-rat
+  keywords: [rat, barrow-rat, vermin]
+  location: the_sunken_barrow
+  dialogue:
+    - The rat bares its teeth and darts at your ankles.
+  aggressive: true
+  hp: 18
+  atk: 3
+  level: 2
+  tier: normal
 
 duskwood_vale_warden:
   name: a warden of Duskwood Vale
@@ -92,7 +103,6 @@ the_black_hollow_guardian:
     - The guardian bars the way into The Black Hollow.
   hp: 420
   atk: 37
-  aggressive: true
   attack_element: DRK
   level: 50
   tier: boss
@@ -145,7 +155,6 @@ starfall_temple_guardian:
     - The guardian bars the way into Starfall Temple.
   hp: 480
   atk: 42
-  aggressive: true
   attack_element: DRK
   level: 60
   tier: boss
@@ -196,7 +205,6 @@ rotwood_deep_guardian:
     - The guardian bars the way into Rotwood Deep.
   hp: 600
   atk: 52
-  aggressive: true
   attack_element: DRK
   level: 80
   tier: boss
@@ -240,7 +248,6 @@ glacial_bastion_guardian:
     - The guardian bars the way into Glacial Bastion.
   hp: 660
   atk: 57
-  aggressive: true
   attack_element: ICE
   level: 90
   tier: boss
@@ -284,7 +291,6 @@ the_obsidian_pit_guardian:
     - The guardian bars the way into The Obsidian Pit.
   hp: 900
   atk: 77
-  aggressive: true
   attack_element: ERT
   level: 130
   tier: boss
@@ -300,7 +306,6 @@ scorchstone_keep_guardian:
     - The guardian bars the way into Scorchstone Keep.
   hp: 900
   atk: 77
-  aggressive: true
   attack_element: ERT
   level: 130
   tier: boss
@@ -344,7 +349,6 @@ heart_of_xilnath_guardian:
     - The guardian bars the way into Xil'nath.
   hp: 1020
   atk: 87
-  aggressive: true
   attack_element: PSN
   level: 150
   tier: boss
@@ -390,7 +394,6 @@ dreadmaw_hold_guardian:
     - The guardian bars the way into Dreadmaw Hold.
   hp: 960
   atk: 82
-  aggressive: true
   attack_element: DRK
   level: 140
   tier: boss
@@ -407,7 +410,6 @@ irondeep_mines_guardian:
     - The guardian bars the way into Irondeep Mines.
   hp: 960
   atk: 82
-  aggressive: true
   attack_element: DRK
   level: 140
   tier: boss
@@ -451,7 +453,6 @@ the_flamewrought_forge_guardian:
     - The guardian bars the way into The Flamewrought Forge.
   hp: 1140
   atk: 97
-  aggressive: true
   attack_element: FIR
   level: 170
   tier: boss
@@ -467,7 +468,6 @@ the_scorched_gate_guardian:
     - The guardian bars the way into The Scorched Gate.
   hp: 1140
   atk: 97
-  aggressive: true
   attack_element: FIR
   level: 170
   tier: boss
@@ -525,7 +525,6 @@ korvash_crater_guardian:
     - The guardian bars the way into Korvash Crater.
   hp: 1320
   atk: 112
-  aggressive: true
   attack_element: DRK
   level: 200
   tier: boss
@@ -562,7 +561,6 @@ blackreef_citadel_guardian:
     - The guardian bars the way into Blackreef Citadel.
   hp: 1500
   atk: 127
-  aggressive: true
   attack_element: WTR
   level: 230
   tier: boss
@@ -606,7 +604,6 @@ the_spire_nexus_guardian:
     - The guardian bars the way into The Spire Nexus.
   hp: 1620
   atk: 137
-  aggressive: true
   attack_element: DRK
   level: 250
   tier: boss
@@ -650,7 +647,6 @@ the_crystal_labyrinth_guardian:
     - The guardian bars the way into The Crystal Labyrinth.
   hp: 1620
   atk: 137
-  aggressive: true
   attack_element: FIR
   level: 250
   tier: boss
@@ -687,7 +683,6 @@ netharions_throne_guardian:
     - The guardian bars the way into Netharion's Throne.
   hp: 1920
   atk: 162
-  aggressive: true
   attack_element: FIR
   level: 300
   tier: boss
@@ -705,7 +700,6 @@ the_rifted_abyss_guardian:
     - The guardian bars the way into The Rifted Abyss.
   hp: 1920
   atk: 162
-  aggressive: true
   attack_element: FIR
   level: 300
   tier: boss
