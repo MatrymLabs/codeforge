@@ -10,7 +10,7 @@ from __future__ import annotations
 
 import pytest
 
-from kernel.topology import (
+from kernel.world.topology import (
     TRAIL_SHAPED,
     UNREACHABLE,
     WORLD_SHAPED,

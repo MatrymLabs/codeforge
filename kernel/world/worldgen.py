@@ -30,10 +30,10 @@ import random
 from collections import deque
 from dataclasses import dataclass
 
-from kernel.field import Cell, Stack, build_field
-from kernel.topology import WORLD_SHAPED, TopologyReport, audit_topology
 from kernel.world.bestiary import make_beast, make_notable
+from kernel.world.field import Cell, Stack, build_field
 from kernel.world.seed import Npc
+from kernel.world.topology import WORLD_SHAPED, TopologyReport, audit_topology
 from kernel.world.wildlands import gatherable_materials
 
 _ORTHO = [(0, 1), (0, -1), (1, 0), (-1, 0)]
