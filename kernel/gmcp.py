@@ -49,23 +49,30 @@ __all__ = [
 ]
 
 
-def seed_hello(seed_id: str, version: str = "1.0.0") -> dict[str, object]:
+def seed_hello(
+    seed_id: str, version: str = "1.0.0", *, profile: str | None = None
+) -> dict[str, object]:
     """The `Seed.Hello` payload: this engine announcing the loaded Seed to a Native-Seed client.
 
-    A seed IS a game, so `seed_id` is the loaded seed and `version` its content version. `required`
-    is the capability floor a client must meet to enter -- `text`, since every Seed is playable as
-    plain text -- and `optional` are the structured capabilities this Seed emits and a client may
-    use (GMCP frames, data-bound panels, a map). A client that meets `required` enters; a missing
-    optional capability degrades the experience, it never refuses (the client negotiates the verdict
-    itself, core/seed.py). Pure: the gateway sources `seed_id` from the loaded world and sends it.
+    `seed_id` is the loaded Seed and `version` is its content/runtime version. `required` is the
+    capability floor a client must meet to enter -- `text`, since every Seed must remain available
+    as plain text -- and `optional` are the structured capabilities this Seed emits and a client may
+    use (GMCP frames, data-bound panels, a map). `profile`, when present, names the declarative Seed
+    Client Profile the server will serve separately. A client that meets `required` enters; a
+    missing optional capability degrades the experience, it never refuses (the client negotiates the
+    verdict itself, core/seed.py). Pure: the gateway sources `seed_id` from the loaded world and
+    sends it.
     """
-    return {
+    payload: dict[str, object] = {
         "seed": seed_id,
         "version": version,
         "protocol": SEED_PROTOCOL,
         "required": ["text"],
         "optional": ["gmcp", "panels", "map"],
     }
+    if profile:
+        payload["profile"] = profile
+    return payload
 
 
 def gmcp_frame(package: str, data: object) -> bytes:
