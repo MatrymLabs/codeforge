@@ -338,24 +338,29 @@ def _cell_order(exits: dict[str, dict[str, str]], start: str) -> list[str]:
     return order
 
 
-def populate_region(region: Region, life: LifeSpec) -> dict[str, Npc]:
+def populate_region(region: Region, life: LifeSpec, *, origin: str | None = None) -> dict[str, Npc]:
     """Breathe life into a generated region: scatter ambient foes, gather nodes, and a handful of
     guardians across the walkable OPEN FIELD (the anchored landmarks -- towns, dungeons, peaks --
     stay safe), so a field plays like the living wilderness the trails gave. Mutates `region.rooms`
     in place to hang gather `node`s; returns the NPC records keyed by label, each `location`d on its
     cell -- the same living-content contract kernel/world/wildlands.py fills for the trails, so the
-    zone's cull/forage boards keep routing once a trail flips to a field. Fails loud on an empty
-    region or a non-positive cadence."""
+    zone's cull/forage boards keep routing once a trail flips to a field.
+
+    The wild DEEPENS outward from `origin` (default the region's spawn): levels climb with distance,
+    so the gentlest ground is at the origin. Pass the field's ENTRANCE as `origin` and a newcomer
+    meets level-1 life at the door, exactly as a trail's attach point did -- the on-ramp, preserved.
+    Fails loud on an empty region, a non-positive cadence, or an origin that is not a real cell."""
     if not region.rooms:
         raise WorldgenError(f"region {region.name!r}: cannot breathe life into an empty region")
     if life.foe_every < 1 or life.gather_every < 1 or life.notable_every < 1:
         raise WorldgenError(f"region {region.name!r}: life cadences must be >= 1")
+    start = origin if origin is not None else region.start
+    if start not in region.rooms:
+        raise WorldgenError(f"region {region.name!r}: life origin {start!r} is not a cell")
 
     exits = {rid: r["exits"] for rid, r in region.rooms.items()}
     # the wilderness fills the open field, never the anchored sites (a town cell is no beast's den).
-    wild = [
-        rid for rid in _cell_order(exits, region.start) if not region.rooms[rid].get("landmark")
-    ]
+    wild = [rid for rid in _cell_order(exits, start) if not region.rooms[rid].get("landmark")]
     span = len(wild)
     max_notables = min(span // life.notable_every, life.notable_cap)
     materials = gatherable_materials(life.biome)

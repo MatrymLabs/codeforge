@@ -585,6 +585,12 @@ _REV = {
 # The biome each zone's wildlands fill uses (mostly the zone biome; the underground/void go volcanic).
 KINDS_WITH_FOE = {"dungeon"}  # dungeons get a guardian foe; other places get a resident NPC
 
+# Zones whose wilderness is an OPEN FIELD (content/seeds/aethryn/fields.yaml, the World Topology
+# Doctrine's trail-to-field zones), NOT a linear trail-chain. Their wildlands trail is skipped here so
+# the generator never re-emits a trail that collides with the authored field -- the generator is the
+# source of truth (Completion Law: fix the generator, not the output), so the skip lives here.
+FIELD_BACKED = {"veridia"}
+
 SP = "  "
 
 
@@ -740,16 +746,19 @@ def emit(out_root: Path | None = None) -> None:
         zones_y.append("")
 
         # --- the zone's wilderness fill (wildlands region attached to the hub) ---
-        wild.append(f"{zid}_wild:")
-        wild.append(f"{SP}name: The {zname} Wilds")
-        wild.append(f'{SP}region: "{zname}"')
-        wild.append(f"{SP}biome: {biome}")
-        wild.append(f"{SP}attach: {zid}")
-        wild.append(f"{SP}attach_dir: {_wild_dir(zid, hub_exits, places)}")
-        wild.append(f"{SP}level_min: {lo}")
-        wild.append(f"{SP}level_max: {hi}")
-        wild.append(f"{SP}trail_length: {_fill_trail(zid)}")
-        wild.append("")
+        # A field-backed zone grows an OPEN FIELD from fields.yaml instead of a trail, so skip its
+        # trail here -- the authored field is its wilderness (kernel.world.fieldzone).
+        if zid not in FIELD_BACKED:
+            wild.append(f"{zid}_wild:")
+            wild.append(f"{SP}name: The {zname} Wilds")
+            wild.append(f'{SP}region: "{zname}"')
+            wild.append(f"{SP}biome: {biome}")
+            wild.append(f"{SP}attach: {zid}")
+            wild.append(f"{SP}attach_dir: {_wild_dir(zid, hub_exits, places)}")
+            wild.append(f"{SP}level_min: {lo}")
+            wild.append(f"{SP}level_max: {hi}")
+            wild.append(f"{SP}trail_length: {_fill_trail(zid)}")
+            wild.append("")
 
     root = (
         out_root

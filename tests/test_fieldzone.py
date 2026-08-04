@@ -7,6 +7,8 @@ a not-world-shaped region, and an id collision each FAIL LOUD (a broken zone nev
 
 from __future__ import annotations
 
+from typing import cast
+
 import pytest
 
 from kernel.world.fieldzone import (
@@ -16,6 +18,7 @@ from kernel.world.fieldzone import (
     build_field_zone,
     load_field_configs,
 )
+from kernel.world.seed import Room
 
 # A config the worldgen twin already proved world-shaped + fully reachable (24x18, seed 7, two
 # landmarks). attach_dir west -> the field's back exit home is `east`.
@@ -144,8 +147,11 @@ def test_a_room_id_collision_with_the_world_is_refused() -> None:
 
 
 def test_gate_cell_finds_a_free_edge_slot() -> None:
-    rooms = {
-        "z_0_0": {"exits": {"east": "z_1_0"}},  # a west-edge cell: its `west` slot is free
-        "z_1_0": {"exits": {"west": "z_0_0"}},
-    }
+    rooms = cast(
+        "dict[str, Room]",
+        {
+            "z_0_0": {"exits": {"east": "z_1_0"}},  # a west-edge cell: its `west` slot is free
+            "z_1_0": {"exits": {"west": "z_0_0"}},
+        },
+    )
     assert _gate_cell(rooms, "west") == "z_0_0"  # lowest id whose `west` slot is open

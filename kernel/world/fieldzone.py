@@ -20,7 +20,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 import yaml
 
@@ -144,15 +144,20 @@ def build_field_zone(cfg: dict[str, Any], taken: set[str]) -> FieldZone:
             f"field zone {cfg['id']!r} room ids collide with the world: {sorted(clash)[:3]}"
         )
 
-    npcs = populate_region(
-        region, LifeSpec(cfg["biome"], int(cfg["level_min"]), int(cfg["level_max"]))
-    )
+    rooms = cast(
+        "dict[str, Room]", region.rooms
+    )  # worldgen types rooms loosely; they are Room dicts
     back = _REVERSE[cfg["attach_dir"]]
-    gate = _gate_cell(region.rooms, back)
-    region.rooms[gate]["exits"][back] = cfg["attach"]  # the field's door back to its hub
+    gate = _gate_cell(rooms, back)
+    # Life deepens from the GATE (the field's door), so a newcomer meets the gentlest level-1 wild
+    # where they enter -- the trail's on-ramp, preserved for the open field.
+    npcs = populate_region(
+        region, LifeSpec(cfg["biome"], int(cfg["level_min"]), int(cfg["level_max"])), origin=gate
+    )
+    rooms[gate]["exits"][back] = cfg["attach"]  # the field's door back to its hub
     zone = Zone(
         name=cfg["name"],
-        rooms=list(region.rooms),
+        rooms=list(rooms),
         reset_mode="empty_only",
         beats_between=12,
         region=cfg["region"],
@@ -161,5 +166,5 @@ def build_field_zone(cfg: dict[str, Any], taken: set[str]) -> FieldZone:
         biome=cfg["biome"],
     )
     return FieldZone(
-        f"field_{cfg['id']}", region.rooms, npcs, gate, cfg["attach"], cfg["attach_dir"], zone
+        f"field_{cfg['id']}", rooms, npcs, gate, cfg["attach"], cfg["attach_dir"], zone
     )

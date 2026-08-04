@@ -324,6 +324,30 @@ def test_a_non_positive_cadence_is_refused_loud() -> None:
             populate_region(region, bad)
 
 
+def test_life_deepens_from_a_chosen_origin_not_just_the_spawn() -> None:
+    # the on-ramp: pass an ENTRANCE as origin and the gentlest wild sits there, deepening outward
+    from kernel.world.worldgen import LifeSpec, _cell_order, populate_region
+
+    region = generate_region(RegionSpec("vale", 24, 18, seed=7, landmarks=(_TOWN, _KEEP)))
+    exits = {rid: r["exits"] for rid, r in region.rooms.items()}
+    # pick an origin that is NOT region.start, deep in the field
+    origin = max(region.rooms)
+    npcs = populate_region(region, LifeSpec("temperate-meadow", 1, 30), origin=origin)
+    order = [rid for rid in _cell_order(exits, origin) if not region.rooms[rid].get("landmark")]
+    by_cell = {npc["location"]: npc for npc in npcs.values()}
+    assert by_cell[order[0]]["level"] < by_cell[order[-1]]["level"], (
+        "the origin cell is the gentlest"
+    )
+
+
+def test_a_life_origin_that_is_not_a_cell_is_refused() -> None:
+    from kernel.world.worldgen import LifeSpec, populate_region
+
+    region = generate_region(RegionSpec("vale", 20, 16, seed=3, landmarks=(_TOWN,)))
+    with pytest.raises(WorldgenError, match="origin"):
+        populate_region(region, LifeSpec("temperate-meadow", 1, 30), origin="nowhere_9_9")
+
+
 def test_band_flattens_when_the_field_is_a_single_cell() -> None:
     from kernel.world.worldgen import _band
 
