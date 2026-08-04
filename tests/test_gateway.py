@@ -1,6 +1,7 @@
 """Test twin for adapters/gateway.py -- the front desk, over real sockets."""
 
 import copy
+import re
 import socket
 import ssl
 import subprocess
@@ -999,3 +1000,71 @@ def test_a_workspace_request_serves_the_instance_deploy_status(server, tmp_path,
     assert b'"version":' in out and b'"connections":' in out  # real self-facts, not a cloud URL
     assert b'"seed":"' in out and b'"uptime_seconds":' in out
     sock.close()
+
+
+def test_live_master_client_workspace_flow_survives_gateway_restart(server, tmp_path, monkeypatch):
+    """The first live SeedLab vertical slice: the Master Client's text commands and GMCP panels
+    cross a real gateway, and the Seed remains addressable after a fresh gateway reads the same
+    file-backed workspace. The source is deliberately tiny, but pytest is a real subprocess run.
+    """
+    monkeypatch.setenv("SEEDLAB_HOME", str(tmp_path / "lab"))
+    source = tmp_path / "source"
+    (source / "sample").mkdir(parents=True)
+    (source / "sample" / "__init__.py").write_text("VALUE = 42\n", encoding="utf-8")
+    (source / "test_smoke.py").write_text(
+        "def test_smoke():\n    assert 2 + 2 == 4\n", encoding="utf-8"
+    )
+    (source / "pyproject.toml").write_text(
+        "[project]\nname = 'live-seedlab-source'\nversion = '0.1.0'\n",
+        encoding="utf-8",
+    )
+
+    _saved_owner()
+    sock, _ = _login_gmcp(server, "wren", "forge")
+    try:
+        created = _command(sock, "workspace create LiveFlow prove the live platform loop")
+        seed_match = re.search(rb"seed-[a-z0-9-]+", created.encode())
+        assert seed_match is not None
+        seed_id = seed_match.group().decode()
+        assert b"Project.Status" in created.encode() and b"LiveFlow" in created.encode()
+
+        connected = _command(sock, f"workspace connect {seed_id} {source}")
+        assert b"Source.Tree" in connected.encode()
+        assert b"Source.Connection" in connected.encode()
+        assert b"Model.Schema" in connected.encode()
+        assert b"sample" in connected.encode()
+
+        modeled = _command(sock, f"workspace model {seed_id}")
+        assert b"Model.Schema" in modeled.encode() and b"live-seedlab-source" in modeled.encode()
+
+        built = _command(sock, f"workspace run {seed_id} {source} pytest")
+        assert b"Build.Report" in built.encode() and b"1 passed" in built.encode()
+
+        reported = _command(sock, f"workspace report {seed_id}")
+        assert b"Build.Report" in reported.encode() and b"1 run(s), 1 ok" in reported.encode()
+
+        assert b"RUNNING" in _command(sock, f"workspace start {seed_id}").encode()
+        backed_up = _command(sock, f"workspace backup {seed_id}")
+        backup_match = re.search(r"bk-[A-Za-z0-9_.-]+", backed_up)
+        assert backup_match is not None
+        backup_id = backup_match.group()
+        assert b"STOPPED" in _command(sock, f"workspace stop {seed_id}").encode()
+        restored = _command(sock, f"workspace restore {seed_id} {backup_id}")
+        assert b"RUNNING" in restored.encode() and b"Project.Status" in restored.encode()
+    finally:
+        sock.close()
+
+    # A second listening gateway over the same SEEDLAB_HOME proves recovery through the actual
+    # server boundary, not merely a fresh Kernel object inside the unit test.
+    recovered = ForgeGateServer(("127.0.0.1", 0), _GateHandler)
+    threading.Thread(target=recovered.serve_forever, daemon=True).start()
+    try:
+        fresh, _ = _login_gmcp(recovered, "wren", "forge")
+        try:
+            status = _command(fresh, f"workspace status {seed_id}")
+            assert b"RUNNING" in status.encode() and b"LiveFlow" in status.encode()
+        finally:
+            fresh.close()
+    finally:
+        recovered.shutdown()
+        recovered.server_close()
