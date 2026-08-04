@@ -16,8 +16,9 @@ creation `Form.Schema` plus the reference Seed's read-only workspace (its `Archi
 `Blueprint.List`, real engine state, so the Master Client's panels light up from the running
 server), an inbound `Seed.Create` / `Form.Submit` frame mints a real Seed (owner-gated, mirroring
 the in-MUD `workspace` verb) and pushes its `workspace_packages` back, and a `Workspace.Request`
-frame serves the reference Seed's `Deploy.Manifest` (for a requested tier) plus its
-`Research.Findings` when a research manifest is mounted (`SEEDLAB_RESEARCH`).
+frame serves this instance's live `Deploy.Status` (version, uptime, connections, TLS), the
+reference Seed's `Deploy.Manifest` (for a requested tier), and its `Research.Findings` when a
+research manifest is mounted (`SEEDLAB_RESEARCH`).
 Seedlab is lazy-imported inside the handlers (off the game load path) and its mutations serialized
 under `SEEDLAB_LOCK`; nothing here touches the tick, `_push_state`, or the front desk.
 """
@@ -112,6 +113,22 @@ LOGIN_FAIL_WINDOW = 300.0  # ...before that address is refused for a cooldown
 _SEATS = Bulkhead(MAX_CONNECTIONS)
 _turnaway_ledger: dict[str, list[float]] = {}
 _ledger_lock = threading.Lock()
+
+# When this process started serving, for the instance's self-reported uptime (Deploy.Status). Set at
+# import (~process start); monotonic so a wall-clock change never makes uptime jump or go negative.
+_STARTED_AT = time.monotonic()
+
+
+def _server_version() -> str:
+    """The running engine's version, from the installed distribution (unknown when run un-packaged,
+    e.g. a source checkout with no metadata) -- an honest self-report, never a hardcoded guess."""
+    from importlib.metadata import PackageNotFoundError
+    from importlib.metadata import version as _dist_version
+
+    try:
+        return _dist_version("codeforge")
+    except PackageNotFoundError:
+        return "unknown"
 
 
 def _next_player_id() -> str:
@@ -394,12 +411,26 @@ class _GateHandler(socketserver.StreamRequestHandler):
         from kernel.seedlab.kernel import SeedKernelError
         from kernel.seedlab.workspace_gmcp import (
             DEPLOY_MANIFEST_PACKAGE,
+            DEPLOY_STATUS_PACKAGE,
             RESEARCH_FINDINGS_PACKAGE,
             deploy_manifest,
+            deploy_status,
             load_research_findings,
             research_findings,
         )
 
+        # The running instance's own live status: real facts the node knows about itself, no cloud.
+        self._send_gmcp(
+            DEPLOY_STATUS_PACKAGE,
+            deploy_status(
+                version=_server_version(),
+                seed=SEED_NAME,
+                uptime_seconds=time.monotonic() - _STARTED_AT,
+                connections=_SEATS.active,
+                max_connections=_SEATS.limit,
+                tls=bool(os.environ.get("CODEFORGE_TLS_CERT", "").strip()),
+            ),
+        )
         tier_id = "prototype"
         if isinstance(payload, dict):
             requested = payload.get("tier")

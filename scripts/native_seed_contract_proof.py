@@ -264,6 +264,30 @@ def main() -> int:
             f"tier={parsed_deploy.tier_id} players={parsed_deploy.sizing.target_players}",
         )
 
+    # Deploy.Status is the running instance's own live status (7b, no cloud). Same additive rule:
+    # prove it only when the client checkout carries the parser.
+    status_pkg = eng.deploy_status(
+        version="0.1.0",
+        seed="first-forge",
+        uptime_seconds=90,
+        connections=2,
+        max_connections=128,
+        tls=True,
+    )
+    try:
+        from codeforge.mudclient.core import deploy_status as cli_status
+    except ImportError:
+        checks.append(("Deploy.Status", True, "SKIP: client parser absent (additive contract)"))
+    else:
+        parsed_status = cli_status.parse_deploy_status(status_pkg)
+        record_check(
+            "Deploy.Status",
+            eng.DEPLOY_STATUS_PACKAGE,
+            cli_status.DEPLOY_STATUS_PACKAGE,
+            parsed_status.version == "0.1.0" and parsed_status.connections_max == 128,
+            f"version={parsed_status.version} conns={parsed_status.connections_max}",
+        )
+
     for pkg, payload in eng.workspace_packages(
         record,
         source=source_record,

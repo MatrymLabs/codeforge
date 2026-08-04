@@ -28,6 +28,7 @@ from kernel.seedlab.workspace_gmcp import (
     BLUEPRINT_LIST_PACKAGE,
     BUILD_REPORT_PACKAGE,
     DEPLOY_MANIFEST_PACKAGE,
+    DEPLOY_STATUS_PACKAGE,
     FORM_SCHEMA_PACKAGE,
     FORM_SUBMIT_PACKAGE,
     MODEL_SCHEMA_PACKAGE,
@@ -42,6 +43,7 @@ from kernel.seedlab.workspace_gmcp import (
     create_from_form_submit,
     create_from_request,
     deploy_manifest,
+    deploy_status,
     form_schema,
     load_module_designations,
     load_research_findings,
@@ -860,3 +862,57 @@ def test_workspace_packages_adds_the_manifest_only_when_given():
     assert DEPLOY_MANIFEST_PACKAGE not in [p for p, _ in workspace_packages(record)]
     withdeploy = workspace_packages(record, manifest=compile_manifest("s", "prototype"))
     assert [p for p, _ in withdeploy] == [PROJECT_STATUS_PACKAGE, DEPLOY_MANIFEST_PACKAGE]
+
+
+# --- Deploy.Status: the running instance's own live status (7b, no cloud) -------------------------
+
+
+def test_deploy_status_reports_the_instances_own_facts():
+    payload = deploy_status(
+        version="0.1.0",
+        seed="first-forge",
+        uptime_seconds=125.7,
+        connections=3,
+        max_connections=128,
+        tls=True,
+    )
+    assert payload["version"] == "0.1.0" and payload["seed"] == "first-forge"
+    assert payload["uptime_seconds"] == 125  # floored to whole seconds
+    assert payload["connections"] == {"current": 3, "max": 128}
+    assert payload["tls"] is True
+
+
+def test_deploy_status_never_reports_a_negative_uptime():
+    # a monotonic hiccup or a zero start must never surface a negative uptime
+    payload = deploy_status(
+        version="v",
+        seed="s",
+        uptime_seconds=-4.0,
+        connections=0,
+        max_connections=1,
+        tls=False,
+    )
+    assert payload["uptime_seconds"] == 0
+
+
+def test_deploy_status_carries_only_real_instance_facts():
+    # No Vision Theater: an instance self-report, never a fabricated cloud URL / region / health.
+    payload = deploy_status(
+        version="v",
+        seed="s",
+        uptime_seconds=1.0,
+        connections=0,
+        max_connections=1,
+        tls=False,
+    )
+    assert set(payload) == {"version", "seed", "uptime_seconds", "connections", "tls"}
+
+
+def test_deploy_status_frames_as_gmcp():
+    frame = gmcp_frame(
+        DEPLOY_STATUS_PACKAGE,
+        deploy_status(
+            version="v", seed="s", uptime_seconds=1.0, connections=0, max_connections=1, tls=False
+        ),
+    )
+    assert isinstance(frame, bytes) and b"Deploy.Status" in frame
