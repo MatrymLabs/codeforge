@@ -651,8 +651,10 @@ def emit(out_root: Path | None = None) -> None:
         place_names = ", ".join(p[1] for p in places)
         exits = dict(hub_exits[zid])
         for pid, pname, _kind, _pd in places:
-            # a noun exit to each place keyed by a short slug of its name's first word
-            key = pname.split()[0].lower().strip("'").replace("'", "")
+            # a noun exit to each place keyed by a short slug of its name's first MEANINGFUL word
+            # (skip leading articles, so "The Sunken Barrow" keys on `sunken`, not the useless `the`)
+            words = [w for w in pname.split() if w.lower() not in ("a", "an", "the", "of")]
+            key = (words[0] if words else pname.split()[0]).lower().strip("'").replace("'", "")
             if (
                 key in exits
                 or key in _REV
@@ -696,6 +698,13 @@ def emit(out_root: Path | None = None) -> None:
             member_rooms.append(pid)
             if kind in KINDS_WITH_FOE:
                 _foe(npcs, f"{pid}_guardian", f"the guardian of {pname}", pid, hi, biome)
+                if lo == 1:
+                    # The starter zone's dungeon mouth also holds a FAIR, aggressive, winnable,
+                    # NON-lethal prey: it strikes first (so the world still exercises proactive
+                    # combat) but a fresh hero beats it and levels, and its death routes through the
+                    # training-ground failsafe -- the on-ramp teaches combat instead of ending it,
+                    # while the capstone guardian above merely bars the way (no longer aggressive).
+                    _prey(npcs, f"{pid}_prey", "a barrow-rat", pid, ["rat", "barrow-rat", "vermin"])
                 # a dungeon mouth the delve generator expands into a multi-room descent
                 delves.append(f"{pid}:")
                 delves.append(f"{SP}name: {pname}")
@@ -838,6 +847,25 @@ def _npc(out: list[str], nid: str, name: str, room: str, line: str) -> None:
     out.append("")
 
 
+def _prey(out: list[str], nid: str, name: str, room: str, keywords: list[str]) -> None:
+    """A fair, aggressive, WINNABLE, non-lethal starter creature. It strikes first (so the world
+    still exercises proactive_combat) but a fresh hero can beat it and level; with no `lethal` flag
+    its death routes through the training-ground failsafe, so the on-ramp teaches combat rather than
+    ending a level-1 run. Low level + low hp/atk keep it winnable for a brand-new character."""
+    out.append(f"{nid}:")
+    out.append(f"{SP}name: {name}")
+    out.append(f"{SP}keywords: [{', '.join(keywords)}]")
+    out.append(f"{SP}location: {room}")
+    out.append(f"{SP}dialogue:")
+    out.append(f"{SP}{SP}- The {keywords[0]} bares its teeth and darts at your ankles.")
+    out.append(f"{SP}aggressive: true")
+    out.append(f"{SP}hp: 18")
+    out.append(f"{SP}atk: 3")
+    out.append(f"{SP}level: 2")
+    out.append(f"{SP}tier: normal")
+    out.append("")
+
+
 def _foe(out: list[str], nid: str, name: str, room: str, level: int, biome: str) -> None:
     el = {
         "glacier-waste": "ICE",
@@ -855,7 +883,9 @@ def _foe(out: list[str], nid: str, name: str, room: str, level: int, biome: str)
     out.append(f"{SP}{SP}- The guardian bars the way into {name.split('of ')[-1]}.")
     out.append(f"{SP}hp: {120 + level * 6}")
     out.append(f"{SP}atk: {12 + level // 2}")
-    out.append(f"{SP}aggressive: true")
+    # A mouth guardian BARS the way (defensive) -- it is not aggressive, so it never passively
+    # kills a lower-level hero who wanders to a zone's capstone-dungeon mouth (the on-ramp fix).
+    # It still "looks hostile" and fights to the death when struck; entering the delve is a choice.
     out.append(f"{SP}attack_element: {el}")
     out.append(f"{SP}level: {level}")
     out.append(f"{SP}tier: boss")
