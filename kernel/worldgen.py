@@ -14,6 +14,11 @@ A region is built in two layers, then judged by every gate:
   * `generate_region(spec)` -> a Region carrying the rooms, the topology verdict, and whether every
     landmark is reachable (progression). It NEVER hides a bad shape: `spec.corridor=True` forces a
     1-wide chain and the region honestly comes back TRAIL_SHAPED (the sabotage the gate must catch).
+  * `populate_region(region, life)` -> the LIFE layer: scatter ambient foes, gather nodes, and a
+    handful of guardians across the open field, so a field PLAYS like the living wilderness the
+    trail-chains gave (foes to fell, nodes to harvest, a lord to hunt), never a bare map. It reuses
+    the same bestiary/gather parts kernel/world/wildlands.py fills the trails with, so the same
+    cull/forage boards keep routing after a zone flips from a trail to a field.
 
 Deterministic: the same seed yields the same region (a seeded RNG, no wall-clock). Fails loud on a
 degenerate size or a landmark placed on impassable terrain. Status: PROTOTYPED (Phase 3).
@@ -22,10 +27,14 @@ degenerate size or a landmark placed on impassable terrain. Status: PROTOTYPED (
 from __future__ import annotations
 
 import random
+from collections import deque
 from dataclasses import dataclass
 
 from kernel.field import Cell, Stack, build_field
 from kernel.topology import WORLD_SHAPED, TopologyReport, audit_topology
+from kernel.world.bestiary import make_beast, make_notable
+from kernel.world.seed import Npc
+from kernel.world.wildlands import gatherable_materials
 
 _ORTHO = [(0, 1), (0, -1), (1, 0), (-1, 0)]
 
@@ -80,13 +89,27 @@ class Region:
         return self.world_shaped and self.landmarks_reachable
 
 
+@dataclass(frozen=True)
+class LifeSpec:
+    """The order for BREATHING LIFE into a region's open field: which biome's creatures and spoil,
+    the level band the wild spans, and how thickly to scatter foes, gather nodes, and guardians."""
+
+    biome: str
+    level_min: int
+    level_max: int
+    foe_every: int = 1  # an ambient foe every Nth wild cell (1 = one per cell, the wildlands rate)
+    gather_every: int = 5  # a gather node every Nth wild cell (mirrors wildlands _GATHER_EVERY = 5)
+    notable_every: int = 40  # a guardian every Nth wild cell (idx-cadenced), capped below
+    notable_cap: int = 16  # at most this many guardians per region (mirrors wildlands _NOTABLE_CAP)
+
+
 # --- spatial-fill helpers ------------------------------------------------------------------------
 
 
 def _heightmap(w: int, h: int, seed: int) -> dict[tuple[int, int], float]:
     """A smooth, deterministic heightmap in [0, 1]: a coarse seeded grid, bilinearly interpolated so
     elevation flows (hills and valleys), not per-cell noise."""
-    # nosec B311 -- this RNG seeds DETERMINISTIC terrain (reproducible worlds), never security/crypto
+    # This RNG seeds deterministic terrain for reproducible worlds, not security.
     rng = random.Random(seed)  # nosec B311
     step = 4
     grid = {(cx, cy): rng.random() for cx in range(w // step + 2) for cy in range(h // step + 2)}
@@ -161,8 +184,6 @@ def _road_between(
     """The shortest walkable path from a to b over passable cells (BFS). This becomes a road: a
     deliberate TRAIL through the open field, so a living world mixes routes to follow with space to
     roam. Empty if either end is a wall or no path exists."""
-    from collections import deque
-
     if a not in passable or b not in passable:
         return []
     prev: dict[tuple[int, int], tuple[int, int] | None] = {a: None}
@@ -288,3 +309,66 @@ def generate_region(spec: RegionSpec) -> Region:
     reached = _reachable(exits, start)
     lms_reachable = all(f"{spec.name}_{lm.at[0]}_{lm.at[1]}" in reached for lm in spec.landmarks)
     return Region(spec.name, rooms, start, report, lms_reachable, tuple(river))
+
+
+# --- the life layer ------------------------------------------------------------------------------
+
+
+def _band(lo: int, hi: int, idx: int, span: int) -> int:
+    """A level for a cell at BFS index `idx` of `span`: a linear gradient from lo (near the spawn)
+    to hi (the deep field), so the wild deepens with distance. The field twin of a trail band."""
+    if span <= 1:
+        return lo
+    return lo + (hi - lo) * min(idx, span - 1) // (span - 1)
+
+
+def _cell_order(exits: dict[str, dict[str, str]], start: str) -> list[str]:
+    """Every reachable cell in a stable BFS order from the spawn: closer cells first, so the wild
+    deepens outward and each cell gets a distinct index (varied elite/aggression/size). It is
+    deterministic (neighbours in sorted order), so the same field always fills the same way."""
+    order = [start]
+    seen = {start}
+    queue = deque([start])
+    while queue:
+        for dest in sorted(exits[queue.popleft()].values()):
+            if dest not in seen:
+                seen.add(dest)
+                order.append(dest)
+                queue.append(dest)
+    return order
+
+
+def populate_region(region: Region, life: LifeSpec) -> dict[str, Npc]:
+    """Breathe life into a generated region: scatter ambient foes, gather nodes, and a handful of
+    guardians across the walkable OPEN FIELD (the anchored landmarks -- towns, dungeons, peaks --
+    stay safe), so a field plays like the living wilderness the trails gave. Mutates `region.rooms`
+    in place to hang gather `node`s; returns the NPC records keyed by label, each `location`d on its
+    cell -- the same living-content contract kernel/world/wildlands.py fills for the trails, so the
+    zone's cull/forage boards keep routing once a trail flips to a field. Fails loud on an empty
+    region or a non-positive cadence."""
+    if not region.rooms:
+        raise WorldgenError(f"region {region.name!r}: cannot breathe life into an empty region")
+    if life.foe_every < 1 or life.gather_every < 1 or life.notable_every < 1:
+        raise WorldgenError(f"region {region.name!r}: life cadences must be >= 1")
+
+    exits = {rid: r["exits"] for rid, r in region.rooms.items()}
+    # the wilderness fills the open field, never the anchored sites (a town cell is no beast's den).
+    wild = [
+        rid for rid in _cell_order(exits, region.start) if not region.rooms[rid].get("landmark")
+    ]
+    span = len(wild)
+    max_notables = min(span // life.notable_every, life.notable_cap)
+    materials = gatherable_materials(life.biome)
+
+    npcs: dict[str, Npc] = {}
+    seq = 0
+    for idx, rid in enumerate(wild):
+        level = _band(life.level_min, life.level_max, idx, span)
+        if idx % life.gather_every == 0:
+            region.rooms[rid]["node"] = materials[(idx // life.gather_every) % len(materials)]
+        if idx and idx % life.notable_every == 0 and seq < max_notables:
+            npcs[f"{region.name}_lord_{seq}"] = make_notable(life.biome, level, idx, rid, seq)
+            seq += 1
+        elif idx % life.foe_every == 0:
+            npcs[f"{region.name}_beast_{idx}"] = make_beast(life.biome, level, idx, rid)
+    return npcs
