@@ -9389,5 +9389,81 @@
   "aliases": [],
   "created": "2026-08-03",
   "updated": "2026-08-03"
+ },
+ {
+  "designation": "MOD-10.092",
+  "name": "topology",
+  "status": "active",
+  "function": "judge whether a world graph is WORLD-SHAPED (a graph with area) or TRAIL-SHAPED (a path with scenery): the anti-trail gate of the World Topology Doctrine",
+  "label": "topology",
+  "file": "kernel/topology.py",
+  "type": "MOD",
+  "domain": "10",
+  "docs": "content/world/topology.yaml",
+  "tests": "tests/test_topology.py",
+  "depends_on": [],
+  "related": [
+   "worldgraph",
+   "wildlands",
+   "navigation",
+   "zones"
+  ],
+  "reuse": "audit_topology(exits, start=, gates=, declared_bottlenecks=) returns a verdict WORLD_SHAPED / TRAIL_SHAPED / UNREACHABLE against measurable anti-trail gates: linearity (rooms with exactly 2 exits), mean exit degree, loop ratio (rooms on a cycle, via an iterative-Tarjan bridge analysis), and undeclared between-regions bottlenecks (a single route between two substantial areas; a leaf-spur to a deliberate dead end is exempt, and a declared bottleneck is passed in). Reachability from the start still applies. Thresholds are the doctrine's defaults (TopologyGates), tunable per terrain as a DECISION; the doctrine ships as DATA in content/world/topology.yaml (directions, terrain + passability, zone backings, gates, two-layer gen design). Dogfooded on the live Aethryn world -> TRAIL_SHAPED (loop_ratio 0.00%). Verdicts, not booleans; fails loud on an empty graph or a dangling exit. Fleet-wide: binds every world-shaped Seed's worldgen (the linear Oregon-Trail archetype opts out).",
+  "notes": "World Topology Doctrine, Phase 1 (branch aethryn/world-topology-v1). Phase 2 builds the coordinate/field backings + terrain movement; Phase 3 wires the two-layer generator; Phase 4 migrates Aethryn (founder-approved). PROTOTYPED.",
+  "tags": ["module"],
+  "superseded_by": "",
+  "aliases": [],
+  "created": "2026-08-04",
+  "updated": "2026-08-04"
+ },
+ {
+  "designation": "MOD-10.093",
+  "name": "field",
+  "status": "active",
+  "function": "a coordinate-backed FIELD backing: turn a terrain map into a WORLD-shaped graph of rooms (8-directional open movement, terrain-gated crossings, vertical stacks, named exits) -- the spatial-fill half of the World Topology Doctrine",
+  "label": "field",
+  "file": "kernel/field.py",
+  "type": "MOD",
+  "domain": "10",
+  "docs": "content/world/topology.yaml",
+  "tests": "tests/test_field.py",
+  "depends_on": ["MOD-10.092"],
+  "related": [
+   "topology",
+   "wildlands",
+   "worldgraph"
+  ],
+  "reuse": "build_field(name, cells, *, stacks=) turns a dict of (x,y)->Cell(terrain, elevation) into the engine's Room dicts (name/desc/exits). Exits are DERIVED from terrain adjacency + the passability matrix (content/world/topology.yaml): a passable cell links to its 8 neighbours (cardinal + intercardinal, no corner-cutting across a wall), an impassable cell (river/cliff/water/wall) is a gap so terrain SHAPES movement (a river blocks except where a ford/bridge cell is passable, which also carries a NAMED crossing exit). A Stack adds true vertical (a summit above via up/climb, a cave below via down). Descriptions are terrain-driven with local features. PROVEN on the doctrine's 20x20 field (river + ford + bridge + hills + summit) -> topology gate WORLD_SHAPED. Fails loud on an empty field, unknown terrain, or a stack on an impassable cell. A generation backing (Hardware Store candidate); lives at kernel/ (not kernel/world/, whose boundary is the game import closure) until Phase 4 wires a zone's `backing: field`.",
+  "notes": "World Topology Doctrine, Phase 2 (branch aethryn/world-topology-v1). Phase 3 wires the two-layer generator (grammar landmarks -> terrain fill -> this backing) + the sabotage test; Phase 4 migrates Aethryn's wildlands from chains to fields (founder-approved). PROTOTYPED.",
+  "tags": ["module"],
+  "superseded_by": "",
+  "aliases": [],
+  "created": "2026-08-04",
+  "updated": "2026-08-04"
+ },
+ {
+  "designation": "MOD-10.094",
+  "name": "worldgen",
+  "status": "active",
+  "function": "the TWO-LAYER region generator of the World Topology Doctrine: mission layer (landmarks + declared river crossings) + spatial fill (seeded heightmap -> river-follows-elevation -> terrain -> field-derived exits), judged by every gate",
+  "label": "worldgen",
+  "file": "kernel/worldgen.py",
+  "type": "MOD",
+  "domain": "10",
+  "docs": "content/world/topology.yaml",
+  "tests": "tests/test_worldgen.py",
+  "depends_on": ["MOD-10.092", "MOD-10.093"],
+  "related": [
+   "topology",
+   "field",
+   "wildlands"
+  ],
+  "reuse": "generate_region(RegionSpec(name,width,height,seed,landmarks,river_source,crossings,corridor)) -> a Region carrying the rooms, the topology verdict, and landmark reachability (progression). Two layers: MISSION (Landmark anchors + declared ford/bridge crossings) then SPATIAL (a deterministic bilinear heightmap; a river traced DOWNHILL from the source following elevation, auto-crossed by a ford + bridge so it stays passable; terrain read from height -- hill/forest/plain, river channel impassable; ROADS paved between consecutive landmarks (a trail THROUGH the open field -- the mixture of trail and field a living world wants, crossing rivers at their fords, toggle spec.roads); exits DERIVED by field.build_field; a peak landmark raises a summit Stack). Judged by ALL gates: audit_topology (anti-trail) + reachability + landmarks-reachable. It NEVER hides a bad shape -- spec.corridor=True forces a 1-wide chain and the region honestly returns TRAIL_SHAPED (the sabotage the gate must catch). Deterministic (seeded RNG, no wall-clock); fails loud on degenerate size or a landmark on impassable terrain. PROVEN: a complete 24x18 region -> WORLD_SHAPED + all landmarks reachable; the sabotage corridor -> TRAIL_SHAPED. A generation mechanism (Hardware Store candidate); lives at kernel/ until Phase 4 wires a zone's backing.",
+  "notes": "World Topology Doctrine, Phase 3 (branch aethryn/world-topology-v1). Phase 4 migrates Aethryn's wildlands from linear chains to generated fields (PROPOSE the map first, founder-approve, migrate non-destructively, prove old+new walk seamlessly, submit the worldgen parts to intake/). PROTOTYPED.",
+  "tags": ["module"],
+  "superseded_by": "",
+  "aliases": [],
+  "created": "2026-08-04",
+  "updated": "2026-08-04"
  }
 ]
