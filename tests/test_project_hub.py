@@ -42,19 +42,26 @@ def test_look_shows_identity_status_and_empty_facets_honestly() -> None:
 
 def test_populated_facets_render_their_values() -> None:
     hub, sid = _hub_with_seed()
-    state = ProjectState(sid, sources=("local:./repo",), risks=("no auth yet",))
+    state = ProjectState(
+        sid,
+        sources=("local:./repo",),
+        connectors=("connector:local-source:./repo",),
+        risks=("no auth yet",),
+    )
     out = hub.render(sid, state)
     assert "Sources (1): local:./repo" in out
+    assert "Connectors (1): connector:local-source:./repo" in out
     assert "Risks (1): no auth yet" in out
 
 
 def test_contract_is_versioned_and_matches_the_render() -> None:
     hub, sid = _hub_with_seed()
-    state = ProjectState(sid, models=("domain-v1",))
+    state = ProjectState(sid, connectors=("connector:local-source:repo",), models=("domain-v1",))
     contract = hub.contract(sid, state)
     assert contract["contract_version"] == CONTRACT_VERSION
     assert contract["seed"]["id"] == sid and contract["seed"]["status"] == "created"
     assert contract["project"]["models"] == ["domain-v1"]
+    assert contract["project"]["connectors"] == ["connector:local-source:repo"]
     assert contract["project"]["sources"] == []  # empty facet is an empty list, present + honest
     assert contract["activity"][0]["action"] == "created"
 

@@ -68,8 +68,8 @@ def refactor_available() -> bool:
 def _import_libcst() -> Any:  # pragma: no cover - import glue, exercised in the [refactor] run
     """Lazy-import LibCST's parser + scope metadata. Fails loud if the extra is absent."""
     try:
-        import libcst as cst  # type: ignore[import-not-found]
-        from libcst.metadata import (  # type: ignore[import-not-found]
+        import libcst as cst
+        from libcst.metadata import (
             FunctionScope,
             MetadataWrapper,
             ScopeProvider,

@@ -28,7 +28,8 @@ generated). The schema is vendored (copied), not imported at runtime: zero coupl
 
 The Native Seed GMCP package examples shared by `codeforge` and `codeforge-client`:
 
-- Server to client: `Seed.Hello`, `Seed.Profile`, `Project.Status`, `Source.Tree`, `Model.Schema`,
+- Server to client: `Seed.Hello`, `Seed.Profile`, `Project.Status`, `Source.Tree`,
+  `Source.Connection`, `Model.Schema`,
   `Build.Report`, `Architecture.Map`, `Research.Findings`, `Form.Schema`, `Blueprint.List`,
   `Deploy.Manifest`, `Deploy.Status`, and `Seed.Created`.
 - Client to server: `Seed.Create`, `Form.Submit`, and `Workspace.Request`.
@@ -36,4 +37,5 @@ The Native Seed GMCP package examples shared by `codeforge` and `codeforge-clien
 `contracts/native_seed.py` builds the examples from Forge's current package builders. The committed
 artifact is a drift gate, not a runtime dependency: consumers vendor or read the JSON examples and
 prove their parsers still accept them. `Seed.Profile` is explicitly marked as a locked profile
-shape pending a full Forge profile emitter.
+shape pending a full Forge profile emitter. The workspace connector entry is additive: it locks the
+structured provenance and connection details emitted for a registered local source.

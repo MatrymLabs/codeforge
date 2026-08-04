@@ -150,8 +150,9 @@ def test_connect_models_a_source_in_world(tmp_path: Path) -> None:
 
 
 def test_connect_pushes_source_tree_and_model_schema(tmp_path: Path) -> None:
-    # Connect resolves a real source AND a fresh model, so it lights up both the Source Explorer
-    # and the Model view: one Source.Tree frame and one Model.Schema frame, to the acting owner.
+    # Connect resolves a real source AND a fresh model, so it lights up the Source Explorer, the
+    # connector surface, and the Model view: one Source.Tree frame, one Source.Connection frame,
+    # and one Model.Schema frame, to the acting owner.
     k = _kernel()
     workspace_command(_owner(), "create Proj a demo", kernel=k)
     sid = k.list_seeds()[0].identity.seed_id
@@ -165,12 +166,14 @@ def test_connect_pushes_source_tree_and_model_schema(tmp_path: Path) -> None:
         gmcp_push=push,
     )
     by_package = {pkg: data for _pid, pkg, data in frames}
-    assert set(by_package) == {"Source.Tree", "Model.Schema"}
+    assert set(by_package) == {"Source.Tree", "Source.Connection", "Model.Schema"}
     tree = by_package["Source.Tree"]
     assert isinstance(tree, dict) and tree["seed"] == "Proj"  # labelled by the seed's name
     assert tree["repository"] == "gizmo"
     files = tree["files"]
     assert isinstance(files, list) and any(e["path"].endswith("__init__.py") for e in files)
+    connection = by_package["Source.Connection"]
+    assert isinstance(connection, dict) and connection["source_id"] == "gizmo"
     schema = by_package["Model.Schema"]
     assert isinstance(schema, dict) and schema["seed"] == "Proj" and "entities" in schema
 

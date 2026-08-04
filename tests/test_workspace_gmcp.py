@@ -2,11 +2,11 @@
 GMCP contracts.
 
 Acceptance: each builder projects a seedlab record into the exact package shape the Master Client
-parses (Project.Status, Source.Tree, Model.Schema, Build.Report), and a Seed.Create request mints a
-real Seed and returns a Seed.Created verdict. Refusal (fail loud / honest): a malformed create frame
-never reaches the Kernel and becomes an ok:false verdict; a duplicate name is refused with a reason;
-the engine emits only what it models (empty entity fields; Build.Report carries real run steps and
-an honest ok verdict but empty test/artifact seams, never a fabricated count).
+parses (Project.Status, Source.Tree, Source.Connection, Model.Schema, Build.Report), and a
+Seed.Create request mints a real Seed and returns a Seed.Created verdict. Refusal (fail loud /
+honest): a malformed create frame never reaches the Kernel and becomes an ok:false verdict; a
+duplicate name is refused with a reason; the engine emits only what it models (empty entity fields;
+Build.Report carries real run steps and optional test/artifact seams, never fabricated evidence).
 """
 
 from __future__ import annotations
@@ -34,6 +34,7 @@ from kernel.seedlab.workspace_gmcp import (
     MODEL_SCHEMA_PACKAGE,
     PROJECT_STATUS_PACKAGE,
     RESEARCH_FINDINGS_PACKAGE,
+    SOURCE_CONNECTION_PACKAGE,
     SOURCE_TREE_PACKAGE,
     SeedCreateRequest,
     WorkspaceContractError,
@@ -53,7 +54,9 @@ from kernel.seedlab.workspace_gmcp import (
     project_status,
     research_findings,
     seed_created,
+    source_connection_package,
     source_tree,
+    summarize_test_runs,
     workspace_packages,
 )
 
@@ -247,9 +250,22 @@ def test_workspace_packages_always_has_status_and_adds_the_rest_when_present() -
         model=_model(),
     )
     names = [p for p, _ in full]
-    assert names == [PROJECT_STATUS_PACKAGE, SOURCE_TREE_PACKAGE, MODEL_SCHEMA_PACKAGE]
+    assert names == [
+        PROJECT_STATUS_PACKAGE,
+        SOURCE_TREE_PACKAGE,
+        SOURCE_CONNECTION_PACKAGE,
+        MODEL_SCHEMA_PACKAGE,
+    ]
     status_payload = full[0][1]
     assert status_payload["branch"] == "main"  # the source's branch flows into the status
+
+
+def test_source_connection_projects_the_registered_connector() -> None:
+    payload = source_connection_package(_source(), seed="Job Tracker")
+    assert payload["seed"] == "Job Tracker"
+    assert payload["source_id"] == "demo-src"
+    assert payload["owner"] == "josh"
+    assert payload["visibility"] == "private"
 
 
 # --- Build.Report: a Seed's tool runs projected into a run summary --------------------------------
@@ -304,6 +320,11 @@ def test_build_report_fills_the_test_and_artifact_seams_when_given() -> None:
     assert payload["artifacts"] == [{"name": "app.whl", "kind": "wheel", "bytes": 4096}]
 
 
+def test_summarize_test_runs_collapses_test_outcomes() -> None:
+    summary = summarize_test_runs([_run(kind="test"), _run(kind="test", exit_code=1)])
+    assert summary == {"passed": 1, "failed": 1, "skipped": 0}
+
+
 def test_build_report_frames_as_gmcp() -> None:
     # the payload the gateway would push is JSON-able through the real framer.
     frame = gmcp_frame(BUILD_REPORT_PACKAGE, build_report([_run()], seed="s"))
@@ -317,10 +338,11 @@ def test_workspace_packages_adds_build_report_only_when_runs_happened() -> None:
     without = workspace_packages(record)
     assert BUILD_REPORT_PACKAGE not in [p for p, _ in without]
 
-    withruns = workspace_packages(record, runs=[_run()])
+    withruns = workspace_packages(record, runs=[_run(kind="test")])
     names = [p for p, _ in withruns]
     assert names == [PROJECT_STATUS_PACKAGE, BUILD_REPORT_PACKAGE]
     assert withruns[-1][1]["seed"] == record.identity.name
+    assert withruns[-1][1]["tests"] == {"passed": 1, "failed": 0, "skipped": 0}
 
 
 # --- Architecture.Map: the classification registry projected into a module map --------------------

@@ -120,8 +120,8 @@ def _seed_profile() -> dict[str, object]:
 
 def _source() -> SourceRecord:
     return SourceRecord(
-        source_id="job-tracker-src",
-        provenance=Provenance("job-tracker-src", owner="josh", visibility="private"),
+        source_id="src-job-tracker",
+        provenance=Provenance("src-job-tracker", owner="josh", visibility="private"),
         root="/home/josh/projects/job-tracker",
         file_count=2,
         branch="main",
@@ -278,6 +278,11 @@ def build_examples() -> dict[str, Any]:
                 gmcp.SOURCE_TREE_PACKAGE,
                 "server_to_client",
                 gmcp.source_tree(source, ["src/app.py", "tests/test_app.py"], seed="job-tracker"),
+            ),
+            _example(
+                gmcp.SOURCE_CONNECTION_PACKAGE,
+                "server_to_client",
+                gmcp.source_connection_package(source, seed="job-tracker"),
             ),
             _example(gmcp.MODEL_SCHEMA_PACKAGE, "server_to_client", gmcp.model_schema(_model())),
             _example(
