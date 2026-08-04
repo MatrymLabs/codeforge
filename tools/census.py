@@ -44,14 +44,24 @@ def _count_dir(subdir: str) -> int:
 
 
 def world_scale() -> dict[str, object]:
-    """Authored rooms, plus the generated-room budget summed from every wildlands region's
-    trail_length (the generator's own scale input at CODEFORGE_WILD_SCALE=1, the default boot)."""
+    """Authored rooms, plus the generated-room budget from the seed's procedural wilderness: every
+    wildlands region's trail_length (a trail-chain) AND every field zone's width x height (an open
+    field, kernel/world/fieldzone.py). Both are the generator's scale input at the default boot."""
     authored = _count("rooms.yaml")
     wild = _load("wildlands.yaml")
-    generated = sum(v.get("trail_length", 0) for v in wild.values() if isinstance(v, dict))
+    fields = _load("fields.yaml")
+    trail_rooms = sum(v.get("trail_length", 0) for v in wild.values() if isinstance(v, dict))
+    field_rooms = sum(
+        int(v.get("width", 0)) * int(v.get("height", 0))
+        for v in fields.values()
+        if isinstance(v, dict)
+    )
+    generated = trail_rooms + field_rooms
     return {
         "authored_rooms": authored,
         "wildlands_regions": len(wild),
+        "field_regions": len(fields),
+        "generated_regions": len(wild) + len(fields),
         "generated_rooms_base": generated,
         "total_rooms_default_scale": authored + generated,
     }

@@ -1,42 +1,51 @@
-# Veridia: trail -> field (World Topology Doctrine, Veridia pilot)
+# Aethryn: every wilderness is now an open, world-shaped FIELD
 
-Aethryn's cradle wilderness, once a linear trail-chain, is now an OPEN, WORLD-SHAPED, LIVING
-field -- and a player crosses from the hand-authored hub into it and back seamlessly through
-the engine tick (`handle_command`). Reproduce with `FORGE_SEED=aethryn` (deterministic, seed 9).
+The World Topology Doctrine, applied to the whole map. All 14 zone wildernesses, once linear
+trail-chains, are now OPEN fields generated at boot -- each terrain reads its BIOME, so the
+map has real topographic variety, and a player crosses from a hand-authored hub into the
+field and back seamlessly through the engine tick. Reproduce with `FORGE_SEED=aethryn`.
 
-## The shape verdict (the field subgraph)
+## Every zone: world-shaped, living, terrain that matches the biome
 
-| metric | old trail (measured) | new field |
-|---|---|---|
-| verdict | TRAIL_SHAPED | **WORLD_SHAPED** |
-| linearity (exactly-2-exit) | 66% | **0%** |
-| loop ratio (on a cycle) | ~0% | **100%** |
-| mean exit degree | 2.0 | **7.38** |
-| rooms | ~800 | 607 |
+| zone | biome | verdict | rooms | loop | terrain reads |
+|---|---|---|---|---|---|
+| ashen_wastes | volcanic-flats | world_shaped | 682 | 100% | ash+hills |
+| caeloria | temperate-meadow | world_shaped | 654 | 100% | trees+meadow+hills |
+| duskwood_vale | wild-forest | world_shaped | 611 | 100% | trees+hills |
+| eldryn_forest | wild-forest | world_shaped | 718 | 100% | trees+hills |
+| frostspire_peaks | glacier-waste | world_shaped | 655 | 99% | snow+hills |
+| korvash_highlands | highland-moor | world_shaped | 829 | 100% | marsh+hills |
+| shattered_isles | coastal-strand | world_shaped | 813 | 100% | sand+shore+hills |
+| skyward_spires | highland-moor | world_shaped | 779 | 100% | marsh+hills |
+| thalorin | highland-moor | world_shaped | 718 | 100% | marsh+hills |
+| the_deepreach | volcanic-flats | world_shaped | 789 | 100% | ash+hills |
+| the_voidscar | volcanic-flats | world_shaped | 842 | 100% | ash+hills |
+| veridia | temperate-meadow | world_shaped | 607 | 100% | trees+meadow+hills |
+| xilnath_jungle | living-jungle | world_shaped | 829 | 100% | marsh+trees+hills |
+| zhaar_desert | salt-desert | world_shaped | 768 | 100% | sand+hills |
 
-Living content: **604 foes**, **121 gather nodes**, **15 named guardians**; a river crossed by a **ford and a bridge**; **35 road cells**.
+**14 fields, 10294 generated rooms**, every one WORLD_SHAPED with a ~100% loop ratio
+(the trails were 66% linear, ~0% looped). Rivers follow elevation and are crossed by fords and
+bridges; cliffs (glacier, volcanic) and sea-inlets (coast) are real obstacles the field routes
+around; roads thread the open ground between landmarks (trail AND field). Each field carries the
+trail's living content -- ambient foes, gather nodes, and named guardians -- and its cull/forage
+boards route by zone exactly as before.
 
-On-ramp preserved: the field's life deepens from the ENTRANCE, so a newcomer meets **level 1** wild at the door (the field spans levels 1-30).
-
-## The seamless walk (authored hub -> field -> back)
+## A seamless walk (authored Veridia hub -> the field -> back)
 
 ```
 >>> look   (the AUTHORED hub, hand-written)
     == Veridia ==
     The Veridia zone (levels 1-30): green starter valleys of rivers and open road, where every journey begins. Within its bounds lie Greenhold, Elderwatch, Riverbend, Sunmeadow, The Sunken Barrow. Roads and routes run on to the neighbouring lands.
-    [location: veridia | zone: veridia_zone]
-
->>> west   (cross the seam: authored hub -> GENERATED field)
+    [veridia | zone: veridia_zone]
+>>> west   (cross the seam into the GENERATED field)
     == Veridia (11,12) ==
     Close-standing trees filter the light to green; water runs to the east.
-    [location: veridia_11_12 | zone: field_veridia | exits: ['north', 'south', 'west', 'northwest', 'southwest', 'east']]
-
+    [veridia_11_12 | zone: field_veridia | exits: ['north', 'south', 'west', 'northwest', 'southwest', 'east']]
 >>> northwest -> veridia_10_13    exits=8  foe(lvl 1)
 >>> northeast -> veridia_11_14    exits=8  foe(lvl 1)
 >>> northeast -> veridia_12_15    exits=8  foe(lvl 2)
->>> northeast -> veridia_13_16    exits=5  foe(lvl 3)
-
->>> (return to the gate veridia_11_12) then  east
+>>> (back at the gate) east
     == Veridia ==
-    [location: veridia | zone: veridia_zone]  -- back in the authored hub, seam closed
+    [veridia | zone: veridia_zone] -- seam closed
 ```
