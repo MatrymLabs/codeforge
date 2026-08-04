@@ -102,6 +102,16 @@ ignore_missing_imports = true
 module = "codeforge_textkernel"
 ignore_missing_imports = true
 
+# libcst is the OPTIONAL [refactor] extra. The refactor module lazy-imports it and has an
+# explicit unavailable path, so the base dev/CI environment must typecheck without installing it.
+[[tool.mypy.overrides]]
+module = "libcst"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "libcst.*"
+ignore_missing_imports = true
+
 # lupa is the OPTIONAL Lua runtime (the [lua] extra), imported opportunistically behind a
 # scripting_available() guard (ADR-0014). It ships no type stubs and is absent from the base dev/CI
 # venv, so don't require them -- installed or not.
