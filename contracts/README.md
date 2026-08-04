@@ -23,3 +23,17 @@ The Pydantic models are the source of truth; `generate.py` derives the JSON Sche
 with its own CI drift gate - so the readiness contract is defined once, in Python, and the TypeScript
 types are provably in step. That replaces the previous hand-mirrored types (which merely *claimed* to be
 generated). The schema is vendored (copied), not imported at runtime: zero coupling, faithful reuse.
+
+## native_seed.v1.examples.json
+
+The Native Seed GMCP package examples shared by `codeforge` and `codeforge-client`:
+
+- Server to client: `Seed.Hello`, `Seed.Profile`, `Project.Status`, `Source.Tree`, `Model.Schema`,
+  `Build.Report`, `Architecture.Map`, `Research.Findings`, `Form.Schema`, `Blueprint.List`,
+  `Deploy.Manifest`, `Deploy.Status`, and `Seed.Created`.
+- Client to server: `Seed.Create`, `Form.Submit`, and `Workspace.Request`.
+
+`contracts/native_seed.py` builds the examples from Forge's current package builders. The committed
+artifact is a drift gate, not a runtime dependency: consumers vendor or read the JSON examples and
+prove their parsers still accept them. `Seed.Profile` is explicitly marked as a locked profile
+shape pending a full Forge profile emitter.

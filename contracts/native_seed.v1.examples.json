@@ -1,0 +1,423 @@
+{
+  "contract": "native-seed-gmcp",
+  "schema": 1,
+  "version": "1.0.0",
+  "protocol": 1,
+  "source": "codeforge kernel/gmcp.py + kernel/seedlab/workspace_gmcp.py",
+  "packages": [
+    {
+      "package": "Seed.Hello",
+      "direction": "server_to_client",
+      "status": "implemented",
+      "payload": {
+        "seed": "job-tracker",
+        "version": "1.0.0",
+        "protocol": 1,
+        "required": [
+          "text"
+        ],
+        "optional": [
+          "gmcp",
+          "panels",
+          "map"
+        ],
+        "profile": "job-tracker@1"
+      }
+    },
+    {
+      "package": "Seed.Profile",
+      "direction": "server_to_client",
+      "status": "client_profile_shape_locked_pending_engine_emitter",
+      "payload": {
+        "seed": "job-tracker",
+        "name": "Job Tracker",
+        "publisher": "Matrym Labs",
+        "version": "1.0.0",
+        "theme": "forge",
+        "terminology": {
+          "seed": "workspace"
+        },
+        "panels": [
+          {
+            "name": "Project Hub",
+            "binding": "Project.Status.seed",
+            "fallback": "Project status and lifecycle phase."
+          },
+          {
+            "name": "Source Workspace",
+            "binding": "Source.Tree.files",
+            "fallback": "Repository files exposed by the Seed."
+          },
+          {
+            "name": "Build Report",
+            "binding": "Build.Report.steps",
+            "fallback": "Build and test run summary."
+          }
+        ],
+        "accessibility": [
+          "screen_reader"
+        ]
+      }
+    },
+    {
+      "package": "Project.Status",
+      "direction": "server_to_client",
+      "status": "implemented",
+      "payload": {
+        "seed": "job-tracker",
+        "phase": "created",
+        "branch": "main",
+        "build": {
+          "status": "passing"
+        },
+        "tests": {
+          "passed": 2,
+          "failed": 0
+        }
+      }
+    },
+    {
+      "package": "Source.Tree",
+      "direction": "server_to_client",
+      "status": "implemented",
+      "payload": {
+        "seed": "job-tracker",
+        "repository": "job-tracker",
+        "files": [
+          {
+            "path": "src/app.py",
+            "kind": "file"
+          },
+          {
+            "path": "tests/test_app.py",
+            "kind": "file"
+          }
+        ],
+        "branch": "main",
+        "commit": "a1b2c3d"
+      }
+    },
+    {
+      "package": "Model.Schema",
+      "direction": "server_to_client",
+      "status": "implemented",
+      "payload": {
+        "seed": "job-tracker",
+        "entities": [
+          {
+            "name": "Application",
+            "fields": []
+          },
+          {
+            "name": "Task",
+            "fields": []
+          }
+        ]
+      }
+    },
+    {
+      "package": "Build.Report",
+      "direction": "server_to_client",
+      "status": "implemented",
+      "payload": {
+        "seed": "job-tracker",
+        "ok": true,
+        "steps": [
+          {
+            "name": "lint",
+            "status": "passed"
+          },
+          {
+            "name": "test",
+            "status": "passed"
+          }
+        ],
+        "tests": {
+          "passed": 2,
+          "failed": 0,
+          "skipped": 0
+        },
+        "artifacts": [
+          {
+            "name": "job-tracker.tar.gz",
+            "kind": "archive",
+            "bytes": 4096
+          }
+        ]
+      }
+    },
+    {
+      "package": "Architecture.Map",
+      "direction": "server_to_client",
+      "status": "implemented",
+      "payload": {
+        "source": "registry/designations/modules.json",
+        "module_count": 2,
+        "domains": [
+          {
+            "domain": "01",
+            "count": 1
+          },
+          {
+            "domain": "02",
+            "count": 1
+          }
+        ],
+        "modules": [
+          {
+            "designation": "MOD-01.001",
+            "name": "seedlab",
+            "domain": "01",
+            "function": "Seed lifecycle and workspace projection.",
+            "file": "kernel/seedlab/kernel.py",
+            "status": "prototype"
+          },
+          {
+            "designation": "MOD-02.001",
+            "name": "workspace_gmcp",
+            "domain": "02",
+            "function": "Native Seed GMCP package projection.",
+            "file": "kernel/seedlab/workspace_gmcp.py",
+            "status": "active"
+          }
+        ],
+        "seed": "job-tracker"
+      }
+    },
+    {
+      "package": "Research.Findings",
+      "direction": "server_to_client",
+      "status": "implemented",
+      "payload": {
+        "finding_count": 1,
+        "verdicts": [
+          {
+            "verdict": "prototype proven",
+            "count": 1
+          }
+        ],
+        "findings": [
+          {
+            "id": "EXP-05",
+            "title": "Source model extraction",
+            "question": "Can a Seed expose a small project model to the client?",
+            "status": "complete",
+            "verdict": "prototype proven",
+            "source": "kernel/seedlab/source_modeler.py",
+            "evidence": "tests/test_source_modeler.py",
+            "summary": "A small source tree can become a persisted project model."
+          }
+        ],
+        "seed": "job-tracker"
+      }
+    },
+    {
+      "package": "Form.Schema",
+      "direction": "server_to_client",
+      "status": "implemented",
+      "payload": {
+        "schema": 1,
+        "common_question_ids": [
+          "name",
+          "owner",
+          "purpose"
+        ],
+        "questions": {
+          "name": {
+            "prompt": "What is this Seed called?",
+            "kind": "text",
+            "required": true
+          },
+          "owner": {
+            "prompt": "Who owns it (account)?",
+            "kind": "text",
+            "required": true
+          },
+          "purpose": {
+            "prompt": "In one line, what is it for?",
+            "kind": "text",
+            "required": true
+          },
+          "world_scale": {
+            "prompt": "World scale?",
+            "kind": "choice",
+            "required": true,
+            "choices": [
+              "small",
+              "large"
+            ]
+          },
+          "combat": {
+            "prompt": "Does it have combat?",
+            "kind": "bool",
+            "required": true
+          },
+          "pvp": {
+            "prompt": "PvP ruleset?",
+            "kind": "choice",
+            "required": true,
+            "choices": [
+              "none",
+              "open"
+            ],
+            "applies_when": {
+              "combat": true
+            }
+          }
+        },
+        "product_types": [
+          {
+            "id": "game",
+            "name": "Game world",
+            "description": "a playable world",
+            "question_ids": [
+              "world_scale",
+              "combat",
+              "pvp"
+            ],
+            "domain_modules": [
+              "game",
+              "economy"
+            ]
+          },
+          {
+            "id": "tool",
+            "name": "Engineering tool",
+            "description": "a small software tool",
+            "question_ids": [],
+            "domain_modules": [
+              "engineering"
+            ]
+          }
+        ],
+        "seed": "job-tracker"
+      }
+    },
+    {
+      "package": "Blueprint.List",
+      "direction": "server_to_client",
+      "status": "implemented",
+      "payload": {
+        "blueprint_count": 1,
+        "statuses": [
+          {
+            "status": "draft",
+            "count": 1
+          }
+        ],
+        "blueprints": [
+          {
+            "blueprint_id": "artifact_registry",
+            "title": "Artifact Registry",
+            "intent": "Record produced target artifacts with provenance.",
+            "requirements": [
+              "Artifact identity is stable.",
+              "Source and run evidence link."
+            ],
+            "security": [
+              "Only the Seed runtime may register artifacts."
+            ],
+            "tasks": [
+              "Define the record.",
+              "Persist the registry.",
+              "Expose a report."
+            ],
+            "stack": {
+              "runtime": "CodeForge SeedLab",
+              "tests": "pytest"
+            },
+            "status": "draft"
+          }
+        ],
+        "seed": "job-tracker"
+      }
+    },
+    {
+      "package": "Deploy.Manifest",
+      "direction": "server_to_client",
+      "status": "implemented",
+      "payload": {
+        "schema": 1,
+        "project": "job-tracker",
+        "tier_id": "prototype",
+        "tier_name": "Prototype",
+        "hardware": "fits a single host (~1.8 GB resident, within a 15 GB box)",
+        "sizing": {
+          "target_players": 500,
+          "rooms": 53500,
+          "zones": 15,
+          "regions": 6,
+          "settlements": 11,
+          "dungeons": 16,
+          "bosses": 16,
+          "npcs": 48150,
+          "monsters": 85600,
+          "quests": 2140,
+          "crafting_recipes": 180,
+          "storage_bytes": 1926000000,
+          "storage_human": "1.8 GB"
+        },
+        "seed": "job-tracker"
+      }
+    },
+    {
+      "package": "Deploy.Status",
+      "direction": "server_to_client",
+      "status": "implemented",
+      "payload": {
+        "version": "0.1.0",
+        "seed": "job-tracker",
+        "uptime_seconds": 90,
+        "connections": {
+          "current": 1,
+          "max": 64
+        },
+        "tls": true
+      }
+    },
+    {
+      "package": "Seed.Create",
+      "direction": "client_to_server",
+      "status": "implemented",
+      "payload": {
+        "name": "job-tracker",
+        "kind": "engineering",
+        "description": "a tiny tracker"
+      }
+    },
+    {
+      "package": "Form.Submit",
+      "direction": "client_to_server",
+      "status": "implemented",
+      "payload": {
+        "product_type": "game",
+        "answers": {
+          "name": "Arena",
+          "owner": "josh",
+          "purpose": "a pvp test world",
+          "world_scale": "small",
+          "combat": true,
+          "pvp": "open"
+        }
+      }
+    },
+    {
+      "package": "Workspace.Request",
+      "direction": "client_to_server",
+      "status": "implemented",
+      "payload": {
+        "tier": "prototype"
+      }
+    },
+    {
+      "package": "Seed.Created",
+      "direction": "server_to_client",
+      "status": "implemented",
+      "payload": {
+        "name": "job-tracker",
+        "ok": true,
+        "id": "seed-job-tracker"
+      }
+    }
+  ]
+}
