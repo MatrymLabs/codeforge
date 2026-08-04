@@ -86,7 +86,8 @@ class Region:
 def _heightmap(w: int, h: int, seed: int) -> dict[tuple[int, int], float]:
     """A smooth, deterministic heightmap in [0, 1]: a coarse seeded grid, bilinearly interpolated so
     elevation flows (hills and valleys), not per-cell noise."""
-    rng = random.Random(seed)
+    # nosec B311 -- this RNG seeds DETERMINISTIC terrain (reproducible worlds), never security/crypto
+    rng = random.Random(seed)  # nosec B311
     step = 4
     grid = {(cx, cy): rng.random() for cx in range(w // step + 2) for cy in range(h // step + 2)}
     hm: dict[tuple[int, int], float] = {}
