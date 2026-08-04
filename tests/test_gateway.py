@@ -982,3 +982,20 @@ def test_an_unmounted_research_source_serves_no_findings(server, tmp_path, monke
     assert b"Deploy.Manifest" in out  # deploy is still served
     assert b"Research.Findings" not in out  # honest: no mount, no findings, an empty panel
     sock.close()
+
+
+# --- Deploy.Status: the running instance's own live status on a Workspace.Request (7b) ------------
+
+
+def test_a_workspace_request_serves_the_instance_deploy_status(server, tmp_path, monkeypatch):
+    from kernel.gmcp import gmcp_frame
+
+    monkeypatch.setenv("SEEDLAB_HOME", str(tmp_path))
+    _saved_owner()
+    sock, _ = _login_gmcp(server, "wren", "forge")
+    sock.sendall(gmcp_frame("Workspace.Request", {}))
+    out = _read_until_in(sock, b"Deploy.Status")
+    assert b"Deploy.Status" in out  # the running instance reports itself
+    assert b'"version":' in out and b'"connections":' in out  # real self-facts, not a cloud URL
+    assert b'"seed":"' in out and b'"uptime_seconds":' in out
+    sock.close()

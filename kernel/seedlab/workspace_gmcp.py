@@ -73,6 +73,8 @@ BLUEPRINT_LIST_PACKAGE = "Blueprint.List"
 #: A Seed's deployment-sizing manifest (tier + derived world sizing) -> the client's Deployment
 #: Panel (core/deploy.py). Read-only: the honest sizing/hardware read, NOT a live cloud deploy.
 DEPLOY_MANIFEST_PACKAGE = "Deploy.Manifest"
+#: The running instance's own live status -> the client's instance panel (core/deploy_status).
+DEPLOY_STATUS_PACKAGE = "Deploy.Status"
 
 #: The kinds of Seed a client may ask to create (matches the client's SEED_KINDS).
 SEED_KINDS = ("engineering", "game")
@@ -420,6 +422,31 @@ def deploy_manifest(manifest: BuildManifest, *, seed: str | None = None) -> dict
     if seed is not None:
         payload["seed"] = seed
     return payload
+
+
+def deploy_status(
+    *,
+    version: str,
+    seed: str,
+    uptime_seconds: float,
+    connections: int,
+    max_connections: int,
+    tls: bool,
+) -> dict[str, object]:
+    """The `Deploy.Status` payload: the RUNNING server instance's OWN live status - the honest,
+    no-cloud slice of a deployment panel. Every field is a real fact the running node knows about
+    itself: the engine `version`, the loaded `seed`, its `uptime_seconds`, its live `connections`
+    (current / max, from the bulkhead), and whether it is serving over `tls`. This is not a cloud
+    provisioning status (no URL, region, or health of an external platform - the engine cannot know
+    those and will not invent them); it is the instance reporting itself. Pure: the gateway gathers
+    the live values and this shapes them."""
+    return {
+        "version": version,
+        "seed": seed,
+        "uptime_seconds": max(0, int(uptime_seconds)),
+        "connections": {"current": int(connections), "max": int(max_connections)},
+        "tls": bool(tls),
+    }
 
 
 # --- the creation Form: the Engineering Form -> the client's Seed Creation Wizard ---------------
