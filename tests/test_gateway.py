@@ -153,6 +153,29 @@ def test_register_over_the_wire_seats_and_enters(server):
     sock.close()
 
 
+def test_aethryn_new_character_gets_a_calling_menu_and_persists_choice(server, monkeypatch):
+    """Aethryn's network creation path chooses a calling before the new hero enters the world."""
+    from kernel.world.characters import load_character
+
+    monkeypatch.setattr(gateway, "SEED_NAME", "aethryn")
+    sock = _connect(server)
+    _read_until(sock, b"NEW: ")
+    _line(sock, "new")
+    _read_until(sock, b"account: ")
+    _line(sock, "aethrynmenu@aethrynco")
+    menu = _read_until(sock, b"Calling (name): ")
+    assert "CHARACTER CREATION" in menu
+    assert "vanguard" in menu
+    _line(sock, "vanguard")
+    _read_until(sock, b"password: " + bytes([255, 251, 1]))
+    _line(sock, "swordfish9")
+    scene = _read_until(sock, b"> ")
+    assert "Welcome, Aethrynmenu@aethrynco" in scene
+    assert "way of the Vanguard" in scene
+    assert load_character("aethrynmenu")["job"] == "vanguard"
+    sock.close()
+
+
 def test_short_password_reprompts_in_place_then_registers(server):
     """A NEW visitor who fumbles the password LENGTH is re-prompted for the
     password in place -- keeping the handle they already chose -- not dumped
