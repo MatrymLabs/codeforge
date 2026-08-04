@@ -24,7 +24,7 @@ from __future__ import annotations
 
 import json
 import re
-import subprocess  # nosec B404 -- fixed allowlisted argv, shell=False; the whole point is controlled exec
+import subprocess  # nosec B404
 import time
 from collections.abc import Callable
 from dataclasses import asdict, dataclass, field
@@ -133,7 +133,8 @@ def run_tool(
     root = Path(source.root)  # the connector already resolved + bounded this
     started = time.monotonic()
     try:
-        proc = subprocess.run(  # nosec B603 -- fixed allowlisted argv, shell=False, cwd-bounded
+        # Fixed allowlisted argv, shell=False, cwd-bounded.
+        proc = subprocess.run(  # nosec B603
             argv, cwd=root, capture_output=True, text=True, timeout=timeout, check=False
         )
         output = (proc.stdout or "") + (proc.stderr or "")

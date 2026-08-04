@@ -79,7 +79,8 @@ class Broker:
         with self._lock:
             targets = list(self._subs.get(topic, ()))
         for client in targets:
-            with suppress(Exception):  # nosec B110 -- a dead client never breaks the fan-out
+            # A dead client must not break the fan-out.
+            with suppress(Exception):  # nosec B110
                 client.send(data)
 
     def drop(self, client: Client) -> None:

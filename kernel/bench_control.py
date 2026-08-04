@@ -166,7 +166,7 @@ def build_interleave(repeats: int, warmup: int, *, seed: int) -> list[str]:
         raise BenchControlError("warmup must be >= 0")
     total = warmup + repeats
     order = ["b"] * total + ["c"] * total
-    random.Random(seed).shuffle(order)  # noqa: S311  # nosec B311 -- bench run order, not security
+    random.Random(seed).shuffle(order)  # noqa: S311  # nosec B311
     return order
 
 

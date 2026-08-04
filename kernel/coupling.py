@@ -19,7 +19,7 @@ cut on a broad validation harness. No claim of a safe cut is made here.
 from __future__ import annotations
 
 import json
-import subprocess  # nosec B404 -- fixed argv, no shell; used only to trace a boot + commands
+import subprocess  # nosec B404
 import sys
 from collections.abc import Callable
 from dataclasses import dataclass
@@ -107,7 +107,8 @@ print(json.dumps(sorted({m.split(".")[1] for m in sys.modules if m.startswith("p
 
 def _real_tracer(commands: list[str]) -> set[str]:
     """Boot the engine in a fresh interpreter, drive `commands`, return the `parts/*` loaded."""
-    result = subprocess.run(  # nosec B603 -- fixed argv, no shell; traces a boot + commands
+    # Fixed argv, no shell; used only to trace a boot + commands.
+    result = subprocess.run(  # nosec B603
         [sys.executable, "-c", _TRACE_PROBE, json.dumps(commands)],
         cwd=_ROOT,
         capture_output=True,
@@ -133,7 +134,8 @@ print(json.dumps(sorted({m.split(".")[1] for m in sys.modules if m.startswith("p
 
 def _real_import_tracer(modules: list[str]) -> set[str]:
     """Boot the engine, then IMPORT `modules` (servers, not command-driven), return `parts/*`."""
-    result = subprocess.run(  # nosec B603 -- fixed argv, no shell; traces a boot + imports
+    # Fixed argv, no shell; used only to trace a boot + imports.
+    result = subprocess.run(  # nosec B603
         [sys.executable, "-c", _IMPORT_PROBE, json.dumps(modules)],
         cwd=_ROOT,
         capture_output=True,

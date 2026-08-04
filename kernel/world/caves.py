@@ -95,7 +95,8 @@ def cave_regions() -> list[str]:
 
 def _rng(region_id: str, seed: int) -> random.Random:
     """A reproducible PRNG for this exact (region, seed): sha512-seeded, PYTHONHASHSEED-immune."""
-    return random.Random(f"cave:{region_id}:{seed}")  # nosec B311 -- deterministic gen, not crypto
+    # Deterministic world generation, not cryptography.
+    return random.Random(f"cave:{region_id}:{seed}")  # nosec B311
 
 
 def _connect(a: dict[str, Any], b: dict[str, Any], direction: str) -> None:

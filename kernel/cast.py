@@ -25,7 +25,7 @@ from __future__ import annotations
 import json
 import os
 import shutil
-import subprocess  # nosec B404 -- fixed argv, no shell; used only to smoke-boot a poured cast
+import subprocess  # nosec B404
 import sys
 from dataclasses import asdict, dataclass, field, replace
 from pathlib import Path
@@ -421,7 +421,8 @@ def validate_cast(
     if manifest_path.is_file():
         env["FORGE_SEED"] = read_manifest(manifest_path).starter_seed_pack
     try:
-        result = subprocess.run(  # nosec B603 -- fixed argv, no shell; boots the poured cast
+        # Fixed argv, no shell; boots the poured cast.
+        result = subprocess.run(  # nosec B603
             [sys.executable, "-c", _VALIDATE_PROBE, json.dumps(corpus), json.dumps(imports or [])],
             cwd=cast_dir,
             capture_output=True,
@@ -459,7 +460,8 @@ def _declared_deps(pyproject_path: Path) -> list[str]:
 
 def _real_runner(cmd: list[str], cwd: Path | None) -> tuple[int, str]:
     """Default step runner for install_check: run one command, return (returncode, combined out)."""
-    proc = subprocess.run(  # nosec B603 -- fixed argv, no shell; venv + pip + boot only
+    # Fixed argv, no shell; venv, pip, and boot only.
+    proc = subprocess.run(  # nosec B603
         cmd, cwd=cwd, capture_output=True, text=True, check=False
     )
     return proc.returncode, (proc.stdout + proc.stderr)

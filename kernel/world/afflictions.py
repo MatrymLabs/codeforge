@@ -23,7 +23,7 @@ from kernel.world.session import Session
 DOT_TICKS = 3
 
 #: Runtime RNG for the infliction roll: game variety, not security. Tests seed or replace it.
-_AFFLICT_RNG = random.Random()  # nosec B311 -- combat variety, not cryptographic
+_AFFLICT_RNG = random.Random()  # nosec B311
 
 
 def apply_dot(session: Session, name: str, damage: int, ticks: int = DOT_TICKS) -> None:

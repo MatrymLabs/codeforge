@@ -30,7 +30,7 @@ import json
 import os
 import re
 import shutil
-import subprocess  # nosec B404 -- fixed argv, no shell; used only to read the source's git commit
+import subprocess  # nosec B404
 import tempfile
 from dataclasses import dataclass, field, replace
 from pathlib import Path
@@ -126,7 +126,8 @@ def _engine_files(root: Path) -> dict[str, str]:
 def _resolve_commit(source_root: Path) -> str:
     """The source checkout's short commit via git; 'unknown' if it is not a repo. Never raises."""
     try:
-        done = subprocess.run(  # nosec B603 B607 -- fixed argv, no shell; read-only git query
+        # Fixed argv, no shell; read-only git query.
+        done = subprocess.run(  # nosec B603 B607
             ["git", "-C", str(source_root), "rev-parse", "--short", "HEAD"],
             capture_output=True,
             text=True,
@@ -143,7 +144,8 @@ def _commit_present(source_root: Path, commit: str) -> bool:
     if commit in ("", "unknown"):
         return False
     try:
-        done = subprocess.run(  # nosec B603 B607 -- fixed argv, no shell; read-only existence check
+        # Fixed argv, no shell; read-only existence check.
+        done = subprocess.run(  # nosec B603 B607
             ["git", "-C", str(source_root), "cat-file", "-e", f"{commit}^{{commit}}"],
             capture_output=True,
             timeout=10,
@@ -157,7 +159,8 @@ def _commit_present(source_root: Path, commit: str) -> bool:
 def _read_at_commit(source_root: Path, commit: str, relpath: str) -> bytes | None:
     """The bytes of <relpath> at <commit> via `git show`, or None if absent. Never raises."""
     try:
-        done = subprocess.run(  # nosec B603 B607 -- fixed argv, no shell; read-only blob read
+        # Fixed argv, no shell; read-only blob read.
+        done = subprocess.run(  # nosec B603 B607
             ["git", "-C", str(source_root), "show", f"{commit}:{relpath}"],
             capture_output=True,
             timeout=10,
@@ -354,7 +357,8 @@ def _pip_audit_runner(requirements: list[str]) -> str:
         handle.write("\n".join(requirements) + "\n")
         reqfile = handle.name
     try:
-        done = subprocess.run(  # nosec B603 B607 -- fixed argv, no shell; read-only dependency audit
+        # Fixed argv, no shell; read-only dependency audit.
+        done = subprocess.run(  # nosec B603 B607
             ["pip-audit", "-r", reqfile, "-f", "json"],
             capture_output=True,
             text=True,

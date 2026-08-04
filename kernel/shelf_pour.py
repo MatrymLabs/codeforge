@@ -15,7 +15,7 @@ from __future__ import annotations
 
 import ast
 import re
-import subprocess  # nosec B404 -- fixed argv, no shell; imports the poured package to prove it loads
+import subprocess  # nosec B404
 import sys
 import tempfile
 from collections.abc import Collection
@@ -430,7 +430,8 @@ def pour_shelf(dest: Path, *, shelf_dir: Path | None = None) -> PouredShelf:
 
 
 def _real_runner(cmd: list[str], cwd: Path | None) -> tuple[int, str]:
-    proc = subprocess.run(  # nosec B603 -- fixed argv (sys.executable), no shell, poured dir only
+    # Fixed argv, no shell; used only inside the poured package directory.
+    proc = subprocess.run(  # nosec B603
         cmd, cwd=str(cwd) if cwd is not None else None, capture_output=True, text=True
     )
     return proc.returncode, (proc.stdout + proc.stderr)
