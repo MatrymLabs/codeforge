@@ -146,6 +146,15 @@ def test_a_room_id_collision_with_the_world_is_refused() -> None:
         build_field_zone(_CFG, taken={"probe_3_3"})
 
 
+def test_a_zone_can_climb_UP_into_its_field() -> None:
+    # some hubs attach vertically (you climb UP into the highland wilderness); the field's door
+    # leads back DOWN. A 2D field cell never spends its up/down slots, so the graft is always free.
+    vertical = {**_CFG, "attach_dir": "up", "biome": "glacier-waste"}
+    fz = build_field_zone(vertical, taken=set())
+    assert fz.attach_dir == "up"
+    assert fz.rooms[fz.gate]["exits"]["down"] == "probe_hub"  # down = reverse of up
+
+
 def test_gate_cell_finds_a_free_edge_slot() -> None:
     rooms = cast(
         "dict[str, Room]",

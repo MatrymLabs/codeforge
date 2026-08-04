@@ -45,6 +45,8 @@ _REVERSE = {
     "southwest": "northeast",
     "northwest": "southeast",
     "southeast": "northwest",
+    "up": "down",  # a hub can climb UP into its wilderness; the field's door leads back down
+    "down": "up",
 }
 
 # Every required key on a field row, with the loud message if it is missing or the wrong shape.
@@ -126,6 +128,7 @@ def build_field_zone(cfg: dict[str, Any], taken: set[str]) -> FieldZone:
         width=int(cfg["width"]),
         height=int(cfg["height"]),
         seed=int(cfg.get("seed", 0)),
+        biome=cfg["biome"],  # the terrain profile: sand, ice, jungle, moor, ash, shore
         landmarks=landmarks,
         river_source=river,
     )
