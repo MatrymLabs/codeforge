@@ -26,7 +26,7 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
-_ROOT = Path(__file__).resolve().parent.parent  # kernel/ -> repo root
+_ROOT = Path(__file__).resolve().parent.parent.parent  # kernel/world/ -> repo root
 
 # --- direction geometry (the full vocabulary the doctrine mandates) ------------------------------
 _CARDINAL = {"north": (0, 1), "south": (0, -1), "east": (1, 0), "west": (-1, 0)}

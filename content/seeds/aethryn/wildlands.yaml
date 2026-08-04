@@ -2,16 +2,6 @@
 # One wilderness region per zone, filling the land between the map's places at the
 # zone's level band and biome (kernel/world/wildlands.py).
 
-veridia_wild:
-  name: The Veridia Wilds
-  region: "Veridia"
-  biome: temperate-meadow
-  attach: veridia
-  attach_dir: west
-  level_min: 1
-  level_max: 30
-  trail_length: 800
-
 duskwood_vale_wild:
   name: The Duskwood Vale Wilds
   region: "Duskwood Vale"

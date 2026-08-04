@@ -26,7 +26,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
-_ROOT = Path(__file__).resolve().parent.parent  # kernel/ -> repo root
+_ROOT = Path(__file__).resolve().parent.parent.parent  # kernel/world/ -> repo root
 _SPEC_PATH = _ROOT / "content" / "world" / "topology.yaml"
 
 # --- verdict words (a distinct vocabulary: "is this a world, or a trail?") -----------------------

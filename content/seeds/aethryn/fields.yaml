@@ -1,0 +1,30 @@
+# SEED: aethryn -- fields.yaml  (AUTHORED: the World Topology Doctrine's trail-to-field zones)
+# A zone listed here grows an OPEN, WORLD-SHAPED FIELD for its wilderness instead of a linear
+# trail-chain (kernel/world/fieldzone.py + kernel/world/worldgen.py): rivers and elevation shape
+# movement, roads thread the open ground between landmarks (a mixture of trail and field), and the
+# same living content the trails carried (foes, gather nodes, guardians) is scattered across it.
+#
+# Each row is DESIGN data, not a mechanical fill: a human picks a seed + landmarks that generate a
+# reachable, world-shaped field (the loader REFUSES a field that is not). tools/emit_map_world.py
+# skips a field-backed zone's trail (its FIELD_BACKED set), so this file and wildlands.yaml never
+# collide. Deterministic: the same seed yields the same field, life and all.
+
+# Veridia -- the cradle. The starter wilderness becomes an open meadowland: a river crossed by a
+# ford and a bridge, roads linking three landmarks, ~610 rooms, temperate-meadow life at levels
+# 1-30 (verified world_shaped, mean degree ~7.4, 100% loop ratio, every landmark reachable).
+veridia:
+  name: The Veridia Wilds
+  region: Veridia
+  biome: temperate-meadow
+  attach: veridia
+  attach_dir: west
+  level_min: 1
+  level_max: 30
+  width: 28
+  height: 22
+  seed: 9
+  river_source: [14, 20]
+  landmarks:
+    - {at: [4, 4], name: "The Cradle Cairn", kind: site}
+    - {at: [13, 10], name: "Meadowmoot", kind: site}
+    - {at: [23, 17], name: "The Old Watchtower", kind: dungeon}

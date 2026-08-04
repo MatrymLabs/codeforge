@@ -9,8 +9,8 @@ from __future__ import annotations
 
 import pytest
 
-from kernel.field import Cell, FieldError, Stack, build_field
-from kernel.topology import WORLD_SHAPED, audit_topology
+from kernel.world.field import Cell, FieldError, Stack, build_field
+from kernel.world.topology import WORLD_SHAPED, audit_topology
 
 _W = _H = 20
 _RIVER_X = 10

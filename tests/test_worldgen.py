@@ -10,9 +10,9 @@ from __future__ import annotations
 
 import pytest
 
-from kernel.field import Cell
-from kernel.topology import TRAIL_SHAPED, WORLD_SHAPED
-from kernel.worldgen import (
+from kernel.world.field import Cell
+from kernel.world.topology import TRAIL_SHAPED, WORLD_SHAPED
+from kernel.world.worldgen import (
     Landmark,
     RegionSpec,
     WorldgenError,
@@ -97,7 +97,7 @@ def test_road_between_returns_empty_when_blocked() -> None:
 
 
 def test_paving_a_road_leaves_a_crossing_unpaved() -> None:
-    from kernel.worldgen import _pave_roads
+    from kernel.world.worldgen import _pave_roads
 
     cells = {(x, 0): Cell("plain") for x in range(5)}
     cells[(2, 0)] = Cell("ford")  # a crossing on the road's path
@@ -181,7 +181,7 @@ def test_a_degenerate_size_is_refused_loud() -> None:
 
 def test_a_landmark_on_impassable_terrain_is_refused_loud(monkeypatch) -> None:
     # force a cell impassable under a landmark, then place a landmark on it -> loud refusal
-    import kernel.worldgen as wg
+    import kernel.world.worldgen as wg
 
     real = wg._terrain
 
@@ -195,3 +195,161 @@ def test_a_landmark_on_impassable_terrain_is_refused_loud(monkeypatch) -> None:
         generate_region(
             RegionSpec("vale", 24, 18, seed=1, landmarks=(Landmark((5, 5), "Sunk", "town"),))
         )
+
+
+# --- the life layer: foes + gather nodes + guardians on the open field ---------------------------
+
+
+def _living_vale(seed: int = 7, **life_kw):
+    """A world-shaped region plus its life, for the life-layer proofs."""
+    from kernel.world.worldgen import LifeSpec, populate_region
+
+    region = generate_region(RegionSpec("vale", 24, 18, seed=seed, landmarks=(_TOWN, _KEEP)))
+    npcs = populate_region(region, LifeSpec("temperate-meadow", 1, 30, **life_kw))
+    return region, npcs
+
+
+def test_a_field_comes_alive_with_foes_gather_and_guardians() -> None:
+    region, npcs = _living_vale()
+    assert npcs, "the field must be populated with creatures"
+    # every creature stands on a real, non-landmark cell of THIS region
+    for npc in npcs.values():
+        room = region.rooms[npc["location"]]
+        assert not room.get("landmark"), "no monster dens in the anchored sites"
+    # gather nodes were hung, each a material this biome can actually yield
+    from kernel.world.wildlands import gatherable_materials
+
+    yields = set(gatherable_materials("temperate-meadow"))
+    nodes = [r["node"] for r in region.rooms.values() if "node" in r]
+    assert nodes, "the field must carry gather nodes"
+    assert all(n in yields for n in nodes)
+    # a handful of guardians, each a named notable of an elite/boss tier
+    lords = {k: v for k, v in npcs.items() if k.startswith("vale_lord_")}
+    assert lords, "the field must seat guardians to hunt"
+    assert all(v["tier"] in ("elite", "boss") for v in lords.values())
+
+
+def test_every_wild_cell_holds_exactly_one_creature_at_the_default_rate() -> None:
+    region, npcs = _living_vale()
+    wild = [rid for rid in region.rooms if not region.rooms[rid].get("landmark")]
+    located = [npc["location"] for npc in npcs.values()]
+    assert len(located) == len(set(located)), "no two creatures share a cell"
+    assert set(located) == set(wild), "foe_every=1 puts one creature on every wild cell"
+
+
+def test_a_guardian_replaces_the_ambient_on_its_cell() -> None:
+    region, npcs = _living_vale()
+    guardian_cells = {v["location"] for k, v in npcs.items() if k.startswith("vale_lord_")}
+    ambient_cells = {v["location"] for k, v in npcs.items() if k.startswith("vale_beast_")}
+    assert guardian_cells, "there must be at least one guardian to check"
+    assert guardian_cells.isdisjoint(ambient_cells), (
+        "a guardian is not shadowed by an ambient beast"
+    )
+
+
+def test_the_wild_deepens_with_distance_from_the_spawn() -> None:
+    region, npcs = _living_vale()
+    # the creature nearest the spawn is weaker than the one deepest in the field
+    from kernel.world.worldgen import _cell_order
+
+    exits = {rid: r["exits"] for rid, r in region.rooms.items()}
+    order = [
+        rid for rid in _cell_order(exits, region.start) if not region.rooms[rid].get("landmark")
+    ]
+    by_cell = {npc["location"]: npc for npc in npcs.values()}
+    near = by_cell[order[0]]["level"]
+    far = by_cell[order[-1]]["level"]
+    assert far > near, f"the deep field ({far}) must out-level the spawn's edge ({near})"
+
+
+def test_guardians_are_capped_no_matter_how_large_the_field() -> None:
+    _, npcs = _living_vale(notable_every=1, notable_cap=3)  # a guardian would fit every cell
+    lords = [k for k in npcs if k.startswith("vale_lord_")]
+    assert len(lords) == 3, "the cap holds even when the cadence would seat far more"
+
+
+def test_a_sparser_cadence_leaves_peaceful_open_ground() -> None:
+    region, npcs = _living_vale(foe_every=4, notable_every=1000)
+    wild = [rid for rid in region.rooms if not region.rooms[rid].get("landmark")]
+    creature_cells = {npc["location"] for npc in npcs.values()}
+    assert len(creature_cells) < len(wild), "a sparse field must leave empty, roamable ground"
+
+
+def test_life_never_disturbs_the_world_shape() -> None:
+    region, _ = _living_vale()
+    before = generate_region(RegionSpec("vale", 24, 18, seed=7, landmarks=(_TOWN, _KEEP)))
+    # populate mutates rooms (nodes/npcs) but never the exits: the shape verdict is unchanged
+    assert region.topology.verdict == before.topology.verdict == WORLD_SHAPED
+    exits_now = {rid: r["exits"] for rid, r in region.rooms.items()}
+    exits_before = {rid: r["exits"] for rid, r in before.rooms.items()}
+    assert exits_now == exits_before, "life adds creatures and nodes, never edges"
+
+
+def test_the_same_seed_breathes_the_same_life() -> None:
+    from kernel.world.worldgen import LifeSpec, populate_region
+
+    spec = RegionSpec("vale", 20, 16, seed=3, landmarks=(_TOWN,))
+    life = LifeSpec("temperate-meadow", 1, 30)
+    a_region = generate_region(spec)
+    a = populate_region(a_region, life)
+    b_region = generate_region(spec)
+    b = populate_region(b_region, life)
+    assert a == b, "life is deterministic: same seed, same creatures"
+    nodes_a = {rid: r.get("node") for rid, r in a_region.rooms.items()}
+    nodes_b = {rid: r.get("node") for rid, r in b_region.rooms.items()}
+    assert nodes_a == nodes_b, "the same field always hangs the same nodes"
+
+
+def test_an_empty_region_cannot_be_brought_to_life() -> None:
+    import dataclasses
+
+    from kernel.world.worldgen import LifeSpec, populate_region
+
+    region = generate_region(RegionSpec("vale", 20, 16, seed=3, landmarks=(_TOWN,)))
+    empty = dataclasses.replace(region, rooms={})
+    with pytest.raises(WorldgenError):
+        populate_region(empty, LifeSpec("temperate-meadow", 1, 30))
+
+
+def test_a_non_positive_cadence_is_refused_loud() -> None:
+    from kernel.world.worldgen import LifeSpec, populate_region
+
+    region = generate_region(RegionSpec("vale", 20, 16, seed=3, landmarks=(_TOWN,)))
+    for bad in (
+        LifeSpec("temperate-meadow", 1, 30, foe_every=0),
+        LifeSpec("temperate-meadow", 1, 30, gather_every=0),
+        LifeSpec("temperate-meadow", 1, 30, notable_every=0),
+    ):
+        with pytest.raises(WorldgenError):
+            populate_region(region, bad)
+
+
+def test_life_deepens_from_a_chosen_origin_not_just_the_spawn() -> None:
+    # the on-ramp: pass an ENTRANCE as origin and the gentlest wild sits there, deepening outward
+    from kernel.world.worldgen import LifeSpec, _cell_order, populate_region
+
+    region = generate_region(RegionSpec("vale", 24, 18, seed=7, landmarks=(_TOWN, _KEEP)))
+    exits = {rid: r["exits"] for rid, r in region.rooms.items()}
+    # pick an origin that is NOT region.start, deep in the field
+    origin = max(region.rooms)
+    npcs = populate_region(region, LifeSpec("temperate-meadow", 1, 30), origin=origin)
+    order = [rid for rid in _cell_order(exits, origin) if not region.rooms[rid].get("landmark")]
+    by_cell = {npc["location"]: npc for npc in npcs.values()}
+    assert by_cell[order[0]]["level"] < by_cell[order[-1]]["level"], (
+        "the origin cell is the gentlest"
+    )
+
+
+def test_a_life_origin_that_is_not_a_cell_is_refused() -> None:
+    from kernel.world.worldgen import LifeSpec, populate_region
+
+    region = generate_region(RegionSpec("vale", 20, 16, seed=3, landmarks=(_TOWN,)))
+    with pytest.raises(WorldgenError, match="origin"):
+        populate_region(region, LifeSpec("temperate-meadow", 1, 30), origin="nowhere_9_9")
+
+
+def test_band_flattens_when_the_field_is_a_single_cell() -> None:
+    from kernel.world.worldgen import _band
+
+    assert _band(1, 30, 0, 1) == 1  # span<=1: no gradient, everything sits at the floor
+    assert _band(1, 30, 5, 0) == 1
