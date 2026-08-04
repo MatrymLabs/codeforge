@@ -9389,5 +9389,31 @@
   "aliases": [],
   "created": "2026-08-03",
   "updated": "2026-08-03"
+ },
+ {
+  "designation": "MOD-10.092",
+  "name": "topology",
+  "status": "active",
+  "function": "judge whether a world graph is WORLD-SHAPED (a graph with area) or TRAIL-SHAPED (a path with scenery): the anti-trail gate of the World Topology Doctrine",
+  "label": "topology",
+  "file": "kernel/topology.py",
+  "type": "MOD",
+  "domain": "10",
+  "docs": "content/world/topology.yaml",
+  "tests": "tests/test_topology.py",
+  "depends_on": [],
+  "related": [
+   "worldgraph",
+   "wildlands",
+   "navigation",
+   "zones"
+  ],
+  "reuse": "audit_topology(exits, start=, gates=, declared_bottlenecks=) returns a verdict WORLD_SHAPED / TRAIL_SHAPED / UNREACHABLE against measurable anti-trail gates: linearity (rooms with exactly 2 exits), mean exit degree, loop ratio (rooms on a cycle, via an iterative-Tarjan bridge analysis), and undeclared between-regions bottlenecks (a single route between two substantial areas; a leaf-spur to a deliberate dead end is exempt, and a declared bottleneck is passed in). Reachability from the start still applies. Thresholds are the doctrine's defaults (TopologyGates), tunable per terrain as a DECISION; the doctrine ships as DATA in content/world/topology.yaml (directions, terrain + passability, zone backings, gates, two-layer gen design). Dogfooded on the live Aethryn world -> TRAIL_SHAPED (loop_ratio 0.00%). Verdicts, not booleans; fails loud on an empty graph or a dangling exit. Fleet-wide: binds every world-shaped Seed's worldgen (the linear Oregon-Trail archetype opts out).",
+  "notes": "World Topology Doctrine, Phase 1 (branch aethryn/world-topology-v1). Phase 2 builds the coordinate/field backings + terrain movement; Phase 3 wires the two-layer generator; Phase 4 migrates Aethryn (founder-approved). PROTOTYPED.",
+  "tags": ["module"],
+  "superseded_by": "",
+  "aliases": [],
+  "created": "2026-08-04",
+  "updated": "2026-08-04"
  }
 ]
