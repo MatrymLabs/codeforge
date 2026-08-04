@@ -9415,5 +9415,30 @@
   "aliases": [],
   "created": "2026-08-04",
   "updated": "2026-08-04"
+ },
+ {
+  "designation": "MOD-10.093",
+  "name": "field",
+  "status": "active",
+  "function": "a coordinate-backed FIELD backing: turn a terrain map into a WORLD-shaped graph of rooms (8-directional open movement, terrain-gated crossings, vertical stacks, named exits) -- the spatial-fill half of the World Topology Doctrine",
+  "label": "field",
+  "file": "kernel/field.py",
+  "type": "MOD",
+  "domain": "10",
+  "docs": "content/world/topology.yaml",
+  "tests": "tests/test_field.py",
+  "depends_on": ["MOD-10.092"],
+  "related": [
+   "topology",
+   "wildlands",
+   "worldgraph"
+  ],
+  "reuse": "build_field(name, cells, *, stacks=) turns a dict of (x,y)->Cell(terrain, elevation) into the engine's Room dicts (name/desc/exits). Exits are DERIVED from terrain adjacency + the passability matrix (content/world/topology.yaml): a passable cell links to its 8 neighbours (cardinal + intercardinal, no corner-cutting across a wall), an impassable cell (river/cliff/water/wall) is a gap so terrain SHAPES movement (a river blocks except where a ford/bridge cell is passable, which also carries a NAMED crossing exit). A Stack adds true vertical (a summit above via up/climb, a cave below via down). Descriptions are terrain-driven with local features. PROVEN on the doctrine's 20x20 field (river + ford + bridge + hills + summit) -> topology gate WORLD_SHAPED. Fails loud on an empty field, unknown terrain, or a stack on an impassable cell. A generation backing (Hardware Store candidate); lives at kernel/ (not kernel/world/, whose boundary is the game import closure) until Phase 4 wires a zone's `backing: field`.",
+  "notes": "World Topology Doctrine, Phase 2 (branch aethryn/world-topology-v1). Phase 3 wires the two-layer generator (grammar landmarks -> terrain fill -> this backing) + the sabotage test; Phase 4 migrates Aethryn's wildlands from chains to fields (founder-approved). PROTOTYPED.",
+  "tags": ["module"],
+  "superseded_by": "",
+  "aliases": [],
+  "created": "2026-08-04",
+  "updated": "2026-08-04"
  }
 ]
