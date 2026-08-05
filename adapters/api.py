@@ -25,7 +25,8 @@ from kernel.dashboard import router as dashboard_router
 from kernel.hardware_lifecycle import HardwareRegistry, default_registry_path
 from kernel.login_guard import LoginGuard
 from kernel.platform import current_platform_status
-from kernel.seedlab.artifact_store import FileArtifactStore
+from kernel.seedlab.artifact_registry import configured_artifact_store
+from kernel.seedlab.artifact_store import ArtifactStore
 from kernel.seedlab.kernel import SeedKernel, SeedKernelError
 from kernel.seedlab.manifest_evidence import FileManifestEvidenceStore
 from kernel.seedlab.model_store import ModelStore, configured_model_store
@@ -215,8 +216,10 @@ def _seedlab_run_log() -> RunLog:
     return configured_run_log(_seedlab_home())
 
 
-def _seedlab_artifact_store() -> FileArtifactStore:
-    return FileArtifactStore(_seedlab_home() / "artifacts")
+def _seedlab_artifact_store() -> ArtifactStore:
+    return configured_artifact_store(_seedlab_home())
+
+
 
 
 @app.get("/characters", response_model=list[Hero])

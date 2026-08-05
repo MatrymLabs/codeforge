@@ -15,6 +15,7 @@ from pathlib import Path
 from kernel.blueprint import Blueprint
 from kernel.hardware_lifecycle import HardwareRecord
 from kernel.seed_package import BuildManifest
+from kernel.seedlab.artifact_registry import configured_artifact_store
 from kernel.seedlab.artifact_store import (
     ArtifactRecord,
     ArtifactStore,
@@ -123,7 +124,7 @@ def build_workspace_contract(
     record = kernel.get(seed_id)
     model_store = configured_model_store(home)
     run_log = configured_run_log(home)
-    artifact_store = _artifact_store(home / "artifacts")
+    artifact_store = configured_artifact_store(home)
 
     state = _project_state(
         seed_id,
