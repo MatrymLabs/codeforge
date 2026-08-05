@@ -60,7 +60,7 @@ build-backend = "setuptools.build_meta"
 # Style-guide section 2: modules are migrating from parts/ into the kernel/adapters/content layers.
 packages = [
     "kernel", "kernel.evolution", "kernel.hubble", "kernel.shelf", "kernel.world",
-    "adapters", "adapters.stewardship", "content",
+    "adapters", "adapters.stewardship", "content", "migrations", "migrations.versions",
 ]
 py-modules = ["forge"]
 
@@ -70,7 +70,7 @@ adapters = ["web/*.html"]
 # Seed manifests and world data are part of the installed CodeForge product, not
 # source-tree-only fixtures. This keeps Aethryn and other Seeds loadable after a
 # normal package installation.
-content = ["seeds/**/*.yaml", "seeds/**/*.txt"]
+content = ["seeds/**/*.yaml", "seeds/**/*.txt", "world/**/*.yaml"]
 
 [tool.ruff]
 line-length = 100

@@ -56,6 +56,16 @@ alembic downgrade -1                              # step back one
 `create_all` remains the zero-config convenience for the SQLite dev path; Alembic is the
 source of truth for evolving a real (Postgres) schema.
 
+The distributable wheel includes the migration package and the runtime world topology data needed
+by the Engine. The no-network packaging proof is:
+
+```bash
+pytest -q tests/test_wheel_install.py
+```
+
+That test builds and installs the wheel into an isolated target, upgrades a fresh database, boots
+Aethryn, and verifies the persistence doctor against the installed files.
+
 For a read-only persistence check, use:
 
 ```bash

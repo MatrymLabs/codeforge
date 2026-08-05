@@ -93,13 +93,26 @@ def _repo_root() -> Path:
     return Path(__file__).resolve().parent.parent
 
 
+def _migration_root() -> Path:
+    """Locate migrations in a source checkout or an installed CodeForge wheel."""
+    checkout_root = _repo_root() / "migrations"
+    if (checkout_root / "versions").is_dir():
+        return checkout_root
+    try:
+        import migrations
+    except ImportError:
+        return checkout_root
+    return Path(migrations.__file__).resolve().parent
+
+
 def _migration_script(repo_root: Path | None = None) -> ScriptDirectory:
     from alembic.config import Config
     from alembic.script import ScriptDirectory
 
-    root = repo_root or _repo_root()
-    config = Config(str(root / "alembic.ini"))
-    config.set_main_option("script_location", str(root / "migrations"))
+    root = (repo_root / "migrations") if repo_root is not None else _migration_root()
+    config_path = _repo_root() / "alembic.ini"
+    config = Config(str(config_path)) if config_path.is_file() else Config()
+    config.set_main_option("script_location", str(root))
     return ScriptDirectory.from_config(config)
 
 
