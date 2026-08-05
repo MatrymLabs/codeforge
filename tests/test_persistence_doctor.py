@@ -9,6 +9,7 @@ from alembic.config import Config
 from sqlalchemy import create_engine, text
 
 from kernel.persistence_doctor import inspect_persistence
+from kernel.platform import validate_startup_schema
 from kernel.world.db import ArchiveBase
 
 
@@ -61,7 +62,7 @@ def test_doctor_reports_current_schema_without_claiming_untracked_migrations_are
     assert report.overall == "warnings"
 
 
-def test_doctor_separates_migration_head_from_model_schema_drift(monkeypatch, tmp_path):
+def test_doctor_reports_a_database_at_the_checked_in_migration_head(monkeypatch, tmp_path):
     import kernel.world.db as db
 
     target = tmp_path / "migrated.db"
@@ -71,11 +72,15 @@ def test_doctor_separates_migration_head_from_model_schema_drift(monkeypatch, tm
 
     command.upgrade(config, "head")
     report = inspect_persistence(f"sqlite:///{target}")
+    engine = create_engine(f"sqlite:///{target}")
+    try:
+        validate_startup_schema(engine)
+    finally:
+        engine.dispose()
 
-    assert report.exit_code == 1
-    assert _states(report)["schema"] == "behind"
+    assert report.exit_code == 0
+    assert _states(report)["schema"] == "ready"
     assert _states(report)["migrations"] == "ready"
-    assert "seed_runs" in report.to_dict()["checks"][1]["detail"]
 
 
 def test_cli_doctor_supports_structured_output(monkeypatch, capsys):

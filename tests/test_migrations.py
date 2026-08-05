@@ -40,17 +40,48 @@ def test_migrations_round_trip_upgrade_downgrade_upgrade(monkeypatch, tmp_path):
 
     command.upgrade(_config(), "head")
     built = _tables(target)
-    assert {"characters", "accounts", "job_progress", "seed_sources", "audit_events"} <= built
+    assert {
+        "characters",
+        "accounts",
+        "job_progress",
+        "seed_sources",
+        "audit_events",
+        "seed_models",
+        "seed_runs",
+        "seed_artifacts",
+        "seed_manifest_evidence",
+    } <= built
 
     command.downgrade(_config(), "base")
     after_down = _tables(target)
     # every schema table is gone; only alembic's own version bookkeeping may remain
     assert not (
-        {"characters", "accounts", "job_progress", "seed_sources", "audit_events"} & after_down
+        {
+            "characters",
+            "accounts",
+            "job_progress",
+            "seed_sources",
+            "audit_events",
+            "seed_models",
+            "seed_runs",
+            "seed_artifacts",
+            "seed_manifest_evidence",
+        }
+        & after_down
     )
 
     command.upgrade(_config(), "head")  # a clean base rebuilds: downgrades left no debris
-    assert {"characters", "accounts", "job_progress", "seed_sources", "audit_events"} <= _tables(target)
+    assert {
+        "characters",
+        "accounts",
+        "job_progress",
+        "seed_sources",
+        "audit_events",
+        "seed_models",
+        "seed_runs",
+        "seed_artifacts",
+        "seed_manifest_evidence",
+    } <= _tables(target)
 
 
 def test_each_migration_steps_down_one_revision_at_a_time(monkeypatch, tmp_path):
@@ -64,6 +95,16 @@ def test_each_migration_steps_down_one_revision_at_a_time(monkeypatch, tmp_path)
     for _ in range(revision_count):  # one individual downgrade for every filed revision
         command.downgrade(_config(), "-1")
     assert not (
-        {"characters", "accounts", "job_progress", "seed_sources", "audit_events"}
+        {
+            "characters",
+            "accounts",
+            "job_progress",
+            "seed_sources",
+            "audit_events",
+            "seed_models",
+            "seed_runs",
+            "seed_artifacts",
+            "seed_manifest_evidence",
+        }
         & _tables(target)
     )
