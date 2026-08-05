@@ -13,6 +13,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from kernel.blueprint import Blueprint
+from kernel.hardware_lifecycle import HardwareRecord
 from kernel.seed_package import BuildManifest
 from kernel.seedlab.artifact_store import (
     ArtifactRecord,
@@ -21,6 +22,7 @@ from kernel.seedlab.artifact_store import (
     build_report_artifacts,
 )
 from kernel.seedlab.kernel import FileSeedStore, SeedKernel
+from kernel.seedlab.manifest_evidence import ManifestRunEvidence
 from kernel.seedlab.model_store import FileModelStore, ModelStore, model_labels
 from kernel.seedlab.project_hub import ProjectHub, ProjectState
 from kernel.seedlab.project_model import ProjectModel
@@ -108,6 +110,8 @@ def build_workspace_contract(
     artifacts: Sequence[ArtifactRecord] | None = None,
     blueprints: Sequence[Blueprint] | None = None,
     manifest: BuildManifest | None = None,
+    manifest_evidence: Sequence[ManifestRunEvidence] | None = None,
+    hardware_records: Sequence[HardwareRecord] | None = None,
     modules: Sequence[Mapping[str, object]] | None = None,
     findings: Sequence[Mapping[str, object]] | None = None,
 ) -> WorkspaceContract:
@@ -152,6 +156,8 @@ def build_workspace_contract(
         manifest=manifest_value,
         modules=module_list,
         findings=finding_list,
+        manifest_evidence=manifest_evidence,
+        hardware_records=hardware_records,
     )
     seed: dict[str, object] = {
         "id": record.identity.seed_id,

@@ -22,10 +22,12 @@ from sqlalchemy import select
 
 from kernel.blueprint import load_all as load_blueprints
 from kernel.dashboard import router as dashboard_router
+from kernel.hardware_lifecycle import HardwareRegistry, default_registry_path
 from kernel.login_guard import LoginGuard
 from kernel.platform import current_platform_status
 from kernel.seedlab.artifact_store import FileArtifactStore
 from kernel.seedlab.kernel import FileSeedStore, SeedKernel, SeedKernelError
+from kernel.seedlab.manifest_evidence import FileManifestEvidenceStore
 from kernel.seedlab.model_store import FileModelStore
 from kernel.seedlab.tool_runner import FileRunLog
 from kernel.seedlab.workspace_contract import (
@@ -290,8 +292,26 @@ async def seedlab_workspace(seed_id: str) -> dict[str, object]:
         model=models[-1] if models else None,
         runs=_seedlab_run_log().for_seed(seed_id),
         artifacts=_seedlab_artifact_store().all_for_seed(seed_id),
+        manifest_evidence=_workspace_manifest_evidence(seed_id),
+        hardware_records=_workspace_hardware_records(),
     )
     return contract.to_dict()
+
+
+def _workspace_manifest_evidence(seed_id: str):
+    """Read the canonical durable evidence projection without creating empty state."""
+    root = _seedlab_home() / "evidence"
+    if not root.is_dir():
+        return None
+    return FileManifestEvidenceStore(root).all_for_seed(seed_id)
+
+
+def _workspace_hardware_records():
+    """Read the configured Hardware registry; the workspace never activates components."""
+    path = default_registry_path()
+    if not path.is_file():
+        return None
+    return HardwareRegistry(path).all()
 
 
 @app.get("/api/blueprints", response_model=list[BlueprintSummary])

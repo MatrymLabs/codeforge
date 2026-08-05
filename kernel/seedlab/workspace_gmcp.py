@@ -35,10 +35,12 @@ from pathlib import Path, PurePath
 
 from kernel.blueprint import Blueprint
 from kernel.blueprint import to_dict as blueprint_record
+from kernel.hardware_lifecycle import HardwareRecord
 from kernel.seed_package import BuildManifest
 from kernel.seedlab.form import _SPEC_SCHEMA as FORM_SPEC_SCHEMA
 from kernel.seedlab.form import EngineeringForm, FormDefinition, FormError
 from kernel.seedlab.kernel import SeedKernel, SeedKernelError, SeedRecord
+from kernel.seedlab.manifest_evidence import ManifestRunEvidence
 from kernel.seedlab.project_model import ProjectModel
 from kernel.seedlab.source_connector import SourceRecord, source_connection
 from kernel.seedlab.tool_runner import ToolRunResult
@@ -77,6 +79,8 @@ BLUEPRINT_LIST_PACKAGE = "Blueprint.List"
 DEPLOY_MANIFEST_PACKAGE = "Deploy.Manifest"
 #: The running instance's own live status -> the client's instance panel (core/deploy_status).
 DEPLOY_STATUS_PACKAGE = "Deploy.Status"
+#: A Seed's manifest-to-job-to-evidence and governed Hardware projection.
+ENGINEERING_EVIDENCE_PACKAGE = "Engineering.Evidence"
 
 #: The kinds of Seed a client may ask to create (matches the client's SEED_KINDS).
 SEED_KINDS = ("engineering", "game")
@@ -191,6 +195,49 @@ def build_report(
     if artifacts:
         payload["artifacts"] = artifacts
     return payload
+
+
+def engineering_evidence(
+    manifest_evidence: Sequence[ManifestRunEvidence],
+    hardware_records: Sequence[HardwareRecord],
+    *,
+    seed: str,
+) -> dict[str, object]:
+    """Project durable manifest/job evidence and Hardware lifecycle state for one Seed.
+
+    This is read-only and deliberately carries only persisted evidence. It does not resolve
+    components, activate plugins, rerun jobs, or infer success from catalog presence.
+    """
+    return {
+        "seed": seed,
+        "manifest_runs": [
+            {
+                "evidence_id": item.evidence_id,
+                "manifest_id": item.manifest_id,
+                "manifest_digest": item.manifest_digest,
+                "seed_id": item.seed_id,
+                "job_id": item.job_id,
+                "event_id": item.event_id,
+                "status": item.status,
+                "target_profile": item.target_profile,
+                "required_components": list(item.required_components),
+                "created_at": item.created_at,
+            }
+            for item in manifest_evidence
+            if item.seed_id == seed
+        ],
+        "hardware": [
+            {
+                "component_id": item.component_id,
+                "version": item.version,
+                "state": item.state,
+                "license": item.license,
+                "provenance": item.provenance,
+                "consumers": list(item.consumers),
+            }
+            for item in hardware_records
+        ],
+    }
 
 
 def _run_step(run: ToolRunResult) -> dict[str, str]:
@@ -601,6 +648,8 @@ def workspace_packages(
     findings: Sequence[Mapping[str, object]] | None = None,
     blueprints: Sequence[Blueprint] | None = None,
     manifest: BuildManifest | None = None,
+    manifest_evidence: Sequence[ManifestRunEvidence] | None = None,
+    hardware_records: Sequence[HardwareRecord] | None = None,
 ) -> list[tuple[str, dict[str, object]]]:
     """The (package, payload) pairs a gateway emits for an engineering Seed: always its Project
     Status, plus a Source Tree when a source is registered, a Model Schema when a model is
@@ -639,6 +688,17 @@ def workspace_packages(
         packages.append((BLUEPRINT_LIST_PACKAGE, blueprint_list(blueprints, seed=seed)))
     if manifest is not None:
         packages.append((DEPLOY_MANIFEST_PACKAGE, deploy_manifest(manifest, seed=seed)))
+    if manifest_evidence is not None or hardware_records is not None:
+        packages.append(
+            (
+                ENGINEERING_EVIDENCE_PACKAGE,
+                engineering_evidence(
+                    manifest_evidence or (),
+                    hardware_records or (),
+                    seed=record.identity.seed_id,
+                ),
+            )
+        )
     return packages
 
 
