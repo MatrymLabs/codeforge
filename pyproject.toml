@@ -3,7 +3,7 @@ name = "codeforge"
 version = "0.1.0"
 description = "A language-extensible software-engineering platform (its flagship Seed is the game Aethryn)."
 requires-python = ">=3.13"
-dependencies = ["pyyaml", "sqlalchemy", "fastapi", "uvicorn", "websockets", "pydantic", "structlog"]
+dependencies = ["pyyaml", "sqlalchemy", "fastapi", "uvicorn", "websockets", "pydantic", "structlog", "alembic"]
 
 [project.optional-dependencies]
 # Optional feature extras still earn their place: the dependency gate (`make deps`) folds
@@ -40,7 +40,6 @@ dev = [
     "cyclonedx-bom",
     "hypothesis",
     "httpx2",
-    "alembic",
     "mkdocs-material",
     "playwright",
 ]
@@ -67,7 +66,7 @@ py-modules = ["forge"]
 
 [tool.setuptools.package-data]
 # The browser gate serves this page; it must ship inside the installed wheel.
-adapters = ["web/*.html"]
+adapters = ["web/*.html", "web/static/*.js"]
 # Seed manifests and world data are part of the installed CodeForge product, not
 # source-tree-only fixtures. This keeps Aethryn and other Seeds loadable after a
 # normal package installation.

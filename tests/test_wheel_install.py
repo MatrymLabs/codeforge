@@ -100,6 +100,17 @@ def test_wheel_install_contains_migrations_and_boots(tmp_path: Path) -> None:
     assert doctor.returncode == 0, doctor.stderr
     assert json.loads(doctor.stdout)["checks"][0]["state"] == "new"
 
+    server_doctor = subprocess.run(
+        [str(server_console), "doctor", "--json"],
+        cwd=tmp_path,
+        check=False,
+        capture_output=True,
+        text=True,
+        env=env,
+    )
+    assert server_doctor.returncode == 0, server_doctor.stderr
+    assert json.loads(server_doctor.stdout)["checks"][0]["state"] == "new"
+
     seeds = subprocess.run(
         [str(console), "seeds"],
         cwd=tmp_path,
@@ -123,12 +134,14 @@ def test_wheel_install_contains_migrations_and_boots(tmp_path: Path) -> None:
     assert "codeforge-engine doctor" in help_result.stdout
 
     script = """
+import asyncio
 from pathlib import Path
 
 from alembic import command
 from alembic.config import Config
 
 import migrations
+from adapters.api import _startup_lifespan, app
 from kernel.persistence_doctor import inspect_persistence
 from kernel.platform import bootstrap_platform
 
@@ -144,6 +157,14 @@ doctor = inspect_persistence()
 assert doctor.exit_code == 0
 assert {check.name: check.state for check in doctor.checks}["migrations"] == "ready"
 assert {check.name: check.state for check in doctor.checks}["schema"] == "ready"
+
+
+async def verify_api_startup() -> None:
+    async with _startup_lifespan(app):
+        pass
+
+
+asyncio.run(verify_api_startup())
 """
     run = subprocess.run(
         [sys.executable, "-c", script],
