@@ -15,6 +15,7 @@ def test_defaults_when_the_env_is_empty():
     assert s.port == 8000
     assert s.architect_brain == "local"
     assert s.database_url == ""
+    assert s.seed_registry_backend == "file"
     assert s.anthropic_key_present is False
 
 
@@ -30,6 +31,18 @@ def test_loads_and_coerces_values():
     assert s.port == 9000  # coerced str -> int
     assert s.architect_brain == "claude"
     assert s.anthropic_key_present is True
+
+
+def test_seed_registry_backend_is_typed_and_rendered():
+    s = Settings.load(env={"CODEFORGE_SEED_REGISTRY": "sql-dual-read"})
+    assert s.seed_registry_backend == "sql-dual-read"
+    assert "sql-dual-read" in s.render()
+
+
+def test_unknown_seed_registry_backend_fails_loud():
+    with pytest.raises(ConfigError) as err:
+        Settings.load(env={"CODEFORGE_SEED_REGISTRY": "redis"})
+    assert "invalid environment" in str(err.value)
 
 
 def test_odd_architect_value_is_normalized_not_crashed():

@@ -21,11 +21,12 @@ from kernel.seedlab.artifact_store import (
     artifact_labels,
     build_report_artifacts,
 )
-from kernel.seedlab.kernel import FileSeedStore, SeedKernel
+from kernel.seedlab.kernel import SeedKernel
 from kernel.seedlab.manifest_evidence import ManifestRunEvidence
 from kernel.seedlab.model_store import FileModelStore, ModelStore, model_labels
 from kernel.seedlab.project_hub import ProjectHub, ProjectState
 from kernel.seedlab.project_model import ProjectModel
+from kernel.seedlab.registry import seed_store
 from kernel.seedlab.source_connector import SourceRecord, source_connector_label, source_label
 from kernel.seedlab.tool_runner import FileRunLog, ToolRunResult, run_labels
 from kernel.seedlab.workspace_gmcp import workspace_packages
@@ -72,7 +73,8 @@ def _default_home(root: Path | None = None) -> Path:
 
 def _seed_kernel(root: Path | None = None) -> SeedKernel:
     home = _default_home(root)
-    return SeedKernel(FileSeedStore(home / "seeds"))
+    backend = os.environ.get("CODEFORGE_SEED_REGISTRY", "file").strip() or "file"
+    return SeedKernel(seed_store(backend, home))
 
 
 def _project_state(

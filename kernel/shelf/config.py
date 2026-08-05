@@ -42,6 +42,7 @@ class Settings(BaseModel):
     database_url: str = ""  # empty -> the SQLite default (see kernel/world/db.py)
     codeforge_db: str = ""  # empty -> repo-root default path
     seed: str = ""  # empty -> the default seed
+    seed_registry_backend: Literal["file", "sql", "sql-dual-read"] = "file"
     anthropic_key_present: bool = False
 
     @classmethod
@@ -59,6 +60,8 @@ class Settings(BaseModel):
                 database_url=e.get("DATABASE_URL", "").strip(),
                 codeforge_db=e.get("CODEFORGE_DB", "").strip(),
                 seed=e.get("FORGE_SEED", "").strip(),
+                seed_registry_backend=e.get("CODEFORGE_SEED_REGISTRY", "file").strip()
+                or "file",
                 anthropic_key_present=bool(e.get("ANTHROPIC_API_KEY", "").strip()),
             )
         except ValidationError as exc:
@@ -75,6 +78,7 @@ class Settings(BaseModel):
                 f"  database_url    : {_redact_url(self.database_url)}",
                 f"  codeforge_db    : {self.codeforge_db or '(unset -> repo-root default)'}",
                 f"  seed            : {self.seed or '(default)'}",
+                f"  seed_registry   : {self.seed_registry_backend}",
                 f"  anthropic_key   : {'present' if self.anthropic_key_present else 'absent'}",
                 "",
                 "  Secrets are never shown here; the key is reported present/absent only.",

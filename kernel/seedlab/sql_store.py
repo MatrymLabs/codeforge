@@ -42,25 +42,34 @@ class SqlSeedStore(SeedStore):
 
     session_factory: Callable[[], SqlSession] = open_archive_session
 
-    def save(self, record: SeedRecord) -> None:
+    def _write(self, session: SqlSession, record: SeedRecord) -> None:
         payload = record.to_dict()
         identity = payload["identity"]
+        row = session.get(SeedRegistryRow, record.identity.seed_id)
+        if row is None:
+            row = SeedRegistryRow(seed_id=record.identity.seed_id)
+            session.add(row)
+        row.name = str(identity["name"])
+        row.owner = str(identity["owner"])
+        row.purpose = str(identity["purpose"])
+        row.version = str(identity["version"])
+        row.created_at = str(identity["created_at"])
+        row.product_type = str(identity.get("product_type", ""))
+        row.domain_modules = _json(identity.get("domain_modules", []))
+        row.status = record.status
+        row.started_at = record.started_at
+        row.stopped_at = record.stopped_at
+        row.audit = _json(payload["audit"])
+
+    def save(self, record: SeedRecord) -> None:
         with self.session_factory() as session, session.begin():
-            row = session.get(SeedRegistryRow, record.identity.seed_id)
-            if row is None:
-                row = SeedRegistryRow(seed_id=record.identity.seed_id)
-                session.add(row)
-            row.name = str(identity["name"])
-            row.owner = str(identity["owner"])
-            row.purpose = str(identity["purpose"])
-            row.version = str(identity["version"])
-            row.created_at = str(identity["created_at"])
-            row.product_type = str(identity.get("product_type", ""))
-            row.domain_modules = _json(identity.get("domain_modules", []))
-            row.status = record.status
-            row.started_at = record.started_at
-            row.stopped_at = record.stopped_at
-            row.audit = _json(payload["audit"])
+            self._write(session, record)
+
+    def save_many(self, records: list[SeedRecord]) -> None:
+        """Import a preflighted batch in one database transaction."""
+        with self.session_factory() as session, session.begin():
+            for record in records:
+                self._write(session, record)
 
     def load(self, seed_id: str) -> SeedRecord | None:
         with self.session_factory() as session:
@@ -95,4 +104,3 @@ class SqlSeedStore(SeedStore):
             )
         except (KeyError, TypeError, ValueError, SeedKernelError) as exc:
             raise SeedKernelError(f"malformed SQL Seed {row.seed_id!r}: {exc}") from exc
-

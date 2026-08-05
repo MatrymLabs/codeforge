@@ -17,6 +17,17 @@ the same `SeedStore` protocol for hosted or production-shaped wiring.
 The SQL Seed registry owns identity and lifecycle projection only. Runtime content remains owned by
 the manifest-backed Seed loader, and the Master Client still reaches both through service APIs.
 
+`CODEFORGE_SEED_REGISTRY=file` is the compatibility default. Hosted-shaped startup can select
+`sql`; an existing local registry should first be imported explicitly with:
+
+```bash
+python -m kernel.seedlab.registry --home .seedlab
+```
+
+During a controlled transition, `CODEFORGE_SEED_REGISTRY=sql-dual-read` uses SQL as the write
+authority and falls back to legacy files only for records not yet imported. The import preflights
+all records and refuses conflicting identities before writing.
+
 ## Run against PostgreSQL locally
 
 ```bash

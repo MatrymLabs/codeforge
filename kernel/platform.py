@@ -116,13 +116,14 @@ def bootstrap_platform(*, seed: str, selection_source: str) -> PlatformStartup:
 
     if seed == "aethryn":
         try:
-            from kernel.seedlab.kernel import FileSeedStore, SeedKernel
+            from kernel.seedlab.kernel import SeedKernel
             from kernel.seedlab.reference_seed import ensure_reference_seed
+            from kernel.seedlab.registry import seed_store
             from kernel.seedlab.runtime_bridge import bind_reference_seed
             from kernel.seedlab.workspace_contract import build_workspace_contract
 
             seedlab_home = Path(os.environ.get("SEEDLAB_HOME", ".seedlab"))
-            seed_kernel = SeedKernel(FileSeedStore(seedlab_home / "seeds"))
+            seed_kernel = SeedKernel(seed_store(settings.seed_registry_backend, seedlab_home))
             record = ensure_reference_seed(seed_kernel, detail="CodeForge product startup")
             binding = bind_reference_seed(seed_kernel)
             contract = build_workspace_contract(seed, root=seedlab_home)
@@ -135,7 +136,8 @@ def bootstrap_platform(*, seed: str, selection_source: str) -> PlatformStartup:
                 ComponentStatus(
                     "seed-registry",
                     "initialized",
-                    f"bound {record.identity.seed_id} to {binding.package}",
+                    f"{settings.seed_registry_backend}: bound {record.identity.seed_id} to "
+                    f"{binding.package}",
                 ),
                 ComponentStatus(
                     "workspace",
