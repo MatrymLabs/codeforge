@@ -17,6 +17,8 @@ from __future__ import annotations
 
 import asyncio
 import contextlib
+from collections.abc import AsyncIterator
+from contextlib import asynccontextmanager
 from pathlib import Path
 
 from fastapi import FastAPI, Request, WebSocket, WebSocketDisconnect
@@ -41,7 +43,22 @@ from kernel.world.session import SESSIONS, Session
 
 _PAGE = (Path(__file__).parent / "web" / "index.html").read_text(encoding="utf-8")
 
-app = FastAPI(title="CodeForge -- play in the browser", docs_url=None, redoc_url=None)
+
+@asynccontextmanager
+async def _startup_lifespan(_app: FastAPI) -> AsyncIterator[None]:
+    """Refuse direct ASGI startup when persistence is behind the model schema."""
+    from kernel.platform import validate_startup_schema
+
+    validate_startup_schema()
+    yield
+
+
+app = FastAPI(
+    title="CodeForge -- play in the browser",
+    docs_url=None,
+    redoc_url=None,
+    lifespan=_startup_lifespan,
+)
 
 # Security response headers for the public browser demo. The page loads xterm from jsdelivr (SRI-
 # pinned) and opens a same-origin WebSocket; the CSP permits exactly that and nothing else, so a

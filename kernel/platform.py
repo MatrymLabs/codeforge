@@ -57,6 +57,21 @@ class PlatformStartup:
         }
 
 
+def validate_startup_schema(engine=None) -> None:
+    """Validate persistence before any startup path opens or creates database tables.
+
+    A fresh database is allowed through the read-only guard and is then initialized by the normal
+    persistence seam. An existing database behind the models fails before ``create_all`` can hide
+    the missing migration.
+    """
+    from kernel.world.schema_guard import SchemaError, require_current_schema
+
+    try:
+        require_current_schema(engine)
+    except SchemaError as exc:
+        raise PlatformStartupError(f"persistence schema validation failed: {exc}") from exc
+
+
 def bootstrap_platform(*, seed: str, selection_source: str) -> PlatformStartup:
     """Initialize existing CodeForge services in the canonical startup order.
 
@@ -77,6 +92,7 @@ def bootstrap_platform(*, seed: str, selection_source: str) -> PlatformStartup:
     )
 
     try:
+        validate_startup_schema()
         from kernel.world import accounts as _accounts
         from kernel.world.db import open_archive_session
 
@@ -88,7 +104,7 @@ def bootstrap_platform(*, seed: str, selection_source: str) -> PlatformStartup:
     components.extend(
         (
             ComponentStatus("identity", "initialized", "account authentication seam loaded"),
-            ComponentStatus("persistence", "initialized", "archive schema opened"),
+            ComponentStatus("persistence", "initialized", "archive schema validated and opened"),
         )
     )
 
@@ -181,6 +197,7 @@ def bootstrap_platform(*, seed: str, selection_source: str) -> PlatformStartup:
 
 def current_platform_status() -> PlatformStartup:
     """Project the already-loaded runtime without starting or mutating services."""
+    validate_startup_schema()
     from kernel.hardware import load_catalog
     from kernel.seedlab.audit import audit_seedlab_modules
     from kernel.world import creator_workshop

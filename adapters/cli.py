@@ -614,6 +614,11 @@ def spark() -> None:
         raise SystemExit(f"Seed selection failed: {exc}") from exc
     os.environ["FORGE_SEED"] = selection.seed_id
 
+    try:
+        _bootstrap_platform(selection.seed_id, selection.source)
+    except Exception as exc:
+        raise SystemExit(f"CodeForge startup failed: {exc}") from exc
+
     from adapters.gateway import serve
 
     serve()

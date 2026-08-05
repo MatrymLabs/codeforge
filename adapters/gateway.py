@@ -824,11 +824,11 @@ class _GateHandler(socketserver.StreamRequestHandler):
 def serve(host: str = "0.0.0.0", port: int = 4000) -> None:
     # Power-on check: refuse to serve on a database whose columns are behind the models, rather
     # than crash the first login on `no such column`. Read-only; it names the fix, never migrates.
-    from kernel.world.schema_guard import SchemaError, require_current_schema
+    from kernel.platform import PlatformStartupError, validate_startup_schema
 
     try:
-        require_current_schema()
-    except SchemaError as exc:
+        validate_startup_schema()
+    except PlatformStartupError as exc:
         print(f"REFUSING TO START: {exc}", file=sys.stderr)
         raise SystemExit(2) from exc
     _configure_logging()  # gateway events emit as structured JSON from here

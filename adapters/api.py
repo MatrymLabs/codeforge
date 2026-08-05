@@ -12,6 +12,8 @@ capability, same law as the @-verbs.
 """
 
 import os
+from collections.abc import AsyncIterator
+from contextlib import asynccontextmanager
 from pathlib import Path
 from typing import Annotated, Any
 
@@ -44,11 +46,22 @@ from kernel.world.db import CharacterRow, open_archive_session
 from kernel.world.ranks import RANK_ORDER
 from kernel.world.world import WORLD
 
+
+@asynccontextmanager
+async def _startup_lifespan(_app: FastAPI) -> AsyncIterator[None]:
+    """Refuse direct ASGI startup when persistence is behind the model schema."""
+    from kernel.platform import validate_startup_schema
+
+    validate_startup_schema()
+    yield
+
+
 app = FastAPI(
     title="CodeForge Admin API",
     description="A window onto the canonical world: saved heroes, the room graph, "
     "and owner-authenticated administration.",
     version="0.1.0",
+    lifespan=_startup_lifespan,
 )
 
 # The portfolio Lens: GET / (server-rendered readiness board) + GET /api/status (JSON twin).
