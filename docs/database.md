@@ -56,6 +56,18 @@ alembic downgrade -1                              # step back one
 `create_all` remains the zero-config convenience for the SQLite dev path; Alembic is the
 source of truth for evolving a real (Postgres) schema.
 
+For a read-only persistence check, use:
+
+```bash
+codeforge-engine doctor
+codeforge-engine doctor --json
+```
+
+This reports database connectivity, model/schema drift, the checked-in Alembic head, local SQLite
+snapshots, and whether recovery has actually been verified. It never runs migrations, creates
+tables, creates backups, or claims that a present snapshot has passed a restore drill. The broader
+repository `make doctor` remains the quality-gate runner; these are complementary diagnostics.
+
 ## How it stays honest / safe
 
 - **Tests never touch a real database.** The `conftest` autouse fixture quarantines every

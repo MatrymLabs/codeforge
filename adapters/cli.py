@@ -33,6 +33,7 @@ USAGE = """codeforge-engine -- CodeForge Engine subsystem operations
   codeforge-engine grant <name> <rank>  host-shell authority (player/wizard/owner)
   codeforge-engine migrate ...          migrate legacy credentials
   codeforge-engine migrate-db           import legacy JSON saves into SQLite
+  codeforge-engine doctor               inspect persistence readiness without mutation
   codeforge-engine passwd <account>     rotate an account password
   codeforge-engine refactor ...         verifier-gated safe rename
   codeforge-engine seedlab proof        run the SeedLab platform proof
@@ -253,6 +254,18 @@ def _cmd_migrate_db(args: list[str]) -> int:
 
     print(import_legacy_json())
     return 0
+
+
+def _cmd_doctor(args: list[str]) -> int:
+    """Inspect persistence without migrating, backing up, or changing runtime state."""
+    if len(args) > 2 or (len(args) == 2 and args[1] != "--json"):
+        print(USAGE)
+        return 1
+    from kernel.persistence_doctor import inspect_persistence
+
+    report = inspect_persistence()
+    print(json.dumps(report.to_dict(), indent=2) if len(args) == 2 else report.render())
+    return report.exit_code
 
 
 def _cmd_passwd(args: list[str]) -> int:
@@ -555,6 +568,7 @@ _DISPATCH: dict[str, Command] = {
     "api": _cmd_api,
     "web": _cmd_web,
     "migrate-db": _cmd_migrate_db,
+    "doctor": _cmd_doctor,
     "passwd": _cmd_passwd,
     "refactor": _cmd_refactor,
     "seedlab": _cmd_seedlab,
