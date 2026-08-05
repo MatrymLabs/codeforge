@@ -27,9 +27,10 @@ make check          # lint + mypy + tests - prove the engine is sound before you
 `make check` must be green. If it isn't, stop - a red gate means the code you're
 about to run is broken, not that you should run it anyway.
 
-Re-activate the venv (`source .venv/bin/activate`) in every new shell before the
-commands below. The console scripts `spark` and `codeforge` only exist on your
-PATH while the venv is active.
+Re-activate the Engine venv (`source .venv/bin/activate`) in every new shell before the
+subsystem commands below. The Engine console scripts `spark` and `codeforge-engine` only exist
+on that PATH. The installed `codeforge` command belongs to the separate CodeForge Master Client;
+it is the primary user-facing doorway and connects to the Engine gateway.
 
 To inspect or explicitly persist the product Seed choice:
 

@@ -1,7 +1,8 @@
 # CodeForge platform startup
 
-The product startup contract is implemented by `adapters.cli.main()` and
-`kernel.platform.bootstrap_platform()`. The CLI resolves the Seed before importing the
+The product startup contract is implemented by the Master Client's `codeforge` entry point and
+the Engine subsystem's `adapters.cli.main()` together with
+`kernel.platform.bootstrap_platform()`. The Engine CLI resolves the Seed before importing the
 world. The bootstrap then initializes the existing configuration, identity, persistence,
 Hardware Store, isolated R&D audit, Engine, Seed Runtime, Creator Workshop, and operational
 API boundary before importing a serving or play driver.
