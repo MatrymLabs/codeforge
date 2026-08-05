@@ -32,6 +32,36 @@ class OutboxError(ValueError):
 IdFactory = Callable[[], str]
 Clock = Callable[[], float]
 Publish = Callable[["OutboxRecord"], None]
+SqlSessionFactory = Callable[[], Any]
+BeatScheduler = Callable[[int, Callable[[], object]], None]
+
+_SQL_ROW_TYPE: type[Any] | None = None
+_SQL_SESSION: SqlSessionFactory | None = None
+_BEAT_SCHEDULER: BeatScheduler | None = None
+
+
+def register_sql_backend(row_type: type[Any], session_factory: SqlSessionFactory) -> None:
+    """Register the persistence adapter supplied by the world layer.
+
+    The shelf owns the outbox contract; the world owns SQLAlchemy models and sessions. This
+    direction keeps the reusable shelf independent of the engine while retaining one SQL-backed
+    implementation.
+    """
+    global _SQL_ROW_TYPE, _SQL_SESSION
+    _SQL_ROW_TYPE = row_type
+    _SQL_SESSION = session_factory
+
+
+def register_beat_scheduler(schedule: BeatScheduler) -> None:
+    """Register the world clock adapter used by durable relay scheduling."""
+    global _BEAT_SCHEDULER
+    _BEAT_SCHEDULER = schedule
+
+
+def _sql_backend() -> tuple[type[Any], SqlSessionFactory]:
+    if _SQL_ROW_TYPE is None or _SQL_SESSION is None:
+        raise OutboxError("SQL outbox backend is not registered")
+    return _SQL_ROW_TYPE, _SQL_SESSION
 
 
 @dataclass
@@ -137,7 +167,7 @@ class SqlOutbox:
     """
 
     def stage(self, topic: str, payload: bytes, *, session: Any = None) -> OutboxRecord:
-        from kernel.world.db import OutboxRow, open_archive_session
+        outbox_row, open_session = _sql_backend()
 
         if not isinstance(topic, str) or not topic.strip():
             raise OutboxError("topic must be a non-empty string")
@@ -153,9 +183,9 @@ class SqlOutbox:
             created_at=time.time(),
         )
         owns_session = session is None
-        db = session or open_archive_session()
+        db = session or open_session()
         db.add(
-            OutboxRow(
+            outbox_row(
                 id=record.id,
                 topic=record.topic,
                 payload=record.payload,
@@ -170,14 +200,14 @@ class SqlOutbox:
         return record
 
     def unsent(self, *, session: Any = None) -> list[OutboxRecord]:
-        from kernel.world.db import OutboxRow, open_archive_session
+        outbox_row, open_session = _sql_backend()
 
         owns_session = session is None
-        db = session or open_archive_session()
+        db = session or open_session()
         rows = (
-            db.query(OutboxRow)
-            .filter(OutboxRow.status == PENDING)
-            .order_by(OutboxRow.created_at, OutboxRow.id)
+            db.query(outbox_row)
+            .filter(outbox_row.status == PENDING)
+            .order_by(outbox_row.created_at, outbox_row.id)
             .all()
         )
         if owns_session:
@@ -188,10 +218,10 @@ class SqlOutbox:
         ]
 
     def mark_sent(self, record_id: str) -> None:
-        from kernel.world.db import OutboxRow, open_archive_session
+        outbox_row, open_session = _sql_backend()
 
-        with open_archive_session() as db:
-            row = db.get(OutboxRow, record_id)
+        with open_session() as db:
+            row = db.get(outbox_row, record_id)
             if row is None:
                 raise OutboxError(f"unknown outbox record: {record_id!r}")
             if row.status == DEAD:
@@ -200,12 +230,12 @@ class SqlOutbox:
             db.commit()
 
     def mark_failed(self, record_id: str, *, max_attempts: int) -> str:
-        from kernel.world.db import OutboxRow, open_archive_session
+        outbox_row, open_session = _sql_backend()
 
         if not isinstance(max_attempts, int) or max_attempts <= 0:
             raise OutboxError("max_attempts must be a positive int")
-        with open_archive_session() as db:
-            row = db.get(OutboxRow, record_id)
+        with open_session() as db:
+            row = db.get(outbox_row, record_id)
             if row is None:
                 raise OutboxError(f"unknown outbox record: {record_id!r}")
             if row.status != PENDING:
@@ -217,10 +247,10 @@ class SqlOutbox:
             return row.status
 
     def counts(self) -> dict[str, int]:
-        from kernel.world.db import OutboxRow, open_archive_session
+        outbox_row, open_session = _sql_backend()
 
-        with open_archive_session() as db:
-            rows = db.query(OutboxRow.status).all()
+        with open_session() as db:
+            rows = db.query(outbox_row.status).all()
         counts = {PENDING: 0, SENT: 0, DEAD: 0}
         for (status,) in rows:
             counts[status] = counts.get(status, 0) + 1
@@ -270,12 +300,11 @@ def schedule_sql_relay(
 
     if not isinstance(every_beats, int) or every_beats <= 0:
         raise OutboxError("every_beats must be a positive int")
-    from kernel.world import climate, scheduler
-
-    scheduler.schedule(
-        climate.now() + every_beats,
+    if _BEAT_SCHEDULER is None:
+        raise OutboxError("world beat scheduler is not registered")
+    _BEAT_SCHEDULER(
+        every_beats,
         lambda: sql_relay(outbox, publish, batch=batch, max_attempts=max_attempts),
-        every=every_beats,
     )
 
 

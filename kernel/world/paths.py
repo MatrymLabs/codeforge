@@ -13,6 +13,13 @@ import os
 from pathlib import Path
 
 
+def discover_seed_ids(root: Path) -> list[str]:
+    """List bootable Seed packages from the shared content root."""
+    if not root.is_dir():
+        return []
+    return sorted(path.name for path in root.iterdir() if (path / "rooms.yaml").is_file())
+
+
 def resolved_path(env_var: str, default: Path) -> Path:
     """The path from `$env_var` (expanded) if set and non-empty, otherwise `default`."""
     override = os.environ.get(env_var)

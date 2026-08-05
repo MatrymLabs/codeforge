@@ -84,7 +84,7 @@ def test_empty_input_is_refused_login_is_required():
     """Guest access was removed: an empty line re-prompts, never enters."""
     client = TestClient(app)
     with client.websocket_connect("/ws") as ws:
-        assert "T H E   F I R S T   F O R G E" in ws.receive_text()  # splash first
+        assert ws.receive_text().strip()  # the configured Seed splash is sent first
         assert "Character" in ws.receive_text()  # the front-desk prompt
         ws.send_text("")  # just hit Enter
         assert "Login required" in ws.receive_text()  # refused

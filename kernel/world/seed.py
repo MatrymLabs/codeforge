@@ -47,7 +47,7 @@ SEED_DIR = SEEDS_ROOT / SEED_NAME
 
 def available_seeds() -> list[str]:
     """Every installed game: seed dirs that carry a rooms.yaml, alphabetical."""
-    from kernel.seed_selection import discover_seed_ids
+    from kernel.world.paths import discover_seed_ids
 
     return discover_seed_ids(SEEDS_ROOT)
 

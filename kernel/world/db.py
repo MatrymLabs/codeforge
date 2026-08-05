@@ -271,3 +271,10 @@ def restore_db(backup_path: Path, dest: Path | None = None) -> Path:
         dead.dispose()
     shutil.copy2(src, target)
     return target
+
+
+# Register the world-owned SQL model behind the shelf-owned outbox contract. The dependency points
+# from the engine toward the reusable shelf; the shelf never imports this module.
+from kernel.shelf.outbox import register_sql_backend  # noqa: E402
+
+register_sql_backend(OutboxRow, open_archive_session)

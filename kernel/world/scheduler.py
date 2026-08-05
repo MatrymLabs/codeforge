@@ -79,3 +79,17 @@ def _drop(job: _Job) -> None:
     """Remove a job if still present (run_due iterates a snapshot; a job may already be gone)."""
     if job in _JOBS:
         _JOBS.remove(job)
+
+
+# The shelf's durable relay schedules through this injected clock adapter, keeping the reusable
+# outbox independent of engine modules.
+from kernel.shelf.outbox import register_beat_scheduler  # noqa: E402
+
+
+def _schedule_from_now(interval: int, run: Callable[[], object]) -> None:
+    from kernel.world import climate
+
+    schedule(climate.now() + interval, run, every=interval)
+
+
+register_beat_scheduler(_schedule_from_now)

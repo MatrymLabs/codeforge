@@ -19,6 +19,8 @@ from collections.abc import Mapping
 from dataclasses import dataclass
 from pathlib import Path
 
+from kernel.world.paths import discover_seed_ids  # noqa: F401 - compatibility export
+
 PRODUCT_DEFAULT_SEED = "aethryn"
 SELECTION_FILE_ENV = "CODEFORGE_SELECTION_FILE"
 ACTIVE_PROJECT_SEED_ENV = "CODEFORGE_ACTIVE_SEED"
@@ -36,13 +38,6 @@ class SeedSelection:
 
     seed_id: str
     source: str
-
-
-def discover_seed_ids(root: Path) -> list[str]:
-    """List bootable Seed packages from one authoritative content root."""
-    if not root.is_dir():
-        return []
-    return sorted(path.name for path in root.iterdir() if (path / "rooms.yaml").is_file())
 
 
 def _validate_seed_id(seed_id: str, *, field: str = "seed") -> str:
