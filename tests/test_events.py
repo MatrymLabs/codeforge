@@ -15,15 +15,18 @@ from kernel.world.events import (
     announce_frame,
     announce_to,
     bind_echo,
+    bind_event_ledger,
     bind_gmcp,
     broadcast,
     push_channel,
     push_gmcp,
     rename_gmcp,
     unbind_echo,
+    unbind_event_ledger,
     unbind_gmcp,
 )
 from kernel.world.frames import SpeechFrame
+from kernel.world.seed import SEED_NAME
 from kernel.world.session import SESSIONS, Session
 
 
@@ -62,6 +65,22 @@ def test_announce_reaches_room_but_not_actor():
     assert c_heard == []
     for pid in ("a", "b", "c"):
         unbind_echo(pid)
+
+
+def test_world_announcement_is_observable_through_the_active_event_ledger():
+    events = []
+    sink = events.append
+    bind_event_ledger(sink)
+    try:
+        announce("library", "the ledger hears this.", exclude="actor")
+    finally:
+        unbind_event_ledger(sink)
+    assert len(events) == 1
+    event = events[0]
+    assert event.event_type == "world.announce"
+    assert event.seed_id == SEED_NAME
+    assert event.payload == {"room": "library", "excluded": True}
+    assert event.text_fallback == "the ledger hears this."
 
 
 def test_announce_frame_renders_per_recipient_and_excludes_actor():

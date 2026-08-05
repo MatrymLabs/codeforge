@@ -25,9 +25,13 @@ felled on another. This carries player PRESENCE and COMMUNICATION across the wir
 not world mutation; the authoritative world server is the deferred next step.
 """
 
+import logging
 from collections.abc import Callable, Iterable
+from datetime import UTC, datetime
 from typing import Any
+from uuid import uuid4
 
+from kernel.event_envelope import EventEnvelope
 from kernel.world import bus, frames
 from kernel.world.frames import Frame
 from kernel.world.session import SESSIONS
@@ -43,9 +47,69 @@ _ECHO_TOPIC = "delivery:echo"
 _GMCP_TOPIC = "delivery:gmcp"
 _ROOM_TOPIC = "delivery:room"
 
+# Optional non-authoritative observation sink. The trusted gateway binds this only after the
+# Hardware Store component is activated; world delivery remains valid without the ledger.
+EventLedgerSink = Callable[[EventEnvelope], None]
+_EVENT_LEDGER: EventLedgerSink | None = None
+_LOG = logging.getLogger(__name__)
+
 # The gateway registers its stop function here at boot; the @shutdown
 # verb calls it. Dependency inversion: forge never imports the gateway.
 SHUTDOWN: dict[str, Callable[[], None] | None] = {"hook": None}
+
+
+def bind_event_ledger(sink: EventLedgerSink) -> None:
+    """Bind the active runtime Event Ledger as a world-event observation sink."""
+    global _EVENT_LEDGER
+    _EVENT_LEDGER = sink
+
+
+def unbind_event_ledger(sink: EventLedgerSink | None = None) -> None:
+    """Remove the Event Ledger binding, optionally only when it is the supplied sink."""
+    global _EVENT_LEDGER
+    if sink is None or _EVENT_LEDGER is sink:
+        _EVENT_LEDGER = None
+
+
+def _seed_id() -> str:
+    """Resolve the loaded Seed lazily so this module does not create an import cycle."""
+    from kernel.world.seed import SEED_NAME
+
+    return SEED_NAME
+
+
+def _record_event(
+    event_type: str,
+    payload: dict[str, object],
+    *,
+    text: str,
+    classification: str = "public",
+) -> None:
+    """Send one event to the optional ledger without breaking authoritative delivery."""
+    sink = _EVENT_LEDGER
+    if sink is None:
+        return
+    event_id = f"world-{uuid4().hex}"
+    try:
+        sink(
+            EventEnvelope(
+                protocol="codeforge.seed-event",
+                version="1",
+                event_id=event_id,
+                seed_id=_seed_id(),
+                session_id="world",
+                event_type=event_type,
+                timestamp=datetime.now(UTC).isoformat(),
+                classification=classification,
+                payload=payload,
+                text_fallback=text,
+                accessibility_summary=text,
+                correlation_id=event_id,
+            )
+        )
+    except Exception:
+        # An audit sink failure must be visible to operators but cannot discard a player's action.
+        _LOG.exception("event_ledger_publish_failed", extra={"event_type": event_type})
 
 
 def bind_echo(player_id: str, sink: EchoSink) -> None:
@@ -79,6 +143,11 @@ def announce(room: str, text: str, exclude: str = "") -> None:
     bus.get_bus().publish(
         _ROOM_TOPIC, {"kind": "text", "room": room, "text": text, "exclude": exclude}
     )
+    _record_event(
+        "world.announce",
+        {"room": room, "excluded": bool(exclude)},
+        text=text,
+    )
 
 
 def announce_frame(room: str, frame: Frame, exclude: str = "") -> None:
@@ -86,9 +155,15 @@ def announce_frame(room: str, frame: Frame, exclude: str = "") -> None:
     RECIPIENT on whichever process hosts them. The typed successor to announce(): the frame crosses
     the bus as JSON (frames.to_wire) and each process reconstructs it and renders for its own local
     viewers, so per-recipient projection survives the wire."""
+    frame_payload = frames.to_wire(frame)
     bus.get_bus().publish(
         _ROOM_TOPIC,
-        {"kind": "frame", "room": room, "frame": frames.to_wire(frame), "exclude": exclude},
+        {"kind": "frame", "room": room, "frame": frame_payload, "exclude": exclude},
+    )
+    _record_event(
+        "world.announce_frame",
+        {"room": room, "frame": frame_payload, "excluded": bool(exclude)},
+        text="A structured world event occurred.",
     )
 
 
@@ -135,14 +210,22 @@ def announce_to(player_ids: Iterable[str], text: str, exclude: str = "") -> None
     explicit membership, so it rides the bus and reaches members on any process. An id with no bound
     sink (an offline member, or one hosted elsewhere with no broker yet) is simply skipped, so a
     cohort message never fails because someone logged out."""
+    targets = list(player_ids)
     bus.get_bus().publish(
-        _ECHO_TOPIC, {"targets": list(player_ids), "text": text, "exclude": exclude}
+        _ECHO_TOPIC, {"targets": targets, "text": text, "exclude": exclude}
+    )
+    _record_event(
+        "world.announce_to",
+        {"target_count": len(targets), "excluded": bool(exclude)},
+        text=text,
+        classification="internal",
     )
 
 
 def broadcast(text: str) -> None:
     """Deliver text to every sink in the world, no exclusions -- across every process on the bus."""
     bus.get_bus().publish(_ECHO_TOPIC, {"targets": None, "text": text, "exclude": ""})
+    _record_event("world.broadcast", {}, text=text)
 
 
 def _on_echo(payload: dict[str, Any]) -> None:

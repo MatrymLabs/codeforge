@@ -231,9 +231,48 @@ class ForgeGateServer(socketserver.ThreadingTCPServer):
     daemon_threads = True
 
     def __init__(self, *args: object, **kwargs: object) -> None:
+        # The gateway owns no component implementations.  It receives the trusted runtime
+        # controller as an injection seam in tests and embedded deployments; the default path only
+        # constructs the controller over the durable registry and registers the built-in provider.
+        # Construction never activates a component.
+        self.hardware_runtime = kwargs.pop("hardware_runtime", None)
         super().__init__(*args, **kwargs)  # type: ignore[arg-type]
+        if self.hardware_runtime is None:
+            from kernel.hardware_lifecycle import HardwareRegistry, default_registry_path
+            from kernel.hardware_runtime import (
+                HardwareRuntimeController,
+                register_builtin_providers,
+            )
+            from kernel.shelf.plugin_registry import PluginRegistry
+
+            self.hardware_runtime = register_builtin_providers(
+                HardwareRuntimeController(
+                    HardwareRegistry(default_registry_path()),
+                    PluginRegistry(),
+                    seed_id=SEED_NAME,
+                    consumer=SEED_NAME,
+                )
+            )
         # Wrap every accepted socket in TLS when configured; None keeps the plaintext transport.
         self._tls = _tls_context()
+        # World delivery remains authoritative independently; the active governed Event Ledger is
+        # an observation sink reached through the injected runtime seam.
+        def _publish_world_event(event: object) -> None:
+            runtime = self.hardware_runtime
+            if runtime is not None:
+                runtime.publish_event(event, lambda _event: None)
+
+        self._world_event_sink = _publish_world_event
+        from kernel.world.events import bind_event_ledger
+
+        bind_event_ledger(self._world_event_sink)
+
+    def server_close(self) -> None:
+        """Release this gateway's optional world-event observation binding."""
+        from kernel.world.events import unbind_event_ledger
+
+        unbind_event_ledger(getattr(self, "_world_event_sink", None))
+        super().server_close()
 
     def get_request(self) -> tuple[socket.socket, object]:
         """Accept a connection, TLS-wrapping it if the server is running with a cert. A handshake
@@ -300,6 +339,7 @@ class _GateHandler(socketserver.StreamRequestHandler):
         self._seed_announced = (
             False  # Native Seed handshake: Seed.Hello is sent once on GMCP enable
         )
+        self._hardware_status_announced = False
         # The authenticated session, set once the front desk lets a player in. None while at the
         # login desk, which GATES the additive engineering-workspace wire: no inbound Seed.Create /
         # Form.Submit is dispatched until a real account is behind the connection.
@@ -511,6 +551,25 @@ class _GateHandler(socketserver.StreamRequestHandler):
             _LOG.warning("workspace_blueprints_unavailable", error=str(exc))
         else:
             self._send_gmcp(BLUEPRINT_LIST_PACKAGE, blueprint_list(blueprints, seed=SEED_NAME))
+
+    def _hardware_runtime_payload(self) -> dict[str, object]:
+        """Return the read-only Hardware runtime projection for an authenticated owner."""
+        runtime = getattr(self.server, "hardware_runtime", None)
+        if runtime is None:
+            return {
+                "seed": SEED_NAME,
+                "consumer": SEED_NAME,
+                "providers": [],
+                "active_bindings": [],
+                "components": [],
+                "available": False,
+            }
+        return runtime.status()
+
+    def _push_hardware_runtime_status(self) -> None:
+        """Push truthful Hardware runtime state once after GMCP and owner authentication."""
+        self._send_gmcp("Hardware.Status", self._hardware_runtime_payload())
+        self._hardware_status_announced = True
 
     def _send_gmcp(self, package: str, data: object) -> None:
         """Push one GMCP frame, only to a client that enabled GMCP (never to a plain-text nc)."""
@@ -765,6 +824,8 @@ class _GateHandler(socketserver.StreamRequestHandler):
             if has_rank(session, "owner"):
                 self._push_workspace_form()
                 self._push_reference_workspace()
+                if self._gmcp_enabled:
+                    self._push_hardware_runtime_status()
             presence.mark_online(
                 session.player_id, session.location
             )  # joins the shared roster + room
