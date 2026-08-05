@@ -38,6 +38,13 @@ class SeedSelection:
     source: str
 
 
+def discover_seed_ids(root: Path) -> list[str]:
+    """List bootable Seed packages from one authoritative content root."""
+    if not root.is_dir():
+        return []
+    return sorted(path.name for path in root.iterdir() if (path / "rooms.yaml").is_file())
+
+
 def _validate_seed_id(seed_id: str, *, field: str = "seed") -> str:
     value = seed_id.strip()
     if not _SEED_ID.fullmatch(value):

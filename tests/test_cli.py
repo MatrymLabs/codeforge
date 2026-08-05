@@ -37,6 +37,7 @@ def test_api_command_serves_on_the_configured_port(monkeypatch):
     calls: dict = {}
     monkeypatch.setattr(uvicorn, "run", lambda app, **kw: calls.update(kw))
     monkeypatch.setattr(config.Settings, "load", classmethod(lambda cls, env=None: cls(port=4321)))
+    monkeypatch.setattr("adapters.cli._bootstrap_platform", lambda seed, source: None)
     assert main(["api"]) == 0
     assert calls["port"] == 4321  # from Settings, not a hardcoded literal
     assert calls["host"] == "0.0.0.0"
@@ -57,6 +58,7 @@ def test_a_valid_seed_sets_the_env_before_dispatch(monkeypatch):
 
     monkeypatch.setattr("adapters.cli._seeds_available", lambda: ["alpha", "beta"])
     monkeypatch.setattr("adapters.gateway.serve", lambda: None)
+    monkeypatch.setattr("adapters.cli._bootstrap_platform", lambda seed, source: None)
     monkeypatch.setenv("FORGE_SEED", "unset")  # tracked by monkeypatch -> restored after the test
     assert main(["--seed", "beta", "serve"]) == 0  # env must be set before the world imports
     assert os.environ["FORGE_SEED"] == "beta"
@@ -65,6 +67,7 @@ def test_a_valid_seed_sets_the_env_before_dispatch(monkeypatch):
 def test_no_args_defaults_to_serve(monkeypatch):
     calls: list[int] = []
     monkeypatch.setattr("adapters.gateway.serve", lambda: calls.append(1))
+    monkeypatch.setattr("adapters.cli._bootstrap_platform", lambda seed, source: None)
     assert main([]) == 0  # bare `codeforge` ignites the server
     import os
 
@@ -81,9 +84,18 @@ def test_seed_select_and_current_use_the_persisted_product_selection(tmp_path, m
     assert "spiral-ascent (persisted)" in out
 
 
+def test_hardware_cli_requires_explicit_lifecycle_actions(tmp_path, monkeypatch, capsys):
+    monkeypatch.setenv("CODEFORGE_HARDWARE_REGISTRY", str(tmp_path / "hardware.json"))
+    for action in ("discover", "validate", "approve", "install", "activate"):
+        assert main(["hardware", action, "validator"]) == 0
+    assert main(["hardware", "list"]) == 0
+    assert "validator" in capsys.readouterr().out
+
+
 def test_serve_dispatches_to_the_gateway(monkeypatch):
     calls: list[int] = []
     monkeypatch.setattr("adapters.gateway.serve", lambda: calls.append(1))
+    monkeypatch.setattr("adapters.cli._bootstrap_platform", lambda seed, source: None)
     assert main(["serve"]) == 0
     assert calls == [1]
 
@@ -91,6 +103,7 @@ def test_serve_dispatches_to_the_gateway(monkeypatch):
 def test_play_dispatches_to_the_game_loop(monkeypatch):
     calls: list[int] = []
     monkeypatch.setattr("forge.game_loop", lambda: calls.append(1))
+    monkeypatch.setattr("adapters.cli._bootstrap_platform", lambda seed, source: None)
     assert main(["play"]) == 0
     assert calls == [1]
 
@@ -98,6 +111,7 @@ def test_play_dispatches_to_the_game_loop(monkeypatch):
 def test_onboard_dispatches_to_the_workflow(monkeypatch):
     calls: list[int] = []
     monkeypatch.setattr("kernel.onboarding.drive", lambda: calls.append(1))
+    monkeypatch.setattr("adapters.cli._bootstrap_platform", lambda seed, source: None)
     assert main(["onboard"]) == 0
     assert calls == [1]
 
@@ -110,6 +124,7 @@ def test_web_serves_on_the_configured_port(monkeypatch):
     calls: dict = {}
     monkeypatch.setattr(uvicorn, "run", lambda app, **kw: calls.update(kw))
     monkeypatch.setattr(config.Settings, "load", classmethod(lambda cls, env=None: cls(port=5555)))
+    monkeypatch.setattr("adapters.cli._bootstrap_platform", lambda seed, source: None)
     assert main(["web"]) == 0
     assert calls["port"] == 5555
     assert calls["host"] == "0.0.0.0"

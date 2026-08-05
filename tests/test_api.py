@@ -49,6 +49,15 @@ def test_health_answers(client):
     assert response.json()["status"] == "alive"
 
 
+def test_platform_status_exposes_the_shared_runtime_contract(client):
+    response = client.get("/api/platform/status")
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["seed"] == "first-forge"  # direct API import preserves library compatibility
+    names = {component["name"] for component in payload["components"]}
+    assert {"engine", "seed-runtime", "hardware-store", "rnd", "creator-workshop"} <= names
+
+
 def test_characters_reads_the_canonical_table(client):
     _owner_account()
     heroes = client.get("/characters").json()

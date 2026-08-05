@@ -23,6 +23,9 @@ USAGE = """codeforge -- hardware-store counter for the world engine
   codeforge seed current               show the resolved Seed and its source
   codeforge seed select <game>         persist an explicit user Seed selection
   codeforge seed clear                 clear the persisted Seed selection
+  codeforge hardware list              show governed Hardware Store lifecycle state
+  codeforge hardware <action> <id>     explicitly discover, approve, install, activate, disable,
+                                      deprecate, or rollback a Hardware component
   codeforge onboard                    run the onboarding workflow (same engine as the game quest)
   codeforge journey --region R --waypoints a,b,c   generate + prove a playable journey region
   codeforge host --region R --waypoints a,b,c      install a journey as a bootable World Package
@@ -46,10 +49,10 @@ The historical library default remains available to direct Engine consumers.
 
 def _seeds_available() -> list[str]:
     """List installed games without importing the world (keeps env-before-import clean)."""
+    from kernel.seed_selection import discover_seed_ids
+
     root = Path(__file__).resolve().parent.parent / "content" / "seeds"
-    if not root.is_dir():
-        return []
-    return sorted(p.name for p in root.iterdir() if (p / "rooms.yaml").is_file())
+    return discover_seed_ids(root)
 
 
 def _pop_seed(args: list[str]) -> str | None:
@@ -124,6 +127,62 @@ def _cmd_seed(args: list[str]) -> int:
 
     print(USAGE)
     return 1
+
+
+def _cmd_hardware(args: list[str]) -> int:
+    """Operate the explicit Hardware Store lifecycle without executing component source."""
+    from kernel.hardware_lifecycle import (
+        HardwareLifecycleError,
+        HardwareRegistry,
+        default_registry_path,
+    )
+
+    registry = HardwareRegistry(default_registry_path())
+    if len(args) == 2 and args[1] == "list":
+        for record in registry.all():
+            consumers = ", ".join(record.consumers) or "(none)"
+            print(f"{record.component_id}\t{record.version}\t{record.state}\t{consumers}")
+        return 0
+    if len(args) != 3 or args[1] not in {
+        "discover",
+        "validate",
+        "approve",
+        "install",
+        "activate",
+        "disable",
+        "deprecate",
+        "rollback",
+    }:
+        print(USAGE)
+        return 1
+    action, component_id = args[1], args[2]
+    try:
+        if action == "discover":
+            record = registry.discover(component_id)
+        elif action == "rollback":
+            record = registry.rollback(component_id)
+        else:
+            target = {
+                "validate": "validated",
+                "approve": "approved",
+                "install": "installed",
+                "activate": "active",
+                "disable": "disabled",
+                "deprecate": "deprecated",
+            }[action]
+            record = registry.transition(component_id, target)
+    except HardwareLifecycleError as exc:
+        print(f"Hardware Store refused: {exc}", file=sys.stderr)
+        return 2
+    print(f"{record.component_id}: {record.state} ({record.version})")
+    return 0
+
+
+def _bootstrap_platform(seed: str, source: str) -> None:
+    """Initialize shared services before importing a serving or play driver."""
+    from kernel.platform import bootstrap_platform
+
+    bootstrap_platform(seed=seed, selection_source=source)
 
 
 def _cmd_serve(args: list[str]) -> int:
@@ -485,6 +544,7 @@ def _cmd_host(args: list[str]) -> int:
 _DISPATCH: dict[str, Command] = {
     "seeds": _cmd_seeds,
     "seed": _cmd_seed,
+    "hardware": _cmd_hardware,
     "serve": _cmd_serve,
     "play": _cmd_play,
     "onboard": _cmd_onboard,
@@ -526,6 +586,13 @@ def main(argv: list[str] | None = None) -> int:
                 print(f"Seed selection failed: {exc}", file=sys.stderr)
             return 2
         os.environ["FORGE_SEED"] = selection.seed_id
+
+        if cmd in {"serve", "play", "api", "web", "onboard"}:
+            try:
+                _bootstrap_platform(selection.seed_id, selection.source)
+            except Exception as exc:
+                print(f"CodeForge startup failed: {exc}", file=sys.stderr)
+                return 2
 
     handler = _DISPATCH.get(cmd)
     if handler is None:

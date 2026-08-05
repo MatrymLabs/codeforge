@@ -47,9 +47,9 @@ SEED_DIR = SEEDS_ROOT / SEED_NAME
 
 def available_seeds() -> list[str]:
     """Every installed game: seed dirs that carry a rooms.yaml, alphabetical."""
-    if not SEEDS_ROOT.is_dir():
-        return []
-    return sorted(p.name for p in SEEDS_ROOT.iterdir() if (p / "rooms.yaml").is_file())
+    from kernel.seed_selection import discover_seed_ids
+
+    return discover_seed_ids(SEEDS_ROOT)
 
 
 def load_splash() -> str:

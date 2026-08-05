@@ -23,6 +23,7 @@ from sqlalchemy import select
 from kernel.blueprint import load_all as load_blueprints
 from kernel.dashboard import router as dashboard_router
 from kernel.login_guard import LoginGuard
+from kernel.platform import current_platform_status
 from kernel.seedlab.artifact_store import FileArtifactStore
 from kernel.seedlab.kernel import FileSeedStore, SeedKernel, SeedKernelError
 from kernel.seedlab.model_store import FileModelStore
@@ -152,9 +153,27 @@ class WorkspaceContractPayload(BaseModel):
     packages: list[WorkspacePackageSummary]
 
 
+class PlatformComponentPayload(BaseModel):
+    name: str
+    state: str
+    detail: str
+
+
+class PlatformStatusPayload(BaseModel):
+    seed: str
+    selection_source: str
+    components: list[PlatformComponentPayload]
+
+
 @app.get("/health")
 def health() -> dict[str, str]:
     return {"status": "alive", "engine": "codeforge"}
+
+
+@app.get("/api/platform/status", response_model=PlatformStatusPayload)
+def platform_status() -> PlatformStatusPayload:
+    """The read-only startup/runtime contract consumed by operational clients."""
+    return PlatformStatusPayload.model_validate(current_platform_status().to_dict())
 
 
 class CharacterPage(BaseModel):
