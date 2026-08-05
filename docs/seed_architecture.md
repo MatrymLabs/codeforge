@@ -2,19 +2,26 @@
 
 *CodeForge is the forge. A **cast** is what leaves the forge.*
 
-## Two layers, one idea - do not conflate them
+## Two layers, one idea - preserve both contracts
 
-CodeForge already owns the word **seed** for a specific thing, and it is frozen. A second,
-net-new concept sits above it. Keep them distinct:
+CodeForge has a historical **seed pack** contract and a newer platform **Seed** contract.
+Keep the persisted pack identifiers compatible while the platform lifecycle is unified around
+them:
 
 | Term | What it is | Status |
 |------|-----------|--------|
-| **seed pack** | A game's **content** - `seeds/<name>/{rooms,items,npcs,jobs}.yaml` + `splash.txt`, loaded by the shared engine. "A seed IS a game." `codeforge seeds` lists them; `--seed <name>` / `FORGE_SEED` selects one. | **Exists. Frozen** - the dir name, YAML keys, `--seed`/`FORGE_SEED`, and save-file references are persisted identifiers and never renamed. |
+| **seed pack** | A game's **content** - `seeds/<name>/{rooms,items,npcs,jobs}.yaml` + `splash.txt`, loaded by the shared engine. `codeforge seeds` lists them; `--seed <name>` / `FORGE_SEED` selects one. | **Exists. Frozen** - the dir name, YAML keys, `--seed`/`FORGE_SEED`, and save-file references are persisted identifiers and never renamed. |
+| **Seed** | The persistent MUD-based engineering environment that owns a Seed pack, project state, services, permissions, and lifecycle. | **Platform contract** - SeedLab currently prototypes the identity/lifecycle; the runtime bridge is incremental. |
 | **cast** | A **standalone, installable project** poured from the forge: the engine + one chosen seed pack + config, detached into its own repo. "What leaves the forge." | **Net-new.** This document + `kernel/cast.py` are the Phase-1 scaffold. |
 
-A seed pack is *content the engine loads*. A cast is *a project you can clone and run on
+A seed pack is *content the Engine loads*. A Seed is *the persistent environment that operates
+that content and creates Target Products*. A cast is *a project you can clone and run on
 its own*. The generator **reads** a seed pack and **writes** a new cast elsewhere - it never
 touches `seeds/`, `--seed`, or `FORGE_SEED`.
+
+Product startup resolves Seeds in this order: explicit request, active project, persisted user
+selection, `FORGE_SEED`, then bundled Aethryn. An unavailable configured Seed fails loudly rather
+than silently changing the user's selection.
 
 ## The honest state of "modular"
 

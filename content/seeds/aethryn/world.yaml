@@ -1,0 +1,17 @@
+# The declared identity of the bundled flagship Seed.
+world_id: aethryn
+title: Aethryn
+start_room: veridia
+version: "1"
+description: >-
+  Aethryn is CodeForge's bundled flagship Seed and first-party MMORPG. It is
+  loaded through the standard Seed Runtime and demonstrates the platform's
+  world, persistence, command, progression, and creator capabilities.
+authors:
+  - Matrym Labs
+tags:
+  - flagship
+  - bundled
+  - mmorpg
+  - first-party
+  - seed

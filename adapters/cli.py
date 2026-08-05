@@ -20,6 +20,9 @@ USAGE = """codeforge -- hardware-store counter for the world engine
   codeforge serve                      same thing, formal attire
   codeforge play                       solo terminal session
   codeforge play --seed <game>         boot a different game (see: codeforge seeds)
+  codeforge seed current               show the resolved Seed and its source
+  codeforge seed select <game>         persist an explicit user Seed selection
+  codeforge seed clear                 clear the persisted Seed selection
   codeforge onboard                    run the onboarding workflow (same engine as the game quest)
   codeforge journey --region R --waypoints a,b,c   generate + prove a playable journey region
   codeforge host --region R --waypoints a,b,c      install a journey as a bootable World Package
@@ -35,8 +38,9 @@ USAGE = """codeforge -- hardware-store counter for the world engine
   codeforge web                        serve the browser gate (WebSocket play) on $PORT
   codeforge help                       this text
 
-A seed IS a game. `--seed <game>` (or the FORGE_SEED env var, which `spark` reads)
-selects which world the engine boots.
+The product default is Aethryn. `--seed <game>` has highest precedence; then an
+active project, persisted user selection, `FORGE_SEED`, and finally Aethryn.
+The historical library default remains available to direct Engine consumers.
 """
 
 
@@ -68,6 +72,58 @@ def _cmd_seeds(args: list[str]) -> int:
     for name in _seeds_available():
         print(name)
     return 0
+
+
+def _cmd_seed(args: list[str]) -> int:
+    """Inspect or explicitly change the persisted product Seed selection."""
+    from kernel.seed_selection import (
+        SeedSelectionError,
+        clear_persisted_seed,
+        persist_seed,
+        read_persisted_seed,
+        resolve_from_environment,
+        selection_path,
+    )
+
+    if len(args) == 2 and args[1] == "current":
+        try:
+            selection = resolve_from_environment(set(_seeds_available()))
+        except SeedSelectionError as exc:
+            print(f"Seed selection failed: {exc}", file=sys.stderr)
+            return 2
+        persisted = read_persisted_seed()
+        print(f"{selection.seed_id} ({selection.source})")
+        if persisted is not None:
+            print(f"persisted: {persisted} ({selection_path()})")
+        return 0
+
+    if len(args) == 3 and args[1] == "select":
+        name = args[2]
+        if name not in _seeds_available():
+            print(
+                f"Unknown seed '{name}'. Installed: {', '.join(_seeds_available()) or '(none)'}",
+                file=sys.stderr,
+            )
+            return 2
+        try:
+            path = persist_seed(name)
+        except SeedSelectionError as exc:
+            print(f"Seed selection failed: {exc}", file=sys.stderr)
+            return 2
+        print(f"Persisted Seed selection: {name} ({path})")
+        return 0
+
+    if len(args) == 2 and args[1] == "clear":
+        try:
+            removed = clear_persisted_seed()
+        except SeedSelectionError as exc:
+            print(f"Seed selection failed: {exc}", file=sys.stderr)
+            return 2
+        print("Cleared persisted Seed selection." if removed else "No persisted Seed selection.")
+        return 0
+
+    print(USAGE)
+    return 1
 
 
 def _cmd_serve(args: list[str]) -> int:
@@ -428,6 +484,7 @@ def _cmd_host(args: list[str]) -> int:
 # Verb -> handler. The strings are the frozen public CLI surface; order is display order only.
 _DISPATCH: dict[str, Command] = {
     "seeds": _cmd_seeds,
+    "seed": _cmd_seed,
     "serve": _cmd_serve,
     "play": _cmd_play,
     "onboard": _cmd_onboard,
@@ -448,18 +505,28 @@ def main(argv: list[str] | None = None) -> int:
     args = list(sys.argv[1:]) if argv is None else list(argv)
 
     # Seed selection must set the env BEFORE any world module is imported, since
-    # SEED_DIR binds at import time (the proving ground picks its program at power-on).
+    # SEED_DIR binds at import time. Administrative selection commands operate on
+    # the preference file directly and must remain usable even if an old choice
+    # is no longer installed.
     seed = _pop_seed(args)
-    if seed is not None:
-        if seed not in _seeds_available():
-            print(
-                f"Unknown seed '{seed}'. Installed: {', '.join(_seeds_available()) or '(none)'}",
-                file=sys.stderr,
-            )
-            return 2
-        os.environ["FORGE_SEED"] = seed
-
     cmd = args[0] if args else "serve"
+    if cmd not in {"seed", "seeds"}:
+        from kernel.seed_selection import SeedSelectionError, resolve_from_environment
+
+        try:
+            selection = resolve_from_environment(set(_seeds_available()), explicit=seed)
+        except SeedSelectionError as exc:
+            if seed is not None:
+                print(
+                    f"Unknown seed '{seed}'. Installed: "
+                    f"{', '.join(_seeds_available()) or '(none)'}",
+                    file=sys.stderr,
+                )
+            else:
+                print(f"Seed selection failed: {exc}", file=sys.stderr)
+            return 2
+        os.environ["FORGE_SEED"] = selection.seed_id
+
     handler = _DISPATCH.get(cmd)
     if handler is None:
         print(USAGE)
@@ -469,6 +536,14 @@ def main(argv: list[str] | None = None) -> int:
 
 def spark() -> None:
     """Every world begins as one."""
+    from kernel.seed_selection import SeedSelectionError, resolve_from_environment
+
+    try:
+        selection = resolve_from_environment(set(_seeds_available()))
+    except SeedSelectionError as exc:
+        raise SystemExit(f"Seed selection failed: {exc}") from exc
+    os.environ["FORGE_SEED"] = selection.seed_id
+
     from adapters.gateway import serve
 
     serve()

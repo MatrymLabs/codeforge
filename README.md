@@ -130,8 +130,11 @@ of YAML. A **cast** is the next layer: a standalone installable project poured f
 (engine + one seed + config). See [docs/seed_architecture.md](docs/seed_architecture.md).
 
 ```bash
-codeforge seeds                       # list installed games
-codeforge play --seed aethryn         # the flagship world (or: spiral-ascent, first-forge)
+codeforge seeds                       # list installed Seeds
+codeforge seed current                # show the resolved Seed and its source
+codeforge seed select aethryn         # persist an explicit Seed selection
+codeforge play                       # the bundled flagship Seed, Aethryn
+codeforge play --seed spiral-ascent   # explicit selection overrides Aethryn
 FORGE_SEED=aethryn spark              # same selector for the multiplayer server
 ```
 

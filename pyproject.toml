@@ -64,6 +64,10 @@ py-modules = ["forge"]
 [tool.setuptools.package-data]
 # The browser gate serves this page; it must ship inside the installed wheel.
 adapters = ["web/*.html"]
+# Seed manifests and world data are part of the installed CodeForge product, not
+# source-tree-only fixtures. This keeps Aethryn and other Seeds loadable after a
+# normal package installation.
+content = ["seeds/**/*.yaml", "seeds/**/*.txt"]
 
 [tool.ruff]
 line-length = 100

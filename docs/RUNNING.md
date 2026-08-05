@@ -1,12 +1,14 @@
-# Running CodeForge - start the servers, log into The First Forge
+# Running CodeForge - start the servers, log into Aethryn
 
 This is the operator's guide: how to ignite the engine, the three doors into a
-world, and a first walk through **The First Forge** (the default game). Every
+world, and a first walk through **Aethryn** (the bundled flagship Seed). Every
 command here is copy-paste runnable from the repo root.
 
-> **A seed is a game.** The engine boots one *seed pack* - a whole world of
+> **A Seed is the runtime world and workshop.** The current game loader still
+> consumes a *Seed pack* - a whole world of
 > rooms, items, NPCs, callings, and a splash screen. The default seed is
-> `first-forge`. Swap the seed (`--seed` or `FORGE_SEED`) and the same engine
+> `aethryn` for CodeForge product startup. Swap the Seed (`--seed`, an active
+> project, a persisted selection, or `FORGE_SEED`) and the same Engine
 > becomes a different game. This guide uses the default; everything applies to
 > any seed.
 
@@ -29,6 +31,14 @@ Re-activate the venv (`source .venv/bin/activate`) in every new shell before the
 commands below. The console scripts `spark` and `codeforge` only exist on your
 PATH while the venv is active.
 
+To inspect or explicitly persist the product Seed choice:
+
+```bash
+codeforge seed current
+codeforge seed select aethryn
+codeforge seed clear
+```
+
 ---
 
 ## 1. Three doors into a world
@@ -47,7 +57,7 @@ port 8000) - covered in §6. It is not how players log in.
 ### 1a. Solo (fastest - no server, no account)
 
 ```bash
-codeforge play                          # boot the default game, first-forge
+codeforge play                          # boot the bundled default Seed, Aethryn
 codeforge play --seed spiral-ascent  # boot a different game
 codeforge seeds                         # list every installed game first
 ```
@@ -316,7 +326,9 @@ players never touch it.
 
 | Variable | Default | What it does |
 |---|---|---|
-| `FORGE_SEED` | `first-forge` | Which game the engine boots. Read once at startup. |
+| `FORGE_SEED` | selected product Seed (Aethryn when unset) | Runtime override, read once at startup. |
+| `CODEFORGE_ACTIVE_SEED` | unset | Active project/workspace Seed; higher precedence than persisted selection and `FORGE_SEED`. |
+| `CODEFORGE_SELECTION_FILE` | `~/.config/codeforge/selection.json` | Persisted user Seed selection. Startup never rewrites it implicitly. |
 | `CODEFORGE_DB` | repo-root `codeforge.db` | Absolute path to the SQLite database. Set this for containers or a chosen data dir. |
 | `CODEFORGE_SEEDS_ROOT` | repo `seeds/` | Where seed packs live. Set only for installed/containerized deploys where the package sits apart from the seeds. |
 

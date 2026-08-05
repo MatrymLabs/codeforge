@@ -66,7 +66,19 @@ def test_no_args_defaults_to_serve(monkeypatch):
     calls: list[int] = []
     monkeypatch.setattr("adapters.gateway.serve", lambda: calls.append(1))
     assert main([]) == 0  # bare `codeforge` ignites the server
+    import os
+
+    assert os.environ["FORGE_SEED"] == "aethryn"
     assert calls == [1]
+
+
+def test_seed_select_and_current_use_the_persisted_product_selection(tmp_path, monkeypatch, capsys):
+    monkeypatch.setenv("CODEFORGE_SELECTION_FILE", str(tmp_path / "selection.json"))
+    assert main(["seed", "select", "spiral-ascent"]) == 0
+    assert "Persisted Seed selection: spiral-ascent" in capsys.readouterr().out
+    assert main(["seed", "current"]) == 0
+    out = capsys.readouterr().out
+    assert "spiral-ascent (persisted)" in out
 
 
 def test_serve_dispatches_to_the_gateway(monkeypatch):
