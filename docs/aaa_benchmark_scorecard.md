@@ -69,6 +69,20 @@ Engine metrics use the command noted at each row (for example, test count is
 > cohort-scaled raid reward (#711) and a second boss unleash kind, `mend` (#709) -- leaving a gear
 > ilvl ceiling, raid difficulty-scaling, and more mechanic kinds.
 
+> **Runtime re-baseline (2026-08-05).** A clean Aethryn boot currently assembles **52,829 rooms,
+> 53,037 NPC records, 52,586 combatants, 51 bosses, 546 items, 14 zones, 18 dungeons, 45
+> settlements, and 1,831 registered quests**. Authored source remains much smaller: **77 rooms, 78
+> NPC records, 185 item definitions, 40 authored quest files, and 154 abilities**. Runtime breadth
+> proves the world can be entered; authored breadth predicts whether it feels specific and memorable.
+> Reproduce with `PYTHONPATH=. .venv/bin/python tools/census.py`; `[runtime]` is the authoritative
+> assembled-world measure.
+
+> **Social correction (2026-08-05).** The earlier “social layer is invisible in the client” statement
+> is retired. CodeForge emits `Char.Party`, `Char.Guild`, `Char.Mail`, and `Char.Friends` through the
+> GMCP contract, and the CodeForge Client renders those panels with text fallback. The remaining gate
+> is packaged cross-repository live-session proof, plus clean degradation against external MUDs that
+> do not provide those packages.
+
 ### Estimated completion (engineering estimate, Low confidence)
 
 "Percent complete versus a AAA MMORPG" is inherently fuzzy: it depends whether the yardstick is a
@@ -80,13 +94,13 @@ would mislead, so the estimate is split by yardstick and by dimension, and every
 |-----------|--------------------------|----------------------------------|------------------|
 | **Engine / architecture** | ~45% | ~70% | Pure-function tick, 5-table persistence, a large module base, a CI-gated suite (count via `pytest --collect-only`), 7 native-accelerator organs. Mature core; missing distributed/sharded serving. |
 | **Combat systems** | ~40% | ~55% | 154 abilities across **10 ability kinds** (strike/heal/brand/daze/weaken/taunt/cleanse/buff + lifesteal `drain` + heal-over-time `regen`), 10 damage types, boss phases + telegraphed specials + afflictions. Party combat shares XP + round-robin loot; the trinity seams now exist (per-NPC threat/aggro table + taunt, ally-targeted heals). A raid bounty scales with the co-located cohort (#711). A **kit-density pass** brought EVERY calling to a full 5-ability kit (all 30 callings, coherent role identities) that wields the deep kinds (DoT/control/lifesteal). A raid boss now scales its DIFFICULTY with the co-located cohort too (harder blows per extra hero, not just a bigger bounty). Gaps: deeper boss-mechanic variety (3 kinds: strike, mend, vampiric drain), dungeon group mechanics. |
-| **Content scale (world)** | ~15% | ~40% | ~26,800 rooms at default scale (procedural), 45 settlements, 18 dungeons. Authored depth thin (77 hand rooms, 34 authored quests). |
-| **Content scale (items/NPCs)** | ~10% | ~35% | 185 items, 75 authored NPCs + procedural guardians, 38 recipes. Well below launch density. |
-| **Progression / player systems** | ~35% | ~60% | 31 jobs, 6 professions, 4 Orders, level cap 255, ember-coin currency. Broad skeleton, shallow per-system depth. |
-| **Social / multiplayer** | ~38% | ~20% | Shipped: party (max 5, shared XP + round-robin loot), atomic player trade, persisted guilds (ranks + chat + coin treasury + item vault), async mail with attachments, friends, world chat, and a raid reward that scales with the co-located cohort (#711). Gaps: no LFG/matchmaking, no housing. (nudged up: item vault + mail attachments + cohort scaling shipped) |
-| **Economy** | ~30% | ~30% | Tiered currency, NPC shops, per-town general-store materials market (buy/sell spread), crafting sinks, inns as a coin sink, guild treasury, direct player trade, a coin-escrow auction house, and a durability/repair coin sink. Gaps: no macro sink/faucet model, no cross-region market. (nudged up: auction house + durability shipped) |
+| **Content scale (world)** | ~15% | ~40% | **52,829 assembled rooms** at default scale, 45 settlements, 18 dungeons. Authored depth thin (77 hand rooms, 40 authored quest files). |
+| **Content scale (items/NPCs)** | ~10% | ~35% | **185 item definitions, 78 authored NPC records, 53,037 assembled NPC records**, and 38 recipes. Runtime breadth is high; authored encounter density remains below launch scale. |
+| **Progression / player systems** | ~35% | ~60% | 31 jobs, 6 professions, 4 Orders, **Aethryn level cap 300** (first-forge compatibility remains 255), ember-coin currency. Broad skeleton, shallow per-system depth. |
+| **Social / multiplayer** | ~38% | ~25% | Shipped: party (max 5, shared XP + round-robin loot), atomic player trade, persisted guilds (ranks + chat + coin treasury + item vault), async mail with attachments, friends, world chat, GMCP panels, and a raid reward that scales with the co-located cohort (#711). Gaps: no LFG/matchmaking, no housing, and packaged cross-repository proof is pending. |
+| **Economy** | ~30% | ~30% | Tiered currency, NPC shops, per-town general-store materials market (buy/sell spread), crafting sinks, inns as a coin sink, guild treasury, direct player trade, a coin-escrow auction house, and a durability/repair coin sink. The designed sink/faucet audit exists; the live coin-change event seam and cross-region market remain open. |
 | **World simulation** | ~30% | ~55% | Weather, seasons, day/night, respawn policies, dynamic spawns, zone resets. No NPC schedules or faction war. |
-| **Live ops / tooling** | ~20% | ~40% | CI, security gates, readiness rituals, admin surface, world generator. No telemetry/analytics pipeline or patch cadence. |
+| **Live ops / tooling** | ~20% | ~40% | CI, security gates, readiness rituals, admin surface, world generator, structured gateway events, and aggregate world metrics. Population-level coin-flow telemetry, analytics, and a patch cadence remain open. |
 | **Accessibility** | ~15% | n/a | Text-native (screen-reader friendly by medium). No declared text-scaling, colorblind, or remap options in the client contract. |
 
 **Blended engineering read:** roughly **~20-25% of a AAA graphical MMORPG's total scope**, and
@@ -113,8 +127,10 @@ slices shipped in #709/#711) and authored content density.
    enrage. Still open: an explicit **gear treadmill / ilvl ceiling** (the affix roll already scales
    gear, but there is no stored ilvl), raid *difficulty*-scaling (only the reward scales so far), and
    more mechanic kinds. Still the shallowest dimension relative to AAA, but no longer empty.
-2. **Content density far below launch scale.** ~185 items and ~75 authored NPCs cannot sustain a
-   1-to-255 curve; ~1,680 quests are 8 template generators over ~7 authored arcs (wide, not deep).
+2. **Content density far below launch scale.** 185 item definitions and 78 authored NPC records
+   cannot sustain a 1-to-300 curve; 1,831 registered quests are mostly generated from a smaller set
+   of authored arcs (wide, not deep). The 52,829-room runtime is breadth, not authored encounter
+   density.
    Only Veridia (the cradle) meets production density; the other 13 zones sit at baseline.
 3. **No live event-stream telemetry at population.** The economy sink/faucet **macro-model now
    exists** (corrected 2026-08-01): `kernel/coin_flow.py` + `make economy-audit` (#702, #705) audit
@@ -123,8 +139,9 @@ slices shipped in #709/#711) and authored content density.
    "sinks not balanced as a system" this line once flagged. What remains is a *live* event seam:
    instrumenting the running coin-change paths so actual flow (not just designed) can be tuned at
    population. The audit answers the design question; the live seam answers the ops question.
-4. **The shipped social layer is invisible in the client.** Party/guild/mail/friend systems exist in
-   the engine but no versioned event schema surfaces them, so the play experience lags the engineering.
+4. **Social release proof is incomplete.** Party/guild/mail/friend systems now have versioned GMCP
+   payloads and client panels; the remaining work is a packaged live-session proof and clean fallback
+   behavior against external MUDs that do not provide those packages.
 
 *Retired since the 2026-07-29 gap analysis (verified shipped in code): loose-item persistence
 (`loose_store.py`, `loose_items` table), the combat trinity seams (`threat.py`, ally-targeted heals in
@@ -180,11 +197,11 @@ engineering estimates unless a cited benchmark has landed.
 
 | Subsystem | Current CodeForge | Current Aethryn | AAA Benchmark | Historical MUD Benchmark | Confidence | Sources |
 |-----------|-------------------|-----------------|---------------|--------------------------|------------|---------|
-| Rooms | Engine: generator scales one seed 1x to ~1M (`CODEFORGE_WILD_SCALE`) | ~26,811 at default scale (75 authored + 26,736 generated) | [Pass 2] | [Pass 2] (DikuMUD-era worlds often 5k-15k rooms) | Current: **Measured** | census |
+| Rooms | Engine: generator scales one seed 1x to ~1M (`CODEFORGE_WILD_SCALE`) | **52,829 assembled** (77 authored source rooms) | [Pass 2] | [Pass 2] (DikuMUD-era worlds often 5k-15k rooms) | Current: **Measured** | census runtime block |
 | Regions / zones | Data-driven zones | 14 zones, 14 wildlands regions | [Pass 2] | [Pass 2] | Measured | census |
 | Settlements (cities/villages) | Seed-defined | 45 settlements | [Pass 2] | [Pass 2] | Measured | census |
 | Dungeons | Seed-defined | 18 dungeons | [Pass 2] | [Pass 2] | Measured | census |
-| Raids | Not modelled as a distinct tier | 0 | [Pass 2] | [Pass 2] | Measured | census |
+| Raids | Modelled through raid-flagged bosses and lockouts | 2 raid-flagged weekly bosses in the assembled runtime | [Pass 2] | [Pass 2] | Measured | combat/lockout tests + census |
 | Fast-travel nodes | Waystone network | 14 waystones | [Pass 2] | [Pass 2] | Measured | census |
 | Max exits per room | 6 cardinal + up/down (data) | same | [Pass 2] | ~6-10 (Diku dirs) | Measured | world.py DIRECTIONS |
 
@@ -205,9 +222,9 @@ engineering estimates unless a cited benchmark has landed.
 
 | Subsystem | Current CodeForge | Current Aethryn | AAA Benchmark | Historical MUD Benchmark | Confidence | Sources |
 |-----------|-------------------|-----------------|---------------|--------------------------|------------|---------|
-| Authored NPCs | Seed-driven | 75 | [Pass 2] | [Pass 2] | Measured | census |
+| Authored NPCs | Seed-driven | **78** | [Pass 2] | [Pass 2] | Measured | census |
 | Procedural NPCs | Guardian-per-N-rooms in wildlands | scales with world | [Pass 2] | [Pass 2] | Measured (mechanism) | wildlands.py |
-| Bosses | tier=boss + phases/specials | 16 | [Pass 2] | [Pass 2] | Measured | census |
+| Bosses | tier=boss + phases/specials | **51 assembled** | [Pass 2] | [Pass 2] | Measured | census runtime block |
 | Merchants | Shop system | via shop wares (not a tier flag) | [Pass 2] | [Pass 2] | Partial | shop.py |
 | Aggressive NPCs | Beat-driven menace | 16 | [Pass 2] | [Pass 2] | Measured | census |
 
@@ -227,9 +244,9 @@ engineering estimates unless a cited benchmark has landed.
 
 | Subsystem | Current CodeForge | Current Aethryn | AAA Benchmark | Historical MUD Benchmark | Confidence | Sources |
 |-----------|-------------------|-----------------|---------------|--------------------------|------------|---------|
-| Authored quests | State-machine quests | 7 authored | [Pass 2] | [Pass 2] | Measured | census |
+| Authored quests | State-machine quests | **40 authored quest files**; 1,831 registered at runtime | [Pass 2] | [Pass 2] | Measured | census |
 | Procedural quests | errands / bounties / deliveries / rumors / storylines generators | scales (14 zone storylines) | [Pass 2] | [Pass 2] | Measured (mechanism) | census, storylines.py |
-| Dialogue | Per-NPC dialogue trees | 75 NPCs carry dialogue | [Pass 2] | [Pass 2] | Measured | census |
+| Dialogue | Per-NPC dialogue trees | **78 authored NPC records** carry dialogue; 53,037 NPC records assemble at runtime | [Pass 2] | [Pass 2] | Measured | census |
 | Achievements / titles | `title` verb; classroom achievements | game achievements not a system | [Pass 2] | [Pass 2] | Partial | titles.py |
 | Lore / books | Item lore fields | 41 items carry lore | [Pass 2] | [Pass 2] | Measured | census |
 
@@ -249,10 +266,10 @@ engineering estimates unless a cited benchmark has landed.
 
 | Subsystem | Current CodeForge | Current Aethryn | AAA Benchmark | Historical MUD Benchmark | Confidence | Sources |
 |-----------|-------------------|-----------------|---------------|--------------------------|------------|---------|
-| Level cap (character) | 255 (locked curve) | 255 | [Pass 2] | [Pass 2] | Measured | progression.py |
+| Level cap (character) | Seed-declared progression curve | **300 for Aethryn; 255 for first-forge compatibility** | [Pass 2] | [Pass 2] | Measured | progression.py + Aethryn world.yaml |
 | Jobs / classes | Data-driven | 31 | [Pass 2] | [Pass 2] | Measured | census |
 | Professions | Gather + craft trades | 6 | [Pass 2] | [Pass 2] | Measured | census |
-| Skills / abilities | Ability system | 66 | [Pass 2] | [Pass 2] | Measured | census |
+| Skills / abilities | Ability system | **154** across 10 kinds | [Pass 2] | [Pass 2] | Measured | census |
 | Equipment slots | 8 (weapon/head/body/arm/leg/feet/2 accessory) | 8 | [Pass 2] | ~10-19 typical | Measured | equipment.py |
 | Factions / Orders | Reputation + tiers | 4 Orders | [Pass 2] | [Pass 2] | Measured | census |
 | Currencies | Tiered ember-coin | 1 currency, 4 tiers | [Pass 2] | [Pass 2] | Measured | coinage.py |

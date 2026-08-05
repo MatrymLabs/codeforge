@@ -18,6 +18,7 @@ from __future__ import annotations
 from collections.abc import Callable
 from typing import NamedTuple
 
+from kernel.world.progression import get_player_level_cap
 from kernel.world.session import Session
 
 _EMBER = 10_000  # cinders in one ember
@@ -39,7 +40,11 @@ FEATS: tuple[Feat, ...] = (
     Feat("Journeyman", "reach level 10", lambda s: s.level >= 10),
     Feat("Veteran", "reach level 50", lambda s: s.level >= 50),
     Feat("Master", "reach level 100", lambda s: s.level >= 100),
-    Feat("Ascendant", "reach the level cap (255)", lambda s: s.level >= 255),
+    Feat(
+        "Ascendant",
+        "reach the active Seed's level cap",
+        lambda s: s.level >= get_player_level_cap(),
+    ),
     Feat("Coinbearer", "hold an ember of wealth (10,000 cinders)", lambda s: s.coins >= _EMBER),
     Feat("Forgemarked", "hold a forgemark (1,000,000 cinders)", lambda s: s.coins >= _FORGEMARK),
     Feat("The Maker", "bear the crown of the world's Seed Owner", lambda s: s.rank == "owner"),

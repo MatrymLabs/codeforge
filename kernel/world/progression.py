@@ -3,7 +3,7 @@
 Salvaged from codeforge_mk1. This is game DESIGN encoded as pure
 functions -- the numbers are the product. Two independent axes:
 
-1. XP -> PLvl (character level, global, capped at 255)
+1. XP -> PLvl (character level, global, capped by the active Seed)
 2. JP -> Job Lvl (per-job, capped at 30)
 
 Cumulative totals are INCLUSIVE: cumulative_*_for_level(N) sums the
@@ -92,7 +92,7 @@ def get_xp_tier_multiplier(level):
 
 
 def marginal_xp_for_level(level):
-    """XP cost of the single level `level` (0 if out of range 1-255)."""
+    """XP cost of the single active-Seed level (0 when outside its declared range)."""
     return _marginal(_ACTIVE_XP_TRACK, level)
 
 
@@ -102,8 +102,13 @@ def cumulative_xp_for_level(level):
 
 
 def get_next_level_threshold(current_level):
-    """Total XP to reach the next PLvl, or None if at cap (255)."""
+    """Total XP to reach the next active-Seed PLvl, or None at that Seed's cap."""
     return _next_threshold(_ACTIVE_XP_TRACK, current_level)
+
+
+def get_player_level_cap() -> int:
+    """Return the active Seed's declared player-level cap."""
+    return _ACTIVE_XP_TRACK[2]
 
 
 JP_BASE = 20
