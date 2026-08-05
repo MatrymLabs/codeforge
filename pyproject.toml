@@ -60,6 +60,7 @@ build-backend = "setuptools.build_meta"
 # Style-guide section 2: modules are migrating from parts/ into the kernel/adapters/content layers.
 packages = [
     "kernel", "kernel.evolution", "kernel.hubble", "kernel.shelf", "kernel.world",
+    "kernel.domains", "kernel.seedlab",
     "adapters", "adapters.stewardship", "content", "migrations", "migrations.versions",
 ]
 py-modules = ["forge"]
