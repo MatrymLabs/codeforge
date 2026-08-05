@@ -324,14 +324,44 @@ class StagedChange(NamedTuple):
     payload: dict[str, str]
 
 
-# Per-session drafts, keyed by player_id. Ephemeral (never persisted): a draft is the owner's
-# unpublished work, cleared on publish or rollback.
+# Per-session working copies, keyed by player_id. The durable owner-scoped draft is loaded lazily
+# from workshop_state on first access and written after each mutation. Keeping this small cache
+# preserves the existing command behavior while making reconnects and process restarts safe.
 _DRAFTS: dict[str, list[StagedChange]] = {}
 
 
 def _draft(session: Session) -> list[StagedChange]:
-    """The owner's current draft (created empty on first use)."""
-    return _DRAFTS.setdefault(session.player_id, [])
+    """The owner's current draft, restored from the durable Workshop state when needed."""
+    if session.player_id not in _DRAFTS:
+        from kernel.world.workshop_state import load_drafts
+
+        persisted = load_drafts(_seed_id()).get(session.player_id, [])
+        _DRAFTS[session.player_id] = [
+            StagedChange(item["kind"], item["summary"], dict(item["payload"])) for item in persisted
+        ]
+    return _DRAFTS[session.player_id]
+
+
+def _persist_drafts() -> None:
+    """Persist all currently loaded owner drafts through the canonical Workshop state boundary."""
+    from kernel.world.workshop_state import load_drafts, save_drafts
+
+    drafts = load_drafts(_seed_id())
+    # Merge the in-process cache into the durable owner map so one creator cannot erase another
+    # creator's unpublished work merely because that owner has not reconnected to this process.
+    drafts.update(
+        {
+            owner: [
+                {"kind": change.kind, "summary": change.summary, "payload": dict(change.payload)}
+                for change in changes
+            ]
+            for owner, changes in _DRAFTS.items()
+        }
+    )
+    save_drafts(
+        _seed_id(),
+        drafts,
+    )
 
 
 def _owner_at(session: Session, room: str) -> bool:
@@ -410,6 +440,7 @@ def _stage(session: Session, rest: str, spec: _Creatable) -> str:
     _draft(session).append(
         StagedChange(spec.kind, summary, {"label": label, "name": name, "room": room})
     )
+    _persist_drafts()
     return (
         f"Staged: {summary}.\n"
         f"{len(_draft(session))} change(s) waiting. Type `preview` to review, then bring them to "
@@ -461,6 +492,7 @@ def publish_changes(session: Session) -> str:
     applied = [_apply(change) for change in draft]
     _persist_published(draft)
     _DRAFTS[session.player_id] = []
+    _persist_drafts()
     return "Published to the living world:\n" + "\n".join(f"  - {line}" for line in applied)
 
 
@@ -472,6 +504,7 @@ def rollback_changes(session: Session) -> str:
         return "Bring your changes to the Publishing Portal to roll them back."
     count = len(_draft(session))
     _DRAFTS[session.player_id] = []
+    _persist_drafts()
     if not count:
         return "Nothing was staged. Your world is unchanged."
     return f"Rolled back {count} staged change(s). Nothing was published; your world is unchanged."

@@ -311,6 +311,42 @@ def test_published_workshop_change_is_durable_and_replayable(monkeypatch, tmp_pa
     assert any(NPCS[label]["name"] == "Durable Marta" for label in npcs_in(room))
 
 
+def test_unpublished_workshop_draft_survives_reconnect_and_restart(monkeypatch, tmp_path):
+    monkeypatch.setenv("CODEFORGE_WORKSHOP_STATE", str(tmp_path / "workshop-state.json"))
+    room = _real_room()
+    owner = _seat("root", "owner", location=cw.NPC_STUDIO)
+    handle_command(owner, f"create npc Draft Marta at {room}")
+    draft_path = tmp_path / "workshop-state.drafts.json"
+    assert draft_path.is_file()
+
+    # A new Session and a fresh module-level cache must recover the same unpublished work.
+    cw._DRAFTS.clear()
+    recovered_owner = _seat("root", "owner", location=cw.CREATOR_WORKSHOP)
+    preview = handle_command(recovered_owner, "preview")
+    assert "Draft Marta" in preview and "not yet live" in preview
+    assert not any(npc["name"] == "Draft Marta" for npc in npcs_in(room))
+
+    recovered_owner.location = cw.PUBLISHING_PORTAL
+    handle_command(recovered_owner, "rollback")
+    assert "Nothing is staged" in handle_command(recovered_owner, "preview")
+    assert not draft_path.exists()
+
+
+def test_unpublished_drafts_for_multiple_owners_are_not_overwritten(monkeypatch, tmp_path):
+    monkeypatch.setenv("CODEFORGE_WORKSHOP_STATE", str(tmp_path / "workshop-state.json"))
+    room = _real_room()
+    first = _seat("first", "owner", location=cw.NPC_STUDIO)
+    handle_command(first, f"create npc First Marta at {room}")
+    second = _seat("second", "owner", location=cw.NPC_STUDIO)
+    handle_command(second, f"create npc Second Marta at {room}")
+
+    cw._DRAFTS.clear()
+    first_reconnected = _seat("first", "owner", location=cw.CREATOR_WORKSHOP)
+    second_reconnected = _seat("second", "owner", location=cw.CREATOR_WORKSHOP)
+    assert "First Marta" in handle_command(first_reconnected, "preview")
+    assert "Second Marta" in handle_command(second_reconnected, "preview")
+
+
 def test_creating_an_item_is_gated_to_the_item_forge():
     room = _real_room()
     owner = _seat("root", "owner", location=cw.NPC_STUDIO)  # wrong station for an item
