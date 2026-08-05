@@ -2,7 +2,12 @@ import pytest
 
 from kernel.seedlab.kernel import FileSeedStore, SeedKernel
 from kernel.seedlab.reference_seed import ensure_reference_seed
-from kernel.seedlab.runtime_bridge import RuntimeSeedError, bind_reference_seed, bind_runtime_seed
+from kernel.seedlab.runtime_bridge import (
+    RuntimeSeedError,
+    bind_reference_seed,
+    bind_runtime_seed,
+    ensure_runtime_seed,
+)
 
 
 def test_reference_seed_binds_to_the_shipped_aethryn_package(tmp_path):
@@ -25,3 +30,17 @@ def test_bridge_rejects_a_seed_without_a_matching_runtime_manifest(tmp_path):
     (package / "world.yaml").write_text("world_id: other\n", encoding="utf-8")
     with pytest.raises(RuntimeSeedError, match="declares"):
         bind_runtime_seed(kernel, "prototype", root=tmp_path / "seeds")
+
+
+def test_bridge_registers_the_second_packaged_seed_and_recovers_it(tmp_path):
+    records = tmp_path / "records"
+    kernel = SeedKernel(FileSeedStore(records))
+    record = ensure_runtime_seed(kernel, "spiral-ascent")
+
+    assert record.identity.seed_id == "spiral-ascent"
+    assert record.identity.name == "The Spiral Ascent"
+    binding = bind_runtime_seed(kernel, "spiral-ascent")
+    assert binding.manifest["start_room"] == "spiral_landing"
+
+    recovered = SeedKernel(FileSeedStore(records))
+    assert ensure_runtime_seed(recovered, "spiral-ascent") == record

@@ -1,0 +1,27 @@
+# SEED: spiral-ascent -- abilities.yaml (one standard kit per calling)
+# The Spiral is intentionally small, but it still satisfies the shared Engine contract:
+# every declared calling has one usable move.
+
+spiral_strike:
+  name: Spiral Strike
+  kind: strike
+  power: 5
+  scales: strength
+  mp_cost: 2
+  jobs: [vanguard]
+
+coil_shot:
+  name: Coil Shot
+  kind: strike
+  power: 5
+  scales: speed
+  mp_cost: 2
+  jobs: [pathfinder]
+
+forge_burst:
+  name: Forge Burst
+  kind: strike
+  power: 5
+  scales: magic
+  mp_cost: 2
+  jobs: [forgewright]

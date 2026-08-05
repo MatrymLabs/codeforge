@@ -73,3 +73,29 @@ def test_platform_bootstrap_can_use_sql_seed_registry(monkeypatch, tmp_path):
     )
     assert result.returncode == 0, result.stderr
     assert not (tmp_path / ".seedlab" / "seeds" / "aethryn.json").exists()
+
+
+def test_platform_bootstrap_bridges_the_non_game_seed_package(monkeypatch, tmp_path):
+    env = os.environ.copy()
+    env["FORGE_SEED"] = "spiral-ascent"
+    env["CODEFORGE_DB"] = str(tmp_path / "codeforge.db")
+    env["SEEDLAB_HOME"] = str(tmp_path / ".seedlab")
+    result = subprocess.run(
+        [
+            sys.executable,
+            "-c",
+            (
+                "from kernel.platform import bootstrap_platform; "
+                "s=bootstrap_platform(seed='spiral-ascent', selection_source='explicit'); "
+                "assert s.status('engine').state == 'initialized'; "
+                "assert s.status('seed-registry').detail.endswith('/content/seeds/spiral-ascent'); "
+                "assert s.status('workspace').detail.endswith('available for The Spiral Ascent')"
+            ),
+        ],
+        check=False,
+        capture_output=True,
+        text=True,
+        env=env,
+    )
+    assert result.returncode == 0, result.stderr
+    assert (tmp_path / ".seedlab" / "seeds" / "spiral-ascent.json").exists()

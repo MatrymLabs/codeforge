@@ -76,7 +76,12 @@ def test_wheel_install_contains_migrations_and_boots(tmp_path: Path) -> None:
     assert console.is_file()
     assert server_console.is_file()
 
-    site_packages = console_root / "lib" / f"python{sys.version_info.major}.{sys.version_info.minor}" / "site-packages"
+    site_packages = (
+        console_root
+        / "lib"
+        / f"python{sys.version_info.major}.{sys.version_info.minor}"
+        / "site-packages"
+    )
 
     env = os.environ.copy()
     env.update(
@@ -121,6 +126,7 @@ def test_wheel_install_contains_migrations_and_boots(tmp_path: Path) -> None:
     )
     assert seeds.returncode == 0, seeds.stderr
     assert "aethryn" in seeds.stdout
+    assert "spiral-ascent" in seeds.stdout
 
     help_result = subprocess.run(
         [str(console), "help"],

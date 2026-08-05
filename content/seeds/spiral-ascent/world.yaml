@@ -1,0 +1,14 @@
+# The declared identity of the Spiral Ascent Seed package.
+world_id: spiral-ascent
+title: The Spiral Ascent
+start_room: spiral_landing
+version: "1"
+description: >-
+  Spiral Ascent is a second first-party game Seed on the standard CodeForge Engine:
+  climbers clear each floor's gate while the persistent Seed provides the workshop.
+authors:
+  - Matrym Labs
+tags:
+  - first-party
+  - seed
+  - spiral
