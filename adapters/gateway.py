@@ -461,10 +461,11 @@ class _GateHandler(socketserver.StreamRequestHandler):
         load path (the game path never imports it)."""
         from pathlib import Path
 
-        from kernel.seedlab.kernel import FileSeedStore, SeedKernel
+        from kernel.seedlab.kernel import SeedKernel
+        from kernel.seedlab.registry import configured_seed_store
 
-        root = Path(os.environ.get("SEEDLAB_HOME", ".seedlab")) / "seeds"
-        return SeedKernel(FileSeedStore(root))
+        root = Path(os.environ.get("SEEDLAB_HOME", ".seedlab"))
+        return SeedKernel(configured_seed_store(root))
 
     def _push_workspace_form(self) -> None:
         """Push the engineering creation Form (`Form.Schema`) to a logged-in owner's Native-Seed

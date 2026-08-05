@@ -26,9 +26,10 @@ from kernel.hardware_lifecycle import HardwareRegistry, default_registry_path
 from kernel.login_guard import LoginGuard
 from kernel.platform import current_platform_status
 from kernel.seedlab.artifact_store import FileArtifactStore
-from kernel.seedlab.kernel import FileSeedStore, SeedKernel, SeedKernelError
+from kernel.seedlab.kernel import SeedKernel, SeedKernelError
 from kernel.seedlab.manifest_evidence import FileManifestEvidenceStore
 from kernel.seedlab.model_store import FileModelStore
+from kernel.seedlab.registry import configured_seed_store
 from kernel.seedlab.tool_runner import FileRunLog
 from kernel.seedlab.workspace_contract import (
     build_workspace_contract,
@@ -203,7 +204,7 @@ def _seedlab_home() -> Path:
 
 
 def _seedlab_kernel() -> SeedKernel:
-    return SeedKernel(FileSeedStore(_seedlab_home() / "seeds"))
+    return SeedKernel(configured_seed_store(_seedlab_home()))
 
 
 def _seedlab_model_store() -> FileModelStore:

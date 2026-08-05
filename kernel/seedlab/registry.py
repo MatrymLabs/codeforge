@@ -81,6 +81,12 @@ def seed_store(backend: str, home: Path) -> SeedStore:
     )
 
 
+def configured_seed_store(home: Path) -> SeedStore:
+    """Open the registry selected by the shared environment configuration."""
+    backend = os.environ.get("CODEFORGE_SEED_REGISTRY", FILE).strip() or FILE
+    return seed_store(backend, home)
+
+
 def migrate_file_registry(
     home: Path,
     *,
