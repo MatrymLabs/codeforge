@@ -7,16 +7,17 @@ or it violates the ship's law (no claim without correspondence). This is that me
 the flagship seed and reads a handful of engine constants, then prints a structured census. Re-run
 it whenever the world grows and paste the fresh numbers into the scorecard's current column.
 
-Content counts come from the seed YAML (the world is data). Generated-world scale is derived from
-the wildlands trail-length budget, since booting the full ~26k-room world just to count rooms is
-wasteful when the generator's own inputs already state the target. Engine constants (Orders, codes,
-equipment slots) are read from their modules so a change there shows up here.
+Content counts come from the seed YAML (the world is data). The report also boots the Aethryn
+runtime and records assembled counts, because generated rooms, NPCs, items, dungeons, settlements,
+and quests are part of the product a player receives. Source counts remain useful for authorship
+and provenance; they must not be mistaken for the live game's scale.
 
 Run from the repo root:  python tools/census.py
 """
 
 from __future__ import annotations
 
+import os
 from collections import Counter
 from pathlib import Path
 
@@ -135,7 +136,38 @@ def engine() -> dict[str, object]:
     }
 
 
+def runtime() -> dict[str, object]:
+    """Measure the assembled default-scale Aethryn runtime, not only source manifests."""
+    configured = os.environ.get("FORGE_SEED", "").strip()
+    if configured and configured != "aethryn":
+        raise RuntimeError(f"the Aethryn census requires FORGE_SEED=aethryn, not {configured!r}")
+    os.environ["FORGE_SEED"] = "aethryn"
+
+    from kernel.world import quest, world
+
+    npcs = world.NPCS
+    return {
+        "seed": "aethryn",
+        "rooms": len(world.WORLD),
+        "npcs": len(npcs),
+        "combatants": sum(1 for npc in npcs.values() if npc.get("hp", 0) > 0),
+        "bosses": sum(1 for npc in npcs.values() if npc.get("tier") == "boss"),
+        "items": len(world.ITEMS),
+        "zones": len(world._story_zones),
+        "dungeons": len(world._dungeons or []),
+        "settlements": len(world._settlements or []),
+        "quests": len(quest.all_ids()),
+    }
+
+
 def main() -> None:
+    configured = os.environ.get("FORGE_SEED", "").strip()
+    if configured and configured != "aethryn":
+        raise SystemExit(f"the Aethryn census requires FORGE_SEED=aethryn, not {configured!r}")
+    # Several engine constants import the Seed package indirectly. Establish the product Seed
+    # before assembling any report section, not only immediately before the runtime section.
+    os.environ["FORGE_SEED"] = "aethryn"
+
     seed_counts: dict[str, object] = {
         "jobs_classes": _count("jobs.yaml"),
         "professions": _count("professions.yaml"),
@@ -155,6 +187,7 @@ def main() -> None:
         "seed_counts": seed_counts,
         "systems": systems(),
         "engine": engine(),
+        "runtime": runtime(),
     }
     print("Aethryn / CodeForge census (measured from the seed + engine)\n")
     for section, body in report.items():

@@ -9,6 +9,11 @@ fail loud when it is measuring nothing, so every section below asserts it counts
 
 from __future__ import annotations
 
+import os
+import subprocess
+import sys
+from pathlib import Path
+
 from tools import census
 
 
@@ -46,3 +51,25 @@ def test_engine_metrics_read_the_restructured_layout():
     assert eng["engine_modules"] > 0
     assert eng["world_modules"] > 0
     assert eng["engine_python_loc"] > 0
+
+
+def test_command_reports_assembled_aethryn_runtime_not_only_source_counts():
+    """The scorecard must measure what boots, including generated world content."""
+    repo = Path(__file__).resolve().parent.parent
+    env = os.environ.copy()
+    env.pop("FORGE_SEED", None)
+    env["PYTHONPATH"] = str(repo)
+    result = subprocess.run(
+        [sys.executable, "tools/census.py"],
+        cwd=repo,
+        env=env,
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    assert result.returncode == 0, result.stderr
+    assert "[runtime]" in result.stdout
+    assert "seed: aethryn" in result.stdout
+    assert "rooms: 52829" in result.stdout
+    assert "npcs: 53037" in result.stdout
+    assert "items: 546" in result.stdout

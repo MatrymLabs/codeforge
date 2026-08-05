@@ -30,11 +30,16 @@ proposes prototype and alpha targets as flagged engineering estimates. The *AAA 
 [Research roadmap](#research-roadmap)), so that when a benchmark number appears here it arrives with
 a source, not a guess.
 
-**Reproduce the current column.** All Aethryn content counts below come from:
+**Reproduce the current column.** All Aethryn source and assembled-runtime counts below come from:
 
 ```
 python tools/census.py
 ```
+
+The census reports source counts separately from the assembled default-scale runtime. Source counts
+describe authored/provenance content; the `[runtime]` section is the authoritative measure of what a
+player receives after Aethryn's generators, dungeons, settlements, workshops, and quest registration
+have run. A scorecard row must not use a source count as a runtime count.
 
 Engine metrics use the command noted at each row (for example, test count is
 `pytest --collect-only -q | tail -1`). Census taken at the commit that introduced this file.
