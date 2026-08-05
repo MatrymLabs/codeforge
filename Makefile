@@ -1,10 +1,12 @@
-.PHONY: hooks env fix lint typecheck test property fuzz coverage audit audit-runtime security sast secrets deps intake sbom bench trend slo loadtest artifact ai-eval retention doctor patch daily check readiness arc-verdicts truth forge cast-plan cast cast-selective cast-install-check cast-diff cast-update deploy-proof plugins coupling shelf-pour shelf-build smoke repo-integrity ship run world world-check zone-density economy-audit store hardware clean serve backup restore db-up db-down db-migrate docs-serve docs-build demo-gif e2e evolution ritual-fast ritual ritual-down unskew loop proto contracts
+.PHONY: hooks env fix lint typecheck test test-bounded api-bounded property fuzz coverage audit audit-runtime security sast secrets deps intake sbom bench trend slo loadtest artifact ai-eval retention doctor patch daily check readiness arc-verdicts truth forge cast-plan cast cast-selective cast-install-check cast-diff cast-update deploy-proof plugins coupling shelf-pour shelf-build smoke repo-integrity ship run world world-check zone-density economy-audit store hardware clean serve backup restore db-up db-down db-migrate docs-serve docs-build demo-gif e2e evolution ritual-fast ritual ritual-down unskew loop proto contracts
 
 # --- Environment: create/validate the .venv, fail loud on version mismatch.
 # Uses uv when present (a Rust resolver; measured ~20x faster than pip on this host:
 # 85s -> 4s) and falls back to plain venv+pip, so bootstrap never hard-requires uv.
 # With uv, `sync` installs the exact pinned graph from uv.lock (reproducible builds);
 # the pip fallback still resolves fresh -- best-effort without the resolver. ---
+PYTEST_BIN ?= $(if $(wildcard .venv/bin/pytest),.venv/bin/pytest,pytest)
+
 env: hooks
 	@if command -v uv >/dev/null 2>&1; then \
 		echo "→ uv found - fast env build (pinned from uv.lock)"; \
@@ -36,6 +38,16 @@ typecheck:
 
 test:
 	pytest -m "not property and not fuzz"
+
+# Bounded diagnostics for environments where a gateway, worker, or test child does not terminate.
+# The ordinary `test` target remains unchanged for local/CI parity; these targets turn a hang into
+# exit 124 with the last pytest output still visible. The 420-second budget covers the observed full
+# serial suite while preventing an unattended process from running forever.
+test-bounded:
+	timeout --foreground 420s $(PYTEST_BIN) -m "not property and not fuzz"
+
+api-bounded:
+	timeout --foreground 180s $(PYTEST_BIN) tests/test_api*.py tests/test_gateway.py tests/test_web_gateway.py tests/test_web_api_generator.py
 
 property:
 	pytest -m property
