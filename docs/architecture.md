@@ -49,7 +49,7 @@ tradeoffs, and the rules for touching it) is written up in
 - Accounts hold the password (salted pbkdf2-sha256, 600k iterations, constant-time
   compare); characters are masks worn by their account.
 - Login refusals are generic -- no account/character/password enumeration.
-- Bootstrap authority is the host shell (`codeforge grant`): physical access is the
+- Bootstrap authority is the host shell (`codeforge-engine grant`): physical access is the
   one rank the engine cannot outrank.
 - Known debts, tracked: plaintext telnet transport (TLS/echo-masking are future
   cards); this is a LAN service, not an internet-facing one.

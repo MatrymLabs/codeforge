@@ -10,7 +10,7 @@ them:
 
 | Term | What it is | Status |
 |------|-----------|--------|
-| **seed pack** | A game's **content** - `seeds/<name>/{rooms,items,npcs,jobs}.yaml` + `splash.txt`, loaded by the shared engine. `codeforge seeds` lists them; `--seed <name>` / `FORGE_SEED` selects one. | **Exists. Frozen** - the dir name, YAML keys, `--seed`/`FORGE_SEED`, and save-file references are persisted identifiers and never renamed. |
+| **seed pack** | A game's **content** - `seeds/<name>/{rooms,items,npcs,jobs}.yaml` + `splash.txt`, loaded by the shared Engine. `codeforge-engine seeds` lists them; `--seed <name>` / `FORGE_SEED` selects one. | **Exists. Frozen** - the dir name, YAML keys, `--seed`/`FORGE_SEED`, and save-file references are persisted identifiers and never renamed. |
 | **Seed** | The persistent MUD-based engineering environment that owns a Seed pack, project state, services, permissions, and lifecycle. | **Platform contract** - SeedLab currently prototypes the identity/lifecycle; the runtime bridge is incremental. |
 | **cast** | A **standalone, installable project** poured from the forge: the engine + one chosen seed pack + config, detached into its own repo. "What leaves the forge." | **Net-new.** This document + `kernel/cast.py` are the Phase-1 scaffold. |
 

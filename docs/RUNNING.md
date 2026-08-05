@@ -34,9 +34,9 @@ PATH while the venv is active.
 To inspect or explicitly persist the product Seed choice:
 
 ```bash
-codeforge seed current
-codeforge seed select aethryn
-codeforge seed clear
+codeforge-engine seed current
+codeforge-engine seed select aethryn
+codeforge-engine seed clear
 ```
 
 ---
@@ -47,19 +47,19 @@ CodeForge runs three ways. Pick by what you want to do.
 
 | Door | Command | What it is | Who connects |
 |---|---|---|---|
-| **Solo** | `codeforge play` | A single-player terminal loop. No network, no login. | Just you, in this terminal. |
+| **Solo** | `codeforge-engine play` | A single-player terminal loop. No network, no login. | Just you, in this terminal. |
 | **Multiplayer** | `spark` | The threaded TCP gateway on port **4000**. Real MUD server. | Anyone with `nc`/telnet/Mudlet to your host. |
 | **Container** | `docker run …` | The same gateway, packaged. | Same as multiplayer, but isolated. |
 
-There is also a fourth, separate server - the **HTTP admin API** (`codeforge api`,
+There is also a fourth, separate server - the **HTTP admin API** (`codeforge-engine api`,
 port 8000) - covered in §6. It is not how players log in.
 
 ### 1a. Solo (fastest - no server, no account)
 
 ```bash
-codeforge play                          # boot the bundled default Seed, Aethryn
-codeforge play --seed spiral-ascent  # boot a different game
-codeforge seeds                         # list every installed game first
+codeforge-engine play                  # boot the bundled default Seed, Aethryn
+codeforge-engine play --seed spiral-ascent  # boot a different game
+codeforge-engine seeds                 # list every installed Seed
 ```
 
 You spawn straight into the world's first room. Skip to §4 for the walkthrough -
@@ -70,7 +70,7 @@ solo play has no front desk.
 ```bash
 spark                     # ignite the server on 0.0.0.0:4000 (default game)
 # or, same thing:
-codeforge serve
+codeforge-engine serve
 # boot a different game on the server:
 FORGE_SEED=spiral-ascent spark
 ```
@@ -294,7 +294,7 @@ Authority is ranked: **player → wizard → owner**. Admin verbs check rank bef
 any code runs. Grant a rank from the host shell (the server operator's power):
 
 ```bash
-codeforge grant climber wizard      # or: owner
+codeforge-engine grant climber wizard      # or: owner
 ```
 
 Then, logged in as that character, the `@`-verbs unlock - e.g. `@teleport`,
@@ -308,7 +308,7 @@ Distinct from the game gateway. It exposes a read/observe surface over the
 canonical world; mutations require **owner-account HTTP Basic auth**.
 
 ```bash
-codeforge api            # serves on http://0.0.0.0:8000
+codeforge-engine api            # serves on http://0.0.0.0:8000
 ```
 
 Renderers and HTTP reads never mutate the world - state is canonical, text and

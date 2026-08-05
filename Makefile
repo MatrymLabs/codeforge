@@ -415,14 +415,14 @@ clean:
 	rm -rf .pytest_cache .ruff_cache .mypy_cache .coverage __pycache__ kernel/__pycache__ adapters/__pycache__ tests/__pycache__
 
 serve:
-	codeforge serve
+	codeforge-engine serve
 
 # Boot aethryn at MMO scale (~1,000,000 rooms, ~1.9 GB / ~22 s boot). CODEFORGE_WILD_SCALE grows
 # every wildlands region; SCALE overrides it (make serve-mmo SCALE=10 for a smaller MMO world). The
 # demo and CI stay at the seed's shipped size (scale 1); this button is for capable hardware.
 serve-mmo: SCALE ?= 19
 serve-mmo:
-	FORGE_SEED=aethryn CODEFORGE_WILD_SCALE=$(SCALE) codeforge serve
+	FORGE_SEED=aethryn CODEFORGE_WILD_SCALE=$(SCALE) codeforge-engine serve
 
 # --- PostgreSQL: the production-shaped backend. SQLite stays the zero-config default;
 # these bring up a local Postgres and run the Alembic migrations against DATABASE_URL.

@@ -20,7 +20,7 @@ Four cards, each computed live from real repo state (never hardcoded):
 ## How to run it
 
 ```bash
-codeforge api          # serves the FastAPI app on :8000
+codeforge-engine api          # serves the FastAPI app on :8000
 # then open http://localhost:8000/           (the dashboard)
 #            http://localhost:8000/api/status (the JSON twin)
 #            http://localhost:8000/docs       (OpenAPI, auto-generated)

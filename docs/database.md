@@ -17,7 +17,7 @@ typed models (`CharacterRow`, `AccountRow`) run on both.
 make db-up          # start Postgres via docker-compose (data in a named volume)
 export DATABASE_URL=postgresql+psycopg://codeforge:codeforge@localhost:5432/codeforge  # pragma: allowlist secret
 make db-migrate     # alembic upgrade head -> builds the schema
-codeforge api       # the app now speaks to Postgres; GET / dashboard, /characters, ...
+codeforge-engine api       # the app now speaks to Postgres; GET / dashboard, /characters, ...
 make db-down        # stop it
 ```
 

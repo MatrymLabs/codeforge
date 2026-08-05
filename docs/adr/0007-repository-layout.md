@@ -25,7 +25,7 @@ CodeForge is a **single-package, monorepo-style flagship** with a flat importabl
 - **`forge.py`** (repo root) - the engine tick, `handle_command(session, signal) -> str`. It
   is the only door (ADR-0001) and stays at the root as a top-level `py-module`, exactly where
   the packaging config and the CLI entry points expect it.
-- **`adapters/cli.py`** - the console entry points (`codeforge`, `spark`), declared in
+- **`adapters/cli.py`** - the Engine console entry points (`codeforge-engine`, `spark`), declared in
   `pyproject.toml [project.scripts]`. These verb strings are a frozen public contract.
 
 ### 2. Where each other kind of file belongs (the map)

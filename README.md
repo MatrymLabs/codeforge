@@ -81,12 +81,12 @@ the Cold Cellar. The whole arc advances from what you actually do.
 Or run it locally - same engine, thin drivers:
 
 ```bash
-codeforge web     # the browser gate (xterm.js over a WebSocket) on http://localhost:8000
-codeforge api     # the FastAPI readiness dashboard on http://localhost:8000
+codeforge-engine web     # the browser gate (xterm.js over a WebSocket) on http://localhost:8000
+codeforge-engine api     # the FastAPI readiness dashboard on http://localhost:8000
 ```
 
 The browser gate is a fourth thin driver: an [xterm.js](https://xtermjs.org) terminal speaks to
-the tick over a WebSocket. `codeforge api` serves a server-rendered dashboard at `GET /` that projects the forge's own
+the tick over a WebSocket. `codeforge-engine api` serves a server-rendered dashboard at `GET /` that projects the forge's own
 evidence (career board, QualityGate audit, hardware store, latest `make bench`) onto one
 accessible page, HTMX-enhanced but working with JavaScript off; the same data is typed JSON at
 `/api/status` (OpenAPI at `/docs`). The public demo is deliberately safe (ephemeral state, a
@@ -112,8 +112,8 @@ register with `NEW` - no anonymous access. Characters persist across restarts; p
 salted pbkdf2 hashes hidden at the prompt (telnet echo blackout); ranks gate the wizard verbs
 (`@teleport`, `@grant`, `@shutdown`).
 
-More doors: `codeforge play` (solo terminal), `codeforge grant <name> <rank>`,
-`codeforge migrate <char> <account>`. The full operator's guide is
+Engine subsystem doors: `codeforge-engine play` (solo terminal), `codeforge-engine grant <name> <rank>`,
+`codeforge-engine migrate <char> <account>`. The full operator's guide is
 [docs/RUNNING.md](docs/RUNNING.md).
 
 **The ritual** - one command lights the whole workshop and drops you at the front desk (gates
@@ -130,11 +130,11 @@ of YAML. A **cast** is the next layer: a standalone installable project poured f
 (engine + one seed + config). See [docs/seed_architecture.md](docs/seed_architecture.md).
 
 ```bash
-codeforge seeds                       # list installed Seeds
-codeforge seed current                # show the resolved Seed and its source
-codeforge seed select aethryn         # persist an explicit Seed selection
-codeforge play                       # the bundled flagship Seed, Aethryn
-codeforge play --seed spiral-ascent   # explicit selection overrides Aethryn
+codeforge-engine seeds                # list installed Seeds
+codeforge-engine seed current         # show the resolved Seed and its source
+codeforge-engine seed select aethryn  # persist an explicit Seed selection
+codeforge-engine play                 # the bundled flagship Seed, Aethryn
+codeforge-engine play --seed spiral-ascent # explicit selection overrides Aethryn
 FORGE_SEED=aethryn spark              # same selector for the multiplayer server
 ```
 
@@ -358,8 +358,8 @@ you want just that check.
 | `make doctor` | The same gates as `check`, diagnostic: read-only, stop at first failure, prescribe the fix |
 | `make patch` | Scan deps for CVEs, apply available security fixes (`pip-audit --fix`), then re-verify + file dated evidence |
 | `make daily` | Apply security patches (+re-verify), then check federal guidance for updates and file them in the Guidance Library (`FGL_HOME`) |
-| `spark` · `codeforge serve` | Multiplayer gateway (Ctrl+C sleeps the world) |
-| `codeforge play` | Solo terminal session |
+| `spark` · `codeforge-engine serve` | Multiplayer gateway (Ctrl+C sleeps the world) |
+| `codeforge-engine play` | Solo terminal session |
 | `make ritual` / `make ritual-down` | Light the whole workshop (gates → mirror → forge → MUD) / secure it at day's end |
 | `make world` / `make store` | Operator catalog / developer card catalog |
 | `make unskew` | Reset tracked-file timestamps (clock-skew cure) |

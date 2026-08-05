@@ -1,10 +1,10 @@
-"""CARD: cli -- one door to the whole workshop: the codeforge command.
+"""CARD: cli -- the Engine subsystem door: the codeforge-engine command.
 
 Installed via [project.scripts] in pyproject.toml, so the venv grows
-real commands: `codeforge <verb>` for operations, and `spark` -- the
+real commands: `codeforge-engine <verb>` for operations, and `spark` -- the
 one-word world igniter, named for the plaque on the anvil.
 
-Handlers import lazily: `codeforge grant` should not have to load
+Handlers import lazily: `codeforge-engine grant` should not have to load
 the entire world to edit one archive casefile.
 """
 
@@ -14,32 +14,32 @@ import sys
 from collections.abc import Callable
 from pathlib import Path
 
-USAGE = """codeforge -- hardware-store counter for the world engine
+USAGE = """codeforge-engine -- CodeForge Engine subsystem operations
 
   spark                                ignite the multiplayer server
-  codeforge serve                      same thing, formal attire
-  codeforge play                       solo terminal session
-  codeforge play --seed <game>         boot a different game (see: codeforge seeds)
-  codeforge seed current               show the resolved Seed and its source
-  codeforge seed select <game>         persist an explicit user Seed selection
-  codeforge seed clear                 clear the persisted Seed selection
-  codeforge hardware list              show governed Hardware Store lifecycle state
-  codeforge hardware <action> <id>     explicitly discover, approve, install, activate, disable,
+  codeforge-engine serve               start the multiplayer Engine gateway
+  codeforge-engine play                solo terminal session
+  codeforge-engine play --seed <game>  boot a different game (see: codeforge-engine seeds)
+  codeforge-engine seed current        show the resolved Seed and its source
+  codeforge-engine seed select <game>  persist an explicit Seed selection
+  codeforge-engine seed clear           clear the persisted Seed selection
+  codeforge-engine hardware list       show governed Hardware Store lifecycle state
+  codeforge-engine hardware <action> <id> explicitly discover, approve, install, activate, disable,
                                       deprecate, or rollback a Hardware component
-  codeforge onboard                    run the onboarding workflow (same engine as the game quest)
-  codeforge journey --region R --waypoints a,b,c   generate + prove a playable journey region
-  codeforge host --region R --waypoints a,b,c      install a journey as a bootable World Package
-  codeforge seeds                      list installed games (seeds)
-  codeforge grant <name> <rank>        host-shell authority (player/wizard/owner)
-  codeforge migrate <char> <account>   move a v1 password onto an account
-  codeforge migrate-db                 import legacy JSON saves into SQLite
-  codeforge passwd <account>           rotate an account password (prompted)
-  codeforge refactor <f> <fn> <o> <n>  verifier-gated safe rename (dry-run; --apply to write)
-  codeforge seedlab proof             run the SeedLab platform proof and write a report artifact
-  codeforge seedlab audit             write the SeedLab module audit artifact
-  codeforge api                        serve the HTTP admin API on port 8000
-  codeforge web                        serve the browser gate (WebSocket play) on $PORT
-  codeforge help                       this text
+  codeforge-engine onboard             run the onboarding workflow
+  codeforge-engine journey ...          generate + prove a playable journey region
+  codeforge-engine host ...             install a journey as a bootable World Package
+  codeforge-engine seeds                list installed Seeds
+  codeforge-engine grant <name> <rank>  host-shell authority (player/wizard/owner)
+  codeforge-engine migrate ...          migrate legacy credentials
+  codeforge-engine migrate-db           import legacy JSON saves into SQLite
+  codeforge-engine passwd <account>     rotate an account password
+  codeforge-engine refactor ...         verifier-gated safe rename
+  codeforge-engine seedlab proof        run the SeedLab platform proof
+  codeforge-engine seedlab audit         write the SeedLab module audit artifact
+  codeforge-engine api                  serve the HTTP admin API on port 8000
+  codeforge-engine web                  serve the browser gate on $PORT
+  codeforge-engine help                 this text
 
 The product default is Aethryn. `--seed <game>` has highest precedence; then an
 active project, persisted user selection, `FORGE_SEED`, and finally Aethryn.

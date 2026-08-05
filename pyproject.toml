@@ -46,7 +46,10 @@ dev = [
 ]
 
 [project.scripts]
-codeforge = "adapters.cli:main"
+# The installed `codeforge` command belongs to the Master Client. These are the
+# Engine's explicit subsystem commands for operators, automation, and diagnostics.
+codeforge-engine = "adapters.cli:main"
+codeforge-server = "adapters.cli:main"
 spark = "adapters.cli:spark"
 
 [build-system]
