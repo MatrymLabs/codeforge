@@ -24,8 +24,9 @@ USAGE = """codeforge-engine -- CodeForge Engine subsystem operations
   codeforge-engine seed select <game>  persist an explicit Seed selection
   codeforge-engine seed clear           clear the persisted Seed selection
   codeforge-engine hardware list       show governed Hardware Store lifecycle state
-  codeforge-engine hardware <action> <id> explicitly discover, approve, install, activate, disable,
-                                      deprecate, or rollback a Hardware component
+  codeforge-engine hardware <action> <id> explicitly discover, approve, install, disable,
+                                      deprecate, or rollback a Hardware component; runtime
+                                      activation requires the Master Client/Seed Runtime
   codeforge-engine onboard             run the onboarding workflow
   codeforge-engine journey ...          generate + prove a playable journey region
   codeforge-engine host ...             install a journey as a bootable World Package
@@ -160,6 +161,13 @@ def _cmd_hardware(args: list[str]) -> int:
     try:
         if action == "discover":
             record = registry.discover(component_id)
+        elif action == "activate":
+            print(
+                "Hardware Store refused: runtime activation requires a Seed Runtime trusted "
+                "provider and authenticated approval; use the Master Client or Creator Workshop.",
+                file=sys.stderr,
+            )
+            return 2
         elif action == "rollback":
             record = registry.rollback(component_id)
         else:

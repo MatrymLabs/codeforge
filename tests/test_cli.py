@@ -86,8 +86,10 @@ def test_seed_select_and_current_use_the_persisted_product_selection(tmp_path, m
 
 def test_hardware_cli_requires_explicit_lifecycle_actions(tmp_path, monkeypatch, capsys):
     monkeypatch.setenv("CODEFORGE_HARDWARE_REGISTRY", str(tmp_path / "hardware.json"))
-    for action in ("discover", "validate", "approve", "install", "activate"):
+    for action in ("discover", "validate", "approve", "install"):
         assert main(["hardware", action, "validator"]) == 0
+    assert main(["hardware", "activate", "validator"]) == 2
+    assert "trusted provider" in capsys.readouterr().err
     assert main(["hardware", "list"]) == 0
     assert "validator" in capsys.readouterr().out
 

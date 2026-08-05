@@ -56,6 +56,13 @@ class PluginRegistry[P]:
         self._require(name)
         self._disabled.add(name)
 
+    def remove(self, name: str) -> tuple[PluginInfo, P]:
+        """Remove a runtime binding after its owning lifecycle has been deactivated."""
+        self._require(name)
+        binding = self._plugins.pop(name)
+        self._disabled.discard(name)
+        return binding
+
     def enable(self, name: str) -> None:
         self._require(name)
         self._disabled.discard(name)

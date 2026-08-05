@@ -26,13 +26,21 @@ codeforge hardware discover validator
 codeforge hardware validate validator
 codeforge hardware approve validator
 codeforge hardware install validator
-codeforge hardware activate validator
 codeforge hardware list
 ```
 
 Activation is never implied by discovery, approval, or installation. R&D experiments and
 unregistered source cannot enter this registry automatically. Rollback preserves the lifecycle
 history and returns the component to its previous state where the transition is safe.
+
+Runtime activation is a separate governed operation. The Master Client, Creator Workshop, or
+another authenticated Seed Runtime caller must provide a Seed-scoped permission, a one-time
+approval for the exact component version, and an explicitly registered trusted provider. The
+provider returns an already-constructed runtime object, which is registered in the shared
+`PluginRegistry`; the Hardware record becomes `active` only after that binding succeeds. The CLI
+therefore refuses `hardware activate` rather than marking a component active without a runtime
+binding. Disable and removal disconnect the live binding and preserve the durable Hardware Card
+and lifecycle history.
 
 The current registry is file-backed for local development and controlled deployments. Set
 `CODEFORGE_HARDWARE_REGISTRY` to place it in the deployment data directory. A future database

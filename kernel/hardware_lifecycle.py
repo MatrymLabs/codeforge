@@ -196,6 +196,40 @@ class HardwareRegistry:
         )
         return updated
 
+    def unregister_consumer(self, component_id: str, consumer: str) -> HardwareRecord:
+        """Remove one Seed's consumer claim without deleting shared component evidence.
+
+        Consumer removal is allowed only after the component is disabled in this registry. The
+        component record remains durable so another Seed's registry and the Hardware Store history
+        are not damaged by one Seed leaving or deactivating the component.
+        """
+        record = self.get(component_id)
+        if record is None:
+            raise HardwareLifecycleError(f"component {component_id!r} is not discovered")
+        if record.state != "disabled":
+            raise HardwareLifecycleError("consumer removal requires a disabled component")
+        label = consumer.strip()
+        if not label:
+            raise HardwareLifecycleError("consumer must not be empty")
+        if label not in record.consumers:
+            raise HardwareLifecycleError(
+                f"consumer {label!r} is not registered for {component_id!r}"
+            )
+        updated = HardwareRecord(
+            component_id=record.component_id,
+            version=record.version,
+            state=record.state,
+            source=record.source,
+            license=record.license,
+            provenance=record.provenance,
+            consumers=tuple(item for item in record.consumers if item != label),
+            history=record.history,
+        )
+        self._write(
+            tuple(item for item in self.all() if item.component_id != component_id) + (updated,)
+        )
+        return updated
+
     def rollback(self, component_id: str) -> HardwareRecord:
         """Move a component to its prior safe state, retaining rollback evidence."""
         record = self.get(component_id)
@@ -205,6 +239,30 @@ class HardwareRegistry:
         if target not in _TRANSITIONS.get(record.state, set()):
             raise HardwareLifecycleError(f"cannot roll back {component_id!r} from {record.state}")
         return self.transition(component_id, target)
+
+    def update_version(self, component_id: str, version: str) -> HardwareRecord:
+        """Persist a component version change without changing its lifecycle state."""
+        record = self.get(component_id)
+        if record is None:
+            raise HardwareLifecycleError(f"component {component_id!r} is not discovered")
+        if not version.strip():
+            raise HardwareLifecycleError("component version must not be empty")
+        if version == record.version:
+            return record
+        updated = HardwareRecord(
+            component_id=record.component_id,
+            version=version,
+            state=record.state,
+            source=record.source,
+            license=record.license,
+            provenance=record.provenance,
+            consumers=record.consumers,
+            history=record.history,
+        )
+        self._write(
+            tuple(item for item in self.all() if item.component_id != component_id) + (updated,)
+        )
+        return updated
 
     def _write(self, records: tuple[HardwareRecord, ...]) -> None:
         """Atomically persist the registry; source files are never modified."""

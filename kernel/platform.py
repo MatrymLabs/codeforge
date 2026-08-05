@@ -8,7 +8,7 @@ and Creator Workshop in one ordered operation before a driver is imported.
 from __future__ import annotations
 
 import os
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 
 from kernel.seed_selection import SeedSelection
@@ -33,6 +33,7 @@ class PlatformStartup:
 
     selection: SeedSelection
     components: tuple[ComponentStatus, ...]
+    hardware_runtime: object | None = field(default=None, repr=False, compare=False)
 
     def status(self, name: str) -> ComponentStatus:
         """Return one component status by canonical name."""
@@ -83,6 +84,7 @@ def bootstrap_platform(*, seed: str, selection_source: str) -> PlatformStartup:
     from kernel.shelf.config import Settings
 
     components: list[ComponentStatus] = []
+    hardware_runtime = None
     try:
         settings = Settings.load()
     except Exception as exc:
@@ -117,6 +119,27 @@ def bootstrap_platform(*, seed: str, selection_source: str) -> PlatformStartup:
     components.append(
         ComponentStatus(
             "hardware-store", "initialized", f"validated {len(catalog)} catalog entries"
+        )
+    )
+
+    try:
+        from kernel.hardware_lifecycle import HardwareRegistry, default_registry_path
+        from kernel.hardware_runtime import HardwareRuntimeController
+        from kernel.shelf.plugin_registry import PluginRegistry
+
+        hardware_runtime = HardwareRuntimeController(
+            HardwareRegistry(default_registry_path()),
+            PluginRegistry(),
+            seed_id=seed,
+            consumer=seed,
+        )
+    except Exception as exc:
+        raise PlatformStartupError(f"Hardware runtime initialization failed: {exc}") from exc
+    components.append(
+        ComponentStatus(
+            "hardware-runtime",
+            "ready",
+            "explicit trusted providers required; no components auto-activated",
         )
     )
 
@@ -192,6 +215,7 @@ def bootstrap_platform(*, seed: str, selection_source: str) -> PlatformStartup:
     return PlatformStartup(
         selection=SeedSelection(seed_id=seed, source=selection_source),
         components=tuple(components),
+        hardware_runtime=hardware_runtime,
     )
 
 
@@ -199,7 +223,10 @@ def current_platform_status() -> PlatformStartup:
     """Project the already-loaded runtime without starting or mutating services."""
     validate_startup_schema()
     from kernel.hardware import load_catalog
+    from kernel.hardware_lifecycle import HardwareRegistry, default_registry_path
+    from kernel.hardware_runtime import HardwareRuntimeController
     from kernel.seedlab.audit import audit_seedlab_modules
+    from kernel.shelf.plugin_registry import PluginRegistry
     from kernel.world import creator_workshop
     from kernel.world.seed import SEED_NAME
     from kernel.world.world import WORLD
@@ -214,6 +241,11 @@ def current_platform_status() -> PlatformStartup:
                 "hardware-store", "available", f"validated {len(load_catalog())} catalog entries"
             ),
             ComponentStatus(
+                "hardware-runtime",
+                "ready",
+                "explicit trusted providers required; no components auto-activated",
+            ),
+            ComponentStatus(
                 "rnd", "isolated", f"audited {len(audit_seedlab_modules().entries)} SeedLab modules"
             ),
             ComponentStatus("engine", "initialized", f"loaded {len(WORLD)} runtime rooms"),
@@ -224,5 +256,11 @@ def current_platform_status() -> PlatformStartup:
                 f"installed {len(creator_workshop.WORKSHOP_ROOMS)} protected workshop rooms",
             ),
             ComponentStatus("creator-console", "available", "external operations API is available"),
+        ),
+        hardware_runtime=HardwareRuntimeController(
+            HardwareRegistry(default_registry_path()),
+            PluginRegistry(),
+            seed_id=SEED_NAME,
+            consumer=SEED_NAME,
         ),
     )
