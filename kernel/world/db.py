@@ -18,7 +18,7 @@ transfers straight to PostgreSQL when the world outgrows one file.
 import os
 from pathlib import Path
 
-from sqlalchemy import Engine, ForeignKey, LargeBinary, create_engine
+from sqlalchemy import CheckConstraint, Engine, ForeignKey, LargeBinary, Text, create_engine
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from sqlalchemy.orm import Session as SqlSession
 
@@ -124,6 +124,37 @@ class OutboxRow(ArchiveBase):
     status: Mapped[str] = mapped_column(default="pending", index=True)
     attempts: Mapped[int] = mapped_column(default=0)
     created_at: Mapped[float] = mapped_column(default=0.0)
+
+
+class SeedRegistryRow(ArchiveBase):
+    """The relational projection of one generic Seed identity and lifecycle record.
+
+    The Seed Kernel remains the domain owner; this row is a durable SQL-backed implementation of
+    its existing ``SeedStore`` protocol. JSON is limited to the versioned audit trail and selected
+    domain-module names so the registry keeps typed identity/lifecycle fields without inventing a
+    second generic entity store.
+    """
+
+    __tablename__ = "seed_registry"
+    __table_args__ = (
+        CheckConstraint(
+            "status IN ('created', 'running', 'stopped', 'archived')",
+            name="ck_seed_registry_status",
+        ),
+    )
+
+    seed_id: Mapped[str] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column()
+    owner: Mapped[str] = mapped_column(index=True)
+    purpose: Mapped[str] = mapped_column(default="")
+    version: Mapped[str] = mapped_column(default="0.1.0")
+    created_at: Mapped[str] = mapped_column(default="")
+    product_type: Mapped[str] = mapped_column(default="")
+    domain_modules: Mapped[str] = mapped_column(Text(), default="[]")
+    status: Mapped[str] = mapped_column(default="created", index=True)
+    started_at: Mapped[str] = mapped_column(default="")
+    stopped_at: Mapped[str] = mapped_column(default="")
+    audit: Mapped[str] = mapped_column(Text(), default="[]")
 
 
 class GuildRow(ArchiveBase):

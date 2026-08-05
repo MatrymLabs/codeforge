@@ -9,7 +9,13 @@ of the engine never sees SQL. Two backends live behind that seam:
 | **PostgreSQL** | production-shaped runs | `DATABASE_URL=postgresql+psycopg://...` | **Alembic migrations** (`migrations/`) |
 
 `engine_url()` chooses: `DATABASE_URL` wins; otherwise a SQLite file at `DB_PATH`. The same
-typed models (`CharacterRow`, `AccountRow`) run on both.
+typed models (`CharacterRow`, `AccountRow`, and the platform `SeedRegistryRow`) run on both. The
+generic Seed Kernel still defaults to its existing file-backed store for compatibility with local
+`.seedlab` homes; `kernel.seedlab.sql_store.SqlSeedStore` provides the SQL-backed implementation of
+the same `SeedStore` protocol for hosted or production-shaped wiring.
+
+The SQL Seed registry owns identity and lifecycle projection only. Runtime content remains owned by
+the manifest-backed Seed loader, and the Master Client still reaches both through service APIs.
 
 ## Run against PostgreSQL locally
 

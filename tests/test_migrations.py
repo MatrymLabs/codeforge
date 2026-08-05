@@ -58,6 +58,7 @@ def test_each_migration_steps_down_one_revision_at_a_time(monkeypatch, tmp_path)
     monkeypatch.setattr(db, "DB_PATH", target)
 
     command.upgrade(_config(), "head")
-    for _ in range(20):  # twenty filed revisions, twenty individual steps
+    revision_count = len(list((_REPO / "migrations" / "versions").glob("*.py")))
+    for _ in range(revision_count):  # one individual downgrade for every filed revision
         command.downgrade(_config(), "-1")
     assert not ({"characters", "accounts", "job_progress"} & _tables(target))
