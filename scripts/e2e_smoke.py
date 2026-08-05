@@ -21,6 +21,7 @@ Run: `make smoke` (or `python3 scripts/e2e_smoke.py`). Exit 0 == every step pass
 from __future__ import annotations
 
 import os
+import selectors
 import socket
 import subprocess
 import sys
@@ -42,6 +43,35 @@ IAC_WILL_ECHO = bytes([255, 251, 1])  # telnet negotiation before a password pro
 PROMPT = b"\n> "
 
 results: list[tuple[str, bool, float, str]] = []
+
+
+def wait_for_server(server: subprocess.Popen[bytes], timeout: float, name: str) -> None:
+    """Wait for a child gateway and preserve its diagnostics when boot fails."""
+    assert server.stdout is not None
+    selector = selectors.DefaultSelector()
+    selector.register(server.stdout, selectors.EVENT_READ)
+    output: list[str] = []
+    deadline = time.monotonic() + timeout
+    try:
+        while time.monotonic() < deadline:
+            if server.poll() is not None:
+                detail = "".join(output).strip() or "no child output"
+                raise SystemExit(f"{name} exited during boot (code {server.returncode}): {detail}")
+            ready = selector.select(min(0.5, max(0.0, deadline - time.monotonic())))
+            if not ready:
+                continue
+            line = server.stdout.readline().decode(errors="replace")
+            if not line:
+                continue
+            output.append(line)
+            # The gateway's structured lifecycle event is authoritative; retain the
+            # human-readable phrase for older/alternate gateway implementations.
+            if "gateway_start" in line.lower() or "listening on" in line.lower():
+                return
+    finally:
+        selector.close()
+    detail = "".join(output).strip() or "no child output"
+    raise SystemExit(f"{name} did not report readiness within {timeout:g}s: {detail}")
 
 
 def _recv_until(sock: socket.socket, marker: bytes, timeout: float = 6.0) -> str:
@@ -167,13 +197,7 @@ def aethryn_journey() -> None:
         stderr=subprocess.STDOUT,
     )
     try:
-        assert server.stdout is not None
-        boot = time.monotonic()
-        while time.monotonic() - boot < 30:  # the flagship seed is larger; allow more boot time
-            if server.poll() is not None:
-                raise SystemExit("aethryn server exited during boot")
-            if "listening on" in server.stdout.readline().decode(errors="ignore"):
-                break
+        wait_for_server(server, 30, "aethryn server")
         results.append(("AETHRYN boot (flagship seed)", True, (time.monotonic() - t0) * 1000, ""))
 
         s = connect(AETHRYN_PORT)
@@ -237,13 +261,7 @@ def multiplayer_journey() -> None:
         stderr=subprocess.STDOUT,
     )
     try:
-        assert server.stdout is not None
-        boot = time.monotonic()
-        while time.monotonic() - boot < 20:
-            if server.poll() is not None:
-                raise SystemExit("multiplayer server exited during boot")
-            if "listening on" in server.stdout.readline().decode(errors="ignore"):
-                break
+        wait_for_server(server, 20, "multiplayer server")
         results.append(("MULTIPLAYER boot (isolated)", True, (time.monotonic() - t0) * 1000, ""))
 
         alia = connect(MULTIPLAYER_PORT)
@@ -334,13 +352,7 @@ def spine_journey() -> None:
         stderr=subprocess.STDOUT,
     )
     try:
-        assert server.stdout is not None
-        boot = time.monotonic()
-        while time.monotonic() - boot < 30:  # the flagship seed is larger; allow more boot time
-            if server.poll() is not None:
-                raise SystemExit("spine server exited during boot")
-            if "listening on" in server.stdout.readline().decode(errors="ignore"):
-                break
+        wait_for_server(server, 30, "spine server")
         results.append(("SPINE boot (flagship seed)", True, (time.monotonic() - t0) * 1000, ""))
 
         # Register the wayfarer, then provision coins for every fare from the host shell (the same
@@ -417,15 +429,7 @@ def main() -> int:
         stderr=subprocess.STDOUT,
     )
     try:
-        # wait for "listening"
-        assert server.stdout is not None
-        boot = time.monotonic()
-        while time.monotonic() - boot < 20:
-            if server.poll() is not None:
-                raise SystemExit("server exited during boot")
-            line = server.stdout.readline().decode(errors="ignore")
-            if "listening on" in line:
-                break
+        wait_for_server(server, 20, "server")
         results.append(
             ("START RITUAL: forge lights (isolated)", True, (time.monotonic() - t0) * 1000, "")
         )

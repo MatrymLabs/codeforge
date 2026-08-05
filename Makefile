@@ -5,6 +5,7 @@
 # 85s -> 4s) and falls back to plain venv+pip, so bootstrap never hard-requires uv.
 # With uv, `sync` installs the exact pinned graph from uv.lock (reproducible builds);
 # the pip fallback still resolves fresh -- best-effort without the resolver. ---
+PYTHON ?= $(if $(wildcard .venv/bin/python),.venv/bin/python,python3)
 PYTEST_BIN ?= $(if $(wildcard .venv/bin/pytest),.venv/bin/pytest,pytest)
 
 env: hooks
@@ -192,7 +193,7 @@ truth:
 # -> look -> check -> do -> log out -> bank the forge. Isolated (own port + temp
 # DB) and timed. Exit 0 == every live step passed. ---
 smoke:
-	@python3 scripts/e2e_smoke.py
+	@$(PYTHON) scripts/e2e_smoke.py
 
 # Blueprint Evolution Lab: run the demo bake-off and file evidence to reports/evolution/.
 # The authorized execution path (the MUD `evolution` command is read-only). Nothing is promoted.
