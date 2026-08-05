@@ -145,8 +145,15 @@ def workspace_command(
 
     if sub in ("list", "ls"):
         from kernel.seedlab.reference_seed import ensure_reference_seed, is_reference_seed
+        from kernel.seedlab.runtime_bridge import bind_reference_seed
 
         ensure_reference_seed(kernel)  # the flagship game is one kind of Seed; it always appears
+        # Keep the engineering registry and the shipped game package honest: listing the reference
+        # Seed verifies the same manifest that product startup will load.
+        try:
+            bind_reference_seed(kernel)
+        except ValueError as exc:
+            return f"workspace: Aethryn runtime binding failed: {exc}"
         lines = ["== Workspaces (engineering Seeds; the game is the reference Seed) =="]
         lines += [
             f"  {r.identity.seed_id}  {r.status.upper():8}  {r.identity.name}"

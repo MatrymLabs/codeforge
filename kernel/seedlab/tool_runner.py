@@ -25,6 +25,7 @@ from __future__ import annotations
 import json
 import re
 import subprocess  # nosec B404
+import sys
 import time
 from collections.abc import Callable
 from dataclasses import asdict, dataclass, field
@@ -127,9 +128,15 @@ def run_tool(
     """Run one approved command inside `source`, bounded and captured. Refuses an unlisted profile;
     returns a ToolRunResult (never raises on a failing command -- a non-zero exit IS the result)."""
     table = allowlist if allowlist is not None else DEFAULT_PROFILE
-    argv = table.get(profile)
-    if argv is None:
+    configured_argv = table.get(profile)
+    if configured_argv is None:
         raise CommandRefused(f"{profile!r} is not an approved command profile")
+    # The profile is portable by contract, but `python` may resolve to a system interpreter that
+    # lacks CodeForge's installed test tools. Keep the allowlist fixed while binding its interpreter
+    # to the current runtime environment.
+    argv = list(configured_argv)
+    if argv and argv[0] == "python":
+        argv[0] = sys.executable
     root = Path(source.root)  # the connector already resolved + bounded this
     started = time.monotonic()
     try:

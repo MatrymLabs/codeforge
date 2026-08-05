@@ -304,10 +304,9 @@ def live_activity(session: Session) -> str:
 
 
 # --- The change buffer + the first MUTATING tool -------------------------------------------------
-# The Creator Experience's LIVE PREVIEW loop, live-only by design (Josh's keel call): the owner
-# STAGES edits into a per-session buffer, PREVIEWS them, then PUBLISHES them to the LIVE world, or
-# ROLLS them back. Publish writes to the in-memory world only, never to the seed files, so a change
-# is reversible and vanishes on restart (persistence to the seed is a separate, later decision).
+# The Creator Experience's LIVE PREVIEW loop: the owner STAGES edits into a per-session buffer,
+# PREVIEWS them, then PUBLISHES them to the LIVE world, or ROLLS them back. Publication writes a
+# durable, validated overlay rather than modifying shipped Seed files; drafts remain ephemeral.
 # This keeps Architecture Law 1 intact: a staged change is inert data; the ONE validated apply-path
 # (`_apply`) is the only thing that mutates canonical state, and only at the owner's explicit
 # `publish`. Each editable KIND (create_npc, create_item, ...) is one station tool + one apply-path.
@@ -450,8 +449,8 @@ def publish_changes(session: Session) -> str:
     """Apply every staged change to the LIVE world, then clear the draft. Publishing Portal only.
 
     This is the single sanctioned mutation point: each staged change flows through `_apply`, the one
-    validated apply-path, so canonical state changes only here and only at the owner's word. Writes
-    the in-memory world only (live-only); nothing touches the seed files."""
+    validated apply-path, so canonical state changes only here and only at the owner's word. The
+    resulting overlay is durable, while the shipped Seed files remain immutable."""
     if not is_seed_owner(session):
         return "There is nothing to publish here."
     if session.location != PUBLISHING_PORTAL:
@@ -460,6 +459,7 @@ def publish_changes(session: Session) -> str:
     if not draft:
         return "Nothing is staged to publish."
     applied = [_apply(change) for change in draft]
+    _persist_published(draft)
     _DRAFTS[session.player_id] = []
     return "Published to the living world:\n" + "\n".join(f"  - {line}" for line in applied)
 
@@ -485,6 +485,44 @@ def _apply(change: StagedChange) -> str:
     if change.kind == "create_item":
         return _apply_create_item(change.payload)
     raise WorkshopError(f"unknown staged change kind: {change.kind!r}")
+
+
+def _seed_id() -> str:
+    from kernel.world.seed import SEED_NAME
+
+    return SEED_NAME
+
+
+def _persist_published(changes: list[StagedChange]) -> None:
+    from kernel.world.workshop_state import load_changes, save_changes
+
+    existing = load_changes(_seed_id())
+    existing.extend({"kind": change.kind, "payload": dict(change.payload)} for change in changes)
+    save_changes(_seed_id(), existing)
+
+
+def restore_published_changes() -> int:
+    """Replay the durable overlay once during world assembly."""
+    from kernel.world.workshop_state import WorkshopStateError, load_changes
+
+    changes = load_changes(_seed_id())
+    for raw in changes:
+        payload = raw["payload"]
+        from kernel.world.world import WORLD
+
+        if payload["room"] not in WORLD:
+            raise WorkshopStateError(
+                f"published Workshop change targets unknown room {payload['room']!r}"
+            )
+        _apply(StagedChange(raw["kind"], "restored Workshop publication", raw["payload"]))
+    return len(changes)
+
+
+def clear_published_state() -> None:
+    """Remove only the current Seed's overlay; intended for isolated tests and recovery."""
+    from kernel.world.workshop_state import clear_changes
+
+    clear_changes(_seed_id())
 
 
 def _apply_create_item(payload: dict[str, str]) -> str:

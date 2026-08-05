@@ -7,11 +7,11 @@ registry is thread-safe-shaped and resettable.
 """
 
 import pytest
-from fastapi.testclient import TestClient
 
 from adapters.api import app
 from kernel.shelf.observability import METRICS, Metrics, configure_logging, get_logger
 from kernel.shelf.trace import parse_traceparent, start_trace
+from tests.sync_test_client import TestClient
 
 
 @pytest.fixture(autouse=True)

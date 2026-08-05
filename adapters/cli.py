@@ -587,7 +587,10 @@ def main(argv: list[str] | None = None) -> int:
             return 2
         os.environ["FORGE_SEED"] = selection.seed_id
 
-        if cmd in {"serve", "play", "api", "web", "onboard"}:
+        # `onboard` is a focused workflow utility and must remain callable after a library client
+        # has already imported its historical world. Serving, play, API, and web are the product
+        # startup surfaces that require the authoritative platform bootstrap.
+        if cmd in {"serve", "play", "api", "web"}:
             try:
                 _bootstrap_platform(selection.seed_id, selection.source)
             except Exception as exc:

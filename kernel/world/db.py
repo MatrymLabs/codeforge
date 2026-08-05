@@ -18,7 +18,7 @@ transfers straight to PostgreSQL when the world outgrows one file.
 import os
 from pathlib import Path
 
-from sqlalchemy import Engine, ForeignKey, create_engine
+from sqlalchemy import Engine, ForeignKey, LargeBinary, create_engine
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from sqlalchemy.orm import Session as SqlSession
 
@@ -111,6 +111,19 @@ class AccountRow(ArchiveBase):
     name: Mapped[str] = mapped_column(primary_key=True)
     auth_salt: Mapped[str] = mapped_column()
     auth_hash: Mapped[str] = mapped_column()
+
+
+class OutboxRow(ArchiveBase):
+    """Durable message staged with a state change and drained by the world-beat relay."""
+
+    __tablename__ = "outbox"
+
+    id: Mapped[str] = mapped_column(primary_key=True)
+    topic: Mapped[str] = mapped_column(index=True)
+    payload: Mapped[bytes] = mapped_column(LargeBinary())
+    status: Mapped[str] = mapped_column(default="pending", index=True)
+    attempts: Mapped[int] = mapped_column(default=0)
+    created_at: Mapped[float] = mapped_column(default=0.0)
 
 
 class GuildRow(ArchiveBase):

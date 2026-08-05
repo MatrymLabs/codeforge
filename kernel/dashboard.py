@@ -342,32 +342,32 @@ router = APIRouter()
 
 
 @router.get("/", response_class=HTMLResponse)
-def dashboard_page() -> str:
+async def dashboard_page() -> str:
     """The portfolio landing page: the readiness board, server-rendered."""
     return render_page(build_snapshot())
 
 
 @router.get("/api/status", response_model=StatusPayload)
-def dashboard_status() -> StatusPayload:
+async def dashboard_status() -> StatusPayload:
     """The read-only, typed JSON twin -- the seam a React/TypeScript front end would consume.
     Typed with StatusPayload, so the contract is documented in OpenAPI at /docs."""
     return status_payload(build_snapshot())
 
 
 @router.get("/static/htmx.min.js")
-def htmx_asset() -> Response:
+async def htmx_asset() -> Response:
     """The vendored HTMX library, served same-origin (no runtime CDN dependency)."""
     return Response(_HTMX_JS, media_type="text/javascript")
 
 
 @router.get("/ui/board", response_class=HTMLResponse)
-def ui_board() -> str:
+async def ui_board() -> str:
     """The board fragment: HTMX swaps this in for a live refresh, no page reload."""
     return render_board(build_snapshot())
 
 
 @router.get("/ui/blueprint/{blueprint_id}", response_class=HTMLResponse)
-def ui_blueprint(blueprint_id: str) -> str:
+async def ui_blueprint(blueprint_id: str) -> str:
     """A Blueprint rendered as an HTML fragment, for in-page HTMX rendering. The id is matched
     against filed blueprints (never used to open a path), so there is no traversal risk."""
     from kernel.blueprint import load_all

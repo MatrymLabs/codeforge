@@ -141,6 +141,12 @@ register_prototypes(install_authored_towns(WORLD, NPCS))
 # canonical rooms pass the same gates as authored ones.
 install_workshop(WORLD)
 
+# Reapply only the owner's explicitly published Workshop overlay. The shipped Seed package remains
+# immutable and the overlay is validated before it reaches the canonical runtime maps.
+from kernel.world.creator_workshop import restore_published_changes  # noqa: E402
+
+restore_published_changes()
+
 inspect_world_links(WORLD, ITEMS, NPCS)
 
 # With the full foe set assembled (seed + the procedural Spiral), generate a hunt-contract for
@@ -162,6 +168,13 @@ register_bounties(NPCS)
 from kernel.world.auction import register_sweep as _register_auction_sweep  # noqa: E402
 
 _register_auction_sweep()
+
+# Drain durable application events on the same deterministic beat as the rest of the world. The
+# relay publishes through the configured message bus, so local and broker-backed worlds share one
+# wiring point without introducing a background worker.
+from kernel.world.outbox_relay import register as _register_outbox_relay  # noqa: E402
+
+_register_outbox_relay()
 
 # The Waystone travel network: the seed's zone hubs a player may pay to cross between
 # (kernel.world.travel). {} when the seed ships no network (first-forge/spiral-ascent).

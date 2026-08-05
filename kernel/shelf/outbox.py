@@ -17,6 +17,7 @@ from __future__ import annotations
 
 from collections.abc import Callable
 from dataclasses import dataclass
+from typing import Any
 
 PENDING = "pending"
 SENT = "sent"
@@ -125,6 +126,157 @@ class Outbox:
         for record in self._records.values():
             out[record.status] += 1
         return out
+
+
+class SqlOutbox:
+    """SQL-backed outbox for production state changes.
+
+    ``stage_in`` accepts a caller-owned SQLAlchemy session so the event row can
+    commit atomically with the business mutation. ``stage`` is the convenient
+    standalone form for callers that have no surrounding transaction.
+    """
+
+    def stage(self, topic: str, payload: bytes, *, session: Any = None) -> OutboxRecord:
+        from kernel.world.db import OutboxRow, open_archive_session
+
+        if not isinstance(topic, str) or not topic.strip():
+            raise OutboxError("topic must be a non-empty string")
+        if not isinstance(payload, (bytes, bytearray)):
+            raise OutboxError("payload must be bytes")
+        import secrets
+        import time
+
+        record = OutboxRecord(
+            id=f"obx-{secrets.token_hex(12)}",
+            topic=topic,
+            payload=bytes(payload),
+            created_at=time.time(),
+        )
+        owns_session = session is None
+        db = session or open_archive_session()
+        db.add(
+            OutboxRow(
+                id=record.id,
+                topic=record.topic,
+                payload=record.payload,
+                status=record.status,
+                attempts=record.attempts,
+                created_at=record.created_at,
+            )
+        )
+        if owns_session:
+            db.commit()
+            db.close()
+        return record
+
+    def unsent(self, *, session: Any = None) -> list[OutboxRecord]:
+        from kernel.world.db import OutboxRow, open_archive_session
+
+        owns_session = session is None
+        db = session or open_archive_session()
+        rows = (
+            db.query(OutboxRow)
+            .filter(OutboxRow.status == PENDING)
+            .order_by(OutboxRow.created_at, OutboxRow.id)
+            .all()
+        )
+        if owns_session:
+            db.close()
+        return [
+            OutboxRecord(r.id, r.topic, bytes(r.payload), r.status, r.attempts, r.created_at)
+            for r in rows
+        ]
+
+    def mark_sent(self, record_id: str) -> None:
+        from kernel.world.db import OutboxRow, open_archive_session
+
+        with open_archive_session() as db:
+            row = db.get(OutboxRow, record_id)
+            if row is None:
+                raise OutboxError(f"unknown outbox record: {record_id!r}")
+            if row.status == DEAD:
+                raise OutboxError(f"cannot mark a dead record sent: {record_id!r}")
+            row.status = SENT
+            db.commit()
+
+    def mark_failed(self, record_id: str, *, max_attempts: int) -> str:
+        from kernel.world.db import OutboxRow, open_archive_session
+
+        if not isinstance(max_attempts, int) or max_attempts <= 0:
+            raise OutboxError("max_attempts must be a positive int")
+        with open_archive_session() as db:
+            row = db.get(OutboxRow, record_id)
+            if row is None:
+                raise OutboxError(f"unknown outbox record: {record_id!r}")
+            if row.status != PENDING:
+                return row.status
+            row.attempts += 1
+            if row.attempts >= max_attempts:
+                row.status = DEAD
+            db.commit()
+            return row.status
+
+    def counts(self) -> dict[str, int]:
+        from kernel.world.db import OutboxRow, open_archive_session
+
+        with open_archive_session() as db:
+            rows = db.query(OutboxRow.status).all()
+        counts = {PENDING: 0, SENT: 0, DEAD: 0}
+        for (status,) in rows:
+            counts[status] = counts.get(status, 0) + 1
+        return counts
+
+
+def sql_relay(
+    outbox: SqlOutbox,
+    publish: Publish,
+    *,
+    batch: int = 100,
+    max_attempts: int = 5,
+) -> RelaySummary:
+    """Relay durable rows using the same at-least-once contract as the reference store."""
+
+    if not isinstance(batch, int) or batch <= 0:
+        raise OutboxError("batch must be a positive int")
+    summary = RelaySummary()
+    for record in outbox.unsent()[:batch]:
+        try:
+            publish(record)
+        except Exception:  # noqa: BLE001 - failed delivery is retriable data
+            status = outbox.mark_failed(record.id, max_attempts=max_attempts)
+            if status == DEAD:
+                summary.dead += 1
+            else:
+                summary.failed += 1
+        else:
+            outbox.mark_sent(record.id)
+            summary.sent += 1
+    return summary
+
+
+def schedule_sql_relay(
+    outbox: SqlOutbox,
+    publish: Publish,
+    *,
+    every_beats: int = 1,
+    batch: int = 100,
+    max_attempts: int = 5,
+) -> None:
+    """Attach a durable relay to the canonical world beat.
+
+    The scheduler remains the only clock in the engine; no background worker is
+    introduced. A caller wires the process's bus publisher once at startup.
+    """
+
+    if not isinstance(every_beats, int) or every_beats <= 0:
+        raise OutboxError("every_beats must be a positive int")
+    from kernel.world import climate, scheduler
+
+    scheduler.schedule(
+        climate.now() + every_beats,
+        lambda: sql_relay(outbox, publish, batch=batch, max_attempts=max_attempts),
+        every=every_beats,
+    )
 
 
 def relay(

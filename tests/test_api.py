@@ -1,13 +1,13 @@
 """Test twin for adapters/api.py -- the HTTP window, via TestClient."""
 
 import pytest
-from fastapi.testclient import TestClient
 
-from adapters.api import app, get_login_guard
+from adapters.api import _get_login_guard, app
 from kernel.login_guard import LoginGuard
 from kernel.world.accounts import adopt, register
 from kernel.world.characters import save_character, set_rank
 from kernel.world.session import SESSIONS, Session
+from tests.sync_test_client import TestClient
 
 
 @pytest.fixture(autouse=True)
@@ -22,7 +22,11 @@ def fresh_login_guard():
     # One throttle instance per test (shared across that test's requests), so the 5-attempt burst
     # is real within a test but never leaks across tests.
     guard = LoginGuard()
-    app.dependency_overrides[get_login_guard] = lambda: guard
+
+    async def override_guard() -> LoginGuard:
+        return guard
+
+    app.dependency_overrides[_get_login_guard] = override_guard
     yield
     app.dependency_overrides.clear()
 

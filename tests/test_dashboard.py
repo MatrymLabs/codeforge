@@ -6,7 +6,6 @@ that will not load renders an honest red card, never a 500; hostile card text is
 """
 
 import pytest
-from fastapi.testclient import TestClient
 
 from adapters.api import app
 from kernel.career import load_board, unproven_claims
@@ -18,6 +17,7 @@ from kernel.dashboard import (
     status_payload,
 )
 from kernel.hardware import load_catalog
+from tests.sync_test_client import TestClient
 
 # --- the snapshot: real data, right shape -----------------------------------
 

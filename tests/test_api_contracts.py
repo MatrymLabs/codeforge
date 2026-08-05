@@ -8,10 +8,10 @@ reader).
 """
 
 import pytest
-from fastapi.testclient import TestClient
 
 from adapters.api import app
 from kernel.shelf.contract import Contract, ContractRegistry, Field, verify_all
+from tests.sync_test_client import TestClient
 
 # The shapes the Master Client depends on (declared by the consumer, verified by the provider).
 BLUEPRINT_ITEM = Contract(

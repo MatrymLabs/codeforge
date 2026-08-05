@@ -18,7 +18,7 @@ from __future__ import annotations
 import time
 from collections import defaultdict
 from threading import Lock
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 import structlog
 from fastapi.responses import Response
@@ -26,7 +26,8 @@ from fastapi.responses import Response
 from kernel.shelf import trace as trace_ctx
 
 if TYPE_CHECKING:
-    from fastapi import FastAPI, Request
+    from fastapi import FastAPI
+    from starlette.types import Receive, Scope, Send
 
 # Prometheus text exposition wants this exact content type.
 _PROM_CONTENT_TYPE = "text/plain; version=0.0.4; charset=utf-8"
@@ -115,40 +116,64 @@ def _labels(method: str, route: str, status: str) -> str:
 METRICS = Metrics()
 
 
-def install_observability(app: FastAPI) -> None:
-    """Wire structured request logging + the /metrics endpoint onto a FastAPI app."""
-    configure_logging()
-    log = get_logger("codeforge.http")
+class ObservabilityMiddleware:
+    """Pure ASGI request observer.
 
-    @app.middleware("http")
-    async def _observe(request: Request, call_next):
-        # Continue an inbound trace (client -> gateway) or mint a fresh one, so this
-        # request's log correlates end to end. A malformed header never breaks a request.
-        inbound = request.headers.get("traceparent")
+    This deliberately avoids Starlette's ``BaseHTTPMiddleware``. Besides reducing one task-group
+    boundary, the pure ASGI form remains usable by synchronous and asynchronous test transports
+    in constrained environments where cross-task response streaming can otherwise wait forever.
+    """
+
+    def __init__(self, app: Any) -> None:
+        self.app = app
+        self.log = get_logger("codeforge.http")
+
+    async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
+        if scope["type"] != "http":
+            await self.app(scope, receive, send)
+            return
+        inbound = next((v for k, v in scope.get("headers", []) if k == b"traceparent"), None)
+        inbound_text = inbound.decode("latin-1") if inbound else None
         try:
-            span = trace_ctx.continue_trace(inbound) if inbound else trace_ctx.start_trace()
+            span = (
+                trace_ctx.continue_trace(inbound_text) if inbound_text else trace_ctx.start_trace()
+            )
         except trace_ctx.TraceError:
             span = trace_ctx.start_trace()
         start = time.perf_counter()
+        status = 500
+
+        async def observed_send(message: dict[str, Any]) -> None:
+            nonlocal status
+            if message["type"] == "http.response.start":
+                status = int(message["status"])
+                headers = list(message.get("headers", []))
+                headers.append((b"traceparent", span.traceparent().encode("ascii")))
+                message = {**message, "headers": headers}
+            await send(message)
+
         with trace_ctx.use_trace(span):
-            response = await call_next(request)
+            await self.app(scope, receive, observed_send)
         elapsed = time.perf_counter() - start
-        # The matched route template keeps metric cardinality bounded (not the raw path).
-        route = getattr(request.scope.get("route"), "path", request.url.path)
-        METRICS.observe(request.method, route, response.status_code, elapsed)
-        log.info(
+        raw_route = getattr(scope.get("route"), "path", scope.get("path", ""))
+        route = raw_route if isinstance(raw_route, str) else str(raw_route)
+        METRICS.observe(scope.get("method", ""), route, status, elapsed)
+        self.log.info(
             "http_request",
-            method=request.method,
+            method=scope.get("method", ""),
             route=route,
-            status=response.status_code,
+            status=status,
             duration_ms=round(elapsed * 1000, 2),
             **span.log_fields(),
         )
-        # Echo the trace id back so a client (or the next hop) can correlate.
-        response.headers["traceparent"] = span.traceparent()
-        return response
+
+
+def install_observability(app: FastAPI) -> None:
+    """Wire structured request logging + the /metrics endpoint onto a FastAPI app."""
+    configure_logging()
+    app.add_middleware(ObservabilityMiddleware)
 
     @app.get("/metrics")
-    def metrics() -> Response:
+    async def metrics() -> Response:
         """Prometheus metrics: request counts and latency by method, route, and status."""
         return Response(METRICS.render(), media_type=_PROM_CONTENT_TYPE)

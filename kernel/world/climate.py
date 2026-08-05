@@ -74,6 +74,12 @@ def now() -> int:
     return _beat
 
 
+def reset() -> None:
+    """Reset the runtime clock for a clean boot or an isolated test."""
+    global _beat
+    _beat = 0
+
+
 def advance() -> None:
     """Take one world beat. Called on the tick beside the zone and menace clocks."""
     global _beat

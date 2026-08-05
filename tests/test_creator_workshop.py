@@ -19,10 +19,12 @@ from kernel.world.world import WORLD, render_room
 
 
 @pytest.fixture(autouse=True)
-def fresh_sessions():
+def fresh_sessions(tmp_path, monkeypatch):
+    monkeypatch.setenv("CODEFORGE_WORKSHOP_STATE", str(tmp_path / "workshop-state.json"))
     SESSIONS.clear()
     events.SHUTDOWN["hook"] = None
     cw._DRAFTS.clear()
+    cw.clear_published_state()
     # Any NPC/item a publish adds is removed after, so the shared world stays clean.
     npc_snapshot, item_snapshot = set(NPCS), set(ITEMS)
     yield
@@ -32,6 +34,7 @@ def fresh_sessions():
         del ITEMS[label]
     reindex_npcs()
     cw._DRAFTS.clear()
+    cw.clear_published_state()
     SESSIONS.clear()
     events.SHUTDOWN["hook"] = None
 
@@ -290,6 +293,22 @@ def test_the_item_forge_creates_and_publishes_an_item():
     owner.location = cw.PUBLISHING_PORTAL
     handle_command(owner, "publish")
     assert any(ITEMS[i]["name"] == "Rusty Lantern" for i in items_in(f"room:{room}"))
+
+
+def test_published_workshop_change_is_durable_and_replayable(monkeypatch, tmp_path):
+    monkeypatch.setenv("CODEFORGE_WORKSHOP_STATE", str(tmp_path / "workshop-state.json"))
+    room = _real_room()
+    owner = _seat("root", "owner", location=cw.NPC_STUDIO)
+    handle_command(owner, f"create npc Durable Marta at {room}")
+    owner.location = cw.PUBLISHING_PORTAL
+    handle_command(owner, "publish")
+    assert (tmp_path / "workshop-state.json").is_file()
+    label = next(label for label, npc in NPCS.items() if npc["name"] == "Durable Marta")
+    del NPCS[label]
+    reindex_npcs()
+    assert not any(npc["name"] == "Durable Marta" for npc in npcs_in(room))
+    assert cw.restore_published_changes() == 1
+    assert any(NPCS[label]["name"] == "Durable Marta" for label in npcs_in(room))
 
 
 def test_creating_an_item_is_gated_to_the_item_forge():

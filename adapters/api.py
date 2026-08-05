@@ -65,10 +65,15 @@ def get_login_guard() -> LoginGuard:
     return _login_guard
 
 
-def _require_owner(
+async def _get_login_guard() -> LoginGuard:
+    """Async adapter keeps the dependency out of AnyIO's sync worker pool."""
+    return get_login_guard()
+
+
+async def _require_owner(
     request: Request,
     credentials: Annotated[HTTPBasicCredentials, Depends(_basic)],
-    guard: Annotated[LoginGuard, Depends(get_login_guard)],
+    guard: Annotated[LoginGuard, Depends(_get_login_guard)],
 ) -> str:
     """HTTP Basic: the account must exist, the password must match, and
     the account must hold an owner-ranked character. One generic 401."""
@@ -166,12 +171,12 @@ class PlatformStatusPayload(BaseModel):
 
 
 @app.get("/health")
-def health() -> dict[str, str]:
+async def health() -> dict[str, str]:
     return {"status": "alive", "engine": "codeforge"}
 
 
 @app.get("/api/platform/status", response_model=PlatformStatusPayload)
-def platform_status() -> PlatformStatusPayload:
+async def platform_status() -> PlatformStatusPayload:
     """The read-only startup/runtime contract consumed by operational clients."""
     return PlatformStatusPayload.model_validate(current_platform_status().to_dict())
 
@@ -212,7 +217,7 @@ def _seedlab_artifact_store() -> FileArtifactStore:
 
 
 @app.get("/characters", response_model=list[Hero])
-def characters() -> list[Hero]:
+async def characters() -> list[Hero]:
     """Every saved hero, straight from the canonical table."""
     with open_archive_session() as db:
         archive_rows = db.scalars(select(CharacterRow)).all()
@@ -220,7 +225,7 @@ def characters() -> list[Hero]:
 
 
 @app.get("/characters/page", response_model=CharacterPage)
-def characters_page(limit: int = 20, after: str | None = None) -> CharacterPage:
+async def characters_page(limit: int = 20, after: str | None = None) -> CharacterPage:
     """Keyset-paginated heroes (stable under concurrent inserts, O(1) deep pages).
 
     `after` is the opaque cursor from a previous page's `next_cursor`; heroes are
@@ -251,7 +256,7 @@ def characters_page(limit: int = 20, after: str | None = None) -> CharacterPage:
 
 
 @app.get("/characters/{name}", response_model=Hero)
-def character(name: str, response: Response) -> Hero:
+async def character(name: str, response: Response) -> Hero:
     """One hero by name, with an `ETag` header for optimistic-concurrency edits."""
     with open_archive_session() as db:
         row = db.scalars(select(CharacterRow).where(CharacterRow.name == name)).first()
@@ -262,7 +267,7 @@ def character(name: str, response: Response) -> Hero:
 
 
 @app.get("/world/rooms", response_model=list[Room])
-def rooms() -> list[Room]:
+async def rooms() -> list[Room]:
     """The seed-born room graph."""
     return [
         Room(label=label, name=room["name"], exits=dict(room["exits"]))
@@ -271,7 +276,7 @@ def rooms() -> list[Room]:
 
 
 @app.get("/api/seedlab/workspaces/{seed_id}")
-def seedlab_workspace(seed_id: str) -> dict[str, object]:
+async def seedlab_workspace(seed_id: str) -> dict[str, object]:
     """The structured SeedLab workspace contract a client can render."""
     kernel = _seedlab_kernel()
     try:
@@ -290,7 +295,7 @@ def seedlab_workspace(seed_id: str) -> dict[str, object]:
 
 
 @app.get("/api/blueprints", response_model=list[BlueprintSummary])
-def blueprints() -> list[BlueprintSummary]:
+async def blueprints() -> list[BlueprintSummary]:
     """Every filed Blueprint, summarized. The typed contract a front end lists from."""
     return [
         BlueprintSummary(
@@ -305,7 +310,7 @@ def blueprints() -> list[BlueprintSummary]:
 
 
 @app.post("/admin/grant")
-def grant(
+async def grant(
     body: GrantRequest,
     _account: Annotated[str, Depends(_require_owner)],
     if_match: Annotated[str | None, Header(alias="If-Match")] = None,
