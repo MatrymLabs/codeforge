@@ -1,0 +1,32 @@
+part_id: event-ledger
+name: Event Ledger
+version: "0.2"
+maturity: shipped
+purpose: >
+  Deliver governed world and Seed events through the existing publish/subscribe seam while keeping
+  audit correlation and subscriber failure isolation outside authoritative state mutation.
+source: kernel/world/events.py
+domain: eventing
+inputs: >
+  validated event payloads, room or membership scope, and an optional recipient exclusion.
+outputs: >
+  text or typed delivery to subscribed local sinks and a bus payload suitable for an injected broker.
+interfaces:
+  - announce
+  - announce_frame
+  - announce_to
+  - push_gmcp
+  - codeforge.seed-event adapter
+dependencies:
+  - kernel/world/bus.py
+security: >
+  Remote payloads are treated as untrusted; the adapter validates EventEnvelope fields and does not
+  load code, resolve paths, or mutate authoritative world state.
+tests:
+  - tests/test_events.py
+  - tests/test_workshop_services.py
+license: MIT
+source_status: original
+owner: MatrymLabs
+adapters:
+  - kernel/seedlab/event_bridge.py

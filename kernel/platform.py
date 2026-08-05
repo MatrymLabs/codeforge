@@ -124,14 +124,19 @@ def bootstrap_platform(*, seed: str, selection_source: str) -> PlatformStartup:
 
     try:
         from kernel.hardware_lifecycle import HardwareRegistry, default_registry_path
-        from kernel.hardware_runtime import HardwareRuntimeController
+        from kernel.hardware_runtime import (
+            HardwareRuntimeController,
+            register_builtin_providers,
+        )
         from kernel.shelf.plugin_registry import PluginRegistry
 
-        hardware_runtime = HardwareRuntimeController(
-            HardwareRegistry(default_registry_path()),
-            PluginRegistry(),
-            seed_id=seed,
-            consumer=seed,
+        hardware_runtime = register_builtin_providers(
+            HardwareRuntimeController(
+                HardwareRegistry(default_registry_path()),
+                PluginRegistry(),
+                seed_id=seed,
+                consumer=seed,
+            )
         )
     except Exception as exc:
         raise PlatformStartupError(f"Hardware runtime initialization failed: {exc}") from exc
@@ -139,7 +144,8 @@ def bootstrap_platform(*, seed: str, selection_source: str) -> PlatformStartup:
         ComponentStatus(
             "hardware-runtime",
             "ready",
-            "explicit trusted providers required; no components auto-activated",
+            f"{len(hardware_runtime.provider_names())} trusted provider registered; "
+            f"{len(hardware_runtime.active_names())} active bindings; no auto-activation",
         )
     )
 
@@ -224,7 +230,10 @@ def current_platform_status() -> PlatformStartup:
     validate_startup_schema()
     from kernel.hardware import load_catalog
     from kernel.hardware_lifecycle import HardwareRegistry, default_registry_path
-    from kernel.hardware_runtime import HardwareRuntimeController
+    from kernel.hardware_runtime import (
+        HardwareRuntimeController,
+        register_builtin_providers,
+    )
     from kernel.seedlab.audit import audit_seedlab_modules
     from kernel.shelf.plugin_registry import PluginRegistry
     from kernel.world import creator_workshop
@@ -243,7 +252,7 @@ def current_platform_status() -> PlatformStartup:
             ComponentStatus(
                 "hardware-runtime",
                 "ready",
-                "explicit trusted providers required; no components auto-activated",
+                "1 trusted provider registered; 0 active bindings; no auto-activation",
             ),
             ComponentStatus(
                 "rnd", "isolated", f"audited {len(audit_seedlab_modules().entries)} SeedLab modules"
@@ -257,10 +266,12 @@ def current_platform_status() -> PlatformStartup:
             ),
             ComponentStatus("creator-console", "available", "external operations API is available"),
         ),
-        hardware_runtime=HardwareRuntimeController(
-            HardwareRegistry(default_registry_path()),
-            PluginRegistry(),
-            seed_id=SEED_NAME,
-            consumer=SEED_NAME,
+        hardware_runtime=register_builtin_providers(
+            HardwareRuntimeController(
+                HardwareRegistry(default_registry_path()),
+                PluginRegistry(),
+                seed_id=SEED_NAME,
+                consumer=SEED_NAME,
+            )
         ),
     )

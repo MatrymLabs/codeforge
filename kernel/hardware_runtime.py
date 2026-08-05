@@ -180,3 +180,57 @@ class HardwareRuntimeController[T]:
     def active_names(self) -> tuple[str, ...]:
         """Return live bindings, suitable for truthful startup and Console status."""
         return tuple(self.runtime.names())
+
+    def provider_names(self) -> tuple[str, ...]:
+        """Return explicitly registered providers, without implying activation."""
+        return tuple(self.providers)
+
+    def status(self) -> dict[str, object]:
+        """Return a truthful read-only projection of durable and live runtime state.
+
+        This is intentionally a projection, not a lifecycle operation: it never discovers,
+        activates, restores, or mutates a component.  Gateway and Master Client boundaries can
+        use it to report what this Seed actually has wired after startup or recovery.
+        """
+        records = self.hardware.all()
+        return {
+            "seed": self.seed_id,
+            "consumer": self.consumer,
+            "providers": list(self.provider_names()),
+            "active_bindings": list(self.active_names()),
+            "components": [
+                {
+                    "component_id": record.component_id,
+                    "state": record.state,
+                    "consumers": list(record.consumers),
+                }
+                for record in records
+            ],
+        }
+
+    def publish_event(self, event: object, fallback: Callable[[object], None]) -> None:
+        """Publish through the active Event Ledger, or use the existing safe fallback."""
+        publisher = self.runtime.get("event-ledger")
+        if publisher is None:
+            fallback(event)
+            return
+        if not callable(publisher):
+            raise HardwareRuntimeError("active event-ledger provider is not callable")
+        publisher(event)
+
+
+def register_builtin_providers(
+    controller: HardwareRuntimeController[object],
+) -> HardwareRuntimeController[object]:
+    """Register built-in providers explicitly during trusted platform construction."""
+    from kernel.seedlab.event_bridge import publish_seed_event
+
+    controller.register_provider(
+        PluginInfo(
+            "event-ledger",
+            version="0.2",
+            capabilities=frozenset({"publish", "audit"}),
+        ),
+        publish_seed_event,
+    )
+    return controller

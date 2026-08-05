@@ -1,4 +1,5 @@
 from datetime import UTC, datetime, timedelta
+from pathlib import Path
 
 import pytest
 
@@ -6,6 +7,7 @@ from kernel.hardware_activation import ActivationApproval, ActivationApprovalLed
 from kernel.hardware_lifecycle import HardwareRegistry
 from kernel.hardware_runtime import HardwareRuntimeController, HardwareRuntimeError
 from kernel.permission_policy import PermissionDenied, PermissionPolicy, PermissionRule
+from kernel.seedlab.workshop_services import CreatorWorkshopService
 from kernel.session_identity import SessionIdentity
 from kernel.shelf.plugin_registry import PluginInfo, PluginRegistry
 
@@ -148,3 +150,43 @@ def test_controller_disable_and_remove_disconnect_runtime(tmp_path):
     assert controller.runtime.get("validator") is None
     assert hardware.get("validator").state == "disabled"
     assert hardware.get("validator").consumers == ()
+
+
+def test_creator_workshop_routes_aethryn_evidence_through_active_event_ledger(tmp_path):
+    hardware = HardwareRegistry(tmp_path / "hardware.json")
+    hardware.discover("event-ledger")
+    for state in ("validated", "approved", "installed"):
+        hardware.transition("event-ledger", state)
+    received = []
+    controller = HardwareRuntimeController(
+        hardware, PluginRegistry(), seed_id="aethryn", consumer="aethryn"
+    )
+    controller.register_provider(PluginInfo("event-ledger"), lambda: received.append)
+    now = datetime(2026, 8, 5, 18, 0, tzinfo=UTC)
+    service = CreatorWorkshopService(hardware_runtime=controller)
+    service.activate_hardware(
+        "event-ledger",
+        approval=ActivationApproval(
+            "approval-aethryn-event-ledger",
+            "event-ledger",
+            hardware.get("event-ledger").version,
+            "aethryn",
+            "reviewer",
+            (now + timedelta(minutes=5)).isoformat(),
+        ),
+        ledger=ActivationApprovalLedger(tmp_path / "approvals.json"),
+        identity=_identity("aethryn"),
+        policy=PermissionPolicy((PermissionRule("component.activate", scope="aethryn"),)),
+        now=now,
+    )
+    job = service.run_test(
+        Path("content/seeds/aethryn"),
+        seed_id="aethryn",
+        actor_id="matrym",
+        profile="python-version",
+        source_id="aethryn-seed-package",
+        source_license="Matrym Labs internal",
+    )
+    assert job.ok
+    assert received and received[0].seed_id == "aethryn"
+    assert hardware.get("event-ledger").consumers == ("aethryn",)
