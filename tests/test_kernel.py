@@ -139,6 +139,33 @@ def test_duplicate_id_is_refused() -> None:
         _seed(k)
 
 
+def test_idempotency_key_returns_the_original_authoritative_seed() -> None:
+    k = _kernel()
+    first = k.create_seed(
+        "Retryable",
+        "josh",
+        "a retryable request",
+        idempotency_key="request-1",
+    )
+    second = k.create_seed(
+        "Retryable",
+        "josh",
+        "a retryable request",
+        idempotency_key="request-1",
+    )
+    assert second == first
+    assert len(k.list_seeds()) == 1
+
+
+def test_idempotency_key_cannot_change_intent_or_owner() -> None:
+    k = _kernel()
+    k.create_seed("Retryable", "josh", "original", idempotency_key="request-2")
+    with pytest.raises(SeedKernelError, match="different Seed intent"):
+        k.create_seed("Retryable", "josh", "changed", idempotency_key="request-2")
+    with pytest.raises(SeedAuthError, match="another Seed owner"):
+        k.create_seed("Retryable", "mallory", "original", idempotency_key="request-2")
+
+
 def test_starting_an_archived_seed_is_refused() -> None:
     k = _kernel()
     _seed(k)

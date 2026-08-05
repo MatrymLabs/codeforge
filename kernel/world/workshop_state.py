@@ -23,6 +23,9 @@ def state_path(seed_id: str) -> Path:
     configured = os.environ.get("CODEFORGE_WORKSHOP_STATE", "").strip()
     if configured:
         return Path(configured).expanduser()
+    seedlab_home = os.environ.get("SEEDLAB_HOME", "").strip()
+    if seedlab_home:
+        return Path(seedlab_home).expanduser() / "workshop" / f"{seed_id}.json"
     return Path.home() / ".config" / "codeforge" / "workshop" / f"{seed_id}.json"
 
 
@@ -36,6 +39,9 @@ def draft_state_path(seed_id: str) -> Path:
     configured = os.environ.get("CODEFORGE_WORKSHOP_DRAFTS", "").strip()
     if configured:
         return Path(configured).expanduser()
+    seedlab_home = os.environ.get("SEEDLAB_HOME", "").strip()
+    if seedlab_home:
+        return Path(seedlab_home).expanduser() / "workshop" / f"{seed_id}.drafts.json"
     path = state_path(seed_id)
     return path.with_name(f"{path.stem}.drafts{path.suffix}")
 

@@ -299,9 +299,15 @@ class AuctionRow(ArchiveBase):
 
 def engine_url() -> str:
     """The SQLAlchemy URL in force. DATABASE_URL wins (PostgreSQL in production);
-    otherwise a SQLite file at DB_PATH (the zero-config default for dev and tests)."""
+    otherwise CODEFORGE_DB may select a SQLite file for a deployment or test, falling back to
+    DB_PATH (the zero-config default for dev and tests). Resolving the environment at call time
+    keeps every compatibility import path on one configurable database boundary."""
     url = os.environ.get("DATABASE_URL", "").strip()
-    return url or f"sqlite:///{DB_PATH}"
+    if url:
+        return url
+    configured = os.environ.get("CODEFORGE_DB", "").strip()
+    path = Path(configured).expanduser().resolve() if configured else DB_PATH
+    return f"sqlite:///{path}"
 
 
 def open_archive_session() -> SqlSession:

@@ -94,6 +94,7 @@ class SeedIdentity:
     created_at: str = ""
     product_type: str = ""
     domain_modules: tuple[str, ...] = ()
+    creation_key: str = ""
 
     def __post_init__(self) -> None:
         for field_name in ("seed_id", "name", "owner"):
@@ -254,6 +255,7 @@ class SeedKernel:
         version: str = "0.1.0",
         product_type: str = "",
         domain_modules: tuple[str, ...] = (),
+        idempotency_key: str = "",
     ) -> SeedRecord:
         """Mint a Seed with a stable identity, record it CREATED, and persist it. A caller may pass
         an explicit `seed_id` (deterministic tests); otherwise one is minted from the name.
@@ -261,6 +263,21 @@ class SeedKernel:
         when a Seed is minted directly)."""
         if not name or not name.strip():
             raise SeedKernelError("a Seed needs a non-empty name")
+        key = idempotency_key.strip()
+        if key:
+            for existing in self._store.all():
+                if existing.identity.creation_key != key:
+                    continue
+                if existing.identity.owner != owner:
+                    raise SeedAuthError("the idempotency key belongs to another Seed owner")
+                if (
+                    existing.identity.name != name.strip()
+                    or existing.identity.purpose != purpose
+                    or existing.identity.product_type != product_type
+                    or existing.identity.domain_modules != tuple(domain_modules)
+                ):
+                    raise SeedKernelError("idempotency key was reused with different Seed intent")
+                return existing
         chosen = seed_id or self._mint(name)
         if self._store.load(chosen) is not None:
             raise SeedKernelError(f"a Seed with id {chosen!r} already exists")
@@ -274,6 +291,7 @@ class SeedKernel:
             created_at=now,
             product_type=product_type,
             domain_modules=tuple(domain_modules),
+            creation_key=key,
         )
         record = SeedRecord(
             identity=identity,

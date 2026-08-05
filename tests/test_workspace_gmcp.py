@@ -216,16 +216,17 @@ def test_a_malformed_create_frame_never_reaches_the_kernel() -> None:
     assert kernel.list_seeds() == []  # nothing was minted
 
 
-def test_a_kernel_refusal_becomes_an_honest_ok_false_verdict() -> None:
-    # a fixed minter forces the second create to collide on id, so the Kernel refuses; the refusal
-    # is surfaced as a verdict, not a crash.
+def test_a_retried_create_returns_the_original_authoritative_verdict() -> None:
+    # A fixed minter is no longer a failure mode for an identical retry: the server-side
+    # idempotency key returns the original record and never creates a duplicate.
     kernel = SeedKernel(
         InMemorySeedStore(), clock=lambda: next(_CLOCK), id_minter=lambda name: "seed-fixed"
     )
     first = create_from_request(kernel, {"name": "dup", "kind": "game"}, owner="josh")
     assert first["ok"] is True
     second = create_from_request(kernel, {"name": "dup", "kind": "game"}, owner="josh")
-    assert second["ok"] is False and second["reason"]  # a reason, never a crash
+    assert second["ok"] is True and second["id"] == first["id"]
+    assert len(kernel.list_seeds()) == 1
     assert len(kernel.list_seeds()) == 1  # only the first was minted
 
 
@@ -716,8 +717,9 @@ def test_create_from_form_submit_refuses_an_out_of_range_choice() -> None:
     assert verdict["ok"] is False and "world_scale" in str(verdict["reason"])
 
 
-def test_create_from_form_submit_refuses_a_duplicate_name() -> None:
-    # a fixed minter forces both submits onto one id, so the Kernel refuses the second, honestly
+def test_create_from_form_submit_is_idempotent_for_a_retried_request() -> None:
+    # a fixed minter is irrelevant to a retry: the server-side creation key returns the original
+    # authoritative record instead of creating a duplicate or reporting a false failure.
     kernel = SeedKernel(
         InMemorySeedStore(), clock=lambda: next(_CLOCK), id_minter=lambda name: "seed-dupe"
     )
@@ -725,7 +727,8 @@ def test_create_from_form_submit_refuses_a_duplicate_name() -> None:
     first = create_from_form_submit(kernel, _form_def(), frame, owner="josh")
     assert first["ok"] is True
     second = create_from_form_submit(kernel, _form_def(), frame, owner="josh")
-    assert second["ok"] is False and "already exists" in str(second["reason"])
+    assert second["ok"] is True and second["id"] == first["id"]
+    assert len(kernel.list_seeds()) == 1
 
 
 # --- Blueprint.List: filed Blueprints -> the client's Blueprint Panel (CR-0003) ------------------

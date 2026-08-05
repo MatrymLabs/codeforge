@@ -14,8 +14,11 @@ from pathlib import Path
 
 import pytest
 
+from kernel.permission_policy import PermissionDenied, PermissionPolicy, PermissionRule
 from kernel.seedlab.project_model import Provenance
 from kernel.seedlab.source_connector import (
+    ConnectorRateLimitExceeded,
+    ConnectorRateLimiter,
     LocalSource,
     PathBoundaryError,
     ProtectedPathError,
@@ -24,6 +27,8 @@ from kernel.seedlab.source_connector import (
     source_connector_label,
     source_label,
 )
+from kernel.session_identity import SessionIdentity
+from datetime import UTC, datetime, timedelta
 
 # A fake git sha + secret-file contents for the fixture (none are real). The commit is centralized
 # and marked so the secret scanner treats it as the allowlisted test fixture it is.
@@ -68,6 +73,51 @@ def test_register_records_provenance_and_metadata(tmp_path: Path) -> None:
     assert (
         record.file_count == 4
     )  # pyproject, README, src/app.py, tests/test_app.py (secrets excluded)
+    assert record.digest.startswith("sha256:")
+
+
+def test_authorized_source_reads_require_active_identity_and_seed_scoped_grant(tmp_path: Path) -> None:
+    now = datetime.now(UTC)
+    identity = SessionIdentity(
+        principal_id="human:josh",
+        principal_kind="human",
+        session_id="source-session",
+        seed_id="seed-demo",
+        issued_at=now - timedelta(seconds=1),
+        expires_at=now + timedelta(minutes=5),
+        correlation_id="source-trace",
+        capabilities=frozenset({"source.read"}),
+    )
+    policy = PermissionPolicy((PermissionRule("source.read", scope="seed-demo"),))
+    source = _source(tmp_path)
+    assert "return 42" in source.read_authorized(
+        "src/app.py", identity, policy, seed_id="seed-demo"
+    )
+    with pytest.raises(PermissionDenied, match="scoped to Seed"):
+        source.read_authorized("src/app.py", identity, policy, seed_id="other-seed")
+
+
+def test_authorized_connector_enforces_per_session_rate_limit(tmp_path: Path) -> None:
+    now = datetime.now(UTC)
+    identity = SessionIdentity(
+        principal_id="human:josh",
+        principal_kind="human",
+        session_id="limited-session",
+        seed_id="seed-demo",
+        issued_at=now - timedelta(seconds=1),
+        expires_at=now + timedelta(minutes=5),
+        correlation_id="limited-trace",
+        capabilities=frozenset({"source.read"}),
+    )
+    source = LocalSource(
+        _project(tmp_path),
+        Provenance("demo-src", owner="josh"),
+        rate_limiter=ConnectorRateLimiter(limit=1, interval_seconds=60),
+    )
+    policy = PermissionPolicy((PermissionRule("source.read", scope="seed-demo"),))
+    source.read_authorized("src/app.py", identity, policy, seed_id="seed-demo")
+    with pytest.raises(ConnectorRateLimitExceeded, match="rate limit"):
+        source.read_authorized("src/app.py", identity, policy, seed_id="seed-demo")
 
 
 def test_list_excludes_protected_files(tmp_path: Path) -> None:
@@ -114,6 +164,16 @@ def test_source_connection_is_structured(tmp_path: Path) -> None:
     assert payload["source_id"] == "demo-src"
     assert payload["owner"] == "josh"
     assert payload["file_count"] == 4
+
+
+def test_source_connection_declares_a_read_only_connector_manifest(tmp_path: Path) -> None:
+    payload = source_connection(_source(tmp_path).register(), seed="seed-demo")
+    manifest = payload["connector"]
+    assert isinstance(manifest, dict)
+    assert manifest["connector_id"] == "connector.local-source"
+    assert manifest["allowed_seeds"] == ["seed-demo"]
+    assert manifest["data_written"] == []
+    assert "source.read" in manifest["capabilities"]
 
 
 def test_a_registered_source_lights_up_the_hub_sources_facet(tmp_path: Path) -> None:

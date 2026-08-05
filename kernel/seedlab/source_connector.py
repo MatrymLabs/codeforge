@@ -19,12 +19,16 @@ Status: PROTOTYPED (see docs/seed_platform/RECENTERING.md).
 
 from __future__ import annotations
 
+import hashlib
 import os
-from dataclasses import dataclass
+import time
+from dataclasses import dataclass, field
 from fnmatch import fnmatch
 from pathlib import Path
 
+from kernel.permission_policy import PermissionDenied, PermissionPolicy
 from kernel.seedlab.project_model import Provenance
+from kernel.session_identity import SessionIdentity, SessionIdentityError
 
 # Files/dirs a project source must never expose. Matched against every path component, so a match
 # anywhere in the path (a nested `.env`, a `secrets/` dir) is protected. Read-only + this denylist
@@ -83,6 +87,34 @@ class ProtectedPathError(SourceConnectorError):
     """A requested path is on the protected denylist (a secret, a VCS dir, a build artifact)."""
 
 
+class ConnectorRateLimitExceeded(SourceConnectorError):
+    """The connector's per-session read budget has been exhausted."""
+
+
+@dataclass
+class ConnectorRateLimiter:
+    """In-memory sliding-window limiter for one connector process."""
+
+    limit: int = 30
+    interval_seconds: float = 60.0
+    _requests: dict[str, list[float]] = field(default_factory=dict, repr=False)
+
+    def check(self, session_id: str, *, now: float | None = None) -> None:
+        if self.limit <= 0 or self.interval_seconds <= 0:
+            raise ConnectorRateLimitExceeded("connector rate limit is unavailable")
+        current = time.monotonic() if now is None else now
+        recent = [
+            timestamp
+            for timestamp in self._requests.get(session_id, [])
+            if current - timestamp < self.interval_seconds
+        ]
+        if len(recent) >= self.limit:
+            self._requests[session_id] = recent
+            raise ConnectorRateLimitExceeded("connector request rate limit exceeded")
+        recent.append(current)
+        self._requests[session_id] = recent
+
+
 @dataclass(frozen=True)
 class SourceRecord:
     """What a registered source is: its id, provenance, root, and inspected metadata. This is the
@@ -94,6 +126,81 @@ class SourceRecord:
     file_count: int
     branch: str | None
     commit: str | None
+    digest: str = ""
+
+
+@dataclass(frozen=True)
+class ConnectorManifest:
+    """The explicit authority and boundary contract for a connector instance."""
+
+    connector_id: str
+    provider: str
+    purpose: str
+    capabilities: tuple[str, ...]
+    authentication_method: str
+    data_read: tuple[str, ...]
+    data_written: tuple[str, ...]
+    classification_ceiling: str
+    allowed_seeds: tuple[str, ...]
+    timeout_seconds: int
+    retry_policy: str
+    idempotency: str
+    audit_policy: str
+    revocation: str
+    removal_procedure: str
+    rate_limit: str = "30 read requests/minute per session"
+    health_check: str = "root_exists_and_digest_matches"
+    pinned_revision: str = ""
+    pinned_digest: str = ""
+
+    def to_dict(self) -> dict[str, object]:
+        """Return the stable manifest shape exposed in Source.Connection."""
+        return {
+            "connector_id": self.connector_id,
+            "provider": self.provider,
+            "purpose": self.purpose,
+            "capabilities": list(self.capabilities),
+            "authentication_method": self.authentication_method,
+            "data_read": list(self.data_read),
+            "data_written": list(self.data_written),
+            "classification_ceiling": self.classification_ceiling,
+            "allowed_seeds": list(self.allowed_seeds),
+            "timeout_seconds": self.timeout_seconds,
+            "retry_policy": self.retry_policy,
+            "idempotency": self.idempotency,
+            "audit_policy": self.audit_policy,
+            "revocation": self.revocation,
+            "removal_procedure": self.removal_procedure,
+            "rate_limit": self.rate_limit,
+            "health_check": self.health_check,
+            "pinned_revision": self.pinned_revision,
+            "pinned_digest": self.pinned_digest,
+        }
+
+
+def local_connector_manifest(
+    seed_id: str | None = None, *, pinned_revision: str = "", pinned_digest: str = ""
+) -> ConnectorManifest:
+    """Return the manifest shared by every local-source connector projection."""
+    return ConnectorManifest(
+        connector_id="connector.local-source",
+        provider="CodeForge Seed Runtime",
+        purpose="Read approved source files and metadata for Seed engineering workflows.",
+        capabilities=("source.list", "source.read", "source.search", "source.identify"),
+        authentication_method="session_identity",
+        data_read=("approved_source_files", "source_metadata"),
+        data_written=(),
+        classification_ceiling="private",
+        allowed_seeds=(seed_id,) if seed_id else (),
+        timeout_seconds=30,
+        retry_policy="none",
+        idempotency="read_only",
+        audit_policy="request_and_denial",
+        revocation="deny_after_session_expiry_or_policy_revocation",
+        removal_procedure="revoke_session_and_delete_registered_source_record",
+        pinned_revision=pinned_revision,
+        pinned_digest=pinned_digest,
+    )
 
 
 @dataclass(frozen=True)
@@ -104,6 +211,7 @@ class LocalSource:
     root: Path
     provenance: Provenance
     deny: tuple[str, ...] = _DENY
+    rate_limiter: ConnectorRateLimiter = field(default_factory=ConnectorRateLimiter, compare=False)
 
     def __post_init__(self) -> None:
         resolved = Path(self.root).resolve()
@@ -137,6 +245,54 @@ class LocalSource:
             if not self._is_protected(rel):
                 out.append(rel)
         return out
+
+    def authorize(
+        self,
+        identity: SessionIdentity,
+        policy: PermissionPolicy,
+        *,
+        seed_id: str,
+        capability: str = "source.read",
+    ) -> None:
+        """Authorize a connector operation at the connector boundary, not in the client."""
+        try:
+            identity.require_seed(seed_id)
+        except SessionIdentityError as exc:
+            raise PermissionDenied(str(exc)) from exc
+        if not identity.is_active():
+            raise PermissionDenied(f"session {identity.session_id!r} is expired or not yet active")
+        policy.require(identity.permission_context(), capability=capability, scope=seed_id)
+        self.rate_limiter.check(identity.session_id)
+
+    def list_files_authorized(
+        self, identity: SessionIdentity, policy: PermissionPolicy, *, seed_id: str
+    ) -> list[str]:
+        self.authorize(identity, policy, seed_id=seed_id, capability="source.list")
+        return self.list_files()
+
+    def read_authorized(
+        self,
+        relpath: str,
+        identity: SessionIdentity,
+        policy: PermissionPolicy,
+        *,
+        seed_id: str,
+        max_bytes: int = 1_000_000,
+    ) -> str:
+        self.authorize(identity, policy, seed_id=seed_id, capability="source.read")
+        return self.read(relpath, max_bytes=max_bytes)
+
+    def search_authorized(
+        self,
+        query: str,
+        identity: SessionIdentity,
+        policy: PermissionPolicy,
+        *,
+        seed_id: str,
+        max_hits: int = 100,
+    ) -> list[tuple[str, int, str]]:
+        self.authorize(identity, policy, seed_id=seed_id, capability="source.search")
+        return self.search(query, max_hits=max_hits)
 
     def read(self, relpath: str, *, max_bytes: int = 1_000_000) -> str:
         """Read one approved file as text (bounded). Refuses protected or out-of-root paths."""
@@ -211,7 +367,20 @@ class LocalSource:
             "file_count": len(self.list_files()),
             "branch": branch,
             "commit": commit,
+            "digest": self.digest(),
         }
+
+    def digest(self) -> str:
+        """Return a deterministic digest over approved relative paths and bytes only."""
+        digest = hashlib.sha256()
+        for rel in self.list_files():
+            encoded = rel.encode("utf-8")
+            data = self._resolve(rel).read_bytes()[:50_000_000]
+            digest.update(len(encoded).to_bytes(8, "big"))
+            digest.update(encoded)
+            digest.update(len(data).to_bytes(8, "big"))
+            digest.update(data)
+        return f"sha256:{digest.hexdigest()}"
 
     def register(self) -> SourceRecord:
         """Register this source: the record the Seed persists and the Project Hub lists. Provenance
@@ -224,6 +393,15 @@ class LocalSource:
             file_count=meta["file_count"],
             branch=meta["branch"],
             commit=meta["commit"],
+            digest=meta["digest"],
+        )
+
+    def manifest(
+        self, *, seed_id: str | None = None, pinned_revision: str = ""
+    ) -> ConnectorManifest:
+        """Describe the local connector without exposing credentials or write authority."""
+        return local_connector_manifest(
+            seed_id, pinned_revision=pinned_revision, pinned_digest=self.digest()
         )
 
 
@@ -245,10 +423,10 @@ def source_connector_label(record: SourceRecord) -> str:
     )
 
 
-def source_connection(record: SourceRecord) -> dict[str, object]:
+def source_connection(record: SourceRecord, *, seed: str | None = None) -> dict[str, object]:
     """The structured connector surface for a registered local source."""
     prov = record.provenance
-    return {
+    payload: dict[str, object] = {
         "source_id": record.source_id,
         "owner": prov.owner,
         "license": prov.license,
@@ -258,4 +436,9 @@ def source_connection(record: SourceRecord) -> dict[str, object]:
         "file_count": record.file_count,
         "branch": record.branch,
         "commit": record.commit,
+        "digest": record.digest,
     }
+    payload["connector"] = local_connector_manifest(
+        seed, pinned_revision=record.commit or "", pinned_digest=record.digest
+    ).to_dict()
+    return payload

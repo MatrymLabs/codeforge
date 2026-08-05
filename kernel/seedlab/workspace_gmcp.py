@@ -27,6 +27,7 @@ is through an injected `SeedKernel` (a test injects an in-memory store); nothing
 
 from __future__ import annotations
 
+import hashlib
 import json
 from collections import Counter
 from collections.abc import Mapping, Sequence
@@ -36,6 +37,7 @@ from pathlib import Path, PurePath
 from kernel.blueprint import Blueprint
 from kernel.blueprint import to_dict as blueprint_record
 from kernel.hardware_lifecycle import HardwareRecord
+from kernel.permission_policy import PermissionDenied, PermissionPolicy
 from kernel.seed_package import BuildManifest
 from kernel.seedlab.form import _SPEC_SCHEMA as FORM_SPEC_SCHEMA
 from kernel.seedlab.form import EngineeringForm, FormDefinition, FormError
@@ -44,6 +46,7 @@ from kernel.seedlab.manifest_evidence import ManifestRunEvidence
 from kernel.seedlab.project_model import ProjectModel
 from kernel.seedlab.source_connector import SourceRecord, source_connection
 from kernel.seedlab.tool_runner import ToolRunResult
+from kernel.session_identity import SessionIdentity, SessionIdentityError
 
 # --- the workspace package names (must match the client's core/*.py PACKAGE constants) -----------
 #: An engineering Seed's project status -> the client's Project Hub (core/project.py).
@@ -145,7 +148,7 @@ def source_connection_package(
     source: SourceRecord, *, seed: str | None = None
 ) -> dict[str, object]:
     """The `Source.Connection` payload for a registered local source connector."""
-    payload = source_connection(source)
+    payload = source_connection(source, seed=seed)
     if seed is not None:
         payload["seed"] = seed
     return payload
@@ -202,41 +205,64 @@ def engineering_evidence(
     hardware_records: Sequence[HardwareRecord],
     *,
     seed: str,
+    lifecycle_evidence: Mapping[str, Sequence[Mapping[str, object]]] | None = None,
 ) -> dict[str, object]:
     """Project durable manifest/job evidence and Hardware lifecycle state for one Seed.
 
     This is read-only and deliberately carries only persisted evidence. It does not resolve
     components, activate plugins, rerun jobs, or infer success from catalog presence.
     """
+    manifest_runs = [
+        {
+            "evidence_id": item.evidence_id,
+            "manifest_id": item.manifest_id,
+            "manifest_digest": item.manifest_digest,
+            "seed_id": item.seed_id,
+            "job_id": item.job_id,
+            "event_id": item.event_id,
+            "status": item.status,
+            "target_profile": item.target_profile,
+            "required_components": list(item.required_components),
+            "created_at": item.created_at,
+        }
+        for item in manifest_evidence
+        if item.seed_id == seed
+    ]
+    hardware = [
+        {
+            "component_id": item.component_id,
+            "version": item.version,
+            "state": item.state,
+            "license": item.license,
+            "provenance": item.provenance,
+            "consumers": list(item.consumers),
+            "history": list(item.history),
+        }
+        for item in hardware_records
+    ]
+    lifecycle_keys = (
+        "catalog",
+        "drafts",
+        "content",
+        "tests",
+        "approvals",
+        "activations",
+        "health",
+        "rollbacks",
+        "promotions",
+    )
+    lifecycle: dict[str, object] = {key: [] for key in lifecycle_keys}
+    lifecycle["tests"] = manifest_runs
+    lifecycle["activations"] = hardware
+    if lifecycle_evidence is not None:
+        for key in lifecycle_keys:
+            records = lifecycle_evidence.get(key, ())
+            lifecycle[key] = [dict(record) for record in records]
     return {
         "seed": seed,
-        "manifest_runs": [
-            {
-                "evidence_id": item.evidence_id,
-                "manifest_id": item.manifest_id,
-                "manifest_digest": item.manifest_digest,
-                "seed_id": item.seed_id,
-                "job_id": item.job_id,
-                "event_id": item.event_id,
-                "status": item.status,
-                "target_profile": item.target_profile,
-                "required_components": list(item.required_components),
-                "created_at": item.created_at,
-            }
-            for item in manifest_evidence
-            if item.seed_id == seed
-        ],
-        "hardware": [
-            {
-                "component_id": item.component_id,
-                "version": item.version,
-                "state": item.state,
-                "license": item.license,
-                "provenance": item.provenance,
-                "consumers": list(item.consumers),
-            }
-            for item in hardware_records
-        ],
+        "manifest_runs": manifest_runs,
+        "hardware": hardware,
+        "lifecycle": lifecycle,
     }
 
 
@@ -395,7 +421,14 @@ def parse_seed_create(data: object) -> SeedCreateRequest:
     return SeedCreateRequest(name=name.strip(), kind=kind.strip().lower(), description=description)
 
 
-def seed_created(name: str, ok: bool, *, seed_id: str = "", reason: str = "") -> dict[str, object]:
+def seed_created(
+    name: str,
+    ok: bool,
+    *,
+    seed_id: str = "",
+    reason: str = "",
+    correlation_id: str = "",
+) -> dict[str, object]:
     """The `Seed.Created` verdict payload: the `name` the request concerned, whether it was `ok`,
     and a detail (the new Seed's `id` on success, the `reason` on refusal). The client reads this as
     an untrusted verdict, shaped exactly as core/seed_create.parse_seed_created expects."""
@@ -404,10 +437,41 @@ def seed_created(name: str, ok: bool, *, seed_id: str = "", reason: str = "") ->
         payload["id"] = seed_id
     if not ok and reason:
         payload["reason"] = reason
+    if correlation_id:
+        payload["correlation_id"] = correlation_id
     return payload
 
 
-def create_from_request(kernel: SeedKernel, data: object, *, owner: str) -> dict[str, object]:
+def _authorize_seed_creation(
+    *,
+    owner: str,
+    identity: SessionIdentity | None,
+    policy: PermissionPolicy | None,
+) -> None:
+    if (identity is None) != (policy is None):
+        raise PermissionDenied("identity and policy must be supplied together")
+    if identity is None or policy is None:
+        return
+    try:
+        identity.require_seed("seedlab")
+    except SessionIdentityError as exc:
+        raise PermissionDenied(str(exc)) from exc
+    if identity.principal_id != owner:
+        raise PermissionDenied("authenticated principal does not match the owner")
+    if not identity.is_active():
+        raise PermissionDenied("session identity is expired or not yet active")
+    policy.require(identity.permission_context(), capability="seed.create", scope="seedlab")
+
+
+def create_from_request(
+    kernel: SeedKernel,
+    data: object,
+    *,
+    owner: str,
+    identity: SessionIdentity | None = None,
+    policy: PermissionPolicy | None = None,
+    correlation_id: str = "",
+) -> dict[str, object]:
     """Turn a client's `Seed.Create` frame into a real Seed and return the `Seed.Created` verdict.
 
     Parse + validate the untrusted frame, mint a Seed through the Kernel (authoritative: the Kernel
@@ -418,13 +482,23 @@ def create_from_request(kernel: SeedKernel, data: object, *, owner: str) -> dict
     try:
         request = parse_seed_create(data)
     except WorkspaceContractError as exc:
-        return seed_created("", False, reason=str(exc))
-    purpose = request.description or f"{request.kind} Seed"
+        return seed_created("", False, reason=str(exc), correlation_id=correlation_id)
     try:
-        record = kernel.create_seed(request.name, owner, purpose)
+        _authorize_seed_creation(owner=owner, identity=identity, policy=policy)
+    except PermissionDenied as exc:
+        return seed_created(request.name, False, reason=str(exc), correlation_id=correlation_id)
+    purpose = request.description or f"{request.kind} Seed"
+    creation_key = _creation_key(owner, request.name, request.kind, purpose)
+    try:
+        record = kernel.create_seed(request.name, owner, purpose, idempotency_key=creation_key)
     except SeedKernelError as exc:
-        return seed_created(request.name, False, reason=str(exc))
-    return seed_created(record.identity.name, True, seed_id=record.identity.seed_id)
+        return seed_created(request.name, False, reason=str(exc), correlation_id=correlation_id)
+    return seed_created(
+        record.identity.name,
+        True,
+        seed_id=record.identity.seed_id,
+        correlation_id=correlation_id,
+    )
 
 
 # --- the planning surface: filed Blueprints -> the client's Blueprint Panel ---------------------
@@ -594,7 +668,14 @@ def parse_form_submit(data: object) -> FormSubmitRequest:
 
 
 def create_from_form_submit(
-    kernel: SeedKernel, definition: FormDefinition, data: object, *, owner: str
+    kernel: SeedKernel,
+    definition: FormDefinition,
+    data: object,
+    *,
+    owner: str,
+    identity: SessionIdentity | None = None,
+    policy: PermissionPolicy | None = None,
+    correlation_id: str = "",
 ) -> dict[str, object]:
     """Turn a client's `Form.Submit` frame into a real Seed and return the `Seed.Created` verdict.
 
@@ -611,14 +692,20 @@ def create_from_form_submit(
     try:
         request = parse_form_submit(data)
     except WorkspaceContractError as exc:
-        return seed_created("", False, reason=str(exc))
+        return seed_created("", False, reason=str(exc), correlation_id=correlation_id)
+    try:
+        _authorize_seed_creation(owner=owner, identity=identity, policy=policy)
+    except PermissionDenied as exc:
+        claimed = request.answers.get("name")
+        name = claimed if isinstance(claimed, str) else ""
+        return seed_created(name, False, reason=str(exc), correlation_id=correlation_id)
     answers = {**request.answers, "owner": owner}
     try:
         spec = EngineeringForm(definition).build_spec(request.product_type, answers)
     except FormError as exc:
         claimed = request.answers.get("name")
         name = claimed if isinstance(claimed, str) else ""
-        return seed_created(name, False, reason=str(exc))
+        return seed_created(name, False, reason=str(exc), correlation_id=correlation_id)
     try:
         record = kernel.create_seed(
             spec.name,
@@ -626,10 +713,27 @@ def create_from_form_submit(
             spec.purpose,
             product_type=spec.product_type,
             domain_modules=spec.domain_modules,
+            idempotency_key=_creation_key(
+                owner,
+                spec.name,
+                spec.product_type,
+                json.dumps(spec.to_dict(), sort_keys=True, separators=(",", ":")),
+            ),
         )
     except SeedKernelError as exc:
-        return seed_created(spec.name, False, reason=str(exc))
-    return seed_created(record.identity.name, True, seed_id=record.identity.seed_id)
+        return seed_created(spec.name, False, reason=str(exc), correlation_id=correlation_id)
+    return seed_created(
+        record.identity.name,
+        True,
+        seed_id=record.identity.seed_id,
+        correlation_id=correlation_id,
+    )
+
+
+def _creation_key(owner: str, name: str, kind: str, intent: str) -> str:
+    """Derive a stable server-side key for safe retries of one declarative create request."""
+    canonical = "|".join((owner.strip(), name.strip(), kind.strip(), intent.strip()))
+    return "workspace-create-v1:" + hashlib.sha256(canonical.encode("utf-8")).hexdigest()
 
 
 # --- the aggregate a gateway would push for a Seed ----------------------------------------------
@@ -650,6 +754,7 @@ def workspace_packages(
     manifest: BuildManifest | None = None,
     manifest_evidence: Sequence[ManifestRunEvidence] | None = None,
     hardware_records: Sequence[HardwareRecord] | None = None,
+    lifecycle_evidence: Mapping[str, Sequence[Mapping[str, object]]] | None = None,
 ) -> list[tuple[str, dict[str, object]]]:
     """The (package, payload) pairs a gateway emits for an engineering Seed: always its Project
     Status, plus a Source Tree when a source is registered, a Model Schema when a model is
@@ -688,7 +793,11 @@ def workspace_packages(
         packages.append((BLUEPRINT_LIST_PACKAGE, blueprint_list(blueprints, seed=seed)))
     if manifest is not None:
         packages.append((DEPLOY_MANIFEST_PACKAGE, deploy_manifest(manifest, seed=seed)))
-    if manifest_evidence is not None or hardware_records is not None:
+    if (
+        manifest_evidence is not None
+        or hardware_records is not None
+        or lifecycle_evidence is not None
+    ):
         packages.append(
             (
                 ENGINEERING_EVIDENCE_PACKAGE,
@@ -696,6 +805,7 @@ def workspace_packages(
                     manifest_evidence or (),
                     hardware_records or (),
                     seed=record.identity.seed_id,
+                    lifecycle_evidence=lifecycle_evidence,
                 ),
             )
         )

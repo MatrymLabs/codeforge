@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from kernel.seedlab.deployment import DeploymentProfile, LocalDeploymentController
 from kernel.seedlab.kernel import FileSeedStore, SeedKernel
 from kernel.seedlab.model_store import FileModelStore
 from kernel.seedlab.project_model import Provenance
@@ -50,3 +51,24 @@ def test_build_workspace_contract_project_and_packages(tmp_path: Path, monkeypat
         "failed": 0,
         "skipped": 0,
     }
+
+
+def test_build_workspace_contract_projects_local_deployment_evidence(tmp_path: Path) -> None:
+    home = tmp_path / ".seedlab"
+    kernel = SeedKernel(FileSeedStore(home / "seeds"), clock=lambda: "2026-08-04T00:00:00+00:00")
+    kernel.create_seed("Workspace", "josh", "a workspace", seed_id="seed-workspace")
+    artifact = tmp_path / "artifact"
+    artifact.mkdir()
+    (artifact / "app.txt").write_text("healthy", encoding="utf-8")
+    LocalDeploymentController(
+        home / "deployments",
+        clock=lambda: "2026-08-04T00:01:00+00:00",
+        id_minter=iter(["deploy-1"]).__next__,
+    ).deploy(DeploymentProfile("local-proof", "seed-workspace", "artifact-1", str(artifact)))
+
+    contract = build_workspace_contract("seed-workspace", root=home)
+
+    deployment = contract.project["deployment"]
+    assert isinstance(deployment, dict)
+    assert deployment["status"] == "deployed"
+    assert deployment["health"] == "healthy"
