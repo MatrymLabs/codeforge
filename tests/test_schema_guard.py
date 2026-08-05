@@ -49,3 +49,13 @@ def test_require_current_schema_fails_loud_and_names_the_fix():
         require_current_schema(engine)
     assert "characters.coins" in str(err.value)
     assert "db-migrate" in str(err.value)  # the guard names the one command that fixes it
+
+
+def test_missing_new_tables_are_flagged_as_schema_drift():
+    engine = _fresh_engine()
+    with engine.begin() as conn:
+        conn.execute(text("DROP TABLE audit_events"))
+        conn.execute(text("DROP TABLE seed_sources"))
+    gaps = missing_columns(engine)
+    assert "audit_events (missing table)" in gaps
+    assert "seed_sources (missing table)" in gaps
