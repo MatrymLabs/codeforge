@@ -41,6 +41,15 @@ def default_registry_path() -> Path:
     )
 
 
+def _string_tuple(value: object, field: str) -> tuple[str, ...]:
+    """Validate JSON list fields instead of iterating an untyped object."""
+    if value is None:
+        return ()
+    if not isinstance(value, list):
+        raise HardwareLifecycleError(f"Hardware record field {field!r} must be a list")
+    return tuple(str(item) for item in value)
+
+
 @dataclass(frozen=True)
 class HardwareRecord:
     """Persistent lifecycle evidence for one cataloged component."""
@@ -62,7 +71,7 @@ class HardwareRecord:
         if missing:
             raise HardwareLifecycleError(f"Hardware record missing: {', '.join(missing)}")
         state = str(raw["state"])
-        history = tuple(str(item) for item in raw.get("history", ()))
+        history = _string_tuple(raw.get("history", []), "history")
         if state not in _TRANSITIONS or not history or history[-1] != state:
             raise HardwareLifecycleError(
                 f"invalid Hardware record state/history for {raw['component_id']!r}"
@@ -74,7 +83,7 @@ class HardwareRecord:
             source=str(raw["source"]),
             license=str(raw["license"]),
             provenance=str(raw["provenance"]),
-            consumers=tuple(str(item) for item in raw.get("consumers", ())),
+            consumers=_string_tuple(raw.get("consumers", []), "consumers"),
             history=history,
         )
 
