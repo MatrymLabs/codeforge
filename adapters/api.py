@@ -28,7 +28,7 @@ from kernel.platform import current_platform_status
 from kernel.seedlab.artifact_registry import configured_artifact_store
 from kernel.seedlab.artifact_store import ArtifactStore
 from kernel.seedlab.kernel import SeedKernel, SeedKernelError
-from kernel.seedlab.manifest_evidence import FileManifestEvidenceStore
+from kernel.seedlab.manifest_registry import configured_manifest_evidence_store
 from kernel.seedlab.model_store import ModelStore, configured_model_store
 from kernel.seedlab.registry import configured_seed_store
 from kernel.seedlab.tool_runner import RunLog, configured_run_log
@@ -304,10 +304,8 @@ async def seedlab_workspace(seed_id: str) -> dict[str, object]:
 
 def _workspace_manifest_evidence(seed_id: str):
     """Read the canonical durable evidence projection without creating empty state."""
-    root = _seedlab_home() / "evidence"
-    if not root.is_dir():
-        return None
-    return FileManifestEvidenceStore(root).all_for_seed(seed_id)
+    records = configured_manifest_evidence_store(_seedlab_home()).all_for_seed(seed_id)
+    return records or None
 
 
 def _workspace_hardware_records():

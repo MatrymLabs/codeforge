@@ -12,6 +12,7 @@ import json
 import re
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Protocol, runtime_checkable
 
 from kernel.event_envelope import EventEnvelope
 from kernel.hardware_lifecycle import HardwareRegistry
@@ -189,11 +190,22 @@ class FileManifestEvidenceStore:
         return tuple(records)
 
 
+@runtime_checkable
+class ManifestEvidenceStore(Protocol):
+    """Persistence seam for immutable manifest-test evidence."""
+
+    def save(self, evidence: ManifestRunEvidence) -> None: ...
+
+    def get(self, evidence_id: str) -> ManifestRunEvidence: ...
+
+    def all_for_seed(self, seed_id: str) -> tuple[ManifestRunEvidence, ...]: ...
+
+
 def run_manifest_test(
     manifest: SeedManifest,
     service: CreatorWorkshopService,
     hardware: HardwareRegistry,
-    evidence_store: FileManifestEvidenceStore,
+    evidence_store: ManifestEvidenceStore,
     *,
     actor_id: str,
     profile: str = "python-version",

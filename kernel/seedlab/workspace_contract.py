@@ -24,6 +24,7 @@ from kernel.seedlab.artifact_store import (
 )
 from kernel.seedlab.kernel import SeedKernel
 from kernel.seedlab.manifest_evidence import ManifestRunEvidence
+from kernel.seedlab.manifest_registry import configured_manifest_evidence_store
 from kernel.seedlab.model_store import ModelStore, configured_model_store, model_labels
 from kernel.seedlab.project_hub import ProjectHub, ProjectState
 from kernel.seedlab.project_model import ProjectModel
@@ -146,6 +147,11 @@ def build_workspace_contract(
     module_list = None if modules is None else list(modules)
     finding_list = None if findings is None else list(findings)
 
+    persisted_manifest_evidence = (
+        manifest_evidence
+        if manifest_evidence is not None
+        else configured_manifest_evidence_store(home).all_for_seed(seed_id)
+    )
     packages = workspace_packages(
         record,
         source=source,
@@ -159,7 +165,7 @@ def build_workspace_contract(
         manifest=manifest_value,
         modules=module_list,
         findings=finding_list,
-        manifest_evidence=manifest_evidence,
+        manifest_evidence=persisted_manifest_evidence or None,
         hardware_records=hardware_records,
     )
     seed: dict[str, object] = {

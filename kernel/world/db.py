@@ -188,6 +188,16 @@ class SeedArtifactRow(ArchiveBase):
     artifact_json: Mapped[str] = mapped_column(Text())
 
 
+class SeedManifestEvidenceRow(ArchiveBase):
+    """One immutable manifest-test evidence record owned by one Seed."""
+
+    __tablename__ = "seed_manifest_evidence"
+
+    seed_id: Mapped[str] = mapped_column(primary_key=True)
+    evidence_id: Mapped[str] = mapped_column(primary_key=True)
+    evidence_json: Mapped[str] = mapped_column(Text())
+
+
 class GuildRow(ArchiveBase):
     """A guild's own record: guild-LEVEL state (its shared treasury), distinct from the per-member
     guild columns on characters. One row per guild, created on found, dropped on disband."""
