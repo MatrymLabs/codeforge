@@ -23,7 +23,7 @@ from kernel.seedlab.artifact_store import (
 )
 from kernel.seedlab.kernel import SeedKernel
 from kernel.seedlab.manifest_evidence import ManifestRunEvidence
-from kernel.seedlab.model_store import FileModelStore, ModelStore, model_labels
+from kernel.seedlab.model_store import ModelStore, configured_model_store, model_labels
 from kernel.seedlab.project_hub import ProjectHub, ProjectState
 from kernel.seedlab.project_model import ProjectModel
 from kernel.seedlab.registry import seed_store
@@ -121,7 +121,7 @@ def build_workspace_contract(
     home = _default_home(root)
     kernel = _seed_kernel(home)
     record = kernel.get(seed_id)
-    model_store = FileModelStore(home / "models")
+    model_store = configured_model_store(home)
     run_log = FileRunLog(home / "runs")
     artifact_store = _artifact_store(home / "artifacts")
 

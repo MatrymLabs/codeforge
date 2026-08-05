@@ -11,17 +11,22 @@ from __future__ import annotations
 from pathlib import Path
 
 import pytest
+from sqlalchemy import create_engine
+from sqlalchemy.orm import Session
 
 from kernel.seedlab.model_store import (
+    DualReadModelStore,
     FileModelStore,
     InMemorySeedModels,
     ModelStore,
     ModelStoreError,
+    SqlModelStore,
     model_id_for,
     model_label,
     model_labels,
 )
 from kernel.seedlab.project_model import ProjectModel, Provenance
+from kernel.world.db import ArchiveBase
 
 
 def _model(identity: str = "TaskLedger", src: str = "demo-src") -> ProjectModel:
@@ -62,6 +67,39 @@ def test_file_store_survives_restart(tmp_path: Path) -> None:
     # Restart: a brand-new store object over the same root recovers the model intact.
     recovered = FileModelStore(tmp_path / "models").all_for_seed("seed-1")
     assert recovered == [m]
+
+
+def test_sql_store_survives_restart(tmp_path: Path) -> None:
+    engine = create_engine(f"sqlite:///{tmp_path / 'platform.db'}")
+    ArchiveBase.metadata.create_all(engine)
+    model = _model()
+    model_id = model_id_for(model)
+    SqlModelStore(lambda: Session(engine)).save("seed-1", model_id, model)
+
+    recovered = SqlModelStore(lambda: Session(engine)).all_for_seed("seed-1")
+
+    assert recovered == [model]
+
+
+def test_dual_read_model_store_writes_sql_and_reads_legacy(tmp_path: Path) -> None:
+    engine = create_engine(f"sqlite:///{tmp_path / 'platform.db'}")
+    ArchiveBase.metadata.create_all(engine)
+    home = tmp_path / "models"
+    model = _model()
+    model_id = model_id_for(model)
+    legacy = FileModelStore(home)
+    legacy.save("seed-1", model_id, model)
+    store = DualReadModelStore(
+        SqlModelStore(lambda: Session(engine)),
+        legacy,
+    )
+
+    assert store.load("seed-1", model_id) == model
+    replacement = _model("Replacement")
+    store.save("seed-1", model_id_for(replacement), replacement)
+    assert SqlModelStore(lambda: Session(engine)).load(
+        "seed-1", model_id_for(replacement)
+    ) == replacement
 
 
 def test_model_labels_lists_all_for_a_seed() -> None:

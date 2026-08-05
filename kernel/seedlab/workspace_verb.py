@@ -38,7 +38,7 @@ from kernel.seedlab.kernel import (
     SeedRecord,
     render_status,
 )
-from kernel.seedlab.model_store import FileModelStore, ModelStore, model_label
+from kernel.seedlab.model_store import ModelStore, configured_model_store, model_label
 from kernel.seedlab.workspace_gmcp import (
     BUILD_REPORT_PACKAGE,
     MODEL_SCHEMA_PACKAGE,
@@ -200,7 +200,7 @@ def workspace_command(
             record = kernel.get(rest[0])  # confirm the workspace exists first
         except SeedKernelError as exc:
             return f"workspace: {exc}"
-        store = model_store or FileModelStore(_home() / "models")
+        store = model_store or configured_model_store(_home())
         models = store.all_for_seed(rest[0])
         if not models:
             return f"No models for {rest[0]} yet (connect a source and model it)."
@@ -234,7 +234,7 @@ def workspace_command(
         from kernel.seedlab.source_connector import LocalSource, SourceConnectorError
         from kernel.seedlab.source_modeler import model_and_store
 
-        store = model_store or FileModelStore(_home() / "models")
+        store = model_store or configured_model_store(_home())
         source_id = resolved.name or "source"
         try:
             source = LocalSource(resolved, Provenance(source_id, owner=actor))
