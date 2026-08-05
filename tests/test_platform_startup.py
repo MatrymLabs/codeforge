@@ -10,6 +10,7 @@ def test_platform_bootstrap_initializes_existing_runtime(monkeypatch, tmp_path):
     env = os.environ.copy()
     env["FORGE_SEED"] = "aethryn"
     env["CODEFORGE_DB"] = str(tmp_path / "codeforge.db")
+    env["SEEDLAB_HOME"] = str(tmp_path / ".seedlab")
     result = subprocess.run(
         [
             sys.executable,
@@ -18,7 +19,9 @@ def test_platform_bootstrap_initializes_existing_runtime(monkeypatch, tmp_path):
                 "from kernel.platform import bootstrap_platform; "
                 "s=bootstrap_platform(seed='aethryn', selection_source='default'); "
                 "assert s.status('engine').state == 'initialized'; "
-                "assert s.status('seed-runtime').detail == 'active Seed: aethryn'"
+                "assert s.status('seed-runtime').detail == 'active Seed: aethryn'; "
+                "assert s.status('seed-registry').state == 'initialized'; "
+                "assert s.status('workspace').detail.endswith('available for Aethryn')"
             ),
         ],
         check=False,
@@ -28,6 +31,7 @@ def test_platform_bootstrap_initializes_existing_runtime(monkeypatch, tmp_path):
     )
     assert result.returncode == 0, result.stderr
     assert Path(tmp_path / "codeforge.db").exists()
+    assert Path(tmp_path / ".seedlab" / "seeds" / "aethryn.json").exists()
 
 
 def test_platform_status_is_structured():

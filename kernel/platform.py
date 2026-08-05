@@ -7,7 +7,9 @@ and Creator Workshop in one ordered operation before a driver is imported.
 
 from __future__ import annotations
 
+import os
 from dataclasses import dataclass
+from pathlib import Path
 
 from kernel.seed_selection import SeedSelection
 
@@ -111,6 +113,37 @@ def bootstrap_platform(*, seed: str, selection_source: str) -> PlatformStartup:
     components.append(
         ComponentStatus("rnd", "isolated", f"audited {len(audit.entries)} SeedLab modules")
     )
+
+    if seed == "aethryn":
+        try:
+            from kernel.seedlab.kernel import FileSeedStore, SeedKernel
+            from kernel.seedlab.reference_seed import ensure_reference_seed
+            from kernel.seedlab.runtime_bridge import bind_reference_seed
+            from kernel.seedlab.workspace_contract import build_workspace_contract
+
+            seedlab_home = Path(os.environ.get("SEEDLAB_HOME", ".seedlab"))
+            seed_kernel = SeedKernel(FileSeedStore(seedlab_home / "seeds"))
+            record = ensure_reference_seed(seed_kernel, detail="CodeForge product startup")
+            binding = bind_reference_seed(seed_kernel)
+            contract = build_workspace_contract(seed, root=seedlab_home)
+        except Exception as exc:
+            raise PlatformStartupError(
+                f"Seed registry/workspace initialization failed: {exc}"
+            ) from exc
+        components.extend(
+            (
+                ComponentStatus(
+                    "seed-registry",
+                    "initialized",
+                    f"bound {record.identity.seed_id} to {binding.package}",
+                ),
+                ComponentStatus(
+                    "workspace",
+                    "initialized",
+                    f"{contract.contract_version} available for {record.identity.name}",
+                ),
+            )
+        )
 
     try:
         from kernel.world import creator_workshop

@@ -11,6 +11,11 @@ registry. The endpoint does not create evidence, install components, activate pl
 or infer success from catalog presence. Activation remains an explicit governed operation, and a
 manifest test remains blocked until every required component is already active.
 
+The primary `bootstrap_platform()` path now registers the bundled Aethryn Seed idempotently in the
+SeedLab registry, verifies it against `content/seeds/aethryn/world.yaml`, and validates that the
+versioned workspace contract can be built. This closes the clean-checkout gap where the bundled
+runtime existed but the ignored local SeedLab registry did not yet contain its record.
+
 The client validates the package defensively and renders it through the text-first
 `engineering_evidence` panel. The same package can arrive through the existing workspace/GMCP
 transport; no second registry or runtime authority is introduced.
