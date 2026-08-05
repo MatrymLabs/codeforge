@@ -39,6 +39,7 @@ from kernel.seedlab.kernel import (
     render_status,
 )
 from kernel.seedlab.model_store import ModelStore, configured_model_store, model_label
+from kernel.seedlab.provenance_registry import ProvenanceStore, configured_provenance_store
 from kernel.seedlab.tool_runner import configured_run_log
 from kernel.seedlab.workspace_gmcp import (
     BUILD_REPORT_PACKAGE,
@@ -125,6 +126,7 @@ def workspace_command(
     *,
     kernel: SeedKernel | None = None,
     model_store: ModelStore | None = None,
+    provenance_store: ProvenanceStore | None = None,
     gmcp_push: GmcpPush | None = None,
     run_log: Any | None = None,
     allowlist: dict[str, list[str]] | None = None,
@@ -239,6 +241,8 @@ def workspace_command(
         source_id = resolved.name or "source"
         try:
             source = LocalSource(resolved, Provenance(source_id, owner=actor))
+            source_record = source.register()
+            (provenance_store or configured_provenance_store(_home())).save(seed_id, source_record)
             model = model_and_store(store, seed_id, source)
         except (SourceConnectorError, SeedLabError) as exc:
             return f"workspace: {exc}"
@@ -251,13 +255,13 @@ def workspace_command(
             session,
             push,
             SOURCE_TREE_PACKAGE,
-            source_tree(source.register(), source.list_files(), seed=seed_name),
+            source_tree(source_record, source.list_files(), seed=seed_name),
         )
         _push_frame(
             session,
             push,
             SOURCE_CONNECTION_PACKAGE,
-            source_connection_package(source.register(), seed=seed_name),
+            source_connection_package(source_record, seed=seed_name),
         )
         _push_frame(session, push, MODEL_SCHEMA_PACKAGE, model_schema(model, seed=seed_name))
         return (

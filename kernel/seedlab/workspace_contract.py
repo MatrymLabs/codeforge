@@ -28,6 +28,7 @@ from kernel.seedlab.manifest_registry import configured_manifest_evidence_store
 from kernel.seedlab.model_store import ModelStore, configured_model_store, model_labels
 from kernel.seedlab.project_hub import ProjectHub, ProjectState
 from kernel.seedlab.project_model import ProjectModel
+from kernel.seedlab.provenance_registry import configured_provenance_store
 from kernel.seedlab.registry import seed_store
 from kernel.seedlab.source_connector import SourceRecord, source_connector_label, source_label
 from kernel.seedlab.tool_runner import RunLog, ToolRunResult, configured_run_log, run_labels
@@ -126,10 +127,12 @@ def build_workspace_contract(
     model_store = configured_model_store(home)
     run_log = configured_run_log(home)
     artifact_store = configured_artifact_store(home)
+    persisted_sources = configured_provenance_store(home).all_for_seed(seed_id)
+    source_value = source or (persisted_sources[-1] if persisted_sources else None)
 
     state = _project_state(
         seed_id,
-        source=source,
+        source=source_value,
         model_store=model_store,
         run_log=run_log,
         artifact_store=artifact_store,
@@ -154,7 +157,7 @@ def build_workspace_contract(
     )
     packages = workspace_packages(
         record,
-        source=source,
+        source=source_value,
         files=list(source_files or []),
         model=model_list,
         runs=run_list if run_list is not None else run_log.for_seed(seed_id),

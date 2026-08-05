@@ -198,6 +198,27 @@ class SeedManifestEvidenceRow(ArchiveBase):
     evidence_json: Mapped[str] = mapped_column(Text())
 
 
+class SeedSourceRow(ArchiveBase):
+    """One immutable registered source snapshot owned by one Seed."""
+
+    __tablename__ = "seed_sources"
+
+    seed_id: Mapped[str] = mapped_column(primary_key=True)
+    source_id: Mapped[str] = mapped_column(primary_key=True)
+    source_json: Mapped[str] = mapped_column(Text())
+
+
+class AuditEventRow(ArchiveBase):
+    """One append-only hash-chain audit event in the platform SQL boundary."""
+
+    __tablename__ = "audit_events"
+
+    sequence: Mapped[int] = mapped_column(primary_key=True, autoincrement=False)
+    payload_json: Mapped[str] = mapped_column(Text())
+    prior_hash: Mapped[str] = mapped_column()
+    content_hash: Mapped[str] = mapped_column()
+
+
 class GuildRow(ArchiveBase):
     """A guild's own record: guild-LEVEL state (its shared treasury), distinct from the per-member
     guild columns on characters. One row per guild, created on found, dropped on disband."""

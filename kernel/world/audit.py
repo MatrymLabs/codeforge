@@ -19,6 +19,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+from kernel.seedlab.audit_registry import AuditStoreError, configured_audit_store
 from kernel.shelf import hashchain
 from kernel.world.paths import resolved_path
 
@@ -38,17 +39,16 @@ def record(actor: str, action: str, detail: str = "", *, ts: str | None = None) 
     action itself. Pass `ts` in tests for a deterministic stamp."""
     stamp = ts or datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
     entry = {"ts": stamp, "actor": actor, "action": action, "detail": detail}
-    with contextlib.suppress(OSError, hashchain.HashChainError):
-        hashchain.append(_audit_path(), entry)
+    with contextlib.suppress(OSError, AuditStoreError, hashchain.HashChainError):
+        configured_audit_store(_audit_path()).append(entry)
 
 
 def tail(limit: int = 20) -> list[dict[str, Any]]:
     """The most recent audit entries (their payloads), oldest of the slice first. Verifies the chain
     on read; a tampered ledger raises HashChainError rather than returning a dishonest history."""
-    links = hashchain.read(_audit_path())
-    return [link.payload for link in links[-limit:]] if limit > 0 else []
+    return configured_audit_store(_audit_path()).tail(limit)
 
 
 def verify() -> bool:
     """True if the audit ledger reads clean end to end, False if any past record was tampered."""
-    return hashchain.verify(_audit_path())
+    return configured_audit_store(_audit_path()).verify()
