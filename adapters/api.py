@@ -30,7 +30,7 @@ from kernel.seedlab.kernel import SeedKernel, SeedKernelError
 from kernel.seedlab.manifest_evidence import FileManifestEvidenceStore
 from kernel.seedlab.model_store import ModelStore, configured_model_store
 from kernel.seedlab.registry import configured_seed_store
-from kernel.seedlab.tool_runner import FileRunLog
+from kernel.seedlab.tool_runner import RunLog, configured_run_log
 from kernel.seedlab.workspace_contract import (
     build_workspace_contract,
 )
@@ -211,8 +211,8 @@ def _seedlab_model_store() -> ModelStore:
     return configured_model_store(_seedlab_home())
 
 
-def _seedlab_run_log() -> FileRunLog:
-    return FileRunLog(_seedlab_home() / "runs")
+def _seedlab_run_log() -> RunLog:
+    return configured_run_log(_seedlab_home())
 
 
 def _seedlab_artifact_store() -> FileArtifactStore:

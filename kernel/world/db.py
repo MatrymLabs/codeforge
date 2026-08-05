@@ -167,6 +167,17 @@ class SeedModelRow(ArchiveBase):
     model_json: Mapped[str] = mapped_column(Text())
 
 
+class SeedRunRow(ArchiveBase):
+    """One append-only controlled tool-run evidence record owned by one Seed."""
+
+    __tablename__ = "seed_runs"
+
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    seed_id: Mapped[str] = mapped_column(index=True)
+    kind: Mapped[str] = mapped_column(index=True)
+    run_json: Mapped[str] = mapped_column(Text())
+
+
 class GuildRow(ArchiveBase):
     """A guild's own record: guild-LEVEL state (its shared treasury), distinct from the per-member
     guild columns on characters. One row per guild, created on found, dropped on disband."""

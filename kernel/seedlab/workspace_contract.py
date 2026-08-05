@@ -28,7 +28,7 @@ from kernel.seedlab.project_hub import ProjectHub, ProjectState
 from kernel.seedlab.project_model import ProjectModel
 from kernel.seedlab.registry import seed_store
 from kernel.seedlab.source_connector import SourceRecord, source_connector_label, source_label
-from kernel.seedlab.tool_runner import FileRunLog, ToolRunResult, run_labels
+from kernel.seedlab.tool_runner import RunLog, ToolRunResult, configured_run_log, run_labels
 from kernel.seedlab.workspace_gmcp import workspace_packages
 
 WORKSPACE_CONTRACT_VERSION = "seedlab.workspace/1"
@@ -82,7 +82,7 @@ def _project_state(
     *,
     source: SourceRecord | None = None,
     model_store: ModelStore,
-    run_log: FileRunLog,
+    run_log: RunLog,
     artifact_store: ArtifactStore,
 ) -> ProjectState:
     source_labels: tuple[str, ...] = ()
@@ -122,7 +122,7 @@ def build_workspace_contract(
     kernel = _seed_kernel(home)
     record = kernel.get(seed_id)
     model_store = configured_model_store(home)
-    run_log = FileRunLog(home / "runs")
+    run_log = configured_run_log(home)
     artifact_store = _artifact_store(home / "artifacts")
 
     state = _project_state(

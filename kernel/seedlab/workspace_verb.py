@@ -39,6 +39,7 @@ from kernel.seedlab.kernel import (
     render_status,
 )
 from kernel.seedlab.model_store import ModelStore, configured_model_store, model_label
+from kernel.seedlab.tool_runner import configured_run_log
 from kernel.seedlab.workspace_gmcp import (
     BUILD_REPORT_PACKAGE,
     MODEL_SCHEMA_PACKAGE,
@@ -284,12 +285,11 @@ def workspace_command(
         from kernel.seedlab.source_connector import LocalSource, SourceConnectorError
         from kernel.seedlab.tool_runner import (
             CommandRefused,
-            FileRunLog,
             render_run,
             run_and_record,
         )
 
-        log = run_log if run_log is not None else FileRunLog(_home() / "runs")
+        log = run_log if run_log is not None else configured_run_log(_home())
         try:
             source = LocalSource(resolved, Provenance(resolved.name or "source", owner=actor))
             result = run_and_record(log, source, profile, seed_id=seed_id, allowlist=allowlist)
@@ -322,9 +322,9 @@ def workspace_command(
             record = kernel.get(rest[0])
         except SeedKernelError as exc:
             return f"workspace: {exc}"
-        from kernel.seedlab.tool_runner import FileRunLog, render_run
+        from kernel.seedlab.tool_runner import render_run
 
-        log = run_log if run_log is not None else FileRunLog(_home() / "runs")
+        log = run_log if run_log is not None else configured_run_log(_home())
         runs = log.for_seed(rest[0])
         if not runs:
             return f"No tool runs for {rest[0]} yet (workspace run <id> <path> <profile>)."

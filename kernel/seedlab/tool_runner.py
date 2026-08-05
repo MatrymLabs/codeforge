@@ -31,8 +31,12 @@ from collections.abc import Callable
 from dataclasses import asdict, dataclass, field
 from datetime import UTC, datetime
 from pathlib import Path
+from typing import Protocol, runtime_checkable
+
+from sqlalchemy.orm import Session as SqlSession
 
 from kernel.seedlab.source_connector import LocalSource
+from kernel.world.db import SeedRunRow, open_archive_session
 
 DEFAULT_TIMEOUT = 120.0
 OUTPUT_CAP = 20_000
@@ -235,8 +239,96 @@ class FileRunLog:
         return out
 
 
+@runtime_checkable
+class RunLog(Protocol):
+    """The append-only persistence seam for controlled run evidence."""
+
+    def append(self, result: ToolRunResult) -> None: ...
+
+    def for_seed(self, seed_id: str) -> list[ToolRunResult]: ...
+
+
+@dataclass
+class SqlRunLog:
+    """Durable append-only run evidence using the platform SQL persistence boundary."""
+
+    session_factory: Callable[[], SqlSession] = open_archive_session
+
+    def append(self, result: ToolRunResult) -> None:
+        with self.session_factory() as session, session.begin():
+            session.add(
+                SeedRunRow(
+                    seed_id=result.seed_id,
+                    kind=result.kind,
+                    run_json=json.dumps(
+                        result.to_dict(), sort_keys=True, separators=(",", ":")
+                    ),
+                )
+            )
+
+    def for_seed(self, seed_id: str) -> list[ToolRunResult]:
+        with self.session_factory() as session:
+            rows = (
+                session.query(SeedRunRow)
+                .filter(SeedRunRow.seed_id == seed_id)
+                .order_by(SeedRunRow.id)
+                .all()
+            )
+        return [self._decode(row) for row in rows]
+
+    @staticmethod
+    def _decode(row: SeedRunRow) -> ToolRunResult:
+        try:
+            return ToolRunResult.from_dict(json.loads(row.run_json))
+        except (json.JSONDecodeError, TypeError, ValueError) as exc:
+            raise RunLogError(f"corrupt SQL run record {row.id}: {exc}") from exc
+
+
+@dataclass
+class DualReadRunLog:
+    """Read legacy JSONL evidence while appending new records to SQL."""
+
+    primary: RunLog
+    legacy: RunLog
+
+    def append(self, result: ToolRunResult) -> None:
+        self.primary.append(result)
+
+    def for_seed(self, seed_id: str) -> list[ToolRunResult]:
+        seen: set[str] = set()
+        records: list[ToolRunResult] = []
+        for result in [*self.primary.for_seed(seed_id), *self.legacy.for_seed(seed_id)]:
+            key = json.dumps(result.to_dict(), sort_keys=True, separators=(",", ":"))
+            if key not in seen:
+                seen.add(key)
+                records.append(result)
+        return records
+
+
+def run_log(backend: str, home: Path) -> RunLog:
+    """Build the run-evidence store selected by the shared SeedLab backend setting."""
+    if backend == "file":
+        return FileRunLog(Path(home) / "runs")
+    primary = SqlRunLog()
+    if backend == "sql":
+        return primary
+    if backend == "sql-dual-read":
+        return DualReadRunLog(primary, FileRunLog(Path(home) / "runs"))
+    raise RunLogError(
+        f"unknown run log backend {backend!r}; expected file, sql, or sql-dual-read"
+    )
+
+
+def configured_run_log(home: Path) -> RunLog:
+    """Open run evidence through the shared SeedLab registry configuration."""
+    import os
+
+    backend = os.environ.get("CODEFORGE_SEED_REGISTRY", "file").strip() or "file"
+    return run_log(backend, home)
+
+
 def run_and_record(
-    log: InMemoryRunLog | FileRunLog,
+    log: RunLog,
     source: LocalSource,
     profile: str,
     *,
@@ -250,7 +342,7 @@ def run_and_record(
     return result
 
 
-def run_labels(log: InMemoryRunLog | FileRunLog, seed_id: str, kind: str) -> tuple[str, ...]:
+def run_labels(log: RunLog, seed_id: str, kind: str) -> tuple[str, ...]:
     """The `builds`/`tests` facet the Hub renders: one label per persisted run of `kind`."""
     return tuple(
         f"{r.profile} exit={r.exit_code} ({r.duration:.1f}s) @ {r.when}"
