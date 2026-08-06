@@ -22,7 +22,7 @@ verify = ["crosshair-tool>=0.0.109"]
 # tool reports refactor_available() False and fails loud with an install hint; nothing else is
 # affected. LibCST is the only lossless scope-aware codemod path (stdlib ast is lossy). deep=True
 # additionally uses the [verify] extra. CI runs without it (the scope-correctness tests skip).
-refactor = ["libcst>=1.8.6"]
+refactor = ["libcst>=1.9.0"]
 dev = [
     # Pinned: `ruff format --check` is a hard gate, so it must be reproducible. Unpinned, CI installs
     # the latest ruff and local lags -- a minor bump (0.15 -> 0.16) reformatted and reddened CI once.
