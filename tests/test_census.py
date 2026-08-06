@@ -70,6 +70,7 @@ def test_command_reports_assembled_aethryn_runtime_not_only_source_counts():
     assert result.returncode == 0, result.stderr
     assert "[runtime]" in result.stdout
     assert "seed: aethryn" in result.stdout
-    assert "rooms: 52829" in result.stdout
-    assert "npcs: 53037" in result.stdout
-    assert "items: 546" in result.stdout
+    assert "rooms: 52832" in result.stdout
+    assert "npcs: 53040" in result.stdout
+    assert "items: 548" in result.stdout
+    assert "quests: 1832" in result.stdout

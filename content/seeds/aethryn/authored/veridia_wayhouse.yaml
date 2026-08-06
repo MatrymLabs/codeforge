@@ -1,0 +1,112 @@
+# SEED: aethryn -- authored/veridia_wayhouse.yaml (the first road's wayhouse at the Veridia spawn)
+#
+# The generated Veridia hub tells a new traveller what region they are in, but a default Seed needs
+# one place that teaches the world by doing. The Wayfarer's House is that threshold: a map room, a
+# stable-yard, a named guide, and a compass that turns the four existing Veridia town stories into
+# one first-ten-level road. It is deliberately small and reachable from the spawn; the depth lives
+# in its connections and in the quest that uses real rooms, items, NPCs, and combat already shipped.
+
+rooms:
+  veridia_wayhouse:
+    name: The Wayfarer's House
+    desc: >-
+      A low white house stands where the four roads meet, its door open to every traveller who comes
+      out of the valley. A fire burns beneath a painted map, and the walls carry old route-marks,
+      ferry-knots, beacon-signs, and the names of towns that still answer one another. Ways lead OUT
+      to Veridia, NORTH into the map room, and EAST into the stable-yard.
+    exits: {out: veridia, north: veridia_maproom, east: veridia_stableyard}
+  veridia_maproom:
+    name: The Cradle Map Room
+    desc: >-
+      A whole map of Veridia covers the north wall: Greenhold's fountain, Elderwatch's beacon,
+      Riverbend's weir, and Sunmeadow's channel are marked with the same four-point sigil. A brass
+      compass rests on a cedar table beneath the map. The wayhouse is back SOUTH.
+    exits: {south: veridia_wayhouse}
+  veridia_stableyard:
+    name: The Wayhouse Stable-Yard
+    desc: >-
+      A bright yard of tack, feed, and patient little valley horses. Couriers come and go through the
+      east gate, carrying news between the four towns. The wayhouse is back WEST; the road to Greenhold
+      begins just beyond the house.
+    exits: {west: veridia_wayhouse}
+
+hub: {room: veridia, keyword: wayhouse, entry: veridia_wayhouse}
+
+npcs:
+  veridia_wayfinder:
+    name: Wayfinder Maelin
+    keywords: [maelin, wayfinder, guide]
+    location: veridia_wayhouse
+    dialogue:
+      - >-
+        "You woke in the right valley, traveller. Veridia is small enough to learn and old enough to
+        hide things. Take the compass from the map room, then walk the road: Greenhold keeps the
+        water, Elderwatch keeps the warning fires, Riverbend keeps the crossing. The four towns are
+        one cradle, and the road will teach you what the map cannot."
+    topics:
+      road:
+        - >-
+          "Start with Greenhold. Its market is the first honest lesson: find someone in need, go where
+          the trouble lives, and come back changed. Do not rush past the people who keep a place alive."
+      cradle:
+        - >-
+          "The same pale metal turns up in every old work. A fountain, a beacon, a weir, a sun-channel:
+          four hands on one buried machine. The scholars call that a coincidence because the other word
+          frightens them."
+      maelin:
+        - >-
+          "Wayfinder Maelin. I carry no sword worth naming; I carry names, routes, and the promise that
+          a road is still there when you need to find your way home."
+    hp: 0
+  veridia_mapkeeper:
+    name: Scribe Oren
+    keywords: [oren, scribe, mapkeeper]
+    location: veridia_maproom
+    dialogue:
+      - >-
+        "The map is not a picture of a place. It is a promise between places. Mark what you learn, and
+        leave enough of the road for the next traveller to follow."
+    topics:
+      compass:
+        - >-
+          "That compass was made for the old roads. It does not point north. It points toward the next
+          place where the cradle needs a hand. Take it, if Maelin has sent you."
+      sigil:
+        - >-
+          "The four-point mark is older than every town on this map. Greenhold, Elderwatch, Riverbend,
+          Sunmeadow: four works, four duties, one forgotten design."
+    hp: 0
+  veridia_stablehand:
+    name: Stablehand Nera
+    keywords: [nera, stablehand]
+    location: veridia_stableyard
+    dialogue:
+      - >-
+        "The horses know the valley better than any map. Greenhold west, Elderwatch east, Riverbend by
+        the water, Sunmeadow under the bright downs. Keep your eyes open and your return fare close."
+    topics:
+      supplies:
+        - >-
+          "A traveller should leave with water and a little healing draught. The valley is kind to
+          prepared feet and cruel to anyone who mistakes a road for a promise of safety."
+    shop:
+      sells: {healing_draught: 24, water_ration: 3}
+    hp: 0
+
+items:
+  veridia_wayfinder_compass:
+    name: a wayfinder's compass
+    keywords: [compass, wayfinder-compass, wayfinder]
+    location: veridia_maproom
+    lore: >-
+      The needle does not settle on a cardinal direction. It trembles toward the next unfinished task,
+      then rests on the four-point sigil etched beneath the glass. The same mark appears on the old
+      works beneath Greenhold, Elderwatch, Riverbend, and Sunmeadow.
+  veridia_cradle_map:
+    name: the cradle road-map
+    keywords: [map, road-map, cradle-map]
+    location: veridia_maproom
+    lore: >-
+      A working map of Veridia, annotated in generations of different hands. Greenhold's water,
+      Elderwatch's warning, Riverbend's crossing, and Sunmeadow's light are connected by a single
+      faded line that runs beneath the roads.

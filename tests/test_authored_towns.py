@@ -22,6 +22,7 @@ from kernel.world.seed import Room, SeedError, load_rooms
 _AETHRYN = Path(__file__).resolve().parent.parent / "content" / "seeds" / "aethryn"
 _AUTHORED = _AETHRYN / "authored"
 _GH = _AUTHORED / "greenhold.yaml"
+_WAYHOUSE = _AUTHORED / "veridia_wayhouse.yaml"
 
 _GH_INTERIOR = {
     "greenhold_market",
@@ -44,6 +45,7 @@ _GH_INTERIOR = {
 def test_the_pipeline_finds_the_authored_towns():
     files = towns.town_files(_AUTHORED)
     assert _GH in files
+    assert _WAYHOUSE in files
     assert all(p.suffix == ".yaml" for p in files)
 
 
@@ -81,6 +83,25 @@ def test_greenhold_is_a_dense_authored_town():
     assert "lore" in items["greenhold_parish_record"]
     # Reactivity: NPCs cross-reference each other and the town's mysteries.
     assert any("beast" in n.get("topics", {}) for n in npcs.values())
+
+
+def test_veridia_wayhouse_is_a_real_starter_threshold():
+    """The default spawn has a teachable first room, not only a generated zone description."""
+    rooms, npcs, items = towns.raise_town(_WAYHOUSE)
+    assert set(rooms) == {"veridia_wayhouse", "veridia_maproom", "veridia_stableyard"}
+    assert towns._load(_WAYHOUSE)["hub"] == {
+        "room": "veridia",
+        "keyword": "wayhouse",
+        "entry": "veridia_wayhouse",
+    }
+    assert {"veridia_wayfinder", "veridia_mapkeeper", "veridia_stablehand"} <= set(npcs)
+    assert {"veridia_wayfinder_compass", "veridia_cradle_map"} <= set(items)
+    assert npcs["veridia_stablehand"]["shop"]["sells"] == {
+        "healing_draught": 24,
+        "water_ration": 3,
+    }
+    assert "greenhold" in npcs["veridia_wayfinder"]["dialogue"][0].lower()
+    assert "four-point sigil" in items["veridia_wayfinder_compass"]["lore"]
 
 
 # --- Acceptance: it composes onto the real generated aethryn map ----------------------------------
@@ -411,6 +432,11 @@ def test_every_authored_town_meets_the_density_floor():
     for path in towns.town_files(_AUTHORED):
         _, npcs, items = towns.raise_town(path)
         stem = path.stem
+        if stem == "veridia_wayhouse":
+            # The Wayfarer's House is an authored threshold attached to the Veridia spawn, not a
+            # settlement. It has its own starter contract and vendor, but is intentionally excluded
+            # from the settlement density and region-coverage floors below.
+            continue
         assert any(n.get("shop", {}).get("sells") for n in npcs.values()), f"{stem}: a vendor"
         talkers = [n for n in npcs.values() if n["hp"] == 0 and n.get("topics")]
         assert len(talkers) >= 3, f"{stem}: three reactive voices"
@@ -466,6 +492,8 @@ def test_every_canon_region_has_an_authored_town():
     covered = set()
     for path in towns.town_files(_AUTHORED):
         hub = towns._load(path)["hub"]["room"]
+        if hub not in settlements:
+            continue  # threshold interiors (currently the Veridia Wayfarer's House) are not towns
         covered.add(settlements[hub]["zone"])  # the region name the town's hub sits in
     assert covered == canon.locked_region_names(), (
         f"reaches without an authored town: {canon.locked_region_names() - covered}"
