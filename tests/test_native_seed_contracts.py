@@ -57,6 +57,32 @@ def test_committed_native_seed_examples_match_live_builders() -> None:
     )
 
 
+def test_committed_native_seed_registry_matches_live_metadata() -> None:
+    committed = native_seed.REGISTRY_PATH.read_text(encoding="utf-8")
+    assert committed == native_seed.render_registry(), (
+        "native_seed.v1.registry.json is stale: run `make contracts` and commit the result"
+    )
+
+
+def test_native_seed_registry_covers_exactly_the_locked_package_set() -> None:
+    examples = _packages()
+    registry = native_seed.build_registry()
+    raw = registry["packages"]
+    assert isinstance(raw, list)
+    metadata = {str(package["package"]): package for package in raw}
+    assert len(metadata) == len(raw)
+    assert set(metadata) == set(examples)
+    for package_name, package in metadata.items():
+        assert package["direction"] == examples[package_name]["direction"]
+        assert package["status"] == examples[package_name]["status"]
+        assert package["source"]
+        assert package["owner"]
+        assert package["schema_version"] == "1"
+        assert package["classification"] == "internal"
+        assert package["compatibility"] == "additive_fields_only"
+        assert package["text_fallback"]
+
+
 def test_native_seed_examples_cover_the_locked_package_set() -> None:
     doc = _doc()
     assert doc["contract"] == "native-seed-gmcp"
@@ -106,7 +132,7 @@ def test_seed_created_fixture_matches_the_engine_verdict_builder() -> None:
     )
 
 
-def test_profile_fixture_is_marked_until_forge_has_a_profile_emitter() -> None:
+def test_profile_fixture_is_emitted_by_forge() -> None:
     profile = _packages()["Seed.Profile"]
-    assert profile["status"] == "client_profile_shape_locked_pending_engine_emitter"
+    assert profile["status"] == "implemented"
     assert profile["direction"] == "server_to_client"

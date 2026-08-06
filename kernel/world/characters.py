@@ -13,7 +13,7 @@ from __future__ import annotations
 import json
 from typing import Any
 
-from kernel.world import allocate, professions, reputation
+from kernel.world import allocate, appearance, professions, reputation
 from kernel.world import friends as friends_mod
 from kernel.world import lockouts as lockouts_mod
 from kernel.world.character_store import CharacterRecord, CharacterStore
@@ -142,6 +142,7 @@ def _clear_carrier(player_id: str) -> None:
 
 def _record_to_casefile(record: CharacterRecord) -> dict[str, Any]:
     casefile: dict[str, Any] = {
+        "appearance": record.appearance,
         "job": record.job,
         "secondary_job": record.secondary_job,
         "level": record.level,
@@ -171,6 +172,13 @@ def load_character(name: str, store: CharacterStore | None = None) -> dict[str, 
     return _record_to_casefile(record) if record is not None else None
 
 
+def characters_for_account(
+    account: str, store: CharacterStore | None = None
+) -> list[CharacterRecord]:
+    """List an account's heroes without exposing authentication fields."""
+    return (store or _default_store()).for_account(account)
+
+
 def put_record(name: str, casefile: dict[str, Any], store: CharacterStore | None = None) -> None:
     """Write one full casefile through the single storage door (auth columns included)."""
     from kernel.world.world import START_ROOM
@@ -178,6 +186,7 @@ def put_record(name: str, casefile: dict[str, Any], store: CharacterStore | None
     auth = casefile.get("auth") or {}
     record = CharacterRecord(
         name=name,
+        appearance=str(casefile.get("appearance", "")),
         job=casefile.get("job", ""),
         secondary_job=casefile.get("secondary_job", ""),
         level=int(casefile.get("level", 1)),
@@ -219,6 +228,7 @@ def save_character(session: Session, store: CharacterStore | None = None) -> Non
         location=session.location,
         rank=session.rank,
         account=session.account,
+        appearance=appearance.serialize(session.appearance),
         order=session.order,
         guild=session.guild,
         guild_rank=session.guild_rank,
@@ -275,6 +285,7 @@ def restore_character(session: Session, casefile: dict[str, Any]) -> None:
     session.named = True
     session.rank = str(casefile.get("rank", "player"))
     session.account = str(casefile.get("account", ""))
+    session.appearance = appearance.deserialize(str(casefile.get("appearance", "")))
     session.order = str(casefile.get("order", ""))
     session.guild = str(casefile.get("guild", ""))
     session.guild_rank = str(casefile.get("guild_rank", ""))

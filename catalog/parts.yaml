@@ -2311,3 +2311,21 @@
     education: teach per-observer projection (state canonical, text a projection)
     security: none
     general: a per-observer name-resolution layer for any actor-to-actor naming
+
+- id: workflow-outline
+  name: Workflow Outline
+  source: kernel/shelf/workflow_outline.py
+  category: workflow
+  tags: [workflow, outline, accessibility, authoring, projection]
+  maturity: prototype
+  source_status: original
+  influence: 'CodeForge CF-407 experiment: an accessible structured projection over canonical workflow data'
+  license: MIT
+  experimental: 'prove a second Seed consumer before promotion to Fleet Core; the graphical canvas remains deferred.'
+  risk: low
+  purpose: 'Render a durable workflow as a keyboard-friendly hierarchical outline with semantic summaries and stable model identifiers.'
+  reuse:
+    game: expose quest, dialogue, and content workflows without requiring a node canvas
+    education: teach workflow structure through an accessible outline projection
+    security: present approval and remediation paths as inspectable ordered steps
+    general: provide a text-first workflow authoring and review projection

@@ -15,6 +15,9 @@ number the game itself would not compute.
 from __future__ import annotations
 
 import json
+from pathlib import Path
+
+import yaml
 
 from kernel.shelf.telnet_codec import IAC, SB, SE, escape_iac, read_negotiation
 from kernel.world.character_view import sheet_from_session
@@ -42,7 +45,10 @@ __all__ = [
     "read_gmcp_package",
     "resists_report",
     "room_report",
+    "aethryn_profile",
+    "observation_report",
     "seed_hello",
+    "seed_profile",
     "skills_report",
     "target_report",
     "vitals_report",
@@ -73,6 +79,136 @@ def seed_hello(
     if profile:
         payload["profile"] = profile
     return payload
+
+
+def seed_profile(
+    seed_id: str,
+    name: str,
+    publisher: str,
+    version: str,
+    *,
+    theme: str | None = None,
+    terminology: dict[str, str] | None = None,
+    panels: list[dict[str, str]] | None = None,
+    accessibility: list[str] | None = None,
+    localization: dict[str, object] | None = None,
+) -> dict[str, object]:
+    """Build a pure declarative Seed Client Profile from named panel bindings.
+
+    A profile contains no executable behavior. Bindings are read paths interpreted by the client;
+    the authoritative GMCP emitters remain separate engine functions and plain text remains the
+    fallback when a structured value is absent.
+    """
+    required = {
+        "seed": seed_id,
+        "name": name,
+        "publisher": publisher,
+        "version": version,
+    }
+    if any(not isinstance(value, str) or not value.strip() for value in required.values()):
+        raise ValueError("Seed profile identity fields must be non-empty strings")
+    payload: dict[str, object] = {
+        **required,
+        "terminology": dict(terminology or {}),
+        "panels": [dict(panel) for panel in (panels or [])],
+        "accessibility": list(accessibility or []),
+    }
+    if theme:
+        payload["theme"] = theme
+    if localization:
+        payload["localization"] = dict(localization)
+    return payload
+
+
+def aethryn_profile(
+    version: str = "1.0.0", *, seed_id: str = "aethryn", name: str = "Aethryn"
+) -> dict[str, object]:
+    """The canonical game profile, loading only a validated current-contract data file."""
+    path = (
+        Path(__file__).resolve().parents[1]
+        / "content"
+        / "seeds"
+        / seed_id
+        / "client_profile.yaml"
+    )
+    if path.exists():
+        data = yaml.safe_load(path.read_text(encoding="utf-8"))
+        if not isinstance(data, dict):
+            raise ValueError(f"client profile must be a mapping: {path}")
+        panels = data.get("panels", [])
+        if not isinstance(panels, list):
+            raise ValueError(f"client profile panels must be a list: {path}")
+        clean_panels: list[dict[str, str]] = []
+        for panel in panels:
+            if not isinstance(panel, dict) or not all(
+                isinstance(panel.get(key), str) and panel[key].strip()
+                for key in ("name", "binding", "fallback")
+            ):
+                raise ValueError(f"client profile panel needs name, binding, and fallback: {path}")
+            clean_panels.append(
+                {key: str(panel[key]) for key in ("name", "binding", "fallback")}
+            )
+        terminology = data.get("terminology", {})
+        accessibility = data.get("accessibility", [])
+        if not isinstance(terminology, dict) or not all(
+            isinstance(key, str) and isinstance(value, str) for key, value in terminology.items()
+        ):
+            raise ValueError(f"client profile terminology must be a string map: {path}")
+        if not isinstance(accessibility, list) or not all(
+            isinstance(value, str) for value in accessibility
+        ):
+            raise ValueError(f"client profile accessibility must be a string list: {path}")
+        return seed_profile(
+            seed_id,
+            name,
+            str(data.get("publisher", "Matrym Labs")),
+            version,
+            theme=str(data.get("theme", "forge")),
+            terminology={str(key): str(value) for key, value in terminology.items()},
+            panels=clean_panels,
+            accessibility=[str(value) for value in accessibility],
+        )
+    return seed_profile(
+        seed_id,
+        name,
+        "Matrym Labs",
+        version,
+        theme="forge",
+        terminology={"class": "calling", "health": "vitality"},
+        panels=[
+            {
+                "name": "Region",
+                "binding": "Room.Info.area",
+                "fallback": "The current region is not available yet.",
+            },
+            {
+                "name": "Map",
+                "binding": "Room.Info.exits",
+                "fallback": "The current map exits are not available yet.",
+            },
+            {
+                "name": "Character",
+                "binding": "Char.Vitals.level",
+                "fallback": "Character status is not available yet.",
+            },
+            {
+                "name": "Calling",
+                "binding": "Char.Skills",
+                "fallback": "Calling abilities are not available yet.",
+            },
+            {
+                "name": "Quest",
+                "binding": "Char.Quest.state",
+                "fallback": "Quest status is not available yet.",
+            },
+            {
+                "name": "Observation Log",
+                "binding": "World.Observation.recent",
+                "fallback": "No observations are available yet.",
+            },
+        ],
+        accessibility=["screen_reader", "no_color"],
+    )
 
 
 def gmcp_frame(package: str, data: object) -> bytes:
@@ -199,11 +335,29 @@ def room_report(session: Session) -> dict[str, object]:
         "num": session.location,
         "name": room["name"],
         "exits": dict(room["exits"]),
+        "exit_names": {
+            direction: WORLD[destination]["name"]
+            for direction, destination in room["exits"].items()
+            if destination in WORLD
+        },
     }
     area = zone_of(session.location)
     if area is not None:
         report["area"] = area
     return report
+
+
+def observation_report(session: Session | None = None) -> dict[str, object]:
+    """Return the bounded observation log and tallies from the existing encounter store."""
+    del session  # the observation log is Seed-scoped rather than character-scoped
+    from kernel.world.encounter_log import recent, tally
+
+    return {
+        "recent": [
+            {"kind": event.kind, "who": event.who, "detail": event.detail} for event in recent()
+        ],
+        "tallies": tally(),
+    }
 
 
 def target_report(session: Session) -> dict[str, object] | None:

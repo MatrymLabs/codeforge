@@ -109,6 +109,28 @@ backend (`DATABASE_URL` set) it refuses loud and points you to `pg_dump`.
 2. Copy a snapshot over the live file: `cp backups/codeforge-<stamp>.db codeforge.db`.
 3. Restart.
 
+### PostgreSQL recovery drill
+
+PostgreSQL backups are intentionally delegated to the native tools rather than the SQLite helper.
+Run this only with a disposable, empty restore database; never point `PG_RECOVERY_DB` at the live
+database. The drill proves both schema and data recovery:
+
+```bash
+export DATABASE_URL=postgresql+psycopg://codeforge:codeforge@localhost:5432/codeforge
+export PG_RECOVERY_DB=codeforge_recovery_probe
+
+createdb "$PG_RECOVERY_DB"                         # disposable empty target
+pg_dump --format=custom --file=/tmp/codeforge.dump "$DATABASE_URL"
+pg_restore --exit-on-error --dbname="$PG_RECOVERY_DB" /tmp/codeforge.dump
+
+psql "$PG_RECOVERY_DB" -c 'select version_num from alembic_version;'
+```
+
+Before the dump, write a deliberately identifiable test record through the application or an
+isolated probe table. After restoring, verify that record and the Alembic head, then mutate the
+source and verify the restored value remains unchanged. Remove the disposable database and dump
+after the drill. A backup is not recovery evidence until the restore and post-restore read pass.
+
 **Schema-drift caveat.** `open_archive_session` runs `create_all(checkfirst=True)`, which creates
 missing *tables* but never missing *columns*. So if the ORM gains a column, a plain restart yields
 a silent "no such column" at runtime. After any model change, run the migration, not just a

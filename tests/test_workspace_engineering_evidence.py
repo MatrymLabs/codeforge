@@ -96,3 +96,17 @@ def test_workspace_does_not_project_evidence_for_another_seed() -> None:
 
     payload = workspace_packages(seed, manifest_evidence=(other,))[-1][1]
     assert payload["manifest_runs"] == []
+
+    foreign_hardware = HardwareRecord(
+        component_id="foreign-validator",
+        version="1.0.0",
+        state="active",
+        source="builtin",
+        license="Matrym Labs internal",
+        provenance="codeforge",
+        consumers=("seed-other",),
+        history=("discovered", "validated", "approved", "installed", "active"),
+    )
+    foreign_payload = workspace_packages(seed, hardware_records=(foreign_hardware,))[-1][1]
+    assert foreign_payload["hardware"] == []
+    assert foreign_payload["lifecycle"]["activations"] == []

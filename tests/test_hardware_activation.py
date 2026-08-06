@@ -14,6 +14,7 @@ from kernel.hardware_activation import (
 )
 from kernel.hardware_lifecycle import HardwareRegistry
 from kernel.hardware_promotion import PromotionPacket, PromotionPacketStore
+from kernel.permission_policy import PermissionContext, PermissionPolicy, PermissionRule
 from kernel.shelf.plugin_registry import PluginInfo, PluginRegistry
 
 
@@ -269,3 +270,54 @@ def test_activation_boundary_can_require_and_apply_promotion_evidence(tmp_path):
     )
     assert hardware.get("validator").state == "active"
     assert packets.load(packet.packet_id) == packet
+
+
+def test_activation_boundary_applies_seed_scoped_policy_before_consuming_approval(tmp_path):
+    hardware = HardwareRegistry(tmp_path / "hardware.json")
+    _installed(hardware)
+    ledger = ActivationApprovalLedger(tmp_path / "approval-ledger.json")
+    now = datetime(2026, 8, 5, 18, 0, tzinfo=UTC)
+    approval = ActivationApproval(
+        "approval-policy",
+        "validator",
+        hardware.get("validator").version,
+        "seed-a",
+        "reviewer",
+        (now + timedelta(minutes=5)).isoformat(),
+    )
+    with pytest.raises(ActivationApprovalError, match="authorization refused"):
+        activate_hardware_component_with_approval(
+            hardware,
+            "validator",
+            PluginRegistry(),
+            PluginInfo("validator"),
+            object(),
+            approval=approval,
+            ledger=ledger,
+            seed_id="seed-a",
+            now=now,
+            policy=PermissionPolicy(),
+            permission=PermissionContext("operator", capabilities=frozenset()),
+        )
+    assert hardware.get("validator").state == "installed"
+    assert ledger.audit_records() == ()
+
+    activate_hardware_component_with_approval(
+        hardware,
+        "validator",
+        PluginRegistry(),
+        PluginInfo("validator"),
+        object(),
+        approval=approval,
+        ledger=ledger,
+        seed_id="seed-a",
+        now=now,
+        policy=PermissionPolicy((PermissionRule("component.activate", scope="seed-a"),)),
+        permission=PermissionContext(
+            "operator", capabilities=frozenset({"component.activate"})
+        ),
+    )
+    audit = ledger.audit_records()[0]
+    assert audit["actor_id"] == "operator"
+    assert audit["seed_id"] == "seed-a"
+    assert audit["component_id"] == "validator"

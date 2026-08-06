@@ -24,6 +24,7 @@ from kernel.hardware_activation import (
 from kernel.hardware_lifecycle import HardwareLifecycleError, HardwareRegistry
 from kernel.permission_policy import PermissionDenied, PermissionPolicy
 from kernel.session_identity import SessionIdentity, SessionIdentityError
+from kernel.session_registry import SessionRegistry
 from kernel.shelf.plugin_registry import PluginInfo, PluginRegistry
 
 
@@ -56,6 +57,7 @@ class HardwareRuntimeController[T]:
     seed_id: str
     consumer: str
     providers: dict[str, TrustedHardwareProvider[T]] = field(default_factory=dict)
+    session_registry: SessionRegistry | None = None
 
     def __post_init__(self) -> None:
         if not self.seed_id.strip():
@@ -95,6 +97,8 @@ class HardwareRuntimeController[T]:
             raise PermissionDenied(str(exc)) from exc
         if not identity.is_active(now):
             raise PermissionDenied(f"session {identity.session_id!r} is expired")
+        if self.session_registry is not None:
+            self.session_registry.require_active(identity, now=now)
         policy.require(identity.permission_context(), capability=capability, scope=self.seed_id)
 
     def activate(
@@ -126,6 +130,8 @@ class HardwareRuntimeController[T]:
             seed_id=self.seed_id,
             now=effective_now,
             artifact_digest=artifact_digest,
+            policy=policy,
+            permission=identity.permission_context(),
         )
         try:
             self.hardware.register_consumer(component_id, self.consumer)

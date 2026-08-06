@@ -27,13 +27,12 @@
     {
       "package": "Seed.Profile",
       "direction": "server_to_client",
-      "status": "client_profile_shape_locked_pending_engine_emitter",
+      "status": "implemented",
       "payload": {
         "seed": "job-tracker",
         "name": "Job Tracker",
         "publisher": "Matrym Labs",
         "version": "1.0.0",
-        "theme": "forge",
         "terminology": {
           "seed": "workspace"
         },
@@ -56,7 +55,8 @@
         ],
         "accessibility": [
           "screen_reader"
-        ]
+        ],
+        "theme": "forge"
       }
     },
     {
@@ -111,6 +111,38 @@
         "file_count": 2,
         "branch": "main",
         "commit": "a1b2c3d",
+        "digest": "",
+        "connector": {
+          "connector_id": "connector.local-source",
+          "provider": "CodeForge Seed Runtime",
+          "purpose": "Read approved source files and metadata for Seed engineering workflows.",
+          "capabilities": [
+            "source.list",
+            "source.read",
+            "source.search",
+            "source.identify"
+          ],
+          "authentication_method": "session_identity",
+          "data_read": [
+            "approved_source_files",
+            "source_metadata"
+          ],
+          "data_written": [],
+          "classification_ceiling": "private",
+          "allowed_seeds": [
+            "job-tracker"
+          ],
+          "timeout_seconds": 30,
+          "retry_policy": "none",
+          "idempotency": "read_only",
+          "audit_policy": "request_and_denial",
+          "revocation": "deny_after_session_expiry_or_policy_revocation",
+          "removal_procedure": "revoke_session_and_persist_removal_tombstone",
+          "rate_limit": "30 read requests/minute per session",
+          "health_check": "root_exists_and_digest_matches",
+          "pinned_revision": "a1b2c3d",
+          "pinned_digest": ""
+        },
         "seed": "job-tracker"
       }
     },

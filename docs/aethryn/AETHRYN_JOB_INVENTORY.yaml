@@ -1,0 +1,18 @@
+version: 1
+source: content/seeds/aethryn/jobs.yaml
+verified_current: true
+count: 30
+calling_roster: [vanguard, pathfinder, emberwright, duelist, sentinel, berserker, ranger, scout, shadowblade, saboteur, arcanist, elementalist, chronomancer, summoner, cleric, oracle, templar, warden, engineer, artificer, gunsmith, mechanist, druid, beastmaster, stormcaller, geomancer, reaver, trickster, runesmith, hierophant]
+current_status:
+  starting_candidates: [vanguard, pathfinder, emberwright]
+  current_data_tier: unverified_in_seed
+  current_unlock_rules: not_declared_in_jobs_yaml
+  current_job_levels: implemented_by_progression_module
+  current_primary_secondary: implemented
+  migration_classification: PRESERVE_AND_EXTEND
+open_audit_fields: [role_tags, job_tier, family, prerequisites, visibility, quest_gate, trial_gate, mastery_contract, profession_relationship]
+evidence:
+  - docs/job_system.md
+  - docs/character_system.md
+  - content/seeds/aethryn/jobs.yaml
+

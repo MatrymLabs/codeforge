@@ -29,6 +29,7 @@ class CharacterRecord:
     a full write, but a gameplay save leaves them untouched."""
 
     name: str
+    appearance: str = ""  # JSON presentation choices, currently skin_color
     job: str = ""
     secondary_job: str = ""
     level: int = 1
@@ -58,6 +59,10 @@ class CharacterStore(Protocol):
 
     def find(self, name: str) -> CharacterRecord | None:
         """The saved record for a name, or None if no such character exists."""
+        ...
+
+    def for_account(self, account: str) -> list[CharacterRecord]:
+        """Return the account's heroes in stable name order, without credentials."""
         ...
 
     def upsert_full(self, record: CharacterRecord) -> None:
@@ -98,6 +103,12 @@ class InMemoryCharacterStore:
 
     def find(self, name: str) -> CharacterRecord | None:
         return self._rows.get(name)
+
+    def for_account(self, account: str) -> list[CharacterRecord]:
+        return sorted(
+            (row for row in self._rows.values() if row.account == account),
+            key=lambda row: row.name,
+        )
 
     def upsert_full(self, record: CharacterRecord) -> None:
         self._rows[record.name] = record

@@ -314,13 +314,34 @@ DIRECTIONS: dict[str, str] = {
     "u": "up",
     "down": "down",
     "d": "down",
+    "in": "in",
+    "out": "out",
 }
 
 
 def render_room(room_id: str) -> str:
+    """Render the room's stable, scannable presentation.
+
+    Room prose remains authored by the Seed. The engine owns the hierarchy around it so a long
+    description cannot bury the navigation affordance: title, description, then a compact exit
+    table whose destination names are visible without requiring another command. Named exits are
+    retained for thresholds and portals, while compass exits always display their canonical words.
+    """
     room = WORLD[room_id]
-    exits = ", ".join(room["exits"]) or "none"
-    return f"\n== {room['name']} ==\n{room['desc']}\nExits: {exits}"
+    lines = [f"\n== {room['name']} ==", "", "DESCRIPTION", f"  {room['desc']}", "", "EXITS"]
+    exits = room.get("exits", {})
+    if not exits:
+        lines.append("  none")
+    else:
+        for direction, destination in exits.items():
+            label = DIRECTIONS.get(direction, direction)
+            destination_name = (
+                "Locked passage"
+                if barred_door_for(room_id, label)
+                else WORLD.get(destination, {}).get("name", destination)
+            )
+            lines.append(f"  {label:<10} — {destination_name}")
+    return "\n".join(lines)
 
 
 def dynamic_capability(room_id: str) -> str:

@@ -9,6 +9,7 @@ from kernel.hardware_runtime import HardwareRuntimeController, HardwareRuntimeEr
 from kernel.permission_policy import PermissionDenied, PermissionPolicy, PermissionRule
 from kernel.seedlab.workshop_services import CreatorWorkshopService
 from kernel.session_identity import SessionIdentity
+from kernel.session_registry import FileSessionRegistry, SessionRegistryError
 from kernel.shelf.plugin_registry import PluginInfo, PluginRegistry
 
 
@@ -126,6 +127,32 @@ def test_controller_enforces_seed_scoped_permission_and_separate_reviewer(tmp_pa
             ),
             ledger=ActivationApprovalLedger(tmp_path / "self-approvals.json"),
             identity=_identity("seed-a"),
+            policy=_policy(),
+            now=datetime(2026, 8, 5, 18, 0, tzinfo=UTC),
+        )
+
+
+def test_controller_rechecks_authoritative_session_invalidation(tmp_path):
+    hardware, controller, _plugin = _controller(tmp_path)
+    registry = FileSessionRegistry(tmp_path / "sessions")
+    identity = _identity("seed-a")
+    registry.issue(identity)
+    controller = HardwareRuntimeController(
+        hardware,
+        PluginRegistry(),
+        seed_id="seed-a",
+        consumer="seed-a",
+        session_registry=registry,
+    )
+    controller.register_provider(PluginInfo("validator"), lambda: object())
+    registry.invalidate(identity.session_id, actor="operator", reason="logout")
+
+    with pytest.raises(SessionRegistryError, match="invalidated"):
+        controller.activate(
+            "validator",
+            approval=_approval(hardware),
+            ledger=ActivationApprovalLedger(tmp_path / "approvals.json"),
+            identity=identity,
             policy=_policy(),
             now=datetime(2026, 8, 5, 18, 0, tzinfo=UTC),
         )

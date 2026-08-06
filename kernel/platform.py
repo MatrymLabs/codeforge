@@ -95,8 +95,8 @@ def bootstrap_platform(*, seed: str, selection_source: str) -> PlatformStartup:
 
     try:
         validate_startup_schema()
+        from kernel.platform_db import open_archive_session
         from kernel.world import accounts as _accounts
-        from kernel.world.db import open_archive_session
 
         with open_archive_session():
             pass

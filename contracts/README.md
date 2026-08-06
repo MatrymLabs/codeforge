@@ -36,6 +36,7 @@ The Native Seed GMCP package examples shared by `codeforge` and `codeforge-clien
 
 `contracts/native_seed.py` builds the examples from Forge's current package builders. The committed
 artifact is a drift gate, not a runtime dependency: consumers vendor or read the JSON examples and
-prove their parsers still accept them. `Seed.Profile` is explicitly marked as a locked profile
-shape pending a full Forge profile emitter. The workspace connector entry is additive: it locks the
-structured provenance and connection details emitted for a registered local source.
+prove their parsers still accept them. `Seed.Profile` is emitted as pure data by
+`kernel.gmcp.seed_profile` and the canonical `aethryn_profile`; the client validates it before
+applying presentation. The workspace connector entry is additive: it locks the structured
+provenance and connection details emitted for a registered local source.

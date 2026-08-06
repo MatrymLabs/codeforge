@@ -197,7 +197,7 @@ def local_connector_manifest(
         idempotency="read_only",
         audit_policy="request_and_denial",
         revocation="deny_after_session_expiry_or_policy_revocation",
-        removal_procedure="revoke_session_and_delete_registered_source_record",
+        removal_procedure="revoke_session_and_persist_removal_tombstone",
         pinned_revision=pinned_revision,
         pinned_digest=pinned_digest,
     )

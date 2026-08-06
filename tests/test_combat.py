@@ -303,6 +303,60 @@ def test_defeating_an_npc_spawns_its_loot_drops():
         items.ITEMS.update(items_snap)
 
 
+def test_a_mortal_defeat_cannot_issue_the_same_reward_twice():
+    """A corpse leaves the room target index, so replaying the command cannot mint loot or coin."""
+    from kernel.world import items
+
+    items_snap = copy.deepcopy(items.ITEMS)
+    try:
+        s = _fighter(location="courtyard")
+        rewarder = Npc(
+            name="the rewarder",
+            keywords=["rewarder"],
+            location="courtyard",
+            dialogue=["..."],
+            next_line=0,
+            hp=1,
+            hp_now=1,
+            xp=1,
+            atk=0,
+        )
+        rewarder["drops"] = ["copper_key"]
+        npcs.NPCS["rewarder"] = rewarder
+        npcs.reindex_npcs()
+        before = sum(
+            1
+            for iid in items.ITEMS
+            if items.prototype_of(iid) == "copper_key"
+            and items.ITEMS[iid]["location"] == "room:courtyard"
+        )
+
+        first = attack(s, "rewarder")
+        coins_after_first = s.coins
+        after_first = sum(
+            1
+            for iid in items.ITEMS
+            if items.prototype_of(iid) == "copper_key"
+            and items.ITEMS[iid]["location"] == "room:courtyard"
+        )
+        second = attack(s, "rewarder")
+
+        assert "collapses" in first
+        assert coins_after_first > 0
+        assert after_first == before + 1
+        assert "There is no one like that here" in second
+        assert s.coins == coins_after_first
+        assert sum(
+            1
+            for iid in items.ITEMS
+            if items.prototype_of(iid) == "copper_key"
+            and items.ITEMS[iid]["location"] == "room:courtyard"
+        ) == after_first
+    finally:
+        items.ITEMS.clear()
+        items.ITEMS.update(items_snap)
+
+
 def test_a_drop_of_an_unknown_prototype_is_skipped_not_a_crash():
     from kernel.world import items
 

@@ -93,7 +93,7 @@ korvash_highlands_wild:
   trail_length: 2285
 
 shattered_isles_wild:
-  name: The The Shattered Isles Wilds
+  name: The Shattered Isles Wilds
   region: "The Shattered Isles"
   biome: coastal-strand
   attach: shattered_isles
@@ -113,7 +113,7 @@ skyward_spires_wild:
   trail_length: 1142
 
 the_deepreach_wild:
-  name: The The Deepreach Wilds
+  name: The Deepreach Wilds
   region: "The Deepreach"
   biome: volcanic-flats
   attach: the_deepreach
@@ -123,7 +123,7 @@ the_deepreach_wild:
   trail_length: 2857
 
 the_voidscar_wild:
-  name: The The Voidscar Wilds
+  name: The Voidscar Wilds
   region: "The Voidscar"
   biome: volcanic-flats
   attach: the_voidscar
@@ -131,4 +131,3 @@ the_voidscar_wild:
   level_min: 250
   level_max: 300
   trail_length: 1714
-

@@ -15,13 +15,13 @@ from pathlib import Path
 
 from sqlalchemy.orm import Session as SqlSession
 
+from kernel.platform_db import SeedArtifactRow, open_archive_session
 from kernel.seedlab.artifact_store import (
     ArtifactRecord,
     ArtifactStore,
     ArtifactStoreError,
     FileArtifactStore,
 )
-from kernel.world.db import SeedArtifactRow, open_archive_session
 
 
 @dataclass

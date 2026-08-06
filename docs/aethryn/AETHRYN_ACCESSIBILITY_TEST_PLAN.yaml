@@ -1,0 +1,17 @@
+version: 1
+principles: [not_color_only, keyboard_complete, text_complete, linearizable, predictable_focus, adjustable_width, reduced_decoration]
+profiles: [standard, narrow, compact, verbose, linear, no_ansi, ascii]
+tests:
+  - {id: A11Y-001, name: color_independence, assert: "status remains distinguishable with ANSI removed"}
+  - {id: A11Y-002, name: reflow, assert: "no essential line exceeds configured width"}
+  - {id: A11Y-003, name: linear_tables, assert: "every table has labelled sequential form"}
+  - {id: A11Y-004, name: keyboard, assert: "every panel action has a command and focus order"}
+  - {id: A11Y-005, name: combat_noise, assert: "compact mode groups ambient events and retains consequential events"}
+  - {id: A11Y-006, name: job_graph, assert: "graph has a complete linear prerequisite listing"}
+  - {id: A11Y-007, name: errors, assert: "errors name cause and next action"}
+  - {id: A11Y-008, name: destructive_confirmation, assert: "delete/archive/publish require explicit confirmation"}
+  - {id: A11Y-009, name: status_announcement, assert: "important state changes are announced without focus theft"}
+  - {id: A11Y-010, name: glyph_fallback, assert: "Unicode-disabled output has equivalent ASCII tokens"}
+manual_review: [screen_reader_linear_order, keyboard_only_character_creation, narrow_client_combat, reduced_motion_master_client]
+security_review_required: [password_recovery, account_lockout, external_identity]
+

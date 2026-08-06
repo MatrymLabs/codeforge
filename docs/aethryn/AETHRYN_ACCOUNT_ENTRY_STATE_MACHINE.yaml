@@ -1,0 +1,32 @@
+version: 1
+authority: Seed_Runtime
+states: [DISCONNECTED, WELCOME, ACCOUNT_CREATION, AUTHENTICATING, AUTHENTICATION_FAILED, AUTHENTICATED, CHARACTER_SELECTION, CHARACTER_CREATION, CHARACTER_CONFIRMATION, ENTERING_WORLD, IN_WORLD, LINK_LOST, RECONNECTING, LOGGING_OUT]
+transitions:
+  - {from: DISCONNECTED, trigger: tcp_or_local_connect, to: WELCOME, output: splash_and_account_prompt}
+  - {from: WELCOME, trigger: new, to: ACCOUNT_CREATION, validation: handle_syntax_and_availability}
+  - {from: WELCOME, trigger: handle_and_secret, to: AUTHENTICATING, validation: rate_limit_and_secret_check}
+  - {from: AUTHENTICATING, trigger: valid_secret, to: AUTHENTICATED, persistence: session_account_id}
+  - {from: AUTHENTICATING, trigger: invalid_secret, to: AUTHENTICATION_FAILED, output: reason_without_account_enumeration}
+  - {from: AUTHENTICATION_FAILED, trigger: retry_within_budget, to: WELCOME}
+  - {from: AUTHENTICATED, trigger: account_has_characters, to: CHARACTER_SELECTION}
+  - {from: AUTHENTICATED, trigger: no_characters_or_create, to: CHARACTER_CREATION}
+  - {from: CHARACTER_SELECTION, trigger: select_character, to: ENTERING_WORLD, validation: ownership_and_availability}
+  - {from: CHARACTER_SELECTION, trigger: create, to: CHARACTER_CREATION}
+  - {from: CHARACTER_CREATION, trigger: complete, to: CHARACTER_CONFIRMATION}
+  - {from: CHARACTER_CONFIRMATION, trigger: confirm, to: ENTERING_WORLD, persistence: atomic_character_create}
+  - {from: CHARACTER_CONFIRMATION, trigger: back_or_cancel, to: CHARACTER_CREATION}
+  - {from: ENTERING_WORLD, trigger: restore_success, to: IN_WORLD, output: room_and_state_projection}
+  - {from: IN_WORLD, trigger: socket_loss, to: LINK_LOST, persistence: autosave_and_presence_offline}
+  - {from: LINK_LOST, trigger: reconnect_with_account, to: RECONNECTING, validation: session_and_character_ownership}
+  - {from: RECONNECTING, trigger: restore_success, to: CHARACTER_SELECTION}
+  - {from: IN_WORLD, trigger: logout, to: LOGGING_OUT, persistence: final_save}
+  - {from: LOGGING_OUT, trigger: save_complete, to: DISCONNECTED}
+security:
+  failed_login_limit: 5
+  failed_login_window_seconds: 300
+  secret_never_echoed: true
+  security_review_required: [password_hashing, recovery, external_identity, lockout_policy, audit_retention]
+compatibility:
+  traditional_client: prompt_driven
+  master_client: same_transitions_with_structured_forms
+

@@ -1,0 +1,44 @@
+version: 1
+status: proposed_graph; implementation_blocked_until_founder_approval
+nodes:
+  starting: [vanguard, pathfinder, emberwright]
+  foundational: [duelist, ranger, arcanist, cleric, engineer, druid]
+  intermediate: [sentinel, scout, elementalist, oracle, artificer, beastmaster]
+  hybrid: [reaver, shadowblade, chronomancer, templar, gunsmith, stormcaller]
+  specialist: [berserker, saboteur, summoner, warden, mechanist, geomancer, trickster, runesmith]
+  prestige: [hierophant]
+edges:
+  - [vanguard, duelist]
+  - [pathfinder, duelist]
+  - [pathfinder, ranger]
+  - [emberwright, arcanist]
+  - [vanguard, sentinel]
+  - [ranger, scout]
+  - [arcanist, elementalist]
+  - [cleric, oracle]
+  - [emberwright, artificer]
+  - [pathfinder, beastmaster]
+  - [vanguard, reaver]
+  - [duelist, shadowblade]
+  - [arcanist, chronomancer]
+  - [cleric, templar]
+  - [ranger, gunsmith]
+  - [druid, stormcaller]
+  - [duelist, berserker]
+  - [scout, saboteur]
+  - [summoner, arcanist]
+  - [sentinel, warden]
+  - [engineer, mechanist]
+  - [druid, geomancer]
+  - [scout, trickster]
+  - [emberwright, runesmith]
+  - [cleric, hierophant]
+  - [oracle, hierophant]
+  - [warden, hierophant]
+rules:
+  - graph_must_remain_acyclic
+  - every_edge_has_a_teaching_or_lore_reason
+  - every_node_has_a_solo_viable_path
+  - no_job_is_required_only_to_slow_progress
+  - switching_never_deletes_job_progress
+

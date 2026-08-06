@@ -13,6 +13,22 @@ from dataclasses import dataclass
 from datetime import datetime
 
 CLASSIFICATIONS = frozenset({"public", "internal", "sensitive"})
+SEMANTIC_CHANNELS = frozenset(
+    {
+        "navigation",
+        "dialogue",
+        "combat",
+        "status",
+        "urgent",
+        "build",
+        "test",
+        "security",
+        "accessibility",
+        "deployment",
+        "administrative",
+        "background",
+    }
+)
 
 
 class EventEnvelopeError(ValueError):
@@ -62,6 +78,7 @@ class EventEnvelope:
     accessibility_summary: str
     correlation_id: str
     localization_key: str = ""
+    semantic_channel: str = "status"
 
     def __post_init__(self) -> None:
         for field in (
@@ -92,6 +109,12 @@ class EventEnvelope:
         )
         if self.localization_key and not isinstance(self.localization_key, str):
             raise EventEnvelopeError("localization_key must be a string")
+        channel = _required_text(self.semantic_channel, "semantic_channel")
+        if channel not in SEMANTIC_CHANNELS:
+            raise EventEnvelopeError(
+                f"semantic_channel must be one of {sorted(SEMANTIC_CHANNELS)}"
+            )
+        object.__setattr__(self, "semantic_channel", channel)
 
     def to_dict(self) -> dict[str, object]:
         """Return a JSON-safe wire representation."""
@@ -109,6 +132,7 @@ class EventEnvelope:
             "accessibility_summary": self.accessibility_summary,
             "correlation_id": self.correlation_id,
             "localization_key": self.localization_key,
+            "semantic_channel": self.semantic_channel,
         }
 
     @classmethod
@@ -133,7 +157,13 @@ class EventEnvelope:
         missing = [field for field in required if field not in value]
         if missing:
             raise EventEnvelopeError(f"event envelope missing: {', '.join(missing)}")
-        return cls(**{key: value[key] for key in (*required, "localization_key") if key in value})
+        return cls(
+            **{
+                key: value[key]
+                for key in (*required, "localization_key", "semantic_channel")
+                if key in value
+            }
+        )
 
     def render(self, *, accessible: bool = False) -> str:
         """Render the appropriate human-readable projection."""

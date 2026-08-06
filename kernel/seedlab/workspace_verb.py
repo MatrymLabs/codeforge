@@ -28,6 +28,7 @@ from __future__ import annotations
 
 import os
 from collections.abc import Callable
+from contextlib import suppress
 from pathlib import Path
 from typing import Any
 
@@ -127,8 +128,10 @@ def workspace_command(
     kernel: SeedKernel | None = None,
     model_store: ModelStore | None = None,
     provenance_store: ProvenanceStore | None = None,
+    connector_registry: Any | None = None,
     gmcp_push: GmcpPush | None = None,
     run_log: Any | None = None,
+    audit_store: Any | None = None,
     allowlist: dict[str, list[str]] | None = None,
     backups: Any | None = None,
 ) -> str:
@@ -220,7 +223,7 @@ def workspace_command(
             return "usage: workspace connect <seed_id> <path>"
         seed_id, path = rest[0], " ".join(rest[1:])
         try:
-            record = kernel.get(seed_id)  # the workspace must exist
+            record = kernel.require_owner(seed_id, actor)
         except SeedKernelError as exc:
             return f"workspace: {exc}"
         # If an operator set an allowed-sources base, refuse a path outside it (defence in depth on
@@ -233,18 +236,51 @@ def workspace_command(
             except ValueError:
                 return f"workspace: {path!r} is outside the allowed sources root ({allowed})"
         # Lazy imports: the connect flow pulls in the connector + modeler only when used.
+        from kernel.seedlab.connector_registry import (
+            ConnectorRegistryError,
+            FileConnectorRegistry,
+            configured_connector_registry,
+        )
         from kernel.seedlab.project_model import Provenance, SeedLabError
         from kernel.seedlab.source_connector import LocalSource, SourceConnectorError
         from kernel.seedlab.source_modeler import model_and_store
 
         store = model_store or configured_model_store(_home())
+        if connector_registry is not None:
+            registry = connector_registry
+        elif provenance_store is not None and hasattr(provenance_store, "root"):
+            registry = FileConnectorRegistry(Path(provenance_store.root).parent / "connectors")
+        else:
+            registry = configured_connector_registry(_home())
         source_id = resolved.name or "source"
+        source_record = None
+        registered = False
         try:
             source = LocalSource(resolved, Provenance(source_id, owner=actor))
             source_record = source.register()
+            registry.register(
+                seed_id,
+                source_record,
+                source.manifest(seed_id=record.identity.name),
+                actor=actor,
+                correlation_id=getattr(session, "correlation_id", ""),
+            )
+            registered = True
             (provenance_store or configured_provenance_store(_home())).save(seed_id, source_record)
             model = model_and_store(store, seed_id, source)
-        except (SourceConnectorError, SeedLabError) as exc:
+        except (ConnectorRegistryError, SourceConnectorError, SeedLabError) as exc:
+            should_record_failure = registered and source_record is not None
+            if source_record is None and registry.load(seed_id, source_id) is None:
+                should_record_failure = True
+            if should_record_failure:
+                with suppress(ConnectorRegistryError):
+                    registry.record_failure(
+                        seed_id,
+                        source_record.source_id if source_record is not None else source_id,
+                        actor=actor,
+                        failure=str(exc),
+                        correlation_id=getattr(session, "correlation_id", ""),
+                    )
             return f"workspace: {exc}"
         # Connecting resolves a real source AND a fresh model, so push both live frames: the
         # client's Source Explorer and Model view light up the instant an owner connects a
@@ -270,12 +306,41 @@ def workspace_command(
             f"See: workspace model {seed_id}"
         )
 
+    if sub in ("disconnect", "remove-connector", "revoke-connector"):
+        if len(rest) < 2:
+            return f"usage: workspace {sub} <seed_id> <source_id>"
+        seed_id, source_id = rest[0], rest[1]
+        try:
+            kernel.require_owner(seed_id, actor)
+            from kernel.seedlab.connector_registry import configured_connector_registry
+
+            registry = connector_registry or configured_connector_registry(_home())
+            if sub == "revoke-connector":
+                registration = registry.revoke(
+                    seed_id,
+                    source_id,
+                    actor=actor,
+                    reason="revoked by workspace owner",
+                    correlation_id=getattr(session, "correlation_id", ""),
+                )
+            else:
+                registration = registry.remove(
+                    seed_id,
+                    source_id,
+                    actor=actor,
+                    reason="removed by workspace owner",
+                    correlation_id=getattr(session, "correlation_id", ""),
+                )
+        except (SeedKernelError, ConnectorRegistryError) as exc:
+            return f"workspace: {exc}"
+        return f"Connector {source_id} -> {registration.state.upper()}"
+
     if sub == "run":
         if len(rest) < 3:
             return "usage: workspace run <seed_id> <path> <profile>"
         seed_id, path, profile = rest[0], rest[1], rest[2]
         try:
-            record = kernel.get(seed_id)  # the workspace must exist
+            record = kernel.require_owner(seed_id, actor)
         except SeedKernelError as exc:
             return f"workspace: {exc}"
         allowed = _allowed_root()  # same defence-in-depth as connect
@@ -294,9 +359,22 @@ def workspace_command(
         )
 
         log = run_log if run_log is not None else configured_run_log(_home())
+        run_audit = audit_store
+        if run_audit is None and run_log is None:
+            from kernel.seedlab.audit_registry import configured_audit_store
+
+            run_audit = configured_audit_store(_home() / "tool-audit.jsonl")
         try:
             source = LocalSource(resolved, Provenance(resolved.name or "source", owner=actor))
-            result = run_and_record(log, source, profile, seed_id=seed_id, allowlist=allowlist)
+            result = run_and_record(
+                log,
+                source,
+                profile,
+                seed_id=seed_id,
+                allowlist=allowlist,
+                audit_store=run_audit,
+                audit_actor=actor,
+            )
         except (SourceConnectorError, CommandRefused) as exc:
             return f"workspace: {exc}"
         # A run resolves real tool-run state, so the 4th panel lights up: push the full

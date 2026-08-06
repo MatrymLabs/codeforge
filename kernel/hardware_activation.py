@@ -17,6 +17,7 @@ from pathlib import Path
 from threading import Lock
 
 from kernel.hardware_lifecycle import HardwareLifecycleError, HardwareRegistry
+from kernel.permission_policy import PermissionContext, PermissionPolicy
 from kernel.shelf import hashchain
 from kernel.shelf.atomic_write import atomic_write_text
 from kernel.shelf.plugin_registry import PluginInfo, PluginRegistry
@@ -131,7 +132,16 @@ class ActivationApprovalLedger:
             raise ActivationApprovalError("approval ledger must be a list of IDs")
         return set(raw)
 
-    def consume(self, approval_id: str) -> None:
+    def consume(
+        self,
+        approval_id: str,
+        *,
+        actor_id: str = "",
+        seed_id: str = "",
+        component_id: str = "",
+        version: str = "",
+        artifact_digest: str = "",
+    ) -> None:
         """Atomically record one approval use; replay is refused."""
         with self._lock, self._exclusive():
             used = self._used()
@@ -147,6 +157,11 @@ class ActivationApprovalLedger:
                     {
                         "action": "activation_approval_consumed",
                         "approval_id": approval_id,
+                        "actor_id": actor_id,
+                        "seed_id": seed_id,
+                        "component_id": component_id,
+                        "version": version,
+                        "artifact_digest": artifact_digest,
                         "recorded_at": datetime.now(UTC).isoformat(),
                     },
                 )
@@ -214,6 +229,8 @@ def activate_hardware_component_with_approval[T](
     artifact_digest: str = "",
     promotion_packet: object | None = None,
     promotion_packets: object | None = None,
+    policy: PermissionPolicy | None = None,
+    permission: PermissionContext | None = None,
 ) -> None:
     """Activate only after promotion evidence and a one-time exact-scope approval.
 
@@ -247,6 +264,21 @@ def activate_hardware_component_with_approval[T](
             raise ActivationApprovalError("promotion packet did not produce an installed component")
     if info.name != component_id:
         raise ActivationApprovalError(f"runtime plugin name {info.name!r} does not match component")
+    if (policy is None) != (permission is None):
+        raise ActivationApprovalError("policy and permission must be supplied together")
+    if policy is not None and permission is not None:
+        if approval.approved_by == permission.actor_id:
+            raise ActivationApprovalError(
+                "component activation requires separate approval and operation"
+            )
+        try:
+            policy.require(
+                permission,
+                capability="component.activate",
+                scope=seed_id,
+            )
+        except Exception as exc:
+            raise ActivationApprovalError(f"activation authorization refused: {exc}") from exc
     approval.assert_valid(
         component_id=component_id,
         version=record.version,
@@ -254,7 +286,14 @@ def activate_hardware_component_with_approval[T](
         artifact_digest=artifact_digest,
         now=now or datetime.now(UTC),
     )
-    ledger.consume(approval.approval_id)
+    ledger.consume(
+        approval.approval_id,
+        actor_id=permission.actor_id if permission is not None else "",
+        seed_id=seed_id,
+        component_id=component_id,
+        version=record.version,
+        artifact_digest=artifact_digest,
+    )
     activate_hardware_component(hardware, component_id, runtime, info, plugin)
 
 

@@ -85,10 +85,10 @@ def test_empty_input_is_refused_login_is_required():
     client = TestClient(app)
     with client.websocket_connect("/ws") as ws:
         assert ws.receive_text().strip()  # the configured Seed splash is sent first
-        assert "Character" in ws.receive_text()  # the front-desk prompt
+        assert "account" in ws.receive_text().lower()  # the front-desk prompt
         ws.send_text("")  # just hit Enter
         assert "Login required" in ws.receive_text()  # refused
-        assert "Character" in ws.receive_text()  # re-prompted, not seated
+        assert "account" in ws.receive_text().lower()  # re-prompted, not seated
 
 
 def test_register_over_the_wire_creates_an_account_and_enters():
@@ -121,6 +121,9 @@ def test_aethryn_new_character_gets_a_calling_menu_and_persists_choice(monkeypat
         assert "CHARACTER CREATION" in menu and "vanguard" in menu
         assert "Calling (name)" in ws.receive_text()
         ws.send_text("vanguard")
+        assert "skin color" in ws.receive_text().lower()
+        assert "skin color" in ws.receive_text().lower()
+        ws.send_text("copper")
         assert "password" in ws.receive_text().lower()
         ws.send_text("swordfish9")
         welcome = ws.receive_text()

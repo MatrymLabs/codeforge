@@ -1,0 +1,66 @@
+version: 1
+status: proposed_consolidation_of_current_HELP_TEXT_and_world_verbs
+authority: Seed_Runtime
+definition_fields: [id, canonical, aliases, category, syntax, arguments, preconditions, permission, side_effects, errors, confirmation, help, accessibility, client_action, tests]
+commands:
+  - {id: movement.north, canonical: north, aliases: [n], category: movement, syntax: north, client_action: go north}
+  - {id: movement.northeast, canonical: northeast, aliases: [ne], category: movement, syntax: northeast}
+  - {id: movement.east, canonical: east, aliases: [e], category: movement, syntax: east}
+  - {id: movement.southeast, canonical: southeast, aliases: [se], category: movement, syntax: southeast}
+  - {id: movement.south, canonical: south, aliases: [s], category: movement, syntax: south}
+  - {id: movement.southwest, canonical: southwest, aliases: [sw], category: movement, syntax: southwest}
+  - {id: movement.west, canonical: west, aliases: [w], category: movement, syntax: west}
+  - {id: movement.northwest, canonical: northwest, aliases: [nw], category: movement, syntax: northwest}
+  - {id: movement.vertical, canonical: up, aliases: [u], category: movement, syntax: up}
+  - {id: movement.vertical_down, canonical: down, aliases: [d], category: movement, syntax: down}
+  - {id: movement.go, canonical: go, aliases: [move], category: movement, syntax: go <exit-or-direction>}
+  - {id: movement.exits, canonical: exits, aliases: [], category: movement, syntax: exits}
+  - {id: movement.map, canonical: map, aliases: [], category: movement, syntax: map}
+  - {id: perception.look, canonical: look, aliases: [l], category: perception, syntax: "look [verbose]"}
+  - {id: perception.examine, canonical: examine, aliases: [x, inspect], category: perception, syntax: examine <target>}
+  - {id: perception.search, canonical: search, aliases: [], category: perception, syntax: "search [target]"}
+  - {id: social.who, canonical: who, aliases: [], category: social, syntax: who}
+  - {id: objects.take, canonical: take, aliases: [get], category: objects, syntax: take <item>}
+  - {id: objects.drop, canonical: drop, aliases: [], category: objects, syntax: drop <item>}
+  - {id: objects.use, canonical: use, aliases: [activate], category: objects_or_combat, syntax: "use <ability-or-item> [on <target>]"}
+  - {id: inventory.inventory, canonical: inventory, aliases: [i], category: inventory, syntax: inventory}
+  - {id: inventory.equipment, canonical: equipment, aliases: [gear], category: inventory, syntax: equipment}
+  - {id: inventory.equip, canonical: equip, aliases: [wear, wield], category: inventory, syntax: equip <item>}
+  - {id: inventory.unequip, canonical: unequip, aliases: [remove], category: inventory, syntax: unequip <slot-or-item>}
+  - {id: combat.attack, canonical: attack, aliases: [hit, strike], category: combat, syntax: attack <target>, side_effects: combat_tick}
+  - {id: combat.target, canonical: target, aliases: [], category: combat, syntax: target <target>}
+  - {id: combat.defend, canonical: defend, aliases: [guard], category: combat, syntax: defend}
+  - {id: combat.assist, canonical: assist, aliases: [], category: combat, syntax: assist <ally-or-target>}
+  - {id: combat.flee, canonical: flee, aliases: [escape], category: combat, syntax: flee, confirmation: false}
+  - {id: combat.status, canonical: combat, aliases: [], category: combat, syntax: "combat [summary|detail|off]"}
+  - {id: progression.score, canonical: score, aliases: [sheet, character], category: character, syntax: "score [compact|jobs|equipment|resistances]"}
+  - {id: progression.skills, canonical: skills, aliases: [], category: progression, syntax: "skills [filter]"}
+  - {id: progression.abilities, canonical: abilities, aliases: [], category: progression, syntax: "abilities [filter]"}
+  - {id: progression.techniques, canonical: techniques, aliases: [], category: progression, syntax: "techniques [filter]"}
+  - {id: progression.jobs, canonical: jobs, aliases: [], category: progression, syntax: "jobs [available|locked|all]"}
+  - {id: progression.job, canonical: job, aliases: [], category: progression, syntax: job <name>}
+  - {id: progression.subjob, canonical: subjob, aliases: [], category: progression, syntax: subjob <name>}
+  - {id: progression.professions, canonical: professions, aliases: [], category: progression, syntax: professions}
+  - {id: quests.quests, canonical: quests, aliases: [journal, contracts], category: quests, syntax: "quests [active|completed]"}
+  - {id: system.help, canonical: help, aliases: ["?"], category: system, syntax: "help [topic]"}
+  - {id: system.commands, canonical: commands, aliases: [], category: system, syntax: "commands [category]"}
+  - {id: system.syntax, canonical: syntax, aliases: [], category: system, syntax: syntax <command>}
+  - {id: system.settings, canonical: settings, aliases: [preferences], category: system, syntax: "settings <name> [value]"}
+  - {id: system.aliases, canonical: aliases, aliases: [], category: system, syntax: aliases}
+  - {id: system.logout, canonical: logout, aliases: [quit], category: system, syntax: logout}
+  - {id: system.reconnect, canonical: reconnect, aliases: [], category: system, syntax: reconnect}
+  - {id: system.report, canonical: report, aliases: [bug, feedback], category: system, syntax: report <message>}
+  - {id: account.characters, canonical: characters, aliases: [], category: account, syntax: characters}
+  - {id: account.select, canonical: select, aliases: [], category: account, syntax: select <character>}
+  - {id: account.create, canonical: create, aliases: [new], category: account_or_creator, syntax: "create [character|account] <name>"}
+  - {id: creator.creator, canonical: creator, aliases: [workshop], category: creator, syntax: "creator <help|status>", permission: owner}
+  - {id: creator.preview, canonical: preview, aliases: [], category: creator, syntax: preview, permission: owner}
+  - {id: creator.publish, canonical: publish, aliases: [], category: creator, syntax: publish, permission: owner, confirmation: required}
+  - {id: creator.rollback, canonical: rollback, aliases: [], category: creator, syntax: rollback, permission: owner, confirmation: required}
+command_registry_rules:
+  - aliases_are_generated_into_help
+  - permission_failures_explain_required_context
+  - command_errors_have_next_action
+  - direct_client_buttons_map_to_canonical_command
+  - creator_namespace_is_context_and_permission_scoped
+  - current_commands_not_listed_here_remain_legacy_until_audit

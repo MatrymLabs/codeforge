@@ -239,6 +239,7 @@ def engineering_evidence(
             "history": list(item.history),
         }
         for item in hardware_records
+        if seed in item.consumers
     ]
     lifecycle_keys = (
         "catalog",

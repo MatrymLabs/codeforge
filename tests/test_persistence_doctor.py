@@ -95,3 +95,31 @@ def test_cli_doctor_supports_structured_output(monkeypatch, capsys):
 
     assert cli.main(["doctor", "--json"]) == 0
     assert '"overall": "ready"' in capsys.readouterr().out
+
+
+def test_selected_database_isolation_and_recovery_follow_codeforge_db(monkeypatch, tmp_path):
+    """The selected database, not the import-time repository default, owns recovery evidence."""
+    import kernel.world.db as db
+
+    first = tmp_path / "first.db"
+    second = tmp_path / "second.db"
+    backup_dir = tmp_path / "backups"
+
+    monkeypatch.delenv("DATABASE_URL", raising=False)
+    monkeypatch.setenv("CODEFORGE_DB", str(first))
+    with db.open_archive_session() as session:
+        session.add(db.AccountRow(name="first-account", auth_salt="salt", auth_hash="hash"))
+        session.commit()
+    backup = db.backup_db(backup_dir)
+    assert backup.parent == backup_dir
+    assert backup.name.startswith("first-")
+
+    monkeypatch.setenv("CODEFORGE_DB", str(second))
+    with db.open_archive_session() as session:
+        assert session.get(db.AccountRow, "first-account") is None
+
+    restored = tmp_path / "restored.db"
+    db.restore_db(backup, dest=restored)
+    monkeypatch.setenv("CODEFORGE_DB", str(restored))
+    with db.open_archive_session() as session:
+        assert session.get(db.AccountRow, "first-account") is not None

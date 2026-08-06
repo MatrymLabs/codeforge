@@ -1,17 +1,20 @@
 """Test twin for adapters/gateway.py -- the front desk, over real sockets."""
 
 import copy
+import os
 import re
 import socket
 import ssl
 import subprocess
 import threading
 import time
+from datetime import UTC, datetime, timedelta
 
 import pytest
 
 import adapters.gateway as gateway
 from adapters.gateway import ForgeGateServer, _GateHandler, _sanitize
+from kernel.session_registry import FileSessionRegistry, SessionRegistryError
 from kernel.shelf.bulkhead import Bulkhead
 from kernel.world import doors, items, npcs
 from kernel.world.accounts import adopt
@@ -58,6 +61,16 @@ def _read_until(sock: socket.socket, marker: bytes) -> str:
     return _read_until_raw(sock, marker).decode("utf-8", errors="ignore")
 
 
+def _read_until_contains(sock: socket.socket, marker: bytes) -> str:
+    data = b""
+    while marker not in data:
+        chunk = sock.recv(4096)
+        if not chunk:
+            break
+        data += chunk
+    return data.decode("utf-8", errors="ignore")
+
+
 def _read_until_raw(sock: socket.socket, marker: bytes) -> bytes:
     data = b""
     while not data.endswith(marker):
@@ -81,6 +94,63 @@ def _drain_to_close(sock: socket.socket) -> str:
 
 def _line(sock: socket.socket, text: str) -> None:
     sock.sendall((text + "\n").encode("utf-8"))
+
+
+def _live_runtime(path, seed_id, consumer, ledger_path, *, activate=True):
+    """Build one explicitly trusted runtime for a live gateway proof."""
+    from kernel.hardware_activation import ActivationApproval, ActivationApprovalLedger
+    from kernel.hardware_lifecycle import HardwareRegistry
+    from kernel.hardware_runtime import HardwareRuntimeController
+    from kernel.permission_policy import PermissionPolicy, PermissionRule
+    from kernel.session_identity import SessionIdentity
+    from kernel.shelf.plugin_registry import PluginInfo, PluginRegistry
+
+    hardware = HardwareRegistry(path)
+    if hardware.get("validator") is None:
+        hardware.discover("validator")
+        for state in ("validated", "approved", "installed"):
+            hardware.transition("validator", state)
+    runtime = HardwareRuntimeController(
+        hardware, PluginRegistry(), seed_id=seed_id, consumer=consumer
+    )
+    runtime.register_provider(PluginInfo("validator"), object)
+    now = datetime(2026, 8, 5, 18, 0, tzinfo=UTC)
+    identity = SessionIdentity(
+        "operator",
+        "human",
+        f"session-{seed_id}",
+        seed_id,
+        now - timedelta(minutes=1),
+        now + timedelta(minutes=30),
+        f"corr-{seed_id}",
+        roles=frozenset({"operator"}),
+        capabilities=frozenset(
+            {"component.activate", "component.restore", "component.disable"}
+        ),
+    )
+    policy = PermissionPolicy(
+        tuple(
+            PermissionRule(capability, scope=seed_id)
+            for capability in ("component.activate", "component.restore", "component.disable")
+        )
+    )
+    if activate:
+        runtime.activate(
+            "validator",
+            approval=ActivationApproval(
+                f"approval-{seed_id}",
+                "validator",
+                hardware.get("validator").version,
+                seed_id,
+                "reviewer",
+                (now + timedelta(minutes=5)).isoformat(),
+            ),
+            ledger=ActivationApprovalLedger(ledger_path),
+            identity=identity,
+            policy=policy,
+            now=now,
+        )
+    return hardware, runtime, identity, policy
 
 
 _acct_seq = 0
@@ -108,6 +178,11 @@ def _connect_player(srv: ForgeGateServer, who: str | None = None) -> socket.sock
 def _command(sock: socket.socket, text: str) -> str:
     _line(sock, text)
     return _read_until(sock, b"> ")
+
+
+def _drain_to_close_after_command(sock: socket.socket, text: str) -> str:
+    _line(sock, text)
+    return _drain_to_close(sock)
 
 
 def _saved_account(char: str = "matrym", account: str = "matlabs", pw: str = "swordfish"):
@@ -167,6 +242,8 @@ def test_aethryn_new_character_gets_a_calling_menu_and_persists_choice(server, m
     assert "CHARACTER CREATION" in menu
     assert "vanguard" in menu
     _line(sock, "vanguard")
+    _read_until(sock, b"Skin color: ")
+    _line(sock, "copper")
     _read_until(sock, b"password: " + bytes([255, 251, 1]))
     _line(sock, "swordfish9")
     scene = _read_until(sock, b"> ")
@@ -280,9 +357,17 @@ def test_password_prompt_negotiates_echo_blackout(server):
     sock.close()
 
 
-def _login(srv: ForgeGateServer, char="matrym", account="matlabs", pw="swordfish") -> socket.socket:
+def _login(
+    srv: ForgeGateServer,
+    char="matrym",
+    account="matlabs",
+    pw="swordfish",
+    *,
+    timeout: float = 3.0,
+) -> socket.socket:
     """Connect and clear the front desk into the world as an account."""
     sock = _connect(srv)
+    sock.settimeout(timeout)
     _read_until(sock, b"NEW: ")
     _line(sock, f"{char}@{account}")
     _read_until(sock, b"Password: " + bytes([255, 251, 1]))
@@ -510,6 +595,9 @@ def test_a_gmcp_client_is_announced_the_seed_on_enabling_gmcp(server):
     out += _read_until_raw(sock, b"> ")
     assert b"Seed.Hello" in out  # the Seed announced itself to the capable client
     assert out.count(b"Seed.Hello") == 1  # exactly once, not on every frame push
+    assert b"Seed.Profile" in out and b"Observation Log" in out
+    expected_seed = os.environ.get("FORGE_SEED", "first-forge")
+    assert f'"seed":"{expected_seed}"'.encode() in out
     sock.close()
 
 
@@ -744,6 +832,30 @@ def test_an_owner_login_serves_the_reference_read_workspace(server, tmp_path, mo
     sock.close()
 
 
+def test_an_owner_login_pushes_live_engineering_evidence(server, tmp_path, monkeypatch):
+    """CF-205: the live gateway projects a real Workshop write into Engineering.Evidence."""
+    from kernel.seedlab.kernel import SeedKernel
+    from kernel.seedlab.registry import configured_seed_store
+    from kernel.seedlab.workshop_services import CreatorWorkshopService
+
+    monkeypatch.setenv("SEEDLAB_HOME", str(tmp_path))
+    kernel = SeedKernel(configured_seed_store(tmp_path))
+    kernel.create_seed(
+        "First Forge", "matrym", "live evidence proof", seed_id="first-forge"
+    )
+    CreatorWorkshopService.durable(tmp_path / "workshop").create_draft(
+        "gateway-draft", "first-forge", "matrym", {"command": "inspect"}
+    )
+    _saved_owner()
+    sock, out = _login_gmcp(server, "wren", "forge")
+    try:
+        assert b"Engineering.Evidence" in out
+        assert b'"catalog"' in out
+        assert b'"draft_id":"gateway-draft"' in out
+    finally:
+        sock.close()
+
+
 def test_a_non_owner_login_gets_no_workspace_packages(server, tmp_path, monkeypatch):
     monkeypatch.setenv("SEEDLAB_HOME", str(tmp_path))
     _saved_account()  # a default player-rank account
@@ -773,8 +885,42 @@ def test_an_owner_creates_a_seed_over_gmcp_and_gets_its_workspace(server, tmp_pa
     sock.sendall(gmcp_frame("Form.Submit", submit) + b"\n")  # a newline gives readline its boundary
     out = _read_until_raw(sock, b"> ")
     assert b"Seed.Created" in out and b'"ok":true' in out  # the engine minted the Seed
+    assert b'"correlation_id":"gateway-seed-create-wren"' in out
     assert b"Project.Status" in out and b"Onboarding" in out  # its workspace was pushed back
     assert list((tmp_path / "seeds").glob("*.json"))  # and it persisted to the file store
+    sock.close()
+
+
+def test_repeated_owner_form_submit_is_idempotent_over_gmcp(server, tmp_path, monkeypatch):
+    from kernel.gmcp import gmcp_frame
+
+    monkeypatch.setenv("SEEDLAB_HOME", str(tmp_path))
+    _saved_owner()
+    sock, _ = _login_gmcp(server, "wren", "forge")
+    submit = {
+        "product_type": "training",
+        "answers": {
+            "name": "Retryable Onboarding",
+            "purpose": "train new hires",
+            "scenarios": "server outage drill",
+            "competencies": "incident response",
+            "certification": True,
+        },
+    }
+
+    sock.sendall(gmcp_frame("Form.Submit", submit) + b"\n")
+    first = _read_until_raw(sock, b"> ")
+    sock.sendall(gmcp_frame("Form.Submit", submit) + b"\n")
+    second = _read_until_raw(sock, b"> ")
+
+    seed_ids = [
+        match.group(1)
+        for response in (first, second)
+        if (match := re.search(rb'Seed\.Created \{[^}]*"id":"([^"]+)"', response))
+    ]
+    assert len(seed_ids) == 2 and seed_ids[0] == seed_ids[1]
+    assert b'"ok":true' in first and b'"ok":true' in second
+    assert len(list((tmp_path / "seeds").glob("*.json"))) == 1
     sock.close()
 
 
@@ -1091,3 +1237,506 @@ def test_live_master_client_workspace_flow_survives_gateway_restart(server, tmp_
     finally:
         recovered.shutdown()
         recovered.server_close()
+
+
+def test_native_aethryn_client_journey_publishes_and_recovers_workshop_state(
+    server, tmp_path, monkeypatch
+):
+    """The native Seed journey crosses the real gateway and survives a fresh boot.
+
+    The client uses the live text projection for movement and Workshop actions while GMCP carries
+    the Seed profile and room state.  Hardware inspection is read-only; publication is the
+    Creator Workshop's canonical overlay write.  Clearing the in-memory item and replaying that
+    overlay before a second gateway starts mirrors the world assembly recovery path.
+    """
+    from kernel.world import creator_workshop as workshop
+    from kernel.world import items
+
+    monkeypatch.setenv("CODEFORGE_WORKSHOP_STATE", str(tmp_path / "aethryn-workshop.json"))
+    workshop.clear_published_state()
+    _saved_owner()
+    sock, entered = _login_gmcp(server, "wren", "forge")
+    try:
+        # The helper intentionally consumes the pre-login handshake while waiting for NEW; the
+        # Native Seed profile itself is covered by the dedicated handshake test above.  Entry still
+        # carries the live room projection.
+        assert b"Room.Info" in entered and b"courtyard" in entered
+
+        navigated = _command(sock, "go south")
+        assert b"The Cold Forge" in navigated.encode()
+        navigated = _command(sock, "go library")
+        assert b"The Grand Library" in navigated.encode()
+        crossed = _command(sock, "go door")
+        assert b"The Creator's Workshop" in crossed.encode()
+
+        inspected = _command(sock, "look")
+        assert b"Creator's Workshop" in inspected.encode()
+        hardware = _command(sock, "hardware")
+        assert b"HARDWARE CATALOG" in hardware.encode() and b"rank-gate" in hardware.encode()
+        functions = _command(sock, "functions")
+        assert b"FUNCTIONS CHECK" in functions.encode() and b"tested" in functions.encode()
+
+        entered_forge = _command(sock, "go items")
+        assert b"Item Forge" in entered_forge.encode()
+        staged = _command(sock, "create item Native Journey Lantern at courtyard")
+        assert b"Staged" in staged.encode() and b"Native Journey Lantern" in staged.encode()
+        preview = _command(sock, "preview")
+        assert b"not yet live" in preview.encode() and b"Native Journey Lantern" in preview.encode()
+
+        _command(sock, "go hall")
+        _command(sock, "go publish")
+        published = _command(sock, "publish")
+        assert b"Published to the living world" in published.encode()
+        assert any(item["name"] == "Native Journey Lantern" for item in items.ITEMS.values())
+
+        _command(sock, "go hall")
+        _command(sock, "go out")
+        _command(sock, "go out")
+        recovered_location = _command(sock, "go north")
+        assert b"Broken Courtyard" in recovered_location.encode()
+    finally:
+        sock.close()
+
+    # Simulate the next world assembly from the durable Workshop overlay, not from the old process
+    # memory.  The exact item is absent before replay and present again after replay.
+    created_label = next(
+        item_label
+        for item_label, item in items.ITEMS.items()
+        if item["name"] == "Native Journey Lantern"
+    )
+    items.ITEMS.pop(created_label)
+    assert not any(item["name"] == "Native Journey Lantern" for item in items.ITEMS.values())
+    assert workshop.restore_published_changes() == 1
+
+    recovered = ForgeGateServer(("127.0.0.1", 0), _GateHandler)
+    threading.Thread(target=recovered.serve_forever, daemon=True).start()
+    try:
+        fresh, _ = _login_gmcp(recovered, "wren", "forge")
+        try:
+            scene = _command(fresh, "look")
+            assert b"Broken Courtyard" in scene.encode()
+            assert b"Native Journey Lantern" in scene.encode()
+        finally:
+            fresh.close()
+    finally:
+        recovered.shutdown()
+        recovered.server_close()
+        workshop.clear_published_state()
+
+
+def test_live_gateway_runtime_reports_restart_recovery_and_independent_seed_binding(tmp_path):
+    """CF-204: a real authenticated gateway sees durable runtime state after restart.
+
+    Aethryn and First Forge use separate registries, so disabling one Seed's binding cannot
+    silently disable the other Seed's component.  The command is read-only; activation and
+    recovery happen through the governed controller before the socket boundary is opened.
+    """
+    ledger = tmp_path / "approvals.json"
+    aethryn_path = tmp_path / "aethryn-hardware.json"
+    _hardware, aethryn_runtime, identity, policy = _live_runtime(
+        aethryn_path, "aethryn", "aethryn", ledger
+    )
+    first = ForgeGateServer(
+        ("127.0.0.1", 0), _GateHandler, hardware_runtime=aethryn_runtime
+    )
+    threading.Thread(target=first.serve_forever, daemon=True).start()
+    try:
+        _saved_account("runtimeaethryn", "runtimeaethrynco")
+        sock = _login(first, "runtimeaethryn", "runtimeaethrynco")
+        try:
+            live = _command(sock, "hardware runtime")
+            assert "HARDWARE RUNTIME" in live
+            assert "seed: aethryn" in live
+            assert "active bindings: validator" in live
+            assert "validator: active" in live
+        finally:
+            sock.close()
+    finally:
+        first.shutdown()
+        first.server_close()
+
+    recovered_hardware, recovered_runtime, _identity, _policy = _live_runtime(
+        aethryn_path, "aethryn", "aethryn", ledger, activate=False
+    )
+    # The helper starts from an installed record, so use the durable registry and explicitly
+    # restore the already-active binding instead of activating it a second time.
+    recovered_runtime.restore_active(
+        "validator", identity=identity, policy=policy, now=datetime(2026, 8, 5, 18, 0, tzinfo=UTC)
+    )
+    restarted = ForgeGateServer(
+        ("127.0.0.1", 0), _GateHandler, hardware_runtime=recovered_runtime
+    )
+    threading.Thread(target=restarted.serve_forever, daemon=True).start()
+    try:
+        _saved_account("runtimerestart", "runtimerestartco")
+        sock = _login(restarted, "runtimerestart", "runtimerestartco")
+        try:
+            recovered = _command(sock, "hardware runtime")
+            assert "seed: aethryn" in recovered
+            assert "active bindings: validator" in recovered
+            assert "consumers: aethryn" in recovered
+        finally:
+            sock.close()
+    finally:
+        restarted.shutdown()
+        restarted.server_close()
+
+    _forge_hardware, forge_runtime, _forge_identity, _forge_policy = _live_runtime(
+        tmp_path / "first-forge-hardware.json", "first-forge", "first-forge", ledger
+    )
+    second = ForgeGateServer(
+        ("127.0.0.1", 0), _GateHandler, hardware_runtime=forge_runtime
+    )
+    threading.Thread(target=second.serve_forever, daemon=True).start()
+    try:
+        _saved_account("runtimeforge", "runtimeforgeco")
+        sock = _login(second, "runtimeforge", "runtimeforgeco")
+        try:
+            independent = _command(sock, "hardware runtime")
+            assert "seed: first-forge" in independent
+            assert "active bindings: validator" in independent
+            assert "consumers: first-forge" in independent
+        finally:
+            sock.close()
+    finally:
+        second.shutdown()
+        second.server_close()
+
+
+def test_live_gateway_owner_can_disable_and_remove_its_hardware_binding(tmp_path):
+    ledger = tmp_path / "approvals.json"
+    hardware_path = tmp_path / "aethryn-hardware.json"
+    hardware, runtime, _identity, _policy = _live_runtime(
+        hardware_path, "aethryn", "aethryn", ledger
+    )
+    server = ForgeGateServer(("127.0.0.1", 0), _GateHandler, hardware_runtime=runtime)
+    threading.Thread(target=server.serve_forever, daemon=True).start()
+    try:
+        _saved_owner("hardwareowner", "howner")
+        sock = _login(server, "hardwareowner", "howner")
+        try:
+            disabled = _command(sock, "hardware disable validator")
+            assert "disabled" in disabled
+            removed = _command(sock, "hardware remove validator")
+            assert "removed" in removed
+        finally:
+            sock.close()
+    finally:
+        server.shutdown()
+        server.server_close()
+
+    record = hardware.get("validator")
+    assert record.state == "disabled"
+    assert record.consumers == ()
+    assert runtime.active_names() == ()
+
+
+def test_live_gateway_persists_and_revokes_authenticated_platform_session(tmp_path):
+    registry = FileSessionRegistry(tmp_path / "sessions")
+    server = ForgeGateServer(
+        ("127.0.0.1", 0),
+        _GateHandler,
+        session_registry=registry,
+    )
+    threading.Thread(target=server.serve_forever, daemon=True).start()
+    try:
+        _saved_owner("sessionowner", "sessionownerco")
+        sock = _login(server, "sessionowner", "sessionownerco")
+        try:
+            records = list(registry.root.glob("*.json"))
+            assert len(records) == 1
+            identity = registry.load(records[0].stem).identity
+            assert identity.principal_id == "sessionownerco"
+            assert identity.seed_id == gateway.SEED_NAME
+            registry.require_active(identity)
+        finally:
+            sock.close()
+        for _ in range(20):
+            try:
+                registry.require_active(identity)
+            except SessionRegistryError as exc:
+                assert "invalidated" in str(exc)
+                break
+            time.sleep(0.05)
+        else:
+            pytest.fail("gateway did not persist session revocation after disconnect")
+    finally:
+        server.shutdown()
+        server.server_close()
+
+
+def test_live_gateway_denies_commands_after_platform_session_revocation(tmp_path):
+    registry = FileSessionRegistry(tmp_path / "sessions")
+    server = ForgeGateServer(
+        ("127.0.0.1", 0),
+        _GateHandler,
+        session_registry=registry,
+    )
+    threading.Thread(target=server.serve_forever, daemon=True).start()
+    try:
+        _saved_account("revokedcommand", "revokedcommandco")
+        sock = _login(server, "revokedcommand", "revokedcommandco")
+        try:
+            record = next(registry.root.glob("*.json"))
+            identity = registry.load(record.stem).identity
+            registry.invalidate(
+                identity.session_id,
+                actor="test-operator",
+                reason="authorization regression test",
+            )
+            response = _drain_to_close_after_command(sock, "look")
+            assert "Session authority unavailable" in response
+        finally:
+            sock.close()
+    finally:
+        server.shutdown()
+        server.server_close()
+
+
+def test_character_location_survives_gateway_restart(tmp_path):
+    """A real movement is saved, then loaded by a fresh gateway process boundary."""
+    from uuid import uuid4
+
+    from kernel.world.jobs import bind_calling
+    from kernel.world.world import START_ROOM, WORLD
+    expected_destination = WORLD[WORLD[START_ROOM]["exits"]["north"]]["name"]
+
+    token = uuid4().hex[:6]
+    character = f"reconnect{token}"
+    account = f"reco{token}"
+    password = "swordfish"
+    hero = Session(player_id=character, location=START_ROOM, named=True, account=account)
+    bind_calling(hero, "vanguard")
+    SESSIONS[character] = hero
+    save_character(hero)
+    SESSIONS.clear()
+    register_account(f"{account}_seed", account, password)
+    adopt(character, account)
+
+    registry = FileSessionRegistry(tmp_path / "sessions")
+    first = ForgeGateServer(
+        ("127.0.0.1", 0), _GateHandler, session_registry=registry
+    )
+    threading.Thread(target=first.serve_forever, daemon=True).start()
+    try:
+        sock = _login(first, character, account, password, timeout=30.0)
+        try:
+            moved = _command(sock, "north")
+            assert expected_destination in moved
+        finally:
+            sock.close()
+    finally:
+        first.shutdown()
+        first.server_close()
+
+    second = ForgeGateServer(
+        ("127.0.0.1", 0), _GateHandler, session_registry=registry
+    )
+    threading.Thread(target=second.serve_forever, daemon=True).start()
+    try:
+        sock = _login(second, character, account, password, timeout=30.0)
+        try:
+            restored = _command(sock, "look")
+            assert expected_destination in restored
+        finally:
+            sock.close()
+    finally:
+        second.shutdown()
+        second.server_close()
+
+
+@pytest.mark.skipif(
+    os.environ.get("FORGE_SEED", "").casefold() != "aethryn",
+    reason="the live Aethryn journey requires FORGE_SEED=aethryn",
+)
+def test_live_aethryn_entry_navigation_combat_progression_and_restart(tmp_path):
+    """Prove the next coherent player slice through the real Aethryn gateway boundary."""
+    from uuid import uuid4
+
+    from kernel.world.characters import load_character
+
+    token = uuid4().hex[:6]
+    character = f"journey{token}"
+    account = f"journey{token}co"
+    registry = FileSessionRegistry(tmp_path / "sessions")
+
+    first = ForgeGateServer(
+        ("127.0.0.1", 0), _GateHandler, session_registry=registry
+    )
+    threading.Thread(target=first.serve_forever, daemon=True).start()
+    try:
+        sock = _connect(first)
+        _read_until(sock, b"NEW: ")
+        _line(sock, "new")
+        _read_until(sock, b"account: ")
+        _line(sock, f"{character}@{account}")
+        creation = _read_until(sock, b"Calling (name): ")
+        assert "CHARACTER CREATION" in creation
+        _line(sock, "vanguard")
+        _read_until(sock, b"Skin color: ")
+        _line(sock, "copper")
+        _read_until(sock, b"password: " + bytes([255, 251, 1]))
+        _line(sock, "swordfish9")
+        entered = _read_until(sock, b"> ")
+        assert f"Welcome, {character.title()}@{account}" in entered
+        assert "Veridia" in entered
+
+        jobs = _command(sock, "jobs")
+        assert "duelist" in jobs and "LOCKED" in jobs
+        locked = _command(sock, "job duelist")
+        assert "locked" in locked.lower() and "vanguard Lv 1/3" in locked
+
+        east = _command(sock, "east")
+        assert "Caeloria" in east
+        west = _command(sock, "west")
+        assert "Veridia" in west
+        barrow = _command(sock, "go sunken")
+        assert "Sunken Barrow" in barrow
+        assert "barrow-rat" in _command(sock, "look")
+
+        defeated = False
+        for _ in range(8):
+            outcome = _command(sock, "attack rat")
+            if "You find" in outcome:
+                defeated = True
+                break
+        assert defeated, "the authored level-2 Aethryn foe did not yield a combat reward"
+        score = _command(sock, "score")
+        assert "Vanguard" in score
+        sock.close()
+    finally:
+        first.shutdown()
+        first.server_close()
+
+    saved = load_character(character)
+    assert saved["location"] == "the_sunken_barrow"
+    assert saved["job"] == "vanguard"
+    assert saved["appearance"]
+
+    second = ForgeGateServer(
+        ("127.0.0.1", 0), _GateHandler, session_registry=registry
+    )
+    threading.Thread(target=second.serve_forever, daemon=True).start()
+    try:
+        sock = _login(second, character, account, "swordfish9", timeout=30.0)
+        try:
+            restored = _command(sock, "look")
+            assert "Sunken Barrow" in restored
+            assert "Vanguard" in _command(sock, "score")
+        finally:
+            sock.close()
+    finally:
+        second.shutdown()
+        second.server_close()
+
+
+@pytest.mark.skipif(
+    os.environ.get("FORGE_SEED", "").casefold() != "aethryn",
+    reason="the live Aethryn journey requires FORGE_SEED=aethryn",
+)
+def test_live_aethryn_technique_item_equipment_social_and_exactly_once(tmp_path):
+    """Prove the live command path for a Technique, gear ownership, equipment, and social output."""
+    from uuid import uuid4
+
+    from kernel.world.characters import load_character
+    from kernel.world.jobs import bind_calling
+
+    token = uuid4().hex[:6]
+    character = f"gear{token}"
+    account = f"gear{token}co"
+    friend = f"friend{token}"
+    friend_account = f"friend{token}co"
+    password = "swordfish9"
+
+    # Persist a second real character at the same room for a cross-session social observation.
+    friend_session = Session(
+        player_id=friend,
+        location="the_sunken_barrow",
+        named=True,
+        account=friend_account,
+    )
+    bind_calling(friend_session, "vanguard")
+    SESSIONS[friend] = friend_session
+    save_character(friend_session)
+    SESSIONS.pop(friend, None)
+    register_account(f"{friend_account}_seed", friend_account, password)
+    adopt(friend, friend_account)
+
+    registry = FileSessionRegistry(tmp_path / "sessions")
+    server = ForgeGateServer(
+        ("127.0.0.1", 0), _GateHandler, session_registry=registry
+    )
+    threading.Thread(target=server.serve_forever, daemon=True).start()
+    first_sock = None
+    second_sock = None
+    try:
+        first_sock = _connect(server)
+        _read_until(first_sock, b"NEW: ")
+        _line(first_sock, "new")
+        _read_until(first_sock, b"account: ")
+        _line(first_sock, f"{character}@{account}")
+        _read_until(first_sock, b"Calling (name): ")
+        _line(first_sock, "vanguard")
+        _read_until(first_sock, b"Skin color: ")
+        _line(first_sock, "copper")
+        _read_until(first_sock, b"password: " + bytes([255, 251, 1]))
+        _line(first_sock, password)
+        _read_until(first_sock, b"> ")
+
+        assert "Ember Edge" in _command(first_sock, "skills")
+        _command(first_sock, "go sunken")
+        technique = _command(first_sock, "use ember edge on scout")
+        assert "Ember Edge" in technique
+        assert "hammer" in technique.lower()
+
+        taken = _command(first_sock, "take hammer")
+        assert "take" in taken.lower() and "hammer" in taken.lower()
+        duplicate = _command(first_sock, "take hammer")
+        assert (
+            "not here" in duplicate.lower()
+            or "aren't carrying" in duplicate.lower()
+            or "don't see that here" in duplicate.lower()
+        )
+        inventory = _command(first_sock, "inventory")
+        assert inventory.lower().count("hammer") == 1
+        equipped = _command(first_sock, "equip hammer")
+        assert "equip" in equipped.lower()
+        assert "hammer" in _command(first_sock, "score").lower()
+
+        second_sock = _login(server, friend, friend_account, password, timeout=30.0)
+        second_room = _command(second_sock, "look")
+        if "Sunken Barrow" not in second_room:
+            second_room = _command(second_sock, "go sunken")
+        assert "Sunken Barrow" in second_room
+        _line(first_sock, "say Hello, Forge friend!")
+        first_say = _read_until(first_sock, b"> ")
+        second_say = _read_until_contains(second_sock, b"Forge friend!")
+        assert "Hello, Forge friend!" in first_say
+        assert "Hello, Forge friend!" in second_say
+    finally:
+        if second_sock is not None:
+            second_sock.close()
+        if first_sock is not None:
+            first_sock.close()
+        server.shutdown()
+        server.server_close()
+
+    saved = load_character(character)
+    assert "cinder_hammer" in saved["equipped_gear"]
+    assert saved["location"] == "the_sunken_barrow"
+
+    restarted = ForgeGateServer(
+        ("127.0.0.1", 0), _GateHandler, session_registry=registry
+    )
+    threading.Thread(target=restarted.serve_forever, daemon=True).start()
+    try:
+        sock = _login(restarted, character, account, password, timeout=30.0)
+        try:
+            restored_inventory = _command(sock, "inventory")
+            assert restored_inventory.lower().count("hammer") == 1
+            assert "hammer" in _command(sock, "score").lower()
+        finally:
+            sock.close()
+    finally:
+        restarted.shutdown()
+        restarted.server_close()

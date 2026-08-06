@@ -92,13 +92,14 @@ class _Quest:
 
 
 # step trigger key -> world-event kind. defeat = an npc falls, take = an item is picked up,
-# enter = a room is entered.
+# enter = a room is entered, craft = a recipe completes successfully.
 _TRIGGER_KEYS = {
     "on_defeat": "defeat",
     "on_take": "take",
     "on_enter": "enter",
     "on_cull": "cull",  # a creature TYPE felled (by keyword), not one specific foe: cull-N quests
     "on_forage": "forage",  # a (zone-scoped) material harvested: forage-N quests
+    "on_craft": "craft",  # a recipe label completed successfully at a crafting station
 }
 
 
@@ -437,8 +438,11 @@ def _apply_effect(quest: _Quest, effect: str | None, session: Session) -> str:
 
 
 def _apply_one(quest: _Quest, effect: str, session: Session) -> str:
-    """Apply ONE named effect. `award_xp` grants the quest's reward; `open_door:<id>` reforges a
-    barrier; `grant_rep:<order>:<amount>` earns standing with an Order. Returns any extra line."""
+    """Apply ONE named effect through existing domain ports only.
+
+    `grant_item:<prototype>` mints into the player's carrier, so quest rewards follow the same
+    instance and persistence rules as loot, shops, and crafting.
+    """
     if effect == "award_xp" and session.stats is not None:
         from kernel.world.progression_awards import award_xp
 
@@ -455,13 +459,24 @@ def _apply_one(quest: _Quest, effect: str, session: Session) -> str:
         _, order, amount = effect.split(":", 2)
         rose = grant(session, order, int(amount))
         return f"\n{rose}" if rose else ""
+    if effect.startswith("grant_item:"):
+        from kernel.world import items
+
+        prototype = effect.split(":", 1)[1].strip()
+        try:
+            iid = items.clone(prototype, items.carrier(session.player_id))
+        except items.ItemError:
+            return "\nThe makers could not issue that reward right now."
+        return f"\nYou receive {items.ITEMS[iid]['name']}."
     return ""
 
 
 def on_event(session: Session, kind: str, target: str) -> str | None:
-    """World-event hook: if `kind` (defeat|take|enter) on `target` advances any quest, fire that
-    step and return its line. Returns None when nothing triggers, or the arc isn't at that beat yet
-    (the engine refuses an out-of-order move -- the `quest <event>` verb stays the fallback)."""
+    """World-event hook for defeat, take, enter, forage, and craft actions.
+
+    Returns None when nothing triggers, or the arc is not at that beat yet; the quest command
+    remains the fallback for an out-of-order move.
+    """
     quest_ids = _EVENT_ROUTES.get((kind, target))
     if not quest_ids:
         return None

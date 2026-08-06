@@ -16,8 +16,8 @@ from typing import Protocol, runtime_checkable
 
 from sqlalchemy.orm import Session as SqlSession
 
+from kernel.platform_db import AuditEventRow, open_archive_session
 from kernel.shelf import hashchain
-from kernel.world.db import AuditEventRow, open_archive_session
 
 
 class AuditStoreError(ValueError):

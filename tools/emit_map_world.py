@@ -671,8 +671,9 @@ def emit(out_root: Path | None = None) -> None:
         rooms.append(f"{zid}:")
         rooms.append(f"{SP}name: {zname}")
         rooms.append(f"{SP}desc: |-")
+        zone_subject = zname if zname.lower().startswith(("the ", "a ", "an ")) else f"The {zname}"
         rooms.append(
-            f"{SP}{SP}The {zname} zone (levels {lo}-{hi}): {q(blurb)}. Within its bounds lie "
+            f"{SP}{SP}{zone_subject} zone (levels {lo}-{hi}): {q(blurb)}. Within its bounds lie "
             f"{q(place_names)}. Roads and routes run on to the neighbouring lands."
         )
         rooms.append(f"{SP}exits:")
@@ -711,6 +712,7 @@ def emit(out_root: Path | None = None) -> None:
                     # training-ground failsafe -- the on-ramp teaches combat instead of ending it,
                     # while the capstone guardian above merely bars the way (no longer aggressive).
                     _prey(npcs, f"{pid}_prey", "a barrow-rat", pid, ["rat", "barrow-rat", "vermin"])
+                    _scout(npcs, f"{pid}_scout", pid)
                 # a dungeon mouth the delve generator expands into a multi-room descent
                 delves.append(f"{pid}:")
                 delves.append(f"{SP}name: {pname}")
@@ -750,7 +752,7 @@ def emit(out_root: Path | None = None) -> None:
         # trail here -- the authored field is its wilderness (kernel.world.fieldzone).
         if zid not in FIELD_BACKED:
             wild.append(f"{zid}_wild:")
-            wild.append(f"{SP}name: The {zname} Wilds")
+            wild.append(f"{SP}name: {zone_subject} Wilds")
             wild.append(f'{SP}region: "{zname}"')
             wild.append(f"{SP}biome: {biome}")
             wild.append(f"{SP}attach: {zid}")
@@ -767,9 +769,9 @@ def emit(out_root: Path | None = None) -> None:
     )
     root.mkdir(parents=True, exist_ok=True)
     (root / "rooms.yaml").write_text("\n".join(rooms) + "\n")
-    (root / "npcs.yaml").write_text("\n".join(npcs) + "\n")
+    (root / "npcs.yaml").write_text("\n".join(npcs).rstrip("\n") + "\n")
     (root / "zones.yaml").write_text("\n".join(zones_y) + "\n")
-    (root / "wildlands.yaml").write_text("\n".join(wild) + "\n")
+    (root / "wildlands.yaml").write_text("\n".join(wild).rstrip("\n") + "\n")
     (root / "settlements.yaml").write_text("\n".join(settles) + "\n")
     (root / "dungeons.yaml").write_text("\n".join(delves) + "\n")
     (root / "waystones.yaml").write_text("\n".join(ways) + "\n")
@@ -873,6 +875,27 @@ def _prey(out: list[str], nid: str, name: str, room: str, keywords: list[str]) -
     out.append(f"{SP}level: 2")
     out.append(f"{SP}tier: normal")
     out.append("")
+
+
+def _scout(out: list[str], nid: str, room: str) -> None:
+    """The starter dungeon's passive technique target and deterministic gear proof."""
+    out.extend(
+        [
+            f"{nid}:",
+            f"{SP}name: a barrow scout",
+            f"{SP}keywords: [scout, barrow-scout, raider]",
+            f"{SP}location: {room}",
+            f"{SP}dialogue:",
+            f"{SP}{SP}- The scout watches the old stones and keeps one hand on a battered hammer.",
+            f"{SP}aggressive: false",
+            f"{SP}hp: 1",
+            f"{SP}atk: 1",
+            f"{SP}level: 2",
+            f"{SP}tier: normal",
+            f"{SP}drops: [cinder_hammer]",
+            "",
+        ]
+    )
 
 
 def _foe(out: list[str], nid: str, name: str, room: str, level: int, biome: str) -> None:

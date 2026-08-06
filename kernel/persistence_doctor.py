@@ -14,7 +14,7 @@ from typing import TYPE_CHECKING, Literal
 from sqlalchemy import Engine, create_engine, inspect
 from sqlalchemy.engine import make_url
 
-from kernel.world.db import engine_url
+from kernel.platform_db import engine_url
 from kernel.world.schema_guard import missing_columns
 
 if TYPE_CHECKING:

@@ -17,6 +17,7 @@ from kernel.seedlab.approval import ApprovalError, ApprovalStore
 from kernel.seedlab.source_connector import LocalSource
 from kernel.seedlab.tool_runner import DEFAULT_TIMEOUT, OUTPUT_CAP, ToolRunResult, run_tool
 from kernel.session_identity import SessionIdentity
+from kernel.session_registry import SessionRegistry
 from kernel.shelf.atomic_write import atomic_write_text
 
 JobKind = Literal["build", "test"]
@@ -169,6 +170,7 @@ class JobRunner:
         cancel_check: Callable[[], bool] | None = None,
         identity: SessionIdentity | None = None,
         policy: PermissionPolicy | None = None,
+        session_registry: SessionRegistry | None = None,
         correlation_id: str = "",
         activity_id: str = "",
         idempotency_key: str = "",
@@ -189,6 +191,7 @@ class JobRunner:
         self.cancel_check = cancel_check or (lambda: False)
         self.identity = identity
         self.policy = policy
+        self.session_registry = session_registry
         self.correlation_id = correlation_id.strip()
         self.activity_id = activity_id.strip()
         self.idempotency_key = idempotency_key.strip()
@@ -335,6 +338,7 @@ class JobRunner:
             clock=self.clock,
             identity=self.identity,
             policy=self.policy,
+            session_registry=self.session_registry,
             correlation_id=self.correlation_id,
             cancel_check=self.cancel_check,
         )

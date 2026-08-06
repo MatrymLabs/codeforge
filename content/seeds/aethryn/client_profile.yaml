@@ -1,0 +1,32 @@
+# Adapted from the deferred client profile candidate. Only bindings currently emitted by the Seed
+# runtime are canonical here; future panels stay in the old branch until their emitters exist.
+seed: aethryn
+name: Aethryn
+publisher: Matrym Labs
+version: "1"
+theme: forge
+terminology:
+  job: Calling
+  jobs: Callings
+  skill: Technique
+  skills: Techniques
+panels:
+  - name: Region
+    binding: Room.Info.area
+    fallback: The current region is not available yet.
+  - name: Map
+    binding: Room.Info.exits
+    fallback: The current map exits are not available yet.
+  - name: Character
+    binding: Char.Vitals.level
+    fallback: Character status is not available yet.
+  - name: Calling
+    binding: Char.Skills
+    fallback: Calling abilities are not available yet.
+  - name: Quest
+    binding: Char.Quest.state
+    fallback: Quest status is not available yet.
+  - name: Observation Log
+    binding: World.Observation.recent
+    fallback: No observations are available yet.
+accessibility: [screen_reader, no_color]

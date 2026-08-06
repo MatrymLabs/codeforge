@@ -165,3 +165,12 @@ def test_migration_policy_denial_happens_before_backup_or_mutation(tmp_path: Pat
 
     assert registry.get("validator").version == "0.1"
     assert not (tmp_path / "lifecycle" / "migrations" / "migration-1.json").exists()
+
+
+def test_migration_journal_creates_a_component_scoped_process_lock(tmp_path: Path) -> None:
+    journal = HardwareMigrationJournal(tmp_path / "lifecycle")
+
+    with journal.exclusive("validator"):
+        assert (tmp_path / "lifecycle" / "locks" / "validator.lock").is_file()
+
+    assert not (tmp_path / "lifecycle" / "locks" / "other.lock").exists()

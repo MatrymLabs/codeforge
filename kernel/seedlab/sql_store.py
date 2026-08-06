@@ -13,8 +13,8 @@ from dataclasses import dataclass
 
 from sqlalchemy.orm import Session as SqlSession
 
+from kernel.platform_db import SeedRegistryRow, open_archive_session
 from kernel.seedlab.kernel import SeedKernelError, SeedRecord, SeedStore
-from kernel.world.db import SeedRegistryRow, open_archive_session
 
 
 def _json(value: object) -> str:

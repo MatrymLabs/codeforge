@@ -1,0 +1,198 @@
+{
+  "contract": "native-seed-gmcp",
+  "schema": 1,
+  "version": "1.0.0",
+  "protocol": 1,
+  "source": "codeforge/contracts/native_seed.py",
+  "classification": "internal",
+  "compatibility_policy": "Additive fields are allowed; breaking changes require a new major contract version and an explicit migration or rejection rule.",
+  "packages": [
+    {
+      "package": "Seed.Hello",
+      "direction": "server_to_client",
+      "status": "implemented",
+      "owner": "Seed Runtime",
+      "source": "kernel/gmcp.py",
+      "text_fallback": "The Seed connection is ready.",
+      "schema_version": "1",
+      "classification": "internal",
+      "compatibility": "additive_fields_only"
+    },
+    {
+      "package": "Seed.Profile",
+      "direction": "server_to_client",
+      "status": "implemented",
+      "owner": "Seed Runtime",
+      "source": "kernel/gmcp.py",
+      "text_fallback": "Seed profile information is available.",
+      "schema_version": "1",
+      "classification": "internal",
+      "compatibility": "additive_fields_only"
+    },
+    {
+      "package": "Project.Status",
+      "direction": "server_to_client",
+      "status": "implemented",
+      "owner": "Seed Runtime",
+      "source": "kernel/seedlab/workspace_gmcp.py",
+      "text_fallback": "Project status updated.",
+      "schema_version": "1",
+      "classification": "internal",
+      "compatibility": "additive_fields_only"
+    },
+    {
+      "package": "Source.Tree",
+      "direction": "server_to_client",
+      "status": "implemented",
+      "owner": "Seed Runtime",
+      "source": "kernel/seedlab/workspace_gmcp.py",
+      "text_fallback": "The source tree is available.",
+      "schema_version": "1",
+      "classification": "internal",
+      "compatibility": "additive_fields_only"
+    },
+    {
+      "package": "Source.Connection",
+      "direction": "server_to_client",
+      "status": "implemented",
+      "owner": "Seed Runtime",
+      "source": "kernel/seedlab/workspace_gmcp.py",
+      "text_fallback": "The source connection is ready.",
+      "schema_version": "1",
+      "classification": "internal",
+      "compatibility": "additive_fields_only"
+    },
+    {
+      "package": "Model.Schema",
+      "direction": "server_to_client",
+      "status": "implemented",
+      "owner": "Seed Runtime",
+      "source": "kernel/seedlab/workspace_gmcp.py",
+      "text_fallback": "The project model is available.",
+      "schema_version": "1",
+      "classification": "internal",
+      "compatibility": "additive_fields_only"
+    },
+    {
+      "package": "Build.Report",
+      "direction": "server_to_client",
+      "status": "implemented",
+      "owner": "Seed Runtime",
+      "source": "kernel/seedlab/workspace_gmcp.py",
+      "text_fallback": "The build report is available.",
+      "schema_version": "1",
+      "classification": "internal",
+      "compatibility": "additive_fields_only"
+    },
+    {
+      "package": "Architecture.Map",
+      "direction": "server_to_client",
+      "status": "implemented",
+      "owner": "Seed Runtime",
+      "source": "kernel/seedlab/workspace_gmcp.py",
+      "text_fallback": "The architecture map is available.",
+      "schema_version": "1",
+      "classification": "internal",
+      "compatibility": "additive_fields_only"
+    },
+    {
+      "package": "Research.Findings",
+      "direction": "server_to_client",
+      "status": "implemented",
+      "owner": "Seed Runtime",
+      "source": "kernel/seedlab/workspace_gmcp.py",
+      "text_fallback": "Research findings are available.",
+      "schema_version": "1",
+      "classification": "internal",
+      "compatibility": "additive_fields_only"
+    },
+    {
+      "package": "Form.Schema",
+      "direction": "server_to_client",
+      "status": "implemented",
+      "owner": "Seed Runtime",
+      "source": "kernel/seedlab/workspace_gmcp.py",
+      "text_fallback": "The Engineering Form is ready.",
+      "schema_version": "1",
+      "classification": "internal",
+      "compatibility": "additive_fields_only"
+    },
+    {
+      "package": "Blueprint.List",
+      "direction": "server_to_client",
+      "status": "implemented",
+      "owner": "Seed Runtime",
+      "source": "kernel/seedlab/workspace_gmcp.py",
+      "text_fallback": "Blueprints are available.",
+      "schema_version": "1",
+      "classification": "internal",
+      "compatibility": "additive_fields_only"
+    },
+    {
+      "package": "Deploy.Manifest",
+      "direction": "server_to_client",
+      "status": "implemented",
+      "owner": "Seed Runtime",
+      "source": "kernel/seedlab/workspace_gmcp.py",
+      "text_fallback": "The deployment manifest is available.",
+      "schema_version": "1",
+      "classification": "internal",
+      "compatibility": "additive_fields_only"
+    },
+    {
+      "package": "Deploy.Status",
+      "direction": "server_to_client",
+      "status": "implemented",
+      "owner": "Seed Runtime",
+      "source": "kernel/seedlab/workspace_gmcp.py",
+      "text_fallback": "Deployment status updated.",
+      "schema_version": "1",
+      "classification": "internal",
+      "compatibility": "additive_fields_only"
+    },
+    {
+      "package": "Seed.Create",
+      "direction": "client_to_server",
+      "status": "implemented",
+      "owner": "Seed Runtime",
+      "source": "kernel/seedlab/workspace_gmcp.py",
+      "text_fallback": "Seed creation was requested.",
+      "schema_version": "1",
+      "classification": "internal",
+      "compatibility": "additive_fields_only"
+    },
+    {
+      "package": "Form.Submit",
+      "direction": "client_to_server",
+      "status": "implemented",
+      "owner": "Seed Runtime",
+      "source": "kernel/seedlab/workspace_gmcp.py",
+      "text_fallback": "Engineering Form answers were submitted.",
+      "schema_version": "1",
+      "classification": "internal",
+      "compatibility": "additive_fields_only"
+    },
+    {
+      "package": "Workspace.Request",
+      "direction": "client_to_server",
+      "status": "implemented",
+      "owner": "Seed Runtime",
+      "source": "kernel/seedlab/workspace_gmcp.py",
+      "text_fallback": "Workspace access was requested.",
+      "schema_version": "1",
+      "classification": "internal",
+      "compatibility": "additive_fields_only"
+    },
+    {
+      "package": "Seed.Created",
+      "direction": "server_to_client",
+      "status": "implemented",
+      "owner": "Seed Runtime",
+      "source": "kernel/seedlab/workspace_gmcp.py",
+      "text_fallback": "The Seed creation result is available.",
+      "schema_version": "1",
+      "classification": "internal",
+      "compatibility": "additive_fields_only"
+    }
+  ]
+}

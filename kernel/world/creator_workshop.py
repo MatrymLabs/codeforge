@@ -496,6 +496,13 @@ def publish_changes(session: Session) -> str:
     return "Published to the living world:\n" + "\n".join(f"  - {line}" for line in applied)
 
 
+def publish_staged_change(change: StagedChange, seed_id: str | None = None) -> str:
+    """Apply and durably record one already-validated change for an external lifecycle service."""
+    result = _apply(change)
+    _persist_published([change], seed_id=seed_id)
+    return result
+
+
 def rollback_changes(session: Session) -> str:
     """Discard the owner's staged changes without publishing. The Publishing Portal only."""
     if not is_seed_owner(session):
@@ -508,6 +515,25 @@ def rollback_changes(session: Session) -> str:
     if not count:
         return "Nothing was staged. Your world is unchanged."
     return f"Rolled back {count} staged change(s). Nothing was published; your world is unchanged."
+
+
+def rollback_published_change(change: StagedChange, seed_id: str | None = None) -> None:
+    """Undo one published change through the same canonical Workshop overlay."""
+    from kernel.world import workshop_state
+
+    target_seed = seed_id or _seed_id()
+    if change.kind == "create_item":
+        from kernel.world.items import ITEMS
+
+        ITEMS.pop(change.payload["label"], None)
+    elif change.kind == "create_npc":
+        from kernel.world.npcs import NPCS, reindex_npcs
+
+        NPCS.pop(change.payload["label"], None)
+        reindex_npcs()
+    else:
+        raise WorkshopError(f"unknown staged change kind: {change.kind!r}")
+    workshop_state.remove_change(target_seed, change.kind, change.payload["label"])
 
 
 def _apply(change: StagedChange) -> str:
@@ -526,12 +552,12 @@ def _seed_id() -> str:
     return SEED_NAME
 
 
-def _persist_published(changes: list[StagedChange]) -> None:
+def _persist_published(changes: list[StagedChange], seed_id: str | None = None) -> None:
     from kernel.world.workshop_state import load_changes, save_changes
 
-    existing = load_changes(_seed_id())
+    existing = load_changes(seed_id or _seed_id())
     existing.extend({"kind": change.kind, "payload": dict(change.payload)} for change in changes)
-    save_changes(_seed_id(), existing)
+    save_changes(seed_id or _seed_id(), existing)
 
 
 def restore_published_changes() -> int:

@@ -1,0 +1,18 @@
+version: 1
+status: proposed; names_preserve_current_roster_until_founder_review
+families:
+  martial: [vanguard, duelist, sentinel, berserker, reaver]
+  precision: [pathfinder, ranger, scout, shadowblade, saboteur, trickster]
+  arcane: [emberwright, arcanist, elementalist, chronomancer, summoner, runesmith]
+  divine: [cleric, oracle, templar, warden, hierophant]
+  engineering: [engineer, artificer, gunsmith, mechanist]
+  nature: [druid, beastmaster, stormcaller, geomancer]
+tiers:
+  starting: [vanguard, pathfinder, emberwright]
+  foundational: [duelist, ranger, arcanist, cleric, engineer, druid]
+  intermediate: [sentinel, scout, elementalist, oracle, artificer, beastmaster]
+  hybrid: [reaver, shadowblade, chronomancer, templar, gunsmith, stormcaller]
+  specialist: [berserker, saboteur, summoner, warden, mechanist, geomancer, trickster, runesmith]
+  prestige: [hierophant]
+classification_note: "This is a design hypothesis. Existing names remain canonical until founder approval and content review."
+

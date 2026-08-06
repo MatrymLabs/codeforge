@@ -9,6 +9,7 @@ import json
 from kernel.gmcp import (
     GMCP_OPT,
     SEED_PROTOCOL,
+    aethryn_profile,
     enables_gmcp,
     escape_iac,
     friends_report,
@@ -16,12 +17,14 @@ from kernel.gmcp import (
     guild_report,
     items_report,
     mail_report,
+    observation_report,
     party_report,
     quest_report,
     read_gmcp_package,
     resists_report,
     room_report,
     seed_hello,
+    seed_profile,
     skills_report,
     target_report,
     vitals_report,
@@ -397,6 +400,39 @@ def test_seed_hello_takes_the_seed_id_it_is_given():
 def test_seed_hello_frames_as_a_gmcp_message():
     frame = gmcp_frame("Seed.Hello", seed_hello("aethryn"))
     assert b"Seed.Hello" in frame and frame.startswith(bytes([255, 250, GMCP_OPT]))
+
+
+def test_aethryn_profile_declares_only_existing_read_path_panels():
+    profile = aethryn_profile()
+    assert profile["seed"] == "aethryn"
+    panels = profile["panels"]
+    assert isinstance(panels, list)
+    assert {panel["name"] for panel in panels} == {
+        "Region",
+        "Map",
+        "Character",
+        "Calling",
+        "Quest",
+        "Observation Log",
+    }
+    assert all("fallback" in panel and "binding" in panel for panel in panels)
+
+
+def test_seed_profile_is_pure_data_and_observation_is_real_engine_state():
+    profile = seed_profile("first-forge", "First Forge", "Matrym Labs", "2.1.0")
+    assert set(profile) >= {"seed", "name", "publisher", "version", "panels", "accessibility"}
+    from kernel.world import encounter_log
+
+    encounter_log.reset()
+    try:
+        encounter_log.witness("defeat", "the training dummy", "the path is clear")
+        report = observation_report()
+        assert report["recent"] == [
+            {"kind": "defeat", "who": "the training dummy", "detail": "the path is clear"}
+        ]
+        assert report["tallies"]["defeat"] == 1
+    finally:
+        encounter_log.reset()
 
 
 # --- read_gmcp_package: the inverse of gmcp_frame (inbound client frames) ----

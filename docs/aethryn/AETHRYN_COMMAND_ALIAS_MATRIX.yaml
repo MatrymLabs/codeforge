@@ -1,0 +1,45 @@
+version: 1
+status: proposed
+rules:
+  normalization: lowercase_unicode_nfkc_trim_outer_whitespace
+  quotes: double_or_single_quotes_preserve_spaces
+  target_matching: exact_then_numbered_then_unique_prefix
+  ambiguity: list_candidates_and_request_exact_choice
+  typo: suggest_at_most_three_candidates_when_distance_is_small
+  history: client_local_by_default; server_never_persists_secrets
+  parser: one_authoritative_registry_for_gateway_tick_and_client_help
+aliases:
+  - {canonical: look, aliases: [l], category: perception, safety: safe}
+  - {canonical: north, aliases: [n], category: movement, safety: safe}
+  - {canonical: northeast, aliases: [ne], category: movement, safety: safe}
+  - {canonical: east, aliases: [e], category: movement, safety: safe}
+  - {canonical: southeast, aliases: [se], category: movement, safety: safe}
+  - {canonical: south, aliases: [s], category: movement, safety: safe}
+  - {canonical: southwest, aliases: [sw], category: movement, safety: safe}
+  - {canonical: west, aliases: [w], category: movement, safety: safe}
+  - {canonical: northwest, aliases: [nw], category: movement, safety: safe}
+  - {canonical: up, aliases: [u], category: movement, safety: safe}
+  - {canonical: down, aliases: [d], category: movement, safety: safe}
+  - {canonical: inventory, aliases: [i], category: inventory, safety: safe}
+  - {canonical: score, aliases: [sheet, character], category: character, safety: safe}
+  - {canonical: skills, aliases: [], category: progression, safety: safe}
+  - {canonical: abilities, aliases: [], category: progression, safety: safe}
+  - {canonical: techniques, aliases: [], category: progression, safety: safe}
+  - {canonical: jobs, aliases: [], category: progression, safety: safe}
+  - {canonical: attack, aliases: [hit, strike], category: combat, safety: consequential}
+  - {canonical: flee, aliases: [escape], category: combat, safety: consequential}
+  - {canonical: say, aliases: ["'"], category: communication, safety: safe}
+  - {canonical: help, aliases: [?], category: system, safety: safe}
+  - {canonical: logout, aliases: [quit], category: system, safety: safe}
+  - {canonical: create, aliases: [new], category: account_or_character, context_required: true, safety: consequential}
+  - {canonical: go, aliases: [move], category: movement, safety: consequential}
+  - {canonical: examine, aliases: [x, inspect], category: perception, safety: safe}
+  - {canonical: take, aliases: [get], category: objects, safety: consequential}
+  - {canonical: use, aliases: [activate], category: combat_or_objects, context_required: true, safety: consequential}
+  - {canonical: creator, aliases: [workshop], category: creator, permission: owner, safety: consequential}
+collision_policy:
+  - command_canonical_name_beats_named_exit
+  - exact_named_exit_may_be_invoked_with_go_even_if_word_is_command
+  - creator_commands_use_context_and_permission_not_global_shadowing
+  - destructive_commands_require_preview_then_confirmation
+

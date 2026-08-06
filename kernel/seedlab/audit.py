@@ -24,6 +24,7 @@ _PLATFORM_CAPABLE = {
     "tool_runner",
     "workspace_gmcp",
     "workspace_verb",
+    "operational_baseline",
 }
 
 _PLATFORM_SUPPORT = {

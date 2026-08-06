@@ -11,6 +11,7 @@ that owns an owner-ranked character -- authorization before
 capability, same law as the @-verbs.
 """
 
+import json
 import os
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
@@ -29,11 +30,14 @@ from kernel.login_guard import LoginGuard
 from kernel.platform import current_platform_status
 from kernel.seedlab.artifact_registry import configured_artifact_store
 from kernel.seedlab.artifact_store import ArtifactStore
+from kernel.seedlab.creator_draft import CreatorDraftError
 from kernel.seedlab.kernel import SeedKernel, SeedKernelError
 from kernel.seedlab.manifest_registry import configured_manifest_evidence_store
 from kernel.seedlab.model_store import ModelStore, configured_model_store
 from kernel.seedlab.registry import configured_seed_store
+from kernel.seedlab.task import TaskError, TaskRecord, configured_task_store
 from kernel.seedlab.tool_runner import RunLog, configured_run_log
+from kernel.seedlab.workshop_services import CreatorWorkshopService
 from kernel.seedlab.workspace_contract import (
     build_workspace_contract,
 )
@@ -142,6 +146,21 @@ class BlueprintSummary(BaseModel):
     requirement_count: int
 
 
+class WorkshopPartSummary(BaseModel):
+    id: str
+    name: str
+    category: str
+    maturity: str
+    risk: str
+    source_status: str
+    license: str
+
+
+class WorkshopCatalogPayload(BaseModel):
+    service: str
+    parts: list[WorkshopPartSummary]
+
+
 class WorkspaceSeedSummary(BaseModel):
     id: str
     name: str
@@ -173,6 +192,35 @@ class WorkspaceContractPayload(BaseModel):
     project: dict[str, Any]
     project_state: WorkspaceStateSummary
     packages: list[WorkspacePackageSummary]
+
+
+class SeedLabConnectRequest(BaseModel):
+    path: str
+
+
+class SeedLabDisconnectRequest(BaseModel):
+    source_id: str
+
+
+class SeedLabDraftCreateRequest(BaseModel):
+    draft_id: str
+    payload: dict[str, Any]
+
+
+class SeedLabDraftEditRequest(BaseModel):
+    changes: dict[str, Any]
+
+
+class SeedLabDraftTransitionRequest(BaseModel):
+    target: str
+
+
+class SeedLabTaskCreateRequest(BaseModel):
+    task_id: str
+    title: str
+    description: str
+    source_proposal: str = ""
+    evidence_ids: list[str] = []
 
 
 class PlatformComponentPayload(BaseModel):
@@ -233,6 +281,8 @@ def _seedlab_artifact_store() -> ArtifactStore:
     return configured_artifact_store(_seedlab_home())
 
 
+def _seedlab_workshop() -> CreatorWorkshopService:
+    return CreatorWorkshopService.durable(_seedlab_home() / "workshop")
 
 
 @app.get("/characters", response_model=list[Hero])
@@ -315,6 +365,203 @@ async def seedlab_workspace(seed_id: str) -> dict[str, object]:
     return contract.to_dict()
 
 
+@app.post("/api/seedlab/workspaces/{seed_id}/connect")
+async def seedlab_connect(
+    seed_id: str,
+    request: SeedLabConnectRequest,
+    account: Annotated[str, Depends(_require_owner)],
+) -> dict[str, object]:
+    """Connect and model a source through the authoritative Seed workspace boundary."""
+    from kernel.seedlab.workspace_verb import workspace_command
+
+    kernel = _seedlab_kernel()
+    try:
+        kernel.require_owner(seed_id, account)
+    except SeedKernelError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+    result = workspace_command(
+        type("ApiSession", (), {"account": account, "player_id": account})(),
+        f"connect {seed_id} {request.path}",
+        kernel=kernel,
+    )
+    if result.startswith("workspace:"):
+        raise HTTPException(status_code=400, detail=result.removeprefix("workspace: ").strip())
+    return (
+        build_workspace_contract(
+            seed_id,
+            root=_seedlab_home(),
+            model=_seedlab_model_store().all_for_seed(seed_id)[-1],
+            runs=_seedlab_run_log().for_seed(seed_id),
+            artifacts=_seedlab_artifact_store().all_for_seed(seed_id),
+            manifest_evidence=_workspace_manifest_evidence(seed_id),
+            hardware_records=_workspace_hardware_records(),
+        )
+    ).to_dict()
+
+
+@app.post("/api/seedlab/workspaces/{seed_id}/disconnect")
+async def seedlab_disconnect(
+    seed_id: str,
+    request: SeedLabDisconnectRequest,
+    account: Annotated[str, Depends(_require_owner)],
+) -> dict[str, object]:
+    """Persist a connector removal tombstone and return the resulting contract."""
+    from kernel.seedlab.workspace_verb import workspace_command
+
+    kernel = _seedlab_kernel()
+    try:
+        kernel.require_owner(seed_id, account)
+    except SeedKernelError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+    result = workspace_command(
+        type("ApiSession", (), {"account": account, "player_id": account})(),
+        f"disconnect {seed_id} {request.source_id}",
+        kernel=kernel,
+    )
+    if result.startswith("workspace:"):
+        raise HTTPException(status_code=400, detail=result.removeprefix("workspace: ").strip())
+    return build_workspace_contract(
+        seed_id,
+        root=_seedlab_home(),
+        runs=_seedlab_run_log().for_seed(seed_id),
+        artifacts=_seedlab_artifact_store().all_for_seed(seed_id),
+        manifest_evidence=_workspace_manifest_evidence(seed_id),
+        hardware_records=_workspace_hardware_records(),
+    ).to_dict()
+
+
+def _workspace_contract(seed_id: str) -> dict[str, object]:
+    """Build the authoritative post-mutation contract shared by every workspace write."""
+    models = _seedlab_model_store().all_for_seed(seed_id)
+    return build_workspace_contract(
+        seed_id,
+        root=_seedlab_home(),
+        model=models[-1] if models else None,
+        runs=_seedlab_run_log().for_seed(seed_id),
+        artifacts=_seedlab_artifact_store().all_for_seed(seed_id),
+        manifest_evidence=_workspace_manifest_evidence(seed_id),
+        hardware_records=_workspace_hardware_records(),
+    ).to_dict()
+
+
+@app.post("/api/seedlab/workspaces/{seed_id}/drafts")
+async def seedlab_create_draft(
+    seed_id: str,
+    request: SeedLabDraftCreateRequest,
+    account: Annotated[str, Depends(_require_owner)],
+) -> dict[str, object]:
+    """Create an isolated Creator Workshop draft and return its authoritative projection."""
+    kernel = _seedlab_kernel()
+    try:
+        kernel.require_owner(seed_id, account)
+        CreatorWorkshopService.durable(_seedlab_home() / "workshop").create_draft(
+            request.draft_id,
+            seed_id,
+            account,
+            request.payload,
+        )
+    except (SeedKernelError, CreatorDraftError) as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    return _workspace_contract(seed_id)
+
+
+@app.post("/api/seedlab/workspaces/{seed_id}/tasks")
+async def seedlab_create_task(
+    seed_id: str,
+    request: SeedLabTaskCreateRequest,
+    account: Annotated[str, Depends(_require_owner)],
+) -> dict[str, object]:
+    """Create an owner-authenticated implementation task and return its workspace projection."""
+    kernel = _seedlab_kernel()
+    try:
+        kernel.require_owner(seed_id, account)
+        task = configured_task_store(_seedlab_home()).create(
+            TaskRecord(
+                task_id=request.task_id,
+                seed_id=seed_id,
+                owner_id=account,
+                title=request.title,
+                description=request.description,
+                source_proposal=request.source_proposal,
+                evidence_ids=tuple(request.evidence_ids),
+            )
+        )
+    except (SeedKernelError, TaskError) as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    return {"task": task.to_dict(), "workspace": _workspace_contract(seed_id)}
+
+
+@app.post("/api/seedlab/workspaces/{seed_id}/drafts/{draft_id}/edit")
+async def seedlab_edit_draft(
+    seed_id: str,
+    draft_id: str,
+    request: SeedLabDraftEditRequest,
+    account: Annotated[str, Depends(_require_owner)],
+) -> dict[str, object]:
+    """Edit a created draft through the durable Creator Workshop service."""
+    kernel = _seedlab_kernel()
+    try:
+        kernel.require_owner(seed_id, account)
+        service = CreatorWorkshopService.durable(_seedlab_home() / "workshop")
+        current = service.drafts.get(draft_id)
+        if current.seed_id != seed_id:
+            raise CreatorDraftError("draft does not belong to this Seed")
+        service.edit_draft(draft_id, account, request.changes)
+    except (SeedKernelError, CreatorDraftError) as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    return _workspace_contract(seed_id)
+
+
+@app.post("/api/seedlab/workspaces/{seed_id}/drafts/{draft_id}/transition")
+async def seedlab_transition_draft(
+    seed_id: str,
+    draft_id: str,
+    request: SeedLabDraftTransitionRequest,
+    account: Annotated[str, Depends(_require_owner)],
+) -> dict[str, object]:
+    """Advance a draft only through the CreatorDraft state machine."""
+    kernel = _seedlab_kernel()
+    try:
+        kernel.require_owner(seed_id, account)
+        service = CreatorWorkshopService.durable(_seedlab_home() / "workshop")
+        current = service.drafts.get(draft_id)
+        if current.seed_id != seed_id:
+            raise CreatorDraftError("draft does not belong to this Seed")
+        service.transition_draft(draft_id, request.target, account)
+    except (SeedKernelError, CreatorDraftError) as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    return _workspace_contract(seed_id)
+
+
+@app.get("/api/seedlab/proofs/{seed_id}")
+async def seedlab_platform_proof(
+    seed_id: str,
+    _account: Annotated[str, Depends(_require_owner)],
+) -> dict[str, object]:
+    """Return the exact durable first-platform proof to an authenticated owner.
+
+    The Master Client receives a read-only projection of evidence. It never executes, repairs,
+    redeploys, or treats the proof as authority; the Seed and deployment records remain owned by
+    their existing services.
+    """
+    if Path(seed_id).name != seed_id or seed_id in {".", ".."}:
+        raise HTTPException(status_code=400, detail="invalid Seed id")
+    path = _seedlab_home() / "proof" / "evidence" / f"platform-proof-{seed_id}.json"
+    if not path.is_file():
+        raise HTTPException(status_code=404, detail=f"no platform proof for Seed {seed_id!r}")
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise HTTPException(
+            status_code=500, detail="platform proof evidence is unavailable"
+        ) from exc
+    if not isinstance(payload, dict) or payload.get("seed_id") != seed_id:
+        raise HTTPException(
+            status_code=409, detail="platform proof evidence does not match the Seed"
+        )
+    return payload
+
+
 def _workspace_manifest_evidence(seed_id: str):
     """Read the canonical durable evidence projection without creating empty state."""
     records = configured_manifest_evidence_store(_seedlab_home()).all_for_seed(seed_id)
@@ -342,6 +589,26 @@ async def blueprints() -> list[BlueprintSummary]:
         )
         for b in load_blueprints()
     ]
+
+
+@app.get("/api/creator-workshop/catalog", response_model=WorkshopCatalogPayload)
+async def creator_workshop_catalog() -> WorkshopCatalogPayload:
+    """Read the authoritative Hardware Store catalog through the Workshop service boundary."""
+    return WorkshopCatalogPayload(
+        service="creator-workshop",
+        parts=[
+            WorkshopPartSummary(
+                id=part.id,
+                name=part.name,
+                category=part.category,
+                maturity=part.maturity,
+                risk=part.risk,
+                source_status=part.source_status,
+                license=part.license,
+            )
+            for part in _seedlab_workshop().shelf()
+        ],
+    )
 
 
 @app.post("/admin/grant")

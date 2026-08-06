@@ -29,14 +29,15 @@ from starlette.responses import Response
 from adapters.gateway import (
     IDLE_TIMEOUT,
     MAX_CONNECTIONS,
+    NAME_RE,
     TICK_LOCK,
     _next_player_id,
     _sanitize,
 )
 from forge import handle_command, render_scene
-from kernel.world import guild, party, trade
-from kernel.world.accounts import password_fixable
-from kernel.world.characters import save_character
+from kernel.world import appearance, guild, party, trade
+from kernel.world.accounts import password_fixable, verify_account
+from kernel.world.characters import characters_for_account, save_character
 from kernel.world.events import bind_echo, unbind_echo
 from kernel.world.seed import SEED_NAME, load_splash
 from kernel.world.session import SESSIONS, Session
@@ -138,6 +139,7 @@ async def _register_dialogue(ws: WebSocket, outbox: asyncio.Queue[str], session:
     chosen handle -- instead of dropping to the top menu. Returns the final response."""
     handle = await _ask(ws, outbox, "Choose your character@account:")
     initial_calling: str | None = None
+    initial_skin = ""
     if SEED_NAME == "aethryn":
         from kernel.world.jobs import calling_label, character_creation_menu
 
@@ -151,6 +153,20 @@ async def _register_dialogue(ws: WebSocket, outbox: asyncio.Queue[str], session:
         if initial_calling is None:
             outbox.put_nowait("Character creation cancelled. Reconnect to try again.")
             return ""
+        outbox.put_nowait(
+            "Choose a skin color, or press Enter to decide later.\n"
+            f"Available: {', '.join(appearance.SKIN_COLORS)}"
+        )
+        for _ in range(3):
+            choice = await _ask(ws, outbox, "Skin color:")
+            if not choice:
+                break
+            initial_skin = appearance.normalize_skin_color(choice)
+            if initial_skin is not None:
+                break
+            outbox.put_nowait(
+                "That skin color is not available. Choose one from the list or press Enter."
+            )
     response = ""
     for attempt in range(_REGISTER_TRIES):
         secret = await _ask(ws, outbox, "Choose a password:")
@@ -160,11 +176,94 @@ async def _register_dialogue(ws: WebSocket, outbox: asyncio.Queue[str], session:
             if response.startswith("Welcome,") and initial_calling is not None:
                 with TICK_LOCK:
                     chosen = handle_command(session, f"job {initial_calling}")
+                    if initial_skin:
+                        session.appearance["skin_color"] = initial_skin
                     save_character(session)
-                response = f"{response}\n{chosen}"
+                note = (
+                    f"\nAppearance saved. Skin color: {initial_skin}."
+                    if initial_skin
+                    else "\nYou can set your appearance later: appearance skin <color>."
+                )
+                response = f"{response}\n{chosen}{note}"
             return response
         outbox.put_nowait(response)  # nudge, then re-ask the password in place
     return response
+
+
+async def _register_character_for_account(
+    ws: WebSocket, outbox: asyncio.Queue[str], session: Session, account: str, secret: str
+) -> str:
+    """Create another character after the account credential has been verified."""
+    handle = (await _ask(ws, outbox, "New character name:")).strip().lower()
+    if not NAME_RE.match(handle):
+        return "Character names are 2-16 characters: letters, digits, and underscores."
+    initial_calling: str | None = None
+    initial_skin = ""
+    if SEED_NAME == "aethryn":
+        from kernel.world.jobs import calling_label, character_creation_menu
+
+        outbox.put_nowait(character_creation_menu())
+        for _ in range(3):
+            initial_calling = calling_label(await _ask(ws, outbox, "Calling (name):"))
+            if initial_calling is not None:
+                break
+            outbox.put_nowait("That calling is not available. Choose one from the menu.")
+        if initial_calling is None:
+            return "Character creation cancelled. Reconnect to try again."
+        outbox.put_nowait(
+            "Choose a skin color, or press Enter to decide later.\n"
+            f"Available: {', '.join(appearance.SKIN_COLORS)}"
+        )
+        for _ in range(3):
+            choice = await _ask(ws, outbox, "Skin color:")
+            if not choice:
+                break
+            initial_skin = appearance.normalize_skin_color(choice)
+            if initial_skin is not None:
+                break
+            outbox.put_nowait(
+                "That skin color is not available. Choose one from the list or press Enter."
+            )
+    with TICK_LOCK:
+        response = handle_command(session, f"register {handle}@{account} {secret}")
+        if response.startswith("Welcome,") and initial_calling is not None:
+            chosen = handle_command(session, f"job {initial_calling}")
+            if initial_skin:
+                session.appearance["skin_color"] = initial_skin
+            save_character(session)
+            response = f"{response}\n{chosen}"
+    return response
+
+
+async def _account_character_selection(
+    ws: WebSocket, outbox: asyncio.Queue[str], session: Session, account: str, secret: str
+) -> str | None:
+    """Show the authenticated account roster and require an explicit character choice."""
+    records = characters_for_account(account)
+    lines = [f"CHARACTERS — {account}", ""]
+    if records:
+        for record in records:
+            lines.append(
+                f"  {record.name:<16} PLvl {record.level:<3} "
+                f"{record.job or 'Calling not chosen':<14} {record.location}"
+            )
+    else:
+        lines.append("  No characters yet.")
+    lines.extend(("", "Select a character name, type NEW to create one, or LOGOUT."))
+    outbox.put_nowait("\n".join(lines))
+    for _ in range(3):
+        choice = (await _ask(ws, outbox, "Character:")).lower()
+        if choice in {"logout", "quit", "back"}:
+            outbox.put_nowait("Selection cancelled.")
+            return None
+        if choice == "new":
+            return await _register_character_for_account(ws, outbox, session, account, secret)
+        if any(record.name == choice for record in records):
+            with TICK_LOCK:
+                return handle_command(session, f"login {choice}@{account} {secret}")
+        outbox.put_nowait("That character is not on this account. Choose a listed name or LOGOUT.")
+    outbox.put_nowait("Too many selection attempts. Reconnect to try again.")
+    return None
 
 
 async def _front_desk(ws: WebSocket, outbox: asyncio.Queue[str], session: Session) -> bool:
@@ -172,7 +271,7 @@ async def _front_desk(ws: WebSocket, outbox: asyncio.Queue[str], session: Sessio
     dialogue assembles login/register tick commands; the tick decides."""
     outbox.put_nowait(load_splash())
     for _ in range(3):
-        who = (await _ask(ws, outbox, "Character (character@account) or NEW:")).lower()
+        who = (await _ask(ws, outbox, "Account, character@account, or NEW:")).lower()
         if not who:
             outbox.put_nowait("Login required: enter your character@account, or type NEW.")
             continue
@@ -180,8 +279,18 @@ async def _front_desk(ws: WebSocket, outbox: asyncio.Queue[str], session: Sessio
             response = await _register_dialogue(ws, outbox, session)
         else:
             secret = await _ask(ws, outbox, "Password:")
-            with TICK_LOCK:
-                response = handle_command(session, f"login {who} {secret}")
+            if "@" not in who and NAME_RE.match(who):
+                if not verify_account(who, secret):
+                    response = "That account and password do not align."
+                else:
+                    response = await _account_character_selection(
+                        ws, outbox, session, who, secret
+                    )
+                    if response is None:
+                        return False
+            else:
+                with TICK_LOCK:
+                    response = handle_command(session, f"login {who} {secret}")
         outbox.put_nowait(response)
         if response.startswith("Welcome back,"):
             return True  # the restore response already rendered the scene

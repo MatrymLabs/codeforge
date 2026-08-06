@@ -384,6 +384,15 @@ def test_score_with_a_bad_mode_surfaces_the_error() -> None:
     assert "unknown display_mode" in handle_command(session, "score no-such-mode")
 
 
+def test_ansi_preference_is_a_known_plain_text_safe_command() -> None:
+    session = _player()
+    enabled = handle_command(session, "ansi on")
+    assert "preference set to on" in enabled
+    assert session.ansi_enabled is True
+    assert "ANSI preference: on" in handle_command(session, "ansi status")
+    assert "Usage: ansi on|off|status" in handle_command(session, "ansi maybe")
+
+
 def test_lesson_with_an_unknown_subcommand_prompts() -> None:
     out = handle_command(_player(), "lesson wibble")
     assert out == "Try: lesson list, or lesson start <subject>"

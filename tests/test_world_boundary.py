@@ -71,6 +71,7 @@ _GAME_SEED = {
     "progression",
     "accounts",
     "characters",
+    "appearance",
     "character_view",
     "zones",
     "equipment",

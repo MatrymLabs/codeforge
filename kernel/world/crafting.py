@@ -110,4 +110,11 @@ def craft(session: Session, arg: str) -> str:
     rose = advance(session, trade_for_craft(name))
     if rose:
         line = f"{line}\n{rose}"
+    # Story arcs may observe the same successful recipe without owning crafting state. Crafting
+    # remains authoritative for the transaction; the quest engine only applies its declared effect.
+    from kernel.world import quest
+
+    quest_line = quest.on_event(session, "craft", name)
+    if quest_line:
+        line = f"{line}\n{quest_line}"
     return line

@@ -26,9 +26,9 @@ from typing import Protocol, runtime_checkable
 
 from sqlalchemy.orm import Session as SqlSession
 
+from kernel.platform_db import SeedModelRow, open_archive_session
 from kernel.seedlab.project_model import ProjectModel
 from kernel.shelf.atomic_write import atomic_write_text
-from kernel.world.db import SeedModelRow, open_archive_session
 
 _SLUG = re.compile(r"[^a-z0-9]+")
 

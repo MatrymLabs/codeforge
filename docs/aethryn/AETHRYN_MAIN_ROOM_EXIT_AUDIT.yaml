@@ -1,0 +1,28 @@
+version: 1
+status: extracted_from_content_seeds_aethryn_rooms_yaml
+summary:
+  authored_rooms: 77
+  authored_exits: 170
+  spatial_direction_exits: 107
+  spatial_direction_percent: 62.9
+  named_or_other_exits: 63
+  primary_issue: "zone hubs use named spokes and settlements use out; reciprocal semantics are not encoded as a shared exit record"
+  recommended_threshold: "70% spatial primary exits in major game spaces; 80% in Creator's Hall where physical layout permits"
+zone_routes:
+  veridia: {hub: veridia, spokes: [greenhold, elderwatch, riverbend, sunmeadow, sunken], spatial: [east=caeloria, south=duskwood_vale, north=frostspire_peaks]}
+  duskwood_vale: {hub: duskwood_vale, spokes: [ravenwatch, moonshade, twilight, black], spatial: [north=veridia, east=eldryn_forest, south=zhaar_desert]}
+  caeloria: {hub: caeloria, spokes: [caeloria, brightwater, silverwatch, westgate, starfall], spatial: [west=veridia, south=eldryn_forest, northeast=frostspire_peaks, east=ashen_wastes]}
+  eldryn_forest: {hub: eldryn_forest, spokes: [eldryn, wildgrowth, greenmist, great, rotwood], spatial: [north=caeloria, west=zhaar_desert, east=ashen_wastes, south=korvash_highlands]}
+  frostspire_peaks: {hub: frostspire_peaks, spokes: [frosthold, winters, ironwall, glacial], spatial: [south=veridia, southwest=caeloria, east=thalorin]}
+  zhaar_desert: {hub: zhaar_desert, spokes: [sunscar, red, sandspire, obsidian, scorchstone], spatial: [north=duskwood_vale, east=eldryn_forest, southeast=korvash_highlands]}
+  xilnath_jungle: {hub: xilnath_jungle, spokes: [zulkarak, mistvale, shifting, heart], spatial: [west=ashen_wastes, north=shattered_isles, east=skyward_spires]}
+  thalorin: {hub: thalorin, spokes: [stonefang, boulderfall, khazgor, dreadmaw, irondeep], spatial: [west=frostspire_peaks, south=ashen_wastes, east=shattered_isles]}
+  ashen_wastes: {hub: ashen_wastes, spokes: [moltenhold, cinderfire, ashen, flamewrought, scorched], spatial: [west=eldryn_forest, north=thalorin, east=xilnath_jungle, south=korvash_highlands]}
+  korvash_highlands: {hub: korvash_highlands, spokes: [stonehelm, highreach, thunderhold, shunderhold, ancient, korvash], spatial: [north=ashen_wastes, northwest=zhaar_desert, down=the_deepreach, southeast=the_voidscar]}
+  shattered_isles: {hub: shattered_isles, spokes: [stormreach, saltwind, blackreef, maelstrom], spatial: [west=thalorin, south=xilnath_jungle, east=skyward_spires]}
+  skyward_spires: {hub: skyward_spires, spokes: [aurelian, celestial, spire], spatial: [west=shattered_isles, south=the_voidscar]}
+  the_deepreach: {hub: the_deepreach, spokes: [deepforge, lumengrotto, shadowfissure, crystal], spatial: [up=korvash_highlands, east=the_voidscar]}
+  the_voidscar: {hub: the_voidscar, spokes: [voidspire, dark, netharions, rifted], spatial: [northwest=korvash_highlands, north=skyward_spires, west=the_deepreach]}
+migration_rule: "Add a canonical direction plus display label; keep a unique named alias. Do not silently reinterpret an authored portal or one-way route."
+required_generated_audit: "tools/aethryn_exit_audit.py must emit one row for every seed and runtime exit before migration lands."
+

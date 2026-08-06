@@ -1,0 +1,23 @@
+version: 1
+test_layers:
+  unit: [token_rendering, ansi_width, wrapping, parser_normalization, alias_resolution, requirement_logic]
+  snapshot: [room_standard, room_narrow, score, skills, job_locked, combat_standard, combat_linear, help]
+  property: [no_line_over_width, no_duplicate_alias, no_duplicate_direction, graph_acyclic, reciprocal_metadata]
+  integration: [login_to_selection, creation_to_world, selection_to_world, room_to_gmcp, combat_to_summary, reconnect_persistence]
+  accessibility: [ansi_stripped_equivalence, ascii_equivalence, linear_order, keyboard_command_parity, non_color_status]
+  security: [rate_limit, secret_redaction, owner_workshop_gate, destructive_confirmation, client_authorization]
+golden_policy:
+  reviewed_updates_allowed: true
+  update_requires: [reason, before_after, accessibility_check, compatibility_check]
+  forbidden: [snapshot_only_claim_of_correctness, secret_values, proprietary_copied_text]
+minimum_vertical_slice:
+  - authenticate_account
+  - select_or_create_character
+  - enter_creator_hall
+  - render_room_and_exits
+  - move_cardinal_and_legacy_alias
+  - render_score_and_skills
+  - inspect_locked_job
+  - controlled_combat_and_summary
+  - disconnect_reconnect_selection
+

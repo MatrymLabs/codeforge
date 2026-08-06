@@ -1,0 +1,23 @@
+version: 1
+status: current_runtime_audit_plus_migration_target
+scope: [grand_library, creator_workshop, planning_table, npc_studio, quest_archive, item_forge, creature_forge, difficulty_desk, blueprint_repository, statistics_wall, publishing_portal]
+current_runtime:
+  grand_library: {visible_exits: {library: spawn, out: spawn}, concealed_exit: {word: door, destination: creator_workshop, owner_only: true}}
+  creator_workshop: {exits: "station nouns from STATIONS plus out=grand_library", direction_policy: named_admin_station_exception}
+  station_rooms: {exits: {hall: creator_workshop, out: creator_workshop}}
+target:
+  grand_library:
+    exits: {out: spawn}
+    labels: {out: "Main Library Threshold"}
+    preserve_aliases: [library]
+    hidden: {door: creator_workshop, owner_only: true}
+  creator_workshop:
+    layout: "central hall with named station portals; this is an explicit menu-like admin space"
+    preserve_aliases: [planning, npc, quests, items, creatures, difficulty, blueprints, stats, publish, out]
+    add: [exits, map, help creator]
+  station_rooms:
+    target_exit: "out — Creator's Workshop"
+    legacy_aliases: [hall]
+validation_required: [owner_gate, hidden_door_not_in_exit_list, teleport_denial, station_permission, exit_payload_parity]
+founder_decisions: [whether_grand_library_library_alias_is_retained, whether_workshop_station_names_are_final]
+

@@ -1,0 +1,15 @@
+version: 1
+phases:
+  - {id: 1, name: reality_audit, objective: "capture runtime and seed evidence", locations: [forge.py, adapters/gateway.py, kernel/world, content/seeds/aethryn, tests], done: "inventory report and repro fixtures reviewed"}
+  - {id: 2, name: presentation_foundation, objective: "shared view models and width profiles", locations: [kernel/world/score_sheet.py, new presentation package, client parsers], dependencies: [1], done: "ANSI/plain/narrow/linear parity tests pass"}
+  - {id: 3, name: room_cleanup, objective: "structured room sections and concise entry", locations: [kernel/world/world.py, room renderers, GMCP], dependencies: [2], done: "room snapshots and text/panel values agree"}
+  - {id: 4, name: navigation, objective: "direction metadata and safe aliases", locations: [content/seeds/aethryn/rooms.yaml, navigation validator, help], dependencies: [1,2], done: "threshold and reciprocal audits pass"}
+  - {id: 5, name: command_registry, objective: "one parser/help source", locations: [forge.py, kernel/commands, client command model], dependencies: [2,4], done: "collision/ambiguity/typo tests pass"}
+  - {id: 6, name: combat_presentation, objective: "grouped tick events and modes", locations: [kernel/world/combat.py, gateway frames, client combat panel], dependencies: [2,5], done: "solo/party/boss/linear snapshots pass"}
+  - {id: 7, name: skills_panels, objective: "typed actions and reasons unavailable", locations: [kernel/world/abilities.py, jobs, client panels], dependencies: [2,5], done: "skill/ability/technique parity passes"}
+  - {id: 8, name: account_entry, objective: "selection and creation state flow", locations: [adapters/gateway.py, kernel/world/accounts.py, character store, client], dependencies: [5], done: "account/character separation and reconnect tests pass"}
+  - {id: 9, name: job_progression, objective: "data-driven unlock graph and migration", locations: [content/seeds/aethryn/jobs.yaml, progression, migration service, client], dependencies: [7,8], gate: founder_approval, done: "dry-run migration and invalid-unlock tests pass"}
+  - {id: 10, name: master_client, objective: "structured projection family", locations: [client ui_qt, GMCP contracts, panel host], dependencies: [3,6,7,8,9], done: "every essential panel has text command parity"}
+  - {id: 11, name: validation, objective: "accessibility, compatibility, restart, performance", locations: [tests, docs, live probes], dependencies: [10], done: "vertical slice and release checklist green"}
+approval_gates: [room_style, command_removals, account_recovery, job_graph, migration_policy, named_exit_exceptions]
+

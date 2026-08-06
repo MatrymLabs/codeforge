@@ -1,0 +1,24 @@
+# SEED: aethryn -- quests/veridia_makers_accord.yaml
+# Adapted from the deferred Aethryn field pack. It now observes current gather and craft events;
+# gathering itself grants the material, so the old duplicate grant_item effect was removed.
+id: veridia_makers_accord
+name: The Makers' Accord
+start: offered
+reward_xp: 55
+steps:
+  - {state: offered, event: enter, to: gathering, on_enter: greenhold_smithy}
+  - state: gathering
+    event: forage
+    to: crafting
+    on_forage: greenhold_fields|meadowfoil
+  - state: crafting
+    event: craft
+    to: done
+    on_craft: meadowfoil_salve
+    effect: "award_xp;grant_rep:making:30"
+terminal: [done]
+labels:
+  offered: "The Greenhold smith needs a maker's hand. Enter the smithy and ask what the town cannot make for itself."
+  gathering: "The makers need meadowfoil from Veridia's fields. Gather it from a live node until you have enough for a salve."
+  crafting: "At a hearth, forge the meadowfoil salve recipe. The finished salve will prove the local makers' work is worth trusting."
+  done: "*** The salve takes cleanly, bright with Veridia's green. The makers have a new trade, and your name is entered in the Accord's ledger. ***"

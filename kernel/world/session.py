@@ -34,6 +34,13 @@ class Session:
     named: bool = False
     rank: str = "player"
     account: str = ""
+    # Player-selected presentation choices. These are canonical character facts, persisted as a
+    # small JSON value; the client may preview them but never owns them.
+    appearance: dict[str, str] = field(default_factory=dict)
+    # Presentation preference for terminal clients.  The wire gateways still sanitize hostile
+    # control sequences; this flag records the player's preference so a trusted ANSI renderer can
+    # honor it without making color the only usable form of information.
+    ansi_enabled: bool = False
     job: str = ""
     secondary_job: str = ""  # the equipped subjob label, or "" for none
     order: str = ""  # the sworn Order (guild-allegiance) label, or "" for none; persisted

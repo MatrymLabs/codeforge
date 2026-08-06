@@ -1,0 +1,12 @@
+version: 1
+gaps:
+  - {id: live-room-inventory, status: open, evidence_needed: "runtime world including generated rooms and authored_towns", owner: engineering}
+  - {id: command-completeness, status: open, evidence_needed: "extract every branch from forge.py and module command handlers", owner: engineering}
+  - {id: combat-transcripts, status: open, evidence_needed: "controlled solo/party/boss captures in all verbosity modes", owner: design}
+  - {id: appearance-persistence, status: open, evidence_needed: "skin color and character creation fields across DB, gateway, client", owner: engineering}
+  - {id: job-unlocks, status: open, evidence_needed: "current runtime availability and character migration records", owner: engineering}
+  - {id: professions, status: open, evidence_needed: "canonical taxonomy and current command behavior", owner: design}
+  - {id: account-recovery, status: founder_decision_required, evidence_needed: "security review", owner: Josh Evans}
+  - {id: client-width, status: open, evidence_needed: "real terminal width matrix and screen-reader review", owner: accessibility}
+  - {id: source-game-research, status: complete_for_baseline, evidence_needed: "additional active MUD comparisons before final adoption", owner: design}
+

@@ -1,0 +1,21 @@
+version: 1
+owner: Josh Evans
+decisions:
+  - {id: presentation-width, question: preferred_standard_line_width, options: [78, 80, 100], recommended: 78, status: open, reversible: true}
+  - {id: room-borders, question: default_room_borders, options: [none, headings_only, framed], recommended: headings_only, status: open, reversible: true}
+  - {id: ansi, question: default_ansi_color, options: [off, basic_only, basic_plus], recommended: basic_only, status: open, reversible: true}
+  - {id: combat-verbosity, question: default_combat_mode, options: [compact, standard, detailed], recommended: standard, status: open, reversible: true}
+  - {id: locked-jobs, question: locked_job_visibility, options: [names_and_requirements, hints_only, hidden_until_discovered], recommended: names_and_requirements, status: open, reversible: true}
+  - {id: starting-jobs, question: starting_job_count, options: [3, 4, 6], recommended: 3_current, status: open, reversible: medium}
+  - {id: job-tiers, question: job_tier_count, options: [4, 5, 6], recommended: 6_including_prestige, status: open, reversible: medium}
+  - {id: cross-job-retention, question: learned_skill_retention, options: [retain_all_learned, retain_active_only, reset_on_switch], recommended: retain_all_learned_with_slots, status: open, reversible: low}
+  - {id: migration, question: existing_character_treatment, options: [grandfather_and_preserve, refund_and_remap, freeze_for_review], recommended: grandfather_and_preserve, status: open, reversible: medium}
+  - {id: slots, question: character_slot_limit, options: [3, 5, configurable], recommended: configurable_with_safe_default, status: open, reversible: high}
+  - {id: deletion, question: deletion_recovery, options: [archive_then_recover, delayed_delete, permanent_delete], recommended: archive_then_recover, status: open, reversible: medium}
+  - {id: named-exits, question: named_exit_exceptions, options: [strict, portal_only, creator_plus_portal], recommended: creator_plus_portal, status: open, reversible: medium}
+  - {id: cardinal-threshold, question: spatial_exit_threshold, options: [70, 80, 90], recommended: 70_major_80_creator, status: open, reversible: medium}
+  - {id: creator-namespace, question: creator_command_namespace, options: [context_only, creator_prefix, workshop_mode], recommended: context_only_plus_permission, status: open, reversible: high}
+  - {id: terminology, question: calling_job_profession_taxonomy, options: [current_calling_job_split, calling_as_archetype, job_only], recommended: current_calling_plus_job_plus_profession, status: open, reversible: low}
+  - {id: compatibility, question: legacy_command_removal, options: [never_remove, deprecate_after_usage, immediate], recommended: deprecate_after_usage, status: open, reversible: medium}
+required_evidence_before_final: [player_test, accessibility_review, migration_dry_run, command_usage, content_author_review]
+

@@ -22,6 +22,7 @@ source. No `kernel/world/` coupling. Status: PROTOTYPED (see docs/seed_platform/
 
 from __future__ import annotations
 
+import hashlib
 import json
 import re
 import subprocess  # nosec B404
@@ -31,15 +32,77 @@ from collections.abc import Callable
 from dataclasses import asdict, dataclass, field
 from datetime import UTC, datetime
 from pathlib import Path
+from threading import Thread
 from typing import Protocol, runtime_checkable
 
 from sqlalchemy.orm import Session as SqlSession
 
+from kernel.permission_policy import PermissionDenied, PermissionPolicy
+from kernel.platform_db import SeedRunRow, open_archive_session
+from kernel.seedlab.audit_registry import AuditStore
 from kernel.seedlab.source_connector import LocalSource
-from kernel.world.db import SeedRunRow, open_archive_session
+from kernel.session_identity import SessionIdentity, SessionIdentityError
+from kernel.session_registry import SessionRegistry
 
 DEFAULT_TIMEOUT = 120.0
 OUTPUT_CAP = 20_000
+
+
+def _default_resource_limits(timeout: float, cap: int) -> dict[str, object]:
+    return {
+        "wall_seconds": timeout,
+        "output_bytes": cap,
+        "cpu_seconds": None,
+        "memory_bytes": None,
+        "processes": 1,
+        "artifact_bytes": None,
+        "filesystem": "cwd-bounded",
+        "network": "policy-declared-not-enforced",
+        "enforced": ["wall_seconds", "output_bytes"],
+    }
+
+
+def _normalize_resource_limits(
+    timeout: float, cap: int, supplied: dict[str, object] | None
+) -> dict[str, object]:
+    limits = _default_resource_limits(timeout, cap)
+    if supplied:
+        limits.update(supplied)
+    if float(limits["wall_seconds"]) <= 0 or int(limits["output_bytes"]) <= 0:
+        raise ValueError("wall_seconds and output_bytes must be positive")
+    for field_name in ("cpu_seconds", "memory_bytes", "processes", "artifact_bytes"):
+        value = limits.get(field_name)
+        if value is not None and float(value) <= 0:
+            raise ValueError(f"{field_name} must be positive when supplied")
+    enforced = ["wall_seconds", "output_bytes"]
+    if limits.get("cpu_seconds") is not None and _resource_preexec(limits) is not None:
+        enforced.append("cpu_seconds")
+    if limits.get("memory_bytes") is not None and _resource_preexec(limits) is not None:
+        enforced.append("memory_bytes")
+    limits["enforced"] = enforced
+    return limits
+
+
+def _resource_preexec(limits: dict[str, object]) -> Callable[[], None] | None:
+    """Return Unix rlimits only when an explicit resource cap was requested."""
+    cpu_seconds = limits.get("cpu_seconds")
+    memory_bytes = limits.get("memory_bytes")
+    if cpu_seconds is None and memory_bytes is None:
+        return None
+    try:
+        import resource
+    except ImportError:
+        return None
+
+    def apply() -> None:
+        if cpu_seconds is not None:
+            seconds = max(1, int(float(cpu_seconds)))
+            resource.setrlimit(resource.RLIMIT_CPU, (seconds, seconds))
+        if memory_bytes is not None:
+            bytes_limit = int(memory_bytes)
+            resource.setrlimit(resource.RLIMIT_AS, (bytes_limit, bytes_limit))
+
+    return apply
 
 # The default approved command profile: build/test tools as fixed, shell-free argv. Only a NAMED
 # entry here can run; a caller may pass its own allowlist. NEVER built from user input.
@@ -73,6 +136,31 @@ class CommandRefused(ValueError):
     """The requested profile is not on the approved allowlist -- it never ran."""
 
 
+def authorize_tool_run(
+    identity: SessionIdentity,
+    policy: PermissionPolicy,
+    *,
+    seed_id: str,
+    kind: str,
+    now: datetime | None = None,
+    session_registry: SessionRegistry | None = None,
+) -> None:
+    """Enforce identity scope, expiry, and capability before a subprocess can start."""
+    try:
+        identity.require_seed(seed_id)
+    except SessionIdentityError as exc:
+        raise PermissionDenied(str(exc)) from exc
+    if not identity.is_active(now):
+        raise PermissionDenied(f"session {identity.session_id!r} is expired or not yet active")
+    if session_registry is not None:
+        session_registry.require_active(identity, now=now)
+    policy.require(
+        identity.permission_context(),
+        capability=f"tool.{kind}",
+        scope=seed_id,
+    )
+
+
 class RunLogError(Exception):
     """A persisted run record is corrupt. Fails loud."""
 
@@ -91,10 +179,29 @@ class ToolRunResult:
     timed_out: bool
     cwd: str
     when: str
+    correlation_id: str = ""
+    cancelled: bool = False
+    revoked: bool = False
+    source_id: str = ""
+    connector_id: str = ""
+    input_digest: str = ""
+    output_digest: str = ""
+    resource_limits: dict[str, object] = field(default_factory=dict)
+    resource_usage: dict[str, object] = field(default_factory=dict)
+    audit_id: str = ""
+    principal_id: str = ""
+    principal_kind: str = ""
+    session_id: str = ""
+    worker_id: str = ""
 
     @property
     def ok(self) -> bool:
-        return self.exit_code == 0 and not self.timed_out
+        return (
+            self.exit_code == 0
+            and not self.timed_out
+            and not self.cancelled
+            and not self.revoked
+        )
 
     def to_dict(self) -> dict:
         return asdict(self)
@@ -113,6 +220,20 @@ class ToolRunResult:
                 timed_out=bool(data.get("timed_out", False)),
                 cwd=data.get("cwd", ""),
                 when=data.get("when", ""),
+                correlation_id=data.get("correlation_id", ""),
+                cancelled=bool(data.get("cancelled", False)),
+                revoked=bool(data.get("revoked", False)),
+                source_id=str(data.get("source_id", "")),
+                connector_id=str(data.get("connector_id", "")),
+                input_digest=str(data.get("input_digest", "")),
+                output_digest=str(data.get("output_digest", "")),
+                resource_limits=dict(data.get("resource_limits", {})),
+                resource_usage=dict(data.get("resource_usage", {})),
+                audit_id=str(data.get("audit_id", "")),
+                principal_id=str(data.get("principal_id", "")),
+                principal_kind=str(data.get("principal_kind", "")),
+                session_id=str(data.get("session_id", "")),
+                worker_id=str(data.get("worker_id", "")),
             )
         except (KeyError, TypeError, ValueError) as exc:
             raise RunLogError(f"malformed run record: {exc}") from exc
@@ -128,9 +249,30 @@ def run_tool(
     timeout: float = DEFAULT_TIMEOUT,
     cap: int = OUTPUT_CAP,
     clock: Callable[[], str] = _utcnow,
+    identity: SessionIdentity | None = None,
+    policy: PermissionPolicy | None = None,
+    correlation_id: str = "",
+    cancel_check: Callable[[], bool] | None = None,
+    log_sink: Callable[[dict[str, object]], None] | None = None,
+    worker_id: str = "codeforge-tool-runner",
+    resource_limits: dict[str, object] | None = None,
+    session_registry: SessionRegistry | None = None,
 ) -> ToolRunResult:
     """Run one approved command inside `source`, bounded and captured. Refuses an unlisted profile;
     returns a ToolRunResult (never raises on a failing command -- a non-zero exit IS the result)."""
+    if (identity is None) != (policy is None):
+        raise PermissionDenied("identity and policy must be supplied together")
+    if identity is not None and policy is not None:
+        auth_now = datetime.fromisoformat(clock().replace("Z", "+00:00"))
+        authorize_tool_run(
+            identity,
+            policy,
+            seed_id=seed_id,
+            kind=kind,
+            now=auth_now,
+            session_registry=session_registry,
+        )
+    cancel_check = cancel_check or (lambda: False)
     table = allowlist if allowlist is not None else DEFAULT_PROFILE
     configured_argv = table.get(profile)
     if configured_argv is None:
@@ -142,14 +284,89 @@ def run_tool(
     if argv and argv[0] == "python":
         argv[0] = sys.executable
     root = Path(source.root)  # the connector already resolved + bounded this
-    started = time.monotonic()
-    try:
-        # Fixed allowlisted argv, shell=False, cwd-bounded.
-        proc = subprocess.run(  # nosec B603
-            argv, cwd=root, capture_output=True, text=True, timeout=timeout, check=False
+    correlation_id = correlation_id.strip()
+    limits = _normalize_resource_limits(timeout, cap, resource_limits)
+    input_digest = source.digest()
+    principal_id = identity.principal_id if identity is not None else ""
+    principal_kind = identity.principal_kind if identity is not None else ""
+    session_id = identity.session_id if identity is not None else ""
+
+    def emit_log(event: str, **fields: object) -> None:
+        if log_sink is None:
+            return
+        log_sink(
+            {
+                "event": event,
+                "seed_id": seed_id,
+                "correlation_id": correlation_id,
+                "worker_id": worker_id,
+                **fields,
+            }
         )
-        output = (proc.stdout or "") + (proc.stderr or "")
-        exit_code, timed_out = proc.returncode, False
+
+    started = time.monotonic()
+    emit_log(
+        "tool.started",
+        kind=kind,
+        profile=profile,
+        source_id=source.provenance.source_id,
+        connector_id="connector.local-source",
+        input_digest=input_digest,
+        resource_limits=limits,
+    )
+    cancelled = False
+    try:
+        # Fixed allowlisted argv, shell=False, cwd-bounded.  Popen gives the control plane a
+        # cancellation observation point while the command is running; subprocess.run cannot.
+        proc = subprocess.Popen(  # nosec B603
+            argv,
+            cwd=root,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            start_new_session=True,
+            preexec_fn=_resource_preexec(limits),  # nosec B603
+        )
+        captured: dict[str, str] = {}
+
+        def drain() -> None:
+            stdout, stderr = proc.communicate()
+            captured["output"] = (stdout or "") + (stderr or "")
+
+        # Drain continuously in a small helper so a verbose build cannot fill the OS pipe while
+        # the control thread watches for cancellation and wall-time expiry.
+        collector = Thread(target=drain, name="codeforge-tool-output", daemon=True)
+        collector.start()
+        while True:
+            if cancel_check():
+                cancelled = True
+                proc.terminate()
+                break
+            if time.monotonic() - started >= timeout:
+                break
+            if proc.poll() is not None:
+                break
+            time.sleep(min(0.05, max(0.001, timeout - (time.monotonic() - started))))
+        if cancelled:
+            collector.join(timeout=1.0)
+            if collector.is_alive():
+                proc.kill()
+                collector.join(timeout=1.0)
+            output = captured.get("output", "")
+            exit_code, timed_out = 125, False
+        elif proc.poll() is None:
+            timed_out = True
+            proc.terminate()
+            collector.join(timeout=1.0)
+            if collector.is_alive():
+                proc.kill()
+                collector.join(timeout=1.0)
+            output = captured.get("output", "")
+            exit_code = 124
+        else:
+            collector.join(timeout=1.0)
+            output = captured.get("output", "")
+            exit_code, timed_out = proc.returncode, False
     except subprocess.TimeoutExpired:
         output, exit_code, timed_out = "", 124, True
     except FileNotFoundError:
@@ -158,7 +375,17 @@ def run_tool(
     output = redact(output)
     if len(output) > cap:
         output = output[:cap] + f"\n... (truncated at {cap} chars)"
-    return ToolRunResult(
+    revoked = False
+    if identity is not None and policy is not None:
+        revoked = policy.is_revoked(
+            identity.permission_context(), capability=f"tool.{kind}", scope=seed_id
+        )
+    output_digest = "sha256:" + hashlib.sha256(output.encode("utf-8")).hexdigest()
+    when = clock()
+    audit_id = "audit:tool-" + hashlib.sha256(
+        f"{seed_id}:{correlation_id}:{profile}:{when}:{output_digest}".encode()
+    ).hexdigest()[:32]
+    result = ToolRunResult(
         seed_id=seed_id,
         kind=kind,
         profile=profile,
@@ -168,8 +395,44 @@ def run_tool(
         duration=duration,
         timed_out=timed_out,
         cwd=str(root),
-        when=clock(),
+        when=when,
+        correlation_id=correlation_id,
+        cancelled=cancelled,
+        revoked=revoked,
+        source_id=source.provenance.source_id,
+        connector_id="connector.local-source",
+        input_digest=input_digest,
+        output_digest=output_digest,
+        resource_limits=limits,
+        resource_usage={"wall_seconds": duration},
+        audit_id=audit_id,
+        principal_id=principal_id,
+        principal_kind=principal_kind,
+        session_id=session_id,
+        worker_id=worker_id,
     )
+    outcome = (
+        "passed"
+        if result.ok
+        else "cancelled"
+        if cancelled
+        else "revoked"
+        if revoked
+        else "failed"
+    )
+    emit_log(
+        "tool.completed",
+        kind=kind,
+        profile=profile,
+        status=outcome,
+        exit_code=exit_code,
+        timed_out=timed_out,
+        output_digest=output_digest,
+        input_digest=input_digest,
+        audit_id=audit_id,
+        resource_limits=limits,
+    )
+    return result
 
 
 def render_run(result: ToolRunResult) -> str:
@@ -178,9 +441,15 @@ def render_run(result: ToolRunResult) -> str:
         "OK"
         if result.ok
         else (
+            "CANCELLED"
+            if result.cancelled
+            else "REVOKED"
+            if result.revoked
+            else (
             f"TIMED OUT ({int(result.duration)}s)"
             if result.timed_out
             else f"FAILED (exit {result.exit_code})"
+            )
         )
     )
     return "\n".join(
@@ -334,11 +603,35 @@ def run_and_record(
     *,
     seed_id: str,
     kind: str = "run",
+    audit_store: AuditStore | None = None,
+    audit_actor: str = "",
     **kw: object,
 ) -> ToolRunResult:
     """Run a command and persist its evidence in one call. Returns the result."""
     result = run_tool(source, profile, seed_id=seed_id, kind=kind, **kw)  # type: ignore[arg-type]
     log.append(result)
+    if audit_store is not None:
+        audit_store.append(
+            {
+                "ts": result.when,
+                "actor": audit_actor or result.session_id or "system",
+                "action": "tool.completed",
+                "detail": json.dumps(
+                    {
+                        "audit_id": result.audit_id,
+                        "correlation_id": result.correlation_id,
+                        "seed_id": result.seed_id,
+                        "source_id": result.source_id,
+                        "connector_id": result.connector_id,
+                        "principal_kind": result.principal_kind,
+                        "input_digest": result.input_digest,
+                        "output_digest": result.output_digest,
+                        "status": "passed" if result.ok else "failed",
+                    },
+                    sort_keys=True,
+                ),
+            }
+        )
     return result
 
 

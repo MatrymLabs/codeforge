@@ -67,6 +67,19 @@ the_sunken_barrow_prey:
   level: 2
   tier: normal
 
+the_sunken_barrow_scout:
+  name: a barrow scout
+  keywords: [scout, barrow-scout, raider]
+  location: the_sunken_barrow
+  dialogue:
+    - The scout watches the old stones and keeps one hand on a battered hammer.
+  aggressive: false
+  hp: 1
+  atk: 1
+  level: 2
+  tier: normal
+  drops: [cinder_hammer]
+
 duskwood_vale_warden:
   name: a warden of Duskwood Vale
   keywords: [warden, Duskwood, Vale]
@@ -707,4 +720,3 @@ the_rifted_abyss_guardian:
   lethal: true
   drops: [greater_healing_draught, abyssal_legguards, abyssal_sabatons]
   loot: {ember_shard: 5, nothing: 2}
-

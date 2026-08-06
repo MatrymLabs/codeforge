@@ -208,6 +208,22 @@ def inspect_login(
     return seat is not None and seat == account
 
 
+def verify_account(
+    account: str, password: str, store: AccountCredentialStore | None = None
+) -> bool:
+    """Verify an account credential for the account-level character selector.
+
+    The result is deliberately generic: an unknown account burns the same password-hash work as a
+    known account, so the selector cannot become an account-enumeration oracle.
+    """
+    store = store or _default_store()
+    secret = store.find(account)
+    if secret is None:
+        _burn_hash(password)
+        return False
+    return _secret_matches(password, secret.salt_hex, secret.hash_hex)
+
+
 def adopt(char: str, account: str, membership: MembershipStore | None = None) -> str:
     """Attach an existing character to an account (migration/admin)."""
     if not (membership or _default_membership()).set_account(char, account):

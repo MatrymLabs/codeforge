@@ -6,9 +6,11 @@ source: callers provide the already-approved migration, health, and compensation
 
 from __future__ import annotations
 
+import fcntl
 import json
 import secrets
 from collections.abc import Callable
+from contextlib import contextmanager
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
@@ -154,6 +156,19 @@ class HardwareMigrationJournal:
         self.root = Path(self.root)
         (self.root / "migrations").mkdir(parents=True, exist_ok=True)
         (self.root / "rollbacks").mkdir(parents=True, exist_ok=True)
+        (self.root / "locks").mkdir(parents=True, exist_ok=True)
+
+    @contextmanager
+    def exclusive(self, component_id: str):
+        """Serialize one component's migration across threads and OS processes."""
+        safe_component = _required(component_id, "component_id")
+        lock_path = self.root / "locks" / f"{safe_component}.lock"
+        with lock_path.open("a", encoding="utf-8") as handle:
+            fcntl.flock(handle.fileno(), fcntl.LOCK_EX)
+            try:
+                yield
+            finally:
+                fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
 
     def save_migration(self, record: MigrationRecord) -> None:
         self._save("migrations", record.migration_id, record.to_dict(), replace=True)
@@ -243,6 +258,35 @@ MigrationStep = Callable[[HardwareRecord], None]
 HealthCheck = Callable[[HardwareRecord], bool]
 
 
+def _serialize_migration(
+    function: Callable[..., MigrationRecord],
+) -> Callable[..., MigrationRecord]:
+    """Hold the component lock for the complete read/mutate/health/rollback sequence."""
+    from functools import wraps
+
+    @wraps(function)
+    def locked(
+        registry: HardwareRegistry,
+        journal: HardwareMigrationJournal,
+        component_id: str,
+        to_version: str,
+        *args: object,
+        **kwargs: object,
+    ) -> MigrationRecord:
+        with journal.exclusive(component_id):
+            return function(
+                registry,
+                journal,
+                component_id,
+                to_version,
+                *args,
+                **kwargs,
+            )
+
+    return locked
+
+
+@_serialize_migration
 def migrate_hardware_component(
     registry: HardwareRegistry,
     journal: HardwareMigrationJournal,

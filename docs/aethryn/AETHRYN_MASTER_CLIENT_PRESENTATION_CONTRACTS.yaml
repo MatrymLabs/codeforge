@@ -1,0 +1,46 @@
+version: 1
+authority: Seed_Runtime
+transport: GMCP_or_versioned_structured_frame
+contracts:
+  PresentationTheme: {purpose: shared tokens, fields: [profile, width, ansi, unicode, color_policy, verbosity], text: settings, tests: [width, fallback]}
+  TextPresentationProfile: {purpose: output constraints, fields: [name, width, wrapping, linearized, decorations], text: profile summary, tests: [reflow, screen_reader_order]}
+  RoomPresentation: {purpose: room projection, fields: [version, room_id, area, title, sections, exits, occupants, points_of_interest, conditions], text: room renderer, tests: [parity, stale_version]}
+  ExitPresentation: {purpose: safe movement affordance, fields: [id, direction, label, aliases, state, destination_hint, command], text: exits, tests: [lock, alias, reciprocal]}
+  CombatPresentation: {purpose: current encounter projection, fields: [encounter_id, beat, participants, target, events, status, mode], text: combat block, tests: [grouping, player_action_visibility]}
+  CharacterSheetPresentation: {purpose: identity/progression projection, fields: [identity, resources, stats, jobs, equipment, resistances, statuses], text: score, tests: [zero_vs_missing, parity]}
+  SkillPresentation: {purpose: learned action projection, fields: [id, kind, name, rank, availability, costs, cooldown, requirements, source], text: skills, tests: [locked_reason]}
+  JobUnlockState: {purpose: explain progression, fields: [job_id, tier, state, requirements, alternatives, explanation], text: job details, tests: [invalid_unlock, linear_tree]}
+  CommandResult: {purpose: authoritative response, fields: [command_id, status, text, events, payload, next_actions], text: complete text, tests: [authorization, error_quality]}
+  HelpTopic: {purpose: discoverability, fields: [id, category, syntax, aliases, examples, permissions, related], text: help, tests: [registry_sync]}
+  ClientPresentationPayload: {purpose: versioned envelope, fields: [schema, source, sequence, timestamp, kind, data, text_equivalent], text: emitted response, tests: [schema, stale_frame, fallback]}
+  RoomSection: {purpose: ordered room subsection, fields: [kind, heading, items, visibility], text: labelled section, tests: [empty_omission, order]}
+  ExitDirectionPolicy: {purpose: movement classification, fields: [canonical, aliases, exception, reciprocal, state], text: exits, tests: [threshold, collision]}
+  NavigationAlias: {purpose: safe legacy movement, fields: [word, canonical, scope, status, deprecation], text: help exits, tests: [unique, lock_preserved]}
+  CombatEvent: {purpose: atomic combat fact, fields: [event_id, beat, actor, target, kind, amount, element, status, visibility], text: event line, tests: [actor_target, grouping_key]}
+  CombatSummary: {purpose: concise encounter result, fields: [encounter_id, duration, decisive_events, rewards, loot, quest_updates], text: summary, tests: [reward_parity]}
+  AbilityPresentation: {purpose: active/passive ability detail, fields: [id, name, kind, source, cost, cooldown, target, effects, availability], text: ability detail, tests: [cost, locked_reason]}
+  TechniquePresentation: {purpose: invoked technique detail, fields: [id, name, syntax, range, cast, cooldown, requirements], text: technique detail, tests: [syntax_matches_registry]}
+  CommandDefinition: {purpose: canonical command record, fields: [id, canonical, aliases, category, syntax, arguments, permissions, effects, errors], text: help, tests: [registry_sync]}
+  CommandAlias: {purpose: input compatibility, fields: [alias, canonical, context, precedence, deprecation], text: syntax, tests: [collision]}
+  CommandCategory: {purpose: help grouping, fields: [id, label, order, permission], text: commands category, tests: [stable_order]}
+  CommandError: {purpose: actionable failure, fields: [code, message, reason, next_actions, retryable, confirmation], text: error block, tests: [cause_and_next]}
+  HelpTopic: {purpose: contextual documentation, fields: [id, command, category, syntax, examples, related, permission], text: help, tests: [real_syntax]}
+  ContextualHint: {purpose: non-repeating onboarding aid, fields: [id, trigger, text, dismissible, cooldown, profile], text: hint, tests: [suppression]}
+  AccountEntryState: {purpose: account/session state, fields: [state, account_id, attempts, retry_at, session_id], text: prompt, tests: [transitions, secret_redaction]}
+  CharacterSelectionState: {purpose: post-auth character list, fields: [account_id, slots, characters, selected, warnings], text: characters, tests: [ownership, empty_state]}
+  CharacterCreationState: {purpose: resumable wizard, fields: [draft_id, step, choices, valid, errors, preview], text: creation screen, tests: [backtrack, atomic_confirm]}
+  CharacterSummary: {purpose: selectable hero summary, fields: [id, name, level, job, location, last_played, availability, migration_warning], text: selection row, tests: [no_secret]}
+  JobDefinition: {purpose: data-driven job contract, fields: [id, name, family, tier, role, stats, abilities, mastery, requirements], text: job detail, tests: [schema]}
+  JobFamily: {purpose: grouping and teaching identity, fields: [id, label, roles, jobs], text: jobs list, tests: [membership]}
+  JobTier: {purpose: progression layer, fields: [id, order, visibility, expected_mastery], text: jobs list, tests: [acyclic_order]}
+  JobRequirement: {purpose: one prerequisite fact, fields: [kind, subject, comparator, value, state, explanation], text: requirement row, tests: [numeric_render]}
+  JobUnlockRule: {purpose: composable prerequisite logic, fields: [operator, children, alternatives, purpose], text: requirements, tests: [all_any_minimum]}
+  JobUnlockState: {purpose: current unlock result, fields: [job_id, state, missing, satisfied, alternatives, explanation], text: job detail, tests: [invalid_unlock]}
+  JobProgressRecord: {purpose: persistent per-job progression, fields: [character_id, job_id, level, jp, tp, mastery, source_version], text: jobs, tests: [switch_retention]}
+  JobMigrationRecord: {purpose: reversible progression migration, fields: [character_id, old, new, retained, refund, reason, backup, rollback_token], text: migration preview, tests: [dry_run, rollback]}
+rules:
+  - payloads_are_read_only_projections
+  - client_actions_submit_authorized_command_ids
+  - text_equivalent_is_required_for_essential_payloads
+  - sequence_and_source_prevent_stale_panel_overwrite
+  - server_values_win_over_client_cache

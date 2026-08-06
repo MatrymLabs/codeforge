@@ -1,6 +1,6 @@
 """Test twin for kernel/world/world_manifest.py -- the typed World Package identity.
 
-Acceptance (a valid mapping builds a manifest; a real seed's world.yaml loads; a manifest-less
+Acceptance (a valid mapping builds a manifest; real Seed world.yaml files load; a manifest-less
 seed is derived, not missing) AND refusal (a bad id / missing title / missing start_room / a
 str-not-list authors fails loud). check_world's reconciliation is pinned by monkeypatching the
 real spawn; audit_worlds is pinned over real fixture seeds AND asserts every committed World
@@ -85,10 +85,9 @@ def test_the_flagship_seed_has_a_declared_manifest() -> None:
     assert m.declared and m.start_room == "forge" and m.title.startswith("CodeForge")
 
 
-def test_a_manifestless_seed_is_derived_not_missing() -> None:
-    m = describe_world("spiral-ascent")  # ships no world.yaml
-    assert not m.declared  # derived, but still a typed identity
-    assert m.title == "Spiral Ascent"  # de-slugged from the id
+def test_a_second_seed_loads_its_declared_manifest() -> None:
+    m = describe_world("spiral-ascent")
+    assert m.declared and m.title == "The Spiral Ascent"
     assert m.start_room  # read from the seed's rooms.yaml
 
 

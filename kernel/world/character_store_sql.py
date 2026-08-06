@@ -33,6 +33,7 @@ class SqlCharacterStore:
                 return None
             return CharacterRecord(
                 name=row.name,
+                appearance=row.appearance,
                 job=row.job,
                 secondary_job=row.secondary_job,
                 level=row.level,
@@ -54,6 +55,45 @@ class SqlCharacterStore:
                 auth_salt=row.auth_salt,
                 auth_hash=row.auth_hash,
             )
+
+    def for_account(self, account: str) -> list[CharacterRecord]:
+        from sqlalchemy import select
+
+        from kernel.world.db import CharacterRow, open_archive_session
+
+        with open_archive_session() as db:
+            rows = db.scalars(
+                select(CharacterRow)
+                .where(CharacterRow.account == account)
+                .order_by(CharacterRow.name)
+            )
+            return [
+                CharacterRecord(
+                    name=row.name,
+                    appearance=row.appearance,
+                    job=row.job,
+                    secondary_job=row.secondary_job,
+                    level=row.level,
+                    xp=row.xp,
+                    location=row.location,
+                    rank=row.rank,
+                    account=row.account,
+                    order=row.order,
+                    guild=row.guild,
+                    guild_rank=row.guild_rank,
+                    equipped_gear=row.equipped_gear,
+                    coins=row.coins,
+                    quest_state=row.quest_state,
+                    lockouts=row.lockouts,
+                    allocated=row.allocated,
+                    professions=row.professions,
+                    reputation=row.reputation,
+                    friends=row.friends,
+                    auth_salt=None,
+                    auth_hash=None,
+                )
+                for row in rows
+            ]
 
     def upsert_full(self, record: CharacterRecord) -> None:
         from kernel.world.db import CharacterRow, open_archive_session
@@ -125,6 +165,7 @@ class SqlCharacterStore:
 def _apply_gameplay(row: CharacterRow, record: CharacterRecord) -> None:
     """Copy the gameplay columns (everything but auth) from a record onto an ORM row."""
     row.job = record.job
+    row.appearance = record.appearance
     row.secondary_job = record.secondary_job
     row.level = record.level
     row.xp = record.xp

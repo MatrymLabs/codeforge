@@ -55,6 +55,7 @@ from kernel.titles import title
 from kernel.vitals import vitals
 from kernel.world import (
     allocate,
+    appearance,
     artifact,
     creator_workshop,
     gather,
@@ -121,7 +122,7 @@ from kernel.world.items import (
     room_items_text,
     take,
 )
-from kernel.world.jobs import JOBS, bind_calling, calling_index, set_secondary
+from kernel.world.jobs import JOBS, bind_calling, calling_index, set_secondary, unlock_status
 from kernel.world.npcs import ask, room_npcs_text, talk, trace_npc
 from kernel.world.orders import swear_order
 from kernel.world.party import (
@@ -197,6 +198,7 @@ HELP_TEXT = (
     "mail [send <player> <msg>|read <n>|delete <n>], friends [add|remove <player>], "
     "chat <message>, rest, bank [deposit|withdraw <item>], auction [list <item> <price>|buy <#>], "
     "route <room>, score, "
+    "appearance [show|skin <color>], ansi [on|off|status], "
     "equip <item>, unequip <slot>, "
     "attack <target>, skills, use <ability> [on <foe>], repair, scan <target>, deploy, calibrate, "
     "channel, journal [text], vitals, "
@@ -1110,7 +1112,7 @@ def _build_commands() -> CommandSet:
             "jobs",
             "CMD-04.015",
             "the callings on offer",
-            lambda _s, _a: calling_index(),
+            lambda s, _a: calling_index(s),
             namespace=CORE,
         )
     )
@@ -2020,6 +2022,24 @@ def _build_commands() -> CommandSet:
     )
     cs.add(
         Command(
+            "appearance",
+            "CMD-04.061",
+            "view or change your presentation (appearance skin <color>)",
+            _appearance_cmd,
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
+            "ansi",
+            "CMD-04.062",
+            "set terminal color preference (ansi [on|off|status])",
+            _ansi_cmd,
+            namespace=CORE,
+        )
+    )
+    cs.add(
+        Command(
             "allocate",
             "CMD-04.087",
             "spend attribute points (allocate <stat> [n])",
@@ -2332,6 +2352,11 @@ def _mover(direction: str) -> Callable[[Session, str], str]:
 
 def _job_cmd(session: Session, arg: str) -> str:
     """Take up a calling; announce it to the room when it is newly bound."""
+    label = arg.strip().lower()
+    if label in JOBS:
+        available, missing = unlock_status(session, label)
+        if not available:
+            return f"{JOBS[label]['name']} is locked. Requirements: {'; '.join(missing)}."
     verdict = bind_calling(session, arg.lower())
     if verdict.startswith("You take up"):
         announce(
@@ -2666,6 +2691,47 @@ def _score_cmd(session: Session, arg: str) -> str:
         return render_score_sheet(sheet, mode)
     except ValueError as err:
         return str(err)
+
+
+def _appearance_cmd(session: Session, arg: str) -> str:
+    """View or persist a small, validated set of player presentation choices."""
+    words = arg.strip().lower().split()
+    if not words or words == ["show"]:
+        skin = session.appearance.get("skin_color", "") or "unselected"
+        return f"APPEARANCE\n  Skin color: {skin}\n\nChange with: appearance skin <color>"
+    if words[0] != "skin" or len(words) != 2:
+        return (
+            "Usage: appearance [show|skin <color>]\n"
+            f"Skin colors: {', '.join(appearance.SKIN_COLORS)}"
+        )
+    skin = appearance.normalize_skin_color(words[1])
+    if skin is None:
+        return f"That skin color is unavailable. Choose: {', '.join(appearance.SKIN_COLORS)}"
+    session.appearance["skin_color"] = skin
+    save_character(session)
+    return f"Appearance saved. Skin color: {skin}."
+
+
+def _ansi_cmd(session: Session, arg: str) -> str:
+    """Set the terminal presentation preference without making ANSI mandatory.
+
+    Text output remains complete in every mode.  Gateways sanitize terminal control sequences,
+    so this preference is deliberately separate from authorization to emit raw escape bytes.
+    """
+    choice = arg.strip().lower() or "status"
+    if choice not in {"on", "off", "status"}:
+        return "Usage: ansi on|off|status"
+    if choice == "status":
+        state = "on" if session.ansi_enabled else "off"
+        return (
+            f"ANSI preference: {state}. Text remains complete without color; "
+            "the CodeForge client renders structured presentation safely."
+        )
+    session.ansi_enabled = choice == "on"
+    return (
+        f"ANSI preference set to {choice}. Text remains complete without color; "
+        "the CodeForge client renders structured presentation safely."
+    )
 
 
 def _lesson_cmd(session: Session, arg: str) -> str:

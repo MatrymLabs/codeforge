@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 from pathlib import Path
 
 from kernel.seedlab.backup import INTACT
@@ -30,10 +31,28 @@ def test_first_platform_proof_creates_generates_validates_and_recovers(tmp_path:
     assert result.source.provenance.allowed_use.startswith("local platform proof")
     assert "pyproject.toml" in result.files
     assert result.model.identity == "first-proof-workload"
+    assert [job.kind for job in result.jobs] == ["build", "test"]
+    assert all(job.ok and job.activity_id and job.idempotency_key for job in result.jobs)
     assert result.runs and all(run.ok for run in result.runs)
     assert result.artifact.name == "first-proof-workload"
+    assert result.deployment.status == "deployed"
+    assert result.deployment.health == "healthy"
+    assert result.failed_deployment.status == "failed"
+    assert result.failed_deployment.health == "unhealthy"
     assert result.artifact.bytes > 0
     assert result.backup_verdict == INTACT
+    assert len(result.semantic_events) == 7
+    assert all(
+        event.text_fallback and event.accessibility_summary for event in result.semantic_events
+    )
+    assert result.semantic_release.human_validation == "pending"
+    assert not result.semantic_release.release_ready
+    assert result.recovered_deployment == result.deployment
+    evidence = Path(result.evidence_path)
+    assert evidence.is_file()
+    saved = json.loads(evidence.read_text(encoding="utf-8"))
+    assert saved["seed_id"] == result.seed_id
+    assert saved["semantic_events"][-1]["event_type"] == "target.recovered"
 
     assert "Project Hub :: First Platform Proof" in result.hub_text
     project = result.hub_contract["project"]
@@ -61,5 +80,6 @@ def test_first_platform_proof_creates_generates_validates_and_recovers(tmp_path:
     assert artifact["run_profiles"] == ["run", "pytest"]
     assert result.recovered_record == result.record
     assert result.recovered_models == (result.model,)
+    assert result.recovered_jobs == result.jobs
     assert result.recovered_runs == result.runs
     assert result.recovered_artifacts == (result.artifact,)

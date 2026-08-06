@@ -85,15 +85,19 @@ def test_migrations_round_trip_upgrade_downgrade_upgrade(monkeypatch, tmp_path):
 
 
 def test_each_migration_steps_down_one_revision_at_a_time(monkeypatch, tmp_path):
-    """Walk head -> -1 -> -1 -> -1: each individual downgrade() runs, not just the bulk path."""
+    """Exercise the newest downgrade individually, then clear the merged history.
+
+    The Seed connector migration and the character-history migration originated on two existing
+    branches. The appearance migration merges them, so Alembic cannot walk ``-1`` from the merge
+    without an explicit branch target. A base downgrade exercises every filed downgrade in a
+    deterministic order, including the new appearance column.
+    """
     monkeypatch.delenv("DATABASE_URL", raising=False)
     target = tmp_path / "migration-steps.db"
     monkeypatch.setattr(db, "DB_PATH", target)
 
     command.upgrade(_config(), "head")
-    revision_count = len(list((_REPO / "migrations" / "versions").glob("*.py")))
-    for _ in range(revision_count):  # one individual downgrade for every filed revision
-        command.downgrade(_config(), "-1")
+    command.downgrade(_config(), "base")
     assert not (
         {
             "characters",

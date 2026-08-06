@@ -13,6 +13,8 @@ from pathlib import Path
 
 import pytest
 
+from kernel.seedlab.audit_registry import FileAuditStore
+from kernel.seedlab.connector_registry import FileConnectorRegistry
 from kernel.seedlab.kernel import InMemorySeedStore, SeedKernel, SeedKernelError
 from kernel.seedlab.model_store import InMemorySeedModels
 from kernel.seedlab.project_model import Provenance
@@ -221,6 +223,49 @@ def test_connect_to_a_bad_path_pushes_nothing(tmp_path: Path) -> None:
         gmcp_push=push,
     )
     assert "workspace:" in out and frames == []
+
+
+def test_connect_requires_seed_owner_and_does_not_register_an_intruder_source(
+    tmp_path: Path,
+) -> None:
+    k = _kernel()
+    workspace_command(_owner(), "create Protected x", kernel=k)
+    sid = k.list_seeds()[0].identity.seed_id
+    intruder = Session(player_id="mallory")
+    registry = FileConnectorRegistry(
+        tmp_path / "connectors", audit=FileAuditStore(tmp_path / "audit.jsonl")
+    )
+
+    out = workspace_command(
+        intruder,
+        f"connect {sid} {tmp_path}",
+        kernel=k,
+        connector_registry=registry,
+    )
+
+    assert "not the owner" in out
+    assert registry.all_for_seed(sid) == []
+
+
+def test_failed_source_registration_is_persisted(tmp_path: Path) -> None:
+    k = _kernel()
+    workspace_command(_owner(), "create Broken x", kernel=k)
+    sid = k.list_seeds()[0].identity.seed_id
+    registry = FileConnectorRegistry(
+        tmp_path / "connectors", audit=FileAuditStore(tmp_path / "audit.jsonl")
+    )
+
+    out = workspace_command(
+        _owner(),
+        f"connect {sid} {tmp_path / 'missing-source'}",
+        kernel=k,
+        connector_registry=registry,
+    )
+
+    assert "workspace:" in out
+    failures = registry.all_for_seed(sid)
+    assert len(failures) == 1 and failures[0].state == "failed"
+    assert failures[0].failure
 
 
 def test_connect_needs_a_seed_and_path() -> None:

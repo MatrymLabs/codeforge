@@ -244,6 +244,12 @@ class SeedKernel:
     def status(self, seed_id: str) -> str:
         return render_status(self.get(seed_id))
 
+    def require_owner(self, seed_id: str, actor: str) -> SeedRecord:
+        """Authorize a non-lifecycle Seed mutation and return its current record."""
+        record = self.get(seed_id)
+        self._authorize(record, actor)
+        return record
+
     # --- create --------------------------------------------------------------------------------
     def create_seed(
         self,

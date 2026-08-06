@@ -13,10 +13,13 @@ Every command here is fixed, harmless argv (sys.executable) -- no network, no ar
 from __future__ import annotations
 
 import sys
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 import pytest
 
+from kernel.permission_policy import PermissionDenied, PermissionPolicy, PermissionRule
+from kernel.seedlab.audit_registry import FileAuditStore
 from kernel.seedlab.project_model import Provenance
 from kernel.seedlab.source_connector import LocalSource
 from kernel.seedlab.tool_runner import (
@@ -31,6 +34,8 @@ from kernel.seedlab.tool_runner import (
     run_labels,
     run_tool,
 )
+from kernel.session_identity import SessionIdentity
+from kernel.session_registry import FileSessionRegistry, SessionRegistryError
 
 _CLOCK = "2026-08-01T00:00:00+00:00"
 
@@ -56,11 +61,148 @@ def _run(
     )
 
 
+def _identity(*, seed_id: str = "seed-1", capabilities: frozenset[str] | None = None):
+    now = datetime.now(UTC)
+    return SessionIdentity(
+        principal_id="human:josh",
+        principal_kind="human",
+        session_id="session-1",
+        seed_id=seed_id,
+        issued_at=now - timedelta(seconds=1),
+        expires_at=now + timedelta(minutes=5),
+        correlation_id="trace-1",
+        capabilities=(frozenset({"tool.test"}) if capabilities is None else capabilities),
+    )
+
+
 # --- acceptance --------------------------------------------------------------------------------
 def test_an_approved_command_runs_and_captures(tmp_path: Path) -> None:
     result = _run(_source(tmp_path), [sys.executable, "--version"])
     assert result.ok and result.exit_code == 0
     assert "Python" in result.output
+
+
+def test_run_emits_redacted_structured_worker_logs(tmp_path: Path) -> None:
+    logs: list[dict[str, object]] = []
+    result = run_tool(
+        _source(tmp_path),
+        "job",
+        seed_id="seed-1",
+        correlation_id="trace-1",
+        allowlist={"job": [sys.executable, "--version"]},
+        clock=lambda: _CLOCK,
+        log_sink=logs.append,
+        worker_id="worker-1",
+    )
+
+    assert result.ok
+    assert [entry["event"] for entry in logs] == ["tool.started", "tool.completed"]
+    assert all(entry["seed_id"] == "seed-1" for entry in logs)
+    assert all(entry["correlation_id"] == "trace-1" for entry in logs)
+    assert all(entry["worker_id"] == "worker-1" for entry in logs)
+    assert logs[-1]["output_digest"].__class__ is str
+    assert "output" not in logs[-1] and "argv" not in logs[-1]
+
+
+def test_run_records_source_digest_resource_policy_and_audit_identity(tmp_path: Path) -> None:
+    result = run_tool(
+        _source(tmp_path),
+        "job",
+        seed_id="seed-1",
+        correlation_id="trace-1",
+        allowlist={"job": [sys.executable, "--version"]},
+        resource_limits={"cpu_seconds": 5, "memory_bytes": 128 * 1024 * 1024},
+    )
+
+    assert result.ok
+    assert result.source_id == "demo-src"
+    assert result.input_digest.startswith("sha256:")
+    assert result.output_digest.startswith("sha256:")
+    assert result.audit_id.startswith("audit:tool-")
+    assert result.resource_limits["wall_seconds"] == 120.0
+    assert "cpu_seconds" in result.resource_limits["enforced"]
+    assert result.resource_usage["wall_seconds"] >= 0
+
+
+def test_run_and_record_can_append_a_durable_audit_link(tmp_path: Path) -> None:
+    audit = FileAuditStore(tmp_path / "audit.jsonl")
+    log = InMemoryRunLog()
+    result = run_and_record(
+        log,
+        _source(tmp_path),
+        "job",
+        seed_id="seed-1",
+        allowlist={"job": [sys.executable, "--version"]},
+        audit_store=audit,
+        audit_actor="alice",
+    )
+
+    assert result.audit_id in audit.all_records()[0]["detail"]
+    assert audit.verify() is True
+
+
+def test_execution_checks_identity_scope_and_capability(tmp_path: Path) -> None:
+    policy = PermissionPolicy((PermissionRule("tool.test", scope="seed-1"),))
+    result = run_tool(
+        _source(tmp_path),
+        "job",
+        seed_id="seed-1",
+        kind="test",
+        allowlist={"job": [sys.executable, "--version"]},
+        identity=_identity(),
+        policy=policy,
+    )
+    assert result.ok
+
+
+def test_execution_requires_authoritative_session_registry_state(tmp_path: Path) -> None:
+    identity = _identity()
+    registry = FileSessionRegistry(
+        tmp_path / "sessions", audit=FileAuditStore(tmp_path / "session-audit.jsonl")
+    )
+    registry.issue(identity)
+    policy = PermissionPolicy((PermissionRule("tool.test", scope="seed-1"),))
+    registry.invalidate(identity.session_id, actor="operator", reason="logout")
+
+    with pytest.raises(SessionRegistryError, match="invalidated"):
+        run_tool(
+            _source(tmp_path),
+            "job",
+            seed_id="seed-1",
+            kind="test",
+            allowlist={"job": [sys.executable, "--version"]},
+            identity=identity,
+            policy=policy,
+            session_registry=registry,
+        )
+
+
+def test_execution_refuses_cross_seed_identity_before_subprocess(tmp_path: Path) -> None:
+    policy = PermissionPolicy((PermissionRule("tool.test", scope="seed-1"),))
+    with pytest.raises(PermissionDenied, match="scoped to Seed"):
+        run_tool(
+            _source(tmp_path),
+            "job",
+            seed_id="seed-1",
+            kind="test",
+            allowlist={"job": [sys.executable, "--version"]},
+            identity=_identity(seed_id="seed-other"),
+            policy=policy,
+        )
+
+
+def test_execution_refuses_missing_capability_before_subprocess(tmp_path: Path) -> None:
+    policy = PermissionPolicy((PermissionRule("tool.test", scope="seed-1"),))
+    with pytest.raises(PermissionDenied, match="missing capability"):
+        run_tool(
+            _source(tmp_path),
+            "job",
+            seed_id="seed-1",
+            kind="test",
+            allowlist={"job": [sys.executable, "--version"]},
+            identity=_identity(capabilities=frozenset()),
+            policy=policy,
+        )
 
 
 def test_runs_inside_the_source_root(tmp_path: Path) -> None:
@@ -79,6 +221,65 @@ def test_a_hung_command_times_out(tmp_path: Path) -> None:
         _source(tmp_path), [sys.executable, "-c", "import time; time.sleep(5)"], timeout=0.4
     )
     assert result.timed_out is True and result.exit_code == 124
+
+
+def test_a_running_command_can_be_cancelled(tmp_path: Path) -> None:
+    checks = 0
+
+    def cancel() -> bool:
+        nonlocal checks
+        checks += 1
+        return checks > 2
+
+    result = run_tool(
+        _source(tmp_path),
+        "job",
+        seed_id="seed-1",
+        allowlist={"job": [sys.executable, "-c", "import time; time.sleep(5)"]},
+        cancel_check=cancel,
+    )
+    assert result.cancelled is True and result.ok is False and result.timed_out is False
+
+
+def test_revocation_is_rechecked_at_the_execution_boundary(tmp_path: Path) -> None:
+    policy = PermissionPolicy((PermissionRule("tool.test", scope="seed-1"),))
+    identity = _identity()
+    policy.revoke("tool.test", scope="seed-1", actor_id=identity.principal_id)
+    with pytest.raises(PermissionDenied, match="revocation"):
+        run_tool(
+            _source(tmp_path),
+            "job",
+            seed_id="seed-1",
+            kind="test",
+            allowlist={"job": [sys.executable, "--version"]},
+            identity=identity,
+            policy=policy,
+        )
+
+
+def test_revocation_during_a_running_command_marks_the_result_non_success(tmp_path: Path) -> None:
+    policy = PermissionPolicy((PermissionRule("tool.test", scope="seed-1"),))
+    identity = _identity()
+    revoked = False
+
+    def revoke_after_start() -> bool:
+        nonlocal revoked
+        if not revoked:
+            policy.revoke("tool.test", scope="seed-1", actor_id=identity.principal_id)
+            revoked = True
+        return False
+
+    result = run_tool(
+        _source(tmp_path),
+        "job",
+        seed_id="seed-1",
+        kind="test",
+        allowlist={"job": [sys.executable, "-c", "import time; time.sleep(0.15)"]},
+        identity=identity,
+        policy=policy,
+        cancel_check=revoke_after_start,
+    )
+    assert result.revoked is True and result.ok is False
 
 
 def test_a_missing_binary_reports_127(tmp_path: Path) -> None:

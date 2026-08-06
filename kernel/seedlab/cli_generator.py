@@ -25,14 +25,23 @@ import json
 import re
 import shutil
 import sys
+from collections.abc import Callable
 from dataclasses import dataclass, field
+from datetime import UTC, datetime
 from pathlib import Path
 
+from kernel.permission_policy import PermissionPolicy
 from kernel.seedlab.project_model import ProjectModel, Provenance
 from kernel.seedlab.source_connector import LocalSource
 from kernel.seedlab.tool_runner import ToolRunResult, run_tool
+from kernel.seedlab.transformation import CliTargetModel, transform_project_to_cli
+from kernel.session_identity import SessionIdentity
 
 _SLUG = re.compile(r"[^a-z0-9]+")
+
+
+def _utcnow() -> str:
+    return datetime.now(UTC).isoformat()
 
 
 class GeneratorError(Exception):
@@ -52,6 +61,16 @@ class GeneratedArtifact:
     provenance: Provenance
     model_identity: str
     commands: list[str] = field(default_factory=list)
+    generator_id: str = "codeforge.cli-generator"
+    generator_version: str = "1.0"
+    input_digest: str = ""
+    file_ownership: dict[str, str] = field(default_factory=dict)
+    diagnostics: tuple[str, ...] = ()
+    transformation_id: str = ""
+    transformation_version: str = ""
+    source_model_type: str = "ProjectModel"
+    target_model_type: str = "CliTargetModel"
+    output_model_digest: str = ""
 
 
 def _package_name(identity: str) -> str:
@@ -67,10 +86,9 @@ def _sha256(text: str) -> str:
     return hashlib.sha256(text.encode("utf-8")).hexdigest()
 
 
-def _emit_files(model: ProjectModel, package: str, name: str) -> dict[str, str]:
+def _emit_files(model: CliTargetModel, package: str, name: str) -> dict[str, str]:
     """Build the {relpath: content} map for the generated CLI. Pure + deterministic."""
-    commands = [c for c in model.actions if _SLUG.sub("_", c.lower()).strip("_")] or ["info"]
-    safe_commands = [_SLUG.sub("_", c.lower()).strip("_") for c in commands]
+    safe_commands = list(model.commands)
     desc = json.dumps(model.identity)  # safely embed as a string literal
     cmd_list = ", ".join(json.dumps(c) for c in safe_commands)
     first = safe_commands[0]
@@ -152,9 +170,11 @@ def generate_cli(model: ProjectModel, dest: Path) -> GeneratedArtifact:
     dest = Path(dest)
     if dest.exists() and any(dest.iterdir()):
         raise GeneratorError(f"destination {dest} is not empty; refusing to overwrite")
-    package = _package_name(model.identity)
+    transformation = transform_project_to_cli(model)
+    target = transformation.target
+    package = _package_name(target.identity)
     name = package.replace("_", "-")
-    contents = _emit_files(model, package, name)
+    contents = _emit_files(target, package, name)
 
     checksums: dict[str, str] = {}
     for rel, text in contents.items():
@@ -164,7 +184,6 @@ def generate_cli(model: ProjectModel, dest: Path) -> GeneratedArtifact:
         checksums[rel] = _sha256(text)
 
     manifest_hash = _sha256("\n".join(f"{r}:{checksums[r]}" for r in sorted(checksums)))
-    commands = [c for c in model.actions if c.strip()] or ["info"]
     return GeneratedArtifact(
         name=name,
         package=package,
@@ -172,9 +191,15 @@ def generate_cli(model: ProjectModel, dest: Path) -> GeneratedArtifact:
         files=sorted(contents),
         checksums=checksums,
         manifest_hash=manifest_hash,
-        provenance=model.provenance,
-        model_identity=model.identity,
-        commands=[_SLUG.sub("_", c.lower()).strip("_") for c in commands],
+        provenance=target.provenance,
+        model_identity=target.identity,
+        commands=list(target.commands),
+        input_digest=transformation.source_model_digest,
+        file_ownership={rel: "generated" for rel in sorted(contents)},
+        diagnostics=transformation.diagnostics,
+        transformation_id=transformation.spec.transformation_id,
+        transformation_version=transformation.spec.version,
+        output_model_digest=transformation.target_model_digest,
     )
 
 
@@ -182,7 +207,15 @@ def _target_source(artifact: GeneratedArtifact) -> LocalSource:
     return LocalSource(Path(artifact.dest), artifact.provenance)
 
 
-def validate_runs(artifact: GeneratedArtifact, *, seed_id: str = "_generate") -> ToolRunResult:
+def validate_runs(
+    artifact: GeneratedArtifact,
+    *,
+    seed_id: str = "_generate",
+    identity: SessionIdentity | None = None,
+    policy: PermissionPolicy | None = None,
+    clock: Callable[[], str] | None = None,
+    correlation_id: str = "",
+) -> ToolRunResult:
     """Prove the generated target RUNS: `python -m <package> --version` in its own dir (exit 0)."""
     return run_tool(
         _target_source(artifact),
@@ -190,10 +223,22 @@ def validate_runs(artifact: GeneratedArtifact, *, seed_id: str = "_generate") ->
         seed_id=seed_id,
         kind="build",
         allowlist={"run": [sys.executable, "-m", artifact.package, "--version"]},
+        identity=identity,
+        policy=policy,
+        clock=clock or _utcnow,
+        correlation_id=correlation_id,
     )
 
 
-def validate_tests(artifact: GeneratedArtifact, *, seed_id: str = "_generate") -> ToolRunResult:
+def validate_tests(
+    artifact: GeneratedArtifact,
+    *,
+    seed_id: str = "_generate",
+    identity: SessionIdentity | None = None,
+    policy: PermissionPolicy | None = None,
+    clock: Callable[[], str] | None = None,
+    correlation_id: str = "",
+) -> ToolRunResult:
     """Prove the generated target's TESTS PASS: run its pytest suite through the Stage-5 runner."""
     return run_tool(
         _target_source(artifact),
@@ -203,6 +248,10 @@ def validate_tests(artifact: GeneratedArtifact, *, seed_id: str = "_generate") -
         allowlist={
             "pytest": [sys.executable, "-m", "pytest", "tests/", "-q", "-p", "no:cacheprovider"]
         },
+        identity=identity,
+        policy=policy,
+        clock=clock or _utcnow,
+        correlation_id=correlation_id,
     )
 
 

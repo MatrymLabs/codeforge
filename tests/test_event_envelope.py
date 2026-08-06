@@ -42,6 +42,13 @@ def test_invalid_payload_and_timestamp_are_rejected():
     values["payload"] = {"bad": object()}
     with pytest.raises(EventEnvelopeError):
         EventEnvelope.from_dict(values)
+
+
+def test_unknown_semantic_channel_is_rejected():
+    values = _event().to_dict()
+    values["semantic_channel"] = "unrouted"
+    with pytest.raises(EventEnvelopeError, match="semantic_channel"):
+        EventEnvelope.from_dict(values)
     values = _event().to_dict()
     values["timestamp"] = "tomorrow"
     with pytest.raises(EventEnvelopeError):

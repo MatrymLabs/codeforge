@@ -19,6 +19,7 @@ import os
 from pathlib import Path
 
 from sqlalchemy import CheckConstraint, Engine, ForeignKey, LargeBinary, Text, create_engine
+from sqlalchemy.engine import make_url
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from sqlalchemy.orm import Session as SqlSession
 
@@ -52,6 +53,7 @@ class CharacterRow(ArchiveBase):
     __tablename__ = "characters"
 
     name: Mapped[str] = mapped_column(primary_key=True)
+    appearance: Mapped[str] = mapped_column(default="")  # JSON presentation choices
     job: Mapped[str] = mapped_column(default="")
     secondary_job: Mapped[str] = mapped_column(default="")  # the equipped subjob, or "" for none
     level: Mapped[int] = mapped_column(default=1)
@@ -208,6 +210,16 @@ class SeedSourceRow(ArchiveBase):
     source_json: Mapped[str] = mapped_column(Text())
 
 
+class SeedConnectorRow(ArchiveBase):
+    """One durable connector lifecycle snapshot owned by one Seed."""
+
+    __tablename__ = "seed_connectors"
+
+    seed_id: Mapped[str] = mapped_column(primary_key=True)
+    registration_id: Mapped[str] = mapped_column(primary_key=True)
+    registration_json: Mapped[str] = mapped_column(Text())
+
+
 class AuditEventRow(ArchiveBase):
     """One append-only hash-chain audit event in the platform SQL boundary."""
 
@@ -310,6 +322,21 @@ def engine_url() -> str:
     return f"sqlite:///{path}"
 
 
+def _sqlite_path(url: str | None = None) -> Path:
+    """Resolve the active SQLite file, including ``CODEFORGE_DB`` overrides.
+
+    Recovery must operate on the same backend selected for ORM sessions.  Using the import-time
+    ``DB_PATH`` here silently backed up the repository default when a deployment selected another
+    file through ``CODEFORGE_DB``.
+    """
+    parsed = make_url(url or engine_url())
+    if parsed.get_backend_name() != "sqlite" or not parsed.database:
+        raise RuntimeError("the active backend is not a file-backed SQLite database")
+    if parsed.database == ":memory:":
+        raise RuntimeError("an in-memory SQLite database cannot be backed up or restored")
+    return Path(parsed.database).expanduser().resolve()
+
+
 def open_archive_session() -> SqlSession:
     """A working archive session on the current backend. Engines are cached per URL.
     For SQLite the tables are created on first contact (idempotent); for PostgreSQL
@@ -336,13 +363,14 @@ def backup_db(dest_dir: Path | None = None) -> Path:
             f"backup_db supports SQLite only; the backend is {url.split(':', 1)[0]}. "
             "For PostgreSQL use pg_dump (see docs/database.md)."
         )
-    if not Path(DB_PATH).exists():
-        raise FileNotFoundError(f"no database to back up at {DB_PATH}")
-    base = dest_dir if dest_dir is not None else Path(DB_PATH).parent / "backups"
+    live = _sqlite_path(url)
+    if not live.exists():
+        raise FileNotFoundError(f"no database to back up at {live}")
+    base = dest_dir if dest_dir is not None else live.parent / "backups"
     base.mkdir(parents=True, exist_ok=True)
     stamp = datetime.now(UTC).strftime("%Y-%m-%dT%H-%M-%SZ")
-    dest = base / f"{Path(DB_PATH).stem}-{stamp}.db"
-    with sqlite3.connect(DB_PATH) as src, sqlite3.connect(dest) as dst:
+    dest = base / f"{live.stem}-{stamp}.db"
+    with sqlite3.connect(live) as src, sqlite3.connect(dest) as dst:
         src.backup(dst)  # online snapshot: consistent even under concurrent writes
     return dest
 
@@ -363,7 +391,7 @@ def restore_db(backup_path: Path, dest: Path | None = None) -> Path:
     src = Path(backup_path)
     if not src.exists():
         raise FileNotFoundError(f"no backup to restore at {src}")
-    target = Path(dest) if dest is not None else Path(DB_PATH)
+    target = Path(dest).expanduser().resolve() if dest is not None else _sqlite_path(url)
     target.parent.mkdir(parents=True, exist_ok=True)
     dead = _ENGINES.pop(f"sqlite:///{target}", None)  # drop the stale engine on the target URL
     if dead is not None:

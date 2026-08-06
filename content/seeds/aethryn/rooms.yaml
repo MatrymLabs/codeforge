@@ -483,7 +483,7 @@ korvash_crater:
 shattered_isles:
   name: The Shattered Isles
   desc: |-
-    The The Shattered Isles zone (levels 180-230): a broken archipelago of citadels and a maelstrom that eats the sea. Within its bounds lie Stormreach, Saltwind Harbor, Blackreef Citadel, The Maelstrom Rise. Roads and routes run on to the neighbouring lands.
+    The Shattered Isles zone (levels 180-230): a broken archipelago of citadels and a maelstrom that eats the sea. Within its bounds lie Stormreach, Saltwind Harbor, Blackreef Citadel, The Maelstrom Rise. Roads and routes run on to the neighbouring lands.
   exits:
     west: thalorin
     south: xilnath_jungle
@@ -556,7 +556,7 @@ the_spire_nexus:
 the_deepreach:
   name: The Deepreach
   desc: |-
-    The The Deepreach zone (levels 100-250): a vast underground realm of forge-cities and living crystal beneath the world. Within its bounds lie Deepforge City, Lumengrotto, Shadowfissure, The Crystal Labyrinth. Roads and routes run on to the neighbouring lands.
+    The Deepreach zone (levels 100-250): a vast underground realm of forge-cities and living crystal beneath the world. Within its bounds lie Deepforge City, Lumengrotto, Shadowfissure, The Crystal Labyrinth. Roads and routes run on to the neighbouring lands.
   exits:
     up: korvash_highlands
     east: the_voidscar
@@ -596,7 +596,7 @@ the_crystal_labyrinth:
 the_voidscar:
   name: The Voidscar
   desc: |-
-    The The Voidscar zone (levels 250-300): a wound in the world where reality unravels and the oldest evil waits. Within its bounds lie Voidspire, Dark Expanse, Netharion's Throne, The Rifted Abyss. Roads and routes run on to the neighbouring lands.
+    The Voidscar zone (levels 250-300): a wound in the world where reality unravels and the oldest evil waits. Within its bounds lie Voidspire, Dark Expanse, Netharion's Throne, The Rifted Abyss. Roads and routes run on to the neighbouring lands.
   exits:
     northwest: korvash_highlands
     north: skyward_spires

@@ -16,7 +16,7 @@ from pathlib import Path
 from typing import Any
 
 from kernel.blueprint import from_dict as make_blueprint
-from kernel.gmcp import SEED_PROTOCOL, seed_hello
+from kernel.gmcp import SEED_PROTOCOL, seed_hello, seed_profile
 from kernel.seed_package import compile_manifest
 from kernel.seedlab import workspace_gmcp as gmcp
 from kernel.seedlab.form import FormDefinition
@@ -27,6 +27,174 @@ from kernel.seedlab.tool_runner import ToolRunResult
 
 CONTRACT_VERSION = "1.0.0"
 EXAMPLES_PATH = Path(__file__).resolve().parent / "native_seed.v1.examples.json"
+REGISTRY_PATH = Path(__file__).resolve().parent / "native_seed.v1.registry.json"
+
+# The JSON registry is the published metadata authority for the Native Seed package surface.
+# Payload examples remain separate because they are generated from live Forge builders; this
+# registry describes ownership and compatibility without making consumers depend on Forge code.
+PACKAGE_REGISTRY: tuple[dict[str, str], ...] = (
+    {
+        "package": "Seed.Hello",
+        "direction": "server_to_client",
+        "status": "implemented",
+        "owner": "Seed Runtime",
+        "source": "kernel/gmcp.py",
+        "text_fallback": "The Seed connection is ready.",
+    },
+    {
+        "package": "Seed.Profile",
+        "direction": "server_to_client",
+        "status": "implemented",
+        "owner": "Seed Runtime",
+        "source": "kernel/gmcp.py",
+        "text_fallback": "Seed profile information is available.",
+    },
+    {
+        "package": "Project.Status",
+        "direction": "server_to_client",
+        "status": "implemented",
+        "owner": "Seed Runtime",
+        "source": "kernel/seedlab/workspace_gmcp.py",
+        "text_fallback": "Project status updated.",
+    },
+    {
+        "package": "Source.Tree",
+        "direction": "server_to_client",
+        "status": "implemented",
+        "owner": "Seed Runtime",
+        "source": "kernel/seedlab/workspace_gmcp.py",
+        "text_fallback": "The source tree is available.",
+    },
+    {
+        "package": "Source.Connection",
+        "direction": "server_to_client",
+        "status": "implemented",
+        "owner": "Seed Runtime",
+        "source": "kernel/seedlab/workspace_gmcp.py",
+        "text_fallback": "The source connection is ready.",
+    },
+    {
+        "package": "Model.Schema",
+        "direction": "server_to_client",
+        "status": "implemented",
+        "owner": "Seed Runtime",
+        "source": "kernel/seedlab/workspace_gmcp.py",
+        "text_fallback": "The project model is available.",
+    },
+    {
+        "package": "Build.Report",
+        "direction": "server_to_client",
+        "status": "implemented",
+        "owner": "Seed Runtime",
+        "source": "kernel/seedlab/workspace_gmcp.py",
+        "text_fallback": "The build report is available.",
+    },
+    {
+        "package": "Architecture.Map",
+        "direction": "server_to_client",
+        "status": "implemented",
+        "owner": "Seed Runtime",
+        "source": "kernel/seedlab/workspace_gmcp.py",
+        "text_fallback": "The architecture map is available.",
+    },
+    {
+        "package": "Research.Findings",
+        "direction": "server_to_client",
+        "status": "implemented",
+        "owner": "Seed Runtime",
+        "source": "kernel/seedlab/workspace_gmcp.py",
+        "text_fallback": "Research findings are available.",
+    },
+    {
+        "package": "Form.Schema",
+        "direction": "server_to_client",
+        "status": "implemented",
+        "owner": "Seed Runtime",
+        "source": "kernel/seedlab/workspace_gmcp.py",
+        "text_fallback": "The Engineering Form is ready.",
+    },
+    {
+        "package": "Blueprint.List",
+        "direction": "server_to_client",
+        "status": "implemented",
+        "owner": "Seed Runtime",
+        "source": "kernel/seedlab/workspace_gmcp.py",
+        "text_fallback": "Blueprints are available.",
+    },
+    {
+        "package": "Deploy.Manifest",
+        "direction": "server_to_client",
+        "status": "implemented",
+        "owner": "Seed Runtime",
+        "source": "kernel/seedlab/workspace_gmcp.py",
+        "text_fallback": "The deployment manifest is available.",
+    },
+    {
+        "package": "Deploy.Status",
+        "direction": "server_to_client",
+        "status": "implemented",
+        "owner": "Seed Runtime",
+        "source": "kernel/seedlab/workspace_gmcp.py",
+        "text_fallback": "Deployment status updated.",
+    },
+    {
+        "package": "Seed.Create",
+        "direction": "client_to_server",
+        "status": "implemented",
+        "owner": "Seed Runtime",
+        "source": "kernel/seedlab/workspace_gmcp.py",
+        "text_fallback": "Seed creation was requested.",
+    },
+    {
+        "package": "Form.Submit",
+        "direction": "client_to_server",
+        "status": "implemented",
+        "owner": "Seed Runtime",
+        "source": "kernel/seedlab/workspace_gmcp.py",
+        "text_fallback": "Engineering Form answers were submitted.",
+    },
+    {
+        "package": "Workspace.Request",
+        "direction": "client_to_server",
+        "status": "implemented",
+        "owner": "Seed Runtime",
+        "source": "kernel/seedlab/workspace_gmcp.py",
+        "text_fallback": "Workspace access was requested.",
+    },
+    {
+        "package": "Seed.Created",
+        "direction": "server_to_client",
+        "status": "implemented",
+        "owner": "Seed Runtime",
+        "source": "kernel/seedlab/workspace_gmcp.py",
+        "text_fallback": "The Seed creation result is available.",
+    },
+)
+
+
+def build_registry() -> dict[str, Any]:
+    """Return the versioned metadata registry for the Native Seed package surface."""
+    return {
+        "contract": "native-seed-gmcp",
+        "schema": 1,
+        "version": CONTRACT_VERSION,
+        "protocol": SEED_PROTOCOL,
+        "source": "codeforge/contracts/native_seed.py",
+        "classification": "internal",
+        "compatibility_policy": (
+            "Additive fields are allowed; breaking changes require a new major contract version "
+            "and an explicit migration or rejection rule."
+        ),
+        "packages": [
+            {
+                **package,
+                "schema_version": "1",
+                "classification": "internal",
+                "compatibility": "additive_fields_only",
+            }
+            for package in PACKAGE_REGISTRY
+        ],
+    }
 
 
 def _example(
@@ -85,19 +253,15 @@ def _form_definition() -> FormDefinition:
 
 
 def _seed_profile() -> dict[str, object]:
-    """The locked declarative profile shape.
-
-    Forge does not yet have a full profile emitter, so this fixture is intentionally marked as
-    profile-shape only in `build_examples`.
-    """
-    return {
-        "seed": "job-tracker",
-        "name": "Job Tracker",
-        "publisher": "Matrym Labs",
-        "version": "1.0.0",
-        "theme": "forge",
-        "terminology": {"seed": "workspace"},
-        "panels": [
+    """The deterministic contract example built through Forge's profile emitter."""
+    return seed_profile(
+        "job-tracker",
+        "Job Tracker",
+        "Matrym Labs",
+        "1.0.0",
+        theme="forge",
+        terminology={"seed": "workspace"},
+        panels=[
             {
                 "name": "Project Hub",
                 "binding": "Project.Status.seed",
@@ -114,8 +278,8 @@ def _seed_profile() -> dict[str, object]:
                 "fallback": "Build and test run summary.",
             },
         ],
-        "accessibility": ["screen_reader"],
-    }
+        accessibility=["screen_reader"],
+    )
 
 
 def _source() -> SourceRecord:
@@ -262,7 +426,6 @@ def build_examples() -> dict[str, Any]:
                 "Seed.Profile",
                 "server_to_client",
                 _seed_profile(),
-                status="client_profile_shape_locked_pending_engine_emitter",
             ),
             _example(
                 gmcp.PROJECT_STATUS_PACKAGE,
@@ -367,8 +530,14 @@ def render() -> str:
     return json.dumps(build_examples(), indent=2) + "\n"
 
 
+def render_registry() -> str:
+    """The committed registry text: pretty JSON plus a trailing newline."""
+    return json.dumps(build_registry(), indent=2) + "\n"
+
+
 def write() -> Path:
     EXAMPLES_PATH.write_text(render(), encoding="utf-8")
+    REGISTRY_PATH.write_text(render_registry(), encoding="utf-8")
     return EXAMPLES_PATH
 
 

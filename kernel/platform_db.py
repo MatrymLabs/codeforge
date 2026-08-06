@@ -11,6 +11,7 @@ from kernel.world.db import ArchiveBase as PlatformBase
 from kernel.world.db import (
     AuditEventRow,
     SeedArtifactRow,
+    SeedConnectorRow,
     SeedManifestEvidenceRow,
     SeedModelRow,
     SeedRegistryRow,
@@ -28,6 +29,7 @@ __all__ = [
     "SeedArtifactRow",
     "SeedManifestEvidenceRow",
     "SeedSourceRow",
+    "SeedConnectorRow",
     "AuditEventRow",
     "engine_url",
     "open_archive_session",

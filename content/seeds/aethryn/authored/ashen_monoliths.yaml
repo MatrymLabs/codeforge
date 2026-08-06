@@ -1,0 +1,78 @@
+# SEED: aethryn -- authored/ashen_monoliths.yaml
+# Adapted from the deferred Aethryn field pack. Its node and loot now resolve through the current
+# item-prototype registry; the room graph remains ordinary Seed room data.
+rooms:
+  ashen_monoliths_camp:
+    name: The Monolith Survey Camp
+    desc: >-
+      Canvas shelters sit between towering black monoliths. Their surfaces are covered in old commands
+      that stop halfway through every sentence. The camp lies OUT; the record tent is NORTH and the
+      cinder field is EAST.
+    exits: {out: ashen_monoliths, north: ashen_monoliths_recordtent, east: ashen_monoliths_cinderfield}
+  ashen_monoliths_recordtent:
+    name: The Monolith Record Tent
+    desc: >-
+      Survey tablets cover every table. None can agree on which way the monoliths are facing. The camp
+      is back SOUTH.
+    exits: {south: ashen_monoliths_camp}
+  ashen_monoliths_cinderfield:
+    name: The Cinder Field
+    desc: >-
+      Cinderium rises in script-like veins through the ash. The lines change when no one is looking.
+      The camp is back WEST.
+    exits: {west: ashen_monoliths_camp}
+    node: cinderium
+hub: {room: ashen_monoliths, keyword: camp, entry: ashen_monoliths_camp}
+npcs:
+  ashen_monoliths_surveylead:
+    name: Survey-Lead Toma Ash
+    keywords: [toma, ash, survey-lead]
+    location: ashen_monoliths_camp
+    dialogue: [Toma keeps the camp's maps weighted down with stones that were not there yesterday.]
+    topics:
+      survey: ["The monoliths are not broken. They are waiting for a command that no living language can finish."]
+    shop:
+      sells: {grand_healing_draught: 120, greater_mana_draught: 82, water_ration: 8}
+      buys: {cinderium: 14}
+    hp: 0
+  ashen_monoliths_tabletreader:
+    name: Tablet-Reader Kesh Vorn
+    keywords: [kesh, vorn, tablet-reader]
+    location: ashen_monoliths_recordtent
+    dialogue: [Kesh reads half a command aloud and stops when the monoliths begin to turn.]
+    topics:
+      tablets: ["Every tablet starts with a duty and ends before naming who receives it. That omission is the whole history of the Ashen Wastes."]
+    hp: 0
+  ashen_monoliths_ashwalker:
+    name: Ashwalker Rila Soot
+    keywords: [rila, soot, ashw alker]
+    location: ashen_monoliths_cinderfield
+    dialogue: [Rila harvests cinderium only after its written veins stop moving.]
+    topics:
+      cinderium: ["The metal is a sentence made solid. Break it carelessly and the sentence continues inside you."]
+    hp: 0
+  ashen_monoliths_commandshade:
+    name: the unfinished command shade
+    keywords: [command-shade, unfinished, shade]
+    location: ashen_monoliths_cinderfield
+    dialogue: [The unfinished command shade rises from a cinderium vein, still searching for the end of its order.]
+    aggressive: true
+    hp: 1360
+    atk: 103
+    xp: 218
+    level: 130
+    tier: elite
+    attack_element: DRK
+    loot: {cinderium: 3, ember_shard: 4, nothing: 1}
+items:
+  ashen_monoliths_halfcommand:
+    name: the half-finished command
+    keywords: [half-command, command, tablet]
+    location: ashen_monoliths_recordtent
+    lore: >-
+      A tablet that ends with the words: when the gate opens, remember to...
+  ashen_monoliths_cinderline:
+    name: the moving cinder line
+    keywords: [cinder-line, cinder, line]
+    location: ashen_monoliths_cinderfield
+    lore: A vein of cinderium that has rearranged itself into a map of the Scorched Gate.

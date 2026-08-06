@@ -27,6 +27,7 @@ from kernel.seedlab.artifact_store import (
     artifact_labels,
     build_report_artifacts,
 )
+from kernel.seedlab.connector_registry import ConnectorRegistry, configured_connector_registry
 from kernel.seedlab.creator_draft import CreatorDraft, CreatorDraftError
 from kernel.seedlab.deployment import DeploymentError, DeploymentRun
 from kernel.seedlab.kernel import SeedKernel
@@ -38,6 +39,7 @@ from kernel.seedlab.project_model import ProjectModel
 from kernel.seedlab.provenance_registry import configured_provenance_store
 from kernel.seedlab.registry import seed_store
 from kernel.seedlab.source_connector import SourceRecord, source_connector_label, source_label
+from kernel.seedlab.task import TaskRecord, configured_task_store
 from kernel.seedlab.tool_runner import RunLog, ToolRunResult, configured_run_log, run_labels
 from kernel.seedlab.workspace_gmcp import workspace_packages
 
@@ -139,6 +141,8 @@ def build_workspace_contract(
     modules: Sequence[Mapping[str, object]] | None = None,
     findings: Sequence[Mapping[str, object]] | None = None,
     lifecycle_evidence: Mapping[str, Sequence[Mapping[str, object]]] | None = None,
+    connector_registry: ConnectorRegistry | None = None,
+    tasks: Sequence[TaskRecord] | None = None,
 ) -> WorkspaceContract:
     """Build the client-facing workspace contract from the existing SeedLab projections."""
     home = _default_home(root)
@@ -148,7 +152,21 @@ def build_workspace_contract(
     run_log = configured_run_log(home)
     artifact_store = configured_artifact_store(home)
     persisted_sources = configured_provenance_store(home).all_for_seed(seed_id)
-    source_value = source or (persisted_sources[-1] if persisted_sources else None)
+    registry = connector_registry or configured_connector_registry(home)
+    all_registrations = registry.all_for_seed(seed_id)
+    registrations = [
+        registration
+        for registration in all_registrations
+        if registration.state in {"registered", "active"}
+    ]
+    registered_sources = [
+        registration.source for registration in registrations if registration.source
+    ]
+    source_value = source or (
+        registered_sources[-1]
+        if registered_sources
+        else (persisted_sources[-1] if persisted_sources and not all_registrations else None)
+    )
 
     state = _project_state(
         seed_id,
@@ -158,6 +176,10 @@ def build_workspace_contract(
         artifact_store=artifact_store,
     )
     project = ProjectHub(kernel).contract(seed_id, state=state)
+    task_list = list(tasks) if tasks is not None else list(
+        configured_task_store(home).all_for_seed(seed_id)
+    )
+    project["tasks"] = [task.to_dict() for task in task_list]
     deployment = _latest_deployment(home, seed_id)
     if deployment is not None:
         project["deployment"] = deployment.to_dict()
@@ -274,6 +296,7 @@ def _durable_lifecycle_evidence(
     has_durable_state = any(
         (
             (workshop_root / f"{seed_id}.drafts.json").is_file(),
+            (workshop_root / "drafts.json").is_file(),
             (workshop_root / f"{seed_id}.json").is_file(),
             (workshop_root / "approvals").is_dir(),
             (hardware_root / "rollbacks").is_dir(),
@@ -290,7 +313,10 @@ def _durable_lifecycle_evidence(
         key: [] for key in _LIFECYCLE_KEYS
     }
     lifecycle["catalog"] = [_catalog_record(part) for part in load_catalog()]
-    lifecycle["drafts"] = _load_drafts(workshop_root / f"{seed_id}.drafts.json", seed_id)
+    draft_records: list[Mapping[str, object]] = []
+    for draft_path in (workshop_root / f"{seed_id}.drafts.json", workshop_root / "drafts.json"):
+        draft_records.extend(_load_drafts(draft_path, seed_id))
+    lifecycle["drafts"] = draft_records
     lifecycle["content"] = _load_workshop_content(seed_id)
     lifecycle["tests"] = [
         _manifest_run_record(item) for item in manifest_evidence if item.seed_id == seed_id
@@ -298,6 +324,7 @@ def _durable_lifecycle_evidence(
     lifecycle["approvals"] = _load_approvals(workshop_root / "approvals", seed_id)
     lifecycle["activations"] = [
         _hardware_record(item) for item in (hardware_records or ())
+        if seed_id in item.consumers
     ]
     lifecycle["health"] = _load_deployment_runs(deployments_root, seed_id)
     lifecycle["rollbacks"] = _load_rollbacks(hardware_root / "rollbacks", seed_id)

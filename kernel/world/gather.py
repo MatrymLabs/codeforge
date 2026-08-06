@@ -52,11 +52,13 @@ def gather(session: Session) -> str:
     from kernel.world.cull import scope_key
     from kernel.world.zones import zone_of
 
-    zone = zone_of(session.location)
-    if zone:
-        forage_line = quest.on_event(session, "forage", scope_key(zone, str(node)))
-        if forage_line:
-            line = f"{line}\n{forage_line}"
+    # Authored interiors can be outside the generated area index while still hosting a real node.
+    # Prefer the area scope, but fall back to the room label so a local story can observe a harvest
+    # without widening the map's zone membership just to make a quest trigger.
+    scope = zone_of(session.location) or session.location
+    forage_line = quest.on_event(session, "forage", scope_key(scope, str(node)))
+    if forage_line:
+        line = f"{line}\n{forage_line}"
     return line
 
 

@@ -1,0 +1,103 @@
+version: 1
+research_date: 2026-08-06
+sources:
+  - title: Evennia Command Sets
+    publisher: Evennia Project
+    url: https://www.evennia.com/docs/latest/Components/Command-Sets.html
+    update: "accessed 2026-08-06; current latest documentation"
+    category: official_engine_documentation
+    observations: "Commands are merged from session, account, character, objects, locations, exits, and channels; permissions are separate from command availability."
+    limitations: "Evennia architecture differs from CodeForge's framework-free tick."
+    accessibility: "Context-sensitive command availability must be exposed in help without hiding essentials."
+    licensing_ip: "Study of public documentation; do not copy implementation or prose."
+    confidence: high
+    classification: VERIFIED_SOURCE_FACT
+  - title: Evennia Command API
+    publisher: Evennia Project
+    url: https://www.evennia.com/docs/latest/api/evennia.commands.command.html
+    update: "accessed 2026-08-06"
+    category: parser_help
+    observations: "Commands define key, aliases, locks, help category, raw input, and argument parsing."
+    limitations: "The API describes a different parser and permission model."
+    accessibility: "A canonical registry can generate syntax and aliases consistently."
+    licensing_ip: "Pattern research only."
+    confidence: high
+    classification: SOURCE_DERIVED_CONCLUSION
+  - title: Evennia Accounts API
+    publisher: Evennia Project
+    url: https://www.evennia.com/docs/latest/evennia.accounts.html
+    update: "accessed 2026-08-06"
+    category: account_character_model
+    observations: "Accounts are out-of-character identities that can control one or more objects/characters."
+    limitations: "Aethryn already has its own account/character persistence."
+    accessibility: "The distinct identity model supports a clear selection step."
+    licensing_ip: "Do not copy account UI or code."
+    confidence: high
+    classification: VERIFIED_SOURCE_FACT
+  - title: Mudlet Supported Protocols
+    publisher: Mudlet Project
+    url: https://wiki.mudlet.org/w/Manual:Supported_Protocols
+    update: "accessed 2026-08-06"
+    category: mud_client_protocol
+    observations: "GMCP carries structured data separately from game text; clients can react to messages."
+    limitations: "Mudlet is a client, not a server authority."
+    accessibility: "Structured side-channel must supplement, not replace, complete text."
+    licensing_ip: "Use protocol standards and original payloads; no copied game content."
+    confidence: high
+    classification: VERIFIED_SOURCE_FACT
+  - title: Mudlet Alias Engine
+    publisher: Mudlet Project
+    url: https://wiki.mudlet.org/w/Manual%3AAlias_Engine
+    update: "accessed 2026-08-06"
+    category: command_discoverability
+    observations: "Client aliases transform input and can use patterns; they are distinct from server commands."
+    limitations: "Client-side automation can diverge from server authority."
+    accessibility: "Server help and canonical commands must remain sufficient when aliases are absent."
+    licensing_ip: "Study interaction pattern only."
+    confidence: high
+    classification: OBSERVED_INTERFACE_PATTERN
+  - title: WCAG 2.2
+    publisher: W3C Web Accessibility Initiative
+    url: https://www.w3.org/TR/WCAG22/
+    update: "2023 recommendation; accessed 2026-08-06"
+    category: accessibility_standard
+    observations: "Relevant criteria include use of color, reflow, keyboard access, focus, and status messages."
+    limitations: "WCAG is written for web content; Aethryn applies the principles to terminal and Qt surfaces."
+    accessibility: "Directly relevant principles; specialist review remains required."
+    licensing_ip: "Standards may be linked and summarized; do not reproduce large text."
+    confidence: high
+    classification: VERIFIED_SOURCE_FACT
+  - title: Understanding Status Messages
+    publisher: W3C Web Accessibility Initiative
+    url: https://www.w3.org/WAI/WCAG22/Understanding/status-messages
+    update: "accessed 2026-08-06"
+    category: accessibility_status
+    observations: "Status and error updates should be programmatically determinable without forcing focus; progress can use log/status semantics."
+    limitations: "Terminal readers and Qt accessibility APIs need separate implementation review."
+    accessibility: "Supports non-focus-stealing event announcements and linear combat logs."
+    licensing_ip: "Standards summary only."
+    confidence: high
+    classification: SOURCE_DERIVED_CONCLUSION
+  - title: ECMA-48 Control Functions for Coded Character Sets
+    publisher: Ecma International
+    url: https://ecma-international.org/publications-and-standards/standards/ecma-48/
+    update: "5th edition June 1991; accessed 2026-08-06"
+    category: terminal_encoding
+    observations: "ANSI-style control functions are device capabilities, not universal display guarantees."
+    limitations: "Does not define modern screen-reader or client behavior."
+    accessibility: "Supports conservative ANSI profiles and plain fallback."
+    licensing_ip: "Cite the standard; do not treat ANSI color as semantic content."
+    confidence: high
+    classification: VERIFIED_SOURCE_FACT
+  - title: GNU Readline Manual
+    publisher: GNU Project
+    url: https://www.gnu.org/software/bash/manual/bash.html
+    update: "accessed 2026-08-06"
+    category: terminal_interaction
+    observations: "History and completion are established terminal interaction patterns."
+    limitations: "Readline is a shell editing library, not a MUD parser."
+    accessibility: "History, completion, and predictable keyboard editing inform client behavior."
+    licensing_ip: "Pattern research only."
+    confidence: medium
+    classification: SOURCE_DERIVED_CONCLUSION
+

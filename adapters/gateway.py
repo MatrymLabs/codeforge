@@ -32,19 +32,23 @@ import ssl
 import sys
 import threading
 import time
+from datetime import UTC, datetime, timedelta
+from pathlib import Path
 from typing import TYPE_CHECKING, Protocol
 
 import structlog
 
-from forge import handle_command, render_scene
+from forge import NAME_RE, handle_command, render_scene
 from kernel.gmcp import (
     GMCP_OPT,
+    aethryn_profile,
     enables_gmcp,
     friends_report,
     gmcp_frame,
     guild_report,
     items_report,
     mail_report,
+    observation_report,
     party_report,
     quest_report,
     read_gmcp_package,
@@ -55,11 +59,14 @@ from kernel.gmcp import (
     target_report,
     vitals_report,
 )
+from kernel.permission_policy import PermissionDenied, PermissionPolicy, PermissionRule
+from kernel.session_identity import SessionIdentity, SessionIdentityError
+from kernel.session_registry import SessionRegistryError
 from kernel.shelf.bulkhead import Bulkhead, BulkheadFull
 from kernel.shelf.telnet_codec import IAC, SE, WILL, WONT, strip_iac
-from kernel.world import bans, guild, maintenance_mode, party, presence, trade, tutorial
-from kernel.world.accounts import password_fixable
-from kernel.world.characters import save_all, save_character
+from kernel.world import appearance, bans, guild, maintenance_mode, party, presence, trade, tutorial
+from kernel.world.accounts import password_fixable, verify_account
+from kernel.world.characters import characters_for_account, save_all, save_character
 from kernel.world.events import SHUTDOWN, bind_echo, bind_gmcp, unbind_echo, unbind_gmcp
 from kernel.world.ranks import has_rank
 from kernel.world.seed import SEED_NAME, load_splash
@@ -100,6 +107,8 @@ AUTOSAVE_EVERY = 25  # a named hero is autosaved every this many of their own co
 # loses at most that many commands of progress (not a whole session). The tick lock is already held
 # when it fires, so the save is consistent with the command that triggered it.
 IDLE_TIMEOUT = 300.0  # seconds of silence before a connection is dropped
+AUTHENTICATED_SESSION_TTL = timedelta(hours=12)
+AUTHENTICATED_SESSION_RENEWAL_WINDOW = timedelta(hours=1)
 MAX_CONNECTIONS = 128  # concurrent sockets; thread-per-connection has a ceiling
 MAX_LINE_BYTES = (
     4096  # cap a single client line: a newline-less flood must not be an unbounded read
@@ -194,6 +203,11 @@ _ECHO_ON = bytes([IAC, WONT, ECHO_OPT])  # "I won't echo" -> client resumes
 # it stays a plain-text client and sees no binary. Framing + reply-reader live in kernel/gmcp.py.
 _WILL_GMCP = bytes([IAC, WILL, GMCP_OPT])
 
+# The local Master Client uses the Native Seed handshake to reject a stale gateway that happens to
+# occupy port 4000. This is the shipped Aethryn runtime/content identity, separate from the generic
+# Seed protocol version.
+AETHRYN_SERVER_VERSION = "1.1.0"
+
 _strip_telnet = strip_iac
 
 
@@ -236,7 +250,15 @@ class ForgeGateServer(socketserver.ThreadingTCPServer):
         # constructs the controller over the durable registry and registers the built-in provider.
         # Construction never activates a component.
         self.hardware_runtime = kwargs.pop("hardware_runtime", None)
+        # Production ``serve`` injects the durable session authority.  Tests and embedded
+        # callers may omit it to preserve their in-memory gateway setup.
+        self.session_registry = kwargs.pop("session_registry", None)
+        self.session_policy = kwargs.pop("session_policy", None)
         super().__init__(*args, **kwargs)  # type: ignore[arg-type]
+        if self.session_policy is None:
+            self.session_policy = PermissionPolicy(
+                (PermissionRule("game.command", scope=SEED_NAME),)
+            )
         if self.hardware_runtime is None:
             from kernel.hardware_lifecycle import HardwareRegistry, default_registry_path
             from kernel.hardware_runtime import (
@@ -355,9 +377,144 @@ class _GateHandler(socketserver.StreamRequestHandler):
         self._last_guild: dict[str, str] = {}  # {} = guildless; clears the client's guild panel
         self._last_mail: dict[str, int] = {}  # {} = empty inbox; clears the mail badge
         self._last_friends: dict[str, object] = {}  # {} = no friends; clears the friends line
+        self._last_observation: dict[str, object] = {}
+        self._authenticated_identity: object | None = None
+        # Privileged engineering operations get separate, narrowly scoped identities.  The
+        # registry is the authority when one is injected; these are only the handler's references.
+        self._gateway_identities: dict[str, object] = {}
         self._cmds_since_save = 0  # autosave cadence counter for this connection's hero
         with contextlib.suppress(OSError):
             self.wfile.write(_WILL_GMCP)
+
+    def _establish_authenticated_identity(self, session: Session) -> None:
+        """Record the authenticated account as a durable platform session when configured.
+
+        World ``Session`` remains the game-state lens.  This separate identity is the platform
+        authority record: it cannot be supplied by the client, and it is revoked when the socket
+        closes. Engineering capabilities continue to use narrower Seed-scoped identities.
+        """
+        registry = getattr(self.server, "session_registry", None)
+        if registry is None:
+            return
+        from uuid import uuid4
+
+        now = datetime.now(UTC)
+        nonce = uuid4().hex
+        account = session.account or session.player_id
+        identity = SessionIdentity(
+            principal_id=account,
+            principal_kind="human",
+            session_id=f"gateway-session-{session.player_id}-{nonce}",
+            seed_id=SEED_NAME,
+            issued_at=now,
+            expires_at=now + AUTHENTICATED_SESSION_TTL,
+            correlation_id=f"gateway-login-{session.player_id}-{nonce}",
+            roles=frozenset({session.rank}),
+            capabilities=frozenset({"game.command"}),
+        )
+        registry.issue(identity, actor=account)
+        self._authenticated_identity = identity
+
+    def _refresh_authenticated_identity(self, session: Session) -> SessionIdentity | None:
+        """Renew the authenticated platform identity near expiry without widening authority."""
+        identity = getattr(self, "_authenticated_identity", None)
+        registry = getattr(self.server, "session_registry", None)
+        if identity is None or registry is None:
+            return identity
+        now = datetime.now(UTC)
+        if identity.expires_at - now <= AUTHENTICATED_SESSION_RENEWAL_WINDOW:
+            account = session.account or session.player_id
+            identity = registry.renew(
+                identity,
+                ttl=AUTHENTICATED_SESSION_TTL,
+                actor=account,
+                now=now,
+            )
+            self._authenticated_identity = identity
+        return identity
+
+    def _authorize_game_command(self, session: Session) -> None:
+        """Require durable session authority before routing an ordinary game command."""
+        identity = self._refresh_authenticated_identity(session)
+        registry = getattr(self.server, "session_registry", None)
+        if identity is None or registry is None:
+            return
+        identity.require_seed(SEED_NAME)
+        registry.require_active(identity)
+        policy = self.server.session_policy
+        policy.require(
+            identity.permission_context(),
+            capability="game.command",
+            scope=SEED_NAME,
+        )
+
+    def _engineering_identity(
+        self,
+        session: Session,
+        *,
+        seed_id: str,
+        capability: str,
+        correlation_prefix: str,
+        now: object | None = None,
+    ) -> object:
+        """Return the least-privileged identity for one gateway capability.
+
+        The old gateway minted an untracked five-minute identity at each request.  When the
+        production server injects ``SessionRegistry``, this path records the identity durably,
+        checks it before use, and revokes it when the socket leaves.  The optional registry keeps
+        direct test/embedded server construction compatible while still using the same identity
+        contract.
+        """
+        from datetime import UTC, datetime, timedelta
+
+        from kernel.permission_policy import PermissionPolicy, PermissionRule
+        from kernel.session_identity import SessionIdentity
+
+        key = f"{seed_id}:{capability}"
+        identity = self._gateway_identities.get(key)
+        effective_now = now if isinstance(now, datetime) else datetime.now(UTC)
+        if identity is None:
+            account = session.account or session.player_id
+            identity = SessionIdentity(
+                principal_id=account,
+                principal_kind="human",
+                session_id=f"gateway-{session.player_id}-{seed_id}-{capability}",
+                seed_id=seed_id,
+                issued_at=effective_now,
+                expires_at=effective_now + timedelta(hours=12),
+                correlation_id=f"{correlation_prefix}-{session.player_id}",
+                roles=frozenset({"owner"}),
+                capabilities=frozenset({capability}),
+            )
+            self._gateway_identities[key] = identity
+            registry = getattr(self.server, "session_registry", None)
+            if registry is not None:
+                registry.issue(identity, actor=account)
+        registry = getattr(self.server, "session_registry", None)
+        if registry is not None:
+            registry.require_active(identity, now=effective_now)
+        # The policy remains explicit at the service boundary; the durable registry is an
+        # additional authority check, not a replacement for capability/scope evaluation.
+        return identity, PermissionPolicy((PermissionRule(capability, scope=seed_id),))
+
+    def _revoke_engineering_identities(self, session: Session) -> None:
+        registry = getattr(self.server, "session_registry", None)
+        if registry is None:
+            return
+        actor = session.account or session.player_id
+        identities = list(self._gateway_identities.values())
+        authenticated = getattr(self, "_authenticated_identity", None)
+        if authenticated is not None:
+            identities.append(authenticated)
+        for identity in identities:
+            try:
+                registry.invalidate(
+                    identity.session_id,
+                    actor=actor,
+                    reason="gateway connection closed",
+                )
+            except Exception:
+                _LOG.exception("session_revoke_failed", session_id=identity.session_id)
 
     def _note_gmcp(self, raw: bytes) -> None:
         """Read a client's GMCP negotiation reply out of raw input and record its choice. When a
@@ -368,7 +525,20 @@ class _GateHandler(socketserver.StreamRequestHandler):
             self._gmcp_enabled = verdict
         if self._gmcp_enabled and not self._seed_announced:
             self._seed_announced = True
-            self._send_gmcp("Seed.Hello", seed_hello(SEED_NAME))
+            version = AETHRYN_SERVER_VERSION if SEED_NAME.casefold() == "aethryn" else "1.0.0"
+            profile_version = "2" if SEED_NAME.casefold() == "aethryn" else "1"
+            self._send_gmcp(
+                "Seed.Hello",
+                seed_hello(SEED_NAME, version=version, profile=f"{SEED_NAME}@{profile_version}"),
+            )
+            self._send_gmcp(
+                "Seed.Profile",
+                aethryn_profile(
+                    version=version,
+                    seed_id=SEED_NAME,
+                    name=SEED_NAME.replace("-", " ").title(),
+                ),
+            )
         # Additive engineering-workspace wire: a logged-in owner's client can create a Seed and get
         # its workspace pushed back, all over GMCP. Only after the front desk (self._session set),
         # and orthogonal to the game path -- a non-workspace frame is ignored here.
@@ -421,14 +591,35 @@ class _GateHandler(socketserver.StreamRequestHandler):
             self._serve_requested_workspace(payload)
             return
         owner = session.account or session.player_id
+        request_identity, request_policy = self._engineering_identity(
+            session,
+            seed_id="seedlab",
+            capability="seed.create",
+            correlation_prefix="gateway-seed-create",
+        )
         with SEEDLAB_LOCK:
             kernel = self._workspace_kernel()
             if name == SEED_CREATE_PACKAGE:
-                verdict = create_from_request(kernel, payload, owner=owner)
+                verdict = create_from_request(
+                    kernel,
+                    payload,
+                    owner=owner,
+                    identity=request_identity,
+                    policy=request_policy,
+                    correlation_id=request_identity.correlation_id,
+                )
             else:
                 from kernel.seedlab.form import load_definition
 
-                verdict = create_from_form_submit(kernel, load_definition(), payload, owner=owner)
+                verdict = create_from_form_submit(
+                    kernel,
+                    load_definition(),
+                    payload,
+                    owner=owner,
+                    identity=request_identity,
+                    policy=request_policy,
+                    correlation_id=request_identity.correlation_id,
+                )
             self._send_gmcp(SEED_CREATED_PACKAGE, verdict)
             if verdict.get("ok"):
                 record = kernel.get(str(verdict.get("id", "")))
@@ -551,6 +742,31 @@ class _GateHandler(socketserver.StreamRequestHandler):
             _LOG.warning("workspace_blueprints_unavailable", error=str(exc))
         else:
             self._send_gmcp(BLUEPRINT_LIST_PACKAGE, blueprint_list(blueprints, seed=SEED_NAME))
+        self._push_reference_engineering_evidence()
+
+    def _push_reference_engineering_evidence(self) -> None:
+        """Push the durable lifecycle projection when the reference Seed is mounted.
+
+        The gateway remains a projection boundary: it reads the same workspace contract used by
+        the HTTP API and never creates missing state. A bare game install may not have a SeedLab
+        record yet, so absence is logged and omitted rather than represented by invented evidence.
+        """
+        from pathlib import Path
+
+        from kernel.seedlab.kernel import SeedKernelError
+        from kernel.seedlab.workspace_contract import build_workspace_contract
+        from kernel.seedlab.workspace_gmcp import ENGINEERING_EVIDENCE_PACKAGE
+
+        root = Path(os.environ.get("SEEDLAB_HOME", ".seedlab"))
+        try:
+            contract = build_workspace_contract(SEED_NAME, root=root)
+        except (OSError, ValueError, SeedKernelError) as exc:
+            _LOG.warning("workspace_engineering_evidence_unavailable", error=str(exc))
+            return
+        for package in contract.packages:
+            if package.package == ENGINEERING_EVIDENCE_PACKAGE:
+                self._send_gmcp(package.package, package.payload)
+                return
 
     def _hardware_runtime_payload(self) -> dict[str, object]:
         """Return the read-only Hardware runtime projection for an authenticated owner."""
@@ -637,6 +853,10 @@ class _GateHandler(socketserver.StreamRequestHandler):
         if friends != self._last_friends:
             self._send_gmcp("Char.Friends", friends)
             self._last_friends = friends
+        observation = observation_report()
+        if observation != self._last_observation:
+            self._send_gmcp("World.Observation", observation)
+            self._last_observation = observation
 
     def _autosave(self, session: Session) -> None:
         """Persist a named hero every AUTOSAVE_EVERY commands. Called under the tick lock just after
@@ -650,6 +870,60 @@ class _GateHandler(socketserver.StreamRequestHandler):
 
     def _send(self, text: str) -> None:
         self.wfile.write((_sanitize(text) + "\r\n").encode("utf-8"))
+
+    def _hardware_runtime_status(self) -> str:
+        """Render the injected runtime projection at the authenticated Seed boundary."""
+        payload = self._hardware_runtime_payload()
+        if payload.get("available") is False:
+            return "HARDWARE RUNTIME\n  unavailable: no runtime controller is configured"
+        active = payload["active_bindings"]
+        providers = payload["providers"]
+        lines = [
+            "HARDWARE RUNTIME",
+            f"  seed: {payload['seed']}",
+            f"  trusted providers: {', '.join(providers) if providers else '(none)'}",
+            f"  active bindings: {', '.join(active) if active else '(none)'}",
+        ]
+        for component in payload["components"]:
+            consumers = component["consumers"]
+            lines.append(
+                f"  {component['component_id']}: {component['state']} "
+                f"(consumers: {', '.join(consumers) if consumers else '(none)'})"
+            )
+        return "\n".join(lines)
+
+    def _hardware_runtime_mutation(self, session: Session, text: str) -> str:
+        """Run the narrow authenticated disable/remove commands over the trusted runtime seam."""
+        parts = text.strip().split()
+        if len(parts) != 3 or parts[1].lower() not in {"disable", "remove"}:
+            return (
+                "Usage: hardware runtime | hardware disable <component> "
+                "| hardware remove <component>"
+            )
+        if not has_rank(session, "owner"):
+            return "Hardware mutation requires owner rank."
+        runtime = getattr(self.server, "hardware_runtime", None)
+        if runtime is None:
+            return "Hardware runtime is unavailable."
+        from datetime import UTC, datetime
+
+        now = datetime.now(UTC)
+        identity, policy = self._engineering_identity(
+            session,
+            seed_id=runtime.seed_id,
+            capability="component.disable",
+            correlation_prefix="gateway-hardware",
+            now=now,
+        )
+        component_id = parts[2]
+        try:
+            if parts[1].lower() == "disable":
+                runtime.disable(component_id, identity=identity, policy=policy, now=now)
+                return f"Hardware component {component_id} disabled."
+            runtime.remove(component_id, identity=identity, policy=policy, now=now)
+            return f"Hardware component {component_id} removed from this Seed."
+        except Exception as exc:
+            return f"Hardware mutation refused: {exc}"
 
     def _ask(self, prompt: str) -> str | None:
         """One question at the front desk. None means they walked away
@@ -706,6 +980,7 @@ class _GateHandler(socketserver.StreamRequestHandler):
             return None
         handle = handle.strip()
         initial_calling: str | None = None
+        initial_skin = ""
         if SEED_NAME == "aethryn":
             from kernel.world.jobs import calling_label, character_creation_menu
 
@@ -721,6 +996,24 @@ class _GateHandler(socketserver.StreamRequestHandler):
             if initial_calling is None:
                 self._send("Character creation cancelled. Reconnect to try again.")
                 return None
+            self._send(
+                "Choose a skin color, or press Enter to decide later.\n"
+                f"Available: {', '.join(appearance.SKIN_COLORS)}"
+            )
+            for _ in range(_AETHRYN_CREATION_TRIES):
+                choice = self._ask("Skin color:")
+                if choice is None:
+                    return None
+                if not choice.strip():
+                    break
+                initial_skin = appearance.normalize_skin_color(choice)
+                if initial_skin is not None:
+                    break
+                self._send(
+                    "That skin color is not available. Choose one from the list or press Enter."
+                )
+            else:
+                initial_skin = ""
         response = ""
         for attempt in range(_REGISTER_TRIES):
             secret = self._ask_secret("Choose a password:")
@@ -733,10 +1026,112 @@ class _GateHandler(socketserver.StreamRequestHandler):
                 if response.startswith("Welcome,") and initial_calling is not None:
                     with TICK_LOCK:
                         chosen = handle_command(session, f"job {initial_calling}")
+                        if initial_skin:
+                            session.appearance["skin_color"] = initial_skin
                         save_character(session)
-                    response = f"{response}\n{chosen}"
+                    appearance_note = (
+                        f"\nAppearance saved. Skin color: {initial_skin}."
+                        if initial_skin
+                        else "\nYou can set your appearance later: appearance skin <color>."
+                    )
+                    response = f"{response}\n{chosen}{appearance_note}"
                 return response  # success, a handle problem, or out of tries
             self._send(response)  # a fixable password: nudge, then re-ask in place
+        return response
+
+    def _account_character_selection(
+        self, session: Session, account: str, secret: str
+    ) -> str | None:
+        """Authenticate an account, then require an explicit hero choice.
+
+        The legacy ``character@account`` path remains valid. This account-first path keeps account
+        identity separate from character identity and sends the final selection through the same
+        authoritative login command as every other entry path.
+        """
+        records = characters_for_account(account)
+        lines = [f"CHARACTERS — {account}", ""]
+        if records:
+            for record in records:
+                job = record.job or "Calling not chosen"
+                lines.append(
+                    f"  {record.name:<16} PLvl {record.level:<3} {job:<14} {record.location}"
+                )
+        else:
+            lines.append("  No characters yet.")
+        lines.extend(("", "Select a character name, type NEW to create one, or LOGOUT."))
+        self._send("\n".join(lines))
+        for _ in range(3):
+            choice = self._ask("Character:")
+            if choice is None:
+                return None
+            normalized = choice.strip().lower()
+            if normalized in {"logout", "quit", "back"}:
+                self._send("Selection cancelled.")
+                return None
+            if normalized == "new":
+                return self._register_character_for_account(session, account, secret)
+            if any(record.name == normalized for record in records):
+                with TICK_LOCK:
+                    return handle_command(session, f"login {normalized}@{account} {secret}")
+            self._send("That character is not on this account. Choose a listed name or LOGOUT.")
+        self._send("Too many selection attempts. Reconnect to try again.")
+        return None
+
+    def _register_character_for_account(
+        self, session: Session, account: str, secret: str
+    ) -> str | None:
+        """Create a second hero after account authentication.
+
+        The account password has already been verified, so this path asks only for the new
+        character identity and Aethryn creation choices. The authoritative ``register`` command
+        still performs the actual write and account-membership check.
+        """
+        handle = self._ask("New character name:")
+        if handle is None:
+            return None
+        handle = handle.strip().lower()
+        if not NAME_RE.match(handle):
+            return "Character names are 2-16 characters: letters, digits, and underscores."
+        initial_calling: str | None = None
+        initial_skin = ""
+        if SEED_NAME == "aethryn":
+            from kernel.world.jobs import calling_label, character_creation_menu
+
+            self._send(character_creation_menu())
+            for _ in range(_AETHRYN_CREATION_TRIES):
+                choice = self._ask("Calling (name):")
+                if choice is None:
+                    return None
+                initial_calling = calling_label(choice)
+                if initial_calling is not None:
+                    break
+                self._send("That calling is not available. Choose one from the menu.")
+            if initial_calling is None:
+                return "Character creation cancelled. Reconnect to try again."
+            self._send(
+                "Choose a skin color, or press Enter to decide later.\n"
+                f"Available: {', '.join(appearance.SKIN_COLORS)}"
+            )
+            for _ in range(_AETHRYN_CREATION_TRIES):
+                choice = self._ask("Skin color:")
+                if choice is None:
+                    return None
+                if not choice.strip():
+                    break
+                initial_skin = appearance.normalize_skin_color(choice)
+                if initial_skin is not None:
+                    break
+                self._send(
+                    "That skin color is not available. Choose one from the list or press Enter."
+                )
+        with TICK_LOCK:
+            response = handle_command(session, f"register {handle}@{account} {secret}")
+            if response.startswith("Welcome,") and initial_calling is not None:
+                chosen = handle_command(session, f"job {initial_calling}")
+                if initial_skin:
+                    session.appearance["skin_color"] = initial_skin
+                save_character(session)
+                response = f"{response}\n{chosen}"
         return response
 
     def _front_desk(self, session: Session) -> bool:
@@ -749,7 +1144,7 @@ class _GateHandler(socketserver.StreamRequestHandler):
             return False
         self._send(load_splash())
         for _ in range(3):
-            who = self._ask("Character (character@account) or NEW:")
+            who = self._ask("Account, character@account, or NEW:")
             if who is None:
                 return False
             who = who.strip().lower()
@@ -764,8 +1159,18 @@ class _GateHandler(socketserver.StreamRequestHandler):
                 secret = self._ask_secret("Password:")
                 if secret is None:
                     return False
-                with TICK_LOCK:
-                    response = handle_command(session, f"login {who} {secret.strip()}")
+                if "@" not in who and NAME_RE.match(who):
+                    if not verify_account(who, secret.strip()):
+                        response = "That account and password do not align."
+                    else:
+                        response = self._account_character_selection(
+                            session, who, secret.strip()
+                        )
+                        if response is None:
+                            return False
+                else:
+                    with TICK_LOCK:
+                        response = handle_command(session, f"login {who} {secret.strip()}")
             self._send(response)
             if response.startswith(("Welcome back,", "Welcome,")):
                 # A proven login, but a banned hero is turned away with their reason (moderation
@@ -786,6 +1191,12 @@ class _GateHandler(socketserver.StreamRequestHandler):
                     )  # onboarding: point a new hero at the first step
                     if nudge:
                         self._send(nudge)
+                try:
+                    self._establish_authenticated_identity(session)
+                except Exception as exc:
+                    _LOG.exception("session_authority_unavailable", player=session.player_id)
+                    self._send(f"Session authority unavailable: {exc}")
+                    return False
                 return True
             _log_turnaway(ip)  # this login/register attempt failed
         self._send("Too many attempts. The door closes.")
@@ -855,10 +1266,30 @@ class _GateHandler(socketserver.StreamRequestHandler):
                 # IAC bytes leak into the command line as decoded garbage and route to "Huh?".
                 text = _strip_telnet(message).decode("utf-8", errors="ignore")
                 if text.strip().lower() == "passwd":
+                    try:
+                        self._authorize_game_command(session)
+                    except (PermissionDenied, SessionIdentityError, SessionRegistryError):
+                        self._send("Session authority unavailable; disconnecting.")
+                        break
                     self._passwd(session)  # multi-prompt dialogue with echo blackout
                     continue
                 with TICK_LOCK:
-                    response = handle_command(session, text)
+                    try:
+                        self._authorize_game_command(session)
+                    except (PermissionDenied, SessionIdentityError, SessionRegistryError):
+                        response = "Session authority unavailable; disconnecting."
+                        self._send(response)
+                        break
+                    # This read-only command is deliberately served by the gateway's injected
+                    # authoritative runtime, not by the catalog renderer.  It proves the live Seed
+                    # boundary without granting the text client activation or removal authority.
+                    normalized = text.strip().lower()
+                    if normalized == "hardware runtime":
+                        response = self._hardware_runtime_status()
+                    elif normalized.startswith("hardware "):
+                        response = self._hardware_runtime_mutation(session, text)
+                    else:
+                        response = handle_command(session, text)
                     self._autosave(session)  # periodic persist, under the same lock as the tick
                 if response:
                     self._send(response)
@@ -869,6 +1300,7 @@ class _GateHandler(socketserver.StreamRequestHandler):
         except OSError:
             pass  # client dropped (broken pipe / reset) -- disconnect quietly
         finally:
+            self._revoke_engineering_identities(session)
             with TICK_LOCK:
                 if entered:
                     save_character(session)  # only real players persist
@@ -896,7 +1328,16 @@ def serve(host: str = "0.0.0.0", port: int = 4000) -> None:
     broker_bus = maybe_wire_broker()  # CODEFORGE_BUS_BROKER set -> join a multi-process deployment
     if broker_bus is not None:
         _LOG.info("bus_broker_wired", broker=os.environ.get("CODEFORGE_BUS_BROKER"))
-    with ForgeGateServer((host, port), _GateHandler) as server:
+    from kernel.session_registry import configured_session_registry
+
+    session_home = Path(
+        os.environ.get("CODEFORGE_SESSION_HOME", str(Path.home() / ".config" / "codeforge"))
+    )
+    with ForgeGateServer(
+        (host, port),
+        _GateHandler,
+        session_registry=configured_session_registry(session_home),
+    ) as server:
 
         def _save_and_stop() -> None:
             """The @shutdown hook. It runs INSIDE the tick lock (the verb reached it through

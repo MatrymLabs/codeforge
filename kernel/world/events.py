@@ -28,10 +28,10 @@ not world mutation; the authoritative world server is the deferred next step.
 import logging
 from collections.abc import Callable, Iterable
 from datetime import UTC, datetime
+from importlib import import_module
 from typing import Any
 from uuid import uuid4
 
-from kernel.event_envelope import EventEnvelope
 from kernel.world import bus, frames
 from kernel.world.frames import Frame
 from kernel.world.session import SESSIONS
@@ -49,7 +49,7 @@ _ROOM_TOPIC = "delivery:room"
 
 # Optional non-authoritative observation sink. The trusted gateway binds this only after the
 # Hardware Store component is activated; world delivery remains valid without the ledger.
-EventLedgerSink = Callable[[EventEnvelope], None]
+EventLedgerSink = Callable[[Any], None]
 _EVENT_LEDGER: EventLedgerSink | None = None
 _LOG = logging.getLogger(__name__)
 
@@ -91,8 +91,11 @@ def _record_event(
         return
     event_id = f"world-{uuid4().hex}"
     try:
+        # Keep the shipped World Package free of a static platform import.  The typed envelope is
+        # loaded only when an explicitly bound platform ledger asks to observe a world event.
+        event_envelope = import_module("kernel.event_envelope").EventEnvelope
         sink(
-            EventEnvelope(
+            event_envelope(
                 protocol="codeforge.seed-event",
                 version="1",
                 event_id=event_id,

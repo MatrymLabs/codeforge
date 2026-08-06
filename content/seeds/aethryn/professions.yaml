@@ -18,7 +18,7 @@ prospecting:
 mining:
   name: Mining
   kind: gather
-  works: [raw_ore, hollow_ingot]
+  works: [raw_ore, hollow_ingot, cinderium]
 herbalism:
   name: Herbalism
   kind: gather

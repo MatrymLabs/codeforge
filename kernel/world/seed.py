@@ -371,6 +371,7 @@ class QuestStep(TypedDict):
                      'cull N of a kind' quest can chain N identical steps, one per kill;
       `on_forage` -- a (zone-scoped) material whose gather fires it, so a 'forage N' quest chains N
                      identical steps, one per harvest.
+      `on_craft`  -- a recipe label whose successful craft fires it.
     """
 
     state: str
@@ -382,6 +383,7 @@ class QuestStep(TypedDict):
     on_enter: NotRequired[str]
     on_cull: NotRequired[str]
     on_forage: NotRequired[str]
+    on_craft: NotRequired[str]
 
 
 class QuestSpec(TypedDict):
@@ -1094,7 +1096,14 @@ def load_quest(path: Path) -> QuestSpec | None:
         }
         if raw.get("effect"):
             step["effect"] = str(raw["effect"])
-        for trigger in ("on_defeat", "on_take", "on_enter", "on_cull", "on_forage"):
+        for trigger in (
+            "on_defeat",
+            "on_take",
+            "on_enter",
+            "on_cull",
+            "on_forage",
+            "on_craft",
+        ):
             if raw.get(trigger):
                 step[trigger] = str(raw[trigger])
         clean_steps.append(step)

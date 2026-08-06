@@ -10,13 +10,13 @@ from pathlib import Path
 
 from sqlalchemy.orm import Session as SqlSession
 
+from kernel.platform_db import SeedManifestEvidenceRow, open_archive_session
 from kernel.seedlab.manifest_evidence import (
     FileManifestEvidenceStore,
     ManifestEvidenceError,
     ManifestEvidenceStore,
     ManifestRunEvidence,
 )
-from kernel.world.db import SeedManifestEvidenceRow, open_archive_session
 
 
 @dataclass
@@ -135,7 +135,9 @@ def manifest_evidence_store(backend: str, home: Path) -> ManifestEvidenceStore:
     if backend == "sql":
         return primary
     if backend == "sql-dual-read":
-        return DualReadManifestEvidenceStore(primary, FileManifestEvidenceStore(Path(home) / "evidence"))
+        return DualReadManifestEvidenceStore(
+            primary, FileManifestEvidenceStore(Path(home) / "evidence")
+        )
     raise ManifestEvidenceError(
         f"unknown manifest evidence backend {backend!r}; expected file, sql, or sql-dual-read"
     )

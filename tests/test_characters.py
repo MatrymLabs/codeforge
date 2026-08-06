@@ -4,7 +4,7 @@ import copy
 
 import pytest
 
-from kernel.world import items, npcs
+from kernel.world import appearance, items, npcs
 from kernel.world.characters import (
     load_character,
     restore_character,
@@ -42,6 +42,14 @@ def test_unnamed_seats_are_never_saved():
     assert load_character("player1") is None
 
 
+def test_character_appearance_is_normalized_and_round_trips():
+    encoded = appearance.serialize({"skin_color": " Copper "})
+    assert appearance.deserialize(encoded) == {"skin_color": "copper"}
+    assert appearance.deserialize(appearance.serialize({"skin_color": "invalid"})) == {
+        "skin_color": ""
+    }
+
+
 def test_daily_lockouts_survive_save_and_restore():
     # The endgame cap must persist: a boss claimed today stays claimed after a logout/login.
     s = _hero()
@@ -72,6 +80,7 @@ def test_save_and_load_roundtrip():
     save_character(s)
     record = load_character("matrym")
     assert record == {
+        "appearance": "",
         "job": "vanguard",
         "secondary_job": "",
         "level": 2,

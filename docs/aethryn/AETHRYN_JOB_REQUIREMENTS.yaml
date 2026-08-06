@@ -1,0 +1,33 @@
+version: 1
+logic: typed_requirement_tree
+operators: [ALL, ANY, MINIMUM_TOTAL]
+requirement_fields: [character_level, calling, job_level, jobs, skill, ability, quest, achievement, reputation, item, trial, region_discovery, story_milestone, mentor]
+visibility: [visible, hinted, undiscovered]
+examples:
+  - job: duelist
+    status: proposed
+    unlock: {all: [{job: vanguard, level: 3}, {job: pathfinder, level: 2}]}
+    purpose: "Teach the player to combine held-ground fundamentals with timing and angle."
+  - job: arcanist
+    status: proposed
+    unlock: {all: [{job: emberwright, level: 3}, {character_level: 5}]}
+    purpose: "Extend the starting maker path into deliberate combat magic."
+  - job: sentinel
+    status: proposed
+    unlock: {all: [{job: vanguard, level: 5}, {quest: first_ward_trial}]}
+    purpose: "Narrative trial plus meaningful defensive mastery."
+  - job: chronomancer
+    status: proposed
+    unlock: {all: [{job: arcanist, level: 5}, {job: pathfinder, level: 3}, {region_discovery: elderwatch}]}
+    purpose: "Combine force and tempo; discovery gives the hybrid a place in the world."
+  - job: hierophant
+    status: proposed
+    unlock: {all: [{job: cleric, level: 8}, {job: oracle, level: 6}, {job: warden, level: 5}, {trial: word_of_law}]}
+    purpose: "Prestige path expresses a sustained divine arc, not unrelated grinding."
+player_explanation:
+  show_checked_requirements: true
+  show_missing_requirements: true
+  show_why: true
+  show_alternative_paths: true
+  hide_secret_names_until_discovered: founder_decision
+

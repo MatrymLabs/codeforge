@@ -1,0 +1,41 @@
+version: 1
+status: proposed
+authority: Seed_Runtime
+canonical_directions: [north, northeast, east, southeast, south, southwest, west, northwest, up, down, in, out]
+abbreviations: {n: north, ne: northeast, e: east, se: southeast, s: south, sw: southwest, w: west, nw: northwest, u: up, d: down}
+policy:
+  physical_spatial_exit: cardinal_or_compound
+  vertical_transition: up_or_down
+  threshold: in_or_out
+  portal_vehicle_instance: named_primary_allowed
+  named_destination: display_label_and_safe_alias_by_default
+  creator_workshop_station: named_primary_allowed_in_protected_admin_space
+  teleport_fast_travel: named_primary_allowed_and_explicit
+display:
+  format: "<direction> — <display label>"
+  locked: "<direction> — [LOCKED] <display label>"
+  hidden: omitted_until_discovered
+  one_way: "<direction> — <display label> [ONE-WAY]"
+  aliases: shown_on_exits_only_when_settings_verbose
+thresholds:
+  creator_hall_primary_spatial_minimum: 0.80
+  major_game_space_primary_spatial_minimum: 0.70
+  rationale: "The existing authored map is a zone graph, so named spokes and out-links remain valid; physical hub routes should still teach spatial reasoning."
+alias_rules:
+  - legacy_named_word_may_alias_a_canonical_direction_if_unique_in_room
+  - alias_must_not_shadow_a_command_or_object_interaction
+  - alias_is_deprecated_only_after_two_release_cycles_and_usage_review
+  - exact_direction_wins_over_partial_named_match
+validation:
+  - destination_exists
+  - no_duplicate_canonical_direction_per_room
+  - no_self_loop_without_explicit_loop_type
+  - reciprocal_spatial_edges_have_opposite_direction_or_explicit_one_way
+  - named_primary_requires_exception_reason
+  - aliases_are_unique_within_context
+  - hidden_and_locked_are_distinct_states
+migration:
+  preserve_legacy_aliases: true
+  warning: "A legacy movement word may receive one unobtrusive deprecation hint after successful movement."
+  rollback: "restore prior exit key and retain newly added canonical alias until clients migrate"
+

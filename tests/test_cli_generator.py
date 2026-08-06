@@ -44,6 +44,10 @@ def test_generate_emits_a_runnable_layout(tmp_path: Path) -> None:
     assert "task_ledger/__main__.py" in art.files and "tests/test_cli.py" in art.files
     assert set(art.checksums) == set(art.files) and art.manifest_hash
     assert art.provenance.source_id == "demo-src" and art.commands == ["add", "complete"]
+    assert art.generator_id == "codeforge.cli-generator" and art.generator_version == "1.0"
+    assert art.input_digest and set(art.file_ownership.values()) == {"generated"}
+    assert art.transformation_id == "codeforge.project-model-to-cli-target"
+    assert art.transformation_version == "1.0" and art.output_model_digest
     assert (tmp_path / "out" / "task_ledger" / "__main__.py").is_file()
 
 
@@ -51,6 +55,7 @@ def test_generation_is_reproducible(tmp_path: Path) -> None:
     a = generate_cli(_model(), tmp_path / "a")
     b = generate_cli(_model(), tmp_path / "b")
     assert a.manifest_hash == b.manifest_hash and a.checksums == b.checksums
+    assert a.input_digest == b.input_digest and a.output_model_digest == b.output_model_digest
 
 
 def test_the_generated_target_runs(tmp_path: Path) -> None:

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from dataclasses import replace
 from pathlib import Path
 
 import pytest
@@ -16,6 +17,7 @@ from kernel.seedlab.artifact_store import (
     artifact_label,
     artifact_labels,
     build_report_artifacts,
+    compare_artifact_reproduction,
     record_generated_artifact,
 )
 from kernel.seedlab.cli_generator import generate_cli
@@ -72,6 +74,32 @@ def test_record_generated_artifact_carries_provenance_runs_and_size(tmp_path: Pa
     assert record.run_profiles == ("run", "pytest")
     assert record.bytes > 0
     assert record.created_at == "2026-08-04T00:00:00+00:00"
+    assert record.deployment_eligible is False
+
+
+def test_artifact_deployability_requires_complete_evidence(tmp_path: Path) -> None:
+    record = record_generated_artifact(
+        "seed-1",
+        generate_cli(_model(), tmp_path / "out"),
+        runs=(_run("pytest"),),
+        dependency_lock_digest="sha256:lock",
+        sbom={"bomFormat": "CycloneDX", "components": []},
+        sbom_status="recorded",
+        reproduction_instructions="python -m codeforge.reproduce artifact-1",
+        file_ownership={
+            path: "generated" for path in generate_cli(_model(), tmp_path / "out-2").files
+        },
+    )
+    assert record.deployment_eligible is True
+
+
+def test_reproduction_comparison_reports_identical_and_different_outputs(tmp_path: Path) -> None:
+    first = _record(tmp_path)
+    second = _record(tmp_path / "rerun")
+    evidence = compare_artifact_reproduction(first, second)
+    assert evidence["same_inputs"] is True and evidence["reproducible"] is True
+    changed = replace(second, checksums={**second.checksums, "README.md": "different"})
+    assert compare_artifact_reproduction(first, changed)["reproducible"] is False
 
 
 def test_a_store_is_an_artifact_store() -> None:
@@ -92,6 +120,15 @@ def test_file_store_survives_restart(tmp_path: Path) -> None:
     store.save(record)
     recovered = FileArtifactStore(tmp_path / "artifacts").all_for_seed(record.seed_id)
     assert recovered == [record]
+
+
+def test_file_store_is_idempotent_but_rejects_evidence_overwrite(tmp_path: Path) -> None:
+    store = FileArtifactStore(tmp_path / "artifacts")
+    record = _record(tmp_path)
+    store.save(record)
+    store.save(record)
+    with pytest.raises(ArtifactStoreError, match="different evidence"):
+        store.save(replace(record, model_identity="tampered-model"))
 
 
 def test_labels_feed_the_project_hub_targets_facet(tmp_path: Path) -> None:
